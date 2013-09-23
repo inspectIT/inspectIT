@@ -63,7 +63,7 @@
 		<ivy:settings file="${ivy.settings.file}" />
 		<!-- needed for TestNG & Cobertura -->
 		<ivy:cachepath pathid="path.testng" organisation="org.testng" module="testng" revision="6.8.7" conf="default" inline="true" />
-		<ivy:cachepath pathid="path.cobertura" organisation="net.sourceforge.cobertura" module="cobertura" revision="1.9.4.1" conf="default" inline="true" />
+		<ivy:cachepath pathid="path.cobertura" organisation="net.sourceforge.cobertura" module="cobertura" revision="2.1.1" conf="default" inline="true" />
 
 		<taskdef name="testng" classpathref="path.testng" classname="org.testng.TestNGAntTask" />
 		<taskdef name="cobertura-instrument" classname="net.sourceforge.cobertura.ant.InstrumentTask" classpathref="path.cobertura" />
