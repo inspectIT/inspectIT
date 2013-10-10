@@ -5,7 +5,7 @@ import info.novatec.inspectit.communication.DefaultData;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
 
 /**
  * Abstract data processor that passes data to chained processors.
@@ -50,9 +50,9 @@ public abstract class AbstractChainedCmrDataProcessor extends AbstractCmrDataPro
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		if (shouldBePassedToChainedProcessors(defaultData)) {
-			passToChainedProcessors(defaultData, session);
+			passToChainedProcessors(defaultData, entityManager);
 		}
 	}
 
@@ -61,13 +61,13 @@ public abstract class AbstractChainedCmrDataProcessor extends AbstractCmrDataPro
 	 * 
 	 * @param defaultData
 	 *            Data to pass.
-	 * @param session
-	 *            {@link StatelessSession} to save data in DB if needed.
+	 * @param entityManager
+	 *            {@link EntityManager} to save data in DB if needed.
 	 */
-	protected void passToChainedProcessors(DefaultData defaultData, StatelessSession session) {
+	protected void passToChainedProcessors(DefaultData defaultData, EntityManager entityManager) {
 		if (null != dataProcessors) {
 			for (AbstractCmrDataProcessor dataProcessor : dataProcessors) {
-				dataProcessor.process(defaultData, session);
+				dataProcessor.process(defaultData, entityManager);
 			}
 		}
 	}

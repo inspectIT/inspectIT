@@ -12,8 +12,9 @@ import info.novatec.inspectit.communication.data.TimerData;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.StatelessSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -48,9 +49,9 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	/**
 	 * {@inheritDoc}
 	 */
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		InvocationSequenceData invocation = (InvocationSequenceData) defaultData;
-		extractDataFromInvocation(session, invocation, invocation);
+		extractDataFromInvocation(entityManager, invocation, invocation);
 	}
 
 	/**
@@ -73,20 +74,20 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	 * Extract data from the invocation in the way that timer data is saved to the Db, while SQL
 	 * statements and Exceptions are indexed into the root branch.
 	 * 
-	 * @param session
-	 *            Session needed for DB persistence.
+	 * @param entityManager
+	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData
 	 *            Invocation data to be extracted.
 	 * @param topInvocationParent
 	 *            Top invocation object.
 	 * 
 	 */
-	private void extractDataFromInvocation(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+	private void extractDataFromInvocation(EntityManager entityManager, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
 		double exclusiveDurationDelta = 0d;
 
 		for (InvocationSequenceData child : (List<InvocationSequenceData>) invData.getNestedSequences()) {
 			// pass child to chained processors
-			passToChainedProcessors(child, session);
+			passToChainedProcessors(child, entityManager);
 
 			// include times from timer, sql or invocation itself
 			if (null != child.getTimerData()) {
@@ -101,32 +102,32 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 			}
 
 			// go to the recursion
-			extractDataFromInvocation(session, child, topInvocationParent);
+			extractDataFromInvocation(entityManager, child, topInvocationParent);
 		}
 
 		// process the SQL Statement and Timer
-		processSqlStatementData(session, invData, topInvocationParent);
-		processTimerData(session, invData, topInvocationParent, exclusiveDurationDelta);
-		processExceptionSensorData(session, invData, topInvocationParent);
+		processSqlStatementData(entityManager, invData, topInvocationParent);
+		processTimerData(entityManager, invData, topInvocationParent, exclusiveDurationDelta);
+		processExceptionSensorData(entityManager, invData, topInvocationParent);
 	}
 
 	/**
 	 * Process SQL statement if one exists in the invData object and passes it to the chained
 	 * processors.
 	 * 
-	 * @param session
-	 *            Session needed for DB persistence.
+	 * @param entityManager
+	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData
 	 *            Invocation data to be processed.
 	 * @param topInvocationParent
 	 *            Top invocation object.
 	 */
-	private void processSqlStatementData(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+	private void processSqlStatementData(EntityManager entityManager, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
 		SqlStatementData sqlStatementData = invData.getSqlStatementData();
 		if (null != sqlStatementData) {
 			topInvocationParent.setNestedSqlStatements(Boolean.TRUE);
 			sqlStatementData.addInvocationParentId(topInvocationParent.getId());
-			passToChainedProcessors(sqlStatementData, session);
+			passToChainedProcessors(sqlStatementData, entityManager);
 		}
 	}
 
@@ -134,8 +135,8 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	 * Process timer data if one exists in the invData object and passes it to the chained
 	 * processors.
 	 * 
-	 * @param session
-	 *            Session needed for DB persistence.
+	 * @param entityManager
+	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData
 	 *            Invocation data to be processed.
 	 * @param topInvocationParent
@@ -143,7 +144,7 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	 * @param exclusiveDurationDelta
 	 *            Duration to subtract from timer duration to get the exclusive duration.
 	 */
-	private void processTimerData(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent, double exclusiveDurationDelta) {
+	private void processTimerData(EntityManager entityManager, InvocationSequenceData invData, InvocationSequenceData topInvocationParent, double exclusiveDurationDelta) {
 		TimerData timerData = invData.getTimerData();
 		if (null != timerData) {
 			double exclusiveTime = invData.getTimerData().getDuration() - exclusiveDurationDelta;
@@ -152,7 +153,7 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 			timerData.calculateExclusiveMax(exclusiveTime);
 			timerData.calculateExclusiveMin(exclusiveTime);
 			timerData.addInvocationParentId(topInvocationParent.getId());
-			passToChainedProcessors(invData.getTimerData(), session);
+			passToChainedProcessors(invData.getTimerData(), entityManager);
 		}
 	}
 
@@ -162,14 +163,14 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	 * Note also that only exception data with CREATED event are processed, since the PASSED and
 	 * HANDLED should be connected as children to the CREATED one.
 	 * 
-	 * @param session
-	 *            Session needed for DB persistence.
+	 * @param entityManager
+	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData
 	 *            Invocation data to be processed.
 	 * @param topInvocationParent
 	 *            Top invocation object.
 	 */
-	private void processExceptionSensorData(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+	private void processExceptionSensorData(EntityManager entityManager, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
 		if (CollectionUtils.isNotEmpty(invData.getExceptionSensorDataObjects())) {
 			for (ExceptionSensorData exceptionData : invData.getExceptionSensorDataObjects()) {
 				if (exceptionData.getExceptionEvent() == ExceptionEvent.CREATED) {
@@ -178,9 +179,9 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 
 					// we need to directly call Exception message processor, cause it can not be
 					// chained
-					exceptionMessageCmrProcessor.process(exceptionData, session);
+					exceptionMessageCmrProcessor.process(exceptionData, entityManager);
 					exceptionData.addInvocationParentId(topInvocationParent.getId());
-					passToChainedProcessors(exceptionData, session);
+					passToChainedProcessors(exceptionData, entityManager);
 				}
 			}
 		}

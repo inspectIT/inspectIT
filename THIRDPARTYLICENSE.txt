@@ -14,6 +14,7 @@
  # javassist
  # jackson-core-asl
  # jackson-mapper-asl
+ # javax.inject
  # jboss-logging
  # jetty
  # jetty-util
@@ -34,6 +35,7 @@
  # spring-osgi-io
  # spring-tx
  # spring-web
+ # validation-api
 which are included in the inspectIT.
 
 --- begin of LICENSE ---
@@ -518,12 +520,13 @@ authorization for you to choose that version for the Library.
 %% This notice is provided with respect to following libraries:
  # hibernate-commons-annotations
  # hibernate-core
+ # hibernate-entitymanager
 which are included in the inspectIT.
 
 --- begin of LICENSE ---
 
 Copyright (c) 2011, Red Hat Inc. or third-party contributors 
-(hibernate-commons-annotations, hibernate-core)
+(hibernate-commons-annotations, hibernate-core, hibernate-entitymanager)
 
 Note that copyright holder of a work retains his full rights without any 
 explicit notice.
@@ -997,6 +1000,7 @@ DAMAGES.
  # Eclipse RCP PLatform
  # logback-core
  # logback-classic
+ # mchange-commons-java
  # nebula-cdatetime
  # nebula-cwt
 which are included in the inspectIT.
@@ -1006,7 +1010,7 @@ which are included in the inspectIT.
 Copyright (c) 1997-2001 Xerox Corporation, 2002 Palo Alto Research Center, 
 Incorporated, 2003-2006 Contributors. (aspectjweaver, aspectjrt)
 
-Copyright (c) 2015 Machinery For Change, Inc. (c3p0)
+Copyright (c) 2015 Machinery For Change, Inc. (c3p0, mchange-commons-java)
 
 Copyright (c) 1999-2012, QOS.ch. (logback-core, logback-classic)
 
@@ -1570,13 +1574,13 @@ herein is intended or shall be deemed to constitute any admission of liability.
 --------------------------------------------------------------------------------
 
 %% This notice is provided with respect to following libraries:
- # hibernate-jpa-2.0-api
+ # hibernate-jpa-2.1-api
 which are included in the inspectIT.
 
 --- begin of LICENSE ---
 
 Copyright (c) 2007, Eclipse Foundation, Inc. and its licensors. 
-(hibernate-jpa-2.0-api)
+(hibernate-jpa-2.1-api)
 
 Note that copyright holder of a work retains his full rights without any 
 explicit notice.

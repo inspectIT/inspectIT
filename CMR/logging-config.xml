@@ -75,6 +75,9 @@
 	<logger name="org" level="error" />
 	<logger name="com" level="error" />
 	<logger name="uk" level="error" />
+	
+	<!-- java on warn level -->
+	<logger name="java" level="warn" />
 
 	<!-- service logging, set this to 'debug' to get additional information about: - Number of timer objects being stored - information about the exception sensor - information about the combined metric sensor -->
 	<logger name="info.novatec.inspectit.cmr.service" level="info" />

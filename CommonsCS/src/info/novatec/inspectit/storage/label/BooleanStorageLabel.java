@@ -2,12 +2,16 @@ package info.novatec.inspectit.storage.label;
 
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+
 /**
  * Label that has a {@link Boolean} as a value.
  * 
  * @author Ivan Senic
  * 
  */
+@Entity
 public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 
 	/**
@@ -18,12 +22,8 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 	/**
 	 * Label value.
 	 */
+	@NotNull
 	private Boolean booleanValue;
-
-	/**
-	 * Storage label type.
-	 */
-	private AbstractStorageLabelType<Boolean> storageLabelType;
 
 	/**
 	 * Default constructor.
@@ -40,8 +40,8 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 	 *            Label type.
 	 */
 	public BooleanStorageLabel(Boolean booleanValue, AbstractStorageLabelType<Boolean> storageLabelType) {
+		super(storageLabelType);
 		this.booleanValue = booleanValue;
-		this.storageLabelType = storageLabelType;
 	}
 
 	/**
@@ -88,33 +88,13 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 	}
 
 	/**
-	 * Gets {@link #storageLabelType}.
-	 * 
-	 * @return {@link #storageLabelType}
-	 */
-	public AbstractStorageLabelType<Boolean> getStorageLabelType() {
-		return storageLabelType;
-	}
-
-	/**
-	 * Sets {@link #storageLabelType}.
-	 * 
-	 * @param storageLabelType
-	 *            New value for {@link #storageLabelType}
-	 */
-	public void setStorageLabelType(AbstractStorageLabelType<Boolean> storageLabelType) {
-		this.storageLabelType = storageLabelType;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((booleanValue == null) ? 0 : booleanValue.hashCode());
-		result = prime * result + ((storageLabelType == null) ? 0 : storageLabelType.hashCode());
 		return result;
 	}
 
@@ -126,7 +106,7 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
@@ -138,13 +118,6 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 				return false;
 			}
 		} else if (!booleanValue.equals(other.booleanValue)) {
-			return false;
-		}
-		if (storageLabelType == null) {
-			if (other.storageLabelType != null) {
-				return false;
-			}
-		} else if (!storageLabelType.equals(other.storageLabelType)) {
 			return false;
 		}
 		return true;

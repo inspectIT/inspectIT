@@ -59,4 +59,15 @@ public interface ISerializer {
 	 */
 	Object deserialize(Input input) throws SerializationException;
 
+	/**
+	 * Returns result of the Kryo copy operation. Effectively clones the object.
+	 * 
+	 * @param <T>
+	 *            type of the object
+	 * @param object
+	 *            Object to be copied
+	 * @return Cloned instance
+	 */
+	<T> T copy(T object);
+
 }
