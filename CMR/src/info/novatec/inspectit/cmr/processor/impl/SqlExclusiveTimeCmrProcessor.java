@@ -4,7 +4,7 @@ import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
 
 /**
  * Processor that sets the correct exclusive time for {@link SqlStatementData} because it's always
@@ -19,7 +19,7 @@ public class SqlExclusiveTimeCmrProcessor extends AbstractCmrDataProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		SqlStatementData sqlStatementData = (SqlStatementData) defaultData;
 		sqlStatementData.setExclusiveCount(1L);
 		sqlStatementData.setExclusiveDuration(sqlStatementData.getDuration());

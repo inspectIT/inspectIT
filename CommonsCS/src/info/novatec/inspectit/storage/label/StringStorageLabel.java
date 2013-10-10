@@ -2,12 +2,16 @@ package info.novatec.inspectit.storage.label;
 
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+
 /**
  * Label that has a {@link String} as a value.
  * 
  * @author Ivan Senic
  * 
  */
+@Entity
 public class StringStorageLabel extends AbstractStorageLabel<String> {
 
 	/**
@@ -18,12 +22,8 @@ public class StringStorageLabel extends AbstractStorageLabel<String> {
 	/**
 	 * Label value.
 	 */
+	@NotNull
 	private String stringValue;
-
-	/**
-	 * Storage label type.
-	 */
-	private AbstractStorageLabelType<String> storageLabelType;
 
 	/**
 	 * Default constructor.
@@ -40,9 +40,8 @@ public class StringStorageLabel extends AbstractStorageLabel<String> {
 	 *            Label Type.
 	 */
 	public StringStorageLabel(String stringValue, AbstractStorageLabelType<String> storageLabelType) {
-		super();
+		super(storageLabelType);
 		this.stringValue = stringValue;
-		this.storageLabelType = storageLabelType;
 	}
 
 	/**
@@ -85,32 +84,12 @@ public class StringStorageLabel extends AbstractStorageLabel<String> {
 	}
 
 	/**
-	 * Gets {@link #storageLabelType}.
-	 * 
-	 * @return {@link #storageLabelType}
-	 */
-	public AbstractStorageLabelType<String> getStorageLabelType() {
-		return storageLabelType;
-	}
-
-	/**
-	 * Sets {@link #storageLabelType}.
-	 * 
-	 * @param storageLabelType
-	 *            New value for {@link #storageLabelType}
-	 */
-	public void setStorageLabelType(AbstractStorageLabelType<String> storageLabelType) {
-		this.storageLabelType = storageLabelType;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((storageLabelType == null) ? 0 : storageLabelType.hashCode());
+		int result = super.hashCode();
 		result = prime * result + ((stringValue == null) ? 0 : stringValue.hashCode());
 		return result;
 	}
@@ -123,20 +102,13 @@ public class StringStorageLabel extends AbstractStorageLabel<String> {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		StringStorageLabel other = (StringStorageLabel) obj;
-		if (storageLabelType == null) {
-			if (other.storageLabelType != null) {
-				return false;
-			}
-		} else if (!storageLabelType.equals(other.storageLabelType)) {
-			return false;
-		}
 		if (stringValue == null) {
 			if (other.stringValue != null) {
 				return false;

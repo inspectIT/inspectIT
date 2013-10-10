@@ -8,6 +8,7 @@ Components”).
 These EPL components are: 
  # Eclipse Nebula, 
  # c3p0,
+ # mchange-commons-java 
  # logback-core
  # logback-classic, and
  # AspectJ.

@@ -4,7 +4,7 @@ import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
 
 /**
  * Processor that connects error messages in the {@link ExceptionSensorData}.
@@ -18,7 +18,7 @@ public class ExceptionMessageCmrProcessor extends AbstractCmrDataProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		connectErrorMessagesInExceptionData((ExceptionSensorData) defaultData);
 	}
 

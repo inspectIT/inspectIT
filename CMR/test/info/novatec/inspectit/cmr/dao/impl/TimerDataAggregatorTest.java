@@ -9,6 +9,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -23,11 +24,13 @@ import java.util.Date;
 import java.util.Random;
 import java.util.Set;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
-import org.hibernate.Transaction;
+import javax.persistence.EntityManager;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -45,23 +48,24 @@ public class TimerDataAggregatorTest extends AbstractTestNGLogSupport {
 	 */
 	private TimerDataAggregator aggregator;
 
-	private StatelessSession session;
+	@Mock
+	private EntityManager entityManager;
+
+	@Mock
+	private PlatformTransactionManager transactionManager;
 
 	/**
 	 * Initialize.
 	 */
 	@BeforeMethod
 	public void init() {
-		SessionFactory factory = mock(SessionFactory.class);
-		session = mock(StatelessSession.class);
-		Transaction transaction = mock(Transaction.class);
-		when(factory.openStatelessSession()).thenReturn(session);
-		when(session.beginTransaction()).thenReturn(transaction);
+		MockitoAnnotations.initMocks(this);
 
-		aggregator = new TimerDataAggregator(factory);
+		aggregator = new TimerDataAggregator(transactionManager);
 		aggregator.aggregationPeriod = 5l;
 		aggregator.cacheCleanSleepingPeriod = 10;
 		aggregator.maxElements = 100;
+		aggregator.entityManager = entityManager;
 	}
 
 	/**
@@ -78,7 +82,7 @@ public class TimerDataAggregatorTest extends AbstractTestNGLogSupport {
 		aggregator.processTimerData(timerData2);
 
 		assertThat(aggregator.getElementCount(), is(1));
-		verifyZeroInteractions(session);
+		verifyZeroInteractions(entityManager);
 	}
 
 	/**
@@ -97,7 +101,7 @@ public class TimerDataAggregatorTest extends AbstractTestNGLogSupport {
 		}
 
 		assertThat(aggregator.getElementCount(), is(2));
-		verifyZeroInteractions(session);
+		verifyZeroInteractions(entityManager);
 	}
 
 	/**
@@ -116,7 +120,7 @@ public class TimerDataAggregatorTest extends AbstractTestNGLogSupport {
 		aggregator.saveAllInPersistList();
 
 		ArgumentCaptor<DatabaseAggregatedTimerData> argument = ArgumentCaptor.forClass(DatabaseAggregatedTimerData.class);
-		verify(session, times(1)).insert(argument.capture());
+		verify(entityManager, times(1)).persist(argument.capture());
 
 		assertThat(argument.getValue(), is(instanceOf(DatabaseAggregatedTimerData.class)));
 		assertThat(argument.getValue().getPlatformIdent(), is(timerData1.getPlatformIdent()));
@@ -181,8 +185,7 @@ public class TimerDataAggregatorTest extends AbstractTestNGLogSupport {
 		}
 
 		aggregator.removeAndPersistAll();
-
-		verify(session, times(2)).insert(argThat(new ArgumentMatcher<TimerData>() {
+		verify(entityManager, timeout(10000).times(2)).persist(argThat(new ArgumentMatcher<TimerData>() {
 			@Override
 			public boolean matches(Object argument) {
 				if (!DatabaseAggregatedTimerData.class.equals(argument.getClass())) {

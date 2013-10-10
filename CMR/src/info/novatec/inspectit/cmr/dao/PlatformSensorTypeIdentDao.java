@@ -4,8 +4,6 @@ import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
 
 import java.util.List;
 
-import org.springframework.orm.hibernate3.HibernateTemplate;
-
 /**
  * This DAO is used to handle all {@link PlatformSensorTypeIdent} objects.
  * 
@@ -23,19 +21,6 @@ public interface PlatformSensorTypeIdentDao {
 	 * @return The found {@link PlatformSensorTypeIdent} object.
 	 */
 	PlatformSensorTypeIdent load(Long id);
-
-	/**
-	 * Execute a findByExample query against the underlying storage.
-	 * 
-	 * @param platformId
-	 *            Platform ID sensor should be bound to.
-	 * @param platformSensorTypeIdent
-	 *            The {@link PlatformSensorTypeIdent} object which serves as the example.
-	 * @return The list of {@link PlatformSensorTypeIdent} objects which have the same contents as
-	 *         the passed example object.
-	 * @see HibernateTemplate#findByExample(Object)
-	 */
-	List<PlatformSensorTypeIdent> findByExample(long platformId, PlatformSensorTypeIdent platformSensorTypeIdent);
 
 	/**
 	 * Saves or updates this {@link PlatformSensorTypeIdent} in the underlying storage.
@@ -68,5 +53,17 @@ public interface PlatformSensorTypeIdentDao {
 	 * @return Returns all stored {@link PlatformSensorTypeIdent} objects.
 	 */
 	List<PlatformSensorTypeIdent> findAll();
+
+	/**
+	 * Find the {@link PlatformSensorTypeIdent} with given fully qualified sensor class name and
+	 * platform ident.
+	 * 
+	 * @param fullyQualifiedClassName
+	 *            FQN of sensor
+	 * @param platformId
+	 *            Platform ident id.
+	 * @return List of existing objects.
+	 */
+	List<PlatformSensorTypeIdent> findByClassNameAndPlatformId(String fullyQualifiedClassName, long platformId);
 
 }
