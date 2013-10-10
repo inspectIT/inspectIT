@@ -2,6 +2,17 @@ package info.novatec.inspectit.cmr.model;
 
 import java.io.Serializable;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
+
 /**
  * The Sensor Type Ident class is the abstract base class for the {@link MethodSensorTypeIdent} and
  * {@link PlatformSensorTypeIdent} classes.
@@ -9,6 +20,9 @@ import java.io.Serializable;
  * @author Patrice Bouillet
  * 
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(length = 4, name = "DISCRIMINATOR")
 public abstract class SensorTypeIdent implements Serializable {
 
 	/**
@@ -19,16 +33,21 @@ public abstract class SensorTypeIdent implements Serializable {
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SENSOR_IDENT_SEQUENCE")
+	@SequenceGenerator(name = "SENSOR_IDENT_SEQUENCE", sequenceName = "SENSOR_IDENT_SEQUENCE")
 	private Long id;
 
 	/**
 	 * The many-to-many association to the {@link PlatformIdent} objects.
 	 */
+	@ManyToOne
 	private PlatformIdent platformIdent;
 
 	/**
 	 * The fully qualified class name of the sensor type.
 	 */
+	@NotNull
 	private String fullyQualifiedClassName;
 
 	/**

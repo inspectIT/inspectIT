@@ -348,6 +348,13 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T copy(T object) {
+		return kryo.copy(object);
+	}
+
+	/**
 	 * Gets {@link #schemaManager}.
 	 * 
 	 * @return {@link #schemaManager}

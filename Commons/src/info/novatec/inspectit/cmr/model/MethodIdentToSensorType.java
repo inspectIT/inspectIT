@@ -3,6 +3,18 @@ package info.novatec.inspectit.cmr.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 /**
  * Class that connects the {@link MethodIdent} and {@link MethodSensorTypeIdent} and provides
  * additional information on the relationship.
@@ -10,6 +22,9 @@ import java.sql.Timestamp;
  * @author Ivan Senic
  * 
  */
+@Table(indexes = { @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodIdent"), @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodSensorTypeIdent") })
+@NamedQuery(name = MethodIdentToSensorType.FIND_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, query = "SELECT m from MethodIdentToSensorType m JOIN m.methodIdent mi JOIN m.methodSensorTypeIdent ms WHERE mi.id=:methodIdentId AND ms.id=:methodSensorTypeIdentId")
+@Entity
 public class MethodIdentToSensorType implements Serializable {
 
 	/**
@@ -18,23 +33,44 @@ public class MethodIdentToSensorType implements Serializable {
 	private static final long serialVersionUID = -3767712432753232084L;
 
 	/**
+	 * Constant for findForMethodAndMethodSensorType query.
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>methodIdent
+	 * <li>methodSensorTypeIdent
+	 * </ul>
+	 */
+	public static final String FIND_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID = "MethodIdentToSensorType.findForMethodIdAndMethodSensorTypeId";
+
+	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "METHOD_SENSOR_SEQUENCE")
+	@SequenceGenerator(name = "METHOD_SENSOR_SEQUENCE", sequenceName = "METHOD_SENSOR_SEQUENCE")
 	private Long id;
 
 	/**
 	 * {@link MethodIdent}.
 	 */
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "methodIdent")
 	private MethodIdent methodIdent;
 
 	/**
 	 * {@link MethodSensorTypeIdent}.
 	 */
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "methodSensorTypeIdent")
 	private MethodSensorTypeIdent methodSensorTypeIdent;
 
 	/**
 	 * Time-stamp represents last time the sensor on the method was registered.
 	 */
+	@NotNull
 	private Timestamp timestamp;
 
 	/**

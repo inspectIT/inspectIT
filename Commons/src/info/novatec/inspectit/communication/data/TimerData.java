@@ -6,6 +6,10 @@ import info.novatec.inspectit.communication.DefaultData;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
+
 /**
  * The timer data class stores information about the execution time of a java method.
  * 
@@ -25,6 +29,8 @@ import java.util.List;
  * @author Stefan Siegl
  * 
  */
+@Entity
+@Table(indexes = { @Index(name = "time_stamp_idx", columnList = "timeStamp") })
 public class TimerData extends InvocationAwareData {
 
 	/**

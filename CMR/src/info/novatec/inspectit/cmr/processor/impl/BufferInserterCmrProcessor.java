@@ -8,7 +8,8 @@ import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.data.InvocationAwareData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -30,7 +31,7 @@ public class BufferInserterCmrProcessor extends AbstractCmrDataProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		buffer.put(new BufferElement<MethodSensorData>((MethodSensorData) defaultData));
 	}
 

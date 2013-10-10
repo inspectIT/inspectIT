@@ -4,12 +4,16 @@ import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
 import java.text.NumberFormat;
 
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+
 /**
  * Label that has a {@link Number} as a value.
  * 
  * @author Ivan Senic
  * 
  */
+@Entity
 public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 
 	/**
@@ -20,12 +24,8 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 	/**
 	 * Label value.
 	 */
+	@NotNull
 	private Number numberValue;
-
-	/**
-	 * Storage label type.
-	 */
-	private AbstractStorageLabelType<Number> storageLabelType;
 
 	/**
 	 * Default constructor.
@@ -42,8 +42,8 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 	 *            Label type.
 	 */
 	public NumberStorageLabel(Number numberValue, AbstractStorageLabelType<Number> storageLabelType) {
+		super(storageLabelType);
 		this.numberValue = numberValue;
-		this.storageLabelType = storageLabelType;
 	}
 
 	/**
@@ -90,34 +90,13 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 	}
 
 	/**
-	 * Gets {@link #storageLabelType}.
-	 * 
-	 * @return {@link #storageLabelType}
-	 */
-	@Override
-	public AbstractStorageLabelType<Number> getStorageLabelType() {
-		return storageLabelType;
-	}
-
-	/**
-	 * Sets {@link #storageLabelType}.
-	 * 
-	 * @param storageLabelType
-	 *            New value for {@link #storageLabelType}
-	 */
-	public void setStorageLabelType(AbstractStorageLabelType<Number> storageLabelType) {
-		this.storageLabelType = storageLabelType;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((numberValue == null) ? 0 : numberValue.hashCode());
-		result = prime * result + ((storageLabelType == null) ? 0 : storageLabelType.hashCode());
 		return result;
 	}
 
@@ -129,7 +108,7 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
@@ -141,13 +120,6 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 				return false;
 			}
 		} else if (!numberValue.equals(other.numberValue)) {
-			return false;
-		}
-		if (storageLabelType == null) {
-			if (other.storageLabelType != null) {
-				return false;
-			}
-		} else if (!storageLabelType.equals(other.storageLabelType)) {
 			return false;
 		}
 		return true;

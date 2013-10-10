@@ -6,6 +6,8 @@ import info.novatec.inspectit.communication.SystemSensorData;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+
 /**
  * This class provide dynamic informations about the underlying operating system such as cpu usage
  * and cpu time.
@@ -16,6 +18,7 @@ import java.sql.Timestamp;
  * @author Eduard Tudenhoefner
  * 
  */
+@Entity
 public class CpuInformationData extends SystemSensorData implements IAggregatedData<CpuInformationData> {
 
 	/**

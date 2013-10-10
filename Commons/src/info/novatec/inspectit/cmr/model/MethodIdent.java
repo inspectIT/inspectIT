@@ -1,11 +1,28 @@
 package info.novatec.inspectit.cmr.model;
 
+import info.novatec.inspectit.jpa.ListStringConverter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
 
 /**
  * The Method Ident class is used to store the information of the Agent(s) about an instrumented
@@ -14,6 +31,10 @@ import java.util.Set;
  * @author Patrice Bouillet
  * 
  */
+@Entity
+@NamedQueries({
+		@NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
+		@NamedQuery(name = MethodIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m from MethodIdent m JOIN m.platformIdent p WHERE p.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType ") })
 public class MethodIdent implements Serializable {
 
 	/**
@@ -22,23 +43,47 @@ public class MethodIdent implements Serializable {
 	private static final long serialVersionUID = 5670026321320934522L;
 
 	/**
+	 * Constant for findAll query.
+	 */
+	public static final String FIND_ALL = "MethodIdent.findAll";
+
+	/**
+	 * Constant for findByPlatformAndExample query.
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>platformIdent
+	 * <li>packageName
+	 * <li>className
+	 * <li>returnType
+	 * </ul>
+	 */
+	public static final String FIND_BY_PLATFORM_AND_EXAMPLE = "MethodIdent.findByPlatformAndExample";
+
+	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "METHOD_IDENT_SEQUENCE")
+	@SequenceGenerator(name = "METHOD_IDENT_SEQUENCE", sequenceName = "METHOD_IDENT_SEQUENCE")
 	private Long id;
 
 	/**
 	 * The timestamp which shows when this information was created on the CMR.
 	 */
+	@NotNull
 	private Timestamp timeStamp;
 
 	/**
 	 * The one-to-many association to the {@link MethodIdentToSensorType}.
 	 */
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "methodIdent", orphanRemoval = true)
 	private Set<MethodIdentToSensorType> methodIdentToSensorTypes = new HashSet<MethodIdentToSensorType>(0);
 
 	/**
 	 * The many-to-one association to the {@link PlatformIdent} object.
 	 */
+	@ManyToOne
 	private PlatformIdent platformIdent;
 
 	/**
@@ -49,17 +94,21 @@ public class MethodIdent implements Serializable {
 	/**
 	 * The name of the class.
 	 */
+	@NotNull
 	private String className;
 
 	/**
 	 * The name of the method.
 	 */
+	@NotNull
 	private String methodName;
 
 	/**
 	 * All method parameters stored in a List, converted to a VARCHAR column in the database via
 	 * ListStringType.
 	 */
+	@Convert(converter = ListStringConverter.class)
+	@Column(length = 2000)
 	private List<String> parameters = new ArrayList<String>(0);
 
 	/**

@@ -8,8 +8,32 @@
 
 	<tx:annotation-driven />
 
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory" />
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="generateDdl" value="true" />
+				<property name="database" value="H2" />
+			</bean>
+		</property>
+		<property name="packagesToScan" value="info.novatec.inspectit" />
+		<property name="persistenceUnitName" value="DefaultPersistenceUnit" />
+		<property name="jpaPropertyMap">
+			<map>
+				<entry key="hibernate.hbm2ddl.auto" value="create" />
+				<entry key="hibernate.dialect" value="${database.dialect}" />
+				<entry key="hibernate.show_sql" value="${database.showsql}" />
+				<entry key="hibernate.format_sql" value="${database.formatsql}" />
+				<entry key="hibernate.connection.release_mode" value="after_transaction" />
+				<entry key="hibernate.default_batch_fetch_size" value="256" />
+				<entry key="hibernate.jdbc.batch_size" value="50" />
+				<entry key="hibernate.order_inserts" value="true" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -23,55 +47,6 @@
 		<property name="maxIdleTime" value="1800" />
 		<property name="autoCommitOnClose" value="false" />
 		<property name="initialPoolSize" value="6" />
-	</bean>
-
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="mappingResources">
-			<list>
-				<!-- Domain Model -->
-				<value>hibernate/PlatformIdent.hbm.xml</value>
-				<value>hibernate/MethodIdent.hbm.xml</value>
-				<value>hibernate/SensorTypeIdent.hbm.xml</value>
-				<value>hibernate/MethodIdentToSensorType.hbm.xml</value>
-
-				<!-- Abstract Data classes -->
-				<value>hibernate/DefaultData.hbm.xml</value>
-				<value>hibernate/ParameterContentData.hbm.xml</value>
-				<value>hibernate/MethodSensorData.hbm.xml</value>
-				<value>hibernate/SystemSensorData.hbm.xml</value>
-
-				<!-- Method Data Objects -->
-				<value>hibernate/TimerData.hbm.xml</value>
-				<value>hibernate/HttpTimerData.hbm.xml</value>
-
-				<!-- Platform Data Objects -->
-				<value>hibernate/ClassLoadingInformationData.hbm.xml</value>
-				<value>hibernate/CompilationInformationData.hbm.xml</value>
-				<value>hibernate/MemoryInformationData.hbm.xml</value>
-				<value>hibernate/CpuInformationData.hbm.xml</value>
-				<value>hibernate/RuntimeInformationData.hbm.xml</value>
-				<value>hibernate/VMArgumentData.hbm.xml</value>
-				<value>hibernate/SystemInformationData.hbm.xml</value>
-				<value>hibernate/ThreadInformationData.hbm.xml</value>
-
-				<!-- Storage Data Object -->
-				<value>hibernate/StorageLabel.hbm.xml</value>
-				<value>hibernate/StorageLabelType.hbm.xml</value>
-			</list>
-		</property>
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.dialect">${database.dialect}</prop>
-				<prop key="hibernate.show_sql">${database.showsql}</prop>
-				<prop key="hibernate.format_sql">${database.formatsql}</prop>
-				<prop key="hibernate.connection.release_mode">after_transaction</prop>
-				<prop key="hibernate.default_batch_fetch_size">256</prop>
-				<prop key="hibernate.jdbc.batch_size">50</prop>
-				<prop key="hibernate.order_inserts">true</prop>
-			</props>
-		</property>
 	</bean>
 
 </beans>

@@ -6,6 +6,8 @@ import info.novatec.inspectit.communication.SystemSensorData;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+
 /**
  * This class provide dynamic informations about the memory of the underlying operating system and
  * also heap and non-heap memory information of the virtual machine.
@@ -16,6 +18,7 @@ import java.sql.Timestamp;
  * @author Eduard Tudenhoefner
  * 
  */
+@Entity
 public class MemoryInformationData extends SystemSensorData implements IAggregatedData<MemoryInformationData> {
 
 	/**

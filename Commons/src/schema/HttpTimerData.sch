@@ -38,3 +38,6 @@ class: info.novatec.inspectit.communication.data.HttpTimerData
 
 #TimerData - INSPECTIT-827
 27: charting
+
+#Http TimerData - INSPECTIT-905
+28: inspectItTaggingHeaderValue
