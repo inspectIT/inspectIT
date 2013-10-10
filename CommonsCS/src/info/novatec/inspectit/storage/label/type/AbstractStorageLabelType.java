@@ -4,6 +4,15 @@ import info.novatec.inspectit.storage.StorageData;
 
 import java.io.Serializable;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQuery;
+
 /**
  * Abstract class for all storage label types.
  * 
@@ -12,6 +21,10 @@ import java.io.Serializable;
  * @param <V>
  *            Type of value label is holding.
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(length = 4, name = "DISCRIMINATOR")
+@NamedQuery(name = AbstractStorageLabelType.FIND_ALL, query = "SELECT lt FROM AbstractStorageLabelType lt")
 public abstract class AbstractStorageLabelType<V> implements Serializable, Comparable<AbstractStorageLabelType<?>> {
 
 	/**
@@ -20,8 +33,15 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 	private static final long serialVersionUID = 8790699289978448114L;
 
 	/**
+	 * Constant for findAll query.
+	 */
+	public static final String FIND_ALL = "AbstractStorageLabelType.findAll";
+
+	/**
 	 * Id of label type for persistence purposes.
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int id;
 
 	/**

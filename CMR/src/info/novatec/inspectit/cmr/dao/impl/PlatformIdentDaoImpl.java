@@ -8,33 +8,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 /**
- * The default implementation of the {@link PlatformIdentDao} interface by using the
- * {@link HibernateDaoSupport} from Spring.
- * <p>
- * Delegates many calls to the {@link HibernateTemplate} returned by the {@link HibernateDaoSupport}
- * class.
+ * The default implementation of the {@link PlatformIdentDao} interface by using the Entity manager.
  * 
  * @author Patrice Bouillet
  * 
  */
 @Repository
-public class PlatformIdentDaoImpl extends HibernateDaoSupport implements PlatformIdentDao {
+public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implements PlatformIdentDao {
 
 	/**
 	 * {@link PlatformIdent} cache.
@@ -43,32 +37,25 @@ public class PlatformIdentDaoImpl extends HibernateDaoSupport implements Platfor
 	private PlatformIdentCache platformIdentCache;
 
 	/**
-	 * This constructor is used to set the {@link SessionFactory} that is needed by
-	 * {@link HibernateDaoSupport}. In a future version it may be useful to go away from the
-	 * {@link HibernateDaoSupport} and directly use the {@link SessionFactory}. This is described
-	 * here:
-	 * http://blog.springsource.com/2007/06/26/so-should-you-still-use-springs-hibernatetemplate
-	 * -andor-jpatemplate
-	 * 
-	 * @param sessionFactory
-	 *            the hibernate session factory.
+	 * Default constructor.
 	 */
-	@Autowired
-	public PlatformIdentDaoImpl(SessionFactory sessionFactory) {
-		setSessionFactory(sessionFactory);
+	public PlatformIdentDaoImpl() {
+		super(PlatformIdent.class);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void delete(PlatformIdent platformIdent) {
-		getHibernateTemplate().delete(platformIdent);
+		super.delete(platformIdent);
 		platformIdentCache.remove(platformIdent);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void deleteAll(List<PlatformIdent> platformIdents) {
 		for (PlatformIdent platformIdent : platformIdents) {
 			delete(platformIdent);
@@ -78,27 +65,31 @@ public class PlatformIdentDaoImpl extends HibernateDaoSupport implements Platfor
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public List<PlatformIdent> findAll() {
-		DetachedCriteria criteria = DetachedCriteria.forClass(PlatformIdent.class);
-		criteria.addOrder(Order.asc("agentName"));
-		criteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
-		return getHibernateTemplate().findByCriteria(criteria);
+		return getEntityManager().createNamedQuery(PlatformIdent.FIND_ALL, PlatformIdent.class).getResultList();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
-	public List<PlatformIdent> findByExample(PlatformIdent platformIdent) {
-		return getHibernateTemplate().findByExample(platformIdent);
-	}
+	@Override
+	public List<PlatformIdent> findByNameAndIps(String agentName, List<String> definedIps) {
+		TypedQuery<PlatformIdent> query = getEntityManager().createNamedQuery(PlatformIdent.FIND_BY_AGENT_NAME, PlatformIdent.class);
+		query.setParameter("agentName", agentName);
+		List<PlatformIdent> results = query.getResultList();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public PlatformIdent load(Long id) {
-		return (PlatformIdent) getHibernateTemplate().get(PlatformIdent.class, id);
+		// manually filter the defined IPs
+		if (null != definedIps) {
+			for (Iterator<PlatformIdent> it = results.iterator(); it.hasNext();) {
+				PlatformIdent platformIdent = it.next();
+				if (!Objects.equals(definedIps, platformIdent.getDefinedIPs())) {
+					it.remove();
+				}
+			}
+		}
+
+		return results;
 	}
 
 	/**
@@ -127,24 +118,13 @@ public class PlatformIdentDaoImpl extends HibernateDaoSupport implements Platfor
 			}
 		}
 
-		getHibernateTemplate().saveOrUpdate(platformIdent);
-		platformIdentCache.markDirty(platformIdent);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void evict(PlatformIdent platformIdent) {
-		getHibernateTemplate().evict(platformIdent);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void evictAll(List<PlatformIdent> platformIdents) {
-		for (PlatformIdent platformIdent : platformIdents) {
-			this.evict(platformIdent);
+		if (null == platformIdent.getId()) {
+			super.create(platformIdent);
+		} else {
+			super.update(platformIdent);
 		}
+
+		platformIdentCache.markDirty(platformIdent);
 	}
 
 	/**
@@ -232,25 +212,25 @@ public class PlatformIdentDaoImpl extends HibernateDaoSupport implements Platfor
 	 */
 	@SuppressWarnings("unchecked")
 	private List<PlatformIdent> loadIdentsFromDB(Collection<Long> excludeIdents, Collection<Long> includeIdents) {
-		StringBuilder hsql = new StringBuilder(
-				"select distinct platformIdent from PlatformIdent as platformIdent left join fetch platformIdent.methodIdents methodIdent left join fetch platformIdent.sensorTypeIdents left join fetch methodIdent.methodIdentToSensorTypes");
+		StringBuilder gl = new StringBuilder(
+				"select distinct platformIdent from PlatformIdent as platformIdent left join fetch platformIdent.methodIdents methodIdent left join fetch platformIdent.sensorTypeIdents sensorTypeIdents left join fetch methodIdent.methodIdentToSensorTypes");
 		if (CollectionUtils.isNotEmpty(includeIdents) && CollectionUtils.isNotEmpty(excludeIdents)) {
-			hsql.append(" where platformIdent.id in :includeIdents and platformIdent.id not in :excludeIdents");
+			gl.append(" where platformIdent.id in :includeIdents and platformIdent.id not in :excludeIdents");
 		} else if (CollectionUtils.isNotEmpty(includeIdents)) {
-			hsql.append(" where platformIdent.id in :includeIdents");
+			gl.append(" where platformIdent.id in :includeIdents");
 		} else if (CollectionUtils.isNotEmpty(excludeIdents)) {
-			hsql.append(" where platformIdent.id not in :excludeIdents");
+			gl.append(" where platformIdent.id not in :excludeIdents");
 		}
 
-		Query query = getSession().createQuery(hsql.toString());
+		Query query = getEntityManager().createQuery(gl.toString());
 		if (CollectionUtils.isNotEmpty(includeIdents)) {
-			query.setParameterList("includeIdents", includeIdents);
+			query.setParameter("includeIdents", includeIdents);
 		}
 		if (CollectionUtils.isNotEmpty(excludeIdents)) {
-			query.setParameterList("excludeIdents", excludeIdents);
+			query.setParameter("excludeIdents", excludeIdents);
 		}
 
-		List<PlatformIdent> platformIdents = query.list();
+		List<PlatformIdent> platformIdents = query.getResultList();
 		for (PlatformIdent platformIdent : platformIdents) {
 			platformIdentCache.markClean(platformIdent);
 		}

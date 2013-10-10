@@ -12,25 +12,19 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Aggregator for the {@link TimerData} objects that need to be persisted to the DB.
- * <p>
- * The class is marked as final because in the constructor it starts a thread.
  * 
  * @author Ivan Senic
- * @see https://confluence.novatec-gmbh.de/display/INSPECTIT/TimerData+Aggregator
+ * @see https://inspectit-performance.atlassian.net/wiki/display/DEV/TimerData+Aggregator
  * 
  */
 @Repository
-public class TimerDataAggregator extends HibernateDaoSupport {
+public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 
 	/**
 	 * Period of time in which all timer data should be aggregated. In milliseconds.
@@ -79,28 +73,23 @@ public class TimerDataAggregator extends HibernateDaoSupport {
 	/**
 	 * Pointer to the most recently added {@link TimerData} to the cache.
 	 */
-	private volatile TimerData mostRecentlyAdded;
+	volatile TimerData mostRecentlyAdded;
 
 	/**
-	 * This constructor is used to set the {@link SessionFactory} that is needed by
-	 * {@link HibernateDaoSupport}. In a future version it may be useful to go away from the
-	 * {@link HibernateDaoSupport} and directly use the {@link SessionFactory}. This is described
-	 * here:
-	 * http://blog.springsource.com/2007/06/26/so-should-you-still-use-springs-hibernatetemplate
-	 * -andor-jpatemplate
-	 * 
-	 * @param sessionFactory
-	 *            the hibernate session factory.
+	 * Cache cleaner.
 	 */
-	@Autowired
-	public TimerDataAggregator(SessionFactory sessionFactory) {
+	private TimerDataAggregatorCacheCleaner timerDataAggregatorCacheCleaner;
+
+	/**
+	 * Default constructor.
+	 */
+	public TimerDataAggregator() {
+		super(TimerData.class);
 		elementCount = new AtomicInteger(0);
 		map = new HashMap<Integer, TimerData>();
 		queue = new ConcurrentLinkedQueue<TimerData>();
 		persistList = new ConcurrentLinkedQueue<TimerData>();
 		persistAllLock = new ReentrantLock();
-
-		setSessionFactory(sessionFactory);
 	}
 
 	/**
@@ -149,20 +138,14 @@ public class TimerDataAggregator extends HibernateDaoSupport {
 		if (!queue.isEmpty()) {
 			persistAllLock.lock();
 			try {
-				StatelessSession session = getHibernateTemplate().getSessionFactory().openStatelessSession();
-				Transaction tx = session.beginTransaction();
-
 				TimerData oldest = queue.poll();
 				while (oldest != null) {
 					map.remove(getCacheHash(oldest.getPlatformIdent(), oldest.getMethodIdent(), oldest.getTimeStamp().getTime()));
-					session.insert(oldest);
+					super.create(oldest);
 					elementCount.decrementAndGet();
 
 					oldest = queue.poll();
 				}
-
-				tx.commit();
-				session.close();
 			} finally {
 				persistAllLock.unlock();
 			}
@@ -172,20 +155,15 @@ public class TimerDataAggregator extends HibernateDaoSupport {
 	/**
 	 * Persists all objects in the persistence list.
 	 */
+	@Transactional
 	void saveAllInPersistList() {
 		if (!persistList.isEmpty()) {
-			StatelessSession session = getHibernateTemplate().getSessionFactory().openStatelessSession();
-			Transaction tx = session.beginTransaction();
-
 			TimerData last = persistList.poll();
 			while (last != null) {
 				last.finalizeData();
-				session.insert(last);
+				super.create(last);
 				last = persistList.poll();
 			}
-
-			tx.commit();
-			session.close();
 		}
 	}
 
@@ -227,8 +205,8 @@ public class TimerDataAggregator extends HibernateDaoSupport {
 	 */
 	@PostConstruct
 	public void postConstruct() {
-		CacheCleaner cacheCleaner = new CacheCleaner();
-		cacheCleaner.start();
+		timerDataAggregatorCacheCleaner = new TimerDataAggregatorCacheCleaner(this);
+		timerDataAggregatorCacheCleaner.start();
 	}
 
 	/**
@@ -259,52 +237,6 @@ public class TimerDataAggregator extends HibernateDaoSupport {
 	 */
 	public int getElementCount() {
 		return elementCount.get();
-	}
-
-	/**
-	 * Cache cleaner, or thread that is constantly checking if there is something to be persisted.
-	 * 
-	 * @author Ivan Senic
-	 * 
-	 */
-	private class CacheCleaner extends Thread {
-
-		/**
-		 * Element that is last checked by thread. If this element is same as most recently added
-		 * element, all elements in the cache will be persisted.
-		 */
-		private TimerData lastChecked;
-
-		/**
-		 * Constructor. Set thread as daemon and gives it minimum priority.
-		 */
-		public CacheCleaner() {
-			setName("timer-data-aggregator-cache-cleaner-thread");
-			setDaemon(true);
-			setPriority(MIN_PRIORITY);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void run() {
-			while (true) {
-				TimerData timerData = mostRecentlyAdded;
-				if (timerData != null) {
-					if (timerData.equals(lastChecked)) {
-						removeAndPersistAll();
-					}
-					lastChecked = timerData;
-				}
-				saveAllInPersistList();
-				try {
-					Thread.sleep(cacheCleanSleepingPeriod);
-				} catch (InterruptedException e) {
-					Thread.interrupted();
-				}
-			}
-		}
 	}
 
 }

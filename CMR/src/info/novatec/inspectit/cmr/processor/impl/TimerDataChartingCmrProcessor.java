@@ -5,8 +5,11 @@ import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.spring.logger.Log;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -19,6 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 
 	/**
+	 * Log for this class.
+	 */
+	@Log
+	Logger log;
+
+	/**
 	 * {@link TimerDataAggregator} for {@link TimerData} aggregation.
 	 */
 	@Autowired
@@ -28,12 +37,15 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		if (defaultData instanceof HttpTimerData) {
-			long bufferId = defaultData.getId();
-			defaultData.setId(0);
-			session.insert(defaultData);
-			defaultData.setId(bufferId);
+			try {
+				HttpTimerData clone = (HttpTimerData) ((HttpTimerData) defaultData).clone();
+				clone.setId(0);
+				entityManager.persist(clone);
+			} catch (CloneNotSupportedException e) {
+				log.warn("TimerDataChartingCmrProcessor failed to clone the given HttpTimerData", e);
+			}
 		} else {
 			timerDataAggregator.processTimerData((TimerData) defaultData);
 		}

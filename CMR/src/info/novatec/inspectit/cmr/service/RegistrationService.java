@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  */
 @Service
+@Transactional
 public class RegistrationService implements IRegistrationService {
 
 	/** The logger of this class. */
@@ -93,27 +94,22 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	@MethodLog
 	public synchronized long registerPlatformIdent(List<String> definedIPs, String agentName, String version) throws RemoteException, ServiceException {
 		if (log.isInfoEnabled()) {
 			log.info("Trying to register Agent '" + agentName + "'");
 		}
 
-		PlatformIdent platformIdent = new PlatformIdent();
+		// find existing registered
+		List<PlatformIdent> platformIdentResults;
 		if (ipBasedAgentRegistration) {
-			platformIdent.setDefinedIPs(definedIPs);
+			platformIdentResults = platformIdentDao.findByNameAndIps(agentName, definedIPs);
+		} else {
+			platformIdentResults = platformIdentDao.findByNameAndIps(agentName, null);
 		}
+
+		PlatformIdent platformIdent = new PlatformIdent();
 		platformIdent.setAgentName(agentName);
-
-		// need to reset the version number, otherwise it will be used for the query
-		platformIdent.setVersion(null);
-
-		// we will not set the version for the platformIdent object here as we use this object
-		// for a QBE (Query by example) and this query should not be performed based on the
-		// version information.
-
-		List<PlatformIdent> platformIdentResults = platformIdentDao.findByExample(platformIdent);
 		if (1 == platformIdentResults.size()) {
 			platformIdent = platformIdentResults.get(0);
 		} else if (platformIdentResults.size() > 1) {
@@ -145,22 +141,15 @@ public class RegistrationService implements IRegistrationService {
 	 * 
 	 * @throws ServiceException
 	 */
-	@Transactional
 	@MethodLog
 	public void unregisterPlatformIdent(List<String> definedIPs, String agentName) throws ServiceException {
 		log.info("Trying to unregister the Agent with following network interfaces:");
 		printOutDefinedIPs(definedIPs);
 
-		PlatformIdent platformIdent = new PlatformIdent();
-		platformIdent.setDefinedIPs(definedIPs);
-		platformIdent.setAgentName(agentName);
+		List<PlatformIdent> platformIdentResults = platformIdentDao.findByNameAndIps(agentName, definedIPs);
 
-		// need to reset the version number, otherwise it will be used for the query
-		platformIdent.setVersion(null);
-
-		List<PlatformIdent> platformIdentResults = platformIdentDao.findByExample(platformIdent);
 		if (1 == platformIdentResults.size()) {
-			platformIdent = platformIdentResults.get(0);
+			PlatformIdent platformIdent = platformIdentResults.get(0);
 			agentStatusDataProvider.registerDisconnected(platformIdent.getId());
 			log.info("The Agent '" + platformIdent.getAgentName() + "' has been successfully unregistered.");
 		} else if (platformIdentResults.size() > 1) {
@@ -176,7 +165,6 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	@MethodLog
 	public long registerMethodIdent(long platformId, String packageName, String className, String methodName, List<String> parameterTypes, String returnType, int modifiers) throws RemoteException {
 		MethodIdent methodIdent = new MethodIdent();
@@ -190,7 +178,7 @@ public class RegistrationService implements IRegistrationService {
 		methodIdent.setReturnType(returnType);
 		methodIdent.setModifiers(modifiers);
 
-		List<MethodIdent> methodIdents = methodIdentDao.findForPlatformIdent(platformId, methodIdent);
+		List<MethodIdent> methodIdents = methodIdentDao.findForPlatformIdAndExample(platformId, methodIdent);
 		if (1 == methodIdents.size()) {
 			methodIdent = methodIdents.get(0);
 		} else {
@@ -210,36 +198,36 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	@MethodLog
 	public long registerMethodSensorTypeIdent(long platformId, String fullyQualifiedClassName, Map<String, Object> parameters) throws RemoteException {
-		MethodSensorTypeIdent methodSensorTypeIdent = new MethodSensorTypeIdent();
-		methodSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
+		// here the optimization should kick in, ticket INSPECTIT-890
+		// remove comment during rebase
+		MethodSensorTypeIdent methodSensorTypeIdent;
 
-		List<MethodSensorTypeIdent> methodSensorTypeIdents = methodSensorTypeIdentDao.findByExample(platformId, methodSensorTypeIdent);
+		List<MethodSensorTypeIdent> methodSensorTypeIdents = methodSensorTypeIdentDao.findByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
 		if (1 == methodSensorTypeIdents.size()) {
 			methodSensorTypeIdent = methodSensorTypeIdents.get(0);
 		} else {
 			// only if the new sensor is register we need to update the platform ident
 			PlatformIdent platformIdent = platformIdentDao.load(platformId);
+			methodSensorTypeIdent = new MethodSensorTypeIdent();
 			methodSensorTypeIdent.setPlatformIdent(platformIdent);
-
+			methodSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
+			
 			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
 			sensorTypeIdents.add(methodSensorTypeIdent);
-
 			platformIdentDao.saveOrUpdate(platformIdent);
 		}
-
 		methodSensorTypeIdent.setSettings(parameters);
 
 		methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
+		
 		return methodSensorTypeIdent.getId();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	@MethodLog
 	public void addSensorTypeToMethod(long methodSensorTypeId, long methodId) throws RemoteException {
 		MethodIdentToSensorType methodIdentToSensorType = methodIdentToSensorTypeDao.find(methodId, methodSensorTypeId);
@@ -258,20 +246,18 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	@MethodLog
 	public long registerPlatformSensorTypeIdent(long platformId, String fullyQualifiedClassName) throws RemoteException {
-		PlatformSensorTypeIdent platformSensorTypeIdent = new PlatformSensorTypeIdent();
-		platformSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
-
-		List<PlatformSensorTypeIdent> platformSensorTypeIdents = platformSensorTypeIdentDao.findByExample(platformId, platformSensorTypeIdent);
-		PlatformIdent platformIdent;
+		PlatformSensorTypeIdent platformSensorTypeIdent;
+		List<PlatformSensorTypeIdent> platformSensorTypeIdents = platformSensorTypeIdentDao.findByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
 		if (1 == platformSensorTypeIdents.size()) {
 			platformSensorTypeIdent = platformSensorTypeIdents.get(0);
 		} else {
 			// only if it s not registered we need updating
-			platformIdent = platformIdentDao.load(platformId);
+			PlatformIdent platformIdent = platformIdentDao.load(platformId);
+			platformSensorTypeIdent = new PlatformSensorTypeIdent();
 			platformSensorTypeIdent.setPlatformIdent(platformIdent);
+			platformSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
 
 			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
 			sensorTypeIdents.add(platformSensorTypeIdent);

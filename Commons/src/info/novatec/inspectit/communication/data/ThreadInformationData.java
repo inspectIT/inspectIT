@@ -6,6 +6,8 @@ import info.novatec.inspectit.communication.SystemSensorData;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+
 /**
  * This class provide dynamic informations about the threads running/started in the virtual machine.
  * <p>
@@ -15,6 +17,7 @@ import java.sql.Timestamp;
  * @author Eduard Tudenhoefner
  * 
  */
+@Entity
 public class ThreadInformationData extends SystemSensorData implements IAggregatedData<ThreadInformationData> {
 
 	/**

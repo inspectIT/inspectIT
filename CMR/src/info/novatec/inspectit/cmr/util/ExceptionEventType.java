@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
 
 /**
@@ -52,9 +53,9 @@ public class ExceptionEventType implements UserType {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner) throws HibernateException, SQLException {
+	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
 		ExceptionEvent result = null;
-		int dbValue = resultSet.getInt(names[0]);
+		int dbValue = rs.getInt(names[0]);
 		if (dbValue != -1) {
 			result = ExceptionEvent.fromOrd(dbValue);
 		}
@@ -62,16 +63,17 @@ public class ExceptionEventType implements UserType {
 	}
 
 	/**
+	 * 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void nullSafeSet(PreparedStatement statement, Object value, int index) throws HibernateException, SQLException {
+	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
 		if (null == value) {
-			statement.setInt(index, -1);
+			st.setInt(index, -1);
 		} else {
 			ExceptionEvent event = (ExceptionEvent) value;
 			int dbValue = event.ordinal();
-			statement.setInt(index, dbValue);
+			st.setInt(index, dbValue);
 		}
 	}
 

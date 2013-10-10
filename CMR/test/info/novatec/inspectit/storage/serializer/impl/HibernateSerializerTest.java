@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.collection.PersistentList;
-import org.hibernate.collection.PersistentMap;
-import org.hibernate.collection.PersistentSet;
+import org.hibernate.collection.internal.PersistentList;
+import org.hibernate.collection.internal.PersistentMap;
+import org.hibernate.collection.internal.PersistentSet;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

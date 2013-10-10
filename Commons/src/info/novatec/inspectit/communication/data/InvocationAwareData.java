@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 /**
  * This is an abstract class for all object that can be found in invocations and should be aware of
  * it.
@@ -18,6 +21,7 @@ import java.util.Set;
  * @author Ivan Senic
  * 
  */
+@Entity
 public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
@@ -29,6 +33,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 	 * Map<Long, MutableInt> that contains the ID of invocation as a key and numbers of object
 	 * appearances in this invocation.
 	 */
+	@Transient
 	private Map<Long, MutableInt> invocationsParentsIdMap;
 
 	/**

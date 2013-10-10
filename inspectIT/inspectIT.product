@@ -94,6 +94,7 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="com.esotericsoftware.kryo"/>
       <plugin id="com.google.guava.jdk5"/>
       <plugin id="com.ibm.icu"/>
+      <plugin id="com.springsource.javax.inject"/>
       <plugin id="com.springsource.net.sf.cglib"/>
       <plugin id="com.springsource.org.aopalliance"/>
       <plugin id="info.novatec.asm"/>
@@ -115,6 +116,7 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="info.novatec.swtgraphics2d"/>
       <plugin id="info.novatec.sysout-over-slf4j"/>
       <plugin id="javax.servlet"/>
+      <plugin id="javax.validation.api"/>
       <plugin id="jcl.over.slf4j"/>
       <plugin id="log4j.over.slf4j"/>
       <plugin id="org.apache.commons.collections"/>
@@ -162,9 +164,9 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.intro"/>
       <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.hibernate.javax.persistence.hibernate-jpa-2.1-api"/>
       <plugin id="org.objenesis"/>
       <plugin id="org.springframework.aop"/>
-      <plugin id="org.springframework.asm"/>
       <plugin id="org.springframework.beans"/>
       <plugin id="org.springframework.context"/>
       <plugin id="org.springframework.core"/>

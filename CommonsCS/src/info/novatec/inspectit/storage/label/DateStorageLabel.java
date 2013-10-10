@@ -5,12 +5,16 @@ import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 import java.text.DateFormat;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+
 /**
  * Label that has a {@link Date} as a value.
  * 
  * @author Ivan Senic
  * 
  */
+@Entity
 public class DateStorageLabel extends AbstractStorageLabel<Date> {
 
 	/**
@@ -21,12 +25,8 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 	/**
 	 * Label value.
 	 */
+	@NotNull
 	private Date dateValue;
-
-	/**
-	 * Storage label type.
-	 */
-	private AbstractStorageLabelType<Date> storageLabelType;
 
 	/**
 	 * Default constructor.
@@ -43,8 +43,8 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 	 *            Label type.
 	 */
 	public DateStorageLabel(Date dateValue, AbstractStorageLabelType<Date> storageLabelType) {
+		super(storageLabelType);
 		this.dateValue = dateValue;
-		this.storageLabelType = storageLabelType;
 	}
 
 	/**
@@ -91,34 +91,13 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 	}
 
 	/**
-	 * Gets {@link #storageLabelType}.
-	 * 
-	 * @return {@link #storageLabelType}
-	 */
-	@Override
-	public AbstractStorageLabelType<Date> getStorageLabelType() {
-		return storageLabelType;
-	}
-
-	/**
-	 * Sets {@link #storageLabelType}.
-	 * 
-	 * @param storageLabelType
-	 *            New value for {@link #storageLabelType}
-	 */
-	public void setStorageLabelType(AbstractStorageLabelType<Date> storageLabelType) {
-		this.storageLabelType = storageLabelType;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((dateValue == null) ? 0 : dateValue.hashCode());
-		result = prime * result + ((storageLabelType == null) ? 0 : storageLabelType.hashCode());
 		return result;
 	}
 
@@ -130,28 +109,18 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		DateStorageLabel other = (DateStorageLabel) obj;
-		// ISE: Tweaked here a bit of generated equals
 		if (dateValue == null) {
 			if (other.dateValue != null) {
 				return false;
 			}
-		} else if (other.dateValue == null) {
-			return false;
-		} else if (dateValue.getTime() != other.dateValue.getTime()) {
-			return false;
-		}
-		if (storageLabelType == null) {
-			if (other.storageLabelType != null) {
-				return false;
-			}
-		} else if (!storageLabelType.equals(other.storageLabelType)) {
+		} else if (!dateValue.equals(other.dateValue)) {
 			return false;
 		}
 		return true;

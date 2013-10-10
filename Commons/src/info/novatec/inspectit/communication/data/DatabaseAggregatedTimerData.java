@@ -2,6 +2,8 @@ package info.novatec.inspectit.communication.data;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+
 /**
  * Sub-class of TimerData that has better performance when aggregating values from other TimerData
  * objects. This class is only meant to be used for purpose of aggregation of objects that will be
@@ -10,6 +12,7 @@ import java.sql.Timestamp;
  * @author Ivan Senic
  * 
  */
+@Entity
 public class DatabaseAggregatedTimerData extends TimerData {
 
 	/**
