@@ -26,4 +26,10 @@
 			<class name="info.novatec.inspectit.versioning.VersionTest" />
 		</classes>
 	</test>
+	<test name="JPA">
+		<classes>
+			<class name="info.novatec.inspectit.jpa.ListStringConverterTest" />
+			<class name="info.novatec.inspectit.jpa.MapStringConverterTest" />
+		</classes>
+	</test>
 </suite>

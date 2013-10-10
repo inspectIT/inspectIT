@@ -1,10 +1,25 @@
 package info.novatec.inspectit.cmr.model;
 
+import info.novatec.inspectit.jpa.ListStringConverter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
 
 /**
  * The Platform Ident class is used to store the unique information of an Agent, so every Agent in
@@ -13,6 +28,9 @@ import java.util.Set;
  * @author Patrice Bouillet
  * 
  */
+@Entity
+@NamedQueries({ @NamedQuery(name = PlatformIdent.FIND_ALL, query = "SELECT p FROM PlatformIdent p"),
+		@NamedQuery(name = PlatformIdent.FIND_BY_AGENT_NAME, query = "SELECT p FROM PlatformIdent p WHERE p.agentName=:agentName") })
 public class PlatformIdent implements Serializable {
 
 	/**
@@ -21,38 +39,57 @@ public class PlatformIdent implements Serializable {
 	private static final long serialVersionUID = 8501768676196666426L;
 
 	/**
+	 * Constant for findAll query.
+	 */
+	public static final String FIND_ALL = "PlatformIdent.findAll";
+
+	/**
+	 * Constant for findByName query.
+	 */
+	public static final String FIND_BY_AGENT_NAME = "PlatformIdent.findByAgentName";
+
+	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PLATFORM_IDENT_SEQUENCE")
+	@SequenceGenerator(name = "PLATFORM_IDENT_SEQUENCE", sequenceName = "PLATFORM_IDENT_SEQUENCE")
 	private Long id;
 
 	/**
 	 * The timestamp which shows when this information was created on the CMR.
 	 */
+	@NotNull
 	private Timestamp timeStamp;
 
 	/**
 	 * The many-to-many association to the {@link SensorTypeIdent} objects.
 	 */
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	private Set<SensorTypeIdent> sensorTypeIdents = new HashSet<SensorTypeIdent>(0);
 
 	/**
 	 * The one-to-many association to the {@link MethodIdent} objects.
 	 */
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	private Set<MethodIdent> methodIdents = new HashSet<MethodIdent>(0);
 
 	/**
 	 * The list of ip's of the target system (including v4 and v6).
 	 */
+	@Convert(converter = ListStringConverter.class)
 	private List<String> definedIPs;
 
 	/**
 	 * The self-defined name of the inspectIT Agent.
 	 */
+	@NotNull
 	private String agentName = "Agent";
 
 	/**
 	 * the current version of the agent.
 	 */
+	@NotNull
 	private String version = "n/a";
 
 	/**

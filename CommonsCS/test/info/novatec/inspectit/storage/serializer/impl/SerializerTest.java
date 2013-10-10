@@ -63,11 +63,14 @@ import info.novatec.inspectit.storage.label.type.impl.StatusLabelType;
 import info.novatec.inspectit.storage.label.type.impl.UseCaseLabelType;
 import info.novatec.inspectit.storage.serializer.ISerializer;
 import info.novatec.inspectit.storage.serializer.SerializationException;
+import info.novatec.inspectit.storage.serializer.SerializationManagerPostProcessor;
 import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
 import info.novatec.inspectit.storage.serializer.schema.SchemaManagerTestProvider;
 import info.novatec.inspectit.util.KryoNetNetwork;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,6 +82,8 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -138,6 +143,9 @@ public class SerializerTest {
 		serializer.setSchemaManager(schemaManager);
 		serializer.setKryoNetNetwork(new KryoNetNetwork());
 		serializer.initKryo();
+
+		SerializationManagerPostProcessor postProcessor = new SerializationManagerPostProcessor();
+		postProcessor.registerClasses(serializer);
 	}
 
 	/**
@@ -191,7 +199,8 @@ public class SerializerTest {
 	 */
 	@DataProvider(name = "classProvider")
 	public Object[][] classProvider() {
-		return TESTING_CLASSES;
+		return new Object[][] { { ArrayBasedStorageLeaf.class } };
+		// return TESTING_CLASSES;
 	}
 
 	/**
@@ -209,9 +218,42 @@ public class SerializerTest {
 	 */
 	@Test(dataProvider = "classProvider")
 	public void classesPlanSerialization(Class<?> testingClass) throws InstantiationException, IllegalAccessException, SerializationException {
-		Object object = testingClass.newInstance();
+		Object object = getInstanceWithPrimitiveFieldsSet(testingClass);
 		Object deserialized = serializeBackAndForth(object);
 		assertThat(deserialized, is(equalTo(object)));
+	}
+
+	@Test(dataProvider = "classProvider")
+	public void copy(Class<?> testingClass) throws IllegalArgumentException, IllegalAccessException, InstantiationException {
+		Object object = getInstanceWithPrimitiveFieldsSet(testingClass);
+		Object copy = serializer.copy(object);
+		assertThat(copy, is(equalTo(object)));
+		assertThat(copy == object, is(false));
+	}
+
+	private Object getInstanceWithPrimitiveFieldsSet(Class<?> testingClass) throws IllegalArgumentException, IllegalAccessException, InstantiationException {
+		Object object = testingClass.newInstance();
+
+		for (Field field : testingClass.getDeclaredFields()) {
+			if (Modifier.isStatic(field.getModifiers())) {
+				continue;
+			}
+
+			field.setAccessible(true);
+			if (field.getType().equals(long.class)) {
+				field.set(object, RandomUtils.nextLong());
+			} else if (field.getType().equals(int.class)) {
+				field.set(object, RandomUtils.nextInt());
+			} else if (field.getType().equals(double.class)) {
+				field.set(object, RandomUtils.nextDouble());
+			} else if (field.getType().equals(boolean.class)) {
+				field.set(object, RandomUtils.nextBoolean());
+			} else if (field.getType().equals(String.class)) {
+				field.set(object, RandomStringUtils.random(100));
+			}
+		}
+
+		return object;
 	}
 
 	/**

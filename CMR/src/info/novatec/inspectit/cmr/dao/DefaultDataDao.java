@@ -17,14 +17,6 @@ import java.util.List;
 public interface DefaultDataDao {
 
 	/**
-	 * Persist the {@link DefaultData} object.
-	 * 
-	 * @param defaultData
-	 *            The object to persist.
-	 */
-	void save(DefaultData defaultData);
-
-	/**
 	 * Persists or updates all items in the collection.
 	 * 
 	 * @param defaultDataCollection

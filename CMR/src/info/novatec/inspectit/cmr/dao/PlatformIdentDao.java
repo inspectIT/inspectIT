@@ -4,8 +4,6 @@ import info.novatec.inspectit.cmr.model.PlatformIdent;
 
 import java.util.List;
 
-import org.springframework.orm.hibernate3.HibernateTemplate;
-
 /**
  * This DAO is used to handle all {@link PlatformIdent} objects.
  * 
@@ -22,17 +20,6 @@ public interface PlatformIdentDao {
 	 * @return The found {@link PlatformIdent} object.
 	 */
 	PlatformIdent load(Long id);
-
-	/**
-	 * Execute a findByExample query against the underlying storage.
-	 * 
-	 * @param platformIdent
-	 *            The {@link PlatformIdent} object which serves as the example.
-	 * @return The list of {@link PlatformIdent} objects which have the same contents as the passed
-	 *         example object.
-	 * @see HibernateTemplate#findByExample(Object)
-	 */
-	List<PlatformIdent> findByExample(PlatformIdent platformIdent);
 
 	/**
 	 * Saves or updates this {@link PlatformIdent} in the underlying storage.
@@ -68,22 +55,6 @@ public interface PlatformIdentDao {
 	List<PlatformIdent> findAll();
 
 	/**
-	 * Evicts the passed {@link PlatformIdent} object from the session.
-	 * 
-	 * @param platformIdent
-	 *            The {@link PlatformIdent} object to evict from the session.
-	 */
-	void evict(PlatformIdent platformIdent);
-
-	/**
-	 * Evicts all {@link PlatformIdent} objects from the session.
-	 * 
-	 * @param platformIdents
-	 *            The list of {@link PlatformIdent} objects to evict from the session.
-	 */
-	void evictAll(List<PlatformIdent> platformIdents);
-
-	/**
 	 * Executes the same query as {@link #findAll()} but initialized the lazy collections
 	 * afterwards. Only for one agent.
 	 * 
@@ -93,5 +64,27 @@ public interface PlatformIdentDao {
 	 * @return Returns one {@link PlatformIdent} object and initializes the collections.
 	 */
 	PlatformIdent findInitialized(long id);
+
+	/**
+	 * Finds agent(s) that are registered with given agent name. Same as calling
+	 * {@link #findByNameAndIps(String, null)}.
+	 * 
+	 * @param agentName
+	 *            Name of the agent to search for.
+	 * @return The list of {@link PlatformIdent} objects.
+	 */
+	List<PlatformIdent> findByName(String agentName);
+
+	/**
+	 * Finds agent(s) that are registered with given agent name and IP addresses. If passed
+	 * addresses are <code>null</code>, they will not be taken into consideration.
+	 * 
+	 * @param agentName
+	 *            Name of the agent to search for.
+	 * @param definedIps
+	 *            List of defined IP addresses.
+	 * @return The list of {@link PlatformIdent} objects.
+	 */
+	List<PlatformIdent> findByNameAndIps(String agentName, List<String> definedIps);
 
 }

@@ -37,7 +37,6 @@
 		<dependency org="org.eclipse.nebula" name="cdatetime" rev="0.14.0.201311081230" conf="osgi->default" />
 
 		<!-- Libs that are transfered by us -->
-
 		<dependency org="jfree" name="info.novatec.jcommon" rev="1.0.20" conf="osgi->default" />
 		<dependency org="jfree" name="info.novatec.jfreechart" rev="1.0.16" conf="osgi->default" />
 		<dependency org="jfree" name="info.novatec.jfreechart-experimental" rev="1.0.16" conf="osgi->default" />
