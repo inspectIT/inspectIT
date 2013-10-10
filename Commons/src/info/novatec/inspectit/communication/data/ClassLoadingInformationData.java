@@ -6,6 +6,8 @@ import info.novatec.inspectit.communication.SystemSensorData;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+
 /**
  * This class provide dynamic informations about the class loading system of the virtual machine.
  * <p>
@@ -15,7 +17,7 @@ import java.sql.Timestamp;
  * @author Eduard Tudenhoefner
  * 
  */
-
+@Entity
 public class ClassLoadingInformationData extends SystemSensorData implements IAggregatedData<ClassLoadingInformationData> {
 
 	/**

@@ -29,13 +29,12 @@
 		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="prod->default" />
 		<dependency org="commons-pool" name="commons-pool" rev="1.6" conf="prod->default" />
 
-		<dependency org="org.springframework" name="org.springframework.core" rev="3.1.0.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.beans" rev="3.1.0.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.context" rev="3.1.0.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.web" rev="3.1.0.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.asm" rev="3.1.0.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.expression" rev="3.1.0.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.aop" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.core" rev="3.2.4.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.2.4.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.2.4.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.web" rev="3.2.4.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.expression" rev="3.2.4.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.aop" rev="3.2.4.RELEASE" conf="prod->default" />
 		<dependency org="org.aopalliance" name="com.springsource.org.aopalliance" rev="1.0.0" conf="prod->default" />
 		<dependency org="javax.servlet" name="javax.servlet" rev="3.0.0.v201103241009" conf="prod->default" />
 		<dependency org="net.sourceforge.cglib" name="com.springsource.net.sf.cglib" rev="2.2.0" conf="prod->default" />
@@ -47,6 +46,10 @@
 		<dependency org="com.esotericsoftware.minlog" name="info.novatec.minlog" rev="1.2" conf="prod->default" />
 		<dependency org="org.ow2.asm" name="info.novatec.asm" rev="4.0" conf="prod->default" />
 		<dependency org="org.objenesis" name="objenesis" rev="2.1" conf="prod->default" />
+		
+		<dependency org="org.hibernate.javax.persistence" name="hibernate-jpa-2.1-api" rev="1.0.0.Final" conf="prod->default" />
+		<dependency org="javax.validation" name="validation-api" rev="1.1.0.Final" conf="prod->default" />
+		<dependency org="javax.inject" name="com.springsource.javax.inject" rev="1.0.0" conf="prod->default" />
 		
 		<dependency org="com.google.guava" name="guava-jdk5" rev="13.0" conf="prod->default" />
 		

@@ -9,6 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
 /**
  * The {@link MethodSensorData} abstract class is extended by all data & value objects which are
  * used for gathered measurements from instrumented methods. Thus an additional identifier is
@@ -17,6 +22,7 @@ import java.util.Set;
  * @author Patrice Bouillet
  * 
  */
+@Entity
 public abstract class MethodSensorData extends DefaultData {
 
 	/**
@@ -32,6 +38,7 @@ public abstract class MethodSensorData extends DefaultData {
 	/**
 	 * Contains optional information about the contents of some fields / parameters etc.
 	 */
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ParameterContentData> parameterContentData;
 
 	/**

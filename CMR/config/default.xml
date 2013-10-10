@@ -36,7 +36,7 @@
 	</section>
 	<section name="JDBC">
 		<properties>
-			<string-property name="URL" default-value="jdbc:h2:db/inspectit;LOCK_MODE=0;CACHE_SIZE=131072;DB_CLOSE_ON_EXIT=FALSE" server-restart-required="true" logical-name="database.url"
+			<string-property name="URL" default-value="jdbc:h2:./db/inspectit;LOCK_MODE=0;CACHE_SIZE=131072;DB_CLOSE_ON_EXIT=FALSE" server-restart-required="true" logical-name="database.url"
 				advanced="true" description="The JDBC URL pointing to the database.">
 				<validators>
 					<isNotEmpty />

@@ -5,12 +5,20 @@ import info.novatec.inspectit.communication.Sizeable;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
 /**
  * This class provide informations about system properties of the virtual machine.
  * 
  * @author Eduard Tudenhoefner
  * 
  */
+@Entity
 public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
@@ -21,21 +29,21 @@ public class VmArgumentData implements Serializable, Sizeable {
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VM_DATA_SEQUENCE")
+	@SequenceGenerator(name = "VM_DATA_SEQUENCE", sequenceName = "VM_DATA_SEQUENCE")
 	private long id;
-
-	/**
-	 * The system information id.
-	 */
-	private long systemInformationId;
 
 	/**
 	 * The name of the virtual machine system property.
 	 */
+	@Column(length = 10000)
 	private String vmName;
 
 	/**
 	 * The value of the virtual machine system property.
 	 */
+	@Column(length = 10000)
 	private String vmValue;
 
 	/**
@@ -57,34 +65,59 @@ public class VmArgumentData implements Serializable, Sizeable {
 		this.vmValue = vmValue;
 	}
 
+	/**
+	 * Gets {@link #id}.
+	 * 
+	 * @return {@link #id}
+	 */
 	public long getId() {
 		return id;
 	}
 
+	/**
+	 * Sets {@link #id}.
+	 * 
+	 * @param id
+	 *            New value for {@link #id}
+	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public void setSystemInformationId(long systemInformationId) {
-		this.systemInformationId = systemInformationId;
-	}
-
-	public long getSystemInformationId() {
-		return systemInformationId;
-	}
-
+	/**
+	 * Gets {@link #vmName}.
+	 * 
+	 * @return {@link #vmName}
+	 */
 	public String getVmName() {
 		return vmName;
 	}
 
+	/**
+	 * Sets {@link #vmName}.
+	 * 
+	 * @param vmName
+	 *            New value for {@link #vmName}
+	 */
 	public void setVmName(String vmName) {
 		this.vmName = vmName;
 	}
 
+	/**
+	 * Gets {@link #vmValue}.
+	 * 
+	 * @return {@link #vmValue}
+	 */
 	public String getVmValue() {
 		return vmValue;
 	}
 
+	/**
+	 * Sets {@link #vmValue}.
+	 * 
+	 * @param vmValue
+	 *            New value for {@link #vmValue}
+	 */
 	public void setVmValue(String vmValue) {
 		this.vmValue = vmValue;
 	}
@@ -136,7 +169,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 	 */
 	public long getObjectSize(IObjectSizes objectSizes) {
 		long size = objectSizes.getSizeOfObjectHeader();
-		size += objectSizes.getPrimitiveTypesSize(2, 0, 0, 0, 2, 0);
+		size += objectSizes.getPrimitiveTypesSize(2, 0, 0, 0, 1, 0);
 		size += objectSizes.getSizeOf(vmName);
 		size += objectSizes.getSizeOf(vmValue);
 		return objectSizes.alignTo8Bytes(size);

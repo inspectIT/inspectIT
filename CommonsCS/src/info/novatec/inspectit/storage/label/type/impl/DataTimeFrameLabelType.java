@@ -3,12 +3,17 @@ package info.novatec.inspectit.storage.label.type.impl;
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 import info.novatec.inspectit.util.TimeFrame;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 /**
  * Label type to define the data time-frame in storage.
  * 
  * @author Ivan Senic
  * 
  */
+@Entity
+@DiscriminatorValue("TFLT")
 public class DataTimeFrameLabelType extends AbstractStorageLabelType<TimeFrame> {
 
 	/**

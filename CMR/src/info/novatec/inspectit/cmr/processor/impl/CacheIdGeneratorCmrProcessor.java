@@ -4,7 +4,8 @@ import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.cmr.util.CacheIdGenerator;
 import info.novatec.inspectit.communication.DefaultData;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -26,7 +27,7 @@ public class CacheIdGeneratorCmrProcessor extends AbstractCmrDataProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		cacheIdGenerator.assignObjectAnId(defaultData);
 	}
 
@@ -39,8 +40,10 @@ public class CacheIdGeneratorCmrProcessor extends AbstractCmrDataProcessor {
 	}
 
 	/**
+	 * Sets {@link #cacheIdGenerator}.
+	 * 
 	 * @param cacheIdGenerator
-	 *            the cacheIdGenerator to set
+	 *            New value for {@link #cacheIdGenerator}
 	 */
 	public void setCacheIdGenerator(CacheIdGenerator cacheIdGenerator) {
 		this.cacheIdGenerator = cacheIdGenerator;

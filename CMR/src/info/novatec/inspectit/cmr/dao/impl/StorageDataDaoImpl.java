@@ -27,27 +27,30 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * Dao support for the storage purposes..
+ * DAO support for the storage purposes.
  * 
  * @author Ivan Senic
  * 
  */
 @Repository
-public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDataDao {
+public class StorageDataDaoImpl implements StorageDataDao {
 
 	/**
 	 * {@link IndexQueryProvider}.
@@ -62,19 +65,28 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	private IBufferTreeComponent<DefaultData> indexingTree;
 
 	/**
-	 * This constructor is used to set the {@link SessionFactory} that is needed by
-	 * {@link HibernateDaoSupport}. In a future version it may be useful to go away from the
-	 * {@link HibernateDaoSupport} and directly use the {@link SessionFactory}. This is described
-	 * here:
-	 * http://blog.springsource.com/2007/06/26/so-should-you-still-use-springs-hibernatetemplate
-	 * -andor-jpatemplate
+	 * Entity manager.
+	 */
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	/**
+	 * Transaction template to use to do init work.
+	 */
+	private TransactionTemplate tt;
+
+	/**
+	 * Default constructor.
+	 * <p>
+	 * Needs {@link PlatformTransactionManager} for instantiating the {@link TransactionTemplate} to
+	 * execute the initialization.
 	 * 
-	 * @param sessionFactory
-	 *            {@link SessionFactory}
+	 * @param transactionManager
+	 *            {@link PlatformTransactionManager}. Autowired by Spring.
 	 */
 	@Autowired
-	public StorageDataDaoImpl(SessionFactory sessionFactory) {
-		setSessionFactory(sessionFactory);
+	public StorageDataDaoImpl(PlatformTransactionManager transactionManager) {
+		this.tt = new TransactionTemplate(transactionManager);
 	}
 
 	/**
@@ -82,7 +94,7 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	public boolean saveLabel(AbstractStorageLabel<?> label) {
 		if (label.getStorageLabelType().isValueReusable()) {
-			List<?> exampleFind = getHibernateTemplate().findByExample(label);
+			List<?> exampleFind = loadAll(label.getClass());
 			if (!exampleFind.contains(label)) {
 				AbstractStorageLabelType<?> labelType = label.getStorageLabelType();
 				if (null == labelType) {
@@ -91,7 +103,7 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 				if (labelType.getId() == 0 && !labelType.isMultiType()) {
 					return false;
 				}
-				getHibernateTemplate().saveOrUpdate(label);
+				entityManager.persist(label);
 				return true;
 			}
 		}
@@ -103,7 +115,7 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	public void removeLabel(AbstractStorageLabel<?> label) {
 		if (label.getStorageLabelType().isValueReusable()) {
-			getHibernateTemplate().delete(label);
+			entityManager.remove(label);
 		}
 	}
 
@@ -121,8 +133,8 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	@SuppressWarnings("unchecked")
 	public List<AbstractStorageLabel<?>> getAllLabels() {
-		List<?> allLabels = getHibernateTemplate().loadAll(AbstractStorageLabel.class);
-		return (List<AbstractStorageLabel<?>>) allLabels;
+		Query query = entityManager.createNamedQuery(AbstractStorageLabel.FIND_ALL);
+		return query.getResultList();
 	}
 
 	/**
@@ -130,11 +142,9 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	@SuppressWarnings("unchecked")
 	public <E> List<AbstractStorageLabel<E>> getAllLabelsForType(AbstractStorageLabelType<E> labelType) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(AbstractStorageLabel.class);
-		criteria.add(Restrictions.eq("storageLabelType", labelType));
-		criteria.setFetchMode("storageLabelType", FetchMode.JOIN);
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return getHibernateTemplate().findByCriteria(criteria);
+		Query query = entityManager.createNamedQuery(AbstractStorageLabel.FIND_BY_LABEL_TYPE);
+		query.setParameter("storageLabelType", labelType);
+		return query.getResultList();
 	}
 
 	/**
@@ -142,11 +152,12 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	public void saveLabelType(AbstractStorageLabelType<?> labelType) {
 		if (labelType.isMultiType()) {
-			getHibernateTemplate().saveOrUpdate(labelType);
+			entityManager.persist(labelType);
 		} else {
-			List<?> findByClass = getHibernateTemplate().loadAll(labelType.getClass());
+
+			List<?> findByClass = loadAll(labelType.getClass());
 			if (findByClass.isEmpty()) {
-				getHibernateTemplate().saveOrUpdate(labelType);
+				entityManager.persist(labelType);
 			}
 		}
 	}
@@ -156,7 +167,7 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	public void removeLabelType(AbstractStorageLabelType<?> labelType) throws BusinessException {
 		if (getAllLabelsForType(labelType).isEmpty()) {
-			getHibernateTemplate().delete(labelType);
+			entityManager.remove(labelType);
 		} else {
 			throw new BusinessException("Delete label type " + labelType.getClass().getSimpleName() + ".", StorageErrorCodeEnum.LABEL_TYPE_CAN_NOT_BE_DELETED);
 		}
@@ -166,7 +177,7 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 * {@inheritDoc}
 	 */
 	public <E extends AbstractStorageLabelType<?>> List<E> getLabelTypes(Class<E> labelTypeClass) {
-		return getHibernateTemplate().loadAll(labelTypeClass);
+		return loadAll(labelTypeClass);
 	}
 
 	/**
@@ -174,14 +185,13 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	@SuppressWarnings("unchecked")
 	public List<AbstractStorageLabelType<?>> getAllLabelTypes() {
-		List<?> returnList = getHibernateTemplate().loadAll(AbstractStorageLabelType.class);
-		return (List<AbstractStorageLabelType<?>>) returnList;
+		Query query = entityManager.createNamedQuery(AbstractStorageLabelType.FIND_ALL);
+		return query.getResultList();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	public List<DefaultData> getAllDefaultDataForAgent(long platformId, Date fromDate, Date toDate) {
 		List<DefaultData> results = new ArrayList<>();
 
@@ -200,16 +210,22 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 		}
 
 		// then load all System sensor data from DB
-		DetachedCriteria criteria = DetachedCriteria.forClass(SystemSensorData.class);
-		criteria.add(Restrictions.eq("platformIdent", platformId));
-		if (null != fromDate) {
-			criteria.add(Restrictions.ge("timeStamp", new Timestamp(fromDate.getTime())));
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<SystemSensorData> criteria = builder.createQuery(SystemSensorData.class);
+		Root<? extends SystemSensorData> root = criteria.from(SystemSensorData.class);
+
+		Predicate platformIdPredicate = builder.equal(root.get("platformIdent"), platformId);
+		Predicate timestampPredicate = null;
+		if (null != fromDate && null != toDate) {
+			timestampPredicate = builder.between(root.<Timestamp> get("timeStamp"), new Timestamp(fromDate.getTime()), new Timestamp(toDate.getTime()));
 		}
-		if (null != toDate) {
-			criteria.add(Restrictions.le("timeStamp", new Timestamp(toDate.getTime())));
+
+		if (null != timestampPredicate) {
+			criteria.where(platformIdPredicate, timestampPredicate);
+		} else {
+			criteria.where(platformIdPredicate);
 		}
-		criteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
-		List<SystemSensorData> sensorDatas = getHibernateTemplate().findByCriteria(criteria);
+		List<SystemSensorData> sensorDatas = entityManager.createQuery(criteria).getResultList();
 
 		// combine results
 		if (CollectionUtils.isNotEmpty(sensorDatas)) {
@@ -243,27 +259,45 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	 */
 	@SuppressWarnings("unchecked")
 	public List<SystemInformationData> getSystemInformationData(Collection<Long> agentIds) {
-		DetachedCriteria subQuery = DetachedCriteria.forClass(SystemInformationData.class);
-		subQuery.add(Restrictions.in("platformIdent", agentIds));
-		subQuery.setProjection(Projections.projectionList().add(Projections.max("id")));
+		Query query = entityManager.createNamedQuery(SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS);
+		query.setParameter("platformIdents", agentIds);
+		return query.getResultList();
+	}
 
-		DetachedCriteria defaultDataCriteria = DetachedCriteria.forClass(SystemInformationData.class);
-		defaultDataCriteria.add(Property.forName("id").in(subQuery));
-		defaultDataCriteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
-		return getHibernateTemplate().findByCriteria(defaultDataCriteria);
+	/**
+	 * Initializes the default label list.
+	 * <p>
+	 * Due to to the fact that when PostConstruct method is fired Spring context might not be yet
+	 * initialized, there is no guarantee that {@link #createDefaultLabelList()} will be executed in
+	 * transactional context even if we annotate it with Transactional. Thus we need to execute
+	 * creation with programmatic transaction management.
+	 */
+	@PostConstruct
+	public void init() {
+		tt.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				createDefaultLabelList();
+			}
+		});
 	}
 
 	/**
 	 * Create set of default labels.
 	 */
-	@PostConstruct
-	protected void createDefaultLabelList() {
+	private void createDefaultLabelList() {
 		this.saveLabelType(new AssigneeLabelType());
 		this.saveLabelType(new UseCaseLabelType());
-		this.saveLabelType(new RatingLabelType());
-		this.saveLabelType(new StatusLabelType());
 
-		AbstractStorageLabelType<String> ratingLabelType = this.getLabelTypes(RatingLabelType.class).get(0);
+		List<RatingLabelType> ratingLabelTypeList = this.getLabelTypes(RatingLabelType.class);
+		RatingLabelType ratingLabelType;
+		if (CollectionUtils.isNotEmpty(ratingLabelTypeList)) {
+			ratingLabelType = ratingLabelTypeList.get(0);
+		} else {
+			ratingLabelType = new RatingLabelType();
+			this.saveLabelType(ratingLabelType);
+		}
+
 		List<AbstractStorageLabel<String>> ratingLabelList = this.getAllLabelsForType(ratingLabelType);
 		if (ratingLabelList.isEmpty()) {
 			// add default rating labels
@@ -274,7 +308,15 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 			this.saveLabel(new StringStorageLabel("Very Good", ratingLabelType));
 		}
 
-		AbstractStorageLabelType<String> statusLabelType = this.getLabelTypes(StatusLabelType.class).get(0);
+		List<StatusLabelType> statusLabelTypeList = this.getLabelTypes(StatusLabelType.class);
+		StatusLabelType statusLabelType;
+		if (CollectionUtils.isNotEmpty(statusLabelTypeList)) {
+			statusLabelType = statusLabelTypeList.get(0);
+		} else {
+			statusLabelType = new StatusLabelType();
+			this.saveLabelType(statusLabelType);
+		}
+
 		List<AbstractStorageLabel<String>> statusLabelList = this.getAllLabelsForType(statusLabelType);
 		if (statusLabelList.isEmpty()) {
 			// add default status labels
@@ -282,6 +324,22 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 			this.saveLabel(new StringStorageLabel("In-Progress", statusLabelType));
 			this.saveLabel(new StringStorageLabel("Closed", statusLabelType));
 		}
+	}
+
+	/**
+	 * Loads all entities of one class.
+	 * 
+	 * @param <E>
+	 *            Type of entity.
+	 * @param clazz
+	 *            Class
+	 * @return List of entities.
+	 */
+	private <E> List<E> loadAll(Class<E> clazz) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<E> criteria = builder.createQuery(clazz);
+		criteria.from(clazz);
+		return entityManager.createQuery(criteria).getResultList();
 	}
 
 }

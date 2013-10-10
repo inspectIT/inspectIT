@@ -22,11 +22,6 @@ public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorage
 	private T value;
 
 	/**
-	 * Storage label type.
-	 */
-	private AbstractStorageLabelType<T> storageLabelType;
-
-	/**
 	 * No-arg constructor.
 	 */
 	public ObjectStorageLabel() {
@@ -41,8 +36,8 @@ public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorage
 	 *            Type of the label.
 	 */
 	public ObjectStorageLabel(T value, AbstractStorageLabelType<T> storageLabelType) {
+		super(storageLabelType);
 		this.value = value;
-		this.storageLabelType = storageLabelType;
 	}
 
 	/**
@@ -73,26 +68,9 @@ public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorage
 	 * {@inheritDoc}
 	 */
 	@Override
-	public AbstractStorageLabelType<T> getStorageLabelType() {
-		return storageLabelType;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setStorageLabelType(AbstractStorageLabelType<T> storageLabelType) {
-		this.storageLabelType = storageLabelType;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((storageLabelType == null) ? 0 : storageLabelType.hashCode());
+		int result = super.hashCode();
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -105,20 +83,13 @@ public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorage
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ObjectStorageLabel<?> other = (ObjectStorageLabel<?>) obj;
-		if (storageLabelType == null) {
-			if (other.storageLabelType != null) {
-				return false;
-			}
-		} else if (!storageLabelType.equals(other.storageLabelType)) {
-			return false;
-		}
 		if (value == null) {
 			if (other.value != null) {
 				return false;

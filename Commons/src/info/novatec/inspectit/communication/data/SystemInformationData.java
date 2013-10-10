@@ -7,22 +7,45 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
 /**
  * Here are the static informations of a system. These informations don't change at runtime.
  * 
  * @author Eduard Tudenhöfner
  * 
  */
+@Entity
+@NamedQueries({
+		@NamedQuery(name = SystemInformationData.FIND_ALL_FOR_PLATFORM_ID, query = "SELECT s FROM SystemInformationData s WHERE s.platformIdent=:platformIdent"),
+		@NamedQuery(name = SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS, query = "SELECT s FROM SystemInformationData s WHERE s.id IN (SELECT MAX(sd.id) FROM SystemInformationData sd WHERE sd.platformIdent IN (:platformIdents) GROUP BY sd.platformIdent)") })
 public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * The serial version uid for this class.
 	 */
 	private static final long serialVersionUID = -8294531858844656994L;
+	
+	/**
+	 * Constant for findLatestForPlatformId query.
+	 */
+	public static final String FIND_ALL_FOR_PLATFORM_ID = "SystemInformationData.findAllForPlatformId";
+
+	/**
+	 * Constant for findLatestForPlatformId query.
+	 */
+	public static final String FIND_LATEST_FOR_PLATFORM_IDS = "SystemInformationData.findLatestForPlatformIds";
 
 	/**
 	 * The one-to-many association to {@link VmArgumentData}.
 	 */
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<VmArgumentData> vmSet = new HashSet<VmArgumentData>();
 
 	/**
@@ -58,16 +81,19 @@ public class SystemInformationData extends SystemSensorData {
 	/**
 	 * The java class path, that is used by the system class loader to search for class files.
 	 */
+	@Column(length = 10000)
 	private String classPath;
 
 	/**
 	 * The boot class path that is used by the bootstrap class loader to search for class files.
 	 */
+	@Column(length = 10000)
 	private String bootClassPath;
 
 	/**
 	 * The java library path.
 	 */
+	@Column(length = 10000)
 	private String libraryPath;
 
 	/**

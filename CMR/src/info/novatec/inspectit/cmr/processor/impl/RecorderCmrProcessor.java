@@ -5,7 +5,8 @@ import info.novatec.inspectit.cmr.storage.CmrStorageManager;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.storage.recording.RecordingState;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -27,7 +28,7 @@ public class RecorderCmrProcessor extends AbstractCmrDataProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		if (storageManager.getRecordingState() == RecordingState.ON) {
 			storageManager.record(defaultData);
 		}

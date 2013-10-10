@@ -3,8 +3,13 @@ package info.novatec.inspectit.communication.data;
 import info.novatec.inspectit.cmr.cache.IObjectSizes;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Data object holding http based timer data. All timer related information are inherited from the
@@ -15,34 +20,75 @@ import java.util.Map;
  * 
  * @author Stefan Siegl
  */
-public class HttpTimerData extends TimerData {
+@Table(indexes = { 
+		@Index(name = "uri_idx", columnList = "uri"),
+		@Index(name = "tag_idx", columnList = "inspectItTaggingHeaderValue") })
+@Entity
+public class HttpTimerData extends TimerData implements Cloneable {
 
-	/** Generated serial version id. */
+	/**
+	 * Generated serial version id.
+	 */
 	private static final long serialVersionUID = -7868876342858232388L;
-	/** String used to represent an unset <code>uri</code> or <code>requestMethod</code>. */
+
+	/**
+	 * The default header for tagged requests.
+	 */
+	public static final String INSPECTIT_TAGGING_HEADER = "inspectit";
+
+	/**
+	 * String used to represent an unset <code>uri</code> or <code>requestMethod</code>.
+	 */
 	public static final String UNDEFINED = "n.a.";
-	/** String used to represent multiple request methods in an aggregation. */
+
+	/**
+	 * String used to represent multiple request methods in an aggregation.
+	 */
 	public static final String REQUEST_METHOD_MULTIPLE = "MULTIPLE";
 	/**
 	 * Max URI chars size.
 	 */
 	private static final int MAX_URI_SIZE = 1000;
 
-	/** The uri. */
+	/**
+	 * The uri.
+	 */
+	@Column(length = 1000)
 	private String uri = UNDEFINED;
-	/** Map is String-String[]. */
-	private Map<String, String[]> parameters = null;
-	/** Map is String-String. */
-	private Map<String, String> attributes = null;
-	/** Map is String-String. */
-	private Map<String, String> headers = null;
-	/** Map is String-String. */
-	private Map<String, String> sessionAttributes = null;
-	/** The request method. */
+
+	/**
+	 * The request method.
+	 */
 	private String requestMethod = UNDEFINED;
 
-	/** The default header for tagged requests. */
-	public static final String INSPECTIT_TAGGING_HEADER = "inspectit";
+	/**
+	 * The inspectIT tag.
+	 */
+	private String inspectItTaggingHeaderValue;
+
+	/**
+	 * Map is String-String[].
+	 */
+	@Transient
+	private Map<String, String[]> parameters = null;
+
+	/**
+	 * Map is String-String.
+	 */
+	@Transient
+	private Map<String, String> attributes = null;
+
+	/**
+	 * Map is String-String.
+	 */
+	@Transient
+	private Map<String, String> headers = null;
+
+	/**
+	 * Map is String-String.
+	 */
+	@Transient
+	private Map<String, String> sessionAttributes = null;
 
 	/**
 	 * Constructor.
@@ -72,10 +118,7 @@ public class HttpTimerData extends TimerData {
 	 * @return if this data has the inspectIT tagging header set.
 	 */
 	public boolean hasInspectItTaggingHeader() {
-		if (null == headers) {
-			return false;
-		}
-		return headers.containsKey(INSPECTIT_TAGGING_HEADER);
+		return null != inspectItTaggingHeaderValue;
 	}
 
 	/**
@@ -84,10 +127,7 @@ public class HttpTimerData extends TimerData {
 	 * @return the value of the inspectit tagging header.
 	 */
 	public String getInspectItTaggingHeaderValue() {
-		if (null == headers) {
-			return UNDEFINED;
-		}
-		return (String) headers.get(INSPECTIT_TAGGING_HEADER);
+		return inspectItTaggingHeaderValue;
 	}
 
 	/**
@@ -97,10 +137,7 @@ public class HttpTimerData extends TimerData {
 	 *            the value for the inspectIT header.
 	 */
 	public void setInspectItTaggingHeaderValue(String value) {
-		if (null == headers) {
-			headers = new HashMap<String, String>(1);
-		}
-		headers.put(INSPECTIT_TAGGING_HEADER, value);
+		this.inspectItTaggingHeaderValue = value;
 	}
 
 	public String getUri() {
@@ -187,6 +224,13 @@ public class HttpTimerData extends TimerData {
 	 */
 	public void setHeaders(Map<String, String> headers) {
 		this.headers = headers;
+
+		// set tag value if it exists
+		if (null != headers) {
+			this.inspectItTaggingHeaderValue = headers.get(INSPECTIT_TAGGING_HEADER);
+		} else {
+			this.inspectItTaggingHeaderValue = UNDEFINED;
+		}
 	}
 
 	/**
@@ -232,8 +276,8 @@ public class HttpTimerData extends TimerData {
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(6, 0, 0, 0, 0, 0);
-		size += objectSizes.getSizeOf(uri, requestMethod);
+		size += objectSizes.getPrimitiveTypesSize(7, 0, 0, 0, 0, 0);
+		size += objectSizes.getSizeOf(uri, requestMethod, inspectItTaggingHeaderValue);
 
 		if (null != parameters) {
 			size += objectSizes.getSizeOfHashMap(parameters.size());
@@ -281,9 +325,9 @@ public class HttpTimerData extends TimerData {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String toString() {
-		String sup = super.toString();
-		return sup + "HttpTimerData [uri=" + uri + ", parameters=" + parameters + ", attributes=" + attributes + ", headers=" + headers + "]";
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	/**
@@ -360,6 +404,14 @@ public class HttpTimerData extends TimerData {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString() {
+		String sup = super.toString();
+		return sup + "HttpTimerData [uri=" + uri + ", parameters=" + parameters + ", attributes=" + attributes + ", headers=" + headers + "]";
 	}
 
 }
