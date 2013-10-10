@@ -4,12 +4,17 @@ import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
 import java.util.Date;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 /**
  * Type of the label to denote the date Storage was created.
  * 
  * @author Ivan Senic
  * 
  */
+@Entity
+@DiscriminatorValue("DTLT")
 public class CreationDateLabelType extends AbstractStorageLabelType<Date> {
 
 	/**

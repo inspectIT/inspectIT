@@ -12,8 +12,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-
+import info.novatec.inspectit.cmr.dao.MethodIdentDao;
 import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
+import info.novatec.inspectit.cmr.dao.MethodSensorTypeIdentDao;
+import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
+import info.novatec.inspectit.cmr.dao.PlatformSensorTypeIdentDao;
 import info.novatec.inspectit.cmr.dao.impl.MethodIdentDaoImpl;
 import info.novatec.inspectit.cmr.dao.impl.MethodSensorTypeIdentDaoImpl;
 import info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoImpl;
@@ -63,25 +66,25 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 * Mocked {@link PlatformIdentDaoImpl}.
 	 */
 	@Mock
-	private PlatformIdentDaoImpl platformIdentDao;
+	private PlatformIdentDao platformIdentDao;
 
 	/**
 	 * Mocked {@link MethodIdentDaoImpl}.
 	 */
 	@Mock
-	private MethodIdentDaoImpl methodIdentDao;
+	private MethodIdentDao methodIdentDao;
 
 	/**
 	 * Mocked {@link MethodSensorTypeIdentDaoImpl}.
 	 */
 	@Mock
-	private MethodSensorTypeIdentDaoImpl methodSensorTypeIdentDao;
+	private MethodSensorTypeIdentDao methodSensorTypeIdentDao;
 
 	/**
 	 * Mocked {@link PlatformSensorTypeIdentDaoImpl}.
 	 */
 	@Mock
-	private PlatformSensorTypeIdentDaoImpl platformSensorTypeIdentDao;
+	private PlatformSensorTypeIdentDao platformSensorTypeIdentDao;
 
 	@Mock
 	private AgentStatusDataProvider agentStatusDataProvider;
@@ -122,7 +125,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		List<PlatformIdent> dbResponseList = new ArrayList<PlatformIdent>();
 		dbResponseList.add(new PlatformIdent());
 		dbResponseList.add(new PlatformIdent());
-		when(platformIdentDao.findByExample((PlatformIdent) anyObject())).thenReturn(dbResponseList);
+		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(dbResponseList);
 
 		registrationService.registerPlatformIdent(definedIps, agentName, version);
 	}
@@ -138,15 +141,16 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		final long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
-		String agentName = "agentName";
+		final String agentName = "agentName";
 		String version = "version";
 
-		when(platformIdentDao.findByExample((PlatformIdent) anyObject())).thenReturn(Collections.<PlatformIdent> emptyList());
+		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(Collections.<PlatformIdent> emptyList());
 		Mockito.doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				PlatformIdent platformIdent = (PlatformIdent) invocation.getArguments()[0];
 				platformIdent.setId(Long.valueOf(platformId));
+				platformIdent.setAgentName(agentName);
 				return null;
 			}
 		}).when(platformIdentDao).saveOrUpdate((PlatformIdent) anyObject());
@@ -189,7 +193,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		List<PlatformIdent> findByExampleList = new ArrayList<PlatformIdent>();
 		findByExampleList.add(platformIdent);
 
-		when(platformIdentDao.findByExample((PlatformIdent) anyObject())).thenReturn(findByExampleList);
+		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(findByExampleList);
 
 		long registeredId = registrationService.registerPlatformIdent(definedIps, agentName, version);
 		assertThat(registeredId, is(equalTo(platformId)));
@@ -218,16 +222,17 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		final long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
-		String agentName = "agentName";
+		final String agentName = "agentName";
 		String version = "version";
 
 		registrationService.ipBasedAgentRegistration = false;
-		when(platformIdentDao.findByExample((PlatformIdent) anyObject())).thenReturn(Collections.<PlatformIdent> emptyList());
+		when(platformIdentDao.findByName(agentName)).thenReturn(Collections.<PlatformIdent> emptyList());
 		Mockito.doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				PlatformIdent platformIdent = (PlatformIdent) invocation.getArguments()[0];
 				platformIdent.setId(Long.valueOf(platformId));
+				platformIdent.setAgentName(agentName);
 				return null;
 			}
 		}).when(platformIdentDao).saveOrUpdate((PlatformIdent) anyObject());
@@ -272,7 +277,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		findByExampleList.add(platformIdent);
 
 		registrationService.ipBasedAgentRegistration = false;
-		when(platformIdentDao.findByExample((PlatformIdent) anyObject())).thenReturn(findByExampleList);
+		when(platformIdentDao.findByName(agentName)).thenReturn(findByExampleList);
 
 		long registeredId = registrationService.registerPlatformIdent(definedIps, agentName, version);
 		assertThat(registeredId, equalTo(platformId));
@@ -306,7 +311,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		List<PlatformIdent> findByExampleList = new ArrayList<PlatformIdent>();
 		findByExampleList.add(platformIdent);
 
-		when(platformIdentDao.findByExample((PlatformIdent) anyObject())).thenReturn(findByExampleList);
+		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(findByExampleList);
 
 		registrationService.unregisterPlatformIdent(definedIps, agentName);
 
@@ -322,7 +327,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		definedIps.add("ip");
 		String agentName = "agentName";
 
-		when(platformIdentDao.findByExample((PlatformIdent) anyObject())).thenReturn(Collections.<PlatformIdent> emptyList());
+		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(Collections.<PlatformIdent> emptyList());
 
 		registrationService.unregisterPlatformIdent(definedIps, agentName);
 	}
@@ -344,7 +349,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 		PlatformIdent platformIdent = new PlatformIdent();
 		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
-		when(methodIdentDao.findForPlatformIdent(eq(platformId), (MethodIdent) anyObject())).thenReturn(Collections.<MethodIdent> emptyList());
+		when(methodIdentDao.findForPlatformIdAndExample(eq(platformId), (MethodIdent) anyObject())).thenReturn(Collections.<MethodIdent> emptyList());
 		Mockito.doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -402,7 +407,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		PlatformIdent platformIdent = new PlatformIdent();
 		methodIdent.setPlatformIdent(platformIdent);
 		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
-		when(methodIdentDao.findForPlatformIdent(eq(platformId), (MethodIdent) anyObject())).thenReturn(findByExampleList);
+		when(methodIdentDao.findForPlatformIdAndExample(eq(platformId), (MethodIdent) anyObject())).thenReturn(findByExampleList);
 
 		long registeredId = registrationService.registerMethodIdent(platformId, packageName, className, methodName, parameterTypes, returnType, modifiers);
 		assertThat(registeredId, equalTo(methodId));
@@ -428,16 +433,17 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	public void registerMethodSensorType() {
 		final long methodSensorId = 30;
 		long platformId = 1;
-		String fqcName = "class";
+		final String fqcName = "class";
 
 		PlatformIdent platformIdent = new PlatformIdent();
 		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
-		when(methodSensorTypeIdentDao.findByExample(eq(platformId), (MethodSensorTypeIdent) anyObject())).thenReturn(Collections.<MethodSensorTypeIdent> emptyList());
+		when(methodSensorTypeIdentDao.findByClassNameAndPlatformId(fqcName, platformId)).thenReturn(Collections.<MethodSensorTypeIdent> emptyList());
 		Mockito.doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				MethodSensorTypeIdent methodSensorIdent = (MethodSensorTypeIdent) invocation.getArguments()[0];
 				methodSensorIdent.setId(Long.valueOf(methodSensorId));
+				methodSensorIdent.setFullyQualifiedClassName(fqcName);
 				return null;
 			}
 		}).when(methodSensorTypeIdentDao).saveOrUpdate((MethodSensorTypeIdent) anyObject());
@@ -462,7 +468,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	public void registerMethodSensorTypeWithSettings() {
 		final long methodSensorId = 30;
 		long platformId = 1;
-		String fqcName = "class";
+		final String fqcName = "class";
 		String regEx = "myRegEx";
 		String regExTemplate = "myRegExTemplate";
 
@@ -470,12 +476,13 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 		PlatformIdent platformIdent = new PlatformIdent();
 		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
-		when(methodSensorTypeIdentDao.findByExample(eq(platformId), (MethodSensorTypeIdent) anyObject())).thenReturn(Collections.<MethodSensorTypeIdent> emptyList());
+		when(methodSensorTypeIdentDao.findByClassNameAndPlatformId(fqcName, platformId)).thenReturn(Collections.<MethodSensorTypeIdent> emptyList());
 		Mockito.doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				MethodSensorTypeIdent methodSensorIdent = (MethodSensorTypeIdent) invocation.getArguments()[0];
 				methodSensorIdent.setId(Long.valueOf(methodSensorId));
+				methodSensorIdent.setFullyQualifiedClassName(fqcName);
 				return null;
 			}
 		}).when(methodSensorTypeIdentDao).saveOrUpdate((MethodSensorTypeIdent) anyObject());
@@ -495,16 +502,17 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	public void registerPlatformSensorType() {
 		final long platformSensorId = 20;
 		long platformId = 1;
-		String fqcName = "class";
+		final String fqcName = "class";
 
 		PlatformIdent platformIdent = new PlatformIdent();
 		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
-		when(platformSensorTypeIdentDao.findByExample(eq(platformId), (PlatformSensorTypeIdent) anyObject())).thenReturn(Collections.<PlatformSensorTypeIdent> emptyList());
+		when(platformSensorTypeIdentDao.findByClassNameAndPlatformId(fqcName, platformId)).thenReturn(Collections.<PlatformSensorTypeIdent> emptyList());
 		Mockito.doAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				PlatformSensorTypeIdent platformSensorTypeIdent = (PlatformSensorTypeIdent) invocation.getArguments()[0];
 				platformSensorTypeIdent.setId(Long.valueOf(platformSensorId));
+				platformSensorTypeIdent.setFullyQualifiedClassName(fqcName);
 				return null;
 			}
 		}).when(platformSensorTypeIdentDao).saveOrUpdate((PlatformSensorTypeIdent) anyObject());

@@ -2,12 +2,17 @@ package info.novatec.inspectit.storage.label.type.impl;
 
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 /**
  * Type of the label to denote the Rating.
  * 
  * @author Ivan Senic
  * 
  */
+@Entity
+@DiscriminatorValue("RTLT")
 public class RatingLabelType extends AbstractStorageLabelType<String> {
 
 	/**

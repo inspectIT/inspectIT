@@ -5,8 +5,6 @@ import info.novatec.inspectit.cmr.model.PlatformIdent;
 
 import java.util.List;
 
-import org.springframework.orm.hibernate3.HibernateTemplate;
-
 /**
  * This DAO is used to handle all {@link MethodIdent} objects.
  * 
@@ -23,17 +21,6 @@ public interface MethodIdentDao {
 	 * @return The found {@link MethodIdent} object.
 	 */
 	MethodIdent load(Long id);
-
-	/**
-	 * Execute a findByExample query against the underlying storage.
-	 * 
-	 * @param methodIdent
-	 *            The {@link MethodIdent} object which serves as the example.
-	 * @return The list of {@link MethodIdent} objects which have the same contents as the passed
-	 *         example object.
-	 * @see HibernateTemplate#findByExample(Object)
-	 */
-	List<MethodIdent> findByExample(MethodIdent methodIdent);
 
 	/**
 	 * Saves or updates this {@link MethodIdent} in the underlying storage.
@@ -71,7 +58,7 @@ public interface MethodIdentDao {
 	 *         with the passed {@link PlatformIdent} object and have identical fields like the
 	 *         example object.
 	 */
-	List<MethodIdent> findForPlatformIdent(long platformId, MethodIdent methodIdentExample);
+	List<MethodIdent> findForPlatformIdAndExample(long platformId, MethodIdent methodIdentExample);
 
 	/**
 	 * Returns all {@link MethodIdent} objects which are saved in the underlying storage.

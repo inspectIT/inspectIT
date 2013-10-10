@@ -8,7 +8,7 @@
 	<bean id="bufferInserterCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.BufferInserterCmrProcessor" />
 	<bean id="exceptionMessageCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.ExceptionMessageCmrProcessor" />
 	<bean id="indexerCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.IndexerCmrProcessor" />
-	<bean id="systemSensorDataCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SessionInserterCmrProcessor" >
+	<bean id="persistingCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.PersistingCmrProcessor" >
 		<constructor-arg>
 				<util:list value-type="java.lang.Class">
 					<value>info.novatec.inspectit.communication.data.ClassLoadingInformationData</value>
@@ -17,11 +17,11 @@
 					<value>info.novatec.inspectit.communication.data.MemoryInformationData</value>
 					<value>info.novatec.inspectit.communication.data.RuntimeInformationData</value>
 					<value>info.novatec.inspectit.communication.data.ThreadInformationData</value>
+					<value>info.novatec.inspectit.communication.data.SystemInformationData</value>
 				</util:list>
 		</constructor-arg>
 	</bean>
 	<bean id="sqlExclusiveTimeCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SqlExclusiveTimeCmrProcessor" />
-	<bean id="systemInformationDataCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SystemInformationDataCmrProcessor" />
 	<bean id="timerDataChartingCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.TimerDataChartingCmrProcessor" />
 	<bean id="invocationModifierCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.InvocationModifierCmrProcessor">
 		<constructor-arg>
@@ -39,8 +39,7 @@
 		<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
 		<ref bean="bufferInserterCmrProcessor" />
 		<ref bean="exceptionMessageCmrProcessor" />
-		<ref bean="systemSensorDataCmrProcessor" />
-		<ref bean="systemInformationDataCmrProcessor" />
+		<ref bean="persistingCmrProcessor" />
 		<ref bean="sqlExclusiveTimeCmrProcessor" />
 		<ref bean="timerDataChartingCmrProcessor" />
 		<ref bean="invocationModifierCmrProcessor" />

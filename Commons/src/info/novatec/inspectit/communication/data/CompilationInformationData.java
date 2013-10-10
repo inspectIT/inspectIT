@@ -5,12 +5,15 @@ import info.novatec.inspectit.communication.SystemSensorData;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+
 /**
  * This class provide dynamic informations about the compilation system of the virtual machine.
  * 
  * @author Eduard Tudenhoefner
  * 
  */
+@Entity
 public class CompilationInformationData extends SystemSensorData {
 
 	/**
