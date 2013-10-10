@@ -4,10 +4,10 @@ import info.novatec.inspectit.util.IHibernateUtil;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Hibernate;
-import org.hibernate.collection.PersistentCollection;
-import org.hibernate.collection.PersistentList;
-import org.hibernate.collection.PersistentMap;
-import org.hibernate.collection.PersistentSet;
+import org.hibernate.collection.internal.PersistentList;
+import org.hibernate.collection.internal.PersistentMap;
+import org.hibernate.collection.internal.PersistentSet;
+import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.stereotype.Component;
 

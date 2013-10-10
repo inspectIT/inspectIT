@@ -6,12 +6,21 @@ import info.novatec.inspectit.util.ObjectUtils;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * Stores the content and meta-data of a method parameter or of a field of a class.
  * 
  * @author Patrice Bouillet
  * 
  */
+@Entity
 public class ParameterContentData implements Serializable, Sizeable, Comparable<ParameterContentData> {
 
 	/**
@@ -22,12 +31,9 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
-
-	/**
-	 * The id of the method sensor.
-	 */
-	private long methodSensorId;
 
 	/**
 	 * The name of the parameter. This can only be set if this class stores the content of a class
@@ -38,11 +44,13 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	/**
 	 * The content of the field / parameter.
 	 */
+	@Column(length = 10000)
 	private String content;
 
 	/**
 	 * The type of the content (field, return value, parameter).
 	 */
+	@Enumerated(EnumType.STRING)
 	private ParameterContentType contentType;
 
 	/**
@@ -68,25 +76,6 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	 */
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	/**
-	 * Gets {@link #methodSensorId}.
-	 * 
-	 * @return {@link #methodSensorId}
-	 */
-	public long getMethodSensorId() {
-		return methodSensorId;
-	}
-
-	/**
-	 * Sets {@link #methodSensorId}.
-	 * 
-	 * @param methodSensorId
-	 *            New value for {@link #methodSensorId}
-	 */
-	public void setMethodSensorId(long methodSensorId) {
-		this.methodSensorId = methodSensorId;
 	}
 
 	/**

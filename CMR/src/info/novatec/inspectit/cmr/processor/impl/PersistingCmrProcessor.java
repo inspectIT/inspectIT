@@ -6,15 +6,15 @@ import info.novatec.inspectit.communication.DefaultData;
 import java.util.Collections;
 import java.util.List;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
 
 /**
- * Processor that saves objects to database via {@link StatelessSession}.
+ * Processor that saves objects to database via {@link EntityManager}.
  * 
  * @author Ivan Senic
  * 
  */
-public class SessionInserterCmrProcessor extends AbstractCmrDataProcessor {
+public class PersistingCmrProcessor extends AbstractCmrDataProcessor {
 
 	/**
 	 * List of classes that should be saved by this simple saver.
@@ -27,7 +27,7 @@ public class SessionInserterCmrProcessor extends AbstractCmrDataProcessor {
 	 * @param classes
 	 *            List of classes that should be saved by this simple saver.
 	 */
-	public SessionInserterCmrProcessor(List<Class<? extends DefaultData>> classes) {
+	public PersistingCmrProcessor(List<Class<? extends DefaultData>> classes) {
 		this.classes = classes;
 		if (null == this.classes) {
 			this.classes = Collections.emptyList();
@@ -38,8 +38,9 @@ public class SessionInserterCmrProcessor extends AbstractCmrDataProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processData(DefaultData defaultData, StatelessSession session) {
-		session.insert(defaultData);
+	protected void processData(DefaultData defaultData, EntityManager entityManager) {
+		defaultData.setId(0);
+		entityManager.persist(defaultData);
 	}
 
 	/**

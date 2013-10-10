@@ -6,6 +6,16 @@ import info.novatec.inspectit.indexing.IIndexQuery;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
+
 /**
  * The {@link DefaultData} class is the base class for all data and value objects. Data objects are
  * persisted on the CMR and can be requested from the interfaces. Value Objects on the other hand
@@ -20,6 +30,9 @@ import java.sql.Timestamp;
  * @author Patrice Bouillet
  * 
  */
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@NamedQuery(name = DefaultData.DELETE_FOR_PLATFORM_ID, query = "DELETE FROM DefaultData d WHERE d.platformIdent=:platformIdent")
 public abstract class DefaultData implements Serializable, Sizeable {
 
 	/**
@@ -28,8 +41,16 @@ public abstract class DefaultData implements Serializable, Sizeable {
 	private static final long serialVersionUID = 5195625080367033147L;
 
 	/**
+	 * Constant for deleteForPlatformId query.
+	 */
+	public static final String DELETE_FOR_PLATFORM_ID = "DefaultData.deleteForPlatformId";
+
+	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DEFAULT_DATA_SEQUENCE")
+	@SequenceGenerator(name = "DEFAULT_DATA_SEQUENCE", sequenceName = "DEFAULT_DATA_SEQUENCE")
 	private long id;
 
 	/**
@@ -45,6 +66,7 @@ public abstract class DefaultData implements Serializable, Sizeable {
 	/**
 	 * The timestamp which shows when this information was created on the Agent.
 	 */
+	@NotNull
 	private Timestamp timeStamp;
 
 	/**

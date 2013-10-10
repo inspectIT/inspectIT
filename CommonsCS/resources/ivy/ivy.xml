@@ -33,7 +33,6 @@
 		<!-- Test -->
 		<!-- Test NG should be on the build path via the Eclipse plug-in -->
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />
-		<dependency org="org.objenesis" name="objenesis" rev="2.1" conf="test->default"/> <!-- Needed for mockito-core -->
 		<dependency org="nl.jqno.equalsverifier" name="equalsverifier" rev="1.0.2" conf="test->default"/>
 	</dependencies>
 </ivy-module>

@@ -2,6 +2,9 @@ package info.novatec.inspectit.storage.label.type;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+
 /**
  * Abstract class for all custom storage label types.
  * 
@@ -10,6 +13,7 @@ import java.io.Serializable;
  * @param <V>
  *            Type of value label is holding.
  */
+@Entity
 public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageLabelType<V> implements Serializable {
 
 	/**
@@ -25,6 +29,7 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 	/**
 	 * Name of this custom label type.
 	 */
+	@NotNull
 	private String name;
 
 	/**

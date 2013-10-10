@@ -5,7 +5,7 @@ import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 
 import java.util.Collection;
 
-import org.hibernate.StatelessSession;
+import javax.persistence.EntityManager;
 
 /**
  * Abstract processor class for CMR data.
@@ -20,12 +20,12 @@ public abstract class AbstractCmrDataProcessor {
 	 * 
 	 * @param defaultDatas
 	 *            Default data objects.
-	 * @param session
-	 *            {@link StatelessSession} to save data in DB if needed.
+	 * @param entityManager
+	 *            {@link EntityManager} to save data in DB if needed.
 	 */
-	public void process(Collection<? extends DefaultData> defaultDatas, StatelessSession session) {
+	public void process(Collection<? extends DefaultData> defaultDatas, EntityManager entityManager) {
 		for (DefaultData defaultData : defaultDatas) {
-			process(defaultData, session);
+			process(defaultData, entityManager);
 		}
 	}
 
@@ -36,12 +36,12 @@ public abstract class AbstractCmrDataProcessor {
 	 * 
 	 * @param defaultData
 	 *            Default data object.
-	 * @param session
-	 *            {@link StatelessSession} to save data in DB if needed.
+	 * @param entityManager
+	 *            {@link EntityManager} to save data in DB if needed.
 	 */
-	public void process(DefaultData defaultData, StatelessSession session) {
+	public void process(DefaultData defaultData, EntityManager entityManager) {
 		if (canBeProcessed(defaultData)) {
-			processData(defaultData, session);
+			processData(defaultData, entityManager);
 		}
 	}
 
@@ -50,10 +50,10 @@ public abstract class AbstractCmrDataProcessor {
 	 * 
 	 * @param defaultData
 	 *            Default data object.
-	 * @param session
-	 *            {@link StatelessSession} to save data in DB if needed.
+	 * @param entityManager
+	 *            {@link EntityManager} to save data in DB if needed.
 	 */
-	protected abstract void processData(DefaultData defaultData, StatelessSession session);
+	protected abstract void processData(DefaultData defaultData, EntityManager entityManager);
 
 	/**
 	 * Returns if the {@link DefaultData} object can be processed by this

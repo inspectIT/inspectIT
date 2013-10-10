@@ -19,4 +19,10 @@
 			<class name="info.novatec.inspectit.storage.nio.stream.SocketExtendedByteBufferInputStreamTest" />
 		</classes>
 	</test>
+		<test name="JPA">
+		<classes>
+			<class name="info.novatec.inspectit.jpa.ListStringConverterTest" />
+			<class name="info.novatec.inspectit.jpa.MapStringConverterTest" />
+		</classes>
+	</test>
 </suite>
