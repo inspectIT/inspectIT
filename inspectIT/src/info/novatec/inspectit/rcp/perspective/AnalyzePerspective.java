@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp;
+package info.novatec.inspectit.rcp.perspective;
 
 import info.novatec.inspectit.rcp.view.impl.DataExplorerView;
 import info.novatec.inspectit.rcp.view.impl.RepositoryManagerView;
@@ -14,7 +14,12 @@ import org.eclipse.ui.IPerspectiveFactory;
  * @author Patrice Bouillet
  * 
  */
-public class Perspective implements IPerspectiveFactory {
+public class AnalyzePerspective implements IPerspectiveFactory {
+
+	/**
+	 * The ID of this perspective.
+	 */
+	public static final String PERSPECTIVE_ID = "info.novatec.inspectit.rcp.perspective.analyze";
 
 	/**
 	 * {@inheritDoc}

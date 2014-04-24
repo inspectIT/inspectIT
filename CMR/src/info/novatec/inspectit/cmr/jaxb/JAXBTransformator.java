@@ -46,9 +46,11 @@ public class JAXBTransformator {
 			throw new IOException("Can not marshal object to the path that represents the directory");
 		}
 		Files.deleteIfExists(path);
+		Files.createDirectories(path.getParent());
 
 		JAXBContext context = JAXBContext.newInstance(object.getClass());
 		Marshaller marshaller = context.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		if (null != noNamespaceSchemaLocation) {
 			marshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, noNamespaceSchemaLocation);
 		}

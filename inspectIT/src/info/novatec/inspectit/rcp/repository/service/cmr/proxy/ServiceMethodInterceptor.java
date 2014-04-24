@@ -3,12 +3,12 @@ package info.novatec.inspectit.rcp.repository.service.cmr.proxy;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.storage.serializer.SerializationException;
 
 import java.net.ConnectException;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.eclipse.core.runtime.IStatus;
 import org.springframework.remoting.RemoteConnectFailureException;
 
 /**
@@ -36,20 +36,13 @@ public class ServiceMethodInterceptor implements MethodInterceptor {
 				throw new RuntimeException("Service proxy not bounded to the CMR repository definition");
 			}
 			return rval;
-		} catch (RemoteConnectFailureException e) {
+		} catch (RemoteConnectFailureException | ConnectException e) {
 			handleConnectionFailure(paramMethodInvocation, e);
-			return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
-		} catch (ConnectException e) {
-			handleConnectionFailure(paramMethodInvocation, e);
-			return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
-		} catch (SerializationException e) {
-			CmrRepositoryDefinition cmrRepositoryDefinition = InterceptorUtils.getRepositoryDefinition(paramMethodInvocation);
-			InspectIT.getDefault().createErrorDialog(
-					"CMR repository version (" + cmrRepositoryDefinition.getVersion() + ") is not compatible with the version of the inspectIT UI. Communication between two is failing.", e, -1);
-			return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
-		} catch (Exception e) {
-			InspectIT.getDefault().createErrorDialog(e.getMessage(), e.getCause() != null ? e.getCause() : e, -1);
-			return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
+			if (InterceptorUtils.isReturnDefaultReturnValue(paramMethodInvocation)) {
+				return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
+			} else {
+				throw e;
+			}
 		}
 	}
 
@@ -58,18 +51,18 @@ public class ServiceMethodInterceptor implements MethodInterceptor {
 	 * 
 	 * @param paramMethodInvocation
 	 *            {@link MethodInvocation}.
-	 * @param e
+	 * @param t
 	 *            {@link Throwable}.
 	 */
-	private void handleConnectionFailure(MethodInvocation paramMethodInvocation, Throwable e) {
+	private void handleConnectionFailure(MethodInvocation paramMethodInvocation, Throwable t) {
 		CmrRepositoryDefinition cmrRepositoryDefinition = InterceptorUtils.getRepositoryDefinition(paramMethodInvocation);
 		if (null != cmrRepositoryDefinition) {
 			if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
 				InspectIT.getDefault().getCmrRepositoryManager().forceCmrRepositoryOnlineStatusUpdate(cmrRepositoryDefinition);
+				InspectIT.getDefault().log(IStatus.WARNING, "The server: '" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + "' is currently unavailable.");
 			}
-			InspectIT.getDefault().createErrorDialog("The server: '" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + "' is currenlty unavailable.", e, -1);
 		} else {
-			throw new RuntimeException("Service proxy not bounded to the CMR repository definition");
+			throw new RuntimeException("Service proxy not bounded to the CMR repository definition", t);
 		}
 	}
 

@@ -12,6 +12,7 @@ import java.util.List;
  * @author Stefan Siegl
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
+@ReturnDefaultValue
 public interface IHttpTimerDataAccessService {
 
 	/**

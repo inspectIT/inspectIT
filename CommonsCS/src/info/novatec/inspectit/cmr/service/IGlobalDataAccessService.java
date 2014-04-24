@@ -18,6 +18,7 @@ import java.util.Map;
  * 
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
+@ReturnDefaultValue
 public interface IGlobalDataAccessService {
 
 	/**

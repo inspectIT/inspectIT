@@ -1,8 +1,10 @@
 package info.novatec.inspectit.rcp.repository.service.cmr.proxy;
 
+import info.novatec.inspectit.cmr.service.ReturnDefaultValue;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.service.cmr.ICmrService;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,21 @@ public final class InterceptorUtils {
 	 */
 	public static boolean isServiceMethod(MethodInvocation methodInvocation) {
 		return !methodInvocation.getMethod().getDeclaringClass().equals(ICmrService.class);
+	}
+
+	/**
+	 * Checks if the method being executed has the {@link ReturnDefaultValue} annotation or it's
+	 * declared in the type that is annotated with same annotation.
+	 * 
+	 * @param methodInvocation
+	 *            Method invocation.
+	 * @return <code>true</code> if {@link ReturnDefaultValue} is present on method or method
+	 *         declaring class
+	 */
+	public static boolean isReturnDefaultReturnValue(MethodInvocation methodInvocation) {
+		Method method = methodInvocation.getMethod();
+		Class<?> declaringClass = method.getDeclaringClass();
+		return declaringClass.isAnnotationPresent(ReturnDefaultValue.class) || method.isAnnotationPresent(ReturnDefaultValue.class);
 	}
 
 	/**

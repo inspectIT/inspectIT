@@ -15,6 +15,7 @@ import java.util.List;
  * 
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
+@ReturnDefaultValue
 public interface IInvocationDataAccessService {
 
 	/**
