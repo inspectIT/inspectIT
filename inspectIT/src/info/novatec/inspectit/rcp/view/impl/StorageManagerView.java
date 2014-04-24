@@ -284,7 +284,10 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		upperComposite.setLayout(lauout);
 		upperComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
+		int borderStyle = toolkit.getBorderStyle();
+		toolkit.setBorderStyle(SWT.NULL);
 		Tree tree = toolkit.createTree(upperComposite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
+		toolkit.setBorderStyle(borderStyle);
 		treeViewer = new TreeViewer(tree);
 		treeViewer.setContentProvider(new StorageManagerTreeContentProvider());
 		treeViewer.setLabelProvider(new StorageManagerTreeLabelProvider());

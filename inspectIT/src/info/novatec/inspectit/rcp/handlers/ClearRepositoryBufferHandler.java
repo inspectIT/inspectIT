@@ -83,12 +83,14 @@ public class ClearRepositoryBufferHandler extends AbstractHandler implements IHa
 								IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 								IEditorReference[] editors = window.getActivePage().getEditorReferences();
 								for (IEditorReference editor : editors) {
-									IRootEditor rootEditor = (IRootEditor) editor.getEditor(false);
-									if (null != rootEditor.getPreferencePanel()) {
-										if (rootEditor.getSubView().getPreferenceIds().contains(PreferenceId.CLEAR_BUFFER)) {
-											InputDefinition inputDefinition = rootEditor.getInputDefinition();
-											if (ObjectUtils.equals(inputDefinition.getRepositoryDefinition(), cmrRepositoryDefinition)) {
-												rootEditor.getSubView().setDataInput(Collections.<DefaultData> emptyList());
+									if (editor instanceof IRootEditor) {
+										IRootEditor rootEditor = (IRootEditor) editor.getEditor(false);
+										if (null != rootEditor.getPreferencePanel()) {
+											if (rootEditor.getSubView().getPreferenceIds().contains(PreferenceId.CLEAR_BUFFER)) {
+												InputDefinition inputDefinition = rootEditor.getInputDefinition();
+												if (ObjectUtils.equals(inputDefinition.getRepositoryDefinition(), cmrRepositoryDefinition)) {
+													rootEditor.getSubView().setDataInput(Collections.<DefaultData> emptyList());
+												}
 											}
 										}
 									}

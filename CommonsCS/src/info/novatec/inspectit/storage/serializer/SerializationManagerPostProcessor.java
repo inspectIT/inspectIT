@@ -1,5 +1,36 @@
 package info.novatec.inspectit.storage.serializer;
 
+import info.novatec.inspectit.ci.AgentMapping;
+import info.novatec.inspectit.ci.AgentMappings;
+import info.novatec.inspectit.ci.Environment;
+import info.novatec.inspectit.ci.Profile;
+import info.novatec.inspectit.ci.assignment.impl.ExceptionSensorAssignment;
+import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
+import info.novatec.inspectit.ci.assignment.impl.TimerMethodSensorAssignment;
+import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
+import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
+import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
+import info.novatec.inspectit.ci.exclude.ExcludeRule;
+import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.ClassLoadingSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.CompilationSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.CpuSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.MemorySensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.RuntimeSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.SystemSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.ThreadSensorConfig;
+import info.novatec.inspectit.ci.strategy.impl.ListSendingStrategyConfig;
+import info.novatec.inspectit.ci.strategy.impl.SimpleBufferStrategyConfig;
+import info.novatec.inspectit.ci.strategy.impl.SizeBufferStrategyConfig;
+import info.novatec.inspectit.ci.strategy.impl.TimeSendingStrategyConfig;
 import info.novatec.inspectit.cmr.property.configuration.Configuration;
 import info.novatec.inspectit.cmr.property.configuration.GroupedProperty;
 import info.novatec.inspectit.cmr.property.configuration.PropertySection;
@@ -240,6 +271,51 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(NotEmptyValidator.class, new FieldSerializer<NotEmptyValidator<?>>(kryo, NotEmptyValidator.class), nextRegistrationId++);
 		kryo.register(PercentageValidator.class, new FieldSerializer<PercentageValidator<?>>(kryo, PercentageValidator.class), nextRegistrationId++);
 		kryo.register(PositiveValidator.class, new FieldSerializer<PositiveValidator<?>>(kryo, PositiveValidator.class), nextRegistrationId++);
+
+		// INSPECTIT-658
+		// this classes can be registered with FieldSerializer since they are not saved to disk
+		kryo.register(AgentMapping.class, new FieldSerializer<AgentMapping>(kryo, AgentMapping.class), nextRegistrationId++);
+		kryo.register(AgentMappings.class, new FieldSerializer<AgentMappings>(kryo, AgentMappings.class), nextRegistrationId++);
+		kryo.register(Environment.class, new FieldSerializer<Environment>(kryo, Environment.class), nextRegistrationId++);
+		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
+		// assignments
+		kryo.register(ExceptionSensorAssignment.class, new FieldSerializer<ExceptionSensorAssignment>(kryo, ExceptionSensorAssignment.class), nextRegistrationId++);
+		kryo.register(MethodSensorAssignment.class, new FieldSerializer<MethodSensorAssignment>(kryo, MethodSensorAssignment.class), nextRegistrationId++);
+		kryo.register(TimerMethodSensorAssignment.class, new FieldSerializer<TimerMethodSensorAssignment>(kryo, TimerMethodSensorAssignment.class), nextRegistrationId++);
+		// context capture
+		kryo.register(FieldContextCapture.class, new FieldSerializer<FieldContextCapture>(kryo, FieldContextCapture.class), nextRegistrationId++);
+		kryo.register(ParameterContextCapture.class, new FieldSerializer<ParameterContextCapture>(kryo, ParameterContextCapture.class), nextRegistrationId++);
+		kryo.register(ReturnContextCapture.class, new FieldSerializer<ReturnContextCapture>(kryo, ReturnContextCapture.class), nextRegistrationId++);
+		// exclude
+		kryo.register(ExcludeRule.class, new FieldSerializer<ExcludeRule>(kryo, ExcludeRule.class), nextRegistrationId++);
+		// exception sensor config
+		kryo.register(ExceptionSensorConfig.class, new FieldSerializer<ExceptionSensorConfig>(kryo, ExceptionSensorConfig.class), nextRegistrationId++);
+		// method sensor configs
+		kryo.register(ConnectionMetaDataSensorConfig.class, new FieldSerializer<ConnectionMetaDataSensorConfig>(kryo, ConnectionMetaDataSensorConfig.class), nextRegistrationId++);
+		kryo.register(ConnectionSensorConfig.class, new FieldSerializer<ConnectionSensorConfig>(kryo, ConnectionSensorConfig.class), nextRegistrationId++);
+		kryo.register(HttpSensorConfig.class, new FieldSerializer<HttpSensorConfig>(kryo, HttpSensorConfig.class), nextRegistrationId++);
+		kryo.register(InvocationSequenceSensorConfig.class, new FieldSerializer<InvocationSequenceSensorConfig>(kryo, InvocationSequenceSensorConfig.class), nextRegistrationId++);
+		kryo.register(PreparedStatementParameterSensorConfig.class, new FieldSerializer<PreparedStatementParameterSensorConfig>(kryo, PreparedStatementParameterSensorConfig.class),
+				nextRegistrationId++);
+		kryo.register(PreparedStatementSensorConfig.class, new FieldSerializer<PreparedStatementSensorConfig>(kryo, PreparedStatementSensorConfig.class), nextRegistrationId++);
+		kryo.register(StatementSensorConfig.class, new FieldSerializer<StatementSensorConfig>(kryo, StatementSensorConfig.class), nextRegistrationId++);
+		kryo.register(TimerSensorConfig.class, new FieldSerializer<TimerSensorConfig>(kryo, TimerSensorConfig.class), nextRegistrationId++);
+		// platform sensor configs
+		kryo.register(ClassLoadingSensorConfig.class, new FieldSerializer<ClassLoadingSensorConfig>(kryo, ClassLoadingSensorConfig.class), nextRegistrationId++);
+		kryo.register(CompilationSensorConfig.class, new FieldSerializer<CompilationSensorConfig>(kryo, CompilationSensorConfig.class), nextRegistrationId++);
+		kryo.register(CpuSensorConfig.class, new FieldSerializer<CpuSensorConfig>(kryo, CpuSensorConfig.class), nextRegistrationId++);
+		kryo.register(MemorySensorConfig.class, new FieldSerializer<MemorySensorConfig>(kryo, MemorySensorConfig.class), nextRegistrationId++);
+		kryo.register(RuntimeSensorConfig.class, new FieldSerializer<RuntimeSensorConfig>(kryo, RuntimeSensorConfig.class), nextRegistrationId++);
+		kryo.register(SystemSensorConfig.class, new FieldSerializer<SystemSensorConfig>(kryo, SystemSensorConfig.class), nextRegistrationId++);
+		kryo.register(ThreadSensorConfig.class, new FieldSerializer<ThreadSensorConfig>(kryo, ThreadSensorConfig.class), nextRegistrationId++);
+		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
+		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
+		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
+		// strategies
+		kryo.register(TimeSendingStrategyConfig.class, new FieldSerializer<TimeSendingStrategyConfig>(kryo, TimeSendingStrategyConfig.class), nextRegistrationId++);
+		kryo.register(ListSendingStrategyConfig.class, new FieldSerializer<ListSendingStrategyConfig>(kryo, ListSendingStrategyConfig.class), nextRegistrationId++);
+		kryo.register(SimpleBufferStrategyConfig.class, new FieldSerializer<SimpleBufferStrategyConfig>(kryo, SimpleBufferStrategyConfig.class), nextRegistrationId++);
+		kryo.register(SizeBufferStrategyConfig.class, new FieldSerializer<SizeBufferStrategyConfig>(kryo, SizeBufferStrategyConfig.class), nextRegistrationId++);
 	}
 
 }
