@@ -39,7 +39,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-public class XmlTransformationTest {
+public class PropertiesXmlTransformationTest {
 
 	private File f = new File("test.xml");;
 

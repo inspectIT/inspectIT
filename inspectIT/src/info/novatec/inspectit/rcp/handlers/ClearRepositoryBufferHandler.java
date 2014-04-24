@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -83,12 +84,15 @@ public class ClearRepositoryBufferHandler extends AbstractHandler implements IHa
 								IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 								IEditorReference[] editors = window.getActivePage().getEditorReferences();
 								for (IEditorReference editor : editors) {
-									IRootEditor rootEditor = (IRootEditor) editor.getEditor(false);
-									if (null != rootEditor.getPreferencePanel()) {
-										if (rootEditor.getSubView().getPreferenceIds().contains(PreferenceId.CLEAR_BUFFER)) {
-											InputDefinition inputDefinition = rootEditor.getInputDefinition();
-											if (ObjectUtils.equals(inputDefinition.getRepositoryDefinition(), cmrRepositoryDefinition)) {
-												rootEditor.getSubView().setDataInput(Collections.<DefaultData> emptyList());
+									IEditorPart editorPart = editor.getEditor(false);
+									if (editorPart instanceof IRootEditor) {
+										IRootEditor rootEditor = (IRootEditor) editorPart;
+										if (null != rootEditor.getPreferencePanel()) {
+											if (rootEditor.getSubView().getPreferenceIds().contains(PreferenceId.CLEAR_BUFFER)) {
+												InputDefinition inputDefinition = rootEditor.getInputDefinition();
+												if (ObjectUtils.equals(inputDefinition.getRepositoryDefinition(), cmrRepositoryDefinition)) {
+													rootEditor.getSubView().setDataInput(Collections.<DefaultData> emptyList());
+												}
 											}
 										}
 									}

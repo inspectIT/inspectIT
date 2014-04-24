@@ -1,5 +1,31 @@
 package info.novatec.inspectit.rcp.formatter;
 
+import info.novatec.inspectit.ci.Environment;
+import info.novatec.inspectit.ci.Profile;
+import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
+import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
+import info.novatec.inspectit.ci.assignment.impl.TimerMethodSensorAssignment;
+import info.novatec.inspectit.ci.context.AbstractContextCapture;
+import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
+import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
+import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
+import info.novatec.inspectit.ci.sensor.ISensorConfig;
+import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.ClassLoadingSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.CompilationSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.CpuSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.MemorySensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.RuntimeSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.SystemSensorConfig;
+import info.novatec.inspectit.ci.sensor.platform.impl.ThreadSensorConfig;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.WritingStatus;
 import info.novatec.inspectit.rcp.InspectIT;
@@ -22,11 +48,17 @@ import info.novatec.inspectit.storage.label.type.impl.RatingLabelType;
 import info.novatec.inspectit.storage.label.type.impl.StatusLabelType;
 import info.novatec.inspectit.storage.label.type.impl.UseCaseLabelType;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -251,7 +283,28 @@ public final class ImageFormatter {
 	 * @return Combined {@link Image}.
 	 */
 	public static Image getCombinedImage(ResourceManager resourceManager, int orientation, ImageDescriptor... descriptors) {
-		ImageDescriptor combinedImageDescriptor = new CombinedIcon(descriptors, orientation);
+		return getCombinedImage(resourceManager, orientation, 0, 0, descriptors);
+	}
+
+	/**
+	 * Returns the combined image for given array of descriptors. Orientation can be vertical or
+	 * horizontal.
+	 * 
+	 * @param resourceManager
+	 *            {@link ResourceManager}.
+	 * @param orientation
+	 *            SWT#Vertical or SWT#Horizontal. Descriptors will be passed in given order.
+	 * @param minWidth
+	 *            min width of image
+	 * @param minHeight
+	 *            min height of image
+	 * @param descriptors
+	 *            Array of descriptors.
+	 * 
+	 * @return Combined {@link Image}.
+	 */
+	public static Image getCombinedImage(ResourceManager resourceManager, int orientation, int minWidth, int minHeight, ImageDescriptor... descriptors) {
+		ImageDescriptor combinedImageDescriptor = new CombinedIcon(descriptors, orientation, minWidth, minHeight);
 		Image img = resourceManager.createImage(combinedImageDescriptor);
 		return img;
 	}
@@ -286,6 +339,181 @@ public final class ImageFormatter {
 			}
 		} else {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT_NOT_ACTIVE);
+		}
+	}
+
+	/**
+	 * Returns image for the {@link ISensorConfig}.
+	 * 
+	 * @param sensorConfig
+	 *            {@link ISensorConfig}
+	 * @return Image or <code>null</code> if one can not be resolved for given sensor configuration.
+	 */
+	public static Image getSensorConfigImage(ISensorConfig sensorConfig) {
+		return getSensorConfigImage(sensorConfig.getClass());
+	}
+
+	/**
+	 * Returns image for the {@link ISensorConfig} class.
+	 * 
+	 * @param sensorClass
+	 *            {@link ISensorConfig} class.
+	 * @return Image or <code>null</code> if one can not be resolved for given sensor configuration.
+	 */
+	public static Image getSensorConfigImage(Class<? extends ISensorConfig> sensorClass) {
+		if (ObjectUtils.equals(sensorClass, ExceptionSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR);
+		} else if (ObjectUtils.equals(sensorClass, ConnectionMetaDataSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
+		} else if (ObjectUtils.equals(sensorClass, ConnectionSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
+		} else if (ObjectUtils.equals(sensorClass, HttpSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		} else if (ObjectUtils.equals(sensorClass, InvocationSequenceSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_INVOCATION);
+		} else if (ObjectUtils.equals(sensorClass, PreparedStatementParameterSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
+		} else if (ObjectUtils.equals(sensorClass, PreparedStatementSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
+		} else if (ObjectUtils.equals(sensorClass, StatementSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
+		} else if (ObjectUtils.equals(sensorClass, TimerSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_TIMER);
+		} else if (ObjectUtils.equals(sensorClass, ClassLoadingSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_CLASS_OVERVIEW);
+		} else if (ObjectUtils.equals(sensorClass, CompilationSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_COMPILATION_OVERVIEW);
+		} else if (ObjectUtils.equals(sensorClass, CpuSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_CPU_OVERVIEW);
+		} else if (ObjectUtils.equals(sensorClass, MemorySensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_MEMORY_OVERVIEW);
+		} else if (ObjectUtils.equals(sensorClass, RuntimeSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_VM_SUMMARY);
+		} else if (ObjectUtils.equals(sensorClass, SystemSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_SYSTEM_OVERVIEW);
+		} else if (ObjectUtils.equals(sensorClass, ThreadSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_THREADS_OVERVIEW);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the image describing the method visibility of the {@link MethodSensorAssignment}.
+	 * 
+	 * @param resourceManager
+	 *            Resource manager to create image with.
+	 * @param methodSensorAssignment
+	 *            {@link MethodSensorAssignment} to create image for.
+	 * @return Image
+	 */
+	public static Image getMethodVisibilityImage(ResourceManager resourceManager, MethodSensorAssignment methodSensorAssignment) {
+		ImageDescriptor[] descriptors = new ImageDescriptor[4];
+		if (methodSensorAssignment.isPublicModifier()) {
+			descriptors[0] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PUBLIC);
+		} else {
+			descriptors[0] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PUBLIC), SWT.IMAGE_DISABLE);
+		}
+
+		if (methodSensorAssignment.isProtectedModifier()) {
+			descriptors[1] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PROTECTED);
+		} else {
+			descriptors[1] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PROTECTED), SWT.IMAGE_DISABLE);
+		}
+
+		if (methodSensorAssignment.isDefaultModifier()) {
+			descriptors[2] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_DEFAULT);
+		} else {
+			descriptors[2] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_DEFAULT), SWT.IMAGE_DISABLE);
+		}
+
+		if (methodSensorAssignment.isPrivateModifier()) {
+			descriptors[3] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PRIVATE);
+		} else {
+			descriptors[3] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PRIVATE), SWT.IMAGE_DISABLE);
+		}
+
+		return getCombinedImage(resourceManager, SWT.HORIZONTAL, descriptors);
+	}
+
+	/**
+	 * Returns the image describing the options of the {@link AbstractClassSensorAssignment}.
+	 * 
+	 * @param resourceManager
+	 *            Resource manager to create image with.
+	 * @param assignment
+	 *            {@link AbstractClassSensorAssignment} to create image for.
+	 * @return Image
+	 */
+	public static Image getSensorAssignmentOptionsImage(ResourceManager resourceManager, AbstractClassSensorAssignment<?> assignment) {
+		List<ImageDescriptor> descs = new ArrayList<>();
+
+		if (StringUtils.isNotEmpty(assignment.getAnnotation())) {
+			descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_ANNOTATION));
+		}
+
+		if (assignment instanceof TimerMethodSensorAssignment) {
+			TimerMethodSensorAssignment timerAssignment = (TimerMethodSensorAssignment) assignment;
+
+			if (timerAssignment.isStartsInvocation()) {
+				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_INVOCATION));
+			}
+
+			if (timerAssignment.isCharting()) {
+				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_CHART_PIE));
+			}
+
+			boolean paramsCapture = false, returnCapture = false, fieldsCapture = false;
+			if (CollectionUtils.isNotEmpty(timerAssignment.getContextCaptures())) {
+				for (AbstractContextCapture contextCapture : timerAssignment.getContextCaptures()) {
+					paramsCapture |= contextCapture instanceof ParameterContextCapture;
+					returnCapture |= contextCapture instanceof ReturnContextCapture;
+					fieldsCapture |= contextCapture instanceof FieldContextCapture;
+				}
+			}
+
+			if (paramsCapture) {
+				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_PARAMETER));
+			}
+
+			if (fieldsCapture) {
+				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_FIELD));
+			}
+
+			if (returnCapture) {
+				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_RETURN));
+			}
+		}
+
+		if (CollectionUtils.isEmpty(descs)) {
+			return null;
+		} else {
+			return getCombinedImage(resourceManager, SWT.HORIZONTAL, descs.toArray(new ImageDescriptor[descs.size()]));
+		}
+	}
+
+	/**
+	 * Returns environment image.
+	 * 
+	 * @param environment
+	 *            Environment to get image for.
+	 * @return Returns environment image.
+	 */
+	public static Image getEnvironmentImage(Environment environment) {
+		return InspectIT.getDefault().getImage(InspectITImages.IMG_BLOCK);
+	}
+
+	/**
+	 * Returns profile image.
+	 * 
+	 * @param profile
+	 *            Profile to get image for.
+	 * @return Returns profile image.
+	 */
+	public static Image getProfileImage(Profile profile) {
+		if (profile.isCommonProfile()) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_ADDRESSBOOK_BLUE);
+		} else {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_ADDRESSBOOK);
 		}
 	}
 }

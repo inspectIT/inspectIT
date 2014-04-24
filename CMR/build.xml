@@ -269,6 +269,9 @@
 		
 		<!-- Create empty logs dir -->
 		<mkdir dir="${build.release.root.cmr}/logs"/>
+		
+		<copydir dest="${build.release.root.cmr}/ci/profiles/common" src="${basedir}/ci/profiles/common"/>
+		<copydir dest="${build.release.root.cmr}/ci/schema" src="${basedir}/ci/schema"/>
 
 		<!-- Create the different distributions -->
 		<antcall target="-retrieve-jre-installations" />
@@ -385,6 +388,14 @@
 
 		<delete dir="${build.configTempDir}" />
 		<fail if="${xsd-schema.notcorrect}"/>
+	</target>
+	
+	<target name="generate-ci-xsd-schema" depends="init,init-jaxb-schemagen">
+		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/ci" jaxb-schemagen.dest="${basedir}/ci/schema" jaxb-schemagen.excludes="" jaxb-schemagen.schemafilename="ciSchema.xsd">
+			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commonscs" />
+			</jaxb-schemagen.classpath>
+		</jaxb-schemagen>
 	</target>
 
 	<!-- *************************************************************** -->

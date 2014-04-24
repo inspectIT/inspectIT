@@ -45,6 +45,7 @@ import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.exception.RemoteException;
 import info.novatec.inspectit.exception.TechnicalException;
 import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
+import info.novatec.inspectit.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.storage.serializer.HibernateAwareClassResolver;
 import info.novatec.inspectit.storage.serializer.IKryoProvider;
@@ -302,6 +303,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 				return new InvocationTargetException(null);
 			}
 		});
+
+		// added with INSPECTIT-1924
+		kryo.register(ConfigurationInterfaceErrorCodeEnum.class, new EnumSerializer(ConfigurationInterfaceErrorCodeEnum.class));
 	}
 
 	/**

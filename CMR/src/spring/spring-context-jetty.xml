@@ -179,6 +179,20 @@
 		<property name="pathSpec" value="/remoting/StorageService" />
 	</bean>
 	<!-- END -->
+	
+	<!-- ConfigurationInterface Service -->
+	<bean name="configurationInterfaceServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet" />
+
+	<bean id="configurationInterfaceServiceServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="configurationInterfaceServiceExporter" />
+		<property name="servlet" ref="configurationInterfaceServiceRequestHandlerServlet" />
+	</bean>
+
+	<bean id="configurationInterfaceServiceServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="configurationInterfaceServiceExporter" />
+		<property name="pathSpec" value="/remoting/ConfigurationInterfaceService" />
+	</bean>
+	<!-- END -->
 
 	<!-- DEFAULT SERVER FOR STATIC CONTENT -->
 	<bean id="defaultServlet" class="org.mortbay.jetty.servlet.DefaultServlet" />
@@ -289,6 +303,7 @@
 				<ref bean="timerDataAccessServiceServletHolder" />
 				<ref bean="httpTimerDataAccessServiceServletHolder" />
 				<ref bean="storageServiceServletHolder" />
+				<ref bean="configurationInterfaceServiceServletHolder" />
 				<ref bean="defaultServletHolder" />
 				<ref bean="uploadServletHolder" />
 				<ref bean="springDispatcherServletHolder" />
@@ -305,6 +320,7 @@
 				<ref bean="timerDataAccessServiceServiceMapping" />
 				<ref bean="httpTimerDataAccessServiceServiceMapping" />
 				<ref bean="storageServiceServiceMapping" />
+				<ref bean="configurationInterfaceServiceServiceMapping" />
 				<ref bean="defaultServletMapping" />
 				<ref bean="uploadServletMapping" />
 				<ref bean="springDispatcherServletMapping" />
