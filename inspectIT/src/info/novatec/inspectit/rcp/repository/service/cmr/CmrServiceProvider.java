@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.repository.service.cmr;
 
 import info.novatec.inspectit.cmr.service.ICmrManagementService;
+import info.novatec.inspectit.cmr.service.IConfigurationInterfaceService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
@@ -180,11 +181,11 @@ public abstract class CmrServiceProvider {
 	protected abstract IHttpTimerDataAccessService getHttpTimerDataAccessService();
 
 	/**
-	 * Returns properly initialized {@link StorageService}.
+	 * Returns properly initialized {@link IStorageService}.
 	 * 
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} to bound service to.
-	 * @return Returns {@link StorageService}.
+	 * @return Returns {@link IStorageService}.
 	 */
 	public IStorageService getStorageService(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		IStorageService storageService = getStorageService();
@@ -193,10 +194,30 @@ public abstract class CmrServiceProvider {
 	}
 
 	/**
-	 * Returns Spring created {@link StorageService}.
+	 * Returns Spring created {@link IStorageService}.
 	 * 
-	 * @return Returns Spring created {@link StorageService}.
+	 * @return Returns Spring created {@link IStorageService}.
 	 */
 	protected abstract IStorageService getStorageService();
+
+	/**
+	 * Returns properly initialized {@link IConfigurationInterfaceService}.
+	 * 
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} to bound service to.
+	 * @return Returns {@link IConfigurationInterfaceService}.
+	 */
+	public IConfigurationInterfaceService getConfigurationInterfaceService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		IConfigurationInterfaceService configurationInterfaceService = getConfigurationInterfaceService();
+		((ICmrService) configurationInterfaceService).initService(cmrRepositoryDefinition);
+		return configurationInterfaceService;
+	}
+
+	/**
+	 * Returns Spring created {@link IConfigurationInterfaceService}.
+	 * 
+	 * @return Returns Spring created {@link IConfigurationInterfaceService}.
+	 */
+	protected abstract IConfigurationInterfaceService getConfigurationInterfaceService();
 
 }

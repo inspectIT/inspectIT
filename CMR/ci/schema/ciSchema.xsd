@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <xs:element name="agent-mapping" type="agentMapping"/>
+
+  <xs:element name="agent-mappings" type="agentMappings"/>
+
+  <xs:element name="class-loading-sensor-config" type="classLoadingSensorConfig"/>
+
+  <xs:element name="compilation-sensor-config" type="compilationSensorConfig"/>
+
+  <xs:element name="connection-meta-data-sensor-config" type="connectionMetaDataSensorConfig"/>
+
+  <xs:element name="connection-sensor-config" type="connectionSensorConfig"/>
+
+  <xs:element name="cpu-sensor-config" type="cpuSensorConfig"/>
+
+  <xs:element name="environment" type="environment"/>
+
+  <xs:element name="exception-sensor-assignment" type="exceptionSensorAssignment"/>
+
+  <xs:element name="exception-sensor-config" type="exceptionSensorConfig"/>
+
+  <xs:element name="exclude-rule" type="excludeRule"/>
+
+  <xs:element name="field-capture" type="fieldContextCapture"/>
+
+  <xs:element name="http-sensor-config" type="httpSensorConfig"/>
+
+  <xs:element name="invocation-sequence-sensor-config" type="invocationSequenceSensorConfig"/>
+
+  <xs:element name="list-sending-strategy-config" type="listSendingStrategyConfig"/>
+
+  <xs:element name="memory-sensor-config" type="memorySensorConfig"/>
+
+  <xs:element name="method-sensor-assignment" type="methodSensorAssignment"/>
+
+  <xs:element name="parameter-capture" type="parameterContextCapture"/>
+
+  <xs:element name="prepared-statement-parameter-sensor-config" type="preparedStatementParameterSensorConfig"/>
+
+  <xs:element name="prepared-statement-sensor-config" type="preparedStatementSensorConfig"/>
+
+  <xs:element name="profile" type="profile"/>
+
+  <xs:element name="return-capture" type="returnContextCapture"/>
+
+  <xs:element name="runtime-sensor-config" type="runtimeSensorConfig"/>
+
+  <xs:element name="simple-buffer-strategy-config" type="simpleBufferStrategyConfig"/>
+
+  <xs:element name="size-buffer-strategy-config" type="sizeBufferStrategyConfig"/>
+
+  <xs:element name="statement-sensor-config" type="statementSensorConfig"/>
+
+  <xs:element name="system-sensor-config" type="systemSensorConfig"/>
+
+  <xs:element name="thread-sensor-config" type="threadSensorConfig"/>
+
+  <xs:element name="time-sending-strategy-config" type="timeSendingStrategyConfig"/>
+
+  <xs:element name="timer-method-sensor-assignment" type="timerMethodSensorAssignment"/>
+
+  <xs:element name="timer-sensor-config" type="timerSensorConfig"/>
+
+  <xs:complexType name="agentMapping">
+    <xs:sequence/>
+    <xs:attribute name="active" type="xs:boolean" use="required"/>
+    <xs:attribute name="agent-name" type="xs:string" use="required"/>
+    <xs:attribute name="ip-address" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="environment-id" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="agentMappings">
+    <xs:sequence>
+      <xs:element ref="agent-mapping" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="revision" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="environment">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element ref="time-sending-strategy-config"/>
+        <xs:element ref="list-sending-strategy-config"/>
+      </xs:choice>
+      <xs:choice>
+        <xs:element ref="simple-buffer-strategy-config"/>
+        <xs:element ref="size-buffer-strategy-config"/>
+      </xs:choice>
+      <xs:element name="platform-sensor-configs" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="class-loading-sensor-config"/>
+              <xs:element ref="compilation-sensor-config"/>
+              <xs:element ref="cpu-sensor-config"/>
+              <xs:element ref="memory-sensor-config"/>
+              <xs:element ref="runtime-sensor-config"/>
+              <xs:element ref="system-sensor-config"/>
+              <xs:element ref="thread-sensor-config"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="method-sensor-configs" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="connection-meta-data-sensor-config"/>
+              <xs:element ref="connection-sensor-config"/>
+              <xs:element ref="http-sensor-config"/>
+              <xs:element ref="invocation-sequence-sensor-config"/>
+              <xs:element ref="prepared-statement-parameter-sensor-config"/>
+              <xs:element ref="prepared-statement-sensor-config"/>
+              <xs:element ref="statement-sensor-config"/>
+              <xs:element ref="timer-sensor-config"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="exception-sensor-config"/>
+      <xs:element name="profile-ids" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="profile-id" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="classLoadingDelegation" type="xs:boolean"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="revision" type="xs:int" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="timeSendingStrategyConfig">
+    <xs:sequence/>
+    <xs:attribute name="time" type="xs:long" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="listSendingStrategyConfig">
+    <xs:sequence/>
+    <xs:attribute name="list-size" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="simpleBufferStrategyConfig">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="sizeBufferStrategyConfig">
+    <xs:sequence/>
+    <xs:attribute name="size" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="classLoadingSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractPlatformSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractPlatformSensorConfig" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="active" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="compilationSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractPlatformSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="cpuSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractPlatformSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="memorySensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractPlatformSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="runtimeSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractPlatformSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="systemSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractPlatformSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="threadSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractPlatformSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="connectionMetaDataSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractMethodSensorConfig" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="connectionSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="httpSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="stringConstraintSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="stringConstraintSensorConfig" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="string-length" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="exceptionSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="stringConstraintSensorConfig">
+        <xs:sequence/>
+        <xs:attribute name="enhanced" type="xs:boolean" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="invocationSequenceSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="stringConstraintSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="preparedStatementParameterSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="preparedStatementSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="stringConstraintSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="statementSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="stringConstraintSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="timerSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="stringConstraintSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="profile">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="method-sensor-assignment"/>
+        <xs:element ref="timer-method-sensor-assignment"/>
+      </xs:choice>
+      <xs:element ref="exception-sensor-assignment" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="exclude-rule" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="created-on" type="xs:dateTime" use="required"/>
+    <xs:attribute name="updated-on" type="xs:dateTime"/>
+    <xs:attribute name="common" type="xs:boolean" use="optional"/>
+    <xs:attribute name="active" type="xs:boolean" use="optional"/>
+    <xs:attribute name="default" type="xs:boolean" use="optional"/>
+    <xs:attribute name="revision" type="xs:int" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="methodSensorAssignment">
+    <xs:complexContent>
+      <xs:extension base="abstractClassSensorAssignment">
+        <xs:sequence/>
+        <xs:attribute name="sensor-config-class" type="xs:string" use="required"/>
+        <xs:attribute name="method-name" type="xs:string"/>
+        <xs:attribute name="parameters">
+          <xs:simpleType>
+            <xs:list itemType="xs:string"/>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="constructor" type="xs:boolean" use="optional"/>
+        <xs:attribute name="public-mod" type="xs:boolean" use="optional"/>
+        <xs:attribute name="protected-mod" type="xs:boolean" use="optional"/>
+        <xs:attribute name="private-mod" type="xs:boolean" use="optional"/>
+        <xs:attribute name="default-mod" type="xs:boolean" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractClassSensorAssignment" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="class-name" type="xs:string" use="required"/>
+    <xs:attribute name="superclass" type="xs:boolean" use="optional"/>
+    <xs:attribute name="interface" type="xs:boolean" use="optional"/>
+    <xs:attribute name="annotation" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="exceptionSensorAssignment">
+    <xs:complexContent>
+      <xs:extension base="abstractClassSensorAssignment">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="timerMethodSensorAssignment">
+    <xs:complexContent>
+      <xs:extension base="methodSensorAssignment">
+        <xs:sequence>
+          <xs:element name="context-captures" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="return-capture"/>
+                  <xs:element ref="parameter-capture"/>
+                  <xs:element ref="field-capture"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="charting" type="xs:boolean" use="optional"/>
+        <xs:attribute name="starts-invocation" type="xs:boolean" use="optional"/>
+        <xs:attribute name="min-invocation-duration" type="xs:long" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="returnContextCapture">
+    <xs:complexContent>
+      <xs:extension base="abstractContextCapture">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractContextCapture" abstract="true">
+    <xs:sequence>
+      <xs:element name="paths" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="path" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="display-name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="parameterContextCapture">
+    <xs:complexContent>
+      <xs:extension base="abstractContextCapture">
+        <xs:sequence/>
+        <xs:attribute name="index" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="fieldContextCapture">
+    <xs:complexContent>
+      <xs:extension base="abstractContextCapture">
+        <xs:sequence/>
+        <xs:attribute name="field-name" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="excludeRule">
+    <xs:sequence/>
+    <xs:attribute name="class-name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="configurationDefaultsFactory" final="extension restriction">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>
+

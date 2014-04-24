@@ -9,6 +9,7 @@ import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
 import java.util.Objects;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -51,9 +52,12 @@ public class RefreshEditorsCachedDataService extends CachedDataService {
 				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				IEditorReference[] editors = workbenchWindow.getActivePage().getEditorReferences();
 				for (IEditorReference editor : editors) {
-					IRootEditor rootEditor = (IRootEditor) editor.getEditor(false);
-					if (Objects.equals(rootEditor.getInputDefinition().getRepositoryDefinition(), repositoryDefinition)) {
-						rootEditor.doRefresh();
+					IEditorPart editorPart = editor.getEditor(false);
+					if (editorPart instanceof IRootEditor) {
+						IRootEditor rootEditor = (IRootEditor) editorPart;
+						if (Objects.equals(rootEditor.getInputDefinition().getRepositoryDefinition(), repositoryDefinition)) {
+							rootEditor.doRefresh();
+						}
 					}
 				}
 			}
