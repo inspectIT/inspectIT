@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.repository;
 
 import info.novatec.inspectit.cmr.service.ICmrManagementService;
+import info.novatec.inspectit.cmr.service.IConfigurationInterfaceService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
@@ -190,6 +191,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private IStorageService storageService;
 
 	/**
+	 * The configuration interface service.
+	 */
+	private IConfigurationInterfaceService configurationInterfaceService;
+
+	/**
 	 * CMR repository change listeners.
 	 */
 	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<CmrRepositoryChangeListener>(1);
@@ -233,6 +239,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		timerDataAccessService = cmrServiceProvider.getTimerDataAccessService(this);
 		globalDataAccessService = cmrServiceProvider.getGlobalDataAccessService(this);
 		storageService = cmrServiceProvider.getStorageService(this);
+		configurationInterfaceService = cmrServiceProvider.getConfigurationInterfaceService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, this);
 	}
@@ -305,6 +312,15 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public IGlobalDataAccessService getGlobalDataAccessService() {
 		return globalDataAccessService;
+	}
+
+	/**
+	 * Gets {@link #configurationInterfaceService}.
+	 * 
+	 * @return {@link #configurationInterfaceService}
+	 */
+	public IConfigurationInterfaceService getConfigurationInterfaceService() {
+		return configurationInterfaceService;
 	}
 
 	/**

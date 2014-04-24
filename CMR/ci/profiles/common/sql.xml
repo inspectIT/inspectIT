@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="sql" name="SQL" common="true" default="true" created-on="2015-02-24T12:00:00" description="Profile for the SQL statements."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- SQL Connection -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareStatement" parameters="java.lang.String" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareStatement" parameters="java.lang.String int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareStatement" parameters="java.lang.String int[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareStatement" parameters="java.lang.String int int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareStatement" parameters="java.lang.String int int int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareStatement" parameters="java.lang.String java.lang.String[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareCall" parameters="java.lang.String" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareCall" parameters="java.lang.String int int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="java.sql.Connection" method-name="prepareCall" parameters="java.lang.String int int int" interface="true" />
+
+	<!-- WebLogic SQL Connection -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareStatement" parameters="java.lang.String" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareStatement" parameters="java.lang.String int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareStatement" parameters="java.lang.String int[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareStatement" parameters="java.lang.String int int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareStatement" parameters="java.lang.String int int int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareStatement" parameters="java.lang.String java.lang.String[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareCall" parameters="java.lang.String" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareCall" parameters="java.lang.String int int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" method-name="prepareCall" parameters="java.lang.String int int int" interface="true" />
+
+	<!-- H2 SQL Connection -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="org.h2.jdbc.JdbcConnection" method-name="prepareAutoCloseStatement" parameters="java.lang.String" />
+
+	<!-- WebSphere / DB2 SQL Connection -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="com.ibm.db2.jcc.t4.*" method-name="newCallableStatement_" parameters="java.lang.String int int int" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="com.ibm.db2.jcc.t4.b" method-name="c" parameters="java.lang.String int int int" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="com.ibm.icm.da.portable.common.sql.DefaultPConnection" method-name="prepareStatement1" parameters="java.lang.String" />
+
+	<!-- Derby meta-data queries SQL Connection -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig" class-name="org.apache.derby.impl.jdbc.EmbedConnection" method-name="prepareMetaDataStatement" parameters="java.lang.String" />
+
+	<!-- Connection Meta-Data -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig" class-name="java.sql.Connection" constructor="true" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" constructor="true" interface="true" />
+
+	<!-- SQL Prepared Statement -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="java.sql.PreparedStatement" constructor="true" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="java.sql.PreparedStatement" method-name="execute" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="java.sql.PreparedStatement" method-name="executeQuery" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="java.sql.PreparedStatement" method-name="executeUpdate" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="java.sql.Statement" method-name="executeBatch" interface="true" />
+
+	<!-- PostgreSQL Prepared Statement -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="org.postgresql.jdbc2.AbstractJdbc2Statement" method-name="execute" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="org.postgresql.jdbc2.AbstractJdbc2Statement" method-name="executeQuery" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="org.postgresql.jdbc2.AbstractJdbc2Statement" method-name="executeUpdate" />
+
+	<!-- SQL Statement -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="execute" parameters="java.lang.String" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="execute" parameters="java.lang.String int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="execute" parameters="java.lang.String int[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="execute" parameters="java.lang.String java.lang.String[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="executeUpdate" parameters="java.lang.String" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="executeUpdate" parameters="java.lang.String int" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="executeUpdate" parameters="java.lang.String int[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="executeUpdate" parameters="java.lang.String java.lang.String[]" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig" class-name="java.sql.Statement" method-name="executeQuery" parameters="java.lang.String" interface="true" />
+
+	<!-- Exclude classes that are not meaningful -->
+	<exclude-rule class-name="oracle.jdbc.driver.OracleClosedStatement"/>
+</profile>

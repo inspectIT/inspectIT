@@ -1,9 +1,9 @@
 package info.novatec.inspectit.rcp.repository.service.cmr.proxy;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.storage.serializer.SerializationException;
 
 import java.net.ConnectException;
 
@@ -42,12 +42,11 @@ public class ServiceMethodInterceptor implements MethodInterceptor {
 		} catch (ConnectException e) {
 			handleConnectionFailure(paramMethodInvocation, e);
 			return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
-		} catch (SerializationException e) {
-			CmrRepositoryDefinition cmrRepositoryDefinition = InterceptorUtils.getRepositoryDefinition(paramMethodInvocation);
-			InspectIT.getDefault().createErrorDialog(
-					"CMR repository version (" + cmrRepositoryDefinition.getVersion() + ") is not compatible with the version of the inspectIT UI. Communication between two is failing.", e, -1);
-			return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
+		} catch (BusinessException e) { // NOPMD
+			// if it's business exception we must throw it to correctly have it in the service calls
+			throw e;
 		} catch (Exception e) {
+			// TODO possibly remove this one completely and let it be caugth in the UI execution
 			InspectIT.getDefault().createErrorDialog(e.getMessage(), e.getCause() != null ? e.getCause() : e, -1);
 			return InterceptorUtils.getDefaultReturnValue(paramMethodInvocation);
 		}
