@@ -71,10 +71,18 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="info.novatec.inspectit.rcp.Perspective"
+            class="info.novatec.inspectit.rcp.perspective.AnalyzePerspective"
             fixed="true"
-            id="inspectit.perspective"
-            name="inspectIT">
+            icon="icons/selfmade/16x16.png"
+            id="info.novatec.inspectit.rcp.perspective.analyze"
+            name="Analyze">
+      </perspective>
+      <perspective
+            class="info.novatec.inspectit.rcp.perspective.ConfigurationInterfacePerspective"
+            fixed="true"
+            icon="icons/fugue/compass.png"
+            id="info.novatec.inspectit.rcp.perspective.configurationinterface"
+            name="Configuration Interface">
       </perspective>
    </extension>
    <extension
@@ -108,6 +116,13 @@
             name="Progress View"
             restorable="true">
       </view>
+      <view
+            class="info.novatec.inspectit.rcp.ci.view.ConfigurationInterfaceManagerView"
+            icon="icons/fugue/compass.png"
+            id="info.novatec.inspectit.rcp.ci.view.ciManager"
+            name="Configuration Manager"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -116,6 +131,27 @@
             default="false"
             id="inspectit.editor.formrooteditor"
             name="Form Root Editor">
+      </editor>
+      <editor
+            class="info.novatec.inspectit.rcp.ci.form.editor.ProfileEditor"
+            default="false"
+            icon="icons/fugue/address-book.png"
+            id="info.novatec.inspectit.rcp.ci.editor.profileEditor"
+            name="Profile Editor">
+      </editor>
+      <editor
+            class="info.novatec.inspectit.rcp.ci.form.editor.EnvironmentEditor"
+            default="false"
+            icon="icons/fugue/block.png"
+            id="info.novatec.inspectit.rcp.ci.editor.environmentEditor"
+            name="Environment Editor">
+      </editor>
+      <editor
+            class="info.novatec.inspectit.rcp.ci.form.editor.AgentMappingEditor"
+            default="false"
+            icon="icons/eclipse/agent.gif"
+            id="info.novatec.inspectit.rcp.ci.editor.agentMappingEditor"
+            name="Agent Mapping Editor">
       </editor>
    </extension>
    <extension
@@ -178,6 +214,24 @@
             icon="icons/eclipse/storage_upload.gif"
             id="info.novatec.inspectit.rcp.wizard.uploadStorageWizard"
             name="Upload Storage Wizard">
+      </wizard>
+      <wizard
+            class="info.novatec.inspectit.rcp.ci.wizard.CreateProfileWizard"
+            icon="icons/eclipse/add_obj.gif"
+            id="info.novatec.inspectit.rcp.ci.wizard.createProfileWizard"
+            name="Create Profile">
+         <description>
+            Create Profile
+         </description>
+      </wizard>
+      <wizard
+            class="info.novatec.inspectit.rcp.ci.wizard.CreateEnvironmentWizard"
+            icon="icons/eclipse/add_obj.gif"
+            id="info.novatec.inspectit.rcp.ci.wizard.createEnvironmentWizard"
+            name="Create Environment">
+         <description>
+            Create Environment
+         </description>
       </wizard>
    </extension>
    <extension
@@ -404,6 +458,36 @@
       <command
             id="info.novatec.inspectit.rcp.commands.copyContextParameters"
             name="Copy Context Parameters">
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.ci.agentMapping"
+            name="Agent Mapping">
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu"
+            name="Add Profile Environment Menu">
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.ci.activateProfile"
+            name="Active/Deactivate Profile">
+         <commandParameter
+               id="info.novatec.inspectit.rcp.ci.activateProfile.active"
+               name="Active?"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.ci.setDefaultProfile"
+            name="Set (Non-)Default Profile">
+         <commandParameter
+               id="info.novatec.inspectit.rcp.ci.setDefaultProfile.default"
+               name="Default?"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.ci.duplicateProfile"
+            name="Duplicate Profile">
       </command>
    </extension>
    <extension
@@ -871,7 +955,17 @@
                <iterate>
                   <instanceof
                         value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
-                  </instanceof></iterate>
+                  </instanceof>
+                  <not>
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                     </instanceof>
+                  </not></iterate>
             </and>
          </activeWhen>
       </handler>
@@ -1153,7 +1247,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.EmptyHandler"
+            class="info.novatec.inspectit.rcp.handlers.ShowPullDownMenuHandler"
             commandId="info.novatec.inspectit.rcp.menu.addMenu">
       </handler>
       <handler
@@ -1404,6 +1498,26 @@
             commandId="info.novatec.inspectit.rcp.sendErrorReport">
       </handler>
       <handler
+            class="info.novatec.inspectit.rcp.handlers.AgentMappingHandler"
+            commandId="info.novatec.inspectit.rcp.ci.agentMapping">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="info.novatec.inspectit.rcp.handlers.DetailsHandler"
             commandId="info.novatec.inspectit.rcp.commands.details">
          <activeWhen>
@@ -1418,6 +1532,22 @@
                </iterate>
             </and>
          </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.ShowPullDownMenuHandler"
+            commandId="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu">
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false">
+               <instanceof
+                     value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+               </instanceof>
+               <test
+                     property="info.novatec.inspectit.onlineStatus"
+                     value="ONLINE">
+               </test>
+            </iterate>
+         </enabledWhen>
       </handler>
       <handler
             class="info.novatec.inspectit.rcp.handlers.NavigateToExceptionTypeHandler$NavigateToSingleExceptionTypeHandler"
@@ -1493,6 +1623,192 @@
                         value="slave">
                   </test>
                </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.DeleteProfileHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.isCommonProfile"
+                        value="false">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.DeleteEnvironmentHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.ActivateProfileHandler"
+            commandId="info.novatec.inspectit.rcp.ci.activateProfile">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.SetDefaultProfileHandler"
+            commandId="info.novatec.inspectit.rcp.ci.setDefaultProfile">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.EditProfileHandler"
+            commandId="org.eclipse.ui.edit.rename">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.isCommonProfile"
+                        value="false">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.EditEnvironmentHandler"
+            commandId="org.eclipse.ui.edit.rename">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.DuplicateProfileHandler"
+            commandId="info.novatec.inspectit.rcp.ci.duplicateProfile">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+               </iterate>
             </and>
          </activeWhen>
       </handler>
@@ -1595,6 +1911,13 @@
             namespace="info.novatec.inspectit"
             properties="canChart"
             type="info.novatec.inspectit.communication.data.TimerData">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.ci.testers.ProfileTester"
+            id="info.inspectit.rcp.ProfileTester"
+            namespace="info.novatec.inspectit"
+            properties="isCommonProfile, isDefaultProfile, isActiveProfile"
+            type="info.novatec.inspectit.rcp.provider.IProfileProvider">
       </propertyTester>
    </extension>
    <extension
@@ -1931,6 +2254,15 @@
                         name="org.eclipse.ui.views.showView.viewId"
                         value="info.novatec.inspectit.rcp.view.dataExplorer">
                   </parameter>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeWorkbenchWindow">
+                        <test
+                              property="org.eclipse.ui.workbenchWindow.isPerspectiveOpen">
+                        </test>
+                     </with>
+                  </visibleWhen>
                </command>
                <command
                      commandId="org.eclipse.ui.views.showView"
@@ -1941,6 +2273,15 @@
                         name="org.eclipse.ui.views.showView.viewId"
                         value="info.novatec.inspectit.rcp.view.storageManager">
                   </parameter>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeWorkbenchWindow">
+                        <test
+                              property="org.eclipse.ui.workbenchWindow.isPerspectiveOpen">
+                        </test>
+                     </with>
+                  </visibleWhen>
                </command>
                <command
                      commandId="org.eclipse.ui.views.showView"
@@ -1950,6 +2291,61 @@
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
                         value="info.novatec.inspectit.rcp.view.repositoryManager">
+                  </parameter>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeWorkbenchWindow">
+                        <test
+                              property="org.eclipse.ui.workbenchWindow.isPerspectiveOpen">
+                        </test>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <separator
+                     name="org.eclipse.ui.main.menu.showView.separator1"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     icon="icons/fugue/compass.png"
+                     label="Configuration Interface Manager"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="info.novatec.inspectit.rcp.ci.view.ciManager">
+                  </parameter>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeWorkbenchWindow">
+                        <test
+                              property="org.eclipse.ui.workbenchWindow.isPerspectiveOpen">
+                        </test>
+                     </with>
+                  </visibleWhen>
+               </command>
+            </menu>
+            <menu
+                  label="Open Perspective">
+               <command
+                     commandId="org.eclipse.ui.perspectives.showPerspective"
+                     icon="icons/selfmade/16x16.png"
+                     label="Analyze"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                        value="info.novatec.inspectit.rcp.perspective.analyze">
+                  </parameter>
+               </command>
+               <command
+                     commandId="org.eclipse.ui.perspectives.showPerspective"
+                     icon="icons/fugue/compass.png"
+                     label="Configuration Interface"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                        value="info.novatec.inspectit.rcp.perspective.configurationinterface">
                   </parameter>
                </command>
             </menu>
@@ -2189,6 +2585,55 @@
          </command>
       </menuContribution>
       <menuContribution
+            allPopups="false"
+            locationURI="toolbar:info.novatec.inspectit.rcp.ci.view.ciManager">
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.agentMapping"
+               icon="icons/eclipse/agent.gif"
+               style="push"
+               tooltip="Agent Mapping Settings">
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu"
+               icon="icons/eclipse/add_obj.gif"
+               style="pulldown">
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               icon="icons/eclipse/edit.gif"
+               label="Edit"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <or>
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                     </instanceof>
+                  </iterate>
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                     </instanceof>
+                  </iterate>
+               </or>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push"
+               tooltip="Delete">
+         </command>
+         <command
+               commandId="org.eclipse.ui.file.refresh"
+               icon="icons/eclipse/refresh.gif"
+               label="Refresh"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
             locationURI="popup:info.novatec.inspectit.rcp.view.storageManager.storageTree">
          <command
                commandId="org.eclipse.ui.edit.rename"
@@ -2420,6 +2865,183 @@
                   name="newWizardId"
                   value="info.novatec.inspectit.rcp.wizard.createStorageWizard">
             </parameter>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="info.novatec.inspectit.rcp.ci.wizard.createEnvironmentWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="info.novatec.inspectit.rcp.ci.wizard.createProfileWizard">
+            </parameter>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:info.novatec.inspectit.rcp.view.configurationInterfaceManager.table">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               icon="icons/eclipse/add_obj.gif"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="info.novatec.inspectit.rcp.ci.wizard.createEnvironmentWizard">
+            </parameter>
+         </command>
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               icon="icons/eclipse/add_obj.gif"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="info.novatec.inspectit.rcp.ci.wizard.createProfileWizard">
+            </parameter>
+         </command>
+         <separator
+               name="info.novatec.inspectit.rcp.view.configurationInterfaceManager.table.separator1"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               icon="icons/eclipse/edit.gif"
+               label="Edit"
+               style="push">
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.duplicateProfile"
+               icon="icons/fugue/address-book-plus.png"
+               label="Duplicate"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.activateProfile"
+               label="Activate"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.activateProfile.active"
+                  value="true">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.isActiveProfile"
+                        value="false">
+                  </test>
+                  <test
+                        property="info.novatec.inspectit.isCommonProfile"
+                        value="false">
+                  </test>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.activateProfile"
+               label="Deactivate"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.activateProfile.active"
+                  value="false">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.isActiveProfile"
+                        value="true">
+                  </test>
+                  <test
+                        property="info.novatec.inspectit.isCommonProfile"
+                        value="false">
+                  </test>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.setDefaultProfile"
+               label="Set Default"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.setDefaultProfile.default"
+                  value="true">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.isDefaultProfile"
+                        value="false">
+                  </test>
+                  <test
+                        property="info.novatec.inspectit.isCommonProfile"
+                        value="false">
+                  </test>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.setDefaultProfile"
+               label="Set Not Default"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.setDefaultProfile.default"
+                  value="false">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.isDefaultProfile"
+                        value="true">
+                  </test>
+                  <test
+                        property="info.novatec.inspectit.isCommonProfile"
+                        value="false">
+                  </test>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <separator
+               name="info.novatec.inspectit.rcp.view.configurationInterfaceManager.table.separator2"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               label="Delete"
+               style="push">
          </command>
       </menuContribution>
    </extension>

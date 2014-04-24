@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="http" name="HTTP" common="true" default="true" created-on="2015-02-24T12:00:00" description="Profile for the HTTP calls."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- Http -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" />
+
+	<!-- Plus timer to start invocation and activate charting -->
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" charting="true" starts-invocation="true" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" charting="true" starts-invocation="true" />
+
+</profile>

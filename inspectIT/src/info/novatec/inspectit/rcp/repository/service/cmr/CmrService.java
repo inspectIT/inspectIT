@@ -49,6 +49,12 @@ public class CmrService implements ICmrService {
 	private SerializationManagerProvider serializationManagerProvider;
 
 	/**
+	 * Defines if the default value should be returned when communication errors occurs in the
+	 * invocation of the service.
+	 */
+	private boolean defaultValueOnError;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void initService(CmrRepositoryDefinition cmrRepositoryDefinition) {
@@ -124,6 +130,25 @@ public class CmrService implements ICmrService {
 	 */
 	public void setSerializationManagerProvider(SerializationManagerProvider serializationManagerProvider) {
 		this.serializationManagerProvider = serializationManagerProvider;
+	}
+
+	/**
+	 * Gets {@link #defaultValueOnError}.
+	 * 
+	 * @return {@link #defaultValueOnError}
+	 */
+	public boolean isDefaultValueOnError() {
+		return defaultValueOnError;
+	}
+
+	/**
+	 * Sets {@link #defaultValueOnError}.
+	 * 
+	 * @param defaultValueOnError
+	 *            New value for {@link #defaultValueOnError}
+	 */
+	public void setDefaultValueOnError(boolean defaultValueOnError) {
+		this.defaultValueOnError = defaultValueOnError;
 	}
 
 }

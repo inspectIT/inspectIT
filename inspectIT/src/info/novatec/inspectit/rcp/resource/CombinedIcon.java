@@ -41,6 +41,22 @@ public class CombinedIcon extends CompositeImageDescriptor {
 	 *            {@link SWT#VERTICAL} or {@link SWT#HORIZONTAL}. Way the images will be pasted.
 	 */
 	public CombinedIcon(ImageDescriptor[] descriptors, int orientation) {
+		this(descriptors, orientation, 0, 0);
+	}
+
+	/**
+	 * Secondary constructor allows specification of the minimum width and height of the new icon.
+	 * 
+	 * @param descriptors
+	 *            {@link ImageDescriptor}s that will be included in the combined icon.
+	 * @param orientation
+	 *            {@link SWT#VERTICAL} or {@link SWT#HORIZONTAL}. Way the images will be pasted.
+	 * @param minWidth
+	 *            minimum width of combined image
+	 * @param minHeight
+	 *            minimum height of combined image
+	 */
+	public CombinedIcon(ImageDescriptor[] descriptors, int orientation, int minWidth, int minHeight) {
 		if (null == descriptors) {
 			throw new IllegalArgumentException("Image descriptor array for combined icon must not be null");
 		}
@@ -61,8 +77,13 @@ public class CombinedIcon extends CompositeImageDescriptor {
 				height = Math.max(height, imageData.height);
 			}
 		}
+		if (minWidth > width) {
+			width = minWidth;
+		}
+		if (minHeight > height) {
+			height = minHeight;
+		}
 		this.size = new Point(width, height);
-
 	}
 
 	/**

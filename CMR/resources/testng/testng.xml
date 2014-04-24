@@ -56,4 +56,9 @@
 			<class name="info.novatec.inspectit.cmr.spring.aop.ExceptionInterceptorTest" />
 		</classes>
 	</test>
+	<test name="CI">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.ci.ConfigurationInterfaceManagerTest" />
+		</classes>
+	</test>	
 </suite>
