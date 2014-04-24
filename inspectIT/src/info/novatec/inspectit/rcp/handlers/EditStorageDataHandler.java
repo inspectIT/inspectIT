@@ -2,7 +2,7 @@ package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.dialog.EditRepositoryDataDialog;
+import info.novatec.inspectit.rcp.dialog.EditNameDescriptionDialog;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -37,9 +37,9 @@ public class EditStorageDataHandler extends AbstractHandler implements IHandler 
 		}
 
 		StorageData storageData = storageDataProvider.getStorageData();
-		EditRepositoryDataDialog editStorageDataDialog = new EditRepositoryDataDialog(HandlerUtil.getActiveShell(event), storageData.getName(), storageData.getDescription());
+		EditNameDescriptionDialog editStorageDataDialog = new EditNameDescriptionDialog(HandlerUtil.getActiveShell(event), storageData.getName(), storageData.getDescription());
 		editStorageDataDialog.open();
-		if (editStorageDataDialog.getReturnCode() == EditRepositoryDataDialog.OK) {
+		if (editStorageDataDialog.getReturnCode() == EditNameDescriptionDialog.OK) {
 			CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
 			if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 				try {

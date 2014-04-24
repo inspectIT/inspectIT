@@ -75,7 +75,7 @@ public abstract class FilterComposite extends Composite {
 	public FilterComposite(Composite parent, int style, String defaultText) {
 		super(parent, style);
 		this.defaultText = defaultText;
-		filterJob = new UIJob("Filter Storage") {
+		filterJob = new UIJob("Filter") {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				executeFilterInternal();
