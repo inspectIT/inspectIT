@@ -131,6 +131,11 @@
 		<Class name="info.novatec.inspectit.rcp.editor.table.input.HttpTimerDataInputController$RegExHttpAggregator" />
 		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
 	</Match>
+	<Match>
+		<Class name="~info\.novatec\.inspectit\.rcp\.ci\.form\.part\.MethodSensorAssignmentDetailsPage.*" />
+		<Method name="handleEvent" />
+		<Bug pattern="ES_COMPARING_STRINGS_WITH_EQ" />
+	</Match>
 	<!-- RCP ignores END -->
 
 </FindBugsFilter>

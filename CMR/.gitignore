@@ -16,3 +16,6 @@ resources/jvm
 /storage
 /config/configurationUpdates*.xml
 /config/configurationUpdates.xml*
+/ci/environments/*.xml
+/ci/profiles/*.xml
+/ci/agent-mappings.xml

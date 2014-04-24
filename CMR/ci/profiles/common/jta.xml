@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="jta" name="JTA" common="true" created-on="2015-02-24T12:00:00" description="Profile for the Java Transaction API."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- Transaction -->
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.UserTransaction" method-name="begin" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.UserTransaction" method-name="commit" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.UserTransaction" method-name="getStatus" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.UserTransaction" method-name="rollback" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.UserTransaction" method-name="setRollbackOnly" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.UserTransaction" method-name="setTransactionTimeout" parameters="int" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	
+	<!-- Transaction Manager-->
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.TransactionManager" method-name="begin" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.TransactionManager" method-name="commit" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.TransactionManager" method-name="rollback" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.TransactionManager" method-name="resume" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.TransactionManager" method-name="suspend" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.TransactionManager" method-name="getStatus" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.transaction.TransactionManager" method-name="getTransaction" interface="true" private-mod="false" protected-mod="false" default-mod="false" />
+
+</profile>

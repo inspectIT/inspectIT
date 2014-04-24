@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="struts" name="Struts" common="true" created-on="2015-02-24T12:00:00" description="Profile for the Hibernate framework."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- Struts-->
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.struts.action.*" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.struts.config.*" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.struts.taglib.html.*" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.struts.taglib.tiles.*" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.struts.tiles.*" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.struts.upload.*" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.struts.util.*" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+</profile>

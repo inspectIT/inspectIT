@@ -54,7 +54,7 @@ public class ServiceInterfaceDelegateInterceptor implements MethodInterceptor {
 		try {
 			return method.invoke(concreteService, arguments);
 		} catch (InvocationTargetException e) {
-			throw e.getCause();
+			throw e.getTargetException();
 		}
 	}
 

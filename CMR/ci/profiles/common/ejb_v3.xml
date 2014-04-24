@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="ejb" name="EJB v3" common="true" created-on="2015-02-24T12:00:00" description="Profile for the EJBs version 3.x."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- Configuration for EJB v. 3 -->
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Stateless" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Stateful" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Singleton" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.MessageDriven" private-mod="false" protected-mod="false" default-mod="false" />
+	
+</profile>

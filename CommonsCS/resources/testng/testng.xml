@@ -65,4 +65,9 @@
 			<class name="info.novatec.inspectit.cmr.property.update.ConfigurationUpdateTest" />
 		</classes>
 	</test>
+	<test name="CI">
+		<classes>
+			<class name="info.novatec.inspectit.ci.XmlTransformationTest" />
+		</classes>
+	</test>
 </suite>

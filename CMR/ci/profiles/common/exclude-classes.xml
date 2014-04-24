@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="exclude-classes" name="Exclude Classes" common="true" default="true" created-on="2015-02-24T12:00:00" description="Default exclude rules, should be included in every Environment."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- Default exclude rules -->
+	<exclude-rule class-name="info.novatec.inspectit.*"/>
+	<exclude-rule class-name="*$Proxy*"/>
+	<exclude-rule class-name="sun.*"/>
+	<exclude-rule class-name="java.lang.ThreadLocal"/>
+	<exclude-rule class-name="java.lang.ref.Reference"/>
+	<exclude-rule class-name="*_WLStub"/>
+	<exclude-rule class-name="*[]"/>
+	<exclude-rule class-name="*CGLIB$$*"/>
+	<exclude-rule class-name="java.lang.invoke.LambdaForm*"/>
+
+</profile>
