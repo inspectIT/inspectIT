@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="webservice" name="WebService" common="true" created-on="2015-02-24T12:00:00" description="Profile for the WebService calls."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.jws.WebService" private-mod="false" protected-mod="false" default-mod="false" />
+	<timer-method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ws.rs.Path" private-mod="false" protected-mod="false" default-mod="false" />
+
+</profile>

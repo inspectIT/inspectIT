@@ -4,6 +4,7 @@ import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.util.ObjectUtils;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -19,12 +20,22 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Dialog for editing a storage or CMR repository.
+ * Dialog for editing name and description.
  * 
  * @author Ivan Senic
  * 
  */
-public class EditRepositoryDataDialog extends TitleAreaDialog {
+public class EditNameDescriptionDialog extends TitleAreaDialog {
+
+	/**
+	 * Default title used when no title is defined.
+	 */
+	private static final String DEFAULT_MESSAGE = "Enter new name and/or description";
+
+	/**
+	 * Default message used when no message is defined.
+	 */
+	private static final String DEFAULT_TITLE = "Edit Data";
 
 	/**
 	 * Name box.
@@ -62,6 +73,16 @@ public class EditRepositoryDataDialog extends TitleAreaDialog {
 	private String newName;
 
 	/**
+	 * Dialog title to display.
+	 */
+	private String dialogTitle = DEFAULT_TITLE;
+
+	/**
+	 * Dialog message to display.
+	 */
+	private String dialogMessage = DEFAULT_MESSAGE;
+
+	/**
 	 * Default constructor.
 	 * 
 	 * @param parentShell
@@ -71,10 +92,34 @@ public class EditRepositoryDataDialog extends TitleAreaDialog {
 	 * @param oldDescription
 	 *            Old description.
 	 */
-	public EditRepositoryDataDialog(Shell parentShell, String oldName, String oldDescription) {
+	public EditNameDescriptionDialog(Shell parentShell, String oldName, String oldDescription) {
 		super(parentShell);
 		this.oldName = oldName;
 		this.oldDescription = oldDescription;
+	}
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param parentShell
+	 *            Parent shell.
+	 * @param oldName
+	 *            Old name.
+	 * @param oldDescription
+	 *            Old description.
+	 * @param dialogTitle
+	 *            title for the dialog
+	 * @param dialogMessage
+	 *            message message for the dialog
+	 */
+	public EditNameDescriptionDialog(Shell parentShell, String oldName, String oldDescription, String dialogTitle, String dialogMessage) {
+		this(parentShell, oldName, oldDescription);
+
+		Assert.isNotNull(dialogTitle);
+		Assert.isNotNull(dialogMessage);
+
+		this.dialogTitle = dialogTitle;
+		this.dialogMessage = dialogMessage;
 	}
 
 	/**
@@ -83,8 +128,8 @@ public class EditRepositoryDataDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		this.setTitle("Edit Data");
-		this.setMessage("Enter new name and/or description", IMessageProvider.INFORMATION);
+		this.setTitle(dialogTitle);
+		this.setMessage(dialogMessage, IMessageProvider.INFORMATION);
 		this.setTitleImage(InspectIT.getDefault().getImage(InspectITImages.IMG_WIZBAN_EDIT));
 	}
 
@@ -94,7 +139,7 @@ public class EditRepositoryDataDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Edit Data");
+		newShell.setText(DEFAULT_TITLE);
 	}
 
 	/**

@@ -27,6 +27,7 @@ public interface InspectITImages {
 	String IMG_ACTIVITY = InspectITConstants.ICON_PATH_ECLIPSE + "debugtt_obj.gif";
 	String IMG_ADD = InspectITConstants.ICON_PATH_ECLIPSE + "add_obj.gif";
 	String IMG_ALERT = InspectITConstants.ICON_PATH_ECLIPSE + "alert_obj.gif";
+	String IMG_ANNOTATION = InspectITConstants.ICON_PATH_ECLIPSE + "annotation_obj.gif";
 	String IMG_CALL_HIERARCHY = InspectITConstants.ICON_PATH_ECLIPSE + "call_hierarchy.gif";
 	String IMG_CHECKMARK = InspectITConstants.ICON_PATH_ECLIPSE + "complete_status.gif";
 	String IMG_CLASS = InspectITConstants.ICON_PATH_ECLIPSE + "class_obj.gif";
@@ -34,6 +35,8 @@ public interface InspectITImages {
 	String IMG_CLOSE = InspectITConstants.ICON_PATH_ECLIPSE + "remove_co.gif";
 	String IMG_COLLAPSE = InspectITConstants.ICON_PATH_ECLIPSE + "collapseall.gif";
 	String IMG_COMPILATION_OVERVIEW = InspectITConstants.ICON_PATH_ECLIPSE + "workset.gif";
+	String IMG_CONFIGURATION = InspectITConstants.ICON_PATH_ECLIPSE + "config_obj.gif";
+	String IMG_COPY = InspectITConstants.ICON_PATH_ECLIPSE + "copy_edit.gif";
 	String IMG_DELETE = InspectITConstants.ICON_PATH_ECLIPSE + "delete_obj.gif";
 	String IMG_DISABLED = InspectITConstants.ICON_PATH_ECLIPSE + "disabled_co.gif";
 	String IMG_EXCEPTION_SENSOR = InspectITConstants.ICON_PATH_ECLIPSE + "exceptiontracer.gif";
@@ -49,6 +52,7 @@ public interface InspectITImages {
 	String IMG_HOME = InspectITConstants.ICON_PATH_ECLIPSE + "home_nav.gif";
 	String IMG_IMPORT = InspectITConstants.ICON_PATH_ECLIPSE + "import.gif";
 	String IMG_INFORMATION = InspectITConstants.ICON_PATH_ECLIPSE + "info_obj.gif";
+	String IMG_INTERFACE = InspectITConstants.ICON_PATH_ECLIPSE + "int_obj.gif";
 	String IMG_ITEM_NA_GREY = InspectITConstants.ICON_PATH_ECLIPSE + "remove_exc.gif";
 	String IMG_LIVE_MODE = InspectITConstants.ICON_PATH_ECLIPSE + "start_task.gif";
 	String IMG_METHOD_PUBLIC = InspectITConstants.ICON_PATH_ECLIPSE + "methpub_obj.gif";
@@ -70,6 +74,7 @@ public interface InspectITImages {
 	String IMG_SHOW_ALL = InspectITConstants.ICON_PATH_ECLIPSE + "all_instances.gif";
 	String IMG_STACKTRACE = InspectITConstants.ICON_PATH_ECLIPSE + "stacktrace.gif";
 	String IMG_TERMINATE = InspectITConstants.ICON_PATH_ECLIPSE + "terminate_co.gif";
+	String IMG_TEST_MAPPINGS = InspectITConstants.ICON_PATH_ECLIPSE + "test.gif";
 	String IMG_THREADS_OVERVIEW = InspectITConstants.ICON_PATH_ECLIPSE + "debugt_obj.gif";
 	String IMG_TIMESTAMP = InspectITConstants.ICON_PATH_ECLIPSE + "dates.gif";
 	String IMG_TRASH = InspectITConstants.ICON_PATH_ECLIPSE + "trash.gif";
@@ -102,6 +107,7 @@ public interface InspectITImages {
 	String IMG_CATALOG = InspectITConstants.ICON_PATH_ECLIPSE + "catalog.gif";
 	String IMG_CHART_BAR = InspectITConstants.ICON_PATH_ECLIPSE + "graph_bar.gif";
 	String IMG_CHART_PIE = InspectITConstants.ICON_PATH_ECLIPSE + "graph_pie.gif";
+	String IMG_CLASS_EXCLUDE = InspectITConstants.ICON_PATH_ECLIPSE + "class_exclude.gif";
 	String IMG_EDIT = InspectITConstants.ICON_PATH_ECLIPSE + "edit.gif";
 	String IMG_FLAG = InspectITConstants.ICON_PATH_ECLIPSE + "flag.gif";
 	String IMG_HTTP_URL = InspectITConstants.ICON_PATH_ECLIPSE + "url.gif";
@@ -131,6 +137,7 @@ public interface InspectITImages {
 	String IMG_STORAGE_OVERLAY = InspectITConstants.ICON_PATH_ECLIPSE + "storage_overlay.gif";
 	String IMG_STORAGE_RECORDING = InspectITConstants.ICON_PATH_ECLIPSE + "storage_recording.gif";
 	String IMG_STORAGE_UPLOAD = InspectITConstants.ICON_PATH_ECLIPSE + "storage_upload.gif";
+	String IMG_SUPERCLASS = InspectITConstants.ICON_PATH_ECLIPSE + "class_hierarchy.gif";
 	String IMG_TIME = InspectITConstants.ICON_PATH_ECLIPSE + "time.gif";
 	String IMG_TIME_DELTA = InspectITConstants.ICON_PATH_ECLIPSE + "time_delta.gif";
 	String IMG_TIMEFRAME = InspectITConstants.ICON_PATH_ECLIPSE + "timeframe.gif";
@@ -140,6 +147,11 @@ public interface InspectITImages {
 	String IMG_USER = InspectITConstants.ICON_PATH_ECLIPSE + "user.gif";
 
 	// Fugue set - license Creative Commons v3.0
+	String IMG_ADDRESSBOOK = InspectITConstants.ICON_PATH_FUGUE + "address-book.png";
+	String IMG_ADDRESSBOOK_BLUE = InspectITConstants.ICON_PATH_FUGUE + "address-book-blue.png";
+	String IMG_ADDRESSBOOK_PLUS = InspectITConstants.ICON_PATH_FUGUE + "address-book-plus.png";
+	String IMG_BLOCK = InspectITConstants.ICON_PATH_FUGUE + "block.png";
+	String IMG_COMPASS = InspectITConstants.ICON_PATH_FUGUE + "compass.png";
 	String IMG_CPU_OVERVIEW = InspectITConstants.ICON_PATH_FUGUE + "processor.png";
 	String IMG_DATABASE = InspectITConstants.ICON_PATH_FUGUE + "database-sql.png";
 	String IMG_INSTRUMENTATION_BROWSER = InspectITConstants.ICON_PATH_FUGUE + "blue-document-tree.png";

@@ -138,8 +138,8 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 	@Test(invocationCount = 5)
 	public void analysisAndSize() throws Exception {
 		Random random = new Random();
-		// tests needs at least two elements
-		long elements = 2 + random.nextInt(10000);
+		// tests needs at least three elements
+		long elements = 3 + random.nextInt(10000);
 		elements += elements % 2;
 		int analyzers = 1 + random.nextInt(3);
 
