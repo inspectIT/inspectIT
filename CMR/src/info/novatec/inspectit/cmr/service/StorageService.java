@@ -1,14 +1,17 @@
 package info.novatec.inspectit.cmr.service;
 
 import info.novatec.inspectit.cmr.dao.StorageDataDao;
+import info.novatec.inspectit.cmr.spring.aop.ExceptionInterceptor;
 import info.novatec.inspectit.cmr.spring.aop.MethodLog;
 import info.novatec.inspectit.cmr.storage.CmrStorageManager;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.cmr.RecordingData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.TechnicalBusinessException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.StorageFileType;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
@@ -62,15 +65,15 @@ public class StorageService implements IStorageService {
 	 * 
 	 * @param storageData
 	 *            Information about new storage.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When storage creation fails.
 	 */
 	@MethodLog
-	public void createStorage(StorageData storageData) throws StorageException {
+	public void createStorage(StorageData storageData) throws BusinessException {
 		try {
 			storageManager.createStorage(storageData);
-		} catch (Exception e) {
-			throw new StorageException("Exception occurred trying to create storage" + storageData + ".", e);
+		} catch (IOException | SerializationException e) {
+			throw ExceptionInterceptor.transformException(e);
 		}
 	}
 
@@ -79,19 +82,21 @@ public class StorageService implements IStorageService {
 	 * 
 	 * @param storageData
 	 *            Storage to open.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When storage with provided {@link StorageData} does not exists. When storage
 	 *             opening fails.
 	 */
 	@MethodLog
-	public void openStorage(StorageData storageData) throws StorageException {
+	public void openStorage(StorageData storageData) throws BusinessException {
 		if (!storageManager.isStorageExisting(storageData)) {
-			throw new StorageException("The storage " + storageData + " does not exsist on the CMR.");
+			throw new BusinessException("Open the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 		try {
 			storageManager.openStorage(storageData);
-		} catch (Exception e) {
-			throw new StorageException("Exception occurred trying to open storage" + storageData + ".", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Open the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Open the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -99,23 +104,26 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public StorageData createAndOpenStorage(StorageData storageData) throws StorageException {
+	public StorageData createAndOpenStorage(StorageData storageData) throws BusinessException {
 		this.createStorage(storageData);
 		this.openStorage(storageData);
 		return storageData;
+
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws StorageException
+	 * @throws BusinessException
 	 */
 	@MethodLog
-	public void closeStorage(StorageData storageData) throws StorageException {
+	public void closeStorage(StorageData storageData) throws BusinessException {
 		try {
 			storageManager.closeStorage(storageData);
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Exception occurred trying to close storage" + storageData + ".", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Close the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Close the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -123,11 +131,11 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void deleteStorage(StorageData storageData) throws StorageException {
+	public void deleteStorage(StorageData storageData) throws BusinessException {
 		try {
 			storageManager.deleteStorage(storageData);
 		} catch (IOException e) {
-			throw new StorageException("Exception occurred trying to delete storage" + storageData + ".", e);
+			throw new TechnicalBusinessException("Delete the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -175,17 +183,19 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public StorageData startOrScheduleRecording(StorageData storageData, RecordingProperties recordingProperties) throws StorageException {
+	public StorageData startOrScheduleRecording(StorageData storageData, RecordingProperties recordingProperties) throws BusinessException {
 		if ((storageManager.getRecordingState() == RecordingState.ON || storageManager.getRecordingState() == RecordingState.SCHEDULED) && !storageData.equals(storageManager.getRecordingStorage())) {
-			throw new StorageException("Recording is already active/scheduled with different storage. Only one storage at time can be chosen as recording destination.");
+			throw new BusinessException("Start or schedule recording on the storage " + storageData + ".", StorageErrorCodeEnum.CAN_NOT_START_RECORDING);
 		} else if (storageManager.getRecordingState() == RecordingState.ON || storageManager.getRecordingState() == RecordingState.SCHEDULED) {
-			throw new StorageException("Recording is already active/scheduled with selected storage.");
+			throw new BusinessException("Start or schedule recording on the storage " + storageData + ".", StorageErrorCodeEnum.CAN_NOT_START_RECORDING);
 		} else {
 			try {
 				storageManager.startOrScheduleRecording(storageData, recordingProperties);
 				return storageManager.getRecordingStorage();
-			} catch (IOException | SerializationException e) {
-				throw new StorageException("Exception occurred trying to start recording on storage " + storageData + ".", e);
+			} catch (SerializationException e) {
+				throw new TechnicalBusinessException("Start or schedule recording on the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+			} catch (IOException e) {
+				throw new TechnicalBusinessException("Start or schedule recording on the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 			}
 		}
 	}
@@ -194,11 +204,13 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void stopRecording() throws StorageException {
+	public void stopRecording() throws BusinessException {
 		try {
 			storageManager.stopRecording();
-		} catch (Exception e) {
-			throw new StorageException("Exception occurred trying to stop recording.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Stop recording.", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Stop recording.", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -227,14 +239,17 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void writeToStorage(StorageData storageData, Collection<DefaultData> defaultDataCollection, Collection<AbstractDataProcessor> dataProcessors, boolean synchronously) throws StorageException {
+	public void writeToStorage(StorageData storageData, Collection<DefaultData> defaultDataCollection, Collection<AbstractDataProcessor> dataProcessors, boolean synchronously)
+			throws BusinessException {
 		if (!storageManager.isStorageOpen(storageData)) {
-			throw new StorageException("Writing to storage tried to be performed on the storage that is not opened. Please open the storage first.");
+			throw new BusinessException("Write to the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_IS_NOT_OPENED);
 		}
 		try {
 			storageManager.writeToStorage(storageData, defaultDataCollection, dataProcessors, synchronously);
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Copy Buffer to Storage action encountered an error.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Write to the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Write to the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -242,23 +257,27 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public StorageData copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws StorageException {
+	public StorageData copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws BusinessException {
 		try {
 			storageManager.copyBufferToStorage(storageData, platformIdents, dataProcessors, autoFinalize);
 			return storageData;
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Copy Buffer to Storage action encountered an error.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Copy buffer to the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Copy buffer to the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
 	@Override
 	public StorageData copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
-			throws StorageException {
+			throws BusinessException {
 		try {
 			storageManager.copyDataToStorage(storageData, elementIds, platformIdent, dataProcessors, autoFinalize);
 			return storageData;
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Copy Data to Storage action encountered an error.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Write to the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Write to the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -266,14 +285,14 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public Map<String, Long> getIndexFilesLocations(StorageData storageData) throws StorageException {
+	public Map<String, Long> getIndexFilesLocations(StorageData storageData) throws BusinessException {
 		if (!storageManager.isStorageExisting(storageData)) {
-			throw new StorageException("The storage " + storageData + " does not exist on the CMR.");
+			throw new BusinessException("Load index files locations for the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 		try {
 			return storageManager.getFilesHttpLocation(storageData, StorageFileType.INDEX_FILE.getExtension());
 		} catch (IOException e) {
-			throw new StorageException("Exception occurred trying to load storage index files locations.", e);
+			throw new TechnicalBusinessException("Load index files locations for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -281,14 +300,14 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public Map<String, Long> getDataFilesLocations(StorageData storageData) throws StorageException {
+	public Map<String, Long> getDataFilesLocations(StorageData storageData) throws BusinessException {
 		if (!storageManager.isStorageExisting(storageData)) {
-			throw new StorageException("The storage " + storageData + " does not exist on the CMR.");
+			throw new BusinessException("Load data files locations for the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 		try {
 			return storageManager.getFilesHttpLocation(storageData, StorageFileType.DATA_FILE.getExtension());
 		} catch (IOException e) {
-			throw new StorageException("Exception occurred trying to load storage data files locations.", e);
+			throw new TechnicalBusinessException("Load data files locations for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -296,14 +315,14 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public Map<String, Long> getCachedDataFilesLocations(StorageData storageData) throws StorageException {
+	public Map<String, Long> getCachedDataFilesLocations(StorageData storageData) throws BusinessException {
 		if (!storageManager.isStorageExisting(storageData)) {
-			throw new StorageException("The storage " + storageData + " does not exist on the CMR.");
+			throw new BusinessException("Load cached files locations for the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 		try {
 			return storageManager.getFilesHttpLocation(storageData, StorageFileType.CACHED_DATA_FILE.getExtension());
 		} catch (IOException e) {
-			throw new StorageException("Exception occurred trying to load storage cached data files locations.", e);
+			throw new TechnicalBusinessException("Load cache files locations for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -311,14 +330,14 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public Map<String, Long> getAgentFilesLocations(StorageData storageData) throws StorageException {
+	public Map<String, Long> getAgentFilesLocations(StorageData storageData) throws BusinessException {
 		if (!storageManager.isStorageExisting(storageData)) {
-			throw new StorageException("The storage " + storageData + " does not exist on the CMR.");
+			throw new BusinessException("Load agent files locations for the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 		try {
 			return storageManager.getFilesHttpLocation(storageData, StorageFileType.AGENT_FILE.getExtension());
 		} catch (IOException e) {
-			throw new StorageException("Exception occurred trying to load storage agent files locations.", e);
+			throw new TechnicalBusinessException("Load agent files locations for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -326,13 +345,15 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public StorageData addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws StorageException {
+	public StorageData addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws BusinessException {
 		try {
 			storageManager.addLabelToStorage(storageData, storageLabel, doOverwrite);
 			storageLabelDataDao.saveLabel(storageLabel);
 			return storageManager.getStorageData(storageData.getId());
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Exception occurred trying to save storage data changes to disk.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Add a label to the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Add a label to the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -340,15 +361,17 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public StorageData addLabelsToStorage(StorageData storageData, Collection<AbstractStorageLabel<?>> storageLabels, boolean doOverwrite) throws StorageException {
+	public StorageData addLabelsToStorage(StorageData storageData, Collection<AbstractStorageLabel<?>> storageLabels, boolean doOverwrite) throws BusinessException {
 		try {
 			for (AbstractStorageLabel<?> storageLabel : storageLabels) {
 				storageManager.addLabelToStorage(storageData, storageLabel, doOverwrite);
 				storageLabelDataDao.saveLabel(storageLabel);
 			}
 			return storageManager.getStorageData(storageData.getId());
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Exception occurred trying to save storage data changes to disk.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Add labels to the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Add labels to the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -356,12 +379,14 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public StorageData removeLabelFromStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel) throws StorageException {
+	public StorageData removeLabelFromStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel) throws BusinessException {
 		try {
 			storageManager.removeLabelFromStorage(storageData, storageLabel);
 			return storageManager.getStorageData(storageData.getId());
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Exception occurred trying to save storage data changes to disk.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Remove a label from the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Remove a label from the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -369,14 +394,16 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public StorageData removeLabelsFromStorage(StorageData storageData, List<AbstractStorageLabel<?>> storageLabelList) throws StorageException {
+	public StorageData removeLabelsFromStorage(StorageData storageData, List<AbstractStorageLabel<?>> storageLabelList) throws BusinessException {
 		try {
 			for (AbstractStorageLabel<?> label : storageLabelList) {
 				storageManager.removeLabelFromStorage(storageData, label);
 			}
 			return storageManager.getStorageData(storageData.getId());
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Exception occurred trying to save storage data changes to disk.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Remove labels from the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Remove labels from the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -384,7 +411,7 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void executeLabelManagementActions(Collection<AbstractLabelManagementAction> managementActions) throws StorageException {
+	public void executeLabelManagementActions(Collection<AbstractLabelManagementAction> managementActions) throws BusinessException {
 		for (AbstractLabelManagementAction managementAction : managementActions) {
 			managementAction.execute(this);
 		}
@@ -442,7 +469,7 @@ public class StorageService implements IStorageService {
 	 * 
 	 */
 	@MethodLog
-	public void removeLabelFromCmr(AbstractStorageLabel<?> storageLabel, boolean removeFromStoragesAlso) throws StorageException {
+	public void removeLabelFromCmr(AbstractStorageLabel<?> storageLabel, boolean removeFromStoragesAlso) throws BusinessException {
 		storageLabelDataDao.removeLabel(storageLabel);
 		if (removeFromStoragesAlso) {
 			for (StorageData storageData : getExistingStorages()) {
@@ -456,7 +483,7 @@ public class StorageService implements IStorageService {
 	 * 
 	 */
 	@MethodLog
-	public void removeLabelsFromCmr(Collection<AbstractStorageLabel<?>> storageLabels, boolean removeFromStoragesAlso) throws StorageException {
+	public void removeLabelsFromCmr(Collection<AbstractStorageLabel<?>> storageLabels, boolean removeFromStoragesAlso) throws BusinessException {
 		storageLabelDataDao.removeLabels(storageLabels);
 		if (removeFromStoragesAlso) {
 			for (StorageData storageData : getExistingStorages()) {
@@ -477,12 +504,8 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void removeLabelType(AbstractStorageLabelType<?> labelType) throws StorageException {
-		try {
-			storageLabelDataDao.removeLabelType(labelType);
-		} catch (Exception e) {
-			throw new StorageException("Label type was not removed", e);
-		}
+	public void removeLabelType(AbstractStorageLabelType<?> labelType) throws BusinessException {
+		storageLabelDataDao.removeLabelType(labelType);
 	}
 
 	/**
@@ -505,11 +528,13 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void updateStorageData(StorageData storageData) throws StorageException {
+	public void updateStorageData(StorageData storageData) throws BusinessException {
 		try {
 			storageManager.updateStorageData(storageData);
-		} catch (IOException | SerializationException e) {
-			throw new StorageException(e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Update data for the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Update data for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -525,11 +550,11 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void unpackUploadedStorage(IStorageData storageData) throws StorageException {
+	public void unpackUploadedStorage(IStorageData storageData) throws BusinessException {
 		try {
 			storageManager.unpackUploadedStorage(storageData);
 		} catch (IOException e) {
-			throw new StorageException("Exception occurred trying to check for imported storage.", e);
+			throw new TechnicalBusinessException("Un-pack uploaded data for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -537,11 +562,13 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void createStorageFromUploadedDir(final IStorageData localStorageData) throws StorageException {
+	public void createStorageFromUploadedDir(final IStorageData localStorageData) throws BusinessException {
 		try {
 			storageManager.createStorageFromUploadedDir(localStorageData);
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Exception occurred trying to create storage from uploaded local storage.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Create the storage " + localStorageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Create the storage " + localStorageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -549,17 +576,19 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void cacheStorageData(StorageData storageData, Collection<? extends DefaultData> data, int hash) throws StorageException {
+	public void cacheStorageData(StorageData storageData, Collection<? extends DefaultData> data, int hash) throws BusinessException {
 		if (!storageManager.isStorageExisting(storageData)) {
-			throw new StorageException("The storage " + storageData + " does not exist on the CMR. Data caching is not possible.");
+			throw new BusinessException("Data caching for the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 		if (!storageManager.isStorageClosed(storageData)) {
-			throw new StorageException("The storage " + storageData + " is still not finalized.  Data caching is not possible.");
+			throw new BusinessException("Data caching for the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_IS_NOT_CLOSED);
 		}
 		try {
 			storageManager.cacheStorageData(storageData, data, hash);
-		} catch (IOException | SerializationException e) {
-			throw new StorageException("Exception occurred trying to cache data fpr storage.", e);
+		} catch (SerializationException e) {
+			throw new TechnicalBusinessException("Cache data for the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalBusinessException("Cache data for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 
 	}
@@ -568,9 +597,9 @@ public class StorageService implements IStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public String getCachedStorageDataFileLocation(StorageData storageData, int hash) throws StorageException {
+	public String getCachedStorageDataFileLocation(StorageData storageData, int hash) throws BusinessException {
 		if (!storageManager.isStorageExisting(storageData)) {
-			throw new StorageException("The storage " + storageData + " does not exist on the CMR. Cached data file can not be resolved.");
+			throw new BusinessException("Load cached storage data files locations for storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 		return storageManager.getCachedStorageDataFileLocation(storageData, hash);
 	}

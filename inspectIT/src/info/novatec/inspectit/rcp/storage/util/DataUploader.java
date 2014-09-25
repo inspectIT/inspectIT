@@ -48,10 +48,10 @@ public class DataUploader {
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param subMonitor
 	 *            {@link SubMonitor} to report progress to.
-	 * @throws Exception
+	 * @throws IOException
 	 *             If file to upload does not exist or exception occurs during the upload.
 	 */
-	public void uploadFileToStorageUploads(Path fileToUpload, Path relativizePath, String tmpDir, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws Exception {
+	public void uploadFileToStorageUploads(Path fileToUpload, Path relativizePath, String tmpDir, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws IOException {
 		this.uploadFileToStorageUploads(Collections.singletonList(fileToUpload), relativizePath, tmpDir, cmrRepositoryDefinition, subMonitor);
 	}
 
@@ -71,10 +71,11 @@ public class DataUploader {
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param subMonitor
 	 *            {@link SubMonitor} to report progress to.
-	 * @throws Exception
+	 * @throws IOException
 	 *             If file to upload does not exist or exception occurs during the upload.
+	 * 
 	 */
-	public void uploadFileToStorageUploads(List<Path> filesToUpload, Path relativizePath, String tmpDir, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws Exception {
+	public void uploadFileToStorageUploads(List<Path> filesToUpload, Path relativizePath, String tmpDir, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws IOException {
 		// calculate how much is there to upload
 		Map<String, Long> files = new HashMap<String, Long>();
 		for (Path file : filesToUpload) {

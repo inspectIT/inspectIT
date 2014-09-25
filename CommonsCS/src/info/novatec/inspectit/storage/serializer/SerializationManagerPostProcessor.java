@@ -49,7 +49,6 @@ import info.novatec.inspectit.indexing.storage.impl.StorageBranchIndexer;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
 import info.novatec.inspectit.storage.StorageData.StorageState;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.BooleanStorageLabel;
 import info.novatec.inspectit.storage.label.DateStorageLabel;
 import info.novatec.inspectit.storage.label.NumberStorageLabel;
@@ -194,9 +193,6 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		// added with INSPECTIT-723
 		kryo.register(RecordingState.class, new EnumSerializer(RecordingState.class), nextRegistrationId++);
 		kryo.register(RecordingProperties.class, new FieldSerializer<RecordingProperties>(kryo, RecordingProperties.class), nextRegistrationId++);
-
-		// added with INSPECTIT-912
-		kryo.register(StorageException.class, new FieldSerializer<StorageException>(kryo, StorageException.class), nextRegistrationId++);
 
 		// added with INSPECTIT-937
 		kryo.register(AgentFilterDataProcessor.class, new FieldSerializer<AgentFilterDataProcessor>(kryo, AgentFilterDataProcessor.class), nextRegistrationId++);

@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.handlers;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
@@ -7,7 +8,6 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -127,7 +127,7 @@ public class CloseStorageHandler extends AbstractHandler implements IHandler {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						cmrRepositoryDefinition.getStorageService().closeStorage(storageData);
-					} catch (final StorageException e) {
+					} catch (final BusinessException e) {
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override
 							public void run() {

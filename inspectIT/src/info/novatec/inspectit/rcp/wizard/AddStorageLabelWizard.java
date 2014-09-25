@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.wizard;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
@@ -7,7 +8,6 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.wizard.page.AddStorageLabelWizardPage;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 
 import java.util.List;
@@ -86,7 +86,7 @@ public class AddStorageLabelWizard extends Wizard implements INewWizard {
 				} catch (Exception e) {
 					InspectIT.getDefault().createErrorDialog("Error occurred trying to save local storage data to disk.", e, -1);
 				}
-			} catch (StorageException e) {
+			} catch (BusinessException e) {
 				InspectIT.getDefault().createErrorDialog("Adding label to storage failed.", e, -1);
 				return false;
 			}

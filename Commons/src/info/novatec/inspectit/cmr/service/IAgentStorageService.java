@@ -3,7 +3,6 @@ package info.novatec.inspectit.cmr.service;
 import info.novatec.inspectit.communication.DefaultData;
 
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -22,9 +21,7 @@ public interface IAgentStorageService extends Remote {
 	 * 
 	 * @param dataObjects
 	 *            The list containing all the data objects.
-	 * @throws RemoteException
-	 *             If a remote exception occurs somewhere.
 	 */
-	void addDataObjects(List<? extends DefaultData> dataObjects) throws RemoteException;
+	void addDataObjects(List<? extends DefaultData> dataObjects);
 
 }

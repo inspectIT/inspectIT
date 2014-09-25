@@ -1,12 +1,12 @@
 package info.novatec.inspectit.rcp.handlers;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.dialog.EditRepositoryDataDialog;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -51,7 +51,7 @@ public class EditStorageDataHandler extends AbstractHandler implements IHandler 
 					} catch (Exception e) {
 						InspectIT.getDefault().createErrorDialog("Storage data update failed.", e, -1);
 					}
-				} catch (StorageException e) {
+				} catch (BusinessException e) {
 					InspectIT.getDefault().createErrorDialog("Storage data update failed.", e, -1);
 				}
 			} else {
