@@ -1,7 +1,7 @@
 package info.novatec.inspectit.rcp.view.impl;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.editor.tree.DeferredTreeViewer;
@@ -292,7 +292,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 			} else {
 				displayedAgent = null; // NOPMD
 			}
-		} catch (ServiceException e) {
+		} catch (BusinessException e) {
 			InspectIT.getDefault().createErrorDialog("Exception occurred trying to load the agent tree for the agent " + agent.getAgentName() + ".", e, -1);
 			displayedAgent = null; // NOPMD
 		}

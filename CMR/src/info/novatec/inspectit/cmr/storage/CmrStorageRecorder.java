@@ -5,7 +5,6 @@ import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.StorageWriter;
 import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 import info.novatec.inspectit.storage.recording.RecordingProperties;
@@ -124,20 +123,20 @@ public class CmrStorageRecorder {
 	 *            Writer for executing writing tasks.
 	 * @param recProperties
 	 *            {@link RecordingProperties} used during the recording.
-	 * @throws StorageException
+	 * @throws IllegalArgumentException
 	 *             If parameters are null, storage writer is not prepared for write or data
 	 *             processor are not provided.
 	 */
-	public synchronized void startOrScheduleRecording(final StorageWriter stWriter, final RecordingProperties recProperties) throws StorageException {
+	public synchronized void startOrScheduleRecording(final StorageWriter stWriter, final RecordingProperties recProperties) throws IllegalArgumentException {
 		if (!isRecordingOn() && !isRecordingScheduled()) {
 			if (null == stWriter) {
-				throw new StorageException("Storage writer can not be null. Recording will not be started.");
+				throw new IllegalArgumentException("Storage writer can not be null. Recording will not be started.");
 			} else if (!stWriter.isWritingOn()) {
-				throw new StorageException("Storage writer must be prepared for write. Recording will not be started.");
+				throw new IllegalArgumentException("Storage writer must be prepared for write. Recording will not be started.");
 			} else if (null == recProperties) {
-				throw new StorageException("Recording properties can not be null. Recording will not be started.");
+				throw new IllegalArgumentException("Recording properties can not be null. Recording will not be started.");
 			} else if (CollectionUtils.isEmpty(recProperties.getRecordingDataProcessors())) {
-				throw new StorageException("Recording data processor must be provided for recording.");
+				throw new IllegalArgumentException("Recording data processor must be provided for recording.");
 			}
 			storageWriter = stWriter;
 			recordingProperties = recProperties;

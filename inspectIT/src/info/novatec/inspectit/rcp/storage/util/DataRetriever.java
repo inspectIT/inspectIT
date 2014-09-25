@@ -1,6 +1,8 @@
 package info.novatec.inspectit.rcp.storage.util;
 
 import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
 import info.novatec.inspectit.indexing.storage.impl.StorageDescriptor;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -8,7 +10,6 @@ import info.novatec.inspectit.rcp.storage.http.TransferDataMonitor;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.StorageFileType;
 import info.novatec.inspectit.storage.StorageManager;
 import info.novatec.inspectit.storage.nio.stream.InputStreamProvider;
@@ -299,15 +300,15 @@ public class DataRetriever {
 	 *            Hash under which the cached data is stored.
 	 * @return Returns cached data for the storage from the CMR if the cached data exists for given
 	 *         hash. If data does not exist <code>null</code> is returned.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurred.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurred.
 	 * @throws SerializationException
 	 *             If {@link SerializationException} occurs.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends DefaultData> List<E> getCachedDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, int hash) throws StorageException, IOException,
+	public <E extends DefaultData> List<E> getCachedDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, int hash) throws BusinessException, IOException,
 			SerializationException {
 		String cachedFileLocation = cmrRepositoryDefinition.getStorageService().getCachedStorageDataFileLocation(storageData, hash);
 		if (null == cachedFileLocation) {
@@ -412,16 +413,16 @@ public class DataRetriever {
 	 *            {@link SubMonitor} for process reporting.
 	 * @param fileTypes
 	 *            Files that should be downloaded.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If directory to save does not exists. If files wanted can not be found on the
 	 *             server.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
 	public void downloadAndSaveStorageFiles(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, final Path directory, boolean compressBefore, boolean decompressContent,
-			SubMonitor subMonitor, StorageFileType... fileTypes) throws StorageException, IOException {
+			SubMonitor subMonitor, StorageFileType... fileTypes) throws BusinessException, IOException {
 		if (!Files.isDirectory(directory)) {
-			throw new StorageException("Directory path supplied as the data saving destination is not valid. Given path is: " + directory.toString());
+			throw new BusinessException("Download and save storage files for storage " + storageData + " to the path " + directory.toString() + ".", StorageErrorCodeEnum.FILE_DOES_NOT_EXIST);
 		}
 
 		Map<String, Long> allFiles = getFilesFromCmr(cmrRepositoryDefinition, storageData, fileTypes);
@@ -469,14 +470,14 @@ public class DataRetriever {
 	 *            {@link SubMonitor} for process reporting.
 	 * @param fileTypes
 	 *            Files that should be downloaded.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If directory to save does not exists. If files wanted can not be found on the
 	 *             server.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
 	public void downloadAndZipStorageFiles(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, final ZipOutputStream zos, boolean compressBefore, boolean decompressContent,
-			SubMonitor subMonitor, StorageFileType... fileTypes) throws StorageException, IOException {
+			SubMonitor subMonitor, StorageFileType... fileTypes) throws BusinessException, IOException {
 		Map<String, Long> allFiles = getFilesFromCmr(cmrRepositoryDefinition, storageData, fileTypes);
 
 		PostDownloadRunnable postDownloadRunnable = new PostDownloadRunnable() {
@@ -504,10 +505,10 @@ public class DataRetriever {
 	 * @param fileTypes
 	 *            Files that should be included.
 	 * @return Map of file names with their size.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs during service invocation.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs during service invocation.
 	 */
-	private Map<String, Long> getFilesFromCmr(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, StorageFileType... fileTypes) throws StorageException {
+	private Map<String, Long> getFilesFromCmr(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, StorageFileType... fileTypes) throws BusinessException {
 		Map<String, Long> allFiles = new HashMap<String, Long>();
 
 		// agent files
@@ -558,11 +559,11 @@ public class DataRetriever {
 	 *            {@link SubMonitor} for process reporting.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If status of HTTP response is not successful (codes 2xx).
 	 */
 	private void downloadAndSaveObjects(CmrRepositoryDefinition cmrRepositoryDefinition, Map<String, Long> files, PostDownloadRunnable postDownloadRunnable, boolean useGzipCompression,
-			boolean decompressContent, final SubMonitor subMonitor) throws IOException, StorageException {
+			boolean decompressContent, final SubMonitor subMonitor) throws IOException, BusinessException {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		final TransferDataMonitor transferDataMonitor = new TransferDataMonitor(subMonitor, files, useGzipCompression);
 		httpClient.addResponseInterceptor(new HttpResponseInterceptor() {

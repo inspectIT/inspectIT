@@ -2,6 +2,8 @@ package info.novatec.inspectit.rcp.storage;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 import info.novatec.inspectit.indexing.storage.impl.ArrayBasedStorageLeaf;
 import info.novatec.inspectit.indexing.storage.impl.CombinedStorageBranch;
@@ -17,7 +19,6 @@ import info.novatec.inspectit.rcp.storage.util.DataUploader;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.StorageFileType;
 import info.novatec.inspectit.storage.StorageManager;
 import info.novatec.inspectit.storage.label.StringStorageLabel;
@@ -110,14 +111,14 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param subMonitor
 	 *            {@link SubMonitor} to report to.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage directory can not be created or storage file can not be saved.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 * @throws SerializationException
 	 *             If {@link SerializationException} occurs.
 	 */
-	public void mountStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws StorageException, IOException, SerializationException {
+	public void mountStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws BusinessException, IOException, SerializationException {
 		this.mountStorage(storageData, cmrRepositoryDefinition, false, false, subMonitor);
 	}
 
@@ -136,7 +137,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            should be compressed on the fly before sent.
 	 * @param subMonitor
 	 *            {@link SubMonitor} to report to.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage directory can not be created or storage file can not be saved.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
@@ -144,17 +145,13 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *             If {@link SerializationException} occurs.
 	 * 
 	 */
-	private void mountStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean fullyDownload, boolean compressBefore, SubMonitor subMonitor) throws StorageException,
+	private void mountStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean fullyDownload, boolean compressBefore, SubMonitor subMonitor) throws BusinessException,
 			IOException, SerializationException {
 		LocalStorageData localStorageData = new LocalStorageData(storageData);
 
 		Path directory = getStoragePath(localStorageData);
 		if (!Files.exists(directory)) {
-			try {
 				Files.createDirectories(directory);
-			} catch (IOException e) {
-				throw new StorageException("Could not create local storage directory.", e);
-			}
 		}
 
 		if (fullyDownload) {
@@ -225,10 +222,15 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            Should data files be compressed on the fly before sent.
 	 * @param subMonitor
 	 *            {@link SubMonitor} to report to.
-	 * @throws Exception
-	 *             If any exception occurs.
+	 * @throws SerializationException
+	 *             If serialization exception occurs.
+	 * @throws IOException
+	 *             If {@link IOException} occurs.
+	 * @throws BusinessException
+	 *             If storage is already fully downloaded.
 	 */
-	public void fullyDownloadStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean compressBefore, SubMonitor subMonitor) throws Exception {
+	public void fullyDownloadStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean compressBefore, SubMonitor subMonitor) throws BusinessException, IOException,
+			SerializationException {
 		LocalStorageData localStorageData = null;
 		for (LocalStorageData lsd : mountedAvailableStorages.keySet()) {
 			if (ObjectUtils.equals(lsd.getId(), storageData.getId())) {
@@ -243,7 +245,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 		}
 
 		if (localStorageData.isFullyDownloaded()) {
-			throw new StorageException("Storage is already fully downloaded.");
+			throw new BusinessException("Download the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_ALREADY_DOWNLOADED);
 		}
 
 		Path directory = getStoragePath(localStorageData);
@@ -251,11 +253,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 		dataRetriever.downloadAndSaveStorageFiles(cmrRepositoryDefinition, storageData, directory, compressBefore, true, subMonitor, StorageFileType.DATA_FILE, StorageFileType.CACHED_DATA_FILE);
 		downloadedStorages.add(localStorageData);
 		localStorageData.setFullyDownloaded(true);
-		try {
-			writeLocalStorageDataToDisk(localStorageData);
-		} catch (Exception e) {
-			throw new StorageException("Could not save local storage information to disk.", e);
-		}
+		writeLocalStorageDataToDisk(localStorageData);
 
 	}
 
@@ -266,10 +264,10 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            {@link LocalStorageData}.
 	 * @throws IOException
 	 *             If deleting of the local data fails.
-	 * @throws StorageException
+	 * @throws SerializationException
 	 *             If serialization fails.
 	 */
-	public void deleteLocalStorageData(LocalStorageData localStorageData) throws IOException, StorageException {
+	public void deleteLocalStorageData(LocalStorageData localStorageData) throws IOException, SerializationException {
 		this.deleteLocalStorageData(localStorageData, true);
 	}
 
@@ -282,19 +280,15 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            Should the listeners be informed.
 	 * @throws IOException
 	 *             If deleting of the local data fails.
-	 * @throws StorageException
+	 * @throws SerializationException
 	 *             If serialization fails.
 	 */
-	private void deleteLocalStorageData(LocalStorageData localStorageData, boolean informListeners) throws IOException, StorageException {
+	private void deleteLocalStorageData(LocalStorageData localStorageData, boolean informListeners) throws IOException, SerializationException {
 		localStorageData.setFullyDownloaded(false);
 		downloadedStorages.remove(localStorageData);
 		if (mountedAvailableStorages.containsKey(localStorageData) || mountedNotAvailableStorages.contains(localStorageData)) {
 			super.deleteStorageDataFromDisk(localStorageData, StorageFileType.DATA_FILE);
-			try {
-				writeLocalStorageDataToDisk(localStorageData);
-			} catch (SerializationException e) {
-				throw new StorageException(e);
-			}
+			writeLocalStorageDataToDisk(localStorageData);
 		} else {
 			super.deleteCompleteStorageDataFromDisk(localStorageData);
 		}
@@ -314,10 +308,12 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * 
 	 * @param storageData
 	 *            {@link StorageData}.
-	 * @throws Exception
-	 *             If deleting of the local data fails.
+	 * @throws SerializationException
+	 *             If serialization fails.
+	 * @throws IOException
+	 *             If {@link IOException} occurs.
 	 */
-	public void storageRemotelyDeleted(StorageData storageData) throws Exception {
+	public void storageRemotelyDeleted(StorageData storageData) throws IOException, SerializationException {
 		LocalStorageData localStorageData = null;
 		for (Map.Entry<LocalStorageData, CmrRepositoryDefinition> entry : mountedAvailableStorages.entrySet()) {
 			if (ObjectUtils.equals(entry.getKey().getId(), storageData.getId())) {
@@ -467,7 +463,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * @param localStorageData
 	 *            {@link LocalStorageData} to create the definition for.
 	 * @return {@link StorageRepositoryDefinition}.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If the wanted {@link LocalStorageData} is not available.
 	 * @throws SerializationException
 	 *             If {@link SerializationException} occurs.
@@ -475,10 +471,10 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *             If {@link IOException} occurs.
 	 * 
 	 */
-	public StorageRepositoryDefinition getStorageRepositoryDefinition(LocalStorageData localStorageData) throws StorageException, SerializationException, IOException {
+	public StorageRepositoryDefinition getStorageRepositoryDefinition(LocalStorageData localStorageData) throws BusinessException, SerializationException, IOException {
 		// check if it is available
 		if (!mountedAvailableStorages.keySet().contains(localStorageData) && !downloadedStorages.contains(localStorageData)) {
-			throw new StorageException("The storage is not fully downloaded, and it's repository could not be found. The Storage repository definition could not be created.");
+			throw new BusinessException("Create repository definition for the storage " + localStorageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 
 		// find CMR repository def, allow null for downloaded and not mounted storages
@@ -579,10 +575,10 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param subMonitor
 	 *            {@link SubMonitor} to report progress to.
-	 * @throws Exception
+	 * @throws IOException
 	 *             If upload file does not exist or upload fails.
 	 */
-	public void uploadZippedStorage(String fileName, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws Exception {
+	public void uploadZippedStorage(String fileName, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws IOException {
 		Path file = Paths.get(fileName);
 		Path relativizePath = file.getParent();
 		String tmpDir = "tmp" + UUID.randomUUID().hashCode();
@@ -601,12 +597,14 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            Repository definition.
 	 * @param subMonitor
 	 *            The monitor to report upload progress to.
-	 * @throws Exception
-	 *             If storage is not fully downloaded or exception occurs during upload.
+	 * @throws BusinessException
+	 *             If storage is not fully downloaded.
+	 * @throws IOException
+	 *             If {@link IOException} occurss during operation.
 	 */
-	public void uploadCompleteStorage(LocalStorageData localStorageData, final CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws Exception {
+	public void uploadCompleteStorage(LocalStorageData localStorageData, final CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws BusinessException, IOException {
 		if (!localStorageData.isFullyDownloaded()) {
-			throw new StorageException("Can not upload storage that is not fully downloaded.");
+			throw new BusinessException("Uploading the storage " + localStorageData + ".", StorageErrorCodeEnum.STORAGE_IS_NOT_DOWNLOADED);
 		}
 
 		String tmpDir = "tmp" + UUID.randomUUID().hashCode();
@@ -631,14 +629,14 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            {@link LocalStorageData} to zip.
 	 * @param zipFileName
 	 *            Zip file name.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If the storage is not fully downloaded.
 	 * @throws IOException
 	 *             If {@link IOException} occurs during compressing.
 	 */
-	public void zipStorageData(LocalStorageData localStorageData, String zipFileName) throws StorageException, IOException {
+	public void zipStorageData(LocalStorageData localStorageData, String zipFileName) throws BusinessException, IOException {
 		if (!localStorageData.isFullyDownloaded()) {
-			throw new StorageException("Local storage data is not fully downloaded.");
+			throw new BusinessException("Zip data for the storage " + localStorageData + ".", StorageErrorCodeEnum.STORAGE_IS_NOT_DOWNLOADED);
 		} else {
 			Path zipPath = Paths.get(zipFileName);
 			if (Files.exists(zipPath)) {
@@ -668,13 +666,15 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *            Defines if the data should be compressed before downloading.
 	 * @param subMonitor
 	 *            {@link SubMonitor} to report to.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If serialization of data fails during zipping.
 	 * @throws IOException
 	 *             If {@link IOException} occurs during compressing.
+	 * @throws SerializationException
+	 *             If {@link SerializationException} occurs.
 	 */
-	public void zipStorageData(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, String zipFileName, boolean compressBefore, SubMonitor subMonitor) throws StorageException,
-			IOException {
+	public void zipStorageData(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, String zipFileName, boolean compressBefore, SubMonitor subMonitor) throws BusinessException,
+			IOException, SerializationException {
 		Path zipPath = Paths.get(zipFileName);
 		if (Files.exists(zipPath)) {
 			Files.delete(zipPath);
@@ -693,12 +693,9 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 			zos.putNextEntry(zipEntry);
 			serializeDataToOutputStream(localStorageData, zos, false);
 			zos.closeEntry();
-		} catch (IOException | StorageException e) {
+		} catch (IOException | BusinessException | SerializationException e) {
 			Files.deleteIfExists(zipPath);
 			throw e;
-		} catch (SerializationException e) {
-			Files.deleteIfExists(zipPath);
-			throw new StorageException("Could not write local storage data to packed storage file.", e);
 		}
 
 	}
@@ -725,7 +722,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * 
 	 * @param fileName
 	 *            File to unzip.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If given file does not exist or content is not proper.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
@@ -733,7 +730,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *             If serialization exception occurs if data needs to be updated.
 	 * 
 	 */
-	public void unzipStorageData(String fileName) throws StorageException, IOException, SerializationException {
+	public void unzipStorageData(String fileName) throws BusinessException, IOException, SerializationException {
 		Path zipPath = Paths.get(fileName);
 		IStorageData packedStorageData = getStorageDataFromZip(zipPath);
 		this.unzipStorageData(zipPath, getStoragePath(packedStorageData));

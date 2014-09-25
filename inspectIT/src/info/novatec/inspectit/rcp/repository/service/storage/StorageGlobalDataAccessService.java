@@ -2,11 +2,12 @@ package info.novatec.inspectit.rcp.repository.service.storage;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
 import info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
@@ -62,13 +63,13 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
-	public PlatformIdent getCompleteAgent(long id) throws ServiceException {
+	public PlatformIdent getCompleteAgent(long id) throws BusinessException {
 		for (PlatformIdent platformIdent : agents) {
 			if (platformIdent.getId().longValue() == id) {
 				return platformIdent;
 			}
 		}
-		throw new ServiceException("Agent with given ID=" + id + " is not existing.");
+		throw new BusinessException("Load the agent with the ID=" + id + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	 * <p>
 	 * Agents can not be deleted on the Storage.
 	 */
-	public void deleteAgent(long platformId) throws ServiceException {
+	public void deleteAgent(long platformId) throws BusinessException {
 	}
 
 	/**

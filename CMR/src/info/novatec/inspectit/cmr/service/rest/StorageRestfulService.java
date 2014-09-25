@@ -14,10 +14,11 @@ import info.novatec.inspectit.communication.data.SystemInformationData;
 import info.novatec.inspectit.communication.data.ThreadInformationData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.communication.data.cmr.RecordingData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.indexing.aggregation.impl.SqlStatementDataAggregator;
 import info.novatec.inspectit.indexing.aggregation.impl.TimerDataAggregator;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 import info.novatec.inspectit.storage.processor.impl.DataAggregatorProcessor;
 import info.novatec.inspectit.storage.processor.impl.DataSaverProcessor;
@@ -116,14 +117,14 @@ public class StorageRestfulService {
 	 * @param name
 	 *            Name of the storage.
 	 * @return Map containing message and created storage.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "create")
 	@ResponseBody
-	public Object createStorage(@RequestParam(value = "name", required = true) String name) throws StorageException {
+	public Object createStorage(@RequestParam(value = "name", required = true) String name) throws BusinessException {
 		if (StringUtils.isEmpty(name)) {
-			throw new StorageException("Can not create the storage when name is not provided.");
+			throw new BusinessException("Create a new storage via storage REST service.", StorageErrorCodeEnum.STORAGE_NAME_IS_NOT_PROVIDED);
 		}
 
 		StorageData storageData = new StorageData();
@@ -143,13 +144,13 @@ public class StorageRestfulService {
 	 * 
 	 * @param id
 	 *            ID bounded from path.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 * @return Message for the user.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "finalize")
 	@ResponseBody
-	public Object finalizeStorage(@RequestParam(value = "id", required = true) String id) throws StorageException {
+	public Object finalizeStorage(@RequestParam(value = "id", required = true) String id) throws BusinessException {
 		StorageData storageData = new StorageData();
 		storageData.setId(id);
 		storageService.closeStorage(storageData);
@@ -163,13 +164,13 @@ public class StorageRestfulService {
 	 * 
 	 * @param id
 	 *            ID bounded from path.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 * @return Message for the user.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "delete")
 	@ResponseBody
-	public Object deleteStorage(@RequestParam(value = "id", required = true) String id) throws StorageException {
+	public Object deleteStorage(@RequestParam(value = "id", required = true) String id) throws BusinessException {
 		StorageData storageData = new StorageData();
 		storageData.setId(id);
 		storageService.deleteStorage(storageData);
@@ -216,13 +217,13 @@ public class StorageRestfulService {
 	 * <p>
 	 * <i> Example URL: /storage/stop-recording</i>
 	 * 
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 * @return Message for the user.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "stop-recording")
 	@ResponseBody
-	public Object stopRecording() throws StorageException {
+	public Object stopRecording() throws BusinessException {
 		storageService.stopRecording();
 		return Collections.singletonMap("message", "Recording stopped.");
 	}
@@ -246,17 +247,17 @@ public class StorageRestfulService {
 	 * @param autoFinalize
 	 *            If storage should be auto-finalized when recording is stopped.
 	 * @return Map with informations for the user.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "start-recording")
 	@ResponseBody
 	public Object startOrScheduleRecording(@RequestParam(value = "id", required = true) String id, @RequestParam(value = "startDelay", required = false) Long startDelay,
 			@RequestParam(value = "recordingDuration", required = false) Long recordingDuration,
 			@RequestParam(value = "extractInvocations", required = false, defaultValue = "true") Boolean extractInvocations,
-			@RequestParam(value = "autoFinalize", required = false, defaultValue = "true") Boolean autoFinalize) throws StorageException {
+			@RequestParam(value = "autoFinalize", required = false, defaultValue = "true") Boolean autoFinalize) throws BusinessException {
 		if (null == getStorageById(id)) {
-			throw new StorageException("Storage with id " + id + " that is chosen for recording does not exists.");
+			throw new BusinessException("Start or schedule recording on storage with ID=" + id + " via storage REST service.", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		}
 
 		StorageData storageData = new StorageData();

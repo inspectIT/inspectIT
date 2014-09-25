@@ -1,9 +1,8 @@
 package info.novatec.inspectit.cmr.service;
 
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
+import info.novatec.inspectit.exception.BusinessException;
 
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +38,10 @@ public interface IRegistrationService extends Remote {
 	 * @param version
 	 *            The version the agent is currently running with.
 	 * @return Returns the unique platform identifier.
-	 * @throws RemoteException
-	 *             If a remote exception occurs somewhere or if the registration was not successful
-	 *             because the registration failed.
-	 * @throws ServiceException
+	 * @throws BusinessException
 	 *             If database contains more than one corresponding platform ident already.
 	 */
-	long registerPlatformIdent(List<String> definedIPs, String agentName, String version) throws RemoteException, ServiceException;
+	long registerPlatformIdent(List<String> definedIPs, String agentName, String version) throws BusinessException;
 
 	/**
 	 * Unregisters a platform by passing the network interfaces from the target server.
@@ -54,13 +50,10 @@ public interface IRegistrationService extends Remote {
 	 *            The list of all network interfaces.
 	 * @param agentName
 	 *            Name of the Agent.
-	 * @throws RemoteException
-	 *             If a remote exception occurs somewhere or if the registration was not successful
-	 *             because the registration failed.
-	 * @throws ServiceException
+	 * @throws BusinessException
 	 *             If the agent defined IPs is not registered.
 	 */
-	void unregisterPlatformIdent(List<String> definedIPs, String agentName) throws RemoteException, ServiceException;
+	void unregisterPlatformIdent(List<String> definedIPs, String agentName) throws BusinessException;
 
 	/**
 	 * Every instrumented method has to be registered from every Agent. This method returns a unique
@@ -82,10 +75,8 @@ public interface IRegistrationService extends Remote {
 	 * @param modifiers
 	 *            The modifiers.
 	 * @return Returns the unique method identifier.
-	 * @throws RemoteException
-	 *             If a remote exception occurs somewhere.
 	 */
-	long registerMethodIdent(long platformIdent, String packageName, String className, String methodName, List<String> parameterTypes, String returnType, int modifiers) throws RemoteException;
+	long registerMethodIdent(long platformIdent, String packageName, String className, String methodName, List<String> parameterTypes, String returnType, int modifiers);
 
 	/**
 	 * Every sensor type which is called by an instrumented method to gather data has to be
@@ -98,10 +89,8 @@ public interface IRegistrationService extends Remote {
 	 * @param parameters
 	 *            Map of parameters that sensor was assigned.
 	 * @return Returns the unique method sensor type identifier.
-	 * @throws RemoteException
-	 *             If a remote exception occurs somewhere.
 	 */
-	long registerMethodSensorTypeIdent(long platformIdent, String fullyQualifiedClassName, Map<String, Object> parameters) throws RemoteException;
+	long registerMethodSensorTypeIdent(long platformIdent, String fullyQualifiedClassName, Map<String, Object> parameters);
 
 	/**
 	 * This method is used to map a registered method sensor type to a registered method.
@@ -110,10 +99,8 @@ public interface IRegistrationService extends Remote {
 	 *            The unique identifier of the sensor type.
 	 * @param methodIdent
 	 *            The unique identifier of the method.
-	 * @throws RemoteException
-	 *             If a remote exception occurs somewhere.
 	 */
-	void addSensorTypeToMethod(long methodSensorTypeIdent, long methodIdent) throws RemoteException;
+	void addSensorTypeToMethod(long methodSensorTypeIdent, long methodIdent);
 
 	/**
 	 * Every sensor type which gathers information about the target platform/system has to be
@@ -124,9 +111,7 @@ public interface IRegistrationService extends Remote {
 	 * @param fullyQualifiedClassName
 	 *            The fully qualified class name of the sensor type.
 	 * @return Returns the unique platform sensor type identifier.
-	 * @throws RemoteException
-	 *             If a remote exception occurs somewhere.
 	 */
-	long registerPlatformSensorTypeIdent(long platformIdent, String fullyQualifiedClassName) throws RemoteException;
+	long registerPlatformSensorTypeIdent(long platformIdent, String fullyQualifiedClassName);
 
 }

@@ -12,6 +12,7 @@ import info.novatec.inspectit.communication.data.InvocationAwareData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -23,7 +24,6 @@ import info.novatec.inspectit.rcp.wizard.page.DefineNewStorageWizzardPage;
 import info.novatec.inspectit.rcp.wizard.page.NewOrExistsingStorageWizardPage;
 import info.novatec.inspectit.rcp.wizard.page.SelectExistingStorageWizardPage;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 import info.novatec.inspectit.util.ObjectUtils;
@@ -201,7 +201,7 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 								}
 							}
 						});
-					} catch (final StorageException e) {
+					} catch (final BusinessException e) {
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override
 							public void run() {

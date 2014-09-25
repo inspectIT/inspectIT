@@ -11,7 +11,6 @@ import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
 import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
 import info.novatec.inspectit.communication.data.AggregatedSqlStatementData;
@@ -32,6 +31,9 @@ import info.novatec.inspectit.communication.data.VmArgumentData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
 import info.novatec.inspectit.communication.data.cmr.RecordingData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.RemoteException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.indexing.indexer.impl.InvocationChildrenIndexer;
 import info.novatec.inspectit.indexing.indexer.impl.MethodIdentIndexer;
 import info.novatec.inspectit.indexing.indexer.impl.ObjectTypeIndexer;
@@ -45,7 +47,6 @@ import info.novatec.inspectit.indexing.storage.impl.StorageBranch;
 import info.novatec.inspectit.indexing.storage.impl.StorageBranchIndexer;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.BooleanStorageLabel;
 import info.novatec.inspectit.storage.label.DateStorageLabel;
 import info.novatec.inspectit.storage.label.NumberStorageLabel;
@@ -67,8 +68,6 @@ import info.novatec.inspectit.storage.serializer.schema.SchemaManagerTestProvide
 import info.novatec.inspectit.util.KryoNetNetwork;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,11 +114,6 @@ public class SerializerTest {
 			{ CmrStatusData.class }, { AgentStatusData.class }, { RecordingData.class }, { CustomBooleanLabelType.class }, { CustomNumberLabelType.class }, { CustomStringLabelType.class },
 			{ AssigneeLabelType.class }, { RatingLabelType.class }, { ExploredByLabelType.class }, { CreationDateLabelType.class }, { StatusLabelType.class }, { UseCaseLabelType.class },
 			{ AggregatedHttpTimerData.class }, { AggregatedSqlStatementData.class }, { AggregatedTimerData.class } };
-
-	/**
-	 * Exceptions we want to test to be able to get serialized.
-	 */
-	private static final Object[][] EXCEPTION_CLASSES = new Object[][] { { StorageException.class }, { ServiceException.class } };
 
 	/**
 	 * Serializer.
@@ -311,34 +305,33 @@ public class SerializerTest {
 	}
 
 	/**
-	 * Tests our exception classes for serialization and de-serialization.
+	 * Tests serialization of remote exception.
 	 */
-	@Test(dataProvider = "exceptionsProvider")
-	public void exceptions(Class<? extends Exception> exceptionClass) throws SerializationException, InstantiationException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException {
+	@Test
+	public void remoteException() throws SerializationException {
 		Exception exception = new Exception("Cause message");
-		Constructor<? extends Exception> constructor = exceptionClass.getConstructor(String.class, Throwable.class);
-		Exception realException = constructor.newInstance("Test message", exception);
-		realException.printStackTrace();
-		Exception deserialized = serializeBackAndForth(realException);
+		RemoteException remoteException = new RemoteException(exception);
+		Exception deserialized = serializeBackAndForth(remoteException);
 
-		// exceptions do not implement equalsTo
-		// we need to manually prove
-		assertThat(deserialized, is(instanceOf(exceptionClass)));
-		assertThat(deserialized.getMessage(), is(equalTo(realException.getMessage())));
-		assertThat(deserialized.getStackTrace(), is(equalTo(realException.getStackTrace())));
-		assertThat(deserialized.getCause(), is(instanceOf(Exception.class)));
-		assertThat(deserialized.getCause().getMessage(), is(equalTo(exception.getMessage())));
+		assertThat(deserialized, is(instanceOf(RemoteException.class)));
+		assertThat(deserialized.getMessage(), is(equalTo(exception.getMessage())));
+		assertThat(deserialized.getStackTrace(), is(equalTo(exception.getStackTrace())));
 	}
 
 	/**
-	 * Provides classes to be tested.
-	 * 
-	 * @return Provides classes to be tested.
+	 * Test the Business exception.
 	 */
-	@DataProvider(name = "exceptionsProvider")
-	public Object[][] exceptionsProvider() {
-		return EXCEPTION_CLASSES;
+	@Test
+	public void businessException() throws SerializationException {
+		BusinessException businessException = new BusinessException("Message", StorageErrorCodeEnum.CAN_NOT_START_RECORDING);
+		businessException.printStackTrace();
+		BusinessException deserialized = serializeBackAndForth(businessException);
+
+		assertThat(deserialized, is(instanceOf(BusinessException.class)));
+		assertThat(deserialized.getMessage(), is(equalTo(businessException.getMessage())));
+		assertThat(deserialized.getStackTrace(), is(equalTo(businessException.getStackTrace())));
+		assertThat(deserialized.getActionPerformed(), is(equalTo(businessException.getActionPerformed())));
+		assertThat(deserialized.getErrorCode(), is(equalTo(businessException.getErrorCode())));
 	}
 
 	/**

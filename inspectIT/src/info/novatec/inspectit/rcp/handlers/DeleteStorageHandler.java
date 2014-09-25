@@ -1,11 +1,11 @@
 package info.novatec.inspectit.rcp.handlers;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.type.impl.ExploredByLabelType;
 
@@ -97,7 +97,7 @@ public class DeleteStorageHandler extends AbstractHandler implements IHandler {
 									try {
 										storageDataProvider.getCmrRepositoryDefinition().getStorageService().deleteStorage(storageDataProvider.getStorageData());
 										InspectIT.getDefault().getInspectITStorageManager().storageRemotelyDeleted(storageDataProvider.getStorageData());
-									} catch (final StorageException e) {
+									} catch (final BusinessException e) {
 										Display.getDefault().asyncExec(new Runnable() {
 											@Override
 											public void run() {

@@ -108,6 +108,9 @@
 	<!-- Set this to debug for more information about: - schema loading for serialization -->
 	<logger name="info.novatec.inspectit.storage.serializer.schema" level="info" />
 
+	<!-- Set this to debug for more information about: - business exceptions occurring -->
+	<logger name="info.novatec.inspectit.cmr.spring.aop.ExceptionInterceptor" level="info" />
+	
 	<!-- Disabled loggers from down here -->
 
 	<!-- hibernate logging -->
