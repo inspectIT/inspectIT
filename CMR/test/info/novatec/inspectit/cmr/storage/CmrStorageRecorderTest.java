@@ -13,7 +13,7 @@ import info.novatec.inspectit.cmr.dao.StorageDataDao;
 import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.storage.StorageException;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.StorageWriter;
 import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 import info.novatec.inspectit.storage.recording.RecordingProperties;
@@ -81,7 +81,7 @@ public class CmrStorageRecorderTest extends AbstractTestNGLogSupport {
 	 * Test that start of recording and processing of data is correct.
 	 */
 	@Test
-	public void processing() throws StorageException {
+	public void processing() throws BusinessException {
 		when(recordingProperties.getRecordingDataProcessors()).thenReturn(Collections.singleton(dataProcessor));
 		cmrStorageRecorder.startOrScheduleRecording(storageWriter, recordingProperties);
 		assertThat(cmrStorageRecorder.isRecordingOn(), is(true));
@@ -98,7 +98,7 @@ public class CmrStorageRecorderTest extends AbstractTestNGLogSupport {
 	 * Tests that no data will be processed if recording is off and storage writer is turned off.
 	 */
 	@Test
-	public void noProcessing() throws StorageException {
+	public void noProcessing() throws BusinessException {
 		cmrStorageRecorder = spy(cmrStorageRecorder);
 		when(recordingProperties.getRecordingDataProcessors()).thenReturn(Collections.singleton(dataProcessor));
 		cmrStorageRecorder.startOrScheduleRecording(storageWriter, recordingProperties);
@@ -117,7 +117,7 @@ public class CmrStorageRecorderTest extends AbstractTestNGLogSupport {
 	 * Tests that the recording will be scheduled if start delay is specified.
 	 */
 	@Test
-	public void scheduleRecording() throws StorageException {
+	public void scheduleRecording() throws BusinessException {
 		cmrStorageRecorder = spy(cmrStorageRecorder);
 		long recordingDelay = 1000L;
 		when(recordingProperties.getRecordingDataProcessors()).thenReturn(Collections.singleton(dataProcessor));
@@ -135,7 +135,7 @@ public class CmrStorageRecorderTest extends AbstractTestNGLogSupport {
 	 * Test that recording will be stopped if recording duration is set.
 	 */
 	@Test
-	public void scheduleRecordingStop() throws StorageException, IOException, SerializationException {
+	public void scheduleRecordingStop() throws BusinessException, IOException, SerializationException {
 		cmrStorageRecorder = spy(cmrStorageRecorder);
 		long recordingDuration = 1000L;
 		when(recordingProperties.getRecordingDataProcessors()).thenReturn(Collections.singleton(dataProcessor));
@@ -157,7 +157,7 @@ public class CmrStorageRecorderTest extends AbstractTestNGLogSupport {
 	 * information data for all recorded platforms.
 	 */
 	@Test
-	public void stopRecording() throws StorageException {
+	public void stopRecording() throws BusinessException {
 		cmrStorageRecorder = spy(cmrStorageRecorder);
 		when(recordingProperties.getRecordingDataProcessors()).thenReturn(Collections.singleton(dataProcessor));
 		cmrStorageRecorder.startOrScheduleRecording(storageWriter, recordingProperties);

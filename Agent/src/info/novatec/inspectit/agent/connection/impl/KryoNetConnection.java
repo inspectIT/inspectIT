@@ -11,8 +11,8 @@ import info.novatec.inspectit.agent.spring.PrototypesProvider;
 import info.novatec.inspectit.cmr.service.IAgentStorageService;
 import info.novatec.inspectit.cmr.service.IRegistrationService;
 import info.novatec.inspectit.cmr.service.ServiceInterface;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.kryonet.Client;
 import info.novatec.inspectit.kryonet.ExtendedSerializationImpl;
 import info.novatec.inspectit.kryonet.IExtendedSerialization;
@@ -23,7 +23,6 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -170,22 +169,17 @@ public class KryoNetConnection implements IConnection {
 				networkInterfaces = getNetworkInterfaces();
 			}
 			return registrationService.registerPlatformIdent(networkInterfaces, agentName, version);
-		} catch (RemoteException remoteException) {
-			if (log.isTraceEnabled()) {
-				log.trace("registerPlatform(String)", remoteException);
-			}
-			throw new RegistrationException("Could not register the platform", remoteException);
 		} catch (SocketException socketException) {
 			log.error("Could not obtain network interfaces from this machine!");
 			if (log.isTraceEnabled()) {
 				log.trace("Constructor", socketException);
 			}
 			throw new RegistrationException("Could not register the platform", socketException);
-		} catch (ServiceException serviceException) {
+		} catch (BusinessException businessException) {
 			if (log.isTraceEnabled()) {
-				log.trace("registerPlatform(String)", serviceException);
+				log.trace("registerPlatform(String)", businessException);
 			}
-			throw new RegistrationException("Could not register the platform", serviceException);
+			throw new RegistrationException("Could not register the platform", businessException);
 		}
 	}
 
@@ -209,18 +203,12 @@ public class KryoNetConnection implements IConnection {
 				log.trace("unregisterPlatform(List,String)", socketException);
 			}
 			throw new RegistrationException("Could not un-register the platform", socketException);
-		} catch (ServiceException serviceException) {
+		} catch (BusinessException businessException) {
 			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", serviceException);
+				log.trace("unregisterPlatform(List,String)", businessException);
 			}
-			throw new RegistrationException("Could not un-register the platform", serviceException);
-		} catch (RemoteException remoteException) {
-			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", remoteException);
-			}
-			throw new RegistrationException("Could not un-register the platform", remoteException);
+			throw new RegistrationException("Could not un-register the platform", businessException);
 		}
-
 	}
 
 	/**

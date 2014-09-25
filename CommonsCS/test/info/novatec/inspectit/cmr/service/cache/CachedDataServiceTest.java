@@ -13,8 +13,8 @@ import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
+import info.novatec.inspectit.exception.BusinessException;
 
 import java.util.Collections;
 
@@ -53,7 +53,7 @@ public class CachedDataServiceTest {
 	 * Test that caching is working.
 	 */
 	@Test
-	public void cacheWorks() throws ServiceException {
+	public void cacheWorks() throws BusinessException {
 		long platformId = 10L;
 		long sensorId = 20L;
 		long methodSensorId = 30L;

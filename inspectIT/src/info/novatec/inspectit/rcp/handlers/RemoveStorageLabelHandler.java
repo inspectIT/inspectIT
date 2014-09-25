@@ -1,12 +1,12 @@
 package info.novatec.inspectit.rcp.handlers;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class RemoveStorageLabelHandler extends AbstractHandler implements IHandl
 					if (viewPart instanceof StorageManagerView) {
 						((StorageManagerView) viewPart).refresh(cmrRepositoryDefinition);
 					}
-				} catch (StorageException e) {
+				} catch (BusinessException e) {
 					return null;
 				}
 			} else {

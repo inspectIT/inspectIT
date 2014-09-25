@@ -1,7 +1,7 @@
 package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.model.AgentLeaf;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -43,7 +43,7 @@ public class DeleteAgentHandler extends AbstractHandler implements IHandler {
 					try {
 						cmrRepositoryDefinition.getGlobalDataAccessService().deleteAgent(platformIdent.getId());
 						InspectIT.getDefault().getCmrRepositoryManager().repositoryAgentDeleted(cmrRepositoryDefinition, platformIdent);
-					} catch (ServiceException e) {
+					} catch (BusinessException e) {
 						InspectIT.getDefault().createErrorDialog("Exception occurred trying to delete the Agent from the CMR.", e, -1);
 					}
 				}

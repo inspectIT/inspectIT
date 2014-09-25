@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.wizard;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -14,7 +15,6 @@ import info.novatec.inspectit.rcp.wizard.page.NewOrExistsingStorageWizardPage;
 import info.novatec.inspectit.rcp.wizard.page.SelectAgentsWizardPage;
 import info.novatec.inspectit.rcp.wizard.page.SelectExistingStorageWizardPage;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 import info.novatec.inspectit.storage.processor.impl.TimeFrameDataProcessor;
@@ -195,7 +195,7 @@ public class CopyBufferToStorageWizard extends Wizard implements INewWizard {
 								}
 							}
 						});
-					} catch (final StorageException e) {
+					} catch (final BusinessException e) {
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override
 							public void run() {

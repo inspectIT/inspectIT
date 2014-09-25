@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.form;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
@@ -17,7 +18,6 @@ import info.novatec.inspectit.rcp.storage.label.edit.LabelValueEditingSupport.La
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.util.ObjectUtils;
 
@@ -420,7 +420,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 								if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 									try {
 										cmrRepositoryDefinition.getStorageService().removeLabelFromStorage(storageDataProvider.getStorageData(), label);
-									} catch (StorageException e) {
+									} catch (BusinessException e) {
 										InspectIT.getDefault().createErrorDialog("Label value can not be updated.", e, -1);
 									}
 								}
@@ -433,7 +433,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 										label.setId(0);
 										cmrRepositoryDefinition.getStorageService().addLabelToStorage(storageDataProvider.getStorageData(), label, true);
 										refreshStorageManagerView(cmrRepositoryDefinition);
-									} catch (StorageException e) {
+									} catch (BusinessException e) {
 										InspectIT.getDefault().createErrorDialog("Label value can not be updated.", e, -1);
 									}
 								}

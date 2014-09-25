@@ -2,6 +2,7 @@ package info.novatec.inspectit.cmr.dao;
 
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
@@ -75,10 +76,10 @@ public interface StorageDataDao {
 	 * 
 	 * @param labelType
 	 *            Label type to remove.
-	 * @throws Exception
+	 * @throws BusinessException
 	 *             If there are still labels of this type existing in the database.
 	 */
-	void removeLabelType(AbstractStorageLabelType<?> labelType) throws Exception;
+	void removeLabelType(AbstractStorageLabelType<?> labelType) throws BusinessException;
 
 	/**
 	 * Returns all instances of desired label type.

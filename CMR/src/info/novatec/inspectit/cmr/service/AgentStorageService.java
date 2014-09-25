@@ -9,7 +9,6 @@ import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.spring.logger.Log;
 
 import java.lang.ref.SoftReference;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -100,7 +99,7 @@ public class AgentStorageService implements IAgentStorageService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void addDataObjects(final List<? extends DefaultData> dataObjects) throws RemoteException {
+	public void addDataObjects(final List<? extends DefaultData> dataObjects) {
 		SoftReference<List<? extends DefaultData>> softReference = new SoftReference<List<? extends DefaultData>>(dataObjects);
 		if (!dataObjects.isEmpty()) {
 			platformIdentDateSaver.registerDataSent(dataObjects.get(0).getPlatformIdent());

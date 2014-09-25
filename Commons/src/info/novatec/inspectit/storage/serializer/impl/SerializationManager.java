@@ -6,7 +6,6 @@ import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.ExceptionEvent;
 import info.novatec.inspectit.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
@@ -42,6 +41,11 @@ import info.novatec.inspectit.communication.data.VmArgumentData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
 import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.RemoteException;
+import info.novatec.inspectit.exception.TechnicalException;
+import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.storage.serializer.HibernateAwareClassResolver;
 import info.novatec.inspectit.storage.serializer.IKryoProvider;
 import info.novatec.inspectit.storage.serializer.ISerializer;
@@ -51,6 +55,7 @@ import info.novatec.inspectit.util.IHibernateUtil;
 import info.novatec.inspectit.util.KryoNetNetwork;
 import info.novatec.inspectit.util.TimeFrame;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -264,7 +269,6 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		// added with INSPECTIT-912
 		UnmodifiableCollectionsSerializer.registerSerializers(kryo);
 		SynchronizedCollectionsSerializer.registerSerializers(kryo);
-		kryo.register(ServiceException.class, new FieldSerializer<ServiceException>(kryo, ServiceException.class));
 		kryo.register(StackTraceElement.class, new StackTraceElementSerializer());
 
 		// added with INSPECTIT-887
@@ -285,6 +289,19 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		// added with INSPECTIT-480
 		// needed for KryoNet
 		kryoNetNetwork.register(kryo);
+
+		// added with INSPECTIT-632
+		kryo.register(BusinessException.class, new FieldSerializer<BusinessException>(kryo, BusinessException.class));
+		kryo.register(TechnicalException.class, new FieldSerializer<TechnicalException>(kryo, TechnicalException.class));
+		kryo.register(RemoteException.class, new FieldSerializer<RemoteException>(kryo, RemoteException.class));
+		kryo.register(StorageErrorCodeEnum.class, new EnumSerializer(StorageErrorCodeEnum.class));
+		kryo.register(AgentManagementErrorCodeEnum.class, new EnumSerializer(AgentManagementErrorCodeEnum.class));
+		kryo.register(InvocationTargetException.class, new FieldSerializer<InvocationTargetException>(kryo, InvocationTargetException.class) {
+			@Override
+			protected InvocationTargetException create(Kryo kryo, Input input, Class<InvocationTargetException> type) {
+				return new InvocationTargetException(null);
+			}
+		});
 	}
 
 	/**

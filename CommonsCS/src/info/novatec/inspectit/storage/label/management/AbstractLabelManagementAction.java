@@ -1,7 +1,7 @@
 package info.novatec.inspectit.storage.label.management;
 
 import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.storage.StorageException;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
@@ -59,10 +59,10 @@ public abstract class AbstractLabelManagementAction implements Serializable {
 	 * 
 	 * @param storageService
 	 *            Storage service that can be used for action purposes.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If exception occurs during the executions.
 	 */
-	public abstract void execute(IStorageService storageService) throws StorageException;
+	public abstract void execute(IStorageService storageService) throws BusinessException;
 
 	/**
 	 * @return Returns if this action is related to label type.

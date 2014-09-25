@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.handlers;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
@@ -8,7 +9,6 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.view.impl.RepositoryManagerView;
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.recording.RecordingState;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -76,7 +76,7 @@ public class StopRecordingHanlder extends AbstractHandler implements IHandler {
 											}
 										}
 									});
-								} catch (final StorageException e) {
+								} catch (final BusinessException e) {
 									Display.getDefault().asyncExec(new Runnable() {
 										@Override
 										public void run() {

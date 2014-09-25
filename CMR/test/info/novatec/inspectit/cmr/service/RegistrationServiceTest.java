@@ -22,9 +22,9 @@ import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
 import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
 import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
+import info.novatec.inspectit.exception.BusinessException;
 
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
@@ -112,10 +112,10 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 * 
 	 * @throws RemoteException
 	 *             If remote exception occurs.
-	 * @throws ServiceException
+	 * @throws BusinessException
 	 */
-	@Test(expectedExceptions = { ServiceException.class })
-	public void noRegistrationTwoAgents() throws RemoteException, ServiceException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void noRegistrationTwoAgents() throws RemoteException, BusinessException {
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
 		String agentName = "agentName";
@@ -136,11 +136,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 *             If {@link LicenseContentException} occurs.
 	 * @throws RemoteException
 	 *             If remote exception occurs.
-	 * @throws ServiceException
-	 *             If {@link ServiceException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerNewPlatformIdent() throws RemoteException, ServiceException {
+	public void registerNewPlatformIdent() throws RemoteException, BusinessException {
 		final long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -178,11 +178,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 *             If {@link LicenseContentException} occurs.
 	 * @throws RemoteException
 	 *             If remote exception occurs.
-	 * @throws ServiceException
-	 *             If {@link ServiceException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerExistingPlatformIdent() throws RemoteException, ServiceException {
+	public void registerExistingPlatformIdent() throws RemoteException, BusinessException {
 		long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -223,11 +223,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 * @throws LicenseContentException
 	 *             If {@link LicenseContentException} occurs.
 	 * @throws RemoteException
-	 * @throws ServiceException
-	 *             If {@link ServiceException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerNewPlatformIdentNoIpBased() throws RemoteException, ServiceException {
+	public void registerNewPlatformIdentNoIpBased() throws RemoteException, BusinessException {
 		final long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -267,11 +267,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 *             If {@link LicenseContentException} occurs.
 	 * @throws RemoteException
 	 *             If remote exception occurs.
-	 * @throws ServiceException
-	 *             If {@link ServiceException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerExistingPlatformIdentNoIpBased() throws RemoteException, ServiceException {
+	public void registerExistingPlatformIdentNoIpBased() throws RemoteException, BusinessException {
 		long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -310,7 +310,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 * Test unregistration of platform ident.
 	 */
 	@Test
-	public void unregisterPlatformIdent() throws ServiceException {
+	public void unregisterPlatformIdent() throws BusinessException {
 		long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -331,10 +331,10 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	}
 
 	/**
-	 * Confirm that {@link ServiceException} is thrown if platform ident can not be located.
+	 * Confirm that {@link BusinessException} is thrown if platform ident can not be located.
 	 */
-	@Test(expectedExceptions = { ServiceException.class })
-	public void unregisterNotExistingPlatformIdent() throws ServiceException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void unregisterNotExistingPlatformIdent() throws BusinessException {
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
 		String agentName = "agentName";

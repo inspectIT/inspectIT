@@ -16,6 +16,7 @@ import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
@@ -114,8 +115,8 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	/**
 	 * We can not open not-existing storage.
 	 */
-	@Test(expectedExceptions = StorageException.class)
-	public void openUnexisting() throws IOException, SerializationException, StorageException {
+	@Test(expectedExceptions = BusinessException.class)
+	public void openUnexisting() throws IOException, SerializationException, BusinessException {
 		storageManager.openStorage(new StorageData());
 	}
 
@@ -126,10 +127,10 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	 *             If serialization fails.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 */
 	@Test
-	public void createStorageTest() throws IOException, SerializationException, StorageException {
+	public void createStorageTest() throws IOException, SerializationException, BusinessException {
 		storageManager.createStorage(storageData);
 
 		File storageDir = getStorageFolder();
@@ -173,15 +174,15 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	/**
 	 * Test write to storage.
 	 * 
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
 	@Test(dependsOnMethods = { "createStorageTest" })
-	public void testWrite() throws StorageException, IOException, SerializationException {
+	public void testWrite() throws BusinessException, IOException, SerializationException {
 		Random random = new Random();
 		int repeat = random.nextInt(100);
 		List<AbstractDataProcessor> processors = new ArrayList<AbstractDataProcessor>();
@@ -213,11 +214,11 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	 *             If serialization fails.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	@Test(dependsOnMethods = { "testWrite" })
-	public void finalizeWriteTest() throws IOException, SerializationException, StorageException {
+	public void finalizeWriteTest() throws IOException, SerializationException, BusinessException {
 		storageManager.closeStorage(storageData);
 
 		assertThat(storageData.isStorageOpened(), is(false));
@@ -274,8 +275,8 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	/**
 	 * Test that the storage can not be opened after it has been finalized.
 	 */
-	@Test(dependsOnMethods = { "finalizeWriteTest" }, expectedExceptions = { StorageException.class })
-	public void canNotOpenClosed() throws IOException, SerializationException, StorageException {
+	@Test(dependsOnMethods = { "finalizeWriteTest" }, expectedExceptions = { BusinessException.class })
+	public void canNotOpenClosed() throws IOException, SerializationException, BusinessException {
 		storageManager.openStorage(storageData);
 	}
 
@@ -332,10 +333,10 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	 *             If serialization fails.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 */
 	@Test
-	public void testStorageLabels() throws IOException, SerializationException, StorageException {
+	public void testStorageLabels() throws IOException, SerializationException, BusinessException {
 		RatingLabelType ratingLabelType = new RatingLabelType();
 		StringStorageLabel label = new StringStorageLabel();
 		label.setStorageLabelType(ratingLabelType);

@@ -1,6 +1,8 @@
 package info.novatec.inspectit.storage;
 
 import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.indexing.IIndexQuery;
 import info.novatec.inspectit.indexing.aggregation.IAggregator;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
@@ -535,15 +537,15 @@ public abstract class StorageManager {
 	 *            Path to the zip file.
 	 * @param destinationPath
 	 *            The path where it should be unpacked.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If zipFilePath does not exist or destination path does exist.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 * 
 	 */
-	protected void unzipStorageData(final Path zipFilePath, final Path destinationPath) throws StorageException, IOException {
+	protected void unzipStorageData(final Path zipFilePath, final Path destinationPath) throws BusinessException, IOException {
 		if (Files.notExists(zipFilePath)) {
-			throw new StorageException("Can not unpack the storage " + StorageFileType.ZIP_STORAGE_FILE.getExtension() + " file. File " + zipFilePath + " does not exist.");
+			throw new BusinessException("Unpack the storage file with path " + zipFilePath + ".", StorageErrorCodeEnum.FILE_DOES_NOT_EXIST);
 		}
 
 		Files.createDirectories(destinationPath);

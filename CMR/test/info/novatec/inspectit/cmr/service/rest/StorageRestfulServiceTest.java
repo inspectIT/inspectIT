@@ -15,8 +15,8 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import info.novatec.inspectit.cmr.service.IStorageService;
 import info.novatec.inspectit.communication.data.cmr.RecordingData;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.processor.impl.InvocationExtractorDataProcessor;
 import info.novatec.inspectit.storage.recording.RecordingProperties;
 import info.novatec.inspectit.storage.recording.RecordingState;
@@ -81,7 +81,7 @@ public class StorageRestfulServiceTest {
 	}
 
 	@Test
-	public void createStorage() throws StorageException {
+	public void createStorage() throws BusinessException {
 		String name = "name";
 		restfulService.createStorage(name);
 
@@ -90,13 +90,13 @@ public class StorageRestfulServiceTest {
 		assertThat(captor.getValue().getName(), is(name));
 	}
 
-	@Test(expectedExceptions = { StorageException.class })
-	public void createStorageEmptyName() throws StorageException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void createStorageEmptyName() throws BusinessException {
 		restfulService.createStorage("");
 	}
 
 	@Test
-	public void deleteStorage() throws StorageException {
+	public void deleteStorage() throws BusinessException {
 		String id = "id";
 		restfulService.deleteStorage(id);
 
@@ -106,7 +106,7 @@ public class StorageRestfulServiceTest {
 	}
 
 	@Test
-	public void finalizeStorage() throws StorageException {
+	public void finalizeStorage() throws BusinessException {
 		String id = "id";
 		restfulService.finalizeStorage(id);
 
@@ -139,7 +139,7 @@ public class StorageRestfulServiceTest {
 
 	@SuppressWarnings("deprecation")
 	@Test
-	public void startRecording() throws StorageException {
+	public void startRecording() throws BusinessException {
 		String id = "id";
 		StorageData storageData = new StorageData();
 		storageData.setId(id);
