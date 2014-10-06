@@ -77,7 +77,7 @@ public enum AgentManagementErrorCodeEnum implements IErrorCode {
 	 * {@inheritDoc}
 	 */
 	public String getName() {
-		return WordUtils.capitalizeFully(this.toString().toLowerCase());
+		return WordUtils.capitalizeFully(this.toString().replace("_", " ").toLowerCase());
 	}
 
 	/**

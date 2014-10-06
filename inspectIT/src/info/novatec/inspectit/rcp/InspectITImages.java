@@ -80,6 +80,8 @@ public interface InspectITImages {
 	String IMG_WIZBAN_ADD = InspectITConstants.WIZBAN_ICON_PATH + "add_wiz.png";
 	String IMG_WIZBAN_DOWNLOAD = InspectITConstants.WIZBAN_ICON_PATH + "download_wiz.png";
 	String IMG_WIZBAN_EDIT = InspectITConstants.WIZBAN_ICON_PATH + "edit_wiz.png";
+	String IMG_WIZBAN_EXCEPTION = InspectITConstants.WIZBAN_ICON_PATH + "exception_wiz.png";
+	String IMG_WIZBAN_ERROR = InspectITConstants.WIZBAN_ICON_PATH + "error_wiz.png";
 	String IMG_WIZBAN_EXPORT = InspectITConstants.WIZBAN_ICON_PATH + "export_wiz.png";
 	String IMG_WIZBAN_IMPORT = InspectITConstants.WIZBAN_ICON_PATH + "import_wiz.png";
 	String IMG_WIZBAN_LABEL = InspectITConstants.WIZBAN_ICON_PATH + "label_wiz.png";

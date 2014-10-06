@@ -394,6 +394,10 @@
             name="Navigate To Single Exception Type">
       </command>
       <command
+            id="info.novatec.inspectit.rcp.sendErrorReport"
+            name="Send Error Report to Support">
+      </command>
+      <command
             id="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType"
             name="Navigate To Grouped Exception Type">
       </command>
@@ -1390,6 +1394,10 @@
                   </instanceof>
                </with></and>
          </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.OpenUrlHandler$ExceptionSupportHandler"
+            commandId="info.novatec.inspectit.rcp.sendErrorReport">
       </handler>
       <handler
             class="info.novatec.inspectit.rcp.handlers.DetailsHandler"
