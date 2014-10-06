@@ -2,13 +2,18 @@ package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.rcp.InspectIT;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
@@ -28,14 +33,17 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+		String urlString = getUrlString(event);
+		if (null == urlString) {
+			return null;
+		}
+
 		try {
 			IWebBrowser browser = browserSupport.createBrowser(null);
-			URL url = new URL(getUrlString(event));
+			URL url = new URL(urlString);
 			browser.openURL(url);
-		} catch (PartInitException e) {
-			InspectIT.getDefault().createErrorDialog(e.getMessage(), e, -1);
-		} catch (MalformedURLException e) {
-			InspectIT.getDefault().createErrorDialog(e.getMessage(), e, -1);
+		} catch (PartInitException | MalformedURLException e) {
+			throw new ExecutionException("Error opetning the URL ('" + urlString + "') in the system browser.", e);
 		}
 		return null;
 	}
@@ -45,7 +53,8 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 	 * 
 	 * @param event
 	 *            {@link ExecutionEvent} that activated the handler.
-	 * @return URL as a string.
+	 * @return URL as a string or <code>null</code> to signal the abort of the action due to the not
+	 *         regular behavior.
 	 */
 	protected abstract String getUrlString(ExecutionEvent event);
 
@@ -97,6 +106,66 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 		@Override
 		protected String getUrlString(ExecutionEvent event) {
 			return "mailto:support.inspectit@novatec-gmbh.de&subject=Support%20needed";
+		}
+	}
+
+	/**
+	 * Handler for sending the exception to the support mail.
+	 * 
+	 * @author Ivan Senic
+	 * 
+	 */
+	public static class ExceptionSupportHandler extends OpenUrlHandler {
+
+		/**
+		 * ID of the command.
+		 */
+		public static final String COMMAND = "info.novatec.inspectit.rcp.sendErrorReport";
+
+		/**
+		 * ID of the input which should be exception.
+		 */
+		public static final String INPUT = "info.novatec.inspectit.rcp.sendErrorReport.throwable";
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected String getUrlString(ExecutionEvent event) {
+			// Get the exception out of the context
+			IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+			Throwable throwable = (Throwable) context.getVariable(INPUT);
+			if (null == throwable) {
+				return null;
+			}
+
+			// create body
+			StringBuilder body = new StringBuilder("I would like to report the following exception that occurred in inspectIT:\n\n");
+			body.append("inspectIT Version: ");
+			body.append(InspectIT.getDefault().getBundle().getVersion());
+			body.append("\nOperating system: ");
+			body.append(SystemUtils.OS_NAME + " " + SystemUtils.OS_VERSION + " (" + SystemUtils.OS_ARCH + ")"); // NOPMD
+			body.append("\nJava version: ");
+			body.append(SystemUtils.JAVA_VENDOR + " " + SystemUtils.JAVA_VERSION); // NOPMD
+			body.append("\nException type: ");
+			body.append(throwable.getClass().getName());
+			body.append("\nException message: ");
+			body.append(throwable.getMessage());
+			body.append("\nStack trace (limited): ");
+			String stackTrace = ExceptionUtils.getStackTrace(throwable);
+			int limit = stackTrace.length() > 1000 ? 1000 : stackTrace.length();
+			body.append(stackTrace.subSequence(0, limit));
+			body.append("\n\nBest regards,\nYour Name");
+
+			String result = "mailto:support.inspectit@novatec-gmbh.de&subject=Support%20needed&body=";
+			try {
+				// encode body
+				result += URLEncoder.encode(body.toString(), "UTF-8").replaceAll("\\+", "%20").replaceAll("\\%21", "!").replaceAll("\\%27", "'").replaceAll("\\%28", "(").replaceAll("\\%29", ")")
+						.replaceAll("\\%7E", "~");
+			} catch (UnsupportedEncodingException exception) {
+				return result;
+			}
+			return result;
 		}
 	}
 

@@ -3,7 +3,9 @@ package info.novatec.inspectit.rcp.handlers;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider;
 import info.novatec.inspectit.storage.LocalStorageData;
+import info.novatec.inspectit.storage.serializer.SerializationException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -56,9 +58,8 @@ public class DeleteLocalStorageHandler extends AbstractHandler implements IHandl
 				for (LocalStorageData localStorageData : localStoragesToDelete) {
 					try {
 						InspectIT.getDefault().getInspectITStorageManager().deleteLocalStorageData(localStorageData);
-					} catch (Exception e) {
-						InspectIT.getDefault().createErrorDialog("There was an exception trying to delete local storage data.", e, -1);
-						return null;
+					} catch (SerializationException | IOException e) {
+						throw new ExecutionException("There was an exception trying to delete local storage data.", e);
 					}
 				}
 
@@ -67,5 +68,4 @@ public class DeleteLocalStorageHandler extends AbstractHandler implements IHandl
 
 		return null;
 	}
-
 }

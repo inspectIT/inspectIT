@@ -195,14 +195,8 @@ public class CopyBufferToStorageWizard extends Wizard implements INewWizard {
 								}
 							}
 						});
-					} catch (final BusinessException e) {
-						Display.getDefault().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								InspectIT.getDefault().createErrorDialog("Copy of the buffer data to storage failed.", e, -1);
-							}
-						});
-						return Status.CANCEL_STATUS;
+					} catch (BusinessException e) {
+						return new Status(IStatus.ERROR, InspectIT.ID, "Copy of the buffer data to storage failed.", e);
 					}
 					return Status.OK_STATUS;
 				}

@@ -55,47 +55,38 @@ public class StopRecordingHanlder extends AbstractHandler implements IHandler {
 			if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 				boolean canStop = cmrRepositoryDefinition.getStorageService().getRecordingState() != RecordingState.OFF;
 				if (canStop) {
-					try {
-						final CmrRepositoryDefinition finalCmrRepositoryDefinition = cmrRepositoryDefinition;
-						Job stopRecordingJob = new Job("Stop Recording") {
-							@Override
-							protected IStatus run(IProgressMonitor monitor) {
-								try {
-									finalCmrRepositoryDefinition.getStorageService().stopRecording();
-									Display.getDefault().asyncExec(new Runnable() {
-										@Override
-										public void run() {
-											IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-											IViewPart repositoryManagerView = activePage.findView(RepositoryManagerView.VIEW_ID);
-											if (repositoryManagerView instanceof RepositoryManagerView) {
-												((RepositoryManagerView) repositoryManagerView).refresh();
-											}
-											IViewPart storageManagerView = activePage.findView(StorageManagerView.VIEW_ID);
-											if (storageManagerView instanceof StorageManagerView) {
-												((StorageManagerView) storageManagerView).refresh(finalCmrRepositoryDefinition);
-											}
+					final CmrRepositoryDefinition finalCmrRepositoryDefinition = cmrRepositoryDefinition;
+					Job stopRecordingJob = new Job("Stop Recording") {
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							try {
+								finalCmrRepositoryDefinition.getStorageService().stopRecording();
+								Display.getDefault().asyncExec(new Runnable() {
+									@Override
+									public void run() {
+										IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+										IViewPart repositoryManagerView = activePage.findView(RepositoryManagerView.VIEW_ID);
+										if (repositoryManagerView instanceof RepositoryManagerView) {
+											((RepositoryManagerView) repositoryManagerView).refresh();
 										}
-									});
-								} catch (final BusinessException e) {
-									Display.getDefault().asyncExec(new Runnable() {
-										@Override
-										public void run() {
-											InspectIT.getDefault().createErrorDialog("Stopping the recording failed", e, -1);
+										IViewPart storageManagerView = activePage.findView(StorageManagerView.VIEW_ID);
+										if (storageManagerView instanceof StorageManagerView) {
+											((StorageManagerView) storageManagerView).refresh(finalCmrRepositoryDefinition);
 										}
-									});
-								}
-								return Status.OK_STATUS;
+									}
+								});
+							} catch (final BusinessException e) {
+								return new Status(IStatus.ERROR, InspectIT.ID, "Stopping the recording failed", e);
 							}
-						};
-						stopRecordingJob.setUser(true);
-						stopRecordingJob.setProperty(IProgressConstants.ICON_PROPERTY, InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_RECORD_STOP));
-						stopRecordingJob.schedule();
-					} catch (Exception e) {
-						InspectIT.getDefault().createErrorDialog("Execution Error", e, -1);
-					}
+							return Status.OK_STATUS;
+						}
+					};
+					stopRecordingJob.setUser(true);
+					stopRecordingJob.setProperty(IProgressConstants.ICON_PROPERTY, InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_RECORD_STOP));
+					stopRecordingJob.schedule();
 				}
 			} else {
-				InspectIT.getDefault().createErrorDialog("Recording can not be stopped, because the repository is currently offline.", null, -1);
+				throw new ExecutionException("Recording can not be stopped, because the repository is currently offline.");
 			}
 		}
 		return null;

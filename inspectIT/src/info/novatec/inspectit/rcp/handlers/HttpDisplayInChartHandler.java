@@ -1,7 +1,6 @@
 package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
@@ -24,6 +23,9 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
@@ -113,8 +115,8 @@ public class HttpDisplayInChartHandler extends AbstractHandler implements IHandl
 
 			try {
 				command.executeWithChecks(executionEvent);
-			} catch (Exception e) {
-				InspectIT.getDefault().createErrorDialog(e.getMessage(), e, -1);
+			} catch (NotDefinedException | NotEnabledException | NotHandledException e) {
+				throw new ExecutionException("Error opening the HTTP chart view.", e);
 			}
 		}
 

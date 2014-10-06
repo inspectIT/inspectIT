@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.handlers;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -9,6 +10,9 @@ import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
 import info.novatec.inspectit.rcp.view.impl.DataExplorerView;
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.storage.StorageData;
+import info.novatec.inspectit.storage.serializer.SerializationException;
+
+import java.io.IOException;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -67,26 +71,12 @@ public class CloseAndShowStorageHandler extends CloseStorageHandler implements I
 						protected IStatus run(IProgressMonitor monitor) {
 							SubMonitor subMonitor = SubMonitor.convert(monitor);
 							InspectITStorageManager storageManager = InspectIT.getDefault().getInspectITStorageManager();
-							try {
-								storageManager.mountStorage(storageData, cmrRepositoryDefinition, subMonitor);
-							} catch (final Exception exception) {
-								Display.getDefault().asyncExec(new Runnable() {
-									@Override
-									public void run() {
-										InspectIT.getDefault().createErrorDialog("There was an exception trying to open the storage.", exception, -1);
-									}
-								});
-							}
 							RepositoryDefinition repositoryDefinition = null;
 							try {
+								storageManager.mountStorage(storageData, cmrRepositoryDefinition, subMonitor);
 								repositoryDefinition = storageManager.getStorageRepositoryDefinition(storageManager.getLocalDataForStorage(storageData));
-							} catch (final Exception exception) {
-								Display.getDefault().asyncExec(new Runnable() {
-									@Override
-									public void run() {
-										InspectIT.getDefault().createErrorDialog("There was an exception trying to open the storage.", exception, -1);
-									}
-								});
+							} catch (BusinessException | SerializationException | IOException exception) {
+								return new Status(IStatus.ERROR, InspectIT.ID, "There was an exception trying to open the storage.", exception);
 							}
 
 							// find views
