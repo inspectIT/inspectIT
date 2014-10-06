@@ -8,7 +8,9 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatu
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.storage.StorageData;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
+import info.novatec.inspectit.storage.serializer.SerializationException;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -67,18 +69,18 @@ public class RemoveStorageLabelHandler extends AbstractHandler implements IHandl
 					StorageData updatedStorageData = cmrRepositoryDefinition.getStorageService().removeLabelsFromStorage(storageProvider.getStorageData(), inputList);
 					try {
 						InspectIT.getDefault().getInspectITStorageManager().storageRemotelyUpdated(updatedStorageData);
-					} catch (Exception e) {
-						InspectIT.getDefault().createErrorDialog("Error occured trying to save local storage data to disk.", e, -1);
+					} catch (SerializationException | IOException e) {
+						throw new ExecutionException("Error occured trying to save local storage data to disk.", e);
 					}
 					IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(StorageManagerView.VIEW_ID);
 					if (viewPart instanceof StorageManagerView) {
 						((StorageManagerView) viewPart).refresh(cmrRepositoryDefinition);
 					}
 				} catch (BusinessException e) {
-					return null;
+					throw new ExecutionException("Error occured trying to remove labels from storage.", e);
 				}
 			} else {
-				InspectIT.getDefault().createErrorDialog("Labels could not be removed from storage, because the underlying repository is offline.", null, -1);
+				throw new ExecutionException("Labels could not be removed from storage, because the underlying repository is offline.");
 			}
 		}
 

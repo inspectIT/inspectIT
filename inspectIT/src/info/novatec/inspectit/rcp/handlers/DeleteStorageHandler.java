@@ -8,25 +8,28 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.type.impl.ExploredByLabelType;
+import info.novatec.inspectit.storage.serializer.SerializationException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -90,6 +93,8 @@ public class DeleteStorageHandler extends AbstractHandler implements IHandler {
 
 						@Override
 						protected IStatus run(IProgressMonitor monitor) {
+							List<Status> statuses = new ArrayList<>();
+
 							final Set<CmrRepositoryDefinition> involvedCmrSet = new HashSet<CmrRepositoryDefinition>();
 							for (final IStorageDataProvider storageDataProvider : storagesToDelete) {
 								if (storageDataProvider.getCmrRepositoryDefinition().getOnlineStatus() != OnlineStatus.OFFLINE) {
@@ -98,33 +103,27 @@ public class DeleteStorageHandler extends AbstractHandler implements IHandler {
 										storageDataProvider.getCmrRepositoryDefinition().getStorageService().deleteStorage(storageDataProvider.getStorageData());
 										InspectIT.getDefault().getInspectITStorageManager().storageRemotelyDeleted(storageDataProvider.getStorageData());
 									} catch (final BusinessException e) {
-										Display.getDefault().asyncExec(new Runnable() {
-											@Override
-											public void run() {
-												String name = storageDataProvider.getStorageData().getName();
-												InspectIT.getDefault().createErrorDialog("Storage '" + name + "' could not be successfully deleted from CMR.", e, -1);
-											}
-										});
-									} catch (final Exception e) {
-										Display.getDefault().asyncExec(new Runnable() {
-											@Override
-											public void run() {
-												String name = storageDataProvider.getStorageData().getName();
-												InspectIT.getDefault().createErrorDialog("Local data for storage '" + name + "' was not cleared successfully.", e, -1);
-											}
-										});
+										String name = storageDataProvider.getStorageData().getName();
+										statuses.add(new Status(IStatus.ERROR, InspectIT.ID, "Storage '" + name + "' could not be successfully deleted from CMR.", e));
+									} catch (final SerializationException | IOException e) {
+										String name = storageDataProvider.getStorageData().getName();
+										statuses.add(new Status(IStatus.ERROR, InspectIT.ID, "Local data for storage '" + name + "' was not cleared successfully.", e));
 									}
 								} else {
-									Display.getDefault().asyncExec(new Runnable() {
-										@Override
-										public void run() {
-											String name = storageDataProvider.getStorageData().getName();
-											InspectIT.getDefault().createInfoDialog("Storage '" + name + "' can not be deleted, because CMR where it is located is offline.", -1);
-										}
-									});
+									String name = storageDataProvider.getStorageData().getName();
+									statuses.add(new Status(IStatus.WARNING, InspectIT.ID, "Storage '" + name + "' can not be deleted, because CMR where it is located is offline."));
 								}
 							}
-							return Status.OK_STATUS;
+
+							if (CollectionUtils.isNotEmpty(statuses)) {
+								if (1 == statuses.size()) {
+									return statuses.iterator().next();
+								} else {
+									return new MultiStatus(InspectIT.ID, IStatus.OK, statuses.toArray(new Status[statuses.size()]), "Delete of several storages failed.", null);
+								}
+							} else {
+								return Status.OK_STATUS;
+							}
 						}
 					};
 					deleteStorageJob.setUser(true);

@@ -9,7 +9,10 @@ import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.rcp.wizard.page.ImportStorageInfoPage;
 import info.novatec.inspectit.rcp.wizard.page.ImportStorageSelectPage;
 import info.novatec.inspectit.storage.IStorageData;
+import info.novatec.inspectit.storage.serializer.SerializationException;
 import info.novatec.inspectit.util.ObjectUtils;
+
+import java.io.IOException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -141,13 +144,8 @@ public class ImportStorageWizard extends Wizard implements INewWizard {
 								InspectIT.getDefault().createInfoDialog("Storage successfully imported.", -1);
 							}
 						});
-					} catch (final Exception e) {
-						Display.getDefault().syncExec(new Runnable() {
-							@Override
-							public void run() {
-								InspectIT.getDefault().createErrorDialog("Exception occurred trying to import the storage via file.", e, -1);
-							}
-						});
+					} catch (BusinessException | SerializationException | IOException e) {
+						return new Status(Status.ERROR, InspectIT.ID, "Exception occurred trying to import the storage via file.", e);
 					}
 					monitor.done();
 					return Status.OK_STATUS;

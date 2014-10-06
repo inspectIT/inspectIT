@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.wizard;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
@@ -9,7 +10,9 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatu
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.rcp.wizard.page.StorageCompressionWizardPage;
 import info.novatec.inspectit.storage.StorageData;
+import info.novatec.inspectit.storage.serializer.SerializationException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -174,8 +177,8 @@ public class DownloadStorageWizard extends Wizard implements INewWizard {
 				try {
 					InspectIT.getDefault().getInspectITStorageManager()
 							.fullyDownloadStorage(storageData, cmrRepositoryDefinition, compress, subMonitor.newChild((int) (storageData.getDiskSize() / 1000)));
-				} catch (Exception e) {
-					connectedStatuses.add(new Status(IStatus.WARNING, InspectIT.ID, "Storage '" + storageData.getName() + "'was not downloaded due to the exception", e));
+				} catch (BusinessException | SerializationException | IOException e) {
+					connectedStatuses.add(new Status(IStatus.ERROR, InspectIT.ID, "Storage '" + storageData.getName() + "'was not downloaded due to the exception", e));
 					continue;
 				}
 			}
@@ -194,7 +197,7 @@ public class DownloadStorageWizard extends Wizard implements INewWizard {
 				if (1 == connectedStatuses.size()) {
 					return connectedStatuses.iterator().next();
 				} else {
-					return new MultiStatus(InspectIT.ID, -1, connectedStatuses.toArray(new Status[connectedStatuses.size()]), "Download of several storages failed.", null);
+					return new MultiStatus(InspectIT.ID, IStatus.OK, connectedStatuses.toArray(new Status[connectedStatuses.size()]), "Download of several storages failed.", null);
 				}
 			} else {
 				return Status.OK_STATUS;
