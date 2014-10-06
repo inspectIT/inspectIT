@@ -301,7 +301,7 @@ public final class PreferencesUtils {
 				return null;
 			}
 			return PreferenceValueProviderFactory.getObjectFromValue(preferenceKey, value);
-		} catch (Exception e) {
+		} catch (PreferenceException e) {
 			InspectIT.getDefault().createErrorDialog("Error trying to load object from the preference store with preference key: " + preferenceKey, e, -1);
 			return null;
 		}

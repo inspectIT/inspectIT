@@ -3,7 +3,6 @@ package info.novatec.inspectit.rcp.handlers;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
@@ -25,6 +24,9 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
@@ -118,8 +120,8 @@ public class NavigateToPlotting extends AbstractHandler {
 
 		try {
 			command.executeWithChecks(executionEvent);
-		} catch (Exception e) {
-			InspectIT.getDefault().createErrorDialog(e.getMessage(), e, -1);
+		} catch (NotDefinedException | NotEnabledException | NotHandledException e) {
+			throw new ExecutionException("Error opening the charting view.", e);
 		}
 
 		return null;

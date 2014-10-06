@@ -44,7 +44,7 @@ public class DeleteAgentHandler extends AbstractHandler implements IHandler {
 						cmrRepositoryDefinition.getGlobalDataAccessService().deleteAgent(platformIdent.getId());
 						InspectIT.getDefault().getCmrRepositoryManager().repositoryAgentDeleted(cmrRepositoryDefinition, platformIdent);
 					} catch (BusinessException e) {
-						InspectIT.getDefault().createErrorDialog("Exception occurred trying to delete the Agent from the CMR.", e, -1);
+						throw new ExecutionException("Exception occurred trying to delete the Agent from the CMR.", e);
 					}
 				}
 			}

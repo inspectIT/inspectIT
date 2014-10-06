@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.wizard;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
@@ -12,6 +13,9 @@ import info.novatec.inspectit.rcp.wizard.page.StorageCompressionWizardPage;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
+import info.novatec.inspectit.storage.serializer.SerializationException;
+
+import java.io.IOException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -145,13 +149,8 @@ public class ExportStorageWizard extends Wizard implements INewWizard {
 								InspectIT.getDefault().createInfoDialog("The storage was exported successfully.", -1);
 							}
 						});
-					} catch (final Exception e) {
-						Display.getDefault().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								InspectIT.getDefault().createErrorDialog("Exception occurred trying to export storage.", e, -1);
-							}
-						});
+					} catch (Exception e) {
+						return new Status(Status.ERROR, InspectIT.ID, "Exception occurred trying to export storage.", e);
 					}
 					monitor.done();
 					return Status.OK_STATUS;
@@ -176,13 +175,8 @@ public class ExportStorageWizard extends Wizard implements INewWizard {
 
 								}
 							});
-						} catch (final Exception e) {
-							Display.getDefault().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									InspectIT.getDefault().createErrorDialog("Exception occurred trying to export storage.", e, -1);
-								}
-							});
+						} catch (BusinessException | SerializationException | IOException e) {
+							return new Status(Status.ERROR, InspectIT.ID, "Exception occurred trying to export storage.", e);
 						}
 						monitor.done();
 						return Status.OK_STATUS;

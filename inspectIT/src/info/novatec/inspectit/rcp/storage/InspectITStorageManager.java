@@ -151,7 +151,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 		Path directory = getStoragePath(localStorageData);
 		if (!Files.exists(directory)) {
-				Files.createDirectories(directory);
+			Files.createDirectories(directory);
 		}
 
 		if (fullyDownload) {
@@ -828,7 +828,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 						newAvailableStoarges.add(localStorageData);
 						try {
 							updateLocalStorageData(localStorageData, storageData);
-						} catch (final Exception e) {
+						} catch (final SerializationException | IOException e) {
 							final String name = localStorageData.getName();
 							Display.getDefault().syncExec(new Runnable() {
 								@Override

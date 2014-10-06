@@ -127,15 +127,10 @@ public class CloseStorageHandler extends AbstractHandler implements IHandler {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						cmrRepositoryDefinition.getStorageService().closeStorage(storageData);
+						return Status.OK_STATUS;
 					} catch (final BusinessException e) {
-						Display.getDefault().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								InspectIT.getDefault().createErrorDialog("Selected storage " + storageData + " could not be finalized.", e, -1);
-							}
-						});
+						return new Status(IStatus.ERROR, InspectIT.ID, "Selected storage " + storageData + " could not be finalized.", e);
 					}
-					return Status.OK_STATUS;
 				}
 			};
 			executeFinalization.setUser(false);
