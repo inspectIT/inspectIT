@@ -26,6 +26,7 @@ import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
 import info.novatec.inspectit.communication.data.ThreadInformationData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.indexing.buffer.impl.Leaf.CustomWeakReference;
 import info.novatec.inspectit.util.UnderlyingSystemInfo;
 import info.novatec.inspectit.util.UnderlyingSystemInfo.JvmProvider;
 
@@ -42,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
+import org.cliffc.high_scale_lib.NonBlockingHashMapLong;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -219,6 +221,17 @@ public class MemoryCalculationTest extends AbstractTestNGLogSupport {
 	}
 
 	/**
+	 * Test size of the {@link CustomWeakReference}.
+	 */
+	@Test
+	public void customWeakReference() {
+		Object customWeakReference = new CustomWeakReference<DefaultData>(new InvocationSequenceData(), null);
+		long ourSize = objectSizes.getSizeOfCustomWeakReference();
+		long theirSize = MemoryUtil.deepMemoryUsageOf(customWeakReference, VisibilityFilter.NONE);
+		assertThat(ourSize, is(equalTo(theirSize)));
+	}
+
+	/**
 	 * Test the array of size 0 and 1.
 	 */
 	@Test
@@ -332,7 +345,6 @@ public class MemoryCalculationTest extends AbstractTestNGLogSupport {
 		long theirSize = MemoryUtil.deepMemoryUsageOf(array, VisibilityFilter.ALL);
 		assertThat("short array", ourSize, is(equalTo(theirSize)));
 	}
-
 
 	/**
 	 * Tests size of empty and populated {@link ArrayList} object.
@@ -466,6 +478,28 @@ public class MemoryCalculationTest extends AbstractTestNGLogSupport {
 			ourSize = objectSizes.getSizeOfConcurrentHashMap(size, 1) + size * 2 * objectSizes.getSizeOfObjectObject();
 			assertThat("Random map size of " + size, ourSize, is(equalTo(theirSize)));
 		}
+	}
+
+	/**
+	 * Tests size of empty and populated {@link NonBlockingHashMapLong} object.
+	 */
+	@Test(invocationCount = 50)
+	public void nonBlockingHashMapLong() {
+		// we can only precisely calculate random amount of elements with one segment
+		NonBlockingHashMapLong<Object> nonBlockingHashMapLong = new NonBlockingHashMapLong<>();
+		long theirSize = MemoryUtil.deepMemoryUsageOf(nonBlockingHashMapLong, VisibilityFilter.ALL);
+		long ourSize = objectSizes.getSizeOfNonBlockingHashMapLong(0);
+		assertThat("Empty map", ourSize, is(equalTo(theirSize)));
+
+		nonBlockingHashMapLong = new NonBlockingHashMapLong<>();
+		int size = (int) (Math.random() * 100);
+		for (long l = 1; l <= size; l++) { // zero key not supported
+			nonBlockingHashMapLong.put(l, Long.valueOf(l));
+		}
+
+		theirSize = MemoryUtil.deepMemoryUsageOf(nonBlockingHashMapLong, VisibilityFilter.ALL);
+		ourSize = objectSizes.getSizeOfNonBlockingHashMapLong(size) + size * objectSizes.getSizeOfLongObject();
+		assertThat("Random map size of " + size, ourSize, is(equalTo(theirSize)));
 	}
 
 	/**

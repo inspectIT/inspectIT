@@ -10,12 +10,11 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.cliffc.high_scale_lib.NonBlockingHashMapLong;
 
 /**
  * Leaf class is the one that holds the weak references to objects, thus last in tree structure.
@@ -28,14 +27,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 
 	/**
-	 * Initial concurrency level for the {@link ConcurrentHashMap}.
+	 * Map for weak references.
 	 */
-	private static final int CONCURRENCY_LEVEL = 4;
-
-	/**
-	 * Map for week references.
-	 */
-	private Map<Long, CustomWeakReference<E>> map;
+	private NonBlockingHashMapLong<CustomWeakReference<E>> map;
 
 	/**
 	 * Reference queue where cleared Weak references are queued by garbage collection.
@@ -60,7 +54,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	 * Default constructor.
 	 */
 	public Leaf() {
-		map = new ConcurrentHashMap<Long, CustomWeakReference<E>>(1, 0.75f, CONCURRENCY_LEVEL);
+		map = new NonBlockingHashMapLong<>();
 		referenceQueue = new ReferenceQueue<E>();
 	}
 
@@ -135,9 +129,13 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 		int mapSize = map.size();
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
-		size += objectSizes.getSizeOfConcurrentHashMap(mapSize, CONCURRENCY_LEVEL);
-		// for Long and CustomWeekReference in a Map.Entry
-		size += map.size() * (objectSizes.getSizeOfLongObject() + 24);
+		size = objectSizes.alignTo8Bytes(size);
+
+		// map
+		size += objectSizes.getSizeOfNonBlockingHashMapLong(mapSize);
+		// for each CustomWeakReference in a map
+		size += map.size() * objectSizes.getSizeOfCustomWeakReference();
+
 		return size;
 		// the size of the reference queue, runnable and future and not included, because they are
 		// simply to small and its size is constant and does not depend on the number of elements in
@@ -202,10 +200,10 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	 * 
 	 * @param <E>
 	 */
-	private class CustomWeakReference<T extends DefaultData> extends WeakReference<T> {
+	public static class CustomWeakReference<T extends DefaultData> extends WeakReference<T> {
 
 		/**
-		 * Id of refering object.
+		 * Id of referring object.
 		 */
 		private long referentId;
 
