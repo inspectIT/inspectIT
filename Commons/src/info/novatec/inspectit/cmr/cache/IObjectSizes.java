@@ -168,6 +168,19 @@ public interface IObjectSizes {
 	long getSizeOfConcurrentHashMap(int mapSize, int concurrencyLevel);
 
 	/**
+	 * Calculates the approximate size of the
+	 * {@link org.cliffc.high_scale_lib.NonBlockingHashMapLong} object. The calculation does not
+	 * include the size of value elements that are in the map. Since keys in this map are
+	 * represented as primitive long arrays, the keys are included in the calculation. The
+	 * calculation may not be correct for other map types.
+	 * 
+	 * @param mapSize
+	 *            Map size.
+	 * @return Size of map object in bytes.
+	 */
+	long getSizeOfNonBlockingHashMapLong(int mapSize);
+
+	/**
 	 * Calculates size of the {@link Object} objects.
 	 * 
 	 * @return Size of the {@link Object} objects in bytes.
@@ -265,6 +278,15 @@ public interface IObjectSizes {
 	 */
 	long getSizeOfArray(int arraySize);
 
+	/**
+	 * Returns size of our own
+	 * {@link info.novatec.inspectit.indexing.buffer.impl.Leaf.CustomWeakReference} without the
+	 * referred object.
+	 * 
+	 * @return Size in bytes.
+	 */
+	long getSizeOfCustomWeakReference();
+	
 	/**
 	 * Calculates the size of the primitive array with the primitives in the array.
 	 * 
