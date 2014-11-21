@@ -1955,6 +1955,7 @@ by the Mozilla Public License, v. 2.0.
 
 %% This notice is provided with respect to following libraries:
  # aopalliance
+ # high-scale-lib
 which are included in the inspectIT.
 
 --- begin of LICENSE ---
