@@ -1,5 +1,8 @@
 package info.novatec.inspectit.rcp;
 
+import info.novatec.inspectit.rcp.job.CheckNewVersionJob;
+
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -35,6 +38,18 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		super.initialize(configurer);
 		// save the state of the application regarding its position etc.
 		configurer.setSaveAndRestore(true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void postStartup() {
+		super.postStartup();
+
+		// fire up the auto new version check
+		Job checkNewVersionJob = new CheckNewVersionJob(false);
+		checkNewVersionJob.schedule();
 	}
 
 	/**

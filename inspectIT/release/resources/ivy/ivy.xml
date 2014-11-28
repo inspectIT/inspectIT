@@ -28,6 +28,7 @@
 
 		<dependency org="commons-fileupload" name="commons-fileupload" rev="1.2.2" conf="osgi->default" />
 		<dependency org="commons-io" name="commons-io" rev="2.4" conf="osgi->default" />
+		<dependency org="commons-net" name="commons-net" rev="3.3" conf="osgi->default" />
 
 		<dependency org="org.springframework.osgi" name="org.springframework.osgi.core" rev="1.2.1" conf="osgi->default" />
 		<dependency org="org.springframework.osgi" name="org.springframework.osgi.extender" rev="1.2.1" conf="osgi->default" />
