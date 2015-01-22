@@ -2,6 +2,7 @@ package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.rcp.util.OccurrenceFinderFactory;
@@ -40,6 +41,38 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 		}
 		if (parameters && null != sqlStatementData.getParameterValues()) {
 			template.setParameterValues(sqlStatementData.getParameterValues());
+		}
+		return template;
+	}
+
+	/**
+	 * Returns template for {@link RemoteCallData}.
+	 * 
+	 * @param remoteCallData
+	 *            Source object.
+	 * @param id
+	 *            Should id be inserted into template.
+	 * @param identification
+	 *            Should identification be inserted into template.
+	 * @param remotePlatformIdent
+	 *            Should remotePlatformIdent be inserted into template.
+	 * @param remoteCall
+	 *            Should remoteCall be inserted into template.
+	 * @return Template object.
+	 */
+	protected RemoteCallData getTemplate(RemoteCallData remoteCallData, boolean id, boolean identification, boolean remotePlatformIdent, boolean remoteCall) {
+		RemoteCallData template = OccurrenceFinderFactory.getEmptyTemplate(remoteCallData);
+		if (id && 0 != remoteCallData.getId()) {
+			template.setId(remoteCallData.getId());
+		}
+		if (identification && 0 != remoteCallData.getIdentification()) {
+			template.setIdentification(remoteCallData.getIdentification());
+		}
+		if (remotePlatformIdent && 0 != remoteCallData.getRemotePlatformIdent()) {
+			template.setRemotePlatformIdent(remoteCallData.getRemotePlatformIdent());
+		}
+		if (remoteCall) {
+			template.setCalling(!remoteCallData.isCalling());
 		}
 		return template;
 	}

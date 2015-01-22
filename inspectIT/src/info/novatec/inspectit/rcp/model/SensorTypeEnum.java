@@ -70,7 +70,15 @@ public enum SensorTypeEnum {
 	/** The navigation invocation sequence sensor type. */
 	NAVIGATION_INVOCATION("info.novatec.inspectit.agent.sensor.method.invocationsequence.NavigationInvocationSequenceSensor", InspectITImages.IMG_INVOCATION),
 	/** The multi invocation timer data sensor type. */
-	MULTI_INVOC_DATA("info.novatec.inspectit.agent.sensor.method.MultiInvocSensor", InspectITImages.IMG_INVOCATION);
+	MULTI_INVOC_DATA("info.novatec.inspectit.agent.sensor.method.MultiInvocSensor", InspectITImages.IMG_INVOCATION),
+	/** The navigation remote invocation sequence sensor type. */
+	NAVIGATION_REMOTE_INVOCATION("info.novatec.inspectit.agent.sensor.method.invocationsequence.NavigationRemoteInvocationSequenceSensor", InspectITImages.IMG_INVOCATION),
+	/** The Remote Call Extractor sensor type. */
+	REMOTE_CALL_RESPONSE("info.novatec.inspectit.agent.sensor.method.webrequest.extractor.http.WebrequestHttpExtractorSensor", InspectITImages.IMG_HTTP),
+	/** The Remote Call Inserter Apache sensor type. */
+	REMOTE_CALL_REQUEST_APACHE("info.novatec.inspectit.agent.sensor.method.webrequest.inserter.http.apache.WebrequestApacheHttpInserterSensor", InspectITImages.IMG_HTTP),
+	/** The Remote Call Inserter jBoss sensor type. */
+	REMOTE_CALL_REQUEST_JBOSS("info.novatec.inspectit.agent.sensor.method.webrequest.inserter.http.jboss.WebrequestJBossHttpInserterHook", InspectITImages.IMG_HTTP);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full

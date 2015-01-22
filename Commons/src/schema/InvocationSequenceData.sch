@@ -24,3 +24,6 @@ class: info.novatec.inspectit.communication.data.InvocationSequenceData
 15: childCount
 16: nestedSqlStatements
 17: nestedExceptions
+18: remoteCallData
+19: nestedOutgoingRemoteCalls
+20: nestedIncommingRemoteCalls

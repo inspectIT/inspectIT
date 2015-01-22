@@ -111,6 +111,17 @@ public final class InvocationSequenceDataHelper {
 	}
 
 	/**
+	 * Checks whether this data object contains a http timer data object.
+	 * 
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return whether this data object contains a http timer data object.
+	 */
+	public static boolean hasRemoteCallData(InvocationSequenceData data) {
+		return null != data.getRemoteCallData();
+	}
+
+	/**
 	 * Checks whether this data object contains exception data.
 	 * 
 	 * @param data
@@ -177,6 +188,28 @@ public final class InvocationSequenceDataHelper {
 	}
 
 	/**
+	 * Checks whether this data object has nested RemoteCalls.
+	 * 
+	 * @param data
+	 *            {@link InvocationSequenceData}
+	 * @return True if is has nested outgoing RemoteCalls, false otherwise.
+	 */
+	public static boolean hasNestedOutgoingRemoteCalls(InvocationSequenceData data) {
+		return null != data.isNestedOutgoingRemoteCalls() && data.isNestedOutgoingRemoteCalls().booleanValue();
+	}
+
+	/**
+	 * Checks whether this data object has nested RemoteCalls.
+	 * 
+	 * @param data
+	 *            {@link InvocationSequenceData}
+	 * @return True if is has nested incomming RemoteCalls, false otherwise.
+	 */
+	public static boolean hasNestedIncommingRemoteCalls(InvocationSequenceData data) {
+		return null != data.isNestedIncommingRemoteCalls() && data.isNestedIncommingRemoteCalls().booleanValue();
+	}
+
+	/**
 	 * Calculates the duration starting from this invocation sequence data element.
 	 * 
 	 * @param data
@@ -189,6 +222,8 @@ public final class InvocationSequenceDataHelper {
 			duration = data.getTimerData().getDuration();
 		} else if (InvocationSequenceDataHelper.hasSQLData(data)) {
 			duration = data.getSqlStatementData().getDuration();
+		} else if (InvocationSequenceDataHelper.hasRemoteCallData(data)) {
+			duration = data.getRemoteCallData().getDuration();
 		} else if (InvocationSequenceDataHelper.isRootElementInSequence(data)) {
 			duration = data.getDuration();
 		}
@@ -215,6 +250,9 @@ public final class InvocationSequenceDataHelper {
 				added = true;
 			} else if (hasSQLData(nestedData)) {
 				nestedDuration = nestedDuration + nestedData.getSqlStatementData().getDuration();
+				added = true;
+			} else if (hasRemoteCallData(nestedData)) {
+				nestedDuration = nestedDuration + nestedData.getRemoteCallData().getDuration();
 				added = true;
 			}
 

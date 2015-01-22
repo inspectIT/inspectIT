@@ -5,6 +5,7 @@ import info.novatec.inspectit.communication.data.AggregatedTimerData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.util.ObjectUtils;
@@ -80,6 +81,11 @@ public final class OccurrenceFinderFactory {
 	private static InvocationOccurenceFinder invocationOccurenceFinder = new InvocationOccurenceFinder();
 
 	/**
+	 * Occurrence finder for {@link RemoteCallData}.
+	 */
+	private static RemoteCallOccurrenceFinder remoteCallOccurrenceFinder = new RemoteCallOccurrenceFinder();
+
+	/**
 	 * Counts number of occurrences of the element in the given invocation.
 	 * 
 	 * @param invocation
@@ -150,6 +156,8 @@ public final class OccurrenceFinderFactory {
 			return exceptionOccurrenceFinder;
 		} else if (InvocationSequenceData.class.isAssignableFrom(element.getClass())) {
 			return invocationOccurenceFinder;
+		} else if (RemoteCallData.class.isAssignableFrom(element.getClass())) {
+			return remoteCallOccurrenceFinder;
 		}
 		RuntimeException exception = new RuntimeException("Occurrence finder factory was not able to supply the correct occurrence finder for the object of class " + element.getClass().getName()
 				+ ".");
@@ -573,6 +581,63 @@ public final class OccurrenceFinderFactory {
 		@Override
 		public Class<? extends InvocationSequenceData> getConcreteClass() {
 			return InvocationSequenceData.class;
+		}
+
+	}
+
+	/**
+	 * Occurrence finder for {@link InvocationSequenceData}.
+	 * 
+	 * @author Ivan Senic
+	 * 
+	 */
+	private static class RemoteCallOccurrenceFinder extends OccurrenceFinder<RemoteCallData> {
+
+		@Override
+		public RemoteCallData getEmptyTemplate() {
+			RemoteCallData remoteCallData = new RemoteCallData();
+			remoteCallData.setMethodIdent(0);
+			remoteCallData.setIdentification(0);
+			return remoteCallData;
+		}
+
+		@Override
+		public boolean occurrenceFound(InvocationSequenceData invocationData, RemoteCallData template) {
+			if (invocationData.getRemoteCallData() != null) {
+				return doesTemplateEqualsElement(template, invocationData.getRemoteCallData());
+			}
+			return false;
+		}
+
+		@Override
+		public boolean doesTemplateEqualsElement(RemoteCallData template, RemoteCallData element) {
+			if (0 != template.getId()) {
+				if (template.getId() != element.getId()) {
+					return false;
+				}
+			}
+			if (0 != template.getMethodIdent()) {
+				if (template.getMethodIdent() != element.getMethodIdent()) {
+					return false;
+				}
+			}
+			if (0 != template.getIdentification()) {
+				if (template.getIdentification() != element.getIdentification()) {
+					return false;
+				}
+			}
+			if (null != template.getUrl()) {
+				if (template.getUrl() != element.getUrl()) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		@Override
+		public Class<? extends RemoteCallData> getConcreteClass() {
+			return RemoteCallData.class;
 		}
 
 	}

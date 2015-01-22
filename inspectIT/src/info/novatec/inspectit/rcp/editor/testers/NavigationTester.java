@@ -5,6 +5,8 @@ import info.novatec.inspectit.communication.data.AggregatedTimerData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.InvocationAwareData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
@@ -92,6 +94,32 @@ public class NavigationTester extends PropertyTester {
 					return null != ((InvocationSequenceData) selectedObject).getSqlStatementData();
 				} else if (selectedObject instanceof SqlStatementData) {
 					return true;
+				}
+			}
+		} else if ("canNavigateToRemoteCall".equals(property)) {
+			if (receiver instanceof StructuredSelection) {
+				StructuredSelection selection = (StructuredSelection) receiver;
+				Object selectedObject = selection.getFirstElement();
+				if (selectedObject instanceof InvocationSequenceData) {
+					InvocationSequenceData invocationSequenceData = (InvocationSequenceData) selectedObject;
+
+					if ("isCalling".equals(expectedValue) && InvocationSequenceDataHelper.hasNestedOutgoingRemoteCalls(invocationSequenceData)) {
+						return true;
+					}
+
+					if ("isCalled".equals(expectedValue) && InvocationSequenceDataHelper.hasNestedIncommingRemoteCalls(invocationSequenceData)) {
+						return true;
+					}
+
+				} else if (selectedObject instanceof RemoteCallData) {
+					RemoteCallData remoteCallData = (RemoteCallData) selectedObject;
+					if ("isCalling".equals(expectedValue) && remoteCallData.isCalling()) {
+						return true;
+					}
+
+					if ("isCalled".equals(expectedValue) && !remoteCallData.isCalling()) {
+						return true;
+					}
 				}
 			}
 		}

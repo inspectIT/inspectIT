@@ -7,6 +7,7 @@ import info.novatec.inspectit.communication.ExceptionEvent;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 
@@ -96,6 +97,8 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 				// invocation, but just to be sure I only include the time of the sql, if i did
 				// not already included the time of the timer before
 				exclusiveDurationDelta += child.getSqlStatementData().getDuration();
+			} else if (null != child.getRemoteCallData()) {
+				exclusiveDurationDelta += child.getRemoteCallData().getDuration();
 			} else {
 				exclusiveDurationDelta += InvocationSequenceDataHelper.computeNestedDuration(child);
 			}
@@ -104,10 +107,35 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 			extractDataFromInvocation(session, child, topInvocationParent);
 		}
 
-		// process the SQL Statement and Timer
+		// process the SQL Statement, Timer and RemoteCalls
 		processSqlStatementData(session, invData, topInvocationParent);
 		processTimerData(session, invData, topInvocationParent, exclusiveDurationDelta);
 		processExceptionSensorData(session, invData, topInvocationParent);
+		processRemoteCallData(session, invData, topInvocationParent);
+	}
+
+	/**
+	 * Process RemoteCalls if one exists in the invData object and passes it to the chained
+	 * processors.
+	 * 
+	 * @param session
+	 *            Session needed for DB persistence.
+	 * @param invData
+	 *            Invocation data to be processed.
+	 * @param topInvocationParent
+	 *            Top invocation object.
+	 */
+	private void processRemoteCallData(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+		RemoteCallData remoteCallData = invData.getRemoteCallData();
+		if (null != remoteCallData) {
+			if (remoteCallData.isCalling()) {
+				topInvocationParent.setNestedOutgoingRemoteCalls(Boolean.TRUE);
+			} else {
+				topInvocationParent.setNestedIncommingRemoteCalls(Boolean.TRUE);
+			}
+			remoteCallData.addInvocationParentId(topInvocationParent.getId());
+			passToChainedProcessors(remoteCallData, session);
+		}
 	}
 
 	/**

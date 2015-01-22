@@ -467,6 +467,14 @@
             id="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu"
             name="Add Profile Environment Menu">
       </command>
+       <command
+            id="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCaller"
+            name="Navigate to oubounding Call">
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCalled"
+            name="Navigate to incomming Call (Root)">
+      </command>
       <command
             id="info.novatec.inspectit.rcp.ci.activateProfile"
             name="Active/Deactivate Profile">
@@ -1685,6 +1693,62 @@
          </activeWhen>
       </handler>
       <handler
+            class="info.novatec.inspectit.rcp.handlers.NavigateToRemoteInvocationHandler"
+            commandId="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCalled">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                     </instanceof>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.RemoteCallData">
+                     </instanceof>
+                  </or>
+               </iterate>
+               <with
+                     variable="selection">
+                  <test
+                        property="info.novatec.inspectit.canNavigateToRemoteCall"
+                        value="isCalled">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.NavigateToRemoteInvocationHandler"
+            commandId="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCaller">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                     </instanceof>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.RemoteCallData">
+                     </instanceof>
+                  </or>
+               </iterate>
+               <with
+                     variable="selection">
+                  <test
+                        property="info.novatec.inspectit.canNavigateToRemoteCall"
+                        value="isCalling">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="info.novatec.inspectit.rcp.ci.handler.ActivateProfileHandler"
             commandId="info.novatec.inspectit.rcp.ci.activateProfile">
          <activeWhen>
@@ -1833,7 +1897,7 @@
             class="info.novatec.inspectit.rcp.editor.testers.NavigationTester"
             id="info.novatec.inspectit.NavigationTester"
             namespace="info.novatec.inspectit"
-            properties="canNavigateToPlotting, canNavigateToInvocations, canNavigateToExceptionType, canNavigateToAggregatedTimerData, canNavigateToAggregatedSqlData"
+            properties="canNavigateToPlotting, canNavigateToInvocations, canNavigateToExceptionType, canNavigateToAggregatedTimerData, canNavigateToAggregatedSqlData, canNavigateToRemoteCall"
             type="org.eclipse.jface.viewers.StructuredSelection">
       </propertyTester>
       <propertyTester
@@ -1851,9 +1915,17 @@
             type="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
       </propertyTester>
       <propertyTester
+            class="info.novatec.inspectit.rcp.editor.testers.RemoteCallTester"
+            id="info.novatec.inspectit.RemoteCallTester"
+            namespace="info.novatec.inspectit"
+            properties="remoteCallState"
+            type="org.eclipse.jface.viewers.StructuredSelection">
+      </propertyTester>
+      <propertyTester
             class="info.novatec.inspectit.rcp.tester.StorageStateTester"
             id="info.inspectit.rcp.StorageStateTester"
-            namespace="info.novatec.inspectit"          properties="storageState, isStorageMounted, isStorageDownloaded"
+            namespace="info.novatec.inspectit"          
+            properties="storageState, isStorageMounted, isStorageDownloaded"
             type="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
       </propertyTester>
       <propertyTester
@@ -1934,6 +2006,22 @@
             <command
                   commandId="info.novatec.inspectit.rcp.commands.navigateToInvocations"
                   icon="icons/fugue/arrow-switch.png"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCaller"
+                  label="Follow Outbound Call"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCalled"
+                  label="Follow Incoming Call (Root)"
                   style="push">
                <visibleWhen
                      checkEnabled="true">
@@ -2080,6 +2168,22 @@
             <command
                   commandId="info.novatec.inspectit.rcp.commands.navigateToInvocations"
                   icon="icons/fugue/arrow-switch.png"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCaller"
+                  label="Follow Outbound Call"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="info.novatec.inspectit.rcp.commands.navigateToInvocationsRemoteCalled"
+                  label="Follow Incoming Call (Root)"
                   style="push">
                <visibleWhen
                      checkEnabled="true">
