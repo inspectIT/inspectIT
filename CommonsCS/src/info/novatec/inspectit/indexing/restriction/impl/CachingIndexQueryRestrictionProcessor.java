@@ -32,7 +32,7 @@ public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestric
 	/**
 	 * Map for caching methods.
 	 */
-	private ConcurrentHashMap<Integer, Method> cacheMap;
+	private final ConcurrentHashMap<Integer, Method> cacheMap;
 
 	/**
 	 * Marker method.
@@ -55,6 +55,7 @@ public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestric
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean areAllRestrictionsFulfilled(Object object, List<IIndexQueryRestriction> restrictions) {
 		for (IIndexQueryRestriction indexingRestriction : restrictions) {
 			int cacheKey = getMethodCacheKey(object.getClass(), indexingRestriction.getQualifiedMethodName());
@@ -75,6 +76,7 @@ public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestric
 				} catch (NoSuchMethodException e) {
 					// not found, put marker method at this place in map
 					cacheMap.putIfAbsent(cacheKey, markerMethod);
+					log.error(e.getMessage(), e);
 				} catch (IllegalArgumentException e) {
 					log.error(e.getMessage(), e);
 				} catch (IllegalAccessException e) {

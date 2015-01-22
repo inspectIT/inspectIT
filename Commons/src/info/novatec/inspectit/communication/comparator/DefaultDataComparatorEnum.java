@@ -17,7 +17,11 @@ public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, C
 	/**
 	 * Compares objects by time stamps.
 	 */
-	TIMESTAMP;
+	TIMESTAMP,
+	/**
+	 * Compares object by platformIdent.
+	 */
+	PLATFORM_IDENT;
 
 	/**
 	 * {@inheritDoc}
@@ -33,6 +37,9 @@ public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, C
 		switch (this) {
 		case TIMESTAMP:
 			return ObjectUtils.compare(o1.getTimeStamp(), o2.getTimeStamp());
+		case PLATFORM_IDENT:
+			// Java5 does not have Long.compare
+			return Long.valueOf(o1.getPlatformIdent()).compareTo(Long.valueOf(o2.getPlatformIdent()));
 		default:
 			return 0;
 		}

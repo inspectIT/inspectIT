@@ -18,7 +18,7 @@ public interface Sizeable {
 	 * @return Approximate object size in bytes.
 	 */
 	long getObjectSize(IObjectSizes objectSizes);
-	
+
 	/**
 	 * Returns the approximate size of the object in the memory in bytes.
 	 * <p>

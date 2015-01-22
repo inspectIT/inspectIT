@@ -97,7 +97,7 @@ public class EditCmrRepositoryWizard extends Wizard implements INewWizard {
 			InspectIT.getDefault().getCmrRepositoryManager().removeCmrRepositoryDefinition(cmrRepositoryDefinition);
 			InspectIT.getDefault().getCmrRepositoryManager().addCmrRepositoryDefinition(editedRepository);
 		}
-		
+
 		return true;
 	}
 

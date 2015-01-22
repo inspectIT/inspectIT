@@ -5,6 +5,7 @@ import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
+import info.novatec.inspectit.cmr.service.IRemoteCallDataAccessService;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
 import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
 import info.novatec.inspectit.cmr.service.cache.CachedDataService;
@@ -12,6 +13,7 @@ import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
@@ -75,6 +77,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 * {@link IHttpTimerDataAccessService}.
 	 */
 	private IHttpTimerDataAccessService httpTimerDataAccessService;
+
+	/**
+	 * {@link IRemoteCallDataAccessService}.
+	 */
+	private IRemoteCallDataAccessService remoteCallDataAccessService;
 
 	/**
 	 * {@link StorageServiceProvider} for instantiating storage services.
@@ -166,6 +173,13 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	public IRemoteCallDataAccessService getRemoteCallDataAccessService() {
+		return remoteCallDataAccessService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressWarnings("unchecked")
 	public void initServices() {
 		// init services
@@ -175,6 +189,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		sqlDataAccessService = storageServiceProvider.createStorageSqlDataAccessService(this, localStorageData, (IStorageTreeComponent<SqlStatementData>) indexingTree);
 		timerDataAccessService = storageServiceProvider.createStorageTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<TimerData>) indexingTree);
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
+		remoteCallDataAccessService = storageServiceProvider.createStorageRemoteDataAccessService(this, localStorageData, (IStorageTreeComponent<RemoteCallData>) indexingTree);
 
 		// for storage we use the regular cached data service because ids can never change
 		cachedDataService = new CachedDataService(globalDataAccessService);

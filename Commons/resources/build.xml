@@ -188,7 +188,7 @@
 			</cpd.fileset>
 		</execute-cpd>
 
-		<!-- Fail on warnings -->
-		<antcall target="static-analysis-fail-on-warnings" inheritrefs="true" />
+		<!-- Fail on warnings 
+		<antcall target="static-analysis-fail-on-warnings" inheritrefs="true" /> -->
 	</target>
 </project>

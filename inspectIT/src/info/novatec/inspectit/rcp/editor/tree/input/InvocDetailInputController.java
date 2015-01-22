@@ -158,6 +158,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
 		cachedDataService = inputDefinition.getRepositoryDefinition().getCachedDataService();
@@ -166,6 +167,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TreeViewer treeViewer) {
 		for (Column column : Column.values()) {
 			TreeViewerColumn viewerColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
@@ -190,6 +192,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new InvocDetailContentProvider();
 	}
@@ -197,6 +200,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new InvocDetailLabelProvider();
 	}
@@ -204,6 +208,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		Set<PreferenceId> preferences = EnumSet.noneOf(PreferenceId.class);
 		preferences.add(PreferenceId.FILTERDATATYPE);
@@ -215,6 +220,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		switch (preferenceEvent.getPreferenceId()) {
 		case FILTERDATATYPE:
@@ -240,6 +246,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean canOpenInput(List<? extends DefaultData> data) {
 		if (null == data) {
 			return false;
@@ -462,6 +469,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object[] getChildren(Object parent) {
 			if (manager.isDeferredAdapter(parent)) {
 				Object[] children = manager.getChildren(parent);
@@ -475,6 +483,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getParent(Object child) {
 			if (child instanceof InvocationSequenceData) {
 				InvocationSequenceData invocationSequenceData = (InvocationSequenceData) child;
@@ -487,6 +496,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean hasChildren(Object parent) {
 			if (parent == null) {
 				return false;
@@ -505,6 +515,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<InvocationSequenceData> invocationSequenceData = (List<InvocationSequenceData>) inputElement;
@@ -514,6 +525,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			manager = new DeferredTreeContentManager((AbstractTreeViewer) viewer);
 			input = newInput;
@@ -522,6 +534,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -545,6 +558,8 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 						return true;
 					} else if (CollectionUtils.isNotEmpty(invocationSequenceData.getExceptionSensorDataObjects())) {
 						return checkSensorDataTypeForObject(invocationSequenceData.getExceptionSensorDataObjects().get(0));
+					} else if (checkSensorDataTypeForObject(invocationSequenceData.getRemoteCallData())) {
+						return true;
 					}
 					return false;
 				}
@@ -559,7 +574,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 			}
 
 			private boolean checkIsOnlyInvocation(InvocationSequenceData data) {
-				return null == data.getTimerData() && null == data.getSqlStatementData() && CollectionUtils.isEmpty(data.getExceptionSensorDataObjects());
+				return null == data.getTimerData() && null == data.getSqlStatementData() && CollectionUtils.isEmpty(data.getExceptionSensorDataObjects()) && null == data.getRemoteCallData();
 			}
 		};
 		ViewerFilter exclusiveTimeFilter = new InvocationViewerFilter() {
@@ -660,6 +675,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof InvocationSequenceData) {
 			InvocationSequenceData data = (InvocationSequenceData) object;
