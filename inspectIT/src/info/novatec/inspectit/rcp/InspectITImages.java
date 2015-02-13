@@ -4,8 +4,13 @@ package info.novatec.inspectit.rcp;
  * Defines all the images for the InspectIT UI. Note that all images are automatically added to the
  * registry on the inspectIT start up.
  * 
- * @author Ivan Senic
+ * Please note that this is NOT all the images available. There are so many additional images that
+ * you can find at
+ * https://inspectit-performance.atlassian.net/wiki/display/DEV/Icons+and+banners?preview=%2F5019224
+ * %2F9109584%2Ffugue-icons-3.5.5.zip
  * 
+ * @author Ivan Senic
+ * @author Stefan Siegl
  */
 public interface InspectITImages {
 
@@ -160,6 +165,8 @@ public interface InspectITImages {
 	String IMG_MEMORY_OVERVIEW = InspectITConstants.ICON_PATH_FUGUE + "memory.png";
 	String IMG_SYSTEM_OVERVIEW = InspectITConstants.ICON_PATH_FUGUE + "system-monitor.png";
 	String IMG_VM_SUMMARY = InspectITConstants.ICON_PATH_FUGUE + "resource-monitor.png";
+	String IMG_LOGGING_MESSAGE = InspectITConstants.ICON_PATH_FUGUE + "odata.png";
+	String IMG_LOGGING_LEVEL = InspectITConstants.ICON_PATH_FUGUE + "traffic-light-single.png";
 
 	// labels just pointing to existing ones
 	String IMG_ASSIGNEE_LABEL_ICON = IMG_USER;

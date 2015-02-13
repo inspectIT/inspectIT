@@ -111,6 +111,17 @@ public final class InvocationSequenceDataHelper {
 	}
 
 	/**
+	 * Checks whether this data object contains a <code>LoggingData</code> object.
+	 * 
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return whether this data object contains a logging data object.
+	 */
+	public static boolean hasLoggingData(InvocationSequenceData data) {
+		return null != data.getLoggingData();
+	}
+
+	/**
 	 * Checks whether this data object contains exception data.
 	 * 
 	 * @param data

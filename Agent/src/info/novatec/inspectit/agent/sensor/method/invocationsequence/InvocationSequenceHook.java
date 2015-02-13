@@ -23,6 +23,7 @@ import info.novatec.inspectit.communication.SystemSensorData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.LoggingData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
@@ -468,6 +469,11 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		if (dataObject.getClass().equals(ExceptionSensorData.class)) {
 			ExceptionSensorData exceptionSensorData = (ExceptionSensorData) dataObject;
 			invocationSequenceData.addExceptionSensorData(exceptionSensorData);
+		}
+
+		if (dataObject.getClass().equals(LoggingData.class)) {
+			LoggingData loggingData = (LoggingData) dataObject;
+			invocationSequenceData.setLoggingData(loggingData);
 		}
 	}
 
