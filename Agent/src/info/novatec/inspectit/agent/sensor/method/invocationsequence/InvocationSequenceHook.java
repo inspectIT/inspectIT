@@ -17,12 +17,15 @@ import info.novatec.inspectit.agent.sensor.exception.ExceptionSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementParameterSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementSensor;
+import info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingSensor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.SystemSensorData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import info.novatec.inspectit.communication.data.LoggingData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
@@ -257,9 +260,8 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 
 				threadLocalInvocationData.set(null);
 			} else {
-				// check for the correct id
-				// due to the IdNotAvailableException we must be sure that we are closing the right
-				// sequence
+				// check for the correct id due to the IdNotAvailableException we must be sure that
+				// we are closing the right sequence
 				try {
 					long registeredId = idManager.getRegisteredMethodId(methodId);
 					if (registeredId != invocationSequenceData.getMethodIdent()) {
@@ -274,13 +276,13 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 
 				// just close the nested sequence and set the correct child count
 				InvocationSequenceData parentSequence = invocationSequenceData.getParentSequence();
-				// check if we should not include this invocation because of exception delegation or
-				// SQL wrapping
-				if (removeDueToExceptionDelegation(rsc, invocationSequenceData) || removeDueToWrappedSqls(rsc, invocationSequenceData)) {
+				// check if we should not include this invocation because of exception delegation,
+				// SQL wrapping or empty logging
+				if (removeDueToExceptionDelegation(rsc, invocationSequenceData) || removeDueToWrappedSqls(rsc, invocationSequenceData) || removeDueToNotCapturedLogging(rsc, invocationSequenceData)) {
 					parentSequence.getNestedSequences().remove(invocationSequenceData);
 					parentSequence.setChildCount(parentSequence.getChildCount() - 1);
-					// but connect all possible children to the parent then
-					// we are eliminating one level here
+					// but connect all possible children to the parent then we are eliminating one
+					// level here
 					if (CollectionUtils.isNotEmpty(invocationSequenceData.getNestedSequences())) {
 						for (InvocationSequenceData child : invocationSequenceData.getNestedSequences()) {
 							child.setParentSequence(parentSequence);
@@ -342,6 +344,28 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			}
 		}
 
+		return false;
+	}
+
+	/**
+	 * Returns if a given {@link InvocationSequenceData} element should be removed due to having an
+	 * empty logging element. This can happen if the logging occurred with a lower logging level
+	 * than the configuration.
+	 * 
+	 * @param rsc
+	 *            {@link RegisteredSensorConfig}
+	 * @param invocationSequenceData
+	 *            {@link InvocationSequenceData} to check.
+	 * @return True if the invocation should be removed.
+	 */
+	private boolean removeDueToNotCapturedLogging(RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData) {
+		if (1 == rsc.getSensorTypeConfigs().size() || (2 == rsc.getSensorTypeConfigs().size() && enhancedExceptionSensor)) {
+			for (MethodSensorTypeConfig methodSensorTypeConfig : rsc.getSensorTypeConfigs()) {
+				if (Log4JLoggingSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
+					return !InvocationSequenceDataHelper.hasLoggingData(invocationSequenceData);
+				}
+			}
+		}
 		return false;
 	}
 
@@ -459,7 +483,8 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		}
 
 		if (dataObject.getClass().equals(TimerData.class)) {
-			// don't overwrite an already existing timerdata or httptimerdata object.
+			// don't overwrite an already existing timerdata or httptimerdata
+			// object.
 			if (null == invocationSequenceData.getTimerData()) {
 				invocationSequenceData.setTimerData((TimerData) dataObject);
 			}
@@ -468,6 +493,11 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		if (dataObject.getClass().equals(ExceptionSensorData.class)) {
 			ExceptionSensorData exceptionSensorData = (ExceptionSensorData) dataObject;
 			invocationSequenceData.addExceptionSensorData(exceptionSensorData);
+		}
+
+		if (dataObject.getClass().equals(LoggingData.class)) {
+			LoggingData loggingData = (LoggingData) dataObject;
+			invocationSequenceData.setLoggingData(loggingData);
 		}
 	}
 
