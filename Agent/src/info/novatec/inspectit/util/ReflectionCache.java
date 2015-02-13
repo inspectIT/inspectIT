@@ -73,6 +73,7 @@ public class ReflectionCache {
 		if (null == method) {
 			try {
 				method = clazz.getMethod(methodName, parameterTypes);
+				method.setAccessible(true);
 			} catch (Exception e) {
 				LOG.warn("Could not lookup method " + methodName + " on class " + clazz.getName(), e);
 				return errorValue;

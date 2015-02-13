@@ -51,6 +51,11 @@ public class InvocationSequenceData extends MethodSensorData {
 	private List<ExceptionSensorData> exceptionSensorDataObjects;
 
 	/**
+	 * The associated logging data. Can be <code>null</code>.
+	 */
+	private LoggingData loggingData;
+
+	/**
 	 * The position if parent sequence is not <code>null</code>.
 	 */
 	private long position;
@@ -164,6 +169,10 @@ public class InvocationSequenceData extends MethodSensorData {
 		this.timerData = timerData;
 	}
 
+	public void setSqlStatementData(SqlStatementData sqlStatementData) {
+		this.sqlStatementData = sqlStatementData;
+	}
+
 	/**
 	 * Gets {@link #sqlStatementData}.
 	 * 
@@ -174,13 +183,22 @@ public class InvocationSequenceData extends MethodSensorData {
 	}
 
 	/**
-	 * Sets {@link #sqlStatementData}.
+	 * Gets {@link #loggingData}.
 	 * 
-	 * @param sqlStatementData
-	 *            New value for {@link #sqlStatementData}
+	 * @return {@link #loggingData}
 	 */
-	public void setSqlStatementData(SqlStatementData sqlStatementData) {
-		this.sqlStatementData = sqlStatementData;
+	public LoggingData getLoggingData() {
+		return loggingData;
+	}
+
+	/**
+	 * Sets {@link #loggingData}.
+	 * 
+	 * @param loggingData
+	 *            New value for {@link #loggingData}
+	 */
+	public void setLoggingData(LoggingData loggingData) {
+		this.loggingData = loggingData;
 	}
 
 	/**
@@ -340,6 +358,7 @@ public class InvocationSequenceData extends MethodSensorData {
 		result = prime * result + ((exceptionSensorDataObjects == null) ? 0 : exceptionSensorDataObjects.hashCode());
 		result = prime * result + ((sqlStatementData == null) ? 0 : sqlStatementData.hashCode());
 		result = prime * result + ((timerData == null) ? 0 : timerData.hashCode());
+		result = prime * result + ((loggingData == null) ? 0 : loggingData.hashCode());
 		return result;
 	}
 
@@ -378,6 +397,13 @@ public class InvocationSequenceData extends MethodSensorData {
 		} else if (!timerData.equals(other.timerData)) {
 			return false;
 		}
+		if (loggingData == null) {
+			if (other.loggingData != null) {
+				return false;
+			}
+		} else if (!loggingData.equals(other.loggingData)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -386,8 +412,9 @@ public class InvocationSequenceData extends MethodSensorData {
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(7, 0, 0, 0, 2, 3);
+		size += objectSizes.getPrimitiveTypesSize(8, 0, 0, 0, 2, 3);
 		size += objectSizes.getSizeOf(timerData);
+		size += objectSizes.getSizeOf(loggingData);
 		size += objectSizes.getSizeOf(sqlStatementData);
 		if (nestedSequences instanceof ArrayList) {
 			size += objectSizes.getSizeOf(nestedSequences, 0);
@@ -436,6 +463,7 @@ public class InvocationSequenceData extends MethodSensorData {
 		clone.setStart(this.getStart());
 		clone.setNestedSqlStatements(this.isNestedSqlStatements());
 		clone.setNestedExceptions(this.isNestedExceptions());
+		clone.setLoggingData(this.getLoggingData());
 		return clone;
 	}
 

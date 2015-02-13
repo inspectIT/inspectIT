@@ -29,6 +29,7 @@ import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationAwareData.MutableInt;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.LoggingData;
 import info.novatec.inspectit.communication.data.MemoryInformationData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.ParameterContentType;
@@ -290,6 +291,8 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		// needed for KryoNet
 		kryoNetNetwork.register(kryo);
 
+		// added with the logging sensor
+		kryo.register(LoggingData.class, new InvocationAwareDataSerializer<LoggingData>(kryo, LoggingData.class, schemaManager));
 		// added with INSPECTIT-632
 		kryo.register(BusinessException.class, new FieldSerializer<BusinessException>(kryo, BusinessException.class));
 		kryo.register(TechnicalException.class, new FieldSerializer<TechnicalException>(kryo, TechnicalException.class));
