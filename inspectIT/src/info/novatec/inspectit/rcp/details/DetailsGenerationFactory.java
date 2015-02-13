@@ -53,6 +53,9 @@ public final class DetailsGenerationFactory {
 			if (CollectionUtils.isNotEmpty(invocationSequenceData.getExceptionSensorDataObjects())) {
 				secondary = invocationSequenceData.getExceptionSensorDataObjects().get(0);
 			}
+			if (null != invocationSequenceData.getLoggingData()) {
+				secondary = invocationSequenceData.getLoggingData();
+			}
 		}
 
 		List<DetailsTable> result = new ArrayList<>();

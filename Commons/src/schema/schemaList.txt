@@ -37,3 +37,4 @@ schema/AbstractCustomStorageLabelType.sch
 schema/MethodIdentToSensorType.sch
 schema/ObjectStorageLabel.sch
 schema/TimeFrame.sch
+schema/LoggingData.sch

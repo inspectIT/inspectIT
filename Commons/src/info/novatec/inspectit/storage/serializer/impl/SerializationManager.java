@@ -29,6 +29,7 @@ import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationAwareData.MutableInt;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.LoggingData;
 import info.novatec.inspectit.communication.data.MemoryInformationData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.ParameterContentType;
@@ -302,6 +303,8 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 				return new InvocationTargetException(null);
 			}
 		});
+		// added with the logging sensor
+		kryo.register(LoggingData.class, new InvocationAwareDataSerializer<LoggingData>(kryo, LoggingData.class, schemaManager));
 	}
 
 	/**
