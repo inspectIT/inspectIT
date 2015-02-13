@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Image;
  * This enumeration holds all available sensor types with their full qualified name and their image.
  * 
  * @author Patrice Bouillet
- * 
+ * @author Stefan Siegl
  */
 public enum SensorTypeEnum {
 	/** The timer sensor type. */
@@ -70,7 +70,9 @@ public enum SensorTypeEnum {
 	/** The navigation invocation sequence sensor type. */
 	NAVIGATION_INVOCATION("info.novatec.inspectit.agent.sensor.method.invocationsequence.NavigationInvocationSequenceSensor", InspectITImages.IMG_INVOCATION),
 	/** The multi invocation timer data sensor type. */
-	MULTI_INVOC_DATA("info.novatec.inspectit.agent.sensor.method.MultiInvocSensor", InspectITImages.IMG_INVOCATION);
+	MULTI_INVOC_DATA("info.novatec.inspectit.agent.sensor.method.MultiInvocSensor", InspectITImages.IMG_INVOCATION),
+	/** Log4JLogging sensor. */
+	LOG4J_LOGGING_DATA("info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingSensor", InspectITImages.IMG_LOGGING_MESSAGE);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full
