@@ -69,8 +69,10 @@ public class DetailsDialog extends Dialog {
 		NAVIGATE_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType", "Grouped Exception View");
 
 		ACTION_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.copySqlQuery", "Copy SQL Query");
+		ACTION_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.copyLogMessage", "Copy Log Message");
 		ACTION_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.displayInChart", "Display in Chart");
 		ACTION_COMMANDS_IDS.put("org.eclipse.ui.file.save", "Save to Server");
+		
 	}
 
 	/**

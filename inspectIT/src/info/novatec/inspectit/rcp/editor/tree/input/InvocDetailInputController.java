@@ -7,6 +7,7 @@ import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import info.novatec.inspectit.communication.data.LoggingData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
@@ -437,6 +438,12 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 					styledString.append("': ");
 					styledString.append(TextFormatter.clearLineBreaks(parameterContentData.getContent()));
 				}
+			}
+
+			if (InvocationSequenceDataHelper.hasLoggingData(data)) {
+				LoggingData loggingData = data.getLoggingData();
+				styledString.append("[" + loggingData.getLevel().toUpperCase() + "] ");
+				styledString.append(loggingData.getMessage());
 			}
 
 			return styledString;
