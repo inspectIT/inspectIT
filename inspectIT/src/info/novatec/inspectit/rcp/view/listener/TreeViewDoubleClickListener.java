@@ -2,6 +2,7 @@ package info.novatec.inspectit.rcp.view.listener;
 
 import info.novatec.inspectit.rcp.handlers.OpenViewHandler;
 import info.novatec.inspectit.rcp.model.Component;
+import info.novatec.inspectit.rcp.model.SensorTypeEnum;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -18,9 +19,9 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * Double click listener for the explorers trees.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TreeViewDoubleClickListener implements IDoubleClickListener {
 
@@ -46,6 +47,12 @@ public class TreeViewDoubleClickListener implements IDoubleClickListener {
 			} else {
 				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+
+				// Quickfix: Logging sensor currently does not have a view to display. until a own
+				// view for logging information is available
+				if (SensorTypeEnum.LOG4J_LOGGING_DATA.equals(((Component) element).getInputDefinition().getId())) {
+					return;
+				}
 
 				Command command = commandService.getCommand(OpenViewHandler.COMMAND);
 				ExecutionEvent executionEvent = handlerService.createExecutionEvent(command, new Event());

@@ -493,6 +493,10 @@
             id="info.novatec.inspectit.rcp.ci.duplicateProfile"
             name="Duplicate Profile">
       </command>
+      <command 
+      		id="info.novatec.inspectit.rcp.commands.copyLogMessage" 
+      		name="Copy Log Message">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -1018,11 +1022,22 @@
                <count
                      value="1">
                </count>
-               <iterate>
-                  <instanceof
-                        value="info.novatec.inspectit.communication.data.SqlStatementData">
-                  </instanceof>
-               </iterate>
+               <or>
+                  <iterate>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.SqlStatementData">
+                     </instanceof>
+                  </iterate>
+                  <iterate>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                     </instanceof>
+                     <test
+                           property="info.novatec.inspectit.hasSQLData"
+                           value="true">
+                     </test>
+                  </iterate>
+               </or>
             </and>
          </activeWhen>
       </handler>
@@ -1820,6 +1835,33 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.CopyLogMessageHandler"
+            commandId="info.novatec.inspectit.rcp.commands.copyLogMessage">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <or>
+                  <iterate>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.LoggingData">
+                     </instanceof>
+                  </iterate>
+                  <iterate>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                     </instanceof>
+                     <test
+                           property="info.novatec.inspectit.hasLoggingData"
+                           value="true">
+                     </test>
+                  </iterate>
+               </or>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -1927,6 +1969,13 @@
             properties="isCommonProfile, isDefaultProfile, isActiveProfile"
             type="info.novatec.inspectit.rcp.provider.IProfileProvider">
       </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.InvocationDataTester"
+            id="info.novatec.inspectit.InvocationDataTester"
+            namespace="info.novatec.inspectit"
+            properties="hasLoggingData, hasSQLData"
+            type="info.novatec.inspectit.communication.data.InvocationSequenceData">
+      </propertyTester>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -2019,6 +2068,13 @@
          <command
                commandId="org.eclipse.ui.edit.copy"
                style="push">
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.commands.copyLogMessage"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
          </command>
          <command
                commandId="info.novatec.inspectit.rcp.commands.copySqlQuery"

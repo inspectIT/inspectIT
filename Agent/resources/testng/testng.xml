@@ -52,6 +52,7 @@
 			<class name="info.novatec.inspectit.agent.sensor.method.http.HttpHookTest" />
 			<class name="info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceHookTest" />
 			<class name="info.novatec.inspectit.agent.sensor.method.timer.TimerHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingHookTest" />
 		</classes>
 	</test>
 	<test name="Connection Meta Data Extraction">
