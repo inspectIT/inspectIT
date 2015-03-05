@@ -81,6 +81,10 @@
 	
 	<!-- analyzer logging, set this to 'debug' to get additional information about: - analyzers -->
 	<logger name="info.novatec.inspectit.agent.analyzer" level="info" />
+	
+	<!-- Needed for bridging minlog to slf4j -->
+	<!-- Set this to debug for more information about libs that use minlog: kryo, kryonet -->
+	<logger name="info.novatec.inspectit.minlog.MinlogToSLF4JLogger" level="warn" />
 
 	<!-- Disabled loggers from down here -->
 

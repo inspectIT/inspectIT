@@ -107,6 +107,10 @@
 
 	<!-- Set this to debug for more information about: - schema loading for serialization -->
 	<logger name="info.novatec.inspectit.storage.serializer.schema" level="info" />
+	
+	<!-- Needed for bridging minlog to slf4j -->
+	<!-- Set this to debug for more information about libs that use minlog: kryo, kryonet -->
+	<logger name="info.novatec.inspectit.minlog.MinlogToSLF4JLogger" level="warn" />
 
 	<!-- Disabled loggers from down here -->
 
