@@ -50,7 +50,7 @@ public class ExceptionDetailsGenerator implements IDetailsGenerator {
 		}
 
 		if (null != exceptionSensorData.getStackTrace()) {
-			table.addContentRow("Stack Trace:", null, new DetailsCellContent[] { new DetailsCellContent(exceptionSensorData.getStackTrace(), true) });
+			table.addContentRow("Stack Trace:", null, new DetailsCellContent[] { new DetailsCellContent(exceptionSensorData.getStackTrace()) });
 		}
 
 		return table;

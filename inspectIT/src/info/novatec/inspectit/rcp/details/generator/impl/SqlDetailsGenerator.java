@@ -40,7 +40,7 @@ public class SqlDetailsGenerator implements IDetailsGenerator {
 		table.addContentRow("Database:", null, new DetailsCellContent[] { new DetailsCellContent(sqlStatementData.getDatabaseProductName()) });
 		table.addContentRow("Database version:", null, new DetailsCellContent[] { new DetailsCellContent(sqlStatementData.getDatabaseProductVersion()) });
 		table.addContentRow("Database URL:", null, new DetailsCellContent[] { new DetailsCellContent(sqlStatementData.getDatabaseUrl()) });
-		table.addContentRow("SQL:", null, new DetailsCellContent[] { new DetailsCellContent(sqlStatementData.getSqlWithParameterValues(), true) });
+		table.addContentRow("SQL:", null, new DetailsCellContent[] { new DetailsCellContent(sqlStatementData.getSqlWithParameterValues()) });
 		return table;
 	}
 

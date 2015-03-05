@@ -26,13 +26,6 @@ public class DetailsCellContent {
 	private String imageToolTip;
 
 	/**
-	 * Denotes if the content might be a long text. If this option is used no image can be displayed
-	 * alongside the text. In addition, {@link #grab} will be ignored if {@link #longText} is set to
-	 * true.
-	 */
-	private boolean longText;
-
-	/**
 	 * How much columns should cell span.
 	 */
 	private int colspan = 1;
@@ -56,20 +49,6 @@ public class DetailsCellContent {
 	 */
 	public DetailsCellContent(String text) {
 		this.text = text;
-	}
-
-	/**
-	 * Constructor defining only text and if long text options should be used.
-	 * 
-	 * @param text
-	 *            Text to display.
-	 * @param longText
-	 *            If text is expected to be a long text, thus different display options will be
-	 *            used.
-	 */
-	public DetailsCellContent(String text, boolean longText) {
-		this.text = text;
-		this.longText = longText;
 	}
 
 	/**
@@ -156,25 +135,6 @@ public class DetailsCellContent {
 	 */
 	public void setImageToolTip(String imageToolTip) {
 		this.imageToolTip = imageToolTip;
-	}
-
-	/**
-	 * Gets {@link #longText}.
-	 * 
-	 * @return {@link #longText}
-	 */
-	boolean isLongText() {
-		return longText;
-	}
-
-	/**
-	 * Sets {@link #longText}.
-	 * 
-	 * @param longText
-	 *            New value for {@link #longText}
-	 */
-	void setLongText(boolean longText) {
-		this.longText = longText;
 	}
 
 	/**
