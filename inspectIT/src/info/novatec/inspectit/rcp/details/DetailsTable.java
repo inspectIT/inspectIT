@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -69,6 +71,13 @@ public class DetailsTable extends SectionPart {
 	private StringBuilder copyStringBuilder = new StringBuilder(); // NOPMD
 
 	/**
+	 * {@link GC} used to calculate the text size in pixels.
+	 * 
+	 * @see GC#textExtent(String)
+	 */
+	private GC gc;
+
+	/**
 	 * Default constructor.
 	 * 
 	 * @param parent
@@ -92,6 +101,8 @@ public class DetailsTable extends SectionPart {
 
 		copyStringBuilder.append(heading);
 		copyStringBuilder.append('\n');
+
+		this.gc = new GC(parent);
 
 		initTable();
 	}
@@ -119,12 +130,45 @@ public class DetailsTable extends SectionPart {
 		for (int i = 0; i < columns; i++) {
 			if (i < cellContents.length) {
 				DetailsCellContent cellContent = cellContents[i];
+				String content = cellContent.getText();
+
+				// calculate the properties based on the text
+				int heightHint = 0;
+				boolean needsScrollBars = false;
+				boolean canFitWidth = true;
+				if (null != content) {
+					// first calculate the properties based on the text
+					Point fontPoint = gc.textExtent(content);
+					canFitWidth = fontPoint.x < CONTENT_CONTROL_MAX_WIDTH;
+					if (!canFitWidth) {
+						// -50 to ensure word splitting to another row does not kill us
+						int rows = fontPoint.x / (CONTENT_CONTROL_MAX_WIDTH - 50) + 1;
+						heightHint = rows * fontPoint.y;
+						if (heightHint > CONTENT_CONTROL_MAX_HEIGHT) {
+							heightHint = CONTENT_CONTROL_MAX_HEIGHT;
+							needsScrollBars = true;
+						}
+					}
+				}
+
 				TableWrapData tableWrapData = getLayoutData(cellContent);
-				if (cellContent.isLongText()) {
-					Text text = toolkit.createText(contentComposite, cellContent.getText(), SWT.READ_ONLY | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+				if (!canFitWidth) {
+					// define styles based on the scroll bars
+					int style = SWT.WRAP | SWT.READ_ONLY | SWT.MULTI;
+					if (needsScrollBars) {
+						style |= SWT.H_SCROLL | SWT.V_SCROLL;
+					}
+
+					// save border, create with none, and then reset
+					int borderStyle = toolkit.getBorderStyle();
+					toolkit.setBorderStyle(SWT.NULL);
+					Text text = toolkit.createText(contentComposite, cellContent.getText(), style);
+					toolkit.setBorderStyle(borderStyle);
+
 					tableWrapData.grabHorizontal = true;
 					tableWrapData.maxWidth = CONTENT_CONTROL_MAX_WIDTH;
 					tableWrapData.maxHeight = CONTENT_CONTROL_MAX_HEIGHT;
+					tableWrapData.heightHint = heightHint;
 					text.setLayoutData(tableWrapData);
 				} else {
 					FormText formText = toolkit.createFormText(contentComposite, false);
@@ -324,6 +368,15 @@ public class DetailsTable extends SectionPart {
 	 */
 	public String getCopyString() {
 		return copyStringBuilder.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		gc.dispose();
+		super.dispose();
 	}
 
 }
