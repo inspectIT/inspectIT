@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp;
 
+import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
 import info.novatec.inspectit.rcp.log.LogListener;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
 import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
@@ -185,6 +186,9 @@ public class InspectIT extends AbstractUIPlugin {
 
 		// use sysout-over-slf4j to redirect out and err calls to logger
 		SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+
+		// initialize out minlog bridge to the slf4j
+		MinlogToSLF4JLogger.init();
 	}
 
 	/**
