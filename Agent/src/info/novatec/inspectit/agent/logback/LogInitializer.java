@@ -1,5 +1,7 @@
 package info.novatec.inspectit.agent.logback;
 
+import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -91,6 +93,11 @@ public final class LogInitializer extends PropertyDefinerBase {
 		}
 
 		StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+
+		// initialize out minlog bridge to the slf4j
+		// not sure if we can do this, this would also bridge application logging if they use
+		// minlong
+		MinlogToSLF4JLogger.init();
 	}
 
 	/**
