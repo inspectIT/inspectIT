@@ -44,11 +44,11 @@ public class ParameterContentDetailsGenerator implements IDetailsGenerator {
 	 */
 	@Override
 	public DetailsTable generate(DefaultData defaultData, RepositoryDefinition repositoryDefinition, Composite parent, FormToolkit toolkit) {
-		Map<ParameterContentType, Collection<ParameterContentData>> contentMap = getContentTypeMap(((MethodSensorData) defaultData).getParameterContentData());
+		Map<ParameterContentType, List<ParameterContentData>> contentMap = getContentTypeMap(((MethodSensorData) defaultData).getParameterContentData());
 
 		DetailsTable table = new DetailsTable(parent, toolkit, "Parameter Content Data", 1);
 
-		for (Map.Entry<ParameterContentType, Collection<ParameterContentData>> entry : contentMap.entrySet()) {
+		for (Map.Entry<ParameterContentType, List<ParameterContentData>> entry : contentMap.entrySet()) {
 			List<String[]> rows = new ArrayList<>();
 			for (ParameterContentData data : entry.getValue()) {
 				rows.add(new String[] { data.getName(), data.getContent() });
@@ -67,20 +67,25 @@ public class ParameterContentDetailsGenerator implements IDetailsGenerator {
 	 *            Data to divide in groups.
 	 * @return Map<ParameterContentType, Collection<ParameterContentData>>
 	 */
-	private Map<ParameterContentType, Collection<ParameterContentData>> getContentTypeMap(Collection<ParameterContentData> parameterContentDatas) {
+	private Map<ParameterContentType, List<ParameterContentData>> getContentTypeMap(Collection<ParameterContentData> parameterContentDatas) {
 		if (CollectionUtils.isEmpty(parameterContentDatas)) {
 			return Collections.emptyMap();
 		}
 
-		Map<ParameterContentType, Collection<ParameterContentData>> map = new HashMap<ParameterContentType, Collection<ParameterContentData>>();
+		Map<ParameterContentType, List<ParameterContentData>> map = new HashMap<ParameterContentType, List<ParameterContentData>>();
 		for (ParameterContentData data : parameterContentDatas) {
-			Collection<ParameterContentData> collection = map.get(data.getContentType());
+			List<ParameterContentData> collection = map.get(data.getContentType());
 			if (null == collection) {
 				collection = new ArrayList<>(1);
 				map.put(data.getContentType(), collection);
 			}
 			collection.add(data);
 		}
+
+		for (List<ParameterContentData> paramList : map.values()) {
+			Collections.sort(paramList);
+		}
+
 		return map;
 	}
 

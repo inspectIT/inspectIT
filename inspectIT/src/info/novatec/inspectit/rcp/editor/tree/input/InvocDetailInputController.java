@@ -423,8 +423,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 			}
 
 			if (InvocationSequenceDataHelper.hasCapturedParameters(data)) {
-				Set<ParameterContentData> parameters = InvocationSequenceDataHelper.getCapturedParameters(data);
-
+				List<ParameterContentData> parameters = InvocationSequenceDataHelper.getCapturedParameters(data, true);
 				boolean isFirst = true;
 				for (ParameterContentData parameterContentData : parameters) {
 					// shorten the representation here.
