@@ -6,9 +6,12 @@ import info.novatec.inspectit.rcp.details.DetailsCellContent;
 import info.novatec.inspectit.rcp.details.DetailsTable;
 import info.novatec.inspectit.rcp.details.generator.IDetailsGenerator;
 import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+import info.novatec.inspectit.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,16 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * 
  */
 public class HttpDetailsGenerator implements IDetailsGenerator {
+
+	/**
+	 * Comparator for the rows displaying the HTTP parameters, attributes, etc.
+	 */
+	private static final Comparator<String[]> ROW_COMPARATOR = new Comparator<String[]>() {
+		@Override
+		public int compare(String[] o1, String[] o2) {
+			return ObjectUtils.compare(o1[0], o2[0]);
+		}
+	};
 
 	/**
 	 * {@inheritDoc}
@@ -55,6 +68,7 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 			for (Map.Entry<String, String[]> entry : httpTimerData.getParameters().entrySet()) {
 				rows.add(new String[] { entry.getKey(), Arrays.toString(entry.getValue()) });
 			}
+			Collections.sort(rows, ROW_COMPARATOR);
 			table.addContentTable("Parameters:", null, 2, new String[] { "Parameter", "Value" }, rows);
 		}
 
@@ -64,6 +78,7 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 			for (Map.Entry<String, String> entry : httpTimerData.getAttributes().entrySet()) {
 				rows.add(new String[] { entry.getKey(), entry.getValue() });
 			}
+			Collections.sort(rows, ROW_COMPARATOR);
 			table.addContentTable("Attributes:", null, 2, new String[] { "Attribute", "Value" }, rows);
 		}
 
@@ -73,6 +88,7 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 			for (Map.Entry<String, String> entry : httpTimerData.getHeaders().entrySet()) {
 				rows.add(new String[] { entry.getKey(), entry.getValue() });
 			}
+			Collections.sort(rows, ROW_COMPARATOR);
 			table.addContentTable("Headers:", null, 2, new String[] { "Header", "Value" }, rows);
 		}
 
@@ -82,6 +98,7 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 			for (Map.Entry<String, String> entry : httpTimerData.getSessionAttributes().entrySet()) {
 				rows.add(new String[] { entry.getKey(), entry.getValue() });
 			}
+			Collections.sort(rows, ROW_COMPARATOR);
 			table.addContentTable("Session Attributes:", null, 2, new String[] { "Session Attribute", "Value" }, rows);
 		}
 

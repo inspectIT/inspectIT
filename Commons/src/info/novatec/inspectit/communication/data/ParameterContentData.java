@@ -2,6 +2,7 @@ package info.novatec.inspectit.communication.data;
 
 import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import info.novatec.inspectit.communication.Sizeable;
+import info.novatec.inspectit.util.ObjectUtils;
 
 import java.io.Serializable;
 
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * @author Patrice Bouillet
  * 
  */
-public class ParameterContentData implements Serializable, Sizeable {
+public class ParameterContentData implements Serializable, Sizeable, Comparable<ParameterContentData> {
 
 	/**
 	 * The serial version UID.
@@ -187,6 +188,13 @@ public class ParameterContentData implements Serializable, Sizeable {
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		return getObjectSize(objectSizes);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int compareTo(ParameterContentData other) {
+		return ObjectUtils.compare(name, other.name);
 	}
 
 	/**
