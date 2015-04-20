@@ -2,6 +2,7 @@ package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
 import info.novatec.inspectit.rcp.editor.tree.TreeSubView;
+import info.novatec.inspectit.rcp.util.ClipboardUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,9 +11,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -53,9 +51,7 @@ public class TreeCopyHandler extends AbstractHandler {
 			sb.append(System.getProperty("line.separator"));
 		}
 
-		TextTransfer textTransfer = TextTransfer.getInstance();
-		Clipboard cb = new Clipboard(HandlerUtil.getActiveShell(event).getDisplay());
-		cb.setContents(new Object[] { sb.toString() }, new Transfer[] { textTransfer });
+		ClipboardUtil.textToClipboard(HandlerUtil.getActiveShell(event).getDisplay(), sb.toString());
 
 		return null;
 	}

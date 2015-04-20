@@ -1,15 +1,13 @@
 package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.communication.data.SqlStatementData;
+import info.novatec.inspectit.rcp.util.ClipboardUtil;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -28,9 +26,7 @@ public class CopySqlQueryHandler extends AbstractHandler implements IHandler {
 		Object firstElement = ((StructuredSelection) HandlerUtil.getCurrentSelection(event)).getFirstElement();
 		if (firstElement instanceof SqlStatementData) {
 			SqlStatementData sqlStatementData = (SqlStatementData) firstElement;
-			TextTransfer textTransfer = TextTransfer.getInstance();
-			Clipboard cb = new Clipboard(HandlerUtil.getActiveShell(event).getDisplay());
-			cb.setContents(new Object[] { sqlStatementData.getSqlWithParameterValues() }, new Transfer[] { textTransfer });
+			ClipboardUtil.textToClipboard(HandlerUtil.getActiveShell(event).getDisplay(), sqlStatementData.getSqlWithParameterValues());
 		}
 		return null;
 	}

@@ -1,9 +1,9 @@
 package info.novatec.inspectit.communication.data;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.mutable.MutableDouble;
@@ -53,22 +53,43 @@ public final class InvocationSequenceDataHelper {
 	 * 
 	 * @param data
 	 *            the <code>InvocationSequenceData</code> object.
+	 * @param sorted
+	 *            if parameters should be sorted by
 	 * @return the captured data of the invocation sequence.
 	 */
-	public static Set<ParameterContentData> getCapturedParameters(InvocationSequenceData data) {
+	public static List<ParameterContentData> getCapturedParameters(InvocationSequenceData data, boolean sorted) {
 		if (!hasCapturedParameters(data)) {
-			return Collections.emptySet();
+			return Collections.emptyList();
 		}
 
-		Set<ParameterContentData> parameterContents = new HashSet<ParameterContentData>();
+		List<ParameterContentData> parameterContents = new ArrayList<ParameterContentData>();
 
-		if (null != data.getParameterContentData()) {
-			parameterContents.addAll(data.getParameterContentData());
+		if (CollectionUtils.isNotEmpty(data.getParameterContentData())) {
+			for (ParameterContentData contentData : data.getParameterContentData()) {
+				if (!parameterContents.contains(contentData)) {
+					parameterContents.add(contentData);
+				}
+			}
 		}
 
 		if (hasTimerData(data)) {
-			parameterContents.addAll(data.getTimerData().getParameterContentData());
+			if (CollectionUtils.isNotEmpty(data.getTimerData().getParameterContentData())) {
+				for (ParameterContentData contentData : data.getTimerData().getParameterContentData()) {
+					if (!parameterContents.contains(contentData)) {
+						parameterContents.add(contentData);
+					}
+				}
+			}
 		}
+
+		if (sorted) {
+			Collections.sort(parameterContents, new Comparator<ParameterContentData>() {
+				public int compare(ParameterContentData o1, ParameterContentData o2) {
+					return o1.getName().compareToIgnoreCase(o2.getName());
+				}
+			});
+		}
+
 		return parameterContents;
 	}
 
