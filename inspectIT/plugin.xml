@@ -397,6 +397,10 @@
             id="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType"
             name="Navigate To Grouped Exception Type">
       </command>
+      <command
+            id="info.novatec.inspectit.rcp.commands.copyContextParameters"
+            name="Copy Context Parameters">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -1461,6 +1465,29 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.CopyContextParametersHandler"
+            commandId="info.novatec.inspectit.rcp.commands.copyContextParameters">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate>
+                  <instanceof
+                        value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                  </instanceof>
+               </iterate>
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="info.novatec.inspectit.subViewClassification"
+                        value="slave">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -1660,6 +1687,10 @@
             <visibleWhen
                   checkEnabled="true">
             </visibleWhen>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.commands.copyContextParameters"
+               style="push">
          </command>
          <separator
                name="inspectit.editor.formrooteditor.treesubview.separator3"
