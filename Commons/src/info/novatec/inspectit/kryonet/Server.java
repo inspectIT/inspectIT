@@ -32,7 +32,6 @@ import com.esotericsoftware.kryonet.FrameworkMessage.DiscoverHost;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterTCP;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterUDP;
 import com.esotericsoftware.kryonet.KryoNetException;
-import com.esotericsoftware.kryonet.KryoSerialization;
 
 /**
  * Manages TCP and optionally UDP connections from many {@link Client Clients}.
@@ -123,7 +122,7 @@ public class Server implements EndPoint {
 	}
 
 	public Kryo getKryo() {
-		return ((KryoSerialization) serialization).getKryo();
+		throw new UnsupportedOperationException("Can not provide Kryo instance.");
 	}
 
 	/**

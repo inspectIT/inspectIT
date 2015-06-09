@@ -60,13 +60,13 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 *            {@link ISerializerProvider} needed for creation of the {@link IKryoProvider}
 	 *            instances.
 	 * @param initialSerializersCreated
-	 *            Amount of {@link IKryoProvider}s to be created immediatelly.
+	 *            Amount of {@link IKryoProvider}s to be created immediately.
 	 */
 	public ExtendedSerializationImpl(ISerializerProvider<? extends IKryoProvider> serializerProvider, int initialSerializersCreated) {
 		this.serializerProvider = serializerProvider;
 
 		for (int i = 0; i < initialSerializersCreated; i++) {
-			serializerQueue.offer(serializerProvider.createSerializer());
+			serializerQueue.offer(createKryoProvider());
 		}
 	}
 
@@ -123,7 +123,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 
 		// if nothing is available in queue don't wait, create new one
 		if (null == kryoProvider) {
-			kryoProvider = serializerProvider.createSerializer();
+			kryoProvider = createKryoProvider();
 		}
 
 		try {
@@ -147,7 +147,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 
 		// if nothing is available in queue don't wait, create new one
 		if (null == kryoProvider) {
-			kryoProvider = serializerProvider.createSerializer();
+			kryoProvider = createKryoProvider();
 		}
 
 		try {
@@ -157,6 +157,17 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 		} finally {
 			serializerQueue.offer(kryoProvider);
 		}
+	}
+
+	/**
+	 * Creates new {@link IKryoProvider}.
+	 * <p>
+	 * Sub-classes can override.
+	 * 
+	 * @return Creates new {@link IKryoProvider}.
+	 */
+	protected IKryoProvider createKryoProvider() {
+		return serializerProvider.createSerializer();
 	}
 
 }
