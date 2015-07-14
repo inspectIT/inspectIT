@@ -131,7 +131,14 @@ public class DetailsTable extends SectionPart {
 					fillFormText(formText, cellContent);
 					formText.setLayoutData(tableWrapData);
 				}
-				copyStringBuilder.append(cellContent.getText());
+
+				// copy append if there is text, if not then image tool-tip
+				if (null != cellContent.getText()) {
+					copyStringBuilder.append(cellContent.getText());
+				} else if (null != cellContent.getImageToolTip()) {
+					copyStringBuilder.append(cellContent.getImageToolTip());
+				}
+
 			} else {
 				toolkit.createLabel(contentComposite, "");
 			}
