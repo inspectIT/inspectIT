@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<suite name="inspectIT Test">
+	<test name="Localtest">
+		<classes>
+			<class
+				name="info.novatec.inspectit.jmeter.localexecution.LocalRunner" />
+		</classes>
+	</test>
+</suite>

@@ -1,0 +1,104 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<suite name="Agent">
+	<test name="Analyzers">
+		<classes>
+			<class name="info.novatec.inspectit.agent.analyzer.impl.ByteCodeAnalyzerTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.impl.InheritanceAnalyzerTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.impl.ClassPoolAnalyzerTest" />
+		</classes>
+	</test>
+	<test name="Configuration">
+		<classes>
+			<class name="info.novatec.inspectit.agent.config.impl.ConfigurationFilesTest" />
+			<class name="info.novatec.inspectit.agent.config.impl.ConfigurationStorageTest" />
+			<class name="info.novatec.inspectit.agent.config.impl.FileConfigurationReaderTest" />
+		</classes>
+	</test>
+	<test name="Core">
+		<classes>
+			<class name="info.novatec.inspectit.agent.core.impl.CoreServiceTest" />
+			<class name="info.novatec.inspectit.agent.core.impl.IdManagerTest" />
+		</classes>
+	</test>
+	<test name="Hooking">
+		<classes>
+			<class name="info.novatec.inspectit.agent.hooking.impl.HookDispatcherTest" />
+			<class name="info.novatec.inspectit.agent.hooking.impl.HookInstrumenterTest" />
+		</classes>
+	</test>
+	<test name="Matchers">
+		<classes>
+			<class name="info.novatec.inspectit.agent.analyzer.AnnotationMatcherTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.DirectMatcherTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.IndirectMatcherTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.InterfaceMatcherTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.ModifierMatcherTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.SuperclassMatcherTest" />
+			<class name="info.novatec.inspectit.agent.analyzer.SimpleMatchPatternTest" />
+		</classes>
+	</test>
+	<test name="Hooks">
+		<classes>
+			<class name="info.novatec.inspectit.agent.sensor.exception.ExceptionSensorHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.averagetimer.AverageTimerHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.StatementHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementParameterHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.http.HttpHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.timer.TimerHookTest" />
+		</classes>
+	</test>
+	<test name="Connection Meta Data Extraction">
+		<classes>
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.JDBCUrlExtractorTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataExtractorTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorageTest" />
+		</classes>
+	</test>
+		<test name="Sensors">
+		<classes>
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.StatementSensorTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.ClassLoadingInformationTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.CompilationInformationTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.CpuInformationTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.MemoryInformationTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.RuntimeInformationTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.SystemInformationTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.ThreadInformationTest" />
+		</classes>
+	</test>
+		<test name="Sending Strategies">
+		<classes>
+			<class name="info.novatec.inspectit.agent.sending.impl.ListSizeStrategyTest" />
+			<class name="info.novatec.inspectit.agent.sending.impl.TimeStrategyTest" />
+		</classes>
+	</test>
+		<test name="Buffer Strategies">
+		<classes>
+			<class name="info.novatec.inspectit.agent.buffer.impl.SimpleBufferStrategyTest" />
+			<class name="info.novatec.inspectit.agent.buffer.impl.SizeBufferStrategyTest" />
+		</classes>
+	</test>
+	<test name="Property Accessor">
+		<classes>
+			<class name="info.novatec.inspectit.agent.config.impl.PropertyAccessorTest" />
+		</classes>
+	</test>
+		<test name="SQL Statement Storage">
+		<classes>
+			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.StatementStorageTest" />
+		</classes>
+	</test>
+	<test name="Util">
+		<classes>
+			<class name="info.novatec.inspectit.agent.sensor.method.http.HttpRequestParameterExtractorTest" />
+			<class name="info.novatec.inspectit.agent.sensor.platform.CpuUsageCalculatorTest" />
+			<class name="info.novatec.inspectit.util.ThreadLocalStackTest" />
+			<class name="info.novatec.inspectit.util.WeakListTest" />
+			<class name="info.novatec.inspectit.util.StringConstraintTest" />
+			<class name="info.novatec.inspectit.util.ReflectionCacheTest" />
+		</classes>
+	</test>
+</suite>

@@ -1,0 +1,189 @@
+package info.novatec.inspectit.cmr.processor.impl;
+
+import info.novatec.inspectit.cmr.processor.AbstractChainedCmrDataProcessor;
+import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
+import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.communication.ExceptionEvent;
+import info.novatec.inspectit.communication.data.ExceptionSensorData;
+import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import info.novatec.inspectit.communication.data.SqlStatementData;
+import info.novatec.inspectit.communication.data.TimerData;
+
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.StatelessSession;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * Processor performing necessary calculation and fixes. This is special type of chained processor
+ * that does not pass the incoming object to the chained processors, but might do so with some other
+ * objects.
+ * 
+ * @author Ivan Senic
+ * 
+ */
+public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProcessor {
+
+	/**
+	 * Message processor for exception that we need to call directly. It's because we need to do
+	 * that for all exceptions, but we will send only one to the chained processors, cause in the
+	 * chain there will be indexed and stuff and we don’t want that for all exceptions, but only
+	 * that survive constructor delegation.
+	 */
+	@Autowired
+	ExceptionMessageCmrProcessor exceptionMessageCmrProcessor;
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param dataProcessors
+	 *            Chained processors.
+	 */
+	public InvocationModifierCmrProcessor(List<AbstractCmrDataProcessor> dataProcessors) {
+		super(dataProcessors);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void processData(DefaultData defaultData, StatelessSession session) {
+		InvocationSequenceData invocation = (InvocationSequenceData) defaultData;
+		extractDataFromInvocation(session, invocation, invocation);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected boolean shouldBePassedToChainedProcessors(DefaultData defaultData) {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean canBeProcessed(DefaultData defaultData) {
+		return defaultData instanceof InvocationSequenceData;
+	}
+
+	/**
+	 * Extract data from the invocation in the way that timer data is saved to the Db, while SQL
+	 * statements and Exceptions are indexed into the root branch.
+	 * 
+	 * @param session
+	 *            Session needed for DB persistence.
+	 * @param invData
+	 *            Invocation data to be extracted.
+	 * @param topInvocationParent
+	 *            Top invocation object.
+	 * 
+	 */
+	private void extractDataFromInvocation(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+		double exclusiveDurationDelta = 0d;
+
+		for (InvocationSequenceData child : (List<InvocationSequenceData>) invData.getNestedSequences()) {
+			// pass child to chained processors
+			passToChainedProcessors(child, session);
+
+			// include times from timer, sql or invocation itself
+			if (null != child.getTimerData()) {
+				exclusiveDurationDelta += child.getTimerData().getDuration();
+			} else if (null != child.getSqlStatementData()) {
+				// I don't know if the situation that both timer and sql are set in one
+				// invocation, but just to be sure I only include the time of the sql, if i did
+				// not already included the time of the timer before
+				exclusiveDurationDelta += child.getSqlStatementData().getDuration();
+			} else {
+				exclusiveDurationDelta += InvocationSequenceDataHelper.computeNestedDuration(child);
+			}
+
+			// go to the recursion
+			extractDataFromInvocation(session, child, topInvocationParent);
+		}
+
+		// process the SQL Statement and Timer
+		processSqlStatementData(session, invData, topInvocationParent);
+		processTimerData(session, invData, topInvocationParent, exclusiveDurationDelta);
+		processExceptionSensorData(session, invData, topInvocationParent);
+	}
+
+	/**
+	 * Process SQL statement if one exists in the invData object and passes it to the chained
+	 * processors.
+	 * 
+	 * @param session
+	 *            Session needed for DB persistence.
+	 * @param invData
+	 *            Invocation data to be processed.
+	 * @param topInvocationParent
+	 *            Top invocation object.
+	 */
+	private void processSqlStatementData(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+		SqlStatementData sqlStatementData = invData.getSqlStatementData();
+		if (null != sqlStatementData) {
+			topInvocationParent.setNestedSqlStatements(Boolean.TRUE);
+			sqlStatementData.addInvocationParentId(topInvocationParent.getId());
+			passToChainedProcessors(sqlStatementData, session);
+		}
+	}
+
+	/**
+	 * Process timer data if one exists in the invData object and passes it to the chained
+	 * processors.
+	 * 
+	 * @param session
+	 *            Session needed for DB persistence.
+	 * @param invData
+	 *            Invocation data to be processed.
+	 * @param topInvocationParent
+	 *            Top invocation object.
+	 * @param exclusiveDurationDelta
+	 *            Duration to subtract from timer duration to get the exclusive duration.
+	 */
+	private void processTimerData(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent, double exclusiveDurationDelta) {
+		TimerData timerData = invData.getTimerData();
+		if (null != timerData) {
+			double exclusiveTime = invData.getTimerData().getDuration() - exclusiveDurationDelta;
+			timerData.setExclusiveCount(1L);
+			timerData.setExclusiveDuration(exclusiveTime);
+			timerData.calculateExclusiveMax(exclusiveTime);
+			timerData.calculateExclusiveMin(exclusiveTime);
+			timerData.addInvocationParentId(topInvocationParent.getId());
+			passToChainedProcessors(invData.getTimerData(), session);
+		}
+	}
+
+	/**
+	 * Process all the exceptions in the invData and passes exceptions to the chained processors.<br>
+	 * <br>
+	 * Note also that only exception data with CREATED event are processed, since the PASSED and
+	 * HANDLED should be connected as children to the CREATED one.
+	 * 
+	 * @param session
+	 *            Session needed for DB persistence.
+	 * @param invData
+	 *            Invocation data to be processed.
+	 * @param topInvocationParent
+	 *            Top invocation object.
+	 */
+	private void processExceptionSensorData(StatelessSession session, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+		if (CollectionUtils.isNotEmpty(invData.getExceptionSensorDataObjects())) {
+			for (ExceptionSensorData exceptionData : invData.getExceptionSensorDataObjects()) {
+				if (exceptionData.getExceptionEvent() == ExceptionEvent.CREATED) {
+					// only if created exception is in invocation set to the parent
+					topInvocationParent.setNestedExceptions(Boolean.TRUE);
+
+					// we need to directly call Exception message processor, cause it can not be
+					// chained
+					exceptionMessageCmrProcessor.process(exceptionData, session);
+					exceptionData.addInvocationParentId(topInvocationParent.getId());
+					passToChainedProcessors(exceptionData, session);
+				}
+			}
+		}
+	}
+
+}

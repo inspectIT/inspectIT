@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util" 
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd"
+	default-autowire="byType">
+
+	<!-- holds definition for other UI related beans -->
+
+	<bean id="detailsGenerationFactory" class="info.novatec.inspectit.rcp.details.DetailsGenerationFactory">
+		<property name="generators">
+			<util:list value-type="info.novatec.inspectit.rcp.details.generator.IDetailsGenerator">
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.GeneralInfoDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.MethodInfoDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.InvocationSequenceDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.SqlDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.ExceptionDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.InvocationAffiliationDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.DurationDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.AggregatedDurationDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.HttpDetailsGenerator" />
+				<bean class="info.novatec.inspectit.rcp.details.generator.impl.ParameterContentDetailsGenerator" />
+			</util:list>
+		</property>
+	</bean>
+	
+</beans>

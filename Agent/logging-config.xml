@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- Use below property definition to place logs in the folder relative to the inspectit-agent.jar location-->
+	<define name="logDir" class="info.novatec.inspectit.agent.logback.LogInitializer" />
+	
+	<!-- Use below property specification to place logs in desired folder on the system -->
+	<!-- <property name="logDir" value="/path/to/desired/logging/folder" /> -->
+
+	<!-- The appenders are defined at the top -->
+	
+	<!-- Console output -->
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<Target>System.out</Target>
+		<encoder>
+			<pattern>%d{ISO8601}: [inspectIT] %-6r [%15.15t] %-5p %30.30c - %m%n%nopex</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Enriched Sysout -->
+	<!-- Rollover every day or when file reaches 20MB -->
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logDir}/agent.log</file>
+		<encoder>
+			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %30.30c - %m%n%rEx</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logDir/agent.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<!-- Exceptions -->
+	<!-- Rollover every day or when file reaches 20MB -->
+	<!-- Only warn & error levels-->
+	<appender name="exceptions" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logDir}/exceptions.log</file>
+		<encoder>
+			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %30.30c - %m%n%rEx</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logDir}/exceptions.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+	</appender>
+
+	<!-- Loggers are defined from down here -->
+
+	<!-- set log levels - for more verbose logging change 'info' to 'debug' -->
+	<root level="info">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="file" />
+		<appender-ref ref="exceptions" />
+	</root>
+
+	<!-- deactivate all other loggers, except for errors -->
+	<logger name="org" level="error" />
+	<logger name="com" level="error" />
+
+	<logger name="info.novatec.inspectit.agent" level="info" />
+	
+	<!-- sensor logging, set this to 'debug' to get additional information about: - sensors -->
+	<logger name="info.novatec.inspectit.agent.sensor" level="info" />
+
+	<!-- hooking logging, set this to 'debug' to get additional information about: - hooks -->
+	<logger name="info.novatec.inspectit.agent.hooking" level="info" />
+
+	<!-- connection logging, set this to 'debug' to get additional information about: - communication -->
+	<logger name="info.novatec.inspectit.agent.connection" level="info" />
+	
+	<!-- configuration logging, set this to 'debug' to get additional information about: - configuration -->
+	<logger name="info.novatec.inspectit.agent.configuration" level="info" />
+	
+	<!-- analyzer logging, set this to 'debug' to get additional information about: - analyzers -->
+	<logger name="info.novatec.inspectit.agent.analyzer" level="info" />
+
+	<!-- Disabled loggers from down here -->
+
+	<!-- javassist logging -->
+	<!-- logger name="com.javassist" level="info" / -->
+
+</configuration>

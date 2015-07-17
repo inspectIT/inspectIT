@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+
+<!-- Main installation file for all installer types -->
+<installation version="1.0">
+	<info>
+		<appname>@{installer.application.name}</appname>
+		<appversion>@{installer.application.version}</appversion>
+		<authors>
+			<author email="@{installer.author.email}" name="@{installer.author.name}" />
+		</authors>
+		<url>@{installer.application.homepage}</url>
+	</info>
+
+	<variables>
+		<!-- Operation system and architecture information for IzPack -->
+		<variable name="OS_VER" value="@{target.os}" />
+		<variable name="ARCH_VER" value="@{target.os.arch}" />
+
+		<!-- Build number of inspectIT -->
+		<variable name="BUILD_VER" value="dev" />
+
+		<!-- Windows Service variables for parsing installService.bat and uninstallService.bat -->
+		<!-- For manipulating the variable values see corresponding properties build file -->
+		<variable name="PR_EXE" value="@{procrun.exe}" />
+		<variable name="SERVICE_NAME" value="@{inspectit.windows.service.name}" />
+		<variable name="PR_DESCRIPTION" value="@{inspectit.windows.service.description}" />
+		<variable name="PR_DISPLAYNAME" value="@{inspectit.windows.service.display.name.pointer}" />
+		<variable name="PR_JVM" value="@{inspectit.windows.service.jvm.path}" />
+		<variable name="PR_CLASSPATH" value="@{inspectit.windows.service.jvm.classpath}" />
+		<variable name="PR_STARTUP" value="@{procrun.startup}" />
+		<variable name="PR_STARTMODE" value="@{procrun.startmode}" />
+		<variable name="PR_STARTCLASS" value="@{procrun.startclass}" />
+		<variable name="PR_STARTMETHOD" value="@{procrun.startmethod}" />
+		<variable name="PR_STARTPARAMS" value="@{procrun.startparams}" />
+		<variable name="PR_STOPMODE" value="@{procrun.stopmode}" />
+		<variable name="PR_STOPCLASS" value="@{procrun.stopclass}" />
+		<variable name="PR_STOPMETHOD" value="@{procrun.stopmethod}" />
+		<variable name="PR_STOPPARAMS" value="@{procrun.stopparams}" />
+
+		<!-- Information for the shortcuts -->
+		<variable name="PROGRAMM_GROUP" value="inspectIT" />
+		<variable name="PROGRAMM_LOCATION" value="applications" />
+
+		<!-- Preset installation path -->
+		<variable name="TargetPanel.dir.windows" value="$APPLICATIONS_DEFAULT_ROOT\${APP_NAME}" />
+		<variable name="TargetPanel.dir.unix" value="$APPLICATIONS_DEFAULT_ROOT/${APP_NAME}" />
+	</variables>
+
+	<guiprefs height="526" width="670" resizable="yes">
+		<modifier key="headingBackgroundColor" value="0x00ffffff" />
+		<modifier key="headingForegroundColor" value="0x00000000" />
+		<modifier key="layoutAnchor" value="NORTWEST" />
+		<modifier key="headingPanelCounter" value="text" />
+		<modifier key="headingPanelCounterPos" value="inHeading" />
+		<modifier key="useHeadingPanel" value="yes" />
+		<modifier key="labelFontSize" value="0.99" />
+		<modifier key="headingFontSize" value="1.3" />
+		<modifier key="headingLineCount" value="1" />
+	</guiprefs>
+
+	<resources>
+		<res id="CustomLangPack.xml_eng" src="installer-commons/bin/langpacks/installer/eng-custom.xml" />
+		<res id="Installer.image" src="installer-commons/side-logo.png" />
+		<res id="Heading.image" src="installer-commons/head-logo.png" />
+		<res id="Win_shortcutSpec.xml" src="installer-commons/Win_shortcutSpec.xml" />
+		<res id="Unix_shortcutSpec.xml" src="installer-commons/Unix_shortcutSpec.xml" />
+		<res id="HTMLLicencePanel.licence" src="installer-commons/license.html" />
+		<res id="HTMLHelloPanel.info" src="installer-commons/welcome-information.html" />
+	</resources>
+
+	<locale>
+		<langpack iso3="eng-custom" />
+	</locale>
+
+	<native type="izpack" name="ShellLink.dll">
+		<os family="windows" />
+	</native>
+	<native type="izpack" name="ShellLink_x64.dll">
+		<os family="windows" />
+	</native>
+
+	<panels>
+		<panel classname="HTMLHelloPanel" />
+		<panel classname="HTMLLicencePanel" />
+		<panel classname="TreePacksPanel" />
+		<panel classname="TargetPanel" />
+		<panel classname="ExtendedInstallPanel" />
+		<panel classname="ShortcutPanel" />
+		<panel classname="FinishPanel" />
+		<panel classname="SimpleFinishPanel" />
+	</panels>
+
+	<conditions>
+		<condition type="variable" id="windows">
+			<name>OS_VER</name>
+			<value>Windows</value>
+		</condition>
+		<condition type="variable" id="is64">
+			<name>ARCH_VER</name>
+			<value>64</value>
+		</condition>
+		<condition type="variable" id="is32">
+			<name>ARCH_VER</name>
+			<value>32</value>
+		</condition>
+		<condition type="and" id="windows64">
+			<condition type="ref" refid="windows" />
+			<condition type="ref" refid="is64" />
+		</condition>
+		<condition type="and" id="windows32">
+			<condition type="ref" refid="windows" />
+			<condition type="ref" refid="is32" />
+		</condition>
+	</conditions>
+
+	<!-- Installer content -->
+	<packs>
+		<!-- inspectIT UI -->
+		<!-- Parent node in the pack tree -->
+		<pack name="inspectIT UI" preselected="yes" required="no">
+			<description>@{inspectit.ui.description.long}</description>
+			<file override="update" src="@{installer.ui.pointer}" unpack="true" targetdir="$INSTALL_PATH" />
+		</pack>
+
+		<!-- inspectIT CMR -->
+		<!-- Parent node in the pack tree -->
+		<pack name="inspectIT Server (CMR)" preselected="yes" required="no">
+			<description>@{inspectit.cmr.description.long}</description>
+
+			<!-- Installation files -->
+			<!-- Cannot use unpack=true because izpack doesn't support tar.gz -->
+			<file override="update" src="@{installer.cmr.pointer}" targetdir="$INSTALL_PATH" />
+
+			<!-- Mark files as executable after installation (important for GNU/Linux OS) -->
+			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/startup.sh" condition="izpack.linuxinstall" />
+
+			<!-- Mark Java file as executable after installation (important for GNU/Linux OS) -->
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/ControlPanel" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/java" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/java_vm" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/javaws" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/jcontrol" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/keytool" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/orbd" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/pack200" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/policytool" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/rmid" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/rmiregistry" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/servertool" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/tnameserv" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/unpack200" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/ControlPanel" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/java" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/java_vm" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/javaws" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/jcontrol" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/keytool" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/orbd" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/pack200" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/policytool" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/rmid" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/rmiregistry" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/servertool" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/tnameserv" condition="izpack.linuxinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/unpack200" condition="izpack.linuxinstall" />
+
+			<file override="update" src="@{commons.installer.resources}/service/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="windows64" />
+			<file override="update" src="@{commons.installer.resources}/service/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="windows32" />
+
+			<file override="update" src="@{commons.installer.resources}/service/inspectITCMRw.exe" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
+
+			<parsable targetfile="$INSTALL_PATH/CMR/installService.bat" condition="izpack.windowsinstall" />
+			<parsable targetfile="$INSTALL_PATH/CMR/uninstallService.bat" condition="izpack.windowsinstall" />
+
+			<executable type="bin" stage="postinstall" targetfile="$INSTALL_PATH/CMR/uninstallService.bat" keep="true" condition="izpack.windowsinstall" />
+			<executable type="bin" stage="postinstall" targetfile="$INSTALL_PATH/CMR/installService.bat" keep="true" condition="izpack.windowsinstall" />
+			<executable type="bin" stage="uninstall" targetfile="$INSTALL_PATH/CMR/uninstallService.bat" condition="izpack.windowsinstall" />
+		</pack>
+
+		<!-- inspectIT Agent -->
+		<!-- Parent node in the pack tree -->
+		<pack name="inspectIT Java Agent" preselected="yes" required="no">
+			<description>@{inspectit.agent.description.long}</description>
+			<file override="update" src="@{agent.build}" unpack="true" targetdir="$INSTALL_PATH" />
+		</pack>
+	</packs>
+</installation>

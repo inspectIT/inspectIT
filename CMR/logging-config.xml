@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- The appenders are defined at the top -->
+	
+	<!-- Console output -->
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<Target>System.out</Target>
+		<encoder>
+			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %30.30c - %m%n%rEx</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Statistics -->
+	<!-- Rollover every day or when file reaches 20MB -->
+	<appender name="statistics" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/statistics.log</file>
+		<encoder>
+			<pattern>%d{ISO8601}: %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/statistics.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<!-- Enriched Sysout -->
+	<!-- Rollover every day or when file reaches 20MB -->
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/cmr.log</file>
+		<encoder>
+			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %30.30c - %m%n%rEx</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/cmr.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<!-- Exceptions -->
+	<!-- Rollover every day or when file reaches 20MB -->
+	<!-- Only warn & error levels-->
+	<appender name="exceptions" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/exceptions.log</file>
+		<encoder>
+			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %30.30c - %m%n%rEx</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/exceptions.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+	</appender>
+
+	<!-- Loggers are defined from down here -->
+
+	<!-- set log levels - for more verbose logging change 'info' to 'debug' -->
+	<root level="info">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="file" />
+		<appender-ref ref="exceptions" />
+	</root>
+
+	<!-- deactivate all other loggers, except for errors -->
+	<logger name="org" level="error" />
+	<logger name="com" level="error" />
+	<logger name="uk" level="error" />
+
+	<!-- service logging, set this to 'debug' to get additional information about: - Number of timer objects being stored - information about the exception sensor - information about the combined metric sensor -->
+	<logger name="info.novatec.inspectit.cmr.service" level="info" />
+	
+	<!-- service logging, set this to 'debug' to get additional information about: - DAOs -->
+	<logger name="info.novatec.inspectit.cmr.dao" level="info" />
+
+	<!-- RMI Exporter Logging - this logger provides the information to which ip/port the RMI services are bound -->
+	<logger name="org.springframework.remoting.rmi" level="info" />
+
+	<!-- This service logs information about the health status of the CMR. By default this is only being logged into a specific file. Set additivity to true if you want to print this information in the default 
+		appender, too. -->
+	<logger name="info.novatec.inspectit.cmr.util.HealthStatus" additivity="false" level="info">
+		<appender-ref ref="statistics" />
+	</logger>
+
+	<!-- Buffer information -->
+	<logger name="info.novatec.inspectit.cmr.cache.impl.AtomicBuffer" level="info" />
+
+	<!-- Storage, set this to debug for more information about: - storage and failed storage serializations -->
+	<logger name="info.novatec.inspectit.storage" level="info" />
+	<logger name="info.novatec.inspectit.cmr.storage" level="info" />
+
+	<!-- Set this to debug for more information about: - IO write/read -->
+	<logger name="info.novatec.inspectit.storage.nio" level="info" />
+	<logger name="info.novatec.inspectit.storage.write" level="info" />
+	
+	<!-- Set this to debug for more information about: - serialization -->
+	<logger name="info.novatec.inspectit.storage.serializer" level="info" />
+
+	<!-- Set this to debug for more information about: - schema loading for serialization -->
+	<logger name="info.novatec.inspectit.storage.serializer.schema" level="info" />
+
+	<!-- Disabled loggers from down here -->
+
+	<!-- hibernate logging -->
+	<!-- logger name="org.hibernate" level="info" / -->
+
+	<!-- log HQL query parser activity -->
+	<!-- logger name="org.hibernate.hql.ast.AST" level="info" / -->
+
+	<!-- log just the SQL -->
+	<!-- logger name="org.hibernate.SQL" level="info" / -->
+
+	<!-- log JDBC bind parameters -->
+	<!-- logger name="org.hibernate.type" level="info" / -->
+
+	<!-- log schema export/update -->
+	<!-- logger name="org.hibernate.tool.hbm2ddl" level="info" / -->
+
+	<!-- log HQL parse trees -->
+	<!-- logger name="org.hibernate.hql" level="debug" / -->
+
+	<!-- log cache activity -->
+	<!-- logger name="org.hibernate.cache" level="info" / -->
+
+	<!-- log transaction activity -->
+	<!-- logger name="org.hibernate.transaction" level="debug" / -->
+
+	<!-- log JDBC resource acquisition -->
+	<!-- logger name="org.hibernate.jdbc" level="debug" / -->
+
+	<!-- enable the following line if you want to track down connection leakages when using DriverManagerConnectionProvider -->
+	<!-- logger name="org.hibernate.connection.DriverManagerConnectionProvider" level="trace" / -->
+
+	<!-- Log only the info level of the c3p0 connection pooling -->
+	<!-- logger name="com.mchange" level="info" / -->
+
+</configuration>

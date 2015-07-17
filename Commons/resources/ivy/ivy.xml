@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
+	<info organisation="info.novatec.inspectit" module="Commons"/>
+
+	<configurations>
+		<conf name="prod" visibility="private" transitive="false"/>
+		<conf name="test" visibility="private" extends="prod" transitive="false"/>
+	</configurations>
+
+	<!-- note that the manifest file stored in the resource sections needs to be updated to reflect any changes to the production libraries (changing of revisions is safe!) -->
+
+	<!-- PLEASE UPDATE THE THIRDPARTYLICENSE.txt FOR ANY CHANGE 
+	     see https://inspectit-performance.atlassian.net/wiki/display/LIC/New+3rd+party+library+dependency+checklist
+	-->
+
+	<!-- IMPORTANT
+		 * All projects must only define the OSGi compliant libs
+		 * Please make sure that any dependency added is OSGi compliant
+		 * Any added OSGi jar has to be added in the MANIFEST.MF of this project  as a dependency
+		 * Any added OSGI jar has to be added to the inspectIT.product as a dependency
+		 * Further info on https://inspectit-performance.atlassian.net/wiki/display/DEV/Usage+of+3rd+party+libraries+in+the+plugins
+	 -->
+
+	<dependencies>
+		<!-- logging dependencies -->
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5" conf="prod->default" />
+
+		<dependency org="commons-lang" name="commons-lang" rev="2.5" conf="prod->default" />
+		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="prod->default" />
+		<dependency org="commons-pool" name="commons-pool" rev="1.6" conf="prod->default" />
+
+		<dependency org="org.springframework" name="org.springframework.core" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.web" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.asm" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.expression" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.aop" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.aopalliance" name="com.springsource.org.aopalliance" rev="1.0.0" conf="prod->default" />
+		<dependency org="javax.servlet" name="javax.servlet" rev="3.0.0.v201103241009" conf="prod->default" />
+		<dependency org="net.sourceforge.cglib" name="com.springsource.net.sf.cglib" rev="2.2.0" conf="prod->default" />
+
+		<dependency org="com.esotericsoftware.kryo" name="kryo" rev="2.24.0" conf="prod->default" />
+		<dependency org="com.esotericsoftware.kryonet" name="info.novatec.kryonet" rev="2.21" conf="prod->default" />
+		<dependency org="de.javakaffee" name="info.novatec.kryo-serializers" rev="0.23" conf="prod->default" />
+		<dependency org="com.esotericsoftware.reflectasm" name="info.novatec.reflectasm" rev="1.07" conf="prod->default" />
+		<dependency org="com.esotericsoftware.minlog" name="info.novatec.minlog" rev="1.2" conf="prod->default" />
+		<dependency org="org.ow2.asm" name="info.novatec.asm" rev="4.0" conf="prod->default" />
+		<dependency org="org.objenesis" name="objenesis" rev="2.1" conf="prod->default" />
+		
+		<dependency org="com.google.guava" name="guava-jdk5" rev="13.0" conf="prod->default" />
+		
+		<!-- Test -->
+		<!-- Test NG should be on the build path via the Eclipse plug-in -->
+		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />
+		<dependency org="nl.jqno.equalsverifier" name="equalsverifier" rev="1.0.2" conf="test->default"/>
+		<dependency org="org.hamcrest" name="info.novatec.hamcrest-all" rev="1.3" conf="test->default" />
+	</dependencies>
+</ivy-module>

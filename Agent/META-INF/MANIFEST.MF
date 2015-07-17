@@ -1,0 +1,2 @@
+Premain-Class: info.novatec.inspectit.agent.javaagent.JavaAgent
+Can-Redefine-Classes: true

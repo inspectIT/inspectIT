@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util" 
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd"
+	default-autowire="byType">
+
+	<!-- holds definitions for storage related beans -->
+		 
+	<bean id="storageIndexQuery" class="info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery" scope="prototype" lazy-init="true" />
+
+	<bean id="storageIndexQueryProvider" class="info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider">
+		<lookup-method name="createNewStorageIndexQuery" bean="storageIndexQuery" />
+	</bean>
+
+	<bean id="restrictionProcessor" class="info.novatec.inspectit.indexing.restriction.impl.CachingIndexQueryRestrictionProcessor" />
+
+	<bean id="byteBufferProvider" class="info.novatec.inspectit.storage.nio.ByteBufferProvider" init-method="init">
+		<property name="poolMaxCapacity" value="52428800" />
+		<property name="poolMinCapacity" value="10485760" />
+		<property name="bufferPoolMaxDirectMemoryOccupancy" value="0.6" />
+		<property name="bufferPoolMinDirectMemoryOccupancy" value="0.3" />
+	</bean>
+
+	<bean id="storageManager" class="info.novatec.inspectit.rcp.storage.InspectITStorageManager">
+		<property name="storageDefaultFolder" value="storage"></property>
+	</bean>
+
+	<bean id="timerDataQueryFactory" class="info.novatec.inspectit.indexing.query.factory.impl.TimerDataQueryFactory" />
+	<bean id="sqlStatementDataQueryFactory" class="info.novatec.inspectit.indexing.query.factory.impl.SqlStatementDataQueryFactory" />
+	<bean id="httpTimerDataQueryFactory" class="info.novatec.inspectit.indexing.query.factory.impl.HttpTimerDataQueryFactory" />
+	<bean id="invocationSequenceDataQueryFactory" class="info.novatec.inspectit.indexing.query.factory.impl.InvocationSequenceDataQueryFactory" />
+	<bean id="exceptionSensorDataQueryFactory" class="info.novatec.inspectit.indexing.query.factory.impl.ExceptionSensorDataQueryFactory" />
+
+	<bean id="dataRetriever" class="info.novatec.inspectit.rcp.storage.util.DataRetriever" init-method="init" />
+
+	<bean id="dataUploader" class="info.novatec.inspectit.rcp.storage.util.DataUploader" />
+
+	<bean id="storageRepositoryDefinition" class="info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition" scope="prototype" lazy-init="true" />
+
+	<bean id="storageRepositoryDefinitionProvider" class="info.novatec.inspectit.rcp.repository.StorageRepositoryDefinitionProvider">
+		<lookup-method name="createStorageRepositoryDefinition" bean="storageRepositoryDefinition" />
+	</bean>
+
+	<bean id="storageTimerDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageTimerDataAccessService" scope="prototype" lazy-init="true">
+		<property name="timerDataQueryFactory" ref="timerDataQueryFactory" />
+	</bean>
+
+	<bean id="storageHttpTimerDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageHttpTimerDataAccessService" scope="prototype" lazy-init="true">
+		<property name="httpDataQueryFactory" ref="httpTimerDataQueryFactory" />
+	</bean>
+
+	<bean id="storageSqlDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageSqlDataAccessService" scope="prototype" lazy-init="true">
+		<property name="sqlDataQueryFactory" ref="sqlStatementDataQueryFactory" />
+	</bean>
+
+	<bean id="storageExceptionDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageExceptionDataAccessService" scope="prototype" lazy-init="true">
+		<property name="exceptionSensorDataQueryFactory" ref="exceptionSensorDataQueryFactory" />
+	</bean>
+
+	<bean id="storageInvocationDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageInvocationDataAccessService" scope="prototype" lazy-init="true">
+		<property name="invocationDataQueryFactory" ref="invocationSequenceDataQueryFactory" />
+	</bean>
+
+	<bean id="storageGlobalDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageGlobalDataAccessService" scope="prototype" lazy-init="true" />
+	<!-- add the provider here directly -->
+
+	<bean id="storageServiceProvider" class="info.novatec.inspectit.rcp.repository.service.storage.StorageServiceProvider">
+		<lookup-method name="createStorageTimerDataAccessService" bean="storageTimerDataAccessService" />
+		<lookup-method name="createStorageHttpTimerDataAccessService" bean="storageHttpTimerDataAccessService" />
+		<lookup-method name="createStorageSqlDataAccessService" bean="storageSqlDataAccessService" />
+		<lookup-method name="createStorageExceptionDataAccessService" bean="storageExceptionDataAccessService" />
+		<lookup-method name="createStorageInvocationDataAccessService" bean="storageInvocationDataAccessService" />
+		<lookup-method name="createStorageGlobalDataAccessService" bean="storageGlobalDataAccessService" />
+	</bean>
+
+	<bean id="IOExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
+		<property name="threadNamePrefix" value="io-executor-service" />
+		<property name="daemon" value="true" />
+		<property name="executorThreads" value="2" />
+		<property name="beanSingleton" value="true" />
+	</bean>
+
+	<bean id="storageExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
+		<property name="threadNamePrefix" value="storage-executor-service" />
+		<property name="daemon" value="true" />
+		<property name="executorThreads" value="3" />
+		<property name="scheduledExecutor" value="true" />
+	</bean>
+
+	<bean id="readingChannelManager" class="info.novatec.inspectit.storage.nio.read.ReadingChannelManager" depends-on="IOExecutorService">
+		<property name="executorService">
+			<ref bean="IOExecutorService" />
+		</property>
+	</bean>
+
+	<bean id="extendedByteBufferInputStream" class="info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferInputStream" scope="prototype" lazy-init="true">
+		<property name="executorService" ref="storageExecutorService" />
+	</bean>
+
+	<bean id="inputStreamProvider" class="info.novatec.inspectit.storage.nio.stream.InputStreamProvider">
+		<lookup-method name="createExtendedByteBufferInputStream" bean="extendedByteBufferInputStream" />
+	</bean>
+	
+</beans>

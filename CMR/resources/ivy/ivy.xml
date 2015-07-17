@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
+	<info organisation="info.novatec.inspectit" module="CMR" />
+
+	<configurations>
+		<conf name="prod" visibility="private" transitive="false" />
+		<conf name="test" visibility="private" extends="prod" transitive="false" />
+	</configurations>
+
+	<!-- note that the manifest file stored in the resource sections needs to be updated to reflect any changes to the production libraries (changing of revisions is safe!) -->
+
+	<!-- PLEASE UPDATE THE THIRDPARTYLICENSE.txt FOR ANY CHANGE 
+	     see https://inspectit-performance.atlassian.net/wiki/display/LIC/New+3rd+party+library+dependency+checklist
+	-->
+
+	<!-- IMPORTANT
+		 * All projects must only define the OSGi compliant libs
+		 * Please make sure that any dependency added is OSGi compliant
+		 * Further info on https://inspectit-performance.atlassian.net/wiki/display/DEV/Usage+of+3rd+party+libraries+in+the+plugins
+	 -->
+
+	<dependencies>
+		<!-- logging dependencies -->
+		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.7.5" conf="prod->default" />
+		<dependency org="org.slf4j" name="log4j-over-slf4j" rev="1.7.5" conf="prod->default" />
+		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.13" conf="prod->default" />
+		<dependency org="ch.qos.logback" name="logback-classic" rev="1.0.13" conf="prod->default" />
+		<dependency org="uk.org.lidalia" name="info.novatec.sysout-over-slf4j" rev="1.0.2" conf="prod->default" />
+
+		<dependency org="org.springframework" name="org.springframework.context.support" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.orm" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.transaction" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="org.springframework.jdbc" rev="3.1.0.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="spring-webmvc" rev="3.1.0.RELEASE" transitive="false" conf="prod->default"/>
+		<dependency org="org.springframework" name="spring-oxm" rev="3.1.0.RELEASE" transitive="false" conf="prod->default"/>
+
+		<dependency org="org.aspectj" name="aspectjweaver" rev="1.7.2" conf="prod->default" />
+		<dependency org="org.aspectj" name="aspectjrt" rev="1.7.2" conf="prod->default" />
+		<dependency org="com.caucho" name="hessian" rev="3.1.5" conf="prod->default" />
+		<dependency org="javax.transaction" name="com.springsource.javax.transaction" rev="1.1.0" conf="prod->default" />
+		<dependency org="dom4j" name="dom4j" rev="1.6.1" conf="prod->default" />
+		<dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.3" transitive="false" conf="prod->default"/>
+		<dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.3" transitive="false" conf="prod->default"/>
+
+		<dependency org="commons-codec" name="commons-codec" rev="1.3" conf="prod->default" />
+
+		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.26" conf="prod->default" />
+		<dependency org="org.mortbay.jetty" name="jetty-util" rev="6.1.26" conf="prod->default" />
+
+		<dependency org="org.hibernate" name="hibernate-core" rev="3.6.9.Final" conf="prod->default" />
+		<dependency org="org.hibernate.common" name="hibernate-commons-annotations" rev="4.0.1.Final" conf="prod->default" />
+		<dependency org="org.hibernate.javax.persistence" name="hibernate-jpa-2.0-api" rev="1.0.1.Final" conf="prod->default" />
+		<dependency org="org.jboss.logging" name="jboss-logging" rev="3.1.2.GA" conf="prod->default" />
+		<dependency org="javassist" name="javassist" rev="3.12.0.GA" conf="prod->default" />
+		<dependency org="antlr" name="antlr" rev="2.7.7" conf="prod->default" />
+		<dependency org="com.h2database" name="h2" rev="1.3.176" conf="prod->default" />
+		<dependency org="c3p0" name="c3p0" rev="0.9.1.2" conf="prod->default" />
+
+		<!-- Test -->
+		<!-- Test NG should be on the build path via the Eclipse plug-in -->
+		<dependency org="org.springframework" name="spring-test" rev="3.1.0.RELEASE" conf="test->default" />
+		<dependency org="classmexer" name="classmexer" rev="0.0.3" conf="test->default" />
+		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />
+		<dependency org="org.objenesis" name="objenesis" rev="2.1" conf="test->default" /> <!-- Needed for mockito-core -->
+		<dependency org="nl.jqno.equalsverifier" name="equalsverifier" rev="1.0.2" conf="test->default" />
+		<dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" conf="test->default" />
+	</dependencies>
+</ivy-module>

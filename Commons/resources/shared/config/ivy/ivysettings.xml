@@ -1,0 +1,13 @@
+<ivysettings>
+	<settings defaultResolver="novatec-nexus" />
+	<resolvers>
+		<chain name="novatec-nexus">
+			<ibiblio name="Nexus@NT" m2compatible="true" root="http://repository.novatec-gmbh.de/content/repositories/3rd_party_libs/" usepoms="true" />
+			<ibiblio name="Maven Central" m2compatible="true" root="http://repo1.maven.org/maven2/" usepoms="true" />
+			<ibiblio name="SpringSource - External Bundle Releases" m2compatible="true" root="http://repository.springsource.com/maven/bundles/external/" usepoms="true" />
+			<ibiblio name="SpringSource - SpringSource Bundle Releases" m2compatible="true" root="http://repository.springsource.com/maven/bundles/release/" usepoms="true" />
+			<ibiblio name="JBoss Public" m2compatible="true" root="https://repository.jboss.org/nexus/content/groups/public/" usepoms="true" />
+		</chain>
+	</resolvers>
+</ivysettings>
+

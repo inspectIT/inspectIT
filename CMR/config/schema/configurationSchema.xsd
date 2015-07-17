@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <xs:element name="boolean-property" type="booleanProperty"/>
+
+  <xs:element name="byte-property" type="byteProperty"/>
+
+  <xs:element name="cmr-configuration" type="configuration"/>
+
+  <xs:element name="group-property" type="groupedProperty"/>
+
+  <xs:element name="isFullyQualifiedClassName" type="fullyQualifiedClassNameValidator"/>
+
+  <xs:element name="isGreater" type="greaterValidator"/>
+
+  <xs:element name="isGreaterOrEqual" type="greaterOrEqualValidator"/>
+
+  <xs:element name="isLess" type="lessValidator"/>
+
+  <xs:element name="isLessOrEqual" type="lessOrEqualValidator"/>
+
+  <xs:element name="isNegative" type="negativeValidator"/>
+
+  <xs:element name="isNotEmpty" type="notEmptyValidator"/>
+
+  <xs:element name="isPercentage" type="percentageValidator"/>
+
+  <xs:element name="isPositive" type="positiveValidator"/>
+
+  <xs:element name="long-property" type="longProperty"/>
+
+  <xs:element name="percentage-property" type="percentageProperty"/>
+
+  <xs:element name="section" type="propertySection"/>
+
+  <xs:element name="string-property" type="stringProperty"/>
+
+  <xs:complexType name="abstractProperty" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="singleProperty" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="abstractProperty">
+        <xs:sequence>
+          <xs:element name="validators" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="isLess"/>
+                  <xs:element ref="isLessOrEqual"/>
+                  <xs:element ref="isGreater"/>
+                  <xs:element ref="isGreaterOrEqual"/>
+                  <xs:element ref="isPercentage"/>
+                  <xs:element ref="isPositive"/>
+                  <xs:element ref="isNegative"/>
+                  <xs:element ref="isFullyQualifiedClassName"/>
+                  <xs:element ref="isNotEmpty"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="logical-name" type="xs:string" use="required"/>
+        <xs:attribute name="advanced" type="xs:boolean" use="required"/>
+        <xs:attribute name="server-restart-required" type="xs:boolean" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="lessValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractComparingValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractComparingValidator" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="property" type="xs:string"/>
+    <xs:attribute name="than" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="lessOrEqualValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractComparingValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="greaterValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractComparingValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="greaterOrEqualValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractComparingValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="percentageValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractSinglePropertyValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractSinglePropertyValidator" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="positiveValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractSinglePropertyValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="negativeValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractSinglePropertyValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="fullyQualifiedClassNameValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractSinglePropertyValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="notEmptyValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractSinglePropertyValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="stringProperty">
+    <xs:complexContent>
+      <xs:extension base="singleProperty">
+        <xs:sequence/>
+        <xs:attribute name="used-value" type="xs:string"/>
+        <xs:attribute name="default-value" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="longProperty">
+    <xs:complexContent>
+      <xs:extension base="singleProperty">
+        <xs:sequence/>
+        <xs:attribute name="used-value" type="xs:long"/>
+        <xs:attribute name="default-value" type="xs:long" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="booleanProperty">
+    <xs:complexContent>
+      <xs:extension base="singleProperty">
+        <xs:sequence/>
+        <xs:attribute name="used-value" type="xs:boolean"/>
+        <xs:attribute name="default-value" type="xs:boolean" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="percentageProperty">
+    <xs:complexContent>
+      <xs:extension base="singleProperty">
+        <xs:sequence/>
+        <xs:attribute name="used-value" type="xs:float"/>
+        <xs:attribute name="default-value" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="byteProperty">
+    <xs:complexContent>
+      <xs:extension base="singleProperty">
+        <xs:sequence/>
+        <xs:attribute name="used-value" type="xs:string"/>
+        <xs:attribute name="default-value" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="groupedProperty">
+    <xs:complexContent>
+      <xs:extension base="abstractProperty">
+        <xs:sequence>
+          <xs:element name="properties" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="string-property"/>
+                  <xs:element ref="long-property"/>
+                  <xs:element ref="boolean-property"/>
+                  <xs:element ref="percentage-property"/>
+                  <xs:element ref="byte-property"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="group-validators" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="isLess"/>
+                  <xs:element ref="isLessOrEqual"/>
+                  <xs:element ref="isGreater"/>
+                  <xs:element ref="isGreaterOrEqual"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="configuration">
+    <xs:sequence>
+      <xs:element ref="section" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="propertySection">
+    <xs:sequence>
+      <xs:element name="properties" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="string-property"/>
+              <xs:element ref="long-property"/>
+              <xs:element ref="boolean-property"/>
+              <xs:element ref="percentage-property"/>
+              <xs:element ref="byte-property"/>
+              <xs:element ref="group-property"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:schema>
+

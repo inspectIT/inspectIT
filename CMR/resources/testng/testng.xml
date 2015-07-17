@@ -1,0 +1,54 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<suite name="CMRTest">
+	<test name="Cache">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.cache.impl.AtomicBufferTest" />
+			<class name="info.novatec.inspectit.cmr.cache.impl.BufferPropertiesTest" />
+			<class name="info.novatec.inspectit.cmr.cache.impl.MemoryCalculationTest" />
+		</classes>
+	</test>
+	<test name="Dao/Aggregators">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.dao.impl.TimerDataAggregatorTest" />
+			<class name="info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoTest" />
+		</classes>
+	</test>
+	<test name="Service">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.service.RegistrationServiceTest" />
+			<class name="info.novatec.inspectit.cmr.service.AgentStorageServiceTest" />
+			<class name="info.novatec.inspectit.cmr.service.GlobalDataAccessServiceTest" />
+		</classes>
+	</test>
+	<test name="Util">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.util.PlatformIdentCacheTest" />
+			<class name="info.novatec.inspectit.cmr.util.AgentStatusDataProviderTest" />
+		</classes>
+	</test>
+	<test name="Properties">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.property.PropertyManagerTest" />
+			<class name="info.novatec.inspectit.cmr.property.PropertyUpdateExecutorTest" />
+			<class name="info.novatec.inspectit.cmr.property.PropertyIntegrationTest" />
+		</classes>
+	</test>
+	<test name="Serializer">
+		<classes>
+			<class name="info.novatec.inspectit.storage.serializer.impl.HibernateSerializerTest" />
+		</classes>
+	</test>
+	<test name="CmrProcessors">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.processor.impl.CmrDataProcessorsTest" />
+		</classes>
+	</test>
+	<test name="Storage">
+		<classes>
+			<class name="info.novatec.inspectit.storage.StorageIntegrationTest" />
+			<class name="info.novatec.inspectit.cmr.storage.CmrStorageManagerTest" />
+			<class name="info.novatec.inspectit.cmr.storage.CmrStorageRecorderTest" />
+			<class name="info.novatec.inspectit.cmr.service.rest.StorageRestfulServiceTest" />
+		</classes>
+	</test>
+</suite>

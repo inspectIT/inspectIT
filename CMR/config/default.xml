@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cmr-configuration xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/configurationSchema.xsd">
+	<section name="Jetty">
+		<properties>
+			<long-property name="Port" default-value="8182" server-restart-required="true" logical-name="jetty.port" advanced="false"
+				description="Port that will be opened for the communication to the inspectIT User interface.">
+				<validators>
+					<isPositive />
+				</validators>
+			</long-property>
+			<long-property name="Graceful Shutdown Time" default-value="5000" server-restart-required="true" logical-name="jetty.graceful.shutdown.time" advanced="false"
+				description='The "grace" period is the time the container will wait for requests currently inside the container to finish processing before shutting down.'>
+				<validators>
+					<isPositive />
+					<isLessOrEqual than="60000" />
+				</validators>
+			</long-property>
+			<group-property name="Threads" description="Defines size of the Jetty thread pool.">
+				<properties>
+					<long-property name="Min Threads" default-value="5" server-restart-required="true" logical-name="jetty.threads.min" advanced="false"
+						description="The minimum thread number that will be in the thread pool for the incoming requests.">
+						<validators>
+							<isPositive />
+							<isLessOrEqual than="50" />
+						</validators>
+					</long-property>
+					<long-property name="Max Threads" default-value="20" server-restart-required="true" logical-name="jetty.threads.max" advanced="false"
+						description="The maximum thread number that will be in the thread pool for the incoming requests.">
+					</long-property>
+				</properties>
+				<group-validators>
+					<isLess property="jetty.threads.min" than="jetty.threads.max" />
+				</group-validators>
+			</group-property>
+		</properties>
+	</section>
+	<section name="JDBC">
+		<properties>
+			<string-property name="URL" default-value="jdbc:h2:db/inspectit;LOCK_MODE=0;CACHE_SIZE=131072;DB_CLOSE_ON_EXIT=FALSE" server-restart-required="true" logical-name="database.url"
+				advanced="true" description="The JDBC URL pointing to the database.">
+				<validators>
+					<isNotEmpty />
+				</validators>
+			</string-property>
+			<string-property name="Driver" default-value="org.h2.Driver" server-restart-required="true" logical-name="database.driver" advanced="true" description="The driver class to be used. ">
+				<validators>
+					<isFullyQualifiedClassName />
+				</validators>
+			</string-property>
+			<string-property name="Username" default-value="inspectit" server-restart-required="true" logical-name="database.user" advanced="true" description="The username used to connect to the database.">
+				<validators>
+					<isNotEmpty />
+				</validators>
+			</string-property>
+			<string-property name="Password" default-value="inspectit" server-restart-required="true" logical-name="database.password" advanced="true" description="The password used to connect to the database.">
+				<validators>
+					<isNotEmpty />
+				</validators>
+			</string-property>
+
+		</properties>
+	</section>
+	<section name="Hibernate">
+		<properties>
+			<string-property name="Dialect" default-value="org.hibernate.dialect.H2Dialect" server-restart-required="true" logical-name="database.dialect" advanced="true"
+				description="The Hibernate dialect to be used.">
+				<validators>
+					<isFullyQualifiedClassName />
+				</validators>
+			</string-property>
+			<boolean-property name="Show SQL" default-value="false" server-restart-required="true" logical-name="database.showsql" advanced="true" description="If Hibernate should print the SQLs executed."></boolean-property>
+			<boolean-property name="Format SQL" default-value="false" server-restart-required="true" logical-name="database.formatsql" advanced="true" description="If printed SQLs should be formated."></boolean-property>
+		</properties>
+	</section>
+	<section name="General settings">
+		<properties>
+			<long-property name="Port" default-value="9070" server-restart-required="true" logical-name="cmr.port" advanced="false" description="The port used for communicating with agents.">
+				<validators>
+					<isPositive />
+				</validators>
+			</long-property>
+			<boolean-property name="IP Based Registration" default-value="true" server-restart-required="false" logical-name="cmr.ipBasedAgentRegistration" advanced="false"
+				description="Defines if the agents should be differently registered if they have different IP adresses."></boolean-property>
+			<long-property name="Data Processing Threads" default-value="2" server-restart-required="false" logical-name="cmr.agentStorageServiceThreadCount" advanced="false"
+				description="Number of threads that will process incoming data from the agent.">
+				<validators>
+					<isPositive />
+					<isLessOrEqual than="10" />
+				</validators>
+			</long-property>
+			<group-property name="Timer Data Aggregation" description="Defines properties for Timer data aggregation before saveing to the database.">
+				<properties>
+					<long-property name="Aggregation Period" default-value="10000" server-restart-required="false" logical-name="cmr.aggregationPeriod" advanced="true"
+						description="Defines period in milliseconds for which all recieved data will be aggregated as one.">
+						<validators>
+							<isGreaterOrEqual than="1000" />
+						</validators>
+					</long-property>
+					<long-property name="Max Elements" default-value="200" server-restart-required="false" logical-name="cmr.maxElements" advanced="true"
+						description="Maximum number of elements aggregator will cache in memory while aggregating.">
+						<validators>
+							<isGreaterOrEqual than="20" />
+						</validators>
+					</long-property>
+					<long-property name="Persist Period" default-value="60000" server-restart-required="false" logical-name="cmr.cacheCleanSleepingPeriod" advanced="true"
+						description="Sleeping period in milliseconds for thread that is persisting the already aggregated objects.">
+						<validators>
+							<isGreaterOrEqual than="5000" />
+						</validators>
+					</long-property>
+				</properties>
+			</group-property>
+		</properties>
+	</section>
+	<section name="Storage">
+		<properties>
+			<string-property name="Default Storage Folder" default-value="storage" server-restart-required="true" logical-name="storage.storageDefaultFolder" advanced="false"
+				description="The name of the folder where all storage related data will be saved.">
+				<validators>
+					<isNotEmpty />
+				</validators>
+			</string-property>
+			<byte-property name="Min GZIP Size" default-value="1MB" server-restart-required="true" logical-name="storage.minGzipSize" advanced="false"
+				description="Min size in bytes for which the storage data will be served compressed." ></byte-property>
+			<group-property name="Hard drive space protection" description="Defines properties that will protect against using all remaning space on the hard drive where CMR is running.">
+				<properties>
+					<byte-property name="Max Hard Drive Occupancy" default-value="0B" server-restart-required="false" logical-name="storage.maxHardDriveOccupancy" advanced="false"
+						description="Amount of bytes that CMR can occupy on the Hard drive for the storage data. Zero value defines no limit, thus all available space will be used."></byte-property>
+					<byte-property name="Warn on Bytes Left" default-value="1GB" server-restart-required="false" logical-name="storage.warnHardDriveByteLeft" advanced="false"
+						description="Defines amount of bytes left to reach the maximum hard drive occupancy when user will be warned that the left space for storage data is low. ">
+						<validators>
+							<isPositive />
+						</validators>
+					</byte-property>
+					<byte-property name="Stop Write on Bytes Left" default-value="100MB" server-restart-required="false" logical-name="storage.stopWriteHardDriveBytesLeft" advanced="false"
+						description="Defines amount of bytes left to reach the maximum hard drive occupancy when all writes to the disk will be suspended.">
+						<validators>
+							<isPositive />
+						</validators>
+					</byte-property>
+				</properties>
+				<group-validators>
+					<isLess property="storage.stopWriteHardDriveBytesLeft" than="storage.warnHardDriveByteLeft" />
+				</group-validators>
+			</group-property>
+			<group-property name="Byte Buffer Pool" description="Defines properties for the pool of byte buffers that will be used during serialization and IO operations.">
+				<properties>
+					<byte-property name="Byte Buffer Size" default-value="1MB" server-restart-required="false" logical-name="storage.bufferSize" advanced="true" description="Capacity of the byte buffers in the pool.">
+						<validators>
+							<isGreaterOrEqual than="64KB" />
+						</validators>
+					</byte-property>
+					<byte-property name="Pool Min Capacity" default-value="30MB" server-restart-required="false" logical-name="storage.bufferPoolMinCapacity" advanced="true"
+						description="Minumum capacity of the pool. If this size is greater than the percentage of direct memory specified by Pool Min Direct Memory Occupancy, it will be decreased to that percentage.">
+						<validators>
+							<isGreaterOrEqual than="8MB" />
+						</validators>
+					</byte-property>
+					<byte-property name="Pool Max Capacity" default-value="150MB" server-restart-required="false" logical-name="storage.bufferPoolMaxCapacity" advanced="true"
+						description="Maximum capacity of the pool. If this size is greater than the percentage of direct memory specified by Pool Max Direct Memory Occupancy, it will be decreased to that percentage.">
+					</byte-property>
+					<percentage-property name="Pool Min Direct Memory Occupancy" default-value="30" server-restart-required="false" logical-name="storage.bufferPoolMinDirectMemoryOccupancy"
+						advanced="true" description="Percentage of the available direct memory that will be used to decrease the pool minimum capacity if it's higher.">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+					<percentage-property name="Pool Max Direct Memory Occupancy" default-value="60" server-restart-required="false" logical-name="storage.bufferPoolMaxDirectMemoryOccupancy"
+						advanced="true" description="Percentage of the available direct memory that will be used to decrease the pool minimum capacity if it's higher.">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+				</properties>
+				<group-validators>
+					<isLess property="storage.bufferSize" than="storage.bufferPoolMinCapacity" />
+					<isLess property="storage.bufferPoolMinCapacity" than="storage.bufferPoolMaxCapacity" />
+					<isLess property="storage.bufferPoolMinDirectMemoryOccupancy" than="storage.bufferPoolMaxDirectMemoryOccupancy" />
+				</group-validators>
+			</group-property>
+			<long-property name="IO Executior Threads" default-value="3" server-restart-required="true" logical-name="storage.ioExecutorThreads" advanced="true"
+				description="The amount of threads in the executor service responsible for writing data to disk.">
+				<validators>
+					<isPositive />
+					<isLessOrEqual than="10" />
+				</validators>
+			</long-property>
+			<long-property name="Serialization Executior Threads" default-value="3" server-restart-required="true" logical-name="storage.storageExecutorThreads" advanced="true"
+				description="The amount of threads in the executor service responsible for serializing the data.">
+				<validators>
+					<isPositive />
+					<isLessOrEqual than="10" />
+				</validators>
+			</long-property>
+			<long-property name="Max Channels Opened" default-value="256" server-restart-required="false" logical-name="storage.maxWriteChannelsOpened" advanced="true"
+				description="Maximum number of File channels that will be opened at a single moment. Note that some operating system are limiting the number of opened channels by single JVM.">
+				<validators>
+					<isGreaterOrEqual than="16" />
+				</validators>
+			</long-property>
+			<byte-property name="Max Index Tree Size" default-value="3MB" server-restart-required="false" logical-name="storage.maximumIndexingTreeSize" advanced="true"
+				description="The maximum indexing tree size in bytes. If tree reaches this size it will be saved to disk and storage will be given second tree to index data to. ">
+				<validators>
+					<isGreaterOrEqual than="1MB" />
+				</validators>
+			</byte-property>
+		</properties>
+	</section>
+	<section name="Buffer">
+		<properties>
+			<percentage-property name="Eviction Start" default-value="95" server-restart-required="false" logical-name="buffer.evictionOccupancyPercentage" advanced="false"
+				description="Defines percentage of buffer to be full so that eviction of elements will take place.">
+				<validators>
+					<isPercentage />
+				</validators>
+			</percentage-property>
+			<percentage-property name="Eviction Size" default-value="5" server-restart-required="false" logical-name="buffer.evictionFragmentSizePercentage" advanced="false"
+				description="Represent a percentage of buffer that is clear when eviction is needed.">
+				<validators>
+					<isPercentage />
+				</validators>
+			</percentage-property>
+			<percentage-property name="Maintenance Size" default-value="7.5" server-restart-required="false" logical-name="buffer.bytesMaintenancePercentage" advanced="false"
+				description="Percentage of the buffer size that need to be added or removed for the buffer so that update and clean of the indexing tree is performed.">
+				<validators>
+					<isPercentage />
+				</validators>
+			</percentage-property>
+			<long-property name="Indexing Tree Cleaning Threads" default-value="1" server-restart-required="false" logical-name="buffer.indexingTreeCleaningThreads" advanced="false"
+				description="Number of threads that will clean the indexing tree parallelly.">
+				<validators>
+					<isPositive />
+					<isLessOrEqual than="3" />
+				</validators>
+			</long-property>
+			<long-property name="Index Element Wait Time" default-value="500" server-restart-required="false" logical-name="buffer.indexingWaitTime" advanced="true"
+				description="Time in milliseconds that the indexing thread will wait for the object to be analyzed first.">
+				<validators>
+					<isPositive />
+				</validators>
+			</long-property>
+			<group-property name="Buffer Size" description="Define properties that define the buffer size.">
+				<properties>
+					<percentage-property name="Min Old-space Occupancy" default-value="50" server-restart-required="false" logical-name="buffer.minOldSpaceOccupancy" advanced="true"
+						description="The minimum percentage of the old generation heap space buffer will occupy.">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+					<percentage-property name="Max Old-space Occupancy" default-value="65" server-restart-required="false" logical-name="buffer.maxOldSpaceOccupancy" advanced="true"
+						description="The maximum percentage of the old generation heap space buffer will occupy.">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+					<byte-property name="Min Occupancy till OldGen Size" default-value="384MB" server-restart-required="false" logical-name="buffer.minOldSpaceOccupancyActiveTillOldGenSize"
+						advanced="true" description="Size of old generation heap space in bytes till which min buffer occupancy will be active.">
+						<validators>
+							<isPositive />
+						</validators>
+					</byte-property>
+					<byte-property name="Max Occupancy from OldGen Size" default-value="2GB" server-restart-required="false" logical-name="buffer.maxOldSpaceOccupancyActiveFromOldGenSize"
+						advanced="true" description="Size of old generation heap space in bytes from which max occupancy will be active.">
+					</byte-property>
+				</properties>
+				<group-validators>
+					<isLess property="buffer.minOldSpaceOccupancy" than="buffer.maxOldSpaceOccupancy" />
+					<isLess property="buffer.minOldSpaceOccupancyActiveTillOldGenSize" than="buffer.maxOldSpaceOccupancyActiveFromOldGenSize" />
+				</group-validators>
+			</group-property>
+			<group-property name="Expansion Rate" description="Expansion rate defines how much the calculated object heap sizes in buffer will be increased, as the safty for available heap space not to be exhausted. ">
+				<properties>
+					<percentage-property name="Min Expansion Rate" default-value="1" server-restart-required="false" logical-name="buffer.minObjectExpansionRate" advanced="true"
+						description="Minimum expansion rate that will be used.">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+					<percentage-property name="Max Expansion Rate" default-value="10" server-restart-required="false" logical-name="buffer.maxObjectExpansionRate" advanced="true"
+						description="Maximum expansion rate that will be used.">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+					<byte-property name="Max Expansion Rate till Buffer Size" default-value="200MB" server-restart-required="false" logical-name="buffer.maxObjectExpansionRateActiveTillBufferSize"
+						advanced="true" description="Defines till which buffer size maximum expansion rate should be active.">
+						<validators>
+							<isPositive />
+						</validators>
+					</byte-property>
+					<byte-property name="Min Expansion Rate from Buffer Size" default-value="1GB" server-restart-required="false" logical-name="buffer.minObjectExpansionRateActiveFromBufferSize"
+						advanced="true" description="Defines from which buffer size minimum expansion rate should be active.">
+						<validators>
+							<isPositive />
+						</validators>
+					</byte-property>
+					<percentage-property name="Max Expansion Rate from Heap occupancy" default-value="75" server-restart-required="false" logical-name="buffer.maxObjectExpansionRateActiveFromOccupancy"
+						advanced="true" description="Defines how much percentage of the old generation heap space buffer is occupying, so that maximum expansion rate will be used. ">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+					<percentage-property name="Min Expansion Rate till Heap Occupancy" default-value="35" server-restart-required="false" logical-name="buffer.minObjectExpansionRateActiveTillOccupancy"
+						advanced="true" description="Defines how much percentage of the old generation heap space buffer is occupying, so that minimum expansion rate will be used. ">
+						<validators>
+							<isPercentage />
+						</validators>
+					</percentage-property>
+				</properties>
+				<group-validators>
+					<isLess property="buffer.minObjectExpansionRate" than="buffer.maxObjectExpansionRate" />
+					<isLess property="buffer.maxObjectExpansionRateActiveTillBufferSize" than="buffer.minObjectExpansionRateActiveFromBufferSize" />
+					<isLess property="buffer.minObjectExpansionRateActiveTillOccupancy" than="buffer.maxObjectExpansionRateActiveFromOccupancy" />
+				</group-validators>
+			</group-property>
+		</properties>
+	</section>
+</cmr-configuration>

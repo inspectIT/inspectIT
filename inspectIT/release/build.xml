@@ -1,0 +1,358 @@
+<project name="inspectIT RCP" default="release" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<property name="release.basedir" value="${basedir}" />
+	<property file="build.properties" />
+
+	<import file="${build.common-targets.file}" />
+
+	<path id="path.test.class">
+		<pathelement location="${build.test.classes}" />
+	</path>
+
+	<path id="path.commons.classes">
+		<pathelement location="${buildDirectory}/plugins/${commons.plugin}" />
+	</path>
+
+	<path id="path.commonscs.classes">
+		<pathelement location="${buildDirectory}/plugins/${commonscs.plugin}" />
+	</path>
+
+	<path id="path.commonscs.libs">
+		<fileset dir="${lib.commonscs}" includes="**/*.jar" />
+	</path>
+
+	<path id="path.rcp">
+		<pathelement location="${build.rcp.classes}" />
+	</path>
+
+	<!--
+        PDE Build expects that the build directory contains a "plugins"
+        directory and a "features" directory. These directories should contain
+        the various plug-ins and features to be built.
+
+        This build copies the necessary projects as plugins to the build
+        folder. It is very important to note that the eclipse build will
+        only recognize that the folders are in fact plugins by the manifest
+        that is provided.
+
+        The PDE build is hard to understand as there is unfortunately little
+        documentation available. I migrated the build to our new structure, there
+        are still a few things that had me puzzling:
+         - we need two different eclipse installations (i used the old ones)
+           using only one of them will lead to errors
+
+        Process:
+        1) This build file is called and integrated the build.properties
+        2) This build creates everything that is necessary and puts it in the
+           location that the build.properties defines.
+        3) The PDE build is called. This build also implicitly include the
+           build.properties file and read the information from there.
+
+        Note that the release.basedir property was used in order to be able
+        to pass the basedir of this build execution to the ANT PDE build
+        process in order to be able to set the output folder correctly
+        (basedir will be reset as we invoke a new ant build)
+
+        Please see the inspectit Wiki for a more thourough documentation!
+    -->
+
+
+	<!-- *************************************************************** -->
+	<!--                        T A R G E T S                            -->
+	<!-- *************************************************************** -->
+
+	<target name="clean">
+		<delete dir="${basedir}/build" failonerror="false" />
+		<delete dir="${basedir}/dist" failonerror="false" />
+		<delete dir="${lib.root}/prod" failonerror="false" />
+		<delete dir="${lib.root}/test" failonerror="false" />
+
+		<!-- clean the PDE build environment -->
+		<delete dir="${buildDirectory}" failonerror="false" />
+	</target>
+
+	<target name="dist-commons">
+		<ant antfile="${build.commons.file}" target="clean" inheritAll="false" useNativeBasedir="true" />
+		<ant antfile="${build.commons.file}" target="release-as-plugin" inheritAll="false" useNativeBasedir="true">
+			<property name="pluginReleaseDir" value="${buildDirectory}/plugins" />
+		</ant>
+	</target>
+
+	<target name="dist-commonscs">
+		<ant antfile="${build.commonscs.file}" target="clean" inheritAll="false" useNativeBasedir="true" />
+		<ant antfile="${build.commonscs.file}" target="release-as-plugin" inheritAll="false" useNativeBasedir="true">
+			<property name="pluginReleaseDir" value="${buildDirectory}/plugins" />
+		</ant>
+	</target>
+
+	<target name="init" depends="init-ivy,retrieve-eclipse,dist-commons,dist-commonscs">
+		<mkdir dir="${buildDirectory}" />
+		<mkdir dir="${buildDirectory}/plugins" />
+		<mkdir dir="${buildDirectory}/features" />
+
+		<!-- ivy properties -->
+		<ivy:settings file="${ivy.settings.file}" />
+		<ivy:resolve file="${ivy.file}" />
+		<ivy:cachepath pathid="lib.osgi" conf="osgi" />
+		<ivy:cachepath pathid="lib.test" conf="test" />
+		
+		<ivy:resolve file="${ivy.file.commons}" />
+		<ivy:cachepath pathid="lib.prod.commons" conf="prod" />
+
+		<ivy:resolve file="${ivy.file.commonscs}" />
+		<ivy:cachepath pathid="lib.prod.commonscs" conf="prod" />
+
+		<copy todir="${buildDirectory}/plugins/${topLevelElementId}">
+			<fileset dir="${basedir}/..">
+				<exclude name="**/release/**" />
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<!-- We need to separate the real jars from sources and other artifacts -->
+		<!-- that's why we need a TMP folder -->
+		<copy todir="${buildDirectory}/plugins/tmp" flatten="true">
+			<path refid="lib.osgi" />
+		</copy>
+		<copy todir="${buildDirectory}/plugins">
+			<fileset dir="${buildDirectory}/plugins/tmp">
+				<include name="**/*.jar" />
+				<exclude name="**/*sources*.jar" />
+			</fileset>
+		</copy>
+		<delete dir="${buildDirectory}/plugins/tmp" failonerror="false" />
+	</target>
+
+	<!-- *************************************************************** -->
+	<!--                E C L I P S E     T A R G E T S                  -->
+	<!-- *************************************************************** -->
+	<!-- These targets actually download the needed Eclipse versions from-->
+	<!-- the FTP and unpack them in order to be used by the PDE Build.   -->
+	<!-- *************************************************************** -->
+	<target name="retrieve-eclipse" description="Checks if Eclipse download is necessary, downloads it and unpacks." depends="init-antcontrib,init-ftp-task">
+		<execute-ftpdownload file="${eclipse.file}" download.dir="${release.basedir}/runtime" download.ftp.remotedir="${ftp.eclipsedir}" download.notify.target="-notify-about-eclipse-update" />
+		<condition property="should-unpack-eclipse">
+			<or>
+				<isset property="download.executed.${eclipse.file}" />
+				<and>
+					<available file="${release.basedir}/runtime/${eclipse.file}.zip" />
+					<not>
+						<available file="${base}" type="dir" />
+					</not>
+				</and>
+			</or>
+		</condition>
+		
+		<if>
+			<istrue value="${should-unpack-eclipse}"/>
+			<then>
+				<delete dir="${base}" failonerror="false" />
+				<unzip src="${release.basedir}/runtime/${eclipse.file}.zip" dest="${release.basedir}/runtime" />
+			</then>
+		</if>
+	</target>
+
+	<target name="-notify-about-eclipse-update">
+		<echo message="-------------------------------------------------------------" />
+		<echo message="INFO: A newer Eclipse was found than currently available." />
+		<echo message="--------------------------------------------------------------" />
+		<echo message="The old version is going to be deleted and updated with the " />
+		<echo message="newer version found on the FTP server." />
+		<echo message="-------------------------------------------------------------" />
+		<input>Press Return key to continue and to overwrite the Eclipse: ${file}</input>
+	</target>
+
+	<!-- *************************************************************** -->
+	<!--                Q U A L I T Y     T A R G E T S                  -->
+	<!-- *************************************************************** -->
+	<!-- These targets are used to ensure the quality of the User        -->
+	<!-- Interface.                                                      -->
+	<!-- *************************************************************** -->
+
+	<!--  It depends on the pdebuild target, because we need the compiled class files from the PDE Build-->
+	<target name="functional-tests" depends="pdebuild,init-functional-tests">
+		<path id="test.compile.classpath">
+			<path refid="lib.prod.commons" />
+			<path refid="lib.prod.commonscs" />
+			<path refid="path.rcp" />
+			<path refid="path.commons.classes" />
+			<path refid="path.commonscs.classes" />
+			<path refid="lib.test" />
+		</path>
+
+		<!-- ensure that the original class files are not touched as we do not want to -->
+		<!-- ship classes that are instrumented with cobertura to the customer -->
+		<fileset id="test.classes-to-instrument" dir="${build.rcp.classes}" excludes="**/*.class" />
+		<path id="compile.classpath" />
+
+		<property name="test.workingDir" value="${basedir}/../" />
+		<property name="test.javac.source" value="1.7" />
+		<property name="test.javac.target" value="1.7" />
+		<property name="test.vmargs" value="" />
+		<property name="test.targetsuite" value="${resources.testng}/testng.xml" />
+
+		<property name="test.workingDir" value="${basedir}/../" />
+		<property name="test.javac.source" value="1.7" />
+		<property name="test.javac.target" value="1.7" />
+		<property name="test.vmargs" value="" />
+		<property name="test.targetsuite" value="${resources.testng}/testng.xml" />
+				
+		<execute-testng 
+			src.root="${src.root}" 
+			test.root="${test.root}" 
+			build.qa.test="${build.qa.test}"
+			build.qa.test.testdata="${build.qa.test.testdata}" 
+			build.qa.test.coveragedata="${build.qa.test.coveragedata}" 
+			build.test.classes="${build.test.classes}" 
+			build.instrumented.classes="${build.instrumented.classes}"
+			test.workingdir="${test.workingDir}"
+			test.javac.source="${test.javac.source}" 
+			test.javac.target="${test.javac.target}"
+			test.targetsuite="${test.targetsuite}"
+			test.vmargs="${test.vmargs}"
+			test.haltonfailure="true">
+			<compile.classpath>
+				<classpath>
+					<path refid="compile.classpath" />
+				</classpath>
+			</compile.classpath>
+			<test.compile.classpath>
+				<classpath>
+					<path refid="test.compile.classpath" />
+				</classpath>
+			</test.compile.classpath>
+			<test.classes-to-instrument>
+				<fileset refid="test.classes-to-instrument" />
+			</test.classes-to-instrument>
+		</execute-testng>
+	</target>
+
+	<!--  It depends on the release target, because we need the compiled class files from the PDE Build-->
+	<target name="static-analysis" depends="pdebuild,init-static-analysis">
+		<!-- Prepare PDM -->
+		<fileset dir="${src.root}" includes="**/*.java" id="pmd.fileset" />
+
+		<execute-pmd build.qa.analysis="${build.qa.analysis}" build.qa.analysis.pmd="${build.qa.analysis.pmd}">
+			<pmd.fileset>
+				<fileset refid="pmd.fileset" />
+			</pmd.fileset>
+		</execute-pmd>
+
+		<!-- Prepare Checkstyle -->
+		<fileset dir="${src.root}" includes="**/*.java" id="checkstyle.fileset" />
+
+		<execute-checkstyle build.qa.analysis="${build.qa.analysis}" build.qa.analysis.checkstyle="${build.qa.analysis.checkstyle}">
+			<checkstyle.fileset>
+				<fileset refid="checkstyle.fileset" />
+			</checkstyle.fileset>
+		</execute-checkstyle>
+
+		<!-- Prepare FindBugs -->
+		<property name="findbugs.sourcepath" value="${src.root}" />
+		<property name="findbugs.classlocation" value="${buildDirectory}/plugins/info.novatec.inspectit.rcp/@dot" />
+		<path id="findbugs.path">
+			<fileset dir="${buildDirectory}/plugins" includes="**/*.class,**/*.jar" excludes="**/info.novatec.inspectit.rcp/**" />
+			<fileset dir="${base}/eclipse/plugins" includes="**/*.jar" />
+		</path>
+
+		<execute-findbugs build.qa.analysis="${build.qa.analysis}" build.qa.analysis.findbugs="${build.qa.analysis.findbugs}" findbugs.sourcepath="${findbugs.sourcepath}" findbugs.classlocation="${findbugs.classlocation}">
+			<findbugs.path>
+				<path refid="findbugs.path" />
+			</findbugs.path>
+		</execute-findbugs>
+
+		<!-- Fail on warnings -->
+		<antcall target="static-analysis-fail-on-warnings" inheritrefs="true" />
+	</target>
+
+
+	<!-- *************************************************************** -->
+	<!--                R E L E A S E     T A R G E T S                  -->
+	<!-- *************************************************************** -->
+	<!-- This target actually executes the PDE Build process by  		 -->
+	<!-- launching the Eclipse antRunner application.     				 -->
+	<!-- *************************************************************** -->
+	<target name="pdebuild" depends="init">
+		<echo message="Executing ${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
+		<java classname="org.eclipse.equinox.launcher.Main" fork="true" failonerror="true">
+			<arg value="-application" />
+			<arg value="org.eclipse.ant.core.antRunner" />
+			<arg value="-buildfile" />
+			<arg value="${eclipseLocation}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/productBuild/productBuild.xml" />
+			<arg value="-Dtimestamp=${timestamp}" />
+			<arg value="-Drelease.basedir=${basedir}" />
+			<classpath>
+				<pathelement location="${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
+			</classpath>
+		</java>
+
+		<!--  Need to copy the compiled class files in order to later be used by the functional-tests and static-analysis targets -->
+		<copy todir="${build.rcp.classes}">
+			<fileset dir="${buildDirectory}/plugins/info.novatec.inspectit.rcp/@dot" includes="**/*.class" />
+		</copy>
+	</target>
+
+	<target name="release" depends="pdebuild">
+		<!-- Copy PDE build artifacts to our dist folder -->
+		<mkdir dir="${basedir}/dist" />
+		<copy todir="${basedir}/dist">
+			<fileset dir="${buildDirectory}/${buildLabel}" includes="*.zip" />
+		</copy>
+
+		<!-- integrate the thirdparty contributions to the release -->
+		<!-- copy the jvms -->
+		<antcall target="-retrieve-jre-installations" />
+
+		<zip destfile="${release.basedir}/dist/inspectit-win32.win32.x86.zip" update="true">
+			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset src="${jvm.root}/jre7-windows-x86.zip" prefix="inspectit/jre" filemode="775" />
+			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
+		</zip>
+		<zip destfile="${release.basedir}/dist/inspectit-win32.win32.x86_64.zip" update="true">
+			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset src="${jvm.root}/jre7-windows-x64.zip" prefix="inspectit/jre" filemode="775" />
+			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
+		</zip>
+		<zip destfile="${release.basedir}/dist/inspectit-linux.gtk.x86.zip" update="true">
+				<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset src="${jvm.root}/jre7-linux-x86.zip" prefix="inspectit/jre" filemode="775" />
+			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
+		</zip>
+		<zip destfile="${release.basedir}/dist/inspectit-linux.gtk.x86_64.zip" update="true">
+			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset src="${jvm.root}/jre7-linux-x64.zip" prefix="inspectit/jre" filemode="775" />
+			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
+		</zip>
+		<!-- No JRE packing for the Mac x32 version -->
+		<zip destfile="${release.basedir}/dist/inspectit-macosx.cocoa.x86.zip" update="true">
+			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
+		</zip>
+		<zip destfile="${release.basedir}/dist/inspectit-macosx.cocoa.x86_64.zip" update="true">
+			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset src="${jvm.root}/jre7-macosx-x64.zip" prefix="inspectit/jre" filemode="775" />
+			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
+		</zip>
+	</target>
+
+	<!-- Calls the release target and then the analysis targets -->
+	<target name="release-and-analyze" depends="static-analysis, functional-tests, release" description="--> Calls the release target and then executes the static analysis with the functional tests" />
+
+	<target name="integrate-version-information" description="Integrates the version information into the about box of the UI">
+		<property environment="env" />
+		<property name="version" value="${env.RELEASE_VERSION}.${env.BUILD_NUMBER}" />
+		<tstamp />
+
+		<echo message="Using version: ${version}" />
+
+		<echo file="../plugin.properties" message="aboutText=
+			inspectIT - http://www.inspectit.eu\n\n\
+			Application Performance Engineering solution\n\
+			\n\n\n\
+			Version: ${version}\n\
+			Build ID: ${DSTAMP}${TSTAMP}
+			" />
+		<echo message="Wrote plugin.properties to inspectIT project" />
+	</target>
+
+</project>

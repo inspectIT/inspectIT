@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<bean id="cacheIdGeneratorCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.CacheIdGeneratorCmrProcessor" />
+	<bean id="bufferInserterCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.BufferInserterCmrProcessor" />
+	<bean id="exceptionMessageCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.ExceptionMessageCmrProcessor" />
+	<bean id="indexerCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.IndexerCmrProcessor" />
+	<bean id="systemSensorDataCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SessionInserterCmrProcessor" >
+		<constructor-arg>
+				<util:list value-type="java.lang.Class">
+					<value>info.novatec.inspectit.communication.data.ClassLoadingInformationData</value>
+					<value>info.novatec.inspectit.communication.data.CompilationInformationData</value>
+					<value>info.novatec.inspectit.communication.data.CpuInformationData</value>
+					<value>info.novatec.inspectit.communication.data.MemoryInformationData</value>
+					<value>info.novatec.inspectit.communication.data.RuntimeInformationData</value>
+					<value>info.novatec.inspectit.communication.data.ThreadInformationData</value>
+				</util:list>
+		</constructor-arg>
+	</bean>
+	<bean id="sqlExclusiveTimeCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SqlExclusiveTimeCmrProcessor" />
+	<bean id="systemInformationDataCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SystemInformationDataCmrProcessor" />
+	<bean id="timerDataChartingCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.TimerDataChartingCmrProcessor" />
+	<bean id="invocationModifierCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.InvocationModifierCmrProcessor">
+		<constructor-arg>
+			<util:list value-type="info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor">
+				<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
+				<ref bean="timerDataChartingCmrProcessor" />
+				<ref bean="indexerCmrProcessor" />
+				<ref bean="sqlExclusiveTimeCmrProcessor" />
+			</util:list>
+		</constructor-arg>
+	</bean>
+	<bean id="recorderCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.RecorderCmrProcessor" />
+
+	<util:list value-type="info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor" id="cmrDataProcessorList">
+		<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
+		<ref bean="bufferInserterCmrProcessor" />
+		<ref bean="exceptionMessageCmrProcessor" />
+		<ref bean="systemSensorDataCmrProcessor" />
+		<ref bean="systemInformationDataCmrProcessor" />
+		<ref bean="sqlExclusiveTimeCmrProcessor" />
+		<ref bean="timerDataChartingCmrProcessor" />
+		<ref bean="invocationModifierCmrProcessor" />
+		<ref bean="recorderCmrProcessor" /> <!-- Must be last when all are processed -->
+	</util:list>
+	
+	
+</beans>

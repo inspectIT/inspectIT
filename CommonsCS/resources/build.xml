@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<!-- ======================================================================
+		inspectIT - CommonsCS
+		Sophisticated Monitoring tool by NovaTec GmbH
+		====================================================================== -->
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="inspectIT - CommonsCS" default="release" basedir="../">
+	<description>
+		Sophisticated Monitoring tool by NovaTec GmbH
+	</description>
+
+	<property file="${basedir}/resources/build.properties" />
+
+	<import file="${build.common-targets.file}" />
+
+	<target name="clean">
+		<delete dir="${build.root}" />
+	</target>
+
+	<target name="init" description="--> Creates necessary folder structure" depends="init-ivy">
+		<mkdir dir="${build.root}" />
+
+		<ivy:settings file="${ivy.settings.file}" />
+		<ivy:resolve file="${ivy.file}" />
+		<ivy:cachepath pathid="lib.prod" conf="prod" />
+		<ivy:cachepath pathid="lib.test" conf="test" />
+
+		<ivy:resolve file="${ivy.file.commons}" />
+		<ivy:cachepath pathid="lib.prod.commons" conf="prod" />
+	</target>
+
+	<!-- *************************************************************** -->
+	<!--                   B U I L D    T A R G E T S                    -->
+	<!-- *************************************************************** -->
+
+	<target name="release-commons" description="--> call the release of the commons project">
+		<ant antfile="${build.commons.file}" target="clean" inheritAll="false" useNativeBasedir="true" />
+		<ant antfile="${build.commons.file}" target="release" inheritAll="false" useNativeBasedir="true" />
+	</target>
+
+	<target name="build" depends="init, release-commons" description="--> builds a clean distribution of the cscommons project and copies the classes to the local build folder">
+		<mkdir dir="${build.commonscs.classes}" />
+
+		<path id="compile.classpath">
+			<pathelement location="${build.commons.classes}" />
+			<path refid="lib.prod" />
+			<path refid="lib.prod.commons" />
+		</path>
+
+		<javac source="1.7" target="1.7" debug="true" fork="true" includeAntRuntime="no" destdir="${build.commonscs.classes}" srcdir="${src.root}" classpathref="compile.classpath">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+
+	</target>
+
+
+
+	<!-- *************************************************************** -->
+	<!--                R E L E A S E     T A R G E T S                  -->
+	<!-- *************************************************************** -->
+
+	<target name="release" depends="build" description="--> Creates the distribution jar">
+		<mkdir dir="${build.release.root}" />
+
+		<jar destfile="${build.release.root}/${dist.jar.name}" basedir="${build.commonscs.classes}" />
+	</target>
+
+	<target name="release-as-plugin" depends="build" if="pluginReleaseDir" description="--> Release the classes and manifest as plug-in in defined directory">
+		<mkdir dir="${pluginReleaseDir}/${plugin.name}" />
+		<mkdir dir="${pluginReleaseDir}/${plugin.name}/META-INF" />
+
+		<copy file="${basedir}/META-INF/MANIFEST.MF" todir="${pluginReleaseDir}/${plugin.name}/META-INF" />
+		<copy todir="${pluginReleaseDir}/${plugin.name}">
+			<fileset dir="${build.commonscs.classes}">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+
+		<!-- We need to separate the real jars from sources and other artifacts -->
+		<!-- that's why we need a TMP folder -->
+		<copy todir="${build.release.root}/lib/tmp" flatten="true">
+			<path refid="lib.prod" />
+		</copy>
+		<copy todir="${pluginReleaseDir}">
+			<fileset dir="${build.release.root}/lib/tmp">
+				<include name="**/*.jar" />
+				<exclude name="**/*sources*.jar" />
+			</fileset>
+		</copy>
+		<delete dir="${build.release.root}/lib/tmp" failonerror="false" />
+	</target>
+
+	<!-- Calls the release target and then the analysis targets -->
+	<target name="release-and-analyze" depends="static-analysis, functional-tests, release" description="--> Calls the release target and then executes the static analysis" />
+
+	<!-- *************************************************************** -->
+	<!--                Q U A L I T Y     T A R G E T S                  -->
+	<!-- *************************************************************** -->
+
+	<!-- Depends on build, because the compiled classes are needed for the analysis -->
+	<target name="functional-tests" depends="build,init-functional-tests">
+		<path id="test.compile.classpath">
+			<pathelement location="${build.commonscs.classes}" />
+			<fileset dir="${commons.build.release}" includes="*.jar" />
+			<path refid="lib.prod" />
+			<path refid="lib.prod.commons" />
+			<path refid="lib.test" />
+		</path>
+
+		<!-- ensure that the original class files are not touched as we do not want to -->
+		<!-- ship classes that are instrumented with cobertura to the customer -->
+		<fileset id="test.classes-to-instrument" dir="${build.commonscs.classes}" includes="**/*.class" />
+
+		<property name="test.workingDir" value="${basedir}"/>
+		<property name="test.javac.source" value="1.7"/>
+		<property name="test.javac.target" value="1.7"/>
+		<property name="test.vmargs" value=""/>
+		<property name="test.targetsuite" value="${resources.testng}/testng.xml"/>
+
+		<execute-testng 
+			src.root="${src.root}" 
+			test.root="${test.root}" 
+			build.qa.test="${build.qa.test}"
+			build.qa.test.testdata="${build.qa.test.testdata}" 
+			build.qa.test.coveragedata="${build.qa.test.coveragedata}" 
+			build.test.classes="${build.test.classes}" 
+			build.instrumented.classes="${build.instrumented.classes}"
+			test.workingdir="${test.workingDir}"
+			test.javac.source="${test.javac.source}" 
+			test.javac.target="${test.javac.target}"
+			test.targetsuite="${test.targetsuite}"
+			test.vmargs="${test.vmargs}"
+			test.haltonfailure="true">
+			<compile.classpath>
+				<classpath>
+					<path refid="compile.classpath"/>
+				</classpath>
+			</compile.classpath>
+			<test.compile.classpath>
+				<classpath>
+					<path refid="test.compile.classpath"/>
+				</classpath>
+			</test.compile.classpath>
+			<test.classes-to-instrument>
+				<fileset refid="test.classes-to-instrument" />
+			</test.classes-to-instrument>
+		</execute-testng>
+	</target>
+
+	<target name="static-analysis" depends="build,init-static-analysis">
+		<!-- Prepare PDM -->
+		<fileset dir="${src.root}" includes="info/novatec/inspectit/**/*.java" id="pmd.fileset" />
+
+		<execute-pmd build.qa.analysis="${build.qa.analysis}" build.qa.analysis.pmd="${build.qa.analysis.pmd}">
+			<pmd.fileset>
+				<fileset refid="pmd.fileset" />
+			</pmd.fileset>
+		</execute-pmd>
+
+		<!-- Prepare Checkstyle -->
+		<fileset dir="${src.root}" includes="**/*.java" id="checkstyle.fileset" />
+
+		<execute-checkstyle build.qa.analysis="${build.qa.analysis}" build.qa.analysis.checkstyle="${build.qa.analysis.checkstyle}">
+			<checkstyle.fileset>
+				<fileset refid="checkstyle.fileset" />
+			</checkstyle.fileset>
+		</execute-checkstyle>
+
+		<!-- Prepare FindBugs -->
+		<property name="findbugs.sourcepath" value="${src.root}" />
+		<property name="findbugs.classlocation" value="${build.commonscs.classes}" />
+		<path id="findbugs.path">
+			<pathelement path="${build.commons.classes}" />
+			<path refid="lib.prod" />
+		</path>
+
+		<execute-findbugs build.qa.analysis="${build.qa.analysis}" build.qa.analysis.findbugs="${build.qa.analysis.findbugs}" findbugs.sourcepath="${findbugs.sourcepath}" findbugs.classlocation="${findbugs.classlocation}">
+			<findbugs.path>
+				<path refid="findbugs.path" />
+			</findbugs.path>
+		</execute-findbugs>
+
+		<!-- Prepare CPD -->
+		<fileset dir="${src.root}" includes="**/*.java" id="cpd.fileset" />
+
+		<execute-cpd build.qa.analysis="${build.qa.analysis}" build.qa.analysis.cpd="${build.qa.analysis.cpd}">
+			<cpd.fileset>
+				<fileset refid="cpd.fileset" />
+			</cpd.fileset>
+		</execute-cpd>
+
+		<!-- Fail on warnings -->
+		<antcall target="static-analysis-fail-on-warnings" inheritrefs="true" />
+	</target>
+
+</project>

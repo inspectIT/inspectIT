@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <xs:element name="boolean-property-update" type="booleanPropertyUpdate"/>
+
+  <xs:element name="byte-property-update" type="bytePropertyUpdate"/>
+
+  <xs:element name="cmr-configuration-update" type="configurationUpdate"/>
+
+  <xs:element name="long-property-update" type="longPropertyUpdate"/>
+
+  <xs:element name="percentage-property-update" type="percentagePropertyUpdate"/>
+
+  <xs:element name="restore-default-property-update" type="restoreDefaultPropertyUpdate"/>
+
+  <xs:element name="string-property-update" type="stringPropertyUpdate"/>
+
+  <xs:complexType name="abstractPropertyUpdate" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="property-logical-name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="stringPropertyUpdate">
+    <xs:complexContent>
+      <xs:extension base="abstractPropertyUpdate">
+        <xs:sequence/>
+        <xs:attribute name="update-value" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="longPropertyUpdate">
+    <xs:complexContent>
+      <xs:extension base="abstractPropertyUpdate">
+        <xs:sequence/>
+        <xs:attribute name="update-value" type="xs:long" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="booleanPropertyUpdate">
+    <xs:complexContent>
+      <xs:extension base="abstractPropertyUpdate">
+        <xs:sequence/>
+        <xs:attribute name="update-value" type="xs:boolean" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="percentagePropertyUpdate">
+    <xs:complexContent>
+      <xs:extension base="abstractPropertyUpdate">
+        <xs:sequence/>
+        <xs:attribute name="update-value" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="bytePropertyUpdate">
+    <xs:complexContent>
+      <xs:extension base="abstractPropertyUpdate">
+        <xs:sequence/>
+        <xs:attribute name="update-value" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="configurationUpdate">
+    <xs:sequence>
+      <xs:element name="updates" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="string-property-update"/>
+              <xs:element ref="long-property-update"/>
+              <xs:element ref="boolean-property-update"/>
+              <xs:element ref="percentage-property-update"/>
+              <xs:element ref="byte-property-update"/>
+              <xs:element ref="restore-default-property-update"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="restoreDefaultPropertyUpdate">
+    <xs:sequence/>
+    <xs:attribute name="property-logical-name" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:schema>
+

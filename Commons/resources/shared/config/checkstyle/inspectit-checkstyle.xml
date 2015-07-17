@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<!-- This configuration file was written by the eclipse-cs plugin configuration
+	editor -->
+<!-- Checkstyle-Configuration: inspectIT Description: none -->
+<module name="Checker">
+	<property name="severity" value="warning" />
+	<module name="TreeWalker">
+		<property name="tabWidth" value="4" />
+
+		<module name="FileContentsHolder" />
+
+		<module name="JavadocMethod">
+			<property name="suppressLoadErrors" value="true" />
+			<property name="allowMissingPropertyJavadoc" value="true" />
+		</module>
+		<module name="JavadocType" />
+		<module name="JavadocVariable" />
+		<module name="JavadocStyle" />
+		<module name="ConstantName" />
+		<module name="LocalFinalVariableName" />
+		<module name="LocalVariableName" />
+		<module name="MemberName" />
+		<module name="MethodName" />
+		<module name="PackageName" />
+		<module name="ParameterName" />
+		<module name="StaticVariableName" />
+		<module name="TypeName" />
+		<module name="AvoidStarImport" />
+		<module name="IllegalImport" />
+		<module name="RedundantImport" />
+		<module name="MethodLength">
+			<property name="max" value="200" />
+		</module>
+		<module name="ParameterNumber" />
+		<module name="EmptyForIteratorPad" />
+		<module name="MethodParamPad" />
+		<module name="NoWhitespaceAfter">
+			<property name="tokens"
+				value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS" />
+		</module>
+		<module name="NoWhitespaceBefore" />
+		<module name="OperatorWrap" />
+		<module name="ParenPad" />
+		<module name="TypecastParenPad" />
+		<module name="WhitespaceAfter" />
+		<module name="WhitespaceAround" />
+		<module name="ModifierOrder" />
+		<module name="RedundantModifier" />
+		<module name="AvoidNestedBlocks" />
+		<module name="EmptyBlock" />
+		<module name="LeftCurly" />
+		<module name="NeedBraces" />
+		<module name="RightCurly" />
+		<module name="EmptyStatement" />
+		<module name="EqualsHashCode" />
+		<module name="IllegalInstantiation" />
+		<module name="InnerAssignment" />
+		<module name="MissingSwitchDefault" />
+		<module name="SimplifyBooleanExpression" />
+		<module name="SimplifyBooleanReturn" />
+		<module name="FinalClass" />
+		<module name="HideUtilityClassConstructor" />
+		<module name="VisibilityModifier">
+			<!-- allow to use fields with visibility protected -->
+			<property name="protectedAllowed" value="true" />
+			<property name="packageAllowed" value="true"/>
+		</module>
+		<module name="ArrayTypeStyle" />
+		<module name="GenericIllegalRegexp">
+			<property name="severity" value="ignore" />
+			<metadata name="net.sf.eclipsecs.core.lastEnabledSeverity"
+				value="inherit" />
+		</module>
+		<module name="TodoComment">
+			<property name="severity" value="ignore" />
+			<metadata name="net.sf.eclipsecs.core.lastEnabledSeverity"
+				value="inherit" />
+		</module>
+		<module name="UpperEll" />
+		<module name="DefaultComesLast" />
+	</module>
+
+	<!-- This suppression allows to disable checkstyle checks for one line by adding the comment //NOCHK -->
+	<module name="SuppressWithNearbyCommentFilter">
+		<property name="commentFormat" value="NOCHK" />
+		<property name="checkFormat" value=".*" />
+		<property name="influenceFormat" value="0" />
+	</module>
+
+	<!-- For wider ranged suppressions one can also use // NOCHKALL to disable it for a whole file. -->
+	<module name="SuppressionCommentFilter">
+		<property name="offCommentFormat" value="NOCHKALL"/>
+	</module>
+
+	<module name="FileTabCharacter">
+		<property name="severity" value="ignore" />
+		<metadata name="net.sf.eclipsecs.core.lastEnabledSeverity"
+			value="inherit" />
+	</module>
+	<module name="Translation" />
+</module>

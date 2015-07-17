@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<bean class="info.novatec.inspectit.cmr.jetty.JettyWebApplicationContextInitializer">
+		<property name="contextAttribute">
+			<util:constant static-field="org.springframework.web.context.WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE" />
+		</property>
+		<property name="jettyContext" ref="servletContext" />
+	</bean>
+
+	<bean id="httpServer" class="org.mortbay.jetty.Server" init-method="start" destroy-method="stop">
+		<constructor-arg type="int" value="${jetty.port}" />
+		<property name="threadPool" ref="threadPool" />
+		<property name="gracefulShutdown" value="${jetty.graceful.shutdown.time}" />
+	</bean>
+
+	<bean id="servletContext" class="org.mortbay.jetty.servlet.Context">
+		<constructor-arg ref="httpServer" />
+		<constructor-arg type="java.lang.String" value="/" />
+
+		<property name="server" ref="httpServer" />
+		<property name="servletHandler" ref="servletHandler" />
+		<property name="mimeTypes">
+			<bean class="org.mortbay.jetty.MimeTypes">
+				<property name="mimeMap">
+					<map>
+						<entry key="agent" value="application/octet-stream" />
+						<entry key="index" value="application/octet-stream" />
+						<entry key="storage" value="application/octet-stream" />
+						<entry key="itdata" value="application/octet-stream" />
+					</map>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="threadPool" class="org.mortbay.thread.BoundedThreadPool">
+		<property name="minThreads" value="${jetty.threads.min}" />
+		<property name="maxThreads" value="${jetty.threads.max}" />
+	</bean>
+
+	<!-- Global Data Access Service -->
+	<bean name="globalDataAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="globalDataAccessServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="globalDataAccessServiceExporter" />
+		<property name="servlet" ref="globalDataAccessRequestHandlerServlet" />
+	</bean>
+
+	<bean id="globalDataAccessServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="globalDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/GlobalDataAccessService" />
+	</bean>
+	<!-- END -->
+
+	<!-- Sql Data Access Service -->
+	<bean name="sqlDataAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="sqlDataAccessServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="sqlDataAccessServiceExporter" />
+		<property name="servlet" ref="sqlDataAccessRequestHandlerServlet" />
+	</bean>
+
+	<bean id="sqlDataAccessServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="sqlDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/SqlDataAccessService" />
+	</bean>
+	<!-- END -->
+
+	<!-- Invocation Access Service -->
+	<bean name="invocationDataAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="invocationDataAccessServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="invocationDataAccessServiceExporter" />
+		<property name="servlet" ref="invocationDataAccessRequestHandlerServlet" />
+	</bean>
+
+	<bean id="invocationDataAccessServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="invocationDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/InvocationDataAccessService" />
+	</bean>
+	<!-- END -->
+
+	<!-- CmrManagementService -->
+	<bean name="cmrManagementServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="cmrManagementServiceServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="cmrManagementServiceExporter" />
+		<property name="servlet" ref="cmrManagementServiceRequestHandlerServlet" />
+	</bean>
+
+	<bean id="cmrManagementServiceServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="cmrManagementServiceExporter" />
+		<property name="pathSpec" value="/remoting/CmrManagementService" />
+	</bean>
+	<!-- END -->
+
+	<!-- Exception Data Access Service -->
+	<bean name="exceptionDataAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="exceptionDataAccessServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="exceptionDataAccessServiceExporter" />
+		<property name="servlet" ref="exceptionDataAccessRequestHandlerServlet" />
+	</bean>
+
+	<bean id="exceptionDataAccessServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="exceptionDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/ExceptionDataAccessService" />
+	</bean>
+	<!-- END -->
+
+	<!-- Server Status Access Service -->
+	<bean name="serverStatusRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="serverStatusServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="serverStatusServiceExporter" />
+		<property name="servlet" ref="serverStatusRequestHandlerServlet" />
+	</bean>
+
+	<bean id="serverStatusServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="serverStatusServiceExporter" />
+		<property name="pathSpec" value="/remoting/ServerStatusService" />
+	</bean>
+	<!-- END -->
+
+	<!-- Timer Data Access Service -->
+	<bean name="timerDataAccessServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="timerDataAccessServiceServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="timerDataAccessServiceExporter" />
+		<property name="servlet" ref="timerDataAccessServiceRequestHandlerServlet" />
+	</bean>
+
+	<bean id="timerDataAccessServiceServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="timerDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/TimerDataAccessService" />
+	</bean>
+	<!-- END -->
+
+	<!-- HTTP Timer Data Access Service -->
+	<bean name="httpTimerDataAccessServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="httpTimerDataAccessServiceServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="httpTimerDataAccessServiceExporter" />
+		<property name="servlet" ref="httpTimerDataAccessServiceRequestHandlerServlet" />
+	</bean>
+
+
+	<bean id="httpTimerDataAccessServiceServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="httpTimerDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/HttpTimerDataAccessService" />
+	</bean>
+	<!-- END -->
+
+	<!-- Storage Service -->
+	<bean name="storageServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="storageServiceServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="storageServiceExporter" />
+		<property name="servlet" ref="storageServiceRequestHandlerServlet" />
+	</bean>
+
+	<bean id="storageServiceServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="storageServiceExporter" />
+		<property name="pathSpec" value="/remoting/StorageService" />
+	</bean>
+	<!-- END -->
+
+	<!-- DEFAULT SERVER FOR STATIC CONTENT -->
+	<bean id="defaultServlet" class="org.mortbay.jetty.servlet.DefaultServlet" />
+
+
+	<bean id="defaultServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="defaultServletExporter" />
+		<property name="servlet" ref="defaultServlet" />
+		<property name="initParameters">
+			<map>
+				<entry key="dirAllowed" value="false" />
+				<entry key="resourceBase" value="./${storage.storageDefaultFolder}" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="defaultServletMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="defaultServletExporter" />
+		<property name="pathSpec" value="/" />
+	</bean>
+	<!-- END -->
+
+	<!-- UPLOAD SERVLET FOR UPLOADING FILES -->
+	<bean id="uploadServlet" class="info.novatec.inspectit.cmr.jetty.FileUploadServlet">
+		<property name="directoryToStore" value="${storage.storageDefaultFolder}/uploads" />
+	</bean>
+
+	<bean id="uploadServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="uploadServletExporter" />
+		<property name="servlet" ref="uploadServlet" />
+	</bean>
+
+	<bean id="uploadServletMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="uploadServletExporter" />
+		<property name="pathSpec" value="/fileupload" />
+	</bean>
+	<!-- END -->
+
+	<!-- MULTIPART FILTER -->
+	<bean id="multiPartFilter" class="org.mortbay.servlet.MultiPartFilter" />
+
+	<bean id="multiPartFilterHolder" class="org.mortbay.jetty.servlet.FilterHolder">
+		<property name="name" value="multiPartFilterExporter" />
+		<property name="filter" ref="multiPartFilter" />
+		<property name="initParameters">
+			<map>
+				<entry key="deleteFiles" value="true" />
+				<entry key="fileOutputBuffer" value="1024" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="multiPartFilterMapping" class="org.mortbay.jetty.servlet.FilterMapping">
+		<property name="filterName" value="multiPartFilterExporter" />
+		<property name="pathSpec" value="/fileupload" />
+	</bean>
+
+	<!-- END -->
+
+	<!-- GZIP FILTER -->
+	<bean id="gzipFilter" class="org.mortbay.servlet.GzipFilter" />
+
+	<bean id="gzipFilterHolder" class="org.mortbay.jetty.servlet.FilterHolder">
+		<property name="name" value="gzipFilterExporter" />
+		<property name="filter" ref="gzipFilter" />
+		<property name="initParameters">
+			<map>
+				<entry key="mimeTypes" value="application/octet-stream" />
+				<entry key="minGzipSize" value="${storage.minGzipSize}" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="gzipFilterMapping" class="org.mortbay.jetty.servlet.FilterMapping">
+		<property name="filterName" value="gzipFilterExporter" />
+		<property name="pathSpec" value="*" />
+	</bean>
+	<!-- END -->
+	
+	<!-- Dispatcher Servlet -->
+	<bean id="springDispatcherServlet" class="org.springframework.web.servlet.DispatcherServlet" />
+	
+	<bean id="springDispatcherServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="springDispatcherServletExporter" />
+		<property name="servlet" ref="springDispatcherServlet" />
+		<property name="initParameters">
+			<map>
+				<entry key="contextConfigLocation" value="classpath:spring/spring-context-rest.xml" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="springDispatcherServletMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="springDispatcherServletExporter" />
+		<property name="pathSpec" value="/rest/*"/>
+	</bean>
+	<!-- END -->
+
+	<bean id="servletHandler" class="org.mortbay.jetty.servlet.ServletHandler">
+		<property name="servlets">
+			<list>
+				<ref bean="globalDataAccessServletHolder" />
+				<ref bean="sqlDataAccessServletHolder" />
+				<ref bean="exceptionDataAccessServletHolder" />
+				<ref bean="invocationDataAccessServletHolder" />
+				<ref bean="serverStatusServletHolder" />
+				<ref bean="cmrManagementServiceServletHolder" />
+				<ref bean="timerDataAccessServiceServletHolder" />
+				<ref bean="httpTimerDataAccessServiceServletHolder" />
+				<ref bean="storageServiceServletHolder" />
+				<ref bean="defaultServletHolder" />
+				<ref bean="uploadServletHolder" />
+				<ref bean="springDispatcherServletHolder" />
+			</list>
+		</property>
+		<property name="servletMappings">
+			<list>
+				<ref bean="globalDataAccessServiceMapping" />
+				<ref bean="sqlDataAccessServiceMapping" />
+				<ref bean="exceptionDataAccessServiceMapping" />
+				<ref bean="invocationDataAccessServiceMapping" />
+				<ref bean="serverStatusServiceMapping" />
+				<ref bean="cmrManagementServiceServiceMapping" />
+				<ref bean="timerDataAccessServiceServiceMapping" />
+				<ref bean="httpTimerDataAccessServiceServiceMapping" />
+				<ref bean="storageServiceServiceMapping" />
+				<ref bean="defaultServletMapping" />
+				<ref bean="uploadServletMapping" />
+				<ref bean="springDispatcherServletMapping" />
+			</list>
+		</property>
+		<property name="filters">
+			<list>
+				<ref bean="multiPartFilterHolder" />
+				<ref bean="gzipFilterHolder" />
+			</list>
+		</property>
+		<property name="filterMappings">
+			<list>
+				<ref bean="multiPartFilterMapping" />
+				<ref bean="gzipFilterMapping" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

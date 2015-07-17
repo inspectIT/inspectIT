@@ -1,0 +1,360 @@
+<?xml version="1.0"?>
+<!-- ======================================================================
+		inspectIT - CMR
+		Sophisticated Monitoring tool by NovaTec GmbH
+		====================================================================== -->
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="inspectIT - CMR" default="release" basedir=".">
+	<description>
+		Sophisticated Monitoring tool by NovaTec GmbH
+	</description>
+
+	<property file="${basedir}/build.properties" />
+	<property file="${crm.startup.properties}" />
+
+	<import file="${build.common-targets.file}" />
+
+	<target name="clean" description="--> Cleans the project">
+		<delete dir="${build.root}" failonerror="false" />
+		<delete dir="${release.root}" failonerror="false" />
+		<delete dir="${lib.root}/prod" failonerror="false" />
+		<delete dir="${lib.root}/test" failonerror="false" />
+	</target>
+
+	<target name="init" description="--> Creates necessary folder structure" depends="init-ivy,init-antcontrib">
+		<mkdir dir="${build.root}" />
+
+		<ivy:settings file="${ivy.settings.file}" />
+		<ivy:resolve file="${ivy.file}" />
+		<ivy:cachepath pathid="lib.prod" conf="prod" />
+		<ivy:cachepath pathid="lib.test" conf="test" />
+
+		<ivy:resolve file="${ivy.file.commons}" />
+		<ivy:cachepath pathid="lib.prod.commons" conf="prod" />
+
+		<ivy:resolve file="${ivy.file.commonscs}" />
+		<ivy:cachepath pathid="lib.prod.commonscs" conf="prod" />
+	</target>
+
+	<!-- *************************************************************** -->
+	<!--                   B U I L D    T A R G E T S                    -->
+	<!-- *************************************************************** -->
+	<!-- These targets are used to build the projects that are used      -->
+	<!-- to create the CMR component.                                    -->
+	<!-- *************************************************************** -->
+
+	<target name="release-commons" description="--> call the release of the commons project">
+		<ant antfile="${build.commons.file}" target="clean" inheritAll="false" useNativeBasedir="true" />
+		<ant antfile="${build.commons.file}" target="release" inheritAll="false" useNativeBasedir="true" />
+	</target>
+
+	<target name="release-commonscs" description="--> call the release of the commonscs project">
+		<ant antfile="${build.commonscs.file}" target="clean" inheritAll="false" useNativeBasedir="true" />
+		<ant antfile="${build.commonscs.file}" target="release" inheritAll="false" useNativeBasedir="true" />
+	</target>
+
+	<!-- Note that release of Commons is not neccesary because it will be called when releasing the CommonsCS -->
+	<target name="build" depends="init, release-commonscs" description="--> Compiles the sources">
+		<mkdir dir="${build.cmr.classes}" />
+
+		<path id="compile.classpath">
+			<pathelement location="${build.commons.classes}" />
+			<pathelement location="${build.commonscs.classes}" />
+			<path refid="lib.prod" />
+			<path refid="lib.prod.commons" />
+			<path refid="lib.prod.commonscs" />
+		</path>
+
+		<javac source="1.7" target="1.7" debug="true" debuglevel="lines,vars,source" destdir="${build.cmr.classes}" srcdir="${src.root}" classpathref="compile.classpath" includeAntRuntime="no" />
+	</target>
+
+
+	<!-- *************************************************************** -->
+	<!--                Q U A L I T Y     T A R G E T S                  -->
+	<!-- *************************************************************** -->
+	<!-- These targets are used to ensure the quality of the agent       -->
+	<!-- component.                                                      -->
+	<!-- *************************************************************** -->
+
+	<!--  It depends on the build target, because we need the compiled classes -->
+	<target name="functional-tests" depends="build,init-classmexer,init-functional-tests">
+		<path id="test.compile.classpath">
+			<pathelement location="${build.cmr.classes}" />
+			<fileset dir="${commons.build.release}" includes="*.jar" />
+			<fileset dir="${commonscs.build.release}" includes="*.jar" />
+			<path refid="lib.prod" />
+			<path refid="lib.prod.commons" />
+			<path refid="lib.prod.commonscs" />
+			<path refid="lib.test" />
+		</path>
+
+		<!-- ensure that the original class files are not touched as we do not want to -->
+		<!-- ship classes that are instrumented with cobertura to the customer -->
+		<fileset id="test.classes-to-instrument" dir="${build.cmr.classes}" includes="**/*.class" />
+
+		<property name="test.workingDir" value="${basedir}"/>
+		<property name="test.javac.source" value="1.7"/>
+		<property name="test.javac.target" value="1.7"/>
+		<property name="test.vmargs" value="-javaagent:${string.path.classmexer} ${cmr.java.opts.32bit}"/>
+		<property name="test.targetsuite" value="${resources.testng}/testng.xml"/>
+
+		<execute-testng 
+			src.root="${src.root}" 
+			test.root="${test.root}" 
+			build.qa.test="${build.qa.test}"
+			build.qa.test.testdata="${build.qa.test.testdata}" 
+			build.qa.test.coveragedata="${build.qa.test.coveragedata}" 
+			build.test.classes="${build.test.classes}" 
+			build.instrumented.classes="${build.instrumented.classes}"
+			test.workingdir="${test.workingDir}"
+			test.javac.source="${test.javac.source}" 
+			test.javac.target="${test.javac.target}"
+			test.targetsuite="${test.targetsuite}"
+			test.vmargs="${test.vmargs}"
+			test.haltonfailure="true">
+			<compile.classpath>
+				<classpath>
+					<path refid="compile.classpath"/>
+				</classpath>
+			</compile.classpath>
+			<test.compile.classpath>
+				<classpath>
+					<path refid="test.compile.classpath"/>
+				</classpath>
+			</test.compile.classpath>
+			<test.classes-to-instrument>
+				<fileset refid="test.classes-to-instrument" />
+			</test.classes-to-instrument>
+		</execute-testng>
+	</target>
+
+
+	<!-- Depends on release, because the compiled classes are needed for the analysis -->
+	<target name="static-analysis" depends="build,init-static-analysis">
+		<!-- Prepare PDM -->
+		<fileset dir="${src.root}" includes="**/*.java" excludes="**/*_Stub.java" id="pmd.fileset" />
+
+		<execute-pmd build.qa.analysis="${build.qa.analysis}" build.qa.analysis.pmd="${build.qa.analysis.pmd}">
+			<pmd.fileset>
+				<fileset refid="pmd.fileset" />
+			</pmd.fileset>
+		</execute-pmd>
+
+		<!-- Prepare Checkstyle -->
+		<fileset dir="${src.root}" includes="**/*.java" excludes="**/*_Stub.java" id="checkstyle.fileset" />
+
+		<execute-checkstyle build.qa.analysis="${build.qa.analysis}" build.qa.analysis.checkstyle="${build.qa.analysis.checkstyle}">
+			<checkstyle.fileset>
+				<fileset refid="checkstyle.fileset" />
+			</checkstyle.fileset>
+		</execute-checkstyle>
+
+		<!-- Prepare FindBugs -->
+		<property name="findbugs.sourcepath" value="${src.root}" />
+		<property name="findbugs.classlocation" value="${build.cmr.classes}" />
+		<path id="findbugs.path">
+			<pathelement path="${build.commons.classes}" />
+			<pathelement path="${build.commonscs.classes}" />
+			<path refid="lib.prod" />
+			<path refid="lib.test" />
+		</path>
+
+		<execute-findbugs build.qa.analysis="${build.qa.analysis}" build.qa.analysis.findbugs="${build.qa.analysis.findbugs}" findbugs.sourcepath="${findbugs.sourcepath}" findbugs.classlocation="${findbugs.classlocation}">
+			<findbugs.path>
+				<path refid="findbugs.path" />
+			</findbugs.path>
+		</execute-findbugs>
+
+		<!-- Prepare CPD -->
+		<fileset dir="${src.root}" includes="**/*.java" excludes="**/*_Stub.java" id="cpd.fileset" />
+
+		<execute-cpd build.qa.analysis="${build.qa.analysis}" build.qa.analysis.cpd="${build.qa.analysis.cpd}">
+			<cpd.fileset>
+				<fileset refid="cpd.fileset" />
+			</cpd.fileset>
+		</execute-cpd>
+
+		<!-- Fail on warnings -->
+		<antcall target="static-analysis-fail-on-warnings" inheritrefs="true" />
+	</target>
+
+
+	<!-- *************************************************************** -->
+	<!--                R E L E A S E     T A R G E T S                  -->
+	<!-- *************************************************************** -->
+
+	<target name="release" depends="build,check-for-xsd-schema-correctness" description="--> Creates the distribution jar">
+		<mkdir dir="${release.root}" />
+		<mkdir dir="${build.release.root}" />
+		<mkdir dir="${build.release.root.cmr}" />
+		<mkdir dir="${build.scripts}" />
+
+		<!-- Include prod libs from all project -->
+		<copy todir="${build.release.root.cmr}/lib" flatten="true">
+			<path refid="lib.prod" />
+			<path refid="lib.prod.commons" />
+			<path refid="lib.prod.commonscs" />
+		</copy>
+
+		<!-- Copy Commons and CommonsCS jars only -->
+		<copy todir="${build.release.root.cmr}/lib">
+			<fileset dir="${commons.build.release}" includes="*.jar" />
+			<fileset dir="${commonscs.build.release}" includes="*.jar" />
+		</copy>
+
+		<!-- create a property containing all .jar files, prefix lib/, and seperated with a space -->
+		<pathconvert property="libs.project" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+					<!-- remove absolute path -->
+					<flattenmapper />
+
+					<!-- add lib/ prefix -->
+					<globmapper from="*" to="lib/*" />
+				</chainedmapper>
+			</mapper>
+
+			<path>
+				<!-- lib.home contains all jar files -->
+				<fileset dir="${build.release.root.cmr}/lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</path>
+		</pathconvert>
+
+		<jar destfile="${build.release.root.cmr}/${dist.jar.name}">
+			<fileset dir="${build.cmr.classes}" includes="**/*.class" />
+			<fileset dir="${src.root}" includes="**/*.xml" />
+			<fileset dir="${src.root}" includes="**/*.properties" />
+			<fileset dir="${src.commons}" includes="version.log" />
+
+			<!-- define MANIFEST.MF -->
+			<manifest>
+				<attribute name="Main-Class" value="info.novatec.inspectit.cmr.CMR" />
+				<attribute name="Class-Path" value="${libs.project}" />
+			</manifest>
+		</jar>
+
+		<copy todir="${build.release.root.cmr}" file="${basedir}/logging-config.xml" />
+
+		<copydir dest="${build.release.root.cmr}/config" src="${basedir}/config"/>
+		
+		<!-- Create empty logs dir -->
+		<mkdir dir="${build.release.root.cmr}/logs"/>
+
+		<!-- Create the different distributions -->
+		<antcall target="-retrieve-jre-installations" />
+		<antcall target="-linux-x86" />
+		<antcall target="-linux-x64" />
+		<antcall target="-windows-x86" />
+		<antcall target="-windows-x64" />
+	</target>
+
+	<!-- Calls the release target and then the analysis targets -->
+	<target name="release-and-analyze" depends="static-analysis, functional-tests, release" description="--> Calls the release target and then executes the static analysis with the functional tests" />
+
+	<!-- *************************************************************** -->
+	<!--           P R I V A T E    B U I L D     T A R G E T S          -->
+	<!-- *************************************************************** -->
+
+	<target name="-linux-x86">
+		<copy file="${basedir}/startup.sh" tofile="${build.scripts}/startup.sh"/>
+		<replaceregexp file="${build.scripts}/startup.sh" match="#COMMAND#" replace="${cmr.java.command.linux} ${cmr.java.memory.32bit} ${cmr.java.opts.32bit} ${cmr.java.opts.linux} ${cmr.java.locgc.linux} -jar ${dist.jar.name}" byline="true"/>
+		<tar destfile="${release.root}/inspectit-cmr.linux.x86.tar.gz" compression="gzip">
+			<fileset dir="${build.release.root}" />
+			<tarfileset file="${build.scripts}/startup.sh" prefix="CMR" filemode="755" />
+			<zipfileset src="${jvm.root}/jre7-linux-x86.zip" prefix="CMR/jre" filemode="755" />
+			<zipfileset dir="${basedir}/../" prefix="CMR" includes="*LICENSE*.txt" />
+		</tar>
+		<delete file="${build.scripts}/startup.sh" failonerror="false" />
+	</target>
+
+	<target name="-linux-x64">
+		<copy file="${basedir}/startup.sh" tofile="${build.scripts}/startup.sh"/>
+		<replaceregexp file="${build.scripts}/startup.sh" match="#COMMAND#" replace="${cmr.java.command.linux} ${cmr.java.memory.64bit} ${cmr.java.opts.64bit} ${cmr.java.opts.linux} ${cmr.java.locgc.linux} -jar ${dist.jar.name}" byline="true"/>
+		<tar destfile="${release.root}/inspectit-cmr.linux.x64.tar.gz" compression="gzip">
+			<fileset dir="${build.release.root}" />
+			<tarfileset file="${build.scripts}/startup.sh" prefix="CMR" filemode="755" />
+			<zipfileset src="${jvm.root}/jre7-linux-x64.zip" prefix="CMR/jre" filemode="755" />
+			<zipfileset dir="${basedir}/../" prefix="CMR" includes="*LICENSE*.txt" />
+		</tar>
+		<delete file="${build.scripts}/startup.sh" failonerror="false" />
+	</target>
+
+	<target name="-windows-x86">
+		<copy file="${basedir}/startup.bat" tofile="${build.scripts}/startup.bat"/>
+		<replaceregexp file="${build.scripts}/startup.bat" match="#COMMAND#" replace="${cmr.java.command.win} ${cmr.java.memory.32bit} ${cmr.java.opts.32bit} ${cmr.java.opts.win} ${cmr.java.locgc.win} -jar ${dist.jar.name}" byline="true"/>
+		<zip destfile="${release.root}/inspectit-cmr.windows.x86.zip">
+			<fileset dir="${build.release.root}" />
+			<zipfileset file="${build.scripts}/startup.bat" prefix="CMR" />
+			<zipfileset src="${jvm.root}/jre7-windows-x86.zip" prefix="CMR/jre" />
+				<zipfileset dir="${basedir}/../" prefix="CMR" includes="*LICENSE*.txt" />
+		</zip>
+		<delete file="${build.scripts}/startup.bat" failonerror="false" />
+	</target>
+
+	<target name="-windows-x64">
+		<copy file="${basedir}/startup.bat" tofile="${build.scripts}/startup.bat"/>
+		<replaceregexp file="${build.scripts}/startup.bat" match="#COMMAND#" replace="${cmr.java.command.win} ${cmr.java.memory.64bit} ${cmr.java.opts.64bit} ${cmr.java.opts.win} ${cmr.java.locgc.win} -jar ${dist.jar.name}" byline="true"/>
+		<zip destfile="${release.root}/inspectit-cmr.windows.x64.zip">
+			<fileset dir="${build.release.root}" />
+			<zipfileset file="${build.scripts}/startup.bat" prefix="CMR" />
+			<zipfileset src="${jvm.root}/jre7-windows-x64.zip" prefix="CMR/jre" />
+				<zipfileset dir="${basedir}/../" prefix="CMR" includes="*LICENSE*.txt" />
+		</zip>
+		<delete file="${build.scripts}/startup.bat" failonerror="false" />
+	</target>
+
+	<target name="generate-configuration-xsd-schema" depends="init,init-jaxb-schemagen">
+		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/configuration" jaxb-schemagen.dest="${basedir}/config/schema" jaxb-schemagen.excludes="validation/**" jaxb-schemagen.schemafilename="configurationSchema.xsd">
+			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commonscs" />
+			</jaxb-schemagen.classpath>
+		</jaxb-schemagen>
+		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/update" jaxb-schemagen.dest="${basedir}/config/schema" jaxb-schemagen.excludes="" jaxb-schemagen.schemafilename="configurationUpdateSchema.xsd">
+			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commonscs" />
+			</jaxb-schemagen.classpath>
+		</jaxb-schemagen>
+	</target>
+
+	<target name="check-for-xsd-schema-correctness" depends="init,init-jaxb-schemagen">
+		<property name="build.configTempDir" value="${build.root}/temp/config/schema" />
+		<mkdir dir="${build.configTempDir}" />
+
+		<!-- Build temp schema files -->
+		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/configuration" jaxb-schemagen.dest="${build.configTempDir}" jaxb-schemagen.excludes="validation/**" jaxb-schemagen.schemafilename="configurationSchema.xsd">
+			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commonscs" />
+			</jaxb-schemagen.classpath>
+		</jaxb-schemagen>
+		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/update" jaxb-schemagen.dest="${build.configTempDir}" jaxb-schemagen.excludes="" jaxb-schemagen.schemafilename="configurationUpdateSchema.xsd">
+			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commonscs" />
+			</jaxb-schemagen.classpath>
+		</jaxb-schemagen>
+
+		<condition property="xsd-schema.notcorrect">
+			<not>
+				<and>
+					<filesmatch textfile="true" file1="${build.configTempDir}/configurationSchema.xsd" file2="${basedir}/config/schema/configurationSchema.xsd" />
+					<filesmatch textfile="true" file1="${build.configTempDir}/configurationUpdateSchema.xsd" file2="${basedir}/config/schema/configurationUpdateSchema.xsd" />
+				</and>	
+			</not>
+		</condition>
+
+		<delete dir="${build.configTempDir}" />
+		<fail if="${xsd-schema.notcorrect}"/>
+	</target>
+
+	<!-- *************************************************************** -->
+	<!--            C L A S S M E X E R     T A R G E T S                -->
+	<!-- *************************************************************** -->
+	<target name="init-classmexer" depends="init-ivy">
+		<ivy:settings file="${ivy.settings.dir}/ivysettings.xml" />
+		<ivy:cachepath pathid="path.classmexer" organisation="classmexer" module="classmexer" revision="0.0.3" conf="default" inline="true" />
+		<pathconvert property="string.path.classmexer" pathsep="">
+			<path refid="path.classmexer" />
+		</pathconvert>
+		<echo>Using Classmexer on path: ${string.path.classmexer}</echo>
+	</target>
+</project>

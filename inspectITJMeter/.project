@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>inspectITJMeter</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>net.sf.eclipsecs.core.CheckstyleBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.apache.ivyde.eclipse.ivynature</nature>
+		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>inspectITSpringConfig</name>
+			<type>2</type>
+			<locationURI>inspectITSpringConfig</locationURI>
+		</link>
+		<link>
+			<name>shared</name>
+			<type>2</type>
+			<locationURI>shared</locationURI>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>inspectITSpringConfig</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/inspectIT/META-INF/spring</value>
+		</variable>
+		<variable>
+			<name>shared</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/Commons/resources/shared</value>
+		</variable>
+	</variableList>
+</projectDescription>

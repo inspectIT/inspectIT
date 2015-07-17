@@ -1,0 +1,22 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<suite name="CommonsTest">
+	<test name="Data">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.cache.impl.ObjectSizesPrimitiveTypesSizeTest" />
+			<class name="info.novatec.inspectit.communication.EqualsVerifierTest" />
+			<class name="info.novatec.inspectit.communication.data.InvocationAwareDataTest" />
+			<class name="info.novatec.inspectit.communication.data.AggregatedDataTest" />
+			<class name="info.novatec.inspectit.communication.valueobject.TimerRawVOTest" />
+		</classes>
+	</test>
+	<test name="Serializer">
+		<classes>
+			<class name="info.novatec.inspectit.storage.serializer.impl.BackwardForwardCompatibilityTest" />
+		</classes>
+	</test>
+	<test name="NIO">
+		<classes>
+			<class name="info.novatec.inspectit.storage.nio.stream.SocketExtendedByteBufferInputStreamTest" />
+		</classes>
+	</test>
+</suite>

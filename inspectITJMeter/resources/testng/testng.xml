@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<suite name="inspectIT Test">
+	<test name="Utilities">
+		<classes>
+			<class
+				name="info.novatec.inspectit.jmeter.util.ResultServiceTest" />
+		</classes>
+	</test>
+	<test name="Base">
+		<classes>
+			<class
+				name="info.novatec.inspectit.jmeter.SamplerBaseTest" />
+		</classes>
+	</test>
+</suite>

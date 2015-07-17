@@ -1,0 +1,8 @@
+/bin
+/dist
+/lib
+/build
+/resources/java15runtime/
+/reports
+/release
+/test-output
