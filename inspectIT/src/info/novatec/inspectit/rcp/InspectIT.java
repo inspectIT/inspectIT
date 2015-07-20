@@ -268,8 +268,26 @@ public class InspectIT extends AbstractUIPlugin {
 				try {
 					String key = (String) field.get(null);
 					URL url = getBundle().getEntry(key);
-					reg.put(key, ImageDescriptor.createFromURL(url));
+					
+					if (null != reg.get(key)) {
+						// if we already have an icon with the same key continue
+						// can happen if two fields are pointing to same image
+						continue;
+					}
+					
+					if (null != url) {
+						reg.put(key, ImageDescriptor.createFromURL(url));
+						
+						// try to get the image in order to be certain given URL is representing an image file
+						reg.get(key);
+					} else {
+						// if image does not exists (url is null) show and log error
+						Status status = new Status(Status.ERROR, ID, "Image with the key '" + field.getName() + "' does not exist on the disk. ");
+						StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
+					}
 				} catch (Exception e) {
+					Status status = new Status(Status.ERROR, ID, "Error loading image with the key'" + field.getName() + "'. ");
+					StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
 					continue;
 				}
 			}
