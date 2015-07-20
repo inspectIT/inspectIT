@@ -58,7 +58,7 @@ public interface InspectITImages {
 	String IMG_NEXT = InspectITConstants.ICON_PATH_ECLIPSE + "next_nav.gif";
 	String IMG_OVERLAY_UP = InspectITConstants.ICON_PATH_ECLIPSE + "over_co.gif";
 	String IMG_PACKAGE = InspectITConstants.ICON_PATH_ECLIPSE + "package_obj.gif";
-	String IMG_PREVIOUS = InspectITConstants.ICON_PATH_ECLIPSE + "previous_nav.gif";
+	String IMG_PREVIOUS = InspectITConstants.ICON_PATH_ECLIPSE + "prev_nav.gif";
 	String IMG_PRIORITY = InspectITConstants.ICON_PATH_ECLIPSE + "ihigh_obj.gif";
 	String IMG_PROPERTIES = InspectITConstants.ICON_PATH_ECLIPSE + "properties.gif";
 	String IMG_PROGRESS_VIEW = InspectITConstants.ICON_PATH_ECLIPSE + "pview.gif";
@@ -123,12 +123,12 @@ public interface InspectITImages {
 	String IMG_STORAGE_AVAILABLE = InspectITConstants.ICON_PATH_ECLIPSE + "storage_available.gif";
 	String IMG_STORAGE_CLOSED = InspectITConstants.ICON_PATH_ECLIPSE + "storage_readable.gif";
 	String IMG_STORAGE_DOWNLOADED = InspectITConstants.ICON_PATH_ECLIPSE + "storage_download.gif";
-	String IMG_STORAGE_FINALIZE = InspectITConstants.ICON_PATH_ECLIPSE + "storage_finalaze.gif";
+	String IMG_STORAGE_FINALIZE = InspectITConstants.ICON_PATH_ECLIPSE + "storage_finalize.gif";
 	String IMG_STORAGE_NOT_AVAILABLE = InspectITConstants.ICON_PATH_ECLIPSE + "storage_na.gif";
 	String IMG_STORAGE_OPENED = InspectITConstants.ICON_PATH_ECLIPSE + "storage_writable.gif";
 	String IMG_STORAGE_OVERLAY = InspectITConstants.ICON_PATH_ECLIPSE + "storage_overlay.gif";
 	String IMG_STORAGE_RECORDING = InspectITConstants.ICON_PATH_ECLIPSE + "storage_recording.gif";
-	String IMG_STORAGE_UPLOAD = InspectITConstants.ICON_PATH_ECLIPSE + "storge_upload.gif";
+	String IMG_STORAGE_UPLOAD = InspectITConstants.ICON_PATH_ECLIPSE + "storage_upload.gif";
 	String IMG_TIME = InspectITConstants.ICON_PATH_ECLIPSE + "time.gif";
 	String IMG_TIME_DELTA = InspectITConstants.ICON_PATH_ECLIPSE + "time_delta.gif";
 	String IMG_TIMEFRAME = InspectITConstants.ICON_PATH_ECLIPSE + "timeframe.gif";
