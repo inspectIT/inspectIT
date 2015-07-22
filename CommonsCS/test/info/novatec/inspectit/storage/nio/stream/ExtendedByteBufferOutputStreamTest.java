@@ -75,7 +75,10 @@ public class ExtendedByteBufferOutputStreamTest {
 		random.nextBytes(array);
 
 		extendedByteBufferOutputStream.write(array);
+		assertThat(extendedByteBufferOutputStream.getTotalWriteSize(), is((long) writeCount));
+
 		extendedByteBufferOutputStream.flush(false);
+		assertThat(extendedByteBufferOutputStream.getTotalWriteSize(), is((long) writeCount));
 
 		Mockito.verify(byteBufferProvider, Mockito.times(1)).acquireByteBuffer();
 		assertThat(extendedByteBufferOutputStream.getBuffersCount(), is(equalTo(1)));
@@ -107,7 +110,9 @@ public class ExtendedByteBufferOutputStreamTest {
 		}
 
 		extendedByteBufferOutputStream.write(array);
+		assertThat(extendedByteBufferOutputStream.getTotalWriteSize(), is((long) writeCount));
 		extendedByteBufferOutputStream.flush(false);
+		assertThat(extendedByteBufferOutputStream.getTotalWriteSize(), is((long) writeCount));
 
 		Mockito.verify(byteBufferProvider, Mockito.times(buffersUsed)).acquireByteBuffer();
 		assertThat(extendedByteBufferOutputStream.getBuffersCount(), is(equalTo(buffersUsed)));

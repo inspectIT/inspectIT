@@ -46,7 +46,7 @@ public class ExtendedByteBufferOutputStream extends ByteBufferOutputStream {
 	/**
 	 * Total size of bytes that has been stored in byte buffers that are cached.
 	 */
-	private long totalWriteSize = 0L;
+	private volatile long totalWriteSize = 0L;
 
 	/**
 	 * If stream has been closed.
@@ -154,16 +154,28 @@ public class ExtendedByteBufferOutputStream extends ByteBufferOutputStream {
 	 *         ByteBuffer that is currently used for write.
 	 */
 	public long getTotalWriteSize() {
-		return totalWriteSize;
+		long size = totalWriteSize;
+		ByteBuffer byteBuffer = super.getByteBuffer();
+		if (null != byteBuffer) {
+			size += byteBuffer.position();
+		}
+		return size;
 	}
 
 	/**
-	 * Returns the total number of {@link ByteBuffer}s used.
+	 * Returns the total number of {@link ByteBuffer}s used including the one that might be used for
+	 * writing at the moment.
 	 * 
-	 * @return Returns the total number of {@link ByteBuffer}s used.
+	 * @return Returns the total number of {@link ByteBuffer}s used including the one that might be
+	 *         used for writing at the moment.
 	 */
 	public int getBuffersCount() {
-		return byteBuffers.size();
+		int count = byteBuffers.size();
+		ByteBuffer byteBuffer = super.getByteBuffer();
+		if (null != byteBuffer) {
+			count++;
+		}
+		return count;
 	}
 
 	/**

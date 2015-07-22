@@ -355,9 +355,7 @@ class TcpConnection {
 		} else {
 			int size = 0;
 			for (ExtendedByteBufferOutputStream stream : writeQueue) {
-				for (ByteBuffer byteBuffer : stream.getAllByteBuffers()) {
-					size += byteBuffer.remaining();
-				}
+				size += stream.getTotalWriteSize();
 			}
 			return size;
 		}
