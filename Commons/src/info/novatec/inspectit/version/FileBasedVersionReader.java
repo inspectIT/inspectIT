@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import info.novatec.inspectit.exception.enumeration.VersioningErrorCodeEnum;
 import info.novatec.inspectit.util.ResourceUtils;

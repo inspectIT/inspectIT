@@ -4,9 +4,9 @@
  # commons-collections
  # commons-fileupload
  # commons-io
- # commons-lang
- # commons-net 
+ # commons-lang 
  # commons-pool
+ # gson
  # guava-jdk5
  # httpclient
  # httpcore 
@@ -52,6 +52,8 @@ Copyright (c) 1999- by Shigeru Chiba, All rights reserved. (javassist)
 Copyright (c) 1995-2015 Mort Bay Consulting Pty Ltd. (jetty, jetty-util)
 
 Copyright (c) 2003-2013, Objenesis Team and all contributors. (objensis)
+
+Copyright (c) 2008 Google Inc. (gson) 
 
 Note that copyright holder of a work retains his full rights without any 
 explicit notice.
