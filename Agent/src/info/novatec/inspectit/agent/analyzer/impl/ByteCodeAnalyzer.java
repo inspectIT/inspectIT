@@ -35,6 +35,7 @@ import javassist.NotFoundException;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -71,6 +72,12 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 	 * responsible for the class loader.
 	 */
 	private final IClassPoolAnalyzer classPoolAnalyzer;
+
+	/**
+	 * If class loader delegation should be active.
+	 */
+	@Value("${instrumentation.classLoaderDelegation}")
+	boolean classLoaderDelegation;
 
 	/**
 	 * The default constructor which accepts two parameters which are needed.
@@ -185,6 +192,14 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 	 *             Something could not be found.
 	 */
 	private List<? extends CtBehavior> analyzeForClassLoaderDelegation(String className, ClassLoader classLoader) throws NotFoundException {
+		if (!classLoaderDelegation) {
+			return Collections.emptyList();
+		}
+
+		if (log.isTraceEnabled()) {
+			log.trace("analyzeForClassLoaderDelegation: " + className);
+		}
+
 		IMatcher matcher = configurationStorage.getClassLoaderDelegationMatcher();
 		if (null != matcher && matcher.compareClassName(classLoader, className)) {
 			List<? extends CtBehavior> behaviors = matcher.getMatchingMethods(classLoader, className);

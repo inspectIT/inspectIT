@@ -66,7 +66,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	@Bean
 	public static PropertyPlaceholderConfigurer properties() {
 		PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
-		ClassPathResource[] resources = new ClassPathResource[] { new ClassPathResource("/config/bytebufferpool.properties") };
+		ClassPathResource[] resources = new ClassPathResource[] { new ClassPathResource("/config/bytebufferpool.properties"), new ClassPathResource("/config/instrumentation.properties") };
 		ppc.setLocations(resources);
 		ppc.setIgnoreUnresolvablePlaceholders(true);
 		return ppc;
