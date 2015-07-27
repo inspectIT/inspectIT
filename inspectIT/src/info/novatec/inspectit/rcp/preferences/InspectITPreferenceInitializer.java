@@ -47,6 +47,9 @@ public class InspectITPreferenceInitializer extends AbstractPreferenceInitialize
 		invocDataTypes.add(SqlStatementData.class);
 		invocDataTypes.add(ExceptionSensorData.class);
 		PreferencesUtils.saveObject(PreferencesConstants.INVOCATION_FILTER_DATA_TYPES, invocDataTypes, true);
+
+		// auto check new version
+		PreferencesUtils.saveBooleanValue(PreferencesConstants.AUTO_CHECK_NEW_VERSION, true, true);
 	}
 
 }
