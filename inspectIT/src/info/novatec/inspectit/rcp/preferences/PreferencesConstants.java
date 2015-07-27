@@ -78,4 +78,9 @@ public interface PreferencesConstants {
 	 */
 	String LAST_SELECTED_AGENT = "LAST_SELECTED_AGENT";
 
+	/**
+	 * Check for the new version on startup.
+	 */
+	String AUTO_CHECK_NEW_VERSION = "AUTO_CHECK_NEW_VERSION";
+
 }
