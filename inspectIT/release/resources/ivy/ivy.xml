@@ -35,6 +35,8 @@
 
 		<dependency org="org.eclipse.nebula" name="cwt" rev="0.9.0.201311081230" conf="osgi->default" />
 		<dependency org="org.eclipse.nebula" name="cdatetime" rev="0.14.0.201311081230" conf="osgi->default" />
+		
+		<dependency org="com.google.code.gson" name="gson" rev="2.3.1" conf="osgi->default" />
 
 		<!-- Libs that are transfered by us -->
 

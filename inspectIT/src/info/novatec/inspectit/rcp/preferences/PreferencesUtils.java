@@ -31,6 +31,62 @@ public final class PreferencesUtils {
 	}
 
 	/**
+	 * Saves a boolean value to the preference store.
+	 * 
+	 * @param name
+	 *            Name of the preference.
+	 * @param value
+	 *            Value to be saved.
+	 * @param isDefault
+	 *            If this is true, the setting will be saved as a default preference. Not that the
+	 *            default preferences are not saved to disk, and have to be entered manually. If it
+	 *            is false, preference will be saved in the configuration scope.
+	 */
+	public static void saveBooleanValue(String name, boolean value, boolean isDefault) {
+		if (isDefault) {
+			preferenceStore.setDefault(name, value);
+		} else {
+			preferenceStore.setValue(name, value);
+		}
+		try {
+			preferenceStore.save();
+		} catch (IOException e) {
+			InspectIT.getDefault().createErrorDialog("Error occurred trying to save setting with name '" + name + "' to preference store.", e, -1);
+		}
+	}
+
+	/**
+	 * Returns boolean value from the preferences. Same as calling
+	 * {@link #getBooleanValue(PreferenceKey, false)}.
+	 * 
+	 * @param name
+	 *            Name of the preference.
+	 * @return Boolean value.
+	 */
+	public static boolean getBooleanValue(String name) {
+		return getBooleanValue(name, false);
+	}
+
+	/**
+	 * Returns boolean value from the preferences.
+	 * 
+	 * @param name
+	 *            Name of the preference.
+	 * @param isDefault
+	 *            Should default value be retrieved.
+	 * @return Boolean value.
+	 */
+	public static boolean getBooleanValue(String name, boolean isDefault) {
+		boolean value;
+		if (isDefault) {
+			value = preferenceStore.getDefaultBoolean(name);
+		} else {
+			value = preferenceStore.getBoolean(name);
+		}
+		return value;
+	}
+
+	/**
 	 * Saves a double value to the preference store.
 	 * 
 	 * @param name
@@ -61,7 +117,7 @@ public final class PreferencesUtils {
 	 * 
 	 * @param name
 	 *            Name of the preference.
-	 * @return String value.
+	 * @return Double value.
 	 */
 	public static double getDoubleValue(String name) {
 		return getDoubleValue(name, false);
