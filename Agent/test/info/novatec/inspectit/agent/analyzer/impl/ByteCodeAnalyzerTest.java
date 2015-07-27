@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
@@ -47,6 +47,7 @@ import javassist.NotFoundException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -70,6 +71,7 @@ public class ByteCodeAnalyzerTest extends AbstractLogSupport {
 	@BeforeMethod(dependsOnMethods = { "initMocks" })
 	public void initTestClass() {
 		byteCodeAnalyzer = new ByteCodeAnalyzer(configurationStorage, hookInstrumenter, classPoolAnalyzer);
+		byteCodeAnalyzer.log = LoggerFactory.getLogger(ByteCodeAnalyzer.class);
 		when(configurationStorage.getClassLoaderDelegationMatcher()).thenReturn(mock(IMatcher.class));
 	}
 
@@ -400,9 +402,15 @@ public class ByteCodeAnalyzerTest extends AbstractLogSupport {
 		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
 		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(methodList);
 		when(configurationStorage.getClassLoaderDelegationMatcher()).thenReturn(matcher);
-
+		
+		byteCodeAnalyzer.classLoaderDelegation = true;
 		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
 		verify(hookInstrumenter, times(1)).addClassLoaderDelegationHook(methodList.get(0));
+		
+		byteCodeAnalyzer.classLoaderDelegation = false;
+		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+		
+		verifyNoMoreInteractions(hookInstrumenter);
 	}
 }
