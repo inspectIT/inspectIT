@@ -397,6 +397,10 @@
             id="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType"
             name="Navigate To Grouped Exception Type">
       </command>
+      <command
+            id="info.novatec.inspectit.rcp.commands.checkForNewVersion"
+            name="Check for New Version">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -1461,6 +1465,10 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.CheckNewVersionHandler"
+            commandId="info.novatec.inspectit.rcp.commands.checkForNewVersion">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -1934,6 +1942,10 @@
                   name="org.eclipse.ui.main.menu.help.separator1"
                   visible="true">
             </separator>
+            <command
+                  commandId="info.novatec.inspectit.rcp.commands.checkForNewVersion"
+                  style="push">
+            </command>
             <command
                   commandId="org.eclipse.ui.help.aboutAction"
                   style="push">
