@@ -120,5 +120,4 @@ public class Branch<E extends DefaultData> extends AbstractBranch<E, E> implemen
 	public IBufferBranchIndexer<E> getBufferBranchIndexer() {
 		return bufferBranchIndexer;
 	}
-
 }

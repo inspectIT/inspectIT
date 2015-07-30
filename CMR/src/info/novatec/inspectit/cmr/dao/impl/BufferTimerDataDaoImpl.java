@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
  * 
  * @author Ivan Senic
  * 
+ * fork&join is used, because much timer- data is expected.
  */
 @Repository
 public class BufferTimerDataDaoImpl extends AbstractBufferDataDao<TimerData> implements TimerDataDao {
@@ -39,6 +40,6 @@ public class BufferTimerDataDaoImpl extends AbstractBufferDataDao<TimerData> imp
 	 */
 	public List<TimerData> getAggregatedTimerData(TimerData timerData, Date fromDate, Date toDate) {
 		IIndexQuery query = timerDataQueryFactory.getAggregatedTimerDataQuery(timerData, fromDate, toDate);
-		return super.executeQuery(query, Aggregators.TIMER_DATA_AGGREGATOR);
+		return super.executeQuery(query, Aggregators.TIMER_DATA_AGGREGATOR, true);
 	}
 }

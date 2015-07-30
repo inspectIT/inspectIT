@@ -9,6 +9,6 @@
   </fileset>
   <filter name="FilesFromPackage" enabled="true">
     <filter-data value="test"/>
+    <filter-data value="perf"/>
   </filter>
-  <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>

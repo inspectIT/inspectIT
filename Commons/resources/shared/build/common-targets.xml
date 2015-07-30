@@ -90,6 +90,12 @@
 		<taskdef name="schemagen" classpathref="ant-jaxb-schemagen.classpath" classname="com.sun.tools.jxc.SchemaGenTask" />
 	</target>
 
+	<target name="init-perf-tests" depends="init-ivy">
+		<ivy:settings file="${ivy.settings.file}" />
+		<ivy:cachepath pathid="path.jmh-core" organisation="org.openjdk.jmh" module="jmh-core" revision="1.11.2" conf="default" inline="true" />
+		<ivy:cachepath pathid="path.jmh-generator-annprocess" organisation="org.openjdk.jmh" module="jmh-generator-annprocess" revision="1.11.2" conf="default" inline="true" />
+	</target>
+
 	<!-- *************************************************************** -->
 	<!--                I V Y     T A R G E T S   		                 -->
 	<!-- *************************************************************** -->
@@ -210,6 +216,36 @@
 		</sequential>
 	</macrodef>
 
+
+	<!-- *************************************************************** -->
+	<!--               P E R F O R M A N C E   T A R G E T S             -->
+	<!-- *************************************************************** -->
+
+	<macrodef name="execute-perf-tests">
+		<attribute name="perftest.root" description="Pefroamnce test source folder" />
+		<attribute name="perftest.javac.source" description="Source version of the performance test classes for javac" />
+		<attribute name="perftest.javac.target" description="Target version of the performance test classes for javac" />
+		<attribute name="build.perftest.classes" description="Destination folder for building performance test classes" />
+		<element name="perftest.compile.classpath" description="Class path needed to compile the performance test classes." />
+		<sequential>
+			<mkdir dir="@{build.perftest.classes}" />
+
+			<javac srcdir="@{perftest.root}" destdir="@{build.perftest.classes}" source="@{perftest.javac.source}" target="@{perftest.javac.target}" debug="true" debuglevel="lines,vars,source" nowarn="off" includeAntRuntime="no">
+				<perftest.compile.classpath />
+				<classpath refid="path.jmh-generator-annprocess" />
+				<compilerarg value="-Xlint:unchecked" />
+			</javac>
+
+			<jar jarfile="@{build.perftest.classes}/benchmarks.jar" basedir="@{build.perftest.classes}" />
+
+			<java classname="org.openjdk.jmh.Main" fork="true">
+				<classpath location="@{build.perftest.classes}/benchmarks.jar" />
+				<classpath refid="path.jmh-core" />
+				<perftest.compile.classpath />
+			</java>
+		</sequential>
+	</macrodef>
+
 	<!-- *************************************************************** -->
 	<!--         S T A T I C     A N A L Y S I S     T A R G E T S  	 -->
 	<!-- *************************************************************** -->
@@ -326,7 +362,6 @@
 			</then>
 		</if>
 	</target>
-
 
 	<!-- *************************************************************** -->
 	<!--           			J V M    T A R G E T S      			     -->
@@ -534,7 +569,7 @@
 
 			<if>
 				<not>
-					<matches string="@{jaxb-schemagen.schemafilename}" pattern="^\s*$"/>
+					<matches string="@{jaxb-schemagen.schemafilename}" pattern="^\s*$" />
 				</not>
 				<then>
 					<move file="@{jaxb-schemagen.dest}/schema1.xsd" tofile="@{jaxb-schemagen.dest}/@{jaxb-schemagen.schemafilename}" overwrite="true" failonerror="true" />

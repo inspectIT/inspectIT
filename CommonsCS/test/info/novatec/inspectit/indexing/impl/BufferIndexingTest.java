@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -52,6 +53,11 @@ public class BufferIndexingTest {
 	 * The mocked processor.
 	 */
 	private IIndexQueryRestrictionProcessor processor;
+	
+	/**
+	 * The forkJoinPool which starts the forks
+	 */
+	private ForkJoinPool forkJoinPool = new ForkJoinPool();
 
 	/**
 	 * Initializes the mocks.
@@ -94,6 +100,9 @@ public class BufferIndexingTest {
 
 		List<DefaultData> results = rootBranch.query(indexQuery);
 		assertThat(results.size(), is(equalTo(2)));
+		// Test for forkJoinPool
+		List<DefaultData> resultsForkJoin = rootBranch.query(indexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(2)));
 	}
 
 	/**
@@ -142,6 +151,12 @@ public class BufferIndexingTest {
 		for (DefaultData result : results) {
 			assertThat(result.getPlatformIdent(), is(equalTo(10L)));
 		}
+		// Test for forkJoinPool
+		List<DefaultData> resultsForkJoin = rootBranch.query(indexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (DefaultData result : resultsForkJoin) {
+			assertThat(result.getPlatformIdent(), is(equalTo(10L)));
+		}
 	}
 
 	/**
@@ -173,6 +188,12 @@ public class BufferIndexingTest {
 		for (MethodSensorData result : results) {
 			assertThat(result.getMethodIdent(), is(equalTo(10L)));
 		}
+		// Test for forkJoinPool
+		List<MethodSensorData> resultsForkJoin = rootBranch.query(indexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (MethodSensorData result : resultsForkJoin) {
+			assertThat(result.getMethodIdent(), is(equalTo(10L)));
+		}
 	}
 
 	/**
@@ -202,6 +223,12 @@ public class BufferIndexingTest {
 		List<DefaultData> results = rootBranch.query(indexQuery);
 		assertThat(results.size(), is(equalTo(1)));
 		for (DefaultData result : results) {
+			assertThat(result, is(instanceOf(defaultData1.getClass())));
+		}
+		// Test for forkJoinPool
+		List<DefaultData> resultsForkJoin = rootBranch.query(indexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (DefaultData result : resultsForkJoin) {
 			assertThat(result, is(instanceOf(defaultData1.getClass())));
 		}
 	}
@@ -237,6 +264,14 @@ public class BufferIndexingTest {
 		List<DefaultData> results = rootBranch.query(indexQuery);
 		assertThat(results.size(), is(equalTo(1)));
 		for (DefaultData result : results) {
+			assertThat(result.getTimeStamp().getTime(), is(greaterThanOrEqualTo(minusHour.getTime())));
+			assertThat(result.getTimeStamp().getTime(), is(lessThanOrEqualTo(plusHour.getTime())));
+		}
+		// Test for forkJoinPool
+
+		List<DefaultData> resultsForkJoin = rootBranch.query(indexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (DefaultData result : resultsForkJoin) {
 			assertThat(result.getTimeStamp().getTime(), is(greaterThanOrEqualTo(minusHour.getTime())));
 			assertThat(result.getTimeStamp().getTime(), is(lessThanOrEqualTo(plusHour.getTime())));
 		}
@@ -286,9 +321,50 @@ public class BufferIndexingTest {
 			assertThat(result.getPlatformIdent(), is(equalTo(10L)));
 			assertThat(result.getSensorTypeIdent(), is(equalTo(10L)));
 		}
-
 	}
+	@Test
+	/**
+	 * Same Test as queryDifferentLevels() except with ForkJoin
+	 * @throws IndexingException
+	 */
+	public void queryDifferentLevelsForkJoin() throws IndexingException {
+		BufferBranchIndexer<DefaultData> sensorTypeIndexer = new BufferBranchIndexer<DefaultData>(new SensorTypeIdentIndexer<DefaultData>());
+		BufferBranchIndexer<DefaultData> objectTypeIndexer = new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), sensorTypeIndexer);
+		BufferBranchIndexer<DefaultData> platformTypeIndexer = new BufferBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), objectTypeIndexer);
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(platformTypeIndexer);
 
+		TimerData defaultData1 = mock(TimerData.class);
+		when(defaultData1.getId()).thenReturn(1L);
+		when(defaultData1.getPlatformIdent()).thenReturn(10L);
+		when(defaultData1.getSensorTypeIdent()).thenReturn(10L);
+		when(defaultData1.isQueryComplied(indexQuery)).thenReturn(true);
+		rootBranch.put(defaultData1);
+
+		SqlStatementData defaultData2 = mock(SqlStatementData.class);
+		when(defaultData2.getId()).thenReturn(2L);
+		when(defaultData2.getPlatformIdent()).thenReturn(10L);
+		when(defaultData2.getSensorTypeIdent()).thenReturn(20L);
+		when(defaultData2.isQueryComplied(indexQuery)).thenReturn(true);
+		rootBranch.put(defaultData2);
+
+		indexQuery.setPlatformIdent(10L);
+
+		List<DefaultData> results = rootBranch.query(indexQuery, forkJoinPool);
+		assertThat(results.size(), is(equalTo(2)));
+		for (DefaultData result : results) {
+			assertThat(result.getPlatformIdent(), is(equalTo(10L)));
+		}
+
+		indexQuery.setPlatformIdent(10L);
+		indexQuery.setSensorTypeIdent(10L);
+
+		results = rootBranch.query(indexQuery, forkJoinPool);
+		assertThat(results.size(), is(equalTo(1)));
+		for (DefaultData result : results) {
+			assertThat(result.getPlatformIdent(), is(equalTo(10L)));
+			assertThat(result.getSensorTypeIdent(), is(equalTo(10L)));
+		}
+	}
 	/**
 	 * Test a removal of one element from the indexing tree.
 	 * 
