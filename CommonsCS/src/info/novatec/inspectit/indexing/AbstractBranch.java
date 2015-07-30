@@ -1,19 +1,22 @@
 package info.novatec.inspectit.indexing;
 
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.indexing.buffer.impl.Branch;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import info.novatec.inspectit.cmr.cache.IObjectSizes;
+import info.novatec.inspectit.indexing.buffer.impl.Branch;
+import info.novatec.inspectit.indexing.impl.IndexingException;
+import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
 
 /**
  * Abstract class for all {@link ITreeComponent}s that are a branch.
@@ -25,7 +28,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @param <E>
  *            Type of the element that can be indexed by the branch.
  */
-public abstract class AbstractBranch<R, E> {
+public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 
 	/**
 	 * Initial concurrency level for the {@link ConcurrentHashMap}.
@@ -36,7 +39,7 @@ public abstract class AbstractBranch<R, E> {
 	 * Branch indexer.
 	 */
 	private IBranchIndexer<E> branchIndexer;
-
+	
 	/**
 	 * Map for holding references.
 	 */
@@ -191,6 +194,14 @@ public abstract class AbstractBranch<R, E> {
 			return results;
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<R> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
+	}
+	
 
 	/**
 	 * Queries the single {@link ITreeComponent} that is mapped with key. If passed key is null, or
@@ -320,5 +331,39 @@ public abstract class AbstractBranch<R, E> {
 		toStringBuilder.append("branchIndexer", branchIndexer);
 		toStringBuilder.append("branchMap", map);
 		return toStringBuilder.toString();
+	}
+	
+	/**
+	 * Returns the branches to Query.
+	 * 
+	 * @param query
+	 *            query
+	 * @return the list of branches
+	 */
+	public Collection<ITreeComponent<R, E>> getBranchesToQuery(IIndexQuery query) {
+		// The given keys which fit to the query
+		Object[] keys = this.getBranchIndexer().getKeys(query);
+		
+		// The map, which holds all branches of the next level
+		if (ArrayUtils.isEmpty(keys)) {
+			return map.values();
+		} else {
+			// the branches which have to be queried
+			Collection<ITreeComponent<R, E>> branchesToQuery = new ArrayList<ITreeComponent<R, E>>();
+			for (Object key : keys) {
+				ITreeComponent<R, E> branch = map.get(key);
+				if (branch != null) {
+					branchesToQuery.add(branch);
+				}
+			}
+			return branchesToQuery;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public RecursiveTask<List<R>> getTaskForForkJoinQuery(IIndexQuery query) {
+		return new QueryTask<>(this.getBranchesToQuery(query), query);
 	}
 }

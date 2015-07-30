@@ -1,16 +1,19 @@
 package info.novatec.inspectit.indexing.storage.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.indexing.IIndexQuery;
+import info.novatec.inspectit.indexing.QueryTask;
 import info.novatec.inspectit.indexing.impl.IndexingException;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * This classes enables joining of many storage indexing trees, so that all of them can be queried.
@@ -135,6 +138,12 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 		}
 		return combinedResult;
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -166,5 +175,25 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 		ToStringBuilder toStringBuilder = new ToStringBuilder(this);
 		toStringBuilder.append("branches", branches);
 		return toStringBuilder.toString();
+	}
+	
+	/**
+	 * Returns the branches to Query.
+	 * 
+	 * @param <R>
+	 * 
+	 * @param query
+	 *             query
+	 * @return the list of branches
+	 */
+	public List<IStorageTreeComponent<E>> getBranchesToQuery(IIndexQuery query) {		
+		return getBranches();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public RecursiveTask<List<IStorageDescriptor>> getTaskForForkJoinQuery(IIndexQuery query) {
+		return new QueryTask<IStorageDescriptor, E>(branches, query);
 	}
 }

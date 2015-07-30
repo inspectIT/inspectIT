@@ -2,6 +2,7 @@ package info.novatec.inspectit.cmr.dao.impl;
 
 import info.novatec.inspectit.cmr.dao.SqlDataDao;
 import info.novatec.inspectit.communication.data.SqlStatementData;
+import info.novatec.inspectit.indexing.AbstractBranch;
 import info.novatec.inspectit.indexing.IIndexQuery;
 import info.novatec.inspectit.indexing.aggregation.Aggregators;
 import info.novatec.inspectit.indexing.query.factory.impl.SqlStatementDataQueryFactory;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Repository;
 /**
  * Implementation of the {@link SqlDataDao} that searches for the SQL statements in the indexing
  * tree.
+ * <br>The query-Method of {@link AbstractBranch} which uses fork&join is executed, because much SQL- data is expected and 
+ * querying with fork&join will be faster.<br>
  * 
  * @author Ivan Senic
  * 
@@ -40,7 +43,7 @@ public class BufferSqlDataDaoImpl extends AbstractBufferDataDao<SqlStatementData
 	 */
 	public List<SqlStatementData> getAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		IIndexQuery query = sqlDataQueryFactory.getAggregatedSqlStatementsQuery(sqlStatementData, fromDate, toDate);
-		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_AGGREGATOR);
+		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_AGGREGATOR, true);
 	}
 
 	/**
@@ -55,7 +58,7 @@ public class BufferSqlDataDaoImpl extends AbstractBufferDataDao<SqlStatementData
 	 */
 	public List<SqlStatementData> getParameterAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		IIndexQuery query = sqlDataQueryFactory.getAggregatedSqlStatementsQuery(sqlStatementData, fromDate, toDate);
-		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_PARAMETER_AGGREGATOR);
+		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_PARAMETER_AGGREGATOR, true);
 	}
 
 }
