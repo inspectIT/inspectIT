@@ -3,6 +3,7 @@ package info.novatec.inspectit.indexing.storage.impl;
 import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.indexing.IIndexQuery;
+import info.novatec.inspectit.indexing.LeafTask;
 import info.novatec.inspectit.indexing.impl.IndexingException;
 import info.novatec.inspectit.indexing.storage.AbstractStorageDescriptor;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
@@ -11,6 +12,8 @@ import info.novatec.inspectit.storage.util.StorageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -102,6 +105,12 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 			list.add(new StorageDescriptor(id, simpleStorageDescriptor));
 		}
 		return list;
+	}
+	/**
+	 *{@inheritDoc}
+	 */
+	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
 
 	/**
@@ -234,5 +243,12 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 		ToStringBuilder toStringBuilder = new ToStringBuilder(this);
 		toStringBuilder.append("descriptors", descriptors);
 		return toStringBuilder.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public RecursiveTask<List<IStorageDescriptor>> getTaskForForkJoinQuery(IIndexQuery query) {
+		return new LeafTask<>(this, query);
 	}
 }
