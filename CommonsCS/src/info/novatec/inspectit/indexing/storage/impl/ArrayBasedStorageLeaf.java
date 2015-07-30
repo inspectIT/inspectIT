@@ -12,6 +12,7 @@ import info.novatec.inspectit.util.ArrayUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -255,6 +256,11 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 			}
 		}
 	}
+	
+	@Override
+	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return query(query);
+	}
 
 	/**
 	 * Queries the leaf with more information given in the {@link StorageIndexQuery}.
@@ -421,5 +427,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 		toStringBuilder.append("capacity", capacity);
 		return toStringBuilder.toString();
 	}
+
+	
 
 }

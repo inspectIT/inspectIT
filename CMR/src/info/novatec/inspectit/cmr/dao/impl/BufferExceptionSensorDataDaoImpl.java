@@ -45,9 +45,9 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, int limit, Date fromDate, Date toDate, Comparator<? super ExceptionSensorData> comparator) {
 		IIndexQuery query = exceptionSensorDataQueryFactory.getUngroupedExceptionOverviewQuery(template, limit, fromDate, toDate);
 		if (null != comparator) {
-			return super.executeQuery(query, comparator, limit);
+			return super.executeQuery(query, comparator, limit, true);
 		} else {
-			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit);
+			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, true);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	 */
 	public List<ExceptionSensorData> getExceptionTree(ExceptionSensorData template) {
 		IIndexQuery query = exceptionSensorDataQueryFactory.getExceptionTreeQuery(template);
-		List<ExceptionSensorData> results = super.executeQuery(query);
+		List<ExceptionSensorData> results = super.executeQuery(query, true);
 		Collections.reverse(results);
 		return results;
 	}
@@ -87,7 +87,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	 */
 	public List<AggregatedExceptionSensorData> getDataForGroupedExceptionOverview(ExceptionSensorData template, Date fromDate, Date toDate) {
 		IIndexQuery query = exceptionSensorDataQueryFactory.getDataForGroupedExceptionOverviewQuery(template, fromDate, toDate);
-		List<ExceptionSensorData> results = super.executeQuery(query, Aggregators.GROUP_EXCEPTION_OVERVIEW_AGGREGATOR);
+		List<ExceptionSensorData> results = super.executeQuery(query, Aggregators.GROUP_EXCEPTION_OVERVIEW_AGGREGATOR, true);
 		List<AggregatedExceptionSensorData> aggResults = new ArrayList<AggregatedExceptionSensorData>();
 		for (ExceptionSensorData exData : results) {
 			if (exData instanceof AggregatedExceptionSensorData) {
@@ -103,7 +103,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	@Override
 	public List<ExceptionSensorData> getStackTraceMessagesForThrowableType(ExceptionSensorData template) {
 		IIndexQuery query = exceptionSensorDataQueryFactory.getStackTraceMessagesForThrowableTypeQuery(template);
-		return super.executeQuery(query, Aggregators.DISTINCT_STACK_TRACES_AGGREGATOR);
+		return super.executeQuery(query, Aggregators.DISTINCT_STACK_TRACES_AGGREGATOR, true);
 	}
 
 }

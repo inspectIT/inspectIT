@@ -39,6 +39,6 @@ public class BufferTimerDataDaoImpl extends AbstractBufferDataDao<TimerData> imp
 	 */
 	public List<TimerData> getAggregatedTimerData(TimerData timerData, Date fromDate, Date toDate) {
 		IIndexQuery query = timerDataQueryFactory.getAggregatedTimerDataQuery(timerData, fromDate, toDate);
-		return super.executeQuery(query, Aggregators.TIMER_DATA_AGGREGATOR);
+		return super.executeQuery(query, Aggregators.TIMER_DATA_AGGREGATOR, true);
 	}
 }

@@ -11,6 +11,7 @@ import info.novatec.inspectit.storage.util.StorageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -102,6 +103,17 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 			list.add(new StorageDescriptor(id, simpleStorageDescriptor));
 		}
 		return list;
+	}
+	/**
+	 * Executes the query() - method without forkJoin.
+	 * @param query
+	 * 		query
+	 * @param forkJoinPool
+	 * 		ForkJoinPool - never used
+	 * @return List of elements, or empty list if nothing is found.
+	 */
+	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return query(query);
 	}
 
 	/**

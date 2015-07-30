@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -120,6 +121,17 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 			}
 		}
 		return results;
+	}
+	/**
+	 * Executes the query() - method without forkJoin.
+	 * @param query
+	 * 		query
+	 * @param forkJoinPool
+	 * 		ForkJoinPool - never used
+	 * @return List of elements, or empty list if nothing is found.
+	 */
+	public List<E> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return query(query);
 	}
 
 	/**

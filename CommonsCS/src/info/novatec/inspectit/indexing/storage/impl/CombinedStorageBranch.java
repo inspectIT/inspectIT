@@ -9,6 +9,7 @@ import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -134,6 +135,13 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 			}
 		}
 		return combinedResult;
+	}
+	/**
+	 * Executes the query() Method without forkJoin..
+	 * {@inheritDoc}
+	 */
+	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return query(query);
 	}
 
 	/**

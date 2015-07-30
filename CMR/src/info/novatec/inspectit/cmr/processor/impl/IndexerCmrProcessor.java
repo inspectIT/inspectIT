@@ -56,4 +56,12 @@ public class IndexerCmrProcessor extends AbstractCmrDataProcessor {
 		return false;
 	}
 
+	/**
+	 * @param indexingTree
+	 *            the indexingTree to set
+	 */
+	public void setIndexingTree(IBufferTreeComponent<DefaultData> indexingTree) {
+		this.indexingTree = indexingTree;
+	}
+
 }

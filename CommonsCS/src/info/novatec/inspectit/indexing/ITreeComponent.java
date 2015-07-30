@@ -4,6 +4,7 @@ import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import info.novatec.inspectit.indexing.impl.IndexingException;
 
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * Interface that defines the operations that each component in indexed tree has to implement.
@@ -59,7 +60,17 @@ public interface ITreeComponent<R, E> {
 	 * @return List of elements, or empty list if nothing is found.
 	 */
 	List<R> query(IIndexQuery query);
-
+	
+	/**
+	 * Returns the list of elements that satisfies the query. The query object should define as
+	 * large as possible information set, because then the search is performed faster. Uses Join&Fork
+	 * @param query
+	 *            Query.
+	 * @param forkJoinPool
+	 * 			  The Pool which starts and manages the forks           
+	 * @return List of elements, or empty list if nothing is found.
+	 */
+	List<R> query(IIndexQuery query, ForkJoinPool forkJoinPool);
 	/**
 	 * Computes the size of the {@link ITreeComponent} with underlined {@link ITreeComponent} sizes
 	 * also, but without referenced elements.

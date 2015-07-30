@@ -40,7 +40,7 @@ public class BufferSqlDataDaoImpl extends AbstractBufferDataDao<SqlStatementData
 	 */
 	public List<SqlStatementData> getAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		IIndexQuery query = sqlDataQueryFactory.getAggregatedSqlStatementsQuery(sqlStatementData, fromDate, toDate);
-		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_AGGREGATOR);
+		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_AGGREGATOR, true);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class BufferSqlDataDaoImpl extends AbstractBufferDataDao<SqlStatementData
 	 */
 	public List<SqlStatementData> getParameterAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		IIndexQuery query = sqlDataQueryFactory.getAggregatedSqlStatementsQuery(sqlStatementData, fromDate, toDate);
-		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_PARAMETER_AGGREGATOR);
+		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_PARAMETER_AGGREGATOR, true);
 	}
 
 }

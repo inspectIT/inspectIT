@@ -4,14 +4,13 @@ import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import info.novatec.inspectit.indexing.buffer.impl.Branch;
 import info.novatec.inspectit.indexing.impl.IndexingException;
 import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.concurrent.ForkJoinPool;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -25,7 +24,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @param <E>
  *            Type of the element that can be indexed by the branch.
  */
-public abstract class AbstractBranch<R, E> {
+public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 
 	/**
 	 * Initial concurrency level for the {@link ConcurrentHashMap}.
@@ -36,7 +35,6 @@ public abstract class AbstractBranch<R, E> {
 	 * Branch indexer.
 	 */
 	private IBranchIndexer<E> branchIndexer;
-
 	/**
 	 * Map for holding references.
 	 */
@@ -191,6 +189,14 @@ public abstract class AbstractBranch<R, E> {
 			return results;
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<R> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return (List<R>) forkJoinPool.invoke(new QueryTask<R, E>(this, query));
+	}
+	
 
 	/**
 	 * Queries the single {@link ITreeComponent} that is mapped with key. If passed key is null, or
@@ -321,4 +327,31 @@ public abstract class AbstractBranch<R, E> {
 		toStringBuilder.append("branchMap", map);
 		return toStringBuilder.toString();
 	}
+	
+	/**
+	 * Returns the branches to Query.
+	 * @param query
+	 * 		query
+	 * @return the list of branches
+	 */
+	public List<ITreeComponent<R, E>> getBranchesToQuery(IIndexQuery query) {
+		// The given keys which fit to the query
+		Object[] keys = this.getBranchIndexer().getKeys(query);
+		// the branches which have to be queried
+		List<ITreeComponent<R, E>> branchesToQuery = new ArrayList<ITreeComponent<R, E>>();
+		// The map, which holds all branches of the next level
+		if (ArrayUtils.isEmpty(keys)) {
+			return new ArrayList<ITreeComponent<R, E>>(this.map.values());
+		} else {
+			for (int i = 0; i < keys.length; i++) {
+				ITreeComponent<R, E> branch = this.map.get(keys[i]);
+				if (branch != null) {
+				branchesToQuery.add(branch);
+				}
+			}
+		}
+		return branchesToQuery;
+
+	}
+	
 }

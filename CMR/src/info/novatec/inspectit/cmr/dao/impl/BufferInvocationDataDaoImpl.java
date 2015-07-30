@@ -59,9 +59,9 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, limit, fromDate, toDate);
 		List<InvocationSequenceData> resultWithChildren;
 		if (null != comparator) {
-			resultWithChildren = super.executeQuery(query, comparator, limit);
+			resultWithChildren = super.executeQuery(query, comparator, limit, false);
 		} else {
-			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit);
+			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 		List<InvocationSequenceData> realResults = new ArrayList<InvocationSequenceData>(resultWithChildren.size());
 		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {
@@ -79,9 +79,9 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, invocationIdCollection, limit);
 		List<InvocationSequenceData> resultWithChildren;
 		if (null != comparator) {
-			resultWithChildren = super.executeQuery(query, comparator, limit);
+			resultWithChildren = super.executeQuery(query, comparator, limit, false);
 		} else {
-			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit);
+			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 		List<InvocationSequenceData> realResults = new ArrayList<InvocationSequenceData>(resultWithChildren.size());
 		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {
