@@ -38,4 +38,12 @@ public class CacheIdGeneratorCmrProcessor extends AbstractCmrDataProcessor {
 		return null != defaultData;
 	}
 
+	/**
+	 * @param cacheIdGenerator
+	 *            the cacheIdGenerator to set
+	 */
+	public void setCacheIdGenerator(CacheIdGenerator cacheIdGenerator) {
+		this.cacheIdGenerator = cacheIdGenerator;
+	}
+
 }
