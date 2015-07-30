@@ -3,6 +3,7 @@ package info.novatec.inspectit.cmr.dao.impl;
 import info.novatec.inspectit.cmr.dao.InvocationDataDao;
 import info.novatec.inspectit.communication.comparator.DefaultDataComparatorEnum;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.indexing.AbstractBranch;
 import info.novatec.inspectit.indexing.IIndexQuery;
 import info.novatec.inspectit.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Repository;
 /**
  * Implementation of {@link InvocationDataDao} that works with the data from the buffer indexing
  * tree.
+ * <br>The query-Method of {@link AbstractBranch} without fork&join is executed, because there isn't much data expected.<br>
  * 
  * @author Ivan Senic
  * 
@@ -59,9 +61,9 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, limit, fromDate, toDate);
 		List<InvocationSequenceData> resultWithChildren;
 		if (null != comparator) {
-			resultWithChildren = super.executeQuery(query, comparator, limit);
+			resultWithChildren = super.executeQuery(query, comparator, limit, false);
 		} else {
-			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit);
+			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 		List<InvocationSequenceData> realResults = new ArrayList<InvocationSequenceData>(resultWithChildren.size());
 		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {
@@ -79,9 +81,9 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, invocationIdCollection, limit);
 		List<InvocationSequenceData> resultWithChildren;
 		if (null != comparator) {
-			resultWithChildren = super.executeQuery(query, comparator, limit);
+			resultWithChildren = super.executeQuery(query, comparator, limit, false);
 		} else {
-			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit);
+			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 		List<InvocationSequenceData> realResults = new ArrayList<InvocationSequenceData>(resultWithChildren.size());
 		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {

@@ -3,6 +3,7 @@ package info.novatec.inspectit.indexing.buffer.impl;
 import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.indexing.IIndexQuery;
+import info.novatec.inspectit.indexing.LeafTask;
 import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
 
 import java.lang.ref.ReferenceQueue;
@@ -11,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
+import java.util.concurrent.RecursiveTask;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.cliffc.high_scale_lib.NonBlockingHashMapLong;
@@ -120,6 +123,12 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 			}
 		}
 		return results;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<E> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
 
 	/**
@@ -238,5 +247,12 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 		ToStringBuilder toStringBuilder = new ToStringBuilder(this);
 		toStringBuilder.append("elementsMap", map);
 		return toStringBuilder.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public RecursiveTask<List<E>> getTaskForForkJoinQuery(IIndexQuery query) {
+		return new LeafTask<>(this, query);
 	}
 }
