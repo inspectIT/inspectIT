@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
  * Provides <code>HttpTimerData</code> information from the CMR internal in memory buffer.
  * 
  * @author Stefan Siegl
+ * 
+ * fork&join isn't used, because only one HTTP -data per invocation is expected.
  */
 @Repository
 public class BufferHttpTimerDataDaoImpl extends AbstractBufferDataDao<HttpTimerData> implements HttpTimerDataDao {
@@ -32,7 +34,7 @@ public class BufferHttpTimerDataDaoImpl extends AbstractBufferDataDao<HttpTimerD
 	@Override
 	public List<HttpTimerData> getAggregatedHttpTimerData(HttpTimerData httpData, boolean includeRequestMethod) {
 		IIndexQuery query = httpDataQueryFactory.getFindAllHttpTimersQuery(httpData, null, null);
-		return super.executeQuery(query, new HttpTimerDataAggregator(true, includeRequestMethod));
+		return super.executeQuery(query, new HttpTimerDataAggregator(true, includeRequestMethod), false);
 	}
 
 	/**
@@ -41,7 +43,7 @@ public class BufferHttpTimerDataDaoImpl extends AbstractBufferDataDao<HttpTimerD
 	@Override
 	public List<HttpTimerData> getAggregatedHttpTimerData(HttpTimerData httpData, boolean includeRequestMethod, Date fromDate, Date toDate) {
 		IIndexQuery query = httpDataQueryFactory.getFindAllHttpTimersQuery(httpData, fromDate, toDate);
-		return super.executeQuery(query, new HttpTimerDataAggregator(true, includeRequestMethod));
+		return super.executeQuery(query, new HttpTimerDataAggregator(true, includeRequestMethod), false);
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class BufferHttpTimerDataDaoImpl extends AbstractBufferDataDao<HttpTimerD
 	@Override
 	public List<HttpTimerData> getTaggedAggregatedHttpTimerData(HttpTimerData httpData, boolean includeRequestMethod) {
 		IIndexQuery query = httpDataQueryFactory.getFindAllTaggedHttpTimersQuery(httpData, null, null);
-		return super.executeQuery(query, new HttpTimerDataAggregator(false, includeRequestMethod));
+		return super.executeQuery(query, new HttpTimerDataAggregator(false, includeRequestMethod), false);
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class BufferHttpTimerDataDaoImpl extends AbstractBufferDataDao<HttpTimerD
 	@Override
 	public List<HttpTimerData> getTaggedAggregatedHttpTimerData(HttpTimerData httpData, boolean includeRequestMethod, Date fromDate, Date toDate) {
 		IIndexQuery query = httpDataQueryFactory.getFindAllTaggedHttpTimersQuery(httpData, fromDate, toDate);
-		return super.executeQuery(query, new HttpTimerDataAggregator(false, includeRequestMethod));
+		return super.executeQuery(query, new HttpTimerDataAggregator(false, includeRequestMethod), false);
 	}
 
 }

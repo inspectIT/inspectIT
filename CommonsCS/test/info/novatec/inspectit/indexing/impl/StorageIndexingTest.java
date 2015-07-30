@@ -10,6 +10,16 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
@@ -23,18 +33,12 @@ import info.novatec.inspectit.indexing.indexer.impl.TimestampIndexer;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 import info.novatec.inspectit.indexing.storage.impl.ArrayBasedStorageLeaf;
+import info.novatec.inspectit.indexing.storage.impl.CombinedStorageBranch;
 import info.novatec.inspectit.indexing.storage.impl.LeafWithNoDescriptors;
 import info.novatec.inspectit.indexing.storage.impl.StorageBranch;
 import info.novatec.inspectit.indexing.storage.impl.StorageBranchIndexer;
+import info.novatec.inspectit.indexing.storage.impl.StorageDescriptor;
 import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 /**
  * Test for checking the {@link IStorageTreeComponent}s.
@@ -42,13 +46,18 @@ import org.testng.annotations.Test;
  * @author Ivan Senic
  * 
  */
-@SuppressWarnings("PMD")
+@SuppressWarnings({ "PMD", "all" })
 public class StorageIndexingTest {
 
 	/**
 	 * {@link StorageIndexQuery}.
 	 */
 	private StorageIndexQuery storageIndexQuery;
+
+	/**
+	 * The forkJoinPool which starts the forks
+	 */
+	private ForkJoinPool forkJoinPool = new ForkJoinPool();
 
 	/**
 	 * Initializes the index query.
@@ -80,6 +89,9 @@ public class StorageIndexingTest {
 
 		List<IStorageDescriptor> results = rootBranch.query(storageIndexQuery);
 		assertThat(results.size(), is(equalTo(2)));
+		// Test for forkJoinPool
+		List<IStorageDescriptor> resultsForkJoin = rootBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(2)));
 	}
 
 	/**
@@ -145,6 +157,12 @@ public class StorageIndexingTest {
 		for (IStorageDescriptor result : results) {
 			assertThat(result.getSize(), is(equalTo(100L)));
 		}
+		// Test for forkJoinPool
+		List<IStorageDescriptor> resultsForkJoin = rootBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (IStorageDescriptor result : resultsForkJoin) {
+			assertThat(result.getSize(), is(equalTo(100L)));
+		}
 	}
 
 	/**
@@ -176,6 +194,12 @@ public class StorageIndexingTest {
 		for (IStorageDescriptor result : results) {
 			assertThat(result.getSize(), is(equalTo(100L)));
 		}
+		// Test for forkJoinPool
+		List<IStorageDescriptor> resultsForkJoin = rootBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (IStorageDescriptor result : resultsForkJoin) {
+			assertThat(result.getSize(), is(equalTo(100L)));
+		}
 	}
 
 	/**
@@ -205,6 +229,12 @@ public class StorageIndexingTest {
 		List<IStorageDescriptor> results = rootBranch.query(storageIndexQuery);
 		assertThat(results.size(), is(equalTo(1)));
 		for (IStorageDescriptor result : results) {
+			assertThat(result.getSize(), is(equalTo(100L)));
+		}
+		// Test for forkJoinPool
+		List<IStorageDescriptor> resultsForkJoin = rootBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (IStorageDescriptor result : resultsForkJoin) {
 			assertThat(result.getSize(), is(equalTo(100L)));
 		}
 	}
@@ -240,6 +270,12 @@ public class StorageIndexingTest {
 		List<IStorageDescriptor> results = rootBranch.query(storageIndexQuery);
 		assertThat(results.size(), is(equalTo(1)));
 		for (IStorageDescriptor result : results) {
+			assertThat(result.getSize(), is(equalTo(200L)));
+		}
+		// Test for forkJoinPool
+		List<IStorageDescriptor> resultsForkJoin = rootBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(1)));
+		for (IStorageDescriptor result : resultsForkJoin) {
 			assertThat(result.getSize(), is(equalTo(200L)));
 		}
 	}
@@ -289,7 +325,50 @@ public class StorageIndexingTest {
 		for (IStorageDescriptor result : results) {
 			assertThat(result.getSize(), is(equalTo(100L)));
 		}
+	}
+	/**
+	 * Same Test as queryDifferentLevels() except with ForkJoin
+	 * @throws IndexingException
+	 */
+	@Test
+	public void queryDifferentLevelsForkJoin() throws IndexingException {
+		StorageBranchIndexer<DefaultData> sensorTypeIndexer = new StorageBranchIndexer<DefaultData>(new SensorTypeIdentIndexer<DefaultData>(), false);
+		StorageBranchIndexer<DefaultData> objectTypeIndexer = new StorageBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), sensorTypeIndexer, false);
+		StorageBranchIndexer<DefaultData> platformTypeIndexer = new StorageBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), objectTypeIndexer, false);
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(platformTypeIndexer);
 
+		TimerData defaultData1 = mock(TimerData.class);
+		when(defaultData1.getId()).thenReturn(1L);
+		when(defaultData1.getPlatformIdent()).thenReturn(10L);
+		when(defaultData1.getSensorTypeIdent()).thenReturn(10L);
+		IStorageDescriptor storageDescriptor1 = rootBranch.put(defaultData1);
+		storageDescriptor1.setPositionAndSize(0L, 100L);
+
+		SqlStatementData defaultData2 = mock(SqlStatementData.class);
+		when(defaultData2.getId()).thenReturn(2L);
+		when(defaultData2.getPlatformIdent()).thenReturn(10L);
+		when(defaultData2.getSensorTypeIdent()).thenReturn(20L);
+		IStorageDescriptor storageDescriptor2 = rootBranch.put(defaultData2);
+		storageDescriptor2.setPositionAndSize(0L, 200L);
+
+		storageIndexQuery.setPlatformIdent(10L);
+
+		List<IStorageDescriptor> results = rootBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(results.size(), is(equalTo(2)));
+		long totalSize = 0;
+		for (IStorageDescriptor result : results) {
+			totalSize += result.getSize();
+		}
+		assertThat(totalSize, is(equalTo(300L)));
+
+		storageIndexQuery.setPlatformIdent(10L);
+		storageIndexQuery.setSensorTypeIdent(10L);
+
+		results = rootBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(results.size(), is(equalTo(1)));
+		for (IStorageDescriptor result : results) {
+			assertThat(result.getSize(), is(equalTo(100L)));
+		}
 	}
 
 	/**
@@ -326,6 +405,9 @@ public class StorageIndexingTest {
 		assertThat(arrayBasedStorageLeaf.getAndRemove(defaultData), is(notNullValue()));
 		assertThat(arrayBasedStorageLeaf.get(defaultData), is(nullValue()));
 		assertThat(arrayBasedStorageLeaf.query(storageIndexQuery), is(empty()));
+		// Test for forkJoinPool
+		assertThat(arrayBasedStorageLeaf.query(storageIndexQuery, forkJoinPool), is(empty()));
+
 	}
 
 	/**
@@ -360,6 +442,14 @@ public class StorageIndexingTest {
 		for (IStorageDescriptor storageDescriptor : results) {
 			assertThat(storageDescriptor.getSize(), is(not(equalTo(removeId))));
 		}
+		// Test for forkJoinPool
+
+		List<IStorageDescriptor> resultsForkJoin = arrayBasedStorageLeaf.query(storageIndexQuery, forkJoinPool);
+		assertThat(resultsForkJoin.size(), is(equalTo(entries - 1)));
+		for (IStorageDescriptor storageDescriptor : resultsForkJoin) {
+			assertThat(storageDescriptor.getSize(), is(not(equalTo(removeId))));
+		}
+
 	}
 
 	/**
@@ -388,6 +478,15 @@ public class StorageIndexingTest {
 		List<IStorageDescriptor> results = leafWithNoDescriptors.query(storageIndexQuery);
 		long totalReturnedSize = 0;
 		for (IStorageDescriptor storageDescriptor : results) {
+			totalReturnedSize += storageDescriptor.getSize();
+		}
+		assertThat(totalReturnedSize, is(equalTo(totalSize)));
+
+		// Test for forkJoinPool
+
+		List<IStorageDescriptor> resultsForkJoin = leafWithNoDescriptors.query(storageIndexQuery, forkJoinPool);
+		totalReturnedSize = 0;
+		for (IStorageDescriptor storageDescriptor : resultsForkJoin) {
 			totalReturnedSize += storageDescriptor.getSize();
 		}
 		assertThat(totalReturnedSize, is(equalTo(totalSize)));
@@ -429,5 +528,31 @@ public class StorageIndexingTest {
 		assertThat(rootBranch.getAndRemove(invocation), is(equalTo(storageDescriptor)));
 		// confirm it is removed
 		assertThat(rootBranch.get(invocation), is(nullValue()));
+	}
+	
+	/**
+	 * Test that tests the functionality of {@link CombinedStorageQueryTask}
+	 */
+	@Test
+	public void queryCombinedStorageBranch(){		
+		List<IStorageDescriptor> testResultList = new ArrayList<IStorageDescriptor>();
+		
+		testResultList.add(new StorageDescriptor());
+		testResultList.add(new StorageDescriptor());
+		CombinedStorageQueryTestTask<DefaultData> testTask = new CombinedStorageQueryTestTask<>(testResultList);
+		
+		StorageBranch<DefaultData> mockedBranch1 = mock(StorageBranch.class);
+		when(mockedBranch1.getTaskForForkJoinQuery(storageIndexQuery)).thenReturn(testTask);
+		
+		StorageBranch<DefaultData> mockedBranch2 = mock(StorageBranch.class);
+		when(mockedBranch2.getTaskForForkJoinQuery(storageIndexQuery)).thenReturn(testTask);
+		
+		ArrayList<IStorageTreeComponent<DefaultData>> branches = new ArrayList<IStorageTreeComponent<DefaultData>>();
+		branches.add(mockedBranch1);
+		branches.add(mockedBranch2);
+		
+		IStorageTreeComponent<DefaultData> rootCombinedStoreBranch = new CombinedStorageBranch<DefaultData>(branches);
+		List<IStorageDescriptor> results = rootCombinedStoreBranch.query(storageIndexQuery, forkJoinPool);
+		assertThat(results.size(), is(equalTo(4)));
 	}
 }

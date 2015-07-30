@@ -126,6 +126,35 @@
 			</test.classes-to-instrument>
 		</execute-testng>
 	</target>
+	
+	
+	<target name="perf-tests" depends="build,init-perf-tests">
+			<path id="perftest.compile.classpath">
+				<pathelement location="${build.cmr.classes}" />
+				<fileset dir="${commons.build.release}" includes="*.jar" />
+				<fileset dir="${commonscs.build.release}" includes="*.jar" />
+				<path refid="lib.prod" />
+				<path refid="lib.prod.commons" />
+				<path refid="lib.prod.commonscs" />
+			</path>
+
+			<property name="perftest.javac.source" value="1.7"/>
+			<property name="perftest.javac.target" value="1.7"/>
+		
+			<execute-perf-tests 
+				perftest.root="${perftest.root}"
+				perftest.javac.source="${perftest.javac.source}" 
+				perftest.javac.target="${perftest.javac.target}"
+				build.perftest.classes="${build.perftest.classes}">
+				
+				<perftest.compile.classpath>
+					<classpath>
+						<path refid="perftest.compile.classpath"/>
+					</classpath>
+				</perftest.compile.classpath>
+		
+			</execute-perf-tests>
+	</target>
 
 
 	<!-- Depends on release, because the compiled classes are needed for the analysis -->

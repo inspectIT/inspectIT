@@ -70,4 +70,14 @@
 		<property name="scheduledExecutor" value="false" />
 		<property name="beanSingleton" value="true" />
 	</bean>
+	
+	<bean id="forkJoinWorkerThreadFactory" class="info.novatec.inspectit.indexing.util.ForkJoinPoolWorkerThreadFactoryFactory">
+		<property name="threadNamePrefix" value="indexingTreeForkJoinThread" />
+	</bean>
+	
+	<bean id="indexingTreeForkJoinPool" class="org.springframework.scheduling.concurrent.ForkJoinPoolFactoryBean">
+		<property name="threadFactory" ref="forkJoinWorkerThreadFactory" />
+		<property name="uncaughtExceptionHandler" ref="forkJoinPoolExceptionHandler" />
+	</bean>
+	
 </beans>

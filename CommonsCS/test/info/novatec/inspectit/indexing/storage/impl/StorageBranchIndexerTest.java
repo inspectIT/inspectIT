@@ -9,16 +9,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageBranchIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
+import info.novatec.inspectit.indexing.storage.IStorageBranchIndexer;
+import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 
 /**
  * Tests the {@link StorageBranchIndexer} class.
