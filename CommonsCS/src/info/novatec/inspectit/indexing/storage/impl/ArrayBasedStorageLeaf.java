@@ -3,6 +3,7 @@ package info.novatec.inspectit.indexing.storage.impl;
 import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.indexing.IIndexQuery;
+import info.novatec.inspectit.indexing.LeafTask;
 import info.novatec.inspectit.indexing.impl.IndexingException;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
@@ -12,6 +13,8 @@ import info.novatec.inspectit.util.ArrayUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -255,6 +258,13 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 			}
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
+		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
+	}
 
 	/**
 	 * Queries the leaf with more information given in the {@link StorageIndexQuery}.
@@ -422,4 +432,10 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 		return toStringBuilder.toString();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public RecursiveTask<List<IStorageDescriptor>> getTaskForForkJoinQuery(IIndexQuery query) {
+		return new LeafTask<>(this, query);
+	}
 }
