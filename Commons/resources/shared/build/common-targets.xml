@@ -74,12 +74,16 @@
 	<target name="init-jaxb-schemagen" depends="init-antcontrib">
 		<ivy:settings file="${ivy.settings.file}" />
 		<!-- needed for TestNG & Cobertura -->
-		<ivy:cachepath pathid="path.jaxb-schemagen" organisation="sun-jaxb" module="jaxb-xjc" revision="2.2" conf="default" inline="true" />
-		<ivy:cachepath pathid="path.jaxb-impl" organisation="sun-jaxb" module="jaxb-impl" revision="2.2" conf="default" inline="true" />
+		<ivy:cachepath pathid="path.jaxb-jxc" organisation="com.sun.xml.bind" module="jaxb-jxc" revision="2.2.11" conf="default" inline="true" />
+		<ivy:cachepath pathid="path.jaxb-xjc" organisation="com.sun.xml.bind" module="jaxb-xjc" revision="2.2.11" conf="default" inline="true" />
+		<ivy:cachepath pathid="path.jaxb-impl" organisation="com.sun.xml.bind" module="jaxb-impl" revision="2.2.11" conf="default" inline="true" />
+		<ivy:cachepath pathid="path.jaxb-core" organisation="com.sun.xml.bind" module="jaxb-core" revision="2.2.11" conf="default" inline="true" />
 
 		<path id="ant-jaxb-schemagen.classpath">
-			<path refid="path.jaxb-schemagen" />
+			<path refid="path.jaxb-jxc" />
+			<path refid="path.jaxb-xjc" />
 			<path refid="path.jaxb-impl" />
+			<path refid="path.jaxb-core" />
 		</path>
 
 		<classloader classpathref="ant-jaxb-schemagen.classpath" parentFirst="false" />

@@ -304,15 +304,20 @@
 		<delete file="${build.scripts}/startup.bat" failonerror="false" />
 	</target>
 
-	<target name="generate-configuration-xsd-schema" depends="init,init-jaxb-schemagen">
+	<target name="generate-configuration-xsd-schema" depends="init,init-jaxb-schemagen,release-commons,release-commonscs">
 		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/configuration" jaxb-schemagen.dest="${basedir}/config/schema" jaxb-schemagen.excludes="validation/**" jaxb-schemagen.schemafilename="configurationSchema.xsd">
 			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commons" />
 				<path refid="lib.prod.commonscs" />
+				<pathelement path="${build.commonscs.classes}" />
 			</jaxb-schemagen.classpath>
 		</jaxb-schemagen>
 		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/update" jaxb-schemagen.dest="${basedir}/config/schema" jaxb-schemagen.excludes="" jaxb-schemagen.schemafilename="configurationUpdateSchema.xsd">
 			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commons" />
 				<path refid="lib.prod.commonscs" />
+				<pathelement path="${build.commons.classes}" />
+				<pathelement path="${build.commonscs.classes}" />
 			</jaxb-schemagen.classpath>
 		</jaxb-schemagen>
 	</target>
@@ -324,12 +329,17 @@
 		<!-- Build temp schema files -->
 		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/configuration" jaxb-schemagen.dest="${build.configTempDir}" jaxb-schemagen.excludes="validation/**" jaxb-schemagen.schemafilename="configurationSchema.xsd">
 			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commons" />
 				<path refid="lib.prod.commonscs" />
+				<pathelement path="${build.commonscs.classes}" />
 			</jaxb-schemagen.classpath>
 		</jaxb-schemagen>
 		<jaxb-schemagen jaxb-schemagen.src="${src.commonscs}/info/novatec/inspectit/cmr/property/update" jaxb-schemagen.dest="${build.configTempDir}" jaxb-schemagen.excludes="" jaxb-schemagen.schemafilename="configurationUpdateSchema.xsd">
 			<jaxb-schemagen.classpath>
+				<path refid="lib.prod.commons" />
 				<path refid="lib.prod.commonscs" />
+				<pathelement path="${build.commons.classes}" />
+				<pathelement path="${build.commonscs.classes}" />
 			</jaxb-schemagen.classpath>
 		</jaxb-schemagen>
 
