@@ -6,6 +6,7 @@ import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
+import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
 import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.service.IServerStatusService.ServerStatus;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
@@ -29,6 +30,7 @@ import java.util.Objects;
  * @author Dirk Maucher
  * @author Eduard Tudenhoefner
  * @author Matthias Huber
+ * @author Alfred Krauss
  * 
  */
 public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrRepositoryProvider {
@@ -185,6 +187,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * The {@link IGlobalDataAccessService}.
 	 */
 	private IGlobalDataAccessService globalDataAccessService;
+	
+	/**
+	 * The {@link IJmxDataAccessService}.
+	 */
+	private IJmxDataAccessService jmxDataAccessService;
 
 	/**
 	 * The storage service.
@@ -241,6 +248,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		globalDataAccessService = cmrServiceProvider.getGlobalDataAccessService(this);
 		storageService = cmrServiceProvider.getStorageService(this);
 		configurationInterfaceService = cmrServiceProvider.getConfigurationInterfaceService(this);
+		jmxDataAccessService = cmrServiceProvider.getJmxDataAccessService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, this);
 	}
@@ -322,6 +330,14 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 */
 	public IConfigurationInterfaceService getConfigurationInterfaceService() {
 		return configurationInterfaceService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IJmxDataAccessService getJmxDataAccessService() {
+		return jmxDataAccessService;
 	}
 
 	/**
@@ -549,5 +565,4 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	public String toString() {
 		return "Repository definition :: Name=" + name + " IP=" + ip + " Port=" + port;
 	}
-
 }

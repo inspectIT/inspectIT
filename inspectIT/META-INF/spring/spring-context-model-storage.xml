@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util" 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd"
 	default-autowire="byType">
 
 	<!-- holds definitions for storage related beans -->
-		 
 	<bean id="storageIndexQuery" class="info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery" scope="prototype" lazy-init="true" />
 
 	<bean id="storageIndexQueryProvider" class="info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider">
@@ -63,6 +62,9 @@
 	</bean>
 
 	<bean id="storageGlobalDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageGlobalDataAccessService" scope="prototype" lazy-init="true" />
+
+	<bean id="storageJmxDataAccessService" class="info.novatec.inspectit.rcp.repository.service.storage.StorageJmxDataAccessService" scope="prototype" lazy-init="true" />
+
 	<!-- add the provider here directly -->
 
 	<bean id="storageServiceProvider" class="info.novatec.inspectit.rcp.repository.service.storage.StorageServiceProvider">
@@ -72,6 +74,7 @@
 		<lookup-method name="createStorageExceptionDataAccessService" bean="storageExceptionDataAccessService" />
 		<lookup-method name="createStorageInvocationDataAccessService" bean="storageInvocationDataAccessService" />
 		<lookup-method name="createStorageGlobalDataAccessService" bean="storageGlobalDataAccessService" />
+		<lookup-method name="createStorageJmxDataAccessService" bean="storageJmxDataAccessService" />
 	</bean>
 
 	<bean id="IOExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
@@ -101,5 +104,4 @@
 	<bean id="inputStreamProvider" class="info.novatec.inspectit.storage.nio.stream.InputStreamProvider">
 		<lookup-method name="createExtendedByteBufferInputStream" bean="extendedByteBufferInputStream" />
 	</bean>
-	
 </beans>

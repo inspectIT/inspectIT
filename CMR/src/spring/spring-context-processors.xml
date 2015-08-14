@@ -18,6 +18,7 @@
 					<value>info.novatec.inspectit.communication.data.RuntimeInformationData</value>
 					<value>info.novatec.inspectit.communication.data.ThreadInformationData</value>
 					<value>info.novatec.inspectit.communication.data.SystemInformationData</value>
+					<value>info.novatec.inspectit.communication.data.JmxSensorValueData</value>
 				</util:list>
 		</constructor-arg>
 	</bean>
