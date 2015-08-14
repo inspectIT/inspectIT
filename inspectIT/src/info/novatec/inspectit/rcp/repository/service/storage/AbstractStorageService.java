@@ -64,7 +64,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	 * 
 	 * @return Returns the indexing tree that can be used for querying.
 	 */
-	protected abstract IStorageTreeComponent<E> getIndexingTree();
+	protected abstract IStorageTreeComponent<? extends DefaultData> getIndexingTree();
 
 	/**
 	 * Executes the query on the indexing tree.

@@ -114,4 +114,42 @@ public interface IRegistrationService extends Remote {
 	 */
 	long registerPlatformSensorTypeIdent(long platformIdent, String fullyQualifiedClassName);
 
+	/**
+	 * Every jmx sensor type has to be registered by calling this method.
+	 * 
+	 * @param platformIdent
+	 *            The unique identifier of the platform.
+	 * @param sensorName
+	 *            Usergiven Name of the Sensor.
+	 * @return Returns the unique jmx sensor sensor type identifier.
+	 */
+	long registerJmxSensorTypeIdent(long platformIdent, String sensorName);
+
+	/**
+	 * 
+	 * @param platformIdent
+	 *            The unique identifier of the platform.
+	 * @param mBeanObjectName
+	 *            The Name of the monitored MBean.
+	 * @param mBeanAttributeName
+	 *            The Name of the specific attribute of the MBean which is monitored.
+	 * @param mBeanAttributeDescription
+	 *            The Description of the Attribute according to the information provided in the
+	 *            MBeanAttributeInfo.
+	 * @param mBeanAttributeType
+	 *            The Type of the Attribute according to the information provided in the
+	 *            MBeanAttributeInfo.
+	 * @param isIs
+	 *            True if a is-getter is available in the Attribute according to the information
+	 *            provided in the MBeanAttributeInfo.
+	 * @param isReadable
+	 *            True if the Attribute is readable according to the information provided in the
+	 *            MBeanAttributeInfo.
+	 * @param isWritable
+	 *            True if the Attribute is writeable according to the information provided in the
+	 *            MBeanAttributeInfo.
+	 * @return Returns the unique jmx definition data identifier.
+	 */
+	long registerJmxSensorDefinitionData(long platformIdent, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs,// NOCHK
+			boolean isReadable, boolean isWritable);
 }

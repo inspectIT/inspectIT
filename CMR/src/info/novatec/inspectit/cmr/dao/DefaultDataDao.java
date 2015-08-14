@@ -2,6 +2,7 @@ package info.novatec.inspectit.cmr.dao;
 
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 
 import java.util.Collection;
 import java.util.Date;
@@ -102,6 +103,27 @@ public interface DefaultDataDao {
 	 * @return List of {@link HttpTimerData}.
 	 */
 	List<HttpTimerData> getChartingHttpTimerDataFromDateToDate(Collection<HttpTimerData> templates, Date fromDate, Date toDate, boolean retrieveByTag);
+
+
+	/**
+	 * Returns the {@link JmxSensorValueData} list of a given time frame that can be used as partial input for the jmx
+	 * sensor.
+	 *
+	 * Impossible to use a group see {@link}
+	 * https://hibernate.atlassian.net/browse/HHH-2893 ProjectionList projectionList =
+	 * Projections
+	 * .projectionList().add(Projections.max("id")).add(Projections.groupProperty(
+	 * "jmxSensorDefinitionDataIdentId"));
+	 * 
+	 * @param jmxSensorValueData
+	 *            The data.
+	 * @param fromDate
+	 *            From date.
+	 * @param toDate
+	 *            To date
+	 * @return List of {@link JmxSensorValueData}.
+	 */
+	List<JmxSensorValueData> getJmxDataOverview(JmxSensorValueData jmxSensorValueData, Date fromDate, Date toDate);
 
 	/**
 	 * Deletes all default data objects in the database with the given platform ID.

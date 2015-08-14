@@ -175,4 +175,29 @@ public abstract class StorageServiceProvider {
 		storageGlobalDataAccessService.setAgents(platformIdents);
 		return storageGlobalDataAccessService;
 	}
+
+	/**
+	 * @return Spring created {@link StorageJmxDataAccessService}.
+	 */
+	protected abstract StorageJmxDataAccessService createStorageJmxDataAccessService();
+
+	/**
+	 * Properly initialized {@link StorageJmxDataAccessService}.
+	 * 
+	 * @param storageRepositoryDefinition
+	 *            {@link StorageRepositoryDefinition}.
+	 * @param localStorageData
+	 *            {@link LocalStorageData}.
+	 * @param storageTreeComponent
+	 *            Indexing tree.
+	 * @return Properly initialized {@link StorageJmxDataAccessService}.
+	 */
+	public StorageJmxDataAccessService createStorageJmxDataAccessService(StorageRepositoryDefinition storageRepositoryDefinition, LocalStorageData localStorageData,
+			IStorageTreeComponent<? extends DefaultData> storageTreeComponent) {
+		StorageJmxDataAccessService storageJmxDataAccessService = createStorageJmxDataAccessService();
+		storageJmxDataAccessService.setStorageRepositoryDefinition(storageRepositoryDefinition);
+		storageJmxDataAccessService.setLocalStorageData(localStorageData);
+		storageJmxDataAccessService.setIndexingTree((IStorageTreeComponent<? extends DefaultData>) storageTreeComponent);
+		return storageJmxDataAccessService;
+	}
 }

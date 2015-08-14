@@ -1,5 +1,7 @@
 package info.novatec.inspectit.storage.serializer.impl;
 
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
+import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
 import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
@@ -29,6 +31,7 @@ import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationAwareData.MutableInt;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.MemoryInformationData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.ParameterContentType;
@@ -294,6 +297,11 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(BusinessException.class, new FieldSerializer<BusinessException>(kryo, BusinessException.class));
 		kryo.register(TechnicalException.class, new FieldSerializer<TechnicalException>(kryo, TechnicalException.class));
 		kryo.register(RemoteException.class, new FieldSerializer<RemoteException>(kryo, RemoteException.class));
+	
+		// added with INSPECTIT-1078
+		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));
+		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager));
+		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager));
 		kryo.register(StorageErrorCodeEnum.class, new EnumSerializer(StorageErrorCodeEnum.class));
 		kryo.register(AgentManagementErrorCodeEnum.class, new EnumSerializer(AgentManagementErrorCodeEnum.class));
 		kryo.register(InvocationTargetException.class, new FieldSerializer<InvocationTargetException>(kryo, InvocationTargetException.class) {
