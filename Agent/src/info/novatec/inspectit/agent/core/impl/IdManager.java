@@ -2,6 +2,8 @@ package info.novatec.inspectit.agent.core.impl;
 
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.config.impl.AbstractSensorTypeConfig;
+import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
+import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
@@ -73,6 +75,11 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	private Map<Long, Long> sensorTypeIdMap = new HashMap<Long, Long>();
 
 	/**
+	 * The mapping between the local and remote jmxDefinitionData ids.
+	 */
+	private Map<Long, Long> jmxDefinitionDataIdMap = new HashMap<Long, Long>();
+
+	/**
 	 * The {@link Thread} used to register the outstanding methods, sensor types etc.
 	 */
 	private volatile RegistrationThread registrationThread;
@@ -81,6 +88,11 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	 * The methods to register at the server.
 	 */
 	private LinkedList<RegisteredSensorConfig> methodsToRegister = new LinkedList<RegisteredSensorConfig>(); // NOPMD
+
+	/**
+	 * The jmx definition data to register at the server.
+	 */
+	private LinkedList<JmxSensorConfig> jmxDefinitionDataIdentToRegister = new LinkedList<JmxSensorConfig>(); // NOPMD
 
 	/**
 	 * The sensor types to register at the server.
@@ -139,6 +151,12 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		for (PlatformSensorTypeConfig config : configurationStorage.getPlatformSensorTypes()) {
 			this.registerPlatformSensorType(config);
 		}
+
+		// register all jmx sensor types saved in the configuration storage
+		for (JmxSensorTypeConfig config : configurationStorage.getJmxSensorTypes()) {
+			this.registerJmxSensorType(config);
+		}
+
 	}
 
 	/**
@@ -242,6 +260,21 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 			throw new IdNotAvailableException("Sensor Type ID '" + sensorTypeId + "' is not mapped");
 		} else {
 			Long registeredSensorTypeIdentifier = sensorTypeIdMap.get(sensorTypeIdentifier);
+			return registeredSensorTypeIdentifier.longValue();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getRegisteredmBeanId(long mBeanId) throws IdNotAvailableException {
+		// same procedure here as in the #getRegisteredMethodId(...) method.
+		Long mBeanIdentifier = Long.valueOf(mBeanId);
+
+		if (!sensorTypeIdMap.containsKey(mBeanIdentifier)) {
+			throw new IdNotAvailableException("mBean '" + mBeanId + "' is not mapped");
+		} else {
+			Long registeredSensorTypeIdentifier = (Long) jmxDefinitionDataIdMap.get(mBeanIdentifier);
 			return registeredSensorTypeIdentifier.longValue();
 		}
 	}
@@ -388,6 +421,76 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public long registerJmxSensorConfig(JmxSensorConfig config) {
+		long id;
+		synchronized (jmxDefinitionDataIdentToRegister) {
+			id = jmxDefinitionDataIdMap.size() + jmxDefinitionDataIdentToRegister.size();
+		}
+		config.setId(id);
+		if (!serverErrorOccured) {
+			try {
+				if (!isPlatformRegistered()) {
+					getPlatformId();
+				}
+
+				registrationThread.registerJmxDefinitionData(config);
+			} catch (Throwable throwable) { // NOPMD
+				synchronized (jmxDefinitionDataIdentToRegister) {
+					jmxDefinitionDataIdentToRegister.addLast(config);
+
+					// start the thread to retry the registration
+					synchronized (registrationThread) {
+						registrationThread.notifyAll();
+					}
+				}
+			}
+		} else {
+			synchronized (jmxDefinitionDataIdentToRegister) {
+				jmxDefinitionDataIdentToRegister.addLast(config);
+			}
+		}
+
+		return id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long registerJmxSensorType(JmxSensorTypeConfig jmxSensorTypeConfig) {
+		// same procedure here as in #registerMethod(...)
+		long id;
+		synchronized (sensorTypesToRegister) {
+			id = sensorTypeIdMap.size() + sensorTypesToRegister.size();
+		}
+		jmxSensorTypeConfig.setId(id);
+
+		if (!serverErrorOccured) {
+			try {
+				if (!isPlatformRegistered()) {
+					getPlatformId();
+				}
+
+				registrationThread.registerSensorType(jmxSensorTypeConfig);
+			} catch (Throwable throwable) { // NOPMD
+				synchronized (sensorTypesToRegister) {
+					sensorTypesToRegister.addLast(jmxSensorTypeConfig);
+					// start the thread to retry the registration
+					synchronized (registrationThread) {
+						registrationThread.notifyAll();
+					}
+				}
+			}
+		} else {
+			synchronized (sensorTypesToRegister) {
+				sensorTypesToRegister.addLast(jmxSensorTypeConfig);
+			}
+		}
+		return id;
+	}
+
+	/**
 	 * Private inner class used to store the mapping between the sensor type IDs and the method IDs.
 	 * Only used if they are not yet registered.
 	 * 
@@ -494,6 +597,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 				}
 
 				registerMethods();
+				registerJmxDefinitionDataIdents();
 				registerSensorTypes();
 				registerSensorTypeToMethodMapping();
 
@@ -640,6 +744,8 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 			long registeredId;
 			if (astc instanceof MethodSensorTypeConfig) {
 				registeredId = connection.registerMethodSensorType(platformId, (MethodSensorTypeConfig) astc);
+			} else if (astc instanceof JmxSensorTypeConfig) {
+				registeredId = connection.registerJmxSensorType(platformId, (JmxSensorTypeConfig) astc);
 			} else if (astc instanceof PlatformSensorTypeConfig) {
 				registeredId = connection.registerPlatformSensorType(platformId, (PlatformSensorTypeConfig) astc);
 			} else {
@@ -695,6 +801,48 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 				if (log.isDebugEnabled()) {
 					log.debug("Method " + rsc.toString() + " registered. ID (local/global): " + localId + "/" + registeredId);
+				}
+			}
+		}
+
+		/**
+		 * Registers all jmxDefinitionData on the server.
+		 * 
+		 * @throws ServerUnavailableException
+		 *             Thrown if a server error occurred.
+		 * @throws RegistrationException
+		 *             Thrown if something happened while trying to register the sensor types on the
+		 *             server.
+		 */
+		private void registerJmxDefinitionDataIdents() throws ServerUnavailableException, RegistrationException {
+			while (!jmxDefinitionDataIdentToRegister.isEmpty()) {
+				JmxSensorConfig jsc = (JmxSensorConfig) jmxDefinitionDataIdentToRegister.getFirst();
+				this.registerJmxDefinitionData(jsc);
+				synchronized (jmxDefinitionDataIdentToRegister) {
+					jmxDefinitionDataIdentToRegister.removeFirst();
+				}
+			}
+		}
+
+		/**
+		 * Registers a JmxDefinitionData on the server and maps the local and global id.
+		 * 
+		 * @param config
+		 *            The {@link JmxSensorConfig} to be registered at the server.
+		 * @throws ServerUnavailableException
+		 *             Thrown if a server error occurred.
+		 * @throws RegistrationException
+		 *             Thrown if something happened while trying to register the sensor types on the
+		 *             server.
+		 */
+		private void registerJmxDefinitionData(JmxSensorConfig config) throws ServerUnavailableException, RegistrationException {
+			long registeredId = connection.registerJmxDefinitionData(platformId, config);
+			synchronized (jmxDefinitionDataIdentToRegister) {
+				Long localId = Long.valueOf(jmxDefinitionDataIdMap.size());
+				jmxDefinitionDataIdMap.put(localId, Long.valueOf(registeredId));
+				
+				if (log.isDebugEnabled()) {
+					log.debug("Method " + config.toString() + " registered. ID (local/global): " + localId + "/" + registeredId);
 				}
 			}
 		}

@@ -12,6 +12,7 @@ import info.novatec.inspectit.rcp.editor.table.input.ExceptionSensorInvocInputCo
 import info.novatec.inspectit.rcp.editor.table.input.GroupedExceptionOverviewInputController;
 import info.novatec.inspectit.rcp.editor.table.input.HttpTimerDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.InvocOverviewInputController;
+import info.novatec.inspectit.rcp.editor.table.input.JmxSensorDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.MethodInvocInputController;
 import info.novatec.inspectit.rcp.editor.table.input.MultiInvocDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.NavigationInvocOverviewInputController;
@@ -22,6 +23,7 @@ import info.novatec.inspectit.rcp.editor.table.input.UngroupedExceptionOverviewI
 import info.novatec.inspectit.rcp.editor.text.TextSubView;
 import info.novatec.inspectit.rcp.editor.text.input.ClassesInputController;
 import info.novatec.inspectit.rcp.editor.text.input.CpuInputController;
+import info.novatec.inspectit.rcp.editor.text.input.JmxInfoTextInputController;
 import info.novatec.inspectit.rcp.editor.text.input.MemoryInputController;
 import info.novatec.inspectit.rcp.editor.text.input.SqlInvocSummaryTextInputController;
 import info.novatec.inspectit.rcp.editor.text.input.SqlStatementTextInputController;
@@ -197,6 +199,21 @@ public final class SubViewFactory {
 			return taggedHttpSashSubView;
 		case CHARTING_HTTP_TIMER_SENSOR:
 			return new GraphSubView(SensorTypeEnum.CHARTING_HTTP_TIMER_SENSOR);
+		case JMX_SENSOR_DATA:
+			SashCompositeSubView jmxSashSubView = new SashCompositeSubView();
+			ISubView jmxTableSubView = new TableSubView(new JmxSensorDataInputController());
+			jmxSashSubView.addSubView(jmxTableSubView);
+			return jmxSashSubView;
+		case CHARTING_JMX_SENSOR_DATA:
+			GraphSubView jmxGraphSubView = new GraphSubView(SensorTypeEnum.CHARTING_JMX_SENSOR_DATA);
+			
+			JmxInfoTextInputController jmxInputController = new JmxInfoTextInputController();
+			TextSubView jmxTextSubView = new TextSubView(jmxInputController);
+
+			SashCompositeSubView jmxChartSashSubView = new SashCompositeSubView();
+			jmxChartSashSubView.addSubView(jmxGraphSubView, 3);
+			jmxChartSashSubView.addSubView(jmxTextSubView, 2);
+			return jmxChartSashSubView;
 		default:
 			throw new IllegalArgumentException("Could not create sub-view. Not supported: " + sensorTypeEnum.toString());
 		}
