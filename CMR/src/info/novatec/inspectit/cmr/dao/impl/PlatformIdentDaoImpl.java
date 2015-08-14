@@ -233,7 +233,7 @@ public class PlatformIdentDaoImpl extends HibernateDaoSupport implements Platfor
 	@SuppressWarnings("unchecked")
 	private List<PlatformIdent> loadIdentsFromDB(Collection<Long> excludeIdents, Collection<Long> includeIdents) {
 		StringBuilder hsql = new StringBuilder(
-				"select distinct platformIdent from PlatformIdent as platformIdent left join fetch platformIdent.methodIdents methodIdent left join fetch platformIdent.sensorTypeIdents left join fetch methodIdent.methodIdentToSensorTypes");
+				"select distinct platformIdent from PlatformIdent as platformIdent left join fetch platformIdent.methodIdents methodIdent left join fetch platformIdent.jmxDefinitionDataIdents jmxDefinitionDataIdents left join fetch platformIdent.sensorTypeIdents left join fetch methodIdent.methodIdentToSensorTypes");
 		if (CollectionUtils.isNotEmpty(includeIdents) && CollectionUtils.isNotEmpty(excludeIdents)) {
 			hsql.append(" where platformIdent.id in :includeIdents and platformIdent.id not in :excludeIdents");
 		} else if (CollectionUtils.isNotEmpty(includeIdents)) {

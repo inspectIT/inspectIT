@@ -9,10 +9,12 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -93,9 +95,31 @@ public abstract class AbstractTextInputController implements TextInputController
 	 *            The text which will be shown.
 	 */
 	protected void addItemToSection(FormToolkit toolkit, String sectionTitle, String text) {
+		addItemToSection(toolkit, sectionTitle, text, null);
+	}
+
+	/**
+	 * Adds an item to the specified section.
+	 * 
+	 * @param toolkit
+	 *            The form toolkit.
+	 * @param sectionTitle
+	 *            The section title.
+	 * @param text
+	 *            The text which will be shown.
+	 * @param image
+	 *            The image which will be shown.
+	 */
+	protected void addItemToSection(FormToolkit toolkit, String sectionTitle, String text, Image image) {
 		if (sections.containsKey(sectionTitle)) {
-			Label label = toolkit.createLabel(sections.get(sectionTitle), text);
-			label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+			FormText formText = toolkit.createFormText(sections.get(sectionTitle), false);
+			if (image != null) {
+				formText.setText("<form><p><img href=\"img\"/> " + text + "</p></form>", true, false);
+				formText.setImage("img", image);
+			} else {
+				formText.setText("<form><p>" + text + "</p></form>", true, false);
+			}
+			formText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		}
 	}
 
