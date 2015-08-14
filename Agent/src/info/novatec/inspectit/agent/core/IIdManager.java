@@ -1,5 +1,7 @@
 package info.novatec.inspectit.agent.core;
 
+import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
+import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
@@ -73,6 +75,18 @@ public interface IIdManager {
 	long getRegisteredSensorTypeId(long sensorTypeId) throws IdNotAvailableException;
 
 	/**
+	 * Returns the ID of the server for the local MBean. Needed for the data objects so they can be
+	 * persisted properly.
+	 * 
+	 * @param mBeanId
+	 *            The mBeanId used locally.
+	 * @return The ID used at the server.
+	 * @throws IdNotAvailableException
+	 *             This exception is thrown if no ID can be retrieved from this manager.
+	 */
+	long getRegisteredmBeanId(long mBeanId) throws IdNotAvailableException;
+
+	/**
 	 * Registers a method and returns a unique id for it.
 	 * 
 	 * @param registeredSensorConfig
@@ -101,6 +115,26 @@ public interface IIdManager {
 	 *            The id of the method.
 	 */
 	void addSensorTypeToMethod(long sensorTypeId, long methodId);
+
+	/**
+	 * Registers a jmx sensor type and returns an unique id for it.
+	 * 
+	 * @param jmxSensorTypeConfig
+	 *            The jmx sensor type configuration which contains all the needed information for
+	 *            registering.
+	 * @return The unique jmx sensor type id.
+	 */
+	long registerJmxSensorType(JmxSensorTypeConfig jmxSensorTypeConfig);
+
+	/**
+	 * Registers a {@link JmxSensorConfig} and returns an unique id for it.
+	 * 
+	 * @param config
+	 *            The jmx sensor configuration which contains all the needed information for
+	 *            registering.
+	 * @return The unique jmx sensor config id
+	 */
+	long registerJmxSensorConfig(JmxSensorConfig config);
 
 	/**
 	 * Registers a platform sensor type and returns a unique id for it.

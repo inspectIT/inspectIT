@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
  * additional java libraries and every statement is in one line.
  * 
  * @author Patrice Bouillet
+ * @author Alfred Krauss
  * 
  */
 @Component("configurationReader")
@@ -86,10 +87,18 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 	private static final String CONFIG_EXCEPTION_SENSOR = "exception-sensor";
 	/** Keyword to define the exception sensor type. */
 	private static final String CONFIG_EXCEPTION_SENSOR_TYPE = "exception-sensor-type";
+	/** Keyword to configure the jmx sensor. */
+	private static final String CONFIG_JMX_SENSOR = "jmx-sensor";
+	/** Keyword to define the jmx sensor type. */
+	private static final String CONFIG_JMX_SENSOR_TYPE = "jmx-sensor-type";
 	/** Keyword to include additional configuration files. */
 	private static final String CONFIG_INCLUDE_FILE = "$include";
 	/** Keyword to exclude certain classes from instrumentation. */
 	private static final String CONFIG_EXCLUDE_CLASS = "exclude-class";
+	/** Keyword to detect the Name of a MBean. */
+	private static final String MBEAN_NAME_IDENTIFIER = "mbeanname=";
+	/** Keyword to detect the Attributename of attribute of a MBean. */
+	private static final String MBEAN_ATTRIBUTENAME_IDENTIFIER = "attributename=";
 
 	/**
 	 * Regular expression pattern to find the signatures of the method definitions in the
@@ -225,6 +234,18 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 					continue;
 				}
 
+				// check for exception sensor type line
+				if (discriminator.equalsIgnoreCase(CONFIG_JMX_SENSOR_TYPE)) {
+					processJmxSensorTypeLine(tokenizer);
+					continue;
+				}
+
+				// check for exception sensor line
+				if (discriminator.equalsIgnoreCase(CONFIG_JMX_SENSOR)) {
+					processJmxSensorLine(tokenizer);
+					continue;
+				}
+
 				// check for a sensor
 				if (discriminator.equalsIgnoreCase(CONFIG_SENSOR)) {
 					processSensorLine(tokenizer);
@@ -245,6 +266,65 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 		} catch (Throwable throwable) { // NOPMD
 			log.error("Error reading config on line : " + line);
 			throw new ParserException("Error reading config on line : " + line, throwable);
+		}
+	}
+
+	/**
+	 * Process the jmx sensor type line.
+	 * 
+	 * @param tokenizer
+	 *            {@link StringTokenizer} holding rest of the line.
+	 * @throws ParserException
+	 *             If Exception Sensor Type can not be added to the configuration storage.
+	 */
+	private void processJmxSensorTypeLine(StringTokenizer tokenizer) throws ParserException {
+		String sensorName = tokenizer.nextToken();
+		String sensorTypeClass = tokenizer.nextToken();
+		try {
+			configurationStorage.addJmxSensorType(sensorTypeClass, sensorName);
+		} catch (StorageException e) {
+			throw new ParserException("Could not add the jmx sensor type to the storage", e);
+		}
+	}
+
+	/**
+	 * Processes an jmx sensor line.
+	 * 
+	 * @param tokenizer
+	 *            The tokenizer which contains the strings to create a sensor type.
+	 * @throws ParserException
+	 *             Thrown if there was an exception caught by parsing the config file.
+	 */
+	private void processJmxSensorLine(StringTokenizer tokenizer) throws ParserException {
+		// Adding values to unregisteredJmxSensorConfigs for further processing with a single JMX
+		// sensor
+		String jmxSensorTypeName = tokenizer.nextToken();
+		String mBeanName = "";
+		String attributeName = "";
+		boolean marker = true;
+
+		// Due to the fact that the name of a MBean can contain white spaces the remaining token
+		// have to be checked as well
+		while (tokenizer.hasMoreTokens()) {
+			String token = tokenizer.nextToken();
+			if (token.contains(MBEAN_NAME_IDENTIFIER)) {
+				mBeanName = token.substring(MBEAN_NAME_IDENTIFIER.length());
+			} else if (token.contains(MBEAN_ATTRIBUTENAME_IDENTIFIER)) {
+				marker = false;
+				attributeName = token.substring(MBEAN_ATTRIBUTENAME_IDENTIFIER.length());
+			} else {
+				if (marker) {
+					mBeanName += " " + token;
+				} else {
+					attributeName += " " + token;
+				}
+			}
+		}
+
+		try {
+			configurationStorage.addUnregisteredJmxConfig(jmxSensorTypeName, mBeanName, attributeName);
+		} catch (StorageException e) {
+			throw new ParserException("Could not add the jmx sensor type to the storage", e);
 		}
 	}
 

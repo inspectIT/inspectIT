@@ -1,10 +1,14 @@
 package info.novatec.inspectit.cmr.service;
 
+import info.novatec.inspectit.cmr.dao.JmxDefinitionDataIdentDao;
+import info.novatec.inspectit.cmr.dao.JmxSensorTypeIdentDao;
 import info.novatec.inspectit.cmr.dao.MethodIdentDao;
 import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
 import info.novatec.inspectit.cmr.dao.MethodSensorTypeIdentDao;
 import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
 import info.novatec.inspectit.cmr.dao.PlatformSensorTypeIdentDao;
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
+import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
 import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
@@ -61,6 +65,12 @@ public class RegistrationService implements IRegistrationService {
 	PlatformIdentDao platformIdentDao;
 
 	/**
+	 * The jmx definition data ident DAO.
+	 */
+	@Autowired
+	JmxDefinitionDataIdentDao jmxDefinitionDataIdentDao;
+
+	/**
 	 * The method ident DAO.
 	 */
 	@Autowired
@@ -77,6 +87,12 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Autowired
 	PlatformSensorTypeIdentDao platformSensorTypeIdentDao;
+
+	/**
+	 * The jmx sensor type ident DAO.
+	 */
+	@Autowired
+	JmxSensorTypeIdentDao jmxSensorTypeIdentDao;
 
 	/**
 	 * The method ident to sensor type DAO.
@@ -119,7 +135,8 @@ public class RegistrationService implements IRegistrationService {
 		} else if (platformIdentResults.size() > 1) {
 			// this cannot occur anymore, if it occurs, then there is something totally wrong!
 			log.error("More than one platform ident has been retrieved! Please send your Database to the NovaTec inspectIT support!");
-			throw new BusinessException("Register the agent with name " + agentName + " and following network interfaces " + definedIPs + ".", AgentManagementErrorCodeEnum.MORE_THAN_ONE_AGENT_REGISTERED);
+			throw new BusinessException("Register the agent with name " + agentName + " and following network interfaces " + definedIPs + ".",
+					AgentManagementErrorCodeEnum.MORE_THAN_ONE_AGENT_REGISTERED);
 		}
 
 		// always update the time stamp and ips, no matter if this is an old or new record.
@@ -285,6 +302,62 @@ public class RegistrationService implements IRegistrationService {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Transactional
+	@MethodLog
+	public long registerJmxSensorTypeIdent(long platformId, String fullyQualifiedClassName) {
+		JmxSensorTypeIdent jmxSensorTypeIdent = new JmxSensorTypeIdent();
+		jmxSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
+
+		List<JmxSensorTypeIdent> jmxSensorTypeIdents = jmxSensorTypeIdentDao.findByExample(platformId, jmxSensorTypeIdent);
+		if (1 == jmxSensorTypeIdents.size()) {
+			jmxSensorTypeIdent = jmxSensorTypeIdents.get(0);
+		} else {
+			PlatformIdent platformIdent = platformIdentDao.load(platformId);
+			jmxSensorTypeIdent.setPlatformIdent(platformIdent);
+
+			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
+			sensorTypeIdents.add(jmxSensorTypeIdent);
+
+			jmxSensorTypeIdentDao.saveOrUpdate(jmxSensorTypeIdent);
+			platformIdentDao.saveOrUpdate(platformIdent);
+		}
+
+		return jmxSensorTypeIdent.getId();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Transactional
+	@MethodLog
+	public long registerJmxSensorDefinitionDataIdent(long platformId, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs, // NOCHK
+			boolean isReadable, boolean isWritable) {
+		JmxDefinitionDataIdent jmxDefinitionDataIdent = new JmxDefinitionDataIdent();
+		jmxDefinitionDataIdent.setmBeanObjectName(mBeanObjectName);
+		jmxDefinitionDataIdent.setmBeanAttributeName(mBeanAttributeName);
+		jmxDefinitionDataIdent.setmBeanAttributeDescription(mBeanAttributeDescription);
+		jmxDefinitionDataIdent.setmBeanAttributeType(mBeanAttributeType);
+		jmxDefinitionDataIdent.setmBeanAttributeIsIs(isIs);
+		jmxDefinitionDataIdent.setmBeanAttributeIsReadable(isReadable);
+		jmxDefinitionDataIdent.setmBeanAttributeIsWritable(isWritable);
+
+		List<JmxDefinitionDataIdent> jmxDefinitionDataIdents = jmxDefinitionDataIdentDao.findForPlatformIdent(platformId, jmxDefinitionDataIdent);
+		if (1 == jmxDefinitionDataIdents.size()) {
+			jmxDefinitionDataIdent = jmxDefinitionDataIdents.get(0);
+		} else {
+			PlatformIdent platformIdent = platformIdentDao.load(Long.valueOf(platformId));
+			jmxDefinitionDataIdent.setPlatformIdent(platformIdent);
+		}
+
+		jmxDefinitionDataIdent.setTimeStamp(new Timestamp(GregorianCalendar.getInstance().getTimeInMillis()));
+
+		jmxDefinitionDataIdentDao.saveOrUpdate(jmxDefinitionDataIdent);
+		return jmxDefinitionDataIdent.getId();
+	}
+
+	/**
 	 * Prints out the given list of defined IP addresses. The example is:
 	 * <p>
 	 * |- IPv4: 192.168.1.6<br>
@@ -320,5 +393,4 @@ public class RegistrationService implements IRegistrationService {
 			log.info("|-Registration Service active...");
 		}
 	}
-
 }

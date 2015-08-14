@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.formatter;
 
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
@@ -53,6 +54,7 @@ import org.eclipse.swt.graphics.TextStyle;
  * @author Patrice Bouillet
  * @author Stefan Siegl
  * @author Ivan Senic
+ * @author Marius Oehler
  */
 public final class TextFormatter {
 
@@ -137,7 +139,7 @@ public final class TextFormatter {
 	}
 
 	/**
-	 * Returns a String out of the {@link MethodIdent} objects which looks like: 'name'('parameter')
+	 * Returns a String out of the {@link MethodIdent} object which looks like: 'name'('parameter')
 	 * - 'package'.'class'.
 	 * 
 	 * @param methodIdent
@@ -146,6 +148,18 @@ public final class TextFormatter {
 	 */
 	public static String getMethodString(MethodIdent methodIdent) {
 		return getStyledMethodString(methodIdent).getString();
+	}
+
+	/**
+	 * Returns a {@link String} out of the {@link JmxDefinitionDataIdent} object which looks like:
+	 * 'attributeName' - 'packagename':'typeName'.
+	 * 
+	 * @param jmxIdent
+	 *            the object which contains the information to create the jmx string.
+	 * @return the created method string
+	 */
+	public static String getJmxDefinitionString(JmxDefinitionDataIdent jmxIdent) {
+		return String.format("%1$s - %2$s:%3$s", jmxIdent.getmBeanAttributeName(), jmxIdent.getDerivedDomainName(), jmxIdent.getDerivedTypeName());
 	}
 
 	/**

@@ -335,4 +335,16 @@ public final class NumberFormatter {
 
 		return stringBuilder.toString();
 	}
+
+	/**
+	 * Converts a double into a percentage string. For example: input = 0.1525 / output = 15.25 %
+	 * 
+	 * @param percentage
+	 *            the percentage value
+	 * @return The formatted string
+	 */
+	public static String formatDoubleToPercent(double percentage) {
+		return doubleFormat.format(percentage * 100D) + " %";
+	}
+
 }
