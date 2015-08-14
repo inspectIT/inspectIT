@@ -39,6 +39,11 @@ public class PlatformIdent implements Serializable {
 	 * The one-to-many association to the {@link MethodIdent} objects.
 	 */
 	private Set<MethodIdent> methodIdents = new HashSet<MethodIdent>(0);
+	
+	/**
+	 * The one-to-many association to the {@link JmxDefinitionDataIdent} objects.
+	 */
+	private Set<JmxDefinitionDataIdent> jmxDefinitionDataIdents = new HashSet<JmxDefinitionDataIdent>(0);
 
 	/**
 	 * The list of ip's of the target system (including v4 and v6).
@@ -187,10 +192,19 @@ public class PlatformIdent implements Serializable {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	
+	public Set<JmxDefinitionDataIdent> getJmxDefinitionDataIdents() {
+		return jmxDefinitionDataIdents;
+	}
+
+	public void setJmxDefinitionDataIdents(Set<JmxDefinitionDataIdent> jmxDefinitionDataIdents) {
+		this.jmxDefinitionDataIdents = jmxDefinitionDataIdents;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -205,6 +219,7 @@ public class PlatformIdent implements Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -253,4 +268,6 @@ public class PlatformIdent implements Serializable {
 		}
 		return true;
 	}
+
+	
 }

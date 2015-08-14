@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
  * 
  * @author Patrice Bouillet
  * @author Eduard Tudenhoefner
+ * @author Alfred Krauss
  * 
  */
 @Component
@@ -104,9 +105,24 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	private List<PlatformSensorTypeConfig> platformSensorTypes = new ArrayList<PlatformSensorTypeConfig>(PLATFORM_LIST_SIZE);
 
 	/**
+	 * The default size of the jmx sensor type list.
+	 */
+	private static final int JMX_LIST_SIZE = 1;
+
+	/**
+	 * The list of jmx sensor types. Contains objects of type {@link JmxSensorTypeConfig}.
+	 */
+	private List<JmxSensorTypeConfig> jmxSensorTypes = new ArrayList<JmxSensorTypeConfig>(JMX_LIST_SIZE);
+
+	/**
 	 * A list containing all the sensor definitions from the configuration.
 	 */
 	private List<UnregisteredSensorConfig> unregisteredSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
+
+	/**
+	 * A list containing all unregistered sensor definitions from the configuration.
+	 */
+	private List<UnregisteredJmxConfig> unregisteredJmxConfigs = new ArrayList<UnregisteredJmxConfig>();
 
 	/**
 	 * Indicates whether the exception sensor is activated or not.
@@ -562,6 +578,66 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		}
 
 		return Collections.unmodifiableList(exceptionSensorTypes);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addJmxSensorType(String sensorTypeClass, String sensorName) throws StorageException {
+		if (null == sensorTypeClass || "".equals(sensorTypeClass)) {
+			throw new StorageException("Jmx sensor type class name cannot be null or empty!");
+		}
+		JmxSensorTypeConfig sensorTypeConfig = new JmxSensorTypeConfig();
+		sensorTypeConfig.setName(sensorName);
+		sensorTypeConfig.setClassName(sensorTypeClass);
+
+		jmxSensorTypes.add(sensorTypeConfig);
+		
+		if (log.isDebugEnabled()) {
+			log.debug("Jmx sensor type added: " + sensorTypeClass + "Name: " + sensorName);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<JmxSensorTypeConfig> getJmxSensorTypes() {
+		return Collections.unmodifiableList(jmxSensorTypes);
+	}
+
+	/**
+	 * Returns the matching {@link JmxSensorTypeConfig} for the passed name.
+	 * 
+	 * @param jmxSensorTypeConfigname
+	 *            The name to look for.
+	 * @return The {@link JmxSensorTypeConfig} which name is equal to the passed sensor type name in
+	 *         the method parameter.
+	 * @throws StorageException
+	 *             Throws the storage exception if no method sensor type configuration can be found.
+	 */
+	public JmxSensorTypeConfig getJmxSensorTypeConfigForName(String jmxSensorTypeConfigname) throws StorageException {
+		for (JmxSensorTypeConfig jmxSensorTypeConfig : jmxSensorTypes) {
+			if (jmxSensorTypeConfig.getName().equals(jmxSensorTypeConfigname)) {
+				return jmxSensorTypeConfig;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addUnregisteredJmxConfig(String jmxSensorTypeName, String mBeanName, String attributeName) throws StorageException {
+		JmxSensorTypeConfig jstc = this.getJmxSensorTypeConfigForName(jmxSensorTypeName);
+		UnregisteredJmxConfig ujc = new UnregisteredJmxConfig(jstc, mBeanName, attributeName);
+		this.unregisteredJmxConfigs.add(ujc);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<UnregisteredJmxConfig> getUnregisteredJmxConfigs() {
+		return this.unregisteredJmxConfigs;
 	}
 
 	/**

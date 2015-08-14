@@ -5,11 +5,14 @@ import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
@@ -40,6 +43,7 @@ public class InspectITPreferenceInitializer extends AbstractPreferenceInitialize
 		PreferencesUtils.saveIntValue(PreferencesConstants.ITEMS_COUNT_TO_SHOW, 100, true);
 		PreferencesUtils.saveDoubleValue(PreferencesConstants.INVOCATION_FILTER_EXCLUSIVE_TIME, Double.NaN, true);
 		PreferencesUtils.saveDoubleValue(PreferencesConstants.INVOCATION_FILTER_TOTAL_TIME, Double.NaN, true);
+
 		Set<Class<?>> invocDataTypes = new HashSet<>();
 		invocDataTypes.add(InvocationSequenceData.class);
 		invocDataTypes.add(TimerData.class);
@@ -47,6 +51,11 @@ public class InspectITPreferenceInitializer extends AbstractPreferenceInitialize
 		invocDataTypes.add(SqlStatementData.class);
 		invocDataTypes.add(ExceptionSensorData.class);
 		PreferencesUtils.saveObject(PreferencesConstants.INVOCATION_FILTER_DATA_TYPES, invocDataTypes, true);
-	}
 
+		Map<String, PlotDataSolver> dataSolverBeanAssignmentMap = new HashMap<>();
+		dataSolverBeanAssignmentMap.put("java.lang.OperatingSystem:SystemCpuLoad", PlotDataSolver.PERCENTAGE);
+		dataSolverBeanAssignmentMap.put("java.lang.OperatingSystem:ProcessCpuLoad", PlotDataSolver.PERCENTAGE);
+		dataSolverBeanAssignmentMap.put("java.lang.OperatingSystem:FreePhysicalMemorySize", PlotDataSolver.MEMORY);
+		PreferencesUtils.saveObject(PreferencesConstants.JMX_PLOT_DATA_SOLVER, dataSolverBeanAssignmentMap, true);
+	}
 }

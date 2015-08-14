@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.service.cache;
 
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
@@ -61,6 +62,12 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	 * Some views / editors need this information because they can only access the ID.
 	 */
 	private Map<Long, MethodIdent> methodMap = new ConcurrentHashMap<Long, MethodIdent>();
+	
+	/**
+	 * This map is needed to store the mapping between the ID's and the {@link JmxDefinitionDataIdent} objects.
+	 * Some views / editors need this information because they can only access the ID.
+	 */
+	private Map<Long, JmxDefinitionDataIdent> jmxDefinitionDataMap = new ConcurrentHashMap<Long, JmxDefinitionDataIdent>();
 
 	/**
 	 * No-args constructor.
@@ -113,6 +120,12 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 			sensorTypeMap.remove(sensorTypeIdent.getId());
 			sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
 		}
+		
+		for (JmxDefinitionDataIdent jmxDefinitionDataIdent: (Set<JmxDefinitionDataIdent>) platformIdent.getJmxDefinitionDataIdents()){
+			jmxDefinitionDataMap.remove(jmxDefinitionDataIdent.getId());
+			jmxDefinitionDataMap.put(jmxDefinitionDataIdent.getId(), jmxDefinitionDataIdent);
+		}
+		
 	}
 
 	/**
@@ -153,6 +166,19 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 
 		return methodMap.get(id);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public JmxDefinitionDataIdent getJmxDefinitionDataIdentForId(long jmxDefinitionDataId) {
+		Long id = Long.valueOf(jmxDefinitionDataId);
+		// load only if the id is not 0
+		if (0 != id.longValue() && !jmxDefinitionDataMap.containsKey(id)) {
+			refreshIdents();
+		}
+
+		return jmxDefinitionDataMap.get(id);
+	}
 
 	/**
 	 * Internal refresh of the idents. Currently everything is loaded again.
@@ -162,6 +188,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 		platformMap.clear();
 		methodMap.clear();
 		sensorTypeMap.clear();
+		jmxDefinitionDataMap.clear();
 
 		for (PlatformIdent overview : agentMap.keySet()) {
 			PlatformIdent platformIdent;
@@ -179,6 +206,10 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 
 			for (SensorTypeIdent sensorTypeIdent : (Set<SensorTypeIdent>) platformIdent.getSensorTypeIdents()) {
 				sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
+			}
+			
+			for (JmxDefinitionDataIdent jmxDefinitionDataIdent : platformIdent.getJmxDefinitionDataIdents()){
+				jmxDefinitionDataMap.put(jmxDefinitionDataIdent.getId(), jmxDefinitionDataIdent);
 			}
 		}
 	}

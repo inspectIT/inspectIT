@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="info.novatec.inspectit.communication.data">
+	<union-subclass name="JmxSensorValueData" extends="info.novatec.inspectit.communication.SystemSensorData" table="JmxSensorValueData">
+		<property name="jmxSensorDefinitionDataIdentId" column="JmxSensorDefinitionDataIdentId" />
+		<property name="value" column="Value" />
+	</union-subclass>
+</hibernate-mapping>
