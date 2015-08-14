@@ -64,6 +64,9 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		configurationStorage.setAgentName("UnitTestAgent");
 		configurationStorage.setRepository("localhost", 1099);
 
+		// jmx sensor types
+		configurationStorage.addJmxSensorType("info.novatec.inspectit.agent.sensor.jmx.JmxSensor", "jmx_test");
+
 		// method sensor types
 		Map<String, Object> settings = new HashMap<String, Object>(1);
 		settings.put("mode", "optimized");
@@ -106,6 +109,8 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		configurationStorage.setBufferStrategy("info.novatec.inspectit.agent.buffer.impl.SimpleBufferStrategy", null);
 
 		// sensor definitions
+		configurationStorage.addUnregisteredJmxConfig("jmx_test", "Catalina:type=Server", "port");
+
 		configurationStorage.addSensor("timer", "*", "*", null, true, null);
 
 		configurationStorage.addSensor("isequence", "info.novatec.inspectitsamples.calculator.Calculator", "actionPerformed", null, true, null);
@@ -201,6 +206,24 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		configurationStorage.setAgentName("agent1");
 
 		assertThat(configurationStorage.getAgentName(), is(equalTo("UnitTestAgent")));
+	}
+
+	@Test
+	public void jmxSensorTypesCheck() {
+		List<JmxSensorTypeConfig> jmxSensorTypeConfigs = configurationStorage.getJmxSensorTypes();
+		assertThat(jmxSensorTypeConfigs, hasSize(1));
+		JmxSensorTypeConfig jmxSensorTypeConfig = jmxSensorTypeConfigs.get(0);
+		assertThat(jmxSensorTypeConfig.getName(), is(equalTo("jmx_test")));
+		assertThat(jmxSensorTypeConfig.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.jmx.JmxSensor")));
+		
+
+		List<UnregisteredJmxConfig> jmxConfigs = configurationStorage.getUnregisteredJmxConfigs();
+		assertThat(jmxConfigs, is(notNullValue()));
+		assertThat(jmxConfigs, hasSize(1));
+		UnregisteredJmxConfig actualConfig = jmxConfigs.get(0);
+		assertThat(actualConfig.getPassedAttributeNameExpression(), is(equalTo("port")));
+		assertThat(actualConfig.getPassedObjectNameExpression(), is(equalTo("Catalina:type=Server")));
+		assertThat(actualConfig.getJmxSensorTypeConfig(), is(equalTo(jmxSensorTypeConfig)));
 	}
 
 	@Test

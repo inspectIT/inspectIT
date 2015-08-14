@@ -52,9 +52,14 @@ public class InputDefinition {
 		private long sensorTypeId = ID_NOT_USED;
 
 		/**
-		 * The ID of the method for the view.Default is {@link ID_NOT_USED}.
+		 * The ID of the method for the view. Default is {@link ID_NOT_USED}.
 		 */
 		private long methodId = ID_NOT_USED;
+
+		/**
+		 * The ID of the JMX sensor definition for the view. Default is {@link ID_NOT_USED}.
+		 */
+		private long jmxDefinitionId = ID_NOT_USED;
 
 		/**
 		 * Gets {@link #platformId}.
@@ -114,11 +119,30 @@ public class InputDefinition {
 		}
 
 		/**
+		 * Gets {@link #jmxDefinitionId}.
+		 * 
+		 * @return {@link #jmxDefinitionId}
+		 */
+		public long getJmxDefinitionId() {
+			return jmxDefinitionId;
+		}
+
+		/**
+		 * Sets {@link #jmxDefinitionId}.
+		 * 
+		 * @param jmxDefinitionId
+		 *            New value for {@link #jmxDefinitionId}
+		 */
+		public void setJmxDefinitionId(long jmxDefinitionId) {
+			this.jmxDefinitionId = jmxDefinitionId;
+		}
+
+		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(platformId, sensorTypeId, methodId);
+			return Objects.hashCode(platformId, sensorTypeId, methodId, jmxDefinitionId);
 		}
 
 		/**
@@ -136,7 +160,8 @@ public class InputDefinition {
 				return false;
 			}
 			IdDefinition that = (IdDefinition) object;
-			return Objects.equal(this.platformId, that.platformId) && Objects.equal(this.sensorTypeId, that.sensorTypeId) && Objects.equal(this.methodId, that.methodId);
+			return Objects.equal(this.platformId, that.platformId) && Objects.equal(this.sensorTypeId, that.sensorTypeId) && Objects.equal(this.methodId, that.methodId)
+					&& Objects.equal(this.jmxDefinitionId, that.jmxDefinitionId);
 		}
 
 		/**
@@ -144,7 +169,7 @@ public class InputDefinition {
 		 */
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("platformId", platformId).add("sensorTypeId", sensorTypeId).add("methodId", methodId).toString();
+			return Objects.toStringHelper(this).add("platformId", platformId).add("sensorTypeId", sensorTypeId).add("methodId", methodId).add("jmxDefinitionId", jmxDefinitionId).toString();
 		}
 
 	}

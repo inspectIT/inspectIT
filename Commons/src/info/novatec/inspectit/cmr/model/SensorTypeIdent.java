@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * The Sensor Type Ident class is the abstract base class for the {@link MethodSensorTypeIdent} and
- * {@link PlatformSensorTypeIdent} classes.
+ * {@link PlatformSensorTypeIdent} and {@link JmxSensorTypeIdent} classes.
  * 
  * @author Patrice Bouillet
  * 

@@ -1,5 +1,7 @@
 package info.novatec.inspectit.agent.connection.impl;
 
+import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
+import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
@@ -343,6 +345,48 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
+	public long registerJmxSensorType(long platformId, JmxSensorTypeConfig jmxSensorTypeConfig) throws ServerUnavailableException, RegistrationException {
+		if (!isConnected()) {
+			throw new ServerUnavailableException();
+		}
+
+		RegisterJmxSensorType register = new RegisterJmxSensorType(registrationService, jmxSensorTypeConfig, platformId);
+		try {
+			Long id = register.makeCall();
+			return id.longValue();
+		} catch (ExecutionException executionException) {
+			// there should be no execution exception
+			log.error("Could not register the jmx sensor type", executionException);
+			throw new RegistrationException("Could not register the method sensor type", executionException);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long registerJmxDefinitionData(long platformId, JmxSensorConfig config) throws ServerUnavailableException, RegistrationException {
+		if (!isConnected()) {
+			throw new ServerUnavailableException();
+		}
+
+		if (config.getmBeanObjectName() != null) {
+			RegisterJmxDefinitionDataIdent register = new RegisterJmxDefinitionDataIdent(registrationService, config, platformId);
+			try {
+				Long id = register.makeCall();
+				return id.longValue();
+			} catch (ExecutionException executionException) {
+				// there should be no execution exception
+				log.error("Could not register the jmx sensor type", executionException);
+				throw new RegistrationException("Could not register the jmx definition data", executionException);
+			}
+		} else {
+			throw new RegistrationException("Could not register the jmx definition data - empty set of data");
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addSensorTypeToMethod(long sensorTypeId, long methodId) throws ServerUnavailableException, RegistrationException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -388,4 +432,5 @@ public class KryoNetConnection implements IConnection {
 	public boolean isConnected() {
 		return null != client && client.isConnected();
 	}
+
 }

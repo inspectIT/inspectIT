@@ -1,5 +1,7 @@
 package info.novatec.inspectit.rcp.preferences;
 
+import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+
 /**
  * Interface that just holds the all inspectIT preferences keys.
  * 
@@ -83,4 +85,8 @@ public interface PreferencesConstants {
 	 */
 	String AUTO_CHECK_NEW_VERSION = "AUTO_CHECK_NEW_VERSION";
 
+	/**
+	 * Map of the selected {@link AbstractPlotDataSolver}.
+	 */
+	String JMX_PLOT_DATA_SOLVER = "JMX_PLOT_DATA_SOLVER";
 }

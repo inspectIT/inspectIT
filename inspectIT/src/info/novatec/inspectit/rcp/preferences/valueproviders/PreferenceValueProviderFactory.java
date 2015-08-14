@@ -33,6 +33,7 @@ public final class PreferenceValueProviderFactory {
 		preferenceValueProviders.put(PreferencesConstants.TABLE_COLUMN_ORDER_CACHE, new ColumnOrderPreferenceValueProvider());
 		preferenceValueProviders.put(PreferencesConstants.LAST_SELECTED_REPOSITORY, new LastSelectedRepositoryPreferenceValueProvider());
 		preferenceValueProviders.put(PreferencesConstants.INVOCATION_FILTER_DATA_TYPES, new ClassCollectionPreferenceValueProvider());
+		preferenceValueProviders.put(PreferencesConstants.JMX_PLOT_DATA_SOLVER, new MapPreferenceValueProvider());
 	}
 
 	/**

@@ -384,5 +384,4 @@ public class GraphSubView extends AbstractSubView {
 	public void dispose() {
 		plotController.dispose();
 	}
-
 }
