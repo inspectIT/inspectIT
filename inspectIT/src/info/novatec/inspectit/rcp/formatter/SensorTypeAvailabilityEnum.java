@@ -51,7 +51,12 @@ public enum SensorTypeAvailabilityEnum {
 	/**
 	 * Tooltip when no exception sensor is available.
 	 */
-	EXCEPTION_SENSOR_NA("This item is not available. You have to activate the exception sensor in 'inspectit-agent.cfg' for viewing this information.");
+	EXCEPTION_SENSOR_NA("This item is not available. You have to activate the exception sensor in 'inspectit-agent.cfg' for viewing this information."),
+	
+	/**
+	 * Tooltip when no JMX sensor is available.
+	 */
+	JMX_SENSOR_NA("This item is not available. You have to activate the jmx sensor in 'inspectit-agent.cfg' for viewing this information.");
 
 	/**
 	 * The message string.

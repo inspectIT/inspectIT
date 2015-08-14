@@ -499,5 +499,4 @@ public class InspectIT extends AbstractUIPlugin {
 		IStatus status = new Status(severity, ID, 0, message, throwable);
 		StatusManager.getManager().handle(status, StatusManager.LOG);
 	}
-
 }

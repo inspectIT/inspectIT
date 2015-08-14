@@ -12,11 +12,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import info.novatec.inspectit.cmr.dao.JmxDefinitionDataIdentDao;
 import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
+import info.novatec.inspectit.cmr.dao.impl.JmxSensorTypeIdentDaoImpl;
 import info.novatec.inspectit.cmr.dao.impl.MethodIdentDaoImpl;
 import info.novatec.inspectit.cmr.dao.impl.MethodSensorTypeIdentDaoImpl;
 import info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoImpl;
 import info.novatec.inspectit.cmr.dao.impl.PlatformSensorTypeIdentDaoImpl;
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
+import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
 import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
@@ -89,6 +93,12 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	@Mock
 	private MethodIdentToSensorTypeDao methodIdentToSensorTypeDao;
 
+	@Mock
+	private JmxSensorTypeIdentDaoImpl jmxSensorTypeIdentDao;
+
+	@Mock
+	private JmxDefinitionDataIdentDao jmxDefinitionDataIdentDao;
+
 	/**
 	 * Initializes mocks. Has to run before each test so that mocks are clear.
 	 */
@@ -103,6 +113,8 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		registrationService.platformSensorTypeIdentDao = platformSensorTypeIdentDao;
 		registrationService.agentStatusDataProvider = agentStatusDataProvider;
 		registrationService.methodIdentToSensorTypeDao = methodIdentToSensorTypeDao;
+		registrationService.jmxSensorTypeIdentDao = jmxSensorTypeIdentDao;
+		registrationService.jmxDefinitionDataIdentDao = jmxDefinitionDataIdentDao;
 		registrationService.log = LoggerFactory.getLogger(RegistrationService.class);
 	}
 
@@ -550,6 +562,89 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 		verify(platformIdentDao, times(1)).saveOrUpdate(platformIdent);
 		assertThat(platformSensorArgument.getValue(), is(equalTo(platformIdent.getSensorTypeIdents().toArray()[0])));
+	}
+
+	/**
+	 * Test the registration of the JMX sensor type ident.
+	 * 
+	 * @throws RemoteException
+	 *             If {@link RemoteException} occurs.
+	 */
+	@Test
+	public void registerJmxSensorTypeIdent() throws RemoteException {
+		final long jmxSensorId = 50;
+		long platformId = 1;
+		String fqcName = "class";
+
+		PlatformIdent platformIdent = new PlatformIdent();
+		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
+		when(jmxSensorTypeIdentDao.findByExample(eq(platformId), (JmxSensorTypeIdent) anyObject())).thenReturn(Collections.<JmxSensorTypeIdent> emptyList());
+		Mockito.doAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				JmxSensorTypeIdent jmxSensorTypeIdent = (JmxSensorTypeIdent) invocation.getArguments()[0];
+				jmxSensorTypeIdent.setId(Long.valueOf(jmxSensorId));
+				return null;
+			}
+		}).when(jmxSensorTypeIdentDao).saveOrUpdate((JmxSensorTypeIdent) anyObject());
+
+		long registeredId = registrationService.registerJmxSensorTypeIdent(platformId, fqcName);
+		assertThat(registeredId, is(equalTo(jmxSensorId)));
+
+		ArgumentCaptor<JmxSensorTypeIdent> jmxSensorArgument = ArgumentCaptor.forClass(JmxSensorTypeIdent.class);
+		verify(jmxSensorTypeIdentDao, times(1)).saveOrUpdate(jmxSensorArgument.capture());
+		assertThat(jmxSensorArgument.getValue().getFullyQualifiedClassName(), is(equalTo(fqcName)));
+
+		verify(platformIdentDao, times(1)).saveOrUpdate(platformIdent);
+		assertThat(jmxSensorArgument.getValue(), is(equalTo(platformIdent.getSensorTypeIdents().toArray()[0])));
+	}
+
+	/**
+	 * Tests the registration of a {@link JmxSensorTypeIdent}.
+	 * 
+	 * @throws RemoteException
+	 *             If {@link RemoteException} occurs.
+	 */
+	@Test
+	public void registerJmxSensorDefinitionDataIdent() throws RemoteException {
+		final long jmxSensorId = 50;
+		long platformId = 1;
+		String mBeanObjectName = "mBeanObjectName";
+		String mBeanAttributeName = "mBeanAttributeName";
+		String mBeanAttributeDescription = "mBeanAttributeDescription";
+		String mBeanAttributeType = "mBeanAttributeType";
+		boolean isIs = true;
+		boolean isReadable = true;
+		boolean isWritable = true;
+
+		final PlatformIdent platformIdent = new PlatformIdent();
+		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
+		when(jmxDefinitionDataIdentDao.findForPlatformIdent(eq(platformId), (JmxDefinitionDataIdent) anyObject())).thenReturn(Collections.<JmxDefinitionDataIdent> emptyList());
+		Mockito.doAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				JmxDefinitionDataIdent jmxSensorTypeIdent = (JmxDefinitionDataIdent) invocation.getArguments()[0];
+				jmxSensorTypeIdent.setId(Long.valueOf(jmxSensorId));
+				return null;
+			}
+		}).when(jmxDefinitionDataIdentDao).saveOrUpdate((JmxDefinitionDataIdent) anyObject());
+
+		long registeredId = registrationService.registerJmxSensorDefinitionDataIdent(platformId, mBeanObjectName, mBeanAttributeName, mBeanAttributeDescription, mBeanAttributeType, isIs, isReadable,
+				isWritable);
+		assertThat(registeredId, is(equalTo(jmxSensorId)));
+
+		ArgumentCaptor<JmxDefinitionDataIdent> jmxSensorArgument = ArgumentCaptor.forClass(JmxDefinitionDataIdent.class);
+		verify(jmxDefinitionDataIdentDao, times(1)).saveOrUpdate(jmxSensorArgument.capture());
+
+		JmxDefinitionDataIdent dataIdent = jmxSensorArgument.getValue();
+
+		assertThat(dataIdent.getmBeanObjectName(), is(equalTo(mBeanObjectName)));
+		assertThat(dataIdent.getmBeanAttributeName(), is(equalTo(mBeanAttributeName)));
+		assertThat(dataIdent.getmBeanAttributeDescription(), is(equalTo(mBeanAttributeDescription)));
+		assertThat(dataIdent.getmBeanAttributeType(), is(equalTo(mBeanAttributeType)));
+		assertThat(dataIdent.getmBeanAttributeIsIs(), is(equalTo(isIs)));
+		assertThat(dataIdent.getmBeanAttributeIsReadable(), is(equalTo(isReadable)));
+		assertThat(dataIdent.getmBeanAttributeIsWritable(), is(equalTo(isWritable)));
 	}
 
 	/**

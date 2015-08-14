@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.model;
 
+import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
@@ -26,8 +27,9 @@ import org.eclipse.core.runtime.Assert;
  * The manager is used to create a tree model currently used by the {@link ServerView}.
  * 
  * @author Patrice Bouillet
- * @author Eduard Tudenhï¿½ï¿½fner
+ * @author Eduard Tudenhöfner
  * @author Stefan Siegl
+ * @author Alfred Krauss
  */
 public class TreeModelManager {
 
@@ -79,10 +81,74 @@ public class TreeModelManager {
 			components.add(getSqlTree(platformIdent, repositoryDefinition));
 			components.add(getTimerTree(platformIdent, repositoryDefinition));
 			components.add(getHttpTimerTree(platformIdent, repositoryDefinition));
+			components.add(getJmxSensorTree(platformIdent, repositoryDefinition));
 			components.add(getExceptionSensorTree(platformIdent, repositoryDefinition));
 			components.add(getSystemOverviewTree(platformIdent, repositoryDefinition));
 		}
 		return components.toArray();
+	}
+
+	/**
+	 * Creates the deferred sub-tree for the JMX data.
+	 * 
+	 * @param platformIdent
+	 *            The platform ID used to create the sub-tree.
+	 * @param definition
+	 *            The {@link RepositoryDefinition} object.
+	 * @return a list containing the root and all children representing the monitored JMX Beans.
+	 */
+	private Component getJmxSensorTree(PlatformIdent platformIdent, RepositoryDefinition definition) {
+		Composite jmxDataComposite = new Composite();
+		jmxDataComposite.setName("JMX Data");
+		jmxDataComposite.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN));
+		jmxDataComposite.setTooltip("With these views, the JMX (Java Management Extension) data objects can be analyzed.");
+
+		boolean sensorTypeAvailable = false;
+
+		for (SensorTypeIdent sensorTypeIdent : platformIdent.getSensorTypeIdents()) {
+			if (sensorTypeIdent instanceof JmxSensorTypeIdent) {
+
+				sensorTypeAvailable = true;
+
+				Component showAll = new Leaf();
+				showAll.setName("Show All");
+				showAll.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SHOW_ALL));
+
+				InputDefinition inputDefinition = new InputDefinition();
+				inputDefinition.setRepositoryDefinition(definition);
+				inputDefinition.setId(SensorTypeEnum.JMX_SENSOR_DATA);
+
+				EditorPropertiesData editorPropertiesData = new EditorPropertiesData();
+				editorPropertiesData.setSensorImage(SensorTypeEnum.JMX_SENSOR_DATA.getImage());
+				editorPropertiesData.setSensorName("JMX Data");
+				editorPropertiesData.setViewImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SHOW_ALL));
+				editorPropertiesData.setViewName("Show All");
+				inputDefinition.setEditorPropertiesData(editorPropertiesData);
+
+				IdDefinition idDefinition = new IdDefinition();
+				idDefinition.setPlatformId(platformIdent.getId());
+				idDefinition.setSensorTypeId(sensorTypeIdent.getId());
+
+				inputDefinition.setIdDefinition(idDefinition);
+				showAll.setInputDefinition(inputDefinition);
+
+				DeferredJmxBrowserComposite browser = new DeferredJmxBrowserComposite();
+				browser.setPlatformIdent(platformIdent);
+				browser.setRepositoryDefinition(repositoryDefinition);
+				browser.setName("Browser");
+				browser.setSensorTypeIdent(sensorTypeIdent);
+
+				jmxDataComposite.addChild(showAll);
+				jmxDataComposite.addChild(browser);
+			}
+		}
+
+		if (!sensorTypeAvailable) {
+			jmxDataComposite.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_ITEM_NA_GREY));
+			jmxDataComposite.setTooltip(SensorTypeAvailabilityEnum.JMX_SENSOR_NA.getMessage());
+		}
+
+		return jmxDataComposite;
 	}
 
 	/**
