@@ -12,7 +12,7 @@ public enum PreferenceId {
 	/**
 	 * The identifiers of the different control groups.
 	 */
-	TIMELINE, SAMPLINGRATE, LIVEMODE, UPDATE, ITEMCOUNT, FILTERDATATYPE, INVOCFILTEREXCLUSIVETIME, INVOCFILTERTOTALTIME, CLEAR_BUFFER, STEPPABLE_CONTROL, TIME_RESOLUTION, HTTP_AGGREGATION_REQUESTMETHOD, HTTP_URI_TRANSFORMING, INVOCATION_SUBVIEW_MODE;
+	JMX_PLOTDATASOLVER, TIMELINE, SAMPLINGRATE, LIVEMODE, UPDATE, ITEMCOUNT, FILTERDATATYPE, INVOCFILTEREXCLUSIVETIME, INVOCFILTERTOTALTIME, CLEAR_BUFFER, STEPPABLE_CONTROL, TIME_RESOLUTION, HTTP_AGGREGATION_REQUESTMETHOD, HTTP_URI_TRANSFORMING, INVOCATION_SUBVIEW_MODE;
 
 	/**
 	 * Inner enumeration for TIMELINE.
@@ -184,5 +184,18 @@ public enum PreferenceId {
 		 * The identifier to state that the mode in subview of invocation is raw or not.
 		 */
 		RAW;
+	}
+
+	/**
+	 * Inner enumeration for JMX_PLOT_DATASOLVER.
+	 * 
+	 * @author Marius Oehler
+	 *
+	 */
+	public enum JmxPlotDataSolver implements IPreferenceGroup {
+		/**
+		 * The identifier that defines which data solver should be used.
+		 */
+		DATA_SOLVER;
 	}
 }

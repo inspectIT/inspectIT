@@ -5,6 +5,7 @@ import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
 import info.novatec.inspectit.spring.logger.Log;
 
@@ -24,6 +25,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -93,6 +95,10 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 			MethodSensorData methodSensorData = (MethodSensorData) template;
 			Predicate methodId = builder.equal(root.get("methodIdent"), methodSensorData.getMethodIdent());
 			criteria.where(platformId, sensorTypeId, timestamp, methodId);
+		} else if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			Predicate jmxSensorDefinitionDataId = builder.equal(root.get("jmxSensorDefinitionDataIdentId"), jmxSensorValueData.getJmxSensorDefinitionDataIdentId());
+			criteria.where(platformId, sensorTypeId, timestamp, jmxSensorDefinitionDataId);
 		} else {
 			criteria.where(platformId, sensorTypeId, timestamp);
 		}
@@ -117,6 +123,10 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 			MethodSensorData methodSensorData = (MethodSensorData) template;
 			Predicate methodId = builder.equal(root.get("methodIdent"), methodSensorData.getMethodIdent());
 			criteria.where(id, platformId, sensorTypeId, methodId);
+		} else if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			Predicate jmxSensorDefinitionDataId = builder.equal(root.get("jmxSensorDefinitionDataIdentId"), jmxSensorValueData.getJmxSensorDefinitionDataIdentId());
+			criteria.where(id, platformId, sensorTypeId, jmxSensorDefinitionDataId);
 		} else {
 			criteria.where(id, platformId, sensorTypeId);
 		}
@@ -158,6 +168,10 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 			MethodSensorData methodSensorData = (MethodSensorData) template;
 			Predicate methodId = builder.equal(root.get("methodIdent"), methodSensorData.getMethodIdent());
 			criteria.where(platformId, sensorTypeId, timestamp, methodId);
+		} else if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			Predicate jmxSensorDefinitionDataId = builder.equal(root.get("jmxSensorDefinitionDataIdentId"), jmxSensorValueData.getJmxSensorDefinitionDataIdentId());
+			criteria.where(platformId, sensorTypeId, timestamp, jmxSensorDefinitionDataId);
 		} else {
 			criteria.where(platformId, sensorTypeId, timestamp);
 		}
@@ -180,6 +194,10 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 			MethodSensorData methodSensorData = (MethodSensorData) template;
 			Predicate methodId = builder.equal(root.get("methodIdent"), methodSensorData.getMethodIdent());
 			criteria.where(platformId, methodId);
+		} else if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			Predicate jmxSensorDefinitionDataId = builder.equal(root.get("jmxSensorDefinitionDataIdentId"), jmxSensorValueData.getJmxSensorDefinitionDataIdentId());
+			criteria.where(platformId, jmxSensorDefinitionDataId);
 		} else {
 			criteria.where(platformId);
 		}
@@ -250,5 +268,40 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 		query = entityManager.createNamedQuery(DefaultData.DELETE_FOR_PLATFORM_ID);
 		query.setParameter("platformIdent", platformId);
 		query.executeUpdate();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<JmxSensorValueData> getJmxDataOverview(JmxSensorValueData template, Date fromDate, Date toDate) {
+		if (template == null) {
+			return null;
+		}
+
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<JmxSensorValueData> c = cb.createQuery(JmxSensorValueData.class);
+		Root<JmxSensorValueData> root = c.from(JmxSensorValueData.class);
+
+		Subquery<Long> sq = c.subquery(Long.class);
+		Root<JmxSensorValueData> sqRoot = sq.from(JmxSensorValueData.class);
+
+		Predicate platformIdentPredicate = cb.equal(sqRoot.get("platformIdent"), template.getPlatformIdent());
+		Predicate sensorTypeIdentPredicate = cb.equal(sqRoot.get("sensorTypeIdent"), template.getSensorTypeIdent());
+		Predicate predicate = cb.and(platformIdentPredicate, sensorTypeIdentPredicate);
+
+		if (template.getJmxSensorDefinitionDataIdentId() > 0) {
+			predicate = cb.and(predicate, cb.equal(sqRoot.get("jmxSensorDefinitionDataIdentId"), template.getJmxSensorDefinitionDataIdentId()));
+		}
+
+		if (fromDate != null && toDate != null) {
+			predicate = cb.and(predicate, cb.between(sqRoot.get("timeStamp").as(Date.class), fromDate, toDate));
+		}
+
+		sq.select(cb.max(sqRoot.get("id").as(Long.class))).where(predicate).groupBy(sqRoot.get("jmxSensorDefinitionDataIdentId"));
+
+		c.select(root).where(cb.in(root.get("id")).value(sq));
+		
+		return entityManager.createQuery(c).getResultList();
 	}
 }
