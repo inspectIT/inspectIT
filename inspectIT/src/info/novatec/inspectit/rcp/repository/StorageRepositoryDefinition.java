@@ -5,6 +5,7 @@ import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
+import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
 import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
 import info.novatec.inspectit.cmr.service.cache.CachedDataService;
@@ -12,6 +13,7 @@ import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
@@ -50,6 +52,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 * {@link IGlobalDataAccessService} service.
 	 */
 	private IGlobalDataAccessService globalDataAccessService;
+
+	/**
+	 * {@link IJmxDataAccessService} service.
+	 */
+	private IJmxDataAccessService jmxDataAccessService;
 
 	/**
 	 * Caching component.
@@ -145,6 +152,14 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public IJmxDataAccessService getJmxDataAccessService() {
+		return jmxDataAccessService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public CachedDataService getCachedDataService() {
 		return cachedDataService;
 	}
@@ -175,6 +190,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		sqlDataAccessService = storageServiceProvider.createStorageSqlDataAccessService(this, localStorageData, (IStorageTreeComponent<SqlStatementData>) indexingTree);
 		timerDataAccessService = storageServiceProvider.createStorageTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<TimerData>) indexingTree);
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
+		jmxDataAccessService = storageServiceProvider.createStorageJmxDataAccessService(this, localStorageData, (IStorageTreeComponent<JmxSensorValueData>) indexingTree);
 
 		// for storage we use the regular cached data service because ids can never change
 		cachedDataService = new CachedDataService(globalDataAccessService);
@@ -260,5 +276,4 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		return Objects.equal(this.localStorageData, that.localStorageData);
 
 	}
-
 }

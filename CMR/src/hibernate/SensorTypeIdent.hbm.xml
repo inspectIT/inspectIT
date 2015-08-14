@@ -17,6 +17,8 @@
 
 		<subclass name="PlatformSensorTypeIdent" discriminator-value="PSTI" />
 
+		<subclass name="JmxSensorTypeIdent" discriminator-value="JSTI" />
+		
 		<subclass name="MethodSensorTypeIdent" discriminator-value="MSTI">
 			<set name="methodIdentToSensorTypes" inverse="true" lazy="true" cascade="all">
 				<key column="method_sensor_type_ident_id" />

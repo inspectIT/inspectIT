@@ -5,10 +5,12 @@ import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
 import info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider;
+import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
 
@@ -204,6 +206,9 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 			if (template instanceof InvocationSequenceData) {
 				query.setOnlyInvocationsWithoutChildren(true);
 			}
+		}
+		if (template instanceof JmxSensorValueData) {
+			query.addIndexingRestriction(IndexQueryRestrictionFactory.equal("jmxSensorDefinitionDataIdentId", ((JmxSensorValueData) template).getJmxSensorDefinitionDataIdentId()));
 		}
 
 		List<DefaultData> returnList = super.executeQuery(query);

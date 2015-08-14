@@ -8,3 +8,4 @@ class: info.novatec.inspectit.cmr.model.PlatformIdent
 5: definedIPs
 6: agentName
 7: version
+8: jmxDefinitionDataIdents

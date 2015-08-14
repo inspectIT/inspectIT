@@ -118,6 +118,21 @@
 		<property name="pathSpec" value="/remoting/ExceptionDataAccessService" />
 	</bean>
 	<!-- END -->
+	
+	<!-- Jmx Data Access Service -->
+	<bean name="jmxDataAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="jmxDataAccessServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="jmxDataAccessServiceExporter" />
+		<property name="servlet" ref="jmxDataAccessRequestHandlerServlet" />
+	</bean>
+
+	<bean id="jmxDataAccessServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="jmxDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/JmxDataAccessService" />
+	</bean>
+	<!-- END -->
 
 	<!-- Server Status Access Service -->
 	<bean name="serverStatusRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
@@ -283,6 +298,7 @@
 				<ref bean="globalDataAccessServletHolder" />
 				<ref bean="sqlDataAccessServletHolder" />
 				<ref bean="exceptionDataAccessServletHolder" />
+				<ref bean="jmxDataAccessServletHolder" />
 				<ref bean="invocationDataAccessServletHolder" />
 				<ref bean="serverStatusServletHolder" />
 				<ref bean="cmrManagementServiceServletHolder" />
@@ -299,6 +315,7 @@
 				<ref bean="globalDataAccessServiceMapping" />
 				<ref bean="sqlDataAccessServiceMapping" />
 				<ref bean="exceptionDataAccessServiceMapping" />
+				<ref bean="jmxDataAccessServiceMapping" />
 				<ref bean="invocationDataAccessServiceMapping" />
 				<ref bean="serverStatusServiceMapping" />
 				<ref bean="cmrManagementServiceServiceMapping" />
