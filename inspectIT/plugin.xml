@@ -1805,6 +1805,28 @@
          </activeWhen>
       </handler>
       <handler
+            class="info.novatec.inspectit.rcp.handlers.NavigateToJmxPlottingHandler"
+            commandId="info.novatec.inspectit.rcp.commands.displayInChart">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <and>
+                     <instanceof
+                           value="info.novatec.inspectit.communication.data.JmxSensorValueData">
+                     </instanceof>
+                     <test
+                           property="info.novatec.inspectit.canChart"
+                           value="true">
+                     </test>
+                  </and>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="info.novatec.inspectit.rcp.ci.handler.DuplicateProfileHandler"
             commandId="info.novatec.inspectit.rcp.ci.duplicateProfile">
          <activeWhen>
@@ -1919,6 +1941,13 @@
             namespace="info.novatec.inspectit"
             properties="canChart"
             type="info.novatec.inspectit.communication.data.TimerData">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.JmxSensorValueDataTester"
+            id="info.inspectit.rcp.JmxSensorValueDataTester"
+            namespace="info.novatec.inspectit"
+            properties="canChart"
+            type="info.novatec.inspectit.communication.data.JmxSensorValueData">
       </propertyTester>
       <propertyTester
             class="info.novatec.inspectit.rcp.ci.testers.ProfileTester"

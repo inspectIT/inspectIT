@@ -88,6 +88,47 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	}
 
 	@Test
+	public void loadAndVerifyJmxSensorType() throws ParserException, StorageException {
+		String name = "jmx_test";
+		String clazz = "info.novatec.inspectit.agent.sensor.jmx.JmxSensor";
+
+		writer.println("jmx-sensor-type " + name + " " + clazz);
+		writer.close();
+
+		fileConfigurationReader.load();
+
+		verify(configurationStorage, times(1)).addJmxSensorType(clazz, name);
+	}
+
+	@Test
+	public void loadAndVerifyJmxSensorConfig() throws ParserException, StorageException {
+		String sensorTypeName = "jmx_test";
+		String mBeanName = "Catalina:type=Server";
+		String attributeName = "port";
+
+		writer.println("jmx-sensor " + sensorTypeName + " mbeanname=" + mBeanName + " attributename=" + attributeName);
+		writer.close();
+
+		fileConfigurationReader.load();
+
+		verify(configurationStorage, times(1)).addUnregisteredJmxConfig(sensorTypeName, mBeanName, attributeName);
+	}
+	
+	@Test
+	public void loadAndVerifyJmxSensorConfigWithSpaces() throws ParserException, StorageException {
+		String sensorTypeName = "jmx_test";
+		String mBeanName = "Catalina:type=Server Apache";
+		String attributeName = "port";
+
+		writer.println("jmx-sensor " + sensorTypeName + " mbeanname=" + mBeanName + " attributename=" + attributeName);
+		writer.close();
+
+		fileConfigurationReader.load();
+
+		verify(configurationStorage, times(1)).addUnregisteredJmxConfig(sensorTypeName, mBeanName, attributeName);
+	}
+
+	@Test
 	public void loadAndVerifyMethodSensorTypeWithParameter() throws ParserException, StorageException {
 		String name = "average-timer";
 		String clazz = "info.novatec.inspectit.agent.sensor.method.averagetimer.AverageTimerSensor";

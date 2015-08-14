@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.service;
 
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
@@ -39,4 +40,12 @@ public interface ICachedDataService {
 	 */
 	MethodIdent getMethodIdentForId(long methodId);
 
+	/**
+	 * Returns the mapped {@link JmxDefinitionDataIdent} object for the passed jmDefinitionData id.
+	 * 
+	 * @param jmxDefinitionDataId
+	 *            The long value.
+	 * @return The {@link JmxDefinitionDataIdent} object.
+	 */
+	JmxDefinitionDataIdent getJmxDefinitionDataIdentForId(long jmxDefinitionDataId);
 }
