@@ -62,10 +62,11 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	 * Some views / editors need this information because they can only access the ID.
 	 */
 	private Map<Long, MethodIdent> methodMap = new ConcurrentHashMap<Long, MethodIdent>();
-	
+
 	/**
-	 * This map is needed to store the mapping between the ID's and the {@link JmxDefinitionDataIdent} objects.
-	 * Some views / editors need this information because they can only access the ID.
+	 * This map is needed to store the mapping between the ID's and the
+	 * {@link JmxDefinitionDataIdent} objects. Some views / editors need this information because
+	 * they can only access the ID.
 	 */
 	private Map<Long, JmxDefinitionDataIdent> jmxDefinitionDataMap = new ConcurrentHashMap<Long, JmxDefinitionDataIdent>();
 
@@ -120,12 +121,12 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 			sensorTypeMap.remove(sensorTypeIdent.getId());
 			sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
 		}
-		
-		for (JmxDefinitionDataIdent jmxDefinitionDataIdent: (Set<JmxDefinitionDataIdent>) platformIdent.getJmxDefinitionDataIdents()){
+
+		for (JmxDefinitionDataIdent jmxDefinitionDataIdent : (Set<JmxDefinitionDataIdent>) platformIdent.getJmxDefinitionDataIdents()) {
 			jmxDefinitionDataMap.remove(jmxDefinitionDataIdent.getId());
 			jmxDefinitionDataMap.put(jmxDefinitionDataIdent.getId(), jmxDefinitionDataIdent);
 		}
-		
+
 	}
 
 	/**
@@ -166,7 +167,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 
 		return methodMap.get(id);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -207,8 +208,8 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 			for (SensorTypeIdent sensorTypeIdent : (Set<SensorTypeIdent>) platformIdent.getSensorTypeIdents()) {
 				sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
 			}
-			
-			for (JmxDefinitionDataIdent jmxDefinitionDataIdent : platformIdent.getJmxDefinitionDataIdents()){
+
+			for (JmxDefinitionDataIdent jmxDefinitionDataIdent : platformIdent.getJmxDefinitionDataIdents()) {
 				jmxDefinitionDataMap.put(jmxDefinitionDataIdent.getId(), jmxDefinitionDataIdent);
 			}
 		}

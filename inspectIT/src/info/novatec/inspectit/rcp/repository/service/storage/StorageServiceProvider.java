@@ -175,14 +175,12 @@ public abstract class StorageServiceProvider {
 		storageGlobalDataAccessService.setAgents(platformIdents);
 		return storageGlobalDataAccessService;
 	}
-	
+
 	/**
 	 * @return Spring created {@link StorageJmxDataAccessService}.
 	 */
 	protected abstract StorageJmxDataAccessService createStorageJmxDataAccessService();
 
-	
-	// TODO really?
 	/**
 	 * Properly initialized {@link StorageJmxDataAccessService}.
 	 * 
@@ -192,8 +190,6 @@ public abstract class StorageServiceProvider {
 	 *            {@link LocalStorageData}.
 	 * @param storageTreeComponent
 	 *            Indexing tree.
-	 * @param platformIdents
-	 *            Agents related to storage.
 	 * @return Properly initialized {@link StorageJmxDataAccessService}.
 	 */
 	public StorageJmxDataAccessService createStorageJmxDataAccessService(StorageRepositoryDefinition storageRepositoryDefinition, LocalStorageData localStorageData,

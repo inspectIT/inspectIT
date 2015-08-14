@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +13,10 @@ import java.util.regex.Pattern;
  * @author Marius Oehler
  * 
  */
-public class JmxDefinitionDataIdent {
+public class JmxDefinitionDataIdent implements Serializable {
+
+	/** */
+	private static final long serialVersionUID = 5190671450845879357L;
 
 	/**
 	 * The ID on the CMR.

@@ -150,6 +150,6 @@ public interface IRegistrationService extends Remote {
 	 *            MBeanAttributeInfo.
 	 * @return Returns the unique jmx definition data identifier.
 	 */
-	long registerJmxSensorDefinitionData(long platformIdent, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs,
+	long registerJmxSensorDefinitionData(long platformIdent, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs,// NOCHK
 			boolean isReadable, boolean isWritable);
 }
