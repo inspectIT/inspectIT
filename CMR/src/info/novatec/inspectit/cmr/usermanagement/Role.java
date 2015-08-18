@@ -1,16 +1,16 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
-import java.util.List;
+import java.util.List;;
 /**
- * Stores the privileges asociated with the Role.
+ * Stores the permissions asociated with the Role.
  * @author Joshua Hartmann
  *
  */
 public class Role {
 	/**
-	 * Contains all privileges this role has.
+	 * Contains all permissions this role has.
 	 */
-	private List<Privilege> privileges;
+	private List<Permission> permissions;
 	/**
 	 * A short title to name the role.
 	 */
@@ -19,28 +19,26 @@ public class Role {
 	/**
 	 * The id of the Role.
 	 */
-	private int id;
+	private long id;
 
 
 	/**
 	 * The constructor for a role.
-	 * @param privileges The privileges this role has.
+	 * @param permissions The permissions this role has.
 	 * @param title The title for the role.
-	 * @param id The id of the role.
 	 */
-	public Role(int id, String title, List<Privilege> privileges) {
+	public Role(String title, List<Permission> permissions) {
 		super();
-		this.privileges = privileges;
+		this.permissions = permissions;
 		this.title = title;
-		this.id = id;
 	}
 	/**
-	 * Gets {@link #privileges}.
+	 * Gets {@link #permissions}.
 	 *   
-	 * @return {@link #privileges}  
+	 * @return {@link #permissions}  
 	 */
-	public List<Privilege> getPrivileges() {
-		return privileges;
+	public List<Permission> getPermissions() {
+		return permissions;
 	}
 	/**
 	 * Gets {@link #title}.
@@ -55,7 +53,7 @@ public class Role {
 	 *   
 	 * @return {@link #Id}  
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	/**
@@ -63,6 +61,36 @@ public class Role {
 	 */
 	@Override
 	public String toString() {
-		return "Role [privileges=" + privileges + ", title=" + title + ", id=" + id + "]";
+		return "Role [permissions=" + permissions + ", title=" + title + ", id=" + id + "]";
 	}
+	/**  
+	 * Sets {@link #permissions}.  
+	 *   
+	 * @param permissions  
+	 *            New value for {@link #permissions}  
+	 */
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
+	/**  
+	 * Sets {@link #title}.  
+	 *   
+	 * @param title  
+	 *            New value for {@link #title}  
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	/**  
+	 * Sets {@link #id}.  
+	 *   
+	 * @param id  
+	 *            New value for {@link #id}  
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	
+	
 }

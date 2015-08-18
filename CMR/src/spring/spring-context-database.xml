@@ -58,6 +58,11 @@
 				<!-- Storage Data Object -->
 				<value>hibernate/StorageLabel.hbm.xml</value>
 				<value>hibernate/StorageLabelType.hbm.xml</value>
+				
+				<!-- User Data Object -->	
+				<value>hibernate/Permission.hbm.xml</value>
+				<value>hibernate/User.hbm.xml</value>	
+				<value>hibernate/Role.hbm.xml</value>		
 			</list>
 		</property>
 		<property name="hibernateProperties">

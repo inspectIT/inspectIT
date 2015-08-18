@@ -1,14 +1,21 @@
+
 package info.novatec.inspectit.cmr.usermanagement;
+
+
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+
+
 /**
  * Storage for a single privilege.
  * @author Joshua Hartmann
- *
+ *HibernateDaoSupport
  */
-public class Privilege {
+public class Permission extends HibernateDaoSupport {
 	/**
 	 * The id of the privilege, used to identify which functionality it covers, must be unique.
 	 */
-	private int id;
+	private long id;
 	/**
 	 * A short title for the privilege.
 	 */
@@ -18,17 +25,13 @@ public class Privilege {
 	 */
 	private String description;
 
-
-
 	/**
 	 * The constructor for a privilege.
-	 * @param id The id for the role, which identifies it.
-	 * @param title The short title of the Privilege.
+	 * @param title The short title of the Permission.
 	 * @param description The more detailed description of the privilege.
 	 */
-	public Privilege(int id, String title, String description) {
+	public Permission(String title, String description) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.description = description;
 	}
@@ -37,7 +40,7 @@ public class Privilege {
 	 *   
 	 * @return {@link #id}  
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	/**
@@ -61,6 +64,38 @@ public class Privilege {
 	 */
 	@Override
 	public String toString() {
-		return "Privilege [id=" + id + ", title=" + title + ", description=" + description + "]";
+		return "Permission [id=" + id + ", title=" + title + ", description=" + description + "]";
 	}
+	
+	/**  
+	 * Sets {@link #title}.  
+	 *   
+	 * @param title  
+	 *            New value for {@link #title}  
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	/**  
+	 * Sets {@link #id}.  
+	 *   
+	 * @param id  
+	 *            New value for {@link #id}  
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+	/**  
+	 * Sets {@link #description}.  
+	 *   
+	 * @param description  
+	 *            New value for {@link #description}  
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
+	
+	
 }

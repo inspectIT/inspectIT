@@ -1,11 +1,14 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
+
 /**
  * Representing a user in the system.
  * @author Joshua Hartmann
  *
  */
 public class User {
+	
+	
 	/**
 	 * The name of the user.
 	 */
@@ -13,7 +16,7 @@ public class User {
 	/**
 	 * The SHA256 Hash of the userpassword.
 	 */
-	private String hashedPassword;
+	private String password;
 	/**
 	 * The users email adress.
 	 * Used to send a new password, if the current one is lost.
@@ -22,27 +25,25 @@ public class User {
 	/**
 	 * The unique id the user is identified with.
 	 */
-	private int id; //XXX not necessary?
+	private long id; //XXX not necessary?
 	/**
-	 * The users role the user is set to.
+	 * The id of the role the user is set to.
 	 */
-	private Role userRole;
+	private long roleId;
 
 	/**
 	 * The constructor for a User object.
 	 * @param name The name of the user
 	 * @param hashedPassword The hashed password of the user
 	 * @param email The email of the user
-	 * @param id The id of the user
-	 * @param userRole The role the user is attached to
+	 * @param roleId The id of the role the user is attached to
 	 */
-	public User(String name, String hashedPassword, String email, int id, Role userRole) {
+	public User(String name, String hashedPassword, String email, long roleId) {
 		super();
 		this.name = name;
-		this.hashedPassword = hashedPassword;
+		this.password = hashedPassword;
 		this.email = email;
-		this.id = id;
-		this.userRole = userRole;
+		this.roleId = roleId;
 	}
 	/**
 	 * Gets {@link #name}.
@@ -53,12 +54,12 @@ public class User {
 		return name;
 	}
 	/**
-	 * Gets {@link #hashedPassword}.
+	 * Gets {@link #password}.
 	 *   
-	 * @return {@link #hashedPassword}  
+	 * @return {@link #password}  
 	 */
-	public String getHashedPassword() {
-		return hashedPassword;
+	public String getPassword() {
+		return password;
 	}
 	/**
 	 * Gets {@link #email}.
@@ -73,22 +74,72 @@ public class User {
 	 *   
 	 * @return {@link #id}  
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
-	}
-	/**
-	 * Gets {@link #userRole}.
-	 *   
-	 * @return {@link #userRole}  
-	 */
-	public Role getUserRole() {
-		return userRole;
 	}
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", hashedPassword=" + hashedPassword + ", email=" + email + ", id=" + id + ", userRole=" + userRole + "]";
+		return "User [name=" + name + ", hashedPassword=" + password + ", email=" + email + ", id=" + id + ", userRole=" + roleId + "]";
 	}
+	
+	
+	
+	/**  
+	 * Sets {@link #name}.  
+	 *   
+	 * @param name  
+	 *            New value for {@link #name}  
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**  
+	 * Sets {@link #password}.  
+	 *   
+	 * @param password  
+	 *            New value for {@link #password}  
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	/**  
+	 * Sets {@link #email}.  
+	 *   
+	 * @param email  
+	 *            New value for {@link #email}  
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	/**  
+	 * Sets {@link #id}.  
+	 *   
+	 * @param id  
+	 *            New value for {@link #id}  
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+	/**
+	 * Gets {@link #roleId}.
+	 *   
+	 * @return {@link #roleId}  
+	 */
+	public long getRoleId() {
+		return roleId;
+	}
+	/**  
+	 * Sets {@link #roleId}.  
+	 *   
+	 * @param roleId  
+	 *            New value for {@link #roleId}  
+	 */
+	public void setRoleId(long roleId) {
+		this.roleId = roleId;
+	}
+	
+	
 }
