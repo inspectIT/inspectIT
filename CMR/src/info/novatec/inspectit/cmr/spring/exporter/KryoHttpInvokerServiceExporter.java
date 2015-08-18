@@ -57,6 +57,7 @@ public class KryoHttpInvokerServiceExporter extends HttpInvokerServiceExporter {
 				Object value = result.getValue();
 				result = new RemoteInvocationResult(value);
 			}
+
 			ISerializer serializer = serializationManagerProvider.createSerializer();
 			serializer.serialize(result, new Output(os));
 		} catch (SerializationException e) {

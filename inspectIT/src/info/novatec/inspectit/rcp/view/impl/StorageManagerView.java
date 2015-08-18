@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.view.impl;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.action.MenuAction;
@@ -33,7 +34,6 @@ import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
 import info.novatec.inspectit.storage.StorageData.StorageState;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 import info.novatec.inspectit.storage.serializer.SerializationException;
@@ -1414,7 +1414,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 					msg += " Version of the CMR where storage was created is unknown";
 				}
 				InspectIT.getDefault().createErrorDialog(msg, e, -1);
-			} catch (StorageException | IOException e) {
+			} catch (BusinessException | IOException e) {
 				InspectIT.getDefault().createErrorDialog("Exception occurred trying to display the remote storage", e, -1);
 			}
 		}
@@ -1443,7 +1443,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 					msg += " Version of the CMR where storage was created is unknown";
 				}
 				InspectIT.getDefault().createErrorDialog(msg, e, -1);
-			} catch (StorageException | IOException e) {
+			} catch (BusinessException | IOException e) {
 				InspectIT.getDefault().createErrorDialog("Exception occurred trying to display the downloaded storage", e, -1);
 			}
 		}

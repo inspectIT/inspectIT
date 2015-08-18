@@ -1,9 +1,9 @@
 package info.novatec.inspectit.cmr.service;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
+import info.novatec.inspectit.exception.BusinessException;
 
 import java.util.Collection;
 import java.util.Date;
@@ -41,21 +41,21 @@ public interface IGlobalDataAccessService {
 	 * @param id
 	 *            Id of wanted agent.
 	 * @return Agent with complete tree.
-	 * @throws ServiceException
+	 * @throws BusinessException
 	 *             If given ID of the agent is not valid.
 	 */
-	PlatformIdent getCompleteAgent(long id) throws ServiceException;
+	PlatformIdent getCompleteAgent(long id) throws BusinessException;
 
 	/**
 	 * Deletes the Agent completely.
 	 * 
 	 * @param platformId
 	 *            Id of the Agent to be delete.
-	 * @throws ServiceException
+	 * @throws BusinessException
 	 *             If Agent with provided ID does not exist or can not be deleted due to it's
 	 *             connection status.
 	 */
-	void deleteAgent(long platformId) throws ServiceException;
+	void deleteAgent(long platformId) throws BusinessException;
 
 	/**
 	 * Returns the last saved data objects (with the given time interval). Returns a list of

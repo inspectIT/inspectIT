@@ -1,11 +1,11 @@
 package info.novatec.inspectit.rcp.wizard;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.wizard.page.ManageLabelWizardPage;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
 
 import java.util.List;
@@ -71,7 +71,7 @@ public class ManageLabelWizard extends Wizard implements INewWizard {
 			if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 				try {
 					cmrRepositoryDefinition.getStorageService().executeLabelManagementActions(actions);
-				} catch (StorageException e) {
+				} catch (BusinessException e) {
 					InspectIT.getDefault().createErrorDialog("There was an exception trying to execute label management operation.", e, -1);
 				}
 			} else {

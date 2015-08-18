@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.wizard;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -8,7 +9,6 @@ import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.rcp.wizard.page.ImportStorageInfoPage;
 import info.novatec.inspectit.rcp.wizard.page.ImportStorageSelectPage;
 import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.util.ObjectUtils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -174,7 +174,7 @@ public class ImportStorageWizard extends Wizard implements INewWizard {
 					try {
 						IStorageData storageData = storageManager.getStorageDataFromZip(fileName);
 						cmrRepositoryDefinition.getStorageService().unpackUploadedStorage(storageData);
-					} catch (final StorageException e) {
+					} catch (final BusinessException e) {
 						return new Status(Status.ERROR, InspectIT.ID, "Storage data was not successfully unpacked on the CMR. Import failed.", e);
 					}
 					unpackMonitor.done();

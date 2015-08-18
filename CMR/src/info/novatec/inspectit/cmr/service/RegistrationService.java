@@ -11,12 +11,12 @@ import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.cmr.spring.aop.MethodLog;
 import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
 import info.novatec.inspectit.spring.logger.Log;
 
-import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,7 +95,7 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Transactional
 	@MethodLog
-	public synchronized long registerPlatformIdent(List<String> definedIPs, String agentName, String version) throws RemoteException, ServiceException {
+	public synchronized long registerPlatformIdent(List<String> definedIPs, String agentName, String version) throws BusinessException {
 		if (log.isInfoEnabled()) {
 			log.info("Trying to register Agent '" + agentName + "'");
 		}
@@ -119,7 +119,7 @@ public class RegistrationService implements IRegistrationService {
 		} else if (platformIdentResults.size() > 1) {
 			// this cannot occur anymore, if it occurs, then there is something totally wrong!
 			log.error("More than one platform ident has been retrieved! Please send your Database to the NovaTec inspectIT support!");
-			throw new ServiceException("Platform ident can not be registered because the inspectIT Database has more than one corresponding platform ident already.");
+			throw new BusinessException("Register the agent with name " + agentName + " and following network interfaces " + definedIPs + ".", AgentManagementErrorCodeEnum.MORE_THAN_ONE_AGENT_REGISTERED);
 		}
 
 		// always update the time stamp and ips, no matter if this is an old or new record.
@@ -134,7 +134,7 @@ public class RegistrationService implements IRegistrationService {
 		agentStatusDataProvider.registerConnected(platformIdent.getId());
 
 		if (log.isInfoEnabled()) {
-			log.info("Successfully registered Agent '" + agentName + "' with id " + platformIdent.getId() + ", version " + version + " and following network interfaces:");
+			log.info("Successfully registered the Agent '" + agentName + "' with id " + platformIdent.getId() + ", version " + version + " and following network interfaces:");
 			printOutDefinedIPs(definedIPs);
 		}
 		return platformIdent.getId();
@@ -143,11 +143,11 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ServiceException
+	 * @throws BusinessException
 	 */
 	@Transactional
 	@MethodLog
-	public void unregisterPlatformIdent(List<String> definedIPs, String agentName) throws ServiceException {
+	public void unregisterPlatformIdent(List<String> definedIPs, String agentName) throws BusinessException {
 		log.info("Trying to unregister the Agent with following network interfaces:");
 		printOutDefinedIPs(definedIPs);
 
@@ -166,10 +166,11 @@ public class RegistrationService implements IRegistrationService {
 		} else if (platformIdentResults.size() > 1) {
 			// this cannot occur anymore, if it occurs, then there is something totally wrong!
 			log.error("More than one platform ident has been retrieved! Please send your Database to the NovaTec inspectIT support!");
-			throw new ServiceException("Platform ident can not be unregistered because the inspectIT Database has more than one corresponding platform idents.");
+			throw new BusinessException("Unregister the agent with name " + agentName + " and following network interfaces " + definedIPs + ".",
+					AgentManagementErrorCodeEnum.MORE_THAN_ONE_AGENT_REGISTERED);
 		} else {
 			log.warn("No registered agent with given network interfaces exists. Unregistration is aborted.");
-			throw new ServiceException("Platform can not be unregistered because there is no platform registered with given network interfaces.");
+			throw new BusinessException("Unregister the agent with name " + agentName + " and following network interfaces " + definedIPs + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 		}
 	}
 
@@ -178,7 +179,7 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Transactional
 	@MethodLog
-	public long registerMethodIdent(long platformId, String packageName, String className, String methodName, List<String> parameterTypes, String returnType, int modifiers) throws RemoteException {
+	public long registerMethodIdent(long platformId, String packageName, String className, String methodName, List<String> parameterTypes, String returnType, int modifiers) {
 		MethodIdent methodIdent = new MethodIdent();
 		methodIdent.setPackageName(packageName);
 		methodIdent.setClassName(className);
@@ -212,7 +213,7 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Transactional
 	@MethodLog
-	public long registerMethodSensorTypeIdent(long platformId, String fullyQualifiedClassName, Map<String, Object> parameters) throws RemoteException {
+	public long registerMethodSensorTypeIdent(long platformId, String fullyQualifiedClassName, Map<String, Object> parameters) {
 		MethodSensorTypeIdent methodSensorTypeIdent = new MethodSensorTypeIdent();
 		methodSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
 
@@ -241,7 +242,7 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Transactional
 	@MethodLog
-	public void addSensorTypeToMethod(long methodSensorTypeId, long methodId) throws RemoteException {
+	public void addSensorTypeToMethod(long methodSensorTypeId, long methodId) {
 		MethodIdentToSensorType methodIdentToSensorType = methodIdentToSensorTypeDao.find(methodId, methodSensorTypeId);
 		if (null == methodIdentToSensorType) {
 			MethodIdent methodIdent = methodIdentDao.load(methodId);
@@ -260,7 +261,7 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Transactional
 	@MethodLog
-	public long registerPlatformSensorTypeIdent(long platformId, String fullyQualifiedClassName) throws RemoteException {
+	public long registerPlatformSensorTypeIdent(long platformId, String fullyQualifiedClassName) {
 		PlatformSensorTypeIdent platformSensorTypeIdent = new PlatformSensorTypeIdent();
 		platformSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
 
