@@ -8,6 +8,8 @@
 		This build file has the common targets used by all other inspectIT components
 	</description>
 
+	<property environment="env" />
+
 	<dirname property="commontargets.basedir" file="${ant.file.CommonTargets}" />
 	<property file="${commontargets.basedir}/common-targets.properties" />
 	<property file="${commontargets.basedir}/cmr-startup.properties" />
