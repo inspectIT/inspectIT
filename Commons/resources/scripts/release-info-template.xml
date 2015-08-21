@@ -1,0 +1,22 @@
+<release-info-BUILD_TYPE>
+	<version> VERSION </version>
+	<artefacts>
+		<agent> AGENT </agent>
+		<cmr os="linux" arch="32"> CMR_LINUX_32 </cmr>
+		<cmr os="linux" arch="64"> CMR_LINUX_64 </cmr>
+		<cmr os="windows" arch="32"> CMR_WINDOWS_32 </cmr>
+		<cmr os="windows" arch="64"> CMR_WINDOWS_64 </cmr>
+		<ui os="linux" arch="32"> UI_LINUX_32 </ui>
+		<ui os="linux" arch="32"> UI_LINUX_64 </ui>
+		<ui os="windows" arch="32"> UI_WINDOWS_32 </ui>
+		<ui os="windows" arch="32"> UI_WINDOWS_64 </ui>
+		<ui os="macos" arch="32"> UI_MACOS_32 </ui>
+		<ui os="macos" arch="32"> UI_MACOS_64 </ui>
+	</artefacts>
+	<installers>
+		<installer os="linux" arch="32"> INSTALLER_LINUX_32 </installer>
+		<installer os="linux" arch="64"> INSTALLER_LINUX_64 </installer>
+		<installer os="windows" arch="32"> INSTALLER_WINDOWS_32 </installer>
+		<installer os="windows" arch="64"> INSTALLER_WINDOWS_64 </installer>
+	</installers>
+</release-info-BUILD_TYPE>
