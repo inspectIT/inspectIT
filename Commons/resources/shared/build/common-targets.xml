@@ -8,6 +8,8 @@
 		This build file has the common targets used by all other inspectIT components
 	</description>
 
+	<property environment="env" />
+
 	<dirname property="commontargets.basedir" file="${ant.file.CommonTargets}" />
 	<property file="${commontargets.basedir}/common-targets.properties" />
 	<property file="${commontargets.basedir}/cmr-startup.properties" />
@@ -534,7 +536,7 @@
 
 			<if>
 				<not>
-					<matches string="@{jaxb-schemagen.schemafilename}" pattern="^\s*$"/>
+					<matches string="@{jaxb-schemagen.schemafilename}" pattern="^\s*$" />
 				</not>
 				<then>
 					<move file="@{jaxb-schemagen.dest}/schema1.xsd" tofile="@{jaxb-schemagen.dest}/@{jaxb-schemagen.schemafilename}" overwrite="true" failonerror="true" />
