@@ -4,6 +4,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+
+import java.security.NoSuchAlgorithmException;
+
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
 import info.novatec.inspectit.cmr.usermanagement.User;
@@ -21,11 +24,12 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 	/**
 	 * Tests that the saving and deleting the {@link User} works.
+	 * @throws NoSuchAlgorithmException 
 	 */
 	@Test
-	public void deleteAndDeleteUser() {
-		User user = new User("TestName", "TestPassword", "email", 1);
-		User user2 = new User("TestName", "TestPassword", "email", 1);
+	public void saveAndDeleteUser() throws NoSuchAlgorithmException {
+		User user = new User("TestName", "TestPassword", "email", 1, 1);
+		User user2 = new User("TestName", "TestPassword", "email", 2, 1);
 
 		userDao.saveOrUpdate(user);
 		userDao.saveOrUpdate(user2);

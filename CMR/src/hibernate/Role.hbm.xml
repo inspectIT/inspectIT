@@ -20,7 +20,5 @@
 			<one-to-many class="Permission"/>
 		</list>
 		
-		
-		<!-- Die verbindung zu den Benutzern muss hier noch rein -->
 	</class>
 </hibernate-mapping>

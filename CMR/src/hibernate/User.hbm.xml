@@ -10,7 +10,6 @@
 		<property name="name" column="name" />
 		<property name="password" column="password" />
 		<property name="email" column="email" />
-		<!-- Hier muss man irgendwie eine Verbindung mit einer Rolle rein bekommen   !-->
 		<property name="roleId" column="role_id" />
 		
 	</class>

@@ -25,7 +25,7 @@ public class RoleDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 * Tests that the saving and deleting the {@link Role} works.
 	 */
 	@Test
-	public void deleteAndDeleteRole() {
+	public void saveAndDeleteRole() {
 		Role role1 = new Role("Normal-User", null);
 		Role role2 = new Role("Power-User", null);
 

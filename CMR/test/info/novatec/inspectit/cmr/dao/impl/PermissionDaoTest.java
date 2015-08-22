@@ -23,7 +23,7 @@ public class PermissionDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 * Tests that the saving and deleting the {@link Permission} works.
 	 */
 	@Test
-	public void deleteAndDeletePermission() {
+	public void saveAndDeletePermission() {
 		Permission permission1 = new Permission("Normal-User", null);
 		Permission permission2 = new Permission("Power-User", null);
 
