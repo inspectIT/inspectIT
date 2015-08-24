@@ -33,7 +33,7 @@
 		<lookup-method name="getStorageIndexingTree" bean="storageRootBranchFactory" />
 	</bean>
 
-	<bean id="versioning" class="info.novatec.inspectit.versioning.FileBasedVersioningServiceImpl" />
+	<bean id="versionService" class="info.novatec.inspectit.version.VersionService" />
 
 	<bean id="IOExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
 		<property name="threadNamePrefix" value="io-executor-service" />

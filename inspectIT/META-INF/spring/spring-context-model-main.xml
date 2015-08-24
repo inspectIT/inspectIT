@@ -259,4 +259,8 @@
 	
 	<bean id="serializationManagerPostProcessor" class="info.novatec.inspectit.storage.serializer.SerializationManagerPostProcessor"/>
 	
+	<bean id="versionService" class="info.novatec.inspectit.version.VersionService" />
+	<bean id="versionProvider" class="info.novatec.inspectit.rcp.version.BundleVersionProvider" />
+	<bean id="documentationService" class="info.novatec.inspectit.rcp.documentation.DocumentationService" />
+	
 </beans>

@@ -23,8 +23,7 @@ import info.novatec.inspectit.agent.connection.IConnection;
 import info.novatec.inspectit.agent.connection.RegistrationException;
 import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.versioning.IVersioningService;
-
+import info.novatec.inspectit.version.VersionService;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -45,13 +44,13 @@ public class IdManagerTest extends AbstractLogSupport {
 	private IConnection connection;
 
 	@Mock
-	private IVersioningService versioning;
+	private VersionService versionService;
 
 	private IdManager idManager;
 
 	@BeforeMethod(dependsOnMethods = { "initMocks" })
 	public void initTestClass() {
-		idManager = new IdManager(configurationStorage, connection, versioning);
+		idManager = new IdManager(configurationStorage, connection, versionService);
 		idManager.log = LoggerFactory.getLogger(IdManager.class);
 	}
 
@@ -104,7 +103,7 @@ public class IdManagerTest extends AbstractLogSupport {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
-		when(versioning.getVersion()).thenReturn("dummyVersion");
+		when(versionService.getVersionAsString()).thenReturn("dummyVersion");
 
 		long fakePlatformId = 7L;
 		when(connection.isConnected()).thenReturn(false);
@@ -123,7 +122,7 @@ public class IdManagerTest extends AbstractLogSupport {
 		when(connection.isConnected()).thenReturn(true);
 		when(connection.registerPlatform("testAgent", "dummyVersion")).thenReturn(fakePlatformId);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
-		when(versioning.getVersion()).thenReturn("dummyVersion");
+		when(versionService.getVersionAsString()).thenReturn("dummyVersion");
 
 		idManager.start();
 		long platformId = idManager.getPlatformId();
@@ -154,7 +153,7 @@ public class IdManagerTest extends AbstractLogSupport {
 		when(connection.isConnected()).thenReturn(true);
 		when(connection.registerPlatform("testAgent", "dummyVersion")).thenReturn(fakePlatformId);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
-		when(versioning.getVersion()).thenReturn("dummyVersion");
+		when(versionService.getVersionAsString()).thenReturn("dummyVersion");
 
 		idManager.start();
 		idManager.getPlatformId();
@@ -191,7 +190,7 @@ public class IdManagerTest extends AbstractLogSupport {
 		when(connection.isConnected()).thenReturn(true);
 		when(connection.registerPlatform("testAgent", "dummyVersion")).thenReturn(fakePlatformId);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
-		when(versioning.getVersion()).thenReturn("dummyVersion");
+		when(versionService.getVersionAsString()).thenReturn("dummyVersion");
 
 		idManager.start();
 		idManager.getPlatformId();

@@ -1,7 +1,6 @@
 package info.novatec.inspectit.cmr.test;
 
 import info.novatec.inspectit.cmr.CMR;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;

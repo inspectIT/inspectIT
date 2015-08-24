@@ -62,13 +62,7 @@ public interface IServerStatusService {
 		public void setRegistrationIdsValidationKey(String registrationIdsValidationKey) {
 			this.registrationIdsValidationKey = registrationIdsValidationKey;
 		}
-
 	}
-
-	/**
-	 * String returned for version not available.
-	 */
-	String VERSION_NOT_AVAILABLE = "n/a";
 
 	/**
 	 * Returns the current server status.
@@ -83,5 +77,4 @@ public interface IServerStatusService {
 	 * @return the current version of the server.
 	 */
 	String getVersion();
-
 }
