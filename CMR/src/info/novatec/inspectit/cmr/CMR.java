@@ -2,7 +2,7 @@ package info.novatec.inspectit.cmr;
 
 import info.novatec.inspectit.cmr.util.Converter;
 import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
-import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.version.VersionService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,16 +98,9 @@ public final class CMR {
 		LOGGER.info("Spring successfully initialized");
 
 		if (LOGGER.isInfoEnabled()) {
-			IVersioningService versioning = (IVersioningService) getBeanFactory().getBean("versioning");
-			String currentVersion = "n/a";
-			try {
-				currentVersion = versioning.getVersion();
-			} catch (IOException e) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Versioning information could not be read");
-				}
-			}
-			LOGGER.info("Starting CMR in version " + currentVersion);
+			VersionService versionService = (VersionService) getBeanFactory().getBean("versionService");
+			LOGGER.info("Starting CMR in version " + versionService.getVersionAsString()
+					+ ". Please note that inspectIT does not provide any guarantee on backwards compatibility. Only if the version match exactly we ensure that the components are compatible.");
 		}
 	}
 

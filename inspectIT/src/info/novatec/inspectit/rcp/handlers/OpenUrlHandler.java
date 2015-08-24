@@ -1,13 +1,13 @@
 package info.novatec.inspectit.rcp.handlers;
 
 import info.novatec.inspectit.rcp.InspectIT;
+import info.novatec.inspectit.rcp.documentation.DocumentationService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.commands.AbstractHandler;
@@ -67,11 +67,16 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 	public static class OpenDocumentationHandler extends OpenUrlHandler {
 
 		/**
+		 * Documentation Service.
+		 */
+		protected DocumentationService documentationService = InspectIT.getService(DocumentationService.class);
+
+		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		protected String getUrlString(ExecutionEvent event) {
-			return "https://documentation.novatec-gmbh.de/display/INSPECTIT/Home";
+			return documentationService.getDocumentationUrl();
 		}
 	}
 
@@ -188,19 +193,7 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 		@Override
 		protected String getUrlString(ExecutionEvent event) {
 			String param = event.getParameter(SEARCH_DOCUMENTATION_PARAMETER);
-			if (StringUtils.isNotEmpty(param)) {
-				StringBuilder stringBuilder = new StringBuilder("https://documentation.novatec-gmbh.de/dosearchsite.action?searchQuery.queryString=");
-				String[] words = StringUtils.split(param);
-				for (int i = 0; i < words.length; i++) {
-					stringBuilder.append(words[i]);
-					if (i < words.length - 1) {
-						stringBuilder.append('+');
-					}
-				}
-				stringBuilder.append("&searchQuery.spaceKey=INSPECTIT");
-				return stringBuilder.toString();
-			}
-			return super.getUrlString(event);
+			return documentationService.getSearchUrlFor(param);
 		}
 	}
 }

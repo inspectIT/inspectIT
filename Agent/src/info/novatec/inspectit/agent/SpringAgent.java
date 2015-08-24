@@ -6,9 +6,8 @@ import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.hooking.IHookDispatcher;
 import info.novatec.inspectit.agent.logback.LogInitializer;
 import info.novatec.inspectit.agent.spring.SpringConfiguration;
-import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.version.VersionService;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -94,15 +93,8 @@ public class SpringAgent implements IAgent {
 
 		// log version
 		if (LOG.isInfoEnabled()) {
-			String currentVersion = "n/a";
-			try {
-				currentVersion = beanFactory.getBean(IVersioningService.class).getVersion();
-			} catch (IOException e) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Version information could not be read", e);
-				}
-			}
-			LOG.info("Using agent version " + currentVersion);
+			VersionService versionService = beanFactory.getBean(VersionService.class);
+			LOG.info("Using agent version " + versionService.getVersionAsString() + ".");
 		}
 
 		hookDispatcher = beanFactory.getBean(IHookDispatcher.class);

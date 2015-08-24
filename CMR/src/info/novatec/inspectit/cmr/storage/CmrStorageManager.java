@@ -24,6 +24,7 @@ import info.novatec.inspectit.storage.serializer.ISerializer;
 import info.novatec.inspectit.storage.serializer.SerializationException;
 import info.novatec.inspectit.storage.util.CopyMoveFileVisitor;
 import info.novatec.inspectit.storage.util.DeleteFileVisitor;
+import info.novatec.inspectit.version.VersionService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -128,7 +129,13 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	IServerStatusService serverStatusService;
 
 	/**
-	 * Current cmr version.
+	 * {@link VersionService}.
+	 */
+	@Autowired
+	VersionService versionService;
+
+	/**
+	 * Stores the current cmr version read from the versionService.
 	 */
 	private String cmrVersion;
 
@@ -1196,7 +1203,7 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 */
 	@PostConstruct
 	public void postConstruct() throws Exception {
-		cmrVersion = serverStatusService.getVersion();
+		cmrVersion = versionService.getVersionAsString();
 		loadAllExistingStorages();
 		updatedStorageSpaceLeft();
 		clearUploadFolder();

@@ -1,10 +1,9 @@
 package info.novatec.inspectit.cmr.service.rest;
 
 import info.novatec.inspectit.cmr.service.ICmrManagementService;
-import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.service.rest.error.JsonError;
 import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
-import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.version.VersionService;
 
 import java.io.IOException;
 
@@ -27,10 +26,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class CmrRestfulService {
 
 	/**
-	 * Reference to the existing {@link IVersioningService}.
+	 * Reference to the existing {@link VersionService}.
 	 */
 	@Autowired
-	private IServerStatusService versioningService;
+	private VersionService versionService;
 
 	/**
 	 * Reference to the existing {@link IVersioningService}.
@@ -62,7 +61,7 @@ public class CmrRestfulService {
 	@RequestMapping(method = RequestMethod.GET, value = "version")
 	@ResponseBody
 	public String getVersion() throws IOException {
-		return versioningService.getVersion();
+		return versionService.getVersionAsString();
 	}
 
 	/**
