@@ -27,6 +27,7 @@ import info.novatec.inspectit.storage.recording.RecordingState;
 import info.novatec.inspectit.storage.serializer.SerializationException;
 import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
 import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
+import info.novatec.inspectit.version.VersionService;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -38,6 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -87,6 +89,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	private IServerStatusService serverStatusService;
 
 	@Mock
+	private VersionService versionService;
+
+	@Mock
 	IBuffer<DefaultData> buffer;
 
 	private StorageData storageData;
@@ -108,9 +113,10 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 		storageManager.setSerializationManagerProvider(serializationManagerProvider);
 		storageManager.serverStatusService = serverStatusService;
 		storageManager.log = LoggerFactory.getLogger(CmrStorageManager.class);
+		storageManager.versionService = versionService;
 		when(storageWriterProvider.getCmrStorageWriter()).thenReturn(storageWriter);
 		when(serializationManagerProvider.createSerializer()).thenReturn(serializer);
-		when(serverStatusService.getVersion()).thenReturn(CMR_VERSION);
+		when(versionService.getVersionAsString()).thenReturn(CMR_VERSION);
 
 		Field field = StorageManager.class.getDeclaredField("log");
 		field.setAccessible(true);

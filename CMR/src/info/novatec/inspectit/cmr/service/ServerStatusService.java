@@ -2,9 +2,8 @@ package info.novatec.inspectit.cmr.service;
 
 import info.novatec.inspectit.cmr.spring.aop.MethodLog;
 import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.version.VersionService;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -28,25 +27,20 @@ public class ServerStatusService implements IServerStatusService {
 	Logger log;
 
 	/**
+	 * {@link VersionService}.
+	 */
+	@Autowired
+	VersionService versionService;
+
+	/**
 	 * The status of the CMR.
 	 */
 	private ServerStatus status = ServerStatus.SERVER_STARTING;
 
 	/**
-	 * The versioning Service.
-	 */
-	@Autowired
-	private IVersioningService versioning;
-
-	/**
-	 * We will only log once that the version information can not be obtained, since the UI is
-	 * checking this periodically. Even in debug level it is not wanted to be logged all the time.
-	 */
-	private boolean versionNotFoundLogged = false;
-
-	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public ServerStatus getServerStatus() {
 		return status;
@@ -55,17 +49,10 @@ public class ServerStatusService implements IServerStatusService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public String getVersion() {
-		try {
-			return versioning.getVersion();
-		} catch (IOException e) {
-			if (!versionNotFoundLogged && log.isDebugEnabled()) {
-				log.debug("Cannot obtain current version", e);
-				versionNotFoundLogged = true;
-			}
-			return IServerStatusService.VERSION_NOT_AVAILABLE;
-		}
+		return versionService.getVersionAsString();
 	}
 
 	/**
