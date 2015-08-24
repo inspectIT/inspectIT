@@ -29,7 +29,7 @@ Export-Package: info.novatec.inspectit.cmr.cache,
  info.novatec.inspectit.storage.serializer.schema,
  info.novatec.inspectit.storage.serializer.util,
  info.novatec.inspectit.util,
- info.novatec.inspectit.versioning,
+ info.novatec.inspectit.version,
  schema
 Bundle-Vendor: NovaTec GmbH
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

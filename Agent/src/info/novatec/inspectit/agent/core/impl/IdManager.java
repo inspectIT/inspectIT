@@ -12,9 +12,8 @@ import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.version.VersionService;
 
-import java.io.IOException;
 import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -51,7 +50,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * The versioning service.
 	 */
-	private final IVersioningService versioningService;
+	private final VersionService versionService;
 
 	/**
 	 * The connection to the Central Measurement Repository.
@@ -112,14 +111,14 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	 *            The configuration storage.
 	 * @param connection
 	 *            The connection to the server.
-	 * @param versioning
+	 * @param versionService
 	 *            The versioning service.
 	 */
 	@Autowired
-	public IdManager(IConfigurationStorage configurationStorage, IConnection connection, IVersioningService versioning) {
+	public IdManager(IConfigurationStorage configurationStorage, IConnection connection, VersionService versionService) {
 		this.configurationStorage = configurationStorage;
 		this.connection = connection;
-		this.versioningService = versioning;
+		this.versionService = versionService;
 	}
 
 	/**
@@ -227,7 +226,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		if (!methodIdMap.containsKey(methodIdentifier)) {
 			throw new IdNotAvailableException("Method ID '" + methodId + "' is not mapped");
 		} else {
-			Long registeredMethodIdentifier = (Long) methodIdMap.get(methodIdentifier);
+			Long registeredMethodIdentifier = methodIdMap.get(methodIdentifier);
 			return registeredMethodIdentifier.longValue();
 		}
 	}
@@ -242,7 +241,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		if (!sensorTypeIdMap.containsKey(sensorTypeIdentifier)) {
 			throw new IdNotAvailableException("Sensor Type ID '" + sensorTypeId + "' is not mapped");
 		} else {
-			Long registeredSensorTypeIdentifier = (Long) sensorTypeIdMap.get(sensorTypeIdentifier);
+			Long registeredSensorTypeIdentifier = sensorTypeIdMap.get(sensorTypeIdentifier);
 			return registeredSensorTypeIdentifier.longValue();
 		}
 	}
@@ -454,6 +453,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void run() {
 			Thread thisThread = Thread.currentThread();
 			// break out of the while loop if the registrationThread is set
@@ -549,26 +549,10 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		 *             appears.
 		 */
 		private void registerPlatform() throws ServerUnavailableException, RegistrationException {
-			platformId = connection.registerPlatform(configurationStorage.getAgentName(), getVersion());
+			platformId = connection.registerPlatform(configurationStorage.getAgentName(), versionService.getVersionAsString());
 
 			if (log.isDebugEnabled()) {
 				log.debug("Received platform ID: " + platformId);
-			}
-		}
-
-		/**
-		 * Returns the formatted version.
-		 * 
-		 * @return the formatted version.
-		 */
-		private String getVersion() {
-			try {
-				return versioningService.getVersion();
-			} catch (IOException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Version information could not be read", e);
-				}
-				return "n/a";
 			}
 		}
 
@@ -584,7 +568,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		private void registerSensorTypeToMethodMapping() throws ServerUnavailableException, RegistrationException {
 			while (!sensorTypeToMethodRegister.isEmpty()) {
 				SensorTypeToMethodMapping mapping;
-				mapping = (SensorTypeToMethodMapping) sensorTypeToMethodRegister.getFirst();
+				mapping = sensorTypeToMethodRegister.getFirst();
 
 				Long sensorTypeId = Long.valueOf(mapping.getSensorTypeId());
 				Long methodId = Long.valueOf(mapping.getMethodId());
@@ -618,8 +602,8 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 				throw new RegistrationException("Method ID could not be found in the map!");
 			}
 
-			Long serverSensorTypeId = (Long) sensorTypeIdMap.get(sensorTypeId);
-			Long serverMethodId = (Long) methodIdMap.get(methodId);
+			Long serverSensorTypeId = sensorTypeIdMap.get(sensorTypeId);
+			Long serverMethodId = methodIdMap.get(methodId);
 
 			connection.addSensorTypeToMethod(serverSensorTypeId.longValue(), serverMethodId.longValue());
 
@@ -692,7 +676,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		private void registerMethods() throws ServerUnavailableException, RegistrationException {
 			while (!methodsToRegister.isEmpty()) {
 				RegisteredSensorConfig rsc;
-				rsc = (RegisteredSensorConfig) methodsToRegister.getFirst();
+				rsc = methodsToRegister.getFirst();
 				this.registerMethod(rsc);
 				synchronized (methodsToRegister) {
 					methodsToRegister.removeFirst();

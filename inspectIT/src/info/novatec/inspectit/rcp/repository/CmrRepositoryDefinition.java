@@ -15,6 +15,7 @@ import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.service.RefreshEditorsCachedDataService;
 import info.novatec.inspectit.rcp.repository.service.cmr.CmrServiceProvider;
+import info.novatec.inspectit.version.VersionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -352,6 +353,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * @return the name
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -397,10 +399,10 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			try {
 				return serverStatusService.getVersion();
 			} catch (Exception e) {
-				return IServerStatusService.VERSION_NOT_AVAILABLE;
+				return VersionService.UNKNOWN_VERSION;
 			}
 		} else {
-			return IServerStatusService.VERSION_NOT_AVAILABLE;
+			return VersionService.UNKNOWN_VERSION;
 		}
 	}
 
@@ -459,6 +461,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
 		return this;
 	}
