@@ -13,8 +13,8 @@ import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.versioning.UnknownVersionException;
 
-import java.io.IOException;
 import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -564,7 +564,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		private String getVersion() {
 			try {
 				return versioningService.getVersion();
-			} catch (IOException e) {
+			} catch (UnknownVersionException e) {
 				if (log.isDebugEnabled()) {
 					log.debug("Version information could not be read", e);
 				}

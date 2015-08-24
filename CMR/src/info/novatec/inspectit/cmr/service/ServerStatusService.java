@@ -3,8 +3,8 @@ package info.novatec.inspectit.cmr.service;
 import info.novatec.inspectit.cmr.spring.aop.MethodLog;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.versioning.UnknownVersionException;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -59,7 +59,7 @@ public class ServerStatusService implements IServerStatusService {
 	public String getVersion() {
 		try {
 			return versioning.getVersion();
-		} catch (IOException e) {
+		} catch (UnknownVersionException e) {
 			if (!versionNotFoundLogged && log.isDebugEnabled()) {
 				log.debug("Cannot obtain current version", e);
 				versionNotFoundLogged = true;

@@ -19,4 +19,9 @@
 			<class name="info.novatec.inspectit.storage.nio.stream.SocketExtendedByteBufferInputStreamTest" />
 		</classes>
 	</test>
+	<test name="Versioning">
+		<classes>
+			<class name="info.novatec.inspectit.versioning.FileBasedVersioningServiceImplTest" />
+		</classes>
+	</test>
 </suite>

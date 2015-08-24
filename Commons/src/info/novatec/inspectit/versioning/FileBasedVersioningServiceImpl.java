@@ -1,7 +1,6 @@
 package info.novatec.inspectit.versioning;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,28 +26,33 @@ public class FileBasedVersioningServiceImpl implements IVersioningService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getVersion() throws IOException {
+	public String getVersion() throws UnknownVersionException {
 
 		// Get a classloader to find the version file
 		ClassLoader classLoader = FileBasedVersioningServiceImpl.class.getClassLoader();
 		if (null == classLoader) {
 			// this means inspectIT was started using the XBootclasspath option and thus all classes
-			// are in fact
-			// loaded by the system classloader, so we need to use the system classloader
+			// are in fact loaded by the system classloader, so we need to use the system
+			// classloader
 			classLoader = ClassLoader.getSystemClassLoader();
 		}
 
 		InputStream s = classLoader.getResourceAsStream(VERSION_LOG_NAME);
 
 		if (null == s) {
-			throw new FileNotFoundException("The version information file \"" + VERSION_LOG_NAME + "\" cannot be found in the classpath");
+			throw new UnknownVersionException("The version information file \"" + VERSION_LOG_NAME + "\" cannot be found in the classpath");
 		}
 
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new InputStreamReader(s));
 
-			String versionString = reader.readLine();
+			String versionString;
+			try {
+				versionString = reader.readLine();
+			} catch (IOException e) {
+				throw new UnknownVersionException("Problem while reading the version file.", e);
+			}
 			String version = "n/a";
 			if (null != versionString && !"".equals(versionString.trim())) {
 				version = versionString;
@@ -68,6 +72,33 @@ public class FileBasedVersioningServiceImpl implements IVersioningService {
 				// ignore
 			}
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getMajorVersion() throws UnknownVersionException {
+		String version = getVersion();
+
+		if (null == version) {
+			throw new UnknownVersionException("version was null");
+		}
+
+		int secondDotSeparator = version.indexOf(".", version.indexOf(".") + 1);
+		
+		if (-1 == secondDotSeparator) {
+			// this is not a valid version, perhaps we are in development
+			throw new UnknownVersionException("The version \"" + version + "\" is an invalid version.");
+		} else {
+			return version.substring(0, secondDotSeparator);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getMajorVersionNoDots() throws UnknownVersionException {
+		return getMajorVersion().replaceAll("\\.", "");
 	}
 
 	// public static void main(String[] args) throws Exception {

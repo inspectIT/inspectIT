@@ -24,8 +24,8 @@ import info.novatec.inspectit.agent.connection.RegistrationException;
 import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.versioning.UnknownVersionException;
 
-import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +100,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void connectAndRetrievePlatformId() throws ServerUnavailableException, RegistrationException, IdNotAvailableException, IOException {
+	public void connectAndRetrievePlatformId() throws ServerUnavailableException, RegistrationException, IdNotAvailableException, UnknownVersionException {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
@@ -118,7 +118,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void retrievePlatformId() throws IdNotAvailableException, ServerUnavailableException, RegistrationException, InterruptedException, IOException {
+	public void retrievePlatformId() throws IdNotAvailableException, ServerUnavailableException, RegistrationException, InterruptedException, UnknownVersionException {
 		long fakePlatformId = 3L;
 		when(connection.isConnected()).thenReturn(true);
 		when(connection.registerPlatform("testAgent", "dummyVersion")).thenReturn(fakePlatformId);
@@ -148,7 +148,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * registration is performed.
 	 */
 	@Test
-	public void unregisterPlatform() throws ServerUnavailableException, RegistrationException, IOException, IdNotAvailableException {
+	public void unregisterPlatform() throws ServerUnavailableException, RegistrationException, UnknownVersionException, IdNotAvailableException {
 		// first simulate connect
 		long fakePlatformId = 3L;
 		when(connection.isConnected()).thenReturn(true);
@@ -185,7 +185,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * should throw an exception
 	 */
 	@Test(expectedExceptions = { IdNotAvailableException.class })
-	public void unregisterPlatformAndInitShutdown() throws ServerUnavailableException, RegistrationException, IOException, IdNotAvailableException {
+	public void unregisterPlatformAndInitShutdown() throws ServerUnavailableException, RegistrationException, UnknownVersionException, IdNotAvailableException {
 		// first simulate connect
 		long fakePlatformId = 3L;
 		when(connection.isConnected()).thenReturn(true);

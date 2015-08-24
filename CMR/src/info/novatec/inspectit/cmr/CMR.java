@@ -3,6 +3,7 @@ package info.novatec.inspectit.cmr;
 import info.novatec.inspectit.cmr.util.Converter;
 import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
 import info.novatec.inspectit.versioning.IVersioningService;
+import info.novatec.inspectit.versioning.UnknownVersionException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -102,7 +103,7 @@ public final class CMR {
 			String currentVersion = "n/a";
 			try {
 				currentVersion = versioning.getVersion();
-			} catch (IOException e) {
+			} catch (UnknownVersionException e) {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Versioning information could not be read");
 				}
