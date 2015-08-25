@@ -6,11 +6,12 @@ import info.novatec.inspectit.cmr.dao.impl.DefaultDataDaoImpl;
 import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.cmr.WritingStatus;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.StorageData;
 import info.novatec.inspectit.storage.StorageData.StorageState;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.StorageFileType;
 import info.novatec.inspectit.storage.StorageManager;
 import info.novatec.inspectit.storage.StorageWriter;
@@ -140,8 +141,13 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             if {@link IOException} occurs.
 	 * @throws SerializationException
 	 *             If serialization fails.
+	 * @throws BusinessException
+	 *             If name for storage is not provided.
 	 */
-	public void createStorage(StorageData storageData) throws IOException, SerializationException {
+	public void createStorage(StorageData storageData) throws IOException, SerializationException, BusinessException {
+		if (null == storageData.getName()) {
+			throw new BusinessException("Create new storage.", StorageErrorCodeEnum.STORAGE_NAME_IS_NOT_PROVIDED);
+		}
 		storageData.setId(getRandomUUIDString());
 		storageData.setCmrVersion(cmrVersion);
 		writeStorageDataToDisk(storageData);
@@ -159,14 +165,14 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             If {@link IOException} occurs.
 	 * @throws SerializationException
 	 *             If exception occurs during update of storage data.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If provided storage data does not exist or if the storage is closed.
 	 */
-	public StorageWriter openStorage(StorageData storageData) throws IOException, SerializationException, StorageException {
+	public StorageWriter openStorage(StorageData storageData) throws IOException, SerializationException, BusinessException {
 		StorageData local = getLocalStorageDataObject(storageData);
 		synchronized (local) {
 			if (isStorageClosed(local)) {
-				throw new StorageException("Already closed storage " + local + " can not be opened.");
+				throw new BusinessException("Open the storage " + local + ".", StorageErrorCodeEnum.STORAGE_ALREADY_CLOSED);
 			}
 			if (!isStorageOpen(local)) {
 				local.markOpened();
@@ -185,20 +191,20 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * 
 	 * @param storageData
 	 *            Storage.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When storage that should be closed is used for recording or it is already closed.
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
-	public void closeStorage(StorageData storageData) throws StorageException, IOException, SerializationException {
+	public void closeStorage(StorageData storageData) throws BusinessException, IOException, SerializationException {
 		StorageData local = getLocalStorageDataObject(storageData);
 		synchronized (local) {
 			if ((storageRecorder.isRecordingOn() || storageRecorder.isRecordingScheduled()) && Objects.equals(local, recorderStorageData)) {
-				throw new StorageException("Storage " + local + " can not be finalized because it is currently used for recording purposes.");
+				throw new BusinessException("Close the storage " + local + ".", StorageErrorCodeEnum.STORAGE_CAN_NOT_BE_CLOSED);
 			} else if (isStorageClosed(local)) {
-				throw new StorageException("Already closed storage " + local + " can not be closed again.");
+				throw new BusinessException("Close the storage " + local + ".", StorageErrorCodeEnum.STORAGE_ALREADY_CLOSED);
 			}
 
 			StorageWriter writer = openedStoragesMap.get(local);
@@ -217,16 +223,16 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * 
 	 * @param storageData
 	 *            {@link StorageData} to delete.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage is not closed.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
-	public void deleteStorage(StorageData storageData) throws StorageException, IOException {
+	public void deleteStorage(StorageData storageData) throws BusinessException, IOException {
 		StorageData local = getLocalStorageDataObject(storageData);
 		synchronized (local) {
 			if ((storageRecorder.isRecordingOn() || storageRecorder.isRecordingScheduled()) && Objects.equals(local, recorderStorageData)) {
-				throw new StorageException("Storage " + local + " can not be finalized because it is currently used for recording purposes.");
+				throw new BusinessException("Delete the storage " + local + ".", StorageErrorCodeEnum.STORAGE_ALREADY_CLOSED);
 			}
 			if (local.isStorageOpened()) {
 				StorageWriter writer = openedStoragesMap.get(local);
@@ -296,10 +302,10 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             If {@link IOException} occurs while creating and opening the storage.
 	 * @throws SerializationException
 	 *             If serialization fails when creating the storage.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If recording can not be started for some reason.
 	 */
-	public void startOrScheduleRecording(StorageData storageData, RecordingProperties recordingProperties) throws IOException, SerializationException, StorageException {
+	public void startOrScheduleRecording(StorageData storageData, RecordingProperties recordingProperties) throws IOException, SerializationException, BusinessException {
 		if (!isStorageExisting(storageData)) {
 			this.createStorage(storageData);
 		}
@@ -325,10 +331,10 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             If serialization fails during write {@link StorageData} to disk.
 	 * @throws IOException
 	 *             If IOException occurs during write {@link StorageData} to disk.
-	 * @throws StorageException
-	 *             If {@link StorageException} is throw during auto-finalize process.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} is throw during auto-finalize process.
 	 */
-	public void stopRecording() throws IOException, SerializationException, StorageException {
+	public void stopRecording() throws IOException, SerializationException, BusinessException {
 		synchronized (this) {
 			if (storageRecorder.isRecordingOn() || storageRecorder.isRecordingScheduled()) {
 				boolean autoFinalize = storageRecorder.getRecordingProperties().isAutoFinalize();
@@ -375,7 +381,7 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *            direct write is done.
 	 * @param synchronously
 	 *            If write will be done synchronously or not.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage is used as a recording storage.
 	 * @throws SerializationException
 	 *             If serialization fails during auto-finalization.
@@ -383,7 +389,7 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             If {@link IOException} occurs during auto-finalization.
 	 */
 	public void writeToStorage(StorageData storageData, Collection<? extends DefaultData> dataToWrite, Collection<AbstractDataProcessor> dataProcessors, boolean synchronously)
-			throws StorageException, IOException, SerializationException {
+			throws BusinessException, IOException, SerializationException {
 		StorageData local = getLocalStorageDataObject(storageData);
 		StorageWriter writer = openedStoragesMap.get(local);
 		if (writer != null) {
@@ -393,12 +399,12 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 				writer.process(dataToWrite, dataProcessors);
 			}
 		} else if (Objects.equals(local, recorderStorageData)) {
-			throw new StorageException("Can not write to storage that is currently used as a recording storage.");
+			throw new BusinessException("Write data to storage " + local + ".", StorageErrorCodeEnum.WRITE_FAILED);
 		} else if (local.getState() == StorageState.CLOSED) {
-			throw new StorageException("Can not write to closed storage");
+			throw new BusinessException("Write data to storage " + local + ".", StorageErrorCodeEnum.STORAGE_ALREADY_CLOSED);
 		} else {
-			log.error("Writer for the not closed storage " + local + " not available.");
-			throw new StorageException("Writer for the not closed storage " + local + " not available.");
+			log.error("Writer for the not closed storage " + local + " is not available.");
+			throw new RuntimeException("Writer for the not closed storage " + local + " is not available.");
 		}
 	}
 
@@ -413,14 +419,14 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *            Processors that will be used for data writing.
 	 * @param autoFinalize
 	 *            If the storage where action is performed should be auto-finalized after the write.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage is used as a recording storage.
 	 * @throws SerializationException
 	 *             If storage needs to be created, and serialization fails.
 	 * @throws IOException
 	 *             If IO exception occurs.
 	 */
-	public void copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws StorageException, IOException,
+	public void copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws BusinessException, IOException,
 			SerializationException {
 		if (!isStorageExisting(storageData)) {
 			this.createStorage(storageData);
@@ -482,11 +488,11 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             If {@link IOException} occurs.
 	 * @throws SerializationException
 	 *             If serialization fails when storage needs to be created/opened.
-	 * @throws StorageException
-	 *             If {@link StorageException} occurs.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs.
 	 */
 	public void copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws IOException,
-			SerializationException, StorageException {
+			SerializationException, BusinessException {
 		if (!isStorageExisting(storageData)) {
 			this.createStorage(storageData);
 		}
@@ -652,7 +658,7 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 			} else {
 				return storageWriter.getQueuedTaskCount();
 			}
-		} catch (StorageException e) {
+		} catch (BusinessException e) {
 			return 0;
 		}
 	}
@@ -722,10 +728,10 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             If {@link IOException} happens.
 	 * @throws SerializationException
 	 *             If {@link SerializationException} happens.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If provided storage data does not exist.
 	 */
-	public void addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws IOException, SerializationException, StorageException {
+	public void addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws IOException, SerializationException, BusinessException {
 		StorageData local = getLocalStorageDataObject(storageData);
 		if (null != local) {
 			local.addLabel(storageLabel, doOverwrite);
@@ -745,10 +751,10 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *             If {@link IOException} happens.
 	 * @throws SerializationException
 	 *             If {@link SerializationException} happens.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If provided storage data does not exist.
 	 */
-	public boolean removeLabelFromStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel) throws IOException, SerializationException, StorageException {
+	public boolean removeLabelFromStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel) throws IOException, SerializationException, BusinessException {
 		StorageData local = getLocalStorageDataObject(storageData);
 		if (null != local) {
 			boolean removed = local.removeLabel(storageLabel);
@@ -763,17 +769,17 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * 
 	 * @param storageData
 	 *            Storage data containing update values.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage does not exists.
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
 	 *             If IO operation fails.
 	 */
-	public void updateStorageData(StorageData storageData) throws StorageException, IOException, SerializationException {
+	public void updateStorageData(StorageData storageData) throws BusinessException, IOException, SerializationException {
 		StorageData local = getLocalStorageDataObject(storageData);
 		if (null == local) {
-			throw new StorageException("Storage to update does not exists.");
+			throw new BusinessException("Update of the storage data" + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 		} else {
 			synchronized (local) {
 				local.setName(storageData.getName());
@@ -851,13 +857,13 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * 
 	 * @throws IOException
 	 *             IF {@link IOException} occurs during the file tree walk.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If there is not enough space for the unpacking the storage.
 	 */
-	public void unpackUploadedStorage(final IStorageData packedStorageData) throws IOException, StorageException {
+	public void unpackUploadedStorage(final IStorageData packedStorageData) throws IOException, BusinessException {
 		long storageBytesLeft = getBytesHardDriveOccupancyLeft();
 		if (packedStorageData.getDiskSize() > storageBytesLeft) {
-			throw new StorageException("Uploaded storage " + packedStorageData + " can not be unpacked because there is not enough disk space left for storage data on the CMR.");
+			throw new BusinessException("Unpack the uploaded storage " + packedStorageData + ".", StorageErrorCodeEnum.LOW_DISK_SPACE);
 		}
 
 		Path uploadPath = Paths.get(this.getStorageUploadsFolder());
@@ -910,15 +916,15 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *            Local storage information.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If there is not enough space for the unpacking the storage.
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 */
-	public void createStorageFromUploadedDir(final IStorageData localStorageData) throws IOException, StorageException, SerializationException {
+	public void createStorageFromUploadedDir(final IStorageData localStorageData) throws IOException, BusinessException, SerializationException {
 		long storageBytesLeft = getBytesHardDriveOccupancyLeft();
 		if (localStorageData.getDiskSize() > storageBytesLeft) {
-			throw new StorageException("Uploaded storage " + localStorageData + " can not be unpacked because there is not enough disk space left for storage data on the CMR.");
+			throw new BusinessException("Create the uploaded storage " + localStorageData + ".", StorageErrorCodeEnum.LOW_DISK_SPACE);
 		}
 
 		Path uploadPath = Paths.get(this.getStorageUploadsFolder());
@@ -1059,16 +1065,16 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * @param storageData
 	 *            Template.
 	 * @return Local object.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If local object can not be found.
 	 */
-	private StorageData getLocalStorageDataObject(StorageData storageData) throws StorageException {
+	private StorageData getLocalStorageDataObject(StorageData storageData) throws BusinessException {
 		for (StorageData existing : existingStoragesSet) {
 			if (existing.getId().equals(storageData.getId())) {
 				return existing;
 			}
 		}
-		throw new StorageException("Local storage object can not be found with given storage data: " + storageData);
+		throw new BusinessException("Find storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
 	}
 
 	/**

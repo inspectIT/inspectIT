@@ -2,9 +2,9 @@ package info.novatec.inspectit.cmr.service;
 
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.cmr.RecordingData;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
@@ -31,12 +31,12 @@ public interface IStorageService {
 	 * 
 	 * @param storageData
 	 *            Information about new storage.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When {@link StorageData} is insufficient for storage creation. When storage
 	 *             creation fails. When storage opening fails.
 	 * @return The newly created storage with proper ID and status information.
 	 */
-	StorageData createAndOpenStorage(StorageData storageData) throws StorageException;
+	StorageData createAndOpenStorage(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Closes an already open storage. Writing after calling this method will not be possible on the
@@ -45,20 +45,20 @@ public interface IStorageService {
 	 * 
 	 * @param storageData
 	 *            Storage to close.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When storage that should be closed is used for recording.
 	 */
-	void closeStorage(StorageData storageData) throws StorageException;
+	void closeStorage(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Deletes a storage. Storage can be deleted only if it is not used for recording.
 	 * 
 	 * @param storageData
 	 *            Storage to delete.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When storage is does not exists or is used for recording.
 	 */
-	void deleteStorage(StorageData storageData) throws StorageException;
+	void deleteStorage(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Returns if the storage is opened, and thus if the write to the storage can be executed.
@@ -119,20 +119,20 @@ public interface IStorageService {
 	 *            Properties to start recording with. Must not be null, otherwise the recording
 	 *            won't start.
 	 * @return The recording storage with proper ID and status information.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If recording is already active or scheduled. If storage has to be created, then
 	 *             when {@link StorageData} is insufficient for storage creation or when storage
 	 *             creation fails. If storage has to be opened, then when storage opening fails.
 	 */
-	StorageData startOrScheduleRecording(StorageData storageData, RecordingProperties recordingProperties) throws StorageException;
+	StorageData startOrScheduleRecording(StorageData storageData, RecordingProperties recordingProperties) throws BusinessException;
 
 	/**
 	 * Stops recording. The storage that is currently used for recording will be closed.
 	 * 
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If stopping the recording fails.
 	 */
-	void stopRecording() throws StorageException;
+	void stopRecording() throws BusinessException;
 
 	/**
 	 * Returns the {@link RecordingData} if the recording is on. Otherwise <code>null</code>.
@@ -155,11 +155,11 @@ public interface IStorageService {
 	 *            List of processor to work on data.
 	 * @param synchronously
 	 *            Should write be synchronous or not.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage is not opened, or the storage is currently used for recording. If
 	 *             write fails.
 	 */
-	void writeToStorage(StorageData storageData, Collection<DefaultData> defaultDataCollection, Collection<AbstractDataProcessor> dataProcessors, boolean synchronously) throws StorageException;
+	void writeToStorage(StorageData storageData, Collection<DefaultData> defaultDataCollection, Collection<AbstractDataProcessor> dataProcessors, boolean synchronously) throws BusinessException;
 
 	/**
 	 * Copies the complete content of the buffer to the provided storage. The storage does not have
@@ -176,10 +176,10 @@ public interface IStorageService {
 	 * @param autoFinalize
 	 *            If the storage where action is performed should be auto-finalized after the write.
 	 * @return The recording storage with proper ID and status information.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If the storage is currently used for recording. If write fails.
 	 */
-	StorageData copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws StorageException;
+	StorageData copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws BusinessException;
 
 	/**
 	 * Copies the data with provided IDs in the storage. The buffer will be queried for the data
@@ -201,11 +201,11 @@ public interface IStorageService {
 	 * @param autoFinalize
 	 *            If the storage where action is performed should be auto-finalized after the write.
 	 * @return The recording storage with proper ID and status information.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If the storage is currently used for recording. If write fails.
 	 */
 	StorageData copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
-			throws StorageException;
+			throws BusinessException;
 
 	/**
 	 * Returns the map of the string/long pairs that represent the path to the index files for one
@@ -219,10 +219,10 @@ public interface IStorageService {
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the index files
 	 *         and their size.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When provided storage does not exist.
 	 */
-	Map<String, Long> getIndexFilesLocations(StorageData storageData) throws StorageException;
+	Map<String, Long> getIndexFilesLocations(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Returns the map of the string/long pairs that represent the path to the data files for one
@@ -236,10 +236,10 @@ public interface IStorageService {
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the data files
 	 *         and their size.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When provided storage does not exist.
 	 */
-	Map<String, Long> getDataFilesLocations(StorageData storageData) throws StorageException;
+	Map<String, Long> getDataFilesLocations(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Returns the map of the string/long pairs that represent the path to the cached data files for
@@ -253,10 +253,10 @@ public interface IStorageService {
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the cached data
 	 *         files and their size.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             When provided storage does not exist.
 	 */
-	Map<String, Long> getCachedDataFilesLocations(StorageData storageData) throws StorageException;
+	Map<String, Long> getCachedDataFilesLocations(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Returns the map of the string/long pairs that represent the path to the agent files for one
@@ -270,10 +270,10 @@ public interface IStorageService {
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the agent files
 	 *         and their size.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If gathering the file names fails.
 	 */
-	Map<String, Long> getAgentFilesLocations(StorageData storageData) throws StorageException;
+	Map<String, Long> getAgentFilesLocations(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Adds one label to the {@link StorageData}. Note that if overwrite is true, the label of the
@@ -286,10 +286,10 @@ public interface IStorageService {
 	 * @param doOverwrite
 	 *            Should be overwritten if it is one per {@link StorageData}.
 	 * @return Updated storage data.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If gathering the file names fails.
 	 */
-	StorageData addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws StorageException;
+	StorageData addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws BusinessException;
 
 	/**
 	 * Adds collection of labels to the {@link StorageData}. Note that if overwrite is true, the
@@ -302,10 +302,10 @@ public interface IStorageService {
 	 * @param doOverwrite
 	 *            Should be overwritten if it is one per {@link StorageData}.
 	 * @return Updated storage data.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If gathering the file names fails.
 	 */
-	StorageData addLabelsToStorage(StorageData storageData, Collection<AbstractStorageLabel<?>> storageLabels, boolean doOverwrite) throws StorageException;
+	StorageData addLabelsToStorage(StorageData storageData, Collection<AbstractStorageLabel<?>> storageLabels, boolean doOverwrite) throws BusinessException;
 
 	/**
 	 * Removes the label from the {@link StorageData}.
@@ -315,10 +315,10 @@ public interface IStorageService {
 	 * @param storageLabel
 	 *            Label.
 	 * @return Updated storage data.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If {@link StorageData} information can not be updated on the disk.
 	 */
-	StorageData removeLabelFromStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel) throws StorageException;
+	StorageData removeLabelFromStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel) throws BusinessException;
 
 	/**
 	 * Removes the label list from the {@link StorageData}.
@@ -328,10 +328,10 @@ public interface IStorageService {
 	 * @param storageLabelList
 	 *            List of labels to remove.
 	 * @return Updated storage data.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If {@link StorageData} information can not be updated on the disk.
 	 */
-	StorageData removeLabelsFromStorage(StorageData storageData, List<AbstractStorageLabel<?>> storageLabelList) throws StorageException;
+	StorageData removeLabelsFromStorage(StorageData storageData, List<AbstractStorageLabel<?>> storageLabelList) throws BusinessException;
 
 	/**
 	 * Returns all labels that are at the moment existing in all storages. Note that if the same
@@ -388,11 +388,11 @@ public interface IStorageService {
 	 *            Label to remove.
 	 * @param removeFromStoragesAlso
 	 *            Should the label also be removed from all storages where it exists.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If removeFromStoragesAlso is <code>true</code> and {@link StorageData}
 	 *             information can not be updated on the disk.
 	 */
-	void removeLabelFromCmr(AbstractStorageLabel<?> storageLabel, boolean removeFromStoragesAlso) throws StorageException;;
+	void removeLabelFromCmr(AbstractStorageLabel<?> storageLabel, boolean removeFromStoragesAlso) throws BusinessException;;
 
 	/**
 	 * Removes a collection of persisted label from a CMR database.
@@ -401,11 +401,11 @@ public interface IStorageService {
 	 *            Label to remove.
 	 * @param removeFromStoragesAlso
 	 *            Should the label also be removed from all storages where it exists.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If removeFromStoragesAlso is <code>true</code> and {@link StorageData}
 	 *             information can not be updated on the disk.
 	 */
-	void removeLabelsFromCmr(Collection<AbstractStorageLabel<?>> storageLabels, boolean removeFromStoragesAlso) throws StorageException;;
+	void removeLabelsFromCmr(Collection<AbstractStorageLabel<?>> storageLabels, boolean removeFromStoragesAlso) throws BusinessException;;
 
 	/**
 	 * Saves the {@link AbstractStorageLabelType} to the database. The label will be saved only if
@@ -422,10 +422,10 @@ public interface IStorageService {
 	 * 
 	 * @param labelType
 	 *            Label type to remove.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If there are still labels of this type existing in the database.
 	 */
-	void removeLabelType(AbstractStorageLabelType<?> labelType) throws StorageException;
+	void removeLabelType(AbstractStorageLabelType<?> labelType) throws BusinessException;
 
 	/**
 	 * Returns all instances of desired label type.
@@ -451,20 +451,20 @@ public interface IStorageService {
 	 * @param managementActions
 	 *            Collection of management actions that can remove different label/label type
 	 *            add/removal.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If exception occurs.
 	 */
-	void executeLabelManagementActions(Collection<AbstractLabelManagementAction> managementActions) throws StorageException;
+	void executeLabelManagementActions(Collection<AbstractLabelManagementAction> managementActions) throws BusinessException;
 
 	/**
 	 * Updates the data like name and description for a storage.
 	 * 
 	 * @param storageData
 	 *            Storage data object with new values.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If saving of updated data fails.
 	 */
-	void updateStorageData(StorageData storageData) throws StorageException;
+	void updateStorageData(StorageData storageData) throws BusinessException;
 
 	/**
 	 * Returns the amount of writing tasks storage still has to process. Note that this is an
@@ -485,10 +485,10 @@ public interface IStorageService {
 	 * @param storageData
 	 *            Storage data that is packed in the file that needs to be unpacked.
 	 * 
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If exception occurs during the check.
 	 */
-	void unpackUploadedStorage(IStorageData storageData) throws StorageException;
+	void unpackUploadedStorage(IStorageData storageData) throws BusinessException;
 
 	/**
 	 * Creates a storage form the uploaded local storage directory. The CMR will perform a search of
@@ -496,11 +496,11 @@ public interface IStorageService {
 	 * 
 	 * @param localStorageData
 	 *            Local storage information.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If exception occurs during the check.
 	 * 
 	 */
-	void createStorageFromUploadedDir(final IStorageData localStorageData) throws StorageException;
+	void createStorageFromUploadedDir(final IStorageData localStorageData) throws BusinessException;
 
 	/**
 	 * Caches the given collection of {@link DefaultData} for the storage. Data will be cached under
@@ -515,10 +515,10 @@ public interface IStorageService {
 	 *            Data to be cached.
 	 * @param hash
 	 *            Hash to use for caching.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage does not exist or it is not finalized.
 	 */
-	void cacheStorageData(StorageData storageData, Collection<? extends DefaultData> data, int hash) throws StorageException;
+	void cacheStorageData(StorageData storageData, Collection<? extends DefaultData> data, int hash) throws BusinessException;
 
 	/**
 	 * Returns location of the file where the cached data for given storage and hash is cached.
@@ -536,9 +536,9 @@ public interface IStorageService {
 	 *            Hash that was used for caching.
 	 * @return Returns location of the file where the cached data for given storage and hash is
 	 *         cached. Returns <code>null</code> if no data is cached for given storage and hash.
-	 * @throws StorageException
+	 * @throws BusinessException
 	 *             If storage does not exist.
 	 */
-	String getCachedStorageDataFileLocation(StorageData storageData, int hash) throws StorageException;
+	String getCachedStorageDataFileLocation(StorageData storageData, int hash) throws BusinessException;
 
 }

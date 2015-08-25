@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.storage.StorageException;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
@@ -84,7 +84,7 @@ public class LabelManagementActionsTest {
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void removeLabelTypeAction() throws StorageException {
+	public void removeLabelTypeAction() throws BusinessException {
 		AbstractStorageLabelType<Object> labelType = mock(AbstractStorageLabelType.class);
 		when(storageService.getLabelSuggestions(labelType)).thenReturn(Collections.<AbstractStorageLabel<Object>> emptyList());
 		removeLabelManagementAction = new RemoveLabelManagementAction(labelType, false);
@@ -105,7 +105,7 @@ public class LabelManagementActionsTest {
 	 * Remove label.
 	 */
 	@Test
-	public void removeLabelAction() throws StorageException {
+	public void removeLabelAction() throws BusinessException {
 		AbstractStorageLabel<?> label = mock(AbstractStorageLabel.class);
 		removeLabelManagementAction = new RemoveLabelManagementAction(Collections.<AbstractStorageLabel<?>> singletonList(label), false);
 		removeLabelManagementAction.execute(storageService);

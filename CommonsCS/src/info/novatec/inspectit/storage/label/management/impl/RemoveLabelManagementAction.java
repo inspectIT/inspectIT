@@ -1,7 +1,7 @@
 package info.novatec.inspectit.storage.label.management.impl;
 
 import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.storage.StorageException;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
 import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
@@ -67,7 +67,7 @@ public class RemoveLabelManagementAction extends AbstractLabelManagementAction {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void execute(IStorageService storageService) throws StorageException {
+	public void execute(IStorageService storageService) throws BusinessException {
 		if (isLabelTypeBasedAction()) {
 			List<?> returnList = storageService.getLabelSuggestions(this.getLabelType());
 			List<AbstractStorageLabel<?>> labels = (List<AbstractStorageLabel<?>>) returnList;

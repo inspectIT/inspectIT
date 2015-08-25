@@ -3,12 +3,13 @@ package info.novatec.inspectit.cmr.service;
 import info.novatec.inspectit.cmr.dao.DefaultDataDao;
 import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.cmr.spring.aop.MethodLog;
 import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
 import info.novatec.inspectit.spring.logger.Log;
 
 import java.util.ArrayList;
@@ -73,12 +74,12 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public PlatformIdent getCompleteAgent(long id) throws ServiceException {
+	public PlatformIdent getCompleteAgent(long id) throws BusinessException {
 		PlatformIdent platformIdent = platformIdentDao.findInitialized(id);
 		if (null != platformIdent) {
 			return platformIdent;
 		} else {
-			throw new ServiceException("Agent with given ID=" + id + " is not existing.");
+			throw new BusinessException("Load the agent with ID=" + id + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 		}
 	}
 
@@ -87,14 +88,14 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public void deleteAgent(long platformId) throws ServiceException {
+	public void deleteAgent(long platformId) throws BusinessException {
 		PlatformIdent platformIdent = platformIdentDao.load(platformId);
 		if (null != platformIdent) {
 			AgentStatusData agentStatusData = agentStatusProvider.getAgentStatusDataMap().get(platformIdent.getId());
 
 			// delete is allowed only if agent is disconnected or was never connected
 			if (null != agentStatusData && agentStatusData.getAgentConnection() == AgentConnection.CONNECTED) {
-				throw new ServiceException("The Agent '" + platformIdent.getAgentName() + "' can not be deleted because it's still connected.");
+				throw new BusinessException("Delete the agent '" + platformIdent.getAgentName() + "'.", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 			}
 
 			platformIdentDao.delete(platformIdent);
@@ -103,7 +104,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 
 			log.info("The Agent '" + platformIdent.getAgentName() + "' with the ID " + platformIdent.getId() + " was successfully deleted from the CMR.");
 		} else {
-			throw new ServiceException("The Agent with the ID=" + platformId + " does not exists on the CMR.");
+			throw new BusinessException("Delete the agent with the ID=" + platformId + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 		}
 	}
 

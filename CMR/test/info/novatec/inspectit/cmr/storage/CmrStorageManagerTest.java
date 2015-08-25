@@ -18,8 +18,8 @@ import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.cmr.WritingStatus;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.StorageManager;
 import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 import info.novatec.inspectit.storage.recording.RecordingProperties;
@@ -127,8 +127,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Test correct creation of storage.
 	 */
 	@Test
-	public void createStorage() throws IOException, SerializationException {
+	public void createStorage() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		storageManager.createStorage(storageData);
 		assertThat(storageData.getId(), is(notNullValue()));
 		assertThat(storageData.getCmrVersion(), is(CMR_VERSION));
@@ -144,8 +145,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests correct opening of storage.
 	 */
 	@Test
-	public void openStorage() throws IOException, SerializationException, StorageException {
+	public void openStorage() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		storageManager.createStorage(storageData);
 		storageManager.openStorage(storageData);
 		assertThat(storageManager.isStorageExisting(storageData), is(true));
@@ -161,9 +163,10 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	/**
 	 * Tests that already closed storage can not be opened.
 	 */
-	@Test(expectedExceptions = { StorageException.class })
-	public void canNotOpenAlreadyClosed() throws IOException, SerializationException, StorageException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void canNotOpenAlreadyClosed() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		storageManager.createStorage(storageData);
 		storageManager.openStorage(storageData);
 		storageManager.closeStorage(storageData);
@@ -174,8 +177,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests closing of storage.
 	 */
 	@Test
-	public void closeStorage() throws IOException, SerializationException, StorageException {
+	public void closeStorage() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		storageManager.createStorage(storageData);
 		storageManager.openStorage(storageData);
 		storageManager.closeStorage(storageData);
@@ -192,8 +196,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests closing of all storages.
 	 */
 	@Test
-	public void closeAllStorages() throws IOException, SerializationException, StorageException {
+	public void closeAllStorages() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		storageManager.createStorage(storageData);
 		storageManager.openStorage(storageData);
 		storageManager.closeAllStorages();
@@ -209,9 +214,10 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	/**
 	 * Tests that storage used for recording can not be closed.
 	 */
-	@Test(expectedExceptions = { StorageException.class })
-	public void canNotCloseWhileRecording() throws IOException, SerializationException, StorageException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void canNotCloseWhileRecording() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		RecordingProperties recordingProperties = mock(RecordingProperties.class);
 		// AbstractDataProcessor dataProcessor = mock(AbstractDataProcessor.class);
 		// when(recordingProperties.getRecordingDataProcessors()).thenReturn(Collections.singleton(dataProcessor));
@@ -227,8 +233,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests start of the recording.
 	 */
 	@Test
-	public void startOrScheduleRecording() throws IOException, SerializationException, StorageException {
+	public void startOrScheduleRecording() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		RecordingProperties recordingProperties = mock(RecordingProperties.class);
 		WritingStatus writingStatus = WritingStatus.GOOD;
 		storageManager.startOrScheduleRecording(storageData, recordingProperties);
@@ -248,8 +255,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests that recording can not be started if it s already running.
 	 */
 	@Test
-	public void canNotStartRecordingWhenAlreadyRunning() throws IOException, SerializationException, StorageException {
+	public void canNotStartRecordingWhenAlreadyRunning() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		RecordingProperties recordingProperties = mock(RecordingProperties.class);
 		storageManager.startOrScheduleRecording(storageData, recordingProperties);
 		when(storageRecorder.isRecordingOn()).thenReturn(true);
@@ -265,8 +273,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests stop recording.
 	 */
 	@Test
-	public void stopRecording() throws IOException, SerializationException, StorageException {
+	public void stopRecording() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		RecordingProperties recordingProperties = mock(RecordingProperties.class);
 		when(recordingProperties.isAutoFinalize()).thenReturn(true);
 		storageManager.startOrScheduleRecording(storageData, recordingProperties);
@@ -309,7 +318,7 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * disk.
 	 */
 	@Test
-	public void stopRecordingWhenCanNotWriteMore() throws IOException, SerializationException, StorageException {
+	public void stopRecordingWhenCanNotWriteMore() throws IOException, SerializationException, BusinessException {
 		storageManager = spy(storageManager);
 		DefaultData defaultData = mock(DefaultData.class);
 		when(storageManager.canWriteMore()).thenReturn(false);
@@ -323,8 +332,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests writing of data to disk.
 	 */
 	@Test
-	public void writeDataToStorage() throws StorageException, IOException, SerializationException {
+	public void writeDataToStorage() throws BusinessException, IOException, SerializationException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		storageManager.createStorage(storageData);
 		storageManager.openStorage(storageData);
 
@@ -343,9 +353,10 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	/**
 	 * Proves that no writing can be done to a closed storage.
 	 */
-	@Test(expectedExceptions = { StorageException.class })
-	public void canNotWriteToClosedStorage() throws StorageException, IOException, SerializationException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void canNotWriteToClosedStorage() throws BusinessException, IOException, SerializationException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 		storageManager.createStorage(storageData);
 		storageManager.openStorage(storageData);
 		storageManager.closeStorage(storageData);
@@ -361,8 +372,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests copy buffer action.
 	 */
 	@Test
-	public void copyBufferToStorage() throws IOException, SerializationException, StorageException {
+	public void copyBufferToStorage() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 
 		DefaultData defaultData = mock(DefaultData.class);
 		Timestamp timestamp = mock(Timestamp.class);
@@ -392,8 +404,9 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * Tests copy data to storage action.
 	 */
 	@SuppressWarnings("unchecked")
-	public void copyDataToStorage() throws IOException, SerializationException, StorageException {
+	public void copyDataToStorage() throws IOException, SerializationException, BusinessException {
 		storageData = new StorageData();
+		storageData.setName("Test");
 
 		List<DefaultData> data = Collections.singletonList(mock(DefaultData.class));
 		Collection<AbstractDataProcessor> processors = Collections.singleton(mock(AbstractDataProcessor.class));
@@ -418,7 +431,7 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 	 * After processing to delete storage that might be created in the test.
 	 */
 	@AfterMethod
-	public void deleteStorage() throws StorageException, IOException, SerializationException {
+	public void deleteStorage() throws BusinessException, IOException, SerializationException {
 		if (null != storageData) {
 			if (storageManager.getRecordingState() == RecordingState.ON) {
 				storageManager.stopRecording();

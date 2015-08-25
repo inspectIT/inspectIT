@@ -5,8 +5,8 @@ import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
 import info.novatec.inspectit.cmr.service.ICachedDataService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
+import info.novatec.inspectit.exception.BusinessException;
 
 import java.util.Map;
 import java.util.Set;
@@ -167,7 +167,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 			PlatformIdent platformIdent;
 			try {
 				platformIdent = globalDataAccessService.getCompleteAgent(overview.getId());
-			} catch (ServiceException e) {
+			} catch (BusinessException e) {
 				LOG.warn("Exception occurred trying to refresh sensor information for the agent " + overview.getAgentName() + ".", e);
 				continue;
 			}

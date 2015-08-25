@@ -51,4 +51,9 @@
 			<class name="info.novatec.inspectit.cmr.service.rest.StorageRestfulServiceTest" />
 		</classes>
 	</test>
+	<test name="AOP">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.spring.aop.ExceptionInterceptorTest" />
+		</classes>
+	</test>
 </suite>

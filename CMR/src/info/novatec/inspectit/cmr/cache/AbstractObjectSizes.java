@@ -171,6 +171,15 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	public long getSizeOfCustomWeakReference() {
+		long size = this.getSizeOfObjectHeader();
+		size += this.getPrimitiveTypesSize(4, 0, 0, 0, 1, 0);
+		return alignTo8Bytes(size);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public long getSizeOfHashSet(int hashSetSize) {
 		return this.getSizeOfHashSet(hashSetSize, MAP_INITIAL_CAPACITY);
 	}
@@ -257,6 +266,78 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 		size += mapSize * this.getSizeOfHashMapEntry();
 
 		return alignTo8Bytes(size);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getSizeOfNonBlockingHashMapLong(int mapSize) {
+		long size = this.getSizeOfObjectHeader();
+		size += this.getPrimitiveTypesSize(5, 1, 0, 0, 1, 0);
+
+		size = alignTo8Bytes(size);
+
+		// we have in addition Counter, no-key Object and CHM table in the NonBlockingHashMapLong
+		// need to add them to the size count
+		size += this.getSizeOfObjectObject();
+		size += this.getSizeOfHighScaleLibCounter();
+		size += this.getSizeOfHighScaleLibCHM(mapSize);
+
+		return size;
+	}
+
+	/**
+	 * Returns size of the CHM object used in the high scale lib NonBlockingHashMapLong.
+	 * 
+	 * @param mapSize
+	 *            Size of map.
+	 * @return Size in bytes.
+	 */
+	private long getSizeOfHighScaleLibCHM(int mapSize) {
+		long size = this.getSizeOfObjectHeader();
+		size += this.getPrimitiveTypesSize(6, 0, 0, 0, 3, 0);
+		size = alignTo8Bytes(size);
+
+		// two counters in addition
+		size += getSizeOfHighScaleLibCounter() << 1;
+
+		// min 16, or next power of two
+		int tablesSize = (mapSize <= MAP_INITIAL_CAPACITY) ? MAP_INITIAL_CAPACITY : 1 << (32 - Integer.numberOfLeadingZeros(mapSize - 1));
+
+		// long table[]
+		size += this.getSizeOfPrimitiveArray(tablesSize, LONG_SIZE);
+
+		// object table[]
+		size += this.getSizeOfPrimitiveArray(tablesSize, getReferenceSize());
+
+		return size;
+	}
+
+	/**
+	 * Returns size of the Counter object used in the high scale lib NonBlockingHashMapLong.
+	 * 
+	 * @return Size in bytes.
+	 */
+	private long getSizeOfHighScaleLibCounter() {
+		long size = this.getSizeOfObjectHeader();
+		size += this.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
+		size = alignTo8Bytes(size);
+		size += this.getSizeOfHighScaleLibCAT();
+		return size;
+	}
+
+	/**
+	 * Returns size of the CAT object used in the high scale lib Counter.
+	 * 
+	 * @return Size in bytes.
+	 */
+	private long getSizeOfHighScaleLibCAT() {
+		long size = this.getSizeOfObjectHeader();
+		size += this.getPrimitiveTypesSize(2, 0, 0, 0, 4, 0);
+		size = alignTo8Bytes(size);
+		// always has an array of 4 longs attached
+		size += this.getSizeOfPrimitiveArray(4, LONG_SIZE);
+		return size;
 	}
 
 	/**

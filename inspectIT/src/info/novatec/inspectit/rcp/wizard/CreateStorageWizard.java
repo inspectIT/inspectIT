@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.wizard;
 
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -7,7 +8,6 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatu
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.rcp.wizard.page.DefineNewStorageWizzardPage;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -86,7 +86,7 @@ public class CreateStorageWizard extends Wizard implements INewWizard {
 				if (viewPart instanceof StorageManagerView) {
 					((StorageManagerView) viewPart).refresh();
 				}
-			} catch (StorageException e) {
+			} catch (BusinessException e) {
 				InspectIT.getDefault().createErrorDialog("Storage can not be created.", e, -1);
 				return false;
 			}

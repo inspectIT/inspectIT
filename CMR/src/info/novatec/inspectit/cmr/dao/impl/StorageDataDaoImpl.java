@@ -4,6 +4,8 @@ import info.novatec.inspectit.cmr.dao.StorageDataDao;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.SystemSensorData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.indexing.IIndexQuery;
 import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
 import info.novatec.inspectit.indexing.impl.IndexingException;
@@ -152,11 +154,11 @@ public class StorageDataDaoImpl extends HibernateDaoSupport implements StorageDa
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeLabelType(AbstractStorageLabelType<?> labelType) throws Exception {
+	public void removeLabelType(AbstractStorageLabelType<?> labelType) throws BusinessException {
 		if (getAllLabelsForType(labelType).isEmpty()) {
 			getHibernateTemplate().delete(labelType);
 		} else {
-			throw new Exception("Label type can not be deleted because there are still lables of the type existing. Please first delete all labels of the type.");
+			throw new BusinessException("Delete label type " + labelType.getClass().getSimpleName() + ".", StorageErrorCodeEnum.LABEL_TYPE_CAN_NOT_BE_DELETED);
 		}
 	}
 

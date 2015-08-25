@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.repository.service.storage;
 
 import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.indexing.aggregation.IAggregator;
 import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
@@ -12,7 +13,6 @@ import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
 import info.novatec.inspectit.rcp.storage.util.DataRetriever;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageException;
 import info.novatec.inspectit.storage.StorageManager;
 import info.novatec.inspectit.storage.serializer.SerializationException;
 
@@ -199,7 +199,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 				StorageData storageData = new StorageData(localStorageData);
 				try {
 					returnList = dataRetriever.getCachedDataViaHttp(getCmrRepositoryDefinition(), storageData, hash);
-				} catch (StorageException | IOException | SerializationException e) { // NOPMD NOCHK
+				} catch (BusinessException | IOException | SerializationException e) { // NOPMD // NOCHK
 					// ignore cause we can still load results in other way
 				}
 
@@ -261,7 +261,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	private void cacheQueryResultOnCmr(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, List<E> results, int hash) {
 		try {
 			cmrRepositoryDefinition.getStorageService().cacheStorageData(storageData, results, hash);
-		} catch (StorageException e) { // NOPMD NOCHK
+		} catch (BusinessException e) { // NOPMD NOCHK
 			// ignore also if caching fails
 		}
 	}

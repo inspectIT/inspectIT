@@ -6,11 +6,11 @@ import static org.mockito.Mockito.when;
 import info.novatec.inspectit.cmr.dao.DefaultDataDao;
 import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.service.exception.ServiceException;
 import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
 import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
+import info.novatec.inspectit.exception.BusinessException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +55,8 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * No delete enabled when platform ident can not be found.
 	 */
-	@Test(expectedExceptions = { ServiceException.class })
-	public void testNonExistingAgentDelete() throws ServiceException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void testNonExistingAgentDelete() throws BusinessException {
 		long platformId = 10L;
 		when(platformIdentDao.load(Long.valueOf(platformId))).thenReturn(null);
 
@@ -66,8 +66,8 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * No delete enabled when agent is connected.
 	 */
-	@Test(expectedExceptions = { ServiceException.class })
-	public void testConnectedAgentDelete() throws ServiceException {
+	@Test(expectedExceptions = { BusinessException.class })
+	public void testConnectedAgentDelete() throws BusinessException {
 		long platformId = 10L;
 		PlatformIdent platformIdent = new PlatformIdent();
 		platformIdent.setId(platformId);
@@ -85,7 +85,7 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 	 * Delete enabled when Agent is not connected.
 	 */
 	@Test
-	public void testAgentDelete() throws ServiceException {
+	public void testAgentDelete() throws BusinessException {
 		long platformId = 10L;
 		PlatformIdent platformIdent = new PlatformIdent();
 		platformIdent.setId(platformId);
