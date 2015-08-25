@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Dialog to reset password in case Button in {@link CmrLoginWizardPage} is pressed.
+ * Dialog for resetting password in case Button in {@link CmrLoginWizardPage} is pressed.
  * 
  * @author Clemens Geibel
  *
