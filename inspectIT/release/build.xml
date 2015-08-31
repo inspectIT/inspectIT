@@ -1,5 +1,7 @@
 <project name="inspectIT RCP" default="release" xmlns:ivy="antlib:org.apache.ivy.ant">
 
+	<property environment="env" />
+
 	<property name="release.basedir" value="${basedir}" />
 	<property file="build.properties" />
 
@@ -95,7 +97,7 @@
 		<ivy:resolve file="${ivy.file}" />
 		<ivy:cachepath pathid="lib.osgi" conf="osgi" />
 		<ivy:cachepath pathid="lib.test" conf="test" />
-		
+
 		<ivy:resolve file="${ivy.file.commons}" />
 		<ivy:cachepath pathid="lib.prod.commons" conf="prod" />
 
@@ -142,9 +144,9 @@
 				</and>
 			</or>
 		</condition>
-		
+
 		<if>
-			<istrue value="${should-unpack-eclipse}"/>
+			<istrue value="${should-unpack-eclipse}" />
 			<then>
 				<delete dir="${base}" failonerror="false" />
 				<unzip src="${release.basedir}/runtime/${eclipse.file}.zip" dest="${release.basedir}/runtime" />
@@ -196,21 +198,8 @@
 		<property name="test.javac.target" value="1.7" />
 		<property name="test.vmargs" value="" />
 		<property name="test.targetsuite" value="${resources.testng}/testng.xml" />
-				
-		<execute-testng 
-			src.root="${src.root}" 
-			test.root="${test.root}" 
-			build.qa.test="${build.qa.test}"
-			build.qa.test.testdata="${build.qa.test.testdata}" 
-			build.qa.test.coveragedata="${build.qa.test.coveragedata}" 
-			build.test.classes="${build.test.classes}" 
-			build.instrumented.classes="${build.instrumented.classes}"
-			test.workingdir="${test.workingDir}"
-			test.javac.source="${test.javac.source}" 
-			test.javac.target="${test.javac.target}"
-			test.targetsuite="${test.targetsuite}"
-			test.vmargs="${test.vmargs}"
-			test.haltonfailure="true">
+
+		<execute-testng src.root="${src.root}" test.root="${test.root}" build.qa.test="${build.qa.test}" build.qa.test.testdata="${build.qa.test.testdata}" build.qa.test.coveragedata="${build.qa.test.coveragedata}" build.test.classes="${build.test.classes}" build.instrumented.classes="${build.instrumented.classes}" test.workingdir="${test.workingDir}" test.javac.source="${test.javac.source}" test.javac.target="${test.javac.target}" test.targetsuite="${test.targetsuite}" test.vmargs="${test.vmargs}" test.haltonfailure="true">
 			<compile.classpath>
 				<classpath>
 					<path refid="compile.classpath" />
@@ -314,7 +303,7 @@
 			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
 		</zip>
 		<zip destfile="${release.basedir}/dist/inspectit-ui.linux.gtk.x86-${env.VERSION}.zip" update="true">
-				<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
 			<zipfileset src="${jvm.root}/jre7-linux-x86.zip" prefix="inspectit/jre" filemode="775" />
 			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
 		</zip>
