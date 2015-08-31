@@ -259,7 +259,7 @@
 	<target name="-linux-x86">
 		<copy file="${basedir}/startup.sh" tofile="${build.scripts}/startup.sh"/>
 		<replaceregexp file="${build.scripts}/startup.sh" match="#COMMAND#" replace="${cmr.java.command.linux} ${cmr.java.memory.32bit} ${cmr.java.opts.32bit} ${cmr.java.opts.linux} ${cmr.java.locgc.linux} -jar ${dist.jar.name}" byline="true"/>
-		<tar destfile="${release.root}/inspectit-cmr.linux.x86-${VERSION}.tar.gz" compression="gzip">
+		<tar destfile="${release.root}/inspectit-cmr.linux.x86-${env.VERSION}.tar.gz" compression="gzip">
 			<fileset dir="${build.release.root}" />
 			<tarfileset file="${build.scripts}/startup.sh" prefix="CMR" filemode="755" />
 			<zipfileset src="${jvm.root}/jre7-linux-x86.zip" prefix="CMR/jre" filemode="755" />
@@ -271,7 +271,7 @@
 	<target name="-linux-x64">
 		<copy file="${basedir}/startup.sh" tofile="${build.scripts}/startup.sh"/>
 		<replaceregexp file="${build.scripts}/startup.sh" match="#COMMAND#" replace="${cmr.java.command.linux} ${cmr.java.memory.64bit} ${cmr.java.opts.64bit} ${cmr.java.opts.linux} ${cmr.java.locgc.linux} -jar ${dist.jar.name}" byline="true"/>
-		<tar destfile="${release.root}/inspectit-cmr.linux.x64-${VERSION}.tar.gz" compression="gzip">
+		<tar destfile="${release.root}/inspectit-cmr.linux.x64-${env.VERSION}.tar.gz" compression="gzip">
 			<fileset dir="${build.release.root}" />
 			<tarfileset file="${build.scripts}/startup.sh" prefix="CMR" filemode="755" />
 			<zipfileset src="${jvm.root}/jre7-linux-x64.zip" prefix="CMR/jre" filemode="755" />
@@ -283,7 +283,7 @@
 	<target name="-windows-x86">
 		<copy file="${basedir}/startup.bat" tofile="${build.scripts}/startup.bat"/>
 		<replaceregexp file="${build.scripts}/startup.bat" match="#COMMAND#" replace="${cmr.java.command.win} ${cmr.java.memory.32bit} ${cmr.java.opts.32bit} ${cmr.java.opts.win} ${cmr.java.locgc.win} -jar ${dist.jar.name}" byline="true"/>
-		<zip destfile="${release.root}/inspectit-cmr.windows.x86-${VERSION}.zip">
+		<zip destfile="${release.root}/inspectit-cmr.windows.x86-${env.VERSION}.zip">
 			<fileset dir="${build.release.root}" />
 			<zipfileset file="${build.scripts}/startup.bat" prefix="CMR" />
 			<zipfileset src="${jvm.root}/jre7-windows-x86.zip" prefix="CMR/jre" />
@@ -295,7 +295,7 @@
 	<target name="-windows-x64">
 		<copy file="${basedir}/startup.bat" tofile="${build.scripts}/startup.bat"/>
 		<replaceregexp file="${build.scripts}/startup.bat" match="#COMMAND#" replace="${cmr.java.command.win} ${cmr.java.memory.64bit} ${cmr.java.opts.64bit} ${cmr.java.opts.win} ${cmr.java.locgc.win} -jar ${dist.jar.name}" byline="true"/>
-		<zip destfile="${release.root}/inspectit-cmr.windows.x64-${VERSION}.zip">
+		<zip destfile="${release.root}/inspectit-cmr.windows.x64-${env.VERSION}.zip">
 			<fileset dir="${build.release.root}" />
 			<zipfileset file="${build.scripts}/startup.bat" prefix="CMR" />
 			<zipfileset src="${jvm.root}/jre7-windows-x64.zip" prefix="CMR/jre" />
