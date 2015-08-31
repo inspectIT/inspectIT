@@ -303,7 +303,7 @@
 		<!-- copy the jvms -->
 		<antcall target="-retrieve-jre-installations" />
 
-		<zip destfile="${release.basedir}/dist/inspectit-ui.windows.x86-${VERSION}.zip" update="true">
+		<zip destfile="${release.basedir}/dist/inspectit-ui.windows.x86-${env.VERSION}.zip" update="true">
 			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
 			<zipfileset src="${jvm.root}/jre7-windows-x86.zip" prefix="inspectit/jre" filemode="775" />
 			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
