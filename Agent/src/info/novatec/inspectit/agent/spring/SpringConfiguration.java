@@ -1,6 +1,7 @@
 package info.novatec.inspectit.agent.spring;
 
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
+import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.StrategyConfig;
@@ -107,6 +108,13 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		for (PlatformSensorTypeConfig platformSensorTypeConfig : configurationStorage.getPlatformSensorTypes()) {
 			className = platformSensorTypeConfig.getClassName();
 			beanName = "platformSensorType[" + className + "]";
+			registerBeanDefinitionAndInitialize(beanName, className);
+		}
+		
+		// jmx sensor types
+		for (JmxSensorTypeConfig jmxSensorTypeConfig : configurationStorage.getJmxSensorTypes()) {
+			className = jmxSensorTypeConfig.getClassName();
+			beanName = "jmxSensorType[" + className + "]";
 			registerBeanDefinitionAndInitialize(beanName, className);
 		}
 

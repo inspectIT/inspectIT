@@ -24,6 +24,7 @@ import info.novatec.inspectit.communication.SystemSensorData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
@@ -607,4 +608,12 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	public void stop() {
 		throw new UnsupportedMethodException();
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData) {
+		throw new UnsupportedMethodException();
+	}
+
 }

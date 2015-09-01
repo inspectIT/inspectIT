@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.editor.preferences;
 
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
@@ -8,6 +9,8 @@ import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.action.MenuAction;
+import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
 import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.LiveMode;
@@ -163,7 +166,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 		// only add buttons and some controls if the set is not empty
 		if (null != preferenceSet && !preferenceSet.isEmpty()) {
 			if (null != toolBarManager) {
-				createButtons(preferenceSet, toolBarManager);
+				createButtons(preferenceSet, toolBarManager, inputDefinition);
 			}
 			createPreferenceControls(innerComposite, preferenceSet);
 		}
@@ -248,8 +251,10 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 *            the list containing the preference ids.
 	 * @param toolBarManager
 	 *            The tool bar manager.
+	 * @param inputDefinition
+	 *            {@link InputDefinition} of the editor where preference panel will be created.
 	 */
-	private void createButtons(Set<PreferenceId> preferenceSet, IToolBarManager toolBarManager) {
+	private void createButtons(Set<PreferenceId> preferenceSet, IToolBarManager toolBarManager, InputDefinition inputDefinition) {
 		switchLiveMode = new SwitchLiveMode("Live");
 		switchPreferences = new SwitchPreferences("Additional options"); // NOPMD
 		MenuAction menuAction = new MenuAction();
@@ -385,6 +390,24 @@ public class FormPreferencePanel implements IPreferencePanel {
 			timeMenuManager.add(new SetTimeDecimalPlaces("2", 2, currentDecimalPlaces));
 			timeMenuManager.add(new SetTimeDecimalPlaces("3", 3, currentDecimalPlaces));
 			menuAction.addContributionItem(timeMenuManager);
+		}
+
+		if (preferenceSet.contains(PreferenceId.JMX_PLOTDATASOLVER)) {
+			JmxDefinitionDataIdent jmxIdent = inputDefinition.getRepositoryDefinition().getCachedDataService().getJmxDefinitionDataIdentForId(inputDefinition.getIdDefinition().getJmxDefinitionId());
+
+			PlotDataSolver currentDataSolver;
+			Map<String, String> map = PreferencesUtils.getObject(PreferencesConstants.JMX_PLOT_DATA_SOLVER);
+			if (map.containsKey(jmxIdent.getDerivedFullName())) {
+				currentDataSolver = PlotDataSolver.valueOf(map.get(jmxIdent.getDerivedFullName()));
+			} else {
+				currentDataSolver = PlotDataSolver.DEFAULT;
+			}
+
+			MenuManager jmxPlotDataSolverManager = new MenuManager("Plot as..");
+			for (PlotDataSolver dataSolver : PlotDataSolver.values()) {
+				jmxPlotDataSolverManager.add(new SetJmxPlotDataSolver(dataSolver.getTitle(), dataSolver, currentDataSolver));
+			}
+			menuAction.addContributionItem(jmxPlotDataSolverManager);
 		}
 
 		// only add if there is really something in the menu
@@ -935,4 +958,46 @@ public class FormPreferencePanel implements IPreferencePanel {
 		}
 	}
 
+	/**
+	 * Action for setting the data solver to plot JMX data.
+	 * 
+	 * @author Marius Oehler
+	 *
+	 */
+	private final class SetJmxPlotDataSolver extends Action {
+
+		/**
+		 * The data solver of this element.
+		 */
+		private PlotDataSolver dataSolver;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param text
+		 *            the label of this item
+		 * @param dataSolver
+		 *            the {@link AbstractPlotDataSolver} which is used when this item is selected
+		 * @param currentDataSolver
+		 *            the current selected {@link AbstractPlotDataSolver}
+		 */
+		public SetJmxPlotDataSolver(String text, PlotDataSolver dataSolver, PlotDataSolver currentDataSolver) {
+			super(text, Action.AS_RADIO_BUTTON);
+			this.dataSolver = dataSolver;
+			setChecked(dataSolver.equals(currentDataSolver));
+		}
+
+		@Override
+		public void run() {
+			if (isChecked()) {
+				PreferenceEvent event = new PreferenceEvent(PreferenceId.JMX_PLOTDATASOLVER);
+				Map<IPreferenceGroup, Object> preferenceMap = new HashMap<IPreferenceGroup, Object>();
+				preferenceMap.put(PreferenceId.JmxPlotDataSolver.DATA_SOLVER, dataSolver);
+				event.setPreferenceMap(preferenceMap);
+				fireEvent(event);
+			}
+
+			update();
+		}
+	}
 }

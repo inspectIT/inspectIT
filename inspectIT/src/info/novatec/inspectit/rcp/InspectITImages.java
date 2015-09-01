@@ -146,7 +146,12 @@ public interface InspectITImages {
 	String IMG_MEMORY_OVERVIEW = InspectITConstants.ICON_PATH_FUGUE + "memory.png";
 	String IMG_SYSTEM_OVERVIEW = InspectITConstants.ICON_PATH_FUGUE + "system-monitor.png";
 	String IMG_VM_SUMMARY = InspectITConstants.ICON_PATH_FUGUE + "resource-monitor.png";
-
+	String IMG_BEAN = InspectITConstants.ICON_PATH_FUGUE + "bean.png";
+	String IMG_BLUE_DOCUMENT_TABLE = InspectITConstants.ICON_PATH_FUGUE + "blue-document-table.png";
+	String IMG_BOOK = InspectITConstants.ICON_PATH_FUGUE + "book.png";
+	String IMG_DUMMY = InspectITConstants.ICON_PATH_FUGUE + "dummy-happy.png";
+	String IMG_COUNTER = InspectITConstants.ICON_PATH_FUGUE + "counter.png";
+	
 	// labels just pointing to existing ones
 	String IMG_ASSIGNEE_LABEL_ICON = IMG_USER;
 	String IMG_DATE_LABEL_ICON = IMG_CALENDAR;
@@ -155,5 +160,5 @@ public interface InspectITImages {
 	String IMG_STATUS_LABEL_ICON = IMG_ALERT;
 	String IMG_USECASE_LABEL_ICON = IMG_BUSINESS;
 	String IMG_USER_LABEL_ICON = IMG_DISABLED;
-
+	
 }

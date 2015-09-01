@@ -17,6 +17,10 @@
 			<key column="platform_id" />
 			<one-to-many class="MethodIdent" />
 		</set>
+		<set name="jmxDefinitionDataIdents" lazy="true" cascade="all">
+			<key column="platform_id" />
+			<one-to-many class="JmxDefinitionDataIdent" />
+		</set>
 
 		<property name="definedIPs" type="info.novatec.inspectit.cmr.util.ListStringType">
 			<column name="defined_ips" length="1024" />
