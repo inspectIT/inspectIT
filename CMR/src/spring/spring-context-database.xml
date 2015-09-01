@@ -34,6 +34,10 @@
 				<value>hibernate/MethodIdent.hbm.xml</value>
 				<value>hibernate/SensorTypeIdent.hbm.xml</value>
 				<value>hibernate/MethodIdentToSensorType.hbm.xml</value>
+				
+				<!-- Jmx Data Objects -->
+				<value>hibernate/JmxDefinitionDataIdent.hbm.xml</value>
+				<value>hibernate/JmxSensorValueData.hbm.xml</value>
 
 				<!-- Abstract Data classes -->
 				<value>hibernate/DefaultData.hbm.xml</value>

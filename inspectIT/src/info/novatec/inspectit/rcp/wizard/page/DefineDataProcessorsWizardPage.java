@@ -7,6 +7,7 @@ import info.novatec.inspectit.communication.data.CpuInformationData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.MemoryInformationData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
@@ -177,6 +178,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 			inputList.add(CompilationInformationData.class);
 			inputList.add(ThreadInformationData.class);
 			inputList.add(SystemInformationData.class);
+			inputList.add(JmxSensorValueData.class);
 		}
 	}
 
@@ -454,6 +456,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 				return "System Information Data";
 			} else if (ObjectUtils.equals(element, CompilationInformationData.class)) {
 				return "Compilation Information Data";
+			} else if (ObjectUtils.equals(element, JmxSensorValueData.class)) {
+				return "JMX Data";
 			}
 			return super.getText(element);
 		}
@@ -485,6 +489,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 				return InspectIT.getDefault().getImage(InspectITImages.IMG_SYSTEM_OVERVIEW);
 			} else if (ObjectUtils.equals(element, CompilationInformationData.class)) {
 				return InspectIT.getDefault().getImage(InspectITImages.IMG_COMPILATION_OVERVIEW);
+			} else if (ObjectUtils.equals(element, JmxSensorValueData.class)) {
+				return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
 			}
 			return super.getImage(element);
 		}

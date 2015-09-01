@@ -48,6 +48,9 @@ public class TreeLabelProvider extends ColumnLabelProvider {
 	public String getToolTipText(Object element) {
 		if (element instanceof Component) {
 			Component component = (Component) element;
+			if (component.getTooltip().isEmpty()) {
+				return null;
+			}
 			return component.getTooltip();
 		}
 
