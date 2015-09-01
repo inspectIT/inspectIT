@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.service;
 
+import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
 import info.novatec.inspectit.exception.BusinessException;
 
 import java.rmi.Remote;
@@ -114,4 +115,24 @@ public interface IRegistrationService extends Remote {
 	 */
 	long registerPlatformSensorTypeIdent(long platformIdent, String fullyQualifiedClassName);
 
+	/**
+	 * Every jmx sensor type has to be registered by calling this method.
+	 * 
+	 * @param platformIdent
+	 *            The unique identifier of the platform.
+	 * @param sensorName
+	 *            User given Name of the Sensor.
+	 * @return Returns the unique JMX sensor sensor type identifier.
+	 */
+	long registerJmxSensorTypeIdent(long platformIdent, String sensorName);
+
+	/**
+	 * 
+	 * @param platformIdent
+	 *            The unique identifier of the platform.
+	 * @param jmxDefinitionDataIdent
+	 *            The {@link JmxDefinitionDataIdent} to register
+	 * @return Returns the unique JMX definition data identifier.
+	 */
+	long registerJmxSensorDefinitionDataIdent(long platformIdent, JmxDefinitionDataIdent jmxDefinitionDataIdent);
 }

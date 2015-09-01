@@ -5,6 +5,7 @@ import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
+import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.spring.logger.Log;
 
 import java.lang.reflect.Modifier;
@@ -128,6 +129,11 @@ public class DefaultDataDaoImpl extends HibernateDaoSupport implements DefaultDa
 			defaultDataCriteria.setFetchMode("parameterContentData", FetchMode.JOIN);
 		}
 
+		if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			defaultDataCriteria.add(Restrictions.eq("jmxSensorDefinitionDataIdentId", jmxSensorValueData.getJmxSensorDefinitionDataIdentId()));
+		}
+
 		defaultDataCriteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
 		return getHibernateTemplate().findByCriteria(defaultDataCriteria);
 	}
@@ -146,6 +152,11 @@ public class DefaultDataDaoImpl extends HibernateDaoSupport implements DefaultDa
 			MethodSensorData methodSensorData = (MethodSensorData) template;
 			defaultDataCriteria.add(Restrictions.eq("methodIdent", methodSensorData.getMethodIdent()));
 			defaultDataCriteria.setFetchMode("parameterContentData", FetchMode.JOIN);
+		}
+
+		if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			defaultDataCriteria.add(Restrictions.eq("jmxSensorDefinitionDataIdentId", jmxSensorValueData.getJmxSensorDefinitionDataIdentId()));
 		}
 
 		defaultDataCriteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
@@ -172,13 +183,21 @@ public class DefaultDataDaoImpl extends HibernateDaoSupport implements DefaultDa
 	public List<DefaultData> findByExampleFromToDate(DefaultData template, Date fromDate, Date toDate) {
 		DetachedCriteria defaultDataCriteria = DetachedCriteria.forClass(template.getClass());
 		defaultDataCriteria.add(Restrictions.eq("platformIdent", template.getPlatformIdent()));
-		defaultDataCriteria.add(Restrictions.eq("sensorTypeIdent", template.getSensorTypeIdent()));
 		defaultDataCriteria.add(Restrictions.between("timeStamp", new Timestamp(fromDate.getTime()), new Timestamp(toDate.getTime())));
+
+		if (!(template instanceof JmxSensorValueData) || template.getSensorTypeIdent() > 0) {
+			defaultDataCriteria.add(Restrictions.eq("sensorTypeIdent", template.getSensorTypeIdent()));
+		}
 
 		if (template instanceof MethodSensorData) {
 			MethodSensorData methodSensorData = (MethodSensorData) template;
 			defaultDataCriteria.add(Restrictions.eq("methodIdent", methodSensorData.getMethodIdent()));
 			defaultDataCriteria.setFetchMode("parameterContentData", FetchMode.JOIN);
+		}
+
+		if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			defaultDataCriteria.add(Restrictions.eq("jmxSensorDefinitionDataIdentId", jmxSensorValueData.getJmxSensorDefinitionDataIdentId()));
 		}
 
 		defaultDataCriteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
@@ -201,6 +220,12 @@ public class DefaultDataDaoImpl extends HibernateDaoSupport implements DefaultDa
 			subQuery.add(Restrictions.eq("methodIdent", methodSensorData.getMethodIdent()));
 			defaultDataCriteria.setFetchMode("parameterContentData", FetchMode.JOIN);
 		}
+
+		if (template instanceof JmxSensorValueData) {
+			JmxSensorValueData jmxSensorValueData = (JmxSensorValueData) template;
+			subQuery.add(Restrictions.eq("jmxSensorDefinitionDataIdentId", jmxSensorValueData.getJmxSensorDefinitionDataIdentId()));
+		}
+
 		defaultDataCriteria.add(Property.forName("id").eq(subQuery));
 		defaultDataCriteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
 
@@ -292,5 +317,42 @@ public class DefaultDataDaoImpl extends HibernateDaoSupport implements DefaultDa
 			}
 		}
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<JmxSensorValueData> getJmxDataOverview(JmxSensorValueData template, Date fromDate, Date toDate) {
+		if (template == null) {
+			return null;
+		}
+
+		StringBuilder hql = new StringBuilder("FROM JmxSensorValueData data WHERE id IN (SELECT MAX(sub.id) FROM JmxSensorValueData sub WHERE sub.platformIdent = :platformId");
+
+		if (template.getSensorTypeIdent() > 0) {
+			hql.append(" AND sub.jmxSensorDefinitionDataIdentId = :sensorDefinitionId");
+		}
+
+		if (fromDate != null && toDate != null) {
+			hql.append(" AND sub.timeStamp BETWEEN :fromTime and :toTime");
+		}
+
+		hql.append(" GROUP BY sub.jmxSensorDefinitionDataIdentId)");
+
+		Query query = getSession().createQuery(hql.toString());
+		query.setLong("platformId", template.getPlatformIdent());
+
+		if (template.getSensorTypeIdent() > 0) {
+			query.setLong("sensorDefinitionId", template.getSensorTypeIdent());
+		}
+
+		if (fromDate != null && toDate != null) {
+			query.setTimestamp("fromTime", fromDate);
+			query.setTimestamp("toTime", toDate);
+		}
+
+		return query.list();
 	}
 }
