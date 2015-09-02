@@ -1,6 +1,6 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
-import java.util.List;;
+import java.util.List;
 /**
  * Stores the permissions asociated with the Role.
  * @author Joshua Hartmann

@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
@@ -28,8 +29,8 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 */
 	@Test
 	public void saveAndDeleteUser() throws NoSuchAlgorithmException {
-		User user = new User("TestName", "TestPassword", "email", 1, 1);
-		User user2 = new User("TestName", "TestPassword", "email", 2, 1);
+		User user = new User("TestName", "TestPassword", "email", 1);
+		User user2 = new User("TestName", "TestPassword", "email", 1);
 
 		userDao.saveOrUpdate(user);
 		userDao.saveOrUpdate(user2);
@@ -38,6 +39,13 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 		System.out.println(id1);
 		System.out.println(id2);
+		
+		List<User> users = userDao.loadAll();
+        
+        for(User u : users){
+
+            System.out.println(u.getId());
+        }
 
 		assertThat(user.getId(), is(greaterThan(0L)));
 

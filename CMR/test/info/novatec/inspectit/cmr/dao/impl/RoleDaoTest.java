@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
@@ -26,29 +27,32 @@ public class RoleDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 */
 	@Test
 	public void saveAndDeleteRole() {
-		Role role1 = new Role("Normal-User", null);
-		Role role2 = new Role("Power-User", null);
+        Role role1 = new Role("Normal-User", null);
+        Role role2 = new Role("Power-User", null);
 
-		roleDao.saveOrUpdate(role1);
-		roleDao.saveOrUpdate(role2);
-		Long id1 = role1.getId();
-		Long id2 = role2.getId();
+        roleDao.saveOrUpdate(role1);
+        roleDao.saveOrUpdate(role2);
+        Long id1 = role1.getId();
+        Long id2 = role2.getId();
 
-		System.out.println(id1);
-		System.out.println(id2);
-		
-		
-		
-		assertThat(role1.getId(), is(greaterThan(0L)));
+        System.out.println(id1);
+        System.out.println(id2);
+        
+        List<Role> roles = roleDao.loadAll();
+        
+        for(Role r : roles){
+            System.out.println(r.getId());
+        }
+        
+        assertThat(role1.getId(), is(greaterThan(0L)));
 
-		roleDao.delete(role1);
-		roleDao.delete(role2);
+        roleDao.delete(role1);
+        roleDao.delete(role2);
 
-		assertThat(roleDao.load(id1), is(nullValue()));
-		assertThat(roleDao.load(id2), is(nullValue()));
-		
-	}
+        assertThat(roleDao.get(id1), is(nullValue()));
+        assertThat(roleDao.get(id2), is(nullValue()));
+        
+    }
 	
 	
-	//TODO more test
 }

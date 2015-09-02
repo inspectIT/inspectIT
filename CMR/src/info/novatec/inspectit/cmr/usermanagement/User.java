@@ -38,16 +38,14 @@ public class User {
 	 * @param name The name of the user
 	 * @param password The hashed password of the user
 	 * @param email The email of the user
-	 * @param id is unique.
 	 * @param roleId The id of the role the user is attached to
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public User(String name, String password, String email, long id, long roleId) throws NoSuchAlgorithmException {
+	public User(String name, String password, String email, long roleId) throws NoSuchAlgorithmException {
 		super();
 		this.name = name;
 		this.password = Permutation.hash(password);
 		this.email = email;
-		this.id = id;
 		this.roleId = roleId;
 	}
 	/**

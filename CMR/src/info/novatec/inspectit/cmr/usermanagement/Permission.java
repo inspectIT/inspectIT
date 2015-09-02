@@ -1,17 +1,13 @@
-
 package info.novatec.inspectit.cmr.usermanagement;
-
-
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 
 
 /**
  * Storage for a single privilege.
  * @author Joshua Hartmann
- *HibernateDaoSupport
+ *
  */
-public class Permission extends HibernateDaoSupport {
+public class Permission {
 	/**
 	 * The id of the privilege, used to identify which functionality it covers, must be unique.
 	 */

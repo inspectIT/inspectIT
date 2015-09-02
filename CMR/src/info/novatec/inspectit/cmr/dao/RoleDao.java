@@ -21,7 +21,7 @@ public interface RoleDao {
 	 *            The id of the Role.
 	 * @return The found {@link Role} object.
 	 */
-	Role load(Long id);
+	Role get(Long id);
 
 
 	/**
@@ -64,6 +64,6 @@ public interface RoleDao {
 	 * 
 	 * @return Returns all stored {@link Role} objects.
 	 */
-	List<Role> findAll();
+	List<Role> loadAll();
 
 }

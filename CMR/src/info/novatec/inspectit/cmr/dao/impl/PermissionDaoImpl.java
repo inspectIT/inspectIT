@@ -57,7 +57,7 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Permission> findAll() {
+	public List<Permission> loadAll() {
 		return getHibernateTemplate().loadAll(Permission.class);
 	}
 
@@ -72,7 +72,7 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 	/**
 	 * {@inheritDoc}
 	 */
-	public Permission load(Long id) {
+	public Permission get(Long id) {
 		return (Permission) getHibernateTemplate().get(Permission.class, id);
 	}
 

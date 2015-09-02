@@ -8,7 +8,6 @@
 			</generator>
 		</id>
 		<property name="title" column="title" />
-		<property name="description" type="string" column="description" />
-		<!-- irgendwie muss hier noch die Verbindung zu den roles rein -->
+		<property name="description" column="description" />
 	</class>
 </hibernate-mapping>

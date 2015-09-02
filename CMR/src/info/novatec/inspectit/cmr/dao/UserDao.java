@@ -64,6 +64,6 @@ public interface UserDao {
 	 * 
 	 * @return Returns all stored {@link User} objects.
 	 */
-	List<User> findAll();
+	List<User> loadAll();
 
 }

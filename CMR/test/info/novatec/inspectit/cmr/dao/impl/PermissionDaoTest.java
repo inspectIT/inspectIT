@@ -4,6 +4,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+
+import java.util.List;
+
+
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
 import info.novatec.inspectit.cmr.usermanagement.Permission;
@@ -24,28 +28,30 @@ public class PermissionDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 */
 	@Test
 	public void saveAndDeletePermission() {
-		Permission permission1 = new Permission("Normal-User", null);
-		Permission permission2 = new Permission("Power-User", null);
+		
+		Permission permission1 = new Permission("aPermission", null);
 
 		permissionDao.saveOrUpdate(permission1);
-		permissionDao.saveOrUpdate(permission2);
+		
 		Long id1 = permission1.getId();
-		Long id2 = permission2.getId();
 
 		System.out.println(id1);
-		System.out.println(id2);
 
+		List<Permission> mylist = permissionDao.loadAll();
+		
+		for(Permission p : mylist){
+			System.out.println(p);
+		}
+		
 		assertThat(permission1.getId(), is(greaterThan(0L)));
 
 		permissionDao.delete(permission1);
-		permissionDao.delete(permission2);
 
-		assertThat(permissionDao.load(id1), is(nullValue()));
-		assertThat(permissionDao.load(id2), is(nullValue()));
+		assertThat(permissionDao.get(id1), is(nullValue()));
+
 		
 	}
 	
 	
 	
-	//TODO more tests
 }

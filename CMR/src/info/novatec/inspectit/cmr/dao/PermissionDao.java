@@ -21,7 +21,7 @@ public interface PermissionDao {
 	 *            The id of the Permission.
 	 * @return The found {@link Permission} object.
 	 */
-	Permission load(Long id);
+	Permission get(Long id);
 
 
 	/**
@@ -64,6 +64,6 @@ public interface PermissionDao {
 	 * 
 	 * @return Returns all stored {@link Permission} objects.
 	 */
-	List<Permission> findAll();
+	List<Permission> loadAll();
 
 }

@@ -57,7 +57,7 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Role> findAll() {
+	public List<Role> loadAll() {
 		return getHibernateTemplate().loadAll(Role.class);
 	}
 
@@ -72,7 +72,7 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Role load(Long id) {
+	public Role get(Long id) {
 		return (Role) getHibernateTemplate().get(Role.class, id);
 	}
 
