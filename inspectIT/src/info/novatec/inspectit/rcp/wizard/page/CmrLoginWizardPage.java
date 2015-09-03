@@ -1,6 +1,5 @@
 package info.novatec.inspectit.rcp.wizard.page;
 
-import javax.swing.text.PasswordView;
 
 import info.novatec.inspectit.rcp.dialog.ForgotPasswordDialog;
 
