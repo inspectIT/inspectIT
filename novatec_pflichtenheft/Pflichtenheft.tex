@@ -1,0 +1,371 @@
+\documentclass[titlepage]{article}
+
+\usepackage[ngerman]{babel}
+\usepackage{selinput}
+\SelectInputMappings{
+  adieresis={ä},
+  germandbls={ß},
+}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage[a4paper,lmargin={4cm},rmargin={4cm},
+tmargin={3cm},bmargin = {3cm}]{geometry}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{lastpage}
+
+\usepackage{enumerate}
+
+\newcommand{\TeamNovaTec}{Maximillian Rösch, Lucca Hellriegel, Thomas Sachs, Mario Rose, \\ Andreas Herzog, Clemens Geibel, Joshua Hartmann und Phil Szalay} 
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Pflichtenheft}
+\fancyhead[C]{2015}
+\fancyhead[R]{NovaTec - inspectIT}
+\renewcommand{\headrulewidth}{0.2pt}
+\fancyfoot[C]{Seite \vspace{10 mm} \thepage \vspace{10 mm} von \vspace{10 mm} \pageref{LastPage}}
+\renewcommand{\footrulewidth}{0.2pt}
+
+\begin{titlepage}
+\title{Pflichtenheft zur\\ \grqq Authentication and Authorisation" \\von inspectIT}
+\date{\today}
+\author{\TeamNovaTec}
+\maketitle
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+
+\subsection{Passwortspeicherung}
+Da unserem System mehrere Benutzer mit verschiedenen Rechten handhaben können soll, müssen wir die einzelnen Benutzer mit einem Passwort sichern.
+Zur Speicherung der Passwörter eignet sich eine Datenbank wohl am besten, weitere Aspekte sind unten beschrieben.
+
+\subsubsection{Passwort vergessen}
+Sollte ein Benutzer sein Passwort vergessen haben, soll es möglich sein, sich ein neues Passwort an seine E-Mail-Adresse schicken zu lassen.\\
+Dadurch besteht die Möglichkeit, wieder Zugriff auf den Benutzer erhalten zu können, sollte man sein Passwort vergessen haben. 
+
+\subsubsection{Passwortsicherheit}
+Wir nehmen nicht an, dass beim Betrieb des System eine sehr große Zahl an Benutzern aufkommen wird.\\
+Deshalb haben wir uns dazu entschieden, nicht die aufwändigste Art der Passwortspeicherung zu nutzen, die uns davor schützen würde, dass im Fall von gestohlenen Daten die Passwörter von allen Nutzern schnell
+bekannt werden würde.\\
+Entschieden haben wir uns für einen guten Mittelweg aus Sicherheit und Performance sowie Einfachheit.\\
+Wir speichern die Passwörter als gesalzene Hash-Werte ab und prüfen bei der Anmeldung entsprechend nach, ob der Hash-Wert des eingegebenen Passworts mit dem gespeicherten Wert übereinstimmt.\\
+
+
+
+
+\subsection{Benutzermanagement}
+
+\subsubsection{Benutzer anlegen}
+
+Mit entsprechenden Rechten ist es möglich, neue Benutzer in dem System anzulegen. Für einen Benutzer speichern wir dabei folgende Informationen:
+
+\begin{enumerate}
+	\item Benutzername\\
+	Ein eindeutiger Benutzername, mit dem ein einzelner Benutzer im System identifiziert werden kann.
+	\item Passwort-Hash\\
+	Zur Sicherheit speichern wir das Passwort der Benutzer nicht im Klartext ab, sondern nur als Hash.
+	Näheres dazu im Abschnitt über die Passwortsicherheit.
+	\item E-Mail Adresse\\
+	Falls der Benutzer benachrichtigt werden muss, zum Beispiel falls er sein Passwort vergessen haben sollte. [Nice-To-Have: vielleicht auch, falls z.B. seine Rolle geändert wurde?]
+	\item Rolle\\
+	Jeder Benutzer hat intern eine Rolle zugewiesen, die jeweils bestimmte Berechtigungen zusammenfasst.
+\end{enumerate}
+
+\subsubsection{Rollen anlegen}
+
+Mit entsprechenden Rechten ist es möglich, neue Rollen in dem System anzulegen. Für eine Rolle speichern wir dabei folgende Informationen:
+
+\begin{enumerate}
+	\item Identifikationsnummer\\
+	Eine eindeutige Identifikationsnummer, mit der eine Rolle im System gekennzeichnet ist.
+	\item Titel\\
+	Ein kurzer Titel, der die Rolle beschreibt.
+	\item Berechtigungen\\
+	Eine Liste mit allen Berechtigungen, die einer Rolle zugewiesen wurde.
+\end{enumerate}
+
+
+\subsubsection{Berechtigungen anlegen}
+
+Mit entsprechenden Rechten ist es möglich, neue Berechtigung in dem System anzulegen. Für eine Berechtigung speichern wir dabei folgende Informationen:
+\begin{enumerate}
+	\item Id\\
+	Eine eindeutiger Identifikationsnummer, mit der eine Berechtigung im System gekennzeichnet ist.
+	\item Titel\\
+	Ein kurzer Titel, der die Rolle beschreibt.
+	\item Beschreibung\\
+	Eine detailliertere Beschreibung, was die Berechtigung für einen Zweck hat.
+\end{enumerate}
+
+\subsubsection{Benutzern neue Rolle zuweisen}
+
+Mit entsprechenden Rechten ist es möglich, einem Benutzer eine neue Rolle zuzuweisen.
+
+\subsubsection{Rollen bearbeiten}
+
+Mit entsprechenden Rechten ist es möglich, einzelnen Rollen weitere Berechtigungen zuzuweisen oder zu entziehen.
+
+
+\subsubsection{Auf dem CMR/Server einloggen}
+Um sich auf einem CMR anzumelden, kann man zum beim entsprechenden CMR eine 'CMR Login'-Option auswählen um sich anzumelden. Diese öffnet einen Wizard mit folgenden Feldern:
+\begin{enumerate}
+	\item E-Mail:\\
+	Als Nutzername wird die E-Mail-Adresse des Nutzers verwendet.
+	\item Passwort:\\
+	Das Passwort, das der Nutzer verwendet um sich einzuloggen.
+	\item 'Forgot Password'-Button:\\
+	Für den Fall, dass der Nutzer sein Passwort vergessen hat, kann durch diesen Button ein Dialog geöffnet werden, der den Nutzer auffordert seine E-Mail Adresse anzugeben, an die ein neues, zufallsgeneriertes Passwort geschickt wird.
+\end{enumerate}
+
+
+\end{document}
+
+
+%%##################CONTENT##################
+%\section{Vorstellung des Projekts}
+%\subsection{Ziel}
+%Das Programm „inspectIT“ der Firma NovaTec wird dazu benutzt um zu analysieren, aus welchen Gründen die Performance von Java-Applikationen nicht den Erwartungen oder Zielen entspricht. \\ 
+%Bei einer solchen Tätigkeit kommt die Software mit vielen verschiedenen sensitiven Daten in Berührung. Das Problem dabei war bisher, dass kein eingebautes Sicherheitssystem existiert und jedem Benutzer jede Option offenstand. An dieser Stelle kommt das Projektteam NovaTec ins Spiel. \\ 
+%Unser Ziel ist: Kernfunktionen von inspectIT schützen. \\
+%Dazu haben wir verschiedene Anregungen und Vorgaben von NovaTec erhalten, die wir zusammen mit unseren Ideen im Folgenden vorstellen wollen. 
+%Während des Projekts werden wir als Themengruppe \shorthandoff{"} "Authentication and Authorisation" \shorthandon{"} innerhalb der Online-Infrastruktur von NovaTec arbeiten. \\
+%Weiterhin wird unter "Prozesszielen" unser grundsätzliches Vorgehen vorgestellt.  \\ 
+%\\ Ansonsten ist die naheliegende Lösung des oben genannten Problems eine Benutzerkontensteuerung einzuführen. \\
+%Dafür müssen wir uns in den Code von inspectIT einarbeiten, und eine derartige Komponente von Grund auf selbst konzipieren und integrieren. \\
+%%Nachfolgend finden Sie eine Grafik (Quelle: NovaTec), die den schematischen Aufbau einer solchen Steuerung darstellt. \\
+%
+%\begin{center}
+%	\includegraphics[width=0.7\textwidth]{Schema.png}\\
+%	\textit{Schematischer Aufbau einer solchen Steuerung\\
+%		Quelle: NovaTec\\}
+%\end{center}
+%Die Benutzerkontensteuerung besteht aus 3 Komponenten. Der grafischen Oberfläche (UI), der Verankerung in der Serversoftware von inspectIT und schließlich der Speicherung jeglicher Benutzer, Rollen und Berechtigungen.
+%Wir haben uns entschlossen das Projekt zur besseren Übersicht in die folgenden Subsysteme einzuteilen.
+%\begin{enumerate}[$\bullet$]
+%	\item Login-UI
+%	\item Rollen
+%	\item Berechtigungen
+%	\item Datenbank\\
+%\end{enumerate}
+%Unabhängig von den folgenden Features kann es sein, dass für die Subsysteme zusätzliche Arbeit anfällt, wie etwa das Lernen relevanter Frameworks oder Grundlagenarbeit zur Integration in inspectIT. \\
+%Diese Aufgaben werden wir während des Projekts dokumentieren und wenn nötig ebenfalls in das Pflichtenheft eintragen, wenn der Umfang dieser zusätzlichen Arbeit klarer ist. \\
+%
+%\subsection{Begriffe}
+%
+%\begin{enumerate}[$\bullet$]
+%	\item Benutzer bezeichnet einen Kunden, der inspectIT einsetzt
+%	\item User ist die Entität eines Benutzers im System
+%	\item Ein CMR ist eine Art von Abhörsonde, mit deren Hilfe man mit inspectIT die Perfomance beobachten kann 
+%	\item Ein Subsystem bezeichnet hier einen aus Konzeptionsgründen einzeln betrachteten Komponenten des Projekts 
+%	\item Ein Feature bezeichnet hier die größte Einheit von Funktionalität und besteht aus Storys und/oder Epics
+%	\item Ein Epic bezeichnet hier die mittlere Einheit von Funktionalität und besteht aus Storys
+%	\item Eine Story bezeichnet hier die kleinste Einheit von Funktionalität
+%\end{enumerate}
+%\newpage
+%\section{Prozessziele}
+%\subsection{Allgemein}
+%\begin{enumerate}[$\bullet$]
+%	\item	Aufteilung in Feature-Gruppen 
+%	\item	Feature-Entwicklung in zwei Wochen-Sprints (siehe Zeitplan)
+%	\item	Wenn nötig, wöchentliche Treffen der Feature-Gruppen
+%	\item Monatliche (Online)-Meetings zwischen dem Projektteam (oder Teilen davon) und dem inspectIT-Team um Features und Fortschritte zu besprechen
+%	\item	Features als Tickets im Ticketing-System Atlassian Jira
+%	\item	Englischsprachige Dokumentation (Meetings, Feature-Skizzen usw.) in Atlassian Confluence
+%	\item	Versionsverwaltung mit GitHub und GitLab
+%	\item	Qualitätskontrolle durch NovaTec-Entwicklungsumgebung
+%	\item	Integration in inspectIT am Ende der Entwicklung mit Atlassian Bamboo
+%	\item	Java als Entwicklungssprache
+%	\item	Spring Framework für Serverintegration und User Interface
+%	\item	Eclipse RCP Framework für User interface
+%	\item	XML für die Datenbank
+%	\item	NovaTec-relevante Kommunikation über Atlassian-Plattformen, Skype und E-Mail
+%	\item Sonstige Kommunikation über Slack
+%\end{enumerate}
+%
+%
+%
+%\subsection{Feature Driven Development}
+%Wir haben uns dafür entschieden unser Projekt grob nach dem Prinzip des Feature Driven Developments durchzuführen. Dabei dreht sich alles um den Feature-Begriff, welcher als \shorthandoff{"} "Aktion Ergebnis Objekt" \shorthandon{"} definiert ist. Wir haben bei der Formulierung unserer Features versucht entweder diesem Schema zu folgen oder zumindest ähnlich reduzierte Aussagen als Leitlinie zu schaffen.\\ 
+%Folgende Schritte sind in FDD definiert:
+%
+%\begin{enumerate}[1.]
+%	\item Entwicklung eines Gesamtmodells 
+%	\item Erstelle Feature-Liste 
+%	\item Plane je Feature 
+%	\item Entwurf je Feature 
+%	\item Konstruiere je Feature 
+%\end{enumerate}
+%Schritt 1 bis 3 werden mit dem Bearbeiten dieses Pflichtenhefts abgedeckt, während unser Zeitplan zeigen soll wie wir Schritt 4 und 5 durchführen wollen. \\
+%Zukünftige Iterationen des Pflichtenhefts werden die detaillierten Entwürfe enthalten. 
+%
+%\newpage
+%\section{Login-UI}
+%Damit der Benutzer das Kontensystem nutzen kann, brauchen wir natürlich eine Login-Maske. Diese existiert zu diesem Zeitpunkt noch nicht und muss an die inspectIT-Software angebaut werden. Dafür werden wir die bisher in inspectIT auch eingesetzten Frameworks Eclipse RPC und Spring verwenden. \\
+%\\
+%Wir haben die Login-Maske in drei Features zusammengefasst, die im Folgenden genauer vorgestellt werden.
+%
+%\subsection{Feature 1}
+%\textbf{\textit{Feature 1:}} \textit{Ein Benutzer kann sich mit Username und Password anmelden} \\
+%Dies ist die grundsätzliche Fähigkeit, dass der Benutzer sich mit seinem Usernamen und Password anmelden kann. \\\\
+%Folgende Unterpunkte werden dafür benötigt:\\
+%\\ \textit{Story 1: Zum Start des Programms wird die Login-Oberfläche gestartet} \\
+%Bisher ist es noch so, dass das Programm mit allen Optionen verfügbar startet. Wir müssen hierbei dafür sorgen, dass die Login-Maske an den Start gesetzt wird und nicht übergangen werden kann. \\
+%\\ \textit{Story 2: Die Login-Oberfläche hat ein Eingabefeld Username} \\\\
+%\textit{Story 3: Die Login-Oberfläche hat ein Eingabefeld Password} \\ 
+%Die Login-Maske muss diese zwei Eingabefelder enthalten. \\
+%\\ \textit{Story 4: Username und Password werden mit der Datenbank abgeglichen} \\
+%Die eingegebenen Daten müssen mit der Datenbank abgeglichen werden können. \\\\ \textit{Story 5: Bei falscher Eingabe gibt es eine Benachrichtigung} \\
+%Die Login-Maske soll bei einer falschen Eingabe dem Benutzer einen Text wie etwa \shorthandoff{"} "Username oder Password sind falsch/ nicht vorhanden" \shorthandon{"} anzeigen. \\
+%\\ \textit{Story 6: Bei richtiger Eingabe wird die aktuelle Session des Programms mit den Berechtigungen der Rolle des aktuellen Users gestartet} \\
+%Bei einer richtigen Eingabe muss die Rolle des aktuellen Users in eine Art Zwischenspeicher geladen werden, damit später je nachdem, was der Benutzer versucht aufzurufen, die Berechtigungen mit der Rolle abgeglichen werden können. \\
+%\subsection{Feature 2}
+%\textbf{\textit{Feature 2:}} \textit{Ein Benutzer kann eine Anfrage zum Erstellen eines Users stellen} \\ 
+%Hierbei wollen wir dem Benutzer die Möglichkeit geben für sich oder andere die Anfrage zum Erstellen eines Zugangsaccounts zu schicken.\\
+%\\\textit{Story 1: Es gib ein Untermenü für die Registrierung in der Login-Oberfläche} \\
+%Das Untermenü zur Registrierung muss über die Login-Maske aufrufbar sein. Dementsprechend muss dort ein Button oder etwas ähnliches dafür bereitstehen. \\
+%\\ \textit{Story 2: In dem Untermenü gibt es ein Feld für E-Mail, Username und gewünschte Rolle} \\
+%Das Untermenü muss die für einen neuen User nötigen Informationen aufnehmen können. \\
+%\\ \textit{Story 3: Es gibt eine Benachrichtigung, falls der Name oder die E-Mail schon vergeben sind} \\
+%Es muss mit der Datenbank abgeglichen werden, ob der Name und die E-Mailadresse schon vergeben worden sind. Das Ergebnis des Abgleichs muss grafisch erkennbar sein.\\
+%\\ \textit{Story 4: Der Administrator wird in seinem Panel mit der Anfrage benachrichtigt} \\
+%Schließlich muss die Anfrage in dem Benachrichtigungspanel des Administrators landen, damit dieser sie verarbeiten kann. Das Panel ist in späteren Features noch genauer beschrieben. \\
+%\\ \textit{Story 5: Die Anfragenzahl zur Erstellung eines neuen Accounts ist zeitlich pro IP begrenzt} \\
+%Um Missbrauch zu verhindern ist es nötig, dass die Erstellungsfunktion von einer IP nur einige wenige Male in einem bestimmten Zeitabschnitt bedient werden darf. \\
+%
+%\subsection{Feature 3}
+%\textbf{\textit{Feature 3:}} \textit{Ein Benutzer kann eine Anfrage zum Wiederherstellen seines Passwords stellen} \\
+%Wichtig ist bei einer Sicherheitsmaßnahme wie der Benutzerkontensteuerung nicht nur die Sicherheit selbst, sondern auch die Zugänglichkeit. Je weniger der Benutzer belastet wird, desto besser. So muss es idealerweise auch möglich sein ein vergessenes Password wiederherstellen zu lassen. \\
+%\\ \textit{Story 1: Es gibt ein Untermenü für die Wiederherstellung} \\
+%Dieses Untermenü muss auf der Login-Maske zugänglich sein und erfordert eine eigene grafische Darstellung. \\
+%\\ \textit{Story 2: Das Untermenü hat ein Eingabefeld für den Usernamen} \\
+%Anhand des Usernamens soll der Wiederherstellungsprozess in Gang gesetzt werden.\\
+%\\ \textit{Story 3: Bei nicht vorhandenem User gibt es eine Benachrichtigung} \\
+%Es muss mit der Datenbank abgeprüft werden ob der eingegebene User überhaupt vorhanden ist. Ansonsten wird eine Fehlermeldung dargestellt. \\
+%\\ \textit{Story 4: Der Administrator wird in seinem Panel mit der Anfrage benachrichtigt} \\
+%Die Wiederherstellungsanfrage muss an das Benachrichtigungspanel des Administrators gesendet werden. \\
+%\\ \textit{Story 5: Die Anfrage zur Wiederherstellung ist pro IP begrenzt} \\ Um Missbrauch zu verhindern ist es nötig, dass die Wiederherstellungsfunktion von einer IP nur einige wenige Male in einem bestimmten Zeitabschnitt bedient werden darf. \\
+%\newpage
+%\section{Rollen}
+%Rollen sind der zentrale Verwaltungspunkt der Benutzerkontensteuerung. Sie können den Usern zugewiesen werden und bestimmen, welche Berechtigungen der Benutzer mit seinem User besitzt. \\
+%Wir haben die wichtigsten Gesichtspunkte der Rollen unter drei Features zusammengefasst.
+%\subsection{Feature 4}
+%\textbf{\textit{Feature 4:}} \textit{Jeder User besitzt eine Rolle} \\
+%Da der gesamte Sinn einer Benutzerkontensteuerung davon abhängt, dass nicht jeder User den gleichen Zugriff hat, muss natürlich auch jeder User eine Rolle besitzen. Dies soll in die Struktur der Datenbank eingebaut werden, sodass es auch gar nicht möglich ist User ohne Rollen zu erstellen. \\
+%\\ \textit{Story 1: Jede Rolle besitzt bestimmte Berechtigungen} \\ \\
+%Wie die Berechtigungen zugewiesen werden wird in dem Abschnitt zu Datenbanken genauer besprochen. Hier soll nur einmal festgehalten werden, dass dies am Ende der Funktionsstand sein soll. \\
+%\subsection{Feature 5}
+%\textbf{\textit{Feature 5:}} \textit{Es gibt die Rolle des Administrators} \\
+%Die Rolle des Administrators ist offensichtlich einer der Wichtigsten in jedem System. Sie wird im Folgenden noch im Detail spezifiziert. \\
+%\\ \textit{Story 1: In der Rolle des Administrators sind alle Optionen erreichbar} \\
+%Hierbei soll sichergestellt werden, dass der Administrator wirklich auf alle Optionen zugreifen kann, was im Moment noch für alle User offen steht. \\
+%\\ \textit{Epic 1: Es gibt ein rudimentäres Admin-Benachrichtungspanel} \\
+%Das bereits erwähnte Benachrichtungspanel des Administrators wird hier genauer spezifiziert. Da dies ein größeres Unterfangen ist, wird es hier als Epic verbucht. \\\\
+%\textit{Story 1: Es gibt eine UI des Benachrichtungspanel} \\
+%Hier soll der Administrator Benachrichtigungen zu Erstellungswünschen neuer User und zu Password-Wiederherstellungs-Anfragen abrufen können und dabei einsehen, wer sie gestellt hat, was für ein Password die Person hat und welche E-Mailadresse hinterlegt ist. Alternativ wird hier ein Bestätigungssystem gebaut, welches der Administrator moderiert, mit dem automatische E-Mails mit dem Password an die anfragenden User gesendet werden können. \\\\
+%\textit{Story 2: Die UI ist in einer Session mit Admin-Rolle erreichbar} \\
+%Wenn sich ein Benutzer mit einem Admin-User einloggt, so muss dies natürlich in dem oben bereits erwähnten Zwischenspeicher aufgezeichnet werden, um die entsprechenden Abfragen bezüglich der Berechtigungen machen zu können. Dies erwähnen wir hier vor allem der Vollständigkeit halber noch einmal.  \\
+%\newpage
+%\subsection{Feature 6}
+%\textbf{\textit{Feature 7:}} \textit{Es gibt Rollen mit beschränkten Rechten} \\
+%Neben dem Administrator muss es auch für die normalen Benutzer Rollen geben, mit denen diese gerade die nötigen Aufgaben ausführen können. Im Folgenden haben wir ein paar dieser möglichen Rollen spezifiziert. \\
+%\\\textit{Story 1: Es gibt eine Rolle mit minimalen Rechten} \\
+%Diese Rolle ist für den Benutzer gedacht, der nur einen Teil von inspectITs Analysen auswerten muss. Ihr geben wir die niedrigst möglichen Leserechte. \\
+%\\\textit{Story 2: Es gibt eine Rolle mit mittleren bis hohen Rechten} \\
+%Diese Rolle ist für den typischen Poweruser gedacht. Er braucht viele Leserechte, aber nicht alle Schreibrechte und sollte auch nicht in der Lage sein das System komplett auszuschalten bzw. zu entfernen. \\
+%\\\textit{Story 3: Es ist möglich Rollen zu bearbeiten und neue zu erstellen} \\
+%Eine der von NovaTec sehr gewünschten Eigenschaften unseres Projekts ist die Erweiterbarkeit. Deswegen wollen wir die Erstellung von Rollen so transparent implementieren, dass diese erweitert werden können. Eventuell soll der Administrator auch die Möglichkeit bekommen, die Rollen im Programm zu bearbeiten.
+%\newpage
+%\section{Berechtigungen}
+%Berechtigungen sind das eigentliche Kernstück unseres Projekts. Während man Rollen Berechtigungen zuweisen können soll, müssen wir diese Berechtigungen erst einmal implementieren. Das wird der größte Teil unserer Arbeit sein, da wir uns hierbei tief in den Code von inspectIT einarbeiten müssen, um für manche Rollen Optionen z.B. ausblenden zu können. Deswegen sind auch scheinbar kleine Berechtigungen, die im Endeffekt z.B. nur das Ausblenden einer Option beinhalten, hier als Features aufgeführt, da dahinter um einiges mehr Arbeit steht, wegen dem bereits erwähnten nötig werdenden Einarbeiten in den Code.\\
+%\subsection{Feature 7}
+%\textbf{\textit{Feature 7:}} \textit{Es gibt die Berechtigung zur Bearbeitung von Usern} \\
+%Dies gehört zu den administrativen Berechtigungen, die zu Änderungen am System bemächtigen. \\
+%Voraussichtlich wird der Fall vorkommen, an dem ein User eine andere Rolle benötigt. Deswegen soll der User-Status veränderbar sein. Außerdem stellt dies auch die Berechtigung dar um User überhaupt anlegen zu können.\\
+%\\\textit{Story 1: Rollen mit dieser Berechtigung können in die Userdatenbank schreiben und diese lesen} \\
+%Um etwas an Usern verändern zu können muss der Zugriff auf die Datenbank gewährleistet werden. Dies wird entweder durch Datenzugriff oder eine separate UI erledigt.  \\
+%\\\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut} \\
+%Hierbei müssen wir in inspectIT den Schalter einbauen, der je nach der Rolle des aktuellen Users Schaltflächen ausgraut. Dies sei hier im Generellen erwähnt, damit Grundlagenarbeit getan werden kann. Im Speziellen ist dies bei den einzelnen Features extra erwähnt.
+%\subsection{Feature 8}
+%\textbf{\textit{Feature 8:}} \textit{Es gibt die Berechtigung zum Auslesen der Userdatenbank} \\ 
+%Das Recht Nutzer zu bearbeiten, und das Recht die komplette Userdatenbank auslesen/bearbeiten zu können wollen wir trennen um eine Feinkonfiguration der User zu ermöglichen. \\
+%\\\textit{Story 1: Rollen mit dieser Berechtigung können die Userdatenbank lesen} \\\\
+%\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut } 
+%\subsection{Feature 9}
+%\textbf{\textit{Feature 9:}} \textit{Es gibt die Berechtigung zum Herunterfahren des Servers} \\
+%Der Server ist die zentrale Verwaltungsstelle von inspectIT an den die CMRs berichten. Er sollte nicht ohne weiteres heruntergefahren werden können. \\\\
+%\textit{Story 1: Rollen mit dieser Berechtigung können die Herunterfahren-Option drücken} \\\\
+%\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut} 
+%\subsection{Feature 10}
+%\textbf{\textit{Feature 10:}} \textit{Es gibt die Berechtigung zum Neustarten des Servers} \\
+%Wie bei dem Herunterfahren des Servers gilt hier auch höchste Sicherheitsstufe, da das Neustarten zu Datenverlust führen könnte. \\
+%\\\textit{Story 1: Rollen mit dieser Berechtigung können die Neustart-Option drücken} \\\\
+%\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut} 
+%\subsection{Feature 11}
+%\textbf{\textit{Feature 11:}} \textit{Es gibt die Berechtigung zum Setzen von CMRs} \\
+%Da CMRs die Hauptfunktionalität von inspectIT darstellen, sollten diese nur von der strategischen Leitung des inspectIT-Einsatzes gesetzt werden. Weiterhin sollte auch verhindert werden, dass durch die CMRs an Stellen abgehört wird, an denen sensitive Daten ausgetauscht werden. \\\\
+%\textit{Story 1: Rollen mit dieser Berechtigung können die Erstell-Option ausführen} \\\\
+%\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut}
+%\subsection{Feature 12} 
+%\textbf{\textit{Feature 12: }} \textit{Es gibt die Berechtigung zum Löschen von CMRs} \\
+%Auch das Löschen von CMRs sollte nur von der strategischen Leitung ausgeführt werden, da sonst Datenverlust droht. \\\\
+%\textit{Story 1: Rollen mit dieser Berechtigung können die Lösch-Option ausführen} \\\\
+%\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut}
+%\newpage
+%\subsection{Feature 13}
+%\textbf{\textit{Feature 13:}} \textit{Es gibt die Berechtigung zum Herunterfahren eines CMRs} \\\\
+%\textit{Story 1: Rollen mit dieser Berechtigung können die Herunterfahren-Option drücken} \\\\
+%\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut} \\
+%%\\ Auf der nächsten Seite ist eine Grafik (Quelle: NovaTec), die die Stelle zeigt an der wir den Zugriff ausgrauen oder einfärben werden. \\
+%\begin{center}	
+%	\includegraphics[width=0.7\textwidth]{Restart.png} \\
+%	\textit{Mögliches Ausgrauen von Menupunkten, zu denen die Berechtigung fehlt\\
+%	Quelle: NovaTec}
+%\end{center}
+%
+%\subsection{Feature 14}
+%\textbf{\textit{Feature 14:}} \textit{Es gibt die Berechtigung zum Neustarten eines CMRs} \\\\
+%\textit{Story 1: Rollen mit dieser Berechtigung können die Neustart-Option drücken} \\\\
+%\textit{Story 2: Bei Rollen ohne diese Berechtigung wird der entsprechende Zugriff ausgegraut}
+%\newpage
+%\subsection{Feature 15}
+%\textbf{\textit{Feature 15:}} \textit{Es gibt die Berechtigung zum Ändern des Speicherplatzes, den ein CMR verbrauchen darf} \\
+%Bisher war es ohne Probleme möglich die ganze Festplatte mit den aufgezeichneten Daten vollzuschreiben. \\
+%\\\textit{Story 1: Rollen mit dieser Berechtigung können das Menü zur Konfiguration des Speicherplatzes ohne Beschränkung bedienen} \\\\
+%\textit{Story 2: Bei Die Speicherplatzoptionen sind standardmäßig realistisch beschränkt für User ohne die Berechtigung aus Feature 15} \\
+%Zusätzlich zu der Berechtigung wollen wir sinnvolle Limits in die Software selbst einbauen, damit der Zugriff auch an normale User gegeben werden könnte. \\
+%
+%\begin{center}
+%	\includegraphics[width=0.7\textwidth]{hardspace.png} \\
+%	\textit{So sieht das Menu bisher aus\\
+%	Quelle: NovaTec}
+%\end{center}
+%
+%\newpage
+%\section{Datenbank}
+%Um all die oben genannten Berechtigungen, Rollen und User auch sinnvoll abspeichern zu können brauchen wir eine Datenbank. Diese wurde jetzt schon mehrmals erwähnt. Hier sei sie nur noch einmal aufgeführt, da in dieser Richtung noch Grundlagenarbeit, wie etwa Einarbeitung in XML oder die Spezifizierung wie die Daten genau abgelegt werden, nötig ist. 
+%\subsection{Feature 16}
+%\textbf{\textit{Feature 16:}} \textit{Die Benutzerverwaltung geschieht über eine Datenbank} \\\\
+%\textit{Story 1: User haben einen Namen, E-Mailadresse und Rolle} \\
+%\subsection{Feature 17}
+%\textbf{\textit{Feature 17:}} \textit{Die Rollenverwaltung geschieht über eine Datenbank} \\\\
+%\textit{Story 1: Die erlaubten Rollen sind in der Datenbank festgelegt}
+%\subsection{Feature 18}
+%\textbf{\textit{Feature 18:}} \textit{Alle möglichen Berechtigungen sind in der Datenbank spezifiziert} \\
+%Da für jede neue Berechtigung einiges an Vorarbeit nötig ist, sollten alle zurzeit möglichen Berechtigungen an einem Ort, in diesem Fall auch der Datenbank, festgehalten werden. Damit ein einfacher Überblick über alle verfügbaren Berechtigungen möglich ist. Zukünftig soll so auch die Erweiterbarkeit unterstützt werden. \\
+%\newpage
+%\section{Ausblick}
+%Abhängig wie unser Zeitplan aufgeht, kann es vorkommen, dass wir im Laufe des Projekts noch weitere Features implementieren werden. Hier seien nur ein paar der Möglichkeiten erwähnt.
+%\subsection{Verschlüsselung des Datenverkehrs} 
+%Im Moment ist es noch theoretisch möglich den Datentransfer des Programms über das lokale Netzwerk abzuhören und daraus sensitive Daten zu ziehen. \\
+%Da inspectIT mit den CMRs tief in der Infrastruktur des zu testenden Programms ist könnte dies z.B. bei Banksoftware oder ähnlichem zu großen Sicherheitslecks führen. NovaTec hat vorgeschlagen, dass wir uns eventuell dazu ein paar Gedanken machen. 
+%\subsection{Nachvollziehbarkeit}
+%Ein weiteres nice-to-have wäre, wenn jegliche Aktivität der User innerhalb der Benutzerkontensteuerung aufgezeichnet werden könnte, damit der Administrator eventuelle Probleme besser diagnostizieren kann. Dazu gehört eventuell eine Versionsverwaltung der verfügbaren Optionen anzulegen, sodass wenn etwas nicht mehr läuft man zu einer alten Einstellung zurückkehren könnte.
+%
+%
+%\end{document}

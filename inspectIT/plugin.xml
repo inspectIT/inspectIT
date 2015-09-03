@@ -179,6 +179,11 @@
             id="info.novatec.inspectit.rcp.wizard.uploadStorageWizard"
             name="Upload Storage Wizard">
       </wizard>
+      <wizard
+            class="info.novatec.inspectit.rcp.wizard.CmrLoginWizard"
+            id="info.novatec.inspectit.rcp.wizard.cmrLoginWizard"
+            name="CMR Login Wizard">
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.importWizards">
@@ -396,6 +401,10 @@
       <command
             id="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType"
             name="Navigate To Grouped Exception Type">
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.commands.cmrLogin"
+            name="CMR Login">
       </command>
    </extension>
    <extension
@@ -1461,6 +1470,10 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.CmrLoginHandler"
+            commandId="info.novatec.inspectit.rcp.commands.cmrLogin">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -2293,6 +2306,15 @@
          </command>         
          <separator
                name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator3"
+               visible="true">
+         </separator>
+         <command
+               commandId="info.novatec.inspectit.rcp.commands.cmrLogin"
+               label="CMR Login"
+               style="push">
+         </command>
+         <separator
+               name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator4"
                visible="true">
          </separator>
          <command
