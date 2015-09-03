@@ -1,5 +1,7 @@
 package info.novatec.inspectit.rcp.wizard.page;
 
+import javax.swing.text.PasswordView;
+
 import info.novatec.inspectit.rcp.dialog.ForgotPasswordDialog;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -71,7 +73,7 @@ public class CmrLoginWizardPage extends WizardPage {
 
 		Label passwordLabel = new Label(main, SWT.LEFT);
 		passwordLabel.setText("Password: ");
-		passwordBox = new Text(main, SWT.BORDER);
+		passwordBox = new Text(main, SWT.BORDER | SWT.PASSWORD);
 		passwordBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		Button forgotPassword = new Button(main, SWT.PUSH);
