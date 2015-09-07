@@ -39,9 +39,9 @@ public class KryoHttpInvokerServiceExporter extends HttpInvokerServiceExporter {
 	 */
 	@Override
 	protected RemoteInvocation readRemoteInvocation(HttpServletRequest request, InputStream is) throws IOException, ClassNotFoundException {
-		try {
+		try (Input input = new Input(is)) {
 			ISerializer serializer = serializationManagerProvider.createSerializer();
-			return (RemoteInvocation) serializer.deserialize(new Input(is));
+			return (RemoteInvocation) serializer.deserialize(input);
 		} catch (SerializationException e) {
 			throw new IOException(e);
 		}
@@ -52,14 +52,14 @@ public class KryoHttpInvokerServiceExporter extends HttpInvokerServiceExporter {
 	 */
 	@Override
 	protected void writeRemoteInvocationResult(HttpServletRequest request, HttpServletResponse response, RemoteInvocationResult result, OutputStream os) throws IOException {
-		try {
+		try (Output output = new Output(os)) {
 			if (!result.hasException()) {
 				Object value = result.getValue();
 				result = new RemoteInvocationResult(value);
 			}
 
 			ISerializer serializer = serializationManagerProvider.createSerializer();
-			serializer.serialize(result, new Output(os));
+			serializer.serialize(result, output);
 		} catch (SerializationException e) {
 			throw new IOException(e);
 		}
