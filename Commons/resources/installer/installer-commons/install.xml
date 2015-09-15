@@ -131,16 +131,12 @@
 			<!-- Cannot use unpack=true because izpack doesn't support tar.gz -->
 			<file override="update" src="@{installer.cmr.pointer}" targetdir="$INSTALL_PATH" />
 
-			<!-- Mark files as executable after installation (important for GNU/Linux OS) -->
+			<!-- Set executable flag to inspectIT files after installation (important for GNU/Linux OS) -->
 			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/CMR/startup.sh" condition="izpack.linuxinstall" />
 
-			<!-- Mark Java file as executable after installation (important for GNU/Linux OS) -->
-			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/ControlPanel" condition="izpack.linuxinstall" />
+			<!-- Set executable flag to java files after installation (important for GNU/Linux OS) -->
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/java" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/java_vm" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/javaws" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/jcontrol" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/keytool" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/orbd" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/pack200" condition="izpack.linuxinstall" />
@@ -150,11 +146,7 @@
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/servertool" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/tnameserv" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/unpack200" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/ControlPanel" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/java" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/java_vm" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/javaws" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/jcontrol" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/keytool" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/orbd" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/pack200" condition="izpack.linuxinstall" />
