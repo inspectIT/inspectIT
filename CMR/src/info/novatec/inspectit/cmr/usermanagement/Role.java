@@ -29,8 +29,8 @@ public class Role {
 	 */
 	public Role(String title, List<Permission> permissions) {
 		super();
-		this.title = title;
 		this.permissions = permissions;
+		this.title = title;
 	}
 	/**
 	 * Gets {@link #permissions}.

@@ -65,5 +65,4 @@ public interface RoleDao {
 	 * @return Returns all stored {@link Role} objects.
 	 */
 	List<Role> loadAll();
-
 }

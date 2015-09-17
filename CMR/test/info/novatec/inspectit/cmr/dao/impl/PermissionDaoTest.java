@@ -49,9 +49,8 @@ public class PermissionDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 		assertThat(permissionDao.get(id1), is(nullValue()));
 
-		
 	}
 	
 	
-	
+	//TODO more tests
 }
