@@ -21,6 +21,10 @@ public class User {
 	private byte[] password;
 	/**
 	 * The users email address.
+	 * The SHA256 Hash of the userpassword.
+	 */
+	/**
+	 * The users email adress.
 	 * Used to send a new password, if the current one is lost.
 	 */
 	private String email;
@@ -86,6 +90,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [name=" + name + ", hashedPassword is hidden , email=" + email + ", id=" + id + ", userRole=" + roleId + "]";
+
 	}
 	
 	
@@ -108,6 +113,7 @@ public class User {
 	 */
 	public void setPassword(String password) throws NoSuchAlgorithmException {
 			this.password = Permutation.hash(password);
+
 	}
 	/**  
 	 * Sets {@link #email}.  
