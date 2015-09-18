@@ -15,13 +15,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public interface PermissionDao {
 
 	/**
-	 * Load a specific {@link Permission} from the underlying storage by passing the id.
+	 * Load a specific {@link Permission} from the underlying storage by passing the title.
 	 * 
-	 * @param id
-	 *            The id of the Permission.
+	 * @param title
+	 *            The title of the Permission.
 	 * @return The found {@link Permission} object.
 	 */
-	Permission get(Long id);
+	Permission load(String title);
 
 
 	/**

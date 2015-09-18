@@ -2,39 +2,47 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 
 
 /**
- * Storage for a single privilege.
+ * Storage for a single permission.
  * @author Joshua Hartmann
  *  extends HibernateDaoSupport 
  */
 public class Permission {
 
 	/**
-	 * The id of the privilege, used to identify which functionality it covers, must be unique.
+	 * The id of the permission, used to identify which functionality it covers, must be unique.
 	 */
 	private long id;
 	/**
-	 * A short title for the privilege.
+	 * A short title for the permission.
 	 */
 	private String title;
 	/**
-	 * A more detailed description for the functionality the privilege covers.
+	 * A more detailed description for the functionality the permission covers.
 	 */
 	private String description;
-
 	/**
-	 * The constructor for a privilege.
-	 * @param title The short title of the Permission.
-	 * @param description The more detailed description of the privilege.
+	 * Default constructor for Permission.
 	 */
-	public Permission(String title, String description) {
+	
+	public Permission() {
+		
+	}
+	
+	/**
+	 * The constructor for a permission.
+	 * @param id The id of the permission.
+	 * @param title The short title of the permission.
+	 * @param description The more detailed description of the permission.
+	 */
+	public Permission(long id, String title, String description) {
 		super();
 		this.title = title;
 		this.description = description;
+		this.id = id;
 	}
 	/**
 	 * Gets {@link #id}.

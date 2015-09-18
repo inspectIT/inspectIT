@@ -29,13 +29,11 @@ public class PermissionDaoTest extends AbstractTransactionalTestNGLogSupport {
 	@Test
 	public void saveAndDeletePermission() {
 		
-		Permission permission1 = new Permission("aPermission", null);
+		Permission permission1 = new Permission(1, "aPermission", null);
 
 		permissionDao.saveOrUpdate(permission1);
 		
-		Long id1 = permission1.getId();
 
-		System.out.println(id1);
 
 		List<Permission> mylist = permissionDao.loadAll();
 		
@@ -47,7 +45,7 @@ public class PermissionDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 		permissionDao.delete(permission1);
 
-		assertThat(permissionDao.get(id1), is(nullValue()));
+		assertThat(permissionDao.load("aPermission"), is(nullValue()));
 
 	}
 	

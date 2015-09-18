@@ -62,7 +62,6 @@ public class CmrRestfulService {
 	@RequestMapping(method = RequestMethod.GET, value = "version")
 	@ResponseBody
 	public String getVersion() throws IOException {
-		System.out.println("returning version");
 		return versioningService.getVersion();
 	}
 

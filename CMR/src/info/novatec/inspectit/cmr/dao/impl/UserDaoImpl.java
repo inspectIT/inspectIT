@@ -72,8 +72,8 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 	/**
 	 * {@inheritDoc}
 	 */
-	public User load(Long id) {
-		return (User) getHibernateTemplate().get(User.class, id);
+	public User load(String name) {
+		return (User) getHibernateTemplate().get(User.class, name);
 	}
 
 	/**

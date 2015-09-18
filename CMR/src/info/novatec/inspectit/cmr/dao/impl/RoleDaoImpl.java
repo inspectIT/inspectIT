@@ -72,8 +72,8 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Role get(Long id) {
-		return (Role) getHibernateTemplate().get(Role.class, id);
+	public Role load(String title) {
+		return (Role) getHibernateTemplate().get(Role.class, title);
 	}
 
 	/**

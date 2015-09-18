@@ -15,13 +15,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public interface RoleDao {
 
 	/**
-	 * Load a specific {@link Role} from the underlying storage by passing the id.
+	 * Load a specific {@link Role} from the underlying storage by passing the title.
 	 * 
-	 * @param id
-	 *            The id of the Role.
+	 * @param title
+	 *            The title of the Role.
 	 * @return The found {@link Role} object.
 	 */
-	Role get(Long id);
+	Role load(String title);
 
 
 	/**

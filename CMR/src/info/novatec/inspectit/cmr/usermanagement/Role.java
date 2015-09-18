@@ -1,6 +1,8 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
 import java.util.List;
+
+import org.hibernate.Hibernate;
 /**
  * Stores the permissions asociated with the Role.
  * @author Joshua Hartmann
@@ -21,16 +23,25 @@ public class Role {
 	 */
 	private long id;
 
-
+	/**
+	 * Default constructor for Role.
+	 */
+	
+	public Role() {
+		
+	}
+	
 	/**
 	 * The constructor for a role.
+	 * @param id The id of the role.
 	 * @param permissions The permissions this role has.
 	 * @param title The title for the role.
 	 */
-	public Role(String title, List<Permission> permissions) {
+	public Role(long id, String title, List<Permission> permissions) {
 		super();
 		this.permissions = permissions;
 		this.title = title;
+		this.id = id;
 	}
 	/**
 	 * Gets {@link #permissions}.
@@ -61,7 +72,7 @@ public class Role {
 	 */
 	@Override
 	public String toString() {
-		return "Role [permissions=" + permissions + ", title=" + title + ", id=" + id + "]";
+		return "Role [permissions=" + getPermissions().toString() + ", title=" + title + ", id=" + id + "]";
 	}
 	/**  
 	 * Sets {@link #permissions}.  
@@ -71,6 +82,8 @@ public class Role {
 	 */
 	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
+		//to prevent org.hibernate.LazyInitializationException
+		Hibernate.initialize(permissions);
 	}
 	/**  
 	 * Sets {@link #title}.  
