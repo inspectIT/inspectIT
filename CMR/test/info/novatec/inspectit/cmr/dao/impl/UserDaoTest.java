@@ -30,31 +30,26 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 	@Test
 	public void saveAndDeleteUser() throws NoSuchAlgorithmException {
 		User user = new User("TestName", "TestPassword", "email", 1);
-		User user2 = new User("TestName", "TestPassword", "email", 1);
 
 		userDao.saveOrUpdate(user);
-		userDao.saveOrUpdate(user2);
-		Long id1 = user.getId();
-		Long id2 = user2.getId();
 
-		System.out.println(id1);
-		System.out.println(id2);
 		
 		List<User> users = userDao.loadAll();
         
         for(User u : users){
 
-            System.out.println(u.getId());
+            System.out.println("Name of user: " + u.getName());
         }
-
-		assertThat(user.getId(), is(greaterThan(0L)));
+        
+        User retrievedUser = userDao.load("TestName");
+        
+        
+        System.out.println("Name of user: " + retrievedUser.getName());
+        
 
 		userDao.delete(user);
-		userDao.delete(user2);
 
-		assertThat(userDao.load(id1), is(nullValue()));
-		assertThat(userDao.load(id2), is(nullValue()));
-		
+		assertThat(userDao.load("TestName"), is(nullValue()));
 	}
 	
 	//TODO More tests

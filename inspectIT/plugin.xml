@@ -31,10 +31,6 @@
                value="inspectIT">
          </property>
          <property
-               name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
-         <property
                name="startupForegroundColor"
                value="FFFFFF">
          </property>
@@ -49,6 +45,10 @@
          <property
                name="aboutImage"
                value="about.png">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
          </property>
       </product>
    </extension>

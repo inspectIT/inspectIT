@@ -27,8 +27,8 @@ public class RoleDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 */
 	@Test
 	public void saveAndDeleteRole() {
-        Role role1 = new Role("Normal-User", null);
-        Role role2 = new Role("Power-User", null);
+        Role role1 = new Role(1, "Normal-User", null);
+        Role role2 = new Role(2, "Power-User", null);
 
         roleDao.saveOrUpdate(role1);
         roleDao.saveOrUpdate(role2);
@@ -49,10 +49,11 @@ public class RoleDaoTest extends AbstractTransactionalTestNGLogSupport {
         roleDao.delete(role1);
         roleDao.delete(role2);
 
-        assertThat(roleDao.get(id1), is(nullValue()));
-        assertThat(roleDao.get(id2), is(nullValue()));
+        assertThat(roleDao.load("Normal-User"), is(nullValue()));
+        assertThat(roleDao.load("Power-User"), is(nullValue()));
         
     }
 	
 	
+	//TODO more test
 }

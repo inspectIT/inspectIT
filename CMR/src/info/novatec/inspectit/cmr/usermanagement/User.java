@@ -1,6 +1,5 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
-import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -12,39 +11,41 @@ public class User {
 	
 	
 	/**
-	 * The name of the user.
+	 * The unique name of the user.
 	 */
 	private String name;
 	/**
-	 * The SHA256 Hash of the user password.
+	 * The hex string representation of the SHA256 Hash of the user password.
 	 */
-	private byte[] password;
+	private String password;
 	/**
-	 * The users email address.
+	 * The users email adress.
 	 * Used to send a new password, if the current one is lost.
 	 */
 	private String email;
 	/**
-	 * The unique id the user is identified with.
-	 */
-	private long id;
-	/**
 	 * The id of the role the user is set to.
 	 */
 	private long roleId;
-
+	/**
+	 * Default contructor for User.
+	 */
+	
+	public User() {
+		
+	}
+	
 	/**
 	 * The constructor for a User object.
 	 * @param name The name of the user
 	 * @param password The hashed password of the user
 	 * @param email The email of the user
 	 * @param roleId The id of the role the user is attached to
-	 * @throws NoSuchAlgorithmException 
 	 */
-	public User(String name, String password, String email, long roleId) throws NoSuchAlgorithmException {
+	public User(String name, String password, String email, long roleId) {
 		super();
 		this.name = name;
-		this.password = Permutation.hash(password);
+		this.password = Permutation.hashString(password);
 		this.email = email;
 		this.roleId = roleId;
 	}
@@ -61,7 +62,7 @@ public class User {
 	 *   
 	 * @return {@link #password}  
 	 */
-	public byte[] getPassword() {
+	public String getPassword() {
 		return password;
 	}
 	/**
@@ -73,19 +74,11 @@ public class User {
 		return email;
 	}
 	/**
-	 * Gets {@link #id}.
-	 *   
-	 * @return {@link #id}  
-	 */
-	public long getId() {
-		return id;
-	}
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", hashedPassword is hidden , email=" + email + ", id=" + id + ", userRole=" + roleId + "]";
+		return "User [name=" + name + ", hashed password [" + password + "] , email=" + email + ", userRoleId=" + roleId + "]";
 	}
 	
 	
@@ -103,11 +96,11 @@ public class User {
 	 * Sets {@link #password}.  
 	 *   
 	 * @param password  
-	 *            New value for {@link #password}  
-	 * @throws NoSuchAlgorithmException 
+	 *            New value for {@link #password}
 	 */
-	public void setPassword(String password) throws NoSuchAlgorithmException {
-			this.password = Permutation.hash(password);
+	public void setPassword(String password) {
+			this.password = Permutation.hashString(password);
+
 	}
 	/**  
 	 * Sets {@link #email}.  
@@ -117,15 +110,6 @@ public class User {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	/**  
-	 * Sets {@link #id}.  
-	 *   
-	 * @param id  
-	 *            New value for {@link #id}  
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 	/**
 	 * Gets {@link #roleId}.

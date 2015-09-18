@@ -15,13 +15,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public interface UserDao {
 
 	/**
-	 * Load a specific {@link User} from the underlying storage by passing the id.
+	 * Load a specific {@link User} from the underlying storage by passing the name.
 	 * 
-	 * @param id
-	 *            The id of the User.
+	 * @param name
+	 *            The name of the User.
 	 * @return The found {@link User} object.
 	 */
-	User load(Long id);
+	User load(String name);
 
 
 	/**

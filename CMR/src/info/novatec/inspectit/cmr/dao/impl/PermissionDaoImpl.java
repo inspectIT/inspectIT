@@ -72,8 +72,8 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 	/**
 	 * {@inheritDoc}
 	 */
-	public Permission get(Long id) {
-		return (Permission) getHibernateTemplate().get(Permission.class, id);
+	public Permission load(String title) {
+		return (Permission) getHibernateTemplate().get(Permission.class, title);
 	}
 
 	/**
