@@ -11,6 +11,9 @@
 		<classes>
 			<class name="info.novatec.inspectit.cmr.dao.impl.TimerDataAggregatorTest" />
 			<class name="info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoTest" />
+			<class name="info.novatec.inspectit.cmr.dao.impl.UserDaoTest" />
+			<class name="info.novatec.inspectit.cmr.dao.impl.RoleDaoTest" />
+			<class name="info.novatec.inspectit.cmr.dao.impl.PermissionDaoTest" />
 		</classes>
 	</test>
 	<test name="Service">

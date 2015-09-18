@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="info.novatec.inspectit.cmr.usermanagement">
+	<class name="Role" table="role">
+		
+		<id name="title" type="string" column="title"  />
+		<property name="id" type="java.lang.Long" column="id" />
+				
+		<list name="permissions">
+			<key column="id" />
+			<index column="idx" />
+			<many-to-many class="Permission" />			
+		</list>
+	</class>
+</hibernate-mapping>
