@@ -1,5 +1,7 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
+import java.io.Serializable;
+
 
 
 /**
@@ -8,7 +10,6 @@ package info.novatec.inspectit.cmr.usermanagement;
  *
  */
 public class User {
-	
 	
 	/**
 	 * The unique name of the user.
@@ -27,14 +28,13 @@ public class User {
 	 * The id of the role the user is set to.
 	 */
 	private long roleId;
-	/**
-	 * Default contructor for User.
-	 */
 	
+	/**
+	 * The default-constructor.
+	 */
 	public User() {
 		
 	}
-	
 	/**
 	 * The constructor for a User object.
 	 * @param name The name of the user

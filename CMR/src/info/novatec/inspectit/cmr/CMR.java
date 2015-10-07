@@ -86,6 +86,7 @@ public final class CMR {
 		Playground play = (Playground) beanFactory.getBean("playground");
 		
 		play.play();
+		
 	}
 
 	/**

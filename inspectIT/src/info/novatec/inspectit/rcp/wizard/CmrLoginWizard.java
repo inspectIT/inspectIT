@@ -6,17 +6,24 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import info.novatec.inspectit.rcp.InspectIT;
+import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
 /**
  * Wizard for logging into a CMR.
  * 
  * @author Clemens Geibel
- *
+ * @author Andreas Herzog
  */
 
 public class CmrLoginWizard extends Wizard implements INewWizard {
 
+	/**
+	 * test.
+	 */
+	private CmrRepositoryDefinition cmrRepositoryDefinition;
+	
 	/**
 	 * {@link CmrLoginWizardPage}.
 	 */
@@ -24,9 +31,11 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
+	 * @param cmrRepositoryDefinition .
 	 */
-	public CmrLoginWizard() {
+	public CmrLoginWizard(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		this.setWindowTitle("CMR Login");
+		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
 	}
 
 	/**
@@ -52,7 +61,8 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		MessageDialog.openError(null, "Sorry", "Login is not yet possible");
-		
+		String message = cmrRepositoryDefinition.getSecurityService().getMessage();
+		MessageDialog.openError(null, "Oh my gosh", message);
 		return false;
 	}
 
