@@ -22,13 +22,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 /**
  * Default implementation of the {@link ICoreService} interface.
@@ -340,6 +348,16 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		buffer.append('.');
 		buffer.append(sensorTypeIdent);
 		return (IObjectStorage) objectStorages.get(buffer.toString());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Bean(name = "coreServiceExecutorService")
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	public ScheduledExecutorService getScheduledExecutorService() {
+		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
+		return Executors.newScheduledThreadPool(1, threadFactory);
 	}
 
 	/**

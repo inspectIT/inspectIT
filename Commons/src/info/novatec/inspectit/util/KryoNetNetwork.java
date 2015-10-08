@@ -1,6 +1,7 @@
 package info.novatec.inspectit.util;
 
 import info.novatec.inspectit.cmr.service.IAgentStorageService;
+import info.novatec.inspectit.cmr.service.IKeepAliveService;
 import info.novatec.inspectit.cmr.service.IRegistrationService;
 import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
 
@@ -32,6 +33,7 @@ public final class KryoNetNetwork {
 		// services to export must be registered due to the bug in KryoNet
 		kryo.register(IRegistrationService.class);
 		kryo.register(IAgentStorageService.class);
+		kryo.register(IKeepAliveService.class);
 
 		// below classes must match the registration performed in the KryoSerialization class
 		// constructor, we pre-register them so that IDs keep same in all components
