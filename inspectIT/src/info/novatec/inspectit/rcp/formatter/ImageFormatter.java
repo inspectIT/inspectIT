@@ -279,6 +279,8 @@ public final class ImageFormatter {
 				} else {
 					return InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT_NOT_SENDING);
 				}
+			case NO_KEEP_ALIVE:
+				return InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT_NO_KEEPALIVE);
 			default:
 				return InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT_NOT_ACTIVE);
 			}

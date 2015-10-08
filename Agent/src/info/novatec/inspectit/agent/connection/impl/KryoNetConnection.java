@@ -9,6 +9,7 @@ import info.novatec.inspectit.agent.connection.RegistrationException;
 import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.spring.PrototypesProvider;
 import info.novatec.inspectit.cmr.service.IAgentStorageService;
+import info.novatec.inspectit.cmr.service.IKeepAliveService;
 import info.novatec.inspectit.cmr.service.IRegistrationService;
 import info.novatec.inspectit.cmr.service.ServiceInterface;
 import info.novatec.inspectit.communication.DefaultData;
@@ -70,6 +71,11 @@ public class KryoNetConnection implements IConnection {
 	private IRegistrationService registrationService;
 
 	/**
+	 * THe keep-alive service remote object to send keep-alive messages.
+	 */
+	private IKeepAliveService keepAliveService;
+
+	/**
 	 * Attribute to check if we are connected.
 	 */
 	private boolean connected = false;
@@ -105,6 +111,11 @@ public class KryoNetConnection implements IConnection {
 				registrationService = ObjectSpace.getRemoteObject(client, registrationServiceServiceId, IRegistrationService.class);
 				((RemoteObject) registrationService).setNonBlocking(false);
 				((RemoteObject) registrationService).setTransmitReturnValue(true);
+
+				int keepAliveServiceId = IKeepAliveService.class.getAnnotation(ServiceInterface.class).serviceId();
+				keepAliveService = ObjectSpace.getRemoteObject(client, keepAliveServiceId, IKeepAliveService.class);
+				((RemoteObject) keepAliveService).setNonBlocking(true);
+				((RemoteObject) registrationService).setTransmitReturnValue(false);
 
 				log.info("KryoNet: Connection established!");
 				connected = true;
@@ -153,6 +164,7 @@ public class KryoNetConnection implements IConnection {
 		}
 		agentStorageService = null; // NOPMD
 		registrationService = null; // NOPMD
+		keepAliveService = null; // NOPMD
 		connected = false;
 	}
 
@@ -181,6 +193,13 @@ public class KryoNetConnection implements IConnection {
 			}
 			throw new RegistrationException("Could not register the platform", businessException);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void sendKeepAlive(long platformId) {
+		keepAliveService.sendKeepAlive(platformId);
 	}
 
 	/**
