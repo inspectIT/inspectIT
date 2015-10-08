@@ -22,11 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -134,6 +136,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * printing of log statements.
 	 */
 	private boolean sendingException = false;
+
+	/**
+	 * The scheduled executor service.
+	 */
+	@Autowired
+	@Qualifier("coreServiceExecutorService")
+	private ScheduledExecutorService scheduledExecutorService;
 
 	/**
 	 * The default constructor which needs 4 parameters.
@@ -340,6 +349,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		buffer.append('.');
 		buffer.append(sensorTypeIdent);
 		return (IObjectStorage) objectStorages.get(buffer.toString());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ScheduledExecutorService getScheduledExecutorService() {
+		return scheduledExecutorService;
 	}
 
 	/**

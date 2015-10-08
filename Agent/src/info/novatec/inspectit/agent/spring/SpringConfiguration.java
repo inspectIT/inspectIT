@@ -7,6 +7,7 @@ import info.novatec.inspectit.agent.config.impl.StrategyConfig;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 import org.springframework.beans.BeansException;
@@ -80,6 +81,16 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	public ExecutorService getSocketReadExecutorService() {
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newFixedThreadPool(1, threadFactory);
+	}
+	
+	/**
+	 * @return Returns coreServiceExecutorService
+	 */
+	@Bean(name = "coreServiceExecutorService")
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	public ScheduledExecutorService getScheduledExecutorService() {
+		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
+		return Executors.newScheduledThreadPool(1, threadFactory);
 	}
 
 	/**
