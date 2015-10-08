@@ -34,6 +34,11 @@ public class AgentStatusData implements Serializable {
 		CONNECTED,
 
 		/**
+		 * Agent is not sending keep-alive messages.
+		 */
+		NO_KEEP_ALIVE,
+		
+		/**
 		 * Agent is disconnected.
 		 */
 		DISCONNECTED;
@@ -49,6 +54,11 @@ public class AgentStatusData implements Serializable {
 	 * Time in milliseconds when last data was sent.
 	 */
 	private long lastDataSendTimestamp;
+
+	/**
+	 * Time in miliseconds when the last keep-alive was received.
+	 */
+	private long lastKeepAliveTimestamp;
 
 	/**
 	 * Current CMR time.
@@ -129,6 +139,25 @@ public class AgentStatusData implements Serializable {
 	}
 
 	/**
+	 * Gets {@link #lastKeepAliveTimestamp}.
+	 * 
+	 * @return {@link #lastKeepAliveTimestamp}
+	 */
+	public long getLastKeepAliveTimestamp() {
+		return lastKeepAliveTimestamp;
+	}
+
+	/**
+	 * Sets {@link #lastKeepAliveTimestamp}.
+	 * 
+	 * @param lastKeepAliveTimestamp
+	 *            New value for {@link #lastKeepAliveTimestamp}
+	 */
+	public void setLastKeepAliveTimestamp(long lastKeepAliveTimestamp) {
+		this.lastKeepAliveTimestamp = lastKeepAliveTimestamp;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -138,6 +167,7 @@ public class AgentStatusData implements Serializable {
 		result = prime * result + ((agentConnection == null) ? 0 : agentConnection.hashCode());
 		result = prime * result + (int) (lastDataSendTimestamp ^ (lastDataSendTimestamp >>> 32));
 		result = prime * result + (int) (serverTimestamp ^ (serverTimestamp >>> 32));
+		result = prime * result + (int) (lastKeepAliveTimestamp ^ (lastKeepAliveTimestamp >>> 32));
 		return result;
 	}
 
@@ -163,6 +193,9 @@ public class AgentStatusData implements Serializable {
 			return false;
 		}
 		if (serverTimestamp != other.serverTimestamp) {
+			return false;
+		}
+		if (lastKeepAliveTimestamp != other.lastKeepAliveTimestamp) {
 			return false;
 		}
 		return true;

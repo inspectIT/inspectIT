@@ -9,6 +9,7 @@ import info.novatec.inspectit.agent.connection.RegistrationException;
 import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.spring.PrototypesProvider;
 import info.novatec.inspectit.cmr.service.IAgentStorageService;
+import info.novatec.inspectit.cmr.service.IKeepAliveService;
 import info.novatec.inspectit.cmr.service.IRegistrationService;
 import info.novatec.inspectit.cmr.service.ServiceInterface;
 import info.novatec.inspectit.communication.DefaultData;
@@ -70,6 +71,16 @@ public class KryoNetConnection implements IConnection {
 	private IRegistrationService registrationService;
 
 	/**
+	 * THe keep-alive service remote object to send keep-alive messages.
+	 */
+	private IKeepAliveService keepAliveService;
+
+	/**
+	 * The keep-alive manager that invokes periodically the keep-alive service.
+	 */
+	private KeepAliveManager keepAliveManager;
+
+	/**
 	 * Attribute to check if we are connected.
 	 */
 	private boolean connected = false;
@@ -85,6 +96,11 @@ public class KryoNetConnection implements IConnection {
 	 */
 	private List<String> networkInterfaces;
 
+	/**
+	 * The id of this platform which was assigned by the CMR.
+	 */
+	private long platformId;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -105,6 +121,14 @@ public class KryoNetConnection implements IConnection {
 				registrationService = ObjectSpace.getRemoteObject(client, registrationServiceServiceId, IRegistrationService.class);
 				((RemoteObject) registrationService).setNonBlocking(false);
 				((RemoteObject) registrationService).setTransmitReturnValue(true);
+
+				int keepAliveServiceId = IKeepAliveService.class.getAnnotation(ServiceInterface.class).serviceId();
+				keepAliveService = ObjectSpace.getRemoteObject(client, keepAliveServiceId, IKeepAliveService.class);
+				((RemoteObject) keepAliveService).setNonBlocking(true);
+				((RemoteObject) registrationService).setTransmitReturnValue(false);
+
+				keepAliveManager = new KeepAliveManager(this);
+				keepAliveManager.start();
 
 				log.info("KryoNet: Connection established!");
 				connected = true;
@@ -151,8 +175,10 @@ public class KryoNetConnection implements IConnection {
 			client.stop();
 			client = null; // NOPMD
 		}
+		keepAliveManager.stop();
 		agentStorageService = null; // NOPMD
 		registrationService = null; // NOPMD
+		keepAliveService = null; // NOPMD
 		connected = false;
 	}
 
@@ -168,7 +194,8 @@ public class KryoNetConnection implements IConnection {
 			if (null == networkInterfaces) {
 				networkInterfaces = getNetworkInterfaces();
 			}
-			return registrationService.registerPlatformIdent(networkInterfaces, agentName, version);
+			platformId = registrationService.registerPlatformIdent(networkInterfaces, agentName, version);
+			return platformId;
 		} catch (SocketException socketException) {
 			log.error("Could not obtain network interfaces from this machine!");
 			if (log.isTraceEnabled()) {
@@ -181,6 +208,13 @@ public class KryoNetConnection implements IConnection {
 			}
 			throw new RegistrationException("Could not register the platform", businessException);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void sendKeepAlive() {
+		keepAliveService.sendKeepAlive(platformId);
 	}
 
 	/**

@@ -41,6 +41,11 @@ public interface IConnection {
 	boolean isConnected();
 
 	/**
+	 * Sends a keep-alive signal to give a sign of life.
+	 */
+	void sendKeepAlive();
+
+	/**
 	 * Send the measurements to the server for further processing.
 	 * 
 	 * @param dataObjects

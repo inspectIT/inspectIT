@@ -305,6 +305,9 @@ public final class TextFormatter {
 					styledString.append("Connected :: No data sent", StyledString.DECORATIONS_STYLER);
 				}
 				break;
+			case NO_KEEP_ALIVE:
+				styledString.append("No keep-alive signal", StyledString.DECORATIONS_STYLER);
+				break;
 			case DISCONNECTED:
 				styledString.append("Disconnected", StyledString.DECORATIONS_STYLER);
 				break;

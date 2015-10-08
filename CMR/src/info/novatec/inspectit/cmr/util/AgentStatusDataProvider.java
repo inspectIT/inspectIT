@@ -69,6 +69,32 @@ public class AgentStatusDataProvider {
 	}
 
 	/**
+	 * Registers the time when the last keep-alive was received for a given platform ident.
+	 * 
+	 * @param platformIdent
+	 *            ID of the platform ident.
+	 */
+	public void registerKeepAliveSent(long platformIdent) {
+		AgentStatusData agentStatusData = agentStatusDataMap.get(platformIdent);
+		if (null != agentStatusData) {
+			agentStatusData.setLastKeepAliveTimestamp(System.currentTimeMillis());
+		}
+	}
+
+	/**
+	 * Registers that the agent is not sending keep-alive messages anymore.
+	 * 
+	 * @param platformIdent
+	 *            ID of the platform ident.
+	 */
+	public void registerKeepAliveTimeout(long platformIdent) {
+		AgentStatusData agentStatusData = agentStatusDataMap.get(platformIdent);
+		if (null != agentStatusData) {
+			agentStatusData.setAgentConnection(AgentConnection.NO_KEEP_ALIVE);
+		}
+	}
+
+	/**
 	 * Informs the {@link AgentStatusDataProvider} that the platform has been deleted from the CMR.
 	 * All kept information will be deleted.
 	 * 
