@@ -94,6 +94,7 @@ public interface InspectITImages {
 	String IMG_AGENT_ACTIVE = InspectITConstants.ICON_PATH_ECLIPSE + "agent_active.gif";
 	String IMG_AGENT_NOT_ACTIVE = InspectITConstants.ICON_PATH_ECLIPSE + "agent_na.gif";
 	String IMG_AGENT_NOT_SENDING = InspectITConstants.ICON_PATH_ECLIPSE + "agent_not_sending.gif";
+	String IMG_AGENT_NO_KEEPALIVE = InspectITConstants.ICON_PATH_ECLIPSE + "agent_no_keepalive.png";
 	String IMG_BUFFER_CLEAR = InspectITConstants.ICON_PATH_ECLIPSE + "buffer_clear.gif";
 	String IMG_BUFFER_COPY = InspectITConstants.ICON_PATH_ECLIPSE + "buffer_copy.gif";
 	String IMG_BUSINESS = InspectITConstants.ICON_PATH_ECLIPSE + "business.gif";

@@ -41,6 +41,14 @@ public interface IConnection {
 	boolean isConnected();
 
 	/**
+	 * Sends a keep-alive signal to give a sign of life.
+	 * 
+	 * @param platformId
+	 *            The unique id for this platform.
+	 */
+	void sendKeepAlive(long platformId);
+
+	/**
 	 * Send the measurements to the server for further processing.
 	 * 
 	 * @param dataObjects
