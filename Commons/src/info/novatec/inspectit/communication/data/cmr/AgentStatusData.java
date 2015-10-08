@@ -34,6 +34,11 @@ public class AgentStatusData implements Serializable {
 		CONNECTED,
 
 		/**
+		 * Agent is not sending keep-alive messages.
+		 */
+		NO_KEEP_ALIVE,
+		
+		/**
 		 * Agent is disconnected.
 		 */
 		DISCONNECTED;
@@ -50,6 +55,16 @@ public class AgentStatusData implements Serializable {
 	 */
 	private long lastDataSendTimestamp;
 
+	/**
+	 * Time in milliseconds when the last keep-alive was received.
+	 */
+	private long lastKeepAliveTimestamp;
+
+	/**
+	 * Time in milliseconds when the agent was connecting.
+	 */
+	private long connectionTimestamp;
+	
 	/**
 	 * Current CMR time.
 	 */
@@ -129,6 +144,44 @@ public class AgentStatusData implements Serializable {
 	}
 
 	/**
+	 * Gets {@link #lastKeepAliveTimestamp}.
+	 * 
+	 * @return {@link #lastKeepAliveTimestamp}
+	 */
+	public long getLastKeepAliveTimestamp() {
+		return lastKeepAliveTimestamp;
+	}
+
+	/**
+	 * Sets {@link #lastKeepAliveTimestamp}.
+	 * 
+	 * @param lastKeepAliveTimestamp
+	 *            New value for {@link #lastKeepAliveTimestamp}
+	 */
+	public void setLastKeepAliveTimestamp(long lastKeepAliveTimestamp) {
+		this.lastKeepAliveTimestamp = lastKeepAliveTimestamp;
+	}
+	
+	/**
+	 * Gets {@link #connectionTimestamp}.
+	 *   
+	 * @return {@link #connectionTimestamp}  
+	 */
+	public long getConnectionTimestamp() {
+		return connectionTimestamp;
+	}
+
+	/**  
+	 * Sets {@link #connectionTimestamp}.  
+	 *   
+	 * @param connectionTimestamp  
+	 *            New value for {@link #connectionTimestamp}  
+	 */
+	public void setConnectionTimestamp(long connectionTimestamp) {
+		this.connectionTimestamp = connectionTimestamp;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -138,6 +191,8 @@ public class AgentStatusData implements Serializable {
 		result = prime * result + ((agentConnection == null) ? 0 : agentConnection.hashCode());
 		result = prime * result + (int) (lastDataSendTimestamp ^ (lastDataSendTimestamp >>> 32));
 		result = prime * result + (int) (serverTimestamp ^ (serverTimestamp >>> 32));
+		result = prime * result + (int) (lastKeepAliveTimestamp ^ (lastKeepAliveTimestamp >>> 32));
+		result = prime * result + (int) (connectionTimestamp ^ (connectionTimestamp >>> 32));
 		return result;
 	}
 
@@ -163,6 +218,12 @@ public class AgentStatusData implements Serializable {
 			return false;
 		}
 		if (serverTimestamp != other.serverTimestamp) {
+			return false;
+		}
+		if (lastKeepAliveTimestamp != other.lastKeepAliveTimestamp) {
+			return false;
+		}
+		if (connectionTimestamp != other.connectionTimestamp) {
 			return false;
 		}
 		return true;

@@ -1,13 +1,23 @@
 package info.novatec.inspectit.cmr.util;
 
+import info.novatec.inspectit.cmr.service.IKeepAliveService;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
+import info.novatec.inspectit.spring.logger.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +27,50 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-public class AgentStatusDataProvider {
+public class AgentStatusDataProvider implements InitializingBean {
+
+	/**
+	 * Runnable for checking the status of the received keep-alive signals.
+	 */
+	private final Runnable keepAliveCheckRunner = new Runnable() {
+		@Override
+		public void run() {
+			long currentTime = System.currentTimeMillis();
+			for (Entry<Long, AgentStatusData> entry : agentStatusDataMap.entrySet()) {
+				if (entry.getValue().getAgentConnection() != AgentConnection.CONNECTED) {
+					continue;
+				}
+
+				// Skip recently connected agents
+				if (currentTime - entry.getValue().getConnectionTimestamp() < IKeepAliveService.KA_TIMEOUT) {
+					continue;
+				}
+
+				long timeToLastSignal = currentTime - entry.getValue().getLastKeepAliveTimestamp();
+
+				if (timeToLastSignal > IKeepAliveService.KA_TIMEOUT) {
+					registerKeepAliveTimeout(entry.getKey());
+
+					if (log.isInfoEnabled()) {
+						log.info("Platform " + entry.getKey() + " timed out.");
+					}
+				}
+			}
+		}
+	};
+
+	/**
+	 * Logger for the class.
+	 */
+	@Log
+	Logger log;
+
+	/**
+	 * {@link ExecutorService} for sending keep alive messages.
+	 */
+	@Autowired
+	@Resource(name = "scheduledExecutorService")
+	ScheduledExecutorService executorService;
 
 	/**
 	 * Map that holds IDs of the platform idents and {@link AgentStatusData} objects.
@@ -39,6 +92,7 @@ public class AgentStatusDataProvider {
 				agentStatusData = existing;
 			}
 		}
+		agentStatusData.setConnectionTimestamp(System.currentTimeMillis());
 		agentStatusData.setAgentConnection(AgentConnection.CONNECTED);
 	}
 
@@ -69,6 +123,41 @@ public class AgentStatusDataProvider {
 	}
 
 	/**
+	 * Registers the time when the last keep-alive was received for a given platform ident.
+	 * 
+	 * @param platformIdent
+	 *            ID of the platform ident.
+	 */
+	public void handleKeepAliveSignal(long platformIdent) {
+		AgentStatusData agentStatusData = agentStatusDataMap.get(platformIdent);
+		if (null != agentStatusData) {
+			agentStatusData.setLastKeepAliveTimestamp(System.currentTimeMillis());
+
+			// Updates the agent status if no keep-alive messages were received before
+			if (agentStatusData.getAgentConnection() == AgentConnection.NO_KEEP_ALIVE) {
+				agentStatusData.setAgentConnection(AgentConnection.CONNECTED);
+
+				if (log.isInfoEnabled()) {
+					log.info("Platform " + platformIdent + " sending keep-alive signals again.");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Registers that the agent is not sending keep-alive messages anymore.
+	 * 
+	 * @param platformIdent
+	 *            ID of the platform ident.
+	 */
+	public void registerKeepAliveTimeout(long platformIdent) {
+		AgentStatusData agentStatusData = agentStatusDataMap.get(platformIdent);
+		if (null != agentStatusData) {
+			agentStatusData.setAgentConnection(AgentConnection.NO_KEEP_ALIVE);
+		}
+	}
+
+	/**
 	 * Informs the {@link AgentStatusDataProvider} that the platform has been deleted from the CMR.
 	 * All kept information will be deleted.
 	 * 
@@ -90,5 +179,15 @@ public class AgentStatusDataProvider {
 			map.put(entry.getKey(), entry.getValue());
 		}
 		return map;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Starts the continuous check of the keep-alive signals.
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		executorService.scheduleAtFixedRate(keepAliveCheckRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_TIMEOUT, TimeUnit.MILLISECONDS);
 	}
 }

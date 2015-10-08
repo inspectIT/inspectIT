@@ -305,6 +305,10 @@ public final class TextFormatter {
 					styledString.append("Connected :: No data sent", StyledString.DECORATIONS_STYLER);
 				}
 				break;
+			case NO_KEEP_ALIVE:
+				long timeSinceLastKeepAlive = System.currentTimeMillis() - agentStatusData.getLastKeepAliveTimestamp();
+				styledString.append("No keep-alive signal for " + NumberFormatter.humanReadableMillisCount(timeSinceLastKeepAlive, true), StyledString.DECORATIONS_STYLER);
+				break;
 			case DISCONNECTED:
 				styledString.append("Disconnected", StyledString.DECORATIONS_STYLER);
 				break;
