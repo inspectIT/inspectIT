@@ -1,6 +1,5 @@
 package info.novatec.inspectit.cmr.usermanagement;
 
-import java.io.Serializable;
 
 
 
