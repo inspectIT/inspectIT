@@ -109,62 +109,6 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		}
 	}
 	
-	/**
-	 * Enumeration for the login status of {@link CmrRepositoryDefinition}.
-	 * 
-	 * @author Andreas Herzog
-	 *
-	 */
-	public enum LoginStatus {
-
-		/**
-		 * Unknown state before the first check.
-		 */
-		UNKNOWN,
-
-		/**
-		 * Subject is not logged in.
-		 */
-		NOT_LOGGED_IN,
-
-		/**
-		 * Status is being checked.
-		 */
-		CHECKING,
-
-		/**
-		 * Subject is logged in.
-		 */
-		LOGGED_IN;
-
-		/**
-		 * Defines if the status can be changed.
-		 * 
-		 * @param newStatus
-		 *            New status
-		 * @return True if the status change is allowed.
-		 */
-		public boolean canChangeTo(OnlineStatus newStatus) {
-			if (this.equals(newStatus)) {
-				return false;
-			}
-			if (newStatus.equals(UNKNOWN)) {
-				return false;
-			}
-			switch (this) {
-			case NOT_LOGGED_IN:
-				if (newStatus.equals(LOGGED_IN)) {
-					return false;
-				}
-			case LOGGED_IN:
-				if (newStatus.equals(NOT_LOGGED_IN)) {
-					return false;
-				}
-			default:
-				return true;
-			}
-		}
-	}
 
 	/**
 	 * The ip of the CMR.
@@ -284,7 +228,6 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		this.port = port;
 		this.onlineStatus = OnlineStatus.UNKNOWN;
 		this.name = name;
-		//this.loginStatus = LoginStatus.UNKNOWN;
 
 		CmrServiceProvider cmrServiceProvider = InspectIT.getService(CmrServiceProvider.class);
 
