@@ -5,6 +5,7 @@ import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
+import info.novatec.inspectit.cmr.service.ISecurityService;
 import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
 import info.novatec.inspectit.cmr.service.IStorageService;
@@ -198,5 +199,25 @@ public abstract class CmrServiceProvider {
 	 * @return Returns Spring created {@link StorageService}.
 	 */
 	protected abstract IStorageService getStorageService();
+	
+	
+	/**
+	 * Returns Spring created {@link SecurityService}.
+	 * 
+	 * @param cmrRepositoryDefinition .
+	 * @return Returns {@link SecurityService}.
+	 */
+	public ISecurityService getSecurityService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		ISecurityService securityService = getSecurityService();
+		((ICmrService) securityService).initService(cmrRepositoryDefinition);
+		return securityService;
+	}
+
+	/**
+	 * Returns Spring created {@link SecurityService}.
+	 * 
+	 * @return Returns Spring created {@link SecurityService}.
+	 */
+	protected abstract ISecurityService getSecurityService();
 
 }

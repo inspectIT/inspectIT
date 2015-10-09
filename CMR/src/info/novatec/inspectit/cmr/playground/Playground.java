@@ -1,6 +1,5 @@
 package info.novatec.inspectit.cmr.playground;
 
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.Arrays;
 
@@ -8,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import info.novatec.inspectit.cmr.CMR;
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
@@ -67,7 +65,6 @@ public class Playground {
 
         roleDao.saveOrUpdate(powerUser);
         roleDao.saveOrUpdate(restrictedUser);
-        
         
         
         

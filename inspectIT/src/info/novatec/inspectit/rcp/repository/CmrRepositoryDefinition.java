@@ -5,6 +5,7 @@ import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
+import info.novatec.inspectit.cmr.service.ISecurityService;
 import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.service.IServerStatusService.ServerStatus;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
@@ -107,6 +108,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			}
 		}
 	}
+	
 
 	/**
 	 * The ip of the CMR.
@@ -188,6 +190,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * The storage service.
 	 */
 	private IStorageService storageService;
+	
+	/**
+	* The security service.
+	*/
+	 private ISecurityService securityService;
 
 	/**
 	 * CMR repository change listeners.
@@ -233,6 +240,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		timerDataAccessService = cmrServiceProvider.getTimerDataAccessService(this);
 		globalDataAccessService = cmrServiceProvider.getGlobalDataAccessService(this);
 		storageService = cmrServiceProvider.getStorageService(this);
+		securityService = cmrServiceProvider.getSecurityService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, this);
 	}
@@ -305,6 +313,13 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public IGlobalDataAccessService getGlobalDataAccessService() {
 		return globalDataAccessService;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ISecurityService getSecurityService() {
+		return securityService;
 	}
 
 	/**
@@ -385,6 +400,10 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	public OnlineStatus getOnlineStatus() {
 		return onlineStatus;
 	}
+	
+	//public LoginStatus getLoginStatus() {
+	// return LoginStatus;
+	//}
 
 	/**
 	 * If the CMR is online invokes the {@link IServerStatusService} to get the version. Otherwise
