@@ -34,6 +34,7 @@
 		<lookup-method name="getTimerDataAccessService" bean="timerDataAccessService" />
 		<lookup-method name="getHttpTimerDataAccessService" bean="httpTimerDataAccessService" />
 		<lookup-method name="getStorageService" bean="storageService" />
+		<lookup-method name="getSecurityService" bean="securityService" />
 	</bean>
 
 	<!-- CmrManagementService -->
@@ -242,23 +243,6 @@
 	</bean>
 	<!-- StorageService End -->
 	
-	<bean id="loggerPostProcessor" class="info.novatec.inspectit.spring.logger.LoggerPostProcessor" />
-	
-		<bean id="classSchemaManager" class="info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager">
-		<property name="schemaListFile" value="classpath:schema/schemaList.txt" />
-	</bean>
-
-	<bean id="serializationManager" class="info.novatec.inspectit.storage.serializer.impl.SerializationManager" scope="prototype" lazy-init="true" />
-
-	<bean id="kryoNetNetwork" class="info.novatec.inspectit.util.KryoNetNetwork" />
-	
-
-	<bean id="serializationManagerProvider" class="info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider">
-		<lookup-method name="createSerializer" bean="serializationManager" />
-	</bean>
-	
-	<bean id="serializationManagerPostProcessor" class="info.novatec.inspectit.storage.serializer.SerializationManagerPostProcessor"/>
-	
 	<!-- SecurityService -->
 	<bean id="securityService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
@@ -281,5 +265,22 @@
 		<property name="serviceName" value="SecurityService" />
 	</bean>
 	<!-- SecurityService End -->
+	
+	<bean id="loggerPostProcessor" class="info.novatec.inspectit.spring.logger.LoggerPostProcessor" />
+	
+		<bean id="classSchemaManager" class="info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager">
+		<property name="schemaListFile" value="classpath:schema/schemaList.txt" />
+	</bean>
+
+	<bean id="serializationManager" class="info.novatec.inspectit.storage.serializer.impl.SerializationManager" scope="prototype" lazy-init="true" />
+
+	<bean id="kryoNetNetwork" class="info.novatec.inspectit.util.KryoNetNetwork" />
+	
+
+	<bean id="serializationManagerProvider" class="info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider">
+		<lookup-method name="createSerializer" bean="serializationManager" />
+	</bean>
+	
+	<bean id="serializationManagerPostProcessor" class="info.novatec.inspectit.storage.serializer.SerializationManagerPostProcessor"/>
 	
 </beans>
