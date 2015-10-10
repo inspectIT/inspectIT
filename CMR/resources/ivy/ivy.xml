@@ -56,6 +56,10 @@
 		<dependency org="com.h2database" name="h2" rev="1.3.176" conf="prod->default" />
 		<dependency org="c3p0" name="c3p0" rev="0.9.1.2" conf="prod->default" />
 		
+		<!-- Shiro Security Framework -->
+		<dependency org="org.apache.shiro" name="shiro-core" rev="1.2.4" conf="prod->default" />
+		
+		
 		<!-- Test -->
 		<!-- Test NG should be on the build path via the Eclipse plug-in -->
 		<dependency org="org.springframework" name="spring-test" rev="3.1.0.RELEASE" conf="test->default" />
