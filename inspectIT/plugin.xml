@@ -639,6 +639,10 @@
                      value="1">
                </count>
                <iterate>
+                  <test
+                        property="info.novatec.inspectit.CmrRecordingPermission"
+                        value="true">
+                  </test>
                   <or>
                      <instanceof
                            value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
@@ -1252,6 +1256,10 @@
                </count>
                <iterate
                      ifEmpty="false">
+                  <test
+                        property="info.novatec.inspectit.CmrDeleteAgentPermission"
+                        value="true">
+                  </test>
                   <instanceof
                         value="info.novatec.inspectit.rcp.model.AgentLeaf">
                   </instanceof>
@@ -1311,6 +1319,10 @@
                      value="1">
                </count>
                <iterate>
+                  <test
+                        property="info.novatec.inspectit.CmrShutdownAndRestartPermission"
+                        value="true">
+                  </test>
                   <instanceof
                         value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
@@ -1573,6 +1585,13 @@
             namespace="info.novatec.inspectit"
             properties="canChart"
             type="info.novatec.inspectit.communication.data.TimerData">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.PermissionTester"
+            id="info.inspectit.rcp.PermissionTester"
+            namespace="info.novatec.inspectit"
+            properties="CmrShutdownAndRestartPermission, CmrDeleteAgentPermission, CmrRecordingPermission"
+            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
       </propertyTester>
    </extension>
    <extension
