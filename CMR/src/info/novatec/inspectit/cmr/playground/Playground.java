@@ -1,6 +1,5 @@
 package info.novatec.inspectit.cmr.playground;
 
-
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.cmr.usermanagement.Permission;
+import info.novatec.inspectit.cmr.usermanagement.Permutation;
 import info.novatec.inspectit.cmr.usermanagement.Role;
 import info.novatec.inspectit.cmr.usermanagement.User;
 
@@ -50,38 +50,38 @@ public class Playground {
 		Permission permCreatePermission = new Permission(3, "CreatePermission", "Permission to create a new permission");
 		Permission permDeltePermission = new Permission(4, "DeltePermission", "Permission to delte a permission");
 		Permission permShutdownCMR = new Permission(5, "ShutdownCMR", "Permission to shut down the CMR");
-		
 
-        permissionDao.saveOrUpdate(permReadOption);
-        permissionDao.saveOrUpdate(permAlterOption);
-        permissionDao.saveOrUpdate(permCreatePermission);
-        permissionDao.saveOrUpdate(permDeltePermission);
-        permissionDao.saveOrUpdate(permShutdownCMR);
-		
-		
-        
+		LOGGER.info("Created permission: " + permAlterOption);
+
+		permissionDao.saveOrUpdate(permReadOption);
+		permissionDao.saveOrUpdate(permAlterOption);
+		permissionDao.saveOrUpdate(permCreatePermission);
+		permissionDao.saveOrUpdate(permDeltePermission);
+		permissionDao.saveOrUpdate(permShutdownCMR);
+
+		Permission permLoaded = permissionDao.load("AlterOption");
+		LOGGER.info("Loaded  permission: " + permLoaded);
+
 		Role powerUser = new Role(1, "PowerUser", Arrays.asList(permReadOption, permAlterOption, permCreatePermission, permDeltePermission, permShutdownCMR));
-        Role restrictedUser = new Role(2, "RestrictedUser", Arrays.asList(permReadOption));
+		Role restrictedUser = new Role(2, "RestrictedUser", Arrays.asList(permReadOption));
 
-        roleDao.saveOrUpdate(powerUser);
-        roleDao.saveOrUpdate(restrictedUser);
-        
-        
-        
-        User jakePowerUser = new User("Jake", "JakesSuperSecretPassword!", "jake@mail.com", powerUser.getId());
-        User tomRestrcitedUser = new User("Tom", "TomsNotsoSecurePassword", "tom@mail.com", restrictedUser.getId());
-        userDao.saveOrUpdate(jakePowerUser);
-        userDao.saveOrUpdate(tomRestrcitedUser);
-        
-        
-        User jakeLoaded = userDao.load("Jake");
-        
-        LOGGER.info(jakeLoaded.toString());
-        
-        Role powerUserLoaded = roleDao.load("PowerUser");
+		LOGGER.info("Created role: " + powerUser);
+		roleDao.saveOrUpdate(powerUser);
+		roleDao.saveOrUpdate(restrictedUser);
 
-        LOGGER.info(powerUserLoaded.toString());
+		Role roleLoaded = roleDao.load("PowerUser");
+		LOGGER.info("Loaded  role: " + roleLoaded);
+
+		User jakePowerUser = new User("Jake", Permutation.hashString("JakesSuperSecretPassword!"), "jake@mail.com", powerUser.getId());
+		User tomRestrcitedUser = new User("Tom", Permutation.hashString("TomsNotsoSecurePassword"), "tom@mail.com", restrictedUser.getId());
+
+		LOGGER.info("Created user: " + tomRestrcitedUser);
+
+		userDao.saveOrUpdate(jakePowerUser);
+		userDao.saveOrUpdate(tomRestrcitedUser);
+
+		User tomLoaded = userDao.load("Tom");
+		LOGGER.info("Loaded  user: " + tomLoaded);
 	}
-	
-	
+
 }
