@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: inspectIT Client-Server Commons
 Bundle-SymbolicName: info.novatec.inspectit.commonscs
-Bundle-Version: 1.5.0
+Bundle-Version: 1.6.0
 Bundle-ClassPath: .
 Export-Package: info.novatec.inspectit.cmr.property,
  info.novatec.inspectit.cmr.property.configuration,
@@ -49,7 +49,7 @@ Export-Package: info.novatec.inspectit.cmr.property,
  info.novatec.inspectit.storage.util
 Bundle-Vendor: NovaTec GmbH
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: info.novatec.inspectit.commons;bundle-version="1.5.0",
+Require-Bundle: info.novatec.inspectit.commons,
  com.springsource.net.sf.cglib;bundle-version="2.2.0",
  com.springsource.org.aopalliance;bundle-version="1.0.0",
  org.springframework.aop;bundle-version="3.1.0",
