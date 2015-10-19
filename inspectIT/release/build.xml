@@ -95,7 +95,7 @@
 		<ivy:resolve file="${ivy.file}" />
 		<ivy:cachepath pathid="lib.osgi" conf="osgi" />
 		<ivy:cachepath pathid="lib.test" conf="test" />
-		
+
 		<ivy:resolve file="${ivy.file.commons}" />
 		<ivy:cachepath pathid="lib.prod.commons" conf="prod" />
 
@@ -142,7 +142,7 @@
 				</and>
 			</or>
 		</condition>
-		
+
 		<if>
 			<istrue value="${should-unpack-eclipse}"/>
 			<then>
@@ -196,7 +196,7 @@
 		<property name="test.javac.target" value="1.7" />
 		<property name="test.vmargs" value="" />
 		<property name="test.targetsuite" value="${resources.testng}/testng.xml" />
-				
+
 		<execute-testng 
 			src.root="${src.root}" 
 			test.root="${test.root}" 
@@ -314,7 +314,7 @@
 			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
 		</zip>
 		<zip destfile="${release.basedir}/dist/inspectit-linux.gtk.x86.zip" update="true">
-				<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
+			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
 			<zipfileset src="${jvm.root}/jre7-linux-x86.zip" prefix="inspectit/jre" filemode="775" />
 			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
 		</zip>
@@ -345,14 +345,12 @@
 
 		<echo message="Using version: ${version}" />
 
-		<echo file="../plugin.properties" message="aboutText=
-			inspectIT - http://www.inspectit.eu\n\n\
-			Application Performance Engineering solution\n\
-			\n\n\n\
-			Version: ${version}\n\
-			Build ID: ${DSTAMP}${TSTAMP}
-			" />
-		<echo message="Wrote plugin.properties to inspectIT project" />
+		<replaceregexp file="${basedir}/../inspectIT.product" match="application=&quot;info.novatec.inspectit.rcp.application&quot; version=&quot;([\.0-9]+)&quot;" replace="application=&quot;info.novatec.inspectit.rcp.application&quot; version=&quot;${version}&quot;" byline="true" />
+		<replaceregexp file="${basedir}/../plugin.properties" match="Version: ([\.0-9]+)\\n" replace="Version: ${version}\\\\n" byline="true" />
+
+		<replaceregexp file="${basedir}/../../Commons/META-INF/MANIFEST.MF" match="Bundle-Version: ([\.0-9]+)" replace="Bundle-Version: ${version}" byline="true" />
+		<replaceregexp file="${basedir}/../../CommonsCS/META-INF/MANIFEST.MF" match="Bundle-Version: ([\.0-9]+)" replace="Bundle-Version: ${version}" byline="true" />
+		<replaceregexp file="${basedir}/../META-INF/MANIFEST.MF" match="Bundle-Version: ([\.0-9]+)" replace="Bundle-Version: ${version}" byline="true" />
 	</target>
 
 </project>

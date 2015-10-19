@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: inspectIT
 Bundle-SymbolicName: info.novatec.inspectit.rcp;singleton:=true
-Bundle-Version: 1.5.0
+Bundle-Version: 1.6.0
 Bundle-Activator: info.novatec.inspectit.rcp.InspectIT
 Bundle-Vendor: NovaTec GmbH
 Bundle-Localization: plugin
@@ -11,8 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions;bundle-version="3.4.0",
  org.eclipse.ui.forms;bundle-version="3.3.0",
  org.eclipse.ui.intro,
- info.novatec.inspectit.commons;bundle-version="1.5.0",
- info.novatec.inspectit.commonscs;bundle-version="1.5.0",
+ info.novatec.inspectit.commons,
+ info.novatec.inspectit.commonscs,
  com.springsource.net.sf.cglib;bundle-version="2.2.0",
  com.springsource.org.aopalliance;bundle-version="1.0.0",
  org.springframework.aop;bundle-version="3.1.0",

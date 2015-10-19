@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: inspectIT Commons
 Bundle-SymbolicName: info.novatec.inspectit.commons
-Bundle-Version: 1.5.0
+Bundle-Version: 1.6.0
 Export-Package: info.novatec.inspectit.cmr.cache,
  info.novatec.inspectit.cmr.model,
  info.novatec.inspectit.cmr.property.spring,
