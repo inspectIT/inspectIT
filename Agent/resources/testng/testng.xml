@@ -53,7 +53,6 @@
 		<classes>
 			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.JDBCUrlExtractorTest" />
 			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataExtractorTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataHookTest" />
 			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorageTest" />
 		</classes>
 	</test>

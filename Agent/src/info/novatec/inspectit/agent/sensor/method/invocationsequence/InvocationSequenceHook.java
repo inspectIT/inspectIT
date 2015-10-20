@@ -14,7 +14,6 @@ import info.novatec.inspectit.agent.hooking.IConstructorHook;
 import info.novatec.inspectit.agent.hooking.IMethodHook;
 import info.novatec.inspectit.agent.sending.ISendingStrategy;
 import info.novatec.inspectit.agent.sensor.exception.ExceptionSensor;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementParameterSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementSensor;
@@ -375,10 +374,6 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				if (ConnectionSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
 					return true;
 				}
-
-				if (ConnectionMetaDataSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
-					return true;
-				}
 			}
 		}
 		return false;
@@ -626,7 +621,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	public void stop() {
 		throw new UnsupportedMethodException();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
