@@ -729,10 +729,11 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 */
 	public void repositoryAgentDeleted(CmrRepositoryDefinition cmrRepositoryDefinition, PlatformIdent agent) {
 		if (ObjectUtils.equals(cmrRepositoryDefinition, displayedRepositoryDefinition)) {
-			if (ObjectUtils.equals(agent, displayedAgent)) {
-				displayedAgent = null; // NOPMD
-			}
 			availableAgents.remove(agent);
+			if (ObjectUtils.equals(agent, displayedAgent)) {
+				selectAgentForDisplay(null);
+			}
+
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
