@@ -92,10 +92,15 @@ public class ConnectionMetaDataStorage {
 		}
 		ConnectionMetaData data = get(connection);
 		if (null != data) {
-			return; // already in the cache.
+			// already in the cache
+			return;
 		}
 
 		data = dataExtractor.parse(connection);
+		if (null == data) {
+			// connection closed, thus ignoring
+			return;
+		}
 
 		storage.put(connection, data);
 	}
@@ -131,6 +136,8 @@ public class ConnectionMetaDataStorage {
 		private static final String GET_DATABASE_PRODUCT_VERSION = "getDatabaseProductVersion";
 		/** Method names. */
 		private static final String GET_DATABASE_PRODUCT_NAME = "getDatabaseProductName";
+		/** Method names. */
+		private static final String IS_CLOSED = "isClosed";
 
 		/** Extractor for the JDBC URL. */
 		static JDBCUrlExtractor urlExtractor = new JDBCUrlExtractor();
@@ -148,18 +155,27 @@ public class ConnectionMetaDataStorage {
 		 * 
 		 * @param connection
 		 *            the <code>Connection</code> object.
-		 * @return meta information about the connection for monitoring.
+		 * @return meta information about the connection for monitoring. returns <code>null</code>
+		 *         in case connection is <code>null</code> or connection is closed.
 		 */
 		public ConnectionMetaData parse(Object connection) {
-			ConnectionMetaData data = new ConnectionMetaData();
 			if (null == connection) {
-				logger.warn("Meta Information on database cannot be read. No database details like URL or Vendor will be displayed.");
-				return data;
+				logger.warn("Meta Information on database cannot be read for the null connection.");
+				return null;
 			}
 
-			Object metaData = getMetaData(connection.getClass(), connection);
+			Class<?> connectionClass = connection.getClass();
+			if (isClosed(connectionClass, connection)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Meta Information on database cannot be read because the connection is closed.");
+				}
+				return null;
+			}
+
+			ConnectionMetaData data = new ConnectionMetaData();
+			Object metaData = getMetaData(connectionClass, connection);
 			if (null == metaData) {
-				logger.warn("Meta Information on database cannot be read. No database details like URL or Vendor will be displayed.");
+				logger.warn("Meta information on database cannot be read for connection " + connection.toString() + ". No database details like URL or Vendor will be displayed.");
 				return data;
 			}
 
@@ -170,6 +186,20 @@ public class ConnectionMetaDataStorage {
 			data.product = parseProduct(metaDataClass, metaData);
 
 			return data;
+		}
+
+		/**
+		 * Checks if the connection is closed.
+		 * 
+		 * @param connectionClass
+		 *            the connection class.
+		 * @param connection
+		 *            the connection instance.
+		 * @return the result of calling isClosed on the connection object or <code>true</code> any
+		 *         exception occurs during method invocation
+		 */
+		private boolean isClosed(Class<?> connectionClass, Object connection) {
+			return (Boolean) cache.invokeMethod(connectionClass, IS_CLOSED, null, connection, null, true);
 		}
 
 		/**

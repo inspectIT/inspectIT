@@ -3,6 +3,9 @@ package info.novatec.inspectit.agent.sensor.method.jdbc;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaData;
 import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaDataExtractor;
 
@@ -27,6 +30,18 @@ public class ConnectionMetaDataStorageTest {
 	}
 
 	@Test
+	public void addExtractorReturnsNull() {
+		Object connectionObject = "";
+
+		ConnectionMetaDataExtractor extractor = Mockito.mock(ConnectionMetaDataExtractor.class);
+		when(extractor.parse(connectionObject)).thenReturn(null);
+		storage.dataExtractor = extractor;
+
+		storage.add(connectionObject);
+		assertThat(storage.storage.size(), is(0L));
+	}
+
+	@Test
 	public void getNotExisting() {
 		ConnectionMetaData data = storage.get("String");
 		assertThat(data, is(nullValue()));
@@ -40,20 +55,19 @@ public class ConnectionMetaDataStorageTest {
 
 	@Test
 	public void addAndGetConnection() {
-		ConnectionMetaDataExtractor extractor = Mockito.mock(ConnectionMetaDataExtractor.class);
-		ConnectionMetaData data = Mockito.mock(ConnectionMetaData.class);
-		Mockito.when(extractor.parse(Mockito.anyObject())).thenReturn(data);
+		ConnectionMetaDataExtractor extractor = mock(ConnectionMetaDataExtractor.class);
+		ConnectionMetaData data = mock(ConnectionMetaData.class);
+		when(extractor.parse(anyObject())).thenReturn(data);
 		storage.dataExtractor = extractor;
 		Object connectionObject = ""; // note that we can pass this as we mocked the data
 										// extraction.
 
 		storage.add(connectionObject);
-		assertThat((int) storage.storage.size(), is(1));
+		assertThat(storage.storage.size(), is(1L));
 
 		storage.add(connectionObject);
-		assertThat((int) storage.storage.size(), is(1));
+		assertThat(storage.storage.size(), is(1L));
 
 		assertThat(storage.get(connectionObject), is(data));
 	}
-
 }
