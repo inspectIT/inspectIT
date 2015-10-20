@@ -150,12 +150,12 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			long registeredMethodId = idManager.getRegisteredMethodId(methodId);
 
 			if (null == threadLocalInvocationData.get()) {
-				// save the start time
-				timeStack.push(new Double(timer.getCurrentTime()));
-
 				// the sensor type is only available in the beginning of the
 				// sequence trace
 				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
+
+				// save the start time
+				timeStack.push(new Double(timer.getCurrentTime()));
 
 				// no invocation tracer is currently started, so we do that now.
 				InvocationSequenceData invocationSequenceData = new InvocationSequenceData(timestamp, platformId, registeredSensorTypeId, registeredMethodId);
@@ -257,6 +257,21 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 
 				threadLocalInvocationData.set(null);
 			} else {
+				// check for the correct id
+				// due to the IdNotAvailableException we must be sure that we are closing the right
+				// sequence
+				try {
+					long registeredId = idManager.getRegisteredMethodId(methodId);
+					if (registeredId != invocationSequenceData.getMethodIdent()) {
+						return;
+					}
+				} catch (IdNotAvailableException e) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Skipping end of invocation sequence because of a (currently) not mapped ID");
+					}
+					return;
+				}
+
 				// just close the nested sequence and set the correct child count
 				InvocationSequenceData parentSequence = invocationSequenceData.getParentSequence();
 				// check if we should not include this invocation because of exception delegation or
@@ -267,7 +282,10 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 					// but connect all possible children to the parent then
 					// we are eliminating one level here
 					if (CollectionUtils.isNotEmpty(invocationSequenceData.getNestedSequences())) {
-						parentSequence.getNestedSequences().addAll(invocationSequenceData.getNestedSequences());
+						for (InvocationSequenceData child : invocationSequenceData.getNestedSequences()) {
+							child.setParentSequence(parentSequence);
+							parentSequence.getNestedSequences().add(child);
+						}
 						parentSequence.setChildCount(parentSequence.getChildCount() + invocationSequenceData.getChildCount());
 					}
 				} else {
