@@ -19,7 +19,6 @@ import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.agent.core.impl.CoreService;
 import info.novatec.inspectit.agent.sensor.ISensor;
 import info.novatec.inspectit.agent.sensor.exception.ExceptionSensor;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementParameterSensor;
 import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementSensor;
@@ -782,6 +781,6 @@ public class InvocationSequenceHookTest extends AbstractLogSupport {
 
 	@DataProvider(name = "skippingSensors")
 	public Object[][] skippingSensors() {
-		return new Object[][] { { ConnectionMetaDataSensor.class }, { ConnectionSensor.class }, { PreparedStatementParameterSensor.class } };
+		return new Object[][] { { ConnectionSensor.class }, { PreparedStatementParameterSensor.class } };
 	}
 }

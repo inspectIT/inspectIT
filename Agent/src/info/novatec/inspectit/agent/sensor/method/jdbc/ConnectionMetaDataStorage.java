@@ -3,6 +3,8 @@ package info.novatec.inspectit.agent.sensor.method.jdbc;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.util.ReflectionCache;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +22,11 @@ import com.google.common.cache.CacheBuilder;
  */
 @Component
 public class ConnectionMetaDataStorage {
+
+	/**
+	 * Empty server as marker that a meta data can not be created for connection.
+	 */
+	protected static final ConnectionMetaData EMPTY = new ConnectionMetaData();
 
 	/**
 	 * This cache keeps track of the meta information for connection objects. The key is the <code>
@@ -49,20 +56,6 @@ public class ConnectionMetaDataStorage {
 	ConnectionMetaDataExtractor dataExtractor = new ConnectionMetaDataExtractor();
 
 	/**
-	 * Retrieves the <code>ConnectionMetaData</code> stored with this connection.
-	 * 
-	 * @param connection
-	 *            the connection instance
-	 * @return the <code>ConnectionMetaData</code> stored with this connection.
-	 */
-	protected ConnectionMetaData get(Object connection) {
-		if (null == connection) {
-			return null;
-		}
-		return storage.getIfPresent(connection);
-	}
-
-	/**
 	 * Populates the given SQL Statement data with the meta information from the storage if this
 	 * data exist.
 	 * 
@@ -73,7 +66,7 @@ public class ConnectionMetaDataStorage {
 	 */
 	public void populate(SqlStatementData sqlData, Object connection) {
 		ConnectionMetaData connectionMetaData = get(connection);
-		if (null != connectionMetaData) {
+		if (null != connectionMetaData && EMPTY != connectionMetaData) { // NOPMD == on purpose
 			sqlData.setDatabaseProductName(connectionMetaData.product);
 			sqlData.setDatabaseProductVersion(connectionMetaData.version);
 			sqlData.setDatabaseUrl(connectionMetaData.url);
@@ -81,23 +74,27 @@ public class ConnectionMetaDataStorage {
 	}
 
 	/**
-	 * Adds the given connection to the storage.
+	 * Retrieves the <code>ConnectionMetaData</code> stored with this connection.
 	 * 
 	 * @param connection
 	 *            the connection instance
+	 * @return the <code>ConnectionMetaData</code> stored with this connection.
 	 */
-	public void add(Object connection) {
+	private ConnectionMetaData get(final Object connection) {
 		if (null == connection) {
-			return;
+			return null;
 		}
-		ConnectionMetaData data = get(connection);
-		if (null != data) {
-			return; // already in the cache.
+		try {
+			return storage.get(connection, new Callable<ConnectionMetaData>() {
+				public ConnectionMetaData call() throws Exception {
+					ConnectionMetaData data = dataExtractor.parse(connection);
+					return data != null ? data : EMPTY;
+				}
+			});
+		} catch (ExecutionException e) {
+			// should not occur as we have no checked exceptions
+			return EMPTY;
 		}
-
-		data = dataExtractor.parse(connection);
-
-		storage.put(connection, data);
 	}
 
 	/**
@@ -131,6 +128,8 @@ public class ConnectionMetaDataStorage {
 		private static final String GET_DATABASE_PRODUCT_VERSION = "getDatabaseProductVersion";
 		/** Method names. */
 		private static final String GET_DATABASE_PRODUCT_NAME = "getDatabaseProductName";
+		/** Method names. */
+		private static final String IS_CLOSED = "isClosed";
 
 		/** Extractor for the JDBC URL. */
 		static JDBCUrlExtractor urlExtractor = new JDBCUrlExtractor();
@@ -148,18 +147,27 @@ public class ConnectionMetaDataStorage {
 		 * 
 		 * @param connection
 		 *            the <code>Connection</code> object.
-		 * @return meta information about the connection for monitoring.
+		 * @return meta information about the connection for monitoring. returns <code>null</code>
+		 *         in case connection is <code>null</code> or connection is closed.
 		 */
 		public ConnectionMetaData parse(Object connection) {
-			ConnectionMetaData data = new ConnectionMetaData();
 			if (null == connection) {
-				logger.warn("Meta Information on database cannot be read. No database details like URL or Vendor will be displayed.");
-				return data;
+				logger.warn("Meta Information on database cannot be read for the null connection.");
+				return null;
 			}
 
-			Object metaData = getMetaData(connection.getClass(), connection);
+			Class<?> connectionClass = connection.getClass();
+			if (isClosed(connectionClass, connection)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Meta Information on database cannot be read because the connection is closed.");
+				}
+				return null;
+			}
+
+			ConnectionMetaData data = new ConnectionMetaData();
+			Object metaData = getMetaData(connectionClass, connection);
 			if (null == metaData) {
-				logger.warn("Meta Information on database cannot be read. No database details like URL or Vendor will be displayed.");
+				logger.warn("Meta information on database cannot be read for connection " + connection.toString() + ". No database details like URL or Vendor will be displayed.");
 				return data;
 			}
 
@@ -170,6 +178,20 @@ public class ConnectionMetaDataStorage {
 			data.product = parseProduct(metaDataClass, metaData);
 
 			return data;
+		}
+
+		/**
+		 * Checks if the connection is closed.
+		 * 
+		 * @param connectionClass
+		 *            the connection class.
+		 * @param connection
+		 *            the connection instance.
+		 * @return the result of calling isClosed on the connection object or <code>true</code> any
+		 *         exception occurs during method invocation
+		 */
+		private boolean isClosed(Class<?> connectionClass, Object connection) {
+			return (Boolean) cache.invokeMethod(connectionClass, IS_CLOSED, null, connection, null, true);
 		}
 
 		/**
