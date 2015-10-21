@@ -1,9 +1,12 @@
 package info.novatec.inspectit.rcp.details;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -47,7 +50,12 @@ public class DetailsTable extends SectionPart {
 	/**
 	 * Maximum suggested height for the text box displaying large text.
 	 */
-	private static final int CONTENT_CONTROL_MAX_HEIGHT = 100;
+	private static final int CONTENT_CONTROL_MAX_HEIGHT = 150;
+
+	/**
+	 * Maximum suggested height for the tables.
+	 */
+	private static final int CONTENT_TABLE_MAX_HEIGHT = 200;
 
 	/**
 	 * {@link FormText} to create elements.
@@ -76,6 +84,11 @@ public class DetailsTable extends SectionPart {
 	 * @see GC#textExtent(String)
 	 */
 	private GC gc;
+
+	/**
+	 * List of controls that should be resized according to the table main composite resizing.
+	 */
+	List<Text> textControls = new ArrayList<Text>();
 
 	/**
 	 * Default constructor.
@@ -119,7 +132,7 @@ public class DetailsTable extends SectionPart {
 	 *            that the provided array should have same length as the {@link #columns} value
 	 *            provided in the constructor.
 	 */
-	public void addContentRow(String title, Image image, DetailsCellContent[] cellContents) {
+	public void addContentRow(String title, Image image, DetailsCellContent... cellContents) {
 		createRowHeading(title, image);
 		if (null != title) {
 			copyStringBuilder.append(title);
@@ -134,30 +147,19 @@ public class DetailsTable extends SectionPart {
 
 				// calculate the properties based on the text
 				int heightHint = 0;
-				boolean needsScrollBars = false;
 				boolean canFitWidth = true;
 				if (null != content) {
 					// first calculate the properties based on the text
-					Point fontPoint = gc.textExtent(content);
-					canFitWidth = fontPoint.x < CONTENT_CONTROL_MAX_WIDTH;
+					canFitWidth = canFit(content, CONTENT_CONTROL_MAX_WIDTH);
 					if (!canFitWidth) {
-						// -50 to ensure word splitting to another row does not kill us
-						int rows = fontPoint.x / (CONTENT_CONTROL_MAX_WIDTH - 50) + 1;
-						heightHint = rows * fontPoint.y;
-						if (heightHint > CONTENT_CONTROL_MAX_HEIGHT) {
-							heightHint = CONTENT_CONTROL_MAX_HEIGHT;
-							needsScrollBars = true;
-						}
+						heightHint = heightHint(content, CONTENT_CONTROL_MAX_WIDTH, CONTENT_CONTROL_MAX_HEIGHT);
 					}
 				}
 
 				TableWrapData tableWrapData = getLayoutData(cellContent);
 				if (!canFitWidth) {
 					// define styles based on the scroll bars
-					int style = SWT.WRAP | SWT.READ_ONLY | SWT.MULTI;
-					if (needsScrollBars) {
-						style |= SWT.H_SCROLL | SWT.V_SCROLL;
-					}
+					int style = SWT.WRAP | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL;
 
 					// save border, create with none, and then reset
 					int borderStyle = toolkit.getBorderStyle();
@@ -170,6 +172,7 @@ public class DetailsTable extends SectionPart {
 					tableWrapData.maxHeight = CONTENT_CONTROL_MAX_HEIGHT;
 					tableWrapData.heightHint = heightHint;
 					text.setLayoutData(tableWrapData);
+					textControls.add(text);
 				} else {
 					FormText formText = toolkit.createFormText(contentComposite, false);
 					fillFormText(formText, cellContent);
@@ -214,18 +217,17 @@ public class DetailsTable extends SectionPart {
 			copyStringBuilder.append(title);
 		}
 
-		Table table = toolkit.createTable(contentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		Table table = toolkit.createTable(contentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		table.setHeaderVisible(true);
 
-		TableWrapData tableWrapData = new TableWrapData();
+		TableWrapData tableWrapData = new TableWrapData(TableWrapData.FILL);
 		tableWrapData.colspan = this.columns;
 		tableWrapData.maxWidth = CONTENT_CONTROL_MAX_WIDTH;
-		tableWrapData.maxHeight = CONTENT_CONTROL_MAX_HEIGHT;
+		tableWrapData.maxHeight = CONTENT_TABLE_MAX_HEIGHT;
 		table.setLayoutData(tableWrapData);
 
 		for (int i = 0; i < cols; i++) {
 			TableColumn tableColumn = new TableColumn(table, SWT.LEFT);
-			tableColumn.setWidth(CONTENT_CONTROL_MAX_WIDTH / cols - 10);
 			tableColumn.setResizable(true);
 			if (i < headers.length) {
 				tableColumn.setText(headers[i]);
@@ -244,6 +246,10 @@ public class DetailsTable extends SectionPart {
 			}
 			copyStringBuilder.append('\n');
 		}
+
+		for (TableColumn column : table.getColumns()) {
+			column.pack();
+		}
 	}
 
 	/**
@@ -253,7 +259,7 @@ public class DetailsTable extends SectionPart {
 	 *         {@link DetailsCellContent}.
 	 */
 	private TableWrapData getLayoutData(DetailsCellContent cellContent) {
-		TableWrapData tableWrapData = new TableWrapData();
+		TableWrapData tableWrapData = new TableWrapData(TableWrapData.FILL);
 		tableWrapData.colspan = cellContent.getColspan();
 		tableWrapData.grabHorizontal = cellContent.isGrab();
 		return tableWrapData;
@@ -289,6 +295,41 @@ public class DetailsTable extends SectionPart {
 	}
 
 	/**
+	 * Calculates if the given text can fit into specified max width. Uses {@link #gc} to make these
+	 * calculations.
+	 * 
+	 * @param text
+	 *            Text to check.
+	 * @param maxWidth
+	 *            Width to check against.
+	 * @return <code>true</code> if given text can fit in the specified width, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean canFit(String text, int maxWidth) {
+		Point fontPoint = gc.textExtent(text);
+		return fontPoint.x < maxWidth;
+	}
+
+	/**
+	 * Returns the height hint for the text that should fit into specified maximum width. If the
+	 * calculated height hint is higher than the given max height, then max height is returned.
+	 * 
+	 * @param text
+	 *            Text to check
+	 * @param maxWidth
+	 *            Width to fit into
+	 * @param maxHeight
+	 *            Maximum hint to consider
+	 * @return Calculated hint
+	 */
+	private int heightHint(String text, int maxWidth, int maxHeight) {
+		Point fontPoint = gc.textExtent(text);
+		// -50 to ensure word splitting to another row does not kill us
+		int rows = fontPoint.x / (maxWidth - 50) + 1;
+		return Math.min(rows * fontPoint.y, maxHeight);
+	}
+
+	/**
 	 * Initializes the {@link #contentComposite}.
 	 */
 	private void initTable() {
@@ -301,6 +342,25 @@ public class DetailsTable extends SectionPart {
 		contentComposite.setLayout(layout);
 
 		getSection().setClient(contentComposite);
+
+		contentComposite.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				Point size = contentComposite.getSize();
+				// decreased for 20 because of margins/paddings
+				int contentCurrentMaxWidth = size.x - ROW_TITLE_WIDTH_HINT - 20;
+
+				// need to re-calculate the text controls
+				for (Text t : textControls) {
+					Object layoutData = t.getLayoutData();
+					if (layoutData instanceof TableWrapData) {
+						int heightHint = heightHint(t.getText(), contentCurrentMaxWidth, CONTENT_CONTROL_MAX_HEIGHT);
+						((TableWrapData) layoutData).maxWidth = contentCurrentMaxWidth;
+						((TableWrapData) layoutData).heightHint = heightHint;
+					}
+				}
+			}
+		});
 	}
 
 	/**
