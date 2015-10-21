@@ -594,6 +594,9 @@
                            value="RECORDING">
                      </test>
                   </not>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                </iterate>
             </and>
          </activeWhen>
@@ -607,6 +610,9 @@
                      value="1">
                </count>
                <iterate>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                   <instanceof
                         value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
                   </instanceof>
@@ -640,8 +646,7 @@
                </count>
                <iterate>
                   <test
-                        property="info.novatec.inspectit.CmrRecordingPermission"
-                        value="true">
+                        property="info.novatec.inspectit.cmrRecordingPermission">
                   </test>
                   <or>
                      <instanceof
@@ -1257,8 +1262,7 @@
                <iterate
                      ifEmpty="false">
                   <test
-                        property="info.novatec.inspectit.CmrDeleteAgentPermission"
-                        value="true">
+                        property="info.novatec.inspectit.cmrDeleteAgentPermission">
                   </test>
                   <instanceof
                         value="info.novatec.inspectit.rcp.model.AgentLeaf">
@@ -1320,7 +1324,7 @@
                </count>
                <iterate>
                   <test
-                        property="info.novatec.inspectit.CmrShutdownAndRestartPermission"
+                        property="info.novatec.inspectit.cmrShutdownAndRestartPermission"
                         value="true">
                   </test>
                   <instanceof
@@ -1590,8 +1594,22 @@
             class="info.novatec.inspectit.rcp.tester.PermissionTester"
             id="info.inspectit.rcp.PermissionTester"
             namespace="info.novatec.inspectit"
-            properties="CmrShutdownAndRestartPermission, CmrDeleteAgentPermission, CmrRecordingPermission"
+            properties="cmrShutdownAndRestartPermission, cmrRecordingPermission"
             type="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.PermissionTester"
+            id="info.inspectit.rcp.PermissionTester"
+            namespace="info.novatec.inspectit"
+            properties="cmrDeleteAgentPermission"
+            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.PermissionTester"
+            id="info.inspectit.rcp.PermissionTester"
+            namespace="info.novatec.inspectit"
+            properties="cmrStoragePermission"
+            type="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
       </propertyTester>
    </extension>
    <extension
