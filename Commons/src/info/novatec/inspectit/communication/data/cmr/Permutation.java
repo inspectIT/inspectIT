@@ -37,7 +37,7 @@ public abstract class Permutation {
 			return new String(Hex.encodeHex(hash(password)));
 			} catch (NoSuchAlgorithmException nsaEx) {
 			//Maybe Log it
-			return "You Donkey!";
+			return "";
 		}
 	}
 }
