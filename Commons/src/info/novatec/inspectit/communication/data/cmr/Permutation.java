@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.usermanagement;
+package info.novatec.inspectit.communication.data.cmr;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
@@ -37,7 +37,7 @@ public abstract class Permutation {
 			return new String(Hex.encodeHex(hash(password)));
 			} catch (NoSuchAlgorithmException nsaEx) {
 			//Maybe Log it
-			return "";
+			return "You Donkey!";
 		}
 	}
 }

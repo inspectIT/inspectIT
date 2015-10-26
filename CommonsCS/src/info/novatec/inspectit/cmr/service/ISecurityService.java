@@ -1,5 +1,7 @@
 package info.novatec.inspectit.cmr.service;
 
+import info.novatec.inspectit.communication.data.cmr.User;
+
 /**
  * Provides general security operations for client<->cmr interaction.
  * 
@@ -7,12 +9,12 @@ package info.novatec.inspectit.cmr.service;
  * @author Clemens Geibel
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
-public interface ISecurityService {
-	
+public interface ISecurityService {	
 	/**
-	 * Tells us that we are awesome.
-	 * @return a message.
+	 * Searches for a User in the CMR DB.
+	 * @param email Email.
+	 * @param hashedPW hashed password
+	 * @return User by Email.
 	 */
-	String getMessage();
-
+	User authenticate(String hashedPW, String email);
 }

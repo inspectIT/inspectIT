@@ -9,7 +9,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import info.novatec.inspectit.cmr.dao.RoleDao;
-import info.novatec.inspectit.cmr.usermanagement.Role;
+import info.novatec.inspectit.communication.data.cmr.Role;
 
 /**
  * The default implementation of the {@link RoleDao} interface by using the

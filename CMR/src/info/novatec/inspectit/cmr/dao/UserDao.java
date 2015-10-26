@@ -1,6 +1,6 @@
 package info.novatec.inspectit.cmr.dao;
 
-import info.novatec.inspectit.cmr.usermanagement.User;
+import info.novatec.inspectit.communication.data.cmr.User;
 
 import java.util.List;
 
@@ -23,6 +23,12 @@ public interface UserDao {
 	 */
 	User load(String name);
 
+	/**
+	 * Get User by Email-Address.
+	 * @param email email
+	 * @return a User object with matching Email-Address.
+	 */
+	List<User> findByEmail(String email);
 
 	/**
 	 * Execute a findByExample query against the underlying storage.

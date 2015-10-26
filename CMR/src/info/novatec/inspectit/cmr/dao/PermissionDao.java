@@ -1,6 +1,6 @@
 package info.novatec.inspectit.cmr.dao;
 
-import info.novatec.inspectit.cmr.usermanagement.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permission;
 
 import java.util.List;
 
