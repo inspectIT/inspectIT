@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
-import info.novatec.inspectit.cmr.usermanagement.Permission;
-import info.novatec.inspectit.cmr.usermanagement.Permutation;
-import info.novatec.inspectit.cmr.usermanagement.Role;
-import info.novatec.inspectit.cmr.usermanagement.User;
+import info.novatec.inspectit.communication.data.cmr.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permutation;
+import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
 
 /**
  * 
@@ -73,7 +73,7 @@ public class Playground {
 		LOGGER.info("Loaded  role: " + roleLoaded);
 
 		User jakePowerUser = new User("Jake", Permutation.hashString("JakesSuperSecretPassword!"), "jake@mail.com", powerUser.getId());
-		User tomRestrcitedUser = new User("Tom", Permutation.hashString("TomsNotsoSecurePassword"), "tom@mail.com", restrictedUser.getId());
+		User tomRestrcitedUser = new User("Tom", Permutation.hashString("Tom"), "TomMail", restrictedUser.getId());
 
 		LOGGER.info("Created user: " + tomRestrcitedUser);
 

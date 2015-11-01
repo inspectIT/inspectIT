@@ -91,9 +91,6 @@
 	</bean>
 	
 	<bean id="playground" class="info.novatec.inspectit.cmr.playground.Playground" />
-
-
-	<bean class="info.novatec.inspectit.cmr.usermanagement.InitNotify" 
-		/>
+	<bean id="securityService" class="info.novatec.inspectit.cmr.service.SecurityService" />
 
 </beans>

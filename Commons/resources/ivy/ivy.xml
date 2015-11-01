@@ -28,6 +28,7 @@
 		<dependency org="commons-lang" name="commons-lang" rev="2.5" conf="prod->default" />
 		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="prod->default" />
 		<dependency org="commons-pool" name="commons-pool" rev="1.6" conf="prod->default" />
+		<dependency org="commons-codec" name="commons-codec" rev="1.3" conf="prod->default" />
 
 		<dependency org="org.springframework" name="org.springframework.core" rev="3.1.0.RELEASE" conf="prod->default" />
 		<dependency org="org.springframework" name="org.springframework.beans" rev="3.1.0.RELEASE" conf="prod->default" />

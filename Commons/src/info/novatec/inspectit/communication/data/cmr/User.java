@@ -1,13 +1,19 @@
-package info.novatec.inspectit.cmr.usermanagement;
+package info.novatec.inspectit.communication.data.cmr;
+
+import java.io.Serializable;
 
 /**
  * Representing a user in the system.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  *
  */
-public class User {
-
+public class User implements Serializable {
+	/**
+	 * Generated UID.
+	 */
+	private static final long serialVersionUID = 2583270705967441921L;
 	/**
 	 * The unique name of the user.
 	 */
@@ -17,7 +23,7 @@ public class User {
 	 */
 	private String password;
 	/**
-	 * The users email adress. Used to send a new password, if the current one is lost.
+	 * The users email address. Used to send a new password, if the current one is lost.
 	 */
 	private String email;
 	/**

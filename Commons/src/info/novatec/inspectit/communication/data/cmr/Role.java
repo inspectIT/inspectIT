@@ -1,14 +1,19 @@
-package info.novatec.inspectit.cmr.usermanagement;
+package info.novatec.inspectit.communication.data.cmr;
 
+import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 /**
  * Stores the permissions asociated with the Role.
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  *
  */
-public class Role {
+public class Role implements Serializable {
+	/**
+	 * Generated UID.
+	 */
+	private static final long serialVersionUID = 2997485478449132744L;
 	/**
 	 * Contains all permissions this role has.
 	 */
@@ -82,8 +87,6 @@ public class Role {
 	 */
 	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
-		//to prevent org.hibernate.LazyInitializationException
-		Hibernate.initialize(permissions);
 	}
 	/**  
 	 * Sets {@link #title}.  

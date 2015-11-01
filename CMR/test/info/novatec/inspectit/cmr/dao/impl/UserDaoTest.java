@@ -9,7 +9,7 @@ import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
-import info.novatec.inspectit.cmr.usermanagement.User;
+import info.novatec.inspectit.communication.data.cmr.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -42,6 +42,11 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
         
         User retrievedUser = userDao.load("TestName");
         
+//        List<User> listOfUsers = userDao.findByEmail("email");
+//        
+//        for (User u : listOfUsers) {
+//        	System.out.println(u.toString());
+//        }
         
         System.out.println("Name of user: " + retrievedUser.getName());
         
