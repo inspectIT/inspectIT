@@ -3,6 +3,8 @@ package info.novatec.inspectit.cmr.dao.impl;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -19,6 +21,7 @@ import info.novatec.inspectit.communication.data.cmr.Role;
  * class.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  * 
  */
 @Repository
@@ -83,5 +86,13 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 		getHibernateTemplate().saveOrUpdate(role);
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Role> findByID(long id) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
+		criteria.add(Restrictions.eq("id", id));
+		return getHibernateTemplate().findByCriteria(criteria);
+	}
 }

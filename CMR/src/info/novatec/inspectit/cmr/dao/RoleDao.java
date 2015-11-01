@@ -10,6 +10,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * This DAO is used to handle all {@link Role} objects.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  * 
  */
 public interface RoleDao {
@@ -23,7 +24,13 @@ public interface RoleDao {
 	 */
 	Role load(String title);
 
-
+	/**
+	 * Find a Users Role.
+	 * @param id the Role ID of a User.
+	 * @return List of the assigned roles.
+	 */
+	List<Role> findByID(long id);
+	
 	/**
 	 * Execute a findByExample query against the underlying storage.
 	 * 
