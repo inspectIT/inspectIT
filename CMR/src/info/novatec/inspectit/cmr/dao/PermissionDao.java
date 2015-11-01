@@ -10,6 +10,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * This DAO is used to handle all {@link Permission} objects.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  * 
  */
 public interface PermissionDao {
@@ -66,4 +67,10 @@ public interface PermissionDao {
 	 */
 	List<Permission> loadAll();
 
+	/**
+	 * Returns a permission object with the same title as the parameter.
+	 * @param permission permission
+	 * @return a permission
+	 */
+	List<Permission> findByTitle(Permission permission);
 }

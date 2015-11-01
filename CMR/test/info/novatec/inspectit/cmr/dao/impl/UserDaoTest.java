@@ -31,13 +31,12 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 		User user = new User("TestName", "TestPassword", "email", 1);
 
 		userDao.saveOrUpdate(user);
-
 		
 		List<User> users = userDao.loadAll();
         
         for(User u : users){
 
-            System.out.println("Name of user: " + u.getName());
+            System.out.println(u.toString());
         }
         
         User retrievedUser = userDao.load("TestName");
@@ -55,7 +54,4 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 		assertThat(userDao.load("TestName"), is(nullValue()));
 	}
-	
-	//TODO More tests
-
 }

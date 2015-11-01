@@ -10,6 +10,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * This DAO is used to handle all {@link User} objects.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  * 
  */
 public interface UserDao {
