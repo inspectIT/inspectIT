@@ -1,6 +1,6 @@
 package info.novatec.inspectit.cmr.dao;
 
-import info.novatec.inspectit.cmr.usermanagement.User;
+import info.novatec.inspectit.communication.data.cmr.User;
 
 import java.util.List;
 
@@ -10,19 +10,26 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  * This DAO is used to handle all {@link User} objects.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  * 
  */
 public interface UserDao {
 
 	/**
-	 * Load a specific {@link User} from the underlying storage by passing the name.
+	 * Load a specific {@link User} from the underlying storage by passing the email.
 	 * 
-	 * @param name
-	 *            The name of the User.
+	 * @param email
+	 *            The email of the User.
 	 * @return The found {@link User} object.
 	 */
-	User load(String name);
+	User load(String email);
 
+	/**
+	 * Get User by Email-Address.
+	 * @param email email
+	 * @return a User object with matching Email-Address.
+	 */
+	List<User> findByEmail(String email);
 
 	/**
 	 * Execute a findByExample query against the underlying storage.

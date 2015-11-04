@@ -35,10 +35,18 @@ public class CmrLoginWizardPage extends WizardPage {
 	 */
 	private Text mailBox;
 
+	public Text getMailBox() {
+		return mailBox;
+	}
+
 	/**
 	 * password text box.
 	 */
 	private Text passwordBox;
+
+	public Text getPasswordBox() {
+		return passwordBox;
+	}
 
 	/**
 	 * {@link ForgotPasswordDialog}.

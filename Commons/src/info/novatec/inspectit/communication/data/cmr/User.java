@@ -1,23 +1,25 @@
-package info.novatec.inspectit.cmr.usermanagement;
+package info.novatec.inspectit.communication.data.cmr;
+
+import java.io.Serializable;
 
 /**
  * Representing a user in the system.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  *
  */
-public class User {
-
+public class User implements Serializable {
 	/**
-	 * The unique name of the user.
+	 * Generated UID.
 	 */
-	private String name;
+	private static final long serialVersionUID = 2583270705967441921L;
 	/**
 	 * The hex string representation of the SHA256 Hash of the user password.
 	 */
 	private String password;
 	/**
-	 * The users email adress. Used to send a new password, if the current one is lost.
+	 * The users email address. Used to send a new password, if the current one is lost.
 	 */
 	private String email;
 	/**
@@ -35,8 +37,6 @@ public class User {
 	/**
 	 * The constructor for a User object.
 	 * 
-	 * @param name
-	 *            The name of the user
 	 * @param password
 	 *            The <b>hashed</b> password of the user
 	 * @param email
@@ -44,23 +44,12 @@ public class User {
 	 * @param roleId
 	 *            The id of the role the user is attached to
 	 */
-	public User(String name, String password, String email, long roleId) {
-		super();
-		this.name = name;
+	public User(String password, String email, long roleId) {
 		this.password = password;
 		this.email = email;
 		this.roleId = roleId;
 	}
-
-	/**
-	 * Gets {@link #name}.
-	 * 
-	 * @return {@link #name}
-	 */
-	public String getName() {
-		return name;
-	}
-
+	
 	/**
 	 * Gets {@link #password}.
 	 * 
@@ -84,17 +73,7 @@ public class User {
 	 */
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", hashed password [" + password + "] , email=" + email + ", userRoleId=" + roleId + "]";
-	}
-
-	/**
-	 * Sets {@link #name}.
-	 * 
-	 * @param name
-	 *            New value for {@link #name}
-	 */
-	public void setName(String name) {
-		this.name = name;
+		return "User [email=" + email + ", hashed password [" + password + "], " + "userRoleId=" + roleId + "]";
 	}
 
 	/**
