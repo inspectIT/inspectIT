@@ -81,7 +81,7 @@ public class SecurityService implements ISecurityService {
 			throw new AuthenticationException("Email or password is incorrect.");
 		} else {
 			User result = foundUsers.get(0);
-			return new User(result.getName(), null, result.getEmail(), result.getRoleId());
+			return new User(null, result.getEmail(), result.getRoleId());
 		}
 	}
 
@@ -98,9 +98,7 @@ public class SecurityService implements ISecurityService {
 	private boolean checkDataIntegrity(Object data) {
 		if (data instanceof User) {
 			User user = (User) data;
-			return (user.getEmail().length() < 50
-					&& user.getName().length() < 50
-					&& user.getPassword().length() < 50);
+			return (user.getEmail().length() <= 256);
 		} else if (data instanceof Permission) {
 			Permission permission = (Permission) data;
 			return (permission.getDescription().length() < 100);
@@ -135,7 +133,7 @@ public class SecurityService implements ISecurityService {
 	public void changeUserAttribute(User user) throws DataIntegrityViolationException, DataRetrievalFailureException  {
 		List<User> foundUsers = userDao.findByEmail(user.getEmail());
 		if (!checkDataIntegrity(user)) {
-			throw new DataIntegrityViolationException("Maximum amount of characters exceeded!");
+			throw new DataIntegrityViolationException("Data integrity test failed!");
 		} else if (foundUsers.size() == 1) {
 			userDao.delete(foundUsers.get(0));
 			userDao.saveOrUpdate(user);
@@ -152,7 +150,7 @@ public class SecurityService implements ISecurityService {
 	public void changePermissionDescription(Permission permission) {
 		List<Permission> foundPermissions = permissionDao.findByTitle(permission);
 		if (!checkDataIntegrity(permission)) {
-			throw new DataIntegrityViolationException("Maximum amount of characters exceeded!");
+			throw new DataIntegrityViolationException("Data integrity test failed!");
 		} else if (foundPermissions.size() == 1) {
 			permissionDao.delete(foundPermissions.get(0));
 			permissionDao.saveOrUpdate(permission);
@@ -171,7 +169,7 @@ public class SecurityService implements ISecurityService {
 		if (roles.size() == 1) {
 			return roles.get(0);
 		} else if (roles.isEmpty()) {
-			throw new DataRetrievalFailureException("No roles in the database matching the id of this user!");
+			throw new DataRetrievalFailureException("No roles in the database matching the given id!");
 		} else {
 			throw new DataIntegrityViolationException("Multiple roles with the same id in the database!");
 		}

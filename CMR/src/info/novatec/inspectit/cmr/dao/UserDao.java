@@ -16,13 +16,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public interface UserDao {
 
 	/**
-	 * Load a specific {@link User} from the underlying storage by passing the name.
+	 * Load a specific {@link User} from the underlying storage by passing the email.
 	 * 
-	 * @param name
-	 *            The name of the User.
+	 * @param email
+	 *            The email of the User.
 	 * @return The found {@link User} object.
 	 */
-	User load(String name);
+	User load(String email);
 
 	/**
 	 * Get User by Email-Address.
