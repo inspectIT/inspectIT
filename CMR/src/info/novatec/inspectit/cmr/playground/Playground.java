@@ -72,15 +72,15 @@ public class Playground {
 		Role roleLoaded = roleDao.load("PowerUser");
 		LOGGER.info("Loaded  role: " + roleLoaded);
 
-		User jakePowerUser = new User("Jake", Permutation.hashString("JakesSuperSecretPassword!"), "jake@mail.com", powerUser.getId());
-		User tomRestrcitedUser = new User("Tom", Permutation.hashString("Tom"), "TomMail", restrictedUser.getId());
+		User jakePowerUser = new User(Permutation.hashString("JakesSuperSecretPassword!"), "jake@mail.com", powerUser.getId());
+		User tomRestrictedUser = new User(Permutation.hashString("Tom"), "TomMail", restrictedUser.getId());
 
-		LOGGER.info("Created user: " + tomRestrcitedUser);
+		LOGGER.info("Created user: " + tomRestrictedUser);
 
 		userDao.saveOrUpdate(jakePowerUser);
-		userDao.saveOrUpdate(tomRestrcitedUser);
+		userDao.saveOrUpdate(tomRestrictedUser);
 
-		User tomLoaded = userDao.load("Tom");
+		User tomLoaded = userDao.load("TomMail");
 		LOGGER.info("Loaded  user: " + tomLoaded);
 	}
 

@@ -15,10 +15,6 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 2583270705967441921L;
 	/**
-	 * The unique name of the user.
-	 */
-	private String name;
-	/**
 	 * The hex string representation of the SHA256 Hash of the user password.
 	 */
 	private String password;
@@ -41,8 +37,6 @@ public class User implements Serializable {
 	/**
 	 * The constructor for a User object.
 	 * 
-	 * @param name
-	 *            The name of the user
 	 * @param password
 	 *            The <b>hashed</b> password of the user
 	 * @param email
@@ -50,23 +44,12 @@ public class User implements Serializable {
 	 * @param roleId
 	 *            The id of the role the user is attached to
 	 */
-	public User(String name, String password, String email, long roleId) {
-		super();
-		this.name = name;
+	public User(String password, String email, long roleId) {
 		this.password = password;
 		this.email = email;
 		this.roleId = roleId;
 	}
-
-	/**
-	 * Gets {@link #name}.
-	 * 
-	 * @return {@link #name}
-	 */
-	public String getName() {
-		return name;
-	}
-
+	
 	/**
 	 * Gets {@link #password}.
 	 * 
@@ -90,17 +73,7 @@ public class User implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", hashed password [" + password + "] , email=" + email + ", userRoleId=" + roleId + "]";
-	}
-
-	/**
-	 * Sets {@link #name}.
-	 * 
-	 * @param name
-	 *            New value for {@link #name}
-	 */
-	public void setName(String name) {
-		this.name = name;
+		return "User [email=" + email + ", hashed password [" + password + "], " + "userRoleId=" + roleId + "]";
 	}
 
 	/**
