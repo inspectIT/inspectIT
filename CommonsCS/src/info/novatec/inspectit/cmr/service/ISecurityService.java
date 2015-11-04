@@ -18,7 +18,16 @@ public interface ISecurityService {
 	 * @param pw password in plain text. to be edited.
 	 * @return User by Email.
 	 */
-	User authenticate(String pw, String email);
+	boolean authenticate(String pw, String email);
+	
+	/**
+	 * Returns a User object with given Email.
+	 * @param email email
+	 * @return a User object with given Email.
+	 * @throws AuthenticationException if the email was not found.
+	 * @throws DataIntegrityViolationException if there is a huge error in database management.
+	 */
+	Role retrieveRole(String email);
 	
 	/**
 	 * Searches for the Role matching a given ID.

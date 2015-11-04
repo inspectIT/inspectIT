@@ -71,17 +71,31 @@ public class SecurityService implements ISecurityService {
 	//+-------------------------------------------------------------------------------------------+
 
 	@Override
-	public User authenticate(String pw, String email) throws AuthenticationException, DataIntegrityViolationException {
+	public boolean authenticate(String pw, String email) throws AuthenticationException, DataIntegrityViolationException {
+		List<User> foundUsers = userDao.findByEmail(email);
+		if (foundUsers.isEmpty()) {
+			return false;
+			//throw new AuthenticationException("Email or password is incorrect.");
+		} else if (foundUsers.size() != 1) {
+			return false;
+			//throw new DataIntegrityViolationException("There are multiple users with same email.");
+		} else if (!foundUsers.get(0).getPassword().equals(Permutation.hashString(pw))) {
+			return false;
+			//throw new AuthenticationException("Email or password is incorrect.");
+		}
+		return true;
+	}
+	
+	@Override
+	public Role retrieveRole(String email) throws AuthenticationException, DataIntegrityViolationException {
 		List<User> foundUsers = userDao.findByEmail(email);
 		if (foundUsers.isEmpty()) {
 			throw new AuthenticationException("Email or password is incorrect.");
 		} else if (foundUsers.size() != 1) {
 			throw new DataIntegrityViolationException("There are multiple users with same email.");
-		} else if (!foundUsers.get(0).getPassword().equals(Permutation.hashString(pw))) {
-			throw new AuthenticationException("Email or password is incorrect.");
 		} else {
-			User result = foundUsers.get(0);
-			return new User(null, result.getEmail(), result.getRoleId());
+			User user = foundUsers.get(0);
+			return getRoleByID(user.getRoleId());
 		}
 	}
 
