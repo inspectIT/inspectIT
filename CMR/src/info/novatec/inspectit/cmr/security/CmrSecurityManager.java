@@ -14,6 +14,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 //import org.slf4j.Logger;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * doc.
@@ -31,15 +32,15 @@ public class CmrSecurityManager extends DefaultSecurityManager {
 	/**
 	 * doc.
 	 */
+	@Autowired
 	private CmrRealm cmrRealm;
 	
-	private UserDao userDao;
-	
-	public CmrSecurityManager() {
-	}
+	//@Autowired
+	//private UserDao userDao;
 	/**
 	 * doc.
 	 */
+	public CmrSecurityManager() { }
 //	public CmrSecurityManager(UserDao userDao) {
 //		this.userDao = userDao;
 //		this.cmrRealm = new CmrRealm(userDao);
@@ -56,23 +57,8 @@ public class CmrSecurityManager extends DefaultSecurityManager {
 	 */
 	@PostConstruct
 	public void postConstruct() {
-		this.cmrRealm = new CmrRealm();
 		if (log.isInfoEnabled()) {
 			log.info("|-CmrSecurityManager active...");
 		}
-	}
-	
-	public UserDao getUserDao() {
-		return userDao;
-	}
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-	
-	public CmrRealm getCmrRealm() {
-		return cmrRealm;
-	}
-	public void setCmrRealm(CmrRealm cmrRealm) {
-		this.cmrRealm = cmrRealm;
 	}
 }

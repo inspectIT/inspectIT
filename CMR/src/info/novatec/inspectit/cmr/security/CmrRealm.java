@@ -44,22 +44,6 @@ public class CmrRealm extends AuthorizingRealm {
 	 */
 	@Autowired
 	UserDao userDao;
-	
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-
-	public RoleDao getRoleDao() {
-		return roleDao;
-	}
-
-	public void setRoleDao(RoleDao roleDao) {
-		this.roleDao = roleDao;
-	}
 
 	/**
 	 * Data Access Object.
@@ -84,10 +68,8 @@ public class CmrRealm extends AuthorizingRealm {
 		UsernamePasswordToken upToken = (UsernamePasswordToken) token;
 		String email = upToken.getUsername();
 		String pw = new String(upToken.getPassword());
-
-		log.info("|-Yo man");
+		
 		List<User> foundUsers = userDao.findByEmail(email);
-		log.info("|-some nullpointer here");
 		if (foundUsers.isEmpty()) {
 			throw new AuthenticationException("An Error occurred while logging into the cmr.");
 		} else if (foundUsers.size() != 1) {

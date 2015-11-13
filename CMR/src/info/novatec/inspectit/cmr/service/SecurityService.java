@@ -61,6 +61,7 @@ public class SecurityService implements ISecurityService {
 	/**
 	 * Security Manager for the CMR.
 	 */
+	@Autowired
 	CmrSecurityManager securityManager;
 
 	/**
@@ -68,7 +69,6 @@ public class SecurityService implements ISecurityService {
 	 */
 	@PostConstruct
 	public void postConstruct() {
-		this.securityManager = new CmrSecurityManager();
 		if (log.isInfoEnabled()) {
 			log.info("|-Security Service active...");
 		}
