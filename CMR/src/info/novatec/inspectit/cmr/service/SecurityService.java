@@ -8,13 +8,15 @@ import javax.annotation.PostConstruct;
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
+import info.novatec.inspectit.cmr.security.CmrSecurityManager;
 import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Permutation;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.spring.logger.Log;
 
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -55,12 +57,18 @@ public class SecurityService implements ISecurityService {
 	 */
 	@Autowired
 	RoleDao roleDao;
+	
+	/**
+	 * Security Manager for the CMR.
+	 */
+	CmrSecurityManager securityManager;
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
 	 */
 	@PostConstruct
 	public void postConstruct() {
+		this.securityManager = new CmrSecurityManager();
 		if (log.isInfoEnabled()) {
 			log.info("|-Security Service active...");
 		}
@@ -69,21 +77,25 @@ public class SecurityService implements ISecurityService {
 	//+-------------------------------------------------------------------------------------------+
 	//|           Communication with the Apache Shiro Security Framework						  |
 	//+-------------------------------------------------------------------------------------------+
-
+	
+	/**
+	 * Authentication via the CmrSecurityManager.
+	 * @param pw users password
+	 * @param email email
+	 * @return true if the user was authenticated
+	 */
 	@Override
-	public boolean authenticate(String pw, String email) throws AuthenticationException, DataIntegrityViolationException {
-		List<User> foundUsers = userDao.findByEmail(email);
-		if (foundUsers.isEmpty()) {
+	public boolean authenticate(String pw, String email) {
+		try {
+			UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
+			securityManager.authenticate((AuthenticationToken) token);
+			//if (log.isInfoEnabled()) {
+			//	log.info("|-New authenticated subject");
+			//}
+			return true;
+		} catch (AuthenticationException ae) {
 			return false;
-			//throw new AuthenticationException("Email or password is incorrect.");
-		} else if (foundUsers.size() != 1) {
-			return false;
-			//throw new DataIntegrityViolationException("There are multiple users with same email.");
-		} else if (!foundUsers.get(0).getPassword().equals(Permutation.hashString(pw))) {
-			return false;
-			//throw new AuthenticationException("Email or password is incorrect.");
 		}
-		return true;
 	}
 	
 	@Override
