@@ -6,7 +6,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
-import info.novatec.inspectit.communication.data.cmr.User;
+import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.exception.RemoteException;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
@@ -62,9 +62,9 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			User authRequest = cmrRepositoryDefinition
+			Role authRequest = cmrRepositoryDefinition
 					.getSecurityService()
-					.authenticate(cmrLoginWizardPage.getPasswordBox().getText(), cmrLoginWizardPage.getMailBox().getText());
+					.retrieveRole(cmrLoginWizardPage.getMailBox().getText());
 			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", authRequest.toString());
 		} catch (RemoteException re) {
 			MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
