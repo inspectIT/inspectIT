@@ -571,6 +571,9 @@
                         property="info.novatec.inspectit.storageState"
                         value="OPENED">
                   </test>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                </iterate>
             </and>
          </activeWhen>
@@ -914,6 +917,9 @@
                   <instanceof
                         value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
                   </instanceof>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                </iterate>
             </and>
          </activeWhen>

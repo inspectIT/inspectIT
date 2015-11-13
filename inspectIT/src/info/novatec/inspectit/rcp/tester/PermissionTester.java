@@ -30,7 +30,7 @@ public class PermissionTester extends PropertyTester {
 			}
 		
 		if ("cmrStoragePermission".equals(property)) {
-			return true;
+			return false;
 			}
 		
 		return false;
