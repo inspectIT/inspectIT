@@ -10,7 +10,7 @@ import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
-import info.novatec.inspectit.cmr.usermanagement.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permission;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

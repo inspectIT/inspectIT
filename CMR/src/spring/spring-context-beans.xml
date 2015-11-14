@@ -89,11 +89,10 @@
 		<property name="scheduledExecutor" value="false" />
 		<property name="beanSingleton" value="true" />
 	</bean>
-	
+
 	<bean id="playground" class="info.novatec.inspectit.cmr.playground.Playground" />
-
-
-	<bean class="info.novatec.inspectit.cmr.usermanagement.InitNotify" 
-		/>
-
+	
+	<bean id="cmrSecurityManager" class="info.novatec.inspectit.cmr.security.CmrSecurityManager" />
+	
+	<bean id="cmrRealm" class="info.novatec.inspectit.cmr.security.CmrRealm" />
 </beans>

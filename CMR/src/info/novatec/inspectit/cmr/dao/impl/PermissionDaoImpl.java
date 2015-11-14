@@ -3,13 +3,15 @@ package info.novatec.inspectit.cmr.dao.impl;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import info.novatec.inspectit.cmr.dao.PermissionDao;
-import info.novatec.inspectit.cmr.usermanagement.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permission;
 
 /**
  * The default implementation of the {@link PermissionDao} interface by using the
@@ -19,6 +21,7 @@ import info.novatec.inspectit.cmr.usermanagement.Permission;
  * class.
  * 
  * @author Joshua Hartmann
+ * @author Andreas Herzog
  * 
  */
 @Repository
@@ -83,5 +86,13 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 		getHibernateTemplate().saveOrUpdate(permission);
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Permission> findByTitle(Permission permission) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class);
+		criteria.add(Restrictions.eq("title", permission.getTitle()));
+		return getHibernateTemplate().findByCriteria(criteria);
+	}
 }
