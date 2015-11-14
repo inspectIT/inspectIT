@@ -21,11 +21,10 @@ public interface ISecurityService {
 	boolean authenticate(String pw, String email);
 	
 	/**
-	 * Returns a User object with given Email.
+	 * Returns a Role object with given Email.
 	 * @param email email
-	 * @return a User object with given Email.
+	 * @return a Role object with given Email.
 	 * @throws AuthenticationException if the email was not found.
-	 * @throws DataIntegrityViolationException if there is a huge error in database management.
 	 */
 	Role retrieveRole(String email);
 	
