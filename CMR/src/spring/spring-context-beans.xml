@@ -92,14 +92,7 @@
 
 	<bean id="playground" class="info.novatec.inspectit.cmr.playground.Playground" />
 	
-	<bean id="securityService" class="info.novatec.inspectit.cmr.service.SecurityService">
-		<property name="cmrSecurityManager" value="info.novatec.inspectit.cmr.security.CmrSecurityManager" />
-	</bean>
-	
-	<bean id="cmrSecurityManager" class="info.novatec.inspectit.cmr.security.CmrSecurityManager">
-		<property name="cmrRealm" value="info.novatec.inspectit.cmr.security.CmrRealm" />
-	</bean>
+	<bean id="cmrSecurityManager" class="info.novatec.inspectit.cmr.security.CmrSecurityManager" />
 	
 	<bean id="cmrRealm" class="info.novatec.inspectit.cmr.security.CmrRealm" />
-	
 </beans>
