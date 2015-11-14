@@ -1,17 +1,18 @@
 
-package info.novatec.inspectit.cmr.usermanagement;
+package info.novatec.inspectit.communication.data.cmr;
 
-
-
-
-
+import java.io.Serializable;
 /**
  * Storage for a single permission.
+ * 
  * @author Joshua Hartmann
- *  extends HibernateDaoSupport 
+ * @author Andreas Herzog
  */
-public class Permission {
-
+public class Permission implements Serializable {
+	/**
+	 * Generated UID.
+	 */
+	private static final long serialVersionUID = -5411425549495314822L;
 	/**
 	 * The id of the permission, used to identify which functionality it covers, must be unique.
 	 */

@@ -9,7 +9,7 @@ import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
-import info.novatec.inspectit.cmr.usermanagement.User;
+import info.novatec.inspectit.communication.data.cmr.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,29 +28,30 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 */
 	@Test
 	public void saveAndDeleteUser() throws NoSuchAlgorithmException {
-		User user = new User("TestName", "TestPassword", "email", 1);
+		User user = new User("TestPassword", "email", 1);
 
 		userDao.saveOrUpdate(user);
-
 		
 		List<User> users = userDao.loadAll();
         
         for(User u : users){
 
-            System.out.println("Name of user: " + u.getName());
+            System.out.println(u.toString());
         }
         
         User retrievedUser = userDao.load("TestName");
         
+//        List<User> listOfUsers = userDao.findByEmail("email");
+//        
+//        for (User u : listOfUsers) {
+//        	System.out.println(u.toString());
+//        }
         
-        System.out.println("Name of user: " + retrievedUser.getName());
+        System.out.println("Name of user: " + retrievedUser.getEmail());
         
 
 		userDao.delete(user);
 
-		assertThat(userDao.load("TestName"), is(nullValue()));
+		assertThat(userDao.load("email"), is(nullValue()));
 	}
-	
-	//TODO More tests
-
 }

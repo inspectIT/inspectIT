@@ -6,7 +6,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
-import info.novatec.inspectit.rcp.InspectIT;
+import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
@@ -23,7 +23,7 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	 * test.
 	 */
 	private CmrRepositoryDefinition cmrRepositoryDefinition;
-	
+
 	/**
 	 * {@link CmrLoginWizardPage}.
 	 */
@@ -60,9 +60,19 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		MessageDialog.openError(null, "Sorry", "Login is not yet possible");
-		String message = cmrRepositoryDefinition.getSecurityService().getMessage();
-		MessageDialog.openError(null, "Oh my gosh", message);
+		if (cmrRepositoryDefinition
+				.getSecurityService()
+				.authenticate(cmrLoginWizardPage.getPasswordBox().getText(), 
+						cmrLoginWizardPage.getMailBox().getText())) {
+
+			Role authRequest = cmrRepositoryDefinition
+					.getSecurityService()
+					.retrieveRole(cmrLoginWizardPage.getMailBox().getText());
+			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", authRequest.toString());
+		
+		} else {
+			MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
+		}
 		return false;
 	}
 
