@@ -31,7 +31,9 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * @param cmrRepositoryDefinition .
+	 * 
+	 * @param cmrRepositoryDefinition
+	 *            .
 	 */
 	public CmrLoginWizard(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		this.setWindowTitle("CMR Login");
@@ -55,21 +57,15 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * {@inheritDoc} This method needs to be edited as soon as it is possible to connect to the CMR
-	 * database.
+	 * {@inheritDoc} Tries to log into the CMR.
 	 */
 	@Override
 	public boolean performFinish() {
-		if (cmrRepositoryDefinition
-				.getSecurityService()
-				.authenticate(cmrLoginWizardPage.getPasswordBox().getText(), 
-						cmrLoginWizardPage.getMailBox().getText())) {
+		if (cmrRepositoryDefinition.getSecurityService().authenticate(cmrLoginWizardPage.getPasswordBox().getText(),
+				cmrLoginWizardPage.getMailBox().getText())) {
+			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", "You are now logged in.");
+			return true;
 
-			Role authRequest = cmrRepositoryDefinition
-					.getSecurityService()
-					.retrieveRole(cmrLoginWizardPage.getMailBox().getText());
-			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", authRequest.toString());
-		
 		} else {
 			MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
 		}

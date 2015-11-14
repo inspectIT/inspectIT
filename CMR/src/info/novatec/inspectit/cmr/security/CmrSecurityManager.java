@@ -30,6 +30,13 @@ public class CmrSecurityManager extends DefaultSecurityManager {
 	@Autowired
 	private CmrRealm cmrRealm;
 	
+	@Autowired	
+	public CmrSecurityManager(CmrRealm realm) {
+		super(realm);
+		
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
 		return cmrRealm.doGetAuthenticationInfo(token);
