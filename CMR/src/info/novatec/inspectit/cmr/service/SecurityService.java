@@ -110,6 +110,8 @@ public class SecurityService implements ISecurityService {
 			return getRoleByID(user.getRoleId());
 		}
 	}
+	
+	
 
 	//+-------------------------------------------------------------------------------------------+
 	//|           Managing Security Data in the Database										  |
