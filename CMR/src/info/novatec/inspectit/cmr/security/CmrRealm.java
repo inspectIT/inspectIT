@@ -28,9 +28,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DataRetrievalFailureException;
 
 /**
+ * Performs all database lookups concerning the security management.
  * 
  * @author Andreas Herzog
- *
  */
 public class CmrRealm extends AuthorizingRealm {
 	/**
@@ -50,8 +50,6 @@ public class CmrRealm extends AuthorizingRealm {
 	 */
 	@Autowired
 	RoleDao roleDao;
-	
-	public CmrRealm() {}
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
@@ -87,7 +85,7 @@ public class CmrRealm extends AuthorizingRealm {
 		return authInfo;
 	}
 
-	@Override //no way this is gonna work
+	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
