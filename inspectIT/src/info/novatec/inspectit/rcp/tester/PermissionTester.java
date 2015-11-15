@@ -1,5 +1,8 @@
 package info.novatec.inspectit.rcp.tester;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.eclipse.core.expressions.PropertyTester;
 
 /**
@@ -7,6 +10,7 @@ import org.eclipse.core.expressions.PropertyTester;
  * 
  * @author Lucca Hellriegel
  * @author Thomas Sachs
+ * @author Mario Rose
  *
  */
 public class PermissionTester extends PropertyTester {
@@ -14,26 +18,9 @@ public class PermissionTester extends PropertyTester {
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		
-		//TODO: Connect with Shiro functionality
-		//TODO: Check permissions generically from CmrDefitinition
-		if ("cmrShutdownAndRestartPermission".equals(property)) {
-			return true;
-			}
-		
-		if ("cmrDeleteAgentPermission".equals(property)) {
-			return true;
-			}
-		
-		
-		if ("cmrRecordingPermission".equals(property)) {
-			return true;
-			}
-		
-		if ("cmrStoragePermission".equals(property)) {
-			return false;
-			}
-		
-		return false;
+		AVLTree userTree = getUserTreeFromServer();
+
+		return userTree.contains(property);
 	}
 
 }
