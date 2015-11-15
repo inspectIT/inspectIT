@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
  * 
  * @author Andreas Herzog
  * @author Clemens Geibel
+ * @author Lucca Hellriegel
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -62,7 +63,7 @@ public class SecurityService implements ISecurityService {
 	PermissionDao permissionDao;
 
 	/**
-	 * Data Access Object.
+	 * Manager for general security purposes.
 	 */
 	@Autowired
 	CmrSecurityManager cmrSecurityManager;
@@ -100,34 +101,27 @@ public class SecurityService implements ISecurityService {
 	 */
 	@Override
 	public boolean authenticate(String pw, String email) {
-		System.out.println(1);
+
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
-		System.out.println(currentUser == null);
-		System.out.println(2);
 
 		if (!currentUser.isAuthenticated()) {
 
 			try {
 				currentUser.login(token);
-			} catch (AuthorizationException uae) { 
+			} catch (AuthorizationException uae) {
+				log.info("User [" + currentUser.getPrincipal() + "] failed to log in successfully.");
 				return false;
 			}
-			}
-			
-		//TODO: Session anlegen
+		}
+
+		// TODO: Make a session
+		
 		log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
-		
-			
 
 		
-
-		System.out.println(4);
-		// all done - log out!
 		currentUser.logout();
-
-		System.out.println(5);
 
 		return true;
 

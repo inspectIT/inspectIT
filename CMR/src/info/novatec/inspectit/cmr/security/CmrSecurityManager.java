@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Security Manager in the means of Apache Shiro.
  * 
  * @author Andreas Herzog
+ * @author Lucca Hellriegel
  */
 public class CmrSecurityManager extends DefaultSecurityManager {
 	
@@ -30,11 +31,13 @@ public class CmrSecurityManager extends DefaultSecurityManager {
 	@Autowired
 	private CmrRealm cmrRealm;
 	
+	/**
+	 * Constructor for the Security Manager.
+	 * @param realm Realm object for configuration of the manager.
+	 */
 	@Autowired	
 	public CmrSecurityManager(CmrRealm realm) {
-		super(realm);
-		
-		// TODO Auto-generated constructor stub
+		super(realm);	
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
-import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
@@ -15,12 +14,13 @@ import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
  * 
  * @author Clemens Geibel
  * @author Andreas Herzog
+ * @author Lucca Hellriegel
  */
 
 public class CmrLoginWizard extends Wizard implements INewWizard {
 
 	/**
-	 * test.
+	 * CmrRepositoryDefinition for easy access to security services.
 	 */
 	private CmrRepositoryDefinition cmrRepositoryDefinition;
 
