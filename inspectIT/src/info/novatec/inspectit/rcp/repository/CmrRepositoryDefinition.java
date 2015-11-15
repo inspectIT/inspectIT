@@ -16,6 +16,7 @@ import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.service.RefreshEditorsCachedDataService;
 import info.novatec.inspectit.rcp.repository.service.cmr.CmrServiceProvider;
+import info.novatec.inspectit.security.AVLTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,12 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 */
 	public static final String DEFAULT_DESCRIPTION = "This Central Management Repository (CMR) is automatically added by default when you first start the inspectIT.";
 
+	
+	/**
+	 * Tree for access to granted rights.
+	 */
+	private AVLTree permissionTree;
+	
 	/**
 	 * Enumeration for the online status of {@link CmrRepositoryDefinition}.
 	 * 
@@ -548,6 +555,14 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public String toString() {
 		return "Repository definition :: Name=" + name + " IP=" + ip + " Port=" + port;
+	}
+
+	public AVLTree getPermissionTree() {
+		return permissionTree;
+	}
+
+	public void setPermissionTree(AVLTree permissionTree) {
+		this.permissionTree = permissionTree;
 	}
 
 }

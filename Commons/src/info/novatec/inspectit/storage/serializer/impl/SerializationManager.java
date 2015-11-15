@@ -49,6 +49,8 @@ import info.novatec.inspectit.exception.RemoteException;
 import info.novatec.inspectit.exception.TechnicalException;
 import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
+import info.novatec.inspectit.security.AVLTree;
+import info.novatec.inspectit.security.Node;
 import info.novatec.inspectit.storage.serializer.HibernateAwareClassResolver;
 import info.novatec.inspectit.storage.serializer.IKryoProvider;
 import info.novatec.inspectit.storage.serializer.ISerializer;
@@ -306,10 +308,13 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 			}
 		});
 		
+		//TODO: Decide if more than tree and node is needed to send
 		// added with NTDT <3
 		kryo.register(Permission.class, new FieldSerializer<Permission>(kryo, Permission.class));
 		kryo.register(Role.class, new FieldSerializer<Role>(kryo, Role.class));
 		kryo.register(User.class, new FieldSerializer<User>(kryo, User.class));
+		kryo.register(AVLTree.class, new FieldSerializer<AVLTree>(kryo, AVLTree.class));
+		kryo.register(Node.class, new FieldSerializer<Node>(kryo, Node.class));
 	}
 
 	/**

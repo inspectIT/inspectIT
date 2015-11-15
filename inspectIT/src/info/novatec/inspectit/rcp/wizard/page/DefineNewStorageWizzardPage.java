@@ -122,8 +122,7 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 		int i = 0;
 		int index = -1;
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositories) {
-			//TODO: Shiro in if integrieren mit subject holen
-			if (true) {
+			if (cmrRepositoryDefinition.getPermissionTree().contains("CmrStoragePermission")) {
 			cmrRepositoryCombo.add(cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + ")");
 			if (cmrRepositoryDefinition.equals(proposedCmrRepositoryDefinition)) {
 				index = i;

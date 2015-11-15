@@ -57,19 +57,23 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * {@inheritDoc} Tries to log into the CMR.
+	 * {@inheritDoc} Tries to log into the CMR and to get the permissionTree.
 	 */
 	@Override
 	public boolean performFinish() {
-		if (cmrRepositoryDefinition.getSecurityService().authenticate(cmrLoginWizardPage.getPasswordBox().getText(),
-				cmrLoginWizardPage.getMailBox().getText())) {
+		cmrRepositoryDefinition.setPermissionTree(cmrRepositoryDefinition.getSecurityService().authenticate(cmrLoginWizardPage.getPasswordBox().getText(),
+				cmrLoginWizardPage.getMailBox().getText()));
+		
+		if (cmrRepositoryDefinition.getPermissionTree() != null){
 			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", "You are now logged in.");
 			return true;
 
 		} else {
 			MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
+			return false;
 		}
-		return false;
+		
+		
 	}
 
 }

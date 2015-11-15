@@ -1,4 +1,6 @@
-package info.novatec.inspectit.rcp.tester;
+package info.novatec.inspectit.security;
+
+import java.io.Serializable;
 
 /**
  * Node of AVL Tree.
@@ -6,8 +8,16 @@ package info.novatec.inspectit.rcp.tester;
  * @author Clemens Geibel
  * @author Thomas Sachs
  */
-public class Node {
+public class Node implements Serializable {
 	
+	/**
+	 * UID for Serialization. 
+	 */
+	private static final long serialVersionUID = 5773607507714396780L;
+
+	/**
+	 * ParentNode.
+	 */
 	private Node parent;
 	
 	/**
@@ -42,6 +52,11 @@ public class Node {
 		this.left = null;
 		this.right = null;
 		this.balance = 0;
+	}
+	
+	
+	public Node() {
+		
 	}
 	
 	/**
@@ -94,7 +109,7 @@ public class Node {
 	}
 
 	/**
-	 * Parent of Node Getter
+	 * Parent of Node Getter.
 	 * 
 	 * @return 
 	 * 		  Parent of Node

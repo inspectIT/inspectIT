@@ -116,8 +116,7 @@ public class ImportStorageSelectPage extends WizardPage {
 		new Label(main, SWT.NONE);
 		cmrCombo = new Combo(main, SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositoryList) {
-			//TODO: integrate Shiro in if
-			if (true) {
+			if (cmrRepositoryDefinition.getPermissionTree().contains("CmrStoragePermission")) {
 			cmrCombo.add(cmrRepositoryDefinition.getName());
 		}
 		}

@@ -1,4 +1,6 @@
-package info.novatec.inspectit.rcp.tester;
+package info.novatec.inspectit.security;
+
+import java.io.Serializable;
 
 /**
  * Implementation of AVL Tree.
@@ -8,7 +10,12 @@ package info.novatec.inspectit.rcp.tester;
  * @author Mario Rose
  */
 
-public class AVLTree {
+public class AVLTree implements Serializable {
+	
+	/**
+	 * UID for Serialization. 
+	 */
+	private static final long serialVersionUID = 7162234592002092681L;
 	/**
 	 * Root of Tree.
 	 */
@@ -154,5 +161,27 @@ public class AVLTree {
 			return contains(node.getRight(), data);
 		}
 	}
-
+	
+	public void print() { 
+		printRec(this.root);
+		}
+	
+	public void printRec(Node node){
+		if(node.getData()!=null){
+		System.out.println(node.getData());
+		} else {
+			return;
+		}
+		if(node.getLeft()!=null){
+			printRec(node.getLeft());
+			
+		}
+		if(node.getRight()!=null){
+			printRec(node.getLeft());
+			
+		}
+		
+		return;
+		
+	}
 }

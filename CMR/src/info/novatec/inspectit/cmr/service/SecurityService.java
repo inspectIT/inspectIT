@@ -12,6 +12,7 @@ import info.novatec.inspectit.cmr.security.CmrSecurityManager;
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
+import info.novatec.inspectit.security.AVLTree;
 import info.novatec.inspectit.spring.logger.Log;
 
 import org.apache.shiro.SecurityUtils;
@@ -74,6 +75,8 @@ public class SecurityService implements ISecurityService {
 	@Autowired
 	RoleDao roleDao;
 
+	
+	
 	/**
 	 * Is executed after dependency injection is done to perform any
 	 * initialization.
@@ -100,30 +103,40 @@ public class SecurityService implements ISecurityService {
 	 * @return true if the user was authenticated
 	 */
 	@Override
-	public boolean authenticate(String pw, String email) {
+	public AVLTree authenticate(String pw, String email) {
 
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
-
+		
 		if (!currentUser.isAuthenticated()) {
 
 			try {
 				currentUser.login(token);
+				log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
 			} catch (AuthorizationException uae) {
 				log.info("User [" + currentUser.getPrincipal() + "] failed to log in successfully.");
-				return false;
+				currentUser.logout();
+				return null;
 			}
 		}
 
 		// TODO: Make a session
 		
-		log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
-
 		
+
+		AVLTree permissionTree = new AVLTree();
+		List<Permission> existingPermissions = permissionDao.loadAll();
+		for (int i = 0; i < existingPermissions.size(); i++) {
+		if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
+			permissionTree.insert(existingPermissions.get(i).getTitle());
+		}
+		}
 		currentUser.logout();
 
-		return true;
+		
+		
+		return permissionTree;
 
 	}
 
