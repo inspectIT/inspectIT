@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +13,6 @@ import info.novatec.inspectit.cmr.security.CmrSecurityManager;
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
-import info.novatec.inspectit.security.AVLTree;
 import info.novatec.inspectit.spring.logger.Log;
 
 import org.apache.shiro.SecurityUtils;
@@ -103,7 +103,7 @@ public class SecurityService implements ISecurityService {
 	 * @return true if the user was authenticated
 	 */
 	@Override
-	public AVLTree authenticate(String pw, String email) {
+	public List<String> authenticate(String pw, String email) {
 
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
@@ -124,19 +124,18 @@ public class SecurityService implements ISecurityService {
 		// TODO: Make a session
 		
 		
-
-		AVLTree permissionTree = new AVLTree();
+		List<String> grantedPermissions = new ArrayList<String>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
 		for (int i = 0; i < existingPermissions.size(); i++) {
 		if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
-			permissionTree.insert(existingPermissions.get(i).getTitle());
+			grantedPermissions.add(existingPermissions.get(i).getTitle());
 		}
 		}
 		currentUser.logout();
 
 		
 		
-		return permissionTree;
+		return grantedPermissions;
 
 	}
 

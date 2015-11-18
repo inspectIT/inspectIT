@@ -1,5 +1,7 @@
 package info.novatec.inspectit.rcp.tester;
 
+import java.util.List;
+
 import org.eclipse.core.expressions.PropertyTester;
 
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
@@ -8,7 +10,6 @@ import info.novatec.inspectit.rcp.provider.IInputDefinitionProvider;
 import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.security.AVLTree;
 
 /**
  * Tester for Permissions.
@@ -30,7 +31,8 @@ public class PermissionTester extends PropertyTester {
 		} else if (receiver instanceof IStorageDataProvider) {
 			cmrRepositoryDefinition = ((IStorageDataProvider) receiver).getCmrRepositoryDefinition();
 		} else if (receiver instanceof IInputDefinitionProvider) {
-			RepositoryDefinition repository = ((IInputDefinitionProvider) receiver).getInputDefinition().getRepositoryDefinition();
+			RepositoryDefinition repository = ((IInputDefinitionProvider) receiver).getInputDefinition()
+					.getRepositoryDefinition();
 			if (repository instanceof CmrRepositoryDefinition) {
 				cmrRepositoryDefinition = (CmrRepositoryDefinition) repository;
 			} else {
@@ -39,21 +41,11 @@ public class PermissionTester extends PropertyTester {
 		} else {
 			return false;
 		}
-		AVLTree userTree = cmrRepositoryDefinition.getPermissionTree();
-		System.out.println(userTree==null);
+		List<String> grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
+		
 		try {
-			
-			userTree.print();
-			System.out.println("here");
-		return userTree.contains(property); 
-			}
-		catch (NullPointerException ale) {
-			System.out.println("fuck");
-			return false;
-		}
-		
-		
-		
+		return grantedPermissions.contains(property);
+		} catch (NullPointerException lo) { return false; }
 	}
 
 }

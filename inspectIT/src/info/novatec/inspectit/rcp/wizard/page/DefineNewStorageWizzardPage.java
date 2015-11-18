@@ -122,7 +122,7 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 		int i = 0;
 		int index = -1;
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositories) {
-			if (cmrRepositoryDefinition.getPermissionTree().contains("CmrStoragePermission")) {
+			if (cmrRepositoryDefinition.getGrantedPermissions().contains("CmrStoragePermission")) {
 			cmrRepositoryCombo.add(cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + ")");
 			if (cmrRepositoryDefinition.equals(proposedCmrRepositoryDefinition)) {
 				index = i;

@@ -1,9 +1,10 @@
 package info.novatec.inspectit.cmr.service;
 
+import java.util.List;
+
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
-import info.novatec.inspectit.security.AVLTree;
 
 /**
  * Provides general security operations for client<->cmr interaction.
@@ -19,7 +20,7 @@ public interface ISecurityService {
 	 * @param pw password in plain text. to be edited.
 	 * @return User by Email.
 	 */
-	AVLTree authenticate(String pw, String email);
+	List<String> authenticate(String pw, String email);
 	
 	/**
 	 * Returns a Role object with given Email.

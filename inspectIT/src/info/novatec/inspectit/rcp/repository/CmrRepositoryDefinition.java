@@ -16,8 +16,6 @@ import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.service.RefreshEditorsCachedDataService;
 import info.novatec.inspectit.rcp.repository.service.cmr.CmrServiceProvider;
-import info.novatec.inspectit.security.AVLTree;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,9 +53,9 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	
 	/**
-	 * Tree for access to granted rights.
+	 * List for access to granted rights.
 	 */
-	private AVLTree permissionTree;
+	private List<String> grantedPermissions;
 	
 	/**
 	 * Enumeration for the online status of {@link CmrRepositoryDefinition}.
@@ -557,12 +555,13 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		return "Repository definition :: Name=" + name + " IP=" + ip + " Port=" + port;
 	}
 
-	public AVLTree getPermissionTree() {
-		return permissionTree;
+	public List<String> getGrantedPermissions() {
+		return grantedPermissions;
 	}
 
-	public void setPermissionTree(AVLTree permissionTree) {
-		this.permissionTree = permissionTree;
+	public void setGrantedPermissions(List<String> grantedPermissions) {
+		this.grantedPermissions = grantedPermissions;
 	}
+
 
 }

@@ -61,10 +61,10 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		cmrRepositoryDefinition.setPermissionTree(cmrRepositoryDefinition.getSecurityService().authenticate(cmrLoginWizardPage.getPasswordBox().getText(),
+		cmrRepositoryDefinition.setGrantedPermissions(cmrRepositoryDefinition.getSecurityService().authenticate(cmrLoginWizardPage.getPasswordBox().getText(),
 				cmrLoginWizardPage.getMailBox().getText()));
 		
-		if (cmrRepositoryDefinition.getPermissionTree() != null){
+		if (cmrRepositoryDefinition.getGrantedPermissions() != null){
 			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", "You are now logged in.");
 			return true;
 
