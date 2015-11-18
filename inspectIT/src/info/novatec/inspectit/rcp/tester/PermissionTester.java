@@ -12,7 +12,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
 
 /**
- * Tester for Permissions.
+ * Tester for Permissions. Searchs the grantedPermissions list and gives an corresponding boolean.
  * 
  * @author Lucca Hellriegel
  * @author Thomas Sachs
@@ -41,11 +41,14 @@ public class PermissionTester extends PropertyTester {
 		} else {
 			return false;
 		}
+		
 		List<String> grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
 		
 		try {
 		return grantedPermissions.contains(property);
-		} catch (NullPointerException lo) { return false; }
+		} catch (NullPointerException lo) { 
+			return false; 
+		}
 	}
 
 }

@@ -2,6 +2,6 @@ package info.novatec.inspectit.cmr.security;
 
 import org.apache.shiro.session.mgt.SessionFactory;
 
-public interface CmrSessionFactory extends SessionFactory{
+public interface CmrSessionFactory extends SessionFactory {
 	
 }
