@@ -54,4 +54,4 @@ Require-Bundle: com.springsource.net.sf.cglib;bundle-version="2.2.0",
  info.novatec.kryonet;bundle-version="2.21.0",
  slf4j.api;bundle-version="1.7.5",
  com.google.guava.jdk5;bundle-version="13.0.0"
-Import-Package: info.novatec.inspectit.security
+
