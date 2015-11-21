@@ -50,6 +50,12 @@ public class Playground {
 		Permission permCreatePermission = new Permission(3, "CreatePermission", "Permission to create a new permission");
 		Permission permDeltePermission = new Permission(4, "DeltePermission", "Permission to delte a permission");
 		Permission permShutdownCMR = new Permission(5, "ShutdownCMR", "Permission to shut down the CMR");
+		
+		Permission cmrRecordingPermission = new Permission(6, "cmrRecordingPermission", "Permission start recording from Agent");
+		Permission cmrShutdownAndRestartPermission = new Permission(7, "cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR");
+		Permission cmrDeleteAgentPermission = new Permission(8, "cmrDeleteAgentPermission", "Permission for deleting Agent");
+		Permission cmrStoragePermission = new Permission(9, "cmrStoragePermission", "Permission for accessing basic storage options");
+		
 
 		LOGGER.info("Created permission: " + permAlterOption);
 
@@ -58,11 +64,17 @@ public class Playground {
 		permissionDao.saveOrUpdate(permCreatePermission);
 		permissionDao.saveOrUpdate(permDeltePermission);
 		permissionDao.saveOrUpdate(permShutdownCMR);
+		
+		permissionDao.saveOrUpdate(cmrRecordingPermission);
+		permissionDao.saveOrUpdate(cmrShutdownAndRestartPermission);
+		permissionDao.saveOrUpdate(cmrDeleteAgentPermission);
+		permissionDao.saveOrUpdate(cmrStoragePermission);
+		
 
 		Permission permLoaded = permissionDao.load("AlterOption");
 		LOGGER.info("Loaded  permission: " + permLoaded);
 
-		Role powerUser = new Role(1, "PowerUser", Arrays.asList(permReadOption, permAlterOption, permCreatePermission, permDeltePermission, permShutdownCMR));
+		Role powerUser = new Role(1, "PowerUser", Arrays.asList(permReadOption, permAlterOption, permCreatePermission, permDeltePermission, permShutdownCMR, cmrRecordingPermission, cmrShutdownAndRestartPermission, cmrDeleteAgentPermission, cmrStoragePermission));
 		Role restrictedUser = new Role(2, "RestrictedUser", Arrays.asList(permReadOption));
 
 		LOGGER.info("Created role: " + powerUser);
@@ -72,7 +84,7 @@ public class Playground {
 		Role roleLoaded = roleDao.load("PowerUser");
 		LOGGER.info("Loaded  role: " + roleLoaded);
 
-		User jakePowerUser = new User(Permutation.hashString("JakesSuperSecretPassword!"), "jake@mail.com", powerUser.getId());
+		User jakePowerUser = new User(Permutation.hashString("J"), "Jake", powerUser.getId());
 		User tomRestrictedUser = new User(Permutation.hashString("Tom"), "TomMail", restrictedUser.getId());
 
 		LOGGER.info("Created user: " + tomRestrictedUser);

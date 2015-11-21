@@ -6,7 +6,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
-import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
@@ -15,12 +14,13 @@ import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
  * 
  * @author Clemens Geibel
  * @author Andreas Herzog
+ * @author Lucca Hellriegel
  */
 
 public class CmrLoginWizard extends Wizard implements INewWizard {
 
 	/**
-	 * test.
+	 * CmrRepositoryDefinition for easy access to security services.
 	 */
 	private CmrRepositoryDefinition cmrRepositoryDefinition;
 
@@ -31,7 +31,9 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * @param cmrRepositoryDefinition .
+	 * 
+	 * @param cmrRepositoryDefinition
+	 *            .
 	 */
 	public CmrLoginWizard(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		this.setWindowTitle("CMR Login");
@@ -55,25 +57,23 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * {@inheritDoc} This method needs to be edited as soon as it is possible to connect to the CMR
-	 * database.
+	 * {@inheritDoc} Tries to log into the CMR and to get and set the list with grantedPermissions.
 	 */
 	@Override
 	public boolean performFinish() {
-		if (cmrRepositoryDefinition
-				.getSecurityService()
-				.authenticate(cmrLoginWizardPage.getPasswordBox().getText(), 
-						cmrLoginWizardPage.getMailBox().getText())) {
-
-			Role authRequest = cmrRepositoryDefinition
-					.getSecurityService()
-					.retrieveRole(cmrLoginWizardPage.getMailBox().getText());
-			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", authRequest.toString());
+		cmrRepositoryDefinition.setGrantedPermissions(cmrRepositoryDefinition.getSecurityService().authenticate(cmrLoginWizardPage.getPasswordBox().getText(),
+				cmrLoginWizardPage.getMailBox().getText()));
 		
+		if (cmrRepositoryDefinition.getGrantedPermissions() != null) {
+			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", "You are now logged in.");
+			return true;
+
 		} else {
 			MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
+			return false;
 		}
-		return false;
+		
+		
 	}
 
 }

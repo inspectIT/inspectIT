@@ -306,10 +306,12 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 			}
 		});
 		
+		//TODO: Decide if needed anymore
 		// added with NTDT <3
 		kryo.register(Permission.class, new FieldSerializer<Permission>(kryo, Permission.class));
 		kryo.register(Role.class, new FieldSerializer<Role>(kryo, Role.class));
 		kryo.register(User.class, new FieldSerializer<User>(kryo, User.class));
+		
 	}
 
 	/**

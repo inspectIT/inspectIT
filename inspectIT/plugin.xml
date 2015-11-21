@@ -571,6 +571,9 @@
                         property="info.novatec.inspectit.storageState"
                         value="OPENED">
                   </test>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                </iterate>
             </and>
          </activeWhen>
@@ -594,6 +597,9 @@
                            value="RECORDING">
                      </test>
                   </not>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                </iterate>
             </and>
          </activeWhen>
@@ -607,6 +613,9 @@
                      value="1">
                </count>
                <iterate>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                   <instanceof
                         value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
                   </instanceof>
@@ -639,6 +648,9 @@
                      value="1">
                </count>
                <iterate>
+                  <test
+                        property="info.novatec.inspectit.cmrRecordingPermission">
+                  </test>
                   <or>
                      <instanceof
                            value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
@@ -905,6 +917,9 @@
                   <instanceof
                         value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
                   </instanceof>
+                  <test
+                        property="info.novatec.inspectit.cmrStoragePermission">
+                  </test>
                </iterate>
             </and>
          </activeWhen>
@@ -1252,6 +1267,9 @@
                </count>
                <iterate
                      ifEmpty="false">
+                  <test
+                        property="info.novatec.inspectit.cmrDeleteAgentPermission">
+                  </test>
                   <instanceof
                         value="info.novatec.inspectit.rcp.model.AgentLeaf">
                   </instanceof>
@@ -1311,6 +1329,10 @@
                      value="1">
                </count>
                <iterate>
+                  <test
+                        property="info.novatec.inspectit.cmrShutdownAndRestartPermission"
+                        value="true">
+                  </test>
                   <instanceof
                         value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
@@ -1573,6 +1595,27 @@
             namespace="info.novatec.inspectit"
             properties="canChart"
             type="info.novatec.inspectit.communication.data.TimerData">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.PermissionTester"
+            id="info.inspectit.rcp.PermissionTester"
+            namespace="info.novatec.inspectit"
+            properties="cmrShutdownAndRestartPermission, cmrRecordingPermission"
+            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.PermissionTester"
+            id="info.inspectit.rcp.PermissionTester"
+            namespace="info.novatec.inspectit"
+            properties="cmrDeleteAgentPermission"
+            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.PermissionTester"
+            id="info.inspectit.rcp.PermissionTester"
+            namespace="info.novatec.inspectit"
+            properties="cmrStoragePermission"
+            type="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
       </propertyTester>
    </extension>
    <extension

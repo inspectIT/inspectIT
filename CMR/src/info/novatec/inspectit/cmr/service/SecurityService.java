@@ -1,6 +1,6 @@
 package info.novatec.inspectit.cmr.service;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -14,15 +14,18 @@ import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.spring.logger.Log;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
-
 
 /**
  * Provides general security-system operations for client<->cmr interaction.
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Service;
  * 
  * @author Andreas Herzog
  * @author Clemens Geibel
+ * @author Lucca Hellriegel
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -53,51 +57,81 @@ public class SecurityService implements ISecurityService {
 	PermissionDao permissionDao;
 
 	/**
+	 * Manager for general security purposes.
+	 */
+	@Autowired
+	CmrSecurityManager cmrSecurityManager;
+
+	/**
 	 * Data Access Object.
 	 */
 	@Autowired
 	RoleDao roleDao;
+
+	
 	
 	/**
-	 * Security Manager for the CMR.
-	 */
-	@Autowired
-	CmrSecurityManager securityManager;
-
-	/**
-	 * Is executed after dependency injection is done to perform any initialization.
+	 * Is executed after dependency injection is done to perform any
+	 * initialization.
 	 */
 	@PostConstruct
 	public void postConstruct() {
+		SecurityUtils.setSecurityManager(cmrSecurityManager);
 		if (log.isInfoEnabled()) {
 			log.info("|-Security Service active...");
 		}
 	}
 
-	//+-------------------------------------------------------------------------------------------+
-	//|           Communication with the Apache Shiro Security Framework						  |
-	//+-------------------------------------------------------------------------------------------+
-	
+	// +-------------------------------------------------------------------------------------------+
+	// | Communication with the Apache Shiro Security Framework |
+	// +-------------------------------------------------------------------------------------------+
+
 	/**
 	 * Authentication via the CmrSecurityManager.
-	 * @param pw users password
-	 * @param email email
+	 * 
+	 * @param pw
+	 *            users password
+	 * @param email
+	 *            email
 	 * @return true if the user was authenticated
 	 */
 	@Override
-	public boolean authenticate(String pw, String email) {
-		try {
-			UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
-			securityManager.authenticate((AuthenticationToken) token);
-			//if (log.isInfoEnabled()) {
-			//	log.info("|-New authenticated subject");
-			//}
-			return true;
-		} catch (AuthenticationException ae) {
-			return false;
+	public List<String> authenticate(String pw, String email) {
+
+		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
+		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
+		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
+		
+		if (!currentUser.isAuthenticated()) {
+
+			try {
+				currentUser.login(token);
+				log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
+			} catch (AuthorizationException uae) {
+				log.info("User [" + currentUser.getPrincipal() + "] failed to log in successfully.");
+				currentUser.logout();
+				return null;
+			}
 		}
+
+		// TODO: Make a session
+		
+		
+		List<String> grantedPermissions = new ArrayList<String>();
+		List<Permission> existingPermissions = permissionDao.loadAll();
+		for (int i = 0; i < existingPermissions.size(); i++) {
+		if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
+			grantedPermissions.add(existingPermissions.get(i).getTitle());
+		}
+		}
+		currentUser.logout();
+
+		
+		
+		return grantedPermissions;
+
 	}
-	
+
 	@Override
 	public Role retrieveRole(String email) throws AuthenticationException, DataIntegrityViolationException {
 		List<User> foundUsers = userDao.findByEmail(email);
@@ -110,17 +144,17 @@ public class SecurityService implements ISecurityService {
 			return getRoleByID(user.getRoleId());
 		}
 	}
-	
-	
 
-	//+-------------------------------------------------------------------------------------------+
-	//|           Managing Security Data in the Database										  |
-	//+-------------------------------------------------------------------------------------------+
+	// +-------------------------------------------------------------------------------------------+
+	// | Managing Security Data in the Database |
+	// +-------------------------------------------------------------------------------------------+
 
 	/**
-	 * Combines the integrity check for all security data types. Uniqueness etc. is
-	 * specifically checked in every method.
-	 * @param data data
+	 * Combines the integrity check for all security data types. Uniqueness etc.
+	 * is specifically checked in every method.
+	 * 
+	 * @param data
+	 *            data
 	 * @return true, if the tested object passes all integrity checks.
 	 */
 	private boolean checkDataIntegrity(Object data) {
@@ -134,7 +168,7 @@ public class SecurityService implements ISecurityService {
 		return false;
 	}
 
-	//| USER |---------------
+	// | USER |---------------
 
 	@Override
 	public void addUser(User user) throws DataIntegrityViolationException {
@@ -158,7 +192,7 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void changeUserAttribute(User user) throws DataIntegrityViolationException, DataRetrievalFailureException  {
+	public void changeUserAttribute(User user) throws DataIntegrityViolationException, DataRetrievalFailureException {
 		List<User> foundUsers = userDao.findByEmail(user.getEmail());
 		if (!checkDataIntegrity(user)) {
 			throw new DataIntegrityViolationException("Data integrity test failed!");
@@ -172,7 +206,7 @@ public class SecurityService implements ISecurityService {
 		}
 	}
 
-	//| PERMISSION |---------
+	// | PERMISSION |---------
 
 	@Override
 	public void changePermissionDescription(Permission permission) {
@@ -189,7 +223,7 @@ public class SecurityService implements ISecurityService {
 		}
 	}
 
-	//| ROLE | --------------
+	// | ROLE | --------------
 
 	@Override
 	public Role getRoleByID(long id) throws DataRetrievalFailureException, DataIntegrityViolationException {
@@ -203,5 +237,5 @@ public class SecurityService implements ISecurityService {
 		}
 	}
 
-	//TODO Make more methods available for the administrator module...
+	// TODO Make more methods available for the administrator module...
 }

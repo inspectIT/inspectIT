@@ -116,7 +116,9 @@ public class ImportStorageSelectPage extends WizardPage {
 		new Label(main, SWT.NONE);
 		cmrCombo = new Combo(main, SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositoryList) {
+			if (cmrRepositoryDefinition.getGrantedPermissions() != null && cmrRepositoryDefinition.getGrantedPermissions().contains("cmrStoragePermission")) {
 			cmrCombo.add(cmrRepositoryDefinition.getName());
+		}
 		}
 		cmrCombo.setEnabled(false);
 		cmrCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
