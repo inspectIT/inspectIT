@@ -7,7 +7,6 @@ Export-Package: info.novatec.inspectit.cmr.cache,
  info.novatec.inspectit.cmr.model,
  info.novatec.inspectit.cmr.property.spring,
  info.novatec.inspectit.cmr.service,
- info.novatec.inspectit.cmr.service.exception,
  info.novatec.inspectit.cmr.storage.util,
  info.novatec.inspectit.communication,
  info.novatec.inspectit.communication.comparator,
@@ -55,3 +54,4 @@ Require-Bundle: com.springsource.net.sf.cglib;bundle-version="2.2.0",
  info.novatec.kryonet;bundle-version="2.21.0",
  slf4j.api;bundle-version="1.7.5",
  com.google.guava.jdk5;bundle-version="13.0.0"
+
