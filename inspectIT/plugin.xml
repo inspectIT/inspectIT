@@ -1495,6 +1495,27 @@
       <handler
             class="info.novatec.inspectit.rcp.handlers.CmrLoginHandler"
             commandId="info.novatec.inspectit.rcp.commands.cmrLogin">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                     </instanceof>
+                  </or>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
       </handler>
    </extension>
    <extension
