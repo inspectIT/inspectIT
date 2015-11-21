@@ -17,7 +17,6 @@ import info.novatec.inspectit.spring.logger.Log;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -107,7 +106,8 @@ public class SecurityService implements ISecurityService {
 			try {
 				currentUser.login(token);
 				log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
-			} catch (AuthorizationException uae) {
+			} catch (Exception uae) {
+				log.info(uae.getMessage() + uae.getClass().toString());
 				log.info("User [" + currentUser.getPrincipal() + "] failed to log in successfully.");
 				currentUser.logout();
 				return null;
