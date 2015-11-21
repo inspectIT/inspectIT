@@ -81,7 +81,7 @@ public final class CMR {
 
 		LOGGER.info("CMR started in " + Converter.nanoToMilliseconds(System.nanoTime() - startTime) + " ms");
 				
-		SecurityInitialization databaseStartup = (SecurityInitialization) beanFactory.getBean("databaseStartup");
+		SecurityInitialization databaseStartup = (SecurityInitialization) beanFactory.getBean("SecurityInitialization");
 		
 		databaseStartup.start();
 		

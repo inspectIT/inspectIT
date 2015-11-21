@@ -48,16 +48,7 @@ public class Role implements Serializable {
 		this.title = title;
 		this.id = id;
 	}
-	
-	/**
-	 * Constructor for empty role.
-	 * @param id The id of the role.
-	 * 
-	 */
-	public Role(int id) {
 		
-	}
-
 	/**
 	 * Gets {@link #permissions}.
 	 *   
