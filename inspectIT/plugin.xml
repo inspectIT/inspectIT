@@ -1513,10 +1513,6 @@
                         property="info.novatec.inspectit.onlineStatus"
                         value="ONLINE">
                   </test>
-                  <test
-                        property="info.novatec.inspectit.recordingActive"
-                        value="false">
-                  </test>
                </iterate>
             </and>
          </activeWhen>
