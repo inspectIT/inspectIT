@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
+import info.novatec.inspectit.communication.data.cmr.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permutation;
+import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
 /**
  * Provides administrative methods for the CMR.
  * 
