@@ -8,8 +8,8 @@ import static org.hamcrest.Matchers.nullValue;
 import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.RoleDao;
+import info.novatec.inspectit.cmr.security.Role;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
-import info.novatec.inspectit.communication.data.cmr.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

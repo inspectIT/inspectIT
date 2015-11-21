@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
-import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Permutation;
-import info.novatec.inspectit.communication.data.cmr.Role;
-import info.novatec.inspectit.communication.data.cmr.User;
+import info.novatec.inspectit.cmr.security.Permission;
+import info.novatec.inspectit.cmr.security.Permutation;
+import info.novatec.inspectit.cmr.security.Role;
+import info.novatec.inspectit.cmr.security.User;
 
 /**
  * 

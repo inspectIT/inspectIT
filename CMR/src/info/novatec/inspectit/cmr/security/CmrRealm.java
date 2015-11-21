@@ -6,10 +6,6 @@ import javax.annotation.PostConstruct;
 
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
-import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Permutation;
-import info.novatec.inspectit.communication.data.cmr.Role;
-import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.spring.logger.Log;
 
 import org.apache.shiro.authc.AuthenticationException;

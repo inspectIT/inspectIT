@@ -1,4 +1,4 @@
-package info.novatec.inspectit.communication.data.cmr;
+package info.novatec.inspectit.cmr.security;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;

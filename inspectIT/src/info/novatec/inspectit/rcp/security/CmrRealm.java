@@ -1,8 +1,8 @@
 package info.novatec.inspectit.rcp.security;
 
+import info.novatec.inspectit.cmr.security.Permission;
+import info.novatec.inspectit.cmr.security.Role;
 import info.novatec.inspectit.cmr.service.ISecurityService;
-import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.exception.RemoteException;
 
 import org.apache.shiro.authc.AuthenticationException;

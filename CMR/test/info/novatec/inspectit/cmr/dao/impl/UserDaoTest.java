@@ -8,8 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.UserDao;
+import info.novatec.inspectit.cmr.security.User;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
-import info.novatec.inspectit.communication.data.cmr.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

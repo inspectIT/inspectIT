@@ -1,10 +1,10 @@
 package info.novatec.inspectit.cmr.dao;
 
-import info.novatec.inspectit.communication.data.cmr.Permission;
-
 import java.util.List;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import info.novatec.inspectit.cmr.security.Permission;
 
 /**
  * This DAO is used to handle all {@link Permission} objects.
