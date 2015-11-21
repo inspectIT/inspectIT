@@ -90,7 +90,7 @@
 		<property name="beanSingleton" value="true" />
 	</bean>
 
-	<bean id="playground" class="info.novatec.inspectit.cmr.playground.Playground" />
+	<bean id="databaseStartup" class="info.novatec.inspectit.cmr.security.DatabaseStartup" />
 	
 	<bean id="cmrSecurityManager" class="info.novatec.inspectit.cmr.security.CmrSecurityManager" />
 	

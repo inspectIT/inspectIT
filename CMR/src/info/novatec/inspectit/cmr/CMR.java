@@ -1,6 +1,6 @@
 package info.novatec.inspectit.cmr;
 
-import info.novatec.inspectit.cmr.playground.Playground;
+import info.novatec.inspectit.cmr.security.SecurityInitialization;
 import info.novatec.inspectit.cmr.util.Converter;
 import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
 import info.novatec.inspectit.versioning.IVersioningService;
@@ -80,12 +80,12 @@ public final class CMR {
 		startRepository();
 
 		LOGGER.info("CMR started in " + Converter.nanoToMilliseconds(System.nanoTime() - startTime) + " ms");
-
-		LOGGER.info("PLAYGROUND ");
+				
+		SecurityInitialization databaseStartup = (SecurityInitialization) beanFactory.getBean("databaseStartup");
 		
-		Playground play = (Playground) beanFactory.getBean("playground");
+		databaseStartup.start();
 		
-		play.play();
+		LOGGER.info("User-Database initialised.");
 		
 	}
 
