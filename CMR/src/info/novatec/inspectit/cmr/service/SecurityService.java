@@ -9,9 +9,9 @@ import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.cmr.security.CmrSecurityManager;
-import info.novatec.inspectit.cmr.security.Permission;
-import info.novatec.inspectit.cmr.security.Role;
-import info.novatec.inspectit.cmr.security.User;
+import info.novatec.inspectit.communication.data.cmr.Permission;
+import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.spring.logger.Log;
 
 import org.apache.shiro.SecurityUtils;

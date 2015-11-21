@@ -2,9 +2,9 @@ package info.novatec.inspectit.cmr.service;
 
 import java.util.List;
 
-import info.novatec.inspectit.cmr.security.Permission;
-import info.novatec.inspectit.cmr.security.Role;
-import info.novatec.inspectit.cmr.security.User;
+import info.novatec.inspectit.communication.data.cmr.Permission;
+import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
 
 /**
  * Provides general security operations for client<->cmr interaction.

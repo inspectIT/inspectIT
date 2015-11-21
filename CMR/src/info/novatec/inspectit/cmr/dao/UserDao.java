@@ -1,10 +1,10 @@
 package info.novatec.inspectit.cmr.dao;
 
+import info.novatec.inspectit.communication.data.cmr.User;
+
 import java.util.List;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
-
-import info.novatec.inspectit.cmr.security.User;
 
 /**
  * This DAO is used to handle all {@link User} objects.

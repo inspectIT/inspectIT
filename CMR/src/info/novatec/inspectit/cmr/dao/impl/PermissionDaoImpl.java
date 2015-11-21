@@ -11,7 +11,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import info.novatec.inspectit.cmr.dao.PermissionDao;
-import info.novatec.inspectit.cmr.security.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permission;
 
 /**
  * The default implementation of the {@link PermissionDao} interface by using the

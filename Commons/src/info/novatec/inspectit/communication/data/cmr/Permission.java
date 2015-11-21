@@ -1,5 +1,5 @@
 
-package info.novatec.inspectit.cmr.security;
+package info.novatec.inspectit.communication.data.cmr;
 
 import java.io.Serializable;
 /**

@@ -11,7 +11,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import info.novatec.inspectit.cmr.dao.UserDao;
-import info.novatec.inspectit.cmr.security.User;
+import info.novatec.inspectit.communication.data.cmr.User;
 
 /**
  * The default implementation of the {@link UserDao} interface by using the
