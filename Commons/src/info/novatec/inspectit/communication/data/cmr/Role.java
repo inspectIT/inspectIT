@@ -48,6 +48,7 @@ public class Role implements Serializable {
 		this.title = title;
 		this.id = id;
 	}
+		
 	/**
 	 * Gets {@link #permissions}.
 	 *   

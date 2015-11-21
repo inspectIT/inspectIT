@@ -1,5 +1,7 @@
 package info.novatec.inspectit.rcp.wizard;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -7,6 +9,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
 /**
@@ -57,23 +60,31 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * {@inheritDoc} Tries to log into the CMR and to get and set the list with grantedPermissions.
+	 * {@inheritDoc} Tries to log into the CMR and to get and set the list with
+	 * grantedPermissions.
 	 */
 	@Override
 	public boolean performFinish() {
-		cmrRepositoryDefinition.setGrantedPermissions(cmrRepositoryDefinition.getSecurityService().authenticate(cmrLoginWizardPage.getPasswordBox().getText(),
-				cmrLoginWizardPage.getMailBox().getText()));
-		
-		if (cmrRepositoryDefinition.getGrantedPermissions() != null) {
-			MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", "You are now logged in.");
-			return true;
+		cmrRepositoryDefinition.refreshOnlineStatus();
+		if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
+			cmrRepositoryDefinition.setGrantedPermissions(cmrRepositoryDefinition.getSecurityService().authenticate(
+					cmrLoginWizardPage.getPasswordBox().getText(), cmrLoginWizardPage.getMailBox().getText()));
 
+			if (cmrRepositoryDefinition.getGrantedPermissions() != null) {
+				MessageDialog.openInformation(null, "Successfully authenticated at selected CMR",
+						"You are now logged in.");
+				return true;
+
+			} else {
+				MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
+				return false;
+			}
 		} else {
-			MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
+			cmrRepositoryDefinition.setGrantedPermissions(null);
+			MessageDialog.openError(null, "Login failed", "Please check your connection.");
 			return false;
 		}
-		
-		
+
 	}
 
 }
