@@ -63,13 +63,17 @@ public class SecurityInitialization {
 		roleDao.saveOrUpdate(freshUser);
 		roleDao.saveOrUpdate(restrictedUser);
 		roleDao.saveOrUpdate(adminUser);
+		
+		
+		System.out.println(roleDao.loadAll().toString());
 
 		//Standarduser - changes with login
 		User admin = new User(Permutation.hashString("admin"), "admin", adminUser.getId());
 		
-		//Testusers - delete before final merging
+		//Testusers
+		//TODO: delete before final merging
 		User restricted = new User(Permutation.hashString("restricted"), "restricted", restrictedUser.getId());
-		User fresh = new User(Permutation.hashString("restricted"), "freshUser", freshUser.getId());
+		User fresh = new User(Permutation.hashString("fresh"), "freshUser", freshUser.getId());
 		userDao.saveOrUpdate(fresh);
 		userDao.saveOrUpdate(restricted);
 		

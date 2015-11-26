@@ -14,12 +14,15 @@ import info.novatec.inspectit.communication.data.cmr.User;
 /**
  * Provides administrative methods for the CMR.
  * 
- * TODO: restrict access to this methods!
+ * 
  * 
  * @author Joshua Hartmann
  *
  */
 public class Administration {
+
+	//TODO: restrict access to this methods!
+	
 	/**
 	 * Data Access Object.
 	 */
