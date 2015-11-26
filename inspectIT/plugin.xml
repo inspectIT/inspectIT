@@ -407,8 +407,8 @@
             name="CMR Login">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.cmrLogout"
-            name="CMR Logout">
+            id="info.novatec.inspectit.rcp.commands.cmrAdministration"
+            name="CMR Administration">
       </command>
    </extension>
    <extension
@@ -1517,17 +1517,13 @@
                         property="info.novatec.inspectit.onlineStatus"
                         value="ONLINE">
                   </test>
-                  <test
-                        property="info.novatec.inspectit.cmrLoginStatus"
-                        value="LOGGEDOUT">
-                  </test>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CmrLogoutHandler"
-            commandId="info.novatec.inspectit.rcp.commands.cmrLogout">
+            class="info.novatec.inspectit.rcp.handlers.CmrAdministrationHandler"
+            commandId="info.novatec.inspectit.rcp.commands.cmrAdministration">
          <activeWhen>
             <and>
                <count
@@ -1547,8 +1543,7 @@
                         value="ONLINE">
                   </test>
                   <test
-                        property="info.novatec.inspectit.cmrLoginStatus"
-                        value="LOGGEDIN">
+                        property="info.novatec.inspectit.cmrAdministrationPermission">
                   </test>
                </iterate>
             </and>
@@ -1658,36 +1653,22 @@
             class="info.novatec.inspectit.rcp.tester.PermissionTester"
             id="info.inspectit.rcp.PermissionTester"
             namespace="info.novatec.inspectit"
-            properties="cmrShutdownAndRestartPermission, cmrRecordingPermission"
+            properties="cmrShutdownAndRestartPermission, cmrRecordingPermission, cmrAdministrationPermission"
             type="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
       </propertyTester>
       <propertyTester
             class="info.novatec.inspectit.rcp.tester.PermissionTester"
             id="info.inspectit.rcp.PermissionTester"
             namespace="info.novatec.inspectit"
-            properties="cmrDeleteAgentPermission"
+            properties="cmrDeleteAgentPermission, cmrAdministrationPermission"
             type="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
       </propertyTester>
       <propertyTester
             class="info.novatec.inspectit.rcp.tester.PermissionTester"
             id="info.inspectit.rcp.PermissionTester"
             namespace="info.novatec.inspectit"
-            properties="cmrStoragePermission"
+            properties="cmrStoragePermission, cmrAdministrationPermission"
             type="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
-      </propertyTester>
-      <propertyTester
-            class="info.novatec.inspectit.rcp.tester.CmrLoginStatusTester"
-            id="info.inspectit.rcp.CmrLoginStatusTester"
-            namespace="info.novatec.inspectit"
-            properties="cmrLoginStatus"
-            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
-      </propertyTester>
-      <propertyTester
-            class="info.novatec.inspectit.rcp.tester.CmrLoginStatusTester"
-            id="info.inspectit.rcp.CmrLoginStatusTester"
-            namespace="info.novatec.inspectit"
-            properties="cmrLoginStatus"
-            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
       </propertyTester>
    </extension>
    <extension
@@ -2429,8 +2410,8 @@
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.cmrLogout"
-               label="CMR Logout"
+               commandId="info.novatec.inspectit.rcp.commands.cmrAdministration"
+               label="CMR Administration"
                style="push">
          </command>
          <separator

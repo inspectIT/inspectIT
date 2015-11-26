@@ -76,7 +76,7 @@ public class Administration {
 	
 	/**
 	 * Changes the User attributes in the database.
-	 * @param oldEmail The email specifying the user to be modiefied
+	 * @param oldEmail The email specifying the user to be modified
 	 * @param newEmail The new email the user should have
 	 * @param newPassword The new password the user should have
 	 * @param newRole The new role the user should have
