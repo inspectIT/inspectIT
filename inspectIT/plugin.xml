@@ -407,6 +407,10 @@
             name="CMR Login">
       </command>
       <command
+            id="info.novatec.inspectit.rcp.commands.cmrLogout"
+            name="CMR Logout">
+      </command>
+      <command
             id="info.novatec.inspectit.rcp.commands.cmrAdministration"
             name="CMR Administration">
       </command>
@@ -1517,10 +1521,43 @@
                         property="info.novatec.inspectit.onlineStatus"
                         value="ONLINE">
                   </test>
+                  <test
+                        property="info.novatec.inspectit.cmrLoginStatus"
+                        value="LOGGEDOUT">
+                  </test>
                </iterate>
             </and>
          </activeWhen>
-      </handler>
+         </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.handlers.CmrLogoutHandler"
+            commandId="info.novatec.inspectit.rcp.commands.cmrLogout">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                     </instanceof>
+                  </or>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+                  <test
+                        property="info.novatec.inspectit.cmrLoginStatus"
+                        value="LOGGEDIN">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+         </handler>
       <handler
             class="info.novatec.inspectit.rcp.handlers.CmrAdministrationHandler"
             commandId="info.novatec.inspectit.rcp.commands.cmrAdministration">
@@ -1669,6 +1706,20 @@
             namespace="info.novatec.inspectit"
             properties="cmrStoragePermission, cmrAdministrationPermission"
             type="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+      </propertyTester>
+            <propertyTester
+            class="info.novatec.inspectit.rcp.tester.CmrLoginStatusTester"
+            id="info.inspectit.rcp.CmrLoginStatusTester"
+            namespace="info.novatec.inspectit"
+            properties="cmrLoginStatus"
+            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.tester.CmrLoginStatusTester"
+            id="info.inspectit.rcp.CmrLoginStatusTester"
+            namespace="info.novatec.inspectit"
+            properties="cmrLoginStatus"
+            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
       </propertyTester>
    </extension>
    <extension
@@ -2407,6 +2458,11 @@
          <command
                commandId="info.novatec.inspectit.rcp.commands.cmrLogin"
                label="CMR Login"
+               style="push">
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.commands.cmrLogout"
+               label="CMR Logout"
                style="push">
          </command>
          <command
