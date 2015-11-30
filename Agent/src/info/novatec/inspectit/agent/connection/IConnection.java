@@ -45,8 +45,11 @@ public interface IConnection {
 	 * 
 	 * @param platformId
 	 *            The unique id for this platform.
+	 * @throws ServerUnavailableException
+	 *             If the sending wasn't successful in any way, a {@link ServerUnavailableException}
+	 *             exception is thrown.
 	 */
-	void sendKeepAlive(long platformId);
+	void sendKeepAlive(long platformId) throws ServerUnavailableException;
 
 	/**
 	 * Send the measurements to the server for further processing.
@@ -84,8 +87,11 @@ public interface IConnection {
 	 *            Name of the Agent.
 	 * @throws RegistrationException
 	 *             This exception is thrown when a problem with the un-registration process appears.
+	 * @throws ServerUnavailableException
+	 *             If the sending wasn't successful in any way, a {@link ServerUnavailableException}
+	 *             exception is thrown.
 	 */
-	void unregisterPlatform(String agentName) throws RegistrationException;
+	void unregisterPlatform(String agentName) throws RegistrationException, ServerUnavailableException;
 
 	/**
 	 * Registers the specified parameters at the server and returns a unique identifier which will

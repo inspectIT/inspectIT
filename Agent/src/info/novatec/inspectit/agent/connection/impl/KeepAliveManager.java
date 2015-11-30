@@ -1,6 +1,7 @@
 package info.novatec.inspectit.agent.connection.impl;
 
 import info.novatec.inspectit.agent.connection.IConnection;
+import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
  * This class handles the sending of keep-alive signals to the CMR.
  * 
  * @author Marius Oehler
- *
+ * 
  */
 @Component
 public class KeepAliveManager implements InitializingBean, DisposableBean {
@@ -31,10 +32,20 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	private final Runnable keepAliveRunner = new Runnable() {
 		public void run() {
 			try {
-				connection.sendKeepAlive(idManager.getPlatformId());
+				if (connection.isConnected()) {
+					connection.sendKeepAlive(idManager.getPlatformId());
+				}
 			} catch (IdNotAvailableException e) {
 				if (log.isDebugEnabled()) {
-					log.debug("keep-alive signal could not be sent. No platform id available.", e);
+					log.debug("Keep-alive signal could not be sent. No platform id available.", e);
+				}
+			} catch (ServerUnavailableException e) {
+				if (log.isDebugEnabled()) {
+					if (e.isServerTimeout()) {
+						log.debug("Keep-alive signal could not be sent. Server timeout.", e);
+					} else {
+						log.debug("Keep-alive signal could not be sent. Server not available.", e);
+					}
 				}
 			}
 		}

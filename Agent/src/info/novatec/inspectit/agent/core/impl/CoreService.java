@@ -4,6 +4,7 @@ import info.novatec.inspectit.agent.buffer.IBufferStrategy;
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
 import info.novatec.inspectit.agent.connection.IConnection;
+import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IObjectStorage;
@@ -135,7 +136,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * Defines if there was an exception before while trying to send the data. Used to throttle the
 	 * printing of log statements.
 	 */
-	private boolean sendingException = false;
+	private boolean sendingExceptionNotice = false;
 
 	/**
 	 * The scheduled executor service.
@@ -509,14 +510,28 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	private void send() {
 		try {
 			while (bufferStrategy.hasNext()) {
+				// if we are not connected keep data in buffer strategy
+				if (!connection.isConnected()) {
+					return;
+				}
+
 				List<DefaultData> dataToSend = bufferStrategy.next();
 				connection.sendDataObjects(dataToSend);
-				sendingException = false;
+				sendingExceptionNotice = false;
 			}
-		} catch (Throwable e) { // NOPMD NOCHK
-			if (!sendingException) {
-				sendingException = true;
-				log.error("Connection problem appeared, stopping sending actual data!", e);
+		} catch (ServerUnavailableException serverUnavailableException) {
+			if (serverUnavailableException.isServerTimeout()) {
+				log.warn("Timeout on server when sending actual data. Data might be lost!", serverUnavailableException);
+			} else {
+				if (!sendingExceptionNotice) {
+					sendingExceptionNotice = true;
+					log.error("Connection problem appeared, stopping sending actual data!", serverUnavailableException);
+				}
+			}
+		} catch (Throwable throwable) { // NOPMD NOCHK
+			if (!sendingExceptionNotice) {
+				sendingExceptionNotice = true;
+				log.error("Connection problem appeared, stopping sending actual data!", throwable);
 			}
 		}
 	}
