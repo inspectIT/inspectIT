@@ -1,10 +1,5 @@
 package info.novatec.inspectit.agent.connection;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 /**
  * <b>IMPORTANT:</b> The class code is copied/taken from <a
  * href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>. Original
@@ -13,7 +8,7 @@ import java.io.ObjectOutput;
  * 
  * @author William Grosso
  */
-public class ServerUnavailableException extends Exception implements Externalizable {
+public class ServerUnavailableException extends Exception {
 
 	/**
 	 * The serial version UID of this class.
@@ -21,15 +16,34 @@ public class ServerUnavailableException extends Exception implements Externaliza
 	private static final long serialVersionUID = 0L;
 
 	/**
-	 * {@inheritDoc}
+	 * Denotes if the server timeout occurred. Defaults to <code>false</code>.
 	 */
-	public void readExternal(ObjectInput input) throws IOException, ClassNotFoundException {
+	private final boolean serverTimeout;
+
+	/**
+	 * Default constructor.
+	 */
+	public ServerUnavailableException() {
+		this(false);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Constructor to set timeout state.
+	 * 
+	 * @param serverTimeout
+	 *            if timeout occurred during server call.
 	 */
-	public void writeExternal(ObjectOutput output) throws IOException {
+	public ServerUnavailableException(boolean serverTimeout) {
+		this.serverTimeout = serverTimeout;
+	}
+
+	/**
+	 * Gets {@link #serverTimeout}.
+	 * 
+	 * @return {@link #serverTimeout}
+	 */
+	public boolean isServerTimeout() {
+		return serverTimeout;
 	}
 
 }

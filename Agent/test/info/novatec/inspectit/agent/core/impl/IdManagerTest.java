@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
@@ -20,11 +21,9 @@ import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.config.impl.RepositoryConfig;
 import info.novatec.inspectit.agent.connection.IConnection;
-import info.novatec.inspectit.agent.connection.RegistrationException;
-import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.version.VersionService;
-import java.io.IOException;
+
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * no reliable way to make this test always successful.
 	 */
 	@Test
-	public void startStop() throws ConnectException, InterruptedException, ServerUnavailableException, RegistrationException {
+	public void startStop() throws Exception {
 		String host = "localhost";
 		int port = 1099;
 		RepositoryConfig repositoryConfig = new RepositoryConfig(host, port);
@@ -80,7 +79,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * no reliable way to make this test always successful.
 	 */
 	@Test
-	public void connected() throws InterruptedException, ServerUnavailableException, RegistrationException {
+	public void connected() throws Exception {
 		when(connection.isConnected()).thenReturn(true);
 
 		String host = "localhost";
@@ -99,7 +98,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void connectAndRetrievePlatformId() throws ServerUnavailableException, RegistrationException, IdNotAvailableException, IOException {
+	public void connectAndRetrievePlatformId() throws Exception {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
@@ -117,7 +116,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void retrievePlatformId() throws IdNotAvailableException, ServerUnavailableException, RegistrationException, InterruptedException, IOException {
+	public void retrievePlatformId() throws Exception {
 		long fakePlatformId = 3L;
 		when(connection.isConnected()).thenReturn(true);
 		when(connection.registerPlatform("testAgent", "dummyVersion")).thenReturn(fakePlatformId);
@@ -147,7 +146,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * registration is performed.
 	 */
 	@Test
-	public void unregisterPlatform() throws ServerUnavailableException, RegistrationException, IOException, IdNotAvailableException {
+	public void unregisterPlatform() throws Exception {
 		// first simulate connect
 		long fakePlatformId = 3L;
 		when(connection.isConnected()).thenReturn(true);
@@ -167,7 +166,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * registration is not done at first place.
 	 */
 	@Test
-	public void noUnregisterPlatform() throws RegistrationException {
+	public void noUnregisterPlatform() throws Exception {
 		// no unregister if no connection
 		when(connection.isConnected()).thenReturn(false);
 		idManager.unregisterPlatform();
@@ -184,7 +183,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * should throw an exception
 	 */
 	@Test(expectedExceptions = { IdNotAvailableException.class })
-	public void unregisterPlatformAndInitShutdown() throws ServerUnavailableException, RegistrationException, IOException, IdNotAvailableException {
+	public void unregisterPlatformAndInitShutdown() throws Exception {
 		// first simulate connect
 		long fakePlatformId = 3L;
 		when(connection.isConnected()).thenReturn(true);
@@ -203,7 +202,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * no reliable way to make this test always successful.
 	 */
 	@Test
-	public void registerMethodSensorTypes() throws InterruptedException, IdNotAvailableException {
+	public void registerMethodSensorTypes() throws Exception {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
@@ -231,7 +230,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * no reliable way to make this test always successful.
 	 */
 	@Test
-	public void registerPlatformSensorTypes() throws InterruptedException, IdNotAvailableException {
+	public void registerPlatformSensorTypes() throws Exception {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(configurationStorage.getAgentName()).thenReturn("testAgent");
@@ -255,7 +254,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	}
 
 	@Test(expectedExceptions = { IdNotAvailableException.class })
-	public void sensorTypeIdNotAvailable() throws InterruptedException, IdNotAvailableException, ConnectException {
+	public void sensorTypeIdNotAvailable() throws Exception {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(connection.isConnected()).thenReturn(false);
@@ -273,7 +272,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void registerMethod() throws ConnectException, ServerUnavailableException, RegistrationException, IdNotAvailableException {
+	public void registerMethod() throws Exception {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(connection.isConnected()).thenReturn(true);
@@ -295,7 +294,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void testMapping() throws ServerUnavailableException, RegistrationException {
+	public void testMapping() throws Exception {
 		RepositoryConfig repositoryConfig = mock(RepositoryConfig.class);
 		when(configurationStorage.getRepositoryConfig()).thenReturn(repositoryConfig);
 		when(connection.isConnected()).thenReturn(true);
