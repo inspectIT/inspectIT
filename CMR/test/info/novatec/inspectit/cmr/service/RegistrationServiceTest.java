@@ -12,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
 import info.novatec.inspectit.cmr.dao.impl.MethodIdentDaoImpl;
 import info.novatec.inspectit.cmr.dao.impl.MethodSensorTypeIdentDaoImpl;
@@ -26,7 +27,6 @@ import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
 import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
 import info.novatec.inspectit.exception.BusinessException;
 
-import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,12 +110,10 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 * Tests that an exception will be thrown if the database returns two or more platform idents
 	 * after findByExample search.
 	 * 
-	 * @throws RemoteException
-	 *             If remote exception occurs.
 	 * @throws BusinessException
 	 */
 	@Test(expectedExceptions = { BusinessException.class })
-	public void noRegistrationTwoAgents() throws RemoteException, BusinessException {
+	public void noRegistrationTwoAgents() throws BusinessException {
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
 		String agentName = "agentName";
@@ -132,15 +130,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * Test that registration will be done properly if the {@link LicenseUtil} validates license.
 	 * 
-	 * @throws LicenseContentException
-	 *             If {@link LicenseContentException} occurs.
-	 * @throws RemoteException
-	 *             If remote exception occurs.
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerNewPlatformIdent() throws RemoteException, BusinessException {
+	public void registerNewPlatformIdent() throws BusinessException {
 		final long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -174,15 +168,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * Tests that the version and timestamp will be updated if the agent is already registered.
 	 * 
-	 * @throws LicenseContentException
-	 *             If {@link LicenseContentException} occurs.
-	 * @throws RemoteException
-	 *             If remote exception occurs.
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerExistingPlatformIdent() throws RemoteException, BusinessException {
+	public void registerExistingPlatformIdent() throws BusinessException {
 		long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -217,17 +207,14 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	}
 
 	/**
-	 * Test that registration will be done properlly if the {@link LicenseUtil} validates license
-	 * and IP based registration is off.
+	 * Test that registration will be done properly if the {@link LicenseUtil} validates license and
+	 * IP based registration is off.
 	 * 
-	 * @throws LicenseContentException
-	 *             If {@link LicenseContentException} occurs.
-	 * @throws RemoteException
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerNewPlatformIdentNoIpBased() throws RemoteException, BusinessException {
+	public void registerNewPlatformIdentNoIpBased() throws BusinessException {
 		final long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -263,15 +250,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 * Tests that the version and timestamp will be updated if the agent is already registered and
 	 * IP registration is off.
 	 * 
-	 * @throws LicenseContentException
-	 *             If {@link LicenseContentException} occurs.
-	 * @throws RemoteException
-	 *             If remote exception occurs.
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
 	@Test
-	public void registerExistingPlatformIdentNoIpBased() throws RemoteException, BusinessException {
+	public void registerExistingPlatformIdentNoIpBased() throws BusinessException {
 		long platformId = 10;
 		List<String> definedIps = new ArrayList<String>();
 		definedIps.add("ip");
@@ -346,12 +329,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests registration of the new {@link MethodIdent}.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void registerNewMethodIdent() throws RemoteException {
+	public void registerNewMethodIdent() {
 		final long methodId = 20;
 		long platformId = 1;
 		String packageName = "package";
@@ -392,12 +372,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests registration of the existing {@link MethodIdent}.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void registerExistnigMethodIdent() throws RemoteException {
+	public void registerExistnigMethodIdent() {
 		final long methodId = 20;
 		long platformId = 1;
 		String packageName = "package";
@@ -446,12 +423,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test the registration of the method sensor type.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void registerMethodSensorType() throws RemoteException {
+	public void registerMethodSensorType() {
 		final long methodSensorId = 30;
 		long platformId = 1;
 		String fqcName = "class";
@@ -482,13 +456,10 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * Test that the registration of the {@link MethodSensorTypeIdent} will be correct if properties
 	 * are provided.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void registerMethodSensorTypeWithSettings() throws RemoteException {
+	public void registerMethodSensorTypeWithSettings() {
 		final long methodSensorId = 30;
 		long platformId = 1;
 		String fqcName = "class";
@@ -519,12 +490,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test the registration of the platform sensor type.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void registerPlatformSensorType() throws RemoteException {
+	public void registerPlatformSensorType() {
 		final long platformSensorId = 20;
 		long platformId = 1;
 		String fqcName = "class";
@@ -554,12 +522,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test the registering of the method sensor type to method occurring for the first time.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void registerSensorTypeWithMethodFirstTime() throws RemoteException {
+	public void registerSensorTypeWithMethodFirstTime() {
 		long methodId = 20;
 		long methodSensorId = 50;
 
@@ -581,12 +546,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test the registering of the method sensor type to method occurring not for the first time.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void registerSensorTypeWithMethodSecondTime() throws RemoteException {
+	public void registerSensorTypeWithMethodSecondTime() {
 		long methodId = 20;
 		long methodSensorId = 50;
 
