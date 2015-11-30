@@ -24,6 +24,7 @@ import info.novatec.inspectit.agent.connection.RegistrationException;
 import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.version.VersionService;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -167,7 +168,7 @@ public class IdManagerTest extends AbstractLogSupport {
 	 * registration is not done at first place.
 	 */
 	@Test
-	public void noUnregisterPlatform() throws RegistrationException {
+	public void noUnregisterPlatform() throws RegistrationException, ServerUnavailableException {
 		// no unregister if no connection
 		when(connection.isConnected()).thenReturn(false);
 		idManager.unregisterPlatform();

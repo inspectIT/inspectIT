@@ -500,29 +500,21 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 				// clear the flag
 				serverErrorOccured = false;
 			} catch (ServerUnavailableException serverUnavailableException) {
-				if (!serverErrorOccured) {
-					log.error("Server unavailable while trying to register something at the server.");
-				}
-				serverErrorOccured = true;
-				if (log.isTraceEnabled()) {
-					log.trace("run()", serverUnavailableException);
+				if (serverUnavailableException.isServerTimeout()) {
+					log.error("Server timeout while trying to register something at the server.");
+				} else {
+					if (!serverErrorOccured) {
+						log.error("Server unavailable while trying to register something at the server.");
+					}
+					serverErrorOccured = true;
 				}
 			} catch (RegistrationException registrationException) {
-				if (!serverErrorOccured) {
-					log.error("Registration exception occurred while trying to register something at the server.");
-				}
-				serverErrorOccured = true;
-				if (log.isTraceEnabled()) {
-					log.trace("run()", registrationException);
-				}
+				log.error("Registration exception occurred while trying to register something at the server.", registrationException);
 			} catch (ConnectException connectException) {
 				if (!serverErrorOccured) {
-					log.error("Connection to the server failed.");
+					log.error("Connection to the server failed.", connectException);
 				}
 				serverErrorOccured = true;
-				if (log.isTraceEnabled()) {
-					log.trace("run()", connectException);
-				}
 			}
 		}
 

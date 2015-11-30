@@ -14,6 +14,11 @@
 			<class name="info.novatec.inspectit.agent.config.impl.FileConfigurationReaderTest" />
 		</classes>
 	</test>
+	<test name="Connection">
+		<classes>
+			<class name="info.novatec.inspectit.agent.connection.impl.KryoNetConnectionTest" />
+		</classes>
+	</test>
 	<test name="Core">
 		<classes>
 			<class name="info.novatec.inspectit.agent.core.impl.CoreServiceTest" />
