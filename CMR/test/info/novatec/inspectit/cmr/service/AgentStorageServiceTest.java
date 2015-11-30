@@ -6,7 +6,6 @@ import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.TimerData;
 
 import java.lang.ref.SoftReference;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -56,12 +55,9 @@ public class AgentStorageServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * Proves that the data will be dropped after the timeout if there is no place in the queue and
 	 * amount of dropped data be remembered.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void dropDataAfterTimeout() throws RemoteException {
+	public void dropDataAfterTimeout() {
 		List<DefaultData> dataList = new ArrayList<DefaultData>();
 		TimerData timerData = new TimerData();
 		timerData.setPlatformIdent(1L);
@@ -76,12 +72,9 @@ public class AgentStorageServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Provides that data will be processed if there is place in the queue.
-	 * 
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
-	public void acceptData() throws RemoteException {
+	public void acceptData() {
 		List<DefaultData> dataList = new ArrayList<DefaultData>();
 		TimerData timerData = new TimerData();
 		timerData.setPlatformIdent(1L);

@@ -2,27 +2,18 @@ package info.novatec.inspectit.agent.connection.impl;
 
 import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
 import info.novatec.inspectit.agent.connection.AbstractRemoteMethodCall;
-import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.cmr.service.IRegistrationService;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.Map;
 
 /**
- * Class which encapsulates the request to the {@link Remote} object {@link IRegistrationService}.
- * The method to call is
- * {@link IRegistrationService#registerMethodSensorTypeIdent(long, String, Map)}
+ * Class which encapsulates the request to the remote object {@link IRegistrationService}. The
+ * method to call is {@link IRegistrationService#registerMethodSensorTypeIdent(long, String, Map)}
  * 
  * @author Patrice Bouillet
  * 
  */
-public class RegisterMethodSensorType extends AbstractRemoteMethodCall {
-
-	/**
-	 * The registration object which is used for the actual registering.
-	 */
-	private final Remote registrationService;
+public class RegisterMethodSensorType extends AbstractRemoteMethodCall<IRegistrationService, Long> {
 
 	/**
 	 * The method sensor type configuration which is registered at the server.
@@ -35,17 +26,17 @@ public class RegisterMethodSensorType extends AbstractRemoteMethodCall {
 	private final long platformId;
 
 	/**
-	 * The only constructor for this class accepts two attributes.
+	 * The only constructor for this class accepts three attributes.
 	 * 
 	 * @param registrationService
-	 *            The {@link Remote} object.
+	 *            The remote object.
 	 * @param methodSensorTypeConfig
 	 *            The {@link MethodSensorTypeConfig} which is registered at the server.
 	 * @param platformId
 	 *            The ID of the platform.
 	 */
 	public RegisterMethodSensorType(IRegistrationService registrationService, MethodSensorTypeConfig methodSensorTypeConfig, long platformId) {
-		this.registrationService = registrationService;
+		super(registrationService);
 		this.methodSensorTypeConfig = methodSensorTypeConfig;
 		this.platformId = platformId;
 	}
@@ -53,16 +44,7 @@ public class RegisterMethodSensorType extends AbstractRemoteMethodCall {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected Remote getRemoteObject() throws ServerUnavailableException {
-		return registrationService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected Object performRemoteCall(Remote remoteObject) throws RemoteException {
-		IRegistrationService reg = (IRegistrationService) remoteObject;
-
-		return Long.valueOf(reg.registerMethodSensorTypeIdent(platformId, methodSensorTypeConfig.getClassName(), methodSensorTypeConfig.getParameters()));
+	protected Long performRemoteCall(IRegistrationService remoteObject) {
+		return Long.valueOf(remoteObject.registerMethodSensorTypeIdent(platformId, methodSensorTypeConfig.getClassName(), methodSensorTypeConfig.getParameters()));
 	}
 }
