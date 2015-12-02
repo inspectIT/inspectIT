@@ -70,6 +70,22 @@ public class StatementStorageTest extends AbstractLogSupport {
 	}
 
 	@Test
+	public void addSQLWithParameterAndNegativeIndex() {
+		// Setup
+		StatementStorage storage = new StatementStorage();
+		storage.addSql("SELECT * FROM CARS WHERE CAR_ID = ?");
+		Object marker = "I am the prepared Statement";
+		storage.addPreparedStatement(marker);
+
+		storage.addParameter(marker, -1, "1");
+
+		List<String> result = storage.getParameters(marker);
+
+		assertThat(result, is(not(equalTo(null))));
+		assertThat(result, contains(equalTo(null)));
+	}
+
+	@Test
 	public void addSQLWithParameterAndAddNullValue() {
 		// Setup
 		StatementStorage storage = new StatementStorage();
