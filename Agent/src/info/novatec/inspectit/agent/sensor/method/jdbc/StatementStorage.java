@@ -128,9 +128,9 @@ public class StatementStorage {
 
 		String[] parameters = queryAndParameters.getParameters();
 
-		if (parameters.length <= index) {
-			if (LOG.isWarnEnabled()) {
-				LOG.warn("Trying to set the parameter with value " + value + " at index " + index + ", but the prepared statement did not have this parameter.");
+		if (0 > index || parameters.length <= index) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Trying to set the parameter with value " + value + " at index " + index + ", but the prepared statement did not have parameter on this index.");
 			}
 			return;
 		}
