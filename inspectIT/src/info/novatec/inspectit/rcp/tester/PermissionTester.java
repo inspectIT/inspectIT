@@ -42,3 +42,4 @@ public class PermissionTester extends PropertyTester {
 	}
 
 }
+
