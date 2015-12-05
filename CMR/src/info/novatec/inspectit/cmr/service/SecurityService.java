@@ -154,11 +154,11 @@ public class SecurityService implements ISecurityService {
 
 	// | USER |---------------
 	@Override
-	public String[] getAllUsers() {
+	public List<String> getAllUsers() {
 		List<User> users = userDao.loadAll();		
-		String[] userEmails = new String[users.size()];		
-		for (int i = 0; i < users.size(); i++) {
-			userEmails[i] = users.get(i).getEmail();
+		List<String> userEmails = new ArrayList<String>();		
+		for (User user : users) {
+			userEmails.add(user.getEmail());
 		}				
 
 		return userEmails;
@@ -221,8 +221,8 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public Permission[] getAllPermissions() {
-		return permissionDao.loadAll().toArray(new Permission[0]);
+	public List<Permission> getAllPermissions() {
+		return permissionDao.loadAll();
 	}
 
 	// | ROLE | --------------
@@ -251,8 +251,8 @@ public class SecurityService implements ISecurityService {
 		}
 	}
 	@Override
-	public Role[] getAllRoles() {
-		return roleDao.loadAll().toArray(new Role[0]);
+	public List<Role> getAllRoles() {
+		return roleDao.loadAll();
 	}
 
 
