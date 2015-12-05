@@ -6,7 +6,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 import info.novatec.inspectit.rcp.dialog.ForgotPasswordDialog;
-import info.novatec.inspectit.rcp.dialog.ShowPermissionsDialog;
+import info.novatec.inspectit.rcp.dialog.ShowAllPermissionsDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrAdministrationWizardPage;
 

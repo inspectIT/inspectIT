@@ -2,9 +2,9 @@ package info.novatec.inspectit.rcp.dialog;
 
 import org.eclipse.swt.widgets.Shell;
 
-public class ManageRolesDialog {
+public class SearchPermissionsDialog {
 
-	public ManageRolesDialog(Shell parentShell) {
+	public SearchPermissionsDialog(Shell shell) {
 		// TODO Auto-generated constructor stub
 	}
 
