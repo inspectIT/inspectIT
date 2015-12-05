@@ -40,17 +40,24 @@ public interface ISecurityService {
 	Role getRoleByID(long id);
 	/**
 	 * Retrieves all existing roles.
-	 * @return An Array containing all Roles
+	 * @return An List containing all Roles
 	 */
-	Role[] getAllRoles();
+	List<Role> getAllRoles();
+	/**
+	 * Adds a new Role to the CMR. 
+	 * @param title The title of the new role.
+	 * @param permissions The permissions assigned to this role.
+	 * @return The id of the created Role.
+	 */
+	//int addRole(String title, List<Permission> permissions);
 	
 	
 	// | USER |---------------
 	/**
 	 * We only want to send the user emails to the client. If a user is about to be modified, other data will be retrieved.
-	 * @return An Array containing all user emails
+	 * @return An List containing all user emails
 	 */
-	String[] getAllUsers();
+	List<String> getAllUsers();
 	/**
 	 * Adds a new User to the Database.
 	 * Throws an exception, if there is an existing registered User with the given email-address.
@@ -89,7 +96,7 @@ public interface ISecurityService {
 	
 	/**
 	 * Retrieves all existing permissions.
-	 * @return An Array containing all Roles
+	 * @return An List containing all Roles
 	 */
-	Permission[] getAllPermissions();
+	List<Permission> getAllPermissions();
 }
