@@ -43,7 +43,7 @@ public class CmrAdministrationWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		cmrAdministrationWizardPage = new CmrAdministrationWizardPage("CMR Administration");
+		cmrAdministrationWizardPage = new CmrAdministrationWizardPage("CMR Administration", cmrRepositoryDefinition);
 		addPage(cmrAdministrationWizardPage);
 	}
 
