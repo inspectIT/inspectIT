@@ -106,7 +106,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		Label rolesLabel = new Label(main, SWT.NONE);
 		rolesLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		rolesLabel.setText("role:");
-		Combo roles = new Combo(main, SWT.DROP_DOWN);
+		roles = new Combo(main, SWT.DROP_DOWN);
 	    for (Role role : rolesList) {
 	    	roles.add(role.getTitle());
 	    }
@@ -138,11 +138,17 @@ public class AddUserDialog extends TitleAreaDialog {
 	 * Adds the new user to database.
 	 */
 	private void addPressed() {
+		long id = 0;
 		int index = roles.getSelectionIndex();
 	    String mail = mailBox.getText();
 	    String password = passwordBox.getText();
 	    String role = roles.getItem(index);
-	    User user = new User(mail, password, 3);
+	    for (Role r : rolesList) {
+	    	if (r.getTitle().equals(role)) {
+	    		id = r.getId();
+	    	}
+	    }
+	    User user = new User(mail, password, id);
 	    cmrRepositoryDefinition.getSecurityService().addUser(user);
 		okPressed();
 	}

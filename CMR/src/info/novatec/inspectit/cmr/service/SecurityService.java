@@ -112,7 +112,6 @@ public class SecurityService implements ISecurityService {
 				return null;
 			}
 		}
-
 		// TODO: Make a session
 
 
