@@ -1,7 +1,5 @@
 package info.novatec.inspectit.rcp.wizard;
 
-import java.util.Arrays;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
