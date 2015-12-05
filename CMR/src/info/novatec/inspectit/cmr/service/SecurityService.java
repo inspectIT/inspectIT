@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
  * @author Andreas Herzog
  * @author Clemens Geibel
  * @author Lucca Hellriegel
+ * @author Joshua Hartmann
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -67,8 +68,7 @@ public class SecurityService implements ISecurityService {
 	@Autowired
 	RoleDao roleDao;
 
-	
-	
+
 	/**
 	 * Is executed after dependency injection is done to perform any
 	 * initialization.
@@ -96,11 +96,10 @@ public class SecurityService implements ISecurityService {
 	 */
 	@Override
 	public List<String> authenticate(String pw, String email) {
-
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
-		
+
 		if (!currentUser.isAuthenticated()) {
 
 			try {
@@ -115,35 +114,20 @@ public class SecurityService implements ISecurityService {
 		}
 
 		// TODO: Make a session
-		
-		
+
+
 		List<String> grantedPermissions = new ArrayList<String>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
 		for (int i = 0; i < existingPermissions.size(); i++) {
-		if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
-			grantedPermissions.add(existingPermissions.get(i).getTitle());
+			if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
+				grantedPermissions.add(existingPermissions.get(i).getTitle());
+			}
 		}
-		}
-		currentUser.logout();
+		currentUser.logout();		
 
-		
-		
 		return grantedPermissions;
-
 	}
 
-	@Override
-	public Role retrieveRole(String email) throws AuthenticationException, DataIntegrityViolationException {
-		List<User> foundUsers = userDao.findByEmail(email);
-		if (foundUsers.isEmpty()) {
-			throw new AuthenticationException("Email or password is incorrect.");
-		} else if (foundUsers.size() != 1) {
-			throw new DataIntegrityViolationException("There are multiple users with same email.");
-		} else {
-			User user = foundUsers.get(0);
-			return getRoleByID(user.getRoleId());
-		}
-	}
 
 	// +-------------------------------------------------------------------------------------------+
 	// | Managing Security Data in the Database |
@@ -169,7 +153,16 @@ public class SecurityService implements ISecurityService {
 	}
 
 	// | USER |---------------
+	@Override
+	public List<String> getAllUsers() {
+		List<User> users = userDao.loadAll();		
+		List<String> userEmails = new ArrayList<String>();		
+		for (User user : users) {
+			userEmails.add(user.getEmail());
+		}				
 
+		return userEmails;
+	}
 	@Override
 	public void addUser(User user) throws DataIntegrityViolationException {
 		if (!checkDataIntegrity(user)) {
@@ -185,7 +178,12 @@ public class SecurityService implements ISecurityService {
 			userDao.saveOrUpdate(user);
 		}
 	}
-
+	
+	@Override
+	public User getUser(String email) {
+		return userDao.load(email);
+	}
+	
 	@Override
 	public void deleteUser(User user) {
 		userDao.delete(user);
@@ -207,7 +205,6 @@ public class SecurityService implements ISecurityService {
 	}
 
 	// | PERMISSION |---------
-
 	@Override
 	public void changePermissionDescription(Permission permission) {
 		List<Permission> foundPermissions = permissionDao.findByTitle(permission);
@@ -223,8 +220,12 @@ public class SecurityService implements ISecurityService {
 		}
 	}
 
-	// | ROLE | --------------
+	@Override
+	public List<Permission> getAllPermissions() {
+		return permissionDao.loadAll();
+	}
 
+	// | ROLE | --------------
 	@Override
 	public Role getRoleByID(long id) throws DataRetrievalFailureException, DataIntegrityViolationException {
 		List<Role> roles = roleDao.findByID(id);
@@ -236,6 +237,24 @@ public class SecurityService implements ISecurityService {
 			throw new DataIntegrityViolationException("Multiple roles with the same id in the database!");
 		}
 	}
+
+	@Override
+	public Role getRoleOfUser(String email) throws AuthenticationException, DataIntegrityViolationException {
+		List<User> foundUsers = userDao.findByEmail(email);
+		if (foundUsers.isEmpty()) {
+			throw new AuthenticationException("Email or password is incorrect.");
+		} else if (foundUsers.size() != 1) {
+			throw new DataIntegrityViolationException("There are multiple users with same email.");
+		} else {
+			User user = foundUsers.get(0);
+			return getRoleByID(user.getRoleId());
+		}
+	}
+	@Override
+	public List<Role> getAllRoles() {
+		return roleDao.loadAll();
+	}
+
 
 	// TODO Make more methods available for the administrator module...
 }

@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import info.novatec.inspectit.rcp.dialog.ShowAllRolesDialog;
 import info.novatec.inspectit.rcp.dialog.ShowAllUsersDialog;
+import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.dialog.AddRoleDialog;
 import info.novatec.inspectit.rcp.dialog.AddUserDialog;
 import info.novatec.inspectit.rcp.dialog.SearchPermissionsDialog;
@@ -28,17 +29,23 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	 * Default page message.
 	 */
 	private static final String DEFAULT_MESSAGE = "Managing users and roles.";
-
+	/**
+	 * CmrRepositoryDefinition for easy access to security services.
+	 */
+	private CmrRepositoryDefinition cmrRepositoryDefinition;
 	/**
 	 * Default constructor.
 	 * 
 	 * @param title
 	 *            title for the CMR Administration Page
+	 * @param cmrRepositoryDefinition
+	 * 			  the CmrRepositoryDefinition
 	 */
-	public CmrAdministrationWizardPage(String title) {
+	public CmrAdministrationWizardPage(String title, CmrRepositoryDefinition cmrRepositoryDefinition) {
 		super(title);
 		this.setTitle(title);
 		this.setMessage(DEFAULT_MESSAGE);
+		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
 	}
 
 	/**
@@ -120,7 +127,7 @@ public class CmrAdministrationWizardPage extends WizardPage {
 		adduser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				addUserDialog = new AddUserDialog(main.getShell());
+				addUserDialog = new AddUserDialog(main.getShell(), cmrRepositoryDefinition);
 				addUserDialog.open();
 			}
 		});
