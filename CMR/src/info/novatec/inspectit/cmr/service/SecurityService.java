@@ -112,7 +112,7 @@ public class SecurityService implements ISecurityService {
 				return null;
 			}
 		}
-
+		System.out.println(userDao.loadAll().toString());
 		// TODO: Make a session
 
 
