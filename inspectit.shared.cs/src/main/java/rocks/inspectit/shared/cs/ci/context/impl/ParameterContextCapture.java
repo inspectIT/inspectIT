@@ -24,7 +24,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 	/**
 	 * Index of the parameter to capture.
 	 */
-	@XmlAttribute(name = "index")
+	@XmlAttribute(name = "index", required = true)
 	private int index;
 
 	/**
@@ -33,7 +33,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 	@Override
 	public String getAgentStringNotation() {
 		StringBuffer stringBuffer = new StringBuffer("p=");
-		stringBuffer.append(index);
+		stringBuffer.append(getIndex());
 		stringBuffer.append(';');
 		stringBuffer.append(getDisplayName());
 		stringBuffer.append(';');
@@ -90,7 +90,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + index;
+		result = (prime * result) + this.index;
 		return result;
 	}
 
@@ -109,10 +109,9 @@ public class ParameterContextCapture extends AbstractContextCapture {
 			return false;
 		}
 		ParameterContextCapture other = (ParameterContextCapture) obj;
-		if (index != other.index) {
+		if (this.index != other.index) {
 			return false;
 		}
 		return true;
 	}
-
 }

@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.bindings.Binding;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.osgi.util.NLS;
@@ -65,7 +66,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * ID of the preference panel.
 	 */
-	private String id;
+	private final String id;
 
 	/**
 	 * The used toolkit.
@@ -426,6 +427,8 @@ public class FormPreferencePanel implements IPreferencePanel {
 		}
 
 		toolBarManager.update(true);
+
+		menuAction.setRunTask(new MenuAction.ToolbarDropDownTask(((ToolBarManager) toolBarManager).getControl()));
 	}
 
 	/**
@@ -553,7 +556,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 */
 	private final class SetItemCountAction extends Action {
 		/** the maximum number of elements shown. */
-		private int limit;
+		private final int limit;
 
 		/**
 		 * Constructor.
@@ -595,7 +598,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	private final class FilterByDataTypeAction extends Action {
 
 		/** The sensor type. */
-		private Class<?> dataClass;
+		private final Class<?> dataClass;
 
 		/**
 		 * Constructor.
@@ -642,7 +645,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 */
 	private final class FilterByExclusiveTimeAction extends Action {
 		/** the time. */
-		private double time;
+		private final double time;
 
 		/**
 		 * Constructor.
@@ -684,7 +687,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 */
 	private final class FilterByTotalTimeAction extends Action {
 		/** the time. */
-		private double time;
+		private final double time;
 
 		/**
 		 * Constructor.
@@ -729,7 +732,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 		/**
 		 * Refresh rate in ms.
 		 */
-		private long rate;
+		private final long rate;
 
 		/**
 		 * Constructor.
@@ -832,7 +835,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 		/**
 		 * The number of decimal places.
 		 */
-		private int decimalPlaces;
+		private final int decimalPlaces;
 
 		/**
 		 * Default constructor.
@@ -980,7 +983,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 		/**
 		 * The data solver of this element.
 		 */
-		private PlotDataSolver dataSolver;
+		private final PlotDataSolver dataSolver;
 
 		/**
 		 * Constructor.
