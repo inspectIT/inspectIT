@@ -859,10 +859,8 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		@Override
 		public void contentModified(AbstractClassSensorAssignment<?> modifiedElement) {
 			Assert.isNotNull(modifiedElement);
-
 			TableViewer tableViewer = getActiveTableViewer();
 			tableViewer.update(modifiedElement, null);
-
 			markDirty();
 		}
 

@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Wizard page for defining name and description. Can be used in multiple wizards.
  *
- * @author Ivan Senic
+ * @author Ivan Senic, Alexander Wert
  *
  */
 public class DefineNameAndDescriptionWizardPage extends WizardPage {
@@ -34,6 +34,21 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	private Text descriptionBox;
 
 	/**
+	 * The initial value for the name.
+	 */
+	private String initialName;
+
+	/**
+	 * The initial value for the description.
+	 */
+	private String initialDescription;
+
+	/**
+	 * Main Composite.
+	 */
+	protected Composite main;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param title
@@ -49,23 +64,50 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	}
 
 	/**
+	 * Default constructor.
+	 *
+	 * @param title
+	 *            Title of the page.
+	 * @param defaultMessage
+	 *            Default message for the page.
+	 * @param initialName
+	 *            initial name
+	 * @param initialDescription
+	 *            description
+	 */
+	public DefineNameAndDescriptionWizardPage(String title, String defaultMessage, String initialName, String initialDescription) {
+		super(title);
+		this.initialName = initialName;
+		this.initialDescription = initialDescription;
+		setTitle(title);
+		setMessage(defaultMessage);
+		this.defaultMessage = defaultMessage;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void createControl(Composite parent) {
-		Composite main = new Composite(parent, SWT.NONE);
+		main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));
 
 		Label nameLabel = new Label(main, SWT.LEFT);
 		nameLabel.setText("Name:");
 		nameBox = new Text(main, SWT.BORDER);
 		nameBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		if (null != initialName) {
+			nameBox.setText(initialName);
+		}
 
 		Label descLabel = new Label(main, SWT.LEFT);
 		descLabel.setText("Description:");
 		descLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 		descriptionBox = new Text(main, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		descriptionBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		if (null != initialDescription) {
+			descriptionBox.setText(initialDescription);
+		}
 
 		Listener pageCompletionListener = new Listener() {
 			@Override
@@ -90,7 +132,7 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	/**
 	 * Sets the message based on the page selections.
 	 */
-	private void setPageMessage() {
+	protected void setPageMessage() {
 		if (nameBox.getText().isEmpty()) {
 			setMessage("No value for the name entered", ERROR);
 			return;

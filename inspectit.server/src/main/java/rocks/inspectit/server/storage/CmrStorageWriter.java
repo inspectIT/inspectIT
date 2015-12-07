@@ -1,6 +1,7 @@
 package rocks.inspectit.server.storage;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -17,10 +18,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
+import rocks.inspectit.server.service.BusinessContextManagementService;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.util.TimeFrame;
+import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
+import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.storage.StorageFileType;
 import rocks.inspectit.shared.cs.storage.StorageWriter;
 import rocks.inspectit.shared.cs.storage.label.ObjectStorageLabel;
@@ -51,18 +56,24 @@ public class CmrStorageWriter extends StorageWriter {
 	/**
 	 * {@link AtomicLong} holding the time-stamp value of the oldest data written in the storage.
 	 */
-	private AtomicLong oldestDataTimestamp = new AtomicLong(Long.MAX_VALUE);
+	private final AtomicLong oldestDataTimestamp = new AtomicLong(Long.MAX_VALUE);
 
 	/**
 	 * {@link AtomicLong} holding the time-stamp value of the newest data written in the storage.
 	 */
-	private AtomicLong newestDataTimestamp = new AtomicLong(0);
+	private final AtomicLong newestDataTimestamp = new AtomicLong(0);
 
 	/**
 	 * Platform ident dao.
 	 */
 	@Autowired
 	private PlatformIdentDaoImpl platformIdentDao;
+
+	/**
+	 * {@link BusinessContextManagementService}.
+	 */
+	@Autowired
+	private IBusinessContextManagementService businessContextService;
 
 	/**
 	 * {@inheritDoc}
@@ -97,12 +108,24 @@ public class CmrStorageWriter extends StorageWriter {
 	}
 
 	/**
+	 * Writes current {@link BusinessContextDefinition} data of the corresponding CMR to storage.
+	 *
+	 * @throws IOException
+	 *             thrown if storing business context fails
+	 */
+	protected void writeBusinessContextData() throws IOException {
+		Collection<BusinessTransactionData> businessTransactions = businessContextService.getBusinessTransactions();
+		super.writeNonDefaultDataObject(businessTransactions, StorageFileType.BUSINESS_CONTEXT_FILE.getDefaultFileName() + StorageFileType.BUSINESS_CONTEXT_FILE.getExtension());
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public synchronized void finalizeWrite() {
 		try {
 			writeAgentData();
+			writeBusinessContextData();
 		} catch (IOException e) {
 			log.error("Exception trying to write agent data to disk.", e);
 		}
