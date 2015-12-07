@@ -1,5 +1,6 @@
 package rocks.inspectit.ui.rcp.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.base.Objects;
@@ -12,6 +13,8 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
+import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
@@ -84,6 +87,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	private IHttpTimerDataAccessService httpTimerDataAccessService;
 
 	/**
+	 * {@link IBusinessContextDefinition}.
+	 */
+	private IBusinessContextManagementService businessContextService;
+
+	/**
 	 * {@link StorageServiceProvider} for instantiating storage services.
 	 */
 	private StorageServiceProvider storageServiceProvider;
@@ -97,6 +105,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 * Involved agents.
 	 */
 	private List<PlatformIdent> agents;
+
+	/**
+	 * Collection of {@link BusinessTransactionData} instances to use for this storage.
+	 */
+	private Collection<BusinessTransactionData> businessTransactions;
 
 	/**
 	 * {@inheritDoc}
@@ -189,6 +202,14 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public IBusinessContextManagementService getBusinessContextMangementService() {
+		return businessContextService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressWarnings("unchecked")
 	public void initServices() {
 		// init services
@@ -199,9 +220,9 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		timerDataAccessService = storageServiceProvider.createStorageTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<TimerData>) indexingTree);
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
 		jmxDataAccessService = storageServiceProvider.createStorageJmxDataAccessService(this, localStorageData, (IStorageTreeComponent<JmxSensorValueData>) indexingTree);
-
+		businessContextService = storageServiceProvider.createStorageBusinessContextService(this, localStorageData, (IStorageTreeComponent<DefaultData>) indexingTree, businessTransactions);
 		// for storage we use the regular cached data service because ids can never change
-		cachedDataService = new CachedDataService(globalDataAccessService);
+		cachedDataService = new CachedDataService(globalDataAccessService, businessContextService);
 	}
 
 	/**
@@ -256,6 +277,16 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 */
 	public void setAgents(List<PlatformIdent> agents) {
 		this.agents = agents;
+	}
+
+	/**
+	 * Sets {@link #businessTransactions}.
+	 *
+	 * @param businessTransactions
+	 *            a collection of {@link #BusinessTransactionData} instances
+	 */
+	public void setBusinessTransactions(Collection<BusinessTransactionData> businessTransactions) {
+		this.businessTransactions = businessTransactions;
 	}
 
 	/**

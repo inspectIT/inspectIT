@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ import com.esotericsoftware.kryo.io.Input;
 
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
 import rocks.inspectit.shared.all.storage.serializer.ISerializer;
@@ -65,12 +67,12 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * List of downloaded storages.
 	 */
-	private Set<LocalStorageData> downloadedStorages = Collections.newSetFromMap(new ConcurrentHashMap<LocalStorageData, Boolean>(16, 0.75f, 2));
+	private final Set<LocalStorageData> downloadedStorages = Collections.newSetFromMap(new ConcurrentHashMap<LocalStorageData, Boolean>(16, 0.75f, 2));
 
 	/**
 	 * Map of mounted and online not available storages.
 	 */
-	private Set<LocalStorageData> mountedNotAvailableStorages = Collections.newSetFromMap(new ConcurrentHashMap<LocalStorageData, Boolean>(16, 0.75f, 2));
+	private final Set<LocalStorageData> mountedNotAvailableStorages = Collections.newSetFromMap(new ConcurrentHashMap<LocalStorageData, Boolean>(16, 0.75f, 2));
 	/**
 	 * Map of mounted and online not available storages.
 	 */
@@ -167,7 +169,8 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 		} else {
 			try {
 				subMonitor.setTaskName("Downloading agent and indexing files for storage '" + storageData.getName() + "'..");
-				dataRetriever.downloadAndSaveStorageFiles(cmrRepositoryDefinition, storageData, directory, compressBefore, true, subMonitor, StorageFileType.AGENT_FILE, StorageFileType.INDEX_FILE);
+				dataRetriever.downloadAndSaveStorageFiles(cmrRepositoryDefinition, storageData, directory, compressBefore, true, subMonitor, StorageFileType.AGENT_FILE, StorageFileType.INDEX_FILE,
+						StorageFileType.BUSINESS_CONTEXT_FILE);
 			} catch (Exception e) {
 				deleteLocalStorageData(localStorageData, false);
 				throw e;
@@ -494,9 +497,13 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 			indexingTree = new ArrayBasedStorageLeaf<>();
 		}
 
+		// get business context
+		Collection<BusinessTransactionData> businessTransactions = getBusinessContextLocally(localStorageData);
+
 		// create new storage repository definition
 		StorageRepositoryDefinition storageRepositoryDefinition = storageRepositoryDefinitionProvider.createStorageRepositoryDefinition();
 		storageRepositoryDefinition.setAgents(platformIdents);
+		storageRepositoryDefinition.setBusinessTransactions(businessTransactions);
 		storageRepositoryDefinition.setIndexingTree(indexingTree);
 		storageRepositoryDefinition.setCmrRepositoryDefinition(cmrRepositoryDefinition);
 		storageRepositoryDefinition.setLocalStorageData(localStorageData);
@@ -897,6 +904,28 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Loads {@link IBusinessContextDefinition} from local storage.
+	 *
+	 * @param storageData
+	 *            the storage data defining the storage to load the
+	 *            {@link IBusinessContextDefinition} from
+	 * @return {@link IBusinessContextDefinition} instance
+	 * @throws IOException
+	 *             if loading fails
+	 * @throws SerializationException
+	 *             if loading fails
+	 */
+	private Set<BusinessTransactionData> getBusinessContextLocally(final IStorageData storageData) throws IOException, SerializationException {
+		Path storagePath = getStoragePath(storageData);
+		List<Collection<BusinessTransactionData>> tmpResult = this.getObjectsByFileTreeWalk(storagePath, StorageFileType.BUSINESS_CONTEXT_FILE.getExtension());
+		Set<BusinessTransactionData> realResult = new HashSet<>();
+		for (Collection<BusinessTransactionData> collection : tmpResult) {
+			realResult.addAll(collection);
+		}
+		return realResult;
 	}
 
 	/**

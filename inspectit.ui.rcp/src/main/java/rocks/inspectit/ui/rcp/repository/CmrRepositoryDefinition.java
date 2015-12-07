@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import rocks.inspectit.shared.all.version.VersionService;
+import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
@@ -171,37 +172,42 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * The buffer data access service.
 	 */
-	private ICmrManagementService cmrManagementService;
+	private final ICmrManagementService cmrManagementService;
 
 	/**
 	 * The timer data access service.
 	 */
-	private ITimerDataAccessService timerDataAccessService;
+	private final ITimerDataAccessService timerDataAccessService;
 
 	/**
 	 * The http timer data access service.
 	 */
-	private IHttpTimerDataAccessService httpTimerDataAccessService;
+	private final IHttpTimerDataAccessService httpTimerDataAccessService;
 
 	/**
 	 * The {@link IGlobalDataAccessService}.
 	 */
-	private IGlobalDataAccessService globalDataAccessService;
+	private final IGlobalDataAccessService globalDataAccessService;
 
 	/**
 	 * The {@link IJmxDataAccessService}.
 	 */
-	private IJmxDataAccessService jmxDataAccessService;
+	private final IJmxDataAccessService jmxDataAccessService;
 
 	/**
 	 * The storage service.
 	 */
-	private IStorageService storageService;
+	private final IStorageService storageService;
 
 	/**
 	 * The configuration interface service.
 	 */
-	private IConfigurationInterfaceService configurationInterfaceService;
+	private final IConfigurationInterfaceService configurationInterfaceService;
+
+	/**
+	 * The business context management service.
+	 */
+	private final IBusinessContextManagementService businessContextManagementService;
 
 	/**
 	 * CMR repository change listeners.
@@ -249,8 +255,9 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		storageService = cmrServiceProvider.getStorageService(this);
 		configurationInterfaceService = cmrServiceProvider.getConfigurationInterfaceService(this);
 		jmxDataAccessService = cmrServiceProvider.getJmxDataAccessService(this);
+		businessContextManagementService = cmrServiceProvider.getBusinessContextManagementService(this);
 
-		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, this);
+		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, businessContextManagementService, this);
 	}
 
 	/**
@@ -330,6 +337,14 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 */
 	public IConfigurationInterfaceService getConfigurationInterfaceService() {
 		return configurationInterfaceService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IBusinessContextManagementService getBusinessContextMangementService() {
+		return businessContextManagementService;
 	}
 
 	/**

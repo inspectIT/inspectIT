@@ -3,7 +3,9 @@ package rocks.inspectit.ui.rcp.ci;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.ui.rcp.ci.listener.IAgentMappingsChangeListener;
+import rocks.inspectit.ui.rcp.ci.listener.IApplicationDefinitionChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
@@ -15,22 +17,27 @@ import rocks.inspectit.ui.rcp.util.ListenerList;
  * @author Ivan Senic
  *
  */
-public class InspectITConfigurationInterfaceManager implements IProfileChangeListener, IEnvironmentChangeListener, IAgentMappingsChangeListener {
+public class InspectITConfigurationInterfaceManager implements IProfileChangeListener, IEnvironmentChangeListener, IAgentMappingsChangeListener, IApplicationDefinitionChangeListener {
 
 	/**
 	 * List of {@link IProfileChangeListener}s.
 	 */
-	private ListenerList<IProfileChangeListener> profileChangeListeners = new ListenerList<>();
+	private final ListenerList<IProfileChangeListener> profileChangeListeners = new ListenerList<>();
 
 	/**
 	 * List of {@link IEnvironmentChangeListener}s.
 	 */
-	private ListenerList<IEnvironmentChangeListener> environmentChangeListeners = new ListenerList<>();
+	private final ListenerList<IEnvironmentChangeListener> environmentChangeListeners = new ListenerList<>();
 
 	/**
 	 * List of {@link IAgentMappingsChangeListener}s.
 	 */
-	private ListenerList<IAgentMappingsChangeListener> agentMappingChangeListeners = new ListenerList<>();
+	private final ListenerList<IAgentMappingsChangeListener> agentMappingChangeListeners = new ListenerList<>();
+
+	/**
+	 * List of {@link IApplicationDefinitionChangeListener}s.
+	 */
+	private final ListenerList<IApplicationDefinitionChangeListener> applicationChangeListeners = new ListenerList<>();
 
 	/**
 	 * {@inheritDoc}
@@ -103,6 +110,44 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public void applicationCreated(ApplicationDefinition application, int positionIndex, CmrRepositoryDefinition repositoryDefinition) {
+		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
+			listener.applicationCreated(application, positionIndex, repositoryDefinition);
+		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void applicationMoved(ApplicationDefinition application, int oldPositionIndex, int newPositionIndex, CmrRepositoryDefinition repositoryDefinition) {
+		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
+			listener.applicationMoved(application, oldPositionIndex, newPositionIndex, repositoryDefinition);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void applicationUpdated(ApplicationDefinition application, CmrRepositoryDefinition repositoryDefinition) {
+		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
+			listener.applicationUpdated(application, repositoryDefinition);
+		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void applicationDeleted(ApplicationDefinition application, CmrRepositoryDefinition repositoryDefinition) {
+		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
+			listener.applicationDeleted(application, repositoryDefinition);
+		}
+	}
+
+	/**
 	 * Registers a {@link IProfileChangeListener} if the same listener does not already exist.
 	 *
 	 * @param profileChangeListener
@@ -160,6 +205,27 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	 */
 	public void removeAgentMappingsChangeListener(IAgentMappingsChangeListener agentMappingsChangeListener) {
 		agentMappingChangeListeners.remove(agentMappingsChangeListener);
+	}
+
+	/**
+	 * Registers a {@link IApplicationDefinitionChangeListener} if the same listener does not
+	 * already exist.
+	 *
+	 * @param applicationDefinitionChangeListener
+	 *            {@link IApplicationDefinitionChangeListener} to add.
+	 */
+	public void addApplicationDefinitionChangeListener(IApplicationDefinitionChangeListener applicationDefinitionChangeListener) {
+		applicationChangeListeners.add(applicationDefinitionChangeListener);
+	}
+
+	/**
+	 * Removes a {@link IApplicationDefinitionChangeListener}.
+	 *
+	 * @param applicationDefinitionChangeListener
+	 *            {@link IApplicationDefinitionChangeListener} to remove.
+	 */
+	public void removeApplicationDefinitionChangeListener(IApplicationDefinitionChangeListener applicationDefinitionChangeListener) {
+		applicationChangeListeners.remove(applicationDefinitionChangeListener);
 	}
 
 }

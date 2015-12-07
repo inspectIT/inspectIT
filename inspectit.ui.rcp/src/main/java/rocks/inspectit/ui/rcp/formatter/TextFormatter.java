@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -775,7 +776,38 @@ public final class TextFormatter {
 		StringBuilder builder = new StringBuilder();
 		builder.append(TextFormatter.getSensorConfigName(sensorAssignment.getSensorConfigClass()));
 		builder.append(" Assignment:");
+		builder.append(getValidationConcatenatedMessage(states));
+		return builder.toString();
+	}
 
+	/**
+	 * Returns a validation errors count text for the given set of {@link ValidationState}s.
+	 *
+	 * @param states
+	 *            set of {@link ValidationState}s
+	 * @param element
+	 *            name of the element (e.g. filed, part, etc.)
+	 * @return the validation message, or null if the given set is empty.
+	 */
+	public static String getValidationErrorsCountText(Set<ValidationState> states, String element) {
+		if (states.size() == 1) {
+			return "One " + element + " contains a validation error";
+		} else if (states.size() > 1) {
+			return states.size() + " " + element + "s contain validation errors";
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns a concatenated validation message for the given set of {@link ValidationState}s.
+	 *
+	 * @param states
+	 *            set of {@link ValidationState}s
+	 * @return a concatenated validation message, or an empty string if the given set is empty.
+	 */
+	public static String getValidationConcatenatedMessage(Collection<ValidationState> states) {
+		StringBuilder builder = new StringBuilder();
 		for (ValidationState state : states) {
 			if (!state.isValid()) {
 				builder.append('\n');
@@ -784,5 +816,4 @@ public final class TextFormatter {
 		}
 		return builder.toString();
 	}
-
 }

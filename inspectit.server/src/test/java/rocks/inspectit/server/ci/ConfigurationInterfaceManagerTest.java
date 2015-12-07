@@ -41,15 +41,18 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.ci.event.BusinessContextDefinitionUpdateEvent;
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
 import rocks.inspectit.server.ci.event.ProfileUpdateEvent;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
@@ -100,6 +103,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		when(pathResolver.getEnvironmentPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentPath())));
 		when(pathResolver.getProfilesPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getProfilesPath())));
 		when(pathResolver.getSchemaPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getSchemaPath())));
+		when(pathResolver.getBusinessContextFilePath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getBusinessContextFilePath())));
 		doAnswer(new Answer<Path>() {
 			@Override
 			public Path answer(InvocationOnMock invocation) throws Throwable {
@@ -660,6 +664,22 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 			manager.saveAgentMappings(mappings, false);
 		}
+	}
+
+	public void updateBusinessContext() throws Exception {
+		assertThat(manager.getBusinessconContextDefinition().getApplicationDefinitions(), hasSize(1));
+
+		BusinessContextDefinition businessCtxDefinition = new BusinessContextDefinition();
+		businessCtxDefinition.addApplicationDefinition(new ApplicationDefinition(1, "newApplication", null));
+		manager.updateBusinessContextDefinition(businessCtxDefinition);
+		BusinessContextDefinition updated = manager.getBusinessconContextDefinition();
+
+		assertThat(updated.getApplicationDefinitions(), hasSize(2));
+		assertThat(updated.getRevision(), is(2));
+
+		ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
+		verify(eventPublisher).publishEvent(captor.capture());
+		assertThat(captor.getValue(), is(instanceOf(BusinessContextDefinitionUpdateEvent.class)));
 	}
 
 	/**
