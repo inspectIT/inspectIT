@@ -18,11 +18,12 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of {@link InvocationDataDao} that works with the data from the buffer indexing
- * tree.
- * <br>The query-Method of {@link AbstractBranch} without fork&join is executed, because there isn't much data expected.<br>
- * 
+ * tree. <br>
+ * The query-Method of {@link AbstractBranch} without fork&join is executed, because there isn't
+ * much data expected.<br>
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Repository
 public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<InvocationSequenceData> implements InvocationDataDao {
@@ -36,6 +37,7 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Comparator<? super InvocationSequenceData> comparator) {
 		return this.getInvocationSequenceOverview(platformId, methodId, limit, null, null, comparator);
 	}
@@ -43,6 +45,7 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, int limit, Comparator<? super InvocationSequenceData> comparator) {
 		return this.getInvocationSequenceOverview(platformId, 0, limit, comparator);
 	}
@@ -50,6 +53,7 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator) {
 		return this.getInvocationSequenceOverview(platformId, 0, limit, fromDate, toDate, comparator);
 	}
@@ -57,6 +61,7 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator) {
 		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, limit, fromDate, toDate);
 		List<InvocationSequenceData> resultWithChildren;
@@ -95,8 +100,22 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
 		return super.getIndexingTree().get(template);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getBufferInvocationSequenceInstances(long platformId, long methodId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator) {
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, limit, fromDate, toDate);
+		if (null != comparator) {
+			return super.executeQuery(query, comparator, limit, false);
+		} else {
+			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
+		}
 	}
 
 }

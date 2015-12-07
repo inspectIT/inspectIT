@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.repository.service.storage;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
@@ -8,18 +9,20 @@ import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.communication.data.cmr.BusinessTransactionData;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
 import info.novatec.inspectit.storage.LocalStorageData;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Provider of all storage related services. This classes correctly initialize the service with help
  * of Spring.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class StorageServiceProvider {
 
@@ -30,7 +33,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageTimerDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -55,7 +58,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageHttpTimerDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -80,7 +83,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageSqlDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -105,7 +108,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageExceptionDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -130,7 +133,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageInvocationDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -156,7 +159,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageGlobalDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -184,7 +187,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageJmxDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -200,5 +203,33 @@ public abstract class StorageServiceProvider {
 		storageJmxDataAccessService.setLocalStorageData(localStorageData);
 		storageJmxDataAccessService.setIndexingTree(storageTreeComponent);
 		return storageJmxDataAccessService;
+	}
+
+	/**
+	 * @return Spring created {@link StorageBusinessContextService}.
+	 */
+	protected abstract StorageBusinessContextService createStorageBusinessContextService();
+
+	/**
+	 * Properly initialized {@link StorageBusinessContextService}.
+	 *
+	 * @param storageRepositoryDefinition
+	 *            {@link StorageRepositoryDefinition}.
+	 * @param localStorageData
+	 *            {@link LocalStorageData}.
+	 * @param indexingTree
+	 *            Indexing tree.
+	 * @param businessTransactions
+	 *            a collection of {@link BusinessTransactionData} instances.
+	 * @return The storage implementation of the {@link IBusinessContextManagementService}
+	 */
+	public IBusinessContextManagementService createStorageBusinessContextService(StorageRepositoryDefinition storageRepositoryDefinition, LocalStorageData localStorageData,
+			IStorageTreeComponent<DefaultData> indexingTree, Collection<BusinessTransactionData> businessTransactions) {
+		StorageBusinessContextService storageBusinessContextService = createStorageBusinessContextService();
+		storageBusinessContextService.setStorageRepositoryDefinition(storageRepositoryDefinition);
+		storageBusinessContextService.setLocalStorageData(localStorageData);
+		storageBusinessContextService.setIndexingTree(indexingTree);
+		storageBusinessContextService.setBusinessTransactions(businessTransactions);
+		return storageBusinessContextService;
 	}
 }

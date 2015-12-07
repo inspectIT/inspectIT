@@ -19,3 +19,4 @@ resources/jvm
 /ci/environments/*.xml
 /ci/profiles/*.xml
 /ci/agent-mappings.xml
+/ci/businessContext.xml

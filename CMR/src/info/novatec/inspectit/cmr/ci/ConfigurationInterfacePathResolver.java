@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * Class that knows how to resolve paths related to the configuration interface.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class ConfigurationInterfacePathResolver {
@@ -48,8 +48,13 @@ public class ConfigurationInterfacePathResolver {
 	private static final String AGENT_MAPPING_FILE = "agent-mappings.xml";
 
 	/**
+	 * File name where default configuration is stored.
+	 */
+	private static final String BUSINESS_CONTEXT_CONFIG_FILE = "businessContext.xml";
+
+	/**
 	 * Returns the default CI folder.
-	 * 
+	 *
 	 * @return Returns the default CI folder.
 	 */
 	public Path getDefaultCiPath() {
@@ -58,7 +63,7 @@ public class ConfigurationInterfacePathResolver {
 
 	/**
 	 * Returns the schema path.
-	 * 
+	 *
 	 * @return Returns the schema path.
 	 */
 	public Path getSchemaPath() {
@@ -67,7 +72,7 @@ public class ConfigurationInterfacePathResolver {
 
 	/**
 	 * Returns the directory where profiles are saved.
-	 * 
+	 *
 	 * @return Profiles directory path.
 	 */
 	public Path getProfilesPath() {
@@ -76,7 +81,7 @@ public class ConfigurationInterfacePathResolver {
 
 	/**
 	 * Returns path pointing to the profile file.
-	 * 
+	 *
 	 * @param profile
 	 *            {@link Profile}
 	 * @return Path to the file.
@@ -88,7 +93,7 @@ public class ConfigurationInterfacePathResolver {
 
 	/**
 	 * Returns the directory where environments are saved.
-	 * 
+	 *
 	 * @return Environments directory path.
 	 */
 	public Path getEnvironmentPath() {
@@ -97,7 +102,7 @@ public class ConfigurationInterfacePathResolver {
 
 	/**
 	 * Returns path pointing to the environment file.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}
 	 * @return Path to the file.
@@ -109,10 +114,19 @@ public class ConfigurationInterfacePathResolver {
 
 	/**
 	 * Returns path pointing to the agent mapping file.
-	 * 
+	 *
 	 * @return Path to the file.
 	 */
 	public Path getAgentMappingFilePath() {
 		return Paths.get(DEFAULT_CI_FOLDER, AGENT_MAPPING_FILE);
+	}
+
+	/**
+	 * Returns path pointing to the business context file.
+	 *
+	 * @return Path to the file.
+	 */
+	public Path getBusinessContextFilePath() {
+		return Paths.get(DEFAULT_CI_FOLDER, BUSINESS_CONTEXT_CONFIG_FILE);
 	}
 }

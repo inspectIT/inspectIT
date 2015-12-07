@@ -1,0 +1,391 @@
+package info.novatec.inspectit.rcp.ci.form.part.business;
+
+import info.novatec.inspectit.ci.business.expression.AbstractExpression;
+import info.novatec.inspectit.ci.business.expression.impl.BooleanExpression;
+import info.novatec.inspectit.ci.business.expression.impl.OrExpression;
+import info.novatec.inspectit.ci.business.impl.IMatchingRuleProvider;
+import info.novatec.inspectit.rcp.InspectIT;
+import info.novatec.inspectit.rcp.InspectITImages;
+import info.novatec.inspectit.rcp.action.MenuAction;
+import info.novatec.inspectit.rcp.ci.form.page.IValidatorRegistry;
+import info.novatec.inspectit.rcp.ci.form.part.business.MatchingRulesEditingElementFactory.MatchingRuleType;
+import info.novatec.inspectit.rcp.ci.form.part.business.rules.AbstractRuleEditingElement;
+import info.novatec.inspectit.rcp.ci.form.part.business.rules.AbstractRuleEditingElement.IRuleEditingElementModifiedListener;
+import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+
+/**
+ * Composite element for matching rules viewing, creation and modification.
+ *
+ * @author Alexander Wert
+ *
+ */
+public class SimpleMatchingRulesPart extends SectionPart implements IMatchingRulesPart {
+
+	/**
+	 * Checks whether the passed {@link AbstractExpression} can be displayed by the
+	 * {@link SimpleMatchingRulesPart}.
+	 *
+	 * @param expression
+	 *            {@link AbstractExpression} instance to check.
+	 * @return true, if {@link SimpleMatchingRulesPart} can display the passed
+	 *         {@link AbstractExpression} instance.
+	 */
+	public static boolean canShowRule(AbstractExpression expression) {
+		if (expression instanceof OrExpression) {
+			for (AbstractExpression childExpression : ((OrExpression) expression).getOperands()) {
+				if (null == MatchingRulesEditingElementFactory.getMatchingRuleType(childExpression)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * List of {@link AbstractRuleEditingElement} comprised in this element.
+	 */
+	private final List<AbstractRuleEditingElement<?>> ruleElements = new ArrayList<AbstractRuleEditingElement<?>>();
+
+	/**
+	 * Main {@link Composite} of this element.
+	 */
+	private Composite main;
+
+	/**
+	 * Indicates whether this element is in the initialization phase.
+	 */
+	private boolean initializationPhase = false;
+
+	/**
+	 * Label holding the description text.
+	 */
+	private Label descriptionLabel;
+
+	/**
+	 * Indicates whether this form part is editable or not.
+	 */
+	private boolean editable;
+
+	/**
+	 * The toolbar manager used in this part.
+	 */
+	private ToolBarManager toolBarManager;
+
+	/**
+	 * Title of the section.
+	 */
+	private final String title;
+
+	/**
+	 * Provider and receiver of the {@link AbstractExpression} instance edited in this form part.
+	 */
+	IMatchingRuleProvider ruleProvider;
+
+	/**
+	 * The {@link IValidatorRegistry} instance to delegate validator events to.
+	 */
+	private final IValidatorRegistry validatorRegistry;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param title
+	 *            The title of the section.
+	 * @param parent
+	 *            parent {@link Composite}.
+	 * @param managedForm
+	 *            the {@link IManagedForm} to add this part to.
+	 * @param validatorRegistry
+	 *            {@link IValidatorRegistry} instance to be notified on validation state changes and
+	 *            to register {@link ValidationControlDecoration} to.
+	 */
+	public SimpleMatchingRulesPart(String title, Composite parent, IManagedForm managedForm, IValidatorRegistry validatorRegistry) {
+		super(parent, managedForm.getToolkit(), Section.TITLE_BAR | Section.EXPANDED);
+		this.title = title;
+		this.validatorRegistry = validatorRegistry;
+		this.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void createContent(IManagedForm managedForm, Composite parent) {
+		FormToolkit toolkit = managedForm.getToolkit();
+		getSection().setText(title);
+		ScrolledForm form = toolkit.createScrolledForm(getSection());
+		form.setLayout(new GridLayout(1, false));
+		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		main = form.getBody();
+		main.setBackground(parent.getBackground());
+		GridLayout layout = new GridLayout(AbstractRuleEditingElement.NUM_GRID_COLUMNS, false);
+		layout.horizontalSpacing = 8;
+		main.setLayout(layout);
+		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		toolkit.decorateFormHeading(form.getForm());
+
+		getSection().setClient(form);
+
+		descriptionLabel = toolkit.createLabel(getSection(), "");
+		descriptionLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		getSection().setDescriptionControl(descriptionLabel);
+
+		createToolbar();
+		updateEnabledState();
+	}
+
+	/**
+	 *
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void initContent(IMatchingRuleProvider ruleProvider) {
+		initializationPhase = true;
+		this.ruleProvider = ruleProvider;
+		reset();
+		AbstractExpression matchingRuleExpression = ruleProvider.getMatchingRuleExpression();
+		if (canShowRule(matchingRuleExpression)) {
+			for (AbstractExpression expression : ((OrExpression) matchingRuleExpression).getOperands()) {
+				addNewRuleEditingElement(expression);
+			}
+		}
+		main.layout(true, true);
+		initializationPhase = false;
+	}
+
+	/**
+	 * Sets the description text for this section.
+	 *
+	 * @param description
+	 *            new description text.
+	 */
+	@Override
+	public void setDescriptionText(String description) {
+		descriptionLabel.setText(description);
+		getSection().layout(true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Control getControl() {
+		return getSection();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ToolBarManager getToolbarManager() {
+		return toolBarManager;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void commit(boolean onSave) {
+		if (null != ruleProvider) {
+			AbstractExpression expression = constructMatchingRuleExpression();
+			ruleProvider.setMatchingRuleExpression(expression);
+		}
+		if (onSave) {
+			super.commit(onSave);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		getManagedForm().removePart(this);
+		getSection().dispose();
+		super.dispose();
+	}
+
+	/**
+	 * Gets {@link #editable}.
+	 *
+	 * @return {@link #editable}
+	 */
+	public boolean isEditable() {
+		return editable;
+	}
+
+	/**
+	 * Sets {@link #editable}.
+	 *
+	 * @param editable
+	 *            New value for {@link #editable}
+	 */
+	@Override
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+		updateEnabledState();
+	}
+
+	/**
+	 * Constructs a {@link AbstractExpression} instance from the contents of this element controls.
+	 *
+	 * @return Returns a {@link AbstractExpression} instance.
+	 */
+	private AbstractExpression constructMatchingRuleExpression() {
+		List<AbstractExpression> activeExpressions = new ArrayList<AbstractExpression>();
+		for (AbstractRuleEditingElement<?> ruleComposite : ruleElements) {
+			AbstractExpression expression = ruleComposite.constructRuleExpression();
+			if (null != expression) {
+				activeExpressions.add(expression);
+			}
+		}
+		AbstractExpression matchingRuleExpression = null;
+		if (!activeExpressions.isEmpty()) {
+			AbstractExpression[] expressions = new AbstractExpression[activeExpressions.size()];
+			activeExpressions.toArray(expressions);
+			matchingRuleExpression = new OrExpression(expressions);
+		}
+		if (null == matchingRuleExpression) {
+			matchingRuleExpression = new BooleanExpression(false);
+		}
+		matchingRuleExpression.setAdvanced(false);
+		return matchingRuleExpression;
+	}
+
+	/**
+	 * Sets the enabled state of this part.
+	 */
+	private void updateEnabledState() {
+		if (null != toolBarManager) {
+			toolBarManager.getControl().setEnabled(isEditable());
+		}
+	}
+
+	/**
+	 * Creates tool bar for creation of new rules.
+	 *
+	 */
+	private void createToolbar() {
+		MenuAction createNewRuleMenu = new MenuAction();
+		createNewRuleMenu.setImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_ADD));
+		createNewRuleMenu.setToolTipText("Add new rule");
+		for (MatchingRuleType type : MatchingRuleType.values()) {
+			createNewRuleMenu.addAction(new AddMatchingRuleCompositeAction(type));
+		}
+
+		toolBarManager = new ToolBarManager();
+		final ToolBar toolbar = toolBarManager.createControl(getSection());
+		toolBarManager.add(createNewRuleMenu);
+		toolBarManager.update(true);
+
+		createNewRuleMenu.setRunTask(new MenuAction.ToolbarDropDownTask(toolbar));
+
+		getSection().setTextClient(toolbar);
+	}
+
+	/**
+	 * Resets the contents of the controls within this part.
+	 */
+	private void reset() {
+		for (AbstractRuleEditingElement<?> ruleElement : ruleElements) {
+			ruleElement.dispose();
+		}
+		ruleElements.clear();
+	}
+
+	/**
+	 * Adds a new rule editing element to this composite element.
+	 *
+	 * @param expression
+	 *            {@link AbstractExpression} instance to add.
+	 */
+	private void addNewRuleEditingElement(AbstractExpression expression) {
+		AbstractRuleEditingElement<?> ruleComposite = MatchingRulesEditingElementFactory.createRuleComposite(expression, isEditable(), validatorRegistry);
+		ruleElements.add(ruleComposite);
+		ruleProvider.setMatchingRuleExpression(constructMatchingRuleExpression());
+		ruleComposite.createControls(main, getManagedForm().getToolkit(), true);
+		ruleComposite.addModifyListener(new IRuleEditingElementModifiedListener() {
+			@Override
+			public void contentModified() {
+				commit(false);
+				markDirty();
+			}
+
+			@Override
+			public void elementDisposed(AbstractRuleEditingElement<?> ruleComposite) {
+				// execute update only if the rules element is not in an initialization phase
+				if (!initializationPhase) {
+					ruleElements.remove(ruleComposite);
+					for (AbstractRuleEditingElement<?> element : ruleElements) {
+						element.disposeValidatorDecorations();
+					}
+					main.layout(true, true);
+					for (AbstractRuleEditingElement<?> element : ruleElements) {
+						element.createControlValidators();
+					}
+					ruleProvider.setMatchingRuleExpression(constructMatchingRuleExpression());
+					markDirty();
+				}
+			}
+		});
+
+		main.layout(true, true);
+		ruleComposite.initialize();
+		if (!initializationPhase) {
+			markDirty();
+		}
+	}
+
+	/**
+	 * This action adds a new {@link AbstractRuleEditingElement} instance depending on the
+	 * {@link MatchingRuleType} type.
+	 *
+	 * @author Alexander Wert
+	 *
+	 */
+	private class AddMatchingRuleCompositeAction extends Action {
+
+		/**
+		 * {@link MatchingRuleType}.
+		 */
+		private final MatchingRuleType type;
+
+		/**
+		 * Default constructor.
+		 *
+		 * @param type
+		 *            {@link MatchingRuleType}
+		 */
+		AddMatchingRuleCompositeAction(MatchingRuleType type) {
+			super();
+			this.type = type;
+			setText(type.toString());
+			setImageDescriptor(InspectIT.getDefault().getImageDescriptor(type.getImageKey()));
+		}
+
+		@Override
+		public void run() {
+			addNewRuleEditingElement(MatchingRulesEditingElementFactory.createExpression(type));
+		}
+	}
+}

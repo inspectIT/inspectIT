@@ -61,6 +61,7 @@ import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 
 /**
  * The class provide image descriptors for the different elements.
@@ -268,6 +269,37 @@ public final class ImageFormatter {
 			return img;
 		}
 		return null;
+	}
+
+	/**
+	 * Returns an overlayed icon of the passed main image using the passed images as overlays.
+	 *
+	 * @param main
+	 *            main image to be overlayed
+	 * @param resourceManager
+	 *            Resource manager that image will be created with. It is responsibility of a caller
+	 *            to provide {@link ResourceManager} for correct image disposing.
+	 * @param scaleFactor
+	 *            scale factor to be used to scale the overlay images. 1.0 means exactly the
+	 *            original size, 0.5 half size, 2.0 double size.
+	 * @param overlays
+	 *            1 to 4 overlay images. 1: top-left, 2: top-right, 3: bottom-left, 4: button-right.
+	 *            Any of the overlay positions can be null to not draw an overlay at that position.
+	 * @return an overlayed image
+	 */
+	public static Image getOverlayedImage(Image main, ResourceManager resourceManager, double scaleFactor, Image... overlays) {
+		ImageDescriptor[] descriptors = new ImageDescriptor[overlays.length];
+		for (int i = 0; i < overlays.length; i++) {
+			if (null != overlays[i]) {
+				ImageData imageData = overlays[i].getImageData();
+				imageData = imageData.scaledTo((int) (scaleFactor * imageData.width), (int) (scaleFactor * imageData.height));
+				descriptors[i] = ImageDescriptor.createFromImageData(imageData);
+			}
+		}
+
+		DecorationOverlayIcon icon = new DecorationOverlayIcon(main, descriptors);
+		Image img = resourceManager.createImage(icon);
+		return img;
 	}
 
 	/**

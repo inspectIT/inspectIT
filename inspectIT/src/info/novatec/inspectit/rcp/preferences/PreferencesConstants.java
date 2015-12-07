@@ -4,9 +4,9 @@ import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataS
 
 /**
  * Interface that just holds the all inspectIT preferences keys.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface PreferencesConstants {
 

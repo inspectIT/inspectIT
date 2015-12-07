@@ -2,11 +2,28 @@ package info.novatec.inspectit.storage.serializer;
 
 import info.novatec.inspectit.ci.AgentMapping;
 import info.novatec.inspectit.ci.AgentMappings;
+import info.novatec.inspectit.ci.BusinessContextDefinition;
 import info.novatec.inspectit.ci.Environment;
 import info.novatec.inspectit.ci.Profile;
 import info.novatec.inspectit.ci.assignment.impl.ExceptionSensorAssignment;
 import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
 import info.novatec.inspectit.ci.assignment.impl.TimerMethodSensorAssignment;
+import info.novatec.inspectit.ci.business.expression.AbstractExpression;
+import info.novatec.inspectit.ci.business.expression.impl.AndExpression;
+import info.novatec.inspectit.ci.business.expression.impl.BooleanExpression;
+import info.novatec.inspectit.ci.business.expression.impl.NameExtractionExpression;
+import info.novatec.inspectit.ci.business.expression.impl.NotExpression;
+import info.novatec.inspectit.ci.business.expression.impl.OrExpression;
+import info.novatec.inspectit.ci.business.expression.impl.StringMatchingExpression;
+import info.novatec.inspectit.ci.business.impl.ApplicationDefinition;
+import info.novatec.inspectit.ci.business.impl.BusinessTransactionDefinition;
+import info.novatec.inspectit.ci.business.valuesource.PatternMatchingType;
+import info.novatec.inspectit.ci.business.valuesource.StringValueSource;
+import info.novatec.inspectit.ci.business.valuesource.impl.HostValueSource;
+import info.novatec.inspectit.ci.business.valuesource.impl.HttpParameterValueSource;
+import info.novatec.inspectit.ci.business.valuesource.impl.HttpUriValueSource;
+import info.novatec.inspectit.ci.business.valuesource.impl.MethodParameterValueSource;
+import info.novatec.inspectit.ci.business.valuesource.impl.MethodSignatureValueSource;
 import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
 import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
 import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
@@ -271,6 +288,26 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(NotEmptyValidator.class, new FieldSerializer<NotEmptyValidator<?>>(kryo, NotEmptyValidator.class), nextRegistrationId++);
 		kryo.register(PercentageValidator.class, new FieldSerializer<PercentageValidator<?>>(kryo, PercentageValidator.class), nextRegistrationId++);
 		kryo.register(PositiveValidator.class, new FieldSerializer<PositiveValidator<?>>(kryo, PositiveValidator.class), nextRegistrationId++);
+
+		// added with INSPECTIT-1804
+		// used for recognition, configuration and visualization of business context information
+		kryo.register(ApplicationDefinition.class, new FieldSerializer<ApplicationDefinition>(kryo, ApplicationDefinition.class), nextRegistrationId++);
+		kryo.register(BusinessContextDefinition.class, new FieldSerializer<BusinessContextDefinition>(kryo, BusinessContextDefinition.class), nextRegistrationId++);
+		kryo.register(BusinessTransactionDefinition.class, new FieldSerializer<BusinessTransactionDefinition>(kryo, BusinessTransactionDefinition.class), nextRegistrationId++);
+		kryo.register(AbstractExpression.class, new FieldSerializer<AbstractExpression>(kryo, AbstractExpression.class), nextRegistrationId++);
+		kryo.register(AndExpression.class, new FieldSerializer<AndExpression>(kryo, AndExpression.class), nextRegistrationId++);
+		kryo.register(NotExpression.class, new FieldSerializer<NotExpression>(kryo, NotExpression.class), nextRegistrationId++);
+		kryo.register(OrExpression.class, new FieldSerializer<OrExpression>(kryo, OrExpression.class), nextRegistrationId++);
+		kryo.register(BooleanExpression.class, new FieldSerializer<BooleanExpression>(kryo, BooleanExpression.class), nextRegistrationId++);
+		kryo.register(StringMatchingExpression.class, new FieldSerializer<StringMatchingExpression>(kryo, StringMatchingExpression.class), nextRegistrationId++);
+		kryo.register(PatternMatchingType.class, new EnumSerializer(PatternMatchingType.class));
+		kryo.register(StringValueSource.class, new FieldSerializer<StringValueSource>(kryo, StringValueSource.class), nextRegistrationId++);
+		kryo.register(HttpUriValueSource.class, new FieldSerializer<HttpUriValueSource>(kryo, HttpUriValueSource.class), nextRegistrationId++);
+		kryo.register(HostValueSource.class, new FieldSerializer<HostValueSource>(kryo, HostValueSource.class), nextRegistrationId++);
+		kryo.register(HttpParameterValueSource.class, new FieldSerializer<HttpParameterValueSource>(kryo, HttpParameterValueSource.class), nextRegistrationId++);
+		kryo.register(MethodSignatureValueSource.class, new FieldSerializer<MethodSignatureValueSource>(kryo, MethodSignatureValueSource.class), nextRegistrationId++);
+		kryo.register(MethodParameterValueSource.class, new FieldSerializer<MethodParameterValueSource>(kryo, MethodParameterValueSource.class), nextRegistrationId++);
+		kryo.register(NameExtractionExpression.class, new FieldSerializer<NameExtractionExpression>(kryo, NameExtractionExpression.class), nextRegistrationId++);
 
 		// INSPECTIT-658
 		// this classes can be registered with FieldSerializer since they are not saved to disk

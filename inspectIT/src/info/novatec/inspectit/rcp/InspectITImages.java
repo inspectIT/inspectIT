@@ -27,6 +27,8 @@ public interface InspectITImages {
 	String IMG_RETURN = InspectITConstants.ICON_PATH_SELFMADE + "return.png";
 	String IMG_PARAMETER = InspectITConstants.ICON_PATH_SELFMADE + "parameter.png";
 	String IMG_FIELD = InspectITConstants.ICON_PATH_SELFMADE + "field.png";
+	String IMG_HTTP_PARAMETER = InspectITConstants.ICON_PATH_SELFMADE + "http-parameter.png";
+	String IMG_METHOD_PARAMETER = InspectITConstants.ICON_PATH_SELFMADE + "method-parameter.png";
 
 	// images from Eclipse, license EPL 1.0
 	String IMG_ACTIVITY = InspectITConstants.ICON_PATH_ECLIPSE + "debugtt_obj.gif";
@@ -172,6 +174,20 @@ public interface InspectITImages {
 	String IMG_BOOK = InspectITConstants.ICON_PATH_FUGUE + "book.png";
 	String IMG_DUMMY = InspectITConstants.ICON_PATH_FUGUE + "dummy-happy.png";
 	String IMG_COUNTER = InspectITConstants.ICON_PATH_FUGUE + "counter.png";
+	String IMG_BUSINESS_CONTEXT = InspectITConstants.ICON_PATH_FUGUE + "briefcase.png";
+	String IMG_APPLICATION = InspectITConstants.ICON_PATH_FUGUE + "application-blue.png";
+	String IMG_APPLICATION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application.png";
+	String IMG_APPLICATIONS = InspectITConstants.ICON_PATH_FUGUE + "applications-blue.png";
+	String IMG_BUSINESS_TRANSACTION = InspectITConstants.ICON_PATH_FUGUE + "application-dock.png";
+	String IMG_BUSINESS_TRANSACTION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application-dock-grey.png";
+	String IMG_ADVANCED_MODE = InspectITConstants.ICON_PATH_FUGUE + "blue-document-node.png";
+	String IMG_ASTERISK = InspectITConstants.ICON_PATH_FUGUE + "asterisk.png";
+	String IMG_CONJUNCTION = InspectITConstants.ICON_PATH_FUGUE + "conjunction.png";
+	String IMG_DISJUNCTION = InspectITConstants.ICON_PATH_FUGUE + "disjunction.png";
+	String IMG_NOT = InspectITConstants.ICON_PATH_FUGUE + "exclamation-diamond.png";
+	String IMG_YES_NO = InspectITConstants.ICON_PATH_FUGUE + "status-y-n.png";
+	String IMG_GLOBE = InspectITConstants.ICON_PATH_FUGUE + "globe-green.png";
+	String IMG_SERVER = InspectITConstants.ICON_PATH_FUGUE + "server.png";
 
 	// labels just pointing to existing ones
 	String IMG_ASSIGNEE_LABEL_ICON = IMG_USER;
