@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * Factory for all queries for the {@link InvocationSequenceData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 @Component
@@ -24,7 +24,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 
 	/**
 	 * Returns query for invocation overview.
-	 * 
+	 *
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param methodId
@@ -35,7 +35,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 	 *            Date include invocation from.
 	 * @param toDate
 	 *            Date include invocation to.
-	 * 
+	 *
 	 * @return Returns the query for invocation sequence overview.
 	 */
 	public E getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate) {
@@ -56,7 +56,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 
 	/**
 	 * Returns query for invocation overview.
-	 * 
+	 *
 	 * @param platformId
 	 *            Platform ID where to look for the objects. If the zero value is passed, looking
 	 *            for the object will be done in all platforms.
@@ -64,7 +64,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 	 *            Collections of invocations IDs to search.
 	 * @param limit
 	 *            The limit/size of the list.
-	 * 
+	 *
 	 * @return Returns the query for invocation sequence overview.
 	 */
 	public E getInvocationSequenceOverview(long platformId, Collection<Long> invocationIdCollection, int limit) {
@@ -74,6 +74,24 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 		searchedClasses.add(InvocationSequenceData.class);
 		query.setObjectClasses(searchedClasses);
 		query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("id", invocationIdCollection));
+		return query;
+	}
+
+	/**
+	 * Returns query for invocation overview.
+	 *
+	 * @param platformId
+	 *            Platform ID where to look for the objects. If the zero value is passed, looking
+	 *            for the object will be done in all platforms.
+	 *
+	 * @return Returns the query for invocation sequence overview.
+	 */
+	public E getInvocationSequenceOverview(long platformId) {
+		E query = getIndexQueryProvider().getIndexQuery();
+		query.setPlatformIdent(platformId);
+		ArrayList<Class<?>> searchedClasses = new ArrayList<Class<?>>();
+		searchedClasses.add(InvocationSequenceData.class);
+		query.setObjectClasses(searchedClasses);
 		return query;
 	}
 }

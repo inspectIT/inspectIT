@@ -1,8 +1,12 @@
 package info.novatec.inspectit.cmr.storage;
 
+import info.novatec.inspectit.ci.BusinessContextDefinition;
 import info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoImpl;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.cmr.service.BusinessContextManagementService;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.communication.data.cmr.BusinessTransactionData;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.storage.StorageFileType;
 import info.novatec.inspectit.storage.StorageWriter;
@@ -11,6 +15,7 @@ import info.novatec.inspectit.storage.label.type.impl.DataTimeFrameLabelType;
 import info.novatec.inspectit.util.TimeFrame;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -28,9 +33,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * {@link StorageWriter} implementation for the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component("cmrStorageWriter")
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -46,23 +51,29 @@ public class CmrStorageWriter extends StorageWriter {
 	/**
 	 * Set of involved Agents, used after recording to store proper Agent information.
 	 */
-	private Set<Long> involvedAgentsSet = new HashSet<Long>();
+	private final Set<Long> involvedAgentsSet = new HashSet<Long>();
 
 	/**
 	 * {@link AtomicLong} holding the time-stamp value of the oldest data written in the storage.
 	 */
-	private AtomicLong oldestDataTimestamp = new AtomicLong(Long.MAX_VALUE);
+	private final AtomicLong oldestDataTimestamp = new AtomicLong(Long.MAX_VALUE);
 
 	/**
 	 * {@link AtomicLong} holding the time-stamp value of the newest data written in the storage.
 	 */
-	private AtomicLong newestDataTimestamp = new AtomicLong(0);
+	private final AtomicLong newestDataTimestamp = new AtomicLong(0);
 
 	/**
 	 * Platform ident dao.
 	 */
 	@Autowired
 	private PlatformIdentDaoImpl platformIdentDao;
+
+	/**
+	 * {@link BusinessContextManagementService}.
+	 */
+	@Autowired
+	private IBusinessContextManagementService businessContextService;
 
 	/**
 	 * {@inheritDoc}
@@ -86,7 +97,7 @@ public class CmrStorageWriter extends StorageWriter {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	protected void writeAgentData() throws IOException {
@@ -97,12 +108,24 @@ public class CmrStorageWriter extends StorageWriter {
 	}
 
 	/**
+	 * Writes current {@link BusinessContextDefinition} data of the corresponding CMR to storage.
+	 *
+	 * @throws IOException
+	 *             thrown if storing business context fails
+	 */
+	protected void writeBusinessContextData() throws IOException {
+		Collection<BusinessTransactionData> businessTransactions = businessContextService.getBusinessTransactions();
+		super.writeNonDefaultDataObject(businessTransactions, "business" + StorageFileType.BUSINESS_CONTEXT_FILE.getExtension());
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public synchronized void finalizeWrite() {
 		try {
 			writeAgentData();
+			writeBusinessContextData();
 		} catch (IOException e) {
 			log.error("Exception trying to write agent data to disk.", e);
 		}
@@ -117,12 +140,12 @@ public class CmrStorageWriter extends StorageWriter {
 
 	/**
 	 * Executes post write operations:
-	 * 
+	 *
 	 * <ul>
 	 * <li>Remembers the platform id of the written data
 	 * <li>Updates the {@link #newestDataTimestamp} and the {@link #oldestDataTimestamp} if needed.
 	 * </ul>
-	 * 
+	 *
 	 * @param defaultData
 	 *            {@link DefaultData} that has been written.
 	 */

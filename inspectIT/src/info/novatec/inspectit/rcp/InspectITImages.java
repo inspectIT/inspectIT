@@ -3,12 +3,12 @@ package info.novatec.inspectit.rcp;
 /**
  * Defines all the images for the InspectIT UI. Note that all images are automatically added to the
  * registry on the inspectIT start up.
- * 
+ *
  * Please note that this is NOT all the images available. There are so many additional images that
  * you can find at
  * https://inspectit-performance.atlassian.net/wiki/display/DEV/Icons+and+banners?preview=%2F5019224
  * %2F9109584%2Ffugue-icons-3.5.5.zip
- * 
+ *
  * @author Ivan Senic
  * @author Stefan Siegl
  */
@@ -172,7 +172,22 @@ public interface InspectITImages {
 	String IMG_BOOK = InspectITConstants.ICON_PATH_FUGUE + "book.png";
 	String IMG_DUMMY = InspectITConstants.ICON_PATH_FUGUE + "dummy-happy.png";
 	String IMG_COUNTER = InspectITConstants.ICON_PATH_FUGUE + "counter.png";
-	
+	String IMG_BUSINESS_CONTEXT = InspectITConstants.ICON_PATH_FUGUE + "briefcase.png";
+	String IMG_APPLICATION = InspectITConstants.ICON_PATH_FUGUE + "application-blue.png";
+	String IMG_APPLICATION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application.png";
+	String IMG_APPLICATIONS = InspectITConstants.ICON_PATH_FUGUE + "applications-blue.png";
+	String IMG_BUSINESS_TRANSACTION = InspectITConstants.ICON_PATH_FUGUE + "application-dock.png";
+	String IMG_BUSINESS_TRANSACTION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application-dock-grey.png";
+	String IMG_ADVANCED_MODE = InspectITConstants.ICON_PATH_FUGUE + "blue-document-node.png";
+	String IMG_ASTERISK = InspectITConstants.ICON_PATH_FUGUE + "asterisk.png";
+
+	// Webgrey set - license Creative Commons v2.5
+	String IMG_AMP = InspectITConstants.ICON_PATH_WEBGREY + "amp.png";
+	String IMG_OR = InspectITConstants.ICON_PATH_WEBGREY + "or.png";
+	String IMG_EXCLAMATION = InspectITConstants.ICON_PATH_WEBGREY + "exclamation.png";
+	String IMG_CIRCLE = InspectITConstants.ICON_PATH_WEBGREY + "point.png";
+	String IMG_SHEET = InspectITConstants.ICON_PATH_WEBGREY + "sheet.png";
+
 	// labels just pointing to existing ones
 	String IMG_ASSIGNEE_LABEL_ICON = IMG_USER;
 	String IMG_DATE_LABEL_ICON = IMG_CALENDAR;
@@ -181,5 +196,5 @@ public interface InspectITImages {
 	String IMG_STATUS_LABEL_ICON = IMG_ALERT;
 	String IMG_USECASE_LABEL_ICON = IMG_BUSINESS;
 	String IMG_USER_LABEL_ICON = IMG_DISABLED;
-	
+
 }

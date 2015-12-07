@@ -80,7 +80,7 @@
       <perspective
             class="info.novatec.inspectit.rcp.perspective.ConfigurationInterfacePerspective"
             fixed="true"
-            icon="icons/fugue/compass.png"
+            icon="icons/fugue/gear.png"
             id="info.novatec.inspectit.rcp.perspective.configurationinterface"
             name="Configuration Interface">
       </perspective>
@@ -117,10 +117,17 @@
             restorable="true">
       </view>
       <view
-            class="info.novatec.inspectit.rcp.ci.view.ConfigurationInterfaceManagerView"
+            class="info.novatec.inspectit.rcp.ci.view.InstrumentationManagerViewPart"
             icon="icons/fugue/compass.png"
-            id="info.novatec.inspectit.rcp.ci.view.ciManager"
-            name="Configuration Manager"
+            id="info.novatec.inspectit.rcp.ci.view.instrumentationManager"
+            name="Instrumentation Manager"
+            restorable="true">
+      </view>
+      <view
+            class="info.novatec.inspectit.rcp.ci.view.BusinessContextManagerViewPart"
+            icon="icons/fugue/briefcase.png"
+            id="info.novatec.inspectit.rcp.ci.view.businessContextManager"
+            name="Business Context Manager"
             restorable="true">
       </view>
    </extension>
@@ -152,6 +159,13 @@
             icon="icons/eclipse/agent.gif"
             id="info.novatec.inspectit.rcp.ci.editor.agentMappingEditor"
             name="Agent Mapping Editor">
+      </editor>
+      <editor
+            class="info.novatec.inspectit.rcp.ci.form.editor.ApplicationDefinitionEditor"
+            default="false"
+            icon="icons/fugue/application-blue.png"
+            id="info.novatec.inspectit.rcp.ci.editor.applicationDefinitionEditor"
+            name="Application Definition Editor">
       </editor>
    </extension>
    <extension
@@ -231,6 +245,15 @@
             name="Create Environment">
          <description>
             Create Environment
+         </description>
+      </wizard>
+      <wizard
+            class="info.novatec.inspectit.rcp.ci.wizard.CreateApplicationWizard"
+            icon="icons/eclipse/add_obj.gif"
+            id="info.novatec.inspectit.rcp.ci.wizard.createApplicationWizard"
+            name="Create Application">
+         <description>
+            Create Application
          </description>
       </wizard>
    </extension>
@@ -496,6 +519,24 @@
       <command 
       		id="info.novatec.inspectit.rcp.commands.copyLogMessage" 
       		name="Copy Log Message">
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.ci.moveApplicationUp"
+            name="Move Application Up">
+         <commandParameter
+               id="info.novatec.inspectit.rcp.ci.moveApplication.direction"
+               name="direction"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            id="info.novatec.inspectit.rcp.ci.moveApplicationDown"
+            name="Move Application Down">
+         <commandParameter
+               id="info.novatec.inspectit.rcp.ci.moveApplication.direction"
+               name="direction"
+               optional="false">
+         </commandParameter>
       </command>
    </extension>
    <extension
@@ -972,6 +1013,11 @@
                   <not>
                      <instanceof
                            value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="info.novatec.inspectit.rcp.provider.IApplicationProvider">
                      </instanceof>
                   </not></iterate>
             </and>
@@ -1708,6 +1754,38 @@
          </activeWhen>
       </handler>
       <handler
+            class="info.novatec.inspectit.rcp.ci.handler.DeleteApplicationHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="info.novatec.inspectit.isDefaultApplication">
+                     </test>
+                  </not>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="info.novatec.inspectit.rcp.ci.handler.ActivateProfileHandler"
             commandId="info.novatec.inspectit.rcp.ci.activateProfile">
          <activeWhen>
@@ -1884,6 +1962,108 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.MoveApplicationHandler"
+            commandId="info.novatec.inspectit.rcp.ci.moveApplicationUp">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="info.novatec.inspectit.isDefaultApplication">
+                     </test>
+                  </not>
+                  <test
+                        property="info.novatec.inspectit.canMoveUp">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.MoveApplicationHandler"
+            commandId="info.novatec.inspectit.rcp.ci.moveApplicationDown">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="info.novatec.inspectit.isDefaultApplication">
+                     </test>
+                  </not>
+                  <test
+                        property="info.novatec.inspectit.canMoveDown">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="info.novatec.inspectit.rcp.ci.handler.EditApplicationHandler"
+            commandId="org.eclipse.ui.edit.rename">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="info.novatec.inspectit.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="info.novatec.inspectit.isDefaultApplication">
+                     </test>
+                  </not>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -2004,6 +2184,13 @@
             namespace="info.novatec.inspectit"
             properties="hasLoggingData, hasSQLData"
             type="info.novatec.inspectit.communication.data.InvocationSequenceData">
+      </propertyTester>
+      <propertyTester
+            class="info.novatec.inspectit.rcp.ci.testers.BusinessContextTester"
+            id="info.inspectit.rcp.DefaultApplicationTester"
+            namespace="info.novatec.inspectit"
+            properties="isDefaultApplication, canMoveUp, canMoveDown"
+            type="info.novatec.inspectit.rcp.model.ci.ApplicationLeaf">
       </propertyTester>
    </extension>
    <extension
@@ -2402,11 +2589,30 @@
                <command
                      commandId="org.eclipse.ui.views.showView"
                      icon="icons/fugue/compass.png"
-                     label="Configuration Interface Manager"
+                     label="Instrumentation Manager"
                      style="push">
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
-                        value="info.novatec.inspectit.rcp.ci.view.ciManager">
+                        value="info.novatec.inspectit.rcp.ci.view.instrumentationManager">
+                  </parameter>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeWorkbenchWindow">
+                        <test
+                              property="org.eclipse.ui.workbenchWindow.isPerspectiveOpen">
+                        </test>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     icon="icons/fugue/briefcase.png"
+                     label="Business Context Manager"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="info.novatec.inspectit.rcp.ci.view.businessContextManager">
                   </parameter>
                   <visibleWhen
                         checkEnabled="false">
@@ -2683,7 +2889,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:info.novatec.inspectit.rcp.ci.view.ciManager">
+            locationURI="toolbar:info.novatec.inspectit.rcp.ci.view.instrumentationManager">
          <command
                commandId="info.novatec.inspectit.rcp.ci.agentMapping"
                icon="icons/eclipse/agent.gif"
@@ -2993,7 +3199,7 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:info.novatec.inspectit.rcp.view.configurationInterfaceManager.table">
+            locationURI="popup:info.novatec.inspectit.rcp.view.instrumentationManager.table">
          <command
                commandId="org.eclipse.ui.newWizard"
                icon="icons/eclipse/add_obj.gif"
@@ -3013,7 +3219,7 @@
             </parameter>
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.view.configurationInterfaceManager.table.separator1"
+               name="info.novatec.inspectit.rcp.view.instrumentationManager.table.separator1"
                visible="true">
          </separator>
          <command
@@ -3132,13 +3338,122 @@
             </visibleWhen>
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.view.configurationInterfaceManager.table.separator2"
+               name="info.novatec.inspectit.rcp.view.instrumentationManager.table.separator2"
                visible="true">
          </separator>
          <command
                commandId="org.eclipse.ui.edit.delete"
                label="Delete"
                style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:info.novatec.inspectit.rcp.ci.view.businessContextManager">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               icon="icons/eclipse/add_obj.gif"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="info.novatec.inspectit.rcp.ci.wizard.createApplicationWizard">
+            </parameter>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               icon="icons/eclipse/edit.gif"
+               label="Edit"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IApplicationProvider">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.moveApplicationUp"
+               icon="icons/eclipse/prev_nav.gif"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.moveApplication.direction"
+                  value="up">
+            </parameter>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.moveApplicationDown"
+               icon="icons/eclipse/next_nav.gif"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.moveApplication.direction"
+                  value="down">
+            </parameter>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push"
+               tooltip="Delete">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:info.novatec.inspectit.rcp.ci.view.businessContextManager">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               icon="icons/eclipse/add_obj.gif"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="info.novatec.inspectit.rcp.ci.wizard.createApplicationWizard">
+            </parameter>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               icon="icons/eclipse/edit.gif"
+               label="Edit"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="info.novatec.inspectit.rcp.provider.IApplicationProvider">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <separator
+               name="info.novatec.inspectit.rcp.view.businessContextManager.table.separator1"
+               visible="true">
+         </separator>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.moveApplicationUp"
+               icon="icons/eclipse/prev_nav.gif"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.moveApplication.direction"
+                  value="up">
+            </parameter>
+         </command>
+         <command
+               commandId="info.novatec.inspectit.rcp.ci.moveApplicationDown"
+               icon="icons/eclipse/next_nav.gif"
+               style="push">
+            <parameter
+                  name="info.novatec.inspectit.rcp.ci.moveApplication.direction"
+                  value="down">
+            </parameter>
+         </command>
+         <separator
+               name="info.novatec.inspectit.rcp.view.businessContextManager.table.separator2"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push"
+               tooltip="Delete">
          </command>
       </menuContribution>
    </extension>

@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.repository;
 
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
@@ -16,10 +17,12 @@ import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.communication.data.cmr.BusinessTransactionData;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
 import info.novatec.inspectit.rcp.repository.service.storage.StorageServiceProvider;
 import info.novatec.inspectit.storage.LocalStorageData;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.base.Objects;
@@ -27,9 +30,9 @@ import com.google.common.base.Objects;
 /**
  * Storage repository definition. This {@link RepositoryDefinition} has a direct usage of a
  * {@link CmrRepositoryDefinition} where storage is located.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageRepositoryDefinition implements RepositoryDefinition {
 
@@ -84,6 +87,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	private IHttpTimerDataAccessService httpTimerDataAccessService;
 
 	/**
+	 * {@link IBusinessContextDefinition}.
+	 */
+	private IBusinessContextManagementService businessContextService;
+
+	/**
 	 * {@link StorageServiceProvider} for instantiating storage services.
 	 */
 	private StorageServiceProvider storageServiceProvider;
@@ -99,8 +107,14 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	private List<PlatformIdent> agents;
 
 	/**
+	 * Collection of {@link BusinessTransactionData} instances to use for this storage.
+	 */
+	private Collection<BusinessTransactionData> businessTransactions;
+
+	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getIp() {
 		return cmrRepositoryDefinition.getIp();
 	}
@@ -108,6 +122,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getPort() {
 		return cmrRepositoryDefinition.getPort();
 	}
@@ -115,6 +130,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return localStorageData.getName();
 	}
@@ -122,6 +138,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IInvocationDataAccessService getInvocationDataAccessService() {
 		return invocationDataAccessService;
 	}
@@ -129,6 +146,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISqlDataAccessService getSqlDataAccessService() {
 		return sqlDataAccessService;
 	}
@@ -136,6 +154,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IExceptionDataAccessService getExceptionDataAccessService() {
 		return exceptionDataAccessService;
 	}
@@ -167,6 +186,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ITimerDataAccessService getTimerDataAccessService() {
 		return timerDataAccessService;
 	}
@@ -174,8 +194,17 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHttpTimerDataAccessService getHttpTimerDataAccessService() {
 		return httpTimerDataAccessService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IBusinessContextManagementService getBusinessContextMangementService() {
+		return businessContextService;
 	}
 
 	/**
@@ -191,9 +220,9 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		timerDataAccessService = storageServiceProvider.createStorageTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<TimerData>) indexingTree);
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
 		jmxDataAccessService = storageServiceProvider.createStorageJmxDataAccessService(this, localStorageData, (IStorageTreeComponent<JmxSensorValueData>) indexingTree);
-
+		businessContextService = storageServiceProvider.createStorageBusinessContextService(this, localStorageData, (IStorageTreeComponent<DefaultData>) indexingTree, businessTransactions);
 		// for storage we use the regular cached data service because ids can never change
-		cachedDataService = new CachedDataService(globalDataAccessService);
+		cachedDataService = new CachedDataService(globalDataAccessService, businessContextService);
 	}
 
 	/**
@@ -248,6 +277,16 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 */
 	public void setAgents(List<PlatformIdent> agents) {
 		this.agents = agents;
+	}
+
+	/**
+	 * Sets {@link #businessTransactions}.
+	 *
+	 * @param businessTransactions
+	 *            a collection of {@link #BusinessTransactionData} instances
+	 */
+	public void setBusinessTransactions(Collection<BusinessTransactionData> businessTransactions) {
+		this.businessTransactions = businessTransactions;
 	}
 
 	/**

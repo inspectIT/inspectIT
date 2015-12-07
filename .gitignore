@@ -2,3 +2,4 @@
 *.svn
 version.log
 .metadata/
+CMR/ci/businessContext.xml

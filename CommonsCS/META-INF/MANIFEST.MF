@@ -7,6 +7,8 @@ Bundle-ClassPath: .
 Export-Package: info.novatec.inspectit.ci;uses:="info.novatec.inspectit.ci.sensor.exception,info.novatec.inspectit.ci.strategy",
  info.novatec.inspectit.ci.assignment,
  info.novatec.inspectit.ci.assignment.impl;uses:="info.novatec.inspectit.ci.assignment",
+ info.novatec.inspectit.ci.business,
+ info.novatec.inspectit.ci.business.impl,
  info.novatec.inspectit.ci.context,
  info.novatec.inspectit.ci.context.impl,
  info.novatec.inspectit.ci.exclude,
@@ -60,8 +62,12 @@ Export-Package: info.novatec.inspectit.ci;uses:="info.novatec.inspectit.ci.senso
  info.novatec.inspectit.storage.nio.write;uses:="info.novatec.inspectit.storage.nio,info.novatec.inspectit.storage.nio.stream,org.slf4j",
  info.novatec.inspectit.storage.processor;uses:="info.novatec.inspectit.communication,info.novatec.inspectit.storage",
  info.novatec.inspectit.storage.processor.impl,
+ info.novatec.inspectit.storage.processor.write,
+ info.novatec.inspectit.storage.processor.write.impl,
  info.novatec.inspectit.storage.recording,
  info.novatec.inspectit.storage.serializer;uses:="org.springframework.beans.factory.config",
+ info.novatec.inspectit.storage.serializer.impl,
+ info.novatec.inspectit.storage.serializer.schema,
  info.novatec.inspectit.storage.util
 Bundle-Vendor: NovaTec GmbH
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

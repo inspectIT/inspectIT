@@ -4,13 +4,15 @@ import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.cmr.service.ICachedDataService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
+import info.novatec.inspectit.communication.data.cmr.ApplicationData;
+import info.novatec.inspectit.communication.data.cmr.BusinessTransactionData;
 import info.novatec.inspectit.exception.BusinessException;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -25,10 +27,10 @@ import org.springframework.stereotype.Component;
  * <p>
  * The implementing classes should realize the {@link #shouldRefreshIdents()} method to properly
  * instruct clearing of cache when needed.
- * 
+ *
  * @author Patrice Bouillet
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class CachedDataService implements InitializingBean, ICachedDataService {
@@ -46,29 +48,48 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	private IGlobalDataAccessService globalDataAccessService;
 
 	/**
+	 * Delegate business context service.
+	 */
+	@Autowired
+	private IBusinessContextManagementService businessContextService;
+
+	/**
 	 * This map is needed to store the mapping between the ID's and the {@link PlatformIdent}
 	 * objects. Some views / editors need this information because they can only access the ID.
 	 */
-	private Map<Long, PlatformIdent> platformMap = new ConcurrentHashMap<Long, PlatformIdent>();
+	private final Map<Long, PlatformIdent> platformMap = new ConcurrentHashMap<Long, PlatformIdent>();
 
 	/**
 	 * This map is needed to store the mapping between the ID's and the {@link SensorTypeIdent}
 	 * objects. Some views / editors need this information because they can only access the ID.
 	 */
-	private Map<Long, SensorTypeIdent> sensorTypeMap = new ConcurrentHashMap<Long, SensorTypeIdent>();
+	private final Map<Long, SensorTypeIdent> sensorTypeMap = new ConcurrentHashMap<Long, SensorTypeIdent>();
 
 	/**
 	 * This map is needed to store the mapping between the ID's and the {@link MethodIdent} objects.
 	 * Some views / editors need this information because they can only access the ID.
 	 */
-	private Map<Long, MethodIdent> methodMap = new ConcurrentHashMap<Long, MethodIdent>();
+	private final Map<Long, MethodIdent> methodMap = new ConcurrentHashMap<Long, MethodIdent>();
 
 	/**
 	 * This map is needed to store the mapping between the ID's and the
 	 * {@link JmxDefinitionDataIdent} objects. Some views / editors need this information because
 	 * they can only access the ID.
 	 */
-	private Map<Long, JmxDefinitionDataIdent> jmxDefinitionDataMap = new ConcurrentHashMap<Long, JmxDefinitionDataIdent>();
+	private final Map<Long, JmxDefinitionDataIdent> jmxDefinitionDataMap = new ConcurrentHashMap<Long, JmxDefinitionDataIdent>();
+
+	/**
+	 * This map is needed to store the mapping between the ID's and the {@link ApplicationData}
+	 * objects. Some views / editors need this information because they can only access the ID.
+	 */
+	private final Map<Integer, ApplicationData> applicationMap = new ConcurrentHashMap<Integer, ApplicationData>();
+
+	/**
+	 * This map is needed to store the mapping between the ID's and the
+	 * {@link BusinessTransactionData} objects. Some views / editors need this information because
+	 * they can only access the ID.
+	 */
+	private final Map<Pair<Integer, Integer>, BusinessTransactionData> businessTransactionsMap = new ConcurrentHashMap<Pair<Integer, Integer>, BusinessTransactionData>();
 
 	/**
 	 * No-args constructor.
@@ -79,9 +100,12 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * @param globalDataAccessService
 	 *            Delegated service.
+	 * @param businessContextService
+	 *            Delegated {@link IBusinessContextManagementService}
 	 */
-	public CachedDataService(IGlobalDataAccessService globalDataAccessService) {
+	public CachedDataService(IGlobalDataAccessService globalDataAccessService, IBusinessContextManagementService businessContextService) {
 		this.globalDataAccessService = globalDataAccessService;
+		this.businessContextService = businessContextService;
 	}
 
 	/**
@@ -104,7 +128,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * Updates the data in the cache for the one agent. This method should be called with care,
 	 * since it removes and inserts all the sensor data.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            Agento to refresh.
 	 */
@@ -112,17 +136,17 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 		platformMap.remove(platformIdent.getId());
 		platformMap.put(platformIdent.getId(), platformIdent);
 
-		for (MethodIdent methodIdent : (Set<MethodIdent>) platformIdent.getMethodIdents()) {
+		for (MethodIdent methodIdent : platformIdent.getMethodIdents()) {
 			methodMap.remove(methodIdent.getId());
 			methodMap.put(methodIdent.getId(), methodIdent);
 		}
 
-		for (SensorTypeIdent sensorTypeIdent : (Set<SensorTypeIdent>) platformIdent.getSensorTypeIdents()) {
+		for (SensorTypeIdent sensorTypeIdent : platformIdent.getSensorTypeIdents()) {
 			sensorTypeMap.remove(sensorTypeIdent.getId());
 			sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
 		}
 
-		for (JmxDefinitionDataIdent jmxDefinitionDataIdent : (Set<JmxDefinitionDataIdent>) platformIdent.getJmxDefinitionDataIdents()) {
+		for (JmxDefinitionDataIdent jmxDefinitionDataIdent : platformIdent.getJmxDefinitionDataIdents()) {
 			jmxDefinitionDataMap.remove(jmxDefinitionDataIdent.getId());
 			jmxDefinitionDataMap.put(jmxDefinitionDataIdent.getId(), jmxDefinitionDataIdent);
 		}
@@ -132,6 +156,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public PlatformIdent getPlatformIdentForId(long platformId) {
 		Long id = Long.valueOf(platformId);
 		// load only if the id is not 0
@@ -145,6 +170,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SensorTypeIdent getSensorTypeIdentForId(long sensorTypeId) {
 		Long id = Long.valueOf(sensorTypeId);
 		// load only if the id is not 0
@@ -158,6 +184,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MethodIdent getMethodIdentForId(long methodId) {
 		Long id = Long.valueOf(methodId);
 		// load only if the id is not 0
@@ -171,6 +198,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public JmxDefinitionDataIdent getJmxDefinitionDataIdentForId(long jmxDefinitionDataId) {
 		Long id = Long.valueOf(jmxDefinitionDataId);
 		// load only if the id is not 0
@@ -201,11 +229,11 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 			}
 			platformMap.put(platformIdent.getId(), platformIdent);
 
-			for (MethodIdent methodIdent : (Set<MethodIdent>) platformIdent.getMethodIdents()) {
+			for (MethodIdent methodIdent : platformIdent.getMethodIdents()) {
 				methodMap.put(methodIdent.getId(), methodIdent);
 			}
 
-			for (SensorTypeIdent sensorTypeIdent : (Set<SensorTypeIdent>) platformIdent.getSensorTypeIdents()) {
+			for (SensorTypeIdent sensorTypeIdent : platformIdent.getSensorTypeIdents()) {
 				sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
 			}
 
@@ -218,8 +246,125 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public ApplicationData getApplicationForId(int id) {
+		if (!applicationMap.containsKey(id)) {
+			refreshBusinessContext();
+		}
+		return applicationMap.get(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public BusinessTransactionData getBusinessTransactionForId(int appId, int businessTxId) {
+		Pair keyPair = new Pair<Integer, Integer>(appId, businessTxId);
+		if (!businessTransactionsMap.containsKey(keyPair)) {
+			refreshBusinessContext();
+		}
+		BusinessTransactionData businessTxData = businessTransactionsMap.get(keyPair);
+		return businessTxData;
+	}
+
+	/**
+	 * Reloads the business context data.
+	 */
+	private void refreshBusinessContext() {
+		applicationMap.clear();
+		businessTransactionsMap.clear();
+
+		for (BusinessTransactionData businessTx : businessContextService.getBusinessTransactions()) {
+			businessTransactionsMap.put(new Pair<Integer, Integer>(businessTx.getApplication().getId(), businessTx.getId()), businessTx);
+			applicationMap.put(businessTx.getApplication().getId(), businessTx.getApplication());
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		refreshIdents();
 	}
 
+	/**
+	 * Simple Pair of two objects.
+	 *
+	 * @author Alexander Wert
+	 *
+	 * @param <A>
+	 *            Type of first object.
+	 * @param <B>Type
+	 *            of second object.
+	 */
+	private static final class Pair<A, B> {
+		/**
+		 * First object.
+		 */
+		private final A first;
+		/**
+		 * Second object.
+		 */
+		private final B second;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param first
+		 *            First object.
+		 * @param second
+		 *            Second object.
+		 */
+		Pair(A first, B second) {
+			super();
+			this.first = first;
+			this.second = second;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((first == null) ? 0 : first.hashCode());
+			result = prime * result + ((second == null) ? 0 : second.hashCode());
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			Pair other = (Pair) obj;
+			if (first == null) {
+				if (other.first != null) {
+					return false;
+				}
+			} else if (!first.equals(other.first)) {
+				return false;
+			}
+			if (second == null) {
+				if (other.second != null) {
+					return false;
+				}
+			} else if (!second.equals(other.second)) {
+				return false;
+			}
+			return true;
+		}
+
+	}
 }

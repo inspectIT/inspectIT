@@ -45,11 +45,14 @@ import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.communication.data.VmArgumentData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
+import info.novatec.inspectit.communication.data.cmr.ApplicationData;
+import info.novatec.inspectit.communication.data.cmr.BusinessTransactionData;
 import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
 import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.exception.RemoteException;
 import info.novatec.inspectit.exception.TechnicalException;
 import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
+import info.novatec.inspectit.exception.enumeration.BusinessContextErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.storage.serializer.HibernateAwareClassResolver;
@@ -320,9 +323,14 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));
 		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager));
 		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager));
-		
+
 		// added with INSPECTIT-1849
 		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager));
+
+		// added with INSPECTIT-1804, INSPECTIT-1807
+		kryo.register(BusinessContextErrorCodeEnum.class, new EnumSerializer(BusinessContextErrorCodeEnum.class));
+		kryo.register(ApplicationData.class, new FieldSerializer<ApplicationData>(kryo, ApplicationData.class));
+		kryo.register(BusinessTransactionData.class, new FieldSerializer<BusinessTransactionData>(kryo, BusinessTransactionData.class));
 	}
 
 	/**

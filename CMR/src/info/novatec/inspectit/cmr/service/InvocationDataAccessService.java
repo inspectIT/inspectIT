@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 @Service
 public class InvocationDataAccessService implements IInvocationDataAccessService {
@@ -42,6 +42,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
@@ -54,6 +55,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
@@ -66,6 +68,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, int limit, Date fromDate, Date toDate, ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
@@ -78,8 +81,10 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
-	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate, ResultComparator<InvocationSequenceData> resultComparator) {
+	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate,
+			ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(cachedDataService);
 		}
@@ -90,6 +95,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Collection<Long> invocationIdCollection, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
@@ -102,6 +108,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
 		InvocationSequenceData result = invocationDataDao.getInvocationSequenceDetail(template);
@@ -110,7 +117,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

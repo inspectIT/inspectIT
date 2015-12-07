@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.repository.service.cmr;
 
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.cmr.service.ICmrManagementService;
 import info.novatec.inspectit.cmr.service.IConfigurationInterfaceService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
@@ -241,5 +242,26 @@ public abstract class CmrServiceProvider {
 	 * @return Returns Spring created {@link IConfigurationInterfaceService}.
 	 */
 	protected abstract IConfigurationInterfaceService getConfigurationInterfaceService();
+	
+	/**
+	 * Returns properly initialized {@link IBusinessContextManagement}.
+	 * 
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} to bound service to.
+	 * @return Returns {@link IBusinessContextManagementService}.
+	 */
+	public IBusinessContextManagementService getBusinessContextManagementService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		IBusinessContextManagementService businessCtxMgmtService = getBusinessContextManagementService();
+		((ICmrService) businessCtxMgmtService).initService(cmrRepositoryDefinition);
+		return businessCtxMgmtService;
+	}
+
+	/**
+	 * Returns Spring created {@link BusinessContextManagementService}.
+	 * 
+	 * @return Returns Spring created {@link BusinessContextManagementService}.
+	 */
+	protected abstract IBusinessContextManagementService getBusinessContextManagementService();
+
 
 }

@@ -60,12 +60,13 @@ import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 
 /**
  * The class provide image descriptors for the different elements.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class ImageFormatter {
 
@@ -87,7 +88,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns the {@link Image} for the composite that represents a label.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type.
 	 * @return {@link Image} for Composite.
@@ -98,7 +99,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns the {@link ImageDescriptor} for the composite that represents a label.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type.
 	 * @return {@link ImageDescriptor} for {@link Composite}.
@@ -109,7 +110,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns the image key for the label type.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type.
 	 * @return String that represents the image key. Will never be <code>null</code>.
@@ -151,7 +152,7 @@ public final class ImageFormatter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} to get picture for.
 	 * @return Returns the {@link Image} for the storage, based on the
@@ -172,7 +173,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns image based on the CMR repository status.
-	 * 
+	 *
 	 * @param selectedCmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param small
@@ -203,7 +204,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns image for the title box.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}
 	 * @return Image for the title box.
@@ -222,7 +223,7 @@ public final class ImageFormatter {
 	/**
 	 * Returns image that represents the {@link WritingStatus} or null if the writing status passed
 	 * is null.
-	 * 
+	 *
 	 * @param status
 	 *            Image for {@link WritingStatus}.
 	 * @return Returns image that represents the {@link WritingStatus} or null if the writing status
@@ -247,7 +248,7 @@ public final class ImageFormatter {
 	/**
 	 * Returns overlayed icon for editors with additional {@link ImageDescriptor} depending if the
 	 * repository is CMR or Storage repository.
-	 * 
+	 *
 	 * @param original
 	 *            Original icon.
 	 * @param repositoryDefinition
@@ -270,16 +271,47 @@ public final class ImageFormatter {
 	}
 
 	/**
+	 * Returns an overlayed icon of the passed main image using the passed images as overlays.
+	 *
+	 * @param main
+	 *            main image to be overlayed
+	 * @param resourceManager
+	 *            Resource manager that image will be created with. It is responsibility of a caller
+	 *            to provide {@link ResourceManager} for correct image disposing.
+	 * @param scaleFactor
+	 *            scale factor to be used to scale the overlay images. 1.0 means exactly the
+	 *            original size, 0.5 half size, 2.0 double size.
+	 * @param overlays
+	 *            1 to 4 overlay images. 1: top-left, 2: top-right, 3: bottom-left, 4: button-right.
+	 *            Any of the overlay positions can be null to not draw an overlay at that position.
+	 * @return an overlayed image
+	 */
+	public static Image getOverlayedEditorImage(Image main, ResourceManager resourceManager, double scaleFactor, Image... overlays) {
+		ImageDescriptor[] descriptors = new ImageDescriptor[overlays.length];
+		for (int i = 0; i < overlays.length; i++) {
+			if (null != overlays[i]) {
+				ImageData imageData = overlays[i].getImageData();
+				imageData = imageData.scaledTo((int) (scaleFactor * imageData.width), (int) (scaleFactor * imageData.height));
+				descriptors[i] = ImageDescriptor.createFromImageData(imageData);
+			}
+		}
+
+		DecorationOverlayIcon icon = new DecorationOverlayIcon(main, descriptors);
+		Image img = resourceManager.createImage(icon);
+		return img;
+	}
+
+	/**
 	 * Returns the combined image for given array of descriptors. Orientation can be vertical or
 	 * horizontal.
-	 * 
+	 *
 	 * @param resourceManager
 	 *            {@link ResourceManager}.
 	 * @param orientation
 	 *            SWT#Vertical or SWT#Horizontal. Descriptors will be passed in given order.
 	 * @param descriptors
 	 *            Array of descriptors.
-	 * 
+	 *
 	 * @return Combined {@link Image}.
 	 */
 	public static Image getCombinedImage(ResourceManager resourceManager, int orientation, ImageDescriptor... descriptors) {
@@ -289,7 +321,7 @@ public final class ImageFormatter {
 	/**
 	 * Returns the combined image for given array of descriptors. Orientation can be vertical or
 	 * horizontal.
-	 * 
+	 *
 	 * @param resourceManager
 	 *            {@link ResourceManager}.
 	 * @param orientation
@@ -300,7 +332,7 @@ public final class ImageFormatter {
 	 *            min height of image
 	 * @param descriptors
 	 *            Array of descriptors.
-	 * 
+	 *
 	 * @return Combined {@link Image}.
 	 */
 	public static Image getCombinedImage(ResourceManager resourceManager, int orientation, int minWidth, int minHeight, ImageDescriptor... descriptors) {
@@ -311,10 +343,10 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns the image for the agent based on the last data sent date.
-	 * 
+	 *
 	 * @param agentStatusData
 	 *            {@link AgentStatusData} golding the information or null if it's not available.
-	 * 
+	 *
 	 * @return {@link Image}
 	 */
 	public static Image getAgentImage(AgentStatusData agentStatusData) {
@@ -344,7 +376,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns image for the {@link ISensorConfig}.
-	 * 
+	 *
 	 * @param sensorConfig
 	 *            {@link ISensorConfig}
 	 * @return Image or <code>null</code> if one can not be resolved for given sensor configuration.
@@ -355,7 +387,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns image for the {@link ISensorConfig} class.
-	 * 
+	 *
 	 * @param sensorClass
 	 *            {@link ISensorConfig} class.
 	 * @return Image or <code>null</code> if one can not be resolved for given sensor configuration.
@@ -399,7 +431,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns the image describing the method visibility of the {@link MethodSensorAssignment}.
-	 * 
+	 *
 	 * @param resourceManager
 	 *            Resource manager to create image with.
 	 * @param methodSensorAssignment
@@ -437,7 +469,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns the image describing the options of the {@link AbstractClassSensorAssignment}.
-	 * 
+	 *
 	 * @param resourceManager
 	 *            Resource manager to create image with.
 	 * @param assignment
@@ -493,7 +525,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns environment image.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to get image for.
 	 * @return Returns environment image.
@@ -504,7 +536,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns profile image.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to get image for.
 	 * @return Returns profile image.
