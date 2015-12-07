@@ -5,6 +5,16 @@
 
   <xs:element name="agent-mappings" type="agentMappings"/>
 
+  <xs:element name="and" type="andExpression"/>
+
+  <xs:element name="applicaction" type="applicationDefinition"/>
+
+  <xs:element name="boolean" type="booleanExpression"/>
+
+  <xs:element name="business-context" type="businessContextDefinition"/>
+
+  <xs:element name="business-transaction" type="businessTransactionDefinition"/>
+
   <xs:element name="charting-method-sensor-assignment" type="chartingMethodSensorAssignment"/>
 
   <xs:element name="class-loading-sensor-config" type="classLoadingSensorConfig"/>
@@ -29,7 +39,13 @@
 
   <xs:element name="field-capture" type="fieldContextCapture"/>
 
+  <xs:element name="host" type="hostValueSource"/>
+
+  <xs:element name="http-parameter-value" type="httpParameterValueSource"/>
+
   <xs:element name="http-sensor-config" type="httpSensorConfig"/>
+
+  <xs:element name="http-uri" type="httpUriValueSource"/>
 
   <xs:element name="invocation-sequence-sensor-config" type="invocationSequenceSensorConfig"/>
 
@@ -45,7 +61,17 @@
 
   <xs:element name="memory-sensor-config" type="memorySensorConfig"/>
 
+  <xs:element name="method-parameter" type="methodParameterValueSource"/>
+
   <xs:element name="method-sensor-assignment" type="methodSensorAssignment"/>
+
+  <xs:element name="method-signature" type="methodSignatureValueSource"/>
+
+  <xs:element name="name-extraction" type="nameExtractionExpression"/>
+
+  <xs:element name="not" type="notExpression"/>
+
+  <xs:element name="or" type="orExpression"/>
 
   <xs:element name="parameter-capture" type="parameterContextCapture"/>
 
@@ -66,6 +92,8 @@
   <xs:element name="size-buffer-strategy-config" type="sizeBufferStrategyConfig"/>
 
   <xs:element name="statement-sensor-config" type="statementSensorConfig"/>
+
+  <xs:element name="string-matching" type="stringMatchingExpression"/>
 
   <xs:element name="system-sensor-config" type="systemSensorConfig"/>
 
@@ -101,7 +129,212 @@
     <xs:sequence>
       <xs:element ref="agent-mapping" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="revision" type="xs:int" use="required"/>
+    <xs:attribute name="revision" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="businessContextDefinition">
+    <xs:sequence>
+      <xs:element name="applications" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="applicaction" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="revision" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="applicationDefinition">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element ref="and"/>
+        <xs:element ref="or"/>
+        <xs:element ref="not"/>
+        <xs:element ref="string-matching"/>
+        <xs:element ref="boolean"/>
+      </xs:choice>
+      <xs:element name="business-transactions" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="business-transaction" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:int" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="revision" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="abstractExpression" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="id" type="xs:long" use="required"/>
+    <xs:attribute name="advanced" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="andExpression">
+    <xs:complexContent>
+      <xs:extension base="abstractExpression">
+        <xs:sequence>
+          <xs:element name="operands" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="and"/>
+                  <xs:element ref="or"/>
+                  <xs:element ref="not"/>
+                  <xs:element ref="string-matching"/>
+                  <xs:element ref="boolean"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="orExpression">
+    <xs:complexContent>
+      <xs:extension base="abstractExpression">
+        <xs:sequence>
+          <xs:element name="operands" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="and"/>
+                  <xs:element ref="or"/>
+                  <xs:element ref="not"/>
+                  <xs:element ref="string-matching"/>
+                  <xs:element ref="boolean"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="notExpression">
+    <xs:complexContent>
+      <xs:extension base="abstractExpression">
+        <xs:choice>
+          <xs:element ref="and"/>
+          <xs:element ref="or"/>
+          <xs:element ref="not"/>
+          <xs:element ref="string-matching"/>
+          <xs:element ref="boolean"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="stringMatchingExpression">
+    <xs:complexContent>
+      <xs:extension base="abstractExpression">
+        <xs:choice>
+          <xs:element ref="http-uri"/>
+          <xs:element ref="http-parameter-value"/>
+          <xs:element ref="method-signature"/>
+          <xs:element ref="method-parameter"/>
+          <xs:element ref="host"/>
+        </xs:choice>
+        <xs:attribute name="matching-type" type="patternMatchingType" use="required"/>
+        <xs:attribute name="snippet" type="xs:string" use="required"/>
+        <xs:attribute name="search-in-trace" type="xs:boolean"/>
+        <xs:attribute name="max-search-depth" type="xs:int"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="stringValueSource" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="httpUriValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="httpParameterValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+        <xs:attribute name="parameter-name" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="methodSignatureValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="methodParameterValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+        <xs:attribute name="parameter-index" type="xs:int" use="required"/>
+        <xs:attribute name="methodSignature" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="hostValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="booleanExpression">
+    <xs:complexContent>
+      <xs:extension base="abstractExpression">
+        <xs:sequence/>
+        <xs:attribute name="boolean-value" type="xs:boolean" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="businessTransactionDefinition">
+    <xs:sequence>
+      <xs:element ref="name-extraction"/>
+      <xs:choice>
+        <xs:element ref="and"/>
+        <xs:element ref="or"/>
+        <xs:element ref="not"/>
+        <xs:element ref="string-matching"/>
+        <xs:element ref="boolean"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:int" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="nameExtractionExpression">
+    <xs:choice>
+      <xs:element ref="http-uri"/>
+      <xs:element ref="http-parameter-value"/>
+      <xs:element ref="method-signature"/>
+      <xs:element ref="method-parameter"/>
+      <xs:element ref="host"/>
+    </xs:choice>
+    <xs:attribute name="id" type="xs:long" use="required"/>
+    <xs:attribute name="regularExpression" type="xs:string" use="required"/>
+    <xs:attribute name="targetNamePattern" type="xs:string" use="required"/>
+    <xs:attribute name="max-search-depth" type="xs:int"/>
+    <xs:attribute name="search-in-trace" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="environment">
@@ -540,5 +773,15 @@
       </xs:element>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:simpleType name="patternMatchingType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="equals"/>
+      <xs:enumeration value="ends-with"/>
+      <xs:enumeration value="contains"/>
+      <xs:enumeration value="regex"/>
+      <xs:enumeration value="starts-with"/>
+    </xs:restriction>
+  </xs:simpleType>
 </xs:schema>
 
