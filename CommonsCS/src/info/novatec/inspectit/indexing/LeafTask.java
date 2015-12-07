@@ -14,6 +14,11 @@ import java.util.concurrent.RecursiveTask;
 public class LeafTask<R, E> extends RecursiveTask<List<R>> {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6813196387139861826L;
+
+	/**
 	 * The given leaf.
 	 */
 	private ITreeComponent<R, E> leaf;

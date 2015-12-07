@@ -10,16 +10,16 @@
 	<bean id="indexerCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.IndexerCmrProcessor" />
 	<bean id="persistingCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.PersistingCmrProcessor" >
 		<constructor-arg>
-				<util:list value-type="java.lang.Class">
-					<value>info.novatec.inspectit.communication.data.ClassLoadingInformationData</value>
-					<value>info.novatec.inspectit.communication.data.CompilationInformationData</value>
-					<value>info.novatec.inspectit.communication.data.CpuInformationData</value>
-					<value>info.novatec.inspectit.communication.data.MemoryInformationData</value>
-					<value>info.novatec.inspectit.communication.data.RuntimeInformationData</value>
-					<value>info.novatec.inspectit.communication.data.ThreadInformationData</value>
+			<util:list value-type="java.lang.Class">
+				<value>info.novatec.inspectit.communication.data.ClassLoadingInformationData</value>
+				<value>info.novatec.inspectit.communication.data.CompilationInformationData</value>
+				<value>info.novatec.inspectit.communication.data.CpuInformationData</value>
+				<value>info.novatec.inspectit.communication.data.MemoryInformationData</value>
+				<value>info.novatec.inspectit.communication.data.RuntimeInformationData</value>
+				<value>info.novatec.inspectit.communication.data.ThreadInformationData</value>
 					<value>info.novatec.inspectit.communication.data.SystemInformationData</value>
 					<value>info.novatec.inspectit.communication.data.JmxSensorValueData</value>
-				</util:list>
+			</util:list>
 		</constructor-arg>
 	</bean>
 	<bean id="sqlExclusiveTimeCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SqlExclusiveTimeCmrProcessor" />
@@ -35,9 +35,13 @@
 		</constructor-arg>
 	</bean>
 	<bean id="recorderCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.RecorderCmrProcessor" />
+	<bean id="businessContextRecognitionProcessor" class="info.novatec.inspectit.cmr.processor.businesscontext.BusinessContextRecognitionProcessor" />
+
+
 
 	<util:list value-type="info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor" id="cmrDataProcessorList">
 		<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
+		<ref bean="businessContextRecognitionProcessor" />
 		<ref bean="bufferInserterCmrProcessor" />
 		<ref bean="exceptionMessageCmrProcessor" />
 		<ref bean="persistingCmrProcessor" />
@@ -46,6 +50,6 @@
 		<ref bean="invocationModifierCmrProcessor" />
 		<ref bean="recorderCmrProcessor" /> <!-- Must be last when all are processed -->
 	</util:list>
-	
-	
+
+
 </beans>

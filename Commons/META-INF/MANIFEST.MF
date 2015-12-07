@@ -4,6 +4,7 @@ Bundle-Name: inspectIT Commons
 Bundle-SymbolicName: info.novatec.inspectit.commons
 Bundle-Version: 1.6.0
 Export-Package: info.novatec.inspectit.cmr.cache,
+ info.novatec.inspectit.cmr.configuration.business,
  info.novatec.inspectit.cmr.model,
  info.novatec.inspectit.cmr.property.spring,
  info.novatec.inspectit.cmr.service,

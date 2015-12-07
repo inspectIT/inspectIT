@@ -18,6 +18,11 @@ import java.util.concurrent.RecursiveTask;
 public class QueryTask<R, E> extends RecursiveTask<List<R>> {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1995008106967548038L;
+
+	/**
 	 * The given query.
 	 */
 	private IIndexQuery query;

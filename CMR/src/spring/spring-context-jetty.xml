@@ -209,6 +209,21 @@
 	</bean>
 	<!-- END -->
 
+	<!-- Business Context Management Service -->
+	<bean name="businessCtxMngmtRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="businessCtxMngmtServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="businessContextManagementServiceExporter" />
+		<property name="servlet" ref="businessCtxMngmtRequestHandlerServlet" />
+	</bean>
+
+	<bean id="businessCtxMngmtServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="businessContextManagementServiceExporter" />
+		<property name="pathSpec" value="/remoting/BusinessContextManagementService" />
+	</bean>
+	<!-- END -->
+
 	<!-- DEFAULT SERVER FOR STATIC CONTENT -->
 	<bean id="defaultServlet" class="org.mortbay.jetty.servlet.DefaultServlet" />
 
@@ -320,6 +335,7 @@
 				<ref bean="httpTimerDataAccessServiceServletHolder" />
 				<ref bean="storageServiceServletHolder" />
 				<ref bean="configurationInterfaceServiceServletHolder" />
+				<ref bean="businessCtxMngmtServletHolder" />
 				<ref bean="defaultServletHolder" />
 				<ref bean="uploadServletHolder" />
 				<ref bean="springDispatcherServletHolder" />
@@ -338,6 +354,7 @@
 				<ref bean="httpTimerDataAccessServiceServiceMapping" />
 				<ref bean="storageServiceServiceMapping" />
 				<ref bean="configurationInterfaceServiceServiceMapping" />
+				<ref bean="businessCtxMngmtServiceMapping" />
 				<ref bean="defaultServletMapping" />
 				<ref bean="uploadServletMapping" />
 				<ref bean="springDispatcherServletMapping" />
