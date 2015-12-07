@@ -4,7 +4,11 @@ Bundle-Name: inspectIT Client-Server Commons
 Bundle-SymbolicName: info.novatec.inspectit.commonscs
 Bundle-Version: 1.6.0
 Bundle-ClassPath: .
-Export-Package: info.novatec.inspectit.ci;uses:="info.novatec.inspectit.ci.sensor.exception,info.novatec.inspectit.ci.strategy",
+Export-Package: info.novatec.inspectit.cmr.configuration.business,
+ info.novatec.inspectit.cmr.configuration.business.expression,
+ info.novatec.inspectit.cmr.configuration.business.expression.impl,
+ info.novatec.inspectit.cmr.property,
+ info.novatec.inspectit.ci;uses:="info.novatec.inspectit.ci.sensor.exception,info.novatec.inspectit.ci.strategy",
  info.novatec.inspectit.ci.assignment,
  info.novatec.inspectit.ci.assignment.impl;uses:="info.novatec.inspectit.ci.assignment",
  info.novatec.inspectit.ci.context,
@@ -60,8 +64,12 @@ Export-Package: info.novatec.inspectit.ci;uses:="info.novatec.inspectit.ci.senso
  info.novatec.inspectit.storage.nio.write;uses:="info.novatec.inspectit.storage.nio,info.novatec.inspectit.storage.nio.stream,org.slf4j",
  info.novatec.inspectit.storage.processor;uses:="info.novatec.inspectit.communication,info.novatec.inspectit.storage",
  info.novatec.inspectit.storage.processor.impl,
+ info.novatec.inspectit.storage.processor.write,
+ info.novatec.inspectit.storage.processor.write.impl,
  info.novatec.inspectit.storage.recording,
  info.novatec.inspectit.storage.serializer;uses:="org.springframework.beans.factory.config",
+ info.novatec.inspectit.storage.serializer.impl,
+ info.novatec.inspectit.storage.serializer.schema,
  info.novatec.inspectit.storage.util
 Bundle-Vendor: NovaTec GmbH
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

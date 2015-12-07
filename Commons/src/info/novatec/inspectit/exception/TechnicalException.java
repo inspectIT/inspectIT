@@ -50,4 +50,26 @@ public class TechnicalException extends BusinessException {
 		initCause(cause);
 	}
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param errorCode
+	 *            Error code describing the exception.
+	 */
+	public TechnicalException(IErrorCode errorCode) {
+		super(errorCode);
+	}
+
+	/**
+	 * Constructor that allows definition of the action.
+	 * 
+	 * @param actionPerformed
+	 *            Action being performed when exception occurred.
+	 * @param errorCode
+	 *            Error code describing the exception.
+	 */
+	public TechnicalException(String actionPerformed, IErrorCode errorCode) {
+		super(actionPerformed, errorCode);
+	}
+
 }

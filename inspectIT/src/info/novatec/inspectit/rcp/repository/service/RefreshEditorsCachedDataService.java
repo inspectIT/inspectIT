@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.repository.service;
 
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.cache.CachedDataService;
 import info.novatec.inspectit.rcp.editor.root.IRootEditor;
@@ -32,11 +33,13 @@ public class RefreshEditorsCachedDataService extends CachedDataService {
 	/**
 	 * @param globalDataAccessService
 	 *            {@link IGlobalDataAccessService}
+	 * @param businessContextService
+	 *            {@link IBusinessContextManagementService}
 	 * @param repositoryDefinition
 	 *            {@link RepositoryDefinition}
 	 */
-	public RefreshEditorsCachedDataService(IGlobalDataAccessService globalDataAccessService, CmrRepositoryDefinition repositoryDefinition) {
-		super(globalDataAccessService);
+	public RefreshEditorsCachedDataService(IGlobalDataAccessService globalDataAccessService, IBusinessContextManagementService businessContextService, CmrRepositoryDefinition repositoryDefinition) {
+		super(globalDataAccessService, businessContextService);
 		this.repositoryDefinition = repositoryDefinition;
 	}
 

@@ -1,6 +1,9 @@
 package info.novatec.inspectit.rcp.repository;
 
+import info.novatec.inspectit.cmr.configuration.business.BusinessContextDefinition;
+import info.novatec.inspectit.cmr.configuration.business.IBusinessContextDefinition;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
@@ -84,6 +87,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	private IHttpTimerDataAccessService httpTimerDataAccessService;
 
 	/**
+	 * {@link IBusinessContextDefinition}.
+	 */
+	private IBusinessContextManagementService businessContextService;
+
+	/**
 	 * {@link StorageServiceProvider} for instantiating storage services.
 	 */
 	private StorageServiceProvider storageServiceProvider;
@@ -97,6 +105,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 * Involved agents.
 	 */
 	private List<PlatformIdent> agents;
+
+	/**
+	 * {@link BusinessContextDefinition} to use for this storage.
+	 */
+	private IBusinessContextDefinition businessContextDefinition;
 
 	/**
 	 * {@inheritDoc}
@@ -181,6 +194,13 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	public IBusinessContextManagementService getBusinessContextMangementService() {
+		return businessContextService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressWarnings("unchecked")
 	public void initServices() {
 		// init services
@@ -191,9 +211,9 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		timerDataAccessService = storageServiceProvider.createStorageTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<TimerData>) indexingTree);
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
 		jmxDataAccessService = storageServiceProvider.createStorageJmxDataAccessService(this, localStorageData, (IStorageTreeComponent<JmxSensorValueData>) indexingTree);
-
+		businessContextService = storageServiceProvider.createStorageBusinessContextService(this, localStorageData, (IStorageTreeComponent<DefaultData>) indexingTree, businessContextDefinition);
 		// for storage we use the regular cached data service because ids can never change
-		cachedDataService = new CachedDataService(globalDataAccessService);
+		cachedDataService = new CachedDataService(globalDataAccessService, businessContextService);
 	}
 
 	/**
@@ -248,6 +268,16 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 */
 	public void setAgents(List<PlatformIdent> agents) {
 		this.agents = agents;
+	}
+
+	/**
+	 * Sets {@link #businessContextDefinition}.
+	 * 
+	 * @param businessContextDefinition
+	 *            New value for {@link #businessContextDefinition}
+	 */
+	public void setBusinessContextDefinition(IBusinessContextDefinition businessContextDefinition) {
+		this.businessContextDefinition = businessContextDefinition;
 	}
 
 	/**

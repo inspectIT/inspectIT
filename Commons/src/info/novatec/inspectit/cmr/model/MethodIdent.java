@@ -27,13 +27,12 @@ import javax.validation.constraints.NotNull;
 /**
  * The Method Ident class is used to store the information of the Agent(s) about an instrumented
  * method into the database.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Entity
-@NamedQueries({
-		@NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
+@NamedQueries({ @NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
 		@NamedQuery(name = MethodIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m from MethodIdent m JOIN m.platformIdent p WHERE p.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType ") })
 public class MethodIdent implements Serializable {
 
@@ -124,7 +123,7 @@ public class MethodIdent implements Serializable {
 	/**
 	 * Returns true if any of the {@link MethodIdentToSensorType} objects in the
 	 * {@link #methodIdentToSensorTypes} is marked as active. Returns false otherwise.
-	 * 
+	 *
 	 * @return Returns true if any of the {@link MethodIdentToSensorType} objects in the
 	 *         {@link #methodIdentToSensorTypes} is marked as active. Returns false otherwise.
 	 */
@@ -139,7 +138,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public Long getId() {
@@ -148,7 +147,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -158,7 +157,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #timeStamp}.
-	 * 
+	 *
 	 * @return {@link #timeStamp}
 	 */
 	public Timestamp getTimeStamp() {
@@ -167,7 +166,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #timeStamp}.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            New value for {@link #timeStamp}
 	 */
@@ -177,7 +176,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #methodIdentToSensorTypes}.
-	 * 
+	 *
 	 * @return {@link #methodIdentToSensorTypes}
 	 */
 	public Set<MethodIdentToSensorType> getMethodIdentToSensorTypes() {
@@ -186,7 +185,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #methodIdentToSensorTypes}.
-	 * 
+	 *
 	 * @param methodIdentToSensorTypes
 	 *            New value for {@link #methodIdentToSensorTypes}
 	 */
@@ -196,7 +195,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #platformIdent}.
-	 * 
+	 *
 	 * @return {@link #platformIdent}
 	 */
 	public PlatformIdent getPlatformIdent() {
@@ -205,7 +204,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #platformIdent}.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            New value for {@link #platformIdent}
 	 */
@@ -215,7 +214,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #parameters}.
-	 * 
+	 *
 	 * @return {@link #parameters}
 	 */
 	public List<String> getParameters() {
@@ -224,7 +223,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #parameters}.
-	 * 
+	 *
 	 * @param parameters
 	 *            New value for {@link #parameters}
 	 */
@@ -234,7 +233,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #packageName}.
-	 * 
+	 *
 	 * @return {@link #packageName}
 	 */
 	public String getPackageName() {
@@ -243,7 +242,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #packageName}.
-	 * 
+	 *
 	 * @param packageName
 	 *            New value for {@link #packageName}
 	 */
@@ -253,7 +252,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #className}.
-	 * 
+	 *
 	 * @return {@link #className}
 	 */
 	public String getClassName() {
@@ -262,7 +261,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #className}.
-	 * 
+	 *
 	 * @param className
 	 *            New value for {@link #className}
 	 */
@@ -272,7 +271,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #methodName}.
-	 * 
+	 *
 	 * @return {@link #methodName}
 	 */
 	public String getMethodName() {
@@ -281,7 +280,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #methodName}.
-	 * 
+	 *
 	 * @param methodName
 	 *            New value for {@link #methodName}
 	 */
@@ -291,7 +290,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #returnType}.
-	 * 
+	 *
 	 * @return {@link #returnType}
 	 */
 	public String getReturnType() {
@@ -300,7 +299,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #returnType}.
-	 * 
+	 *
 	 * @param returnType
 	 *            New value for {@link #returnType}
 	 */
@@ -310,7 +309,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Gets {@link #modifiers}.
-	 * 
+	 *
 	 * @return {@link #modifiers}
 	 */
 	public int getModifiers() {
@@ -319,7 +318,7 @@ public class MethodIdent implements Serializable {
 
 	/**
 	 * Sets {@link #modifiers}.
-	 * 
+	 *
 	 * @param modifiers
 	 *            New value for {@link #modifiers}
 	 */
@@ -330,11 +329,37 @@ public class MethodIdent implements Serializable {
 	/**
 	 * Returns the Fully qualified name (FQN) of the class {@link MethodIdent} is holding
 	 * information for.
-	 * 
+	 *
 	 * @return Fully qualified name (FQN) string.
 	 */
 	public String getFQN() {
 		return packageName + '.' + className;
+	}
+
+	/**
+	 * Returns the fully qualified signature of the method the class {@link MethodIdent} is holding
+	 * information for. Format: package.Class.method(pack.ParamA,pack.ParamB)
+	 *
+	 * @return Returns the fully qualified signature of the method.
+	 */
+	public String getFullyQualifiedMethodSignature() {
+		StringBuilder signature = new StringBuilder();
+		signature.append(getFQN());
+		signature.append('.');
+		signature.append(getMethodName());
+		if (parameters.isEmpty()) {
+			signature.append("()");
+		} else {
+			signature.append('(');
+			int maxIndex = parameters.size() - 1;
+			for (int i = 0; i < maxIndex; i++) {
+				signature.append(parameters.get(i));
+				signature.append(',');
+			}
+			signature.append(parameters.get(maxIndex));
+			signature.append(')');
+		}
+		return signature.toString();
 	}
 
 	/**

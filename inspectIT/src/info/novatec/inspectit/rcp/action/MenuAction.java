@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.action;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
@@ -37,6 +38,16 @@ public final class MenuAction extends Action implements IMenuCreator {
 	 */
 	public void addContributionItem(IContributionItem contributionItem) {
 		menuManager.add(contributionItem);
+	}
+
+	/**
+	 * Adds an action to this manager.
+	 * 
+	 * @param action
+	 *            The action to add.
+	 */
+	public void addAction(IAction action) {
+		menuManager.add(action);
 	}
 
 	/**

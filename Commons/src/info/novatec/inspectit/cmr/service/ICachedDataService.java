@@ -1,12 +1,15 @@
 package info.novatec.inspectit.cmr.service;
 
 import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
+import info.novatec.inspectit.cmr.configuration.business.IApplicationDefinition;
+import info.novatec.inspectit.cmr.configuration.business.IBusinessTransactionDefinition;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
 
 /**
- * Interface for the cached data service. Provides platform, sensor and method ident from the cache.
+ * Interface for the cached data service. Provides platform, sensor, method ident and business
+ * context from the cache.
  * 
  * @author Ivan Senic
  * 
@@ -48,4 +51,32 @@ public interface ICachedDataService {
 	 * @return The {@link JmxDefinitionDataIdent} object.
 	 */
 	JmxDefinitionDataIdent getJmxDefinitionDataIdentForId(long jmxDefinitionDataId);
+	
+	/**
+	 * Retrieves the {@link IApplicationDefinition} for the given identifier.
+	 * 
+	 * @param id
+	 *            unique identifier of the application definition
+	 * @return Returns the application definition for the given id or null if no applicaiton
+	 *         definition for the id exists.
+	 */
+	IApplicationDefinition getApplicationDefinitionForId(long id);
+
+	/**
+	 * Retrieves the {@link IBusinessTransactionDefinition} for the given application and business
+	 * transaction identifiers.
+	 * 
+	 * @param appId
+	 *            unique identifier of the application definition
+	 * @param businessTxId
+	 *            unique identifier of the business transaction definition
+	 * @return Returns the business transaction definition or null if no business transaction
+	 *         definition for the given pair of identifiers exists.
+	 */
+	IBusinessTransactionDefinition getBusinessTransactionDefinitionForId(long appId, long businessTxId);
+
+	/**
+	 * Invalidates the cache for the business context.
+	 */
+	void invalidateBusinessContextCache();
 }
