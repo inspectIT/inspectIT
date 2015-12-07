@@ -30,7 +30,7 @@ public class AgentMappings {
 	 * Revision. Server for version control and updating control.
 	 */
 	@XmlAttribute(name = "revision")
-	private int revision = 1;
+	private Integer revision = 1;
 
 	/**
 	 * No-arg constructor.
@@ -71,7 +71,7 @@ public class AgentMappings {
 	 * @return {@link #revision}
 	 */
 	public int getRevision() {
-		return revision;
+		return revision.intValue();
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class AgentMappings {
 	 *            New value for {@link #revision}
 	 */
 	public void setRevision(int revision) {
-		this.revision = revision;
+		this.revision = Integer.valueOf(revision);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class AgentMappings {
 		} else if (!mappings.equals(other.mappings)) {
 			return false;
 		}
-		if (revision != other.revision) {
+		if (getRevision() != other.getRevision()) {
 			return false;
 		}
 		return true;

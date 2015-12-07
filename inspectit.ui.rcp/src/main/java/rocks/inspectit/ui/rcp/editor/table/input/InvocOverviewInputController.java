@@ -40,6 +40,8 @@ import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
@@ -93,15 +95,17 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		COUNT("Child Count", 100, null, InvocationSequenceDataComparatorEnum.CHILD_COUNT),
 		/** The URI column. */
 		URI("URI", 150, null, InvocationSequenceDataComparatorEnum.URI),
+		/** The application column. */
+		APPLICATION("Application", 150, null, InvocationSequenceDataComparatorEnum.APPLICATION),
 		/** The Use case column. */
 		USE_CASE("Use case", 100, null, InvocationSequenceDataComparatorEnum.USE_CASE);
 
 		/** The name. */
-		private String name;
+		private final String name;
 		/** The width of the column. */
-		private int width;
+		private final int width;
 		/** The image descriptor. Can be <code>null</code> */
-		private Image image;
+		private final Image image;
 		/** Comparator for the column. */
 		protected IDataComparator<? super InvocationSequenceData> dataComparator;
 
@@ -193,7 +197,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 	/**
 	 * The resource manager is used for the images etc.
 	 */
-	private LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
+	private final LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
 
 	/**
 	 * Result comparator to be used on the server.
@@ -607,17 +611,24 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 			} else {
 				return emptyStyledString;
 			}
+		case APPLICATION:
+			ApplicationData appData = cachedDataService.getApplicationForId(data.getApplicationId());
+			if (null != appData) {
+				return new StyledString(appData.getName());
+			} else {
+				return emptyStyledString;
+			}
 		case USE_CASE:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
 				String useCase = ((HttpTimerData) data.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
 				if (null != useCase) {
+					// use case tagged through inspectIT HTTP header
 					return new StyledString(useCase);
-				} else {
-					return emptyStyledString;
 				}
-			} else {
-				return emptyStyledString;
 			}
+
+			BusinessTransactionData businessTx = cachedDataService.getBusinessTransactionForId(data.getApplicationId(), data.getBusinessTransactionId());
+			return (null != businessTx) ? new StyledString(businessTx.getName()) : emptyStyledString;
 		default:
 			return new StyledString("error");
 		}

@@ -53,7 +53,7 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate,
 			ResultComparator<InvocationSequenceData> resultComparator) {
-		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, fromDate, toDate);
+		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, methodId, fromDate, toDate);
 		query.setOnlyInvocationsWithoutChildren(true);
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(getStorageRepositoryDefinition().getCachedDataService());
@@ -77,7 +77,7 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	 */
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Collection<Long> invocationIdCollection, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
-		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, invocationIdCollection, limit);
+		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, invocationIdCollection, limit);
 		query.setOnlyInvocationsWithoutChildren(true);
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(getStorageRepositoryDefinition().getCachedDataService());
@@ -92,7 +92,7 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	 */
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, ResultComparator<InvocationSequenceData> resultComparator) {
-		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, startDate, endDate, minId);
+		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, startDate, endDate, minId);
 		query.setOnlyInvocationsWithoutChildren(true);
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(getStorageRepositoryDefinition().getCachedDataService());
