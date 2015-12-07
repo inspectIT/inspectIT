@@ -45,7 +45,12 @@ public enum StorageFileType {
 	/**
 	 * Cached data files.
 	 */
-	CACHED_DATA_FILE(".cached");
+	CACHED_DATA_FILE(".cached"),
+
+	/**
+	 * Business context data file.
+	 */
+	BUSINESS_CONTEXT_FILE("business", ".bctx");
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full
@@ -65,6 +70,11 @@ public enum StorageFileType {
 	private String extension;
 
 	/**
+	 * Default file name.
+	 */
+	private String defaultFileName;
+
+	/**
 	 * Private constructor.
 	 *
 	 * @param extension
@@ -75,12 +85,34 @@ public enum StorageFileType {
 	}
 
 	/**
+	 * Private constructor.
+	 *
+	 * @param defaultFileName
+	 *            The default name of the file.
+	 * @param extension
+	 *            Extension of file type.
+	 */
+	private StorageFileType(String defaultFileName, String extension) {
+		this.extension = extension;
+		this.defaultFileName = defaultFileName;
+	}
+
+	/**
 	 * Gets {@link #extension}.
 	 *
 	 * @return {@link #extension}
 	 */
 	public String getExtension() {
 		return extension;
+	}
+
+	/**
+	 * Gets {@link #defaultFileName}.
+	 *
+	 * @return {@link #defaultFileName} or null, if no default name exists.
+	 */
+	public String getDefaultFileName() {
+		return defaultFileName;
 	}
 
 	/**

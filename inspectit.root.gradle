@@ -32,6 +32,11 @@ allprojects {
 	apply from: file(dependenciesFile.absolutePath)
 
 	/**
+	* It is required to set the encoding for all projects to UTF-8, otherwise the build may fail on windows.
+	*/
+	System.setProperty("file.encoding", "utf-8")
+	 
+	/**
 	 * If -PintegrateVersionInfo=true is passed with the build, then we will create versionInfo property for the project.
 	 * The build must be started then with -DRELEASE_VERSION and -DBUILD_NUMBER properties set.
 	 */

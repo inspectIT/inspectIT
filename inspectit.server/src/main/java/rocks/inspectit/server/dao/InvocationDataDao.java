@@ -147,6 +147,29 @@ public interface InvocationDataDao {
 	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, Comparator<? super InvocationSequenceData> comparator);
 
 	/**
+	 * Returns a list of {@link InvocationSequenceData} objects from the buffer. This method returns
+	 * the original {@link InvocationSequenceData} instances from the buffer. This method is
+	 * intended to be used only within the CMR for purposes of updating elements in the buffer.
+	 *
+	 * @param platformId
+	 *            The ID of the platform.
+	 * @param methodId
+	 *            The ID of the method.
+	 * @param limit
+	 *            The limit/size of the list.
+	 * @param fromDate
+	 *            Date include invocation from.
+	 * @param toDate
+	 *            Date include invocation to.
+	 * @param comparator
+	 *            Comparator to compare results with. If <code>null</code> is passed default
+	 *            comparator will be used (in this case Timestamp comparator).
+	 *
+	 * @return Returns the list of invocation sequences.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceDetail(long platformId, long methodId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator);
+
+	/**
 	 * This service method is used to get all the details of a specific invocation sequence.
 	 *
 	 * @param template

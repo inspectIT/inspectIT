@@ -29,7 +29,7 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 	/**
 	 * If it is charting.
 	 */
-	@XmlAttribute(name = "charting")
+	@XmlAttribute(name = "charting", required = false)
 	private Boolean charting = Boolean.FALSE;
 
 	/**

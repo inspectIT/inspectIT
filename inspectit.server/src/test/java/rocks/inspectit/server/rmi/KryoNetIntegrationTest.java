@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -181,9 +182,8 @@ public class KryoNetIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 			client.sendTCP(toSend);
 
 			// sleep as the receiving is done in another thread
-			Thread.sleep(100);
+			verify(listener, timeout(500)).received(Matchers.<Connection> anyObject(), eq(toSend));
 
-			verify(listener).received(Matchers.<Connection> anyObject(), eq(toSend));
 		}
 
 		@Test(invocationCount = 10)
@@ -206,14 +206,14 @@ public class KryoNetIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 			cyclicBarrier.await();
 
 			for (Thread thread : threads) {
-				thread.join(10000);
+				thread.join();
 			}
 
 			// sleep as the receiving is done in another thread
-			Thread.sleep(100);
+			// Thread.sleep(500);
 
 			for (Object toSend : sendingObjectsSet) {
-				verify(listener).received(Matchers.<Connection> anyObject(), eq(toSend));
+				verify(listener, timeout(500)).received(Matchers.<Connection> anyObject(), eq(toSend));
 			}
 		}
 	}
