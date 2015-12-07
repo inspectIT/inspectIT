@@ -53,7 +53,7 @@ public class Profile extends AbstractCiData {
 	 */
 	@Override
 	public String getName() {
-		if (commonProfile) {
+		if (isCommonProfile()) {
 			return "[Common] " + super.getName();
 		} else {
 			return super.getName();
@@ -67,6 +67,16 @@ public class Profile extends AbstractCiData {
 	 */
 	public boolean isCommonProfile() {
 		return commonProfile.booleanValue();
+	}
+
+	/**
+	 * Sets {@link #commonProfile}.
+	 *
+	 * @param commonProfile
+	 *            New value for {@link #commonProfile}
+	 */
+	public void setCommonProfile(boolean commonProfile) {
+		this.commonProfile = commonProfile;
 	}
 
 	/**

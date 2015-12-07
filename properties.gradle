@@ -10,7 +10,7 @@ ext {
 	 * Can be overwritten with -PintegrateVersionInfo=true -Denv.RELEASE_VERSION= -Denv.BUILD_NUMBER=
 	 */
 	versionInfo = '1.6.0'
-
+	
 	/** QA settings */
 	baseDir = project.projectDir
 	buildRoot = "${baseDir}/build"

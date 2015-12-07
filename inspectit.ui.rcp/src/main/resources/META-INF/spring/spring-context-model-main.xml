@@ -34,6 +34,7 @@
 		<lookup-method name="getHttpTimerDataAccessService" bean="httpTimerDataAccessService" />
 		<lookup-method name="getStorageService" bean="storageService" />
 		<lookup-method name="getConfigurationInterfaceService" bean="configurationInterfaceService" />
+		<lookup-method name="getBusinessContextManagementService" bean="businessContextManagementService" />
 	</bean>
 
 	<!-- CmrManagementService -->
@@ -273,6 +274,29 @@
 		<property name="defaultValueOnError" value="false" />
 	</bean>
 	<!-- StorageService End -->
+	
+	<!-- BusinessContextManagementService -->
+	<bean id="businessContextManagementService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
+		<property name="proxyInterfaces">
+			<list>
+				<value>rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
+			</list>
+		</property>
+		<property name="target" ref="businessContextManagementServiceTarget" />
+		<property name="interceptorNames">
+			<list>
+				<value>serviceMethodInterceptor</value>
+				<value>interfaceInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="businessContextManagementServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService" />
+		<property name="serviceName" value="BusinessContextManagementService" />
+	</bean>
+	<!-- BusinessContextManagementService End -->
 	
 	<!-- ConfigurationInterfaceService -->
 	<bean id="configurationInterfaceService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
