@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -45,8 +46,8 @@ import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
 import rocks.inspectit.shared.all.storage.serializer.IKryoProvider;
 import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 
-/**
- * Tests the complete kryonet server-client communication.
+/***
+ * Tests the complete kryonet server-client communication.**
  *
  * @author Ivan Senic
  *
@@ -181,12 +182,10 @@ public class KryoNetIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 			client.sendTCP(toSend);
 
 			// sleep as the receiving is done in another thread
-			Thread.sleep(100);
-
-			verify(listener).received(Mockito.<Connection> anyObject(), eq(toSend));
+			verify(listener, timeout(500)).received(Mockito.<Connection> anyObject(), eq(toSend));
 		}
 
-		@Test(invocationCount = 10)
+		@Test(invocationCount = 10, enabled = true)
 		public void multiThreaded() throws InterruptedException, BrokenBarrierException, IOException {
 			int numThreads = 3;
 			int numObjects = 1024;
@@ -206,14 +205,14 @@ public class KryoNetIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 			cyclicBarrier.await();
 
 			for (Thread thread : threads) {
-				thread.join(10000);
+				thread.join();
 			}
 
 			// sleep as the receiving is done in another thread
-			Thread.sleep(100);
+			// Thread.sleep(500);
 
 			for (Object toSend : sendingObjectsSet) {
-				verify(listener).received(Mockito.<Connection> anyObject(), eq(toSend));
+				verify(listener, timeout(500)).received(Mockito.<Connection> anyObject(), eq(toSend));
 			}
 		}
 	}

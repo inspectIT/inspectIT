@@ -40,9 +40,9 @@ import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
-import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
 
 /**

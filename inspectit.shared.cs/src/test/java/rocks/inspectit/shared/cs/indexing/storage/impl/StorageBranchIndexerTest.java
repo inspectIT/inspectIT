@@ -20,10 +20,6 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
-import rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf;
-import rocks.inspectit.shared.cs.indexing.storage.impl.LeafWithNoDescriptors;
-import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranch;
-import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranchIndexer;
 
 /**
  * Tests the {@link StorageBranchIndexer} class.

@@ -4,13 +4,15 @@ import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Comparators for {@link InvocationSequenceData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum InvocationSequenceDataComparatorEnum implements IDataComparator<InvocationSequenceData> {
 
@@ -33,6 +35,11 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 	 * Sort by URIs (if available in invocation root).
 	 */
 	URI,
+
+	/**
+	 * Sort by applications (if available in invocation root).
+	 */
+	APPLICATION,
 
 	/**
 	 * Sort by use cases (if available in invocation root).
@@ -80,18 +87,43 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 			} else {
 				return 0;
 			}
+		case APPLICATION:
+			ApplicationData appDeff1 = cachedDataService.getApplicationForId(o1.getApplicationId());
+			ApplicationData appDeff2 = cachedDataService.getApplicationForId(o2.getApplicationId());
+
+			return ObjectUtils.compare(appDeff1.getName().toLowerCase(), appDeff2.getName().toLowerCase());
 		case USE_CASE:
-			if (InvocationSequenceDataHelper.hasHttpTimerData(o1) && InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
-				String useCase1 = ((HttpTimerData) o1.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
-				String useCase2 = ((HttpTimerData) o2.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
-				return ObjectUtils.compare(useCase1, useCase2);
-			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o1)) {
-				return 1;
-			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
-				return -1;
-			} else {
-				return 0;
+			String businessTransaction1 = null;
+			String businessTransaction2 = null;
+			if (InvocationSequenceDataHelper.hasHttpTimerData(o1)) {
+				businessTransaction1 = ((HttpTimerData) o1.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
 			}
+			if (null == businessTransaction1) {
+				BusinessTransactionData btxDef1 = cachedDataService.getBusinessTransactionForId(o1.getApplicationId(), o1.getBusinessTransactionId());
+				if (null != btxDef1) {
+					businessTransaction1 = btxDef1.getName();
+				}
+			}
+
+			if (null != businessTransaction1) {
+				businessTransaction1 = businessTransaction1.toLowerCase();
+			}
+
+			if (InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
+				businessTransaction2 = ((HttpTimerData) o2.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
+			}
+			if (null == businessTransaction2) {
+				BusinessTransactionData btxDef2 = cachedDataService.getBusinessTransactionForId(o2.getApplicationId(), o2.getBusinessTransactionId());
+				if (null != btxDef2) {
+					businessTransaction2 = btxDef2.getName();
+				}
+			}
+
+			if (null != businessTransaction2) {
+				businessTransaction2 = businessTransaction2.toLowerCase();
+			}
+
+			return ObjectUtils.compare(businessTransaction1, businessTransaction2);
 		default:
 			return 0;
 		}

@@ -25,7 +25,6 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
-import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;

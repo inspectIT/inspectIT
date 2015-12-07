@@ -8,6 +8,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
@@ -32,11 +33,13 @@ public class RefreshEditorsCachedDataService extends CachedDataService {
 	/**
 	 * @param globalDataAccessService
 	 *            {@link IGlobalDataAccessService}
+	 * @param businessContextService
+	 *            {@link IBusinessContextManagementService}
 	 * @param repositoryDefinition
 	 *            {@link RepositoryDefinition}
 	 */
-	public RefreshEditorsCachedDataService(IGlobalDataAccessService globalDataAccessService, CmrRepositoryDefinition repositoryDefinition) {
-		super(globalDataAccessService);
+	public RefreshEditorsCachedDataService(IGlobalDataAccessService globalDataAccessService, IBusinessContextManagementService businessContextService, CmrRepositoryDefinition repositoryDefinition) {
+		super(globalDataAccessService, businessContextService);
 		this.repositoryDefinition = repositoryDefinition;
 	}
 

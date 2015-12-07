@@ -15,7 +15,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.dao.PlatformIdentDao;
-import rocks.inspectit.server.service.GlobalDataAccessService;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;

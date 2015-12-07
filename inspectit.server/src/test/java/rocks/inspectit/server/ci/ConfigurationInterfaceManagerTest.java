@@ -4,10 +4,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -19,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -26,15 +30,20 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.ci.event.BusinessContextDefinitionUpdateEvent;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
 
 /**
@@ -66,6 +75,9 @@ public class ConfigurationInterfaceManagerTest {
 	private ConfigurationInterfacePathResolver pathResolver;
 
 	@Mock
+	private ApplicationEventPublisher eventPublisher;
+
+	@Mock
 	private Logger logger;
 
 	/**
@@ -74,7 +86,6 @@ public class ConfigurationInterfaceManagerTest {
 	@BeforeMethod
 	public void init() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		MockitoAnnotations.initMocks(this);
-
 		final ConfigurationInterfacePathResolver resolverHelper = new ConfigurationInterfacePathResolver();
 		resolverHelper.init();
 		when(pathResolver.getDefaultCiPath()).thenReturn(Paths.get(TEST_FOLDER));
@@ -82,6 +93,7 @@ public class ConfigurationInterfaceManagerTest {
 		when(pathResolver.getEnvironmentPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentPath())));
 		when(pathResolver.getProfilesPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getProfilesPath())));
 		when(pathResolver.getSchemaPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getSchemaPath())));
+		when(pathResolver.getBusinessContextFilePath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getBusinessContextFilePath()));
 		doAnswer(new Answer<Path>() {
 			@Override
 			public Path answer(InvocationOnMock invocation) throws Throwable {
@@ -267,6 +279,22 @@ public class ConfigurationInterfaceManagerTest {
 	}
 
 	@Test
+	public void updateBusinessContext() throws Exception {
+		assertThat(manager.getBusinessconContextDefinition().getApplicationDefinitions(), hasSize(1));
+
+		BusinessContextDefinition businessCtxDefinition = new BusinessContextDefinition();
+		businessCtxDefinition.addApplicationDefinition(new ApplicationDefinition(1, "newApplication", null));
+		manager.updateBusinessContextDefinition(businessCtxDefinition);
+		BusinessContextDefinition updated = manager.getBusinessconContextDefinition();
+
+		assertThat(updated.getApplicationDefinitions(), hasSize(2));
+		assertThat(updated.getRevision(), is(2));
+
+		ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
+		verify(eventPublisher).publishEvent(captor.capture());
+		assertThat(captor.getValue(), is(instanceOf(BusinessContextDefinitionUpdateEvent.class)));
+	}
+
 	/**
 	 * Clean test folder after each test.
 	 */

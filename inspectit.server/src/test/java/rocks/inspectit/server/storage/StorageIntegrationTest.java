@@ -34,7 +34,6 @@ import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryo.io.Input;
 
-import rocks.inspectit.server.storage.CmrStorageManager;
 import rocks.inspectit.server.test.AbstractTransactionalTestNGLogSupport;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;

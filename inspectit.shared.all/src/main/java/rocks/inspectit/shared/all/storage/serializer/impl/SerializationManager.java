@@ -88,12 +88,15 @@ import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.VmArgumentData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
 import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.RemoteException;
 import rocks.inspectit.shared.all.exception.TechnicalException;
 import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
+import rocks.inspectit.shared.all.exception.enumeration.BusinessContextErrorCodeEnum;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
 import rocks.inspectit.shared.all.storage.serializer.HibernateAwareClassResolver;
@@ -322,6 +325,11 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-1849
 		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager));
+
+		// added with INSPECTIT-1804, INSPECTIT-1807
+		kryo.register(BusinessContextErrorCodeEnum.class, new EnumSerializer(BusinessContextErrorCodeEnum.class));
+		kryo.register(ApplicationData.class, new CustomCompatibleFieldSerializer<ApplicationData>(kryo, ApplicationData.class, schemaManager));
+		kryo.register(BusinessTransactionData.class, new CustomCompatibleFieldSerializer<BusinessTransactionData>(kryo, BusinessTransactionData.class, schemaManager));
 	}
 
 	/**

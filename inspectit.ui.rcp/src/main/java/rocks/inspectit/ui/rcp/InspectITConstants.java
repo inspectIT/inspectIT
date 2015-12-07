@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp;
 
 /**
  * Defines all the constants for the InspectIT UI.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface InspectITConstants {
 
@@ -27,6 +27,11 @@ public interface InspectITConstants {
 	 * Path to the folder that holds images.
 	 */
 	String ICON_PATH_FUGUE = ICON_PATH + "fugue/";
+
+	/**
+	 * Path to the folder that holds images.
+	 */
+	String ICON_PATH_WEBGREY = ICON_PATH + "webgrey/";
 
 	/**
 	 * Path to the folder that holds images.

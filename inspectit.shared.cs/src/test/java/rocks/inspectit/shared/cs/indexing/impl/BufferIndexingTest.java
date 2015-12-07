@@ -29,8 +29,6 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
 import rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexer;
-import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
-import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;

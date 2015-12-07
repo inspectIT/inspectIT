@@ -34,8 +34,8 @@ import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEn
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.editor.text.input.SqlStatementTextInputController.SqlHolderHelper;

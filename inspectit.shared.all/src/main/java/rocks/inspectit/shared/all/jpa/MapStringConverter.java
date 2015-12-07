@@ -12,9 +12,9 @@ import org.apache.commons.lang.StringUtils;
 /**
  * {@link AttributeConverter} that can convert Map to a String value so it can be saved in a single
  * column in DB.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MapStringConverter implements AttributeConverter<Map<?, ?>, String> {
 

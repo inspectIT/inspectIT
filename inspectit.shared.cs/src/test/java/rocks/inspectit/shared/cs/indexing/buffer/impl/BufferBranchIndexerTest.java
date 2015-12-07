@@ -17,9 +17,6 @@ import org.testng.annotations.Test;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexer;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.Leaf;
 import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**

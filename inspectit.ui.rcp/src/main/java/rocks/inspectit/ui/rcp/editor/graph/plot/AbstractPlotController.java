@@ -10,12 +10,12 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.SamplingRate;
 import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl;
-import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateSelecterFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateSelecterFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 

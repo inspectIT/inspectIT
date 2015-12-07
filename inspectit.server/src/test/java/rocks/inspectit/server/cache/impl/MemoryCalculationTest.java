@@ -27,7 +27,6 @@ import com.javamex.classmexer.MemoryUtil;
 import com.javamex.classmexer.MemoryUtil.VisibilityFilter;
 
 import rocks.inspectit.server.cache.AbstractObjectSizes;
-import rocks.inspectit.server.cache.impl.ObjectSizesFactory;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.DefaultData;

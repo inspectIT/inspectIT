@@ -73,7 +73,7 @@ public class Environment {
 	 * Revision. Server for version control and updating control.
 	 */
 	@XmlAttribute(name = "revision")
-	private int revision = 1;
+	private Integer revision = 1;
 
 	/**
 	 * Configuration for the sending strategy.
@@ -192,7 +192,7 @@ public class Environment {
 	 * @return {@link #revision}
 	 */
 	public int getRevision() {
-		return revision;
+		return null != revision ? revision : 1;
 	}
 
 	/**
@@ -403,7 +403,7 @@ public class Environment {
 		} else if (!profileIds.equals(other.profileIds)) {
 			return false;
 		}
-		if (revision != other.revision) {
+		if (getRevision() != other.getRevision()) {
 			return false;
 		}
 		if (sendingStrategyConfig == null) {

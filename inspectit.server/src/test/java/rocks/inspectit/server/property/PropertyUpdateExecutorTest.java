@@ -17,7 +17,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.property.PropertyUpdateExecutor;
 import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 

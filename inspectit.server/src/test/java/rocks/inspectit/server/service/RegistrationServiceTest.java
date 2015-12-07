@@ -42,7 +42,6 @@ import rocks.inspectit.server.dao.impl.MethodIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.MethodSensorTypeIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformSensorTypeIdentDaoImpl;
-import rocks.inspectit.server.service.RegistrationService;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
