@@ -5,8 +5,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
-import info.novatec.inspectit.rcp.dialog.ForgotPasswordDialog;
-import info.novatec.inspectit.rcp.dialog.ShowPermissionsDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrAdministrationWizardPage;
 
@@ -45,7 +43,7 @@ public class CmrAdministrationWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		cmrAdministrationWizardPage = new CmrAdministrationWizardPage("CMR Administration");
+		cmrAdministrationWizardPage = new CmrAdministrationWizardPage("CMR Administration", cmrRepositoryDefinition);
 		addPage(cmrAdministrationWizardPage);
 	}
 

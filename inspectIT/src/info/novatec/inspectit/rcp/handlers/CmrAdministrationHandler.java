@@ -13,7 +13,6 @@ import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.CmrAdministrationWizard;
-import info.novatec.inspectit.rcp.wizard.CmrLoginWizard;
 
 /**
  * Handler for managing the users on the CMR.

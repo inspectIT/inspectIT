@@ -41,6 +41,9 @@ import info.novatec.inspectit.communication.data.VmArgumentData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
 import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
+import info.novatec.inspectit.communication.data.cmr.Permission;
+import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.exception.RemoteException;
 import info.novatec.inspectit.exception.TechnicalException;
@@ -302,7 +305,11 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 				return new InvocationTargetException(null);
 			}
 		});
-				
+		
+		// added with NTDT <3
+		kryo.register(Permission.class, new FieldSerializer<Permission>(kryo, Permission.class));
+		kryo.register(Role.class, new FieldSerializer<Role>(kryo, Role.class));
+		kryo.register(User.class, new FieldSerializer<User>(kryo, User.class));
 	}
 
 	/**

@@ -63,10 +63,7 @@ public class SecurityInitialization {
 		roleDao.saveOrUpdate(freshUser);
 		roleDao.saveOrUpdate(restrictedUser);
 		roleDao.saveOrUpdate(adminUser);
-		
-		
-		System.out.println(roleDao.loadAll().toString());
-
+	
 		//Standarduser - changes with login
 		User admin = new User(Permutation.hashString("admin"), "admin", adminUser.getId());
 		
