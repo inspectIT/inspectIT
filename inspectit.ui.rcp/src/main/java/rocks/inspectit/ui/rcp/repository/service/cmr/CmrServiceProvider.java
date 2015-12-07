@@ -1,5 +1,6 @@
 package rocks.inspectit.ui.rcp.repository.service.cmr;
 
+import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
@@ -241,5 +242,26 @@ public abstract class CmrServiceProvider {
 	 * @return Returns Spring created {@link IConfigurationInterfaceService}.
 	 */
 	protected abstract IConfigurationInterfaceService getConfigurationInterfaceService();
+	
+	/**
+	 * Returns properly initialized {@link IBusinessContextManagement}.
+	 * 
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} to bound service to.
+	 * @return Returns {@link IBusinessContextManagementService}.
+	 */
+	public IBusinessContextManagementService getBusinessContextManagementService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		IBusinessContextManagementService businessCtxMgmtService = getBusinessContextManagementService();
+		((ICmrService) businessCtxMgmtService).initService(cmrRepositoryDefinition);
+		return businessCtxMgmtService;
+	}
+
+	/**
+	 * Returns Spring created {@link BusinessContextManagementService}.
+	 * 
+	 * @return Returns Spring created {@link BusinessContextManagementService}.
+	 */
+	protected abstract IBusinessContextManagementService getBusinessContextManagementService();
+
 
 }
