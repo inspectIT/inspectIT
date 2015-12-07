@@ -14,6 +14,7 @@ import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
@@ -21,6 +22,23 @@ import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.business.expression.AbstractExpression;
+import rocks.inspectit.shared.cs.ci.business.expression.impl.AndExpression;
+import rocks.inspectit.shared.cs.ci.business.expression.impl.BooleanExpression;
+import rocks.inspectit.shared.cs.ci.business.expression.impl.NameExtractionExpression;
+import rocks.inspectit.shared.cs.ci.business.expression.impl.NotExpression;
+import rocks.inspectit.shared.cs.ci.business.expression.impl.OrExpression;
+import rocks.inspectit.shared.cs.ci.business.expression.impl.StringMatchingExpression;
+import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
+import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
+import rocks.inspectit.shared.cs.ci.business.valuesource.PatternMatchingType;
+import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureValueSource;
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
@@ -277,6 +295,27 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(NotEmptyValidator.class, new FieldSerializer<NotEmptyValidator<?>>(kryo, NotEmptyValidator.class), nextRegistrationId++);
 		kryo.register(PercentageValidator.class, new FieldSerializer<PercentageValidator<?>>(kryo, PercentageValidator.class), nextRegistrationId++);
 		kryo.register(PositiveValidator.class, new FieldSerializer<PositiveValidator<?>>(kryo, PositiveValidator.class), nextRegistrationId++);
+
+		// added with INSPECTIT-1804
+		// used for recognition, configuration and visualization of business context information
+		kryo.register(ApplicationDefinition.class, new FieldSerializer<ApplicationDefinition>(kryo, ApplicationDefinition.class), nextRegistrationId++);
+		kryo.register(BusinessContextDefinition.class, new FieldSerializer<BusinessContextDefinition>(kryo, BusinessContextDefinition.class), nextRegistrationId++);
+		kryo.register(BusinessTransactionDefinition.class, new FieldSerializer<BusinessTransactionDefinition>(kryo, BusinessTransactionDefinition.class), nextRegistrationId++);
+		kryo.register(AbstractExpression.class, new FieldSerializer<AbstractExpression>(kryo, AbstractExpression.class), nextRegistrationId++);
+		kryo.register(AndExpression.class, new FieldSerializer<AndExpression>(kryo, AndExpression.class), nextRegistrationId++);
+		kryo.register(NotExpression.class, new FieldSerializer<NotExpression>(kryo, NotExpression.class), nextRegistrationId++);
+		kryo.register(OrExpression.class, new FieldSerializer<OrExpression>(kryo, OrExpression.class), nextRegistrationId++);
+		kryo.register(BooleanExpression.class, new FieldSerializer<BooleanExpression>(kryo, BooleanExpression.class), nextRegistrationId++);
+		kryo.register(StringMatchingExpression.class, new FieldSerializer<StringMatchingExpression>(kryo, StringMatchingExpression.class), nextRegistrationId++);
+		kryo.register(PatternMatchingType.class, new EnumSerializer(PatternMatchingType.class));
+		kryo.register(StringValueSource.class, new FieldSerializer<StringValueSource>(kryo, StringValueSource.class), nextRegistrationId++);
+		kryo.register(HttpUriValueSource.class, new FieldSerializer<HttpUriValueSource>(kryo, HttpUriValueSource.class), nextRegistrationId++);
+		kryo.register(HostValueSource.class, new FieldSerializer<HostValueSource>(kryo, HostValueSource.class), nextRegistrationId++);
+		kryo.register(HttpParameterValueSource.class, new FieldSerializer<HttpParameterValueSource>(kryo, HttpParameterValueSource.class), nextRegistrationId++);
+		kryo.register(MethodSignatureValueSource.class, new FieldSerializer<MethodSignatureValueSource>(kryo, MethodSignatureValueSource.class), nextRegistrationId++);
+		kryo.register(MethodParameterValueSource.class, new FieldSerializer<MethodParameterValueSource>(kryo, MethodParameterValueSource.class), nextRegistrationId++);
+		kryo.register(NameExtractionExpression.class, new FieldSerializer<NameExtractionExpression>(kryo, NameExtractionExpression.class), nextRegistrationId++);
+		kryo.register(HttpRequestMethodValueSource.class, new FieldSerializer<HttpRequestMethodValueSource>(kryo, HttpRequestMethodValueSource.class), nextRegistrationId++);
 
 		// INSPECTIT-658
 		// this classes are registered with CompatibleFieldSerializer since they can be
