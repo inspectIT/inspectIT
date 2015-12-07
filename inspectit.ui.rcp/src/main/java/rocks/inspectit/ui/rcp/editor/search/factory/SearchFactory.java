@@ -17,6 +17,8 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
@@ -371,6 +373,17 @@ public final class SearchFactory {
 					}
 				}
 			}
+
+			ApplicationData application = repositoryDefinition.getCachedDataService().getApplicationForId(element.getApplicationId());
+			if ((null != application) && stringMatches(application.getName(), searchCriteria)) {
+				return true;
+			}
+
+			BusinessTransactionData businessTxData = repositoryDefinition.getCachedDataService().getBusinessTransactionForId(element.getApplicationId(), element.getBusinessTransactionId());
+			if ((null != businessTxData) && stringMatches(businessTxData.getName(), searchCriteria)) {
+				return true;
+			}
+
 			MethodIdent methodIdent = repositoryDefinition.getCachedDataService().getMethodIdentForId(element.getMethodIdent());
 			return super.isSearchCompatible(methodIdent, searchCriteria);
 		}

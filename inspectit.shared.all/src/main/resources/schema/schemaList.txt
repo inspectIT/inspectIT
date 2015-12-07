@@ -41,3 +41,5 @@ schema/LoggingData.sch
 schema/JmxDefinitionDataIdent.sch
 schema/JmxSensorValueData.sch
 schema/HttpInfo.sch
+schema/ApplicationData.sch
+schema/BusinessTransactionData.sch
