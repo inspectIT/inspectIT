@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.perspective;
 
-import info.novatec.inspectit.rcp.ci.view.ConfigurationInterfaceManagerView;
+import info.novatec.inspectit.rcp.ci.view.BusinessContextManagerViewPart;
+import info.novatec.inspectit.rcp.ci.view.InstrumentationManagerViewPart;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -30,10 +31,13 @@ public class ConfigurationInterfacePerspective implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 
 		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, ratio, editorArea);
-		topLeft.addView(ConfigurationInterfaceManagerView.VIEW_ID);
-
-		layout.getViewLayout(ConfigurationInterfaceManagerView.VIEW_ID).setCloseable(true);
-		layout.getViewLayout(ConfigurationInterfaceManagerView.VIEW_ID).setMoveable(true);
+		topLeft.addView(InstrumentationManagerViewPart.VIEW_ID);
+		topLeft.addView(BusinessContextManagerViewPart.VIEW_ID);
+		
+		layout.getViewLayout(InstrumentationManagerViewPart.VIEW_ID).setCloseable(true);
+		layout.getViewLayout(InstrumentationManagerViewPart.VIEW_ID).setMoveable(true);
+		layout.getViewLayout(BusinessContextManagerViewPart.VIEW_ID).setCloseable(true);
+		layout.getViewLayout(BusinessContextManagerViewPart.VIEW_ID).setMoveable(true);
 	}
 
 

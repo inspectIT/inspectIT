@@ -1,5 +1,6 @@
 package info.novatec.inspectit.rcp.repository;
 
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.cmr.service.ICachedDataService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
@@ -93,4 +94,11 @@ public interface RepositoryDefinition {
 	 * @return Returns the {@link IJmxDataAccessService}.
 	 */
 	IJmxDataAccessService getJmxDataAccessService();
+	
+	/**
+	 * Returns the {@link IBusinessContextManagementService}.
+	 * 
+	 * @return Returns the {@link IBusinessContextManagementService}.
+	 */
+	IBusinessContextManagementService getBusinessContextMangementService();
 }

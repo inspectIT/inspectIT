@@ -13,12 +13,12 @@ import info.novatec.inspectit.rcp.ci.form.input.ProfileEditorInput;
 import info.novatec.inspectit.rcp.ci.widget.SensorAssignmentTableProvider;
 import info.novatec.inspectit.rcp.formatter.ImageFormatter;
 import info.novatec.inspectit.rcp.formatter.TextFormatter;
+import info.novatec.inspectit.rcp.validation.TableItemControlDecoration;
 import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,8 +29,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -51,7 +49,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
@@ -74,9 +71,9 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * Tree master block for the sensor definition form page.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements IFormPart, IPartSelectionListener, ISelectionChangedListener, IPropertyListener {
 
@@ -93,28 +90,28 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	/**
 	 * Map of assignments.
 	 */
-	private Map<Class<? extends ISensorConfig>, List<AbstractClassSensorAssignment<?>>> configToAssignmentMap = new HashMap<>();
+	private final Map<Class<? extends ISensorConfig>, List<AbstractClassSensorAssignment<?>>> configToAssignmentMap = new HashMap<>();
 
 	/**
 	 * Map of sensors to the CTabItem.
 	 */
-	private Map<Class<? extends ISensorConfig>, CTabItem> sensorToTabMap = new HashMap<>();
+	private final Map<Class<? extends ISensorConfig>, CTabItem> sensorToTabMap = new HashMap<>();
 
 	/**
 	 * List of all currently invalid assignments in the page with connection to the full error
 	 * message.
 	 */
-	private Map<AbstractClassSensorAssignment<?>, String> invalidAssignments = new IdentityHashMap<>();
+	private final Map<AbstractClassSensorAssignment<?>, String> invalidAssignments = new IdentityHashMap<>();
 
 	/**
 	 * List of created {@link TableViewer}.
 	 */
-	private List<TableViewer> tableViewers = new ArrayList<>();
+	private final List<TableViewer> tableViewers = new ArrayList<>();
 
 	/**
 	 * {@link TableEditor}s to handle the validation decoration on table rows.
 	 */
-	private List<TableItemControlDecoration> tableItemControlDecorations = new ArrayList<>();
+	private final List<TableItemControlDecoration<AbstractClassSensorAssignment<?>>> tableItemControlDecorations = new ArrayList<>();
 
 	/**
 	 * Assignment currently being edited or <code>null</code> if no edit is done in the moment.
@@ -129,7 +126,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	/**
 	 * Form page block belongs to.
 	 */
-	private FormPage formPage;
+	private final FormPage formPage;
 
 	/**
 	 * Managed form to report to.
@@ -158,7 +155,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Composite to be displayed when no assignment is existing in the profile.
-	 * 
+	 *
 	 * @see {@link #createEmptyInputHint()}
 	 */
 	private Composite emptyHintComposite;
@@ -412,7 +409,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Creates new tab item with the list of assignments to be used as input.
-	 * 
+	 *
 	 * @param sensorClass
 	 *            sensor class
 	 * @param assignments
@@ -452,7 +449,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Removes a {@link CTabItem} for the sensor class.
-	 * 
+	 *
 	 * @param sensorClass
 	 *            sensor class
 	 */
@@ -509,7 +506,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * To be called when add is requested to the tree.
-	 * 
+	 *
 	 * @return Returns new {@link AbstractClassSensorAssignment} with the correctly set sensor type.
 	 */
 	private AbstractClassSensorAssignment<?> addRequested() {
@@ -575,7 +572,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Creates input map and returns the input.
-	 * 
+	 *
 	 * @return Input for the tree
 	 */
 	private Map<Class<? extends ISensorConfig>, List<AbstractClassSensorAssignment<?>>> getInput() {
@@ -595,7 +592,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Adds one {@link AbstractClassSensorAssignment} to the input map.
-	 * 
+	 *
 	 * @param assignment
 	 *            {@link AbstractClassSensorAssignment}
 	 */
@@ -611,7 +608,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Removes one {@link AbstractClassSensorAssignment} from the input map.
-	 * 
+	 *
 	 * @param assignment
 	 *            {@link AbstractClassSensorAssignment}
 	 */
@@ -630,7 +627,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Updates the state of the remove button depending on the current selection.
-	 * 
+	 *
 	 * @param selection
 	 *            Current selection.
 	 */
@@ -647,7 +644,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Fires edit option on the selection.
-	 * 
+	 *
 	 * @param selection
 	 *            {@link ISelection}
 	 */
@@ -674,7 +671,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Removes the error decoration for the sensor assignment.
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            {@link AbstractClassSensorAssignment}.
 	 * @param message
@@ -688,8 +685,8 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		}
 
 		// first check if we have it, if so shown
-		for (TableItemControlDecoration decoration : tableItemControlDecorations) {
-			if (sensorAssignment == decoration.getAssignment()) { // NOPMD == on purpose
+		for (TableItemControlDecoration<AbstractClassSensorAssignment<?>> decoration : tableItemControlDecorations) {
+			if (sensorAssignment == decoration.getData()) { // NOPMD == on purpose
 				decoration.show();
 				decoration.setDescriptionText(message);
 				return;
@@ -699,7 +696,16 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		// if not find appropriate table item to place it
 		for (TableItem tableItem : tableViewer.getTable().getItems()) {
 			if (tableItem.getData() == sensorAssignment) { // NOPMD == on purpose
-				TableItemControlDecoration decoration = new TableItemControlDecoration(tableItem);
+				final TableItemControlDecoration<AbstractClassSensorAssignment<?>> decoration = new TableItemControlDecoration<AbstractClassSensorAssignment<?>>(tableItem);
+				decoration.setDisposeListener(new DisposeListener() {
+					@Override
+					public void widgetDisposed(DisposeEvent e) {
+						// in any case hide, dispose and remove
+						tableItemControlDecorations.remove(decoration);
+						decoration.hide();
+						decoration.dispose();
+					}
+				});
 				decoration.show();
 				decoration.setDescriptionText(message);
 
@@ -711,7 +717,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Removes the error decoration for the sensor assignment.
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            {@link AbstractClassSensorAssignment}.
 	 */
@@ -722,9 +728,8 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		}
 
 		// remove if it's there
-		for (Iterator<TableItemControlDecoration> it = tableItemControlDecorations.iterator(); it.hasNext();) {
-			TableItemControlDecoration decoration = it.next();
-			if (sensorAssignment == decoration.getAssignment()) { // NOPMD == on purpose
+		for (TableItemControlDecoration<AbstractClassSensorAssignment<?>> decoration : tableItemControlDecorations) {
+			if (sensorAssignment == decoration.getData()) { // NOPMD == on purpose
 				decoration.hide();
 				return;
 			}
@@ -734,7 +739,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	/**
 	 * Returns message key to be used with the {@link IMessageManager} when reporting errors with
 	 * provided assignment.
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            Assignment
 	 * @return Object to be used as a key
@@ -826,7 +831,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	 */
 	@Override
 	public void selectionChanged(IFormPart part, ISelection selection) {
-		updateButtonsState((StructuredSelection) selection);
+		updateButtonsState(selection);
 		fireEdit(selection);
 	}
 
@@ -844,7 +849,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Returns short (1 line) error message for the assignment based on the validation decorations.
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            assignment
 	 * @param validationDecorations
@@ -875,7 +880,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	 * Returns full error message for the assignment based on the validation decorations. In this
 	 * message each line will contain error reported by any invalid
 	 * {@link ValidationControlDecoration}
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            assignment
 	 * @param validationDecorations
@@ -904,15 +909,15 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Helper selection class to denote remove was executed.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static class RemoveSelection extends StructuredSelection {
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param elements
 		 *            removed elements
 		 */
@@ -923,93 +928,10 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	}
 
 	/**
-	 * Class to help with displaying control decorations on the table rows.
-	 * 
-	 * @author Ivan Senic
-	 * 
-	 */
-	private class TableItemControlDecoration extends ControlDecoration {
-
-		/**
-		 * TableItem to create decoration for.
-		 */
-		private TableItem tableItem;
-
-		/**
-		 * Internal {@link TableEditor} to show decoration.
-		 */
-		private TableEditor tableEditor;
-
-		/**
-		 * Assignment being connected to the table item.
-		 */
-		private AbstractClassSensorAssignment<?> assignment;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param tableItem
-		 *            TableItem to create decoration for.
-		 */
-		public TableItemControlDecoration(TableItem tableItem) {
-			super(new Composite(tableItem.getParent(), SWT.NONE), SWT.BOTTOM);
-			Assert.isNotNull(tableItem);
-			Assert.isLegal(tableItem.getData() instanceof AbstractClassSensorAssignment);
-
-			this.tableItem = tableItem;
-			this.assignment = (AbstractClassSensorAssignment<?>) tableItem.getData();
-			tableEditor = new TableEditor(tableItem.getParent());
-			tableEditor.horizontalAlignment = SWT.LEFT;
-			tableEditor.verticalAlignment = SWT.BOTTOM;
-			tableEditor.setEditor(getControl(), tableItem, 0);
-
-			setImage(FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage());
-			hide();
-
-			tableItem.addDisposeListener(new DisposeListener() {
-				@Override
-				public void widgetDisposed(DisposeEvent e) {
-					// in any case hide, dispose and remove
-					tableItemControlDecorations.remove(TableItemControlDecoration.this);
-					hide();
-					dispose();
-				}
-			});
-		}
-
-		/**
-		 * Gets {@link #assignment}.
-		 * 
-		 * @return {@link #assignment}
-		 */
-		public AbstractClassSensorAssignment<?> getAssignment() {
-			return assignment;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void dispose() {
-			Control c = getControl();
-			if (!tableItem.isDisposed()) {
-				tableEditor.dispose();
-			}
-
-			super.dispose();
-
-			// we need to dispose the composite that we have created
-			if (null != c) {
-				c.dispose();
-			}
-		}
-	}
-
-	/**
 	 * {@link ISensorAssignmentUpdateListener} to handle the validations in the master view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class MasterBlockValidationListener implements ISensorAssignmentUpdateListener {
 
