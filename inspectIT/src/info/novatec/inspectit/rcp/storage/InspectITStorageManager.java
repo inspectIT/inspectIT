@@ -1,5 +1,7 @@
 package info.novatec.inspectit.rcp.storage;
 
+import info.novatec.inspectit.ci.BusinessContextDefinition;
+import info.novatec.inspectit.cmr.configuration.business.IBusinessContextDefinition;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.exception.BusinessException;
@@ -167,7 +169,8 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 		} else {
 			try {
 				subMonitor.setTaskName("Downloading agent and indexing files for storage '" + storageData.getName() + "'..");
-				dataRetriever.downloadAndSaveStorageFiles(cmrRepositoryDefinition, storageData, directory, compressBefore, true, subMonitor, StorageFileType.AGENT_FILE, StorageFileType.INDEX_FILE);
+				dataRetriever.downloadAndSaveStorageFiles(cmrRepositoryDefinition, storageData, directory, compressBefore, true, subMonitor, StorageFileType.AGENT_FILE, StorageFileType.INDEX_FILE,
+						StorageFileType.BUSINESS_CONTEXT_FILE);
 			} catch (Exception e) {
 				deleteLocalStorageData(localStorageData, false);
 				throw e;
@@ -493,9 +496,13 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 			indexingTree = new ArrayBasedStorageLeaf<DefaultData>();
 		}
 
+		// get business context
+		IBusinessContextDefinition businessContextDef = getBusinessContextLocally(localStorageData);
+
 		// create new storage repository definition
 		StorageRepositoryDefinition storageRepositoryDefinition = storageRepositoryDefinitionProvider.createStorageRepositoryDefinition();
 		storageRepositoryDefinition.setAgents(platformIdents);
+		storageRepositoryDefinition.setBusinessContextDefinition(businessContextDef);
 		storageRepositoryDefinition.setIndexingTree(indexingTree);
 		storageRepositoryDefinition.setCmrRepositoryDefinition(cmrRepositoryDefinition);
 		storageRepositoryDefinition.setLocalStorageData(localStorageData);
@@ -890,6 +897,29 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 			return returnList;
 		} else {
 			return null;
+		}
+	}
+
+	/**
+	 * Loads {@link IBusinessContextDefinition} from local storage.
+	 * 
+	 * @param storageData
+	 *            the storage data defining the storage to load the
+	 *            {@link IBusinessContextDefinition} from
+	 * @return {@link IBusinessContextDefinition} instance
+	 * @throws IOException
+	 *             if loading fails
+	 * @throws SerializationException
+	 *             if loading fails
+	 */
+	private IBusinessContextDefinition getBusinessContextLocally(final IStorageData storageData) throws IOException, SerializationException {
+		Path storagePath = getStoragePath(storageData);
+		List<IBusinessContextDefinition> returnList = this.getObjectsByFileTreeWalk(storagePath, StorageFileType.BUSINESS_CONTEXT_FILE.getExtension());
+		if (!returnList.isEmpty() && null != returnList.get(0)) {
+			return returnList.get(0);
+		} else {
+			// return default business context
+			return new BusinessContextDefinition();
 		}
 	}
 

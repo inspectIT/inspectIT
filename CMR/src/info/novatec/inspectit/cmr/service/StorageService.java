@@ -347,6 +347,21 @@ public class StorageService implements IStorageService {
 	 */
 	@Transactional
 	@MethodLog
+	public Map<String, Long> getBusinessContextFilesLocation(StorageData storageData) throws BusinessException {
+		if (!storageManager.isStorageExisting(storageData)) {
+			throw new BusinessException("Load business context files locations for the storage " + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
+		}
+		try {
+			return storageManager.getFilesHttpLocation(storageData, StorageFileType.BUSINESS_CONTEXT_FILE.getExtension());
+		} catch (IOException e) {
+			throw new TechnicalException("Load business context files locations for the storage " + storageData + ".", StorageErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@MethodLog
 	public StorageData addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws BusinessException {
 		try {
 			storageManager.addLabelToStorage(storageData, storageLabel, doOverwrite);

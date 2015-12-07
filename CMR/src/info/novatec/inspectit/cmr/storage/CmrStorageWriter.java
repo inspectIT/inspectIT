@@ -1,7 +1,11 @@
 package info.novatec.inspectit.cmr.storage;
 
+import info.novatec.inspectit.ci.BusinessContextDefinition;
+import info.novatec.inspectit.cmr.configuration.business.IBusinessContextDefinition;
 import info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoImpl;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.cmr.service.BusinessContextManagementService;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.storage.StorageFileType;
@@ -65,6 +69,12 @@ public class CmrStorageWriter extends StorageWriter {
 	private PlatformIdentDaoImpl platformIdentDao;
 
 	/**
+	 * {@link BusinessContextManagementService}.
+	 */
+	@Autowired
+	private IBusinessContextManagementService businessContextService;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -97,12 +107,24 @@ public class CmrStorageWriter extends StorageWriter {
 	}
 
 	/**
+	 * Writes current {@link BusinessContextDefinition} data of the corresponding CMR to storage.
+	 * 
+	 * @throws IOException
+	 *             thrown if storing business context fails
+	 */
+	protected void writeBusinessContextData() throws IOException {
+		IBusinessContextDefinition businessContextDef = businessContextService.getBusinessContextDefinition();
+		super.writeNonDefaultDataObject(businessContextDef, "business" + StorageFileType.BUSINESS_CONTEXT_FILE.getExtension());
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public synchronized void finalizeWrite() {
 		try {
 			writeAgentData();
+			writeBusinessContextData();
 		} catch (IOException e) {
 			log.error("Exception trying to write agent data to disk.", e);
 		}

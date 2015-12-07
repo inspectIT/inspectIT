@@ -34,6 +34,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.bindings.Binding;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.osgi.util.NLS;
@@ -52,7 +53,7 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 
 /**
  * This is the class where the preference panel is created.
- * 
+ *
  * @author Eduard Tudenhoefner
  * @author Patrice Bouillet
  * @author Stefan Siegl
@@ -63,7 +64,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * ID of the preference panel.
 	 */
-	private String id;
+	private final String id;
 
 	/**
 	 * The used toolkit.
@@ -74,7 +75,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 * Callbacks which are containing the fire method which is executed whenever something is
 	 * changed and updated.
 	 */
-	private List<PreferenceEventCallback> callbacks = new ArrayList<PreferenceEventCallback>();
+	private final List<PreferenceEventCallback> callbacks = new ArrayList<PreferenceEventCallback>();
 
 	/**
 	 * The button for live mode switching.
@@ -94,7 +95,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * The list of created preference controls.
 	 */
-	private List<IPreferenceControl> preferenceControlList = new ArrayList<IPreferenceControl>();
+	private final List<IPreferenceControl> preferenceControlList = new ArrayList<IPreferenceControl>();
 
 	/**
 	 * The created section.
@@ -103,7 +104,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * The constructor which needs a {@link ViewController} reference.
-	 * 
+	 *
 	 * @param toolkit
 	 *            The Form toolkit which defines the used colors.
 	 */
@@ -125,6 +126,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void registerCallback(PreferenceEventCallback callback) {
 		Assert.isNotNull(callback);
 
@@ -134,6 +136,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeCallback(PreferenceEventCallback callback) {
 		Assert.isNotNull(callback);
 
@@ -143,6 +146,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void fireEvent(PreferenceEvent event) {
 		for (PreferenceEventCallback callback : callbacks) {
 			callback.eventFired(event);
@@ -152,6 +156,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, Set<PreferenceId> preferenceSet, InputDefinition inputDefinition, IToolBarManager toolBarManager) {
 		section = toolkit.createSection(parent, Section.NO_TITLE);
 		section.setText("Preferences");
@@ -178,6 +183,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		section.setVisible(visible);
 		section.setExpanded(visible);
@@ -186,6 +192,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void disableLiveMode() {
 		if (switchLiveMode.isChecked()) {
 			switchLiveMode.setChecked(false);
@@ -198,6 +205,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void update() {
 		if (switchPreferences.isChecked()) {
 			for (IPreferenceControl preferenceControl : preferenceControlList) {
@@ -221,6 +229,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setSteppingControlChecked(boolean checked) {
 		if (null != switchSteppingControl) {
 			switchSteppingControl.setChecked(checked);
@@ -229,7 +238,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Creates the preference controls in the preference control panel.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent {@link Composite} to which the controls will be added.
 	 * @param preferenceSet
@@ -246,7 +255,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Creates the buttons for this panel.
-	 * 
+	 *
 	 * @param preferenceSet
 	 *            the list containing the preference ids.
 	 * @param toolBarManager
@@ -265,8 +274,8 @@ public class FormPreferencePanel implements IPreferencePanel {
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		Map<Object, Object> params = new HashMap<Object, Object>();
 		params.put(MaximizeActiveViewHandler.PREFERENCE_PANEL_ID_PARAMETER, id);
-		CommandContributionItemParameter contributionParameters = new CommandContributionItemParameter(workbenchWindow, null, MaximizeActiveViewHandler.COMMAND_ID, params, InspectIT.getDefault()
-				.getImageDescriptor(InspectITImages.IMG_WINDOW), null, null, null, null, getTooltipTextForMaximizeContributionItem(), SWT.CHECK, null, true);
+		CommandContributionItemParameter contributionParameters = new CommandContributionItemParameter(workbenchWindow, null, MaximizeActiveViewHandler.COMMAND_ID, params,
+				InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_WINDOW), null, null, null, null, getTooltipTextForMaximizeContributionItem(), SWT.CHECK, null, true);
 		CommandContributionItem maximizeCommandContribution = new CommandContributionItem(contributionParameters);
 		toolBarManager.add(maximizeCommandContribution);
 
@@ -416,6 +425,8 @@ public class FormPreferencePanel implements IPreferencePanel {
 		}
 
 		toolBarManager.update(true);
+
+		menuAction.setRunTask(new MenuAction.ToolbarDropDownTask(((ToolBarManager) toolBarManager).getControl()));
 	}
 
 	/**
@@ -423,7 +434,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 * sequence for the maximize active sub-view command.
 	 * <p>
 	 * <i>This method should be removed when Eclipse fixes the bug.</i>
-	 * 
+	 *
 	 * @return Returns tool-tip text with key binding sequence.
 	 */
 	private String getTooltipTextForMaximizeContributionItem() {
@@ -455,14 +466,14 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Switches the Preference View on/off.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class SwitchPreferences extends Action {
 		/**
 		 * Switches the preferences.
-		 * 
+		 *
 		 * @param text
 		 *            The text.
 		 */
@@ -482,14 +493,14 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Updates the Preferences.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class UpdateAction extends Action {
 		/**
 		 * Updates an action.
-		 * 
+		 *
 		 * @param text
 		 *            The text.
 		 */
@@ -509,15 +520,15 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Switches the live mode.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private final class SwitchLiveMode extends Action {
 
 		/**
 		 * Switches the Live Mode.
-		 * 
+		 *
 		 * @param text
 		 *            The text.
 		 */
@@ -538,16 +549,16 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Filters by the maximum number of elements shown.
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	private final class SetItemCountAction extends Action {
 		/** the maximum number of elements shown. */
-		private int limit;
+		private final int limit;
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the text
 		 * @param limit
@@ -579,17 +590,17 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Filters by data type.
-	 * 
+	 *
 	 * @author Ivan Senic
 	 */
 	private final class FilterByDataTypeAction extends Action {
 
 		/** The sensor type. */
-		private Class<?> dataClass;
+		private final Class<?> dataClass;
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the text
 		 * @param dataClass
@@ -627,16 +638,16 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Filters by exclusive time.
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	private final class FilterByExclusiveTimeAction extends Action {
 		/** the time. */
-		private double time;
+		private final double time;
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the text
 		 * @param time
@@ -669,16 +680,16 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Filters by total time.
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	private final class FilterByTotalTimeAction extends Action {
 		/** the time. */
-		private double time;
+		private final double time;
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the text
 		 * @param time
@@ -711,7 +722,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Sets the automatic refresh rate.
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	private final class SetRefreshRateAction extends Action {
@@ -719,11 +730,11 @@ public class FormPreferencePanel implements IPreferencePanel {
 		/**
 		 * Refresh rate in ms.
 		 */
-		private long rate;
+		private final long rate;
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the text
 		 * @param rate
@@ -768,6 +779,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 		for (IPreferenceControl preferenceControl : preferenceControlList) {
 			preferenceControl.dispose();
@@ -778,15 +790,15 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Action for turning the stepping control off and on.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private final class SwitchSteppingControl extends Action {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the action's text, or <code>null</code> if there is no text
 		 * @see Action
@@ -812,20 +824,20 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Sets the decimal places.
-	 * 
+	 *
 	 * @author Stefan Siegl
-	 * 
+	 *
 	 */
 	private final class SetTimeDecimalPlaces extends Action {
 
 		/**
 		 * The number of decimal places.
-		 * */
-		private int decimalPlaces;
+		 */
+		private final int decimalPlaces;
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the action's text, or <code>null</code> if there is no text
 		 * @param decimalPlaces
@@ -859,14 +871,14 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Option to switch between categorization based on request method or not.
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	private final class SwitchHttpCategorizationRequestMethod extends Action {
 
 		/**
 		 * Default Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the action's text, or <code>null</code> if there is no text
 		 */
@@ -893,15 +905,15 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Option to active Http URI transformation with regular expression.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private final class SwitchHttpUriTransformation extends Action {
 
 		/**
 		 * Default Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the action's text, or <code>null</code> if there is no text
 		 */
@@ -928,15 +940,15 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Action for switching the mode of the invocation subviews from/to raw/aggregated.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private final class SwitchInvocationSubviewMode extends Action {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param text
 		 *            Text on the action.
 		 */
@@ -960,7 +972,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 	/**
 	 * Action for setting the data solver to plot JMX data.
-	 * 
+	 *
 	 * @author Marius Oehler
 	 *
 	 */
@@ -969,11 +981,11 @@ public class FormPreferencePanel implements IPreferencePanel {
 		/**
 		 * The data solver of this element.
 		 */
-		private PlotDataSolver dataSolver;
+		private final PlotDataSolver dataSolver;
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param text
 		 *            the label of this item
 		 * @param dataSolver

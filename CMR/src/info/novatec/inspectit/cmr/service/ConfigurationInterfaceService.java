@@ -149,7 +149,7 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 		try {
 			ciManager.deleteEnvironment(environment);
 		} catch (IOException e) {
-			throw new TechnicalException("Create the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+			throw new TechnicalException("Delete the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 

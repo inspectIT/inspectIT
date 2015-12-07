@@ -11,9 +11,9 @@ import org.apache.commons.collections.CollectionUtils;
 
 /**
  * {@link AbstractContextCapture} for parameters. Saves parameter index to capture.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "parameter-capture")
@@ -23,7 +23,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 	 * Index of the parameter to capture.
 	 */
 	@XmlAttribute(name = "index")
-	private int index;
+	private Integer index;
 
 	/**
 	 * {@inheritDoc}
@@ -31,7 +31,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 	@Override
 	public String getAgentStringNotation() {
 		StringBuffer stringBuffer = new StringBuffer("p=");
-		stringBuffer.append(index);
+		stringBuffer.append(getIndex());
 		stringBuffer.append(';');
 		stringBuffer.append(getDisplayName());
 		stringBuffer.append(';');
@@ -51,16 +51,16 @@ public class ParameterContextCapture extends AbstractContextCapture {
 
 	/**
 	 * Gets {@link #index}.
-	 * 
+	 *
 	 * @return {@link #index}
 	 */
 	public int getIndex() {
-		return index;
+		return null != index ? index : 0;
 	}
 
 	/**
 	 * Sets {@link #index}.
-	 * 
+	 *
 	 * @param index
 	 *            New value for {@link #index}
 	 */
@@ -75,7 +75,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + index;
+		result = prime * result + getIndex();
 		return result;
 	}
 
@@ -94,7 +94,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 			return false;
 		}
 		ParameterContextCapture other = (ParameterContextCapture) obj;
-		if (index != other.index) {
+		if (getIndex() != other.getIndex()) {
 			return false;
 		}
 		return true;

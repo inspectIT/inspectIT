@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.ci.AgentMapping;
 import info.novatec.inspectit.ci.AgentMappings;
 import info.novatec.inspectit.ci.Environment;
@@ -38,9 +39,9 @@ import org.testng.annotations.Test;
 
 /**
  * Test for the {@link ConfigurationInterfaceManager}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class ConfigurationInterfaceManagerTest {
@@ -75,6 +76,7 @@ public class ConfigurationInterfaceManagerTest {
 		when(pathResolver.getEnvironmentPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getEnvironmentPath()));
 		when(pathResolver.getProfilesPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getProfilesPath()));
 		when(pathResolver.getSchemaPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getSchemaPath()));
+		when(pathResolver.getBusinessContextFilePath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getBusinessContextFilePath()));
 		doAnswer(new Answer<Path>() {
 			@Override
 			public Path answer(InvocationOnMock invocation) throws Throwable {

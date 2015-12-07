@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.cmr.model.SensorTypeIdent;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.exception.BusinessException;
@@ -40,13 +41,16 @@ public class CachedDataServiceTest {
 	@Mock
 	private IGlobalDataAccessService globalDataAccessService;
 
+	@Mock
+	private IBusinessContextManagementService businessContextService;
+
 	/**
 	 * Init.
 	 */
 	@BeforeMethod
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		cachedDataService = new CachedDataService(globalDataAccessService);
+		cachedDataService = new CachedDataService(globalDataAccessService, businessContextService);
 	}
 
 	/**

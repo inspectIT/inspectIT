@@ -1,5 +1,7 @@
 package info.novatec.inspectit.rcp.editor.table.input;
 
+import info.novatec.inspectit.cmr.configuration.business.IApplicationDefinition;
+import info.novatec.inspectit.cmr.configuration.business.IBusinessTransactionDefinition;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.service.ICachedDataService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
@@ -93,6 +95,8 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		COUNT("Child Count", 100, null, InvocationSequenceDataComparatorEnum.CHILD_COUNT),
 		/** The URI column. */
 		URI("URI", 150, null, InvocationSequenceDataComparatorEnum.URI),
+		/** The application column. */
+		APPLICATION("Application", 150, null, InvocationSequenceDataComparatorEnum.APPLICATION),
 		/** The Use case column. */
 		USE_CASE("Use case", 100, null, InvocationSequenceDataComparatorEnum.USE_CASE);
 
@@ -598,14 +602,28 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 			} else {
 				return emptyStyledString;
 			}
+		case APPLICATION:
+			IApplicationDefinition appDef = cachedDataService.getApplicationDefinitionForId(data.getApplicationId());
+			if (null != appDef) {
+				return new StyledString(appDef.getApplicationName());
+			} else {
+				return emptyStyledString;
+			}
 		case USE_CASE:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
 				String useCase = ((HttpTimerData) data.getTimerData()).getInspectItTaggingHeaderValue();
 				if (null != useCase) {
+					// use case tagged through inspectIT HTTP header
 					return new StyledString(useCase);
 				} else {
-					return emptyStyledString;
+					IBusinessTransactionDefinition bTxDef = cachedDataService.getBusinessTransactionDefinitionForId(data.getApplicationId(), data.getBusinessTransactionId());
+					if (null != bTxDef) {
+						return new StyledString(bTxDef.getBusinessTransactionName());
+					} else {
+						return emptyStyledString;
+					}
 				}
+
 			} else {
 				return emptyStyledString;
 			}

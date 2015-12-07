@@ -1,6 +1,9 @@
 package info.novatec.inspectit.rcp.repository.service.storage;
 
+import info.novatec.inspectit.ci.BusinessContextDefinition;
+import info.novatec.inspectit.cmr.configuration.business.IBusinessContextDefinition;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.cmr.service.IBusinessContextManagementService;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
@@ -200,5 +203,33 @@ public abstract class StorageServiceProvider {
 		storageJmxDataAccessService.setLocalStorageData(localStorageData);
 		storageJmxDataAccessService.setIndexingTree(storageTreeComponent);
 		return storageJmxDataAccessService;
+	}
+	
+	/**
+	 * @return Spring created {@link StorageBusinessContextService}.
+	 */
+	protected abstract StorageBusinessContextService createStorageBusinessContextService();
+
+	/**
+	 * Properly initialized {@link StorageBusinessContextService}.
+	 * 
+	 * @param storageRepositoryDefinition
+	 *            {@link StorageRepositoryDefinition}.
+	 * @param localStorageData
+	 *            {@link LocalStorageData}.
+	 * @param indexingTree
+	 *            Indexing tree.
+	 * @param businessContextDefinition
+	 *            the {@link BusinessContextDefinition} to use.
+	 * @return The storage implementation of the {@link IBusinessContextManagementService}
+	 */
+	public IBusinessContextManagementService createStorageBusinessContextService(StorageRepositoryDefinition storageRepositoryDefinition, LocalStorageData localStorageData,
+			IStorageTreeComponent<DefaultData> indexingTree, IBusinessContextDefinition businessContextDefinition) {
+		StorageBusinessContextService storageBusinessContextService = createStorageBusinessContextService();
+		storageBusinessContextService.setStorageRepositoryDefinition(storageRepositoryDefinition);
+		storageBusinessContextService.setLocalStorageData(localStorageData);
+		storageBusinessContextService.setIndexingTree(indexingTree);
+		storageBusinessContextService.setBusinessContextDefinition(businessContextDefinition);
+		return storageBusinessContextService;
 	}
 }

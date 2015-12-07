@@ -172,6 +172,14 @@ public interface InspectITImages {
 	String IMG_BOOK = InspectITConstants.ICON_PATH_FUGUE + "book.png";
 	String IMG_DUMMY = InspectITConstants.ICON_PATH_FUGUE + "dummy-happy.png";
 	String IMG_COUNTER = InspectITConstants.ICON_PATH_FUGUE + "counter.png";
+	String IMG_BUSINESS_CONTEXT = InspectITConstants.ICON_PATH_FUGUE + "briefcase.png";
+	String IMG_APPLICATION = InspectITConstants.ICON_PATH_FUGUE + "application-blue.png";
+	String IMG_APPLICATION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application.png";
+	String IMG_APPLICATIONS = InspectITConstants.ICON_PATH_FUGUE + "applications-blue.png";
+	String IMG_BUSINESS_TRANSACTION = InspectITConstants.ICON_PATH_FUGUE + "application-dock.png";
+	String IMG_BUSINESS_TRANSACTION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application-dock-grey.png";
+	String IMG_PUZZLE = InspectITConstants.ICON_PATH_FUGUE + "puzzle.png";
+	String IMG_PUZZLE_GREY = InspectITConstants.ICON_PATH_FUGUE + "puzzle-grey.png";
 	
 	// labels just pointing to existing ones
 	String IMG_ASSIGNEE_LABEL_ICON = IMG_USER;

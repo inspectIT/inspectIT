@@ -49,6 +49,7 @@ import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.exception.RemoteException;
 import info.novatec.inspectit.exception.TechnicalException;
 import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
+import info.novatec.inspectit.exception.enumeration.BusinessContextErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
 import info.novatec.inspectit.storage.serializer.HibernateAwareClassResolver;
@@ -319,6 +320,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));
 		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager));
 		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager));
+
+		// added with INSPECTIT-1804, INSPECTIT-1807
+		kryo.register(BusinessContextErrorCodeEnum.class, new EnumSerializer(BusinessContextErrorCodeEnum.class));
 	}
 
 	/**
