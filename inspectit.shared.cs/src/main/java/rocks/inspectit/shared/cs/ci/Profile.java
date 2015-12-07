@@ -53,7 +53,7 @@ public class Profile extends AbstractCiData {
 	 */
 	@Override
 	public String getName() {
-		if (commonProfile) {
+		if (isCommonProfile()) {
 			return "[Common] " + super.getName();
 		} else {
 			return super.getName();
