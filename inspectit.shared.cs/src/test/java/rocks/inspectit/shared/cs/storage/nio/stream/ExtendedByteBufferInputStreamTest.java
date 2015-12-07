@@ -35,7 +35,6 @@ import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.shared.cs.storage.StorageManager;
 import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 import rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager;
-import rocks.inspectit.shared.cs.storage.nio.stream.ExtendedByteBufferInputStream;
 
 /**
  * Testing of the {@link ExtendedByteBufferInputStream} class.

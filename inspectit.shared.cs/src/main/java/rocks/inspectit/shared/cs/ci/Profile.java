@@ -17,9 +17,9 @@ import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 
 /**
  * Profile defines sensor assignments and exclude rules.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "profile")
@@ -59,26 +59,26 @@ public class Profile {
 	 * Is it the "common" profile.
 	 */
 	@XmlAttribute(name = "common")
-	private boolean commonProfile;
+	private Boolean commonProfile = Boolean.FALSE;
 
 	/**
 	 * If profile is active. Deactivating profiles means they are not used even when they are
 	 * assigned to the Environments.
 	 */
 	@XmlAttribute(name = "active")
-	private boolean active = true;
+	private Boolean active = true;
 
 	/**
 	 * If the profile should be included in the Environment by default.
 	 */
 	@XmlAttribute(name = "default")
-	private boolean defaultProfile;
+	private Boolean defaultProfile = Boolean.FALSE;
 
 	/**
 	 * Revision. Server for version control and updating control.
 	 */
 	@XmlAttribute(name = "revision")
-	private int revision = 1;
+	private Integer revision = 1;
 
 	/**
 	 * {@link MethodSensorAssignment}s.
@@ -100,7 +100,7 @@ public class Profile {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public String getId() {
@@ -109,7 +109,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -121,11 +121,11 @@ public class Profile {
 	 * Gets {@link #name}.
 	 * <p>
 	 * If is common profile adds the prefix [Common] to the defined profile name.
-	 * 
+	 *
 	 * @return {@link #name}
 	 */
 	public String getName() {
-		if (commonProfile) {
+		if (isCommonProfile()) {
 			return "[Common] " + name;
 		} else {
 			return name;
@@ -134,7 +134,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #name}.
-	 * 
+	 *
 	 * @param name
 	 *            New value for {@link #name}
 	 */
@@ -144,7 +144,7 @@ public class Profile {
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
 	public String getDescription() {
@@ -153,7 +153,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #description}.
-	 * 
+	 *
 	 * @param description
 	 *            New value for {@link #description}
 	 */
@@ -163,7 +163,7 @@ public class Profile {
 
 	/**
 	 * Gets {@link #createdDate}.
-	 * 
+	 *
 	 * @return {@link #createdDate}
 	 */
 	public Date getCreatedDate() {
@@ -172,7 +172,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #createdDate}.
-	 * 
+	 *
 	 * @param createdDate
 	 *            New value for {@link #createdDate}
 	 */
@@ -182,7 +182,7 @@ public class Profile {
 
 	/**
 	 * Gets {@link #updatedDate}.
-	 * 
+	 *
 	 * @return {@link #updatedDate}
 	 */
 	public Date getUpdatedDate() {
@@ -191,7 +191,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #updatedDate}.
-	 * 
+	 *
 	 * @param updatedDate
 	 *            New value for {@link #updatedDate}
 	 */
@@ -201,25 +201,35 @@ public class Profile {
 
 	/**
 	 * Gets {@link #commonProfile}.
-	 * 
+	 *
 	 * @return {@link #commonProfile}
 	 */
 	public boolean isCommonProfile() {
-		return commonProfile;
+		return null != commonProfile ? commonProfile : false;
+	}
+
+	/**
+	 * Sets {@link #commonProfile}.
+	 *
+	 * @param commonProfile
+	 *            New value for {@link #commonProfile}
+	 */
+	public void setCommonProfile(boolean commonProfile) {
+		this.commonProfile = commonProfile;
 	}
 
 	/**
 	 * Gets {@link #active}.
-	 * 
+	 *
 	 * @return {@link #active}
 	 */
 	public boolean isActive() {
-		return active;
+		return null != active ? active : true;
 	}
 
 	/**
 	 * Sets {@link #active}.
-	 * 
+	 *
 	 * @param active
 	 *            New value for {@link #active}
 	 */
@@ -229,16 +239,16 @@ public class Profile {
 
 	/**
 	 * Gets {@link #defaultProfile}.
-	 * 
+	 *
 	 * @return {@link #defaultProfile}
 	 */
 	public boolean isDefaultProfile() {
-		return defaultProfile;
+		return null != defaultProfile ? defaultProfile : false;
 	}
 
 	/**
 	 * Sets {@link #defaultProfile}.
-	 * 
+	 *
 	 * @param defaultProfile
 	 *            New value for {@link #defaultProfile}
 	 */
@@ -248,16 +258,16 @@ public class Profile {
 
 	/**
 	 * Gets {@link #revision}.
-	 * 
+	 *
 	 * @return {@link #revision}
 	 */
 	public int getRevision() {
-		return revision;
+		return null != revision ? revision : 1;
 	}
 
 	/**
 	 * Sets {@link #revision}.
-	 * 
+	 *
 	 * @param revision
 	 *            New value for {@link #revision}
 	 */
@@ -267,7 +277,7 @@ public class Profile {
 
 	/**
 	 * Gets {@link #methodSensorAssignments}.
-	 * 
+	 *
 	 * @return {@link #methodSensorAssignments}
 	 */
 	public List<MethodSensorAssignment> getMethodSensorAssignments() {
@@ -276,7 +286,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #methodSensorAssignments}.
-	 * 
+	 *
 	 * @param methodSensorAssignments
 	 *            New value for {@link #methodSensorAssignments}
 	 */
@@ -286,7 +296,7 @@ public class Profile {
 
 	/**
 	 * Gets {@link #exceptionSensorAssignments}.
-	 * 
+	 *
 	 * @return {@link #exceptionSensorAssignments}
 	 */
 	public List<ExceptionSensorAssignment> getExceptionSensorAssignments() {
@@ -295,7 +305,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #exceptionSensorAssignments}.
-	 * 
+	 *
 	 * @param exceptionSensorAssignments
 	 *            New value for {@link #exceptionSensorAssignments}
 	 */
@@ -305,7 +315,7 @@ public class Profile {
 
 	/**
 	 * Gets {@link #excludeRules}.
-	 * 
+	 *
 	 * @return {@link #excludeRules}
 	 */
 	public List<ExcludeRule> getExcludeRules() {
@@ -314,7 +324,7 @@ public class Profile {
 
 	/**
 	 * Sets {@link #excludeRules}.
-	 * 
+	 *
 	 * @param excludeRules
 	 *            New value for {@link #excludeRules}
 	 */
@@ -331,7 +341,7 @@ public class Profile {
 		int result = 1;
 		result = prime * result + (active ? 1231 : 1237);
 		result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
-		result = prime * result + (commonProfile ? 1231 : 1237);
+		result = prime * result + (isCommonProfile() ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((exceptionSensorAssignments == null) ? 0 : exceptionSensorAssignments.hashCode());
 		result = prime * result + ((excludeRules == null) ? 0 : excludeRules.hashCode());
@@ -358,7 +368,7 @@ public class Profile {
 			return false;
 		}
 		Profile other = (Profile) obj;
-		if (active != other.active) {
+		if (isActive() != other.isActive()) {
 			return false;
 		}
 		if (createdDate == null) {
@@ -368,7 +378,7 @@ public class Profile {
 		} else if (!createdDate.equals(other.createdDate)) {
 			return false;
 		}
-		if (commonProfile != other.commonProfile) {
+		if (isCommonProfile() != other.isCommonProfile()) {
 			return false;
 		}
 		if (description == null) {
@@ -413,7 +423,7 @@ public class Profile {
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		if (revision != other.revision) {
+		if (getRevision() != other.getRevision()) {
 			return false;
 		}
 		if (updatedDate == null) {

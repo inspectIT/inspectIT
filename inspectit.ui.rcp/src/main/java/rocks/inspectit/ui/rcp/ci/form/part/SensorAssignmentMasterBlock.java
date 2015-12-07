@@ -3,7 +3,6 @@ package rocks.inspectit.ui.rcp.ci.form.part;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,8 +13,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -24,9 +21,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -36,10 +30,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.forms.DetailsPart;
@@ -70,13 +62,14 @@ import rocks.inspectit.ui.rcp.ci.form.input.ProfileEditorInput;
 import rocks.inspectit.ui.rcp.ci.widget.SensorAssignmentTableProvider;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.validation.TableItemControlDecorationManager;
 import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Tree master block for the sensor definition form page.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements IFormPart, IPartSelectionListener, ISelectionChangedListener, IPropertyListener {
 
@@ -93,28 +86,28 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	/**
 	 * Map of assignments.
 	 */
-	private Map<Class<? extends ISensorConfig>, List<AbstractClassSensorAssignment<?>>> configToAssignmentMap = new HashMap<>();
+	private final Map<Class<? extends ISensorConfig>, List<AbstractClassSensorAssignment<?>>> configToAssignmentMap = new HashMap<>();
 
 	/**
 	 * Map of sensors to the CTabItem.
 	 */
-	private Map<Class<? extends ISensorConfig>, CTabItem> sensorToTabMap = new HashMap<>();
+	private final Map<Class<? extends ISensorConfig>, CTabItem> sensorToTabMap = new HashMap<>();
 
 	/**
 	 * List of all currently invalid assignments in the page with connection to the full error
 	 * message.
 	 */
-	private Map<AbstractClassSensorAssignment<?>, String> invalidAssignments = new IdentityHashMap<>();
+	private final Map<AbstractClassSensorAssignment<?>, String> invalidAssignments = new IdentityHashMap<>();
 
 	/**
 	 * List of created {@link TableViewer}.
 	 */
-	private List<TableViewer> tableViewers = new ArrayList<>();
+	private final List<TableViewer> tableViewers = new ArrayList<>();
 
 	/**
-	 * {@link TableEditor}s to handle the validation decoration on table rows.
+	 * {@link TableItemControlDecorationManager} instance for managing table item decorations.
 	 */
-	private List<TableItemControlDecoration> tableItemControlDecorations = new ArrayList<>();
+	private final TableItemControlDecorationManager tableControlDecorationManager = new TableItemControlDecorationManager();
 
 	/**
 	 * Assignment currently being edited or <code>null</code> if no edit is done in the moment.
@@ -129,7 +122,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	/**
 	 * Form page block belongs to.
 	 */
-	private FormPage formPage;
+	private final FormPage formPage;
 
 	/**
 	 * Managed form to report to.
@@ -158,7 +151,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Composite to be displayed when no assignment is existing in the profile.
-	 * 
+	 *
 	 * @see {@link #createEmptyInputHint()}
 	 */
 	private Composite emptyHintComposite;
@@ -412,7 +405,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Creates new tab item with the list of assignments to be used as input.
-	 * 
+	 *
 	 * @param sensorClass
 	 *            sensor class
 	 * @param assignments
@@ -452,7 +445,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Removes a {@link CTabItem} for the sensor class.
-	 * 
+	 *
 	 * @param sensorClass
 	 *            sensor class
 	 */
@@ -509,7 +502,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * To be called when add is requested to the tree.
-	 * 
+	 *
 	 * @return Returns new {@link AbstractClassSensorAssignment} with the correctly set sensor type.
 	 */
 	private AbstractClassSensorAssignment<?> addRequested() {
@@ -561,7 +554,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		// descriptors
 		tableViewer.refresh();
 		for (Map.Entry<AbstractClassSensorAssignment<?>, String> entry : invalidAssignments.entrySet()) {
-			showTableItemControlDecoration(entry.getKey(), entry.getValue());
+			tableControlDecorationManager.showTableItemControlDecoration(tableViewer, entry.getKey(), entry.getValue());
 		}
 
 		// if we don't have any more assignment for sensor remove tab
@@ -575,7 +568,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Creates input map and returns the input.
-	 * 
+	 *
 	 * @return Input for the tree
 	 */
 	private Map<Class<? extends ISensorConfig>, List<AbstractClassSensorAssignment<?>>> getInput() {
@@ -595,7 +588,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Adds one {@link AbstractClassSensorAssignment} to the input map.
-	 * 
+	 *
 	 * @param assignment
 	 *            {@link AbstractClassSensorAssignment}
 	 */
@@ -611,7 +604,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Removes one {@link AbstractClassSensorAssignment} from the input map.
-	 * 
+	 *
 	 * @param assignment
 	 *            {@link AbstractClassSensorAssignment}
 	 */
@@ -630,7 +623,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Updates the state of the remove button depending on the current selection.
-	 * 
+	 *
 	 * @param selection
 	 *            Current selection.
 	 */
@@ -647,7 +640,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Fires edit option on the selection.
-	 * 
+	 *
 	 * @param selection
 	 *            {@link ISelection}
 	 */
@@ -673,68 +666,9 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	}
 
 	/**
-	 * Removes the error decoration for the sensor assignment.
-	 * 
-	 * @param sensorAssignment
-	 *            {@link AbstractClassSensorAssignment}.
-	 * @param message
-	 *            Message to display.
-	 * @return
-	 */
-	private void showTableItemControlDecoration(AbstractClassSensorAssignment<?> sensorAssignment, String message) {
-		TableViewer tableViewer = getActiveTableViewer();
-		if (null == tableViewer) {
-			return;
-		}
-
-		// first check if we have it, if so shown
-		for (TableItemControlDecoration decoration : tableItemControlDecorations) {
-			if (sensorAssignment == decoration.getAssignment()) { // NOPMD == on purpose
-				decoration.show();
-				decoration.setDescriptionText(message);
-				return;
-			}
-		}
-
-		// if not find appropriate table item to place it
-		for (TableItem tableItem : tableViewer.getTable().getItems()) {
-			if (tableItem.getData() == sensorAssignment) { // NOPMD == on purpose
-				TableItemControlDecoration decoration = new TableItemControlDecoration(tableItem);
-				decoration.show();
-				decoration.setDescriptionText(message);
-
-				tableItemControlDecorations.add(decoration);
-				return;
-			}
-		}
-	}
-
-	/**
-	 * Removes the error decoration for the sensor assignment.
-	 * 
-	 * @param sensorAssignment
-	 *            {@link AbstractClassSensorAssignment}.
-	 */
-	private void hideTableItemControlDecoration(AbstractClassSensorAssignment<?> sensorAssignment) {
-		TableViewer tableViewer = getActiveTableViewer();
-		if (null == tableViewer) {
-			return;
-		}
-
-		// remove if it's there
-		for (Iterator<TableItemControlDecoration> it = tableItemControlDecorations.iterator(); it.hasNext();) {
-			TableItemControlDecoration decoration = it.next();
-			if (sensorAssignment == decoration.getAssignment()) { // NOPMD == on purpose
-				decoration.hide();
-				return;
-			}
-		}
-	}
-
-	/**
 	 * Returns message key to be used with the {@link IMessageManager} when reporting errors with
 	 * provided assignment.
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            Assignment
 	 * @return Object to be used as a key
@@ -826,7 +760,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	 */
 	@Override
 	public void selectionChanged(IFormPart part, ISelection selection) {
-		updateButtonsState((StructuredSelection) selection);
+		updateButtonsState(selection);
 		fireEdit(selection);
 	}
 
@@ -844,7 +778,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Returns short (1 line) error message for the assignment based on the validation decorations.
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            assignment
 	 * @param validationDecorations
@@ -875,7 +809,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	 * Returns full error message for the assignment based on the validation decorations. In this
 	 * message each line will contain error reported by any invalid
 	 * {@link ValidationControlDecoration}
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            assignment
 	 * @param validationDecorations
@@ -904,15 +838,15 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 	/**
 	 * Helper selection class to denote remove was executed.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static class RemoveSelection extends StructuredSelection {
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param elements
 		 *            removed elements
 		 */
@@ -923,93 +857,10 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	}
 
 	/**
-	 * Class to help with displaying control decorations on the table rows.
-	 * 
-	 * @author Ivan Senic
-	 * 
-	 */
-	private class TableItemControlDecoration extends ControlDecoration {
-
-		/**
-		 * TableItem to create decoration for.
-		 */
-		private TableItem tableItem;
-
-		/**
-		 * Internal {@link TableEditor} to show decoration.
-		 */
-		private TableEditor tableEditor;
-
-		/**
-		 * Assignment being connected to the table item.
-		 */
-		private AbstractClassSensorAssignment<?> assignment;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param tableItem
-		 *            TableItem to create decoration for.
-		 */
-		public TableItemControlDecoration(TableItem tableItem) {
-			super(new Composite(tableItem.getParent(), SWT.NONE), SWT.BOTTOM);
-			Assert.isNotNull(tableItem);
-			Assert.isLegal(tableItem.getData() instanceof AbstractClassSensorAssignment);
-
-			this.tableItem = tableItem;
-			this.assignment = (AbstractClassSensorAssignment<?>) tableItem.getData();
-			tableEditor = new TableEditor(tableItem.getParent());
-			tableEditor.horizontalAlignment = SWT.LEFT;
-			tableEditor.verticalAlignment = SWT.BOTTOM;
-			tableEditor.setEditor(getControl(), tableItem, 0);
-
-			setImage(FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage());
-			hide();
-
-			tableItem.addDisposeListener(new DisposeListener() {
-				@Override
-				public void widgetDisposed(DisposeEvent e) {
-					// in any case hide, dispose and remove
-					tableItemControlDecorations.remove(TableItemControlDecoration.this);
-					hide();
-					dispose();
-				}
-			});
-		}
-
-		/**
-		 * Gets {@link #assignment}.
-		 * 
-		 * @return {@link #assignment}
-		 */
-		public AbstractClassSensorAssignment<?> getAssignment() {
-			return assignment;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void dispose() {
-			Control c = getControl();
-			if (!tableItem.isDisposed()) {
-				tableEditor.dispose();
-			}
-
-			super.dispose();
-
-			// we need to dispose the composite that we have created
-			if (null != c) {
-				c.dispose();
-			}
-		}
-	}
-
-	/**
 	 * {@link ISensorAssignmentUpdateListener} to handle the validations in the master view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class MasterBlockValidationListener implements ISensorAssignmentUpdateListener {
 
@@ -1019,11 +870,9 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		@Override
 		public void sensorAssignmentUpdated(AbstractClassSensorAssignment<?> sensorAssignment, boolean dirty, boolean isValid, List<ValidationControlDecoration<?>> validationDecorations) {
 			Assert.isNotNull(sensorAssignment);
-
+			TableViewer tableViewer = getActiveTableViewer();
 			if (dirty) {
-				TableViewer tableViewer = getActiveTableViewer();
 				tableViewer.refresh();
-
 				markDirty();
 			}
 
@@ -1031,11 +880,11 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 			if (!isValid) {
 				String fullErrorMessage = getErroMessageFull(sensorAssignment, validationDecorations);
 				invalidAssignments.put(sensorAssignment, fullErrorMessage);
-				showTableItemControlDecoration(sensorAssignment, fullErrorMessage);
+				tableControlDecorationManager.showTableItemControlDecoration(tableViewer, sensorAssignment, fullErrorMessage);
 				formPage.getManagedForm().getMessageManager().addMessage(key, getErroMessageShort(sensorAssignment, validationDecorations), null, IMessageProvider.ERROR);
 			} else {
 				invalidAssignments.remove(sensorAssignment);
-				hideTableItemControlDecoration(sensorAssignment);
+				tableControlDecorationManager.hideTableItemControlDecoration(tableViewer, sensorAssignment);
 				formPage.getManagedForm().getMessageManager().removeMessage(key);
 			}
 		}

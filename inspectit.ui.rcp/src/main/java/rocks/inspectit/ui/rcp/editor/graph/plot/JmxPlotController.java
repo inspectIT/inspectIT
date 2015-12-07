@@ -35,8 +35,8 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolve
 import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.PlotDataSolverFactory;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;

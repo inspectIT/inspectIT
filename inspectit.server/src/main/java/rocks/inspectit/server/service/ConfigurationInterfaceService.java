@@ -17,16 +17,18 @@ import rocks.inspectit.shared.all.exception.TechnicalException;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 
 /**
  * Implementation of the {@link ICmrManagementService}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Service
 public class ConfigurationInterfaceService implements IConfigurationInterfaceService {
@@ -151,7 +153,7 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 		try {
 			ciManager.deleteEnvironment(environment);
 		} catch (IOException e) {
-			throw new TechnicalException("Create the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+			throw new TechnicalException("Delete the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -178,8 +180,112 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public synchronized List<ApplicationDefinition> getApplicationDefinitions() {
+		return ciManager.getBusinessconContextDefinition().getApplicationDefinitions();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public synchronized ApplicationDefinition getApplicationDefinition(int id) throws BusinessException {
+		if (id == ApplicationDefinition.DEFAULT_ID) {
+			return BusinessContextDefinition.DEFAULT_APPLICATION_DEFINITION;
+		} else {
+			return ciManager.getBusinessconContextDefinition().getApplicationDefinition(id);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ApplicationDefinition addApplicationDefinition(ApplicationDefinition appDefinition) throws BusinessException {
+		return addApplicationDefinition(appDefinition, -1);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public synchronized ApplicationDefinition addApplicationDefinition(ApplicationDefinition appDefinition, int insertBeforeIndex) throws BusinessException {
+		try {
+			BusinessContextDefinition businessContextDefinition = ciManager.getBusinessconContextDefinition();
+			ApplicationDefinition addedApplicationDefinition;
+			if (insertBeforeIndex < 0) {
+				addedApplicationDefinition = businessContextDefinition.addApplicationDefinition(appDefinition);
+			} else {
+				addedApplicationDefinition = businessContextDefinition.addApplicationDefinition(appDefinition, insertBeforeIndex);
+			}
+			ciManager.updateBusinessContextDefinition(businessContextDefinition);
+			return addedApplicationDefinition;
+		} catch (JAXBException e) {
+			throw new TechnicalException("Add the application definition '" + appDefinition.getApplicationName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED,
+					e);
+		} catch (IOException e) {
+			throw new TechnicalException("Add the application definition '" + appDefinition.getApplicationName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public synchronized void deleteApplicationDefinition(ApplicationDefinition appDefinition) throws BusinessException {
+		try {
+			BusinessContextDefinition businessContextDefinition = ciManager.getBusinessconContextDefinition();
+			businessContextDefinition.deleteApplicationDefinition(appDefinition);
+			ciManager.updateBusinessContextDefinition(businessContextDefinition);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Delete the application definition '" + appDefinition.getApplicationName() + "'.",
+					ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Delete the application definition '" + appDefinition.getApplicationName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public synchronized ApplicationDefinition moveApplicationDefinition(ApplicationDefinition appDefinition, int index) throws BusinessException {
+		try {
+			BusinessContextDefinition businessContextDefinition = ciManager.getBusinessconContextDefinition();
+			ApplicationDefinition movedAppDefinition = businessContextDefinition.moveApplicationDefinition(appDefinition, index);
+			ciManager.updateBusinessContextDefinition(businessContextDefinition);
+			return movedAppDefinition;
+		} catch (JAXBException e) {
+			throw new TechnicalException("Move the application definition '" + appDefinition.getApplicationName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED,
+					e);
+		} catch (IOException e) {
+			throw new TechnicalException("Move the application definition '" + appDefinition.getApplicationName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public synchronized ApplicationDefinition updateApplicationDefinition(ApplicationDefinition appDefinition) throws BusinessException {
+		try {
+			BusinessContextDefinition businessContextDefinition = ciManager.getBusinessconContextDefinition();
+			ApplicationDefinition updated = businessContextDefinition.updateApplicationDefinition(appDefinition);
+			ciManager.updateBusinessContextDefinition(businessContextDefinition);
+			return updated;
+		} catch (JAXBException e) {
+			throw new TechnicalException("Update the application definition '" + appDefinition.getApplicationName() + "'.",
+					ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Update the application definition '" + appDefinition.getApplicationName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

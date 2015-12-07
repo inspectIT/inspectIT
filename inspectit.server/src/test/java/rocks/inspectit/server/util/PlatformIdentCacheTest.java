@@ -13,7 +13,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
-import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**

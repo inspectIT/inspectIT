@@ -45,7 +45,12 @@ public enum StorageFileType {
 	/**
 	 * Cached data files.
 	 */
-	CACHED_DATA_FILE(".cached");
+	CACHED_DATA_FILE(".cached"),
+
+	/**
+	 * Business context data file.
+	 */
+	BUSINESS_CONTEXT_FILE(".bctx");
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full

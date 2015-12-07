@@ -517,6 +517,12 @@ public class DataRetriever {
 			allFiles.putAll(platformIdentsFiles);
 		}
 
+		// business context files
+		if (ArrayUtils.contains(fileTypes, StorageFileType.BUSINESS_CONTEXT_FILE)) {
+			Map<String, Long> businessContextFiles = cmrRepositoryDefinition.getStorageService().getBusinessContextFilesLocation(storageData);
+			allFiles.putAll(businessContextFiles);
+		}
+
 		// indexing files
 		if (ArrayUtils.contains(fileTypes, StorageFileType.INDEX_FILE)) {
 			Map<String, Long> indexingTreeFiles = cmrRepositoryDefinition.getStorageService().getIndexFilesLocations(storageData);

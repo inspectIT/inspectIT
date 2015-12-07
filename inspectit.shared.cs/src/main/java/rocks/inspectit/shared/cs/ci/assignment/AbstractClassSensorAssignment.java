@@ -11,11 +11,12 @@ import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 
 /**
  * Class for class sensor assignment.
- * 
+ *
  * @author Ivan Senic
- * 
- * @param <T>Type of the sensor config that relates to the assignment.
- * 
+ *
+ * @param <T>Type
+ *            of the sensor config that relates to the assignment.
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ MethodSensorAssignment.class, ExceptionSensorAssignment.class })
@@ -30,14 +31,14 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	/**
 	 * If superclass marker is set.
 	 */
-	@XmlAttribute(name = "superclass", required = true)
-	private boolean superclass;
+	@XmlAttribute(name = "superclass")
+	private Boolean superclass = Boolean.FALSE;
 
 	/**
 	 * If interface marker is set.
 	 */
-	@XmlAttribute(name = "interface", required = true)
-	private boolean interf;
+	@XmlAttribute(name = "interface")
+	private Boolean interf = Boolean.FALSE;
 
 	/**
 	 * Annotation class.
@@ -47,7 +48,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Gets {@link #className}.
-	 * 
+	 *
 	 * @return {@link #className}
 	 */
 	public String getClassName() {
@@ -56,7 +57,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Sets {@link #className}.
-	 * 
+	 *
 	 * @param className
 	 *            New value for {@link #className}
 	 */
@@ -66,16 +67,16 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Gets {@link #superclass}.
-	 * 
+	 *
 	 * @return {@link #superclass}
 	 */
 	public boolean isSuperclass() {
-		return superclass;
+		return null != superclass ? superclass : false;
 	}
 
 	/**
 	 * Sets {@link #superclass}.
-	 * 
+	 *
 	 * @param superclass
 	 *            New value for {@link #superclass}
 	 */
@@ -85,16 +86,16 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Gets {@link #interf}.
-	 * 
+	 *
 	 * @return {@link #interf}
 	 */
 	public boolean isInterf() {
-		return interf;
+		return null != interf ? interf : false;
 	}
 
 	/**
 	 * Sets {@link #interf}.
-	 * 
+	 *
 	 * @param interf
 	 *            New value for {@link #interf}
 	 */
@@ -104,7 +105,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Gets {@link #annotation}.
-	 * 
+	 *
 	 * @return {@link #annotation}
 	 */
 	public String getAnnotation() {
@@ -113,7 +114,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Sets {@link #annotation}.
-	 * 
+	 *
 	 * @param annotation
 	 *            New value for {@link #annotation}
 	 */
@@ -138,8 +139,8 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 		int result = 1;
 		result = prime * result + ((annotation == null) ? 0 : annotation.hashCode());
 		result = prime * result + ((className == null) ? 0 : className.hashCode());
-		result = prime * result + (interf ? 1231 : 1237);
-		result = prime * result + (superclass ? 1231 : 1237);
+		result = prime * result + (isInterf() ? 1231 : 1237);
+		result = prime * result + (isSuperclass() ? 1231 : 1237);
 		return result;
 	}
 
@@ -172,10 +173,10 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 		} else if (!className.equals(other.className)) {
 			return false;
 		}
-		if (interf != other.interf) {
+		if (isInterf() != other.isInterf()) {
 			return false;
 		}
-		if (superclass != other.superclass) {
+		if (isSuperclass() != other.isSuperclass()) {
 			return false;
 		}
 		return true;

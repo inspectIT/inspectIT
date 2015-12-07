@@ -14,7 +14,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.server.cache.impl.AtomicBuffer;
 import rocks.inspectit.server.cache.impl.BufferProperties;
-import rocks.inspectit.server.property.PropertyManager;
 import rocks.inspectit.server.test.AbstractTransactionalTestNGLogSupport;
 import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
 import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;

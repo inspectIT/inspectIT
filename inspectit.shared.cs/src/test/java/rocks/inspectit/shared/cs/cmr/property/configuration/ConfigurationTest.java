@@ -13,9 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
-import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
-import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 
 @SuppressWarnings("PMD")

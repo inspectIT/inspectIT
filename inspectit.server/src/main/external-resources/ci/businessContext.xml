@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<business-context xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="3" xsi:noNamespaceSchemaLocation="schema\ciSchema.xsd">
+    <applications>
+        <applicaction id="-1585624782" name="test" revision="2">
+            <or id="2568041589592247500" advanced="true">
+                <operands>
+                    <string-matching matching-type="equals" snippet="d" search-in-trace="false" max-search-depth="-1" id="7149006152130773897" advanced="false">
+                        <http-uri/>
+                    </string-matching>
+                    <string-matching matching-type="equals" snippet="s" search-in-trace="false" max-search-depth="-1" id="193045001473641789" advanced="false">
+                        <http-uri/>
+                    </string-matching>
+                </operands>
+            </or>
+            <business-transactions>
+                <business-transaction id="1276463144" name="abc">
+                    <name-extraction id="-1597243771532521622" regularExpression="(.*)" targetNamePattern="(1)" max-search-depth="-1" search-in-trace="false">
+                        <http-parameter-value parameter-name="k"/>
+                    </name-extraction>
+                    <or id="-144708896032405508" advanced="false">
+                        <operands/>
+                    </or>
+                </business-transaction>
+            </business-transactions>
+        </applicaction>
+    </applications>
+</business-context>

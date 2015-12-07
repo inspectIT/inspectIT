@@ -10,10 +10,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,74 +23,141 @@ import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
+import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
-import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 
 /**
  * Testing the caching abilities of {@link CachedDataService}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
-public class CachedDataServiceTest {
+public class CachedDataServiceTest extends TestBase {
 
 	/**
 	 * Class under test.
 	 */
-	private CachedDataService cachedDataService;
+	@InjectMocks
+	CachedDataService cachedDataService;
 
 	@Mock
-	private IGlobalDataAccessService globalDataAccessService;
+	IGlobalDataAccessService globalDataAccessService;
+
+	@Mock
+	IBusinessContextManagementService businessContextService;
 
 	/**
-	 * Init.
+	 * Tests the Idents cache.
 	 */
-	@BeforeMethod
-	public void init() {
-		MockitoAnnotations.initMocks(this);
-		cachedDataService = new CachedDataService(globalDataAccessService);
+	public static class IdentsCacheTest extends CachedDataServiceTest {
+		private static final long PLATFORM_ID = 10L;
+		private PlatformIdent platformIdent;
+		private static final long METHOD_SENSOR_ID = 20L;
+		private MethodIdent methodIdent;
+		private static final long SENSOR_ID = 20L;
+		private SensorTypeIdent sensorType;
+
+		@BeforeMethod
+		public void initialize() throws BusinessException {
+			platformIdent = mock(PlatformIdent.class);
+			when(platformIdent.getId()).thenReturn(PLATFORM_ID);
+
+			when(globalDataAccessService.getAgentsOverview()).thenReturn(Collections.<PlatformIdent, AgentStatusData> singletonMap(platformIdent, null));
+			when(globalDataAccessService.getCompleteAgent(PLATFORM_ID)).thenReturn(platformIdent);
+
+			methodIdent = mock(MethodIdent.class);
+			when(methodIdent.getId()).thenReturn(METHOD_SENSOR_ID);
+			when(platformIdent.getMethodIdents()).thenReturn(Collections.singleton(methodIdent));
+
+			sensorType = mock(SensorTypeIdent.class);
+			when(sensorType.getId()).thenReturn(SENSOR_ID);
+			when(platformIdent.getSensorTypeIdents()).thenReturn(Collections.singleton(sensorType));
+		}
+
+		@Test
+		public void testIdentsCache() throws BusinessException {
+			assertThat(cachedDataService.getPlatformIdentForId(PLATFORM_ID), is(equalTo(platformIdent)));
+			assertThat(cachedDataService.getMethodIdentForId(METHOD_SENSOR_ID), is(equalTo(methodIdent)));
+			assertThat(cachedDataService.getSensorTypeIdentForId(SENSOR_ID), is(equalTo(sensorType)));
+
+			verify(globalDataAccessService, times(1)).getAgentsOverview();
+			verify(globalDataAccessService, times(1)).getCompleteAgent(PLATFORM_ID);
+			verifyNoMoreInteractions(globalDataAccessService);
+
+			assertThat(cachedDataService.getPlatformIdentForId(100L), is(nullValue()));
+			assertThat(cachedDataService.getMethodIdentForId(100L), is(nullValue()));
+			assertThat(cachedDataService.getSensorTypeIdentForId(100L), is(nullValue()));
+
+			verify(globalDataAccessService, times(4)).getAgentsOverview();
+			verify(globalDataAccessService, times(4)).getCompleteAgent(PLATFORM_ID);
+			verifyNoMoreInteractions(globalDataAccessService);
+
+			verifyNoMoreInteractions(businessContextService);
+		}
 	}
 
 	/**
-	 * Test that caching is working.
+	 * Tests the Business Context cache.
 	 */
-	@Test
-	public void cacheWorks() throws BusinessException {
-		long platformId = 10L;
-		long sensorId = 20L;
-		long methodSensorId = 30L;
+	public static class BusinessContextCacheTest extends CachedDataServiceTest {
+		private final int FIRST_APPLICATION_ID = 123;
+		private final int FIRST_BUSINESS_TX_ID = 456;
+		private final int SECOND_BUSINESS_TX_ID = 45678;
 
-		PlatformIdent platformIdent = mock(PlatformIdent.class);
-		when(platformIdent.getId()).thenReturn(platformId);
+		private final int SECOND_APPLICATION_ID = 12378;
+		private final int THIRD_BUSINESS_TX_ID = 49978;
 
-		SensorTypeIdent sensorType = mock(SensorTypeIdent.class);
-		when(sensorType.getId()).thenReturn(sensorId);
-		when(platformIdent.getSensorTypeIdents()).thenReturn(Collections.singleton(sensorType));
+		private ApplicationData firstApplication;
+		private ApplicationData secondApplication;
+		private BusinessTransactionData firstBusinessTx;
+		private BusinessTransactionData secondBusinessTx;
+		private BusinessTransactionData thirdBusinessTx;
 
-		MethodIdent methodIdent = mock(MethodIdent.class);
-		when(methodIdent.getId()).thenReturn(methodSensorId);
-		when(platformIdent.getMethodIdents()).thenReturn(Collections.singleton(methodIdent));
+		@BeforeMethod
+		public void initialize() throws BusinessException {
+			firstApplication = new ApplicationData(FIRST_APPLICATION_ID, FIRST_APPLICATION_ID, "firstApplication");
+			firstBusinessTx = new BusinessTransactionData(FIRST_BUSINESS_TX_ID, FIRST_BUSINESS_TX_ID, firstApplication, "firstBusinessTx");
+			secondBusinessTx = new BusinessTransactionData(SECOND_BUSINESS_TX_ID, SECOND_BUSINESS_TX_ID, firstApplication, "secondBusinessTx");
 
-		when(globalDataAccessService.getAgentsOverview()).thenReturn(Collections.<PlatformIdent, AgentStatusData> singletonMap(platformIdent, null));
-		when(globalDataAccessService.getCompleteAgent(platformId)).thenReturn(platformIdent);
+			secondApplication = new ApplicationData(SECOND_APPLICATION_ID, SECOND_APPLICATION_ID, "secondApplication");
+			thirdBusinessTx = new BusinessTransactionData(THIRD_BUSINESS_TX_ID, THIRD_BUSINESS_TX_ID, secondApplication, "thirdBusinessTx");
 
-		assertThat(cachedDataService.getPlatformIdentForId(platformId), is(equalTo(platformIdent)));
-		assertThat(cachedDataService.getSensorTypeIdentForId(sensorId), is(equalTo(sensorType)));
-		assertThat(cachedDataService.getMethodIdentForId(methodSensorId), is(equalTo(methodIdent)));
+			List<BusinessTransactionData> businessTxs = new ArrayList<>();
+			businessTxs.add(firstBusinessTx);
+			businessTxs.add(secondBusinessTx);
+			businessTxs.add(thirdBusinessTx);
+			List<ApplicationData> applications = new ArrayList<>();
+			applications.add(firstApplication);
+			applications.add(secondApplication);
+			when(businessContextService.getBusinessTransactions()).thenReturn(businessTxs);
+			when(businessContextService.getApplications()).thenReturn(applications);
+		}
 
-		verify(globalDataAccessService, times(1)).getAgentsOverview();
-		verify(globalDataAccessService, times(1)).getCompleteAgent(platformId);
-		verifyNoMoreInteractions(globalDataAccessService);
+		@Test
+		public void testBusinessContextCache() throws BusinessException {
+			assertThat(cachedDataService.getApplicationForId(FIRST_APPLICATION_ID), is(equalTo(firstApplication)));
+			assertThat(cachedDataService.getApplicationForId(SECOND_APPLICATION_ID), is(equalTo(secondApplication)));
+			assertThat(cachedDataService.getBusinessTransactionForId(FIRST_APPLICATION_ID, FIRST_BUSINESS_TX_ID), is(equalTo(firstBusinessTx)));
+			assertThat(cachedDataService.getBusinessTransactionForId(FIRST_APPLICATION_ID, SECOND_BUSINESS_TX_ID), is(equalTo(secondBusinessTx)));
+			assertThat(cachedDataService.getBusinessTransactionForId(SECOND_APPLICATION_ID, THIRD_BUSINESS_TX_ID), is(equalTo(thirdBusinessTx)));
 
-		assertThat(cachedDataService.getPlatformIdentForId(100L), is(nullValue()));
-		assertThat(cachedDataService.getSensorTypeIdentForId(100L), is(nullValue()));
-		assertThat(cachedDataService.getMethodIdentForId(100L), is(nullValue()));
+			verify(businessContextService, times(1)).getBusinessTransactions();
+			verify(businessContextService, times(1)).getApplications();
 
-		verify(globalDataAccessService, times(4)).getAgentsOverview();
-		verify(globalDataAccessService, times(4)).getCompleteAgent(platformId);
-		verifyNoMoreInteractions(globalDataAccessService);
+			assertThat(cachedDataService.getApplicationForId(1), is(nullValue()));
+			assertThat(cachedDataService.getApplicationForId(1), is(nullValue()));
+			assertThat(cachedDataService.getBusinessTransactionForId(SECOND_APPLICATION_ID, FIRST_BUSINESS_TX_ID), is(nullValue()));
+			assertThat(cachedDataService.getBusinessTransactionForId(FIRST_APPLICATION_ID, THIRD_BUSINESS_TX_ID), is(nullValue()));
+			assertThat(cachedDataService.getBusinessTransactionForId(1, THIRD_BUSINESS_TX_ID), is(nullValue()));
+			assertThat(cachedDataService.getBusinessTransactionForId(1, 1), is(nullValue()));
 
+			verify(businessContextService, times(7)).getBusinessTransactions();
+			verify(businessContextService, times(7)).getApplications();
+		}
 	}
 }

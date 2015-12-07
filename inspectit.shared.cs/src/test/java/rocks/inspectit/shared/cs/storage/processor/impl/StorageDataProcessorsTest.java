@@ -44,12 +44,6 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
 import rocks.inspectit.shared.cs.storage.IWriter;
 import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.AgentFilterDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.DataAggregatorProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.DataSaverProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.InvocationClonerDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.InvocationExtractorDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.TimeFrameDataProcessor;
 
 /**
  * Tests all {@link AbstractDataProcessor}s for the correct functionality.

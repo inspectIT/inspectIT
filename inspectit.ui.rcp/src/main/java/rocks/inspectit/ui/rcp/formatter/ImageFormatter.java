@@ -19,6 +19,8 @@ import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
+import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
@@ -517,6 +519,36 @@ public final class ImageFormatter {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_ADDRESSBOOK_BLUE);
 		} else {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_ADDRESSBOOK);
+		}
+	}
+
+	/**
+	 * Returns application definition image.
+	 *
+	 * @param appDefinition
+	 *            {@link ApplicationDefinition} to get image for.
+	 * @return Returns image for application definition.
+	 */
+	public static Image getApplicationDefinitionImage(ApplicationDefinition appDefinition) {
+		if (appDefinition.getId() == ApplicationDefinition.DEFAULT_ID) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_APPLICATION_GREY);
+		} else {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_APPLICATION);
+		}
+	}
+
+	/**
+	 * Returns business transaction definition image.
+	 *
+	 * @param businessTxDefinition
+	 *            {@link BusinessTransactionDefinition} to get image for.
+	 * @return Returns image for business transaction definition.
+	 */
+	public static Image getBusinessTransactionDefinitionImage(BusinessTransactionDefinition businessTxDefinition) {
+		if (businessTxDefinition.getId() == BusinessTransactionDefinition.DEFAULT_ID) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_BUSINESS_TRANSACTION_GREY);
+		} else {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_BUSINESS_TRANSACTION);
 		}
 	}
 }
