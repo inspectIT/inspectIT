@@ -278,6 +278,24 @@ public interface IStorageService {
 	Map<String, Long> getAgentFilesLocations(StorageData storageData) throws BusinessException;
 
 	/**
+	 * Returns the map of the string/long pairs that represent the path to the business context
+	 * files for one storage and their size in bytes. The paths are in form
+	 * "/directory/file.extension". These paths can be used in combination to CMR's ip and port to
+	 * get the files via HTTP.
+	 * <p>
+	 * For example, if the CMR has the ip localhost and port 8080, the address for the file would
+	 * be: http://localhost:8080/directory/file.extension
+	 * 
+	 * @param storageData
+	 *            Storage to get business context files for.
+	 * @return Returns the map of the string/long pairs that represent the path to the business
+	 *         context files and their size.
+	 * @throws BusinessException
+	 *             If gathering the file names fails.
+	 */
+	Map<String, Long> getBusinessContextFilesLocation(StorageData storageData) throws BusinessException;
+
+	/**
 	 * Adds one label to the {@link StorageData}. Note that if overwrite is true, the label of the
 	 * same type will be overwritten if the type is only one per storage data.
 	 *

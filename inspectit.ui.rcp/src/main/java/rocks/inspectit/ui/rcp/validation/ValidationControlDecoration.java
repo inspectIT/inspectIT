@@ -8,11 +8,18 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.IMessageManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class for all {@link ValidationControlDecoration}s.
@@ -23,6 +30,11 @@ import org.eclipse.ui.forms.IMessageManager;
  *            Type of control to decorate.
  */
 public abstract class ValidationControlDecoration<T extends Control> {
+
+	/**
+	 * Logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ValidationControlDecoration.class);
 
 	/**
 	 * Control.
@@ -103,7 +115,23 @@ public abstract class ValidationControlDecoration<T extends Control> {
 	 *            {@link IControlValidationListener}.
 	 */
 	public ValidationControlDecoration(T control, IControlValidationListener listener) {
-		this(control, (IMessageManager) null);
+		this(control, listener, true);
+	}
+
+	/**
+	 * Simple constructor. Control decoration will not be handled by message manager.Registers
+	 * listener to the list of validation listeners.
+	 *
+	 * @param control
+	 *            Control to decorate.
+	 * @param listener
+	 *            {@link IControlValidationListener}.
+	 * @param startupValidation
+	 *            Defines whether the control shall be validated during construction of the
+	 *            ValidationControlDecoration.
+	 */
+	public ValidationControlDecoration(T control, IControlValidationListener listener, boolean startupValidation) {
+		this(control, (IMessageManager) null, true, startupValidation);
 		addControlValidationListener(listener);
 	}
 
@@ -121,18 +149,83 @@ public abstract class ValidationControlDecoration<T extends Control> {
 	 *            changed on the control being validated.
 	 */
 	public ValidationControlDecoration(T control, IMessageManager messageManager, boolean alterControlBackround) {
+		this(control, messageManager, alterControlBackround, true);
+	}
+
+	/**
+	 * Default constructor that allows setting of the {@link #alterControlBackround}. Control
+	 * decoration will be handled by message manager if one is supplied.
+	 *
+	 * @param control
+	 *            Control to decorate.
+	 * @param messageManager
+	 *            {@link IMessageManager} to use for reporting messages. Can be <code>null</code>
+	 * @param alterControlBackround
+	 *            Defines if the control background should be changed to/from valid/invalid color.
+	 *            Defaults to <code>true</code>. If set to <code>false</code> no background will be
+	 *            changed on the control being validated.
+	 * @param startupValidation
+	 *            Defines whether the control shall be validated during construction of the
+	 *            ValidationControlDecoration.
+	 */
+	public ValidationControlDecoration(T control, IMessageManager messageManager, boolean alterControlBackround, boolean startupValidation) {
 		this.control = control;
 		this.messageManager = messageManager;
 		this.alterControlBackround = alterControlBackround;
 		this.controlBackground = control.getBackground();
 		this.nonValidBackground = new Color(control.getDisplay(), 255, 200, 200);
 
+		// must be added before creating the decoration
+		this.control.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				try {
+					hide();
+				} catch (Exception exception) {
+					// ignore exception on purpose
+					// SWT exception is thrown when one of the sibling elements is disposed in the
+					// process that one of the parent UI elements is disposed.
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("Ignoring Exception on ValidationControlDecoration disposal.", exception);
+					}
+				}
+				dispose();
+			}
+		});
+
+		// must be added before creating the decoration
+		// ensures that decoration is moved with the control on layout events
+		this.control.addControlListener(new ControlListener() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				Composite c = ValidationControlDecoration.this.control.getParent();
+				while (null != c) {
+					c.redraw();
+					c = c.getParent();
+				}
+			}
+
+			@Override
+			public void controlMoved(ControlEvent e) {
+				Composite c = ValidationControlDecoration.this.control.getParent();
+				while (null != c) {
+					c.redraw();
+					c = c.getParent();
+				}
+			}
+		});
+
 		if (null == messageManager) {
 			this.controlDecoration = new ControlDecoration(control, SWT.LEFT | SWT.BOTTOM);
 			this.controlDecoration.setImage(FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage());
 		}
 
-		startupValidation();
+		if (startupValidation) {
+			startupValidation();
+		} else {
+			// hide decoration per default
+			hide();
+		}
 	}
 
 	/**
@@ -344,9 +437,9 @@ public abstract class ValidationControlDecoration<T extends Control> {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Disposes the {@link #nonValidBackground} and the {@link #controlDecoration}.
 	 */
-	public void dispose() {
+	private void dispose() {
 		nonValidBackground.dispose();
 		if (null != controlDecoration) {
 			controlDecoration.dispose();
