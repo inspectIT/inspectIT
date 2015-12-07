@@ -80,7 +80,7 @@
       <perspective
             class="rocks.inspectit.ui.rcp.perspective.ConfigurationInterfacePerspective"
             fixed="true"
-            icon="icons/fugue/compass.png"
+            icon="icons/fugue/gear.png"
             id="rocks.inspectit.ui.rcp.perspective.configurationinterface"
             name="Configuration Interface">
       </perspective>
@@ -117,10 +117,17 @@
             restorable="true">
       </view>
       <view
-            class="rocks.inspectit.ui.rcp.ci.view.ConfigurationInterfaceManagerView"
+            class="rocks.inspectit.ui.rcp.ci.view.InstrumentationManagerViewPart"
             icon="icons/fugue/compass.png"
-            id="rocks.inspectit.ui.rcp.ci.view.ciManager"
-            name="Configuration Manager"
+            id="rocks.inspectit.ui.rcp.ci.view.instrumentationManager"
+            name="Instrumentation Manager"
+            restorable="true">
+      </view>
+      <view
+            class="rocks.inspectit.ui.rcp.ci.view.BusinessContextManagerViewPart"
+            icon="icons/fugue/briefcase.png"
+            id="rocks.inspectit.ui.rcp.ci.view.businessContextManager"
+            name="Business Context Manager"
             restorable="true">
       </view>
    </extension>
@@ -152,6 +159,13 @@
             icon="icons/eclipse/agent.gif"
             id="rocks.inspectit.ui.rcp.ci.editor.agentMappingEditor"
             name="Agent Mapping Editor">
+      </editor>
+      <editor
+            class="rocks.inspectit.ui.rcp.ci.form.editor.ApplicationDefinitionEditor"
+            default="false"
+            icon="icons/fugue/application-blue.png"
+            id="rocks.inspectit.ui.rcp.ci.editor.applicationDefinitionEditor"
+            name="Application Definition Editor">
       </editor>
    </extension>
    <extension
@@ -231,6 +245,15 @@
             name="Create Environment">
          <description>
             Create Environment
+         </description>
+      </wizard>
+      <wizard
+            class="rocks.inspectit.ui.rcp.ci.wizard.CreateApplicationWizard"
+            icon="icons/eclipse/add_obj.gif"
+            id="rocks.inspectit.ui.rcp.ci.wizard.createApplicationWizard"
+            name="Create Application">
+         <description>
+            Create Application
          </description>
       </wizard>
    </extension>
@@ -514,6 +537,24 @@
       <command 
       		id="rocks.inspectit.ui.rcp.commands.copyLogMessage" 
       		name="Copy Log Message">
+      </command>
+      <command
+            id="rocks.inspectit.ui.rcp.ci.moveApplicationUp"
+            name="Move Application Up">
+         <commandParameter
+               id="rocks.inspectit.ui.rcp.ci.moveApplication.direction"
+               name="direction"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            id="rocks.inspectit.ui.rcp.ci.moveApplicationDown"
+            name="Move Application Down">
+         <commandParameter
+               id="rocks.inspectit.ui.rcp.ci.moveApplication.direction"
+               name="direction"
+               optional="false">
+         </commandParameter>
       </command>
    </extension>
    <extension
@@ -990,6 +1031,11 @@
                   <not>
                      <instanceof
                            value="rocks.inspectit.ui.rcp.provider.IEnvironmentProvider">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
                      </instanceof>
                   </not></iterate>
             </and>
@@ -1726,6 +1772,38 @@
          </activeWhen>
       </handler>
       <handler
+            class="rocks.inspectit.ui.rcp.ci.handler.DeleteApplicationHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="rocks.inspectit.ui.rcp.isDefaultApplication">
+                     </test>
+                  </not>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="rocks.inspectit.ui.rcp.ci.handler.ActivateProfileHandler"
             commandId="rocks.inspectit.ui.rcp.ci.activateProfile">
          <activeWhen>
@@ -1902,6 +1980,108 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.ci.handler.MoveApplicationHandler"
+            commandId="rocks.inspectit.ui.rcp.ci.moveApplicationUp">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="rocks.inspectit.ui.rcp.isDefaultApplication">
+                     </test>
+                  </not>
+                  <test
+                        property="rocks.inspectit.ui.rcp.canMoveUp">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.ci.handler.MoveApplicationHandler"
+            commandId="rocks.inspectit.ui.rcp.ci.moveApplicationDown">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="rocks.inspectit.ui.rcp.isDefaultApplication">
+                     </test>
+                  </not>
+                  <test
+                        property="rocks.inspectit.ui.rcp.canMoveDown">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.ci.handler.EditApplicationHandler"
+            commandId="org.eclipse.ui.edit.rename">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
+                  </instanceof>
+                  <not>
+                     <test
+                           property="rocks.inspectit.ui.rcp.isDefaultApplication">
+                     </test>
+                  </not>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -1942,76 +2122,77 @@
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.StorageStateTester"
-            id="info.inspectit.rcp.StorageStateTester"
-            namespace="rocks.inspectit.ui.rcp"          properties="storageState, isStorageMounted, isStorageDownloaded"
+            id="rocks.inspectit.ui.rcp.StorageStateTester"
+            namespace="rocks.inspectit.ui.rcp"
+            properties="storageState, isStorageMounted, isStorageDownloaded"
             type="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
-            id="info.inspectit.rcp.CmrTester"
+            id="rocks.inspectit.ui.rcp.CmrTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
             type="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
-            id="info.inspectit.rcp.CmrTester"
+            id="rocks.inspectit.ui.rcp.CmrTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
             type="rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
-            id="info.inspectit.rcp.CmrTester"
+            id="rocks.inspectit.ui.rcp.CmrTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
             type="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
-            id="info.inspectit.rcp.CmrTester"
+            id="rocks.inspectit.ui.rcp.CmrTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
             type="rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.InputDefinitionTester"
-            id="info.inspectit.rcp.InputDefinitionTester"
+            id="rocks.inspectit.ui.rcp.InputDefinitionTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="repositoryType"
             type="rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.CanRefreshViewTester"
-            id="info.inspectit.rcp.CanRefreshTester"
+            id="rocks.inspectit.ui.rcp.CanRefreshTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="canRefresh"
             type="rocks.inspectit.ui.rcp.view.IRefreshableView">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.AgentTester"
-            id="info.inspectit.rcp.AgentTester"
+            id="rocks.inspectit.ui.rcp.AgentTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="canDelete"
             type="rocks.inspectit.ui.rcp.model.AgentLeaf">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.TimerDataTester"
-            id="info.inspectit.rcp.TimerDataTester"
+            id="rocks.inspectit.ui.rcp.TimerDataTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="canChart"
             type="rocks.inspectit.shared.all.communication.data.TimerData">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.JmxSensorValueDataTester"
-            id="info.inspectit.rcp.JmxSensorValueDataTester"
+            id="rocks.inspectit.ui.rcp.JmxSensorValueDataTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="canChart"
             type="rocks.inspectit.shared.all.communication.data.JmxSensorValueData">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.ci.testers.ProfileTester"
-            id="info.inspectit.rcp.ProfileTester"
+            id="rocks.inspectit.ui.rcp.ProfileTester"
             namespace="rocks.inspectit.ui.rcp"
             properties="isCommonProfile, isDefaultProfile, isActiveProfile"
             type="rocks.inspectit.ui.rcp.provider.IProfileProvider">
@@ -2022,6 +2203,13 @@
             namespace="rocks.inspectit.ui.rcp"
             properties="hasLoggingData, hasSQLData"
             type="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
+      </propertyTester>
+      <propertyTester
+            class="rocks.inspectit.ui.rcp.ci.testers.BusinessContextTester"
+            id="rocks.inspectit.ui.rcp.DefaultApplicationTester"
+            namespace="rocks.inspectit.ui.rcp"
+            properties="isDefaultApplication, canMoveUp, canMoveDown"
+            type="rocks.inspectit.ui.rcp.model.ci.ApplicationLeaf">
       </propertyTester>
    </extension>
    <extension
@@ -2420,11 +2608,30 @@
                <command
                      commandId="org.eclipse.ui.views.showView"
                      icon="icons/fugue/compass.png"
-                     label="Configuration Interface Manager"
+                     label="Instrumentation Manager"
                      style="push">
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
-                        value="rocks.inspectit.ui.rcp.ci.view.ciManager">
+                        value="rocks.inspectit.ui.rcp.ci.view.instrumentationManager">
+                  </parameter>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeWorkbenchWindow">
+                        <test
+                              property="org.eclipse.ui.workbenchWindow.isPerspectiveOpen">
+                        </test>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     icon="icons/fugue/briefcase.png"
+                     label="Business Context Manager"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="rocks.inspectit.ui.rcp.ci.view.businessContextManager">
                   </parameter>
                   <visibleWhen
                         checkEnabled="false">
@@ -2701,7 +2908,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:rocks.inspectit.ui.rcp.ci.view.ciManager">
+            locationURI="toolbar:rocks.inspectit.ui.rcp.ci.view.instrumentationManager">
          <command
                commandId="rocks.inspectit.ui.rcp.ci.agentMapping"
                icon="icons/eclipse/agent.gif"
@@ -3058,7 +3265,7 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table">
+            locationURI="popup:rocks.inspectit.ui.rcp.ci.view.instrumentationManager.table">
          <command
                commandId="org.eclipse.ui.newWizard"
                icon="icons/eclipse/add_obj.gif"
@@ -3078,7 +3285,7 @@
             </parameter>
          </command>
          <separator
-               name="rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table.separator1"
+               name="rocks.inspectit.ui.rcp.ci.view.instrumentationManager.table.separator1"
                visible="true">
          </separator>
          <command
@@ -3197,7 +3404,7 @@
             </visibleWhen>
          </command>
          <separator
-               name="rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table.separator2"
+               name="rocks.inspectit.ui.rcp.ci.view.instrumentationManager.table.separator2"
                visible="true">
          </separator>
          <command
@@ -3254,6 +3461,139 @@
                commandId="org.eclipse.ui.edit.delete"
                label="Delete"
                style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:rocks.inspectit.ui.rcp.ci.view.businessContextManager">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               icon="icons/eclipse/add_obj.gif"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createApplicationWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               icon="icons/eclipse/edit.gif"
+               label="Edit"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="rocks.inspectit.ui.rcp.ci.moveApplicationUp"
+               icon="icons/eclipse/prev_nav.gif"
+               style="push">
+            <parameter
+                  name="rocks.inspectit.ui.rcp.ci.moveApplication.direction"
+                  value="up">
+            </parameter>
+         </command>
+         <command
+               commandId="rocks.inspectit.ui.rcp.ci.moveApplicationDown"
+               icon="icons/eclipse/next_nav.gif"
+               style="push">
+            <parameter
+                  name="rocks.inspectit.ui.rcp.ci.moveApplication.direction"
+                  value="down">
+            </parameter>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push"
+               tooltip="Delete">
+         </command>
+         <command
+               commandId="org.eclipse.ui.file.refresh"
+               icon="icons/eclipse/refresh.gif"
+               label="Refresh"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:rocks.inspectit.ui.rcp.ci.view.businessContextManager">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               icon="icons/eclipse/add_obj.gif"
+               style="push">
+            <parameter
+                  name="newWizardId"
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createApplicationWizard">
+            </parameter>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.rename"
+               icon="icons/eclipse/edit.gif"
+               label="Edit"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <separator
+               name="rocks.inspectit.ui.rcp.view.businessContextManager.table.separator1"
+               visible="true">
+         </separator>
+         <command
+               commandId="rocks.inspectit.ui.rcp.ci.moveApplicationUp"
+               icon="icons/eclipse/prev_nav.gif"
+               style="push">
+            <parameter
+                  name="rocks.inspectit.ui.rcp.ci.moveApplication.direction"
+                  value="up">
+            </parameter>
+         </command>
+         <command
+               commandId="rocks.inspectit.ui.rcp.ci.moveApplicationDown"
+               icon="icons/eclipse/next_nav.gif"
+               style="push">
+            <parameter
+                  name="rocks.inspectit.ui.rcp.ci.moveApplication.direction"
+                  value="down">
+            </parameter>
+         </command>
+         <separator
+               name="rocks.inspectit.ui.rcp.view.businessContextManager.table.separator2"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push"
+               tooltip="Delete">
          </command>
       </menuContribution>
    </extension>

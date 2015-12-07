@@ -55,12 +55,12 @@ public class EditNameDescriptionDialog extends TitleAreaDialog {
 	/**
 	 * Old name.
 	 */
-	private String oldName;
+	private final String oldName;
 
 	/**
 	 * Old description.
 	 */
-	private String oldDescription;
+	private final String oldDescription;
 
 	/**
 	 * New name.
@@ -81,6 +81,11 @@ public class EditNameDescriptionDialog extends TitleAreaDialog {
 	 * Dialog message to display.
 	 */
 	private String dialogMessage = DEFAULT_MESSAGE;
+
+	/**
+	 * Array of names that already exist. This array can be used to avoid duplicate names.
+	 */
+	private String[] existingNames;
 
 	/**
 	 * Default constructor.
@@ -120,6 +125,33 @@ public class EditNameDescriptionDialog extends TitleAreaDialog {
 
 		this.dialogTitle = dialogTitle;
 		this.dialogMessage = dialogMessage;
+	}
+
+	/**
+	 * Default constructor.
+	 *
+	 * @param parentShell
+	 *            Parent shell.
+	 * @param oldName
+	 *            Old name.
+	 * @param oldDescription
+	 *            Old description.
+	 * @param dialogTitle
+	 *            title for the dialog
+	 * @param dialogMessage
+	 *            message message for the dialog
+	 * @param existingNames
+	 *            Array of names that already exist. This array is used to avoid duplicate names.
+	 */
+	public EditNameDescriptionDialog(Shell parentShell, String oldName, String oldDescription, String dialogTitle, String dialogMessage, String[] existingNames) {
+		this(parentShell, oldName, oldDescription);
+
+		Assert.isNotNull(dialogTitle);
+		Assert.isNotNull(dialogMessage);
+
+		this.dialogTitle = dialogTitle;
+		this.dialogMessage = dialogMessage;
+		this.existingNames = existingNames;
 	}
 
 	/**
@@ -231,13 +263,25 @@ public class EditNameDescriptionDialog extends TitleAreaDialog {
 	 * @return Is input in textual boxes valid.
 	 */
 	private boolean isInputValid() {
-		if (ObjectUtils.equals(oldName, nameBox.getText().trim())) {
-			if (ObjectUtils.equals(oldDescription, descriptionBox.getText().trim())) {
-				return false;
-			}
+		this.setMessage(dialogMessage, IMessageProvider.INFORMATION);
+		if (ObjectUtils.equals(oldName, nameBox.getText().trim()) && ObjectUtils.equals(oldDescription, descriptionBox.getText().trim())) {
+			this.setMessage("Fields have not been modified!", IMessageProvider.ERROR);
+			return false;
 		}
 		if (nameBox.getText().isEmpty()) {
+			this.setMessage("No value for the name entered", IMessageProvider.ERROR);
 			return false;
+		}
+		if (null != existingNames) {
+			for (String existingName : existingNames) {
+				if (ObjectUtils.equals(existingName, oldName)) {
+					continue;
+				}
+				if (ObjectUtils.equals(existingName, nameBox.getText().trim())) {
+					this.setMessage("This name already exists!", IMessageProvider.ERROR);
+					return false;
+				}
+			}
 		}
 		return true;
 	}
