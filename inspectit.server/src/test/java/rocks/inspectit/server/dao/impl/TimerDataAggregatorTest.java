@@ -30,7 +30,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.dao.impl.TimerDataAggregator;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.communication.data.DatabaseAggregatedTimerData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;

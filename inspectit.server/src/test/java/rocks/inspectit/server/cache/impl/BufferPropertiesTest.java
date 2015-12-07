@@ -14,7 +14,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.cache.impl.BufferProperties;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 
 /**

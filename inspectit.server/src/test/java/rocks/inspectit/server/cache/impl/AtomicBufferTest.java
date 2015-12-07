@@ -21,11 +21,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.cache.IBufferElement;
-import rocks.inspectit.server.cache.impl.AtomicBuffer;
-import rocks.inspectit.server.cache.impl.BufferAnalyzer;
-import rocks.inspectit.server.cache.impl.BufferElement;
-import rocks.inspectit.server.cache.impl.BufferIndexer;
-import rocks.inspectit.server.cache.impl.BufferProperties;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.DefaultData;

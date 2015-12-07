@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
 import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 

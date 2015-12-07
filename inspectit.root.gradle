@@ -28,6 +28,8 @@ allprojects {
 	apply from: file(propertiesFile.absolutePath)
 	apply from: file(dependenciesFile.absolutePath)
 
+	System.setProperty("file.encoding", "utf-8")
+	 
 	/**
 	 * If -PintegrateVersionInfo=true is passed with the build, then we will create versionInfo property for the project.
 	 */

@@ -9,26 +9,27 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 
 /**
  * Service for the CI.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface IConfigurationInterfaceService {
 
 	/**
 	 * Returns all existing profiles.
-	 * 
+	 *
 	 * @return Returns all existing profiles.
 	 */
 	List<Profile> getAllProfiles();
 
 	/**
 	 * Returns the profile with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of profile.
 	 * @return {@link Profile}
@@ -39,7 +40,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Creates new profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile template.
 	 * @return Returns created profile with correctly set id.
@@ -55,7 +56,7 @@ public interface IConfigurationInterfaceService {
 	 * <li>Profile does not exists on the CMR.
 	 * <li>Profile revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to update.
 	 * @return updated profile instance
@@ -67,7 +68,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Deletes the existing profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to delete.
 	 * @throws BusinessException
@@ -77,14 +78,14 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Returns all existing environment.
-	 * 
+	 *
 	 * @return Returns all existing environment.
 	 */
 	Collection<Environment> getAllEnvironments();
 
 	/**
 	 * Returns the environment with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of environment.
 	 * @return {@link Environment}
@@ -95,7 +96,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Creates new environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment template.
 	 * @return Returns created environment with correctly set id.
@@ -111,7 +112,7 @@ public interface IConfigurationInterfaceService {
 	 * <li>Environment does not exists on the CMR.
 	 * <li>Environment revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to update.
 	 * @return updated environment instance
@@ -122,7 +123,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Deletes the existing environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to delete.
 	 * @throws BusinessException
@@ -132,14 +133,14 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Returns the currently used agent mappings.
-	 * 
+	 *
 	 * @return Returns the currently used agent mappings.
 	 */
 	AgentMappings getAgentMappings();
 
 	/**
 	 * Saves the agent mappings to be used.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings} to save
 	 * @return updated {@link AgentMappings} instance
@@ -147,5 +148,87 @@ public interface IConfigurationInterfaceService {
 	 *             If the revision fails. If save fails.
 	 */
 	AgentMappings saveAgentMappings(AgentMappings agentMappings) throws BusinessException;
+
+	/**
+	 * Returns an unmodifiable list of all {@link ApplicationDefinition} instances.
+	 *
+	 * @return unmodifiable list of all {@link ApplicationDefinition} instances.
+	 */
+	List<ApplicationDefinition> getApplicationDefinitions();
+
+	/**
+	 * Retrieves the {@link ApplicationDefinition} for the given id.
+	 *
+	 * @param id
+	 *            identifier of the application definition.
+	 * @return Returns the {@link ApplicationDefinition} for the given id.
+	 *
+	 * @throws BusinessException
+	 *             if adding {@link ApplicationDefinition} fails.
+	 */
+	ApplicationDefinition getApplicationDefinition(int id) throws BusinessException;
+
+	/**
+	 * Adds application definition to the business context.
+	 *
+	 * @param appDefinition
+	 *            {@link ApplicationDefinition} instance to add
+	 * @return added {@link ApplicationDefinition} instance
+	 * @throws BusinessException
+	 *             if adding {@link ApplicationDefinition} fails.
+	 */
+	ApplicationDefinition addApplicationDefinition(ApplicationDefinition appDefinition) throws BusinessException;
+
+	/**
+	 * Adds application definition to the business context. Inserts it to the list before the
+	 * element with the passed index.
+	 *
+	 * @param appDefinition
+	 *            {@link ApplicationDefinition} instance to add
+	 * @param insertBeforeIndex
+	 *            insert before this index
+	 * @return added {@link ApplicationDefinition} instance
+	 * @throws BusinessException
+	 *             if adding {@link ApplicationDefinition} fails.
+	 */
+	ApplicationDefinition addApplicationDefinition(ApplicationDefinition appDefinition, int insertBeforeIndex) throws BusinessException;
+
+	/**
+	 * Deletes the {@link ApplicationDefinition} from the business context.
+	 *
+	 * @param appDefinition
+	 *            {@link ApplicationDefinition} to delete
+	 * @throws BusinessException
+	 *             if deleting {@link ApplicationDefinition} fails.
+	 */
+	void deleteApplicationDefinition(ApplicationDefinition appDefinition) throws BusinessException;
+
+	/**
+	 * Moves the {@link ApplicationDefinition} to a different position specified by the index
+	 * parameter.
+	 *
+	 * @param appDefinition
+	 *            {@link ApplicationDefinition} to move
+	 * @param index
+	 *            position to move the {@link ApplicationDefinition} to
+	 *
+	 * @return the moved {@link ApplicationDefinition} instance
+	 * @throws BusinessException
+	 *             if moving {@link ApplicationDefinition} fails.
+	 */
+	ApplicationDefinition moveApplicationDefinition(ApplicationDefinition appDefinition, int index) throws BusinessException;
+
+	/**
+	 * Updates the given {@link ApplicationDefinition}.
+	 *
+	 * @param appDefinition
+	 *            {@link ApplicationDefinition} to update
+	 * @throws BusinessException
+	 *             if update of {@link ApplicationDefinition} fails
+	 * @throws BusinessException
+	 *             if updating {@link ApplicationDefinition} fails.
+	 * @return the updated {@link ApplicationDefinition} instance
+	 */
+	ApplicationDefinition updateApplicationDefinition(ApplicationDefinition appDefinition) throws BusinessException;
 
 }

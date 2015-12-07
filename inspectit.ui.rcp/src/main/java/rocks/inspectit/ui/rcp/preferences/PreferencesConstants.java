@@ -4,9 +4,9 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolve
 
 /**
  * Interface that just holds the all inspectIT preferences keys.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface PreferencesConstants {
 

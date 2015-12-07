@@ -26,23 +26,26 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+import rocks.inspectit.server.ci.event.BusinessContextDefinitionUpdateEvent;
 import rocks.inspectit.server.jaxb.JAXBTransformator;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Manages all configuration interface operations.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class ConfigurationInterfaceManager {
@@ -60,9 +63,15 @@ public class ConfigurationInterfaceManager {
 	ConfigurationInterfacePathResolver pathResolver;
 
 	/**
+	 * Spring {@link ApplicationEventPublisher} for publishing the events.
+	 */
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+
+	/**
 	 * {@link JAXBTransformator}.
 	 */
-	private JAXBTransformator transformator = new JAXBTransformator();
+	private final JAXBTransformator transformator = new JAXBTransformator();
 
 	/**
 	 * Existing profiles in the system mapped by the id.
@@ -77,11 +86,16 @@ public class ConfigurationInterfaceManager {
 	/**
 	 * Currently used agent mapping.
 	 */
-	private AtomicReference<AgentMappings> agentMappingsReference = new AtomicReference<>();
+	private final AtomicReference<AgentMappings> agentMappingsReference = new AtomicReference<>();
+
+	/**
+	 * Business context definition.
+	 */
+	private BusinessContextDefinition businessContextDefinition;
 
 	/**
 	 * Returns all existing profiles.
-	 * 
+	 *
 	 * @return Returns all existing profiles.
 	 */
 	public List<Profile> getAllProfiles() {
@@ -90,7 +104,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the profile with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of profile.
 	 * @return {@link Profile}
@@ -107,7 +121,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Creates new profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile template.
 	 * @return Returns created profile with correctly set id.
@@ -133,7 +147,7 @@ public class ConfigurationInterfaceManager {
 	 * <li>Profile does not exists on the CMR.
 	 * <li>Profile revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to update.
 	 * @return updated profile instance
@@ -154,7 +168,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Deletes the existing profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to delete.
 	 * @throws IOException
@@ -186,7 +200,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns all existing environment.
-	 * 
+	 *
 	 * @return Returns all existing environment.
 	 */
 	public Collection<Environment> getAllEnvironments() {
@@ -195,7 +209,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the environment with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of environment.
 	 * @return {@link Environment}
@@ -212,7 +226,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Creates new environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment template.
 	 * @return Returns created environment with correctly set id.
@@ -245,7 +259,7 @@ public class ConfigurationInterfaceManager {
 	 * <li>Environment does not exists on the CMR.
 	 * <li>Environment revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to update.
 	 * @param checkProfiles
@@ -288,7 +302,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Deletes the existing environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to delete.
 	 * @throws IOException
@@ -313,7 +327,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the currently used agent mappings.
-	 * 
+	 *
 	 * @return Returns the currently used agent mappings.
 	 */
 	public AgentMappings getAgentMappings() {
@@ -322,7 +336,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Sets the agent mappings to be used.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings}
 	 * @param checkEnvironments
@@ -356,9 +370,38 @@ public class ConfigurationInterfaceManager {
 		return agentMappings;
 	}
 
+	public BusinessContextDefinition getBusinessconContextDefinition() {
+		return businessContextDefinition;
+	}
+
+	/**
+	 * Updates and stores new definition of the business context.
+	 *
+	 * @param businessContextDefinition
+	 *            New {@link IBusinessContextDefinition} to use.
+	 * @return the updated {@link BusinessContextDefinition} instance.
+	 * @throws BusinessException
+	 *             If updating business context fails.
+	 * @throws IOException
+	 *             If {@link IOException} occurs during update.
+	 * @throws JAXBException
+	 *             If {@link JAXBException} occurs during update.
+	 */
+	public synchronized BusinessContextDefinition updateBusinessContextDefinition(BusinessContextDefinition businessContextDefinition) throws BusinessException, JAXBException, IOException {
+		businessContextDefinition.setRevision(businessContextDefinition.getRevision() + 1);
+		if (this.businessContextDefinition != businessContextDefinition && this.businessContextDefinition.getRevision() + 1 != businessContextDefinition.getRevision()) { // NOPMD
+			throw new BusinessException("Update of the business context.", ConfigurationInterfaceErrorCodeEnum.REVISION_CHECK_FAILED);
+		}
+		saveBusinessContext(businessContextDefinition);
+
+		eventPublisher.publishEvent(new BusinessContextDefinitionUpdateEvent(this, businessContextDefinition));
+
+		return businessContextDefinition;
+	}
+
 	/**
 	 * Internal process of updating the profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile being updated.
 	 * @return Updated instance.
@@ -396,7 +439,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Cleans the non-existing profiles from the {@link Environment}.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}.
 	 * @return if environment was changed during the check process
@@ -417,7 +460,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Cleans the non-existing environments from the {@link AgentMappings}.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings}.
 	 * @return if mappings where changed during the check process
@@ -438,7 +481,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves profile and persists it to the list.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to be saved.
 	 * @throws IOException
@@ -457,7 +500,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves {@link Environment} to the disk.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment} to save.
 	 * @throws IOException
@@ -471,7 +514,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves agent mapping.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            To save
 	 * @throws IOException
@@ -484,8 +527,23 @@ public class ConfigurationInterfaceManager {
 	}
 
 	/**
+	 * Saves the passed {@link IBusinessContextDefinition}.
+	 *
+	 * @param businessContextDefinition
+	 *            {@link IBusinessContextDefinition} to save
+	 * @throws IOException
+	 *             If {@link IOException} occurs.
+	 * @throws JAXBException
+	 *             If {@link JAXBException} occurs. If saving fails.
+	 */
+	private void saveBusinessContext(BusinessContextDefinition businessContextDefinition) throws JAXBException, IOException {
+		this.businessContextDefinition = businessContextDefinition;
+		transformator.marshall(pathResolver.getBusinessContextFilePath(), businessContextDefinition, getRelativeToSchemaPath(pathResolver.getDefaultCiPath()).toString());
+	}
+
+	/**
 	 * Returns given path relative to schema part.
-	 * 
+	 *
 	 * @param path
 	 *            path to relativize
 	 * @return path relative to schema part
@@ -504,6 +562,7 @@ public class ConfigurationInterfaceManager {
 		loadExistingProfiles();
 		loadExistingEnvironments();
 		loadAgentMappings();
+		loadBusinessContextDefinition();
 	}
 
 	/**
@@ -636,8 +695,33 @@ public class ConfigurationInterfaceManager {
 	}
 
 	/**
+	 * Loads the business context definition if it is not already loaded. If successfully loaded
+	 * definition will be placed in the {@link #businessContextDefinition} field.
+	 */
+	private void loadBusinessContextDefinition() {
+		log.info("|-Loading the business context definition");
+		Path path = pathResolver.getBusinessContextFilePath();
+		if (Files.exists(path)) {
+			try {
+				businessContextDefinition = transformator.unmarshall(path, pathResolver.getSchemaPath(), BusinessContextDefinition.class);
+			} catch (JAXBException | IOException | SAXException e) {
+				log.error("Error loading Configuration interface business context file. File path: " + path.toString() + ".", e);
+			}
+		}
+		if (null == businessContextDefinition) {
+			businessContextDefinition = new BusinessContextDefinition();
+			try {
+				saveBusinessContext(businessContextDefinition);
+			} catch (JAXBException | IOException e) {
+				log.error("Error saving Configuration interface business context file. File path: " + path.toString() + ".", e);
+			}
+		}
+
+	}
+
+	/**
 	 * If path is a file that ends with the <i>.xml</i> extension.
-	 * 
+	 *
 	 * @param path
 	 *            Path to the file.
 	 * @return If path is a file that ends with the <i>.xml</i> extension.
@@ -648,7 +732,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the unique String that will be used for IDs.
-	 * 
+	 *
 	 * @return Returns unique string based on the {@link UUID}.
 	 */
 	private String getRandomUUIDString() {

@@ -1,7 +1,5 @@
 package rocks.inspectit.ui.rcp.handlers;
 
-import static org.hamcrest.Matchers.instanceOf;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

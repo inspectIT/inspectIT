@@ -21,8 +21,8 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.tree.input.SteppingTreeInputController;
 import rocks.inspectit.ui.rcp.util.ElementOccurrenceCount;
 

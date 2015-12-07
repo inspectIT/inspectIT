@@ -24,13 +24,6 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
 import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.InvocationChildrenIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.SensorTypeIdentIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.SqlStringIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
 import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**

@@ -28,8 +28,6 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
-import rocks.inspectit.shared.cs.storage.StorageIndexingTreeHandler;
-import rocks.inspectit.shared.cs.storage.StorageWriter;
 import rocks.inspectit.shared.cs.storage.StorageWriter.WriteTask;
 import rocks.inspectit.shared.cs.storage.util.StorageIndexTreeProvider;
 

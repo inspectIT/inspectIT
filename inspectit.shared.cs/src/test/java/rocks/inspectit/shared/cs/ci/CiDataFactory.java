@@ -8,9 +8,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 
-import rocks.inspectit.shared.cs.ci.AgentMapping;
-import rocks.inspectit.shared.cs.ci.Environment;
-import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;

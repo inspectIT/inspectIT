@@ -19,8 +19,6 @@ import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
-import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.IGroupedProperyValidator;

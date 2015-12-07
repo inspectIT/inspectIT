@@ -21,7 +21,6 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.ITreeComponent;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
 
 /**
  * Testing of the buffer branch class.

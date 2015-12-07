@@ -7,8 +7,8 @@ import java.util.Set;
 import org.jfree.chart.plot.XYPlot;
 
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
 import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;

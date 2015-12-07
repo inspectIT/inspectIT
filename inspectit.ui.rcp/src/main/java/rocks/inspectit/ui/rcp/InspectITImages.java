@@ -151,6 +151,7 @@ public interface InspectITImages {
 	String IMG_TOOL = InspectITConstants.ICON_PATH_ECLIPSE + "build.gif";
 	String IMG_TRANSFORM = InspectITConstants.ICON_PATH_ECLIPSE + "transform.gif";
 	String IMG_USER = InspectITConstants.ICON_PATH_ECLIPSE + "user.gif";
+	String IMG_METHOD_PARAMETER = InspectITConstants.ICON_PATH_ECLIPSE + "method-parameter.png";
 
 	// Fugue set - license Creative Commons v3.0
 	String IMG_ADDRESSBOOK = InspectITConstants.ICON_PATH_FUGUE + "address-book.png";
@@ -172,6 +173,23 @@ public interface InspectITImages {
 	String IMG_BOOK = InspectITConstants.ICON_PATH_FUGUE + "book.png";
 	String IMG_DUMMY = InspectITConstants.ICON_PATH_FUGUE + "dummy-happy.png";
 	String IMG_COUNTER = InspectITConstants.ICON_PATH_FUGUE + "counter.png";
+	String IMG_BUSINESS_CONTEXT = InspectITConstants.ICON_PATH_FUGUE + "briefcase.png";
+	String IMG_APPLICATION = InspectITConstants.ICON_PATH_FUGUE + "application-blue.png";
+	String IMG_APPLICATION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application.png";
+	String IMG_APPLICATIONS = InspectITConstants.ICON_PATH_FUGUE + "applications-blue.png";
+	String IMG_BUSINESS_TRANSACTION = InspectITConstants.ICON_PATH_FUGUE + "application-dock.png";
+	String IMG_BUSINESS_TRANSACTION_GREY = InspectITConstants.ICON_PATH_FUGUE + "application-dock-grey.png";
+	String IMG_ADVANCED_MODE = InspectITConstants.ICON_PATH_FUGUE + "blue-document-node.png";
+	String IMG_ASTERISK = InspectITConstants.ICON_PATH_FUGUE + "asterisk.png";
+	String IMG_CONJUNCTION = InspectITConstants.ICON_PATH_FUGUE + "conjunction.png";
+	String IMG_DISJUNCTION = InspectITConstants.ICON_PATH_FUGUE + "disjunction.png";
+	String IMG_NOT = InspectITConstants.ICON_PATH_FUGUE + "exclamation-diamond.png";
+	String IMG_YES_NO = InspectITConstants.ICON_PATH_FUGUE + "status-y-n.png";
+	String IMG_BROWSER = InspectITConstants.ICON_PATH_FUGUE + "application-browser.png";
+	String IMG_SERVER = InspectITConstants.ICON_PATH_FUGUE + "server.png";
+
+	// Images originally from Fugue set we modified - license Creative Commons v3.0
+	String IMG_HTTP_PARAMETER = InspectITConstants.ICON_PATH_FUGUE + "http-parameter.png";
 
 	// labels just pointing to existing ones
 	String IMG_ASSIGNEE_LABEL_ICON = IMG_USER;

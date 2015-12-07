@@ -17,8 +17,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
-import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
-import rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpTimerDataAggregator;
 
 /**
  * Tests the buffer aggregation of <code>HttpTimerData</code> elements.

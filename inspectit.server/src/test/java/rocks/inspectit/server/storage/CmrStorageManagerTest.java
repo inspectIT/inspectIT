@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -37,10 +36,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.server.cache.IBuffer;
 import rocks.inspectit.server.dao.StorageDataDao;
-import rocks.inspectit.server.storage.CmrStorageManager;
-import rocks.inspectit.server.storage.CmrStorageRecorder;
-import rocks.inspectit.server.storage.CmrStorageWriter;
-import rocks.inspectit.server.storage.CmrStorageWriterProvider;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.exception.BusinessException;
