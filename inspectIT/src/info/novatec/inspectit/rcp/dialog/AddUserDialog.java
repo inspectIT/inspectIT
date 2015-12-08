@@ -6,6 +6,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -23,21 +25,26 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
  * Dialog to add a new user.
  * 
  * @author Mario Rose
+ * @author Thomas Sachs
  *
  */
 public class AddUserDialog extends TitleAreaDialog {
+
 	/**
 	 * CmrRepositoryDefinition.
 	 */
 	private CmrRepositoryDefinition cmrRepositoryDefinition;
+
 	/**
 	 * Mail address text box.
 	 */
 	private Text mailBox;
+
 	/**
 	 * password text box.
 	 */
 	private Text passwordBox;
+
 	/**
 	 * Add user button.
 	 */
@@ -106,10 +113,27 @@ public class AddUserDialog extends TitleAreaDialog {
 		Label rolesLabel = new Label(main, SWT.NONE);
 		rolesLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		rolesLabel.setText("role:");
-		roles = new Combo(main, SWT.DROP_DOWN);
+		roles = new Combo(main, SWT.READ_ONLY);
 	    for (Role role : rolesList) {
 	    	roles.add(role.getTitle());
 	    }
+	    roles.setText("");
+	    
+		ModifyListener modifyListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if (isInputValid()) {
+					addButton.setEnabled(true);
+				} else {
+					addButton.setEnabled(false);
+				}
+			}
+		};
+		
+		mailBox.addModifyListener(modifyListener);
+		passwordBox.addModifyListener(modifyListener);
+		roles.addModifyListener(modifyListener);
+
 		return main;
 	}
 	/**
@@ -118,7 +142,7 @@ public class AddUserDialog extends TitleAreaDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		addButton = createButton(parent, ADD_ID, "Add User", true);
-		addButton.setEnabled(true);
+		addButton.setEnabled(false);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CLOSE_LABEL, false);
 	}
 	
@@ -151,6 +175,19 @@ public class AddUserDialog extends TitleAreaDialog {
 	    User user = new User(mail, password, id);
 	    cmrRepositoryDefinition.getSecurityService().addUser(user);
 		okPressed();
+	}
+	
+	private boolean isInputValid() {
+		if (mailBox.getText().isEmpty()) {
+			return false;
+		}
+		if (passwordBox.getText().isEmpty()) {
+			return false;
+		}
+		if (roles.getText() == "" ) {
+			return false;
+		} 
+		return true;
 	}
 	
 }

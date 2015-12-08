@@ -28,6 +28,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -336,15 +337,23 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		addNewLabel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 
-				Command command = commandService.getCommand(AddStorageLabelHandler.COMMAND);
-				ExecutionEvent executionEvent = handlerService.createExecutionEvent(command, new Event());
-				try {
-					command.executeWithChecks(executionEvent);
-				} catch (Exception exception) {
-					throw new RuntimeException(exception);
+				CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
+				if (cmrRepositoryDefinition.getGrantedPermissions() != null && cmrRepositoryDefinition.getGrantedPermissions().contains("cmrStoragePermission")) {
+
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+
+					Command command = commandService.getCommand(AddStorageLabelHandler.COMMAND);
+					ExecutionEvent executionEvent = handlerService.createExecutionEvent(command, new Event());
+					try {
+						command.executeWithChecks(executionEvent);
+					} catch (Exception exception) {
+						throw new RuntimeException(exception);
+					}
+				}
+				else {	
+					MessageDialog.openError(null, "Add new Label failed!", "Your not allowed to add a new Label to the Storage,\nor you are currently not logged in");
 				}
 			}
 		});
@@ -355,7 +364,8 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		removeLabels.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!labelsTableViewer.getSelection().isEmpty()) {
+				CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
+				if (!labelsTableViewer.getSelection().isEmpty() && cmrRepositoryDefinition.getGrantedPermissions() != null && cmrRepositoryDefinition.getGrantedPermissions().contains("cmrStoragePermission")) {
 					List<AbstractStorageLabel<?>> inputList = new ArrayList<AbstractStorageLabel<?>>();
 					for (Object object : ((StructuredSelection) labelsTableViewer.getSelection()).toArray()) {
 						if (object instanceof AbstractStorageLabel) {
@@ -375,6 +385,10 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 					} catch (Exception exception) {
 						throw new RuntimeException(exception);
 					}
+				}
+				else{
+					MessageDialog.openError(null, "Remove Label failed!", "Your not allowed to remove a Label to the Storage,\nor you are currently not logged in");
+
 				}
 			}
 		});
@@ -492,12 +506,13 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 					sizeOnDisk.setText(NumberFormatter.humanReadableByteCount(storageData.getDiskSize()));
 					labelsTableViewer.setInput(storageData.getLabelList());
 					labelsTableViewer.refresh();
-					addNewLabel.setEnabled(isRemoteStorageDisplayed());
+					CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
+					addNewLabel.setEnabled(
+							isRemoteStorageDisplayed() && cmrRepositoryDefinition.getGrantedPermissions() != null && cmrRepositoryDefinition.getGrantedPermissions().contains("cmrStoragePermission"));
 
 					// depending of type enable/disable widgets
-					if (isRemoteStorageDisplayed()) {
+					if (isRemoteStorageDisplayed() && cmrRepositoryDefinition.getGrantedPermissions() != null && cmrRepositoryDefinition.getGrantedPermissions().contains("cmrStoragePermission")) {
 						// for remote storage
-						CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
 						repository.setText(cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + ")");
 						state.setText(TextFormatter.getStorageStateTextualRepresentation(storageDataProvider.getStorageData().getState()));
 						Image img = ImageFormatter.getImageForStorageLeaf((StorageData) storageData);
