@@ -86,7 +86,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * The login status. LOGGEDIN in case a user is logged in on the CMR, otherwise LOGGEDOUT.
 	 */
-	private LoginStatus loginStatus;
+	private LoginStatus loginStatus = LoginStatus.LOGGEDOUT;
 
 	/**
 	 * Enumeration for the online status of {@link CmrRepositoryDefinition}.
