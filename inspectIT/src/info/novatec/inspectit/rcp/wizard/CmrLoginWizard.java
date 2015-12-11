@@ -1,7 +1,5 @@
 package info.novatec.inspectit.rcp.wizard;
 
-import java.util.Arrays;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -9,7 +7,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.LoginStatus;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
 /**
@@ -60,28 +58,25 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * {@inheritDoc} Tries to log into the CMR and to get and set the list with
-	 * grantedPermissions.
+	 * {@inheritDoc} Tries to log into the CMR and to get and set the list with grantedPermissions.
 	 */
 	@Override
 	public boolean performFinish() {
-		cmrRepositoryDefinition.refreshOnlineStatus();
-		if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
-			cmrRepositoryDefinition.setGrantedPermissions(cmrRepositoryDefinition.getSecurityService().authenticate(
-					cmrLoginWizardPage.getPasswordBox().getText(), cmrLoginWizardPage.getMailBox().getText()));
+		cmrRepositoryDefinition.refreshLoginStatus();
+		if (cmrRepositoryDefinition.getLoginStatus().equals(LoginStatus.LOGGEDOUT)) {
+			String email = cmrLoginWizardPage.getMailBox().getText();
+			String password = cmrLoginWizardPage.getPasswordBox().getText();
 
-			if (cmrRepositoryDefinition.getGrantedPermissions() != null) {
-				MessageDialog.openInformation(null, "Successfully authenticated at selected CMR",
-						"You are now logged in.");
-				return true;
+			boolean loggedin = cmrRepositoryDefinition.login(email, password);
 
+			if (loggedin) {
+				MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", "You are now logged in.");
 			} else {
 				MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
-				return false;
 			}
+			return loggedin;
 		} else {
-			cmrRepositoryDefinition.setGrantedPermissions(null);
-			MessageDialog.openError(null, "Login failed", "Please check your connection.");
+			MessageDialog.openError(null, "Error", "You are already logged in.");
 			return false;
 		}
 

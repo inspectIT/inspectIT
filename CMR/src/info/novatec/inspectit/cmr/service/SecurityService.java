@@ -1,9 +1,25 @@
 package info.novatec.inspectit.cmr.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.stereotype.Service;
 
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
@@ -13,18 +29,6 @@ import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.spring.logger.Log;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.stereotype.Service;
 
 /**
  * Provides general security-system operations for client<->cmr interaction.
@@ -67,8 +71,6 @@ public class SecurityService implements ISecurityService {
 	@Autowired
 	RoleDao roleDao;
 
-	
-	
 	/**
 	 * Is executed after dependency injection is done to perform any
 	 * initialization.
@@ -92,17 +94,27 @@ public class SecurityService implements ISecurityService {
 	 *            users password
 	 * @param email
 	 *            email
-	 * @return true if the user was authenticated
+	 * @return sessionId if the user was authenticated
 	 */
 	@Override
-	public List<String> authenticate(String pw, String email) {
-
+	public Serializable authenticate(String pw, String email) {
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
-		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
-		
-		if (!currentUser.isAuthenticated()) {
 
+		DefaultSessionManager sm = (DefaultSessionManager) cmrSecurityManager.getSessionManager();
+		for (Session session : sm.getSessionDAO().getActiveSessions()) {
+			SimplePrincipalCollection p = (SimplePrincipalCollection) session
+					.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+			if (p != null && token.getPrincipal().equals(p.getPrimaryPrincipal())) {
+				log.info("User [" + token.getPrincipal() + "] is already authenticated.");
+				return session.getId();
+			}
+		}
+
+		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
+
+
+		if (!currentUser.isAuthenticated()) {
 			try {
 				currentUser.login(token);
 				log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
@@ -114,21 +126,64 @@ public class SecurityService implements ISecurityService {
 			}
 		}
 
-		// TODO: Make a session
-		
-		
+		return currentUser.getSession().getId();
+	}
+
+	/**
+	 * Ends the session.
+	 * 
+	 * @param sessionId
+	 *            Session id from the session to end
+	 */
+	@Override
+	public void logout(Serializable sessionId) {
+		if (existsSession(sessionId)) {
+			Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+			log.info("SessionId [" + currentUser.getSession(false).getId() + "], Name [" + currentUser.getPrincipal()
+					+ "].");
+			currentUser.logout();
+			log.info("Logged out successfully.");
+		}
+	}
+
+	/**
+	 * Returns titles of permissions as Strings.
+	 * 
+	 * @param sessionId
+	 *            sessionId
+	 * @return List with the users permissions.
+	 */
+	@Override
+	public List<String> getPermissions(Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+
 		List<String> grantedPermissions = new ArrayList<String>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
 		for (int i = 0; i < existingPermissions.size(); i++) {
-		if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
-			grantedPermissions.add(existingPermissions.get(i).getTitle());
+			if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
+				grantedPermissions.add(existingPermissions.get(i).getTitle());
+			}
 		}
-		}
-		currentUser.logout();
 
-		
-		
 		return grantedPermissions;
+	}
+
+	/**
+	 * Checks whether session of a specific sessionId exists.
+	 * 
+	 * @param sessionId
+	 *            The id to check.
+	 * @return Boolean whether the session exists.
+	 */
+	@Override
+	public boolean existsSession(Serializable sessionId) {
+		// Subject just can exist if it was created earlier with Principals
+		Subject currentSubject = new Subject.Builder().sessionId(sessionId).buildSubject();
+		if (null == currentSubject.getPrincipal()) {
+			currentSubject.logout();
+			return false;
+		}
+		return true;
 
 	}
 

@@ -12,6 +12,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.LoginStatus;
 
 /**
  * Handler for CMR Logout.
@@ -40,9 +41,9 @@ public class CmrLogoutHandler extends AbstractHandler implements IHandler {
 		}
 
 		if (null != cmrRepositoryDefinition) {
-			if (null != cmrRepositoryDefinition.getGrantedPermissions()) {
-				cmrRepositoryDefinition.setGrantedPermissions(null);
-				MessageDialog.openError(null, "Logout succeed", "You have succesfully logged out.");
+			cmrRepositoryDefinition.refreshLoginStatus();
+			if (LoginStatus.LOGGEDIN == cmrRepositoryDefinition.getLoginStatus()) {
+				cmrRepositoryDefinition.logout();
 			} else {
 				MessageDialog.openError(null, "Logout failed", "You are not logged in.");
 			}
