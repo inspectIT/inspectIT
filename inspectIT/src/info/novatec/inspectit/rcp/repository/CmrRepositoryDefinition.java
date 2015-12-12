@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-//import org.eclipse.jface.dialogs.MessageDialog;
+// import org.eclipse.jface.dialogs.MessageDialog;
 
 import info.novatec.inspectit.cmr.service.ICmrManagementService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
@@ -626,11 +626,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		if (isLoggedIn()) {
 			loginStatus = LoginStatus.LOGGEDIN;
 		} else {
-			/*  MessageDialog causes an "unhandled loop exception" in Windows.
-			if (LoginStatus.LOGGEDIN == loginStatus) {
-				MessageDialog.openError(null, "Warning", "You are no longer logged in.");
-			}
-			*/
+			/*
+			 * MessageDialog causes an "unhandled loop exception" in Windows. if
+			 * (LoginStatus.LOGGEDIN == loginStatus) { MessageDialog.openError(null, "Warning",
+			 * "You are no longer logged in."); }
+			 */
 			loginStatus = LoginStatus.LOGGEDOUT;
 			sessionId = null;
 		}
@@ -669,11 +669,18 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		return loginStatus;
 	}
 
-	public List<String> getGrantedPermissions() {
-		return grantedPermissions;
-	}
-
 	private void setGrantedPermissions(List<String> grantedPermissions) {
 		this.grantedPermissions = grantedPermissions;
+	}
+
+	/**
+	 * Checks Permission.
+	 * 
+	 * @param permission
+	 *            Permission to be checked.
+	 * @return true if has Permission.
+	 */
+	public boolean hasPermission(String permission) {
+		return this.grantedPermissions != null && this.grantedPermissions.contains(permission);
 	}
 }
