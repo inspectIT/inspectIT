@@ -28,6 +28,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
  * 
  * @author Mario Rose
  * @author Thomas Sachs
+ * @author Lucca Hellriegel
  *
  */
 public class AddUserDialog extends TitleAreaDialog {
@@ -174,8 +175,8 @@ public class AddUserDialog extends TitleAreaDialog {
 	 * Adds the new user to database.
 	 */
 	private void addPressed() {
-		if (userList.contains(mailBox.getText())){
-			MessageDialog.openError(null, "Mail already exists!", "The Mail you chose is already taken! ");
+		if (userList.contains(mailBox.getText())) {
+			MessageDialog.openError(null, "Mail already exists!", "The mail you chose is already taken! ");
 			return;
 		}
 		long id = 0;

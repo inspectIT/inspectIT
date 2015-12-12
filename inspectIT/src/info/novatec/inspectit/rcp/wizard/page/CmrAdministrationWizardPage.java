@@ -94,27 +94,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	private AddUserDialog addUserDialog;
 
 	/**
-	 * The dialog to remove users.
-	 */
-	private RemoveUserDialog removeUserDialog;
-
-	/**
-	 * The dialog to remove roles.
-	 */
-	private RemoveRoleDialog removeRoleDialog;
-
-	/**
-	 * Reset button id.
-	 */
-
-	private static final int DONE_ID = 0; // IDialogConstants.OK_ID;
-
-	/**
-	 * Finished button.
-	 */
-	private Button doneButton;
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -188,17 +167,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 				searchRolesDialog.open();
 			}
 		});
-
-		Button removeUser = new Button(main, SWT.CENTER);
-		removeUser.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		removeUser.setText("Remove User");
-		removeUser.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeUserDialog = new RemoveUserDialog(main.getShell());
-				removeUserDialog.open();
-			}
-		});
 		
 		Button showPermissions = new Button(main, SWT.CENTER);
 		showPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
@@ -221,18 +189,7 @@ public class CmrAdministrationWizardPage extends WizardPage {
 				searchPermissionsDialog.open();
 			}
 		});
-
-		Button removeRole = new Button(main, SWT.CENTER);
-		removeRole.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		removeRole.setText("Remove Role");
-		removeRole.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeRoleDialog = new RemoveRoleDialog(main.getShell());
-				removeRoleDialog.open();
-			}
-		});
-
+		
 		setControl(main);
 	}
 
