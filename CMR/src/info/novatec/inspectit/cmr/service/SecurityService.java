@@ -196,6 +196,16 @@ public class SecurityService implements ISecurityService {
 	}
 
 	// | USER |---------------
+	@Override
+	public List<String> getAllUsers() {
+		List<User> users = userDao.loadAll();
+		List<String> userEmails = new ArrayList<String>();
+		for (User user : users) {
+			userEmails.add(user.getEmail());
+		}
+
+		return userEmails;
+	}
 
 	@Override
 	public void addUser(User user) throws DataIntegrityViolationException {
@@ -211,6 +221,11 @@ public class SecurityService implements ISecurityService {
 		} else {
 			userDao.saveOrUpdate(user);
 		}
+	}
+
+	@Override
+	public User getUser(String email) {
+		return userDao.load(email);
 	}
 
 	@Override
@@ -234,7 +249,6 @@ public class SecurityService implements ISecurityService {
 	}
 
 	// | PERMISSION |---------
-
 	@Override
 	public void changePermissionDescription(Permission permission) {
 		List<Permission> foundPermissions = permissionDao.findByTitle(permission);
@@ -250,8 +264,12 @@ public class SecurityService implements ISecurityService {
 		}
 	}
 
-	// | ROLE | --------------
+	@Override
+	public List<Permission> getAllPermissions() {
+		return permissionDao.loadAll();
+	}
 
+	// | ROLE | --------------
 	@Override
 	public Role getRoleByID(long id) throws DataRetrievalFailureException, DataIntegrityViolationException {
 		List<Role> roles = roleDao.findByID(id);
@@ -262,6 +280,24 @@ public class SecurityService implements ISecurityService {
 		} else {
 			throw new DataIntegrityViolationException("Multiple roles with the same id in the database!");
 		}
+	}
+
+	@Override
+	public Role getRoleOfUser(String email) throws AuthenticationException, DataIntegrityViolationException {
+		List<User> foundUsers = userDao.findByEmail(email);
+		if (foundUsers.isEmpty()) {
+			throw new AuthenticationException("Email or password is incorrect.");
+		} else if (foundUsers.size() != 1) {
+			throw new DataIntegrityViolationException("There are multiple users with same email.");
+		} else {
+			User user = foundUsers.get(0);
+			return getRoleByID(user.getRoleId());
+		}
+	}
+
+	@Override
+	public List<Role> getAllRoles() {
+		return roleDao.loadAll();
 	}
 
 	// TODO Make more methods available for the administrator module...
