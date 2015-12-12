@@ -49,8 +49,9 @@ public interface ISecurityService {
 	 * @param permissions The permissions assigned to this role.
 	 * @return The id of the created Role.
 	 */
-	//int addRole(String title, List<Permission> permissions);
+//	int addRole(String title, List<Permission> permissions);
 	
+	void addRole(Role role);
 	
 	// | USER |---------------
 	/**

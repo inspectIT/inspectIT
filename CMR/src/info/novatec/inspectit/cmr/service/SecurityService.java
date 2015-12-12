@@ -27,8 +27,8 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 /**
- * Provides general security-system operations for client<->cmr interaction.
- * Watches over Data Integrity.
+ * Provides general security-system operations for client<->cmr interaction. Watches over Data
+ * Integrity.
  * 
  * @author Andreas Herzog
  * @author Clemens Geibel
@@ -68,10 +68,8 @@ public class SecurityService implements ISecurityService {
 	@Autowired
 	RoleDao roleDao;
 
-
 	/**
-	 * Is executed after dependency injection is done to perform any
-	 * initialization.
+	 * Is executed after dependency injection is done to perform any initialization.
 	 */
 	@PostConstruct
 	public void postConstruct() {
@@ -114,7 +112,6 @@ public class SecurityService implements ISecurityService {
 		}
 		// TODO: Make a session
 
-
 		List<String> grantedPermissions = new ArrayList<String>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
 		for (int i = 0; i < existingPermissions.size(); i++) {
@@ -122,19 +119,18 @@ public class SecurityService implements ISecurityService {
 				grantedPermissions.add(existingPermissions.get(i).getTitle());
 			}
 		}
-		currentUser.logout();		
+		currentUser.logout();
 
 		return grantedPermissions;
 	}
-
 
 	// +-------------------------------------------------------------------------------------------+
 	// | Managing Security Data in the Database |
 	// +-------------------------------------------------------------------------------------------+
 
 	/**
-	 * Combines the integrity check for all security data types. Uniqueness etc.
-	 * is specifically checked in every method.
+	 * Combines the integrity check for all security data types. Uniqueness etc. is specifically
+	 * checked in every method.
 	 * 
 	 * @param data
 	 *            data
@@ -147,21 +143,22 @@ public class SecurityService implements ISecurityService {
 		} else if (data instanceof Permission) {
 			Permission permission = (Permission) data;
 			return (permission.getDescription().length() < 100);
-		}
+		} 
 		return false;
 	}
 
 	// | USER |---------------
 	@Override
 	public List<String> getAllUsers() {
-		List<User> users = userDao.loadAll();		
-		List<String> userEmails = new ArrayList<String>();		
+		List<User> users = userDao.loadAll();
+		List<String> userEmails = new ArrayList<String>();
 		for (User user : users) {
 			userEmails.add(user.getEmail());
-		}				
+		}
 
 		return userEmails;
 	}
+
 	@Override
 	public void addUser(User user) throws DataIntegrityViolationException {
 		if (!checkDataIntegrity(user)) {
@@ -177,12 +174,12 @@ public class SecurityService implements ISecurityService {
 			userDao.saveOrUpdate(user);
 		}
 	}
-	
+
 	@Override
 	public User getUser(String email) {
 		return userDao.load(email);
 	}
-	
+
 	@Override
 	public void deleteUser(User user) {
 		userDao.delete(user);
@@ -249,11 +246,24 @@ public class SecurityService implements ISecurityService {
 			return getRoleByID(user.getRoleId());
 		}
 	}
+
 	@Override
 	public List<Role> getAllRoles() {
 		return roleDao.loadAll();
 	}
 
+	@Override
+	public void addRole(Role role) throws DataIntegrityViolationException {
+		if (!checkDataIntegrity(role)) {
+			throw new DataIntegrityViolationException("Data integrity test failed!");
+		}
+		List<Role> allRole = roleDao.loadAll();
+		if (allRole.contains(role)) {
+			throw new DataIntegrityViolationException("Role already exist!");
+		} else {
+			roleDao.saveOrUpdate(role);
+		}
+	}
 
 	// TODO Make more methods available for the administrator module...
 }

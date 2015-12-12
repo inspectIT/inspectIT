@@ -41,7 +41,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 	/**
 	 * Mail address text box.
 	 */
-	private Text roleName;
+	private Text roleNameBox;
 
 	/**
 	 * Add user button.
@@ -99,7 +99,9 @@ public class AddRoleDialog extends TitleAreaDialog {
 
 	public AddRoleDialog(Shell parentShell, CmrRepositoryDefinition cmrRepositoryDefinition) {
 		super(parentShell);
+		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
+		
 	}
 
 	/**
@@ -127,11 +129,11 @@ public class AddRoleDialog extends TitleAreaDialog {
 		textLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
 		textLabel.setText("Add new Role");
 
-		Label roleNameLabel = new Label(main, SWT.NONE);
-		roleNameLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		roleNameLabel.setText("name:");
-		roleName = new Text(main, SWT.BORDER);
-		roleName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		Label roleNameBoxLabel = new Label(main, SWT.NONE);
+		roleNameBoxLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		roleNameBoxLabel.setText("name:");
+		roleNameBox = new Text(main, SWT.BORDER);
+		roleNameBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		Label textPermissionLabel = new Label(main, SWT.NONE);
 		textPermissionLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
@@ -149,8 +151,6 @@ public class AddRoleDialog extends TitleAreaDialog {
 		cmrShutdownAndRestartPermissionButton.setText("CMR Shutdown/Restart");
 		cmrAdministrationPermissionButton.setText("Administration");
 
-		cmrRecordingPermissionButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
-
 		
 		ModifyListener modifyListener = new ModifyListener() {
 			@Override
@@ -163,7 +163,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 			}
 		};
 
-		roleName.addModifyListener(modifyListener);
+		roleNameBox.addModifyListener(modifyListener);
 
 		return main;
 	}
@@ -191,13 +191,12 @@ public class AddRoleDialog extends TitleAreaDialog {
 	}
 
 	private void addPressed() {
-		if (rolesList.contains(roleName.getText())) {
+		System.out.println();
+		if (rolesList.contains(roleNameBox.getText())) {
 			MessageDialog.openError(null, "Role already exists!", "The Role you chose is already taken! ");
 			return;
 		}
-		long id = 0;
-		int index = roles.getSelectionIndex();
-		String name = roleName.getText();
+		String name = roleNameBox.getText();
 		List<Permission> rolePermissions = new ArrayList<Permission>();
 		if (cmrRecordingPermissionButton.isEnabled()) {
 			rolePermissions.add(new Permission("cmrRecordingPermission", "Permission start recording from Agent"));
@@ -221,10 +220,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 	}
 
 	private boolean isInputValid() {
-		if (roleName.getText().isEmpty()) {
-			return false;
-		}
-		if (!cmrStoragePermissionButton.getSelection()) {
+		if (roleNameBox.getText().isEmpty()) {
 			return false;
 		}
 		return true;
