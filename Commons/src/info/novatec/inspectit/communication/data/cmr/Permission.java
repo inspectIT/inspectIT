@@ -35,7 +35,7 @@ public class Permission implements Serializable {
 	
 	/**
 	 * The constructor for a permission.
-	 * @param id The id of the permission.
+	 * @param id The id of the permission. [id should no longer be hardcoded]
 	 * @param title The short title of the permission.
 	 * @param description The more detailed description of the permission.
 	 */
@@ -44,6 +44,17 @@ public class Permission implements Serializable {
 		this.title = title;
 		this.description = description;
 		this.id = id;
+	}
+	/**
+	 * The constructor for a permission.
+	 * @param title The short title of the permission.
+	 * @param description The more detailed description of the permission.
+	 */
+	public Permission(String title, String description) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.id = 0;
 	}
 	/**
 	 * Gets {@link #id}.

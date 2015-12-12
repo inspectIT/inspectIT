@@ -49,8 +49,8 @@ public class RoleDaoTest extends AbstractTransactionalTestNGLogSupport {
         roleDao.delete(role1);
         roleDao.delete(role2);
 
-        assertThat(roleDao.load("Normal-User"), is(nullValue()));
-        assertThat(roleDao.load("Power-User"), is(nullValue()));
+        assertThat(roleDao.findByTitle("Normal-User"), is(nullValue()));
+        assertThat(roleDao.findByTitle("Power-User"), is(nullValue()));
         
     }
 	

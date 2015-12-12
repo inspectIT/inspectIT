@@ -16,13 +16,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public interface PermissionDao {
 
 	/**
-	 * Load a specific {@link Permission} from the underlying storage by passing the title.
+	 * Load a specific {@link Permission} from the underlying storage by passing the id.
 	 * 
-	 * @param title
-	 *            The title of the Permission.
+	 * @param id
+	 *            The id of the Permission.
 	 * @return The found {@link Permission} object.
 	 */
-	Permission load(String title);
+	Permission load(long id);
 
 
 	/**
@@ -73,4 +73,12 @@ public interface PermissionDao {
 	 * @return a permission
 	 */
 	List<Permission> findByTitle(Permission permission);
+	
+	/**
+	 * Searches for a Permission in the Database matching the example.
+	 * E.g. when a Permission Object is created, the id field is not set and with this we can get the Permission Object with the corresponding id in the Database.
+	 * @param permission A sample permission
+	 * @return A matching Permission if found, null if not found or multiple entries
+	 */
+	Permission findOneByExample(Permission permission);
 }

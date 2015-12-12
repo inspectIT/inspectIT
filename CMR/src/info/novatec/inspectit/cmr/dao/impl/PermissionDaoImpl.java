@@ -75,14 +75,21 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 	/**
 	 * {@inheritDoc}
 	 */
-	public Permission load(String title) {
-		return (Permission) getHibernateTemplate().get(Permission.class, title);
+	public Permission load(long id) {
+		return (Permission) getHibernateTemplate().get(Permission.class, id);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void saveOrUpdate(Permission permission) {
+		//title is unique, it should return exactly this permission but with the correct id		
+		Permission tmpPermission = findOneByExample(permission);
+		//if the given permission is present in the database, adapt the id of the permission
+		if (tmpPermission != null) {
+			permission.setId(tmpPermission.getId());
+			tmpPermission = null;
+		}
 		getHibernateTemplate().saveOrUpdate(permission);
 	}
 
@@ -94,5 +101,48 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 		DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class);
 		criteria.add(Restrictions.eq("title", permission.getTitle()));
 		return getHibernateTemplate().findByCriteria(criteria);
+	}
+	
+	///**
+	// * {@inheritDoc}
+	// */
+	/*
+	@SuppressWarnings("unchecked")
+	public Permission findByCriteria(Permission permission, boolean id, boolean title, boolean desciption) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class);
+		if (id) {
+			criteria.add(Restrictions.eq("id", permission.getId()));			
+		}
+		if (title) {
+			criteria.add(Restrictions.eq("title", permission.getTitle()));			
+		}
+		if (desciption) {
+			criteria.add(Restrictions.eq("desciption", permission.getDescription()));			
+		}
+		List<Permission> possiblePermissions = getHibernateTemplate().findByCriteria(criteria);
+		
+		if (possiblePermissions.size() > 1) {
+			return null; //hier evtl auch ein fehler werfen
+		} else if (possiblePermissions.size() == 1) {
+			return possiblePermissions.get(0);
+		} else {
+			return null;
+		}
+	}*/
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public Permission findOneByExample(Permission permission) {
+		List<Permission> possiblePermissions = getHibernateTemplate().findByExample(permission);
+		
+		if (possiblePermissions.size() > 1) {
+			return null; //hier evtl auch ein fehler werfen
+		} else if (possiblePermissions.size() == 1) {
+			return possiblePermissions.get(0);
+		} else {
+			return null;
+		}
 	}
 }
