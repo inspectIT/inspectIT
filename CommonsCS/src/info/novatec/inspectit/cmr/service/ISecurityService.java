@@ -53,17 +53,6 @@ public interface ISecurityService {
 	List<String> getPermissions(Serializable sessionId);
 
 	/**
-	 * Returns a Role object with given Email.
-	 * 
-	 * @param email
-	 *            email
-	 * @return a Role object with given Email.
-	 * @throws AuthenticationException
-	 *             if the email was not found.
-	 */
-	Role retrieveRole(String email);
-
-	/**
 	 * Searches for the Role matching a given ID.
 	 * 
 	 * @param id

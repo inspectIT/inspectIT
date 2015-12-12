@@ -30,8 +30,8 @@ import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.spring.logger.Log;
 
 /**
- * Provides general security-system operations for client<->cmr interaction.
- * Watches over Data Integrity.
+ * Provides general security-system operations for client<->cmr interaction. Watches over Data
+ * Integrity.
  * 
  * @author Andreas Herzog
  * @author Clemens Geibel
@@ -71,8 +71,7 @@ public class SecurityService implements ISecurityService {
 	RoleDao roleDao;
 
 	/**
-	 * Is executed after dependency injection is done to perform any
-	 * initialization.
+	 * Is executed after dependency injection is done to perform any initialization.
 	 */
 	@PostConstruct
 	public void postConstruct() {
@@ -102,7 +101,6 @@ public class SecurityService implements ISecurityService {
 
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
 
-
 		if (!currentUser.isAuthenticated()) {
 			try {
 				currentUser.login(token);
@@ -128,8 +126,7 @@ public class SecurityService implements ISecurityService {
 	public void logout(Serializable sessionId) {
 		if (existsSession(sessionId)) {
 			Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
-			log.info("SessionId [" + currentUser.getSession(false).getId() + "], Name [" + currentUser.getPrincipal()
-					+ "].");
+			log.info("SessionId [" + currentUser.getSession(false).getId() + "], Name [" + currentUser.getPrincipal() + "].");
 			currentUser.logout();
 			log.info("Logged out successfully.");
 		}
@@ -175,26 +172,13 @@ public class SecurityService implements ISecurityService {
 		return false;
 	}
 
-	@Override
-	public Role retrieveRole(String email) throws AuthenticationException, DataIntegrityViolationException {
-		List<User> foundUsers = userDao.findByEmail(email);
-		if (foundUsers.isEmpty()) {
-			throw new AuthenticationException("Email or password is incorrect.");
-		} else if (foundUsers.size() != 1) {
-			throw new DataIntegrityViolationException("There are multiple users with same email.");
-		} else {
-			User user = foundUsers.get(0);
-			return getRoleByID(user.getRoleId());
-		}
-	}
-
 	// +-------------------------------------------------------------------------------------------+
 	// | Managing Security Data in the Database |
 	// +-------------------------------------------------------------------------------------------+
 
 	/**
-	 * Combines the integrity check for all security data types. Uniqueness etc.
-	 * is specifically checked in every method.
+	 * Combines the integrity check for all security data types. Uniqueness etc. is specifically
+	 * checked in every method.
 	 * 
 	 * @param data
 	 *            data
