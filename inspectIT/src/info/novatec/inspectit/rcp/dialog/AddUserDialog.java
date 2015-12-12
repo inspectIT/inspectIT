@@ -3,7 +3,6 @@ package info.novatec.inspectit.rcp.dialog;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -23,6 +22,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
  * Dialog to add a new user.
  * 
  * @author Mario Rose
+ * @author Lucca Hellriegel
  *
  */
 public class AddUserDialog extends TitleAreaDialog {
@@ -106,8 +106,8 @@ public class AddUserDialog extends TitleAreaDialog {
 		Label rolesLabel = new Label(main, SWT.NONE);
 		rolesLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		rolesLabel.setText("role:");
-		roles = new Combo(main, SWT.DROP_DOWN);
-	    for (Role role : rolesList) {
+		roles = new Combo(main, SWT.DROP_DOWN | SWT.READ_ONLY);
+		for (Role role : rolesList) {
 	    	roles.add(role.getTitle());
 	    }
 		return main;
