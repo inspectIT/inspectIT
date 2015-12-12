@@ -16,13 +16,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public interface RoleDao {
 
 	/**
-	 * Load a specific {@link Role} from the underlying storage by passing the title.
+	 * Load a specific {@link Role} from the underlying storage by passing the id.
 	 * 
-	 * @param title
-	 *            The title of the Role.
+	 * @param id
+	 *            The id of the Role.
 	 * @return The found {@link Role} object.
 	 */
-	Role load(String title);
+	Role load(long id);
 
 	/**
 	 * Find a Users Role.
@@ -41,7 +41,12 @@ public interface RoleDao {
 	 * @see HibernateTemplate#findByExample(Object)
 	 */
 	List<Role> findByExample(Role role);
-
+	/**
+	 * Searches for a role with the given title.
+	 * @param title The title
+	 * @return The role
+	 */
+	Role findByTitle(String title);
 	/**
 	 * Saves or updates this {@link Role} in the underlying storage.
 	 * 
@@ -72,4 +77,12 @@ public interface RoleDao {
 	 * @return Returns all stored {@link Role} objects.
 	 */
 	List<Role> loadAll();
+	
+	/**
+	 * Searches for a Role in the Database matching the example.
+	 * E.g. when a Role Object is created, the id field is not set and with this we can get the Role Object with the corresponding id in the Database.
+	 * @param role A sample Role
+	 * @return A matching Role if found, null if not found or multiple entries
+	 */
+	Role findOneByExample(Role role);
 }

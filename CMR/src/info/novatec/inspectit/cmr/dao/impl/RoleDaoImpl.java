@@ -71,18 +71,42 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 	public List<Role> findByExample(Role role) {
 		return getHibernateTemplate().findByExample(role);
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public Role findByTitle(String title) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
+		criteria.add(Restrictions.eq("title", title));
+		List<Role> possibleRoles = getHibernateTemplate().findByCriteria(criteria);
+		
+		if (possibleRoles.size() > 1) {
+			return null; //hier evtl auch ein fehler werfen
+		} else if (possibleRoles.size() == 1) {
+			return possibleRoles.get(0);
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Role load(String title) {
-		return (Role) getHibernateTemplate().get(Role.class, title);
+	public Role load(long id) {
+		return (Role) getHibernateTemplate().get(Role.class, id);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void saveOrUpdate(Role role) {
+		//title is unique, it should return exactly this role but with the correct id				
+		Role tmpRole = findOneByExample(role);
+				
+		//if the given permission is already present in the database, set the corresponding id of the role
+		if (tmpRole != null) {
+			role.setId(tmpRole.getId());
+		}
 		getHibernateTemplate().saveOrUpdate(role);
 	}
 
@@ -94,5 +118,21 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 		DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
 		criteria.add(Restrictions.eq("id", id));
 		return getHibernateTemplate().findByCriteria(criteria);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public Role findOneByExample(Role role) {
+		List<Role> possibleRoles = getHibernateTemplate().findByExample(role);
+		
+		if (possibleRoles.size() > 1) {
+			return null; //hier evtl auch ein fehler werfen
+		} else if (possibleRoles.size() == 1) {
+			return possibleRoles.get(0);
+		} else {
+			return null;
+		}
 	}
 }

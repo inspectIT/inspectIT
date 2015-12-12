@@ -1,9 +1,8 @@
 package info.novatec.inspectit.cmr.security;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import info.novatec.inspectit.cmr.dao.PermissionDao;
@@ -38,49 +37,45 @@ public class SecurityInitialization {
 	private UserDao userDao;
 
 	/**
-	 * The logger of this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityInitialization.class);
-
-	/**
 	 * Initializes the database with the given roles and permissions.
 	 */
 	public void start() {
+		Permission cmrRecordingPermission = new Permission("cmrRecordingPermission", "Permission start recording from Agent");
+		Permission cmrShutdownAndRestartPermission = new Permission("cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR");
+		Permission cmrDeleteAgentPermission = new Permission("cmrDeleteAgentPermission", "Permission for deleting Agent");
+		Permission cmrStoragePermission = new Permission("cmrStoragePermission", "Permission for accessing basic storage options");
+		Permission cmrAdministrationPermission = new Permission("cmrAdministrationPermission", "Permission for accessing the CMR Administration");
 				
-		//Declaration of permissions. Name must be the same as in plugin.xml
-		Permission cmrRecordingPermission = new Permission(1, "cmrRecordingPermission", "Permission start recording from Agent");
-		Permission cmrShutdownAndRestartPermission = new Permission(2, "cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR");
-		Permission cmrDeleteAgentPermission = new Permission(3, "cmrDeleteAgentPermission", "Permission for deleting Agent");
-		Permission cmrStoragePermission = new Permission(4, "cmrStoragePermission", "Permission for accessing basic storage options");
-		
 		//Transfers permissions to database.
 		permissionDao.saveOrUpdate(cmrRecordingPermission);
 		permissionDao.saveOrUpdate(cmrShutdownAndRestartPermission);
 		permissionDao.saveOrUpdate(cmrDeleteAgentPermission);
 		permissionDao.saveOrUpdate(cmrStoragePermission);
+		permissionDao.saveOrUpdate(cmrAdministrationPermission);
 		
 		//Predefined roles
-		Role freshUser = new Role(1, "freshUser", null);
-		Role restrictedUser = new Role(2, "restrictedUser", Arrays.asList(cmrRecordingPermission, cmrStoragePermission));
-		Role adminUser = new Role(3, "adminUser", Arrays.asList(cmrRecordingPermission, cmrStoragePermission , cmrDeleteAgentPermission , cmrShutdownAndRestartPermission));
+		Role freshUser = new Role("freshRole", new ArrayList<Permission>());
+		Role freshUser2 = new Role("freshRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission));
+		Role restrictedUser = new Role("restrictedRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission));
+		Role adminUser = new Role("adminRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrDeleteAgentPermission, cmrShutdownAndRestartPermission, cmrAdministrationPermission));
 		
 		//Transfers roles to database.
 		roleDao.saveOrUpdate(freshUser);
+		roleDao.saveOrUpdate(freshUser2);
 		roleDao.saveOrUpdate(restrictedUser);
 		roleDao.saveOrUpdate(adminUser);
-
+			
 		//Standarduser - changes with login
 		User admin = new User(Permutation.hashString("admin"), "admin", adminUser.getId());
 		
-		//Testusers - delete before final merging
+		//Testusers
+		//TODO: delete before final merging
 		User restricted = new User(Permutation.hashString("restricted"), "restricted", restrictedUser.getId());
-		User fresh = new User(Permutation.hashString("restricted"), "freshUser", freshUser.getId());
+		User fresh = new User(Permutation.hashString("fresh"), "freshUser", freshUser.getId());
 		userDao.saveOrUpdate(fresh);
 		userDao.saveOrUpdate(restricted);
 		
 		//Transfers users to databse.		
-		userDao.saveOrUpdate(admin);
-			   
+		userDao.saveOrUpdate(admin);			   
 	}
-
 }
