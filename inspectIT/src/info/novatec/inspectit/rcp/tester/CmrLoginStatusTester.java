@@ -5,6 +5,7 @@ import org.eclipse.core.expressions.PropertyTester;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.LoginStatus;
 
 /**
  * 
@@ -28,10 +29,15 @@ public class CmrLoginStatusTester extends PropertyTester {
 		}
 
 		if ("cmrLoginStatus".equals(property)) {
+			cmrRepositoryDefinition.refreshLoginStatus();
+			LoginStatus loginStatus = cmrRepositoryDefinition.getLoginStatus();
+			if (null == loginStatus) {
+				return false;
+			}
 			if ("LOGGEDIN".equals(expectedValue)) {
-				return null != cmrRepositoryDefinition.getGrantedPermissions();
+				return cmrRepositoryDefinition.getLoginStatus().equals(LoginStatus.LOGGEDIN);
 			} else if ("LOGGEDOUT".equals(expectedValue)) {
-				return null == cmrRepositoryDefinition.getGrantedPermissions();
+				return cmrRepositoryDefinition.getLoginStatus().equals(LoginStatus.LOGGEDOUT);
 			}
 		}
 
