@@ -2,10 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="info.novatec.inspectit.communication.data.cmr">
 	<class name="Role" table="role">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native"></generator>  
+		</id>
 		
-		<id name="title" type="string" column="title"  />
-		<property name="id" type="java.lang.Long" column="id" />
-				
+		<property name="title" type="string" column="title" unique="true"></property>
+		
 		<list name="permissions" lazy="false">
 			<key column="id" />
 			<index column="idx" />
