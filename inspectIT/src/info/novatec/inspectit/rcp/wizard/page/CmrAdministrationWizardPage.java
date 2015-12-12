@@ -1,11 +1,9 @@
 package info.novatec.inspectit.rcp.wizard.page;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -15,8 +13,6 @@ import info.novatec.inspectit.rcp.dialog.ShowAllUsersDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.dialog.AddRoleDialog;
 import info.novatec.inspectit.rcp.dialog.AddUserDialog;
-import info.novatec.inspectit.rcp.dialog.RemoveRoleDialog;
-import info.novatec.inspectit.rcp.dialog.RemoveUserDialog;
 import info.novatec.inspectit.rcp.dialog.SearchPermissionsDialog;
 import info.novatec.inspectit.rcp.dialog.SearchRolesDialog;
 import info.novatec.inspectit.rcp.dialog.SearchUsersDialog;
