@@ -14,7 +14,6 @@ import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -101,16 +100,6 @@ public class SecurityService implements ISecurityService {
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
 
-		DefaultSessionManager sm = (DefaultSessionManager) cmrSecurityManager.getSessionManager();
-		for (Session session : sm.getSessionDAO().getActiveSessions()) {
-			SimplePrincipalCollection p = (SimplePrincipalCollection) session
-					.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-			if (p != null && token.getPrincipal().equals(p.getPrimaryPrincipal())) {
-				log.info("User [" + token.getPrincipal() + "] is already authenticated.");
-				return session.getId();
-			}
-		}
-
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
 
 
@@ -177,14 +166,13 @@ public class SecurityService implements ISecurityService {
 	 */
 	@Override
 	public boolean existsSession(Serializable sessionId) {
-		// Subject just can exist if it was created earlier with Principals
-		Subject currentSubject = new Subject.Builder().sessionId(sessionId).buildSubject();
-		if (null == currentSubject.getPrincipal()) {
-			currentSubject.logout();
-			return false;
+		DefaultSessionManager sm = (DefaultSessionManager) cmrSecurityManager.getSessionManager();
+		for (Session session : sm.getSessionDAO().getActiveSessions()) {
+			if (session.getId().equals(sessionId)) {
+				return true;
+			}
 		}
-		return true;
-
+		return false;
 	}
 
 	@Override
