@@ -193,6 +193,10 @@ public class AddUserDialog extends TitleAreaDialog {
 		okPressed();
 	}
 	
+	/**
+	 * Checks if the input is not null.
+	 * @return true if not null.
+	 */
 	private boolean isInputValid() {
 		if (mailBox.getText().isEmpty()) {
 			return false;
@@ -200,7 +204,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		if (passwordBox.getText().isEmpty()) {
 			return false;
 		}
-		if (roles.getText() == "" ) {
+		if (roles.getText() == "") {
 			return false;
 		} 
 		return true;
