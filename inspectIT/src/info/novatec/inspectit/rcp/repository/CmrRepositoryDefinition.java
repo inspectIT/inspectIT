@@ -73,10 +73,10 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 */
 	public enum LoginStatus {
 		/**
-		 *  User is logged in.
+		 * User is logged in.
 		 */
-		LOGGEDIN, 
-		
+		LOGGEDIN,
+
 		/**
 		 * User is logged out.
 		 */
@@ -607,7 +607,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		sessionId = null;
 		return false;
 	}
-	
+
 	/**
 	 * Method for logging out.
 	 */
@@ -627,7 +627,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			loginStatus = LoginStatus.LOGGEDIN;
 		} else {
 			if (LoginStatus.LOGGEDIN == loginStatus) {
-				MessageDialog.openError(null, "Warning", "You are no longer logged in.");
+				// MessageDialog.openError(null, "Warning", "You are no longer logged in.");
 			}
 			loginStatus = LoginStatus.LOGGEDOUT;
 			sessionId = null;

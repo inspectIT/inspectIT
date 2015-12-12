@@ -44,6 +44,7 @@ public class CmrLogoutHandler extends AbstractHandler implements IHandler {
 			cmrRepositoryDefinition.refreshLoginStatus();
 			if (LoginStatus.LOGGEDIN == cmrRepositoryDefinition.getLoginStatus()) {
 				cmrRepositoryDefinition.logout();
+				MessageDialog.openError(null, "Warning", "You logged out successfully.");
 			} else {
 				MessageDialog.openError(null, "Logout failed", "You are not logged in.");
 			}
