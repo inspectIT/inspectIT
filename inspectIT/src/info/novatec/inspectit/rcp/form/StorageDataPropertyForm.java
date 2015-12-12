@@ -28,6 +28,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -190,11 +191,13 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	 * @param parent
 	 *            Parent where form will be created.
 	 * @param storageDataProvider
-	 *            {@link IStorageDataProvider} to display. Can be <code>null</code>.
+	 *            {@link IStorageDataProvider} to display. Can be
+	 *            <code>null</code>.
 	 * @param storageData
 	 *            {@link IStorageData} to display. Can be <code>null</code>.
 	 */
-	public StorageDataPropertyForm(Composite parent, IStorageDataProvider storageDataProvider, IStorageData storageData) {
+	public StorageDataPropertyForm(Composite parent, IStorageDataProvider storageDataProvider,
+			IStorageData storageData) {
 		this.managedForm = new ManagedForm(parent);
 		this.toolkit = managedForm.getToolkit();
 		this.form = managedForm.getForm();
@@ -262,7 +265,8 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		labelComposite.setLayout(tableWrapLayout);
 		labelComposite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		Table table = toolkit.createTable(labelComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+		Table table = toolkit.createTable(labelComposite,
+				SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		TableWrapData tableWrapData = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -336,15 +340,25 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		addNewLabel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 
-				Command command = commandService.getCommand(AddStorageLabelHandler.COMMAND);
-				ExecutionEvent executionEvent = handlerService.createExecutionEvent(command, new Event());
-				try {
-					command.executeWithChecks(executionEvent);
-				} catch (Exception exception) {
-					throw new RuntimeException(exception);
+				CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
+				if (cmrRepositoryDefinition.hasPermission("cmrStoragePermission")) {
+
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getService(IHandlerService.class);
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+							.getService(ICommandService.class);
+
+					Command command = commandService.getCommand(AddStorageLabelHandler.COMMAND);
+					ExecutionEvent executionEvent = handlerService.createExecutionEvent(command, new Event());
+					try {
+						command.executeWithChecks(executionEvent);
+					} catch (Exception exception) {
+						throw new RuntimeException(exception);
+					}
+				} else {
+					MessageDialog.openError(null, "Add new Label failed!",
+							"Your not allowed to add a new Label to the Storage,\nor you are currently not logged in");
 				}
 			}
 		});
@@ -355,7 +369,9 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		removeLabels.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!labelsTableViewer.getSelection().isEmpty()) {
+				CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
+				if (!labelsTableViewer.getSelection().isEmpty()
+						&& cmrRepositoryDefinition.hasPermission("cmrStoragePermission")) {
 					List<AbstractStorageLabel<?>> inputList = new ArrayList<AbstractStorageLabel<?>>();
 					for (Object object : ((StructuredSelection) labelsTableViewer.getSelection()).toArray()) {
 						if (object instanceof AbstractStorageLabel) {
@@ -363,8 +379,10 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 						}
 					}
 
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getService(IHandlerService.class);
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+							.getService(ICommandService.class);
 
 					Command command = commandService.getCommand(RemoveStorageLabelHandler.COMMAND);
 					ExecutionEvent executionEvent = handlerService.createExecutionEvent(command, new Event());
@@ -375,6 +393,10 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 					} catch (Exception exception) {
 						throw new RuntimeException(exception);
 					}
+				} else {
+					MessageDialog.openError(null, "Remove Label failed!",
+							"Your not allowed to remove a Label to the Storage,\nor you are currently not logged in");
+
 				}
 			}
 		});
@@ -411,17 +433,21 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 					if (!ObjectUtils.equals(storageDataProvider, firstElement)) {
 						storageDataProvider = (IStorageDataProvider) firstElement;
 						storageData = storageDataProvider.getStorageData();
-						final CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
-						LabelValueEditingSupport editingSupport = new LabelValueEditingSupport(labelsTableViewer, storageDataProvider.getStorageData(), cmrRepositoryDefinition);
+						final CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider
+								.getCmrRepositoryDefinition();
+						LabelValueEditingSupport editingSupport = new LabelValueEditingSupport(labelsTableViewer,
+								storageDataProvider.getStorageData(), cmrRepositoryDefinition);
 						editingSupport.addLabelEditListener(new LabelEditListener() {
 
 							@Override
 							public void preLabelValueChange(AbstractStorageLabel<?> label) {
 								if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 									try {
-										cmrRepositoryDefinition.getStorageService().removeLabelFromStorage(storageDataProvider.getStorageData(), label);
+										cmrRepositoryDefinition.getStorageService()
+												.removeLabelFromStorage(storageDataProvider.getStorageData(), label);
 									} catch (BusinessException e) {
-										InspectIT.getDefault().createErrorDialog("Label value can not be updated.", e, -1);
+										InspectIT.getDefault().createErrorDialog("Label value can not be updated.", e,
+												-1);
 									}
 								}
 							}
@@ -431,10 +457,12 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 								if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 									try {
 										label.setId(0);
-										cmrRepositoryDefinition.getStorageService().addLabelToStorage(storageDataProvider.getStorageData(), label, true);
+										cmrRepositoryDefinition.getStorageService()
+												.addLabelToStorage(storageDataProvider.getStorageData(), label, true);
 										refreshStorageManagerView(cmrRepositoryDefinition);
 									} catch (BusinessException e) {
-										InspectIT.getDefault().createErrorDialog("Label value can not be updated.", e, -1);
+										InspectIT.getDefault().createErrorDialog("Label value can not be updated.", e,
+												-1);
 									}
 								}
 							}
@@ -482,7 +510,8 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 					String desc = storageData.getDescription();
 					if (null != desc) {
 						if (desc.length() > MAX_DESCRIPTION_LENGTH) {
-							description.setText("<form><p>" + desc.substring(0, MAX_DESCRIPTION_LENGTH) + ".. <a href=\"More\">[More]</a></p></form>", true, false);
+							description.setText("<form><p>" + desc.substring(0, MAX_DESCRIPTION_LENGTH)
+									+ ".. <a href=\"More\">[More]</a></p></form>", true, false);
 						} else {
 							description.setText(desc, false, false);
 						}
@@ -492,14 +521,17 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 					sizeOnDisk.setText(NumberFormatter.humanReadableByteCount(storageData.getDiskSize()));
 					labelsTableViewer.setInput(storageData.getLabelList());
 					labelsTableViewer.refresh();
-					addNewLabel.setEnabled(isRemoteStorageDisplayed());
+					CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
+					addNewLabel.setEnabled(isRemoteStorageDisplayed()
+							&& cmrRepositoryDefinition.hasPermission("cmrStoragePermission"));
 
 					// depending of type enable/disable widgets
-					if (isRemoteStorageDisplayed()) {
+					if (isRemoteStorageDisplayed() && cmrRepositoryDefinition.hasPermission("cmrStoragePermission")) {
 						// for remote storage
-						CmrRepositoryDefinition cmrRepositoryDefinition = storageDataProvider.getCmrRepositoryDefinition();
-						repository.setText(cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + ")");
-						state.setText(TextFormatter.getStorageStateTextualRepresentation(storageDataProvider.getStorageData().getState()));
+						repository.setText(cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp()
+								+ ":" + cmrRepositoryDefinition.getPort() + ")");
+						state.setText(TextFormatter
+								.getStorageStateTextualRepresentation(storageDataProvider.getStorageData().getState()));
 						Image img = ImageFormatter.getImageForStorageLeaf((StorageData) storageData);
 						form.setImage(img);
 					} else {
@@ -526,13 +558,15 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	 */
 	private void showStorageDescriptionBox() {
 		int shellStyle = SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE;
-		PopupDialog popupDialog = new PopupDialog(form.getShell(), shellStyle, true, false, false, false, false, "Storage description", "Storage description") {
+		PopupDialog popupDialog = new PopupDialog(form.getShell(), shellStyle, true, false, false, false, false,
+				"Storage description", "Storage description") {
 			private static final int CURSOR_SIZE = 15;
 
 			@Override
 			protected Control createDialogArea(Composite parent) {
 				Composite composite = (Composite) super.createDialogArea(parent);
-				Text text = toolkit.createText(parent, null, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
+				Text text = toolkit.createText(parent, null,
+						SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
 				GridData gd = new GridData(GridData.BEGINNING | GridData.FILL_BOTH);
 				gd.horizontalIndent = 3;
 				gd.verticalIndent = 3;
@@ -560,14 +594,15 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Refreshes the {@link StorageManagerView}, but only reloads the storages from given
-	 * repository.
+	 * Refreshes the {@link StorageManagerView}, but only reloads the storages
+	 * from given repository.
 	 * 
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 */
 	private void refreshStorageManagerView(CmrRepositoryDefinition cmrRepositoryDefinition) {
-		IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(StorageManagerView.VIEW_ID);
+		IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.findView(StorageManagerView.VIEW_ID);
 		if (viewPart instanceof StorageManagerView) {
 			((StorageManagerView) viewPart).refresh(cmrRepositoryDefinition);
 		}

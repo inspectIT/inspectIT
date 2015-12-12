@@ -1,22 +1,16 @@
 package info.novatec.inspectit.cmr.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import info.novatec.inspectit.cmr.dao.PermissionDao;
-import info.novatec.inspectit.cmr.dao.RoleDao;
-import info.novatec.inspectit.cmr.dao.UserDao;
-import info.novatec.inspectit.cmr.security.CmrSecurityManager;
-import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Role;
-import info.novatec.inspectit.communication.data.cmr.User;
-import info.novatec.inspectit.spring.logger.Log;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -26,14 +20,23 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
+import info.novatec.inspectit.cmr.dao.PermissionDao;
+import info.novatec.inspectit.cmr.dao.RoleDao;
+import info.novatec.inspectit.cmr.dao.UserDao;
+import info.novatec.inspectit.cmr.security.CmrSecurityManager;
+import info.novatec.inspectit.communication.data.cmr.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permutation;
+import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
+import info.novatec.inspectit.spring.logger.Log;
+
 /**
- * Provides general security-system operations for client<->cmr interaction.
- * Watches over Data Integrity.
+ * Provides general security-system operations for client<->cmr interaction. Watches over Data
+ * Integrity.
  * 
  * @author Andreas Herzog
  * @author Clemens Geibel
  * @author Lucca Hellriegel
- * @author Joshua Hartmann
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -68,10 +71,8 @@ public class SecurityService implements ISecurityService {
 	@Autowired
 	RoleDao roleDao;
 
-
 	/**
-	 * Is executed after dependency injection is done to perform any
-	 * initialization.
+	 * Is executed after dependency injection is done to perform any initialization.
 	 */
 	@PostConstruct
 	public void postConstruct() {
@@ -92,16 +93,16 @@ public class SecurityService implements ISecurityService {
 	 *            users password
 	 * @param email
 	 *            email
-	 * @return true if the user was authenticated
+	 * @return sessionId if the user was authenticated
 	 */
 	@Override
-	public List<String> authenticate(String pw, String email) {
+	public Serializable authenticate(String pw, String email) {
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
+
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
 
 		if (!currentUser.isAuthenticated()) {
-
 			try {
 				currentUser.login(token);
 				log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
@@ -113,8 +114,35 @@ public class SecurityService implements ISecurityService {
 			}
 		}
 
-		// TODO: Make a session
+		return currentUser.getSession().getId();
+	}
 
+	/**
+	 * Ends the session.
+	 * 
+	 * @param sessionId
+	 *            Session id from the session to end
+	 */
+	@Override
+	public void logout(Serializable sessionId) {
+		if (existsSession(sessionId)) {
+			Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+			log.info("SessionId [" + currentUser.getSession(false).getId() + "], Name [" + currentUser.getPrincipal() + "].");
+			currentUser.logout();
+			log.info("Logged out successfully.");
+		}
+	}
+
+	/**
+	 * Returns titles of permissions as Strings.
+	 * 
+	 * @param sessionId
+	 *            sessionId
+	 * @return List with the users permissions.
+	 */
+	@Override
+	public List<String> getPermissions(Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
 
 		List<String> grantedPermissions = new ArrayList<String>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
@@ -123,19 +151,35 @@ public class SecurityService implements ISecurityService {
 				grantedPermissions.add(existingPermissions.get(i).getTitle());
 			}
 		}
-		currentUser.logout();		
 
 		return grantedPermissions;
 	}
 
+	/**
+	 * Checks whether session of a specific sessionId exists.
+	 * 
+	 * @param sessionId
+	 *            The id to check.
+	 * @return Boolean whether the session exists.
+	 */
+	@Override
+	public boolean existsSession(Serializable sessionId) {
+		DefaultSessionManager sm = (DefaultSessionManager) cmrSecurityManager.getSessionManager();
+		for (Session session : sm.getSessionDAO().getActiveSessions()) {
+			if (session.getId().equals(sessionId)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	// +-------------------------------------------------------------------------------------------+
 	// | Managing Security Data in the Database |
 	// +-------------------------------------------------------------------------------------------+
 
 	/**
-	 * Combines the integrity check for all security data types. Uniqueness etc.
-	 * is specifically checked in every method.
+	 * Combines the integrity check for all security data types. Uniqueness etc. is specifically
+	 * checked in every method.
 	 * 
 	 * @param data
 	 *            data
@@ -155,14 +199,15 @@ public class SecurityService implements ISecurityService {
 	// | USER |---------------
 	@Override
 	public List<String> getAllUsers() {
-		List<User> users = userDao.loadAll();		
-		List<String> userEmails = new ArrayList<String>();		
+		List<User> users = userDao.loadAll();
+		List<String> userEmails = new ArrayList<String>();
 		for (User user : users) {
 			userEmails.add(user.getEmail());
-		}				
+		}
 
 		return userEmails;
 	}
+
 	@Override
 	public void addUser(User user) throws DataIntegrityViolationException {
 		if (!checkDataIntegrity(user)) {
@@ -175,15 +220,18 @@ public class SecurityService implements ISecurityService {
 		} else if (existingRole.isEmpty()) {
 			throw new DataIntegrityViolationException("Invalid role id assigned to this user!");
 		} else {
+			String hashedPassword = Permutation.hashString(user.getPassword());
+			user.setPassword(hashedPassword);
 			userDao.saveOrUpdate(user);
+					
 		}
 	}
-	
+
 	@Override
 	public User getUser(String email) {
 		return userDao.load(email);
 	}
-	
+
 	@Override
 	public void deleteUser(User user) {
 		userDao.delete(user);
@@ -250,11 +298,11 @@ public class SecurityService implements ISecurityService {
 			return getRoleByID(user.getRoleId());
 		}
 	}
+
 	@Override
 	public List<Role> getAllRoles() {
 		return roleDao.loadAll();
 	}
-
 
 	// TODO Make more methods available for the administrator module...
 }
