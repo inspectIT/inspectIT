@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Combo;
 
+import info.novatec.inspectit.communication.data.cmr.Permutation;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -54,10 +56,17 @@ public class AddUserDialog extends TitleAreaDialog {
 	 * Reset button id.
 	 */
 	private static final int ADD_ID = 0; //IDialogConstants.OK_ID;
+
+	/**
+	 * Array of all Users.
+	 */
+	private List<String> userList;
+	
 	/**
 	 * Array of all Roles.
 	 */
 	private List<Role> rolesList;
+	
 	/**
 	 * Dropdown menu for roles.
 	 */
@@ -69,10 +78,13 @@ public class AddUserDialog extends TitleAreaDialog {
 	 * @param cmrRepositoryDefinition
 	 * CmrRepositoryDefinition for easy access to security services.
 	 */
+	
 	public AddUserDialog(Shell parentShell, CmrRepositoryDefinition cmrRepositoryDefinition) {
 		super(parentShell);
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
 		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
+		userList = cmrRepositoryDefinition.getSecurityService().getAllUsers();
+
 	}
 	/**
 	 * {@inheritDoc}
@@ -162,6 +174,10 @@ public class AddUserDialog extends TitleAreaDialog {
 	 * Adds the new user to database.
 	 */
 	private void addPressed() {
+		if (userList.contains(mailBox.getText())){
+			MessageDialog.openError(null, "Mail already exists!", "The Mail you chose is already taken! ");
+			return;
+		}
 		long id = 0;
 		int index = roles.getSelectionIndex();
 	    String mail = mailBox.getText();
@@ -172,7 +188,7 @@ public class AddUserDialog extends TitleAreaDialog {
 	    		id = r.getId();
 	    	}
 	    }
-	    User user = new User(mail, password, id);
+	    User user = new User(password, mail , id);
 	    cmrRepositoryDefinition.getSecurityService().addUser(user);
 		okPressed();
 	}

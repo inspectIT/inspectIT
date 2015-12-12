@@ -162,7 +162,7 @@ public class CmrAdministrationWizardPage extends WizardPage {
 		addRole.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				addRoleDialog = new AddRoleDialog(main.getShell());
+				addRoleDialog = new AddRoleDialog(main.getShell(), cmrRepositoryDefinition);
 				addRoleDialog.open();
 			}
 		});
