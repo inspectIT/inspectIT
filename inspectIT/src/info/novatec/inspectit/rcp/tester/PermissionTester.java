@@ -1,7 +1,5 @@
 package info.novatec.inspectit.rcp.tester;
 
-import java.util.List;
-
 import org.eclipse.core.expressions.PropertyTester;
 
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
@@ -32,13 +30,7 @@ public class PermissionTester extends PropertyTester {
 			return false;
 		}
 
-		List<String> grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
-
-		try {
-			return grantedPermissions.contains(property);
-		} catch (NullPointerException lo) {
-			return false;
-		}
+		return cmrRepositoryDefinition.hasPermission(property);
 	}
 
 }

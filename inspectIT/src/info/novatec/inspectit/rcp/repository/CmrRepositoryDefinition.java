@@ -555,13 +555,19 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		return "Repository definition :: Name=" + name + " IP=" + ip + " Port=" + port;
 	}
 
-	public List<String> getGrantedPermissions() {
-		return grantedPermissions;
-	}
-
 	public void setGrantedPermissions(List<String> grantedPermissions) {
 		this.grantedPermissions = grantedPermissions;
 	}
 
+	/**
+	 * Checks Permission.
+	 * 
+	 * @param permission
+	 * 				Permission to be checked.
+	 * @return true if has Permission.
+	 */
+	public boolean hasPermission(String permission) {
+    	return this.grantedPermissions != null && this.grantedPermissions.contains(permission);
+    }
 
 }
