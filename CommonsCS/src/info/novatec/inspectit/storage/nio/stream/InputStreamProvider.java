@@ -3,6 +3,7 @@ package info.novatec.inspectit.storage.nio.stream;
 import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
 import info.novatec.inspectit.storage.IStorageData;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,8 +22,10 @@ public abstract class InputStreamProvider {
 	 *            List of descriptors that point to the data.
 	 * 
 	 * @return Returns the newly initialized instance of the {@link ExtendedByteBufferInputStream}.
+	 * @throws IOException
+	 *             if input stream can not be obtained
 	 */
-	public ExtendedByteBufferInputStream getExtendedByteBufferInputStream(IStorageData storageData, List<IStorageDescriptor> descriptors) {
+	public ExtendedByteBufferInputStream getExtendedByteBufferInputStream(IStorageData storageData, List<IStorageDescriptor> descriptors) throws IOException {
 		ExtendedByteBufferInputStream stream = createExtendedByteBufferInputStream();
 		stream.setStorageData(storageData);
 		stream.setDescriptors(descriptors);

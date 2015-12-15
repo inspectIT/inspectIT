@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +43,7 @@ public class ByteBufferProviderTest {
 	 * Test that the created capacity of the buffer will be as wanted.
 	 */
 	@Test(invocationCount = 5)
-	public void capacity() {
+	public void capacity() throws IOException {
 		int maxCapacity = 1000;
 		Random random = new Random();
 		// at least 1
@@ -59,7 +60,7 @@ public class ByteBufferProviderTest {
 	 * Tests that no buffer will be created after max pool capacity has been reached.
 	 */
 	@Test
-	public void creationUntilMax() {
+	public void creationUntilMax() throws IOException {
 		int maxCapacity = 3;
 		byteBufferProvider.setBufferSize(1);
 		byteBufferProvider.setPoolMaxCapacity(maxCapacity);
@@ -76,7 +77,7 @@ public class ByteBufferProviderTest {
 	 * capacity is above or equal to min capacity.
 	 */
 	@Test
-	public void relaseAfterMin() {
+	public void relaseAfterMin() throws IOException {
 		byteBufferProvider.setBufferSize(1);
 		byteBufferProvider.setPoolMaxCapacity(3);
 		byteBufferProvider.setPoolMinCapacity(1);
@@ -99,7 +100,7 @@ public class ByteBufferProviderTest {
 	 * Tests that acquire and release of the buffer will have the correct side effects.
 	 */
 	@Test
-	public void acquireAndRelease() {
+	public void acquireAndRelease() throws IOException {
 		byteBufferProvider.setBufferSize(1);
 		byteBufferProvider.setPoolMaxCapacity(2);
 		byteBufferProvider.setPoolMinCapacity(1);
@@ -140,10 +141,14 @@ public class ByteBufferProviderTest {
 				@Override
 				public void run() {
 					for (int i = 0; i < iterationsPerThread; i++) {
-						ByteBuffer buffer = byteBufferProvider.acquireByteBuffer();
-						assertThat(buffer, is(notNullValue()));
-						byteBufferProvider.releaseByteBuffer(buffer);
-						totalCount.decrementAndGet();
+						try {
+							ByteBuffer buffer = byteBufferProvider.acquireByteBuffer();
+							assertThat(buffer, is(notNullValue()));
+							byteBufferProvider.releaseByteBuffer(buffer);
+							totalCount.decrementAndGet();
+						} catch (IOException ioException) {
+							// ignore
+						}
 					}
 				}
 			}).start();

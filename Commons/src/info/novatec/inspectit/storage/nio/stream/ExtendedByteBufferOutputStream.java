@@ -72,8 +72,10 @@ public class ExtendedByteBufferOutputStream extends ByteBufferOutputStream {
 	 * 
 	 * @param takeNewBuffer
 	 *            If the new buffers should be placed the super {@link OutputStream}.
+	 * @exception IOException
+	 *                if an I/O error occurs.
 	 */
-	public void flush(boolean takeNewBuffer) {
+	public void flush(boolean takeNewBuffer) throws IOException {
 		ByteBuffer fullBuffer = super.getByteBuffer();
 		fullBuffer.flip();
 		byteBuffers.add(fullBuffer);
@@ -90,8 +92,11 @@ public class ExtendedByteBufferOutputStream extends ByteBufferOutputStream {
 	/**
 	 * Prepares for the write. This method will get a {@link ByteBuffer} from the
 	 * {@link ByteBufferProvider} and set it as the current output.
+	 * 
+	 * @throws IOException
+	 *             if preparation fails due to inability to obtain a byte buffers
 	 */
-	public void prepare() {
+	public void prepare() throws IOException {
 		byteBuffers.clear();
 		totalWriteSize = 0L;
 		ByteBuffer byteBuffer = byteBufferProvider.acquireByteBuffer();
