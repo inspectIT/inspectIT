@@ -92,7 +92,7 @@ public class CmrStorageWriter extends StorageWriter {
 	protected void writeAgentData() throws IOException {
 		List<PlatformIdent> involvedPlatformIdents = platformIdentDao.findAllInitialized(involvedAgentsSet);
 		for (PlatformIdent agent : involvedPlatformIdents) {
-			super.writeNonDefaultDataObject(agent, agent.getId() + StorageFileType.AGENT_FILE.getExtension());
+			super.writeNonDefaultDataObject(agent, agent.getId() + StorageFileType.AGENT_FILE.getExtension(), false);
 		}
 	}
 

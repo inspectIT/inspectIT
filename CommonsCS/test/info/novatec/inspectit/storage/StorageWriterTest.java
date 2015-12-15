@@ -243,7 +243,7 @@ public class StorageWriterTest {
 	@Test
 	public void objectWriteNoSerializerAvailable() throws InterruptedException {
 		when(serializerQueue.take()).thenReturn(null);
-		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
+		storageWriter.writeNonDefaultDataObject(new Object(), "myFile", false);
 
 		verifyZeroInteractions(writingChannelManager, streamProvider, extendedByteBufferOutputStream);
 	}
@@ -251,7 +251,7 @@ public class StorageWriterTest {
 	@Test
 	public void objectWriteSerializerQueueInterrupted() throws InterruptedException {
 		doThrow(InterruptedException.class).when(serializerQueue).take();
-		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
+		storageWriter.writeNonDefaultDataObject(new Object(), "myFile", false);
 
 		verifyZeroInteractions(writingChannelManager, streamProvider, extendedByteBufferOutputStream);
 	}
@@ -260,7 +260,7 @@ public class StorageWriterTest {
 	public void objectWriteFailedSerialization() throws SerializationException {
 		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Mockito.<Output> anyObject(), Mockito.<Map<?, ?>> anyObject());
 		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Mockito.<Output> anyObject());
-		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
+		storageWriter.writeNonDefaultDataObject(new Object(), "myFile", false);
 
 		verify(extendedByteBufferOutputStream, times(1)).close();
 		verify(serializerQueue, times(1)).add(serializer);
@@ -276,7 +276,7 @@ public class StorageWriterTest {
 		doThrow(IOException.class).when(writingChannelManager).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), Mockito.<Path> anyObject(),
 				Mockito.<WriteReadCompletionRunnable> anyObject());
 
-		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
+		storageWriter.writeNonDefaultDataObject(new Object(), "myFile", false);
 
 		verify(extendedByteBufferOutputStream, times(1)).close();
 		verify(serializerQueue, times(1)).add(serializer);
@@ -291,7 +291,7 @@ public class StorageWriterTest {
 		storageWriter.prepareForWrite(storageData);
 		doThrow(Throwable.class).when(writingChannelManager).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), Mockito.<Path> anyObject(), Mockito.<WriteReadCompletionRunnable> anyObject());
 
-		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
+		storageWriter.writeNonDefaultDataObject(new Object(), "myFile", false);
 
 		verify(extendedByteBufferOutputStream, times(1)).close();
 		verify(serializerQueue, times(1)).add(serializer);

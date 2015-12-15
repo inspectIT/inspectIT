@@ -491,9 +491,12 @@ public class StorageWriter implements IWriter {
 	 *            {@link ISerializer}.
 	 * @param fileName
 	 *            Name of the file to save data to.
+	 * @param asynch
+	 *            Should write be done asynchronously. If <code>false</code> then calling thread
+	 *            will be blocked until the complete write is finished (failed or succeeded).
 	 * @return True if the object was written successfully, otherwise false.
 	 */
-	public boolean writeNonDefaultDataObject(Object object, String fileName) {
+	public boolean writeNonDefaultDataObject(Object object, String fileName, boolean asynch) {
 		ExtendedByteBufferOutputStream extendedByteBufferOutputStream = null;
 		try {
 			ISerializer serializer = null;
@@ -544,6 +547,9 @@ public class StorageWriter implements IWriter {
 			// execute write
 			try {
 				writingChannelManager.write(extendedByteBufferOutputStream, channelPath, completionRunnable);
+				if (!asynch) {
+					completionRunnable.blockUntilFinish();
+				}
 				return true;
 			} catch (IOException e) {
 				extendedByteBufferOutputStream.close();

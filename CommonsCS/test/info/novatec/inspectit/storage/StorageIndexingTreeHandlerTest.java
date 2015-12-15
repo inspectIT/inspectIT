@@ -2,6 +2,7 @@ package info.novatec.inspectit.storage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -125,9 +126,9 @@ public class StorageIndexingTreeHandlerTest {
 	@Test
 	public void treeWrittenOnFinish() {
 		when(future.isDone()).thenReturn(true);
-		when(storageWriter.writeNonDefaultDataObject(eq(indexingTree), anyString())).thenReturn(true);
+		when(storageWriter.writeNonDefaultDataObject(eq(indexingTree), anyString(), anyBoolean())).thenReturn(true);
 		indexingTreeHandler.finish();
-		verify(storageWriter, times(1)).writeNonDefaultDataObject(eq(indexingTree), anyString());
+		verify(storageWriter, times(1)).writeNonDefaultDataObject(eq(indexingTree), anyString(), eq(false));
 	}
 
 	@Test
@@ -144,8 +145,8 @@ public class StorageIndexingTreeHandlerTest {
 		ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
 		verify(executorService, times(1)).submit(captor.capture());
 
-		when(storageWriter.writeNonDefaultDataObject(eq(indexingTree), anyString())).thenReturn(true);
+		when(storageWriter.writeNonDefaultDataObject(eq(indexingTree), anyString(), anyBoolean())).thenReturn(true);
 		captor.getValue().run();
-		verify(storageWriter, times(1)).writeNonDefaultDataObject(eq(indexingTree), anyString());
+		verify(storageWriter, times(1)).writeNonDefaultDataObject(eq(indexingTree), anyString(), eq(false));
 	}
 }

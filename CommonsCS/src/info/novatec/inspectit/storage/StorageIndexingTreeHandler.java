@@ -271,7 +271,7 @@ public class StorageIndexingTreeHandler {
 				}
 			}
 			currentIndexingTree.preWriteFinalization();
-			boolean written = storageWriter.writeNonDefaultDataObject(currentIndexingTree, getRandomFileName() + StorageFileType.INDEX_FILE.getExtension());
+			boolean written = storageWriter.writeNonDefaultDataObject(currentIndexingTree, getRandomFileName() + StorageFileType.INDEX_FILE.getExtension(), false);
 			if (!written) {
 				log.error("Indexing tree saving failed. Indexing tree might be lost.");
 			}
@@ -335,7 +335,7 @@ public class StorageIndexingTreeHandler {
 										boolean safeToSave = Collections.disjoint(writeTasksToWait, writeTasksInProcess.keySet());
 										if (safeToSave) {
 											currentIndexingTree.preWriteFinalization();
-											boolean written = storageWriter.writeNonDefaultDataObject(currentIndexingTree, getRandomFileName() + StorageFileType.INDEX_FILE.getExtension());
+											boolean written = storageWriter.writeNonDefaultDataObject(currentIndexingTree, getRandomFileName() + StorageFileType.INDEX_FILE.getExtension(), false);
 											if (!written) {
 												log.error("Indexing tree saving failed. Indexing tree might be lost.");
 											}

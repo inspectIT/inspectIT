@@ -40,6 +40,11 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	private AtomicInteger failedMarks = new AtomicInteger(0);
 
 	/**
+	 * Object to be used as monitor for the blocking on completion runnable to be finished.
+	 */
+	private Object monitor = new Object();
+
+	/**
 	 * Default constructor. Sets {@link #completeMarks} to 1.
 	 */
 	public WriteReadCompletionRunnable() {
@@ -58,10 +63,30 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	}
 
 	/**
+	 * Blocks the calling thread until the IO operation is finished.
+	 */
+	public void blockUntilFinish() {
+		while (!isFinished()) {
+			synchronized (monitor) {
+				try {
+					if (!isFinished()) {
+						monitor.wait();
+					}
+				} catch (InterruptedException e) {
+					Thread.interrupted();
+				}
+			}
+		}
+	}
+
+	/**
 	 * Marks as success.
 	 */
 	public void markSuccess() {
 		successMarks.incrementAndGet();
+		synchronized (monitor) {
+			monitor.notifyAll();
+		}
 	}
 
 	/**
@@ -69,6 +94,9 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	 */
 	public void markFailed() {
 		failedMarks.incrementAndGet();
+		synchronized (monitor) {
+			monitor.notifyAll();
+		}
 	}
 
 	/**
