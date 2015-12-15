@@ -94,8 +94,11 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	 * <p>
 	 * Implementing classes must extend this method in way that full buffers queue is filled with
 	 * data that will be available for the reader of input stream.
+	 * 
+	 * @throws IOException
+	 *             if preparation fails due to inability to obtain defined number of byte buffers
 	 */
-	public void prepare() {
+	public void prepare() throws IOException {
 		// get the buffers first
 		int buffers = numberOfBuffers;
 		if (buffers < MIN_BUFFERS) {
@@ -105,6 +108,11 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 		}
 		for (int i = 0; i < buffers; i++) {
 			ByteBuffer byteBuffer = byteBufferProvider.acquireByteBuffer();
+			// if can not be obtained, throw IO exception
+			if (null == byteBuffer) {
+				throw new IOException("Byte buffer can not be obtained from byte buffer provider.");
+			}
+
 			emptyBuffers.add(byteBuffer);
 		}
 	}

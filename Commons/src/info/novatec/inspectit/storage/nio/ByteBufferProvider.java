@@ -105,8 +105,14 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	/**
 	 * Returns buffer from the pool. This method waits for buffer to be available or creates a new
 	 * buffer if the {@link #createdCapacity} is less than {@link #poolMaxCapacity}.
+	 * <p>
+	 * Note that if pool maximum is reached, the calling thread will wait for {@value #MAX_WAIT}
+	 * milliseconds for a buffer to become available. After this time the method will return
+	 * <code>null</code> as a result. It's responsibility of the caller to handle the situations
+	 * when <code>null</code> is returned as the result of this method call.
 	 * 
-	 * @return {@link ByteBuffer}.
+	 * @return {@link ByteBuffer} or <code>null</code> if pool is on the maximum limit and wait time
+	 *         passes.
 	 */
 	public ByteBuffer acquireByteBuffer() {
 		try {

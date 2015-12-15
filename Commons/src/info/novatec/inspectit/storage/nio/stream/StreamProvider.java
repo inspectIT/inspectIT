@@ -1,5 +1,6 @@
 package info.novatec.inspectit.storage.nio.stream;
 
+import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 /**
@@ -14,8 +15,10 @@ public abstract class StreamProvider {
 	/**
 	 * @return Returns the newly initialized instance of the {@link ExtendedByteBufferOutputStream}
 	 *         that has been prepared for use.
+	 * @throws IOException
+	 *             if output stream can not be obtained
 	 */
-	public ExtendedByteBufferOutputStream getExtendedByteBufferOutputStream() {
+	public ExtendedByteBufferOutputStream getExtendedByteBufferOutputStream() throws IOException {
 		ExtendedByteBufferOutputStream stream = createExtendedByteBufferOutputStream();
 		stream.prepare();
 		return stream;
@@ -34,8 +37,10 @@ public abstract class StreamProvider {
 	 * @param socketChannel
 	 *            Underlying {@link SocketChannel} for the stream.
 	 * @return {@link SocketExtendedByteBufferInputStream}.
+	 * @throws IOException
+	 *             if input stream can not be obtained
 	 */
-	public SocketExtendedByteBufferInputStream getSocketExtendedByteBufferInputStream(SocketChannel socketChannel) {
+	public SocketExtendedByteBufferInputStream getSocketExtendedByteBufferInputStream(SocketChannel socketChannel) throws IOException {
 		SocketExtendedByteBufferInputStream inputStream = createSocketExtendedByteBufferInputStream();
 		inputStream.setSocketChannel(socketChannel);
 		inputStream.prepare();
@@ -51,8 +56,10 @@ public abstract class StreamProvider {
 	 * @param totalSize
 	 *            Size to read from {@link SocketChannel}.
 	 * @return {@link SocketExtendedByteBufferInputStream}.
+	 * @throws IOException
+	 *             if input stream can not be obtained
 	 */
-	public SocketExtendedByteBufferInputStream getSocketExtendedByteBufferInputStream(SocketChannel socketChannel, long totalSize) {
+	public SocketExtendedByteBufferInputStream getSocketExtendedByteBufferInputStream(SocketChannel socketChannel, long totalSize) throws IOException {
 		SocketExtendedByteBufferInputStream inputStream = createSocketExtendedByteBufferInputStream();
 		inputStream.setSocketChannel(socketChannel);
 		inputStream.setTotalSize(totalSize);

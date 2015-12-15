@@ -46,7 +46,7 @@ public class ExtendedByteBufferOutputStreamTest {
 	 * Init mocks.
 	 */
 	@BeforeMethod
-	public void init() {
+	public void init() throws IOException {
 		MockitoAnnotations.initMocks(this);
 		Mockito.when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
 

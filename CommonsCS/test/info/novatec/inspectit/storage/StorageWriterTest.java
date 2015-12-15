@@ -86,7 +86,7 @@ public class StorageWriterTest {
 
 	@SuppressWarnings({ "unchecked" })
 	@BeforeMethod
-	public void init() throws IndexingException, InterruptedException {
+	public void init() throws IndexingException, InterruptedException, IOException {
 		MockitoAnnotations.initMocks(this);
 		storageWriter = new StorageWriter();
 		when(streamProvider.getExtendedByteBufferOutputStream()).thenReturn(extendedByteBufferOutputStream);
