@@ -5,6 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import info.novatec.inspectit.storage.nio.bytebuffer.ByteBufferFactory;
+
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,7 +36,7 @@ public class ByteBufferProviderTest {
 	 */
 	@BeforeMethod
 	public void init() {
-		byteBufferProvider = new ByteBufferProvider();
+		byteBufferProvider = new ByteBufferProvider(new ByteBufferFactory(1), 1);
 		byteBufferProvider.setBufferPoolMaxDirectMemoryOccupancy(0.6f);
 		byteBufferProvider.setBufferPoolMinDirectMemoryOccupancy(0.3f);
 	}
@@ -42,7 +45,7 @@ public class ByteBufferProviderTest {
 	 * Test that the created capacity of the buffer will be as wanted.
 	 */
 	@Test(invocationCount = 5)
-	public void capacity() {
+	public void capacity() throws IOException {
 		int maxCapacity = 1000;
 		Random random = new Random();
 		// at least 1
@@ -59,7 +62,7 @@ public class ByteBufferProviderTest {
 	 * Tests that no buffer will be created after max pool capacity has been reached.
 	 */
 	@Test
-	public void creationUntilMax() {
+	public void creationUntilMax() throws IOException {
 		int maxCapacity = 3;
 		byteBufferProvider.setBufferSize(1);
 		byteBufferProvider.setPoolMaxCapacity(maxCapacity);
@@ -76,7 +79,7 @@ public class ByteBufferProviderTest {
 	 * capacity is above or equal to min capacity.
 	 */
 	@Test
-	public void relaseAfterMin() {
+	public void relaseAfterMin() throws IOException {
 		byteBufferProvider.setBufferSize(1);
 		byteBufferProvider.setPoolMaxCapacity(3);
 		byteBufferProvider.setPoolMinCapacity(1);
@@ -99,7 +102,7 @@ public class ByteBufferProviderTest {
 	 * Tests that acquire and release of the buffer will have the correct side effects.
 	 */
 	@Test
-	public void acquireAndRelease() {
+	public void acquireAndRelease() throws IOException {
 		byteBufferProvider.setBufferSize(1);
 		byteBufferProvider.setPoolMaxCapacity(2);
 		byteBufferProvider.setPoolMinCapacity(1);
@@ -118,6 +121,24 @@ public class ByteBufferProviderTest {
 		assertThat(byteBufferProvider.getBufferPoolSize(), is(equalTo(1)));
 		assertThat(byteBufferProvider.getCreatedCapacity(), is(equalTo(1L)));
 		assertThat(byteBufferProvider.getAvailableCapacity(), is(equalTo(1L)));
+	}
+
+	/**
+	 * Test that IOException will be thrown when there is no buffer available any more.
+	 */
+	@Test(expectedExceptions = IOException.class)
+	public void bufferNotAvailable() throws IOException {
+		byteBufferProvider.setBufferSize(1);
+		byteBufferProvider.setPoolMaxCapacity(1);
+		byteBufferProvider.setPoolMinCapacity(0);
+		byteBufferProvider.init();
+
+		// first acquire to work
+		ByteBuffer buffer = byteBufferProvider.acquireByteBuffer();
+		assertThat(buffer, is(notNullValue()));
+
+		// second to fail
+		buffer = byteBufferProvider.acquireByteBuffer();
 	}
 
 	/**
@@ -140,10 +161,15 @@ public class ByteBufferProviderTest {
 				@Override
 				public void run() {
 					for (int i = 0; i < iterationsPerThread; i++) {
-						ByteBuffer buffer = byteBufferProvider.acquireByteBuffer();
-						assertThat(buffer, is(notNullValue()));
-						byteBufferProvider.releaseByteBuffer(buffer);
-						totalCount.decrementAndGet();
+						try {
+							ByteBuffer buffer = byteBufferProvider.acquireByteBuffer();
+							assertThat(buffer, is(notNullValue()));
+							byteBufferProvider.releaseByteBuffer(buffer);
+							totalCount.decrementAndGet();
+						} catch (IOException ioException) {
+							// if IOException occurs we will repeat the try
+							i--;
+						}
 					}
 				}
 			}).start();

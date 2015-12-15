@@ -40,7 +40,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void prepare() {
+	public void prepare() throws IOException {
 		super.prepare();
 
 		if (getTotalSize() > 0) {

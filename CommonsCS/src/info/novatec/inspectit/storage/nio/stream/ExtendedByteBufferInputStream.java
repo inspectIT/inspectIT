@@ -131,8 +131,11 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 
 	/**
 	 * Prepares the stream for read. Must be called before any read operation is executed.
+	 * 
+	 * @throws IOException
+	 *             if preparation fails due to inability to obtain defined number of byte buffers
 	 */
-	public void prepare() {
+	public void prepare() throws IOException {
 		super.prepare();
 
 		// set total size
