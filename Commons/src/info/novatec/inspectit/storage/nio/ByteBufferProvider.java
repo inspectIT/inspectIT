@@ -6,6 +6,7 @@ import info.novatec.inspectit.storage.nio.bytebuffer.ByteBufferFactory;
 import info.novatec.inspectit.util.UnderlyingSystemInfo;
 import info.novatec.inspectit.util.UnderlyingSystemInfo.JvmProvider;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
@@ -96,24 +97,41 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	 *            Pool factory to be used.
 	 */
 	protected ByteBufferProvider(ByteBufferFactory poolFactory) {
+		this(poolFactory, MAX_WAIT);
+	}
+
+	/**
+	 * @param poolFactory
+	 *            Pool factory to be used.
+	 * @param maxWait
+	 *            max wait in milliseconds for buffer to be available
+	 */
+	ByteBufferProvider(ByteBufferFactory poolFactory, long maxWait) {
 		super(poolFactory);
 		this.poolFactory = poolFactory;
-		this.setMaxWait(MAX_WAIT);
+		this.setMaxWait(maxWait);
 		this.setWhenExhaustedAction(WHEN_EXHAUSTED_BLOCK);
 	}
 
 	/**
 	 * Returns buffer from the pool. This method waits for buffer to be available or creates a new
 	 * buffer if the {@link #createdCapacity} is less than {@link #poolMaxCapacity}.
+	 * <p>
+	 * Note that if pool maximum is reached, the calling thread will wait for {@value #MAX_WAIT}
+	 * milliseconds for a buffer to become available. After this time if no buffer becomes available
+	 * {@link IOException} will thrown.
 	 * 
-	 * @return {@link ByteBuffer}.
+	 * @return {@link ByteBuffer}
+	 * @throws IOException
+	 *             If buffer can not be acquired.
 	 */
-	public ByteBuffer acquireByteBuffer() {
+	public ByteBuffer acquireByteBuffer() throws IOException {
 		try {
 			return super.borrowObject();
 		} catch (Exception e) {
-			log.error("Byte buffer pool can not borrow a valid byte buffer.", e);
-			return null;
+			IOException ioException = new IOException("Byte buffer pool can not borrow a valid byte buffer.");
+			ioException.initCause(e);
+			throw ioException;
 		}
 	}
 
@@ -122,7 +140,6 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	 * 
 	 * @param byteBuffer
 	 *            {@link ByteBuffer} to put back to the pool.
-	 * @throws InterruptedException
 	 */
 	public void releaseByteBuffer(ByteBuffer byteBuffer) {
 		try {
