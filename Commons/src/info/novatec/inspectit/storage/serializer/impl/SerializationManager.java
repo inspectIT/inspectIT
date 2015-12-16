@@ -32,6 +32,7 @@ import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.MemoryInformationData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.ParameterContentType;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.RuntimeInformationData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
@@ -286,6 +287,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-950
 		kryo.register(TimeFrame.class, new CustomCompatibleFieldSerializer<TimeFrame>(kryo, TimeFrame.class, schemaManager));
+
+		// addet with INSPECTIT-1053
+		kryo.register(RemoteCallData.class, new InvocationAwareDataSerializer<RemoteCallData>(kryo, RemoteCallData.class, schemaManager));
 
 		// added with INSPECTIT-480
 		// needed for KryoNet

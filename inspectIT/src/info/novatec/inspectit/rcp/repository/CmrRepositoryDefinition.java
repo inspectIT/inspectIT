@@ -6,6 +6,7 @@ import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
+import info.novatec.inspectit.cmr.service.IRemoteCallDataAccessService;
 import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.service.IServerStatusService.ServerStatus;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
@@ -187,6 +188,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private IGlobalDataAccessService globalDataAccessService;
 
 	/**
+	 * The {@link IRemoteCallDataAccessService}.
+	 */
+	private IRemoteCallDataAccessService remoteCallDataAccessService;
+
+	/**
 	 * The storage service.
 	 */
 	private IStorageService storageService;
@@ -239,6 +245,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		cmrManagementService = cmrServiceProvider.getCmrManagementService(this);
 		timerDataAccessService = cmrServiceProvider.getTimerDataAccessService(this);
 		globalDataAccessService = cmrServiceProvider.getGlobalDataAccessService(this);
+		remoteCallDataAccessService = cmrServiceProvider.getRemoteCallDataAccessService(this);
 		storageService = cmrServiceProvider.getStorageService(this);
 		configurationInterfaceService = cmrServiceProvider.getConfigurationInterfaceService(this);
 
@@ -548,6 +555,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public String toString() {
 		return "Repository definition :: Name=" + name + " IP=" + ip + " Port=" + port;
+	}
+
+	@Override
+	public IRemoteCallDataAccessService getRemoteCallDataAccessService() {
+		return remoteCallDataAccessService;
 	}
 
 }

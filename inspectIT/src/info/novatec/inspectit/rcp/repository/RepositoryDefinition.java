@@ -5,6 +5,7 @@ import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
 import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
+import info.novatec.inspectit.cmr.service.IRemoteCallDataAccessService;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
 import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
 
@@ -85,4 +86,12 @@ public interface RepositoryDefinition {
 	 * @return Returns the {@link IGlobalDataAccessService}.
 	 */
 	IGlobalDataAccessService getGlobalDataAccessService();
+
+	/**
+	 * Returns the {@link IRemoteCallDataAccessService} access service for this repository
+	 * definition.
+	 * 
+	 * @return The {@link IRemoteCallDataAccessService.
+	 */
+	IRemoteCallDataAccessService getRemoteCallDataAccessService();
 }

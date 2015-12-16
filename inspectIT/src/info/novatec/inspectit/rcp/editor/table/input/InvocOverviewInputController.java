@@ -508,7 +508,8 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 			Column enumId = Column.fromOrd(index);
 			switch (enumId) {
 			case NESTED_DATA:
-				if (InvocationSequenceDataHelper.hasNestedSqlStatements(data) || InvocationSequenceDataHelper.hasNestedExceptions(data)) {
+				if (InvocationSequenceDataHelper.hasNestedSqlStatements(data) || InvocationSequenceDataHelper.hasNestedExceptions(data)
+						|| InvocationSequenceDataHelper.hasNestedIncommingRemoteCalls(data) || InvocationSequenceDataHelper.hasNestedOutgoingRemoteCalls(data)) {
 					StringBuilder toolTip = new StringBuilder("This invocation contains:");
 					if (InvocationSequenceDataHelper.hasNestedSqlStatements(data)) {
 						toolTip.append("\n - SQL statement(s)");
@@ -516,6 +517,13 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 					if (InvocationSequenceDataHelper.hasNestedExceptions(data)) {
 						toolTip.append("\n - Exception(s)");
 					}
+					if (InvocationSequenceDataHelper.hasNestedIncommingRemoteCalls(data)) {
+						toolTip.append("\n - Incomming Call(s)");
+					}
+					if (InvocationSequenceDataHelper.hasNestedOutgoingRemoteCalls(data)) {
+						toolTip.append("\n - Outgoing Call(s)");
+					}
+
 					return toolTip.toString();
 				} else {
 					return super.getToolTipText(element, index);
@@ -612,6 +620,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		default:
 			return new StyledString("error");
 		}
+
 	}
 
 	/**

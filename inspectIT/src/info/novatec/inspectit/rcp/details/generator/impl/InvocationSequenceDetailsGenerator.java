@@ -42,8 +42,11 @@ public class InvocationSequenceDetailsGenerator implements IDetailsGenerator {
 		table.addContentRow("Children Count:", null, new DetailsCellContent[] { new DetailsCellContent(String.valueOf(invocationSequenceData.getChildCount())) });
 		table.addContentRow("Nested SQLs:", null, new DetailsCellContent[] { new YesNoDetailsCellContent(InvocationSequenceDataHelper.hasNestedSqlStatements(invocationSequenceData)) });
 		table.addContentRow("Nested Exceptions:", null, new DetailsCellContent[] { new YesNoDetailsCellContent(InvocationSequenceDataHelper.hasNestedExceptions(invocationSequenceData)) });
+		table.addContentRow("Nested Incomming Remote Calls:", null,
+				new DetailsCellContent[] { new YesNoDetailsCellContent(InvocationSequenceDataHelper.hasNestedIncommingRemoteCalls(invocationSequenceData)) });
+		table.addContentRow("Nested Outgoing Remote Calls:", null,
+				new DetailsCellContent[] { new YesNoDetailsCellContent(InvocationSequenceDataHelper.hasNestedOutgoingRemoteCalls(invocationSequenceData)) });
 
 		return table;
 	}
-
 }

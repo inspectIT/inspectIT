@@ -5,6 +5,7 @@ import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
@@ -71,6 +72,31 @@ public abstract class StorageServiceProvider {
 		storageHttpTimerDataService.setIndexingTree(storageTreeComponent);
 		return storageHttpTimerDataService;
 	}
+
+	/**
+	 * Properly initialized {@link StorageRemoteDataAccessService}.
+	 * 
+	 * @param storageRepositoryDefinition
+	 *            {@link StorageRepositoryDefinition}.
+	 * @param localStorageData
+	 *            {@link LocalStorageData}.
+	 * @param storageTreeComponent
+	 *            Indexing tree.
+	 * @return Properly initialized {@link StorageRemoteDataAccessService}.
+	 */
+	public StorageRemoteDataAccessService createStorageRemoteDataAccessService(StorageRepositoryDefinition storageRepositoryDefinition, LocalStorageData localStorageData,
+			IStorageTreeComponent<RemoteCallData> storageTreeComponent) {
+		StorageRemoteDataAccessService storageRemoteDataAccessService = createStorageRemoteDataAccessService();
+		storageRemoteDataAccessService.setStorageRepositoryDefinition(storageRepositoryDefinition);
+		storageRemoteDataAccessService.setLocalStorageData(localStorageData);
+		storageRemoteDataAccessService.setIndexingTree(storageTreeComponent);
+		return storageRemoteDataAccessService;
+	}
+
+	/**
+	 * @return Spring created {@link StorageRemoteDataAccessService}.
+	 */
+	protected abstract StorageRemoteDataAccessService createStorageRemoteDataAccessService();
 
 	/**
 	 * @return Spring created {@link StorageSqlDataAccessService}.

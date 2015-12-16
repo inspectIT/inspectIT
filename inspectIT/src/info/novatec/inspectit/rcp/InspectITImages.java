@@ -80,6 +80,7 @@ public interface InspectITImages {
 	String IMG_TRASH = InspectITConstants.ICON_PATH_ECLIPSE + "trash.gif";
 	String IMG_WARNING = InspectITConstants.ICON_PATH_ECLIPSE + "warning_obj.gif";
 	String IMG_WINDOW = InspectITConstants.ICON_PATH_ECLIPSE + "defaultview_misc.gif";
+	String IMG_HTTP_AGGREGATE = InspectITConstants.ICON_PATH_ECLIPSE + "showcat_co.gif";
 
 	// wizard banners, all from Eclipse, license EPL 1.0
 	String IMG_WIZBAN_ADD = InspectITConstants.WIZBAN_ICON_PATH + "add_wiz.png";

@@ -15,10 +15,12 @@ import info.novatec.inspectit.rcp.editor.table.input.InvocOverviewInputControlle
 import info.novatec.inspectit.rcp.editor.table.input.MethodInvocInputController;
 import info.novatec.inspectit.rcp.editor.table.input.MultiInvocDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.NavigationInvocOverviewInputController;
+import info.novatec.inspectit.rcp.editor.table.input.NavigationRemoteInvocOverviewInputController;
 import info.novatec.inspectit.rcp.editor.table.input.SqlParameterAggregationInputControler;
 import info.novatec.inspectit.rcp.editor.table.input.TaggedHttpTimerDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.TimerDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.UngroupedExceptionOverviewInputController;
+import info.novatec.inspectit.rcp.editor.table.input.UngroupedRemoteCallOverviewDataInputController;
 import info.novatec.inspectit.rcp.editor.text.TextSubView;
 import info.novatec.inspectit.rcp.editor.text.input.ClassesInputController;
 import info.novatec.inspectit.rcp.editor.text.input.CpuInputController;
@@ -83,23 +85,28 @@ public final class SubViewFactory {
 			classLoadingSubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			classLoadingSubView.addSubView(new TextSubView(new ClassesInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
 			return classLoadingSubView;
+
 		case MEMORY_INFORMATION:
 			GridCompositeSubView memorySubView = new GridCompositeSubView();
 			memorySubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			memorySubView.addSubView(new TextSubView(new MemoryInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
 			return memorySubView;
+
 		case CPU_INFORMATION:
 			GridCompositeSubView cpuSubView = new GridCompositeSubView();
 			cpuSubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			cpuSubView.addSubView(new TextSubView(new CpuInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
 			return cpuSubView;
+
 		case SYSTEM_INFORMATION:
 			return new TextSubView(new VmSummaryInputController());
+
 		case THREAD_INFORMATION:
 			GridCompositeSubView threadSubView = new GridCompositeSubView();
 			threadSubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			threadSubView.addSubView(new TextSubView(new ThreadsInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
 			return threadSubView;
+
 		case INVOCATION_SEQUENCE:
 			GridCompositeSubView sqlCombinedView = new GridCompositeSubView();
 			ISubView invocSql = new TreeSubView(new SqlInvocInputController());
@@ -122,12 +129,14 @@ public final class SubViewFactory {
 			invocSubView.addSubView(invocTabbedSubView, 2);
 
 			return invocSubView;
+
 		case SQL:
 			SashCompositeSubView sqlSashSubView = new SashCompositeSubView();
 			sqlSashSubView.addSubView(new TreeSubView(new SqlInputController()), 10);
 			sqlSashSubView.addSubView(new TableSubView(new SqlParameterAggregationInputControler()), 5);
 			sqlSashSubView.addSubView(new TextSubView(new SqlStatementTextInputController()), 1);
 			return sqlSashSubView;
+
 		case EXCEPTION_SENSOR:
 			SashCompositeSubView ungroupedExceptionSensorSubView = new SashCompositeSubView();
 			ISubView ungroupedExceptionOverview = new TableSubView(new UngroupedExceptionOverviewInputController());
@@ -141,6 +150,7 @@ public final class SubViewFactory {
 			ungroupedExceptionSensorSubView.addSubView(ungroupedExceptionOverview, 1);
 			ungroupedExceptionSensorSubView.addSubView(exceptionTreeTabbedSubView, 2);
 			return ungroupedExceptionSensorSubView;
+
 		case EXCEPTION_SENSOR_GROUPED:
 			SashCompositeSubView groupedExceptionSensorSubView = new SashCompositeSubView();
 			ISubView groupedExceptionOverview = new TableSubView(new GroupedExceptionOverviewInputController());
@@ -149,6 +159,7 @@ public final class SubViewFactory {
 			groupedExceptionSensorSubView.addSubView(groupedExceptionOverview, 1);
 			groupedExceptionSensorSubView.addSubView(exceptionMessagesTree, 2);
 			return groupedExceptionSensorSubView;
+
 		case NAVIGATION_INVOCATION:
 			GridCompositeSubView sqlCombinedView1 = new GridCompositeSubView();
 			ISubView invocSql1 = new TreeSubView(new SqlInvocInputController());
@@ -171,6 +182,7 @@ public final class SubViewFactory {
 			invocSubView1.addSubView(invocTabbedSubView1, 2);
 
 			return invocSubView1;
+
 		case MULTI_INVOC_DATA:
 			SashCompositeSubView multiInvocSubView = new SashCompositeSubView();
 			ISubView multiInvocOverview = new TableSubView(new MultiInvocDataInputController());
@@ -187,16 +199,50 @@ public final class SubViewFactory {
 			multiInvocSubView.addSubView(multiInvocTabbedSubView, 2);
 
 			return multiInvocSubView;
+
+		case NAVIGATION_REMOTE_INVOCATION:
+			GridCompositeSubView sqlCombinedView2 = new GridCompositeSubView();
+			ISubView invocSql2 = new TreeSubView(new SqlInvocInputController());
+			ISubView invocSqlSummary2 = new TextSubView(new SqlInvocSummaryTextInputController());
+			sqlCombinedView2.addSubView(invocSql2, new GridData(SWT.FILL, SWT.FILL, true, true));
+			sqlCombinedView2.addSubView(invocSqlSummary2, new GridData(SWT.FILL, SWT.FILL, true, false));
+
+			TabbedCompositeSubView invocTabbedSubView2 = new TabbedCompositeSubView();
+			ISubView invocDetails2 = new SteppingTreeSubView(new SteppingInvocDetailInputController(true));
+			ISubView invocMethods2 = new TableSubView(new MethodInvocInputController());
+			ISubView invocExceptions2 = new TableSubView(new ExceptionSensorInvocInputController());
+			invocTabbedSubView2.addSubView(invocDetails2, "Call Hierarchy", InspectIT.getDefault().getImage(InspectITImages.IMG_CALL_HIERARCHY));
+			invocTabbedSubView2.addSubView(sqlCombinedView2, "SQL", InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE));
+			invocTabbedSubView2.addSubView(invocMethods2, "Methods", InspectIT.getDefault().getImage(InspectITImages.IMG_METHOD_PUBLIC));
+			invocTabbedSubView2.addSubView(invocExceptions2, "Exceptions", InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR));
+
+			SashCompositeSubView invocSubView2 = new SashCompositeSubView();
+			ISubView invocOverview2 = new TableSubView(new NavigationRemoteInvocOverviewInputController());
+			invocSubView2.addSubView(invocOverview2, 1);
+			invocSubView2.addSubView(invocTabbedSubView2, 2);
+
+			return invocSubView2;
+
 		case HTTP_TIMER_SENSOR:
 			SashCompositeSubView httpSashSubView = new SashCompositeSubView();
 			httpSashSubView.addSubView(new TableSubView(new HttpTimerDataInputController()));
 			return httpSashSubView;
+
 		case TAGGED_HTTP_TIMER_SENSOR:
 			SashCompositeSubView taggedHttpSashSubView = new SashCompositeSubView();
 			taggedHttpSashSubView.addSubView(new TableSubView(new TaggedHttpTimerDataInputController()));
 			return taggedHttpSashSubView;
+
 		case CHARTING_HTTP_TIMER_SENSOR:
 			return new GraphSubView(SensorTypeEnum.CHARTING_HTTP_TIMER_SENSOR);
+
+		case REMOTE_CALL_RESPONSE:
+		case REMOTE_CALL_REQUEST_APACHE:
+		case REMOTE_CALL_REQUEST_JBOSS:
+			SashCompositeSubView remoteSashSubView = new SashCompositeSubView();
+			remoteSashSubView.addSubView(new TableSubView(new UngroupedRemoteCallOverviewDataInputController()));
+			return remoteSashSubView;
+
 		default:
 			throw new IllegalArgumentException("Could not create sub-view. Not supported: " + sensorTypeEnum.toString());
 		}

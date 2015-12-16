@@ -4,6 +4,7 @@ import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationAwareData;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
@@ -129,7 +130,7 @@ public class NavigateToInvocationsHandler extends AbstractTemplateHandler {
 		for (InvocationAwareData invocationAwareData : invocationAwareDataList) {
 			if (invocationAwareData instanceof SqlStatementData) {
 				steppableTemplates.add(super.getTemplate((SqlStatementData) invocationAwareData, false, true, true));
-			} else if (invocationAwareData instanceof TimerData && !(invocationAwareData instanceof HttpTimerData)) {
+			} else if (invocationAwareData instanceof TimerData && !(invocationAwareData instanceof HttpTimerData) && !(invocationAwareData instanceof RemoteCallData)) {
 				steppableTemplates.add(super.getTemplate((TimerData) invocationAwareData, false, true));
 			} else if (invocationAwareData instanceof ExceptionSensorData) {
 				steppableTemplates.add(super.getTemplate((ExceptionSensorData) invocationAwareData, false, true, true, true, true));

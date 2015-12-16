@@ -24,6 +24,7 @@ import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.util.StringConstraint;
@@ -455,6 +456,13 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			// don't overwrite ourself but overwrite timers
 			if (null == invocationSequenceData.getTimerData() || invocationSequenceData.getTimerData().getClass().equals(TimerData.class)) {
 				invocationSequenceData.setTimerData((HttpTimerData) dataObject);
+			}
+		}
+
+		if (dataObject.getClass().equals(RemoteCallData.class)) {
+			// don't overwrite ourself
+			if (null == invocationSequenceData.getRemoteCallData()) {
+				invocationSequenceData.setRemoteCallData((RemoteCallData) dataObject);
 			}
 		}
 

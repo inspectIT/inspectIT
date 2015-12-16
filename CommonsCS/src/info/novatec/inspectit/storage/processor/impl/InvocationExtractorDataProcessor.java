@@ -74,6 +74,9 @@ public class InvocationExtractorDataProcessor extends AbstractExtractorDataProce
 		if (null != invocation.getSqlStatementData()) {
 			passToChainedProcessors(invocation.getSqlStatementData());
 		}
+		if (null != invocation.getRemoteCallData()) {
+			passToChainedProcessors(invocation.getRemoteCallData());
+		}
 		if (null != invocation.getExceptionSensorDataObjects()) {
 			for (ExceptionSensorData exceptionSensorData : (List<ExceptionSensorData>) invocation.getExceptionSensorDataObjects()) {
 				if (exceptionSensorData.getExceptionEvent() == ExceptionEvent.CREATED) {

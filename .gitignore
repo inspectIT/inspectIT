@@ -2,3 +2,4 @@
 *.svn
 version.log
 .metadata/
+Agent/Agent/.classpath
