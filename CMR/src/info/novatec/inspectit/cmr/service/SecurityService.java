@@ -192,7 +192,12 @@ public class SecurityService implements ISecurityService {
 		} else if (data instanceof Permission) {
 			Permission permission = (Permission) data;
 			return (permission.getDescription().length() < 100);
+		} else if (data instanceof Role) {
+			//TODO: make real data integrity tests
+			Role role = (Role) data;
+			return true;
 		}
+		
 		return false;
 	}
 
@@ -302,6 +307,19 @@ public class SecurityService implements ISecurityService {
 	@Override
 	public List<Role> getAllRoles() {
 		return roleDao.loadAll();
+	}
+
+	@Override
+	public void addRole(Role role) throws DataIntegrityViolationException {
+		if (!checkDataIntegrity(role)) {
+			throw new DataIntegrityViolationException("Data integrity test failed!");
+		}
+		List<Role> allRole = roleDao.loadAll();
+		if (allRole.contains(role)) {
+			throw new DataIntegrityViolationException("Role already exist!");
+		} else {
+			roleDao.saveOrUpdate(role);
+		}
 	}
 
 	// TODO Make more methods available for the administrator module...

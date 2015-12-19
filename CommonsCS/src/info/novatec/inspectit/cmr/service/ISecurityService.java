@@ -151,5 +151,7 @@ public interface ISecurityService {
 	 * @return An List containing all Roles
 	 */
 	List<Permission> getAllPermissions();
+
+	void addRole(Role role);
 }
 

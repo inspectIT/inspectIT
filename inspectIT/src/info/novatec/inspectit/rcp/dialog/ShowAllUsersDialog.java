@@ -38,13 +38,13 @@ public class ShowAllUsersDialog extends TitleAreaDialog{
 	/**
 	 * List of all Emails.
 	 */
-	private List<String> Users;
+	private List<String> users;
 	
 
 	public ShowAllUsersDialog(Shell parentShell, CmrRepositoryDefinition cmrRepositoryDefinition) {
 		super(parentShell);
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
-		Users = cmrRepositoryDefinition.getSecurityService().getAllUsers();
+		users = cmrRepositoryDefinition.getSecurityService().getAllUsers();
 	}
 
 	/**
@@ -79,9 +79,9 @@ public class ShowAllUsersDialog extends TitleAreaDialog{
 		column.pack();
 		
 		// content for rows
-		for (int i = 0; i < Users.size(); i++) {
+		for (int i = 0; i < users.size(); i++) {
 			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(0, Users.get(i));
+			item.setText(0, users.get(i));
 		}
 		
 		parent.pack();

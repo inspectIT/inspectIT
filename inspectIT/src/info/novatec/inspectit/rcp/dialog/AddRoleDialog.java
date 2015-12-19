@@ -54,27 +54,27 @@ public class AddRoleDialog extends TitleAreaDialog {
 	private static final int ADD_ID = 0; // IDialogConstants.OK_ID;
 
 	/**
-	 * Checkbutton for Recording Permission
+	 * Checkbutton for Recording Permission.
 	 */
 	private Button cmrRecordingPermissionButton;
 
 	/**
-	 * Checkbutton for Storage Permission
+	 * Checkbutton for Storage Permission.
 	 */
 	private Button cmrStoragePermissionButton;
 
 	/**
-	 * Checkbutton for Delete Agent Permission
+	 * Checkbutton for Delete Agent Permission.
 	 */
 	private Button cmrDeleteAgentPermissionButton;
 
 	/**
-	 * Checkbutton for Shutdown And Restart Permission
+	 * Checkbutton for Shutdown And Restart Permission.
 	 */
 	private Button cmrShutdownAndRestartPermissionButton;
 
 	/**
-	 * Checkbutton for Administration Permission
+	 * Checkbutton for Administration Permission.
 	 */
 	private Button cmrAdministrationPermissionButton;
 
