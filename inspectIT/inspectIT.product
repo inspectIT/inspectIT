@@ -92,6 +92,7 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="ch.qos.logback.classic"/>
       <plugin id="ch.qos.logback.core"/>
       <plugin id="com.esotericsoftware.kryo"/>
+      <plugin id="com.google.gson"/>
       <plugin id="com.google.guava.jdk5"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.springsource.net.sf.cglib"/>
