@@ -464,6 +464,10 @@
             name="Agent Mapping">
       </command>
       <command
+            id="info.novatec.inspectit.rcp.commands.checkForNewVersion"
+            name="Check for New Version">
+      </command>
+      <command
             id="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu"
             name="Add Profile Environment Menu">
       </command>
@@ -1604,6 +1608,10 @@
          </activeWhen>
       </handler>
       <handler
+            class="info.novatec.inspectit.rcp.handlers.CheckNewVersionHandler"
+            commandId="info.novatec.inspectit.rcp.commands.checkForNewVersion">
+      </handler>
+      <handler
             class="info.novatec.inspectit.rcp.handlers.CopyContextParametersHandler"
             commandId="info.novatec.inspectit.rcp.commands.copyContextParameters">
          <activeWhen>
@@ -2369,6 +2377,10 @@
                   name="org.eclipse.ui.main.menu.help.separator1"
                   visible="true">
             </separator>
+            <command
+                  commandId="info.novatec.inspectit.rcp.commands.checkForNewVersion"
+                  style="push">
+            </command>
             <command
                   commandId="org.eclipse.ui.help.aboutAction"
                   style="push">
