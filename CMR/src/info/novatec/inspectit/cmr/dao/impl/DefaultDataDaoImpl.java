@@ -215,7 +215,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 						uris.add(httpTimerData.getUri());
 					}
 				}
-				condition = root.get("uri").in(uris);
+				condition = root.join("httpInfo").get("uri").in(uris);
 			} else {
 				Set<String> tags = new HashSet<String>();
 
@@ -224,7 +224,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 						tags.add(httpTimerData.getInspectItTaggingHeaderValue());
 					}
 				}
-				condition = root.get("inspectItTaggingHeaderValue").in(tags);
+				condition = root.join("httpInfo").get("inspectItTaggingHeaderValue").in(tags);
 			}
 
 			criteria.where(platformId, timestamp, condition);

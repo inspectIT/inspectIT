@@ -5,14 +5,22 @@ import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.communication.data.util.HttpInfo;
 import info.novatec.inspectit.spring.logger.Log;
 import info.novatec.inspectit.storage.serializer.SerializationException;
 import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
 import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -56,6 +64,8 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 		if (defaultData instanceof HttpTimerData) {
 			try {
 				HttpTimerData clone = getClone((HttpTimerData) defaultData);
+				HttpInfo httpInfo = getHttpInfo(clone, entityManager);
+				clone.setHttpInfo(httpInfo);
 				entityManager.persist(clone);
 			} catch (SerializationException e) {
 				log.warn("TimerDataChartingCmrProcessor failed to clone the given HttpTimerData", e);
@@ -95,6 +105,49 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 	@PostConstruct
 	protected void init() {
 		serializationManager = serializationManagerProvider.createSerializer();
+	}
+
+	/**
+	 * Find {@link HttpInfo} to attach to {@link HttpTimerData} when saving.
+	 * 
+	 * @param httpTimerData
+	 *            {@link HttpTimerData} to find info for.
+	 * @param entityManager
+	 *            EntityManager
+	 * @return {@link HttpInfo}.
+	 */
+	HttpInfo getHttpInfo(HttpTimerData httpTimerData, EntityManager entityManager) {
+		String uri = httpTimerData.isUriDefined() ? httpTimerData.getUri() : null; // NOPMD
+		String tag = httpTimerData.hasInspectItTaggingHeader() ? httpTimerData.getInspectItTaggingHeaderValue() : null; // NOPMD
+		String requestMethod = httpTimerData.getRequestMethod();
+
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<HttpInfo> criteria = builder.createQuery(HttpInfo.class);
+		Root<? extends HttpInfo> root = criteria.from(HttpInfo.class);
+
+		Predicate uriPredicate;
+		Predicate tagPredicate;
+		Predicate requestMethodPredicate = builder.equal(root.get("requestMethod"), requestMethod);
+		if (null != uri) {
+			uriPredicate = builder.equal(root.get("uri"), uri);
+		} else {
+			uriPredicate = builder.isNull(root.get("uri"));
+		}
+		if (null != tag) {
+			tagPredicate = builder.equal(root.get("inspectItTaggingHeaderValue"), tag);
+		} else {
+			tagPredicate = builder.isNull(root.get("inspectItTaggingHeaderValue"));
+		}
+
+		criteria.where(uriPredicate, tagPredicate, requestMethodPredicate);
+
+		List<?> httpInfoList = entityManager.createQuery(criteria).getResultList();
+
+		if (CollectionUtils.isNotEmpty(httpInfoList)) {
+			return (HttpInfo) httpInfoList.get(0);
+		} else {
+			return new HttpInfo(uri, requestMethod, tag);
+		}
 	}
 
 }
