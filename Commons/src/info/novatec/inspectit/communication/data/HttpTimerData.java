@@ -1,14 +1,16 @@
 package info.novatec.inspectit.communication.data;
 
 import info.novatec.inspectit.cmr.cache.IObjectSizes;
+import info.novatec.inspectit.communication.data.util.HttpInfo;
 
 import java.sql.Timestamp;
 import java.util.Map;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 
 /**
@@ -20,9 +22,6 @@ import javax.persistence.Transient;
  * 
  * @author Stefan Siegl
  */
-@Table(indexes = { 
-		@Index(name = "uri_idx", columnList = "uri"),
-		@Index(name = "tag_idx", columnList = "inspectItTaggingHeaderValue") })
 @Entity
 public class HttpTimerData extends TimerData implements Cloneable {
 
@@ -53,17 +52,19 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	/**
 	 * The uri.
 	 */
-	@Column(length = 1000)
+	@Transient
 	private String uri = UNDEFINED;
 
 	/**
 	 * The request method.
 	 */
+	@Transient
 	private String requestMethod = UNDEFINED;
 
 	/**
 	 * The inspectIT tag.
 	 */
+	@Transient
 	private String inspectItTaggingHeaderValue;
 
 	/**
@@ -89,6 +90,12 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	 */
 	@Transient
 	private Map<String, String> sessionAttributes = null;
+
+	/**
+	 * Http info for optimizing saving to the DB.
+	 */
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	private HttpInfo httpInfo;
 
 	/**
 	 * Constructor.
@@ -272,11 +279,21 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	}
 
 	/**
+	 * Sets {@link #httpInfo}.
+	 * 
+	 * @param httpInfo
+	 *            New value for {@link #httpInfo}
+	 */
+	public void setHttpInfo(HttpInfo httpInfo) {
+		this.httpInfo = httpInfo;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(7, 0, 0, 0, 0, 0);
+		size += objectSizes.getPrimitiveTypesSize(8, 0, 0, 0, 0, 0);
 		size += objectSizes.getSizeOf(uri, requestMethod, inspectItTaggingHeaderValue);
 
 		if (null != parameters) {
@@ -315,6 +332,8 @@ public class HttpTimerData extends TimerData implements Cloneable {
 			}
 		}
 
+		size += objectSizes.getSizeOf(httpInfo);
+
 		if (doAlign) {
 			return objectSizes.alignTo8Bytes(size);
 		} else {
@@ -328,6 +347,16 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	/**
+	 * Executed after load from the DB.
+	 */
+	@PostLoad
+	protected void postLoad() {
+		setUri(httpInfo.getUri());
+		setRequestMethod(httpInfo.getRequestMethod());
+		setInspectItTaggingHeaderValue(httpInfo.getInspectItTaggingHeaderValue());
 	}
 
 	/**
