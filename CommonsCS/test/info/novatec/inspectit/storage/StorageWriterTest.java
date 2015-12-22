@@ -6,13 +6,13 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.indexing.impl.IndexingException;
@@ -25,9 +25,11 @@ import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
 import info.novatec.inspectit.storage.processor.write.AbstractWriteDataProcessor;
 import info.novatec.inspectit.storage.serializer.ISerializer;
 import info.novatec.inspectit.storage.serializer.SerializationException;
+import info.novatec.inspectit.storage.util.DeleteFileVisitor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -43,6 +45,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -83,6 +86,8 @@ public class StorageWriterTest {
 	@SuppressWarnings("rawtypes")
 	@Mock
 	private ScheduledFuture future;
+
+	private Path testPath = Paths.get("myTestPath" + File.separator);
 
 	@SuppressWarnings({ "unchecked" })
 	@BeforeMethod
@@ -257,45 +262,26 @@ public class StorageWriterTest {
 	}
 
 	@Test
-	public void objectWriteFailedSerialization() throws SerializationException {
+	public void objectWriteFailedSerialization() throws Exception {
+		StorageData storageData = new StorageData();
+		when(storageManager.getStoragePath(storageData)).thenReturn(testPath);
+		storageWriter.prepareForWrite(storageData);
+
 		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Mockito.<Output> anyObject(), Mockito.<Map<?, ?>> anyObject());
 		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Mockito.<Output> anyObject());
 		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
 
-		verify(extendedByteBufferOutputStream, times(1)).close();
 		verify(serializerQueue, times(1)).add(serializer);
-		verifyZeroInteractions(writingChannelManager);
+		verifyZeroInteractions(writingChannelManager, extendedByteBufferOutputStream);
 	}
 
-	@Test
-	public void objectWriteExceptionDuringWrite() throws IOException {
-		StorageData storageData = new StorageData();
-		Path testPath = Paths.get("test" + File.separator);
-		when(storageManager.getStoragePath(storageData)).thenReturn(testPath);
-		storageWriter.prepareForWrite(storageData);
-		doThrow(IOException.class).when(writingChannelManager).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), Mockito.<Path> anyObject(),
-				Mockito.<WriteReadCompletionRunnable> anyObject());
+	@AfterTest
+	public void cleanUp() throws IOException {
+		if (Files.exists(testPath)) {
+			Files.walkFileTree(testPath, new DeleteFileVisitor());
+		}
 
-		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
-
-		verify(extendedByteBufferOutputStream, times(1)).close();
-		verify(serializerQueue, times(1)).add(serializer);
-		verify(writingChannelManager, times(1)).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), eq(testPath.resolve("myFile")), Mockito.<WriteReadCompletionRunnable> anyObject());
-	}
-
-	@Test
-	public void objectWriteThrowableDuringWrite() throws IOException {
-		StorageData storageData = new StorageData();
-		Path testPath = Paths.get("test" + File.separator);
-		when(storageManager.getStoragePath(storageData)).thenReturn(testPath);
-		storageWriter.prepareForWrite(storageData);
-		doThrow(Throwable.class).when(writingChannelManager).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), Mockito.<Path> anyObject(), Mockito.<WriteReadCompletionRunnable> anyObject());
-
-		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
-
-		verify(extendedByteBufferOutputStream, times(1)).close();
-		verify(serializerQueue, times(1)).add(serializer);
-		verify(writingChannelManager, times(1)).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), eq(testPath.resolve("myFile")), Mockito.<WriteReadCompletionRunnable> anyObject());
+		Files.deleteIfExists(testPath);
 	}
 
 }
