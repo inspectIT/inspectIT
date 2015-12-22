@@ -64,10 +64,10 @@ public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 			if (null != httpSensorTypeIdent && null != MethodSensorTypeIdentHelper.getRegEx(httpSensorTypeIdent)) {
 				return HttpTimerDataHelper.getTransformedUri(object, MethodSensorTypeIdentHelper.getRegEx(httpSensorTypeIdent), MethodSensorTypeIdentHelper.getRegExTemplate(httpSensorTypeIdent));
 			} else {
-				return object.getUri();
+				return object.getHttpInfo().getUri();
 			}
 		} catch (IllegalArgumentException e) {
-			return object.getUri();
+			return object.getHttpInfo().getUri();
 		}
 	}
 

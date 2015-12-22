@@ -70,8 +70,8 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 			return invNested1 - invNested2;
 		case URI:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(o1) && InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
-				String uri1 = ((HttpTimerData) o1.getTimerData()).getUri();
-				String uri2 = ((HttpTimerData) o2.getTimerData()).getUri();
+				String uri1 = ((HttpTimerData) o1.getTimerData()).getHttpInfo().getUri();
+				String uri2 = ((HttpTimerData) o2.getTimerData()).getHttpInfo().getUri();
 				return ObjectUtils.compare(uri1, uri2);
 			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o1)) {
 				return 1;
@@ -82,8 +82,8 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 			}
 		case USE_CASE:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(o1) && InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
-				String useCase1 = ((HttpTimerData) o1.getTimerData()).getInspectItTaggingHeaderValue();
-				String useCase2 = ((HttpTimerData) o2.getTimerData()).getInspectItTaggingHeaderValue();
+				String useCase1 = ((HttpTimerData) o1.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
+				String useCase2 = ((HttpTimerData) o2.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
 				return ObjectUtils.compare(useCase1, useCase2);
 			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o1)) {
 				return 1;

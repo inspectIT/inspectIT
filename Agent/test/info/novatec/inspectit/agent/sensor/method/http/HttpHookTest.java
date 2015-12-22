@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
@@ -161,8 +162,8 @@ public class HttpHookTest extends AbstractLogSupport {
 		Long secondCpuTimerValue = 6872L;
 
 		HttpTimerData tmp = new HttpTimerData(null, platformId, registeredSensorTypeId, registeredMethodId);
-		tmp.setRequestMethod(method);
-		tmp.setUri(uri);
+		tmp.getHttpInfo().setRequestMethod(method);
+		tmp.getHttpInfo().setUri(uri);
 		Map<String, String> attributeMap = new HashMap<String, String>();
 		MapUtils.putAll(attributeMap, new Object[][] { { att1, att1Value }, { att2, att2Value } });
 		tmp.setAttributes(attributeMap);
@@ -442,8 +443,8 @@ public class HttpHookTest extends AbstractLogSupport {
 			}
 			HttpTimerData other = (HttpTimerData) object;
 
-			assertThat(data.getUri(), is(equalTo(other.getUri())));
-			assertThat(data.getRequestMethod(), is(equalTo(other.getRequestMethod())));
+			assertThat(data.getHttpInfo().getUri(), is(equalTo(other.getHttpInfo().getUri())));
+			assertThat(data.getHttpInfo().getRequestMethod(), is(equalTo(other.getHttpInfo().getRequestMethod())));
 			assertThat(data.getAttributes(), is(equalTo(other.getAttributes())));
 			assertThat(data.getHeaders(), is(equalTo(other.getHeaders())));
 			assertThat(data.getSessionAttributes(), is(equalTo(other.getSessionAttributes())));
