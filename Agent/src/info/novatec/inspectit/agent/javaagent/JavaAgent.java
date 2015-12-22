@@ -471,6 +471,20 @@ public class JavaAgent implements ClassFileTransformer {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * We need this method due to the class loading delegation. As we are instrumenting the
+		 * {@link ClassLoader#loadClass(String)} with delegation byte code, without this method we
+		 * would enter the loop if any our class is loaded via this class loader. Thus, I delegate
+		 * this to our {@link #loadClass(String, boolean)} method with <code>false</code> resolve.
+		 * Thus, escaping the further delegation checks.
+		 */
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			return loadClass(name, false);
+		}
+
 		/** {@inheritDoc} */
 		public synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 			Class<?> result = findLoadedClass(name);

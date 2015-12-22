@@ -9,6 +9,7 @@ import info.novatec.inspectit.agent.config.impl.StrategyConfig;
 import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
 import info.novatec.inspectit.agent.sensor.exception.IExceptionSensor;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -266,12 +267,13 @@ public interface IConfigurationStorage {
 	void addIgnoreClassesPattern(String patternString);
 
 	/**
-	 * Returns the matcher that can be used to test if the ClassLoader class should be instrumented
+	 * Returns the matchers that can be used to test if the ClassLoader class should be instrumented
 	 * in the way that class loading is delegated if the class to be loaded is inspectIT class.
 	 * 
-	 * @return Returns the matcher that can be used to test if the ClassLoader class should be
+	 * @return Returns the matchers that can be used to test if the ClassLoader class should be
 	 *         instrumented in the way that class loading is delegated if the class to be loaded is
 	 *         inspectIT class.
 	 */
-	IMatcher getClassLoaderDelegationMatcher();
+	Collection<IMatcher> getClassLoaderDelegationMatchers();
+
 }
