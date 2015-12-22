@@ -2,6 +2,7 @@ package info.novatec.inspectit.indexing.aggregation.impl;
 
 import info.novatec.inspectit.communication.IAggregatedData;
 import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
+import info.novatec.inspectit.communication.data.HttpInfo;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.indexing.aggregation.IAggregator;
 
@@ -54,7 +55,7 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 	 */
 	public void aggregate(IAggregatedData<HttpTimerData> aggregatedObject, HttpTimerData objectToAdd) {
 		if (!uriBased) {
-			if (!objectToAdd.hasInspectItTaggingHeader()) {
+			if (!objectToAdd.getHttpInfo().hasInspectItTaggingHeader()) {
 				// use case aggregation for elements that do not have any tagged value does not
 				// make sense, thus we ignore these.
 				return;
@@ -65,8 +66,9 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 
 		if (!includeRequestMethod) {
 			// If we have different request methods, we set the request method to "multiple"
-			if (!objectToAdd.getRequestMethod().equals(aggregatedObject.getData().getRequestMethod()) && !aggregatedObject.getData().getRequestMethod().equals(HttpTimerData.REQUEST_METHOD_MULTIPLE)) {
-				aggregatedObject.getData().setRequestMethod(HttpTimerData.REQUEST_METHOD_MULTIPLE);
+			if (!objectToAdd.getHttpInfo().getRequestMethod().equals(aggregatedObject.getData().getHttpInfo().getRequestMethod())
+					&& !aggregatedObject.getData().getHttpInfo().getRequestMethod().equals(HttpTimerData.REQUEST_METHOD_MULTIPLE)) {
+				aggregatedObject.getData().getHttpInfo().setRequestMethod(HttpTimerData.REQUEST_METHOD_MULTIPLE);
 			}
 		}
 	}
@@ -81,14 +83,14 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 		clone.setMethodIdent(httpData.getMethodIdent());
 		clone.setCharting(httpData.isCharting());
 		if (uriBased) {
-			clone.setUri(httpData.getUri());
+			clone.getHttpInfo().setUri(httpData.getHttpInfo().getUri());
 		} else {
 			// Aggregation based on Usecase. We reset the URI so that we can easily know
 			// that use case aggregation is used.
-			clone.setUri(HttpTimerData.UNDEFINED);
-			clone.setInspectItTaggingHeaderValue(httpData.getInspectItTaggingHeaderValue());
+			clone.getHttpInfo().setUri(HttpInfo.UNDEFINED);
+			clone.getHttpInfo().setInspectItTaggingHeaderValue(httpData.getHttpInfo().getInspectItTaggingHeaderValue());
 		}
-		clone.setRequestMethod(httpData.getRequestMethod());
+		clone.getHttpInfo().setRequestMethod(httpData.getHttpInfo().getRequestMethod());
 		return clone;
 	}
 
@@ -99,13 +101,13 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 		final int prime = 31;
 		int result = 0;
 		if (uriBased) {
-			result = prime * result + ((httpData.getUri() == null) ? 0 : httpData.getUri().hashCode());
+			result = prime * result + ((httpData.getHttpInfo().getUri() == null) ? 0 : httpData.getHttpInfo().getUri().hashCode());
 		} else {
-			result = prime * result + ((httpData.getInspectItTaggingHeaderValue() == null) ? 0 : httpData.getInspectItTaggingHeaderValue().hashCode());
+			result = prime * result + ((httpData.getHttpInfo().getInspectItTaggingHeaderValue() == null) ? 0 : httpData.getHttpInfo().getInspectItTaggingHeaderValue().hashCode());
 		}
 
 		if (includeRequestMethod) {
-			result = prime * result + ((httpData.getRequestMethod() == null) ? 0 : httpData.getRequestMethod().hashCode());
+			result = prime * result + ((httpData.getHttpInfo().getRequestMethod() == null) ? 0 : httpData.getHttpInfo().getRequestMethod().hashCode());
 		}
 		return result;
 	}

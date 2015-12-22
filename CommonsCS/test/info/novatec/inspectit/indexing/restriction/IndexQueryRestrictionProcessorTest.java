@@ -2,13 +2,13 @@ package info.novatec.inspectit.indexing.restriction;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
+import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.indexing.restriction.impl.CachingIndexQueryRestrictionProcessor;
 import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -34,12 +34,20 @@ public class IndexQueryRestrictionProcessorTest {
 	private TimerData timerData;
 
 	/**
+	 * HTTP timer data.
+	 */
+	private HttpTimerData httpTimerData;
+
+	/**
 	 * Initialize. Set up the timer data.
 	 */
 	@BeforeClass
 	public void init() {
 		timerData = new TimerData();
 		timerData.setId(1L);
+		// http for navigation testing
+		httpTimerData = new HttpTimerData();
+		httpTimerData.getHttpInfo().setId(1L);
 	}
 
 	/**
@@ -55,9 +63,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void equalsTrueRestriction() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.equal("id", 1L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.equal("id", 1L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.equal("httpInfo.id", 1L))), is(true));
 	}
 
 	/**
@@ -65,9 +72,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void equalsFalseRestriction() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.equal("id", 0L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.equal("id", 0L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.equal("httpInfo.id", 0L))), is(false));
 	}
 
 	/**
@@ -75,9 +81,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void notEqualsFalseRestriction() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.notEqual("id", 1L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.notEqual("id", 1L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.notEqual("httpInfo.id", 1L))), is(false));
 	}
 
 	/**
@@ -85,9 +90,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void notEqualsTrueRestriction() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.notEqual("id", 0L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.notEqual("id", 0L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.notEqual("httpInfo.id", 0L))), is(true));
 	}
 
 	/**
@@ -95,9 +99,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void isNull() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.isNull("id"));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.isNull("id"))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.isNull("httpInfo.id"))), is(false));
 	}
 
 	/**
@@ -105,9 +108,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void isNotNull() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.isNotNull("id"));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.isNotNull("id"))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.isNotNull("httpInfo.id"))), is(true));
 	}
 
 	/**
@@ -115,9 +117,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void greaterThanOne() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.greaterThan("id", 1L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterThan("id", 1L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterThan("httpInfo.id", 1L))), is(false));
 	}
 
 	/**
@@ -125,9 +126,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void greaterThanZero() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.greaterThan("id", 0L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterThan("id", 0L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterThan("httpInfo.id", 0L))), is(true));
 	}
 
 	/**
@@ -135,9 +135,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void greaterThanTwo() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.greaterThan("id", 2L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterThan("id", 2L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterThan("httpInfo.id", 2L))), is(false));
 	}
 
 	/**
@@ -145,9 +144,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void greaterEqualOne() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.greaterEqual("id", 1L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterEqual("id", 1L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterEqual("httpInfo.id", 1L))), is(true));
 	}
 
 	/**
@@ -155,9 +153,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void greaterEqualZero() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.greaterEqual("id", 0L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterEqual("id", 0L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterEqual("httpInfo.id", 0L))), is(true));
 	}
 
 	/**
@@ -165,9 +162,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void greaterEqualTwo() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.greaterEqual("id", 2L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterEqual("id", 2L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.greaterEqual("httpInfo.id", 2L))), is(false));
 	}
 
 	/**
@@ -175,9 +171,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void lessThanOne() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.lessThan("id", 1L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.lessThan("id", 1L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.lessThan("httpInfo.id", 1L))), is(false));
 	}
 
 	/**
@@ -185,9 +180,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void lessThanZero() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.lessThan("id", 0L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.lessThan("id", 0L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.lessThan("httpInfo.id", 0L))), is(false));
 	}
 
 	/**
@@ -195,9 +189,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void lessThanTwo() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.lessThan("id", 2L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.lessThan("id", 2L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.lessThan("httpInfo.id", 2L))), is(true));
 	}
 
 	/**
@@ -205,9 +198,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void lessEqualOne() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.lessEqual("id", 1L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.lessEqual("id", 1L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.lessEqual("httpInfo.id", 1L))), is(true));
 	}
 
 	/**
@@ -215,9 +207,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void lessEqualZero() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.lessEqual("id", 0L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.lessEqual("id", 0L))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.lessEqual("httpInfo.id", 0L))), is(false));
 	}
 
 	/**
@@ -225,9 +216,8 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void lessEqualTwo() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.lessEqual("id", 2L));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.lessEqual("id", 2L))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.lessEqual("httpInfo.id", 2L))), is(true));
 	}
 
 	/**
@@ -235,12 +225,21 @@ public class IndexQueryRestrictionProcessorTest {
 	 */
 	@Test
 	public void isInCollection() {
-		List<IIndexQueryRestriction> restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.isInCollection("id", Collections.singletonList(1L)));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.isInCollection("id", Collections.singletonList(1L)))), is(true));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.isInCollection("httpInfo.id", Collections.singletonList(1L)))), is(true));
 
-		restrictions = new ArrayList<IIndexQueryRestriction>(1);
-		restrictions.add(IndexQueryRestrictionFactory.isInCollection("id", Collections.singletonList(2L)));
-		assertThat(processor.areAllRestrictionsFulfilled(timerData, restrictions), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.isInCollection("id", Collections.singletonList(2L)))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.isInCollection("httpInfo.id", Collections.singletonList(2L)))),
+				is(false));
+	}
+
+	/**
+	 * If field does not exists it should be <code>false</code>.
+	 */
+	@Test
+	public void fieldDoesNotExists() {
+		assertThat(processor.areAllRestrictionsFulfilled(timerData, Collections.singletonList(IndexQueryRestrictionFactory.isNotNull("myId"))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.isNotNull("httpInfo.myid"))), is(false));
+		assertThat(processor.areAllRestrictionsFulfilled(httpTimerData, Collections.singletonList(IndexQueryRestrictionFactory.isNotNull("myHttpInfo.myid"))), is(false));
 	}
 }

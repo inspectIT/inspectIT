@@ -1,6 +1,6 @@
 package info.novatec.inspectit.agent.sensor.method.http;
 
-import info.novatec.inspectit.communication.data.HttpTimerData;
+import info.novatec.inspectit.communication.data.HttpInfo;
 import info.novatec.inspectit.util.StringConstraint;
 
 import java.lang.reflect.Array;
@@ -121,7 +121,7 @@ class HttpRequestParameterExtractor {
 	public String getRequestUri(Class<?> httpServletRequestClass, Object httpServletRequest) {
 		Method m = retrieveMethod(HttpMethods.SERVLET_REQUEST_URI, httpServletRequestClass);
 		if (null == m) {
-			return HttpTimerData.UNDEFINED;
+			return HttpInfo.UNDEFINED;
 		}
 
 		try {
@@ -129,11 +129,11 @@ class HttpRequestParameterExtractor {
 			if (null != uri) {
 				return uri;
 			} else {
-				return HttpTimerData.UNDEFINED;
+				return HttpInfo.UNDEFINED;
 			}
 		} catch (Exception e) {
 			LOG.error("Invocation on given object failed.", e);
-			return HttpTimerData.UNDEFINED;
+			return HttpInfo.UNDEFINED;
 		}
 	}
 
@@ -151,7 +151,7 @@ class HttpRequestParameterExtractor {
 	public String getRequestMethod(Class<?> httpServletRequestClass, Object httpServletRequest) {
 		Method m = retrieveMethod(HttpMethods.SERVLET_GET_METHOD, httpServletRequestClass);
 		if (null == m) {
-			return HttpTimerData.UNDEFINED;
+			return HttpInfo.UNDEFINED;
 		}
 
 		try {
@@ -159,11 +159,11 @@ class HttpRequestParameterExtractor {
 			if (null != requestMethod) {
 				return requestMethod;
 			} else {
-				return HttpTimerData.UNDEFINED;
+				return HttpInfo.UNDEFINED;
 			}
 		} catch (Exception e) {
 			LOG.error("Invocation on given object failed.", e);
-			return HttpTimerData.UNDEFINED;
+			return HttpInfo.UNDEFINED;
 		}
 	}
 
