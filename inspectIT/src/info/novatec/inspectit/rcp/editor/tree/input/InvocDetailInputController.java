@@ -4,6 +4,7 @@ import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.service.ICachedDataService;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
+import info.novatec.inspectit.communication.data.HttpInfo;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
@@ -415,9 +416,10 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 
 			if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
 				HttpTimerData httpTimer = (HttpTimerData) data.getTimerData();
-				if (null != httpTimer.getUri()) {
+				HttpInfo httpInfo = httpTimer.getHttpInfo();
+				if (null != httpInfo.getUri()) {
 					styledString.append("URI: ");
-					styledString.append(httpTimer.getUri());
+					styledString.append(httpInfo.getUri());
 					styledString.append(" | ");
 				}
 			}

@@ -55,11 +55,11 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 
 		DetailsTable table = new DetailsTable(parent, toolkit, "HTTP Info", 1);
 
-		table.addContentRow("Method:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getRequestMethod()) });
-		table.addContentRow("URI:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getUri()) });
+		table.addContentRow("Method:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getRequestMethod()) });
+		table.addContentRow("URI:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getUri()) });
 
-		if (httpTimerData.hasInspectItTaggingHeader()) {
-			table.addContentRow("Tag Value:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getInspectItTaggingHeaderValue()) });
+		if (httpTimerData.getHttpInfo().hasInspectItTaggingHeader()) {
+			table.addContentRow("Tag Value:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getInspectItTaggingHeaderValue()) });
 		}
 
 		// parameters
