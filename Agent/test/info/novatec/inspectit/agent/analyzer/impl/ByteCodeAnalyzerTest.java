@@ -10,8 +10,10 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
 import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
@@ -72,7 +74,7 @@ public class ByteCodeAnalyzerTest extends AbstractLogSupport {
 	public void initTestClass() {
 		byteCodeAnalyzer = new ByteCodeAnalyzer(configurationStorage, hookInstrumenter, classPoolAnalyzer);
 		byteCodeAnalyzer.log = LoggerFactory.getLogger(ByteCodeAnalyzer.class);
-		when(configurationStorage.getClassLoaderDelegationMatcher()).thenReturn(mock(IMatcher.class));
+		when(configurationStorage.getClassLoaderDelegationMatchers()).thenReturn(Collections.singleton(mock(IMatcher.class)));
 	}
 
 	private byte[] getByteCode(String className) throws NotFoundException, IOException, CannotCompileException {
@@ -401,16 +403,16 @@ public class ByteCodeAnalyzerTest extends AbstractLogSupport {
 		IMatcher matcher = mock(IMatcher.class);
 		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
 		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(methodList);
-		when(configurationStorage.getClassLoaderDelegationMatcher()).thenReturn(matcher);
-		
+		when(configurationStorage.getClassLoaderDelegationMatchers()).thenReturn(Collections.singleton(matcher));
+
 		byteCodeAnalyzer.classLoaderDelegation = true;
 		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
 		verify(hookInstrumenter, times(1)).addClassLoaderDelegationHook(methodList.get(0));
-		
+
 		byteCodeAnalyzer.classLoaderDelegation = false;
 		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
-		
+
 		verifyNoMoreInteractions(hookInstrumenter);
 	}
 }

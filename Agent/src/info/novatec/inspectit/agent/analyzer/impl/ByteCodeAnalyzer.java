@@ -200,12 +200,13 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 			log.trace("analyzeForClassLoaderDelegation: " + className);
 		}
 
-		IMatcher matcher = configurationStorage.getClassLoaderDelegationMatcher();
-		if (null != matcher && matcher.compareClassName(classLoader, className)) {
-			List<? extends CtBehavior> behaviors = matcher.getMatchingMethods(classLoader, className);
-			if (CollectionUtils.isNotEmpty(behaviors)) {
-				matcher.checkParameters(behaviors);
-				return behaviors;
+		for (IMatcher matcher : configurationStorage.getClassLoaderDelegationMatchers()) {
+			if (null != matcher && matcher.compareClassName(classLoader, className)) {
+				List<? extends CtBehavior> behaviors = matcher.getMatchingMethods(classLoader, className);
+				if (CollectionUtils.isNotEmpty(behaviors)) {
+					matcher.checkParameters(behaviors);
+					return behaviors;
+				}
 			}
 		}
 		return Collections.emptyList();
