@@ -2,6 +2,7 @@ package info.novatec.inspectit.rcp.repository.service.storage;
 
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.communication.data.HttpTimerData;
+import info.novatec.inspectit.communication.data.util.HttpInfo;
 import info.novatec.inspectit.indexing.aggregation.impl.HttpTimerDataAggregator;
 import info.novatec.inspectit.indexing.query.factory.impl.HttpTimerDataQueryFactory;
 import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
@@ -91,7 +92,7 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 			if (!retrieveByTag) {
 				Set<String> uris = new HashSet<String>();
 				for (HttpTimerData httpTimerData : templates) {
-					if (!HttpTimerData.UNDEFINED.equals(httpTimerData.getUri())) {
+					if (!HttpInfo.UNDEFINED.equals(httpTimerData.getUri())) {
 						uris.add(httpTimerData.getUri());
 					}
 				}

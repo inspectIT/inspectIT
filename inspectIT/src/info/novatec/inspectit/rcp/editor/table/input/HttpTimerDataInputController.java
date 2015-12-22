@@ -548,7 +548,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 			clone.setSensorTypeIdent(httpData.getSensorTypeIdent());
 			clone.setMethodIdent(httpData.getMethodIdent());
 			clone.setCharting(httpData.isCharting());
-			clone.setRequestMethod(httpData.getRequestMethod());
+			clone.getHttpInfo().setRequestMethod(httpData.getRequestMethod());
 			clone.setTransformedUri(RegExAggregatedHttpTimerData.getTransformedUri(httpData, httpSensorTypeIdent));
 			return clone;
 		}

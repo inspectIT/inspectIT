@@ -27,6 +27,7 @@ import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.WritingStatus;
+import info.novatec.inspectit.communication.data.util.HttpInfo;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.model.AgentFolderFactory;
 import info.novatec.inspectit.rcp.model.AgentLeaf;
@@ -257,7 +258,7 @@ public final class TextFormatter {
 			HttpTimerData timerData = (HttpTimerData) invAwareData;
 			// Print either URI or Usecase (tagged value) depending on the situation (which is
 			// filled, that is)
-			if (!HttpTimerData.UNDEFINED.equals(timerData.getUri())) {
+			if (!HttpInfo.UNDEFINED.equals(timerData.getUri())) {
 				return "URI: " + timerData.getUri();
 			} else {
 				return "Usecase: " + timerData.getInspectItTaggingHeaderValue();

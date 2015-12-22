@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
@@ -161,8 +162,8 @@ public class HttpHookTest extends AbstractLogSupport {
 		Long secondCpuTimerValue = 6872L;
 
 		HttpTimerData tmp = new HttpTimerData(null, platformId, registeredSensorTypeId, registeredMethodId);
-		tmp.setRequestMethod(method);
-		tmp.setUri(uri);
+		tmp.getHttpInfo().setRequestMethod(method);
+		tmp.getHttpInfo().setUri(uri);
 		Map<String, String> attributeMap = new HashMap<String, String>();
 		MapUtils.putAll(attributeMap, new Object[][] { { att1, att1Value }, { att2, att2Value } });
 		tmp.setAttributes(attributeMap);

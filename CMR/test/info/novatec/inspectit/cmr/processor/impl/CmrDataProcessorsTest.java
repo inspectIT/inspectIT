@@ -30,6 +30,7 @@ import info.novatec.inspectit.communication.data.InvocationAwareData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.communication.data.util.HttpInfo;
 import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
 import info.novatec.inspectit.indexing.impl.IndexingException;
 import info.novatec.inspectit.storage.recording.RecordingState;
@@ -39,6 +40,10 @@ import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
 import java.util.Collections;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -54,7 +59,7 @@ import org.testng.annotations.Test;
  * @author Ivan Senic
  * 
  */
-@SuppressWarnings("PMD")
+@SuppressWarnings("all")
 public class CmrDataProcessorsTest {
 
 	@Mock
@@ -303,6 +308,17 @@ public class CmrDataProcessorsTest {
 		processor.timerDataAggregator = timerDataAggregator;
 		processor.serializationManager = serializationManager;
 
+		// set up entity manager for quering
+		CriteriaBuilder build = mock(CriteriaBuilder.class, RETURNS_SMART_NULLS);
+		CriteriaQuery<HttpInfo> criteria = mock(CriteriaQuery.class, RETURNS_SMART_NULLS);
+		Root<? extends HttpInfo> root = mock(Root.class, RETURNS_SMART_NULLS);
+		TypedQuery<HttpInfo> query = mock(TypedQuery.class, RETURNS_SMART_NULLS);
+
+		when(entityManager.getCriteriaBuilder()).thenReturn(build);
+		when(build.createQuery(HttpInfo.class)).thenReturn(criteria);
+		when(criteria.from(HttpInfo.class)).thenReturn((Root<HttpInfo>) root);
+		when(entityManager.createQuery(criteria)).thenReturn(query);
+
 		// don't fail on null
 		processor.process((DefaultData) null, entityManager);
 		verifyZeroInteractions(timerDataAggregator, entityManager);
@@ -311,6 +327,8 @@ public class CmrDataProcessorsTest {
 		HttpTimerData httpTimerData = mock(HttpTimerData.class);
 		HttpTimerData clone = mock(HttpTimerData.class);
 		when(serializationManager.copy(Mockito.<HttpTimerData> any())).thenReturn(clone);
+		HttpInfo httpInfo = mock(HttpInfo.class);
+		when(query.getResultList()).thenReturn(Collections.singletonList(httpInfo));
 
 		// first with no charting skip
 		when(timerData.isCharting()).thenReturn(false);
@@ -327,8 +345,9 @@ public class CmrDataProcessorsTest {
 		// timer to aggregator
 		verify(timerDataAggregator, times(1)).processTimerData(timerData);
 		// http to entityManager
+		verify(clone, times(1)).setHttpInfo(httpInfo);
 		verify(entityManager, times(1)).persist(clone);
-		verifyNoMoreInteractions(timerDataAggregator, entityManager);
+		verifyNoMoreInteractions(timerDataAggregator);
 
 		// correct ID set on the clone
 		verify(clone, times(1)).setId(0);

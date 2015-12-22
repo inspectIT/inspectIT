@@ -41,6 +41,7 @@ import info.novatec.inspectit.communication.data.VmArgumentData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
 import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
+import info.novatec.inspectit.communication.data.util.HttpInfo;
 import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.exception.RemoteException;
 import info.novatec.inspectit.exception.TechnicalException;
@@ -306,6 +307,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-1924
 		kryo.register(ConfigurationInterfaceErrorCodeEnum.class, new EnumSerializer(ConfigurationInterfaceErrorCodeEnum.class));
+
+		// added with INSPECTIT-1849
+		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager));
 	}
 
 	/**
