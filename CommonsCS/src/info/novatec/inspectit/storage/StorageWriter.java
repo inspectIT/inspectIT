@@ -15,10 +15,12 @@ import info.novatec.inspectit.storage.serializer.SerializationException;
 import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.SoftReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -484,7 +486,8 @@ public class StorageWriter implements IWriter {
 	}
 
 	/**
-	 * Writes any object to the file with given file name.
+	 * Writes any object to the file with given file name. Note that this will be a synchronus
+	 * write.
 	 * 
 	 * @param object
 	 *            Object to write. Note that object of this kind has to be serializable by
@@ -494,7 +497,6 @@ public class StorageWriter implements IWriter {
 	 * @return True if the object was written successfully, otherwise false.
 	 */
 	public boolean writeNonDefaultDataObject(Object object, String fileName) {
-		ExtendedByteBufferOutputStream extendedByteBufferOutputStream = null;
 		try {
 			ISerializer serializer = null;
 			try {
@@ -507,53 +509,30 @@ public class StorageWriter implements IWriter {
 				return false;
 			}
 
-			// final reference needed because of the runnable
-			extendedByteBufferOutputStream = streamProvider.getExtendedByteBufferOutputStream();
-			try {
-				Output output = new Output(extendedByteBufferOutputStream);
-				serializer.serialize(object, output);
-				extendedByteBufferOutputStream.flush(false);
-			} catch (SerializationException e) {
-				serializerQueue.add(serializer);
-				extendedByteBufferOutputStream.close();
-				log.error("Serialization for the object " + object + " failed. Data will be skipped.", e);
-				return false;
-			}
-			serializerQueue.add(serializer);
-
-			int buffersToWrite = extendedByteBufferOutputStream.getBuffersCount();
-			final ExtendedByteBufferOutputStream finalOutputStream = extendedByteBufferOutputStream;
-			WriteReadCompletionRunnable completionRunnable = new WriteReadCompletionRunnable(buffersToWrite) {
-				@Override
-				public void run() {
-					finalOutputStream.close();
-				}
-			};
-
 			// prepare path
-			Path channelPath = writingFolderPath.resolve(fileName);
-			if (Files.exists(channelPath)) {
+			Path path = writingFolderPath.resolve(fileName);
+			if (Files.exists(path)) {
 				try {
-					Files.delete(channelPath);
+					Files.delete(path);
 				} catch (IOException e) {
 					log.error("Exception thrown trying to delete file from disk", e);
+					return false;
 				}
 			}
-			openedChannelPaths.add(channelPath);
 
-			// execute write
-			try {
-				writingChannelManager.write(extendedByteBufferOutputStream, channelPath, completionRunnable);
-				return true;
-			} catch (IOException e) {
-				extendedByteBufferOutputStream.close();
-				log.error("Exception occurred while attempting to write data to disk", e);
+			// open and write via NIO api
+			try (OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE_NEW)) {
+				Output output = new Output(outputStream);
+				serializer.serialize(object, output);
+			} catch (SerializationException e) {
+				log.error("Serialization for the object " + object + " failed. Data will be skipped.", e);
 				return false;
+			} finally {
+				serializerQueue.add(serializer);
 			}
+
+			return true;
 		} catch (Throwable throwable) { // NOPMD
-			if (null != extendedByteBufferOutputStream) {
-				extendedByteBufferOutputStream.close();
-			}
 			log.error("Exception occurred while attempting to write data to disk", throwable);
 			return false;
 		}
