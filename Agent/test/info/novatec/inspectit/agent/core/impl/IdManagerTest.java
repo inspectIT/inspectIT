@@ -47,7 +47,7 @@ public class IdManagerTest extends AbstractLogSupport {
 
 	private IdManager idManager;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		idManager = new IdManager(configurationStorage, connection, versionService);
 		idManager.log = LoggerFactory.getLogger(IdManager.class);

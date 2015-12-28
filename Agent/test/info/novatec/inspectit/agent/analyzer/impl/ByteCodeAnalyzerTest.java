@@ -40,18 +40,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 
 @SuppressWarnings("PMD")
 public class ByteCodeAnalyzerTest extends AbstractLogSupport {
@@ -70,7 +70,7 @@ public class ByteCodeAnalyzerTest extends AbstractLogSupport {
 
 	private ByteCodeAnalyzer byteCodeAnalyzer;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		byteCodeAnalyzer = new ByteCodeAnalyzer(configurationStorage, hookInstrumenter, classPoolAnalyzer);
 		byteCodeAnalyzer.log = LoggerFactory.getLogger(ByteCodeAnalyzer.class);

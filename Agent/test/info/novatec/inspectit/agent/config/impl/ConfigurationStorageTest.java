@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verifyZeroInteractions;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
 import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
@@ -33,12 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javassist.Modifier;
-
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javassist.Modifier;
 
 @SuppressWarnings("PMD")
 public class ConfigurationStorageTest extends AbstractLogSupport {
@@ -55,7 +56,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 	 * This method will be executed before every method is executed in here. This ensures that some
 	 * tests don't modify the contents of the configuration storage.
 	 */
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() throws StorageException {
 		configurationStorage = new ConfigurationStorage(classPoolAnalyzer, inheritanceAnalyzer);
 		configurationStorage.log = LoggerFactory.getLogger(ConfigurationStorage.class);
