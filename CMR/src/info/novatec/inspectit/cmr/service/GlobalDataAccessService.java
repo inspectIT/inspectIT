@@ -97,7 +97,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 
 			// delete is allowed only if agent is disconnected or was never connected
 			if (null != agentStatusData && agentStatusData.getAgentConnection() == AgentConnection.CONNECTED) {
-				throw new BusinessException("Delete the agent '" + platformIdent.getAgentName() + "'.", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+				throw new BusinessException("Delete the agent '" + platformIdent.getAgentName() + "'.", AgentManagementErrorCodeEnum.AGENT_CAN_NOT_BE_DELETED);
 			}
 
 			platformIdentDao.delete(platformIdent);
