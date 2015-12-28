@@ -251,7 +251,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 						invocationSequenceData.setDuration(duration);
 						invocationSequenceData.setStart(startTime);
 						invocationSequenceData.setEnd(endTime);
-						coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(System.currentTimeMillis()), invocationSequenceData);
+						coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(startTime) + String.valueOf(endTime), invocationSequenceData); // NOPMD
 					}
 				}
 
@@ -411,7 +411,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			invocationSequenceData.setDuration(duration);
 			invocationSequenceData.setStart(startTime);
 			invocationSequenceData.setEnd(endTime);
-			coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(System.currentTimeMillis()), invocationSequenceData);
+			coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(startTime) + String.valueOf(endTime), invocationSequenceData); // NOPMD
 		} else {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Not saving invocation. " + duration + " < " + minduration + " ID(local): " + rsc.getId());
