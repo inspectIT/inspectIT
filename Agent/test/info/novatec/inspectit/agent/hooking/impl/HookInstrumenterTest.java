@@ -13,6 +13,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.IAgent;
 import info.novatec.inspectit.agent.analyzer.classes.ExceptionTestClass;
@@ -34,6 +35,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mockito.ArgumentMatcher;
+import org.mockito.Mock;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
@@ -41,12 +48,6 @@ import javassist.CtMethod;
 import javassist.Loader;
 import javassist.LoaderClassPath;
 import javassist.NotFoundException;
-
-import org.mockito.ArgumentMatcher;
-import org.mockito.Mock;
-import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 public class HookInstrumenterTest extends AbstractLogSupport {
@@ -68,7 +69,7 @@ public class HookInstrumenterTest extends AbstractLogSupport {
 
 	private HookInstrumenter hookInstrumenter;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		hookInstrumenter = new HookInstrumenter(hookDispatcher, idManager, configurationStorage);
 		hookInstrumenter.log = LoggerFactory.getLogger(HookInstrumenter.class);

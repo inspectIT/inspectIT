@@ -9,6 +9,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
@@ -44,7 +45,7 @@ public class CpuInformationTest extends AbstractLogSupport {
 	@Mock
 	private ICoreService coreService;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		cpuInfo = new CpuInformation(idManager);
 		cpuInfo.log = LoggerFactory.getLogger(CpuInformation.class);

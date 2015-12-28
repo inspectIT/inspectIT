@@ -8,6 +8,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
@@ -38,7 +39,7 @@ public class CompilationInformationTest extends AbstractLogSupport {
 	@Mock
 	private ICoreService coreService;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		compilationInfo = new CompilationInformation(idManager);
 		compilationInfo.log = LoggerFactory.getLogger(CompilationInformation.class);

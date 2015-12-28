@@ -1,11 +1,11 @@
 package info.novatec.inspectit.util;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -13,6 +13,7 @@ import com.google.common.cache.CacheBuilder;
  * Provides caching of Reflection calls.
  * 
  * @author Stefan Siegl
+ * @author Patrice Bouillet
  */
 public class ReflectionCache {
 
@@ -22,9 +23,9 @@ public class ReflectionCache {
 	private static final Logger LOG = LoggerFactory.getLogger(ReflectionCache.class);
 
 	/**
-	 * Cache that holds the <code> Method </code> instances for the Class and method Names.
+	 * Cache that holds the <code> MethodTuple </code> instances for the Class and method indexes.
 	 */
-	Cache<Class<?>, Cache<String, Method>> cache = CacheBuilder.newBuilder().weakKeys().softValues().build();
+	private Cache<Class<?>, Cache<String, MethodTuple>> cache = CacheBuilder.newBuilder().weakKeys().softValues().build();
 
 	/**
 	 * Invokes the given method on the given class. This method uses the cache to only lookup the
@@ -55,7 +56,7 @@ public class ReflectionCache {
 		if (null == clazz || null == methodName) {
 			return errorValue;
 		}
-		Cache<String, Method> classCache = cache.getIfPresent(clazz);
+		Cache<String, MethodTuple> classCache = cache.getIfPresent(clazz);
 		if (null == classCache) {
 			// create a new cache and add it. There can be race conditions here. There is no entry
 			// for class C and caller A and caller B
@@ -69,23 +70,87 @@ public class ReflectionCache {
 		}
 
 		// get method
-		Method method = classCache.getIfPresent(methodName);
-		if (null == method) {
+		MethodTuple methodTuple = classCache.getIfPresent(methodName);
+		if (null == methodTuple) {
 			try {
-				method = clazz.getMethod(methodName, parameterTypes);
+				MethodAccess methodAccess = MethodAccess.get(clazz);
+				int methodIndex;
+				if (parameterTypes == null || parameterTypes.length == 0) {
+					methodIndex = methodAccess.getIndex(methodName);
+				} else {
+					methodIndex = methodAccess.getIndex(methodName, parameterTypes);
+				}
+				methodTuple = new MethodTuple(methodAccess, methodIndex);
 			} catch (Exception e) {
 				LOG.warn("Could not lookup method " + methodName + " on class " + clazz.getName(), e);
 				return errorValue;
 			}
-			classCache.put(methodName, method);
+			classCache.put(methodName, methodTuple);
 		}
 
 		// invoke method
 		try {
-			return method.invoke(instance, values);
+			if (parameterTypes == null || parameterTypes.length == 0) {
+				return methodTuple.getMethodAccess().invoke(instance, methodTuple.getMethodIndex(), methodName);
+			} else {
+				return methodTuple.getMethodAccess().invoke(instance, methodTuple.getMethodIndex(), methodName, parameterTypes, values);
+			}
+			// return method.invoke(instance, values);
 		} catch (Exception e) {
 			LOG.warn("Could not invoke method " + methodName + " on instance " + instance, e);
 			return errorValue;
 		}
+	}
+
+	/**
+	 * Small tuple inner class for storing the method access object and the appropriate index of the
+	 * method to be accessed.
+	 * 
+	 * @author Patrice Bouillet
+	 *
+	 */
+	private static class MethodTuple {
+
+		/**
+		 * The generated method access object which could basically access all methods of one class.
+		 */
+		private final MethodAccess methodAccess;
+
+		/**
+		 * The index attribute to have no lookup costs for a method in the method access object.
+		 */
+		private final int methodIndex;
+
+		/**
+		 * Constructor to build up the tuple class.
+		 * 
+		 * @param methodAccess
+		 *            method access object to set.
+		 * @param methodIndex
+		 *            method index to set.
+		 */
+		public MethodTuple(MethodAccess methodAccess, int methodIndex) {
+			this.methodAccess = methodAccess;
+			this.methodIndex = methodIndex;
+		}
+
+		/**
+		 * Gets {@link #methodAccess}.
+		 * 
+		 * @return {@link #methodAccess}
+		 */
+		public MethodAccess getMethodAccess() {
+			return methodAccess;
+		}
+
+		/**
+		 * Gets {@link #methodIndex}.
+		 * 
+		 * @return {@link #methodIndex}
+		 */
+		public int getMethodIndex() {
+			return methodIndex;
+		}
+
 	}
 }

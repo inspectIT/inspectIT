@@ -12,5 +12,6 @@
 	<exclude-rule class-name="*[]"/>
 	<exclude-rule class-name="*CGLIB$$*"/>
 	<exclude-rule class-name="java.lang.invoke.LambdaForm*"/>
+	<exclude-rule class-name="*MethodAccess"/>
 
 </profile>
