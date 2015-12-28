@@ -15,6 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.analyzer.classes.MyTestException;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
@@ -52,7 +53,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 
 	private ExceptionSensorHook exceptionHook;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		stringLength = 1000;
 		parameter = new HashMap<String, Object>();

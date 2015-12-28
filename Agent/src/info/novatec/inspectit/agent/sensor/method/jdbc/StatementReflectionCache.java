@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Provides the connection for a given statement.
- * 
+ *
  * @author Stefan Siegl
  */
 @Component
@@ -19,7 +19,7 @@ public class StatementReflectionCache extends ReflectionCache {
 
 	/**
 	 * Retrieves the connection.
-	 * 
+	 *
 	 * @param statementClass
 	 *            the class of the statement instance.
 	 * @param statementInstance
@@ -27,6 +27,7 @@ public class StatementReflectionCache extends ReflectionCache {
 	 * @return the associated connection.
 	 */
 	public Connection getConnection(Class<?> statementClass, Object statementInstance) {
-		return (Connection) invokeMethod(statementClass, GET_CONNECTION_METHOD_NAME, null, statementInstance, null, null);
+		return invokeMethod(statementClass, GET_CONNECTION_METHOD_NAME, statementInstance, null, null);
 	}
+
 }
