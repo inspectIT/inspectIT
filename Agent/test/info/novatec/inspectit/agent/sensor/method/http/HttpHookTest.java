@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
@@ -73,7 +74,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	private long registeredMethodId = 13L;
 	private long registeredSensorTypeId = 7L;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		Map<String, String> settings = new HashMap<String, String>();
 		settings.put("sessioncapture", "false");
