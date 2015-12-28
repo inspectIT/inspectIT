@@ -2,6 +2,7 @@ package info.novatec.inspectit.agent.config.impl;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.config.ParserException;
@@ -52,7 +53,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 		writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 	}
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		fileConfigurationReader = new FileConfigurationReader(configurationStorage);
 		fileConfigurationReader.log = LoggerFactory.getLogger(FileConfigurationReader.class);

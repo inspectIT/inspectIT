@@ -7,13 +7,18 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.MockInit;
+
+import info.novatec.inspectit.agent.TestBase;
 import info.novatec.inspectit.agent.analyzer.impl.ModifierMatcher;
 import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.mockito.Mock;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -22,12 +27,8 @@ import javassist.CtMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
 
-import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 @SuppressWarnings("PMD")
-public class ModifierMatcherTest extends MockInit {
+public class ModifierMatcherTest extends TestBase {
 
 	@Mock
 	private IClassPoolAnalyzer classPoolAnalyzer;
@@ -47,7 +48,7 @@ public class ModifierMatcherTest extends MockInit {
 		super();
 	}
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		unregisteredSensorConfig = new UnregisteredSensorConfig(classPoolAnalyzer, mock(IInheritanceAnalyzer.class));
 		unregisteredSensorConfig.setIgnoreSignature(false);

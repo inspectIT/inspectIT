@@ -14,7 +14,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.MockInit;
+
+import info.novatec.inspectit.agent.TestBase;
 import info.novatec.inspectit.agent.analyzer.impl.InterfaceMatcher;
 import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
 
@@ -23,17 +24,17 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mockito.Mock;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
-import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 @SuppressWarnings("PMD")
-public class InterfaceMatcherTest extends MockInit {
+public class InterfaceMatcherTest extends TestBase {
 
 	@Mock
 	private IClassPoolAnalyzer classPoolAnalyzer;
@@ -45,7 +46,7 @@ public class InterfaceMatcherTest extends MockInit {
 
 	private IMatcher matcher;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		unregisteredSensorConfig = new UnregisteredSensorConfig(classPoolAnalyzer, mock(IInheritanceAnalyzer.class));
 		unregisteredSensorConfig.setIgnoreSignature(false);
