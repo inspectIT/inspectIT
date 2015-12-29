@@ -1,5 +1,11 @@
 package info.novatec.inspectit.indexing.restriction;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Abstract class for all index query restriction classes.
  * 
@@ -9,43 +15,48 @@ package info.novatec.inspectit.indexing.restriction;
 public abstract class AbstractIndexQueryRestriction implements IIndexQueryRestriction {
 
 	/**
-	 * Field name.
+	 * Getter methods names that needs to be invoked in order to get the object to check the
+	 * restriction on.
 	 */
-	private String fieldName;
+	private final List<String> methodNames;
 
 	/**
 	 * Default constructor.
 	 * 
 	 * @param fieldName
-	 *            Name of the field that is restriction bounded to.
+	 *            Name of the field that is restriction bounded to. If you need navigation use the
+	 *            '.' to separate fields. For example person.age will navigate to the age field to
+	 *            execute the restriction on.
 	 */
 	public AbstractIndexQueryRestriction(String fieldName) {
-		this.fieldName = fieldName;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getQualifiedMethodName() {
 		if (null == fieldName) {
-			return "";
+			throw new IllegalArgumentException();
 		}
-		String methodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-		return methodName;
+
+		String[] split = StringUtils.splitPreserveAllTokens(fieldName, '.');
+		methodNames = new ArrayList<String>(split.length);
+
+		for (int i = 0, size = split.length; i < size; i++) {
+			methodNames.add(getMethodName(split[i]));
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getFieldName() {
-		return fieldName;
+	public List<String> getQualifiedMethodNames() {
+		return Collections.unmodifiableList(methodNames);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns getter method name based on the field name.
+	 * 
+	 * @param fieldName
+	 *            name of the field
+	 * @return getter method name
 	 */
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	private String getMethodName(String fieldName) {
+		return "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 	}
 
 	/**
@@ -55,7 +66,7 @@ public abstract class AbstractIndexQueryRestriction implements IIndexQueryRestri
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = prime * result + ((methodNames == null) ? 0 : methodNames.hashCode());
 		return result;
 	}
 
@@ -74,11 +85,11 @@ public abstract class AbstractIndexQueryRestriction implements IIndexQueryRestri
 			return false;
 		}
 		AbstractIndexQueryRestriction other = (AbstractIndexQueryRestriction) obj;
-		if (fieldName == null) {
-			if (other.fieldName != null) {
+		if (methodNames == null) {
+			if (other.methodNames != null) {
 				return false;
 			}
-		} else if (!fieldName.equals(other.fieldName)) {
+		} else if (!methodNames.equals(other.methodNames)) {
 			return false;
 		}
 		return true;

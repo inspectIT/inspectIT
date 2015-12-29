@@ -589,7 +589,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 			return new StyledString(NumberFormatter.formatLong(data.getChildCount()));
 		case URI:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
-				String uri = ((HttpTimerData) data.getTimerData()).getUri();
+				String uri = ((HttpTimerData) data.getTimerData()).getHttpInfo().getUri();
 				if (null != uri) {
 					return new StyledString(uri);
 				} else {
@@ -600,7 +600,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 			}
 		case USE_CASE:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
-				String useCase = ((HttpTimerData) data.getTimerData()).getInspectItTaggingHeaderValue();
+				String useCase = ((HttpTimerData) data.getTimerData()).getHttpInfo().getInspectItTaggingHeaderValue();
 				if (null != useCase) {
 					return new StyledString(useCase);
 				} else {

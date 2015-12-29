@@ -42,11 +42,11 @@ public enum HttpTimerDataComparatorEnum implements IDataComparator<HttpTimerData
 	public int compare(HttpTimerData o1, HttpTimerData o2) {
 		switch (this) {
 		case URI:
-			return ObjectUtils.compare(o1.getUri(), o2.getUri());
+			return ObjectUtils.compare(o1.getHttpInfo().getUri(), o2.getHttpInfo().getUri());
 		case HTTP_METHOD:
-			return ObjectUtils.compare(o1.getRequestMethod(), o2.getRequestMethod());
+			return ObjectUtils.compare(o1.getHttpInfo().getRequestMethod(), o2.getHttpInfo().getRequestMethod());
 		case TAG_VALUE:
-			return ObjectUtils.compare(o1.getInspectItTaggingHeaderValue(), o2.getInspectItTaggingHeaderValue());
+			return ObjectUtils.compare(o1.getHttpInfo().getInspectItTaggingHeaderValue(), o2.getHttpInfo().getInspectItTaggingHeaderValue());
 		default:
 			return 0;
 		}

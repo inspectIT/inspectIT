@@ -168,18 +168,22 @@ public class VmArgumentData implements Serializable, Sizeable {
 	 * {@inheritDoc}
 	 */
 	public long getObjectSize(IObjectSizes objectSizes) {
-		long size = objectSizes.getSizeOfObjectHeader();
-		size += objectSizes.getPrimitiveTypesSize(2, 0, 0, 0, 1, 0);
-		size += objectSizes.getSizeOf(vmName);
-		size += objectSizes.getSizeOf(vmValue);
-		return objectSizes.alignTo8Bytes(size);
+		return getObjectSize(objectSizes, true);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
-		return getObjectSize(objectSizes);
+		long size = objectSizes.getSizeOfObjectHeader();
+		size += objectSizes.getPrimitiveTypesSize(2, 0, 0, 0, 1, 0);
+		size += objectSizes.getSizeOf(vmName, vmValue);
+
+		if (doAlign) {
+			return objectSizes.alignTo8Bytes(size);
+		} else {
+			return size;
+		}
 	}
 
 }

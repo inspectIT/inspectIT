@@ -37,7 +37,7 @@ public final class HttpTimerDataHelper {
 	 *             <code>null</code> or can not be compiled.
 	 */
 	public static String getTransformedUri(HttpTimerData httpTimerData, String regEx, String regExTemplate) throws IllegalArgumentException {
-		if (!httpTimerData.isUriDefined()) {
+		if (!httpTimerData.getHttpInfo().isUriDefined()) {
 			throw new IllegalArgumentException("URI is not defined for the given HttpTimerData.");
 		}
 		if (null == regEx) {
@@ -45,7 +45,7 @@ public final class HttpTimerDataHelper {
 		}
 		try {
 			Pattern pattern = Pattern.compile(regEx);
-			Matcher matcher = pattern.matcher(httpTimerData.getUri());
+			Matcher matcher = pattern.matcher(httpTimerData.getHttpInfo().getUri());
 			String result = "";
 			if (null != regExTemplate) {
 				result = regExTemplate;

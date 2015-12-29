@@ -4,6 +4,7 @@ import info.novatec.inspectit.cmr.dao.DefaultDataDao;
 import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.MethodSensorData;
+import info.novatec.inspectit.communication.data.HttpInfo;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.JmxSensorValueData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
@@ -229,20 +230,20 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 			if (!retrieveByTag) {
 				Set<String> uris = new HashSet<String>();
 				for (HttpTimerData httpTimerData : templates) {
-					if (!HttpTimerData.UNDEFINED.equals(httpTimerData.getUri())) {
-						uris.add(httpTimerData.getUri());
+					if (!HttpInfo.UNDEFINED.equals(httpTimerData.getHttpInfo().getUri())) {
+						uris.add(httpTimerData.getHttpInfo().getUri());
 					}
 				}
-				condition = root.get("uri").in(uris);
+				condition = root.join("httpInfo").get("uri").in(uris);
 			} else {
 				Set<String> tags = new HashSet<String>();
 
 				for (HttpTimerData httpTimerData : templates) {
-					if (httpTimerData.hasInspectItTaggingHeader()) {
-						tags.add(httpTimerData.getInspectItTaggingHeaderValue());
+					if (httpTimerData.getHttpInfo().hasInspectItTaggingHeader()) {
+						tags.add(httpTimerData.getHttpInfo().getInspectItTaggingHeaderValue());
 					}
 				}
-				condition = root.get("inspectItTaggingHeaderValue").in(tags);
+				condition = root.join("httpInfo").get("inspectItTaggingHeaderValue").in(tags);
 			}
 
 			criteria.where(platformId, timestamp, condition);
