@@ -15,7 +15,7 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@SuppressWarnings("all")
+@SuppressWarnings("unchecked")
 public class ListStringConverterTest {
 
 	private ListStringConverter converter;

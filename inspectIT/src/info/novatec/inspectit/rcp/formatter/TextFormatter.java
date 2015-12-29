@@ -22,6 +22,7 @@ import info.novatec.inspectit.ci.sensor.platform.impl.ThreadSensorConfig;
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
+import info.novatec.inspectit.communication.data.HttpInfo;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationAwareData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
@@ -271,10 +272,10 @@ public final class TextFormatter {
 			HttpTimerData timerData = (HttpTimerData) invAwareData;
 			// Print either URI or Usecase (tagged value) depending on the situation (which is
 			// filled, that is)
-			if (!HttpTimerData.UNDEFINED.equals(timerData.getUri())) {
-				return "URI: " + timerData.getUri();
+			if (!HttpInfo.UNDEFINED.equals(timerData.getHttpInfo().getUri())) {
+				return "URI: " + timerData.getHttpInfo().getUri();
 			} else {
-				return "Usecase: " + timerData.getInspectItTaggingHeaderValue();
+				return "Usecase: " + timerData.getHttpInfo().getInspectItTaggingHeaderValue();
 			}
 		} else if (invAwareData instanceof ExceptionSensorData) {
 			ExceptionSensorData exData = (ExceptionSensorData) invAwareData;

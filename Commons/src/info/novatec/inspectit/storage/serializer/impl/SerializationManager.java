@@ -28,6 +28,7 @@ import info.novatec.inspectit.communication.data.CompilationInformationData;
 import info.novatec.inspectit.communication.data.CpuInformationData;
 import info.novatec.inspectit.communication.data.DatabaseAggregatedTimerData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
+import info.novatec.inspectit.communication.data.HttpInfo;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.communication.data.InvocationAwareData.MutableInt;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
@@ -319,6 +320,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));
 		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager));
 		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager));
+		
+		// added with INSPECTIT-1849
+		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager));
 	}
 
 	/**

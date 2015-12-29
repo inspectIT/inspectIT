@@ -412,10 +412,10 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 			if (data instanceof RegExAggregatedHttpTimerData) {
 				return new StyledString(((RegExAggregatedHttpTimerData) data).getTransformedUri());
 			} else {
-				return new StyledString(data.getUri());
+				return new StyledString(data.getHttpInfo().getUri());
 			}
 		case HTTP_METHOD:
-			return new StyledString(data.getRequestMethod());
+			return new StyledString(data.getHttpInfo().getRequestMethod());
 		case INVOCATION_AFFILLIATION:
 			int percentage = (int) (data.getInvocationAffiliationPercentage() * 100);
 			int invocations = 0;
@@ -548,7 +548,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 			clone.setSensorTypeIdent(httpData.getSensorTypeIdent());
 			clone.setMethodIdent(httpData.getMethodIdent());
 			clone.setCharting(httpData.isCharting());
-			clone.setRequestMethod(httpData.getRequestMethod());
+			clone.getHttpInfo().setRequestMethod(httpData.getHttpInfo().getRequestMethod());
 			clone.setTransformedUri(RegExAggregatedHttpTimerData.getTransformedUri(httpData, httpSensorTypeIdent));
 			return clone;
 		}
@@ -564,7 +564,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 			result = prime * result + ((transformed == null) ? 0 : transformed.hashCode());
 
 			if (includeRequestMethod) {
-				result = prime * result + ((httpData.getRequestMethod() == null) ? 0 : httpData.getRequestMethod().hashCode());
+				result = prime * result + ((httpData.getHttpInfo().getRequestMethod() == null) ? 0 : httpData.getHttpInfo().getRequestMethod().hashCode());
 			}
 			return result;
 		}

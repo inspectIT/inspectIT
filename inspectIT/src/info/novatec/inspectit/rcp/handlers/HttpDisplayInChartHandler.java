@@ -80,13 +80,13 @@ public class HttpDisplayInChartHandler extends AbstractHandler implements IHandl
 			if (templates.size() == 1 && !regExTransformation) {
 				HttpTimerData template = templates.get(0);
 				if (plotByTagValue) {
-					editorPropertiesData.setViewName("Tag: " + template.getInspectItTaggingHeaderValue() + " [" + template.getRequestMethod() + "]");
+					editorPropertiesData.setViewName("Tag: " + template.getHttpInfo().getInspectItTaggingHeaderValue() + " [" + template.getHttpInfo().getRequestMethod() + "]");
 				} else {
-					editorPropertiesData.setViewName("URI: " + template.getUri() + " [" + template.getRequestMethod() + "]");
+					editorPropertiesData.setViewName("URI: " + template.getHttpInfo().getUri() + " [" + template.getHttpInfo().getRequestMethod() + "]");
 				}
 			} else if (regExTemplates.size() == 1 && regExTransformation) {
 				RegExAggregatedHttpTimerData regExTemplate = regExTemplates.get(0);
-				editorPropertiesData.setViewName("Transformed URI: " + regExTemplate.getTransformedUri() + " [" + regExTemplate.getRequestMethod() + "]");
+				editorPropertiesData.setViewName("Transformed URI: " + regExTemplate.getTransformedUri() + " [" + regExTemplate.getHttpInfo().getRequestMethod() + "]");
 			} else {
 				editorPropertiesData.setViewName("Multiple HTTP data");
 			}

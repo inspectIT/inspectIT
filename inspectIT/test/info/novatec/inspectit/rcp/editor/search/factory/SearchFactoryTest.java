@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.cmr.model.MethodIdent;
 import info.novatec.inspectit.cmr.service.cache.CachedDataService;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
@@ -148,23 +149,23 @@ public class SearchFactoryTest {
 		SearchCriteria searchCriteria = new SearchCriteria("Blah");
 		SearchCriteria wrong = new SearchCriteria("halB");
 
-		httpData.setInspectItTaggingHeaderValue("blaha");
+		httpData.getHttpInfo().setInspectItTaggingHeaderValue("blaha");
 		searchCriteria.setCaseSensitive(false);
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(true)));
 		searchCriteria.setCaseSensitive(true);
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(false)));
 		assertThat(SearchFactory.isSearchCompatible(httpData, wrong, repositoryDefinition), is(equalTo(false)));
 
-		httpData.setInspectItTaggingHeaderValue("");
-		httpData.setUri("ablah");
+		httpData.getHttpInfo().setInspectItTaggingHeaderValue("");
+		httpData.getHttpInfo().setUri("ablah");
 		searchCriteria.setCaseSensitive(false);
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(true)));
 		searchCriteria.setCaseSensitive(true);
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(false)));
 		assertThat(SearchFactory.isSearchCompatible(httpData, wrong, repositoryDefinition), is(equalTo(false)));
 
-		httpData.setUri("");
-		httpData.setRequestMethod("ablaha");
+		httpData.getHttpInfo().setUri("");
+		httpData.getHttpInfo().setRequestMethod("ablaha");
 		searchCriteria.setCaseSensitive(false);
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(true)));
 		searchCriteria.setCaseSensitive(true);
@@ -173,7 +174,7 @@ public class SearchFactoryTest {
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ablaha", "value");
-		httpData.setRequestMethod("");
+		httpData.getHttpInfo().setRequestMethod("");
 		httpData.setAttributes(map);
 		searchCriteria.setCaseSensitive(false);
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(true)));
@@ -266,7 +267,7 @@ public class SearchFactoryTest {
 
 		HttpTimerData httpData = new HttpTimerData();
 		httpData.setMethodIdent(1L);
-		httpData.setInspectItTaggingHeaderValue("blaha");
+		httpData.getHttpInfo().setInspectItTaggingHeaderValue("blaha");
 		invocationData.setTimerData(httpData);
 		searchCriteria.setCaseSensitive(false);
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(true)));
