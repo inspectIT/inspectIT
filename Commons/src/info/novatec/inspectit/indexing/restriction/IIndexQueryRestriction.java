@@ -2,6 +2,8 @@ package info.novatec.inspectit.indexing.restriction;
 
 import info.novatec.inspectit.indexing.IIndexQuery;
 
+import java.util.List;
+
 /**
  * Interface that defines the restriction behavior for indexing query when searching for objects in
  * the indexing tree. Restrictions are part of the {@link IIndexQuery} and allow additional
@@ -14,20 +16,17 @@ import info.novatec.inspectit.indexing.IIndexQuery;
 public interface IIndexQueryRestriction {
 
 	/**
-	 * Returns the name of the object's field that is aimed with this restriction.
+	 * Returns the name of the getter methods that needs to be invoked in order to get the object to
+	 * check the restriction on. The first method is invoked on the object in the index, the second
+	 * is invoked on the result of the first invocation, and so on.
+	 * <p>
+	 * The method names are complied with Java Bean naming standard, meaning that if the field name
+	 * is foo, the name of the getter method is getFoo.
 	 * 
-	 * @return Object's field name that restriction is bounded to.
+	 * @return Getter methods that needs to be invoked in order to get the object to check the
+	 *         restriction on
 	 */
-	String getFieldName();
-
-	/**
-	 * Returns the name of the getter method that returns the field indexing restriction is aiming.
-	 * The method name is complied with Java Bean naming standard, meaning that if the field name is
-	 * foo, the name of the getter method is getFoo.
-	 * 
-	 * @return Getter method name for object's field that restriction is bounded to.
-	 */
-	String getQualifiedMethodName();
+	List<String> getQualifiedMethodNames();
 
 	/**
 	 * Checks if the restriction is fulfilled with given object value.
