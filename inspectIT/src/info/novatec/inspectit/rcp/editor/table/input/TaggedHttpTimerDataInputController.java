@@ -310,9 +310,9 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 		case CHARTING:
 			return emptyStyledString;
 		case TAG_VALUE:
-			return new StyledString(data.getInspectItTaggingHeaderValue());
+			return new StyledString(data.getHttpInfo().getInspectItTaggingHeaderValue());
 		case HTTP_METHOD:
-			return new StyledString(data.getRequestMethod());
+			return new StyledString(data.getHttpInfo().getRequestMethod());
 		case INVOCATION_AFFILLIATION:
 			int percentage = (int) (data.getInvocationAffiliationPercentage() * 100);
 			int invocations = 0;

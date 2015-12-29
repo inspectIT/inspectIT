@@ -15,7 +15,7 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@SuppressWarnings("all")
+@SuppressWarnings("unchecked")
 public class MapStringConverterTest {
 
 	private MapStringConverter converter;

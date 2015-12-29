@@ -195,7 +195,8 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 	private HttpTimerData findTemplateForData(HttpTimerData httpTimerData) {
 		if (regExTransformation) {
 			for (RegExAggregatedHttpTimerData regExTemplate : regExTemplates) {
-				if (HttpTimerData.REQUEST_METHOD_MULTIPLE.equals(regExTemplate.getRequestMethod()) || Objects.equals(regExTemplate.getRequestMethod(), httpTimerData.getRequestMethod())) {
+				if (HttpTimerData.REQUEST_METHOD_MULTIPLE.equals(regExTemplate.getHttpInfo().getRequestMethod())
+						|| Objects.equals(regExTemplate.getHttpInfo().getRequestMethod(), httpTimerData.getHttpInfo().getRequestMethod())) {
 					if (null != findTemplateForUriData(httpTimerData, regExTemplate.getAggregatedDataList(), true)) {
 						return regExTemplate;
 					}
@@ -222,10 +223,10 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 	 */
 	private HttpTimerData findTemplateForUriData(HttpTimerData httpTimerData, List<HttpTimerData> templates, boolean checkOnlyUri) {
 		for (HttpTimerData template : templates) {
-			if (Objects.equals(template.getUri(), httpTimerData.getUri())) {
-				if (!checkOnlyUri && HttpTimerData.REQUEST_METHOD_MULTIPLE.equals(template.getRequestMethod())) {
+			if (Objects.equals(template.getHttpInfo().getUri(), httpTimerData.getHttpInfo().getUri())) {
+				if (!checkOnlyUri && HttpTimerData.REQUEST_METHOD_MULTIPLE.equals(template.getHttpInfo().getRequestMethod())) {
 					return template;
-				} else if (Objects.equals(template.getRequestMethod(), httpTimerData.getRequestMethod())) {
+				} else if (Objects.equals(template.getHttpInfo().getRequestMethod(), httpTimerData.getHttpInfo().getRequestMethod())) {
 					return template;
 				}
 			}
@@ -244,8 +245,9 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 	 */
 	private HttpTimerData findTemplateForTagData(HttpTimerData httpTimerData, List<HttpTimerData> templates) {
 		for (HttpTimerData template : templates) {
-			if (Objects.equals(template.getInspectItTaggingHeaderValue(), httpTimerData.getInspectItTaggingHeaderValue())) {
-				if (HttpTimerData.REQUEST_METHOD_MULTIPLE.equals(template.getRequestMethod()) || Objects.equals(template.getRequestMethod(), httpTimerData.getRequestMethod())) {
+			if (Objects.equals(template.getHttpInfo().getInspectItTaggingHeaderValue(), httpTimerData.getHttpInfo().getInspectItTaggingHeaderValue())) {
+				if (HttpTimerData.REQUEST_METHOD_MULTIPLE.equals(template.getHttpInfo().getRequestMethod())
+						|| Objects.equals(template.getHttpInfo().getRequestMethod(), httpTimerData.getHttpInfo().getRequestMethod())) {
 					return template;
 				}
 			}
@@ -263,12 +265,12 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 	 */
 	protected Comparable<?> getSeriesKey(HttpTimerData httpTimerData) {
 		if (regExTransformation && httpTimerData instanceof RegExAggregatedHttpTimerData) {
-			return "Transformed URI: " + ((RegExAggregatedHttpTimerData) httpTimerData).getTransformedUri() + " [" + httpTimerData.getRequestMethod() + "]";
+			return "Transformed URI: " + ((RegExAggregatedHttpTimerData) httpTimerData).getTransformedUri() + " [" + httpTimerData.getHttpInfo().getRequestMethod() + "]";
 		} else {
 			if (plotByTagValue) {
-				return "Tag: " + httpTimerData.getInspectItTaggingHeaderValue() + " [" + httpTimerData.getRequestMethod() + "]";
+				return "Tag: " + httpTimerData.getHttpInfo().getInspectItTaggingHeaderValue() + " [" + httpTimerData.getHttpInfo().getRequestMethod() + "]";
 			} else {
-				return "URI: " + httpTimerData.getUri() + " [" + httpTimerData.getRequestMethod() + "]";
+				return "URI: " + httpTimerData.getHttpInfo().getUri() + " [" + httpTimerData.getHttpInfo().getRequestMethod() + "]";
 			}
 		}
 	}
