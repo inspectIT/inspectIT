@@ -5,10 +5,10 @@ import info.novatec.inspectit.cmr.cache.IObjectSizes;
 import java.sql.Timestamp;
 import java.util.Map;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 /**
@@ -20,11 +20,8 @@ import javax.persistence.Transient;
  * 
  * @author Stefan Siegl
  */
-@Table(indexes = { 
-		@Index(name = "uri_idx", columnList = "uri"),
-		@Index(name = "tag_idx", columnList = "inspectItTaggingHeaderValue") })
 @Entity
-public class HttpTimerData extends TimerData implements Cloneable {
+public class HttpTimerData extends TimerData {
 
 	/**
 	 * Generated serial version id.
@@ -37,34 +34,9 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	public static final String INSPECTIT_TAGGING_HEADER = "inspectit";
 
 	/**
-	 * String used to represent an unset <code>uri</code> or <code>requestMethod</code>.
-	 */
-	public static final String UNDEFINED = "n.a.";
-
-	/**
 	 * String used to represent multiple request methods in an aggregation.
 	 */
 	public static final String REQUEST_METHOD_MULTIPLE = "MULTIPLE";
-	/**
-	 * Max URI chars size.
-	 */
-	private static final int MAX_URI_SIZE = 1000;
-
-	/**
-	 * The uri.
-	 */
-	@Column(length = 1000)
-	private String uri = UNDEFINED;
-
-	/**
-	 * The request method.
-	 */
-	private String requestMethod = UNDEFINED;
-
-	/**
-	 * The inspectIT tag.
-	 */
-	private String inspectItTaggingHeaderValue;
 
 	/**
 	 * Map is String-String[].
@@ -91,6 +63,18 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	private Map<String, String> sessionAttributes = null;
 
 	/**
+	 * Http info for optimizing saving to the DB.
+	 */
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	private HttpInfo httpInfo = new HttpInfo();
+
+	/**
+	 * No-args constructor.
+	 */
+	public HttpTimerData() {
+	}
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param timeStamp
@@ -104,69 +88,6 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	 */
 	public HttpTimerData(Timestamp timeStamp, long platformIdent, long sensorTypeIdent, long methodIdent) {
 		super(timeStamp, platformIdent, sensorTypeIdent, methodIdent);
-	}
-
-	/**
-	 * Constructor.
-	 */
-	public HttpTimerData() {
-	}
-
-	/**
-	 * Checks if this data has the inspectIT tagging header set.
-	 * 
-	 * @return if this data has the inspectIT tagging header set.
-	 */
-	public boolean hasInspectItTaggingHeader() {
-		return null != inspectItTaggingHeaderValue;
-	}
-
-	/**
-	 * Retrieves the value of the inspectit tagging header.
-	 * 
-	 * @return the value of the inspectit tagging header.
-	 */
-	public String getInspectItTaggingHeaderValue() {
-		return inspectItTaggingHeaderValue;
-	}
-
-	/**
-	 * Sets the value for the inspectIT header.
-	 * 
-	 * @param value
-	 *            the value for the inspectIT header.
-	 */
-	public void setInspectItTaggingHeaderValue(String value) {
-		this.inspectItTaggingHeaderValue = value;
-	}
-
-	public String getUri() {
-		return uri;
-	}
-
-	/**
-	 * Sets the uri.
-	 * 
-	 * @param uri
-	 *            the uri.
-	 */
-	public void setUri(String uri) {
-		if (null != uri) {
-			if (uri.length() > MAX_URI_SIZE) {
-				this.uri = uri.substring(0, MAX_URI_SIZE);
-			} else {
-				this.uri = uri;
-			}
-		}
-	}
-
-	/**
-	 * Returns if the URI is defined for this instance.
-	 * 
-	 * @return True if {@link #uri} is not null and is different from {@value #UNDEFINED}.
-	 */
-	public boolean isUriDefined() {
-		return uri != null && !UNDEFINED.equals(uri);
 	}
 
 	/**
@@ -227,9 +148,9 @@ public class HttpTimerData extends TimerData implements Cloneable {
 
 		// set tag value if it exists
 		if (null != headers) {
-			this.inspectItTaggingHeaderValue = headers.get(INSPECTIT_TAGGING_HEADER);
+			httpInfo.setInspectItTaggingHeaderValue(headers.get(INSPECTIT_TAGGING_HEADER));
 		} else {
-			this.inspectItTaggingHeaderValue = UNDEFINED;
+			httpInfo.setInspectItTaggingHeaderValue(HttpInfo.UNDEFINED);
 		}
 	}
 
@@ -253,22 +174,22 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	}
 
 	/**
-	 * Gets {@link #requestMethod}.
+	 * Gets {@link #httpInfo}.
 	 * 
-	 * @return {@link #requestMethod}
+	 * @return {@link #httpInfo}
 	 */
-	public String getRequestMethod() {
-		return requestMethod;
+	public HttpInfo getHttpInfo() {
+		return httpInfo;
 	}
 
 	/**
-	 * Sets {@link #requestMethod}.
+	 * Sets {@link #httpInfo}.
 	 * 
-	 * @param requestMethod
-	 *            New value for {@link #requestMethod}
+	 * @param httpInfo
+	 *            New value for {@link #httpInfo}
 	 */
-	public void setRequestMethod(String requestMethod) {
-		this.requestMethod = requestMethod;
+	public void setHttpInfo(HttpInfo httpInfo) {
+		this.httpInfo = httpInfo;
 	}
 
 	/**
@@ -276,8 +197,7 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(7, 0, 0, 0, 0, 0);
-		size += objectSizes.getSizeOf(uri, requestMethod, inspectItTaggingHeaderValue);
+		size += objectSizes.getPrimitiveTypesSize(5, 0, 0, 0, 0, 0);
 
 		if (null != parameters) {
 			size += objectSizes.getSizeOfHashMap(parameters.size());
@@ -315,6 +235,8 @@ public class HttpTimerData extends TimerData implements Cloneable {
 			}
 		}
 
+		size += objectSizes.getSizeOf(httpInfo);
+
 		if (doAlign) {
 			return objectSizes.alignTo8Bytes(size);
 		} else {
@@ -326,23 +248,14 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
 		result = prime * result + ((headers == null) ? 0 : headers.hashCode());
+		result = prime * result + ((httpInfo == null) ? 0 : httpInfo.hashCode());
 		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
-		result = prime * result + ((requestMethod == null) ? 0 : requestMethod.hashCode());
 		result = prime * result + ((sessionAttributes == null) ? 0 : sessionAttributes.hashCode());
-		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		return result;
 	}
 
@@ -375,6 +288,13 @@ public class HttpTimerData extends TimerData implements Cloneable {
 		} else if (!headers.equals(other.headers)) {
 			return false;
 		}
+		if (httpInfo == null) {
+			if (other.httpInfo != null) {
+				return false;
+			}
+		} else if (!httpInfo.equals(other.httpInfo)) {
+			return false;
+		}
 		if (parameters == null) {
 			if (other.parameters != null) {
 				return false;
@@ -382,25 +302,11 @@ public class HttpTimerData extends TimerData implements Cloneable {
 		} else if (!parameters.equals(other.parameters)) {
 			return false;
 		}
-		if (requestMethod == null) {
-			if (other.requestMethod != null) {
-				return false;
-			}
-		} else if (!requestMethod.equals(other.requestMethod)) {
-			return false;
-		}
 		if (sessionAttributes == null) {
 			if (other.sessionAttributes != null) {
 				return false;
 			}
 		} else if (!sessionAttributes.equals(other.sessionAttributes)) {
-			return false;
-		}
-		if (uri == null) {
-			if (other.uri != null) {
-				return false;
-			}
-		} else if (!uri.equals(other.uri)) {
 			return false;
 		}
 		return true;
@@ -411,7 +317,6 @@ public class HttpTimerData extends TimerData implements Cloneable {
 	 */
 	public String toString() {
 		String sup = super.toString();
-		return sup + "HttpTimerData [uri=" + uri + ", parameters=" + parameters + ", attributes=" + attributes + ", headers=" + headers + "]";
+		return sup + "HttpTimerData [uri=" + (null != httpInfo ? httpInfo.getUri() : HttpInfo.UNDEFINED) + ", parameters=" + parameters + ", attributes=" + attributes + ", headers=" + headers + "]";
 	}
-
 }

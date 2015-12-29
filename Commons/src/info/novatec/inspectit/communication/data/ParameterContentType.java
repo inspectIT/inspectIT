@@ -30,23 +30,24 @@ public enum ParameterContentType implements Serializable, Sizeable {
 	private static final long serialVersionUID = -8005782295084781051L;
 
 	/**
-	 * Returns the approximate size of the object in the memory in bytes.
-	 * 
-	 * @param objectSizes
-	 *            Appropriate instance of {@link IObjectSizes} depending on the VM architecture.
-	 * @return Approximate object size in bytes.
+	 * {@inheritDoc}
 	 */
 	public long getObjectSize(IObjectSizes objectSizes) {
-		long size = objectSizes.getSizeOfObjectHeader();
-		size += objectSizes.getPrimitiveTypesSize(1, 0, 1, 0, 0, 0);
-		size += objectSizes.getSizeOf(name());
-		return objectSizes.alignTo8Bytes(size);
+		return getObjectSize(objectSizes, true);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
-		return getObjectSize(objectSizes);
+		long size = objectSizes.getSizeOfObjectHeader();
+		size += objectSizes.getPrimitiveTypesSize(1, 0, 1, 0, 0, 0);
+		size += objectSizes.getSizeOf(name());
+
+		if (doAlign) {
+			return objectSizes.alignTo8Bytes(size);
+		} else {
+			return size;
+		}
 	}
 }

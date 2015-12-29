@@ -44,9 +44,9 @@ public class CopyContextParametersHandler extends AbstractHandler implements IHa
 				boolean lineAdded = false;
 				if (InvocationSequenceDataHelper.hasHttpTimerData(invocation)) {
 					HttpTimerData httpTimer = (HttpTimerData) invocation.getTimerData();
-					if (null != httpTimer.getUri()) {
+					if (null != httpTimer.getHttpInfo().getUri()) {
 						stringBuilder.append("URI: ");
-						stringBuilder.append(httpTimer.getUri());
+						stringBuilder.append(httpTimer.getHttpInfo().getUri());
 						stringBuilder.append('\t');
 						lineAdded = true;
 					}

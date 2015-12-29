@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
  * This restriction processor caches the methods of each class that needs to be invoke. It also
  * marks in the cache all method that do not exist for specific class and an attempt to find them
  * was made.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestrictionProcessor {
@@ -32,7 +32,7 @@ public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestric
 	/**
 	 * Map for caching methods.
 	 */
-	private ConcurrentHashMap<Integer, Method> cacheMap;
+	private final ConcurrentHashMap<Integer, Method> cacheMap;
 
 	/**
 	 * Marker method.
@@ -55,58 +55,85 @@ public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestric
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean areAllRestrictionsFulfilled(Object object, List<IIndexQueryRestriction> restrictions) {
 		for (IIndexQueryRestriction indexingRestriction : restrictions) {
-			int cacheKey = getMethodCacheKey(object.getClass(), indexingRestriction.getQualifiedMethodName());
-			Method method = cacheMap.get(cacheKey);
-			if (method == null) { // method has not yet in cache
-				try {
-					Method methodFromClass = object.getClass().getMethod(indexingRestriction.getQualifiedMethodName(), new Class<?>[0]);
-					Method existing = cacheMap.putIfAbsent(cacheKey, methodFromClass);
-					if (null != existing) {
-						methodFromClass = existing;
-					}
-					Object fieldValue = methodFromClass.invoke(object, new Object[0]);
-					if (!indexingRestriction.isFulfilled(fieldValue)) {
-						return false;
-					}
-				} catch (SecurityException e) {
-					log.error(e.getMessage(), e);
-				} catch (NoSuchMethodException e) {
-					// not found, put marker method at this place in map
-					cacheMap.putIfAbsent(cacheKey, markerMethod);
-				} catch (IllegalArgumentException e) {
-					log.error(e.getMessage(), e);
-				} catch (IllegalAccessException e) {
-					log.error(e.getMessage(), e);
-				} catch (InvocationTargetException e) {
-					log.error(e.getMessage(), e);
-				}
-			} else {
-				if (markerMethod.equals(method)) { // such method does not exists for this class
-					break;
-				} else { // method found try to invoke
-					try {
-						Object fieldValue = method.invoke(object, new Object[0]);
-						if (!indexingRestriction.isFulfilled(fieldValue)) {
-							return false;
-						}
-					} catch (IllegalArgumentException e) {
-						log.error(e.getMessage(), e);
-					} catch (IllegalAccessException e) {
-						log.error(e.getMessage(), e);
-					} catch (InvocationTargetException e) {
-						log.error(e.getMessage(), e);
-					}
-				}
+			if (!isRestrictionFulfilled(object, indexingRestriction)) {
+				return false;
 			}
 		}
 		return true;
 	}
 
 	/**
+	 * Checks if one {@link IIndexQueryRestriction} is fulfilled.
+	 *
+	 * @param object
+	 *            to start from
+	 * @param indexingRestriction
+	 *            {@link IIndexQueryRestriction} to check.
+	 *
+	 * @return <code>true</code> if the indexing restriction is fulfilled.
+	 */
+	private boolean isRestrictionFulfilled(Object object, IIndexQueryRestriction indexingRestriction) {
+		List<String> methodNames = indexingRestriction.getQualifiedMethodNames();
+
+		try {
+			Object executeOn = object;
+			for (String methodName : methodNames) {
+				Method method = getMethod(executeOn, methodName);
+				if (null == method) {
+					return false;
+				}
+				executeOn = method.invoke(executeOn, new Object[0]);
+			}
+
+			return indexingRestriction.isFulfilled(executeOn);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			log.error("Error in find object to execute indexing restricton check.", e);
+			return false;
+		}
+	}
+
+	/**
+	 * Returns the {@link Method} for the given {@link Object} with the given method name.
+	 *
+	 * @param object
+	 *            Object to find method on.
+	 * @param methodName
+	 *            Name of the method.
+	 * @return Method if one can be found.
+	 */
+	private Method getMethod(Object object, String methodName) {
+		int cacheKey = getMethodCacheKey(object.getClass(), methodName);
+		Method method = cacheMap.get(cacheKey);
+
+		if (method == null) { // method is not yet in cache
+			try {
+				Method methodFromClass = object.getClass().getMethod(methodName, new Class<?>[0]);
+				Method existing = cacheMap.putIfAbsent(cacheKey, methodFromClass);
+				if (null != existing) {
+					methodFromClass = existing;
+				}
+				return methodFromClass;
+			} catch (NoSuchMethodException e) {
+				// not found, put marker method at this place in map
+				cacheMap.putIfAbsent(cacheKey, markerMethod);
+				return null;
+			} catch (SecurityException | IllegalArgumentException e) {
+				log.error("Error retrieve the method " + methodName + " for the object of class " + object.getClass(), e);
+				return null;
+			}
+		} else if (markerMethod.equals(method)) {
+			return null;
+		} else {
+			return method;
+		}
+	}
+
+	/**
 	 * Returns key for the hash map based on the supplied class and method name.
-	 * 
+	 *
 	 * @param clazz
 	 *            class
 	 * @param methodName

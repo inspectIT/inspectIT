@@ -1,6 +1,7 @@
 package info.novatec.inspectit.rcp.repository.service.storage;
 
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
+import info.novatec.inspectit.communication.data.HttpInfo;
 import info.novatec.inspectit.communication.data.HttpTimerData;
 import info.novatec.inspectit.indexing.aggregation.impl.HttpTimerDataAggregator;
 import info.novatec.inspectit.indexing.query.factory.impl.HttpTimerDataQueryFactory;
@@ -91,8 +92,8 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 			if (!retrieveByTag) {
 				Set<String> uris = new HashSet<String>();
 				for (HttpTimerData httpTimerData : templates) {
-					if (!HttpTimerData.UNDEFINED.equals(httpTimerData.getUri())) {
-						uris.add(httpTimerData.getUri());
+					if (!HttpInfo.UNDEFINED.equals(httpTimerData.getHttpInfo().getUri())) {
+						uris.add(httpTimerData.getHttpInfo().getUri());
 					}
 				}
 				query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("uri", uris));
@@ -100,8 +101,8 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 				Set<String> tags = new HashSet<String>();
 
 				for (HttpTimerData httpTimerData : templates) {
-					if (httpTimerData.hasInspectItTaggingHeader()) {
-						tags.add(httpTimerData.getInspectItTaggingHeaderValue());
+					if (httpTimerData.getHttpInfo().hasInspectItTaggingHeader()) {
+						tags.add(httpTimerData.getHttpInfo().getInspectItTaggingHeaderValue());
 					}
 				}
 				query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("inspectItTaggingHeaderValue", tags));

@@ -264,11 +264,11 @@ public final class SearchFactory {
 
 		@Override
 		public boolean isSearchCompatible(HttpTimerData element, SearchCriteria searchCriteria, RepositoryDefinition repositoryDefinition) {
-			if (stringMatches(element.getInspectItTaggingHeaderValue(), searchCriteria)) {
+			if (stringMatches(element.getHttpInfo().getInspectItTaggingHeaderValue(), searchCriteria)) {
 				return true;
-			} else if (stringMatches(element.getRequestMethod(), searchCriteria)) {
+			} else if (stringMatches(element.getHttpInfo().getRequestMethod(), searchCriteria)) {
 				return true;
-			} else if (stringMatches(element.getUri(), searchCriteria)) {
+			} else if (stringMatches(element.getHttpInfo().getUri(), searchCriteria)) {
 				return true;
 			} else {
 				if (MapUtils.isNotEmpty(element.getAttributes())) {

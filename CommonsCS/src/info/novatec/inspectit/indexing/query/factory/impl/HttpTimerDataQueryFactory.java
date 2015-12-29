@@ -68,7 +68,7 @@ public class HttpTimerDataQueryFactory<E extends IIndexQuery> extends AbstractQu
 		classesToSearch.add(HttpTimerData.class);
 		classesToSearch.add(AggregatedHttpTimerData.class);
 		query.setObjectClasses(classesToSearch);
-		query.addIndexingRestriction(IndexQueryRestrictionFactory.isNotNull("inspectItTaggingHeaderValue"));
+		query.addIndexingRestriction(IndexQueryRestrictionFactory.isNotNull("httpInfo.inspectItTaggingHeaderValue"));
 		if (null != fromDate) {
 			query.setFromDate(new Timestamp(fromDate.getTime()));
 		}

@@ -155,28 +155,27 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	}
 
 	/**
-	 * Returns the approximate size of the object in the memory in bytes.
-	 * <p>
-	 * This method needs to be overwritten by all subclasses.
-	 * 
-	 * @param objectSizes
-	 *            Appropriate instance of {@link IObjectSizes} depending on the VM architecture.
-	 * @return Approximate object size in bytes.
+	 * {@inheritDoc}
 	 */
 	public long getObjectSize(IObjectSizes objectSizes) {
-		long size = objectSizes.getSizeOfObjectHeader();
-		size += objectSizes.getPrimitiveTypesSize(3, 1, 1, 0, 2, 0);
-		size += objectSizes.getSizeOf(content);
-		size += objectSizes.getSizeOf(name);
-		size += objectSizes.getSizeOf(contentType);
-		return objectSizes.alignTo8Bytes(size);
+		return getObjectSize(objectSizes, true);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
-		return getObjectSize(objectSizes);
+		long size = objectSizes.getSizeOfObjectHeader();
+		size += objectSizes.getPrimitiveTypesSize(3, 0, 1, 0, 1, 0);
+		size += objectSizes.getSizeOf(content);
+		size += objectSizes.getSizeOf(name);
+		size += objectSizes.getSizeOf(contentType);
+
+		if (doAlign) {
+			return objectSizes.alignTo8Bytes(size);
+		} else {
+			return size;
+		}
 	}
 
 	/**
