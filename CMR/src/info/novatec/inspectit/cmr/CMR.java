@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.SystemUtils;
 import org.slf4j.Logger;
@@ -20,11 +22,11 @@ import org.springframework.beans.factory.access.BeanFactoryReference;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.access.ContextSingletonBeanFactoryLocator;
 
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
+import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**
  * Main class of the Central Measurement Repository. The main method is used to start the
@@ -87,6 +89,8 @@ public final class CMR {
 	private static void startRepository() {
 		LOGGER.info("Initializing Spring...");
 
+		checkForCorrectJvmVersion();
+
 		BeanFactoryLocator beanFactoryLocator = ContextSingletonBeanFactoryLocator.getInstance();
 		BeanFactoryReference beanFactoryReference = beanFactoryLocator.useBeanFactory("ctx");
 		beanFactory = beanFactoryReference.getFactory();
@@ -101,6 +105,42 @@ public final class CMR {
 			VersionService versionService = (VersionService) getBeanFactory().getBean("versionService");
 			LOGGER.info("Starting CMR in version " + versionService.getVersionAsString()
 					+ ". Please note that inspectIT does not provide any guarantee on backwards compatibility. Only if the version match exactly we ensure that the components are compatible.");
+		}
+	}
+
+	/**
+	 * This method checks if the JVM the CMR is started on is compatible.
+	 */
+	private static void checkForCorrectJvmVersion() {
+		String version = System.getProperty("java.version");
+		// searching for Oracle version pattern: 1.7.0_80 or unofficial builds from OpenJDK:
+		// 1.7.0-u80-unofficial
+		Matcher matcher = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)[_-]u?(\\d+)").matcher(version);
+		boolean correctVersion = true;
+
+		if (matcher.find() && matcher.groupCount() >= 4) {
+			try {
+				int majorFirst = Integer.parseInt(matcher.group(1));
+				int majorSecond = Integer.parseInt(matcher.group(2));
+				int minor = Integer.parseInt(matcher.group(3));
+				int update = Integer.parseInt(matcher.group(4));
+
+				if (majorFirst != 1 || majorSecond != 7 || minor != 0) {
+					correctVersion = false;
+				}
+
+				if (update < 51 || update > 80) {
+					correctVersion = false;
+				}
+			} catch (NumberFormatException e) {
+				correctVersion = false;
+			}
+		}
+
+		if (!correctVersion) {
+			LOGGER.warn("|-ATTENTION: The version of this JVM (" + version + ") is not compatible with the CMR! Please use the JVM that is provided with the installation!");
+		} else {
+			LOGGER.info("|-The JVM version (" + version + ") is compatible.");
 		}
 	}
 
