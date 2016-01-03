@@ -115,7 +115,7 @@ public class CmrAdministrationWizardPage extends WizardPage {
 		showUsers.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				showAllUsersDialog = new ShowAllUsersDialog(main.getShell(),cmrRepositoryDefinition);
+				showAllUsersDialog = new ShowAllUsersDialog(main.getShell(), cmrRepositoryDefinition);
 				showAllUsersDialog.open();
 			}
 		});

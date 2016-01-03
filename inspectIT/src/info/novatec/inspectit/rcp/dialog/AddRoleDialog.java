@@ -12,15 +12,12 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Permutation;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 
@@ -40,12 +37,12 @@ public class AddRoleDialog extends TitleAreaDialog {
 	private CmrRepositoryDefinition cmrRepositoryDefinition;
 
 	/**
-	 * Mail address text box.
+	 * Role-name text box.
 	 */
 	private Text roleNameBox;
 
 	/**
-	 * Add user button.
+	 * Add role button.
 	 */
 	private Button addButton;
 
@@ -64,13 +61,11 @@ public class AddRoleDialog extends TitleAreaDialog {
 	 */
 	private List<String> grantedPermissions; 
 	
+	/**
+	 * Array of buttons to display the permissions that can be granted.
+	 */
 	private Button[] grantedPermissionsButtons; 
 	
-	/**
-	 * Dropdown menu for roles.
-	 */
-	private Combo roles;
-
 	/**
 	 * Default constructor.
 	 * 
@@ -169,8 +164,10 @@ public class AddRoleDialog extends TitleAreaDialog {
 		}
 	}
 
+	/**
+	 * Finishes the role-creation.
+	 */
 	private void addPressed() {
-		System.out.println();
 		if (rolesList.contains(roleNameBox.getText())) {
 			MessageDialog.openError(null, "Role already exists!", "The Role you chose is already taken! ");
 			return;
@@ -178,20 +175,21 @@ public class AddRoleDialog extends TitleAreaDialog {
 		String name = roleNameBox.getText();
 		List<String> rolePermissions = new ArrayList<String>();
 		for (int i = 0; i < grantedPermissions.size(); i++) {
-			if(grantedPermissionsButtons[i].isEnabled()) {
+			if (grantedPermissionsButtons[i].isEnabled()) {
 				rolePermissions.add(grantedPermissions.get(i));
 			}
 			
 		}
-		cmrRepositoryDefinition.getSecurityService().addRole(name,rolePermissions);
+		cmrRepositoryDefinition.getSecurityService().addRole(name, rolePermissions);
 		okPressed();
 	}
 
+	/**
+	 * Checks if the name-box is not empty.
+	 * @return true if not empty
+	 */
 	private boolean isInputValid() {
-		if (roleNameBox.getText().isEmpty()) {
-			return false;
-		}
-		return true;
+		return !roleNameBox.getText().isEmpty();
 	}
 
 }

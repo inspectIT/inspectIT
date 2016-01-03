@@ -152,6 +152,13 @@ public interface ISecurityService {
 	 */
 	List<Permission> getAllPermissions();
 
+	/**
+	 * Method to add a new role.
+	 * @param name
+	 * 				Name of role.
+	 * @param rolePermissions
+	 * 				Permissions of role in string-form.
+	 */
 	void addRole(String name, List<String> rolePermissions);
 }
 
