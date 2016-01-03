@@ -597,7 +597,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * @return Returns whether the login was successful
 	 */
 	public boolean login(String email, String password) {
-		Serializable authenticate = securityService.authenticate(email, password);
+		Serializable authenticate = securityService.authenticate(password, email);
 		refreshLoginStatus();
 		if (null != authenticate) {
 			sessionId = authenticate;
@@ -671,6 +671,10 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	private void setGrantedPermissions(List<String> grantedPermissions) {
 		this.grantedPermissions = grantedPermissions;
+	}
+	
+	public List<String> getGrantedPermissions() {
+		return this.grantedPermissions;
 	}
 
 	/**
