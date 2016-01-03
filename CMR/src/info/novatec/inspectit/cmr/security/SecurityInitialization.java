@@ -53,6 +53,7 @@ public class SecurityInitialization {
 		permissionDao.saveOrUpdate(cmrStoragePermission);
 		permissionDao.saveOrUpdate(cmrAdministrationPermission);
 		
+		//TODO: freshUser2?
 		//Predefined roles
 		Role freshUser = new Role("freshRole", new ArrayList<Permission>());
 		Role freshUser2 = new Role("freshRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission));

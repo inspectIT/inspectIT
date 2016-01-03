@@ -672,6 +672,10 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private void setGrantedPermissions(List<String> grantedPermissions) {
 		this.grantedPermissions = grantedPermissions;
 	}
+	
+	public List<String> getGrantedPermissions() {
+		return this.grantedPermissions;
+	}
 
 	/**
 	 * Checks Permission.

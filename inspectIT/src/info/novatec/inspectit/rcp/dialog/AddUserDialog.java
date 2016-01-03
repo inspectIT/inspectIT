@@ -118,7 +118,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		Label passwordLabel = new Label(main, SWT.NONE);
 		passwordLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		passwordLabel.setText("password:");
-		passwordBox = new Text(main, SWT.BORDER);
+		passwordBox = new Text(main, SWT.BORDER | SWT.PASSWORD);
 		passwordBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		Label rolesLabel = new Label(main, SWT.NONE);
@@ -187,7 +187,7 @@ public class AddUserDialog extends TitleAreaDialog {
 	    		id = r.getId();
 	    	}
 	    }
-	    User user = new User(password, mail , id);
+	    User user = new User(mail, password , id);
 	    cmrRepositoryDefinition.getSecurityService().addUser(user);
 		okPressed();
 	}

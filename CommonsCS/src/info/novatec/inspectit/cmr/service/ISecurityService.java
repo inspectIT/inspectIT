@@ -152,6 +152,6 @@ public interface ISecurityService {
 	 */
 	List<Permission> getAllPermissions();
 
-	void addRole(Role role);
+	void addRole(String name, List<String> rolePermissions);
 }
 
