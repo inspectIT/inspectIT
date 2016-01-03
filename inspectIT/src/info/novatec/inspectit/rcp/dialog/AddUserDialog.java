@@ -187,7 +187,7 @@ public class AddUserDialog extends TitleAreaDialog {
 	    		id = r.getId();
 	    	}
 	    }
-	    User user = new User(mail, password , id);
+	    User user = new User(password, mail , id);
 	    cmrRepositoryDefinition.getSecurityService().addUser(user);
 		okPressed();
 	}
