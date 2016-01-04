@@ -54,6 +54,9 @@ You do not have to be a programmer to contribute to inspectIT, but if you are yo
 - [Prioritize through voting](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Vote+for+features+and+bugs)
 - [Fork and improve](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Contribute+source+code)
 
+### Developers
+If you want to fix Bugs or implement Features on your own, you're very welcome to do so! For the easiest start, you just need to follow our [Development Environment Documentation](https://inspectit-performance.atlassian.net/wiki/display/DEV/Development+Environment) for installing Eclipse with all projects and settings already pre-configured via the new official Oomph installer.
+
 ### Ticketing
 We primarily use [Atlassian JIRA](https://inspectit-performance.atlassian.net/secure/Dashboard.jspa) for ticketing. But if you are in a hurry, please feel free to open a GitHub issue.
 
