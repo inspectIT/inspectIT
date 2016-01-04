@@ -122,11 +122,11 @@ public class CmrAdministrationWizardPage extends WizardPage {
 
 		Button searchUsers = new Button(main, SWT.CENTER);
 		searchUsers.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		searchUsers.setText("Search All Users");
+		searchUsers.setText("Search Users");
 		searchUsers.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				searchUsersDialog = new SearchUsersDialog(main.getShell());
+				searchUsersDialog = new SearchUsersDialog(main.getShell(), cmrRepositoryDefinition);
 				searchUsersDialog.open();
 			}
 		});
