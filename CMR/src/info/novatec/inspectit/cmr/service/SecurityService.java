@@ -213,6 +213,17 @@ public class SecurityService implements ISecurityService {
 
 		return userEmails;
 	}
+	
+	@Override
+	public List<String> getUsersByRole(long id) {
+		List<User> foundUsers = userDao.findByRole(id);
+		List<String> userEmails = new ArrayList<String>();
+		for (User user : foundUsers) {
+			userEmails.add(user.getEmail());
+		}
+
+		return userEmails;
+	}
 
 	@Override
 	public void addUser(User user) throws DataIntegrityViolationException {
