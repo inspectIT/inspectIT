@@ -1591,6 +1591,10 @@
           value="2"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.ui/formatter_profile"
           value="_inspectIT"/>
       <setupTask
@@ -1639,7 +1643,71 @@
           value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>&lt;templates>&lt;template autoinsert=&quot;false&quot; context=&quot;gettercomment_context&quot; deleted=&quot;false&quot; description=&quot;Comment for getter method&quot; enabled=&quot;true&quot; id=&quot;org.eclipse.jdt.ui.text.codetemplates.gettercomment&quot; name=&quot;gettercomment&quot;>/**&#xA; * Gets {@link #$${field}}.&#xA; *   &#xA; * @return {@link #$${field}}  &#xA; */ &lt;/template>&lt;template autoinsert=&quot;false&quot; context=&quot;settercomment_context&quot; deleted=&quot;false&quot; description=&quot;Comment for setter method&quot; enabled=&quot;true&quot; id=&quot;org.eclipse.jdt.ui.text.codetemplates.settercomment&quot; name=&quot;settercomment&quot;>/**  &#xA; * Sets {@link #$${field}}.  &#xA; *   &#xA; * @param $${field}  &#xA; *            New value for {@link #$${field}}  &#xA; */&lt;/template>&lt;template autoinsert=&quot;false&quot; context=&quot;typecomment_context&quot; deleted=&quot;false&quot; description=&quot;Comment for created types&quot; enabled=&quot;true&quot; id=&quot;org.eclipse.jdt.ui.text.codetemplates.typecomment&quot; name=&quot;typecomment&quot;>/**&#xA; * @author ${author.name}&#xA; *&#xA; * $${tags}&#xA; */&lt;/template>&lt;template autoinsert=&quot;false&quot; context=&quot;overridecomment_context&quot; deleted=&quot;false&quot; description=&quot;Comment for overriding methods&quot; enabled=&quot;true&quot; id=&quot;org.eclipse.jdt.ui.text.codetemplates.overridecomment&quot; name=&quot;overridecomment&quot;>/**&#xA; * {@inheritDoc}&#xA; */&lt;/template>&lt;/templates>"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.add_missing_annotations"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.add_missing_deprecated_annotations"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.add_missing_override_annotations"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.add_missing_override_annotations_interface_methods"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.always_use_blocks"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.always_use_parentheses_in_expressions"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.convert_to_enhanced_for_loop"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.correct_indentation"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.format_source_code"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.make_private_fields_final"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.make_variable_declarations_final"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.ui/sp_cleanup.on_save_use_additional_actions"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.organize_imports"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_trailing_whitespaces"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_trailing_whitespaces_all"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unnecessary_casts"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_imports"
           value="true"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
