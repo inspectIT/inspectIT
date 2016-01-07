@@ -19,6 +19,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
 import info.novatec.inspectit.rcp.util.SelectionProviderAdapter;
+import info.novatec.inspectit.rcp.util.UnfinishedWarningUtils;
 import info.novatec.inspectit.rcp.view.IRefreshableView;
 
 import java.util.ArrayList;
@@ -274,6 +275,12 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		});
 		getSite().setSelectionProvider(selectionProviderAdapter);
 		selectionProviderAdapter.setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
+
+		// TODO: This needs to be removed as soon as the configuration interface is fully
+		// functional.
+		UnfinishedWarningUtils.inform(
+				"The configuration interface is not yet connected with the agent instrumentation. You can play around with this preview, but the instrumentations will not be effective.",
+				"UNFINISHED_WARNING_CONFIGURATION_INTERFACE");
 	}
 
 	/**
@@ -359,8 +366,8 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 			viewerColumn.getColumn().setResizable(true);
 			viewerColumn.getColumn().setText("Active");
 			viewerColumn.getColumn().setWidth(55);
-			viewerColumn.getColumn().setToolTipText(
-					"If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
+			viewerColumn.getColumn()
+					.setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
 
 			viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 			viewerColumn.getColumn().setMoveable(true);
