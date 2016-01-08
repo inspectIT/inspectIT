@@ -1740,7 +1740,8 @@
     <workingSet
         name="${scope.project.label}">
       <predicate
-          xsi:type="predicates:ImportedPredicate"/>
+          xsi:type="predicates:LocationPredicate"
+          pattern="${git.clone.location/.*}"/>
     </workingSet>
   </setupTask>
   <setupTask
