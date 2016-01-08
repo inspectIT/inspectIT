@@ -110,8 +110,8 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 		T against = property.parseLiteral(than);
 
 		if (null == against) {
-			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property), "Validation of  property " + property.getName()
-					+ " failed because literal (" + than + ") to compare against can not be parsed.");
+			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property),
+					"Validation of  property " + property.getName() + " failed because literal (" + than + ") to compare against can not be parsed.");
 			propertyValidation.addValidationError(validationError);
 		}
 
@@ -133,8 +133,8 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 		try {
 			compare((SingleProperty<T>) compare, (SingleProperty<T>) against, (T) compare.getValue(), (T) against.getValue(), propertyValidation);
 		} catch (Exception e) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because exception occurred during validation. Exception message: " + e.getMessage());
+			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because exception occurred during validation. Exception message: " + e.getMessage());
 			propertyValidation.addValidationError(validationError);
 		}
 	}
@@ -171,8 +171,8 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 		try {
 			compare((SingleProperty<T>) compareProperty, (SingleProperty<T>) againstProperty, value, against, propertyValidation);
 		} catch (Exception e) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because exception occurred during validation. Exception message: " + e.getMessage());
+			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because exception occurred during validation. Exception message: " + e.getMessage());
 			propertyValidation.addValidationError(validationError);
 		}
 	}
@@ -190,15 +190,15 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 */
 	private SingleProperty<?> getProperty(GroupedProperty groupProperty, PropertyValidation propertyValidation) {
 		if (StringUtils.isEmpty(property)) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because property logical name is not set.");
+			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because property logical name is not set.");
 			propertyValidation.addValidationError(validationError);
 			return null;
 		}
 		SingleProperty<?> p = groupProperty.forLogicalname(property);
 		if (null == p) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because property with logical name '" + property + "' does not exist.");
+			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because property with logical name '" + property + "' does not exist.");
 			propertyValidation.addValidationError(validationError);
 		}
 		return p;
@@ -217,15 +217,15 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 */
 	private SingleProperty<?> getAgainstProperty(GroupedProperty groupProperty, PropertyValidation propertyValidation) {
 		if (StringUtils.isEmpty(than)) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because logical name of the property to compare against is not set.");
+			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because logical name of the property to compare against is not set.");
 			propertyValidation.addValidationError(validationError);
 			return null;
 		}
 		SingleProperty<?> p = groupProperty.forLogicalname(than);
 		if (null == p) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because property with logical name '" + than + "' does not exist.");
+			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because property with logical name '" + than + "' does not exist.");
 			propertyValidation.addValidationError(validationError);
 		}
 		return p;

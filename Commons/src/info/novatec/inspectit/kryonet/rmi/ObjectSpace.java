@@ -50,10 +50,10 @@ import com.esotericsoftware.kryonet.rmi.TimeoutException;
  * ignored}, an extra byte is written. If the type of a parameter is not final (note primitives are
  * final) then an extra byte is written for that parameter.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan
+ * Sweet. License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
  * 
  * @author Nathan Sweet <misc@n4te.com>
  */
@@ -183,7 +183,9 @@ public class ObjectSpace {
 			trace("kryonet", "Object " + objectID + " removed from ObjectSpace: " + object);
 	}
 
-	/** Causes this ObjectSpace to stop listening to the connections for method invocation messages. */
+	/**
+	 * Causes this ObjectSpace to stop listening to the connections for method invocation messages.
+	 */
 	public void close() {
 		Connection[] connections = this.connections;
 		for (int i = 0; i < connections.length; i++)

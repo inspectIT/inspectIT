@@ -25,7 +25,6 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 */
 	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.http.HttpSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

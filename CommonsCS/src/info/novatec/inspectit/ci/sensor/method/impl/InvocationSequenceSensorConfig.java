@@ -25,7 +25,6 @@ public class InvocationSequenceSensorConfig extends StringConstraintSensorConfig
 	 */
 	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

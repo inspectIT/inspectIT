@@ -49,8 +49,8 @@ public final class StringToPrimitiveTransformUtil {
 				}
 			}
 		} else {
-			throw new PreferenceException("Error transforming Collection<java.lang.String> to Collection<" + elementClass.getName() + ">. Parsing method can not be found in class "
-					+ elementClass.getName() + ".");
+			throw new PreferenceException(
+					"Error transforming Collection<java.lang.String> to Collection<" + elementClass.getName() + ">. Parsing method can not be found in class " + elementClass.getName() + ".");
 		}
 	}
 

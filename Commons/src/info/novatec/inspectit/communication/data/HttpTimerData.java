@@ -15,14 +15,12 @@ import javax.persistence.Transient;
  * Data object holding http based timer data. All timer related information are inherited from the
  * super class.
  * 
- * <b> Be careful when adding new attributes. Do not forget to add them to the size calculation.
- * </b>
+ * <b> Be careful when adding new attributes. Do not forget to add them to the size
+ * calculation. </b>
  * 
  * @author Stefan Siegl
  */
-@Table(indexes = { 
-		@Index(name = "uri_idx", columnList = "uri"),
-		@Index(name = "tag_idx", columnList = "inspectItTaggingHeaderValue") })
+@Table(indexes = { @Index(name = "uri_idx", columnList = "uri"), @Index(name = "tag_idx", columnList = "inspectItTaggingHeaderValue") })
 @Entity
 public class HttpTimerData extends TimerData implements Cloneable {
 

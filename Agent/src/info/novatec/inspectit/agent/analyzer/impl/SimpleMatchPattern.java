@@ -11,10 +11,10 @@ import java.util.List;
  * on trailing characters only, or "xxx*yyy" to match on both leading and trailing. It can also
  * include multiple '*' characters when more than one part of the match is wildcarded.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken from <a
- * href="http://www.ibm.com/developerworks/java/library/j-dyn0203.html">IBM developers Works</a>.
- * Original author is Dennis Sosnoski. License info can be found <a
- * href="http://www.ibm.com/developerworks/apps/download/index.jsp
+ * <b>IMPORTANT:</b> The class code is copied/taken from
+ * <a href="http://www.ibm.com/developerworks/java/library/j-dyn0203.html">IBM developers Works</a>.
+ * Original author is Dennis Sosnoski. License info can be found
+ * <a href="http://www.ibm.com/developerworks/apps/download/index.jsp
  * ?contentid=10908&filename=j-dyn0203-source.zip&method=http&locale=">here</a>.
  * 
  * @author Dennis Sosnoski

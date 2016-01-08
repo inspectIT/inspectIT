@@ -41,8 +41,8 @@ public class StatementStorage {
 	 * garbage collector can remove this object and thus the entry in the cache. In order to
 	 * safe-guard our cache, elements will also be removed if they are not used for 20 minutes.
 	 * 
-	 * <b> Note that this data structure provides atomic access like a <code>ConcurrentMap</code>.
-	 * </b>.
+	 * <b> Note that this data structure provides atomic access like a <code>ConcurrentMap</code>
+	 * . </b>.
 	 */
 	private Cache<Object, QueryInformation> preparedStatements = CacheBuilder.newBuilder().expireAfterAccess(20 * 60, TimeUnit.SECONDS).weakKeys().build();
 

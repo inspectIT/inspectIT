@@ -127,7 +127,7 @@ public class SensorAssignmentSelectionDialog extends ListDialog {
 				return new TimerMethodSensorAssignment();
 			} else if (sensorConfig instanceof IMethodSensorConfig) {
 				return new MethodSensorAssignment((Class<? extends IMethodSensorConfig>) sensorConfig.getClass());
-			} 
+			}
 		}
 		return null;
 	}

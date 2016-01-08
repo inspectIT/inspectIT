@@ -135,8 +135,8 @@ public class DataRetriever {
 	 *             If {@link IOException} occurs.
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends DefaultData> List<E> getDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, IStorageData storageData, List<IStorageDescriptor> descriptors) throws IOException,
-			SerializationException {
+	public <E extends DefaultData> List<E> getDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, IStorageData storageData, List<IStorageDescriptor> descriptors)
+			throws IOException, SerializationException {
 		Map<Integer, List<IStorageDescriptor>> separateFilesGroup = createFilesGroup(descriptors);
 		List<E> receivedData = new ArrayList<E>();
 		String serverUri = getServerUri(cmrRepositoryDefinition);
@@ -308,8 +308,8 @@ public class DataRetriever {
 	 *             If {@link IOException} occurs.
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends DefaultData> List<E> getCachedDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, int hash) throws BusinessException, IOException,
-			SerializationException {
+	public <E extends DefaultData> List<E> getCachedDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, int hash)
+			throws BusinessException, IOException, SerializationException {
 		String cachedFileLocation = cmrRepositoryDefinition.getStorageService().getCachedStorageDataFileLocation(storageData, hash);
 		if (null == cachedFileLocation) {
 			return null;
@@ -711,8 +711,8 @@ public class DataRetriever {
 	 * <p>
 	 * <b>IMPORTANT:</b> The class code is copied/taken/based from <a href=
 	 * "https://svn.apache.org/repos/asf/httpcomponents/httpcore/branches/4.0.x/contrib/src/main/java/org/apache/http/contrib/compress/GzipDecompressingEntity.java"
-	 * >Http Core's GzipDecompressingEntity</a>. License info can be found <a
-	 * href="http://www.apache.org/licenses/LICENSE-2.0">here</a>.
+	 * >Http Core's GzipDecompressingEntity</a>. License info can be found
+	 * <a href="http://www.apache.org/licenses/LICENSE-2.0">here</a>.
 	 * 
 	 * 
 	 */

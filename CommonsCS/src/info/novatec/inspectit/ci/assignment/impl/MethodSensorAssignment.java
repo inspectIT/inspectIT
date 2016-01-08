@@ -27,7 +27,7 @@ public class MethodSensorAssignment extends AbstractClassSensorAssignment<IMetho
 	 */
 	@XmlAttribute(name = "sensor-config-class", required = true)
 	private Class<? extends IMethodSensorConfig> sensorConfig;
-	
+
 	/**
 	 * Method name/pattern.
 	 */
@@ -79,7 +79,8 @@ public class MethodSensorAssignment extends AbstractClassSensorAssignment<IMetho
 	/**
 	 * Default constructor.
 	 * 
-	 * @param sensorConfig Method sensor config class begin assigned.
+	 * @param sensorConfig
+	 *            Method sensor config class begin assigned.
 	 */
 	public MethodSensorAssignment(Class<? extends IMethodSensorConfig> sensorConfig) {
 		this.sensorConfig = sensorConfig;

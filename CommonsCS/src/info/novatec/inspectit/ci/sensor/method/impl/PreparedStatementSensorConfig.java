@@ -25,7 +25,6 @@ public class PreparedStatementSensorConfig extends StringConstraintSensorConfig 
 	 */
 	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

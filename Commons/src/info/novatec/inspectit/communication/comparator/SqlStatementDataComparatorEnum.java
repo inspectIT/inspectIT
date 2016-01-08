@@ -13,7 +13,7 @@ import java.util.List;
  * @author Ivan Senic
  * 
  */
-public enum SqlStatementDataComparatorEnum implements IDataComparator<SqlStatementData>, Comparator<SqlStatementData> {
+public enum SqlStatementDataComparatorEnum implements IDataComparator<SqlStatementData>,Comparator<SqlStatementData> {
 
 	/**
 	 * Sort by if the statement is prepared or not.

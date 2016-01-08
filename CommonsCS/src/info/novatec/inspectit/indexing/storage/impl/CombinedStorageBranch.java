@@ -138,6 +138,7 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 		}
 		return combinedResult;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -176,17 +177,17 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 		toStringBuilder.append("branches", branches);
 		return toStringBuilder.toString();
 	}
-	
+
 	/**
 	 * Returns the branches to Query.
 	 * 
 	 * @param <R>
 	 * 
 	 * @param query
-	 *             query
+	 *            query
 	 * @return the list of branches
 	 */
-	public List<IStorageTreeComponent<E>> getBranchesToQuery(IIndexQuery query) {		
+	public List<IStorageTreeComponent<E>> getBranchesToQuery(IIndexQuery query) {
 		return getBranches();
 	}
 

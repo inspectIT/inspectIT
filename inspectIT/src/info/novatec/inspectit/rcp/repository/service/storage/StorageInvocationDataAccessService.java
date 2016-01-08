@@ -48,7 +48,8 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate, ResultComparator<InvocationSequenceData> resultComparator) {
+	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate,
+			ResultComparator<InvocationSequenceData> resultComparator) {
 		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, limit, fromDate, toDate);
 		query.setOnlyInvocationsWithoutChildren(true);
 		if (null != resultComparator) {

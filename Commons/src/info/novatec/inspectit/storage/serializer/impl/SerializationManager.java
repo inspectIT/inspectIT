@@ -102,7 +102,8 @@ import de.javakaffee.kryoserializers.SynchronizedCollectionsSerializer;
 import de.javakaffee.kryoserializers.UnmodifiableCollectionsSerializer;
 
 /**
- * Implementation of the {@link ISerializer} that uses Kryo library for serializing the objects. <br>
+ * Implementation of the {@link ISerializer} that uses Kryo library for serializing the objects.
+ * <br>
  * <br>
  * <b>This class is not thread safe and should be used with special attention. The class can be used
  * only by one thread while the serialization/de-serialization process lasts.</b>

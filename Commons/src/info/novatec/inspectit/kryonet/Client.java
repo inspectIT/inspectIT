@@ -38,10 +38,10 @@ import com.esotericsoftware.kryonet.KryoNetException;
 /**
  * Represents a TCP and optionally a UDP connection to a {@link Server}.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan
+ * Sweet. License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
  * 
  * @author Nathan Sweet <misc@n4te.com>
  */

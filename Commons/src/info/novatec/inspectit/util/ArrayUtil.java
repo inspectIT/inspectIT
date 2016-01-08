@@ -4,11 +4,11 @@ package info.novatec.inspectit.util;
  * This is a utility class that provides the {@link #binarySearch(long[], int, int, long)} method
  * that is not available in Java5.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://docs.oracle.com/javase/7/docs/technotes/guides/collections/index.html">Java
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/collections/index.html">Java
  * Collections Framework</a> {@link java.util.Arrays} class. Original authors are Josh Bloch, Neal
- * Gafter and John Rose. License info can be found <a
- * href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">here</a>.
+ * Gafter and John Rose. License info can be found
+ * <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">here</a>.
  * 
  * @author Josh Bloch
  * @author Neal Gafter

@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
  * <p>
  * <b>IMPORTANT:</b> The class is licensed under the Eclipse Public License v1.0 as it includes the
  * code from the {@link org.eclipse.ui.internal.part.SelectionProviderAdapter} class belonging to
- * the Eclipse Rich Client Platform. EPL v1.0 license can be found <a
- * href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
+ * the Eclipse Rich Client Platform. EPL v1.0 license can be found
+ * <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
  * <p>
  * Please relate to the LICENSEEXCEPTIONS.txt file for more information about license exceptions
  * that apply regarding to InspectIT and Eclipse RCP and/or EPL Components.

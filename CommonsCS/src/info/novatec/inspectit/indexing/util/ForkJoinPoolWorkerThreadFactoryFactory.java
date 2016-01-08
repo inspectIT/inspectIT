@@ -35,12 +35,11 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 	public boolean isSingleton() {
 		return false;
 	}
-	
+
 	/**
 	 * Getter of threadNamePrefix.
 	 * 
-	 * @return
-	 * 		threadNamePrefix
+	 * @return threadNamePrefix
 	 */
 	public String getThreadNamePrefix() {
 		return threadNamePrefix;
@@ -50,7 +49,7 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 	 * Setter of threadNamePrefix.
 	 * 
 	 * @param threadNamePrefix
-	 * 			threadNamePrefix
+	 *            threadNamePrefix
 	 */
 	public void setThreadNamePrefix(String threadNamePrefix) {
 		this.threadNamePrefix = threadNamePrefix;
@@ -80,31 +79,32 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 	 * @author Tobias Angerstein
 	 */
 	static class WorkerThreadFactory implements ForkJoinWorkerThreadFactory {
-		
+
 		/**
-		 * ThreadName. 
+		 * ThreadName.
 		 */
 		private String threadNamePrefix;
-		
+
 		/**
 		 * Number of current threads.
 		 */
 		private int threadCounter;
-		
+
 		/**
 		 * Constructor.
 		 * 
 		 * @param threadNamePrefix
-		 * 					threadName;
+		 *            threadName;
 		 */
 		public WorkerThreadFactory(String threadNamePrefix) {
 			this.threadNamePrefix = threadNamePrefix;
 			this.threadCounter = 0;
 		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Returns new Thread with set name. 
+		 * Returns new Thread with set name.
 		 */
 		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
 			ForkJoinWorkerThread workerThread = new WorkerThread(pool);

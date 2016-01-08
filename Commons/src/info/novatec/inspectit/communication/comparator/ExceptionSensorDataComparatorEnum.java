@@ -12,7 +12,7 @@ import java.util.Comparator;
  * @author Ivan Senic
  * 
  */
-public enum ExceptionSensorDataComparatorEnum implements IDataComparator<ExceptionSensorData>, Comparator<ExceptionSensorData> {
+public enum ExceptionSensorDataComparatorEnum implements IDataComparator<ExceptionSensorData>,Comparator<ExceptionSensorData> {
 
 	/**
 	 * Sort by fully qualified name of the exception.

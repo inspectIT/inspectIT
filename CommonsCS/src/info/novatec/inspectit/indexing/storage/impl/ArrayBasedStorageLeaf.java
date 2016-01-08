@@ -258,7 +258,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 			}
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

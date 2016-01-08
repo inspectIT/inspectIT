@@ -139,8 +139,8 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 					stringConstraintComponent.createComponent(mainComposite, toolkit, "String length of SQLs:",
 							"Defines the maximum string length of SQL strings and parameters for prepared statement sensor.", layoutColumns);
 				} else if (methodSensorConfig instanceof StatementSensorConfig) {
-					stringConstraintComponent.createComponent(mainComposite, toolkit, "String length of SQLs:",
-							"Defines the maximum string length of SQL strings and parameters for statement sensor.", layoutColumns);
+					stringConstraintComponent.createComponent(mainComposite, toolkit, "String length of SQLs:", "Defines the maximum string length of SQL strings and parameters for statement sensor.",
+							layoutColumns);
 				}
 			}
 		}
@@ -161,9 +161,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 		exceptionSimple.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		exceptionEnhanced = toolkit.createButton(radioGroupHelp, "Enhanced", SWT.RADIO);
 		toolkit.createLabel(mainComposite, "");
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"Simple mode will only provide the information where have the exceptions been created. All other informations like passed and handled will be available when enhanced mode if on. But, with simple mode there will be no performance overhead for using the exception sensor.");
 
 		// set selection for simple / enhanced

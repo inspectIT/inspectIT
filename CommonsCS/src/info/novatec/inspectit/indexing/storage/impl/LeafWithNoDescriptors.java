@@ -106,8 +106,9 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 		}
 		return list;
 	}
+
 	/**
-	 *{@inheritDoc}
+	 * {@inheritDoc}
 	 */
 	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
 		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));

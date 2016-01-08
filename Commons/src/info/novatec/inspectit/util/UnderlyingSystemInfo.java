@@ -7,10 +7,10 @@ import java.util.List;
 /**
  * Provides information about the System and JVM.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://commons.apache.org/proper/commons-lang/">Apache Commons Lang</a>
- * {@link org.apache.commons.lang.SystemUtils} class. License info can be found <a
- * href="http://www.apache.org/licenses/">here</a>.
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://commons.apache.org/proper/commons-lang/">Apache Commons Lang</a>
+ * {@link org.apache.commons.lang.SystemUtils} class. License info can be found
+ * <a href="http://www.apache.org/licenses/">here</a>.
  * 
  */
 public final class UnderlyingSystemInfo {

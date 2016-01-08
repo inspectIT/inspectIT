@@ -141,8 +141,8 @@ public class CheckNewVersionJob extends Job {
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Check for new Version", "There is no newer version of inspectIT available. Currently running version "
-							+ currentVersionFinal.toString() + " is the latest officially released version.");
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Check for new Version",
+							"There is no newer version of inspectIT available. Currently running version " + currentVersionFinal.toString() + " is the latest officially released version.");
 				}
 			});
 

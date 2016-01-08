@@ -14,7 +14,7 @@ import java.util.List;
  * @author Ivan Senic
  * 
  */
-public enum MethodSensorDataComparatorEnum implements IDataComparator<MethodSensorData>, Comparator<MethodIdent> {
+public enum MethodSensorDataComparatorEnum implements IDataComparator<MethodSensorData>,Comparator<MethodIdent> {
 
 	/**
 	 * Sort by package name.

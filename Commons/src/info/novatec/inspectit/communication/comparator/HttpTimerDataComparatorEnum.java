@@ -12,7 +12,7 @@ import java.util.Comparator;
  * @author Ivan Senic
  * 
  */
-public enum HttpTimerDataComparatorEnum implements IDataComparator<HttpTimerData>, Comparator<HttpTimerData> {
+public enum HttpTimerDataComparatorEnum implements IDataComparator<HttpTimerData>,Comparator<HttpTimerData> {
 
 	/**
 	 * Sort by URI.

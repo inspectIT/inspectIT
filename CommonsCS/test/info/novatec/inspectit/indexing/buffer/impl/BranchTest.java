@@ -62,8 +62,8 @@ public class BranchTest {
 		IBufferTreeComponent<DefaultData> component2 = Mockito.mock(IBufferTreeComponent.class);
 		when(component2.clean()).thenReturn(false);
 
-		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(), new Object[] { "c1", component1, "c2",
-				component2 });
+		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(),
+				new Object[] { "c1", component1, "c2", component2 });
 		when(branch.getComponentMap()).thenReturn(componentMap);
 
 		boolean isClean = branch.clean();
@@ -92,8 +92,8 @@ public class BranchTest {
 		IBufferTreeComponent<DefaultData> component2 = Mockito.mock(IBufferTreeComponent.class);
 		when(component2.clearEmptyComponents()).thenReturn(false);
 
-		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(), new Object[] { "c1", component1, "c2",
-				component2 });
+		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(),
+				new Object[] { "c1", component1, "c2", component2 });
 		when(branch.getComponentMap()).thenReturn(componentMap);
 
 		boolean isClear = branch.clearEmptyComponents();
