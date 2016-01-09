@@ -55,26 +55,17 @@ public class SecurityInitialization {
 		
 		//Predefined roles
 		Role freshUser = new Role("freshRole", new ArrayList<Permission>());
-		Role freshUser2 = new Role("freshRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission));
 		Role restrictedUser = new Role("restrictedRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission));
 		Role adminUser = new Role("adminRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrDeleteAgentPermission, cmrShutdownAndRestartPermission, cmrAdministrationPermission));
 		
 		//Transfers roles to database.
 		roleDao.saveOrUpdate(freshUser);
-		roleDao.saveOrUpdate(freshUser2);
 		roleDao.saveOrUpdate(restrictedUser);
 		roleDao.saveOrUpdate(adminUser);
 			
-		//Standarduser - changes with login
+		//Standarduser - has to be changed on first login
 		User admin = new User(Permutation.hashString("admin"), "admin", adminUser.getId());
-		
-		//Testusers
-		//TODO: delete before final merging
-		User restricted = new User(Permutation.hashString("restricted"), "restricted", restrictedUser.getId());
-		User fresh = new User(Permutation.hashString("fresh"), "freshUser", freshUser.getId());
-		userDao.saveOrUpdate(fresh);
-		userDao.saveOrUpdate(restricted);
-		
+				
 		//Transfers users to databse.		
 		userDao.saveOrUpdate(admin);			   
 	}

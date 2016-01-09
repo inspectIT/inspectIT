@@ -1,22 +1,17 @@
 package info.novatec.inspectit.cmr.service;
 
+import java.io.Serializable;
+import java.security.Permissions;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import info.novatec.inspectit.cmr.dao.PermissionDao;
-import info.novatec.inspectit.cmr.dao.RoleDao;
-import info.novatec.inspectit.cmr.dao.UserDao;
-import info.novatec.inspectit.cmr.security.CmrSecurityManager;
-import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Role;
-import info.novatec.inspectit.communication.data.cmr.User;
-import info.novatec.inspectit.spring.logger.Log;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -26,6 +21,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
+import info.novatec.inspectit.cmr.dao.PermissionDao;
+import info.novatec.inspectit.cmr.dao.RoleDao;
+import info.novatec.inspectit.cmr.dao.UserDao;
+import info.novatec.inspectit.cmr.security.CmrSecurityManager;
+import info.novatec.inspectit.communication.data.cmr.Permission;
+import info.novatec.inspectit.communication.data.cmr.Permutation;
+import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
+import info.novatec.inspectit.spring.logger.Log;
+
 /**
  * Provides general security-system operations for client<->cmr interaction. Watches over Data
  * Integrity.
@@ -33,7 +38,6 @@ import org.springframework.stereotype.Service;
  * @author Andreas Herzog
  * @author Clemens Geibel
  * @author Lucca Hellriegel
- * @author Joshua Hartmann
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -90,16 +94,16 @@ public class SecurityService implements ISecurityService {
 	 *            users password
 	 * @param email
 	 *            email
-	 * @return true if the user was authenticated
+	 * @return sessionId if the user was authenticated
 	 */
 	@Override
-	public List<String> authenticate(String pw, String email) {
+	public Serializable authenticate(String pw, String email) {
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
+
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
 
 		if (!currentUser.isAuthenticated()) {
-
 			try {
 				currentUser.login(token);
 				log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
@@ -110,7 +114,36 @@ public class SecurityService implements ISecurityService {
 				return null;
 			}
 		}
-		// TODO: Make a session
+
+		return currentUser.getSession().getId();
+	}
+
+	/**
+	 * Ends the session.
+	 * 
+	 * @param sessionId
+	 *            Session id from the session to end
+	 */
+	@Override
+	public void logout(Serializable sessionId) {
+		if (existsSession(sessionId)) {
+			Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+			log.info("SessionId [" + currentUser.getSession(false).getId() + "], Name [" + currentUser.getPrincipal() + "].");
+			currentUser.logout();
+			log.info("Logged out successfully.");
+		}
+	}
+
+	/**
+	 * Returns titles of permissions as Strings.
+	 * 
+	 * @param sessionId
+	 *            sessionId
+	 * @return List with the users permissions.
+	 */
+	@Override
+	public List<String> getPermissions(Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
 
 		List<String> grantedPermissions = new ArrayList<String>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
@@ -119,9 +152,26 @@ public class SecurityService implements ISecurityService {
 				grantedPermissions.add(existingPermissions.get(i).getTitle());
 			}
 		}
-		currentUser.logout();
 
 		return grantedPermissions;
+	}
+
+	/**
+	 * Checks whether session of a specific sessionId exists.
+	 * 
+	 * @param sessionId
+	 *            The id to check.
+	 * @return Boolean whether the session exists.
+	 */
+	@Override
+	public boolean existsSession(Serializable sessionId) {
+		DefaultSessionManager sm = (DefaultSessionManager) cmrSecurityManager.getSessionManager();
+		for (Session session : sm.getSessionDAO().getActiveSessions()) {
+			if (session.getId().equals(sessionId)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// +-------------------------------------------------------------------------------------------+
@@ -143,7 +193,12 @@ public class SecurityService implements ISecurityService {
 		} else if (data instanceof Permission) {
 			Permission permission = (Permission) data;
 			return (permission.getDescription().length() < 100);
-		} 
+		} else if (data instanceof Role) {
+			//TODO: make real data integrity tests
+			Role role = (Role) data;
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -171,7 +226,10 @@ public class SecurityService implements ISecurityService {
 		} else if (existingRole.isEmpty()) {
 			throw new DataIntegrityViolationException("Invalid role id assigned to this user!");
 		} else {
+			String hashedPassword = Permutation.hashString(user.getPassword());
+			user.setPassword(hashedPassword);
 			userDao.saveOrUpdate(user);
+					
 		}
 	}
 
@@ -253,7 +311,20 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void addRole(Role role) throws DataIntegrityViolationException {
+	public void addRole(String name, List<String> rolePermissions) throws DataIntegrityViolationException {
+		List<Permission> allPermissions = getAllPermissions();
+		List<Permission> grantedPermissions = new ArrayList<Permission>();
+		for (int i = 0; i < rolePermissions.size(); i++) {
+			for (int y = 0; y < allPermissions.size(); y++) {
+				if (rolePermissions.get(i).equals(allPermissions.get(y).getTitle())) {
+					grantedPermissions.add(allPermissions.get(y));
+					break;
+					}
+			}
+		}
+	   Role role = new Role(name, grantedPermissions);
+		
+		
 		if (!checkDataIntegrity(role)) {
 			throw new DataIntegrityViolationException("Data integrity test failed!");
 		}
@@ -261,6 +332,7 @@ public class SecurityService implements ISecurityService {
 		if (allRole.contains(role)) {
 			throw new DataIntegrityViolationException("Role already exist!");
 		} else {
+			
 			roleDao.saveOrUpdate(role);
 		}
 	}

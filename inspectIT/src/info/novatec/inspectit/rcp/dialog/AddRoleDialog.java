@@ -12,15 +12,12 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Permutation;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 
@@ -29,6 +26,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
  * 
  * @author Mario Rose
  * @author Thomas Sachs
+ * @author Lucca Hellriegel
  *
  */
 public class AddRoleDialog extends TitleAreaDialog {
@@ -39,12 +37,12 @@ public class AddRoleDialog extends TitleAreaDialog {
 	private CmrRepositoryDefinition cmrRepositoryDefinition;
 
 	/**
-	 * Mail address text box.
+	 * Role-name text box.
 	 */
 	private Text roleNameBox;
 
 	/**
-	 * Add user button.
+	 * Add role button.
 	 */
 	private Button addButton;
 
@@ -54,40 +52,20 @@ public class AddRoleDialog extends TitleAreaDialog {
 	private static final int ADD_ID = 0; // IDialogConstants.OK_ID;
 
 	/**
-	 * Checkbutton for Recording Permission
-	 */
-	private Button cmrRecordingPermissionButton;
-
-	/**
-	 * Checkbutton for Storage Permission
-	 */
-	private Button cmrStoragePermissionButton;
-
-	/**
-	 * Checkbutton for Delete Agent Permission
-	 */
-	private Button cmrDeleteAgentPermissionButton;
-
-	/**
-	 * Checkbutton for Shutdown And Restart Permission
-	 */
-	private Button cmrShutdownAndRestartPermissionButton;
-
-	/**
-	 * Checkbutton for Administration Permission
-	 */
-	private Button cmrAdministrationPermissionButton;
-
-	/**
 	 * Array of all Roles.
 	 */
 	private List<Role> rolesList;
 
 	/**
-	 * Dropdown menu for roles.
+	 * List of permissions that the current user can give to the new role.
 	 */
-	private Combo roles;
-
+	private List<String> grantedPermissions; 
+	
+	/**
+	 * Array of buttons to display the permissions that can be granted.
+	 */
+	private Button[] grantedPermissionsButtons; 
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -139,17 +117,13 @@ public class AddRoleDialog extends TitleAreaDialog {
 		textPermissionLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
 		textPermissionLabel.setText("Mark the permissions, that the new role should have:");
 
-		cmrRecordingPermissionButton = new Button(parent, SWT.CHECK);
-		cmrStoragePermissionButton = new Button(parent, SWT.CHECK);
-		cmrDeleteAgentPermissionButton = new Button(parent, SWT.CHECK);
-		cmrShutdownAndRestartPermissionButton = new Button(parent, SWT.CHECK);
-		cmrAdministrationPermissionButton = new Button(parent, SWT.CHECK);
-
-		cmrRecordingPermissionButton.setText("CMR Recording");
-		cmrStoragePermissionButton.setText("CMR Storage");
-		cmrDeleteAgentPermissionButton.setText("CMR Delete Agent");
-		cmrShutdownAndRestartPermissionButton.setText("CMR Shutdown/Restart");
-		cmrAdministrationPermissionButton.setText("Administration");
+		this.grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
+		this.grantedPermissionsButtons = new Button[grantedPermissions.size()];
+		for (int i = 0; i < grantedPermissions.size(); i++) {
+			grantedPermissionsButtons[i] = new Button(parent, SWT.CHECK);
+			grantedPermissionsButtons[i].setText(grantedPermissions.get(i));
+		}
+		
 
 		
 		ModifyListener modifyListener = new ModifyListener() {
@@ -190,40 +164,32 @@ public class AddRoleDialog extends TitleAreaDialog {
 		}
 	}
 
+	/**
+	 * Finishes the role-creation.
+	 */
 	private void addPressed() {
-		System.out.println();
 		if (rolesList.contains(roleNameBox.getText())) {
 			MessageDialog.openError(null, "Role already exists!", "The Role you chose is already taken! ");
 			return;
 		}
 		String name = roleNameBox.getText();
-		List<Permission> rolePermissions = new ArrayList<Permission>();
-		if (cmrRecordingPermissionButton.isEnabled()) {
-			rolePermissions.add(new Permission("cmrRecordingPermission", "Permission start recording from Agent"));
+		List<String> rolePermissions = new ArrayList<String>();
+		for (int i = 0; i < grantedPermissions.size(); i++) {
+			if (grantedPermissionsButtons[i].isEnabled()) {
+				rolePermissions.add(grantedPermissions.get(i));
+			}
+			
 		}
-		if (cmrShutdownAndRestartPermissionButton.isEnabled()) {
-			rolePermissions.add(new Permission("cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR"));
-		}
-		if (cmrStoragePermissionButton.isEnabled()) {
-			rolePermissions.add(new Permission("cmrStoragePermission", "Permission for accessing basic storage options"));
-		}
-		if (cmrDeleteAgentPermissionButton.isEnabled()) {
-			rolePermissions.add(new Permission("cmrDeleteAgentPermission", "Permission for deleting Agent"));
-		}
-		if (cmrAdministrationPermissionButton.isEnabled()){
-			rolePermissions.add(new Permission("cmrAdministrationPermission", "Permission for accessing the CMR Administration"));
-		}
-
-		 Role role = new Role(name, rolePermissions);
-		 cmrRepositoryDefinition.getSecurityService().addRole(role);
+		cmrRepositoryDefinition.getSecurityService().addRole(name, rolePermissions);
 		okPressed();
 	}
 
+	/**
+	 * Checks if the name-box is not empty.
+	 * @return true if not empty
+	 */
 	private boolean isInputValid() {
-		if (roleNameBox.getText().isEmpty()) {
-			return false;
-		}
-		return true;
+		return !roleNameBox.getText().isEmpty();
 	}
 
 }

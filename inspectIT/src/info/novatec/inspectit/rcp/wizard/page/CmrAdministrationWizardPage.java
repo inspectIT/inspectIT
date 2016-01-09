@@ -1,11 +1,9 @@
 package info.novatec.inspectit.rcp.wizard.page;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -15,8 +13,6 @@ import info.novatec.inspectit.rcp.dialog.ShowAllUsersDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.dialog.AddRoleDialog;
 import info.novatec.inspectit.rcp.dialog.AddUserDialog;
-import info.novatec.inspectit.rcp.dialog.RemoveRoleDialog;
-import info.novatec.inspectit.rcp.dialog.RemoveUserDialog;
 import info.novatec.inspectit.rcp.dialog.SearchPermissionsDialog;
 import info.novatec.inspectit.rcp.dialog.SearchRolesDialog;
 import info.novatec.inspectit.rcp.dialog.SearchUsersDialog;
@@ -94,27 +90,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	private AddUserDialog addUserDialog;
 
 	/**
-	 * The dialog to remove users.
-	 */
-	private RemoveUserDialog removeUserDialog;
-
-	/**
-	 * The dialog to remove roles.
-	 */
-	private RemoveRoleDialog removeRoleDialog;
-
-	/**
-	 * Reset button id.
-	 */
-
-	private static final int DONE_ID = 0; // IDialogConstants.OK_ID;
-
-	/**
-	 * Finished button.
-	 */
-	private Button doneButton;
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -140,7 +115,7 @@ public class CmrAdministrationWizardPage extends WizardPage {
 		showUsers.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				showAllUsersDialog = new ShowAllUsersDialog(main.getShell());
+				showAllUsersDialog = new ShowAllUsersDialog(main.getShell(), cmrRepositoryDefinition);
 				showAllUsersDialog.open();
 			}
 		});
@@ -188,17 +163,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 				searchRolesDialog.open();
 			}
 		});
-
-		Button removeUser = new Button(main, SWT.CENTER);
-		removeUser.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		removeUser.setText("Remove User");
-		removeUser.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeUserDialog = new RemoveUserDialog(main.getShell());
-				removeUserDialog.open();
-			}
-		});
 		
 		Button showPermissions = new Button(main, SWT.CENTER);
 		showPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
@@ -221,18 +185,7 @@ public class CmrAdministrationWizardPage extends WizardPage {
 				searchPermissionsDialog.open();
 			}
 		});
-
-		Button removeRole = new Button(main, SWT.CENTER);
-		removeRole.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		removeRole.setText("Remove Role");
-		removeRole.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeRoleDialog = new RemoveRoleDialog(main.getShell());
-				removeRoleDialog.open();
-			}
-		});
-
+		
 		setControl(main);
 	}
 

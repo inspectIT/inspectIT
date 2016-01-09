@@ -3,7 +3,6 @@ package info.novatec.inspectit.rcp.dialog;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -19,7 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Combo;
 
-import info.novatec.inspectit.communication.data.cmr.Permutation;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
@@ -28,6 +26,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
  * 
  * @author Mario Rose
  * @author Thomas Sachs
+ * @author Lucca Hellriegel
  *
  */
 public class AddUserDialog extends TitleAreaDialog {
@@ -119,7 +118,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		Label passwordLabel = new Label(main, SWT.NONE);
 		passwordLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		passwordLabel.setText("password:");
-		passwordBox = new Text(main, SWT.BORDER);
+		passwordBox = new Text(main, SWT.BORDER | SWT.PASSWORD);
 		passwordBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		Label rolesLabel = new Label(main, SWT.NONE);
@@ -174,8 +173,8 @@ public class AddUserDialog extends TitleAreaDialog {
 	 * Adds the new user to database.
 	 */
 	private void addPressed() {
-		if (userList.contains(mailBox.getText())){
-			MessageDialog.openError(null, "Mail already exists!", "The Mail you chose is already taken! ");
+		if (userList.contains(mailBox.getText())) {
+			MessageDialog.openError(null, "Mail already exists!", "The mail you chose is already taken! ");
 			return;
 		}
 		long id = 0;
@@ -193,6 +192,10 @@ public class AddUserDialog extends TitleAreaDialog {
 		okPressed();
 	}
 	
+	/**
+	 * Checks if the input is not null.
+	 * @return true if not null.
+	 */
 	private boolean isInputValid() {
 		if (mailBox.getText().isEmpty()) {
 			return false;
@@ -200,7 +203,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		if (passwordBox.getText().isEmpty()) {
 			return false;
 		}
-		if (roles.getText() == "" ) {
+		if (roles.getText() == "") {
 			return false;
 		} 
 		return true;
