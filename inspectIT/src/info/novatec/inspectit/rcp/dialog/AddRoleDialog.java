@@ -59,13 +59,13 @@ public class AddRoleDialog extends TitleAreaDialog {
 	/**
 	 * List of permissions that the current user can give to the new role.
 	 */
-	private List<String> grantedPermissions; 
-	
+	private List<String> grantedPermissions;
+
 	/**
 	 * Array of buttons to display the permissions that can be granted.
 	 */
-	private Button[] grantedPermissionsButtons; 
-	
+	private Button[] grantedPermissionsButtons;
+
 	/**
 	 * Default constructor.
 	 * 
@@ -79,7 +79,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 		super(parentShell);
 		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
-		
+
 	}
 
 	/**
@@ -123,9 +123,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 			grantedPermissionsButtons[i] = new Button(parent, SWT.CHECK);
 			grantedPermissionsButtons[i].setText(grantedPermissions.get(i));
 		}
-		
 
-		
 		ModifyListener modifyListener = new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -168,17 +166,19 @@ public class AddRoleDialog extends TitleAreaDialog {
 	 * Finishes the role-creation.
 	 */
 	private void addPressed() {
-		if (rolesList.contains(roleNameBox.getText())) {
-			MessageDialog.openError(null, "Role already exists!", "The Role you chose is already taken! ");
-			return;
+		for (Role list : rolesList) {
+			if (list.getTitle().equals(roleNameBox.getText())) {
+				MessageDialog.openError(null, "Role already exists!", "The Role you chose is already taken! ");
+				return;
+			}
 		}
 		String name = roleNameBox.getText();
 		List<String> rolePermissions = new ArrayList<String>();
 		for (int i = 0; i < grantedPermissions.size(); i++) {
-			if (grantedPermissionsButtons[i].isEnabled()) {
+			if (grantedPermissionsButtons[i].getSelection()) {
 				rolePermissions.add(grantedPermissions.get(i));
 			}
-			
+
 		}
 		cmrRepositoryDefinition.getSecurityService().addRole(name, rolePermissions);
 		okPressed();
@@ -186,6 +186,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 
 	/**
 	 * Checks if the name-box is not empty.
+	 * 
 	 * @return true if not empty
 	 */
 	private boolean isInputValid() {
