@@ -195,7 +195,6 @@ public class SecurityService implements ISecurityService {
 			return (permission.getDescription().length() < 100);
 		} else if (data instanceof Role) {
 			//TODO: make real data integrity tests
-			Role role = (Role) data;
 			return true;
 		}
 		
