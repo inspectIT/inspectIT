@@ -258,13 +258,13 @@ public class SecurityService implements ISecurityService {
 	@Override
 	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged) {
 		if (passwordChanged) {
-			User userNew = new User(userOld.getPassword(), email, roleID);
-			userDao.delete(userOld);
-			userDao.saveOrUpdate(userNew); //this way the old password is not hashed twice.
-		} else {
 			User userNew = new User(password, email, roleID);
 			userDao.delete(userOld);
 			addUser(userNew);
+		} else {
+			User userNew = new User(userOld.getPassword(), email, roleID);
+			userDao.delete(userOld);
+			userDao.saveOrUpdate(userNew); //this way the old password is not hashed twice.
 		}
 	}
 
