@@ -6,9 +6,14 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -35,7 +40,7 @@ public class SearchUsersDialog extends TitleAreaDialog {
 	/**
 	 * email text box.
 	 */
-	private Text mailBox;
+	private Text searchBox;
 	/**
 	 * Search user button.
 	 */
@@ -49,6 +54,10 @@ public class SearchUsersDialog extends TitleAreaDialog {
 	 */
 	private Table table;
 	/**
+	 * Dropdown menu for search options.
+	 */
+	private Combo searchOptions;
+	/**
 	 * Array of all Roles.
 	 */
 	private List<Role> rolesList;
@@ -56,6 +65,10 @@ public class SearchUsersDialog extends TitleAreaDialog {
 	 * List of all Users.
 	 */
 	private List<String> userList;
+	/**
+	 * {@link EditUserDialog}.
+	 */
+	private EditUserDialog editUserDialog;
 	/**
 	 * Default constructor.
 	 * @param parentShell
@@ -78,7 +91,7 @@ public class SearchUsersDialog extends TitleAreaDialog {
 		super.create();
 		this.setTitle("Search Users");
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -91,20 +104,27 @@ public class SearchUsersDialog extends TitleAreaDialog {
 		gd.heightHint = 100;
 		main.setLayoutData(gd);
 
-		Label textLabel = new Label(main, SWT.NONE);
-		textLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
-		textLabel.setText("Search Users");
+		Label searchBoxLabel = new Label(main, SWT.NONE);
+		searchBoxLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		searchBoxLabel.setText("Search:");
+		searchBox = new Text(main, SWT.BORDER);
+		searchBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-		Label mailLabel = new Label(main, SWT.NONE);
-		mailLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		mailLabel.setText("e-mail:");
-		mailBox = new Text(main, SWT.BORDER);
-		mailBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		
-		table = new Table(parent, SWT.BORDER);
+		Label searchOptionsLabel = new Label(main, SWT.NONE);
+		searchOptionsLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		searchOptionsLabel.setText("Search for:");
+		searchOptions = new Combo(main, SWT.READ_ONLY);
+		searchOptions.add("E-Mail");
+		searchOptions.add("Role");
+		searchOptions.setText("");
+
+		table = new Table(parent, SWT.BORDER | SWT.FULL_SELECTION);
+		GridData gdTable = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gdTable.heightHint = 100;
+		table.setLayoutData(gdTable);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		  
+
 		// columns
 		final TableColumn emailColumn = new TableColumn(table, SWT.NONE);
 		emailColumn.setText("E-Mail");
@@ -112,23 +132,49 @@ public class SearchUsersDialog extends TitleAreaDialog {
 		final TableColumn roleColumn = new TableColumn(table, SWT.NONE);
 		roleColumn.setText("Role");
 		roleColumn.pack();
-		
 		parent.pack();
+
+		table.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (table.getSelectionIndex() != -1) {
+					TableItem[] tableItems = table.getItems();
+					User user = cmrRepositoryDefinition.getSecurityService().getUser(tableItems[table.getSelectionIndex()].getText(0));
+					editUserDialog(main.getShell(), user);
+				}
+			}
+		});
+
+		ModifyListener modifyListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if (isInputValid()) {
+					searchButton.setEnabled(true);
+				} else {
+					searchButton.setEnabled(false);
+				}
+			}
+		};
+
+		searchBox.addModifyListener(modifyListener);
+		searchOptions.addModifyListener(modifyListener);
+
+
+
 		return main;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		searchButton = createButton(parent, SEARCH_ID, "Search", true);
-		searchButton.setEnabled(true);
+		searchButton.setEnabled(false);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CLOSE_LABEL, false);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -140,28 +186,43 @@ public class SearchUsersDialog extends TitleAreaDialog {
 			cancelPressed();
 		}
 	}
-	
+
 	/**
 	 * Searches for user with that email in database.
 	 */
 	private void searchPressed() {
+		userList = cmrRepositoryDefinition.getSecurityService().getAllUsers();
 		table.removeAll();
-		if (userList.contains(mailBox.getText())) {
-			User user = cmrRepositoryDefinition.getSecurityService().getUser(mailBox.getText());
-			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(0, user.getEmail());
+		if (searchOptions.getText().equals("E-Mail")) {
+			if (userList.contains(searchBox.getText())) {
+				User user = cmrRepositoryDefinition.getSecurityService().getUser(searchBox.getText());
+				TableItem item = new TableItem(table, SWT.NONE);
+				item.setText(0, user.getEmail());
+				for (Role role : rolesList) {
+					if (role.getId() == user.getRoleId()) {
+						item.setText(1, role.getTitle());
+					}
+				}
+			}
+		} else if (searchOptions.getText().equals("Role")) {
+			long id = 0; //Role IDs start at 1.
 			for (Role role : rolesList) {
-		    	if (role.getId() == user.getRoleId()) {
-		    		item.setText(1, role.getTitle());
-		    	}
-		    }
-		} else {
-			MessageDialog.openError(null, "No users found.", "We couldn't find a user with this email.");
-			return;
+				if (role.getTitle().equals(searchBox.getText())) {
+					id = role.getId();
+				}
+			}
+			if (id != 0) {
+				List<String> users = cmrRepositoryDefinition.getSecurityService().getUsersByRole(id);
+				for (String user : users) {
+					TableItem item = new TableItem(table, SWT.NONE);
+					item.setText(0, user);
+					item.setText(1, searchBox.getText());
+				}
+			}
 		}
 		resizeTable();
 	}
-	
+
 	/**
 	 * Resizes the table.
 	 */
@@ -169,7 +230,33 @@ public class SearchUsersDialog extends TitleAreaDialog {
 		for (TableColumn column : table.getColumns()) {
 			column.pack();
 		}
-		table.pack();
+	}
+
+	/**
+	 * Checks if the input is not null.
+	 * @return true if not null.
+	 */
+	private boolean isInputValid() {
+		if (searchBox.getText().isEmpty()) {
+			return false;
+		}
+		if (searchOptions.getText() == "") {
+			return false;
+		} 
+		return true;
+	}
+	
+	/**
+	 * Dialog in case a user is clicked in the table.
+	 * 
+	 * @param parentShell
+	 *            parent shell for the {@link EditUserDialog}
+	 * @param user
+	 * 		 	  the user to edit.
+	 */
+	private void editUserDialog(Shell parentShell, User user) {
+		editUserDialog = new EditUserDialog(parentShell, cmrRepositoryDefinition, user);
+		editUserDialog.open();
 	}
 
 }

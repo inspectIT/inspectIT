@@ -135,12 +135,19 @@ public interface ISecurityService {
 	void deleteUser(User user);
 
 	/**
-	 * Change any attribute of a User. Email cannot be changed.
 	 * 
-	 * @param user
-	 *            user
+	 * @param userOld 
+	 * 		the user that is edited and now needs to be deleted
+	 * @param email
+	 * 		the new email
+	 * @param password
+	 * 		the new password
+	 * @param roleID
+	 * 		the new roleID
+	 * @param passwordChanged
+	 * 		boolean to see if password was changed and needs to be hashed
 	 */
-	void changeUserAttribute(User user, User user2);
+	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged);
 
 	// | PERMISSION |---------
 	/**
@@ -157,6 +164,8 @@ public interface ISecurityService {
 	 * @return An List containing all Roles
 	 */
 	List<Permission> getAllPermissions();
+
+	
 
 	
 
