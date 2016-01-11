@@ -1,7 +1,9 @@
 package info.novatec.inspectit.rcp.dialog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -15,9 +17,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 
@@ -168,18 +172,40 @@ public class AddRoleDialog extends TitleAreaDialog {
 	private void addPressed() {
 		for (Role list : rolesList) {
 			if (list.getTitle().equals(roleNameBox.getText())) {
-				MessageDialog.openError(null, "Role already exists!", "The Role you chose is already taken! ");
+				MessageDialog.openError(null, "Title already exists!", "The Title you chose is already taken! ");
 				return;
 			}
 		}
+
 		String name = roleNameBox.getText();
 		List<String> rolePermissions = new ArrayList<String>();
 		for (int i = 0; i < grantedPermissions.size(); i++) {
 			if (grantedPermissionsButtons[i].getSelection()) {
 				rolePermissions.add(grantedPermissions.get(i));
 			}
-
 		}
+		String similarRoles = "";
+		for (Role list : rolesList) {
+			Set<String> permissionSetExisting = new HashSet<String>();
+			for (Permission permission : list.getPermissions()) {
+				permissionSetExisting.add(permission.getTitle());
+			}
+			Set<String> permissionSetNew = new HashSet<String>(rolePermissions);
+			if (permissionSetExisting.equals(permissionSetNew)) {
+				similarRoles+="\"" + list.getTitle() + "\", ";
+			}
+		}
+
+		if (similarRoles != "") {
+			String Warning = "One or more roles with the same set of permissions already exists." + "\n" + "\nDetected roles: " + similarRoles.substring(0, similarRoles.length()-2) +"\n" 
+					+ "\nDo you really want to add the role \"" + name + "\"?";
+			Boolean confirm = MessageDialog.openConfirm(null, "Similar role already exists!", Warning);
+			if (!confirm) {
+				return;
+					
+			}
+		}
+		
 		cmrRepositoryDefinition.getSecurityService().addRole(name, rolePermissions);
 		okPressed();
 	}
