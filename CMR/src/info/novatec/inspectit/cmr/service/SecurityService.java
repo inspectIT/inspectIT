@@ -256,18 +256,16 @@ public class SecurityService implements ISecurityService {
 
 	//TODO: TESTMETHODE!
 	@Override
-	public void changeUserAttribute(User user, User user2) throws DataIntegrityViolationException, DataRetrievalFailureException {
-		//List<User> foundUsers = userDao.findByEmail(user.getEmail());
-		//if (!checkDataIntegrity(user)) {
-			//throw new DataIntegrityViolationException("Data integrity test failed!");
-		//} else if (foundUsers.size() == 1) {
-			userDao.delete(user);
-			userDao.saveOrUpdate(user2);
-		//} else if (foundUsers.size() > 1) {
-		//	throw new DataIntegrityViolationException("Multiple users with same email found!");
-		//} else {
-			//throw new DataRetrievalFailureException("The user you wanted to update does not exist!");
-		//}
+	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged) {
+		if (passwordChanged) {
+			User userNew = new User(userOld.getPassword(), email, roleID);
+			userDao.delete(userOld);
+			userDao.saveOrUpdate(userNew); //this way the old password is not hashed twice.
+		} else {
+			User userNew = new User(password, email, roleID);
+			userDao.delete(userOld);
+			addUser(userNew);
+		}
 	}
 
 	// | PERMISSION |---------
