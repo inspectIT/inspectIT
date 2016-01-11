@@ -140,7 +140,7 @@ public interface ISecurityService {
 	 * @param user
 	 *            user
 	 */
-	void changeUserAttribute(User user);
+	void changeUserAttribute(User user, User user2);
 
 	// | PERMISSION |---------
 	/**

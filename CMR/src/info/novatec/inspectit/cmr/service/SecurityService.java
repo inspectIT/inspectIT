@@ -254,19 +254,20 @@ public class SecurityService implements ISecurityService {
 		userDao.delete(user);
 	}
 
+	//TODO: TESTMETHODE!
 	@Override
-	public void changeUserAttribute(User user) throws DataIntegrityViolationException, DataRetrievalFailureException {
-		List<User> foundUsers = userDao.findByEmail(user.getEmail());
-		if (!checkDataIntegrity(user)) {
-			throw new DataIntegrityViolationException("Data integrity test failed!");
-		} else if (foundUsers.size() == 1) {
-			userDao.delete(foundUsers.get(0));
-			userDao.saveOrUpdate(user);
-		} else if (foundUsers.size() > 1) {
-			throw new DataIntegrityViolationException("Multiple users with same email found!");
-		} else {
-			throw new DataRetrievalFailureException("The user you wanted to update does not exist!");
-		}
+	public void changeUserAttribute(User user, User user2) throws DataIntegrityViolationException, DataRetrievalFailureException {
+		//List<User> foundUsers = userDao.findByEmail(user.getEmail());
+		//if (!checkDataIntegrity(user)) {
+			//throw new DataIntegrityViolationException("Data integrity test failed!");
+		//} else if (foundUsers.size() == 1) {
+			userDao.delete(user);
+			userDao.saveOrUpdate(user2);
+		//} else if (foundUsers.size() > 1) {
+		//	throw new DataIntegrityViolationException("Multiple users with same email found!");
+		//} else {
+			//throw new DataRetrievalFailureException("The user you wanted to update does not exist!");
+		//}
 	}
 
 	// | PERMISSION |---------
