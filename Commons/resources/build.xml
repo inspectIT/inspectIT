@@ -39,7 +39,7 @@
 		<!-- we integrate the rt.jar of a JDK 1.5 as bootclasspath. This ensures that the code is really tested against
 		     a 1.5 java environment. Only defining the source and target also allows a 1.6 JDK to compile the code and
 		     this jdk does not detect errors based on classes that were not available in 1.5 -->
-		<javac bootclasspath="${java15runtime.path}/${ftp.internal.java15runtime.file}" source="1.5" target="1.5" debug="true" fork="true" includeAntRuntime="no" destdir="${build.commons.classes}" srcdir="${src.root}" classpathref="compile.classpath">
+		<javac bootclasspath="${java15runtime.path}/${ftp.internal.java15runtime.file}" source="1.5" target="1.5" debug="true" fork="true" includeAntRuntime="no" destdir="${build.commons.classes}" srcdir="${src.root}" classpathref="compile.classpath" encoding="utf-8">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 
