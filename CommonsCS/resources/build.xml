@@ -46,7 +46,7 @@
 			<path refid="lib.prod.commons" />
 		</path>
 
-		<javac source="1.7" target="1.7" debug="true" fork="true" includeAntRuntime="no" destdir="${build.commonscs.classes}" srcdir="${src.root}" classpathref="compile.classpath">
+		<javac source="1.7" target="1.7" debug="true" fork="true" includeAntRuntime="no" destdir="${build.commonscs.classes}" srcdir="${src.root}" classpathref="compile.classpath" encoding="utf-8">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 

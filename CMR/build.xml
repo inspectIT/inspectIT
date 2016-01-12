@@ -64,7 +64,7 @@
 			<path refid="lib.prod.commonscs" />
 		</path>
 
-		<javac source="1.7" target="1.7" debug="true" debuglevel="lines,vars,source" destdir="${build.cmr.classes}" srcdir="${src.root}" classpathref="compile.classpath" includeAntRuntime="no" />
+		<javac source="1.7" target="1.7" debug="true" debuglevel="lines,vars,source" destdir="${build.cmr.classes}" srcdir="${src.root}" classpathref="compile.classpath" includeAntRuntime="no" encoding="utf-8" />
 	</target>
 
 
