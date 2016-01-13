@@ -38,6 +38,7 @@ import info.novatec.inspectit.spring.logger.Log;
  * @author Andreas Herzog
  * @author Clemens Geibel
  * @author Lucca Hellriegel
+ * @author Mario Rose
  */
 @Service
 public class SecurityService implements ISecurityService {
