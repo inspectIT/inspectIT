@@ -53,6 +53,7 @@
 			<class name="info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceHookTest" />
 			<class name="info.novatec.inspectit.agent.sensor.method.timer.TimerHookTest" />
 			<class name="info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingHookTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.remote.http.RemoteHttpExtractorHookTest" />
 		</classes>
 	</test>
 	<test name="Connection Meta Data Extraction">
@@ -99,6 +100,7 @@
 	<test name="Util">
 		<classes>
 			<class name="info.novatec.inspectit.agent.sensor.method.http.HttpRequestParameterExtractorTest" />
+			<class name="info.novatec.inspectit.agent.sensor.method.remote.http.RemoteHttpParameterExtractorTest" />
 			<class name="info.novatec.inspectit.agent.sensor.platform.CpuUsageCalculatorTest" />
 			<class name="info.novatec.inspectit.util.ThreadLocalStackTest" />
 			<class name="info.novatec.inspectit.util.WeakListTest" />

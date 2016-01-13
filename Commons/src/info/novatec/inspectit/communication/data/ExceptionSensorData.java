@@ -214,7 +214,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 	 * {@inheritDoc}
 	 */
 	public double getInvocationAffiliationPercentage() {
-		return (double) getObjectsInInvocationsCount() / 1d;
+		return (double) getObjectsInInvocationsCount() / 1d; 
 	}
 
 	/**

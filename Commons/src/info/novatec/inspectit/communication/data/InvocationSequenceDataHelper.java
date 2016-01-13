@@ -120,6 +120,18 @@ public final class InvocationSequenceDataHelper {
 	public static boolean hasLoggingData(InvocationSequenceData data) {
 		return null != data.getLoggingData();
 	}
+	
+	/**
+	/**
+	 * Checks whether this data object contains a remote call data object.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return whether this data object contains a remote call data object.
+	 */
+	public static boolean hasRemoteCallData(InvocationSequenceData data) {
+		return null != data.getRemoteCallData();
+	}
 
 	/**
 	 * Checks whether this data object contains exception data.
@@ -185,6 +197,28 @@ public final class InvocationSequenceDataHelper {
 	 */
 	public static boolean hasNestedExceptions(InvocationSequenceData data) {
 		return null != data.isNestedExceptions() && data.isNestedExceptions().booleanValue();
+	}
+
+	/**
+	 * Checks whether this data object has nested RemoteCalls.
+	 * 
+	 * @param data
+	 *            {@link InvocationSequenceData}
+	 * @return True if is has nested outgoing RemoteCalls, false otherwise.
+	 */
+	public static boolean hasNestedOutgoingRemoteCalls(InvocationSequenceData data) {
+		return null != data.isNestedOutgoingRemoteCalls() && data.isNestedOutgoingRemoteCalls().booleanValue();
+	}
+
+	/**
+	 * Checks whether this data object has nested RemoteCalls.
+	 * 
+	 * @param data
+	 *            {@link InvocationSequenceData}
+	 * @return True if is has nested incomming RemoteCalls, false otherwise.
+	 */
+	public static boolean hasNestedIncommingRemoteCalls(InvocationSequenceData data) {
+		return null != data.isNestedIncommingRemoteCalls() && data.isNestedIncommingRemoteCalls().booleanValue();
 	}
 
 	/**

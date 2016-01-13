@@ -46,6 +46,11 @@ public class InvocationSequenceData extends MethodSensorData {
 	private SqlStatementData sqlStatementData;
 
 	/**
+	 * The associated remote call data object. Can be <code>null</code>.
+	 */
+	private RemoteCallData remoteCallData;
+
+	/**
 	 * The associated exception sensor data object. Can be <code>null</code>.
 	 */
 	private List<ExceptionSensorData> exceptionSensorDataObjects;
@@ -89,6 +94,18 @@ public class InvocationSequenceData extends MethodSensorData {
 	 * If the {@link ExceptionSensorData} is available in this or one of the nested invocations.
 	 */
 	private Boolean nestedExceptions;
+
+	/**
+	 * If the {@link RemoteCallData} is available and is outgoing in this or one of the nested
+	 * invocations.
+	 */
+	private Boolean nestedOutgoingRemoteCalls;
+
+	/**
+	 * If the {@link RemoteCallData} is available and is outgoing in this or one of the nested
+	 * invocations.
+	 */
+	private Boolean nestedIncomingRemoteCalls;
 
 	/**
 	 * Default no-args constructor.
@@ -176,6 +193,14 @@ public class InvocationSequenceData extends MethodSensorData {
 	 */
 	public SqlStatementData getSqlStatementData() {
 		return sqlStatementData;
+	}
+
+	public void setRemoteCallData(RemoteCallData remoteCallData) {
+		this.remoteCallData = remoteCallData;
+	}
+
+	public RemoteCallData getRemoteCallData() {
+		return remoteCallData;
 	}
 
 	/**
@@ -356,8 +381,47 @@ public class InvocationSequenceData extends MethodSensorData {
 	}
 
 	/**
+	 * Gets {@link #nestedOutgoingRemoteCalls}.
+	 * 
+	 * @return {@link #nestedOutgoingRemoteCalls}
+	 */
+	public Boolean isNestedOutgoingRemoteCalls() {
+		return nestedOutgoingRemoteCalls;
+	}
+
+	/**
+	 * Sets {@link #nestedOutgoingRemoteCalls}.
+	 * 
+	 * @param nestedOutgoingRemoteCalls
+	 *            New value for {@link #nestedOutgoingRemoteCalls}
+	 */
+	public void setNestedOutgoingRemoteCalls(Boolean nestedOutgoingRemoteCalls) {
+		this.nestedOutgoingRemoteCalls = nestedOutgoingRemoteCalls;
+	}
+
+	/**
+	 * Gets {@link #nestedIncomingRemoteCalls}.
+	 * 
+	 * @return {@link #nestedIncomingRemoteCalls}
+	 */
+	public Boolean isNestedIncommingRemoteCalls() {
+		return nestedIncomingRemoteCalls;
+	}
+
+	/**
+	 * Sets {@link #nestedIncomingRemoteCalls}.
+	 * 
+	 * @param nestedIncommingRemoteCalls
+	 *            New value for {@link #nestedIncomingRemoteCalls}
+	 */
+	public void setNestedIncommingRemoteCalls(Boolean nestedIncommingRemoteCalls) {
+		this.nestedIncomingRemoteCalls = nestedIncommingRemoteCalls;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -365,12 +429,14 @@ public class InvocationSequenceData extends MethodSensorData {
 		result = prime * result + ((sqlStatementData == null) ? 0 : sqlStatementData.hashCode());
 		result = prime * result + ((timerData == null) ? 0 : timerData.hashCode());
 		result = prime * result + ((loggingData == null) ? 0 : loggingData.hashCode());
+		result = prime * result + ((remoteCallData == null) ? 0 : remoteCallData.hashCode());
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -410,18 +476,27 @@ public class InvocationSequenceData extends MethodSensorData {
 		} else if (!loggingData.equals(other.loggingData)) {
 			return false;
 		}
+		if (remoteCallData == null) {
+			if (other.remoteCallData != null) {
+				return false;
+			}
+		} else if (!remoteCallData.equals(other.remoteCallData)) {
+			return false;
+		}
 		return true;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(8, 0, 0, 0, 2, 3);
+		size += objectSizes.getPrimitiveTypesSize(11, 0, 0, 0, 2, 3);
 		size += objectSizes.getSizeOf(timerData);
 		size += objectSizes.getSizeOf(loggingData);
 		size += objectSizes.getSizeOf(sqlStatementData);
+		size += objectSizes.getSizeOf(remoteCallData);
 		if (nestedSequences instanceof ArrayList) {
 			size += objectSizes.getSizeOf(nestedSequences, 0);
 			for (InvocationSequenceData invocationSequenceData : nestedSequences) {
@@ -438,6 +513,12 @@ public class InvocationSequenceData extends MethodSensorData {
 			size += objectSizes.getSizeOfBooleanObject();
 		}
 		if (null != nestedExceptions) {
+			size += objectSizes.getSizeOfBooleanObject();
+		}
+		if (null != nestedOutgoingRemoteCalls) {
+			size += objectSizes.getSizeOfBooleanObject();
+		}
+		if (null != nestedIncomingRemoteCalls) {
 			size += objectSizes.getSizeOfBooleanObject();
 		}
 		if (doAlign) {
@@ -470,6 +551,9 @@ public class InvocationSequenceData extends MethodSensorData {
 		clone.setNestedSqlStatements(this.isNestedSqlStatements());
 		clone.setNestedExceptions(this.isNestedExceptions());
 		clone.setLoggingData(this.getLoggingData());
+		clone.setRemoteCallData(this.getRemoteCallData());
+		clone.setNestedIncommingRemoteCalls(this.isNestedIncommingRemoteCalls());
+		clone.setNestedOutgoingRemoteCalls(this.isNestedOutgoingRemoteCalls());
 		return clone;
 	}
 

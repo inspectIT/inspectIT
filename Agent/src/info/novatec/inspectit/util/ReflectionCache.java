@@ -83,6 +83,7 @@ public class ReflectionCache {
 
 		// invoke method
 		try {
+			method.setAccessible(true);
 			return method.invoke(instance, values);
 		} catch (Exception e) {
 			LOG.warn("Could not invoke method " + methodName + " on instance " + instance, e);

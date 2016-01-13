@@ -404,15 +404,15 @@ public class ByteCodeAnalyzerTest extends AbstractLogSupport {
 		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
 		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(methodList);
 		when(configurationStorage.getClassLoaderDelegationMatchers()).thenReturn(Collections.singleton(matcher));
-
+		
 		byteCodeAnalyzer.classLoaderDelegation = true;
 		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
 		verify(hookInstrumenter, times(1)).addClassLoaderDelegationHook(methodList.get(0));
-
+		
 		byteCodeAnalyzer.classLoaderDelegation = false;
 		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
-
+		
 		verifyNoMoreInteractions(hookInstrumenter);
 	}
 }
