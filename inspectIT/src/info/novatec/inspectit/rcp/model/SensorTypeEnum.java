@@ -76,7 +76,13 @@ public enum SensorTypeEnum {
 	/** The JMX sensor data type. */
 	JMX_SENSOR_DATA("info.novatec.inspectit.agent.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
 	/** The JMX sensor data type. */
-	CHARTING_JMX_SENSOR_DATA("info.novatec.inspectit.agent.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN);
+	CHARTING_JMX_SENSOR_DATA("info.novatec.inspectit.agent.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
+	/** The Remote Call Extractor sensor type. */
+	REMOTE_CALL_RESPONSE("info.novatec.inspectit.agent.sensor.method.remote.extractor.http.RemoteHttpExtractorSensor", InspectITImages.IMG_HTTP),
+	/** The Remote Call Inserter Apache sensor type. */
+	REMOTE_CALL_REQUEST_APACHE_HTTPCLIENT_V40("info.novatec.inspectit.agent.sensor.method.remote.inserter.apache.httpclient.RemoteApacheHttpClientV40InserterSensor", InspectITImages.IMG_HTTP),
+	/** The remote navigation invocation sequence sensor type. */
+	NAVIGATION_REMOTE_INVOCATION("info.novatec.inspectit.agent.sensor.method.invocationsequence.NavigationInvocationSequenceSensor", InspectITImages.IMG_INVOCATION);
 	
 	
 

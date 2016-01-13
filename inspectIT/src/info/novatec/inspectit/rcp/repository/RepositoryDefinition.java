@@ -6,6 +6,7 @@ import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
 import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
+import info.novatec.inspectit.cmr.service.IRemoteCallDataAccessService;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
 import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
 
@@ -93,4 +94,11 @@ public interface RepositoryDefinition {
 	 * @return Returns the {@link IJmxDataAccessService}.
 	 */
 	IJmxDataAccessService getJmxDataAccessService();
+	
+	/**
+	 * Returns the {@link IRemoteCallDataAccessService}. 
+	 * 
+	 * @return Returns the {@link IRemoteCallDataAccessService}.
+	 */
+	IRemoteCallDataAccessService getRemoteCallDataAccessService();
 }

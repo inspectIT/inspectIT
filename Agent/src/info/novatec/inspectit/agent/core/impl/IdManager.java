@@ -72,7 +72,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * The mapping between the local and remote sensor type ids.
 	 */
-	private Map<Long, Long> sensorTypeIdMap = new HashMap<Long, Long>();
+	private final Map<Long, Long> sensorTypeIdMap = new HashMap<Long, Long>();
 
 	/**
 	 * The mapping between the local and remote jmxDefinitionData ids.
@@ -87,7 +87,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * The methods to register at the server.
 	 */
-	private LinkedList<RegisteredSensorConfig> methodsToRegister = new LinkedList<RegisteredSensorConfig>(); // NOPMD
+	private final LinkedList<RegisteredSensorConfig> methodsToRegister = new LinkedList<RegisteredSensorConfig>(); // NOPMD
 
 	/**
 	 * The jmx definition data to register at the server.
@@ -97,12 +97,12 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * The sensor types to register at the server.
 	 */
-	private LinkedList<AbstractSensorTypeConfig> sensorTypesToRegister = new LinkedList<AbstractSensorTypeConfig>(); // NOPMD
+	private final LinkedList<AbstractSensorTypeConfig> sensorTypesToRegister = new LinkedList<AbstractSensorTypeConfig>(); // NOPMD
 
 	/**
 	 * The mapping between the sensor types and methods to register at the server.
 	 */
-	private LinkedList<SensorTypeToMethodMapping> sensorTypeToMethodRegister = new LinkedList<SensorTypeToMethodMapping>(); // NOPMD
+	private final LinkedList<SensorTypeToMethodMapping> sensorTypeToMethodRegister = new LinkedList<SensorTypeToMethodMapping>(); // NOPMD
 
 	/**
 	 * If set to <code>true</code>, the connection to server created an exception.
@@ -502,12 +502,12 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		/**
 		 * The sensor type identifier.
 		 */
-		private long sensorTypeId;
+		private final long sensorTypeId;
 
 		/**
 		 * The method identifier.
 		 */
-		private long methodId;
+		private final long methodId;
 
 		/**
 		 * Creates a new instance.

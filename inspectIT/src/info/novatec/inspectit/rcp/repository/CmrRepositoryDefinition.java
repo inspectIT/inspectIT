@@ -7,6 +7,7 @@ import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
 import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
+import info.novatec.inspectit.cmr.service.IRemoteCallDataAccessService;
 import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.service.IServerStatusService.ServerStatus;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
@@ -192,6 +193,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * The {@link IJmxDataAccessService}.
 	 */
 	private IJmxDataAccessService jmxDataAccessService;
+	
+	/**
+	 * The {@link IRemoteCallDataAccessService}.
+	 */
+	private IRemoteCallDataAccessService remoteCallDataAccessService;
 
 	/**
 	 * The storage service.
@@ -249,6 +255,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		storageService = cmrServiceProvider.getStorageService(this);
 		configurationInterfaceService = cmrServiceProvider.getConfigurationInterfaceService(this);
 		jmxDataAccessService = cmrServiceProvider.getJmxDataAccessService(this);
+		remoteCallDataAccessService = cmrServiceProvider.getRemoteDataAccessService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, this);
 	}
@@ -338,6 +345,13 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public IJmxDataAccessService getJmxDataAccessService() {
 		return jmxDataAccessService;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public IRemoteCallDataAccessService getRemoteCallDataAccessService() {
+		return remoteCallDataAccessService;
 	}
 
 	/**

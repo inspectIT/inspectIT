@@ -40,3 +40,4 @@ schema/TimeFrame.sch
 schema/LoggingData.sch
 schema/JmxDefinitionDataIdent.sch
 schema/JmxSensorValueData.sch
+schema/RemoteCallData.sch

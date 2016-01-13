@@ -22,7 +22,7 @@ public class ListStringConverter implements AttributeConverter<List<?>, String> 
 	/**
 	 * Delimiter for key and value pairs.
 	 */
-	private static final char DELIMITER = 'Â¦';
+	private static final char DELIMITER = '¦';
 
 	/**
 	 * {@inheritDoc}

@@ -49,6 +49,11 @@ public class TreeModelManager {
 	private boolean hideInactiveInstrumentations;
 
 	/**
+	 * Flag to enable the Remote Call Overview.
+	 */
+	private boolean remoteCallViewActive = true;
+
+	/**
 	 * Every tree model manager needs a reference to a {@link RepositoryDefinition} which reflects a
 	 * CMR.
 	 * 
@@ -82,6 +87,12 @@ public class TreeModelManager {
 			components.add(getTimerTree(platformIdent, repositoryDefinition));
 			components.add(getHttpTimerTree(platformIdent, repositoryDefinition));
 			components.add(getJmxSensorTree(platformIdent, repositoryDefinition));
+
+			// PB want this until we have a nice way to display data
+			if (remoteCallViewActive) {
+				components.add(getRemoteCallTree(platformIdent, repositoryDefinition));
+			}
+
 			components.add(getExceptionSensorTree(platformIdent, repositoryDefinition));
 			components.add(getSystemOverviewTree(platformIdent, repositoryDefinition));
 		}
@@ -787,5 +798,52 @@ public class TreeModelManager {
 		timerDataComposite.addChild(taggedView);
 
 		return timerDataComposite;
+	}
+	
+	/**
+	 * Returns the Remote Call data tree.
+	 * 
+	 * @param platformIdent
+	 *            The platform ident used to create the tree.
+	 * @param definition
+	 *            The {@link RepositoryDefinition} object.
+	 * @return The Remote Call data tree.
+	 */
+	private Component getRemoteCallTree(PlatformIdent platformIdent, RepositoryDefinition definition) {
+		Composite remoteCallDataComposite = new Composite();
+		remoteCallDataComposite.setName("Remote Call Data");
+		remoteCallDataComposite.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP));
+
+		Component remoteDataView = new Leaf();
+		remoteDataView.setName("Show All");
+		remoteDataView.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP_URL));
+
+		InputDefinition inputDefinition = new InputDefinition();
+		inputDefinition.setRepositoryDefinition(definition);
+		inputDefinition.setId(SensorTypeEnum.REMOTE_CALL_RESPONSE);
+
+		EditorPropertiesData editorPropertiesData = new EditorPropertiesData();
+		editorPropertiesData.setSensorImage(SensorTypeEnum.REMOTE_CALL_RESPONSE.getImage());
+		editorPropertiesData.setSensorName("Remote Call Data");
+		editorPropertiesData.setViewImage(InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP_TAGGED));
+		editorPropertiesData.setViewName("Show All");
+		inputDefinition.setEditorPropertiesData(editorPropertiesData);
+
+		IdDefinition idDefinition = new IdDefinition();
+		idDefinition.setPlatformId(platformIdent.getId());
+		for (SensorTypeIdent sensorTypeIdent : platformIdent.getSensorTypeIdents()) {
+			if (ObjectUtils.equals(sensorTypeIdent.getFullyQualifiedClassName(), SensorTypeEnum.REMOTE_CALL_RESPONSE.getFqn())
+					|| ObjectUtils.equals(sensorTypeIdent.getFullyQualifiedClassName(), SensorTypeEnum.REMOTE_CALL_REQUEST_APACHE_HTTPCLIENT_V40.getFqn())) {
+				idDefinition.setSensorTypeId(sensorTypeIdent.getId());
+				break;
+			}
+		}
+
+		inputDefinition.setIdDefinition(idDefinition);
+		remoteDataView.setInputDefinition(inputDefinition);
+
+		remoteCallDataComposite.addChild(remoteDataView);
+
+		return remoteCallDataComposite;
 	}
 }

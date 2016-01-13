@@ -36,6 +36,7 @@ import info.novatec.inspectit.communication.data.LoggingData;
 import info.novatec.inspectit.communication.data.MemoryInformationData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.ParameterContentType;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.RuntimeInformationData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
@@ -314,6 +315,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-1971
 		kryo.register(LoggingData.class, new InvocationAwareDataSerializer<LoggingData>(kryo, LoggingData.class, schemaManager));
+		
+		// addet with INSPECTIT-1921
+		kryo.register(RemoteCallData.class, new InvocationAwareDataSerializer<RemoteCallData>(kryo, RemoteCallData.class, schemaManager));
 
 		// added with INSPECTIT-1915
 		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));

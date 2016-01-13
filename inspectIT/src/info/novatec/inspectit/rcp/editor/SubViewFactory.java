@@ -20,6 +20,7 @@ import info.novatec.inspectit.rcp.editor.table.input.SqlParameterAggregationInpu
 import info.novatec.inspectit.rcp.editor.table.input.TaggedHttpTimerDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.TimerDataInputController;
 import info.novatec.inspectit.rcp.editor.table.input.UngroupedExceptionOverviewInputController;
+import info.novatec.inspectit.rcp.editor.table.input.UngroupedRemoteCallOverviewDataInputController;
 import info.novatec.inspectit.rcp.editor.text.TextSubView;
 import info.novatec.inspectit.rcp.editor.text.input.ClassesInputController;
 import info.novatec.inspectit.rcp.editor.text.input.CpuInputController;
@@ -214,6 +215,11 @@ public final class SubViewFactory {
 			jmxChartSashSubView.addSubView(jmxGraphSubView, 3);
 			jmxChartSashSubView.addSubView(jmxTextSubView, 2);
 			return jmxChartSashSubView;
+		case REMOTE_CALL_RESPONSE:
+		case REMOTE_CALL_REQUEST_APACHE_HTTPCLIENT_V40:
+			SashCompositeSubView remoteSashSubView = new SashCompositeSubView();
+			remoteSashSubView.addSubView(new TableSubView(new UngroupedRemoteCallOverviewDataInputController()));
+			return remoteSashSubView;
 		default:
 			throw new IllegalArgumentException("Could not create sub-view. Not supported: " + sensorTypeEnum.toString());
 		}

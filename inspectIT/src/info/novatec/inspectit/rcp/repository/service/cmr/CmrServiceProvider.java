@@ -7,6 +7,7 @@ import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
 import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
 import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
+import info.novatec.inspectit.cmr.service.IRemoteCallDataAccessService;
 import info.novatec.inspectit.cmr.service.IServerStatusService;
 import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
 import info.novatec.inspectit.cmr.service.IStorageService;
@@ -114,6 +115,26 @@ public abstract class CmrServiceProvider {
 		((ICmrService) invocationDataAccessService).initService(cmrRepositoryDefinition);
 		return invocationDataAccessService;
 	}
+	
+	/**
+	 * Returns properly initialized {@link RemoteCallDataAccessService}.
+	 * 
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} to bound service to.
+	 * @return Returns {@link RemoteCallDataAccessService}.
+	 */
+	public IRemoteCallDataAccessService getRemoteDataAccessService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		IRemoteCallDataAccessService remoteCallDataAccessService = getRemoteDataAccessService();
+		((ICmrService) remoteCallDataAccessService).initService(cmrRepositoryDefinition);
+		return remoteCallDataAccessService;
+	}
+
+	/**
+	 * Returns Spring created {@link RemoteCallDataAccessService}.
+	 * 
+	 * @return Returns Spring created {@link RemoteCallDataAccessService}.
+	 */
+	protected abstract IRemoteCallDataAccessService getRemoteDataAccessService();
 
 	/**
 	 * Returns Spring created {@link InvocationDataAccessService}.

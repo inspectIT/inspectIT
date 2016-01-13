@@ -81,6 +81,17 @@ public final class InputDefinitionExtrasMarkerFactory {
 		}
 
 	};
+	
+	/**
+	 * Marker for {@link RemoteInvocationInputDefinitionExtra}.
+	 */
+	public static final InputDefinitionExtraMarker<RemoteInvocationInputDefinitionExtra> REMOTE_INVOCATION_EXTRAS_MARKER = new InputDefinitionExtraMarker<RemoteInvocationInputDefinitionExtra>() {
+		@Override
+		public Class<RemoteInvocationInputDefinitionExtra> getInputDefinitionExtraClass() {
+			return RemoteInvocationInputDefinitionExtra.class;
+		}
+
+	};
 
 	/**
 	 * Abstract class for input definition extras marker.

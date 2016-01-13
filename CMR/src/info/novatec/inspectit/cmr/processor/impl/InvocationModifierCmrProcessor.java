@@ -7,6 +7,7 @@ import info.novatec.inspectit.communication.ExceptionEvent;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.InvocationSequenceData;
 import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import info.novatec.inspectit.communication.data.RemoteCallData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
 import info.novatec.inspectit.communication.data.TimerData;
 
@@ -105,10 +106,35 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 			extractDataFromInvocation(entityManager, child, topInvocationParent);
 		}
 
-		// process the SQL Statement and Timer
+		// process the SQL Statement, Timer and RemoteCalls
 		processSqlStatementData(entityManager, invData, topInvocationParent);
 		processTimerData(entityManager, invData, topInvocationParent, exclusiveDurationDelta);
 		processExceptionSensorData(entityManager, invData, topInvocationParent);
+		processRemoteCallData(entityManager, invData, topInvocationParent);
+	}
+
+	/**
+	 * Process RemoteCalls if one exists in the invData object and passes it to the chained
+	 * processors.
+	 * 
+	 * @param entityManager
+	 *            {@link EntityManager} needed for DB persistence.
+	 * @param invData
+	 *            Invocation data to be processed.
+	 * @param topInvocationParent
+	 *            Top invocation object.
+	 */
+	private void processRemoteCallData(EntityManager entityManager, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+		RemoteCallData remoteCallData = invData.getRemoteCallData();
+		if (null != remoteCallData) {
+			if (remoteCallData.isCalling()) {
+				topInvocationParent.setNestedOutgoingRemoteCalls(Boolean.TRUE);
+			} else {
+				topInvocationParent.setNestedIncommingRemoteCalls(Boolean.TRUE);
+			}
+			remoteCallData.addInvocationParentId(topInvocationParent.getId());
+			passToChainedProcessors(remoteCallData, entityManager);
+		}
 	}
 
 	/**
