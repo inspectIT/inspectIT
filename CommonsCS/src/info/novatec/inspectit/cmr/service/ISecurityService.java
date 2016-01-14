@@ -90,6 +90,18 @@ public interface ISecurityService {
 	 * 				Permissions of role in string-form.
 	 */
 	void addRole(String name, List<String> rolePermissions);
+	/**
+	 * Method to edit a role.
+	 * @param roleOld
+	 * 		the role to edit
+	 * @param name
+	 * 		name of the new role
+	 * @param newPermissions
+	 * 		list of new permissions
+	 * @param id
+	 * 		the role id which stays the same
+	 */
+	void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions);
 
 	// | USER |---------------
 	/**
@@ -146,8 +158,10 @@ public interface ISecurityService {
 	 * 		the new roleID
 	 * @param passwordChanged
 	 * 		boolean to see if password was changed and needs to be hashed
+	 * @param sessionId
+	 * 		the sessionId
 	 */
-	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged);
+	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId);
 
 	// | PERMISSION |---------
 	/**

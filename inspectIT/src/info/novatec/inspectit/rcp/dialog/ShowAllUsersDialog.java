@@ -31,7 +31,7 @@ import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 /**
  * 
  * @author Phil Szalay
- *
+ * @author Mario Rose
  */
 
 public class ShowAllUsersDialog extends TitleAreaDialog {

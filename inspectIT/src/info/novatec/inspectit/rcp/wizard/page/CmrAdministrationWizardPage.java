@@ -50,11 +50,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	}
 
 	/**
-	 * The dialog to show available permissions.
-	 */
-	private ShowAllPermissionsDialog showAllPermissionsDialog;
-
-	/**
 	 * The dialog to show available roles.
 	 */
 	private ShowAllRolesDialog showAllRolesDialog;

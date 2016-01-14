@@ -1,10 +1,12 @@
 package info.novatec.inspectit.rcp.dialog;
 
+import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -43,17 +45,17 @@ public class EditRoleDialog extends TitleAreaDialog {
 	 * Edit button.
 	 */
 	private Button editButton;
-	
+
 	/**
 	 * List of all Roles.
 	 */
 	private List<Role> rolesList;
-	
+
 	/**
 	 * The role to edit.
 	 */
 	private Role roleOld;
-	
+
 	/**
 	 * Reset button id.
 	 */
@@ -114,12 +116,17 @@ public class EditRoleDialog extends TitleAreaDialog {
 		Label textPermissionLabel = new Label(main, SWT.NONE);
 		textPermissionLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
 		textPermissionLabel.setText("Mark the permissions, that the new role should have:");
-
+		List<Permission> permissionList = roleOld.getPermissions();
 		this.grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
 		this.grantedPermissionsButtons = new Button[grantedPermissions.size()];
 		for (int i = 0; i < grantedPermissions.size(); i++) {
 			grantedPermissionsButtons[i] = new Button(parent, SWT.CHECK);
 			grantedPermissionsButtons[i].setText(grantedPermissions.get(i));
+			for (Permission perm : permissionList) {
+				if (perm.getTitle().equals(grantedPermissions.get(i))) { 
+					grantedPermissionsButtons[i].setSelection(true);
+				}
+			}
 		}
 
 
@@ -135,7 +142,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 		editButton.setEnabled(true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CLOSE_LABEL, false);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -147,11 +154,24 @@ public class EditRoleDialog extends TitleAreaDialog {
 			cancelPressed();
 		}
 	}
-	
+
 	/**
 	 * Notifies that the edit button has been pressed.
 	 */
 	private void editPressed() {
+		String name = roleNameBox.getText();
+		List<Permission> allPermissions = cmrRepositoryDefinition.getSecurityService().getAllPermissions();
+		List<Permission> newPermissions = new ArrayList<Permission>();
+		for (Button but : grantedPermissionsButtons) {
+			if (but.getSelection()) {
+				for (Permission perm : allPermissions) {
+					if (perm.getTitle().equals(but.getText())) {
+						newPermissions.add(perm);
+					}
+				}
+			}
+		}
+		cmrRepositoryDefinition.getSecurityService().changeRoleAttribute(roleOld, name, newPermissions);
 		okPressed();
 	}
 }

@@ -30,6 +30,7 @@ import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 /**
  * 
  * @author Phil Szalay
+ * @author Mario Rose
  *
  */
 
@@ -96,13 +97,52 @@ public class ShowAllRolesDialog extends TitleAreaDialog {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		
-		// columns
 		TableColumn column1 = new TableColumn(table, SWT.NONE);
 		column1.setText("Role");
 		column1.pack();
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
 		column2.setText("Permissions");
 		column2.pack();
+		updateTable();
+		table.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (table.getSelectionIndex() != -1) {
+					TableItem[] tableItems = table.getItems();
+					long id = 0;
+					for (Role r : roles) {
+				    	if (r.getTitle().equals(tableItems[table.getSelectionIndex()].getText(0))) {
+				    		id = r.getId();
+				    	}
+				    }
+					Role role = cmrRepositoryDefinition.getSecurityService().getRoleByID(id);
+					editRoleDialog(main.getShell(), role);
+					roles = cmrRepositoryDefinition.getSecurityService().getAllRoles();
+					updateTable();
+				}
+			}
+		});
+		parent.pack();
+		
+		return main;
+	}
+	
+	/**
+	 * Dialog in case a user is clicked in the table.
+	 * 
+	 * @param parentShell
+	 *            parent shell for the {@link EditUserDialog}
+	 * @param role
+	 * 		 	  the role to edit.
+	 */
+	private void editRoleDialog(Shell parentShell, Role role) {
+		editRoleDialog = new EditRoleDialog(parentShell, cmrRepositoryDefinition, role);
+		editRoleDialog.open();
+	}
+	/**
+	 * updates the table.
+	 */
+	private void updateTable() {
+		table.removeAll();
 		
 		// content for rows
 		for (int i = 0; i < roles.size(); i++) {
@@ -120,37 +160,6 @@ public class ShowAllRolesDialog extends TitleAreaDialog {
 		for (TableColumn column : table.getColumns()) {
 			column.pack();
 		}
-		table.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				if (table.getSelectionIndex() != -1) {
-					TableItem[] tableItems = table.getItems();
-					long id = 0;
-					for (Role r : roles) {
-				    	if (r.getTitle().equals(tableItems[table.getSelectionIndex()].getText(0))) {
-				    		id = r.getId();
-				    	}
-				    }
-					Role role = cmrRepositoryDefinition.getSecurityService().getRoleByID(id);
-					editRoleDialog(main.getShell(), role);
-				}
-			}
-		});
-		parent.pack();
-		
-		return main;
-	}
-	
-	/**
-	 * Dialog in case a user is clicked in the table.
-	 * 
-	 * @param parentShell
-	 *            parent shell for the {@link EditUserDialog}
-	 * @param user
-	 * 		 	  the user to edit.
-	 */
-	private void editRoleDialog(Shell parentShell, Role role) {
-		editRoleDialog = new EditRoleDialog(parentShell, cmrRepositoryDefinition, role);
-		editRoleDialog.open();
 	}
 
 }
