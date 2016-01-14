@@ -257,6 +257,7 @@ public class SearchUsersDialog extends TitleAreaDialog {
 	private void editUserDialog(Shell parentShell, User user) {
 		editUserDialog = new EditUserDialog(parentShell, cmrRepositoryDefinition, user);
 		editUserDialog.open();
+		parentShell.close();
 	}
 
 }

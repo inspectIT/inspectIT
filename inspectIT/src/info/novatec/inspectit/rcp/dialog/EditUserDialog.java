@@ -181,7 +181,7 @@ public class EditUserDialog extends TitleAreaDialog {
 	    if (passwordBox.getText().isEmpty()) {
 	    	passwordChanged = false;
 	    }
-	    cmrRepositoryDefinition.getSecurityService().changeUserAttribute(userOld, mail, password, id, passwordChanged);
+	    cmrRepositoryDefinition.getSecurityService().changeUserAttribute(userOld, mail, password, id, passwordChanged, cmrRepositoryDefinition.getSessionId());
 		okPressed();
 	}
 }

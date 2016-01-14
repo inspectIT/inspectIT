@@ -38,6 +38,7 @@ import info.novatec.inspectit.spring.logger.Log;
  * @author Andreas Herzog
  * @author Clemens Geibel
  * @author Lucca Hellriegel
+ * @author Mario Rose
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -255,15 +256,20 @@ public class SecurityService implements ISecurityService {
 
 	//TODO: TESTMETHODE!
 	@Override
-	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged) {
+	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+		String currentName = (String) currentUser.getPrincipal();
+		if (currentName.equals(userOld.getEmail())) {
+			currentUser.logout();
+		}
 		if (passwordChanged) {
-			User userNew = new User(userOld.getPassword(), email, roleID);
-			userDao.delete(userOld);
-			userDao.saveOrUpdate(userNew); //this way the old password is not hashed twice.
-		} else {
 			User userNew = new User(password, email, roleID);
 			userDao.delete(userOld);
 			addUser(userNew);
+		} else {
+			User userNew = new User(userOld.getPassword(), email, roleID);
+			userDao.delete(userOld);
+			userDao.saveOrUpdate(userNew); //this way the old password is not hashed twice.
 		}
 	}
 
@@ -344,6 +350,12 @@ public class SecurityService implements ISecurityService {
 			
 			roleDao.saveOrUpdate(role);
 		}
+	}
+	
+	@Override
+	public void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions) {
+		Role roleNew = new Role(roleOld.getId(), name, newPermissions);
+		roleDao.saveOrUpdate(roleNew);
 	}
 
 	// TODO Make more methods available for the administrator module...
