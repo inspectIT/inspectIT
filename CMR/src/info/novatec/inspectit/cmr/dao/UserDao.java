@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.dao;
 
+import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 
 import java.util.List;
@@ -30,6 +31,13 @@ public interface UserDao {
 	 * @return a User object with matching Email-Address.
 	 */
 	List<User> findByEmail(String email);
+	
+	/**
+	 * Get User by Role.
+	 * @param roleId roleId
+	 * @return a User object with matching Role.
+	 */
+	List<User> findByRole(long roleId);
 
 	/**
 	 * Execute a findByExample query against the underlying storage.
@@ -72,5 +80,7 @@ public interface UserDao {
 	 * @return Returns all stored {@link User} objects.
 	 */
 	List<User> loadAll();
+
+	
 
 }

@@ -11,6 +11,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import info.novatec.inspectit.cmr.dao.UserDao;
+import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 
 /**
@@ -95,6 +96,15 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 		criteria.add(Restrictions.eq("email", email));
 		return getHibernateTemplate().findByCriteria(criteria);
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public List<User> findByRole(long roleId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+		criteria.add(Restrictions.eq("roleId", roleId));
+		return getHibernateTemplate().findByCriteria(criteria);
+	}
 
 }

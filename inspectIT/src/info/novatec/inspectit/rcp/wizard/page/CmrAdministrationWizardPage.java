@@ -50,11 +50,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	}
 
 	/**
-	 * The dialog to show available permissions.
-	 */
-	private ShowAllPermissionsDialog showAllPermissionsDialog;
-
-	/**
 	 * The dialog to show available roles.
 	 */
 	private ShowAllRolesDialog showAllRolesDialog;
@@ -122,11 +117,11 @@ public class CmrAdministrationWizardPage extends WizardPage {
 
 		Button searchUsers = new Button(main, SWT.CENTER);
 		searchUsers.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		searchUsers.setText("Search All Users");
+		searchUsers.setText("Search Users");
 		searchUsers.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				searchUsersDialog = new SearchUsersDialog(main.getShell());
+				searchUsersDialog = new SearchUsersDialog(main.getShell(), cmrRepositoryDefinition);
 				searchUsersDialog.open();
 			}
 		});
@@ -148,43 +143,11 @@ public class CmrAdministrationWizardPage extends WizardPage {
 		showRoles.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				showAllRolesDialog = new ShowAllRolesDialog(main.getShell());
+				showAllRolesDialog = new ShowAllRolesDialog(main.getShell(), cmrRepositoryDefinition);
 				showAllRolesDialog.open();
 			}
 		});
 
-		Button searchRoles = new Button(main, SWT.CENTER);
-		searchRoles.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		searchRoles.setText("Search All Roles");
-		searchRoles.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				searchRolesDialog = new SearchRolesDialog(main.getShell());
-				searchRolesDialog.open();
-			}
-		});
-		
-		Button showPermissions = new Button(main, SWT.CENTER);
-		showPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		showPermissions.setText("Show All Permissions");
-		showPermissions.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				showAllPermissionsDialog = new ShowAllPermissionsDialog(main.getShell());
-				showAllPermissionsDialog.open();
-			}
-		});
-
-		Button searchPermissions = new Button(main, SWT.CENTER);
-		searchPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		searchPermissions.setText("Search All Permissions");
-		searchPermissions.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				searchPermissionsDialog = new SearchPermissionsDialog(main.getShell());
-				searchPermissionsDialog.open();
-			}
-		});
 		
 		setControl(main);
 	}
