@@ -227,16 +227,29 @@
 		<copy todir="${build.release}/sun1.5-data/agent">
 			<fileset dir="${basedir}" includes="logging-config.xml" />
 		</copy>
+		
+		<mkdir dir="${build.release}/lib"/>
+		<copy todir="${build.release}/lib">
+			<fileset refid="lib.prod.commons.fileset" />
+			<fileset refid="lib.prod.fileset" />
+			<fileset dir="${commons.build.release}" includes="inspectit-commons.jar" />
+		</copy>
 
 		<jar destfile="${build.release}/sun1.5-data/agent/${dist.jar.name}" manifest="${basedir}/META-INF/MANIFEST.MF">
 			<fileset dir="${build.agent.classes}" includes="**/*.class" />
 			<fileset dir="${src.root}" includes="**/*.xml" />
 			<fileset dir="${src.root}" includes="**/*.properties" />
 			<fileset dir="${commons.src}" includes="version.log" />
-			<zipfileset refid="lib.prod.fileset" prefix="lib" />
-			<zipfileset refid="lib.prod.commons.fileset" prefix="lib" />
-			<zipfileset dir="${commons.build.release}" prefix="lib" includes="inspectit-commons.jar" />
+			<zipfileset dir="${build.release}/lib" prefix="lib">
+				<!-- exlucde javax.validation and javax.persistence due to incomatibility with Java 5, they are not used on Agent -->
+				<patternset id="test">
+					<exclude name="javax.validation/**" />
+					<exclude name="org.hibernate.javax.persistence/**" />
+				</patternset>
+			</zipfileset>
 		</jar>
+		
+		<delete dir="${build.release}/lib" />
 
 		<zip destfile="${release.root}/${release.name.sun15}" basedir="${build.release}/sun1.5-data" />
 		<zip destfile="${release.root}/${release.name.sun15}" update="true">
