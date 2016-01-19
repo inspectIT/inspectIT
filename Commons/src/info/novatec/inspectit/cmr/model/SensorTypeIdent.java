@@ -9,20 +9,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 /**
  * The Sensor Type Ident class is the abstract base class for the {@link MethodSensorTypeIdent} and
  * {@link PlatformSensorTypeIdent} and {@link JmxSensorTypeIdent} classes.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length = 4, name = "DISCRIMINATOR")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "platformIdent", "fullyQualifiedClassName" }))
 public abstract class SensorTypeIdent implements Serializable {
 
 	/**
@@ -42,6 +46,7 @@ public abstract class SensorTypeIdent implements Serializable {
 	 * The many-to-many association to the {@link PlatformIdent} objects.
 	 */
 	@ManyToOne
+	@JoinColumn(name = "platformIdent", nullable = false)
 	private PlatformIdent platformIdent;
 
 	/**
@@ -52,7 +57,7 @@ public abstract class SensorTypeIdent implements Serializable {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public Long getId() {
@@ -61,7 +66,7 @@ public abstract class SensorTypeIdent implements Serializable {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -71,7 +76,7 @@ public abstract class SensorTypeIdent implements Serializable {
 
 	/**
 	 * Gets {@link #platformIdent}.
-	 * 
+	 *
 	 * @return {@link #platformIdent}
 	 */
 	public PlatformIdent getPlatformIdent() {
@@ -80,7 +85,7 @@ public abstract class SensorTypeIdent implements Serializable {
 
 	/**
 	 * Sets {@link #platformIdent}.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            New value for {@link #platformIdent}
 	 */
@@ -90,7 +95,7 @@ public abstract class SensorTypeIdent implements Serializable {
 
 	/**
 	 * Gets {@link #fullyQualifiedClassName}.
-	 * 
+	 *
 	 * @return {@link #fullyQualifiedClassName}
 	 */
 	public String getFullyQualifiedClassName() {
@@ -99,7 +104,7 @@ public abstract class SensorTypeIdent implements Serializable {
 
 	/**
 	 * Sets {@link #fullyQualifiedClassName}.
-	 * 
+	 *
 	 * @param fullyQualifiedClassName
 	 *            New value for {@link #fullyQualifiedClassName}
 	 */
@@ -110,6 +115,7 @@ public abstract class SensorTypeIdent implements Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -121,6 +127,7 @@ public abstract class SensorTypeIdent implements Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
