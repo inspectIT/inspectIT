@@ -674,6 +674,24 @@
 		<antcall target="release-installer" inheritall="true" />
 	</target>
 
+	<!-- INSPECTIT INSTALLER OSX 64 -->
+	<target name="release-installer-osx64" description="--> Creates an all-component wizard installer for OSX (64 Bits) operating system." depends="init-installer">
+		<!-- Target OS specification -->
+		<property name="target.os" value="OSX" />
+		<property name="target.os.arch" value="64" />
+
+		<!-- Unpacking CMR Archive for preparation -->
+		<untar src="${cmr.build.macosx64}" dest="${cmr.installer.working.dir}" compression="gzip" />
+
+		<!-- Setting pointers on the right directories and names -->
+		<property name="installer.ui.pointer" value="${inspectit.build.osx64}" />
+		<property name="installer.cmr.pointer" value="${cmr.installer.working.dir}/CMR" />
+		<property name="installer.name.pointer" value="${installer.osx64.name}" />
+
+		<!-- Create installer -->
+		<antcall target="release-installer" inheritall="true" />
+	</target>
+
 	<!-- INSPECTIT INSTALLER ALL PLATFORMS-->
 	<target name="release-installers" description="--> Creates four wizard installers for Windows and GNU/Linux operating systems.">
 		<!-- Remove old installers -->
@@ -684,6 +702,7 @@
 		<antcall target="release-installer-win32" />
 		<antcall target="release-installer-linux64" />
 		<antcall target="release-installer-linux32" />
+		<antcall target="release-installer-osx64" />
 	</target>
 
 	<!-- Define installer target -->

@@ -91,9 +91,17 @@
 	</panels>
 
 	<conditions>
-		<condition type="variable" id="windows">
+		<condition type="variable" id="windows-packaged">
 			<name>OS_VER</name>
 			<value>Windows</value>
+		</condition>
+		<condition type="variable" id="linux-packaged">
+			<name>OS_VER</name>
+			<value>Linux</value>
+		</condition>
+		<condition type="variable" id="osx-packaged">
+			<name>OS_VER</name>
+			<value>OSX</value>
 		</condition>
 		<condition type="variable" id="is64">
 			<name>ARCH_VER</name>
@@ -104,11 +112,11 @@
 			<value>32</value>
 		</condition>
 		<condition type="and" id="windows64">
-			<condition type="ref" refid="windows" />
+			<condition type="ref" refid="windows-packaged" />
 			<condition type="ref" refid="is64" />
 		</condition>
 		<condition type="and" id="windows32">
-			<condition type="ref" refid="windows" />
+			<condition type="ref" refid="windows-packaged" />
 			<condition type="ref" refid="is32" />
 		</condition>
 	</conditions>
@@ -120,20 +128,10 @@
 		<pack name="inspectIT UI" preselected="yes" required="no">
 			<description>@{inspectit.ui.description.long}</description>
 			<file override="update" src="@{installer.ui.pointer}" unpack="true" targetdir="$INSTALL_PATH" />
-		</pack>
 
-		<!-- inspectIT CMR -->
-		<!-- Parent node in the pack tree -->
-		<pack name="inspectIT Server (CMR)" preselected="yes" required="no">
-			<description>@{inspectit.cmr.description.long}</description>
-
-			<!-- Installation files -->
-			<!-- Cannot use unpack=true because izpack doesn't support tar.gz -->
-			<file override="update" src="@{installer.cmr.pointer}" targetdir="$INSTALL_PATH" />
-
-			<!-- Set executable flag to inspectIT files after installation (important for GNU/Linux OS) -->
-			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/startup.sh" condition="izpack.linuxinstall" />
+			<!-- Set executable flag to inspectIT files after installation (important for GNU/Linux OS or OSX) -->
+			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT.app/Contents/MacOS/inspectIT" condition="osx-packaged" />
+			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT" condition="linux-packaged" />
 
 			<!-- Set executable flag to java files after installation (important for GNU/Linux OS) -->
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/java" condition="izpack.linuxinstall" />
@@ -146,16 +144,31 @@
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/servertool" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/tnameserv" condition="izpack.linuxinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/jre/bin/unpack200" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/java" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/keytool" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/orbd" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/pack200" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/policytool" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/rmid" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/rmiregistry" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/servertool" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/tnameserv" condition="izpack.linuxinstall" />
-			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/unpack200" condition="izpack.linuxinstall" />
+		</pack>
+
+		<!-- inspectIT CMR -->
+		<!-- Parent node in the pack tree -->
+		<pack name="inspectIT Server (CMR)" preselected="yes" required="no">
+			<description>@{inspectit.cmr.description.long}</description>
+
+			<!-- Installation files -->
+			<!-- Cannot use unpack=true because izpack doesn't support tar.gz -->
+			<file override="update" src="@{installer.cmr.pointer}" targetdir="$INSTALL_PATH" />
+
+			<!-- Set executable flag to inspectIT files after installation (important for GNU/Linux OS or OSX) -->
+			<executable targetfile="$INSTALL_PATH/CMR/startup.sh" condition="!izpack.windowsinstall" />
+
+			<!-- Set executable flag to java files after installation (important for GNU/Linux OS) -->
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/java" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/keytool" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/orbd" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/pack200" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/policytool" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/rmid" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/rmiregistry" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/servertool" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/tnameserv" condition="!izpack.windowsinstall" />
+			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/unpack200" condition="!izpack.windowsinstall" />
 
 			<file override="update" src="@{commons.installer.resources}/service/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="windows64" />
 			<file override="update" src="@{commons.installer.resources}/service/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="windows32" />
