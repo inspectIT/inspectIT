@@ -161,8 +161,8 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 		addPage(selectStorageWizardPage);
 		selectAgentsWizardPage = new SelectAgentsWizardPage("Select Agent(s) that should participate in recording", autoSelectedAgents);
 		addPage(selectAgentsWizardPage);
-		defineDataPage = new DefineDataProcessorsWizardPage(DefineDataProcessorsWizardPage.BUFFER_DATA | DefineDataProcessorsWizardPage.SYSTEM_DATA
-				| DefineDataProcessorsWizardPage.EXTRACT_INVOCATIONS);
+		defineDataPage = new DefineDataProcessorsWizardPage(
+				DefineDataProcessorsWizardPage.BUFFER_DATA | DefineDataProcessorsWizardPage.SYSTEM_DATA | DefineDataProcessorsWizardPage.EXTRACT_INVOCATIONS);
 		addPage(defineDataPage);
 		timelineWizardPage = new DefineTimelineWizardPage("Limit Recording", "Optionally select how long recording should last", DefineTimelineWizardPage.FUTURE | DefineTimelineWizardPage.BOTH_DATES);
 		addPage(timelineWizardPage);

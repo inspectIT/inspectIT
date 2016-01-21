@@ -11,7 +11,7 @@ import java.util.Comparator;
  * @author Ivan Senic
  * 
  */
-public enum TimerDataComparatorEnum implements IDataComparator<TimerData>, Comparator<TimerData> {
+public enum TimerDataComparatorEnum implements IDataComparator<TimerData>,Comparator<TimerData> {
 
 	/**
 	 * Sorts on the count.

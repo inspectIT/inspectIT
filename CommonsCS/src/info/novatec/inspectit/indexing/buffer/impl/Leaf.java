@@ -124,6 +124,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 		}
 		return results;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */

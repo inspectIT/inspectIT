@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 
  * @author Stefan Siegl
  */
-public enum ParameterContentType implements Serializable, Sizeable {
+public enum ParameterContentType implements Serializable,Sizeable {
 
 	/** Property accessor refers to a field. */
 	FIELD,

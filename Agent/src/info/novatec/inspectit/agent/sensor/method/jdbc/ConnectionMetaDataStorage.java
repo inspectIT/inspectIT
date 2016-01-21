@@ -41,8 +41,8 @@ public class ConnectionMetaDataStorage {
 	 * equals() comparison. This is just the thing we want as we can ensure that connections
 	 * identity stays that same. On top of that == is faster than equals.
 	 * 
-	 * <b> Note that this data structure provides atomic access like a <code>ConcurrentMap</code>.
-	 * </b>.
+	 * <b> Note that this data structure provides atomic access like a <code>ConcurrentMap</code>
+	 * . </b>.
 	 * 
 	 * Package access for easier testing.
 	 */
@@ -258,9 +258,8 @@ public class ConnectionMetaDataStorage {
 		/**
 		 * URL pattern to read jdbc URL from jdbc connection string.
 		 * jdbc:sqlserver://[serverName[\instanceName
-		 * ][:portNumber]][;property=value[;property=value]]
-		 * jdbc:db2://<HOST>:<PORT>/<DATABASE_NAME> --> remove the //
-		 * jdbc:h2:../../database/database/dvdstore22
+		 * ][:portNumber]][;property=value[;property=value]] jdbc:db2://<HOST>:<PORT>/
+		 * <DATABASE_NAME> --> remove the // jdbc:h2:../../database/database/dvdstore22
 		 * 
 		 * Oracle is once again different: http://www.orafaq.com/wiki/JDBC
 		 * "jdbc:oracle:thin:@//myhost:1521/orcl"; "jdbc:oracle:thin:@myhost:1521:orcl";

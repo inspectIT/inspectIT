@@ -33,8 +33,8 @@ public class LessOrEqualValidator<T extends Number> extends AbstractComparingVal
 			List<SingleProperty<?>> properties = new ArrayList<SingleProperty<?>>(2);
 			properties.add(property);
 			properties.add(againstProperty);
-			ValidationError validationError = new ValidationError(properties, "Value of property '" + property.getName() + "' must be less or equal than value of property '"
-					+ againstProperty.getName() + "'");
+			ValidationError validationError = new ValidationError(properties,
+					"Value of property '" + property.getName() + "' must be less or equal than value of property '" + againstProperty.getName() + "'");
 			propertyValidation.addValidationError(validationError);
 		}
 	}
@@ -45,8 +45,8 @@ public class LessOrEqualValidator<T extends Number> extends AbstractComparingVal
 	@Override
 	protected void compare(SingleProperty<? extends T> property, T value, T against, PropertyValidation propertyValidation) {
 		if (!matches(value, against)) {
-			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property), "Value of property '" + property.getName() + "' must be less or equal than "
-					+ against);
+			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property),
+					"Value of property '" + property.getName() + "' must be less or equal than " + against);
 			propertyValidation.addValidationError(validationError);
 		}
 	}

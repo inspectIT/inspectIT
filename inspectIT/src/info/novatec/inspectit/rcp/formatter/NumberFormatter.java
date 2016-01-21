@@ -253,8 +253,8 @@ public final class NumberFormatter {
 	 * <p>
 	 * <b>IMPORTANT:</b> The method code is copied/taken/based from <a href=
 	 * "http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java"
-	 * >stackoverflow</a>. Original author is aioobe. License info can be found <a
-	 * href="http://creativecommons.org/licenses/by-sa/3.0/">here</a>.
+	 * >stackoverflow</a>. Original author is aioobe. License info can be found
+	 * <a href="http://creativecommons.org/licenses/by-sa/3.0/">here</a>.
 	 * 
 	 * @param bytes
 	 *            Bytes to transform.

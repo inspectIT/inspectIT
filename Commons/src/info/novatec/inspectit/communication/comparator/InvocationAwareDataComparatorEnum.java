@@ -11,7 +11,7 @@ import java.util.Comparator;
  * @author Ivan Senic
  * 
  */
-public enum InvocationAwareDataComparatorEnum implements IDataComparator<InvocationAwareData>, Comparator<InvocationAwareData> {
+public enum InvocationAwareDataComparatorEnum implements IDataComparator<InvocationAwareData>,Comparator<InvocationAwareData> {
 
 	/**
 	 * Sorting by invocation affiliation percentage.

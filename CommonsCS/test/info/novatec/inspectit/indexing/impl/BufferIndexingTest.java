@@ -53,7 +53,7 @@ public class BufferIndexingTest {
 	 * The mocked processor.
 	 */
 	private IIndexQueryRestrictionProcessor processor;
-	
+
 	/**
 	 * The forkJoinPool which starts the forks
 	 */
@@ -322,9 +322,11 @@ public class BufferIndexingTest {
 			assertThat(result.getSensorTypeIdent(), is(equalTo(10L)));
 		}
 	}
+
 	@Test
 	/**
 	 * Same Test as queryDifferentLevels() except with ForkJoin
+	 * 
 	 * @throws IndexingException
 	 */
 	public void queryDifferentLevelsForkJoin() throws IndexingException {
@@ -365,6 +367,7 @@ public class BufferIndexingTest {
 			assertThat(result.getSensorTypeIdent(), is(equalTo(10L)));
 		}
 	}
+
 	/**
 	 * Test a removal of one element from the indexing tree.
 	 * 

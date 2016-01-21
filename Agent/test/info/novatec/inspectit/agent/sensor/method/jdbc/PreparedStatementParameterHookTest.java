@@ -199,7 +199,8 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 	 */
 	@DataProvider(name = "methodsWithBigDataStructures")
 	public Object[][] methodsWithBigDataStructures() {
-		return new Object[][] { { "setAsciiStream" }, { "setBinaryStream" }, { "setBlob" }, { "setCharacterStream" }, { "setClob" }, { "setNCharacterStream" }, { "setNClob" }, { "setUnicodeStream" } };
+		return new Object[][] { { "setAsciiStream" }, { "setBinaryStream" }, { "setBlob" }, { "setCharacterStream" }, { "setClob" }, { "setNCharacterStream" }, { "setNClob" },
+				{ "setUnicodeStream" } };
 	}
 
 }

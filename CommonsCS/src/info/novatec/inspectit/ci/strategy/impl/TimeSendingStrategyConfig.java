@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "time-sending-strategy-config")
 public class TimeSendingStrategyConfig implements IStrategyConfig {
-	
+
 	/**
 	 * Implementing class name.
 	 */

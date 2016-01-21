@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * <p>
  * <b>IMPORTANT:</b> The class code is copied/taken/based from <a href=
  * "http://www.eclipse.org/articles/Article-WorkbenchSelections/SelectionProviderIntermediate.java"
- * >Eclipse Workbench article</a>. Original author is Marc R. Hoffmann. License info can be found <a
- * href="https://eclipse.org/legal/termsofuse.php">here</a>. Copied from
+ * >Eclipse Workbench article</a>. Original author is Marc R. Hoffmann. License info can be found
+ * <a href="https://eclipse.org/legal/termsofuse.php">here</a>. Copied from
  * 
  * 
  * @author Marc R. Hoffmann

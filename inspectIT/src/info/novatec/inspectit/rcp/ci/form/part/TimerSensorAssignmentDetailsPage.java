@@ -248,9 +248,7 @@ public class TimerSensorAssignmentDetailsPage extends MethodSensorAssignmentDeta
 		toolkit.createLabel(mainComposite, "Charting:");
 		chartingButton = toolkit.createButton(mainComposite, "Yes", SWT.CHECK);
 		chartingButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"With the charting option it is possible to define what data should be considered as the long-term data available for charting in inspectIT User interface. This data is additionally saved to the database, thus even when the CMR is shutdown or buffer is cleared the data will be available via charts.");
 
 		// starts invocation

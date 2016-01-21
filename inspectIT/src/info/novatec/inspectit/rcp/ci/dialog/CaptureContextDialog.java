@@ -350,8 +350,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 				updateAccessorText();
 			}
 		});
-		createInfoLabel(
-				main,
+		createInfoLabel(main,
 				"Specify path to follow on the captured object. For example, if object of type Customer is captured, and this object has a field named 'id', then you can save the 'id' value by creating a path '-> id'. ");
 
 		validationControlDecorations.add(indexValidation);

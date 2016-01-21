@@ -32,11 +32,8 @@ public class RemoveCmrRepositoryHandler extends AbstractHandler implements IHand
 			if (selectedObject instanceof ICmrRepositoryProvider) {
 				CmrRepositoryDefinition cmrRepositoryDefinition = ((ICmrRepositoryProvider) selectedObject).getCmrRepositoryDefinition();
 				if (null != cmrRepositoryDefinition) {
-					boolean isSure = MessageDialog.openConfirm(
-							null,
-							"Remove Central Management Repository (CMR)",
-							"Are you sure that you want to remove the repository " + cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":"
-									+ cmrRepositoryDefinition.getPort() + ")?");
+					boolean isSure = MessageDialog.openConfirm(null, "Remove Central Management Repository (CMR)", "Are you sure that you want to remove the repository "
+							+ cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + ")?");
 
 					if (isSure) {
 						InspectIT.getDefault().getCmrRepositoryManager().removeCmrRepositoryDefinition(cmrRepositoryDefinition);

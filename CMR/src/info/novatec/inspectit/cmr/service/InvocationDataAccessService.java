@@ -79,7 +79,8 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 * {@inheritDoc}
 	 */
 	@MethodLog
-	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate, ResultComparator<InvocationSequenceData> resultComparator) {
+	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate,
+			ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(cachedDataService);
 		}

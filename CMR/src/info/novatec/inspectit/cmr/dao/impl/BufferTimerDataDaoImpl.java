@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of {@link TimerData} that searches for timer data in buffer.
- * <br>The query-Method of {@link AbstractBranch} without fork&join is executed, because much timer-data is expected and 
- * querying with fork&join will be faster.<br>
+ * Implementation of {@link TimerData} that searches for timer data in buffer. <br>
+ * The query-Method of {@link AbstractBranch} without fork&join is executed, because much timer-data
+ * is expected and querying with fork&join will be faster.<br>
  * 
  * @author Ivan Senic
  * 

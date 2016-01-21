@@ -11,7 +11,7 @@ import java.util.Comparator;
  * @author Ivan Senic
  * 
  */
-public enum AggregatedExceptionSensorDataComparatorEnum implements IDataComparator<AggregatedExceptionSensorData>, Comparator<AggregatedExceptionSensorData> {
+public enum AggregatedExceptionSensorDataComparatorEnum implements IDataComparator<AggregatedExceptionSensorData>,Comparator<AggregatedExceptionSensorData> {
 
 	/**
 	 * Sort by amount of created exceptions.

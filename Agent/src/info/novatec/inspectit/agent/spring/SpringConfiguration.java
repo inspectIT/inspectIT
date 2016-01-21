@@ -83,7 +83,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newFixedThreadPool(1, threadFactory);
 	}
-	
+
 	/**
 	 * @return Returns coreServiceExecutorService
 	 */

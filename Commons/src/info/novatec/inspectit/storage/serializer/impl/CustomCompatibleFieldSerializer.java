@@ -37,10 +37,10 @@ import com.esotericsoftware.kryo.util.ObjectMap;
  * decrease the amount of binary data. This is because we are writing integers that are less than
  * 128 and occupy only 1 byte and not complete field names.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryo">kryo</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryo/blob/master/license.txt">here</a>.
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryo">kryo</a>. Original author is Nathan Sweet.
+ * License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryo/blob/master/license.txt">here</a>.
  * 
  * @author Nathan Sweet <misc@n4te.com>
  * @author Ivan Senic

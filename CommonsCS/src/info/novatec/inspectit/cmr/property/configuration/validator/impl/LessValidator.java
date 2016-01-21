@@ -44,8 +44,8 @@ public class LessValidator<T extends Number> extends AbstractComparingValidator<
 	@Override
 	protected void compare(SingleProperty<? extends T> property, T value, T against, PropertyValidation propertyValidation) {
 		if (!matches(value, against)) {
-			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property), "Value of property '" + property.getName() + "' must be less than "
-					+ against);
+			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property),
+					"Value of property '" + property.getName() + "' must be less than " + against);
 			propertyValidation.addValidationError(validationError);
 		}
 	}

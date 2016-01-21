@@ -635,8 +635,8 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		}
 		for (AbstractStorageLabelType<?> labelType : availableLabelTypes) {
 			if (labelType.isGroupingEnabled()) {
-				groupByLabelMenu.add(new LabelOrderAction(TextFormatter.getLabelName(labelType), ImageFormatter.getImageDescriptorForLabel(labelType), labelType, ObjectUtils.equals(labelType,
-						orderingLabelType)));
+				groupByLabelMenu.add(
+						new LabelOrderAction(TextFormatter.getLabelName(labelType), ImageFormatter.getImageDescriptorForLabel(labelType), labelType, ObjectUtils.equals(labelType, orderingLabelType)));
 			}
 		}
 

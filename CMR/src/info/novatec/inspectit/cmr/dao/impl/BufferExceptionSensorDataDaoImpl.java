@@ -19,10 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * {@link ExceptionSensorDataDao} that works with the data from the buffer.
- * <br> The query-Method of {@link AbstractBranch} which uses fork&join is executed, because much exception-data is expected and 
- * querying with fork&join will be faster<br>
- * <br> in getExceptionTree(ExceptionSensorData template) the query-Method without fork&join is used, because only one exception tree per invocation will be queried. <br>
+ * {@link ExceptionSensorDataDao} that works with the data from the buffer. <br>
+ * The query-Method of {@link AbstractBranch} which uses fork&join is executed, because much
+ * exception-data is expected and querying with fork&join will be faster<br>
+ * <br>
+ * in getExceptionTree(ExceptionSensorData template) the query-Method without fork&join is used,
+ * because only one exception tree per invocation will be queried. <br>
  * 
  * @author Ivan Senic
  * 

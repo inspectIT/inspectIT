@@ -25,7 +25,6 @@ public class TimerSensorConfig extends StringConstraintSensorConfig implements I
 	 */
 	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.timer.TimerSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

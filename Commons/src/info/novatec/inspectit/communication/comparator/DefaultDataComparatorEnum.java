@@ -12,7 +12,7 @@ import java.util.Comparator;
  * @author Ivan Senic
  * 
  */
-public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, Comparator<DefaultData> {
+public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>,Comparator<DefaultData> {
 
 	/**
 	 * Compares objects by time stamps.

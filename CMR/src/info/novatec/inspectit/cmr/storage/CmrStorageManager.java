@@ -433,8 +433,8 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * @throws IOException
 	 *             If IO exception occurs.
 	 */
-	public void copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws BusinessException, IOException,
-			SerializationException {
+	public void copyBufferToStorage(StorageData storageData, List<Long> platformIdents, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
+			throws BusinessException, IOException, SerializationException {
 		if (!isStorageExisting(storageData)) {
 			this.createStorage(storageData);
 		}
@@ -498,8 +498,8 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
-	public void copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize) throws IOException,
-			SerializationException, BusinessException {
+	public void copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
+			throws IOException, SerializationException, BusinessException {
 		if (!isStorageExisting(storageData)) {
 			this.createStorage(storageData);
 		}
@@ -1194,7 +1194,8 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 		if (null == storageData.getCmrVersion()) {
 			log.warn("The storage " + storageData + " does not define the CMR version. The storage might be unstable on the CMR version " + cmrVersion + ".");
 		} else if (!Objects.equals(storageData.getCmrVersion(), cmrVersion)) {
-			log.warn("The storage " + storageData + " has different CMR version (" + storageData.getCmrVersion() + ") than the current CMR version(" + cmrVersion + "). The storage might be unstable.");
+			log.warn(
+					"The storage " + storageData + " has different CMR version (" + storageData.getCmrVersion() + ") than the current CMR version(" + cmrVersion + "). The storage might be unstable.");
 		}
 	}
 

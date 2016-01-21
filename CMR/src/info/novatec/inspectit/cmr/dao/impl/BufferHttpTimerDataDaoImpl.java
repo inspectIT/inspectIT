@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
  * 
  * @author Stefan Siegl
  * 
- * fork&join isn't used, because only one HTTP -data per invocation is expected.
+ *         fork&join isn't used, because only one HTTP -data per invocation is expected.
  */
 @Repository
 public class BufferHttpTimerDataDaoImpl extends AbstractBufferDataDao<HttpTimerData> implements HttpTimerDataDao {

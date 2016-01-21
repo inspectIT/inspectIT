@@ -254,7 +254,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 		Label info = new Label(main, SWT.WRAP);
 		info.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
-		info.setToolTipText("All Timer and SQL Statement Data objects need to be aggregated before saved to the storage, because the amount of objects to be saved is in most cases too high and can impose performance problems while writing to disk. Thus, please select the aggregation period for these two data types.");
+		info.setToolTipText(
+				"All Timer and SQL Statement Data objects need to be aggregated before saved to the storage, because the amount of objects to be saved is in most cases too high and can impose performance problems while writing to disk. Thus, please select the aggregation period for these two data types.");
 
 		new Label(main, SWT.NONE).setText("Aggregation period for Timer and SQL Statement Data:");
 		aggregationPeriodSpiner = new Spinner(main, SWT.BORDER);

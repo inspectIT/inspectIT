@@ -404,8 +404,8 @@ class HttpRequestParameterExtractor {
 	/**
 	 * Utility method that checks if the attribute provided is an Array, and if it so, formats the
 	 * return String in the human-readable form. If the attribute is not an Array, the
-	 * {@link Object#toString()} will be returned. If attribute is <code>null</code>, then
-	 * '<notset>' will be returned.
+	 * {@link Object#toString()} will be returned. If attribute is <code>null</code>, then '
+	 * <notset>' will be returned.
 	 * 
 	 * @param attribute
 	 *            Attribute to get {@link String} value for.

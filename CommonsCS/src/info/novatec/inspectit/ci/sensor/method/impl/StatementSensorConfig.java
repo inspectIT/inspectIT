@@ -25,7 +25,6 @@ public class StatementSensorConfig extends StringConstraintSensorConfig implemen
 	 */
 	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.jdbc.StatementSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

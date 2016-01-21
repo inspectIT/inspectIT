@@ -14,8 +14,8 @@ import java.lang.annotation.Target;
  * This annotation serves as a specialization of {@link Component @Component}, allowing for
  * interface classes to be autodetected through classpath scanning.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
  * authors are James Douglas and Henno Vermeulen.
  * 
  * @author Henno Vermeulen

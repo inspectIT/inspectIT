@@ -168,8 +168,8 @@ public final class PreferencesUtils {
 	}
 
 	/**
-	 * Returns long value from the preferences. Same as calling
-	 * {@link #getLongValue(PreferenceKey, false)}.
+	 * Returns long value from the preferences. Same as calling {@link #getLongValue(PreferenceKey,
+	 * false)}.
 	 * 
 	 * @param name
 	 *            Name of the preference.
@@ -224,8 +224,8 @@ public final class PreferencesUtils {
 	}
 
 	/**
-	 * Returns int value from the preferences. Same as calling
-	 * {@link #getIntValue(PreferenceKey, false)}.
+	 * Returns int value from the preferences. Same as calling {@link #getIntValue(PreferenceKey,
+	 * false)}.
 	 * 
 	 * @param name
 	 *            Name of the preference.

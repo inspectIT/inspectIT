@@ -158,7 +158,8 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	}
 
 	/**
-	 * Process all the exceptions in the invData and passes exceptions to the chained processors.<br>
+	 * Process all the exceptions in the invData and passes exceptions to the chained processors.
+	 * <br>
 	 * <br>
 	 * Note also that only exception data with CREATED event are processed, since the PASSED and
 	 * HANDLED should be connected as children to the CREATED one.

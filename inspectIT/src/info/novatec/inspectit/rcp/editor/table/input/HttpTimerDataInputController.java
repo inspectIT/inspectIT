@@ -175,9 +175,8 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 					Pattern.compile(regEx);
 					regExEnabledInSensor = true;
 				} catch (PatternSyntaxException e) {
-					InspectIT.getDefault().createInfoDialog(
-							"The HTTP sensor defines the Regular expression " + regEx
-									+ " for URI transformation that can not be compiled. The transformation option will not be available.\n\n Reason: " + e.getMessage(), -1);
+					InspectIT.getDefault().createInfoDialog("The HTTP sensor defines the Regular expression " + regEx
+							+ " for URI transformation that can not be compiled. The transformation option will not be available.\n\n Reason: " + e.getMessage(), -1);
 				}
 			}
 		}
