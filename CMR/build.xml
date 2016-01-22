@@ -279,6 +279,7 @@
 		<antcall target="-linux-x64" />
 		<antcall target="-windows-x86" />
 		<antcall target="-windows-x64" />
+		<antcall target="-macosx-x64" />
 	</target>
 
 	<!-- Calls the release target and then the analysis targets -->
@@ -334,6 +335,18 @@
 				<zipfileset dir="${basedir}/../" prefix="CMR" includes="*LICENSE*.txt" />
 		</zip>
 		<delete file="${build.scripts}/startup.bat" failonerror="false" />
+	</target>
+
+	<target name="-macosx-x64">
+		<copy file="${basedir}/startup.sh" tofile="${build.scripts}/startup.sh"/>
+		<replaceregexp file="${build.scripts}/startup.sh" match="#COMMAND#" replace="${cmr.java.command.linux} ${cmr.java.memory.64bit} ${cmr.java.opts.64bit} ${cmr.java.opts.linux} ${cmr.java.locgc.linux} -jar ${dist.jar.name}" byline="true"/>
+		<tar destfile="${release.root}/inspectit-cmr.macosx.x64.tar.gz" compression="gzip">
+			<fileset dir="${build.release.root}" />
+			<tarfileset file="${build.scripts}/startup.sh" prefix="CMR" filemode="755" />
+			<zipfileset src="${jvm.root}/jre7-macosx-x64.zip" prefix="CMR/jre" filemode="755" />
+			<zipfileset dir="${basedir}/../" prefix="CMR" includes="*LICENSE*.txt" />
+		</tar>
+		<delete file="${build.scripts}/startup.sh" failonerror="false" />
 	</target>
 
 	<target name="generate-configuration-xsd-schema" depends="init,init-jaxb-schemagen,release-commonscs">
