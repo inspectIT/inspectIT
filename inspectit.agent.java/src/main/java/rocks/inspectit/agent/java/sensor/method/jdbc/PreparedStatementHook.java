@@ -27,9 +27,9 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
  * <p>
  * Furthermore, a {@link StatementStorage} is used which saves all the created prepared statements
  * and if the parameter hook for the sqls is installed and activated, the parameters are replaced.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 
@@ -67,17 +67,17 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 	 * The ThreadLocal for a boolean value so only the last before and first after hook of an
 	 * invocation is measured.
 	 */
-	private ThreadLocal<Boolean> threadLast = new ThreadLocal<Boolean>();
+	private final ThreadLocal<Boolean> threadLast = new ThreadLocal<Boolean>();
 
 	/**
 	 * The StringConstraint to ensure a maximum length of strings.
 	 */
-	private StringConstraint strConstraint;
+	private final StringConstraint strConstraint;
 
 	/**
 	 * Caches the calls to getConnection().
 	 */
-	private StatementReflectionCache statementReflectionCache;
+	private final StatementReflectionCache statementReflectionCache;
 
 	/**
 	 * Contains all method idents of all prepared statements that had a problem finding the stored
@@ -88,7 +88,7 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 
 	/**
 	 * The only constructor which needs the {@link Timer}.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer.
 	 * @param idManager
@@ -146,10 +146,8 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 						Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 						List<String> params = statementStorage.getParameters(object);
 						long platformId = idManager.getPlatformId();
-						long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
-						long registeredMethodId = idManager.getRegisteredMethodId(methodId);
 
-						sqlData = new SqlStatementData(timestamp, platformId, registeredSensorTypeId, registeredMethodId);
+						sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
 						sqlData.setPreparedStatement(true);
 						sqlData.setSql(strConstraint.crop(sql));
 						sqlData.setDuration(duration);

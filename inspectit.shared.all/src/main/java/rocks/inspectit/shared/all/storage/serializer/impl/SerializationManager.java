@@ -96,6 +96,30 @@ import rocks.inspectit.shared.all.exception.TechnicalException;
 import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.all.instrumentation.classcache.AnnotationType;
+import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
+import rocks.inspectit.shared.all.instrumentation.classcache.InterfaceType;
+import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
+import rocks.inspectit.shared.all.instrumentation.classcache.util.ArraySet;
+import rocks.inspectit.shared.all.instrumentation.classcache.util.MethodTypeSet;
+import rocks.inspectit.shared.all.instrumentation.classcache.util.SortedArraySet;
+import rocks.inspectit.shared.all.instrumentation.classcache.util.TypeSet;
+import rocks.inspectit.shared.all.instrumentation.classcache.util.TypeWithAnnotationsSet;
+import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
+import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPath;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
+import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
+import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
 import rocks.inspectit.shared.all.storage.serializer.HibernateAwareClassResolver;
 import rocks.inspectit.shared.all.storage.serializer.IKryoProvider;
 import rocks.inspectit.shared.all.storage.serializer.ISerializer;
@@ -322,6 +346,33 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-1849
 		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager));
+
+		// added with INSPECTIT-1919
+		kryo.register(AgentConfig.class, new FieldSerializer<AgentConfig>(kryo, AgentConfig.class));
+		kryo.register(StrategyConfig.class, new FieldSerializer<StrategyConfig>(kryo, StrategyConfig.class));
+		kryo.register(PlatformSensorTypeConfig.class, new FieldSerializer<PlatformSensorTypeConfig>(kryo, PlatformSensorTypeConfig.class));
+		kryo.register(MethodSensorTypeConfig.class, new FieldSerializer<MethodSensorTypeConfig>(kryo, MethodSensorTypeConfig.class));
+		kryo.register(ExceptionSensorTypeConfig.class, new FieldSerializer<ExceptionSensorTypeConfig>(kryo, ExceptionSensorTypeConfig.class));
+		kryo.register(PropertyPath.class, new FieldSerializer<PropertyPath>(kryo, PropertyPath.class));
+		kryo.register(PropertyPathStart.class, new FieldSerializer<PropertyPathStart>(kryo, PropertyPathStart.class));
+		kryo.register(InstrumentationDefinition.class, new FieldSerializer<InstrumentationDefinition>(kryo, InstrumentationDefinition.class));
+		kryo.register(MethodInstrumentationConfig.class, new FieldSerializer<MethodInstrumentationConfig>(kryo, MethodInstrumentationConfig.class));
+		kryo.register(SensorInstrumentationPoint.class, new FieldSerializer<SensorInstrumentationPoint>(kryo, SensorInstrumentationPoint.class));
+		kryo.register(SpecialInstrumentationPoint.class, new FieldSerializer<SpecialInstrumentationPoint>(kryo, SpecialInstrumentationPoint.class));
+		kryo.register(SpecialInstrumentationType.class, new EnumSerializer(SpecialInstrumentationType.class));
+		kryo.register(PriorityEnum.class, new EnumSerializer(PriorityEnum.class));
+		kryo.register(EqualsMatchPattern.class, new FieldSerializer<EqualsMatchPattern>(kryo, EqualsMatchPattern.class));
+		kryo.register(WildcardMatchPattern.class, new FieldSerializer<WildcardMatchPattern>(kryo, WildcardMatchPattern.class));
+		// class cache structures
+		kryo.register(ClassType.class, new FieldSerializer<ClassType>(kryo, ClassType.class));
+		kryo.register(InterfaceType.class, new FieldSerializer<InterfaceType>(kryo, InterfaceType.class));
+		kryo.register(AnnotationType.class, new FieldSerializer<AnnotationType>(kryo, AnnotationType.class));
+		kryo.register(MethodType.class, new FieldSerializer<MethodType>(kryo, MethodType.class));
+		kryo.register(ArraySet.class, new CollectionSerializer());
+		kryo.register(SortedArraySet.class, new CollectionSerializer());
+		kryo.register(MethodTypeSet.class, new CollectionSerializer());
+		kryo.register(TypeSet.class, new CollectionSerializer());
+		kryo.register(TypeWithAnnotationsSet.class, new CollectionSerializer());
 	}
 
 	/**

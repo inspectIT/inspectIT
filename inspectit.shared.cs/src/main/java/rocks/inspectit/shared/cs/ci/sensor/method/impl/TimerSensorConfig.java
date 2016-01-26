@@ -2,9 +2,9 @@ package rocks.inspectit.shared.cs.ci.sensor.method.impl;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.cs.ci.sensor.StringConstraintSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
 
 /**
  * Timer sensor configuration.
@@ -53,8 +53,8 @@ public class TimerSensorConfig extends StringConstraintSensorConfig implements I
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodSensorPriorityEnum getPriority() {
-		return MethodSensorPriorityEnum.MAX;
+	public PriorityEnum getPriority() {
+		return PriorityEnum.MAX;
 	}
 
 	/**

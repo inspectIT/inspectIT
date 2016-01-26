@@ -23,10 +23,10 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
  * one query. After the complete SQL method was executed, it computes how long the method took to
  * finish and saves the executed SQL Statement String. Afterwards, the measurement is added to the
  * {@link CoreService}.
- * 
+ *
  * @author Christian Herzog
  * @author Patrice Bouillet
- * 
+ *
  */
 public class StatementHook implements IMethodHook {
 
@@ -59,21 +59,21 @@ public class StatementHook implements IMethodHook {
 	 * The ThreadLocal for a boolean value so only the last before and first after hook of an
 	 * invocation is measured.
 	 */
-	private ThreadLocal<Boolean> threadLast = new ThreadLocal<Boolean>();
+	private final ThreadLocal<Boolean> threadLast = new ThreadLocal<Boolean>();
 
 	/**
 	 * The StringConstraint to ensure a maximum length of strings.
 	 */
-	private StringConstraint strConstraint;
+	private final StringConstraint strConstraint;
 
 	/**
 	 * Caches the calls to getConnection().
 	 */
-	private StatementReflectionCache statementReflectionCache;
+	private final StatementReflectionCache statementReflectionCache;
 
 	/**
 	 * The only constructor which needs the {@link Timer}.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer.
 	 * @param idManager
@@ -126,10 +126,8 @@ public class StatementHook implements IMethodHook {
 				try {
 					Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 					long platformId = idManager.getPlatformId();
-					long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
-					long registeredMethodId = idManager.getRegisteredMethodId(methodId);
 
-					sqlData = new SqlStatementData(timestamp, platformId, registeredSensorTypeId, registeredMethodId);
+					sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
 					sqlData.setPreparedStatement(false);
 					sqlData.setSql(strConstraint.crop(sql));
 					sqlData.setDuration(duration);

@@ -79,5 +79,13 @@
 		<property name="threadFactory" ref="forkJoinWorkerThreadFactory" />
 		<property name="uncaughtExceptionHandler" ref="forkJoinPoolExceptionHandler" />
 	</bean>
+
+	<bean id="agentServiceExecutorService" class="rocks.inspectit.shared.cs.storage.util.ExecutorServiceFactory">
+		<property name="threadNamePrefix" value="agent-service-executor-service" />
+		<property name="daemon" value="true" />
+		<property name="executorThreads" value="1" />
+		<property name="scheduledExecutor" value="false" />
+		<property name="beanSingleton" value="true" />
+	</bean>
 	
 </beans>

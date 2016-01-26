@@ -5,9 +5,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.cs.ci.sensor.StringConstraintSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
 
 /**
  * Configuration of the exception sensor.
@@ -72,8 +72,8 @@ public class ExceptionSensorConfig extends StringConstraintSensorConfig implemen
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodSensorPriorityEnum getPriority() {
-		return MethodSensorPriorityEnum.NORMAL;
+	public PriorityEnum getPriority() {
+		return PriorityEnum.NORMAL;
 	}
 
 	/**

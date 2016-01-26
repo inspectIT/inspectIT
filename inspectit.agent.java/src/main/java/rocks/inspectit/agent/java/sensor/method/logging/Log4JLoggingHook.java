@@ -19,15 +19,15 @@ import rocks.inspectit.shared.all.communication.data.LoggingData;
  * The logging hook for log4j logging capturing. This hook captures all loggings from log4j if the
  * loggings are with a level "greater" than the provided minimum logging level (see
  * {@link SeverityHelper}).
- * 
+ *
  * If the minimum logging level is not provided or cannot be found in log4j default levels, the
  * logging hook will not capture any loggings.
- * 
+ *
  * This hook is expected to be placed on the method
  * <code>protected void forcedLog(String fqcn, Priority level, Object message, Throwable
  * t)</code> of the class <code>org.apache.log4j.Priority</code>. Putting this hook to other
  * classes/methods can lead to errors.
- * 
+ *
  * @author Stefan Siegl
  */
 public class Log4JLoggingHook implements IMethodHook {
@@ -36,17 +36,17 @@ public class Log4JLoggingHook implements IMethodHook {
 	private static final Logger LOG = LoggerFactory.getLogger(Log4JLoggingHook.class);
 
 	/** the id manager. */
-	private IIdManager idManager;
+	private final IIdManager idManager;
 
 	/** the level checker. */
-	private SeverityHelper checker;
+	private final SeverityHelper checker;
 
 	/** caches whether the hook has a correct minimum level. */
 	// private final boolean correctlyInitialized;
 
 	/**
 	 * Creates a new instance of the Log4J Logging hook.
-	 * 
+	 *
 	 * @param idManager
 	 *            the idManager.
 	 * @param minimumLevelToCapture
@@ -86,13 +86,14 @@ public class Log4JLoggingHook implements IMethodHook {
 			}
 
 			try {
-				LoggingData data = new LoggingData();
+				long platformId = idManager.getPlatformId();
 
+				LoggingData data = new LoggingData();
 				data.setLevel(level);
 				data.setMessage(String.valueOf(parameters[2]));
-				data.setPlatformIdent(idManager.getPlatformId());
-				data.setSensorTypeIdent(idManager.getRegisteredSensorTypeId(sensorTypeId));
-				data.setMethodIdent(idManager.getRegisteredMethodId(methodId));
+				data.setPlatformIdent(platformId);
+				data.setSensorTypeIdent(sensorTypeId);
+				data.setMethodIdent(methodId);
 				data.setTimeStamp(new Timestamp(System.currentTimeMillis()));
 
 				// TODO: Note that setting the prefix to null here is only

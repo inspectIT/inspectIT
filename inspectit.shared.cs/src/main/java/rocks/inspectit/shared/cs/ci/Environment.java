@@ -17,7 +17,6 @@ import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -104,10 +103,9 @@ public class Environment {
 	 * List of the method sensor configurations.
 	 */
 	@XmlElementWrapper(name = "method-sensor-configs")
-	@XmlElementRefs({ @XmlElementRef(type = ConnectionMetaDataSensorConfig.class), @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class),
-		@XmlElementRef(type = InvocationSequenceSensorConfig.class), @XmlElementRef(type = PreparedStatementParameterSensorConfig.class),
-		@XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class), @XmlElementRef(type = TimerSensorConfig.class),
-		@XmlElementRef(type = Log4jLoggingSensorConfig.class) })
+	@XmlElementRefs({ @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class), @XmlElementRef(type = InvocationSequenceSensorConfig.class),
+		@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
+		@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**
@@ -128,6 +126,23 @@ public class Environment {
 	 */
 	@XmlElement(name = "classLoadingDelegation")
 	private boolean classLoadingDelegation = true;
+
+	/**
+	 * Returns the {@link IMethodSensorConfig} for the given {@link IMethodSensorConfig} class.
+	 *
+	 * @param clazz
+	 *            Class to look for.
+	 * @return Returns the {@link IMethodSensorConfig} for the given {@link IMethodSensorConfig}
+	 *         class.
+	 */
+	public IMethodSensorConfig getMethodSensorTypeConfig(Class<? extends IMethodSensorConfig> clazz) {
+		for (IMethodSensorConfig config : methodSensorConfigs) {
+			if (config.getClass().equals(clazz)) {
+				return config;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Gets {@link #id}.

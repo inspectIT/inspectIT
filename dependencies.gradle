@@ -117,14 +117,16 @@ dependencies {
 		'de.javakaffee:info.novatec.kryo-serializers:0.23',
 		'com.esotericsoftware.reflectasm:info.novatec.reflectasm:1.07',
 		'com.esotericsoftware.minlog:info.novatec.minlog:1.2',
-		'org.ow2.asm:info.novatec.asm:4.0',
 		'org.objenesis:objenesis:2.1',
 
 		'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final',
 		'javax.validation:validation-api:1.1.0.Final',
 		'javax.inject:com.springsource.javax.inject:1.0.0',
 
-		'com.google.guava:guava-jdk5:13.0'
+		'com.google.guava:guava-jdk5:13.0',
+		'com.github.stephenc.high-scale-lib:info.novatec.high-scale-lib:1.1.2',
+		
+		'org.ow2.asm:info.novatec.asm-all-shaded:5.0.4'
 	) 
 	sharedAllTest (
 		'nl.jqno.equalsverifier:equalsverifier:1.0.2',
@@ -135,13 +137,12 @@ dependencies {
 	sharedCsProd (
 		'commons-pool:commons-pool:1.6',
 		'commons-collections:commons-collections:3.2.2',
-		'org.hamcrest:info.novatec.hamcrest-all:1.3',
-		'com.github.stephenc.high-scale-lib:info.novatec.high-scale-lib:1.1.2'
+		'org.hamcrest:info.novatec.hamcrest-all:1.3'
 	)
 
 	/** inspectit.agent.java */
 	agentJavaProd (
-		'org.javassist:info.novatec.javassist:3.20.0-GA',
+		'commons-codec:commons-codec:1.6',
 		'org.slf4j:jcl-over-slf4j:1.7.21',
 		'org.slf4j:log4j-over-slf4j:1.7.21',
 		'ch.qos.logback:logback-core:1.1.7',
