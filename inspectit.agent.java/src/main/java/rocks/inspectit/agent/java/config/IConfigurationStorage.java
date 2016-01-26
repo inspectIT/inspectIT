@@ -4,31 +4,32 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import rocks.inspectit.agent.java.analyzer.IMatchPattern;
-import rocks.inspectit.agent.java.analyzer.IMatcher;
-import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.agent.java.config.impl.RepositoryConfig;
-import rocks.inspectit.agent.java.config.impl.StrategyConfig;
 import rocks.inspectit.agent.java.config.impl.UnregisteredJmxConfig;
-import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
 import rocks.inspectit.agent.java.sensor.exception.IExceptionSensor;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
+import rocks.inspectit.shared.all.pattern.IMatchPattern;
 
 /**
  * This storage is used by all configuration readers to store the information into.
- * 
+ *
  * @author Patrice Bouillet
  * @author Eduard Tudenhoefner
  * @author Alfred Krauss
- * 
+ * @author Ivan Senic
  */
 public interface IConfigurationStorage {
 
 	/**
 	 * Sets the repository. Internally, a {@link RepositoryConfig} class is instantiated and filled
 	 * with the proper arguments.
-	 * 
+	 *
 	 * @param host
 	 *            The host ip / name.
 	 * @param port
@@ -39,16 +40,26 @@ public interface IConfigurationStorage {
 	void setRepository(String host, int port) throws StorageException;
 
 	/**
+	 * Sets the {@link AgentConfig}.
+	 *
+	 * @param agentConfiguration
+	 *            Agent configuration received from the server.
+	 * @throws StorageException
+	 *             If registration of the components defined in the configuration fails.
+	 */
+	void setAgentConfiguration(AgentConfig agentConfiguration) throws StorageException;
+
+	/**
 	 * Returns an instance of the {@link RepositoryConfig} class which is filled with the values by
 	 * the {@link #setRepository(String, int)} method.
-	 * 
+	 *
 	 * @return The {@link RepositoryConfig} instance.
 	 */
 	RepositoryConfig getRepositoryConfig();
 
 	/**
 	 * Sets the name of the Agent.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the Agent to set.
 	 * @throws StorageException
@@ -58,270 +69,121 @@ public interface IConfigurationStorage {
 
 	/**
 	 * Returns the name of the Agent.
-	 * 
+	 *
 	 * @return The name of the Agent.
 	 */
 	String getAgentName();
 
 	/**
-	 * Sets the unique buffer strategy. The parameters are stored in the {@link StrategyConfig}
-	 * class.
-	 * 
-	 * @param clazzName
-	 *            The fully qualified name of the buffer strategy class.
-	 * @param settings
-	 *            A map containing some optional settings for the buffer.
-	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
-	 */
-	void setBufferStrategy(String clazzName, Map<String, String> settings) throws StorageException;
-
-	/**
 	 * Returns a {@link StrategyConfig} instance containing the buffer strategy information.
-	 * 
+	 *
 	 * @return An instance of {@link StrategyConfig}.
-	 */
-	StrategyConfig getBufferStrategyConfig();
-
-	/**
-	 * Adds a sending strategy. The parameters are stored in the {@link StrategyConfig} class.
-	 * 
-	 * @param clazzName
-	 *            The fully qualified name of the sending strategy class.
-	 * @param settings
-	 *            A map containing some optional settings for the sending strategy.
 	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
+	 *             If agent configuration is not set.
 	 */
-	void addSendingStrategy(String clazzName, Map<String, String> settings) throws StorageException;
+	StrategyConfig getBufferStrategyConfig() throws StorageException;
 
 	/**
-	 * Returns a {@link List} of {@link StrategyConfig} instances containing the sending strategy
+	 * Returns a {@link StrategyConfig} instance containing the sending strategy
 	 * information.
-	 * 
-	 * @return A {@link List} of {@link StrategyConfig} instances.
-	 */
-	List<StrategyConfig> getSendingStrategyConfigs();
-
-	/**
-	 * Creates and initializes a {@link MethodSensorTypeConfig} out of the given parameters. A
-	 * sensor type is always unique, hence only one instance exists which is used by all installed
-	 * sensors in the target application.
-	 * 
-	 * @param sensorTypeName
-	 *            The name of the sensor type.
-	 * @param sensorTypeClass
-	 *            The fully qualified definition of the sensor type which is instantiated via
-	 *            reflection.
-	 * @param priority
-	 *            The priority of the sensor type.
-	 * @param settings
-	 *            A map containing optional settings.
+	 *
+	 * @return Used {@link StrategyConfig} instances.
 	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
+	 *             If agent configuration is not set.
 	 */
-	void addMethodSensorType(String sensorTypeName, String sensorTypeClass, PriorityEnum priority, Map<String, Object> settings) throws StorageException;
+	StrategyConfig getSendingStrategyConfig() throws StorageException;
 
 	/**
 	 * Returns a {@link List} of the {@link MethodSensorTypeConfig} classes.
-	 * 
+	 *
 	 * @return A {@link List} of {@link MethodSensorTypeConfig} classes.
-	 */
-	List<MethodSensorTypeConfig> getMethodSensorTypes();
-
-	/**
-	 * Returns a {@link List} of {@link MethodSensorTypeConfig} classes.
-	 * 
-	 * @return A {@link List} of {@link MethodSensorTypeConfig} classes.
-	 */
-	List<MethodSensorTypeConfig> getExceptionSensorTypes();
-
-	/**
-	 * Creates and initializes a {@link JmxSensorTypeConfig} out of the given parameters. A sensor
-	 * type is always unique, hence only one instance exists which is used by all installed sensors
-	 * in the target application.
-	 * 
-	 * @param sensorTypeClass
-	 *            the fully qualified definition of the sensor type which is instantiated via
-	 *            reflection.
-	 * @param sensorName
-	 *            the user given name of the sensor.
 	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
+	 *             If agent configuration is not set.
 	 */
-	void addJmxSensorType(String sensorTypeClass, String sensorName) throws StorageException;
+	List<MethodSensorTypeConfig> getMethodSensorTypes() throws StorageException;
 
 	/**
 	 * Returns a {@link List} of the {@link JmxSensorTypeConfig} classes.
-	 * 
+	 *
 	 * @return A {@link List} of {@link JmxSensorTypeConfig} classes.
 	 */
 	List<JmxSensorTypeConfig> getJmxSensorTypes();
 
 	/**
-	 * Adds a configuration for a jmx sensor.
-	 * 
-	 * @param jmxSensorTypeName
-	 *            Name of the JMX-Sensor
-	 * @param mBeanName
-	 *            Name of the MBean
-	 * @param attributeName
-	 *            Name of the Attribute
+	 * Returns the exception sensor types.
+	 *
+	 * @return Returns the exception sensor types.
+	 *
 	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
+	 *             If agent configuration is not set.
 	 */
-	void addUnregisteredJmxConfig(String jmxSensorTypeName, String mBeanName, String attributeName) throws StorageException;
-
-	/**
-	 * Creates and initializes a {@link MethodSensorTypeConfig} out of the given parameters. A
-	 * sensor type is always unique, hence only one instance exists which is used by all installed
-	 * sensors in the target application.
-	 * 
-	 * @param sensorTypeClass
-	 *            the fully qualified definition of the sensor type which is instantiated via
-	 *            reflection.
-	 * @param settings
-	 *            A map containing optional settings.
-	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
-	 */
-	void addExceptionSensorType(String sensorTypeClass, Map<String, Object> settings) throws StorageException;
-
-	/**
-	 * Adds a new parameter for the exception sensor definition.
-	 * 
-	 * @param sensorTypeName
-	 *            The name of the sensor type.
-	 * @param targetClassName
-	 *            The name of the target class.
-	 * @param isVirtual
-	 *            Defines if the signature does not matter, hence all classes matching the
-	 *            <code>targetClassName</code> despite their signatures are instrumented.
-	 * @param settings
-	 *            Additional and optional settings for this sensor definition as a {@link Map}. The
-	 *            key and value has to be defined as a standard {@link String}. <br>
-	 *            Available are the keys <b>superclass</b> and <b>interface</b> with the value
-	 *            <code>true</code> or <code>false</code>.
-	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
-	 */
-	void addExceptionSensorTypeParameter(String sensorTypeName, String targetClassName, boolean isVirtual, Map<String, Object> settings) throws StorageException;
-
-	/**
-	 * Creates and initializes a {@link MethodSensorTypeConfig} out of the given parameters. A
-	 * sensor type is always unique, hence only one instance exists which is used by all installed
-	 * sensors in the target application.
-	 * 
-	 * @param sensorTypeClass
-	 *            The fully qualified definition of the sensor type which is instantiated via
-	 *            reflection.
-	 * @param settings
-	 *            A map containing optional settings.
-	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
-	 */
-	void addPlatformSensorType(String sensorTypeClass, Map<String, Object> settings) throws StorageException;
+	ExceptionSensorTypeConfig getExceptionSensorType() throws StorageException;
 
 	/**
 	 * Returns a {@link List} of the {@link PlatformSensorTypeConfig} classes.
-	 * 
+	 *
 	 * @return A {@link List} of {@link PlatformSensorTypeConfig} classes.
-	 */
-	List<PlatformSensorTypeConfig> getPlatformSensorTypes();
-
-	/**
-	 * Adds a new sensor definition.
-	 * 
-	 * @param sensorTypeName
-	 *            The name of the sensor type.
-	 * @param targetClassName
-	 *            The name of the target class.
-	 * @param targetMethodName
-	 *            The name of the target method.
-	 * @param parameterList
-	 *            The list of parameters of the target method.
-	 * @param ignoreSignature
-	 *            Defines if the signature does not matter for the method, hence all methods
-	 *            matching the <code>targetMethodName</code> despite their signatures are
-	 *            instrumented.
-	 * @param settings
-	 *            Additional and optional settings for this sensor definition as a {@link Map}. The
-	 *            key and value has to be defined as a standard {@link String}. <br>
-	 *            Available are the keys <b>superclass</b> and <b>interface</b> with the value
-	 *            <code>true</code> or <code>false</code>.
 	 * @throws StorageException
-	 *             This exception is thrown if something unexpected happens while initializing the
-	 *             buffer strategy.
+	 *             If agent configuration is not set.
 	 */
-	void addSensor(String sensorTypeName, String targetClassName, String targetMethodName, List<String> parameterList, boolean ignoreSignature, Map<String, Object> settings) throws StorageException;
-
-	/**
-	 * Returns a {@link List} of the {@link UnregisteredSensorConfig} classes.
-	 * 
-	 * @return A {@link List} of {@link UnregisteredSensorConfig} classes.
-	 */
-	List<UnregisteredSensorConfig> getUnregisteredSensorConfigs();
+	List<PlatformSensorTypeConfig> getPlatformSensorTypes() throws StorageException;
 
 	/**
 	 * Returns a {@link List} of the {@link UnregisteredJmxConfig} classes.
-	 * 
+	 *
 	 * @return A {@link List} of {@link UnregisteredJmxConfig} classes.
 	 */
 	List<UnregisteredJmxConfig> getUnregisteredJmxConfigs();
 
 	/**
 	 * Returns whether the {@link IExceptionSensor} is activated.
-	 * 
+	 *
 	 * @return Whether the {@link IExceptionSensor} is activated.
+	 * @throws StorageException
+	 *             If agent configuration is not set.
 	 */
-	boolean isExceptionSensorActivated();
-
-	/**
-	 * Activates or deactivates the instrumentation of enhanced exception events with try/catch.
-	 * 
-	 * @param enhancedEvent
-	 *            Boolean indicating whether to activate or deactivate enhanced events.
-	 */
-	void setEnhancedExceptionSensorActivated(boolean enhancedEvent);
+	boolean isExceptionSensorActivated() throws StorageException;
 
 	/**
 	 * Returns whether enhanced exception events are instrumented with try/catch.
-	 * 
+	 *
 	 * @return Whether enhanced exception events are instrumented.
+	 * @throws StorageException
+	 *             If agent configuration is not set.
 	 */
-	boolean isEnhancedExceptionSensorActivated();
+	boolean isEnhancedExceptionSensorActivated() throws StorageException;
 
 	/**
 	 * Returns the patterns that denote the classes that should be ignored.
-	 * 
+	 *
 	 * @return Returns the patterns that denote the classes that should be ignored.
+	 * @throws StorageException
+	 *             If agent configuration is not set.
 	 */
-	List<IMatchPattern> getIgnoreClassesPatterns();
+	Collection<IMatchPattern> getIgnoreClassesPatterns() throws StorageException;
 
 	/**
-	 * Adds the ignore classes pattern to the {@link IConfigurationStorage}.
-	 * 
-	 * @param patternString
-	 *            String that will be used as pattern for ignoring.
+	 * Returns if the class cache for the agent exist on the CMR. If this is set to
+	 * <code>true</code> agent can use its internal sending classes cache, otherwise agent should
+	 * send all the loaded classes to the CMR ignoring the sending cache state.
+	 *
+	 * @return Returns if the class cache for the agent exist on the CMR.
+	 * @throws StorageException
+	 *             If agent configuration is not set.
 	 */
-	void addIgnoreClassesPattern(String patternString);
+	boolean isClassCacheExistsOnCmr() throws StorageException;
 
 	/**
-	 * Returns the matchers that can be used to test if the ClassLoader class should be instrumented
-	 * in the way that class loading is delegated if the class to be loaded is inspectIT class.
-	 * 
-	 * @return Returns the matchers that can be used to test if the ClassLoader class should be
-	 *         instrumented in the way that class loading is delegated if the class to be loaded is
-	 *         inspectIT class.
+	 * Set of known {@link InstrumentationDefinition} for the agent that can be used by the Agent right
+	 * away. Each {@link InstrumentationDefinition} is mapped to the collection of the class hashes it
+	 * relates to.
+	 *
+	 * @return Set of known {@link InstrumentationDefinition} for the agent that can be used by the
+	 *         Agent right away. Each {@link InstrumentationDefinition} is mapped to the collection of
+	 *         the class hashes it relates to.
+	 * @throws StorageException
+	 *             If agent configuration is not set.
 	 */
-	Collection<IMatcher> getClassLoaderDelegationMatchers();
+	Map<Collection<String>, InstrumentationDefinition> getInitialInstrumentationResults() throws StorageException;
 
 }

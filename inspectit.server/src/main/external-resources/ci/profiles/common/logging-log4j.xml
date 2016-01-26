@@ -3,6 +3,6 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<!-- Configuration for Log4j -->
-	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.Log4jLoggingSensorConfig" class-name="org.apache.log4j.Category" method-name="forcedLog" parameters="java.lang.String org.apache.log4j.Priority java.lang.Object java.lang.Throwable" private-mod="false" protected-mod="false" default-mod="false" />
+	<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig" class-name="org.apache.log4j.Category" method-name="forcedLog" parameters="java.lang.String org.apache.log4j.Priority java.lang.Object java.lang.Throwable" public-mod="false" private-mod="false" default-mod="false" />
 
 </profile>

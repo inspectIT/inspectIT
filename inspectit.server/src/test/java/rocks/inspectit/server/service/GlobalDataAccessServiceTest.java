@@ -1,5 +1,7 @@
 package rocks.inspectit.server.service;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -7,14 +9,18 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.dao.PlatformIdentDao;
+import rocks.inspectit.server.event.AgentDeletedEvent;
 import rocks.inspectit.server.service.GlobalDataAccessService;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
@@ -40,6 +46,9 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 	@Mock
 	private AgentStatusDataProvider agentStatusProvider;
 
+	@Mock
+	private ApplicationEventPublisher eventPublisher;
+
 	/**
 	 * Initializes mocks. Has to run before each test so that mocks are clear.
 	 */
@@ -51,6 +60,7 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 		globalDataAccessService.platformIdentDao = platformIdentDao;
 		globalDataAccessService.agentStatusProvider = agentStatusProvider;
 		globalDataAccessService.defaultDataDao = defaultDataDao;
+		globalDataAccessService.eventPublisher = eventPublisher;
 		globalDataAccessService.log = LoggerFactory.getLogger(GlobalDataAccessService.class);
 	}
 
@@ -102,6 +112,10 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 
 		verify(platformIdentDao, times(1)).delete(platformIdent);
 		verify(defaultDataDao, times(1)).deleteAll(platformId);
-		verify(agentStatusProvider, times(1)).registerDeleted(platformId);
+		ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
+		verify(eventPublisher, times(1)).publishEvent(captor.capture());
+
+		AgentDeletedEvent event = (AgentDeletedEvent) captor.getValue();
+		assertThat(event.getPlatformIdent(), is(platformIdent));
 	}
 }

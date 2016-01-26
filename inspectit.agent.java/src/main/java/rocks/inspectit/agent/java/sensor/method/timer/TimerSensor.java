@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -14,9 +14,9 @@ import rocks.inspectit.agent.java.util.Timer;
 
 /**
  * The timer sensor which initializes and returns the {@link TimerHook} class.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -27,10 +27,10 @@ public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 	private Timer timer;
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * The property accessor.
@@ -51,17 +51,17 @@ public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 
 	/**
 	 * The default constructor which needs 3 parameter for initialization.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer used for accurate measuring.
-	 * @param idManager
-	 *            The ID manager.
+	 * @param platformManager
+	 *            The Platform manager.
 	 * @param propertyAccessor
 	 *            The property accessor.
 	 */
-	public TimerSensor(Timer timer, IIdManager idManager, IPropertyAccessor propertyAccessor) {
+	public TimerSensor(Timer timer, IPlatformManager platformManager, IPropertyAccessor propertyAccessor) {
 		this.timer = timer;
-		this.idManager = idManager;
+		this.platformManager = platformManager;
 		this.propertyAccessor = propertyAccessor;
 	}
 
@@ -75,8 +75,9 @@ public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		timerHook = new TimerHook(timer, idManager, propertyAccessor, parameter, ManagementFactory.getThreadMXBean());
+	@Override
+	public void initHook(Map<String, Object> parameter) {
+		timerHook = new TimerHook(timer, platformManager, propertyAccessor, parameter, ManagementFactory.getThreadMXBean());
 	}
 
 }

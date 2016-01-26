@@ -1,54 +1,58 @@
 package rocks.inspectit.agent.java.analyzer.impl;
 
+import info.novatec.inspectit.org.objectweb.asm.ClassReader;
+import info.novatec.inspectit.org.objectweb.asm.ClassWriter;
+
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import javassist.ByteArrayClassPath;
-import javassist.CannotCompileException;
-import javassist.ClassPath;
-import javassist.ClassPool;
-import javassist.CtBehavior;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-import javassist.NotFoundException;
-import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
-import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
-import rocks.inspectit.agent.java.analyzer.IMatcher;
-import rocks.inspectit.agent.java.config.IConfigurationStorage;
-import rocks.inspectit.agent.java.config.StorageException;
-import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
-import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
-import rocks.inspectit.agent.java.hooking.IHookInstrumenter;
-import rocks.inspectit.agent.java.hooking.impl.HookException;
-import rocks.inspectit.shared.all.communication.data.ParameterContentType;
-import rocks.inspectit.shared.all.spring.logger.Log;
-
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.google.common.io.ByteStreams;
+
+import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.connection.IConnection;
+import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
+import rocks.inspectit.agent.java.instrumentation.asm.ClassAnalyzer;
+import rocks.inspectit.agent.java.instrumentation.asm.ClassInstrumenter;
+import rocks.inspectit.agent.java.instrumentation.asm.LoaderAwareClassWriter;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.instrumentation.classcache.Type;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
+import rocks.inspectit.shared.all.spring.logger.Log;
+
 /**
- * The default implementation of the {@link IByteCodeAnalyzer} interface. First it tries to analyze
- * the given byte code and collects all the methods which need to be instrumented in a Map. This is
- * done in the {@link #analyze(byte[], String, ClassLoader)} method. Afterwards, the Map is passed
- * to the {@link #instrument(Map)} method which will do the instrumentation.
- * 
- * @author Patrice Bouillet
- * @author Eduard Tudenhoefner
- * 
+ * {@link IByteCodeAnalyzer} that uses {@link IConnection} to connect to the CMR and send the
+ * analyzed type. If needed performs instrumentation based on the result of the CMR answer.
+ *
+ * @author Ivan Senic
+ *
  */
 @Component
-public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
+public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 
 	/**
 	 * Log for the class.
@@ -57,353 +61,321 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 	Logger log;
 
 	/**
-	 * The implementation of the hook instrumenter.
-	 */
-	private final IHookInstrumenter hookInstrumenter;
-
-	/**
-	 * The implementation of the configuration storage where all definitions of the user are stored.
-	 */
-	private final IConfigurationStorage configurationStorage;
-
-	/**
-	 * The class pool analyzer is used here to add the passed byte code to the class pool which is
-	 * responsible for the class loader.
-	 */
-	private final IClassPoolAnalyzer classPoolAnalyzer;
-
-	/**
-	 * If class loader delegation should be active.
-	 */
-	@Value("${instrumentation.classLoaderDelegation}")
-	boolean classLoaderDelegation;
-
-	/**
-	 * The default constructor which accepts two parameters which are needed.
-	 * 
-	 * @param configurationStorage
-	 *            The configuration storage reference.
-	 * @param hookInstrumenter
-	 *            The hook instrumenter reference.
-	 * @param classPoolAnalyzer
-	 *            The class pool analyzer reference.
+	 * Platform manager.
 	 */
 	@Autowired
-	public ByteCodeAnalyzer(IConfigurationStorage configurationStorage, IHookInstrumenter hookInstrumenter, IClassPoolAnalyzer classPoolAnalyzer) {
-		if (null == configurationStorage) {
-			throw new IllegalArgumentException("Configuration storage cannot be null!");
+	private IPlatformManager platformManager;
+
+	/**
+	 * {@link IConfigurationStorage} for getting if exception sensor is active or not.
+	 */
+	@Autowired
+	private IConfigurationStorage configurationStorage;
+
+	/**
+	 * {@link IConnection}.
+	 */
+	@Autowired
+	private IConnection connection;
+
+	/**
+	 * {@link IHookDispatcherMapper}.
+	 */
+	@Autowired
+	private IHookDispatcherMapper hookDispatcherMapper;
+
+	/**
+	 * {@link IClassHashHelper}.
+	 */
+	@Autowired
+	private ClassHashHelper classHashHelper;
+
+	/**
+	 * Core service needed for providing the executor service.
+	 */
+	@Autowired
+	private ICoreService coreService;
+
+	/**
+	 * All initialized {@link IMethodSensor}s.
+	 */
+	@Autowired
+	private List<IMethodSensor> methodSensors;
+
+	/**
+	 * Map of {@link IMethodSensor}s to their IDs for faster lookups.
+	 */
+	private Map<Long, IMethodSensor> methodSensorMap;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public byte[] analyzeAndInstrument(byte[] byteCode, String className, final ClassLoader classLoader) {
+		return analyzeAndInstrumentInternal(byteCode, className, classLoader, true);
+	}
+
+	/**
+	 * Internal implementation of the {@link #analyzeAndInstrument(byte[], String, ClassLoader)}.
+	 * Provides option to define if the instrumentation needs to be performed or not.
+	 *
+	 * @param byteCode
+	 *            The byte-code of the class to analyze. If <code>null</code> is passed byte code
+	 *            will be loaded using {@link #getByteCodeFromClassLoader(String, ClassLoader)}.
+	 * @param className
+	 *            The class name.
+	 * @param classLoader
+	 *            The class loader.
+	 * @param performInstrumentation
+	 *            If instrumentation should be performed with the instrumentation result sent by the
+	 *            server.
+	 * @return The instrumented byte code or <code>null</code> if instrumentation was not performed
+	 *         (or in case of error).
+	 */
+	private byte[] analyzeAndInstrumentInternal(byte[] byteCode, String className, final ClassLoader classLoader, boolean performInstrumentation) {
+		try {
+			if (null == byteCode) {
+				// try to read from class loader, if it fails just return
+				byteCode = getByteCodeFromClassLoader(className, classLoader);
+
+				if (null == byteCode) {
+					return null;
+				}
+			}
+
+			// no matter what first register class being analyzed with class loader
+			classHashHelper.registerAnalyzed(className);
+
+			// create the hash
+			String hash = DigestUtils.sha256Hex(byteCode);
+			InstrumentationDefinition instrumentationResult = null;
+			if (classHashHelper.isSent(className, hash)) {
+				// if sent load instrumentation result from the class hash helper
+				instrumentationResult = classHashHelper.getInstrumentationDefinition(className);
+			} else {
+				// if not sent we go for the sending
+				if (!connection.isConnected()) {
+					// we will not do anything else if there is no connection
+					if (log.isDebugEnabled()) {
+						log.debug("Not parsing and sending data for " + className + " as connection to server does not exist.");
+					}
+					return null;
+				}
+
+				// parse first, do not use internFQNs
+				ClassReader classReader = new ClassReader(byteCode);
+				ClassAnalyzer classAnalyzer = new ClassAnalyzer(hash);
+				classReader.accept(classAnalyzer, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+				Type type = (Type) classAnalyzer.getType();
+
+				// analyze all necessary depending classes before
+				analyzeDependingTypes(type, classLoader);
+
+				// try connecting to server
+				instrumentationResult = connection.analyze(platformManager.getPlatformId(), hash, type);
+
+				// register type as sent
+				classHashHelper.registerSent(className, hash);
+				classHashHelper.registerInstrumentationDefinition(className, instrumentationResult);
+			}
+
+			// execute instrumentation if needed
+			if (performInstrumentation) {
+				return performInstrumentation(byteCode, classLoader, instrumentationResult);
+			} else {
+				return null;
+			}
+		} catch (IdNotAvailableException idNotAvailableException) {
+			log.error("Error occurred instrumenting the byte code of class " + className, idNotAvailableException);
+			return null;
+		} catch (ServerUnavailableException serverUnavailableException) {
+			log.error("Error occurred instrumenting the byte code of class " + className, serverUnavailableException);
+			return null;
+		} catch (BusinessException businessException) {
+			log.error("Error occurred instrumenting the byte code of class " + className, businessException);
+			return null;
+		} catch (StorageException storageException) {
+			log.error("Error occurred instrumenting the byte code of class " + className, storageException);
+			return null;
 		}
-		if (null == hookInstrumenter) {
-			throw new IllegalArgumentException("Hook instrumenter cannot be null!");
+	}
+
+	/**
+	 * Analyze the depending types of the given type and sends the results to the server if needed.
+	 *
+	 * @param type
+	 *            {@link Type}
+	 * @param classLoader
+	 *            {@link ClassLoader} used for loading the given type.
+	 */
+	private void analyzeDependingTypes(Type type, ClassLoader classLoader) {
+		Collection<Type> dependingTypes = type.getDependingTypes();
+		if (CollectionUtils.isNotEmpty(dependingTypes)) {
+			for (Type dependingType : dependingTypes) {
+				if (!classHashHelper.isAnalyzed(dependingType.getFQN())) {
+					analyzeAndInstrumentInternal(null, dependingType.getFQN(), classLoader, false);
+				}
+			}
 		}
-		if (null == classPoolAnalyzer) {
-			throw new IllegalArgumentException("Class pool analyzer cannot be null!");
+	}
+
+	/**
+	 * Performs the instrumentation. No instrumentation will be performed if instrumentation result
+	 * is <code>null</code> or {@link InstrumentationDefinition#isEmpty()} returns <code>true</code>
+	 * .
+	 *
+	 * @param byteCode
+	 *            original byte code
+	 * @param classLoader
+	 *            class loader loading the class
+	 * @param instrumentationResult
+	 *            {@link InstrumentationDefinition} holding instrumentation properties.
+	 * @return instrumented byte code or <code>null</code> if instrumentation result is
+	 *         <code>null</code> or contains no instrumentation points
+	 * @throws StorageException
+	 *             If storage exception occurs when reading if enhanced exception sensor is active
+	 */
+	private byte[] performInstrumentation(byte[] byteCode, ClassLoader classLoader, InstrumentationDefinition instrumentationResult) throws StorageException {
+		// if no instrumentation result or empty return null
+		if (null == instrumentationResult || instrumentationResult.isEmpty()) {
+			return null;
 		}
-		this.configurationStorage = configurationStorage;
-		this.hookInstrumenter = hookInstrumenter;
-		this.classPoolAnalyzer = classPoolAnalyzer;
+
+		Collection<MethodInstrumentationConfig> instrumentationConfigs = instrumentationResult.getMethodInstrumentationConfigs();
+
+		// here do the instrumentation
+		ClassReader classReader = new ClassReader(byteCode);
+		LoaderAwareClassWriter classWriter = new LoaderAwareClassWriter(classReader, ClassWriter.COMPUTE_FRAMES, classLoader);
+		ClassInstrumenter classInstrumenter = new ClassInstrumenter(classWriter, instrumentationConfigs, configurationStorage.isEnhancedExceptionSensorActivated());
+		classReader.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+
+		// return changed byte code if we did actually add some byte code
+		if (classInstrumenter.isByteCodeAdded()) {
+			Map<Long, long[]> methodToSensorMap = new HashMap<Long, long[]>(0);
+
+			// map the instrumentation points if we have them
+			for (MethodInstrumentationConfig config : classInstrumenter.getAppliedInstrumentationConfigs()) {
+				RegisteredSensorConfig registeredSensorConfig = createRegisteredSensorConfig(config);
+				if (null != registeredSensorConfig) {
+					SensorInstrumentationPoint sensorInstrumentationPoint = config.getSensorInstrumentationPoint();
+					hookDispatcherMapper.addMapping(registeredSensorConfig.getId(), registeredSensorConfig);
+					methodToSensorMap.put(Long.valueOf(registeredSensorConfig.getId()), sensorInstrumentationPoint.getSensorIds());
+				}
+			}
+
+			// inform CMR of the applied instrumentation ids
+			if (MapUtils.isNotEmpty(methodToSensorMap)) {
+				coreService.getExecutorService().submit(new InstrumentationAppliedRunnable(connection, methodToSensorMap));
+			}
+
+			return classWriter.toByteArray();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Creates the new {@link RegisteredSensorConfig} from the {@link MethodInstrumentationConfig}
+	 * if the {@link SensorInstrumentationPoint} is defined in the configuration.
+	 * <p>
+	 * Data from the {@link SensorInstrumentationPoint} is copied to the
+	 * {@link RegisteredSensorConfig} and method sensors are resolved and attached to the returned
+	 * sensor configuration.
+	 *
+	 * @param config
+	 *            {@link MethodInstrumentationConfig}
+	 * @return {@link RegisteredSensorConfig} or <code>null</code> if this instrumentation config
+	 *         does not defined the {@link SensorInstrumentationPoint}.
+	 */
+	private RegisteredSensorConfig createRegisteredSensorConfig(MethodInstrumentationConfig config) {
+		SensorInstrumentationPoint sensorInstrumentationPoint = config.getSensorInstrumentationPoint();
+		if (null == sensorInstrumentationPoint) {
+			return null;
+		}
+
+		// copy properties
+		RegisteredSensorConfig rsc = new RegisteredSensorConfig();
+		rsc.setTargetClassFqn(config.getTargetClassFqn());
+		rsc.setTargetMethodName(config.getTargetMethodName());
+		rsc.setReturnType(config.getReturnType());
+		rsc.setParameterTypes(config.getParameterTypes());
+		rsc.setId(sensorInstrumentationPoint.getId());
+		rsc.setStartsInvocation(sensorInstrumentationPoint.isStartsInvocation());
+		rsc.setSettings(sensorInstrumentationPoint.getSettings());
+		// accessor list must be thread safe
+		if (CollectionUtils.isNotEmpty(sensorInstrumentationPoint.getPropertyAccessorList())) {
+			rsc.setPropertyAccessorList(new CopyOnWriteArrayList<PropertyPathStart>(sensorInstrumentationPoint.getPropertyAccessorList()));
+		} else {
+			rsc.setPropertyAccessorList(Collections.<PropertyPathStart> emptyList());
+		}
+
+		// resolve sensors
+		for (long sensorId : sensorInstrumentationPoint.getSensorIds()) {
+			IMethodSensor sensor = methodSensorMap.get(sensorId);
+			if (null != sensor) {
+				rsc.addMethodSensor(sensor);
+			} else {
+				String methodFull = config.getTargetClassFqn() + "#" + config.getTargetMethodName();
+				log.error("Sensor with the id " + sensorId + " does not exists on the agent, but it's defined for the method: " + methodFull);
+			}
+		}
+
+		return rsc;
+	}
+
+	/**
+	 * Tries to read the byte code form the input stream provided by the given class loader. If the
+	 * class loader is <code>null</code>, then {@link ClassLoader#getResourceAsStream(String)} will
+	 * be called in order to find byte code.
+	 * <p>
+	 * This method returns provided byte code or <code>null</code> if reading was not successful.
+	 *
+	 * @param className
+	 *            Class name defined by the class object.
+	 * @param classLoader
+	 *            Class loader loading the class.
+	 * @return Byte code or <code>null</code> if reading was not successful
+	 */
+	private byte[] getByteCodeFromClassLoader(String className, ClassLoader classLoader) {
+		InputStream is = null;
+		try {
+			if (null != classLoader) {
+				is = classLoader.getResourceAsStream(className.replace('.', '/') + ".class");
+			} else {
+				is = ClassLoader.getSystemResourceAsStream(className.replace('.', '/') + ".class");
+			}
+
+			if (null == is) {
+				// nothing we can do here
+				return null;
+			}
+
+			return ByteStreams.toByteArray(is);
+		} catch (IOException e) {
+			if (log.isDebugEnabled()) {
+				log.debug("Can not load byte-code for the class " + className + " and class loader " + classLoader + ". Class will be ignored and not instrumented.", e);
+			} else {
+				log.info("Can not load byte-code for the class " + className + " and class loader " + classLoader + ". Class will be ignored and not instrumented.");
+			}
+			return null;
+		} finally {
+			if (null != is) {
+				try {
+					is.close();
+				} catch (IOException e) { // NOPMD //NOCHK
+					// ignore
+				}
+			}
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public byte[] analyzeAndInstrument(byte[] byteCode, String className, ClassLoader classLoader) {
-		// The reason to create a byte array class path here is to handle
-		// classes created at runtime (reflection / byte code engineering
-		// libraries etc.) and to get the real content of that class (think of
-		// classes modified by other java agents before.)
-		ClassPool classPool = classPoolAnalyzer.getClassPool(classLoader);
-		ClassPath classPath = null;
-		ClassPath loaderClassPath = null;
-		try {
-			if (null == byteCode) {
-				// this occurs if we are in the initialization phase and are instrumenting classes
-				// where we don't have the bytecode directly. Thus we try to load it.
-				byteCode = classPool.get(className).toBytecode();
-			}
-			if (null != Thread.currentThread().getContextClassLoader() && classLoader != Thread.currentThread().getContextClassLoader()) {
-				// only use the context class loader if it is even set and not the same as the
-				// classloader being passed to the instrumentation
-				loaderClassPath = new LoaderClassPath(Thread.currentThread().getContextClassLoader());
-				classPool.insertClassPath(loaderClassPath);
-			}
-			// the byte array classpath needs to be the last one to be the first for access
-			classPath = new ByteArrayClassPath(className, byteCode);
-			classPool.insertClassPath(classPath);
-
-			byte[] instrumentedByteCode = null;
-			Map<CtBehavior, List<UnregisteredSensorConfig>> behaviorToConfigMap = analyze(className, classLoader);
-
-			// class loader delegation behaviors
-			List<? extends CtBehavior> classLoaderDelegationBehaviors = analyzeForClassLoaderDelegation(className, classLoader);
-
-			CtBehavior ctBehavior = null;
-			if (!behaviorToConfigMap.isEmpty()) {
-				ctBehavior = instrumentSensors(behaviorToConfigMap);
-			}
-
-			if (!classLoaderDelegationBehaviors.isEmpty()) {
-				ctBehavior = instrumentClassLoader(classLoaderDelegationBehaviors);
-			}
-
-			if (null != ctBehavior) {
-				instrumentedByteCode = ctBehavior.getDeclaringClass().toBytecode();
-			}
-
-			return instrumentedByteCode;
-		} catch (NotFoundException notFoundException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, notFoundException);
-			return null;
-		} catch (IOException iOException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, iOException);
-			return null;
-		} catch (CannotCompileException cannotCompileException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, cannotCompileException);
-			return null;
-		} catch (HookException hookException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, hookException);
-			return null;
-		} catch (StorageException storageException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, storageException);
-			return null;
-		} finally {
-			// Remove the byte array class path from the class pool. The class
-			// loader now should know this class, thus it can be accessed
-			// through the standard way.
-			if (null != classPath) {
-				classPool.removeClassPath(classPath);
-			}
-			if (null != loaderClassPath) {
-				classPool.removeClassPath(loaderClassPath);
-			}
+	public void afterPropertiesSet() throws Exception {
+		methodSensorMap = new HashMap<Long, IMethodSensor>();
+		for (IMethodSensor methodSensor : methodSensors) {
+			methodSensorMap.put(methodSensor.getSensorTypeConfig().getId(), methodSensor);
 		}
 	}
 
-	/**
-	 * Returns the list of {@link CtBehavior} that relate to the class loader delegation.
-	 * 
-	 * @param className
-	 *            The name of the class.
-	 * @param classLoader
-	 *            The class loader of the passed class.
-	 * @return Returns the list of {@link CtBehavior} that relate to the class loader delegation.
-	 * @throws NotFoundException
-	 *             Something could not be found.
-	 */
-	private List<? extends CtBehavior> analyzeForClassLoaderDelegation(String className, ClassLoader classLoader) throws NotFoundException {
-		if (!classLoaderDelegation) {
-			return Collections.emptyList();
-		}
-
-		if (log.isTraceEnabled()) {
-			log.trace("analyzeForClassLoaderDelegation: " + className);
-		}
-
-		for (IMatcher matcher : configurationStorage.getClassLoaderDelegationMatchers()) {
-			if (null != matcher && matcher.compareClassName(classLoader, className)) {
-				List<? extends CtBehavior> behaviors = matcher.getMatchingMethods(classLoader, className);
-				if (CollectionUtils.isNotEmpty(behaviors)) {
-					matcher.checkParameters(behaviors);
-					return behaviors;
-				}
-			}
-		}
-		return Collections.emptyList();
-	}
-
-	/**
-	 * The analyze method will analyze the passed byte code, class name and class loader and returns
-	 * a {@link Map} with all matching methods to be instrumented.
-	 * 
-	 * @param className
-	 *            The name of the class.
-	 * @param classLoader
-	 *            The class loader of the passed class.
-	 * @return Returns a {@link Map} with all found methods ({@link CtBehavior}) as the Key and a
-	 *         {@link List} of {@link UnregisteredSensorConfig} as the value.
-	 * @throws NotFoundException
-	 *             Something could not be found.
-	 * @throws StorageException
-	 *             Sensor could not be added.
-	 */
-	private Map<CtBehavior, List<UnregisteredSensorConfig>> analyze(String className, ClassLoader classLoader) throws NotFoundException, StorageException {
-		Map<CtBehavior, List<UnregisteredSensorConfig>> behaviorToConfigMap = new HashMap<CtBehavior, List<UnregisteredSensorConfig>>();
-
-		// Iterating over all stored unregistered sensor configurations
-		for (UnregisteredSensorConfig unregisteredSensorConfig : configurationStorage.getUnregisteredSensorConfigs()) {
-			// try to match the class name first
-			IMatcher matcher = unregisteredSensorConfig.getMatcher();
-			if (matcher.compareClassName(classLoader, className)) {
-				List<? extends CtBehavior> behaviors;
-				// differentiate between constructors and methods.
-				if (unregisteredSensorConfig.isConstructor()) {
-					// the constructors
-					behaviors = matcher.getMatchingConstructors(classLoader, className);
-				} else {
-					// the methods
-					behaviors = matcher.getMatchingMethods(classLoader, className);
-				}
-				matcher.checkParameters(behaviors);
-
-				// iterating over all methods which passed the matcher
-				for (CtBehavior behavior : behaviors) {
-					if (behaviorToConfigMap.containsKey(behavior)) {
-						// access the already initialized list and store the
-						// unregistered sensor configuration in it.
-						List<UnregisteredSensorConfig> configs = behaviorToConfigMap.get(behavior);
-						configs.add(unregisteredSensorConfig);
-					} else {
-						// key does not exist already, thus we have to
-						// create the list first.
-						List<UnregisteredSensorConfig> configs = new ArrayList<UnregisteredSensorConfig>();
-						configs.add(unregisteredSensorConfig);
-						behaviorToConfigMap.put(behavior, configs);
-					}
-				}
-			}
-		}
-
-		return behaviorToConfigMap;
-	}
-
-	/**
-	 * Instruments the methods in the {@link Map} and creates the appropriate
-	 * {@link RegisteredSensorConfig} classes.
-	 * 
-	 * @param methodToConfigMap
-	 *            The initialized {@link Map} which is filled by the
-	 *            {@link #analyze(byte[], String, ClassLoader)} method.
-	 * @return Returns the instrumented byte code.
-	 * @throws NotFoundException
-	 *             Something could not be found.
-	 * @throws HookException
-	 *             The hook instrumenter generated an exception.
-	 * @throws IOException
-	 *             The byte code could not be generated.
-	 * @throws CannotCompileException
-	 *             The byte code could not be generated.
-	 */
-	private CtBehavior instrumentSensors(Map<CtBehavior, List<UnregisteredSensorConfig>> methodToConfigMap) throws NotFoundException, HookException, IOException, CannotCompileException {
-		CtBehavior ctBehavior = null;
-		for (Map.Entry<CtBehavior, List<UnregisteredSensorConfig>> entry : methodToConfigMap.entrySet()) {
-			ctBehavior = entry.getKey();
-			List<UnregisteredSensorConfig> configs = entry.getValue();
-
-			List<String> parameterTypes = new ArrayList<String>();
-			CtClass[] parameterClasses = ctBehavior.getParameterTypes();
-			for (int pos = 0; pos < parameterClasses.length; pos++) {
-				parameterTypes.add(parameterClasses[pos].getName());
-			}
-
-			RegisteredSensorConfig rsc = new RegisteredSensorConfig();
-			rsc.setTargetPackageName(ctBehavior.getDeclaringClass().getPackageName());
-			rsc.setTargetClassName(ctBehavior.getDeclaringClass().getSimpleName());
-			rsc.setTargetMethodName(ctBehavior.getName());
-			rsc.setParameterTypes(parameterTypes);
-			rsc.setModifiers(ctBehavior.getModifiers());
-			rsc.setCtBehavior(ctBehavior);
-			rsc.setConstructor(ctBehavior instanceof CtConstructor);
-
-			// return type only for methods available, otherwise the return type is set to empty
-			// string.
-			if (!rsc.isConstructor()) {
-				CtMethod ctMethod = (CtMethod) ctBehavior;
-				rsc.setReturnType(ctMethod.getReturnType().getName());
-			}
-
-			for (UnregisteredSensorConfig usc : configs) {
-				rsc.addSensorTypeConfig(usc.getSensorTypeConfig());
-				rsc.getSettings().putAll(usc.getSettings());
-
-				if (usc.isPropertyAccess()) {
-					for (PropertyPathStart propertyPathStart : usc.getPropertyAccessorList()) {
-						// Filter not meaningful property accessors.
-						if (isMeaningfulCapturing(propertyPathStart.getContentType(), rsc)) {
-							rsc.getPropertyAccessorList().add(propertyPathStart);
-						}
-					}
-				}
-			}
-
-			rsc.setPropertyAccess(!rsc.getPropertyAccessorList().isEmpty());
-
-			// only when there is an enhanced Exception Sensor defined
-			if (configurationStorage.isExceptionSensorActivated() && configurationStorage.isEnhancedExceptionSensorActivated()) {
-				// iterate over the exception sensor types - currently there is only one
-				for (MethodSensorTypeConfig config : configurationStorage.getExceptionSensorTypes()) {
-					// need to add the exception sensor config separately, because otherwise it
-					// would be added to the other method hooks, but the exception sensor is a
-					// constructor hook
-					rsc.setExceptionSensorTypeConfig(config);
-				}
-			}
-
-			if (!rsc.isConstructor()) {
-				hookInstrumenter.addMethodHook((CtMethod) ctBehavior, rsc);
-			} else {
-				hookInstrumenter.addConstructorHook((CtConstructor) ctBehavior, rsc);
-			}
-		}
-		return ctBehavior;
-	}
-
-	/**
-	 * Instruments the methods in the {@link List} with the class loader delegation hook.
-	 * 
-	 * @param classLoaderDelegationBehaviors
-	 *            {@link CtBehavior}s that relate to the class loader boot delegation and have to be
-	 *            instrumented in different way that the normal user specified instrumentation.
-	 * 
-	 * @return Returns the {@link CtBehavior}.
-	 * @throws NotFoundException
-	 *             Something could not be found.
-	 * @throws HookException
-	 *             The hook instrumenter generated an exception.
-	 * @throws IOException
-	 *             The byte code could not be generated.
-	 * @throws CannotCompileException
-	 *             The byte code could not be generated.
-	 */
-	private CtBehavior instrumentClassLoader(List<? extends CtBehavior> classLoaderDelegationBehaviors) throws NotFoundException, HookException, IOException, CannotCompileException {
-		CtBehavior ctBehavior = null;
-		if (CollectionUtils.isNotEmpty(classLoaderDelegationBehaviors)) {
-			for (CtBehavior clDelegationBehavior : classLoaderDelegationBehaviors) {
-				ctBehavior = clDelegationBehavior;
-				hookInstrumenter.addClassLoaderDelegationHook((CtMethod) ctBehavior);
-			}
-		}
-		return ctBehavior;
-	}
-
-	/**
-	 * Checks whether the property accessor is meaningful. Please note that during the creation of
-	 * the property accessor certain checks are already in place. For example it is checked that no
-	 * return value capturing is set on a constructor. Please ensure that checks that could be done
-	 * at creation time are already performed at this time ({@link
-	 * rocks.inspectit.agent.java.config.impl.ConfigurationStorage.addSensor()}).
-	 * 
-	 * Certain checks cannot be done on creation time. One example is the return value capturing on
-	 * method defining a void return type. At creation time the information that the method the
-	 * sensor is attached to has in fact no return value is not known.
-	 * 
-	 * @param type
-	 *            the type of capturing
-	 * @param rsc
-	 *            the sensor configuration
-	 * @return if this property accessor is meaningful.
-	 */
-	private boolean isMeaningfulCapturing(ParameterContentType type, RegisteredSensorConfig rsc) {
-		// Return value capturing on constructors is not meaningful (property accessors should
-		// never be placed on constructors anyway, so this is just an additional layer of safety).
-		if (ParameterContentType.RETURN.equals(type) && rsc.isConstructor()) {
-			return false;
-		}
-
-		// Return value capturing for void returning methods is just not meaningful.
-		if (ParameterContentType.RETURN.equals(type) && !rsc.isConstructor() && "void".equals(rsc.getReturnType())) {
-			return false;
-		}
-
-		return true;
-	}
 }

@@ -2,11 +2,9 @@ package rocks.inspectit.agent.java.sensor.method.logging;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -16,7 +14,7 @@ import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperF
 
 /**
  * Logging sensor to capture log4j loggings.
- * 
+ *
  * @author Stefan Siegl
  */
 public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodSensor {
@@ -28,7 +26,7 @@ public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodS
 	 * Used for creating and resolving ids necessary to communicate with the server.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/** hook instance. */
 	private Log4JLoggingHook hook;
@@ -36,10 +34,11 @@ public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodS
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
 		// read the desired minimum level and pass it to the hook
-		String minimumLevelToCapture = (String) parameter.get(CONFIG_KEY_MINIMUM_LEVEL);
-		hook = new Log4JLoggingHook(idManager, minimumLevelToCapture);
+		String minimumLevelToCapture = (String) parameters.get(CONFIG_KEY_MINIMUM_LEVEL);
+		hook = new Log4JLoggingHook(platformManager, minimumLevelToCapture);
 	}
 
 	/**
@@ -48,4 +47,5 @@ public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodS
 	public IHook getHook() {
 		return hook;
 	}
+
 }
