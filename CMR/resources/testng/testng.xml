@@ -40,7 +40,8 @@
 	</test>
 	<test name="CmrProcessors">
 		<classes>
-			<class name="info.novatec.inspectit.cmr.processor.impl.CmrDataProcessorsTest" />
+			<class
+				name="info.novatec.inspectit.cmr.processor.impl.CmrDataProcessorsTest" />
 		</classes>
 	</test>
 	<test name="Storage">
@@ -51,6 +52,22 @@
 			<class name="info.novatec.inspectit.cmr.service.rest.StorageRestfulServiceTest" />
 		</classes>
 	</test>
+	<test name="Instrumentation">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.instrumentation.NextGenInstrumentationManagerTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.classcache.ClassCacheLookupTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.classcache.ClassCacheModificationTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.classcache.ClassCacheInstrumentationTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.classcache.index.FqnIndexerTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.config.ClassCacheSearchNarrowerTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.config.ConfigurationCreatorTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.config.ConfigurationResolverTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.config.ConfigurationHolderTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.config.job.ProfileUpdateJobTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.config.job.EnvironmentUpdateJobTest" />
+			<class name="info.novatec.inspectit.cmr.instrumentation.config.job.EnvironmentMappingUpdateJobTest" />
+		</classes>
+	</test>
 	<test name="AOP">
 		<classes>
 			<class name="info.novatec.inspectit.cmr.spring.aop.ExceptionInterceptorTest" />
@@ -59,6 +76,8 @@
 	<test name="CI">
 		<classes>
 			<class name="info.novatec.inspectit.cmr.ci.ConfigurationInterfaceManagerTest" />
+			<class name="info.novatec.inspectit.cmr.ci.event.EnvironmentUpdateEventTest" />
+			<class name="info.novatec.inspectit.cmr.ci.event.ProfileUpdateEventTest" />
 		</classes>
 	</test>	
 	<test name="Communication">

@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The timer sensor which initializes and returns the {@link TimerHook} class.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -51,7 +51,7 @@ public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 
 	/**
 	 * The default constructor which needs 3 parameter for initialization.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer used for accurate measuring.
 	 * @param idManager
@@ -75,7 +75,8 @@ public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	@Override
+	public void initHook(Map<String, Object> parameter) {
 		timerHook = new TimerHook(timer, idManager, propertyAccessor, parameter, ManagementFactory.getThreadMXBean());
 	}
 

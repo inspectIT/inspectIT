@@ -2,12 +2,13 @@ package info.novatec.inspectit.agent.sensor.jmx;
 
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.UnregisteredJmxConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.communication.data.JmxSensorValueData;
+import info.novatec.inspectit.instrumentation.config.impl.AbstractSensorTypeConfig;
+import info.novatec.inspectit.instrumentation.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.spring.logger.Log;
 
 import java.lang.management.ManagementFactory;
@@ -75,6 +76,11 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	private IIdManager idManager;
 
 	/**
+	 * Sensor configruation.
+	 */
+	private JmxSensorTypeConfig sensorTypeConfig;
+
+	/**
 	 * The MBeanServer providing information about registered MBeans.
 	 */
 	private MBeanServer mBeanServer;
@@ -114,7 +120,9 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	public void init(JmxSensorTypeConfig sensorTypeConfig) {
+		this.sensorTypeConfig = sensorTypeConfig;
+
 		unregisteredJmxConfigs.addAll(configurationStorage.getUnregisteredJmxConfigs());
 		mBeanServer = ManagementFactory.getPlatformMBeanServer();
 	}
@@ -122,7 +130,15 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public AbstractSensorTypeConfig getSensorTypeConfig() {
+		return sensorTypeConfig;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = sensorTypeConfig.getId();
 		long currentTime = System.currentTimeMillis();
 
 		// Check if the registerMBeans method should be invoked
@@ -171,10 +187,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 
 				// Create a new JmxSensorValueData to be saved into the database
 				long platformid = idManager.getPlatformId();
-				long sensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
-				long registeredmBeanId = idManager.getRegisteredmBeanId(jsc.getId());
-
-				JmxSensorValueData jsvd = new JmxSensorValueData(registeredmBeanId, value, timestamp, platformid, sensorTypeId);
+				JmxSensorValueData jsvd = new JmxSensorValueData(jsc.getId(), value, timestamp, platformid, sensorTypeIdent);
 
 				coreService.addJmxSensorValueData(sensorTypeIdent, jsc.getmBeanObjectName(), jsc.getAttributeName(), jsvd);
 			} catch (AttributeNotFoundException e) {
@@ -229,7 +242,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 								jsc.setmBeanAttributeIsWritable(mBeanAttributeInfo.isWritable());
 								jsc.setmBeanAttributeType(mBeanAttributeInfo.getType());
 
-								idManager.registerJmxSensorConfig(jsc);
+								// TODO send to CMR here
 								registeredJmxSensorConfigs.put(mBeanAttributeKey, jsc);
 								activeAttributes.put(mBeanAttributeKey, jsc);
 								nameStringToObjectName.put(objectName.toString(), objectName);
@@ -269,8 +282,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		for (JmxSensorTypeConfig config : configurationStorage.getJmxSensorTypes()) {
 			if (config.getClassName().equals(this.getClass().getName())) {
-				this.init(config.getParameters());
-				config.setSensorType(this);
+				this.init(config);
 				break;
 			}
 		}
@@ -287,4 +299,5 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	void setUnregisteredJmxConfigs(List<UnregisteredJmxConfig> unregisteredJmxConfigs) {
 		this.unregisteredJmxConfigs = unregisteredJmxConfigs;
 	}
+
 }

@@ -10,16 +10,15 @@ import info.novatec.inspectit.spring.logger.Log;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class provides dynamic information about the thread system through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ThreadInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -38,7 +37,7 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * The {@link ThreadInfoProvider} used to retrieve information from the thread system.
 	 */
-	private ThreadInfoProvider threadBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getThreadInfoProvider();
+	private final ThreadInfoProvider threadBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getThreadInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -48,7 +47,7 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
+	 *
 	 * @param idManager
 	 *            The ID Manager.
 	 */
@@ -58,7 +57,7 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the current number of live daemon threads.
-	 * 
+	 *
 	 * @return The daemon thread count.
 	 */
 	public int getDaemonThreadCount() {
@@ -67,7 +66,7 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the peak live thread count since the virtual machine started.
-	 * 
+	 *
 	 * @return The peak thread count.
 	 */
 	public int getPeakThreadCount() {
@@ -76,7 +75,7 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the live thread count both daemon and non-daemon threads.
-	 * 
+	 *
 	 * @return The thread count.
 	 */
 	public int getThreadCount() {
@@ -85,7 +84,7 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the total number of created and also started threads.
-	 * 
+	 *
 	 * @return The total started thread count.
 	 */
 	public long getTotalStartedThreadCount() {
@@ -94,14 +93,12 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Updates all dynamic thread information.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
-	 * @param sensorTypeIdent
-	 *            The sensorTypeIdent.
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = getSensorTypeConfig().getId();
 		int daemonThreadCount = this.getDaemonThreadCount();
 		int peakThreadCount = this.getPeakThreadCount();
 		int threadCount = this.getThreadCount();
@@ -112,10 +109,9 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 		if (threadData == null) {
 			try {
 				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
 				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
 
-				threadData = new ThreadInformationData(timestamp, platformId, registeredSensorTypeId);
+				threadData = new ThreadInformationData(timestamp, platformId, sensorTypeIdent);
 				threadData.incrementCount();
 
 				threadData.addDaemonThreadCount(daemonThreadCount);
@@ -171,12 +167,6 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 				threadData.setMaxTotalStartedThreadCount(totalStartedThreadCount);
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

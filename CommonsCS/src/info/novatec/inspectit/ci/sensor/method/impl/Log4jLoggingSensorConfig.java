@@ -6,7 +6,7 @@ package info.novatec.inspectit.ci.sensor.method.impl;
 import info.novatec.inspectit.ci.sensor.method.AbstractMethodSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.ILoggingSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+import info.novatec.inspectit.instrumentation.config.PriorityEnum;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,8 +75,8 @@ public class Log4jLoggingSensorConfig extends AbstractMethodSensorConfig impleme
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodSensorPriorityEnum getPriority() {
-		return MethodSensorPriorityEnum.MIN;
+	public PriorityEnum getPriority() {
+		return PriorityEnum.MIN;
 	}
 
 	/**

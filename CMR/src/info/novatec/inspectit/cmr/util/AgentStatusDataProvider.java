@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.util;
 
+import info.novatec.inspectit.cmr.AgentDeletedEvent;
 import info.novatec.inspectit.cmr.service.IKeepAliveService;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
@@ -18,16 +19,17 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 /**
  * Bean that saves the time when the last time platform ident received the data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
-public class AgentStatusDataProvider implements InitializingBean {
+public class AgentStatusDataProvider implements InitializingBean, ApplicationListener<AgentDeletedEvent> {
 
 	/**
 	 * Runnable for checking the status of the received keep-alive signals.
@@ -75,11 +77,19 @@ public class AgentStatusDataProvider implements InitializingBean {
 	/**
 	 * Map that holds IDs of the platform idents and {@link AgentStatusData} objects.
 	 */
-	private ConcurrentHashMap<Long, AgentStatusData> agentStatusDataMap = new ConcurrentHashMap<Long, AgentStatusData>(8, 0.75f, 1);
+	private final ConcurrentHashMap<Long, AgentStatusData> agentStatusDataMap = new ConcurrentHashMap<Long, AgentStatusData>(8, 0.75f, 1);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onApplicationEvent(AgentDeletedEvent event) {
+		agentStatusDataMap.remove(event.getPlatformIdent().getId());
+	}
 
 	/**
 	 * Registers that the agent was connected.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            ID of the platform ident.
 	 */
@@ -98,7 +108,7 @@ public class AgentStatusDataProvider implements InitializingBean {
 
 	/**
 	 * Registers that the agent has been disconnected.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            ID of the platform ident.
 	 */
@@ -111,7 +121,7 @@ public class AgentStatusDataProvider implements InitializingBean {
 
 	/**
 	 * Registers the time when last data was received for a given platform ident.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            ID of the platform ident.
 	 */
@@ -124,7 +134,7 @@ public class AgentStatusDataProvider implements InitializingBean {
 
 	/**
 	 * Registers the time when the last keep-alive was received for a given platform ident.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            ID of the platform ident.
 	 */
@@ -146,7 +156,7 @@ public class AgentStatusDataProvider implements InitializingBean {
 
 	/**
 	 * Registers that the agent is not sending keep-alive messages anymore.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            ID of the platform ident.
 	 */
@@ -155,17 +165,6 @@ public class AgentStatusDataProvider implements InitializingBean {
 		if (null != agentStatusData) {
 			agentStatusData.setAgentConnection(AgentConnection.NO_KEEP_ALIVE);
 		}
-	}
-
-	/**
-	 * Informs the {@link AgentStatusDataProvider} that the platform has been deleted from the CMR.
-	 * All kept information will be deleted.
-	 * 
-	 * @param platformId
-	 *            ID of the platform ident.
-	 */
-	public void registerDeleted(long platformId) {
-		agentStatusDataMap.remove(platformId);
 	}
 
 	/**
@@ -183,7 +182,7 @@ public class AgentStatusDataProvider implements InitializingBean {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * Starts the continuous check of the keep-alive signals.
 	 */
 	@Override

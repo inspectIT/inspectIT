@@ -12,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.cmr.dao.JmxDefinitionDataIdentDao;
 import info.novatec.inspectit.cmr.dao.MethodIdentDao;
 import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
@@ -54,9 +55,9 @@ import org.testng.annotations.Test;
 
 /**
  * Thesting the {@link RegistrationService} of CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class RegistrationServiceTest extends AbstractTestNGLogSupport {
@@ -124,7 +125,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * Tests that an exception will be thrown if the database returns two or more platform idents
 	 * after findByExample search.
-	 * 
+	 *
 	 * @throws BusinessException
 	 */
 	@Test(expectedExceptions = { BusinessException.class })
@@ -144,7 +145,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test that registration will be done properly if the {@link LicenseUtil} validates license.
-	 * 
+	 *
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
@@ -183,7 +184,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests that the version and timestamp will be updated if the agent is already registered.
-	 * 
+	 *
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
@@ -225,7 +226,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * Test that registration will be done properly if the {@link LicenseUtil} validates license and
 	 * IP based registration is off.
-	 * 
+	 *
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
@@ -266,7 +267,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	/**
 	 * Tests that the version and timestamp will be updated if the agent is already registered and
 	 * IP registration is off.
-	 * 
+	 *
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
@@ -320,12 +321,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		platformIdent.setId(platformId);
 		platformIdent.setAgentName(agentName);
 		platformIdent.setDefinedIPs(definedIps);
-		List<PlatformIdent> findByExampleList = new ArrayList<PlatformIdent>();
-		findByExampleList.add(platformIdent);
+		when(platformIdentDao.load(platformId)).thenReturn(platformIdent);
 
-		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(findByExampleList);
-
-		registrationService.unregisterPlatformIdent(definedIps, agentName);
+		registrationService.unregisterPlatformIdent(platformId);
 
 		verify(agentStatusDataProvider, times(1)).registerDisconnected(platformId);
 	}
@@ -335,13 +333,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 */
 	@Test(expectedExceptions = { BusinessException.class })
 	public void unregisterNotExistingPlatformIdent() throws BusinessException {
-		List<String> definedIps = new ArrayList<String>();
-		definedIps.add("ip");
-		String agentName = "agentName";
+		long platformId = 10;
 
-		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(Collections.<PlatformIdent> emptyList());
+		when(platformIdentDao.load(platformId)).thenReturn(null);
 
-		registrationService.unregisterPlatformIdent(definedIps, agentName);
+		registrationService.unregisterPlatformIdent(platformId);
 	}
 
 	/**
@@ -542,7 +538,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test the registration of the JMX sensor type ident.
-	 * 
+	 *
 	 * @throws RemoteException
 	 *             If {@link RemoteException} occurs.
 	 */
@@ -577,7 +573,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests the registration of a {@link JmxSensorTypeIdent}.
-	 * 
+	 *
 	 * @throws RemoteException
 	 *             If {@link RemoteException} occurs.
 	 */

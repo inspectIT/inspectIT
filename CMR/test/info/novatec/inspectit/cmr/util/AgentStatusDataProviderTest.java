@@ -5,6 +5,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+
+import info.novatec.inspectit.cmr.AgentDeletedEvent;
+import info.novatec.inspectit.cmr.model.PlatformIdent;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
 import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
 
@@ -13,9 +16,9 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the {@link AgentStatusDataProvider}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class AgentStatusDataProviderTest {
@@ -63,7 +66,10 @@ public class AgentStatusDataProviderTest {
 		assertThat(agentStatusData, is(notNullValue()));
 		assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.DISCONNECTED));
 
-		agentStatusDataProvider.registerDeleted(platformIdent);
+		PlatformIdent p = new PlatformIdent();
+		p.setId(platformIdent);
+		AgentDeletedEvent event = new AgentDeletedEvent(this, p);
+		agentStatusDataProvider.onApplicationEvent(event);
 		assertThat(agentStatusDataProvider.getAgentStatusDataMap().size(), is(0));
 	}
 

@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The SQL timer sensor which initializes and returns the {@link StatementHook} class.
- * 
+ *
  * @author Christian Herzog
- * 
+ *
  */
 public class StatementSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -50,7 +50,7 @@ public class StatementSensor extends AbstractMethodSensor implements IMethodSens
 
 	/**
 	 * Returns the method hook.
-	 * 
+	 *
 	 * @return The method hook.
 	 */
 	public IHook getHook() {
@@ -60,8 +60,9 @@ public class StatementSensor extends AbstractMethodSensor implements IMethodSens
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		statementHook = new StatementHook(timer, idManager, connectionMetaDataStorage, statementReflectionCache, parameter);
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		statementHook = new StatementHook(timer, idManager, connectionMetaDataStorage, statementReflectionCache, parameters);
 	}
 
 }

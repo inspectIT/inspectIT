@@ -11,7 +11,6 @@ import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
 import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
 import info.novatec.inspectit.ci.sensor.ISensorConfig;
 import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -364,8 +363,6 @@ public final class ImageFormatter {
 	public static Image getSensorConfigImage(Class<? extends ISensorConfig> sensorClass) {
 		if (ObjectUtils.equals(sensorClass, ExceptionSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR);
-		} else if (ObjectUtils.equals(sensorClass, ConnectionMetaDataSensorConfig.class)) {
-			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
 		} else if (ObjectUtils.equals(sensorClass, ConnectionSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
 		} else if (ObjectUtils.equals(sensorClass, HttpSensorConfig.class)) {
