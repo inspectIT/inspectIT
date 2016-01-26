@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -12,9 +12,9 @@ import rocks.inspectit.agent.java.util.Timer;
 
 /**
  * The SQL timer sensor which initializes and returns the {@link StatementHook} class.
- * 
+ *
  * @author Christian Herzog
- * 
+ *
  */
 public class StatementSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -25,10 +25,10 @@ public class StatementSensor extends AbstractMethodSensor implements IMethodSens
 	private Timer timer;
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * The used statement hook.
@@ -50,7 +50,7 @@ public class StatementSensor extends AbstractMethodSensor implements IMethodSens
 
 	/**
 	 * Returns the method hook.
-	 * 
+	 *
 	 * @return The method hook.
 	 */
 	public IHook getHook() {
@@ -60,8 +60,9 @@ public class StatementSensor extends AbstractMethodSensor implements IMethodSens
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		statementHook = new StatementHook(timer, idManager, connectionMetaDataStorage, statementReflectionCache, parameter);
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		statementHook = new StatementHook(timer, platformManager, connectionMetaDataStorage, statementReflectionCache, parameters);
 	}
 
 }

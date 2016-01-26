@@ -30,7 +30,6 @@ import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -706,8 +705,6 @@ public final class TextFormatter {
 	public static String getSensorConfigName(Class<? extends ISensorConfig> sensorClass) {
 		if (ObjectUtils.equals(sensorClass, ExceptionSensorConfig.class)) {
 			return "Exception Sensor";
-		} else if (ObjectUtils.equals(sensorClass, ConnectionMetaDataSensorConfig.class)) {
-			return "JDBC Connection Meta-Data Sensor";
 		} else if (ObjectUtils.equals(sensorClass, ConnectionSensorConfig.class)) {
 			return "JDBC Connection Sensor";
 		} else if (ObjectUtils.equals(sensorClass, HttpSensorConfig.class)) {

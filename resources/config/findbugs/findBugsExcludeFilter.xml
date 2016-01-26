@@ -76,6 +76,14 @@
 		<Method name="unmarshall" />
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
 	</Match>
+	<Match>
+		<Class name="rocks.inspectit.server.ci.event.EnvironmentUpdateEvent" />
+		<Bug pattern="SE_BAD_FIELD" />
+	</Match>
+	<Match>
+		<Class name="rocks.inspectit.server.ci.event.ProfileUpdateEvent" />
+		<Bug pattern="SE_BAD_FIELD" />
+	</Match>
 	<!-- CMR ignores END -->
 	
 	<!-- Commons ignores START -->

@@ -377,8 +377,18 @@ subprojects {
 	/** 
 	 * JMH-Perf tests.
 	 */
+	jmhJar {
+		doFirst {
+			duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+		}
+	}
 	jmh {
-		
+		/**
+		 * Use -PjmhInclude='regular expression' to specify what tests to run with JMH.
+		 */
+		if (project.hasProperty('jmhInclude')) {
+			include = project.getProperty('jmhInclude')
+		}
 		humanOutputFile = file("${buildQAPerfTest}/jmh/human.txt") 
 		resultsFile = file("${buildQAPerfTest}/jmh/results.txt")
 	}

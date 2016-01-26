@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -13,7 +13,7 @@ import rocks.inspectit.agent.java.util.Timer;
 
 /**
  * The http sensor which initializes and returns the {@link HttpHook} class.
- * 
+ *
  * @author Stefan Siegl
  */
 public class HttpSensor extends AbstractMethodSensor implements IMethodSensor {
@@ -30,10 +30,10 @@ public class HttpSensor extends AbstractMethodSensor implements IMethodSensor {
 	private Timer timer;
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -43,22 +43,23 @@ public class HttpSensor extends AbstractMethodSensor implements IMethodSensor {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param timer
 	 *            the timer.
-	 * @param idManager
-	 *            the idmanager.
+	 * @param platformManager
+	 *            the platform manager.
 	 */
-	public HttpSensor(Timer timer, IIdManager idManager) {
+	public HttpSensor(Timer timer, IPlatformManager platformManager) {
 		this.timer = timer;
-		this.idManager = idManager;
+		this.platformManager = platformManager;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameters) {
-		hook = new HttpHook(timer, idManager, parameters, ManagementFactory.getThreadMXBean());
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		hook = new HttpHook(timer, platformManager, parameters, ManagementFactory.getThreadMXBean());
 	}
 
 	/**
