@@ -51,12 +51,6 @@ public class JavaAgent implements ClassFileTransformer {
 	private static final Logger LOGGER = Logger.getLogger(JavaAgent.class.getName());
 
 	/**
-	 * In case that multiple classes are loaded at the same time, which happens in some cases, even
-	 * though the JVM specification prohibits that (the case at hand was starting ant).
-	 */
-	private static volatile boolean operationInProgress = false;
-
-	/**
 	 * The reference to the instrumentation class.
 	 */
 	private static Instrumentation instrumentation;
@@ -145,15 +139,9 @@ public class JavaAgent implements ClassFileTransformer {
 			}
 
 			// now the real inspectit agent will handle this class
-			if (!operationInProgress) {
-				operationInProgress = true;
-				String modifiedClassName = className.replaceAll("/", ".");
-				byte[] instrumentedData = Agent.agent.inspectByteCode(data, modifiedClassName, classLoader);
-				operationInProgress = false;
-				return instrumentedData;
-			}
-			// LOGGER.severe("Parallel loading of classes: Skipping class "+className);
-			return data;
+			String modifiedClassName = className.replaceAll("/", ".");
+			byte[] instrumentedData = Agent.agent.inspectByteCode(data, modifiedClassName, classLoader);
+			return instrumentedData;
 		} catch (Throwable ex) { // NOPMD
 			LOGGER.severe("Error occurred while dealing with class: " + className + " " + ex.getMessage());
 			ex.printStackTrace(); // NOPMD

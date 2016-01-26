@@ -2,7 +2,6 @@ package rocks.inspectit.agent.java.connection.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -16,60 +15,50 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryonet.rmi.TimeoutException;
 
-import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
-import rocks.inspectit.agent.java.connection.RegistrationException;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
-import rocks.inspectit.agent.java.connection.impl.AdditiveWaitRetryStrategy;
-import rocks.inspectit.agent.java.connection.impl.KryoNetConnection;
+import rocks.inspectit.shared.all.cmr.service.IAgentService;
 import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
-import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.instrumentation.classcache.Type;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.kryonet.Client;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
-@SuppressWarnings("PMD")
-public class KryoNetConnectionTest {
+@SuppressWarnings({ "PMD", "unchecked" })
+public class KryoNetConnectionTest extends TestBase {
 
 	@InjectMocks
-	protected KryoNetConnection connection;
+	KryoNetConnection connection;
 
 	@Mock
-	private Logger log;
+	Logger log;
 
 	@Mock
-	protected Client client;
+	Client client;
 
 	@Mock
-	protected IAgentStorageService agentStorageService;
+	IAgentStorageService agentStorageService;
 
 	@Mock
-	protected IRegistrationService registrationService;
+	IAgentService agentService;
 
 	@Mock
-	protected IKeepAliveService keepAliveService;
-
-	@BeforeMethod
-	public void init() {
-		MockitoAnnotations.initMocks(this);
-	}
+	IKeepAliveService keepAliveService;
 
 	public static class KeepAlive extends KryoNetConnectionTest {
 
@@ -203,75 +192,72 @@ public class KryoNetConnectionTest {
 		}
 	}
 
-	public static class RegisterPlatform extends KryoNetConnectionTest {
+	public static class Register extends KryoNetConnectionTest {
 
 		@Test
 		public void register() throws Exception {
-			long id = 3L;
+			AgentConfig agentConfiguration = mock(AgentConfig.class);
 			when(client.isConnected()).thenReturn(true);
-			doReturn(id).when(registrationService).registerPlatformIdent(Mockito.<List<String>> any(), anyString(), anyString());
+			doReturn(agentConfiguration).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
-			long registeredId = connection.registerPlatform(agentName, version);
-			assertThat(registeredId, is(id));
+			AgentConfig receivedAgentConfiguration = connection.register(agentName, version);
+			assertThat(receivedAgentConfiguration, is(agentConfiguration));
 
-			verify(registrationService, times(1)).registerPlatformIdent(Mockito.<List<String>> any(), eq(agentName), eq(version));
-			verifyNoMoreInteractions(registrationService);
+			verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+			verifyNoMoreInteractions(agentService);
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(registrationService).registerPlatformIdent(Mockito.<List<String>> any(), anyString(), anyString());
+			doThrow(TimeoutException.class).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
 			try {
-				connection.registerPlatform(agentName, version);
+				connection.register(agentName, version);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(true));
 				throw e;
 			} finally {
-				verify(registrationService, times(1)).registerPlatformIdent(Mockito.<List<String>> any(), eq(agentName), eq(version));
-				verifyNoMoreInteractions(registrationService);
+				verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(registrationService).registerPlatformIdent(Mockito.<List<String>> any(), anyString(), anyString());
+			doThrow(RuntimeException.class).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
 			try {
-				connection.registerPlatform(agentName, version);
+				connection.register(agentName, version);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
 			} finally {
 				// fail fast call, only one attempt
-				verify(registrationService, times(1)).registerPlatformIdent(Mockito.<List<String>> any(), eq(agentName), eq(version));
-				verifyNoMoreInteractions(registrationService);
+				verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
-		@Test(expectedExceptions = { RegistrationException.class })
+		@Test(expectedExceptions = { BusinessException.class })
 		public void businessException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(BusinessException.class).when(registrationService).registerPlatformIdent(Mockito.<List<String>> any(), anyString(), anyString());
+			doThrow(BusinessException.class).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
 			try {
-				connection.registerPlatform(agentName, version);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
+				connection.register(agentName, version);
 			} finally {
-				verify(registrationService, times(1)).registerPlatformIdent(Mockito.<List<String>> any(), eq(agentName), eq(version));
-				verifyNoMoreInteractions(registrationService);
+				verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
@@ -282,434 +268,248 @@ public class KryoNetConnectionTest {
 			String version = "version";
 
 			try {
-				connection.registerPlatform(agentName, version);
+				connection.register(agentName, version);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
 			} finally {
-				verifyZeroInteractions(registrationService);
+				verifyZeroInteractions(agentService);
 			}
 		}
 	}
 
-	public static class UnregisterPlatform extends KryoNetConnectionTest {
+	public static class Unregister extends KryoNetConnectionTest {
 
 		@Test
 		public void unregister() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			String agentName = "agentName";
+			long platformId = 10L;
 
-			connection.unregisterPlatform(agentName);
+			connection.unregister(platformId);
 
-			verify(registrationService, times(1)).unregisterPlatformIdent(Mockito.<List<String>> any(), eq(agentName));
-			verifyNoMoreInteractions(registrationService);
+			verify(agentService, times(1)).unregister(platformId);
+			verifyNoMoreInteractions(agentService);
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(registrationService).unregisterPlatformIdent(Mockito.<List<String>> any(), anyString());
-			String agentName = "agentName";
+			doThrow(TimeoutException.class).when(agentService).unregister(anyLong());
+			long platformId = 10L;
 
 			try {
-				connection.unregisterPlatform(agentName);
+				connection.unregister(platformId);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(true));
 				throw e;
 			} finally {
-				verify(registrationService, times(1)).unregisterPlatformIdent(Mockito.<List<String>> any(), eq(agentName));
-				verifyNoMoreInteractions(registrationService);
+				verify(agentService, times(1)).unregister(platformId);
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(registrationService).unregisterPlatformIdent(Mockito.<List<String>> any(), anyString());
-			String agentName = "agentName";
+			doThrow(RuntimeException.class).when(agentService).unregister(anyLong());
+			long platformId = 10L;
 
 			try {
-				connection.unregisterPlatform(agentName);
+				connection.unregister(platformId);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
 			} finally {
 				// fail fast call, only one attempt
-				verify(registrationService, times(1)).unregisterPlatformIdent(Mockito.<List<String>> any(), eq(agentName));
-				verifyNoMoreInteractions(registrationService);
+				verify(agentService, times(1)).unregister(platformId);
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
-		@Test(expectedExceptions = { RegistrationException.class })
+		@Test(expectedExceptions = { BusinessException.class })
 		public void businessException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(BusinessException.class).when(registrationService).unregisterPlatformIdent(Mockito.<List<String>> any(), anyString());
-			String agentName = "agentName";
+			doThrow(BusinessException.class).when(agentService).unregister(anyLong());
+			long platformId = 10L;
 
 			try {
-				connection.unregisterPlatform(agentName);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
+				connection.unregister(platformId);
 			} finally {
-				verify(registrationService, times(1)).unregisterPlatformIdent(Mockito.<List<String>> any(), eq(agentName));
-				verifyNoMoreInteractions(registrationService);
+				verify(agentService, times(1)).unregister(platformId);
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void notConnected() throws Exception {
 			when(client.isConnected()).thenReturn(false);
-			String agentName = "agentName";
+			long platformId = 10L;
 
 			try {
-				connection.unregisterPlatform(agentName);
+				connection.unregister(platformId);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
 			} finally {
-				verifyZeroInteractions(registrationService);
+				verifyZeroInteractions(agentService);
 			}
 		}
 	}
 
-	public static class RegisterMethod extends KryoNetConnectionTest {
+	public static class AnalyzeAndInstrument extends KryoNetConnectionTest {
 
 		@Test
-		public void registerMethod() throws Exception {
-			long id = 3L;
-			long platformIdent = 7L;
+		public void analyzeAndInstrument() throws Exception {
+			InstrumentationDefinition instrumentationResult = mock(InstrumentationDefinition.class);
 			when(client.isConnected()).thenReturn(true);
-			doReturn(id).when(registrationService).registerMethodIdent(anyLong(), anyString(), anyString(), anyString(), Mockito.<List<String>> any(), anyString(), anyInt());
+			doReturn(instrumentationResult).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			long id = 7;
+			String hash = "hash";
+			Type type = mock(Type.class);
 
-			String packageName = "p";
-			String className = "c";
-			String methodName = "m";
-			List<String> parameterTypes = Collections.emptyList();
-			String returnType = "r";
-			int modifiers = 54321;
-			RegisteredSensorConfig sensorConfig = mock(RegisteredSensorConfig.class);
-			when(sensorConfig.getTargetPackageName()).thenReturn(packageName);
-			when(sensorConfig.getTargetClassName()).thenReturn(className);
-			when(sensorConfig.getTargetMethodName()).thenReturn(methodName);
-			when(sensorConfig.getParameterTypes()).thenReturn(parameterTypes);
-			when(sensorConfig.getReturnType()).thenReturn(returnType);
-			when(sensorConfig.getModifiers()).thenReturn(modifiers);
+			InstrumentationDefinition receivedResult = connection.analyze(id, hash, type);
+			assertThat(receivedResult, is(instrumentationResult));
 
-			long registeredId = connection.registerMethod(platformIdent, sensorConfig);
-			assertThat(registeredId, is(id));
-
-			verify(registrationService, times(1)).registerMethodIdent(platformIdent, packageName, className, methodName, parameterTypes, returnType, modifiers);
-			verifyNoMoreInteractions(registrationService);
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void timeout() throws ServerUnavailableException, RegistrationException {
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(registrationService).registerMethodIdent(anyLong(), anyString(), anyString(), anyString(), Mockito.<List<String>> any(), anyString(), anyInt());
-
-			String packageName = "p";
-			String className = "c";
-			String methodName = "m";
-			List<String> parameterTypes = Collections.emptyList();
-			String returnType = "r";
-			int modifiers = 54321;
-			RegisteredSensorConfig sensorConfig = mock(RegisteredSensorConfig.class);
-			when(sensorConfig.getTargetPackageName()).thenReturn(packageName);
-			when(sensorConfig.getTargetClassName()).thenReturn(className);
-			when(sensorConfig.getTargetMethodName()).thenReturn(methodName);
-			when(sensorConfig.getParameterTypes()).thenReturn(parameterTypes);
-			when(sensorConfig.getReturnType()).thenReturn(returnType);
-			when(sensorConfig.getModifiers()).thenReturn(modifiers);
-
-			try {
-				connection.registerMethod(platformIdent, sensorConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(true));
-				throw e;
-			} finally {
-				verify(registrationService, times(1)).registerMethodIdent(platformIdent, packageName, className, methodName, parameterTypes, returnType, modifiers);
-				verifyNoMoreInteractions(registrationService);
-			}
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void remoteException() throws ServerUnavailableException, RegistrationException {
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(registrationService).registerMethodIdent(anyLong(), anyString(), anyString(), anyString(), Mockito.<List<String>> any(), anyString(), anyInt());
-
-			String packageName = "p";
-			String className = "c";
-			String methodName = "m";
-			List<String> parameterTypes = Collections.emptyList();
-			String returnType = "r";
-			int modifiers = 54321;
-			RegisteredSensorConfig sensorConfig = mock(RegisteredSensorConfig.class);
-			when(sensorConfig.getTargetPackageName()).thenReturn(packageName);
-			when(sensorConfig.getTargetClassName()).thenReturn(className);
-			when(sensorConfig.getTargetMethodName()).thenReturn(methodName);
-			when(sensorConfig.getParameterTypes()).thenReturn(parameterTypes);
-			when(sensorConfig.getReturnType()).thenReturn(returnType);
-			when(sensorConfig.getModifiers()).thenReturn(modifiers);
-
-			try {
-				connection.registerMethod(platformIdent, sensorConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verify(registrationService, times(AdditiveWaitRetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).registerMethodIdent(platformIdent, packageName, className, methodName, parameterTypes,
-						returnType, modifiers);
-				verifyNoMoreInteractions(registrationService);
-			}
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void notConnected() throws ServerUnavailableException, RegistrationException {
-			when(client.isConnected()).thenReturn(false);
-			long platformIdent = 7L;
-			RegisteredSensorConfig sensorConfig = mock(RegisteredSensorConfig.class);
-
-			try {
-				connection.registerMethod(platformIdent, sensorConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verifyZeroInteractions(registrationService);
-			}
-		}
-	}
-
-	public static class RegisterMethodSensor extends KryoNetConnectionTest {
-
-		@Test
-		public void registerMethodSensor() throws ServerUnavailableException, RegistrationException {
-			long id = 3L;
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doReturn(id).when(registrationService).registerMethodSensorTypeIdent(anyLong(), anyString(), Mockito.<Map<String, Object>> any());
-
-			String className = "c";
-			Map<String, Object> parameters = Collections.emptyMap();
-			MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-			when(methodSensorTypeConfig.getClassName()).thenReturn(className);
-			when(methodSensorTypeConfig.getParameters()).thenReturn(parameters);
-
-			long registeredId = connection.registerMethodSensorType(platformIdent, methodSensorTypeConfig);
-			assertThat(registeredId, is(id));
-
-			verify(registrationService, times(1)).registerMethodSensorTypeIdent(platformIdent, className, parameters);
-			verifyNoMoreInteractions(registrationService);
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void timeout() throws ServerUnavailableException, RegistrationException {
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(registrationService).registerMethodSensorTypeIdent(anyLong(), anyString(), Mockito.<Map<String, Object>> any());
-
-			String className = "c";
-			Map<String, Object> parameters = Collections.emptyMap();
-			MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-			when(methodSensorTypeConfig.getClassName()).thenReturn(className);
-			when(methodSensorTypeConfig.getParameters()).thenReturn(parameters);
-
-			try {
-				connection.registerMethodSensorType(platformIdent, methodSensorTypeConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(true));
-				throw e;
-			} finally {
-				verify(registrationService, times(1)).registerMethodSensorTypeIdent(platformIdent, className, parameters);
-				verifyNoMoreInteractions(registrationService);
-			}
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void remoteException() throws Exception {
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(registrationService).registerMethodSensorTypeIdent(anyLong(), anyString(), Mockito.<Map<String, Object>> any());
-
-			String className = "c";
-			Map<String, Object> parameters = Collections.emptyMap();
-			MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-			when(methodSensorTypeConfig.getClassName()).thenReturn(className);
-			when(methodSensorTypeConfig.getParameters()).thenReturn(parameters);
-
-			try {
-				connection.registerMethodSensorType(platformIdent, methodSensorTypeConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verify(registrationService, times(AdditiveWaitRetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).registerMethodSensorTypeIdent(platformIdent, className, parameters);
-				verifyNoMoreInteractions(registrationService);
-			}
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void notConnected() throws Exception {
-			when(client.isConnected()).thenReturn(false);
-			long platformIdent = 7L;
-			MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-
-			try {
-				connection.registerMethodSensorType(platformIdent, methodSensorTypeConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verifyZeroInteractions(registrationService);
-			}
-		}
-	}
-
-	public static class RegisterPlatformSensor extends KryoNetConnectionTest {
-
-		@Test
-		public void registerPlatformSensor() throws Exception {
-			long id = 3L;
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doReturn(id).when(registrationService).registerPlatformSensorTypeIdent(anyLong(), anyString());
-
-			String className = "c";
-			PlatformSensorTypeConfig platformSensorTypeConfig = mock(PlatformSensorTypeConfig.class);
-			when(platformSensorTypeConfig.getClassName()).thenReturn(className);
-
-			long registeredId = connection.registerPlatformSensorType(platformIdent, platformSensorTypeConfig);
-			assertThat(registeredId, is(id));
-
-			verify(registrationService, times(1)).registerPlatformSensorTypeIdent(platformIdent, className);
-			verifyNoMoreInteractions(registrationService);
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void timeout() throws Exception {
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(registrationService).registerPlatformSensorTypeIdent(anyLong(), anyString());
-
-			String className = "c";
-			PlatformSensorTypeConfig platformSensorTypeConfig = mock(PlatformSensorTypeConfig.class);
-			when(platformSensorTypeConfig.getClassName()).thenReturn(className);
-
-			try {
-				connection.registerPlatformSensorType(platformIdent, platformSensorTypeConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(true));
-				throw e;
-			} finally {
-				verify(registrationService, times(1)).registerPlatformSensorTypeIdent(platformIdent, className);
-				verifyNoMoreInteractions(registrationService);
-			}
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void remoteException() throws Exception {
-			long platformIdent = 7L;
-			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(registrationService).registerPlatformSensorTypeIdent(anyLong(), anyString());
-
-			String className = "c";
-			PlatformSensorTypeConfig platformSensorTypeConfig = mock(PlatformSensorTypeConfig.class);
-			when(platformSensorTypeConfig.getClassName()).thenReturn(className);
-
-			try {
-				connection.registerPlatformSensorType(platformIdent, platformSensorTypeConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verify(registrationService, times(AdditiveWaitRetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).registerPlatformSensorTypeIdent(platformIdent, className);
-				verifyNoMoreInteractions(registrationService);
-			}
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void notConnected() throws Exception {
-			when(client.isConnected()).thenReturn(false);
-			long platformIdent = 7L;
-			PlatformSensorTypeConfig platformSensorTypeConfig = mock(PlatformSensorTypeConfig.class);
-
-			try {
-				connection.registerPlatformSensorType(platformIdent, platformSensorTypeConfig);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verifyZeroInteractions(registrationService);
-			}
-		}
-	}
-
-	public static class AddSensorToMethod extends KryoNetConnectionTest {
-
-		@Test
-		public void addSensorToMethod() throws Exception {
-			when(client.isConnected()).thenReturn(true);
-			long methodId = 3L;
-			long sensorId = 7L;
-
-			connection.addSensorTypeToMethod(sensorId, methodId);
-
-			verify(registrationService, times(1)).addSensorTypeToMethod(sensorId, methodId);
-			verifyNoMoreInteractions(registrationService);
+			verify(agentService, times(1)).analyze(id, hash, type);
+			verifyNoMoreInteractions(agentService);
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(registrationService).addSensorTypeToMethod(anyLong(), anyLong());
-			long methodId = 3L;
-			long sensorId = 7L;
+			doThrow(TimeoutException.class).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			long id = 7;
+			String hash = "hash";
+			Type type = mock(Type.class);
 
 			try {
-				connection.addSensorTypeToMethod(sensorId, methodId);
+				connection.analyze(id, hash, type);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(true));
 				throw e;
 			} finally {
-				verify(registrationService, times(1)).addSensorTypeToMethod(sensorId, methodId);
-				verifyNoMoreInteractions(registrationService);
+				verify(agentService, times(1)).analyze(id, hash, type);
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(registrationService).addSensorTypeToMethod(anyLong(), anyLong());
-			long methodId = 3L;
-			long sensorId = 7L;
+			doThrow(RuntimeException.class).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			long id = 7;
+			String hash = "hash";
+			Type type = mock(Type.class);
 
 			try {
-				connection.addSensorTypeToMethod(sensorId, methodId);
+				connection.analyze(id, hash, type);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
 			} finally {
-				verify(registrationService, times(AdditiveWaitRetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).addSensorTypeToMethod(sensorId, methodId);
-				verifyNoMoreInteractions(registrationService);
+				// fail fast call, only one attempt
+				verify(agentService, times(1)).analyze(id, hash, type);
+				verifyNoMoreInteractions(agentService);
+			}
+		}
+
+		@Test(expectedExceptions = { BusinessException.class })
+		public void businessException() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			doThrow(BusinessException.class).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			long id = 7;
+			String hash = "hash";
+			Type type = mock(Type.class);
+
+			try {
+				connection.analyze(id, hash, type);
+			} finally {
+				verify(agentService, times(1)).analyze(id, hash, type);
+				verifyNoMoreInteractions(agentService);
 			}
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void notConnected() throws Exception {
 			when(client.isConnected()).thenReturn(false);
-			long methodId = 3L;
-			long sensorId = 7L;
+			long id = 7;
+			String hash = "hash";
+			Type type = mock(Type.class);
 
 			try {
-				connection.addSensorTypeToMethod(sensorId, methodId);
+				connection.analyze(id, hash, type);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
 			} finally {
-				verifyZeroInteractions(registrationService);
+				verifyZeroInteractions(agentService);
+			}
+		}
+	}
+
+	public static class InstrumentationApplied extends KryoNetConnectionTest {
+
+		@Test
+		public void instrumentationApplied() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			Map<Long, long[]> methodToSensorMap = mock(Map.class);
+			when(methodToSensorMap.isEmpty()).thenReturn(false);
+
+			connection.instrumentationApplied(methodToSensorMap);
+
+			verify(agentService, times(1)).instrumentationApplied(methodToSensorMap);
+			verifyNoMoreInteractions(agentService);
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void timeout() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			doThrow(TimeoutException.class).when(agentService).instrumentationApplied(Mockito.<Map<Long, long[]>> any());
+			Map<Long, long[]> methodToSensorMap = mock(Map.class);
+			when(methodToSensorMap.isEmpty()).thenReturn(false);
+
+			try {
+				connection.instrumentationApplied(methodToSensorMap);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(true));
+				throw e;
+			} finally {
+				verify(agentService, times(1)).instrumentationApplied(methodToSensorMap);
+				verifyNoMoreInteractions(agentService);
+			}
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void remoteException() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			doThrow(RuntimeException.class).when(agentService).instrumentationApplied(Mockito.<Map<Long, long[]>> any());
+			Map<Long, long[]> methodToSensorMap = mock(Map.class);
+			when(methodToSensorMap.isEmpty()).thenReturn(false);
+
+			try {
+				connection.instrumentationApplied(methodToSensorMap);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(false));
+				throw e;
+			} finally {
+				// call depends on the retry strategy
+				verify(agentService, times(AdditiveWaitRetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).instrumentationApplied(methodToSensorMap);
+				verifyNoMoreInteractions(agentService);
+			}
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void notConnected() throws Exception {
+			when(client.isConnected()).thenReturn(false);
+			Map<Long, long[]> methodToSensorMap = mock(Map.class);
+
+			try {
+				connection.instrumentationApplied(methodToSensorMap);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(false));
+				throw e;
+			} finally {
+				verifyZeroInteractions(agentService);
 			}
 		}
 	}

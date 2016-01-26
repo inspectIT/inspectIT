@@ -1,14 +1,14 @@
 package rocks.inspectit.agent.java.core;
 
-import rocks.inspectit.agent.java.core.impl.IdManager;
+import rocks.inspectit.agent.java.core.impl.PlatformManager;
 
 /**
  * This exception is thrown whenever something happens unexpectedly while accessing or registering
  * an ID (method, sensor type, agent, ...).
  * 
  * @author Patrice Bouillet
- * @see IIdManager
- * @see IdManager
+ * @see IPlatformManager
+ * @see PlatformManager
  */
 public class IdNotAvailableException extends Exception {
 

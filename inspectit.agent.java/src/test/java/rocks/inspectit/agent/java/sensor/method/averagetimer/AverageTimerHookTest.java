@@ -29,7 +29,7 @@ import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerHook;
 import rocks.inspectit.agent.java.util.Timer;
@@ -44,7 +44,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 	private Timer timer;
 
 	@Mock
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	@Mock
 	private IPropertyAccessor propertyAccessor;
@@ -62,7 +62,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 
 	@BeforeMethod
 	public void initTestClass() {
-		averageTimerHook = new AverageTimerHook(timer, idManager, propertyAccessor, parameter);
+		averageTimerHook = new AverageTimerHook(timer, platformManager, propertyAccessor, parameter);
 	}
 
 	@Test
@@ -70,9 +70,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -81,9 +79,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		Double secondTimerValue = 1323.675d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(1)).getCurrentTime();
@@ -92,23 +88,21 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		verify(timer, times(2)).getCurrentTime();
 
 		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		verify(idManager).getPlatformId();
-		verify(idManager).getRegisteredMethodId(methodId);
-		verify(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		verify(platformManager).getPlatformId();
 		verify(coreService).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
 
 		TimerData timerData = new TimerData();
 		timerData.setPlatformIdent(platformId);
-		timerData.setMethodIdent(registeredMethodId);
-		timerData.setSensorTypeIdent(registeredSensorTypeId);
+		timerData.setMethodIdent(methodId);
+		timerData.setSensorTypeIdent(sensorTypeId);
 		timerData.setCount(1L);
 		timerData.setDuration(secondTimerValue - firstTimerValue);
 		timerData.calculateMax(secondTimerValue - firstTimerValue);
 		timerData.calculateMin(secondTimerValue - firstTimerValue);
 		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), (String) eq(null), argThat(new TimerDataVerifier(timerData)));
 
-		verifyNoMoreInteractions(timer, idManager, coreService, registeredSensorConfig);
+		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 		verifyZeroInteractions(propertyAccessor, object, result);
 	}
 
@@ -116,11 +110,8 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 	public void twoRecords() throws IdNotAvailableException {
 		long platformId = 1L;
 		long methodIdOne = 3L;
-		long registeredMethodIdOne = 13L;
 		long methodIdTwo = 9L;
-		long registeredMethodIdTwo = 15L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -131,10 +122,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		Double fourthTimerValue = 2319.712d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue).thenReturn(thirdTimerValue).thenReturn(fourthTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodIdOne)).thenReturn(registeredMethodIdOne);
-		when(idManager.getRegisteredMethodId(methodIdTwo)).thenReturn(registeredMethodIdTwo);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		averageTimerHook.beforeBody(methodIdOne, sensorTypeId, object, parameters, registeredSensorConfig);
 		averageTimerHook.beforeBody(methodIdTwo, sensorTypeId, object, parameters, registeredSensorConfig);
@@ -143,8 +131,8 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.secondAfterBody(coreService, methodIdTwo, sensorTypeId, object, parameters, result, registeredSensorConfig);
 		TimerData timerDataTwo = new TimerData();
 		timerDataTwo.setPlatformIdent(platformId);
-		timerDataTwo.setMethodIdent(registeredMethodIdTwo);
-		timerDataTwo.setSensorTypeIdent(registeredSensorTypeId);
+		timerDataTwo.setMethodIdent(methodIdTwo);
+		timerDataTwo.setSensorTypeIdent(sensorTypeId);
 		timerDataTwo.setCount(1L);
 		timerDataTwo.setDuration(thirdTimerValue - secondTimerValue);
 		timerDataTwo.calculateMax(thirdTimerValue - secondTimerValue);
@@ -155,8 +143,8 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.secondAfterBody(coreService, methodIdOne, sensorTypeId, object, parameters, result, registeredSensorConfig);
 		TimerData timerDataOne = new TimerData();
 		timerDataOne.setPlatformIdent(platformId);
-		timerDataOne.setMethodIdent(registeredMethodIdOne);
-		timerDataOne.setSensorTypeIdent(registeredSensorTypeId);
+		timerDataOne.setMethodIdent(methodIdOne);
+		timerDataOne.setSensorTypeIdent(sensorTypeId);
 		timerDataOne.setCount(1L);
 		timerDataOne.setDuration(fourthTimerValue - firstTimerValue);
 		timerDataOne.calculateMax(fourthTimerValue - firstTimerValue);
@@ -169,9 +157,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -182,9 +168,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		Double fourthTimerValue = 2812.0d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue).thenReturn(thirdTimerValue).thenReturn(fourthTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		// First call
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
@@ -194,16 +178,14 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		verify(timer, times(2)).getCurrentTime();
 
 		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		verify(idManager).getPlatformId();
-		verify(idManager).getRegisteredMethodId(methodId);
-		verify(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		verify(platformManager).getPlatformId();
 		verify(coreService).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
 
 		TimerData timerData = new TimerData();
 		timerData.setPlatformIdent(platformId);
-		timerData.setMethodIdent(registeredMethodId);
-		timerData.setSensorTypeIdent(registeredSensorTypeId);
+		timerData.setMethodIdent(methodId);
+		timerData.setSensorTypeIdent(sensorTypeId);
 		timerData.setCount(1L);
 		timerData.setDuration(secondTimerValue - firstTimerValue);
 		timerData.calculateMax(secondTimerValue - firstTimerValue);
@@ -223,14 +205,14 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		verify(registeredSensorConfig, times(2)).isPropertyAccess();
 
 		assertThat(timerData.getPlatformIdent(), is(equalTo(platformId)));
-		assertThat(timerData.getMethodIdent(), is(equalTo(registeredMethodId)));
-		assertThat(timerData.getSensorTypeIdent(), is(equalTo(registeredSensorTypeId)));
+		assertThat(timerData.getMethodIdent(), is(equalTo(methodId)));
+		assertThat(timerData.getSensorTypeIdent(), is(equalTo(sensorTypeId)));
 		assertThat(timerData.getCount(), is(equalTo(2L)));
 		assertThat(timerData.getDuration(), is(equalTo(fourthTimerValue - thirdTimerValue + secondTimerValue - firstTimerValue)));
 		assertThat(timerData.getMax(), is(equalTo(fourthTimerValue - thirdTimerValue)));
 		assertThat(timerData.getMin(), is(equalTo(secondTimerValue - firstTimerValue)));
 
-		verifyNoMoreInteractions(timer, idManager, coreService, registeredSensorConfig);
+		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 		verifyZeroInteractions(propertyAccessor, object, result);
 	}
 
@@ -239,9 +221,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -252,9 +232,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		Double fourthTimerValue = 1934.0d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue).thenReturn(thirdTimerValue).thenReturn(fourthTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		// First call
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
@@ -264,16 +242,14 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		verify(timer, times(2)).getCurrentTime();
 
 		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		verify(idManager).getPlatformId();
-		verify(idManager).getRegisteredMethodId(methodId);
-		verify(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		verify(platformManager).getPlatformId();
 		verify(coreService).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
 
 		TimerData timerData = new TimerData();
 		timerData.setPlatformIdent(platformId);
-		timerData.setMethodIdent(registeredMethodId);
-		timerData.setSensorTypeIdent(registeredSensorTypeId);
+		timerData.setMethodIdent(methodId);
+		timerData.setSensorTypeIdent(sensorTypeId);
 		timerData.setCount(1L);
 		timerData.setDuration(secondTimerValue - firstTimerValue);
 		timerData.calculateMax(secondTimerValue - firstTimerValue);
@@ -293,14 +269,14 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		verify(registeredSensorConfig, times(2)).isPropertyAccess();
 
 		assertThat(timerData.getPlatformIdent(), is(equalTo(platformId)));
-		assertThat(timerData.getMethodIdent(), is(equalTo(registeredMethodId)));
-		assertThat(timerData.getSensorTypeIdent(), is(equalTo(registeredSensorTypeId)));
+		assertThat(timerData.getMethodIdent(), is(equalTo(methodId)));
+		assertThat(timerData.getSensorTypeIdent(), is(equalTo(sensorTypeId)));
 		assertThat(timerData.getCount(), is(equalTo(2L)));
 		assertThat(timerData.getDuration(), is(equalTo(fourthTimerValue - thirdTimerValue + secondTimerValue - firstTimerValue)));
 		assertThat(timerData.getMax(), is(equalTo(secondTimerValue - firstTimerValue)));
 		assertThat(timerData.getMin(), is(equalTo(fourthTimerValue - thirdTimerValue)));
 
-		verifyNoMoreInteractions(timer, idManager, coreService, registeredSensorConfig);
+		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 		verifyZeroInteractions(propertyAccessor, object, result);
 	}
 
@@ -358,57 +334,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		Double secondTimerValue = 1323.675d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		doThrow(new IdNotAvailableException("")).when(idManager).getPlatformId();
-
-		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-
-		verify(coreService, never()).addMethodSensorData(anyLong(), anyLong(), anyString(), (MethodSensorData) isNull());
-	}
-
-	@Test
-	public void methodIdNotAvailable() throws IdNotAvailableException {
-		// set up data
-		long platformId = 1L;
-		long methodId = 3L;
-		long sensorTypeId = 11L;
-		Object object = mock(Object.class);
-		Object[] parameters = new Object[0];
-		Object result = mock(Object.class);
-
-		Double firstTimerValue = 1000.453d;
-		Double secondTimerValue = 1323.675d;
-
-		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		doThrow(new IdNotAvailableException("")).when(idManager).getRegisteredMethodId(methodId);
-
-		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-
-		verify(coreService, never()).addMethodSensorData(anyLong(), anyLong(), anyString(), (MethodSensorData) isNull());
-	}
-
-	@Test
-	public void sensorTypeIdNotAvailable() throws IdNotAvailableException {
-		// set up data
-		long platformId = 1L;
-		long methodId = 3L;
-		long registeredMethodId = 13L;
-		long sensorTypeId = 11L;
-		Object object = mock(Object.class);
-		Object[] parameters = new Object[0];
-		Object result = mock(Object.class);
-
-		Double firstTimerValue = 1000.453d;
-		Double secondTimerValue = 1323.675d;
-
-		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		doThrow(new IdNotAvailableException("")).when(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		doThrow(new IdNotAvailableException("")).when(platformManager).getPlatformId();
 
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
@@ -422,7 +348,6 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[2];
@@ -432,9 +357,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		Double secondTimerValue = 1323.675d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		doThrow(new IdNotAvailableException("")).when(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 		when(registeredSensorConfig.isPropertyAccess()).thenReturn(true);
 
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);

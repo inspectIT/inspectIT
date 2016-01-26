@@ -79,7 +79,6 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager;
 import rocks.inspectit.ui.rcp.util.SafeExecutor;
 import rocks.inspectit.ui.rcp.util.SelectionProviderAdapter;
-import rocks.inspectit.ui.rcp.util.UnfinishedWarningUtils;
 import rocks.inspectit.ui.rcp.view.IRefreshableView;
 
 /**
@@ -276,12 +275,6 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		});
 		getSite().setSelectionProvider(selectionProviderAdapter);
 		selectionProviderAdapter.setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
-
-		// TODO: This needs to be removed as soon as the configuration interface is fully
-		// functional.
-		UnfinishedWarningUtils.inform(
-				"The configuration interface is not yet connected with the agent instrumentation. You can play around with this preview, but the instrumentations will not be effective.",
-				"UNFINISHED_WARNING_CONFIGURATION_INTERFACE");
 	}
 
 	/**

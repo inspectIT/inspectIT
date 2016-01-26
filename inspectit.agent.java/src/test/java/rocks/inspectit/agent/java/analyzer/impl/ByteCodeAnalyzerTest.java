@@ -1,419 +1,574 @@
 package rocks.inspectit.agent.java.analyzer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import info.novatec.inspectit.org.objectweb.asm.ClassReader;
+import info.novatec.inspectit.org.objectweb.asm.ClassWriter;
+import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
-import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
-import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
-import rocks.inspectit.agent.java.analyzer.IMatcher;
-import rocks.inspectit.agent.java.analyzer.classes.MyTestException;
-import rocks.inspectit.agent.java.analyzer.classes.TestClass;
-import rocks.inspectit.agent.java.analyzer.impl.ByteCodeAnalyzer;
-import rocks.inspectit.agent.java.analyzer.impl.ThrowableMatcher;
-import rocks.inspectit.agent.java.config.IConfigurationStorage;
-import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor;
-import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
-import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
-import rocks.inspectit.agent.java.hooking.IHookInstrumenter;
-import rocks.inspectit.agent.java.hooking.impl.HookException;
-import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
-import rocks.inspectit.agent.java.sensor.exception.IExceptionSensor;
-import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
-import rocks.inspectit.shared.all.communication.data.ParameterContentType;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.slf4j.LoggerFactory;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.classes.AbstractSubTest;
+import rocks.inspectit.agent.java.analyzer.classes.TestClass;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.connection.IConnection;
+import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
+import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
-@SuppressWarnings("PMD")
-public class ByteCodeAnalyzerTest extends AbstractLogSupport {
+@SuppressWarnings({ "PMD", "unchecked", "rawtypes" })
+public class ByteCodeAnalyzerTest extends TestBase {
+
+	@InjectMocks
+	ByteCodeAnalyzer byteCodeAnalyzer;
 
 	@Mock
-	private IConfigurationStorage configurationStorage;
+	Logger log;
 
 	@Mock
-	private IHookInstrumenter hookInstrumenter;
+	IPlatformManager platformManager;
 
 	@Mock
-	private IClassPoolAnalyzer classPoolAnalyzer;
+	IConnection connection;
 
 	@Mock
-	private IInheritanceAnalyzer inheritanceAnalyzer;
+	IHookDispatcherMapper hookDispatcherMapper;
 
-	private ByteCodeAnalyzer byteCodeAnalyzer;
+	@Mock
+	InstrumentationDefinition instrumentationResult;
+
+	@Mock
+	MethodInstrumentationConfig methodInstrumentationConfig;
+
+	@Mock
+	SensorInstrumentationPoint sensorInstrumentationPoint;
+
+	@Mock
+	IConfigurationStorage configurationStorage;
+
+	@Mock
+	ClassHashHelper classHashHelper;
+
+	@Mock
+	ICoreService coreService;
+
+	@Mock
+	ScheduledExecutorService executorService;
+
+	@Mock
+	MethodVisitor methodVisitor;
+
+	@Mock
+	MethodSensorTypeConfig methodSensorTypeConfig;
+
+	@Mock
+	IMethodSensor methodSensor;
+
+	@Mock
+	List<IMethodSensor> methodSensors;
+
+	final Long platformId = 10L;
 
 	@BeforeMethod
-	public void initTestClass() {
-		byteCodeAnalyzer = new ByteCodeAnalyzer(configurationStorage, hookInstrumenter, classPoolAnalyzer);
-		byteCodeAnalyzer.log = LoggerFactory.getLogger(ByteCodeAnalyzer.class);
-		when(configurationStorage.getClassLoaderDelegationMatchers()).thenReturn(Collections.singleton(mock(IMatcher.class)));
+	public void setup() throws IdNotAvailableException, ServerUnavailableException {
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+		when(coreService.getExecutorService()).thenReturn(executorService);
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				((Runnable) invocation.getArguments()[0]).run();
+				return null;
+			}
+		}).when(executorService).submit(Mockito.<Runnable> any());
+
+		// method sensor and config
+		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
+		// method sensors iterator
+		Iterator<IMethodSensor> it = Mockito.mock(Iterator.class);
+		when(it.hasNext()).thenReturn(true, false);
+		when(it.next()).thenReturn(methodSensor);
+		when(methodSensors.iterator()).thenReturn(it);
 	}
 
-	private byte[] getByteCode(String className) throws NotFoundException, IOException, CannotCompileException {
-		CtClass ctClass = ClassPool.getDefault().get(className);
-		return ctClass.toBytecode();
+	protected byte[] getByteCode(String className) throws IOException {
+		// get byte-code via ASM
+		ClassReader reader = new ClassReader(className);
+		ClassWriter writer = new ClassWriter(reader, 0);
+		reader.accept(writer, 0);
+		return writer.toByteArray();
 	}
 
-	@Test
-	public void nothingToDo() throws NotFoundException, IOException, CannotCompileException {
-		String className = TestClass.class.getName();
-		ClassLoader classLoader = TestClass.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+	public class AnalyzeAndInstrument extends ByteCodeAnalyzerTest {
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
+		@Test
+		public void instrumentation() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-		byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+			// make registered sensor config always instrument toString
+			when(methodInstrumentationConfig.getTargetClassFqn()).thenReturn(className);
+			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
+			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
+			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
+			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
+			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
+			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
-		// as no instrumentation happened, we get a null object
-		assertThat(instrumentedByteCode, is(nullValue()));
-	}
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(instrumentationResult);
+			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
+			long rscId = 13L;
+			long[] sensorIds = { 17L };
+			when(sensorInstrumentationPoint.getId()).thenReturn(rscId);
+			when(sensorInstrumentationPoint.getSensorIds()).thenReturn(sensorIds);
+			when(sensorInstrumentationPoint.isStartsInvocation()).thenReturn(false);
+			when(sensorInstrumentationPoint.getSettings()).thenReturn(Collections.<String, Object> singletonMap("key", "value"));
+			when(sensorInstrumentationPoint.getPropertyAccessorList()).thenReturn(Collections.<PropertyPathStart> emptyList());
+			when(methodSensorTypeConfig.getId()).thenReturn(sensorIds[0]);
 
-	@Test
-	public void simpleClassAndMethod() throws NotFoundException, IOException, CannotCompileException {
-		String className = TestClass.class.getName();
-		String methodName = "voidNullParameter";
-		ClassLoader classLoader = TestClass.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+			byteCodeAnalyzer.afterPropertiesSet();
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
+			// as instrumentation happened, we get a not null object
+			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-		List<UnregisteredSensorConfig> unregisteredSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
-		UnregisteredSensorConfig unregisteredSensorConfig = mock(UnregisteredSensorConfig.class);
-		when(unregisteredSensorConfig.getTargetClassName()).thenReturn(className);
-		when(unregisteredSensorConfig.getTargetMethodName()).thenReturn(methodName);
-		MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(methodSensorTypeConfig.getClassName()).thenReturn("");
-		IMethodSensor methodSensor = mock(IMethodSensor.class);
-		when(methodSensorTypeConfig.getSensorType()).thenReturn(methodSensor);
-		when(unregisteredSensorConfig.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
-		IMatcher matcher = mock(IMatcher.class);
-		List<CtMethod> ctMethods = new ArrayList<CtMethod>();
-		ctMethods.add(ClassPool.getDefault().getMethod(className, methodName));
-		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
-		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(ctMethods);
-		when(unregisteredSensorConfig.getMatcher()).thenReturn(matcher);
-		unregisteredSensorConfigs.add(unregisteredSensorConfig);
+			verify(connection, times(2)).isConnected();
+			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
+			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			assertThat(captor.getValue().size(), is(1));
+			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
+			ArgumentCaptor<RegisteredSensorConfig> rscCaptor = ArgumentCaptor.forClass(RegisteredSensorConfig.class);
+			verify(hookDispatcherMapper, times(1)).addMapping(eq(rscId), rscCaptor.capture());
+			assertThat(rscCaptor.getValue().getId(), is(rscId));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasSize(1));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasItem(methodSensor));
+			assertThat(rscCaptor.getValue().getTargetClassFqn(), is(methodInstrumentationConfig.getTargetClassFqn()));
+			assertThat(rscCaptor.getValue().getTargetMethodName(), is(methodInstrumentationConfig.getTargetMethodName()));
+			assertThat(rscCaptor.getValue().getReturnType(), is(methodInstrumentationConfig.getReturnType()));
+			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
+			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
+			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
+			verify(coreService, times(1)).getExecutorService();
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, coreService);
+		}
 
-		when(configurationStorage.getUnregisteredSensorConfigs()).thenReturn(unregisteredSensorConfigs);
+		@Test
+		public void nullByteCodeAndClassLoaderInstrumentation() throws Exception {
+			String className = String.class.getName();
 
-		byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+			// make registered sensor config always instrument toString
+			when(methodInstrumentationConfig.getTargetClassFqn()).thenReturn(className);
+			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
+			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
+			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
+			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
+			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
+			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
-		assertThat(instrumentedByteCode, is(notNullValue()));
-		// nothing was really instrumented, thus the byte code has to be the
-		// same
-		assertThat(instrumentedByteCode, is(equalTo(byteCode)));
-	}
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(instrumentationResult);
+			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
+			long rscId = 13L;
+			long[] sensorIds = { 17L };
+			when(sensorInstrumentationPoint.getId()).thenReturn(rscId);
+			when(sensorInstrumentationPoint.getSensorIds()).thenReturn(sensorIds);
+			when(sensorInstrumentationPoint.isStartsInvocation()).thenReturn(false);
+			when(sensorInstrumentationPoint.getSettings()).thenReturn(Collections.<String, Object> singletonMap("key", "value"));
+			when(sensorInstrumentationPoint.getPropertyAccessorList()).thenReturn(Collections.<PropertyPathStart> emptyList());
+			when(methodSensorTypeConfig.getId()).thenReturn(sensorIds[0]);
 
-	@Test
-	public void removeReturnValueCapturingForVoidReturnMethods() throws NotFoundException, IOException, CannotCompileException, HookException {
-		String className = TestClass.class.getName();
-		String methodName = "voidNullParameter";
-		ClassLoader classLoader = TestClass.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+			byteCodeAnalyzer.afterPropertiesSet();
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(null, className, null);
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
+			// as instrumentation happened, we get a not null object
+			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-		List<UnregisteredSensorConfig> unregisteredSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
-		UnregisteredSensorConfig unregisteredSensorConfig = mock(UnregisteredSensorConfig.class);
-		when(unregisteredSensorConfig.getTargetClassName()).thenReturn(className);
-		when(unregisteredSensorConfig.getTargetMethodName()).thenReturn(methodName);
-		MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(methodSensorTypeConfig.getClassName()).thenReturn("");
+			verify(connection, times(2)).isConnected();
+			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
+			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			assertThat(captor.getValue().size(), is(1));
+			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
+			ArgumentCaptor<RegisteredSensorConfig> rscCaptor = ArgumentCaptor.forClass(RegisteredSensorConfig.class);
+			verify(hookDispatcherMapper, times(1)).addMapping(eq(rscId), rscCaptor.capture());
+			assertThat(rscCaptor.getValue().getId(), is(rscId));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasSize(1));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasItem(methodSensor));
+			assertThat(rscCaptor.getValue().getTargetClassFqn(), is(methodInstrumentationConfig.getTargetClassFqn()));
+			assertThat(rscCaptor.getValue().getTargetMethodName(), is(methodInstrumentationConfig.getTargetMethodName()));
+			assertThat(rscCaptor.getValue().getReturnType(), is(methodInstrumentationConfig.getReturnType()));
+			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
+			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
+			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
+			verify(coreService, times(1)).getExecutorService();
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, coreService);
+		}
 
-		IMethodSensor methodSensor = mock(IMethodSensor.class);
-		when(methodSensorTypeConfig.getSensorType()).thenReturn(methodSensor);
-		when(unregisteredSensorConfig.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
+		@Test
+		public void functionalInstrumentation() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-		IMatcher matcher = mock(IMatcher.class);
-		List<CtMethod> ctMethods = new ArrayList<CtMethod>();
-		ctMethods.add(ClassPool.getDefault().getMethod(className, methodName));
-		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
-		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(ctMethods);
-		when(unregisteredSensorConfig.getMatcher()).thenReturn(matcher);
+			// need to fake the method
+			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
+			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
+			when(methodInstrumentationConfig.getAllInstrumentationPoints())
+			.thenReturn(Collections.<IMethodInstrumentationPoint> singleton(new SpecialInstrumentationPoint(SpecialInstrumentationType.CLASS_LOADING_DELEGATION)));
 
-		List<PropertyPathStart> propertyAccessors = new ArrayList<PropertyAccessor.PropertyPathStart>();
-		PropertyPathStart path = new PropertyPathStart();
-		path.setContentType(ParameterContentType.RETURN);
-		path.setName("returnValue");
-		propertyAccessors.add(path);
-		when(unregisteredSensorConfig.getPropertyAccessorList()).thenReturn(propertyAccessors);
-		when(unregisteredSensorConfig.isPropertyAccess()).thenReturn(true);
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(instrumentationResult);
+			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
 
-		unregisteredSensorConfigs.add(unregisteredSensorConfig);
-		when(configurationStorage.getUnregisteredSensorConfigs()).thenReturn(unregisteredSensorConfigs);
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+			// as instrumentation happened, we get a not null object
+			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-		ArgumentCaptor<RegisteredSensorConfig> capturedRegisteredSensorConfig = ArgumentCaptor.forClass(RegisteredSensorConfig.class);
-		Mockito.verify(hookInstrumenter).addMethodHook(Mockito.any(CtMethod.class), capturedRegisteredSensorConfig.capture());
-		assertThat(capturedRegisteredSensorConfig.getValue().getPropertyAccessorList(), is(empty()));
-		assertThat(capturedRegisteredSensorConfig.getValue().isPropertyAccess(), is(false));
-	}
+			verify(connection, times(1)).isConnected();
+			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
+			verifyNoMoreInteractions(connection, classHashHelper);
+			verifyZeroInteractions(hookDispatcherMapper, coreService);
+		}
 
-	@Test
-	public void removeReturnValueCapturingForVoidReturnMethodsButKeepOthers() throws NotFoundException, IOException, CannotCompileException, HookException {
-		String className = TestClass.class.getName();
-		String methodName = "voidNullParameter";
-		ClassLoader classLoader = TestClass.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+		@Test
+		public void notToBeSentNoInstrumentation() throws IOException {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(true);
+			when(classHashHelper.getInstrumentationDefinition(fqnCaptor.capture())).thenReturn(null);
 
-		List<UnregisteredSensorConfig> unregisteredSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
-		UnregisteredSensorConfig unregisteredSensorConfig = mock(UnregisteredSensorConfig.class);
-		when(unregisteredSensorConfig.getTargetClassName()).thenReturn(className);
-		when(unregisteredSensorConfig.getTargetMethodName()).thenReturn(methodName);
-		MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(methodSensorTypeConfig.getClassName()).thenReturn("");
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		IMethodSensor methodSensor = mock(IMethodSensor.class);
-		when(methodSensorTypeConfig.getSensorType()).thenReturn(methodSensor);
-		when(unregisteredSensorConfig.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
+			// we did not send the class type
+			assertThat(instrumentedByteCode, is(nullValue()));
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verifyZeroInteractions(platformManager, connection, hookDispatcherMapper, coreService);
+			// but we asked for the instrumentation result
+			verify(classHashHelper, times(1)).getInstrumentationDefinition(fqnCaptor.getValue());
+			verifyNoMoreInteractions(classHashHelper);
+		}
 
-		IMatcher matcher = mock(IMatcher.class);
-		List<CtMethod> ctMethods = new ArrayList<CtMethod>();
-		ctMethods.add(ClassPool.getDefault().getMethod(className, methodName));
-		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
-		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(ctMethods);
-		when(unregisteredSensorConfig.getMatcher()).thenReturn(matcher);
+		@Test
+		public void notToBeSentCachedInstrumentation() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-		List<PropertyPathStart> propertyAccessors = new ArrayList<PropertyAccessor.PropertyPathStart>();
+			// make registered sensor config always instrument toString
+			when(methodInstrumentationConfig.getTargetClassFqn()).thenReturn(className);
+			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
+			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
+			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
+			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
+			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
+			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
-		PropertyPathStart path = new PropertyPathStart();
-		path.setContentType(ParameterContentType.RETURN);
-		path.setName("returnValue");
-		propertyAccessors.add(path);
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(true);
+			when(classHashHelper.getInstrumentationDefinition(fqnCaptor.capture())).thenReturn(instrumentationResult);
 
-		path = new PropertyPathStart();
-		path.setContentType(ParameterContentType.PARAM);
-		path.setName("returnValue");
-		propertyAccessors.add(path);
-		when(unregisteredSensorConfig.getPropertyAccessorList()).thenReturn(propertyAccessors);
-		when(unregisteredSensorConfig.isPropertyAccess()).thenReturn(true);
+			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
+			long rscId = 13L;
+			long[] sensorIds = { 17L };
+			when(sensorInstrumentationPoint.getId()).thenReturn(rscId);
+			when(sensorInstrumentationPoint.getSensorIds()).thenReturn(sensorIds);
+			when(sensorInstrumentationPoint.isStartsInvocation()).thenReturn(false);
+			when(sensorInstrumentationPoint.getSettings()).thenReturn(Collections.<String, Object> singletonMap("key", "value"));
+			when(sensorInstrumentationPoint.getPropertyAccessorList()).thenReturn(Collections.<PropertyPathStart> emptyList());
+			when(methodSensorTypeConfig.getId()).thenReturn(sensorIds[0]);
+			when(connection.isConnected()).thenReturn(true);
 
-		unregisteredSensorConfigs.add(unregisteredSensorConfig);
-		when(configurationStorage.getUnregisteredSensorConfigs()).thenReturn(unregisteredSensorConfigs);
+			byteCodeAnalyzer.afterPropertiesSet();
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+			// we did not send the class type
+			assertThat(instrumentedByteCode, is(not(nullValue())));
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			// but we asked for the instrumentation result and instrumented
+			verify(classHashHelper, times(1)).getInstrumentationDefinition(fqnCaptor.getValue());
+			ArgumentCaptor<RegisteredSensorConfig> rscCaptor = ArgumentCaptor.forClass(RegisteredSensorConfig.class);
+			verify(hookDispatcherMapper, times(1)).addMapping(eq(rscId), rscCaptor.capture());
+			assertThat(rscCaptor.getValue().getId(), is(rscId));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasSize(1));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasItem(methodSensor));
+			assertThat(rscCaptor.getValue().getTargetClassFqn(), is(methodInstrumentationConfig.getTargetClassFqn()));
+			assertThat(rscCaptor.getValue().getTargetMethodName(), is(methodInstrumentationConfig.getTargetMethodName()));
+			assertThat(rscCaptor.getValue().getReturnType(), is(methodInstrumentationConfig.getReturnType()));
+			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
+			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
+			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
+			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+			verify(connection, times(1)).isConnected();
+			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			assertThat(captor.getValue().size(), is(1));
+			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
+			verify(coreService, times(1)).getExecutorService();
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, platformManager, coreService);
+		}
 
-		ArgumentCaptor<RegisteredSensorConfig> capturedRegisteredSensorConfig = ArgumentCaptor.forClass(RegisteredSensorConfig.class);
-		Mockito.verify(hookInstrumenter).addMethodHook(Mockito.any(CtMethod.class), capturedRegisteredSensorConfig.capture());
-		assertThat(capturedRegisteredSensorConfig.getValue().getPropertyAccessorList(), hasSize(1));
-		assertThat(capturedRegisteredSensorConfig.getValue().isPropertyAccess(), is(true));
-		assertThat(capturedRegisteredSensorConfig.getValue().getPropertyAccessorList(), contains(path));
-	}
+		@Test
+		public void noInstrumentationResult() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-	@Test
-	public void noRemovalOfReturnValueCapturingForNonVoidReturnMethods() throws NotFoundException, IOException, CannotCompileException, HookException {
-		String className = TestClass.class.getName();
-		String methodName = "stringNullParameter";
-		ClassLoader classLoader = TestClass.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(null);
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		List<UnregisteredSensorConfig> unregisteredSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
-		UnregisteredSensorConfig unregisteredSensorConfig = mock(UnregisteredSensorConfig.class);
-		when(unregisteredSensorConfig.getTargetClassName()).thenReturn(className);
-		when(unregisteredSensorConfig.getTargetMethodName()).thenReturn(methodName);
-		MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(methodSensorTypeConfig.getClassName()).thenReturn("");
+			// as no instrumentation happened, we get a null object
+			assertThat(instrumentedByteCode, is(nullValue()));
 
-		IMethodSensor methodSensor = mock(IMethodSensor.class);
-		when(methodSensorTypeConfig.getSensorType()).thenReturn(methodSensor);
-		when(unregisteredSensorConfig.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
+			verify(connection, times(1)).isConnected();
+			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), null);
+			verifyZeroInteractions(hookDispatcherMapper, coreService);
+			verifyNoMoreInteractions(connection, classHashHelper);
+		}
 
-		IMatcher matcher = mock(IMatcher.class);
-		List<CtMethod> ctMethods = new ArrayList<CtMethod>();
-		ctMethods.add(ClassPool.getDefault().getMethod(className, methodName));
-		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
-		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(ctMethods);
-		when(unregisteredSensorConfig.getMatcher()).thenReturn(matcher);
+		@Test
+		public void noInstrumentationConnectionOffline() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-		List<PropertyPathStart> propertyAccessors = new ArrayList<PropertyAccessor.PropertyPathStart>();
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(connection.isConnected()).thenReturn(false);
 
-		PropertyPathStart path = new PropertyPathStart();
-		path.setContentType(ParameterContentType.RETURN);
-		path.setName("returnValue");
-		propertyAccessors.add(path);
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		path = new PropertyPathStart();
-		path.setContentType(ParameterContentType.PARAM);
-		path.setName("returnValue");
-		propertyAccessors.add(path);
-		when(unregisteredSensorConfig.getPropertyAccessorList()).thenReturn(propertyAccessors);
-		when(unregisteredSensorConfig.isPropertyAccess()).thenReturn(true);
+			// as no instrumentation happened, we get a null object
+			assertThat(instrumentedByteCode, is(nullValue()));
 
-		unregisteredSensorConfigs.add(unregisteredSensorConfig);
-		when(configurationStorage.getUnregisteredSensorConfigs()).thenReturn(unregisteredSensorConfigs);
+			verify(connection, times(1)).isConnected();
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verifyZeroInteractions(hookDispatcherMapper, coreService);
+			verifyNoMoreInteractions(connection, classHashHelper);
+		}
 
-		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+		@Test
+		public void noInstrumentationMissingMethod() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-		ArgumentCaptor<RegisteredSensorConfig> capturedRegisteredSensorConfig = ArgumentCaptor.forClass(RegisteredSensorConfig.class);
-		Mockito.verify(hookInstrumenter).addMethodHook(Mockito.any(CtMethod.class), capturedRegisteredSensorConfig.capture());
-		assertThat(capturedRegisteredSensorConfig.getValue().getPropertyAccessorList(), hasSize(2));
-		assertThat(capturedRegisteredSensorConfig.getValue().isPropertyAccess(), is(true));
-	}
+			// make registered sensor config always instrument toString
+			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("someOtherNonExistingMethod");
+			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
+			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
+			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
+			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
-	@Test
-	public void methodWithOneParameter() throws NotFoundException, IOException, CannotCompileException {
-		String className = TestClass.class.getName();
-		String methodName = "voidOneParameter";
-		ClassLoader classLoader = TestClass.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(instrumentationResult);
+			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
+			long rscId = 13L;
+			when(sensorInstrumentationPoint.getId()).thenReturn(rscId);
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		List<UnregisteredSensorConfig> unregisteredSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
-		UnregisteredSensorConfig unregisteredSensorConfig = mock(UnregisteredSensorConfig.class);
-		when(unregisteredSensorConfig.getTargetClassName()).thenReturn(className);
-		when(unregisteredSensorConfig.getTargetMethodName()).thenReturn(methodName);
-		MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(methodSensorTypeConfig.getClassName()).thenReturn("");
-		IMethodSensor methodSensor = mock(IMethodSensor.class);
-		when(methodSensorTypeConfig.getSensorType()).thenReturn(methodSensor);
-		when(unregisteredSensorConfig.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
-		IMatcher matcher = mock(IMatcher.class);
-		List<CtMethod> ctMethods = new ArrayList<CtMethod>();
-		ctMethods.add(ClassPool.getDefault().getMethod(className, methodName));
-		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
-		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(ctMethods);
-		when(unregisteredSensorConfig.getMatcher()).thenReturn(matcher);
-		unregisteredSensorConfigs.add(unregisteredSensorConfig);
+			// as no instrumentation happened, we get a null object
+			assertThat(instrumentedByteCode, is(nullValue()));
 
-		when(configurationStorage.getUnregisteredSensorConfigs()).thenReturn(unregisteredSensorConfigs);
+			verify(connection, times(1)).isConnected();
+			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
+			verifyNoMoreInteractions(connection, classHashHelper);
+			verifyZeroInteractions(hookDispatcherMapper, coreService);
+		}
 
-		byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+		@Test
+		public void noInstrumentationMissingClass() throws Exception {
+			String className = "someCrazyClass";
 
-		assertThat(instrumentedByteCode, is(notNullValue()));
-		// nothing was really instrumented, thus the byte code has to be the
-		// same
-		assertThat(instrumentedByteCode, is(equalTo(byteCode)));
-	}
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(null, className, null);
 
-	@Test
-	public void exceptionSensorNotActivated() throws NotFoundException, IOException, CannotCompileException {
-		String className = MyTestException.class.getName();
-		ClassLoader classLoader = MyTestException.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+			assertThat(instrumentedByteCode, is(nullValue()));
 
-		when(configurationStorage.isExceptionSensorActivated()).thenReturn(false);
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
+			verifyZeroInteractions(hookDispatcherMapper, coreService, connection, classHashHelper, configurationStorage, platformManager);
+		}
 
-		// actual class was not a subclass of Throwable, so nothing to
-		// instrument
-		byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
-		assertThat(instrumentedByteCode, is(nullValue()));
-	}
+		@Test
+		public void instrumentationAnalyzeDependingClasses() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
 
-	@Test
-	public void exceptionSensorActivated() throws NotFoundException, IOException, CannotCompileException {
-		String className = MyTestException.class.getName();
-		ClassLoader classLoader = MyTestException.class.getClassLoader();
-		byte[] byteCode = getByteCode(className);
+			// make registered sensor config always instrument toString
+			when(methodInstrumentationConfig.getTargetClassFqn()).thenReturn(className);
+			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
+			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
+			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
+			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
+			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
+			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
-		when(inheritanceAnalyzer.subclassOf(className, "java.lang.Throwable", classPool)).thenReturn(true);
-		IExceptionSensor exceptionSensor = mock(ExceptionSensor.class);
+			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
+			when(classHashHelper.isSent(anyString(), anyString())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(classHashHelper.isAnalyzed(AbstractSubTest.class.getName())).thenReturn(false);
+			when(connection.isConnected()).thenReturn(true);
+			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(instrumentationResult);
+			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
+			long rscId = 13L;
+			long[] sensorIds = { 17L };
+			when(sensorInstrumentationPoint.getId()).thenReturn(rscId);
+			when(sensorInstrumentationPoint.getSensorIds()).thenReturn(sensorIds);
+			when(sensorInstrumentationPoint.isStartsInvocation()).thenReturn(false);
+			when(sensorInstrumentationPoint.getSettings()).thenReturn(Collections.<String, Object> singletonMap("key", "value"));
+			when(sensorInstrumentationPoint.getPropertyAccessorList()).thenReturn(Collections.<PropertyPathStart> emptyList());
+			when(methodSensorTypeConfig.getId()).thenReturn(sensorIds[0]);
 
-		MethodSensorTypeConfig sensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(sensorTypeConfig.getName()).thenReturn(exceptionSensor.getClass().getName());
-		when(sensorTypeConfig.getClassName()).thenReturn(exceptionSensor.getClass().getName());
-		when(sensorTypeConfig.getSensorType()).thenReturn(exceptionSensor);
-		List<MethodSensorTypeConfig> exceptionSensorTypes = new ArrayList<MethodSensorTypeConfig>();
-		exceptionSensorTypes.add(sensorTypeConfig);
-		when(configurationStorage.getMethodSensorTypes()).thenReturn(exceptionSensorTypes);
-		when(configurationStorage.getExceptionSensorTypes()).thenReturn(exceptionSensorTypes);
-		IMatcher superclassMatcher = mock(IMatcher.class);
-		when(superclassMatcher.compareClassName(classLoader, className)).thenReturn(true);
+			byteCodeAnalyzer.afterPropertiesSet();
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
-		Map<String, Object> settings = new HashMap<String, Object>();
-		settings.put("superclass", "true");
+			// as instrumentation happened, we get a not null object
+			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-		List<UnregisteredSensorConfig> exceptionSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
-		UnregisteredSensorConfig config = mock(UnregisteredSensorConfig.class);
-		when(config.isConstructor()).thenReturn(true);
-		when(config.isInterface()).thenReturn(false);
-		when(config.isSuperclass()).thenReturn(true);
-		when(config.isVirtual()).thenReturn(false);
-		when(config.isIgnoreSignature()).thenReturn(true);
-		when(config.getSensorTypeConfig()).thenReturn(sensorTypeConfig);
-		when(config.getSettings()).thenReturn(settings);
-		ThrowableMatcher matcher = new ThrowableMatcher(inheritanceAnalyzer, classPoolAnalyzer, config, superclassMatcher);
-		when(config.getMatcher()).thenReturn(matcher);
-		exceptionSensorConfigs.add(config);
+			verify(connection, times(3)).isConnected();
+			verify(connection, times(1)).analyze(eq(platformId.longValue()), anyString(), eq(classCaptor.getAllValues().get(0)));
+			verify(connection, times(1)).analyze(eq(platformId.longValue()), anyString(), eq(classCaptor.getAllValues().get(1)));
+			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			assertThat(captor.getValue().size(), is(1));
+			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
 
-		when(configurationStorage.getUnregisteredSensorConfigs()).thenReturn(exceptionSensorConfigs);
+			// assert sent classes order
+			assertThat(classCaptor.getAllValues().get(0).getFQN(), is(AbstractSubTest.class.getName()));
+			assertThat(classCaptor.getAllValues().get(1).getFQN(), is(TestClass.class.getName()));
 
-		// exception sensor was activated, so the current Throwable class was
-		// instrumented
-		byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
-		assertThat(instrumentedByteCode, is(notNullValue()));
-	}
+			// class hash verfications
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(eq(TestClass.class.getName()), anyString());
+			verify(classHashHelper, times(1)).isSent(eq(AbstractSubTest.class.getName()), anyString());
+			verify(classHashHelper, times(1)).registerAnalyzed(TestClass.class.getName());
+			verify(classHashHelper, times(1)).registerAnalyzed(AbstractSubTest.class.getName());
+			verify(classHashHelper, times(1)).registerSent(eq(TestClass.class.getName()), anyString());
+			verify(classHashHelper, times(1)).registerSent(eq(AbstractSubTest.class.getName()), anyString());
+			verify(classHashHelper, times(1)).registerInstrumentationDefinition(TestClass.class.getName(), instrumentationResult);
+			verify(classHashHelper, times(1)).registerInstrumentationDefinition(AbstractSubTest.class.getName(), instrumentationResult);
 
-	@Test
-	public void classLoaderInstumentation() throws NotFoundException, IOException, CannotCompileException, HookException {
-		ClassLoader classLoader = this.getClass().getClassLoader();
-		Class<?> classLoaderClass = classLoader.getClass();
-		String className = classLoaderClass.getName();
-		byte[] byteCode = getByteCode(className);
+			ArgumentCaptor<RegisteredSensorConfig> rscCaptor = ArgumentCaptor.forClass(RegisteredSensorConfig.class);
+			verify(hookDispatcherMapper, times(1)).addMapping(eq(rscId), rscCaptor.capture());
+			assertThat(rscCaptor.getValue().getId(), is(rscId));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasSize(1));
+			assertThat(rscCaptor.getValue().getMethodSensors(), hasItem(methodSensor));
+			assertThat(rscCaptor.getValue().getTargetClassFqn(), is(methodInstrumentationConfig.getTargetClassFqn()));
+			assertThat(rscCaptor.getValue().getTargetMethodName(), is(methodInstrumentationConfig.getTargetMethodName()));
+			assertThat(rscCaptor.getValue().getReturnType(), is(methodInstrumentationConfig.getReturnType()));
+			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
+			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
+			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
+			verify(coreService, times(1)).getExecutorService();
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, coreService);
+		}
 
-		ClassPool classPool = ClassPool.getDefault();
-		when(classPoolAnalyzer.getClassPool(classLoader)).thenReturn(classPool);
-		when(configurationStorage.getUnregisteredSensorConfigs()).thenReturn(Collections.<UnregisteredSensorConfig> emptyList());
-		List<CtMethod> methodList = new ArrayList<CtMethod>();
-		methodList.add(classPool.getMethod(className, "loadClass"));
-
-		IMatcher matcher = mock(IMatcher.class);
-		when(matcher.compareClassName(classLoader, className)).thenReturn(true);
-		when(matcher.getMatchingMethods(classLoader, className)).thenReturn(methodList);
-		when(configurationStorage.getClassLoaderDelegationMatchers()).thenReturn(Collections.singleton(matcher));
-
-		byteCodeAnalyzer.classLoaderDelegation = true;
-		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
-
-		verify(hookInstrumenter, times(1)).addClassLoaderDelegationHook(methodList.get(0));
-
-		byteCodeAnalyzer.classLoaderDelegation = false;
-		byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
-
-		verifyNoMoreInteractions(hookInstrumenter);
 	}
 }

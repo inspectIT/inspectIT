@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
@@ -21,9 +21,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 /**
  * This class provides static information about heap memory/operating system/runtime through
  * MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class SystemInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -39,10 +39,10 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	private static final int MAX_LENGTH = 10000;
 
 	/**
-	 * The ID Manager used to get the correct IDs.
+	 * The Platform manager used to get the correct IDs.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * After the first update()-call the static information will only be updated when the update is
@@ -54,17 +54,17 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	 * The {@link OperatingSystemInfoProvider} used to retrieve information from the operating
 	 * system.
 	 */
-	private OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
+	private final OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
 
 	/**
 	 * The {@link MemoryInfoProvider} used to retrieve heap memory information.
 	 */
-	private MemoryInfoProvider memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
+	private final MemoryInfoProvider memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
 
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the runtime VM.
 	 */
-	private RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -74,17 +74,17 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
-	 * @param idManager
-	 *            The ID Manager.
+	 *
+	 * @param platformManager
+	 *            The Platform manager.
 	 */
-	public SystemInformation(IIdManager idManager) {
-		this.idManager = idManager;
+	public SystemInformation(IPlatformManager platformManager) {
+		this.platformManager = platformManager;
 	}
 
 	/**
 	 * Returns the total amount of physical memory.
-	 * 
+	 *
 	 * @return The total amount of physical memory.
 	 */
 	public long getTotalPhysMemory() {
@@ -93,7 +93,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the total amount of swap space.
-	 * 
+	 *
 	 * @return The total amount of swap space.
 	 */
 	public long getTotalSwapSpace() {
@@ -102,7 +102,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the number of processors available to the virtual machine.
-	 * 
+	 *
 	 * @return The number of processors available to the virtual machine.
 	 */
 	public int getAvailableProcessors() {
@@ -111,7 +111,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the operating system architecture.
-	 * 
+	 *
 	 * @return The operating system architecture.
 	 */
 	public String getArchitecture() {
@@ -120,7 +120,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the name of the operating system.
-	 * 
+	 *
 	 * @return The name of the operating system.
 	 */
 	public String getOsName() {
@@ -129,7 +129,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the version of the operating system.
-	 * 
+	 *
 	 * @return The version of the operating system.
 	 */
 	public String getOsVersion() {
@@ -138,7 +138,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Return the name of the Just-in-time (JIT) compiler.
-	 * 
+	 *
 	 * @return The name of the Just-in-time (JIT) compiler.
 	 */
 	public String getJitCompilerName() {
@@ -148,7 +148,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * Returns the java class path that is used by the system class loader to search for class
 	 * files.
-	 * 
+	 *
 	 * @return The java class path that is used by the system class loader to search for class
 	 *         files.
 	 */
@@ -159,7 +159,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * Returns the boot class path that is used by the bootstrap class loader to search for class
 	 * files.
-	 * 
+	 *
 	 * @return The boot class path that is used by the bootstrap class loader to search for class
 	 *         files.
 	 */
@@ -169,7 +169,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the java library path.
-	 * 
+	 *
 	 * @return The java library path.
 	 */
 	public String getLibraryPath() {
@@ -178,7 +178,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the vendor of the virtual machine.
-	 * 
+	 *
 	 * @return The vendor of the virtual machine.
 	 */
 	public String getVmVendor() {
@@ -187,7 +187,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the name of the virtual machine.
-	 * 
+	 *
 	 * @return The name of the virtual machine.
 	 */
 	public String getVmName() {
@@ -196,7 +196,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the version of the virtual machine.
-	 * 
+	 *
 	 * @return The version of the virtual machine.
 	 */
 	public String getVmVersion() {
@@ -205,7 +205,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the name representing the running virtual machine. for example: 12456@pc-name.
-	 * 
+	 *
 	 * @return The name representing the running virtual machine.
 	 */
 	public String getVmSpecName() {
@@ -215,7 +215,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * Returns the initial amount of memory that the virtual machine requests from the operating
 	 * system for heap memory management during startup.
-	 * 
+	 *
 	 * @return The initial amount of memory that the virtual machine requests from the operating
 	 *         system for heap memory management during startup.
 	 */
@@ -225,7 +225,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the maximum amount of memory that can be used for heap memory management.
-	 * 
+	 *
 	 * @return The maximum amount of memory that can be used for heap memory management.
 	 */
 	public long getMaxHeapMemorySize() {
@@ -235,7 +235,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * Returns the initial amount of memory that the virtual machine requests from the operating
 	 * system for non-heap memory management during startup.
-	 * 
+	 *
 	 * @return The initial amount of memory that the virtual machine requests from the operating
 	 *         system for non-heap memory management during startup.
 	 */
@@ -245,7 +245,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the maximum amount of memory that can be used for non-heap memory management.
-	 * 
+	 *
 	 * @return The maximum amount of memory that can be used for non-heap memory management.
 	 */
 	public long getMaxNonHeapMemorySize() {
@@ -254,20 +254,17 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Updates all static information.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
-	 * @param sensorTypeIdent
-	 *            The sensorTypeIdent.
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = getSensorTypeConfig().getId();
 		try {
-			long platformId = idManager.getPlatformId();
-			long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
+			long platformId = platformManager.getPlatformId();
 			Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
 
-			SystemInformationData systemData = new SystemInformationData(timestamp, platformId, registeredSensorTypeId);
+			SystemInformationData systemData = new SystemInformationData(timestamp, platformId, sensorTypeIdent);
 
 			updateRequested = false;
 			String vmArgumentName = "";
@@ -328,19 +325,13 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean automaticUpdate() {
 		return updateRequested;
 	}
 
 	/**
 	 * Crops a string if it is longer than the specified MAX_LENGTH.
-	 * 
+	 *
 	 * @param value
 	 *            The value to crop.
 	 * @return A cropped string which length is smaller than the MAX_LENGTH.

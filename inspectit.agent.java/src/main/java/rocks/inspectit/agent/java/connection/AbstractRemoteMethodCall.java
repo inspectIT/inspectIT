@@ -14,11 +14,11 @@ import rocks.inspectit.agent.java.connection.impl.AdditiveWaitRetryStrategy;
  * href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>. Original
  * author is William Grosso. License info can be found <a
  * href="http://www.oreilly.com/terms/">here</a>.
- * 
+ *
  * @author William Grosso
  * @author Patrice Bouillet
  * @author Ivan Senic
- * 
+ *
  * @param <R>
  *            type of the remote object
  * @param <T>
@@ -34,11 +34,11 @@ public abstract class AbstractRemoteMethodCall<R, T> {
 	/**
 	 * Remote object to make the call on.
 	 */
-	private R remoteObject;
+	private final R remoteObject;
 
 	/**
 	 * Constructor that accepts remote object.
-	 * 
+	 *
 	 * @param remoteObject
 	 *            Remote object
 	 */
@@ -52,7 +52,7 @@ public abstract class AbstractRemoteMethodCall<R, T> {
 
 	/**
 	 * Performs the actual call to the server.
-	 * 
+	 *
 	 * @return The object returned from the server (if there is one).
 	 * @throws ServerUnavailableException
 	 *             Throws a ServerUnavailable exception if the server isn't available anymore due to
@@ -75,6 +75,10 @@ public abstract class AbstractRemoteMethodCall<R, T> {
 			} catch (RuntimeException remoteException) {
 				// on any other runtime exception, true to repeat as kryonet will report all errors
 				// via runtime exceptions
+
+				// first log this exception as it is important to understand
+				LOG.warn("Communication with " + remoteObject + " failed, applying retry strategy.", remoteException);
+
 				try {
 					strategy.remoteExceptionOccured();
 				} catch (RetryException retryException) {
@@ -98,7 +102,7 @@ public abstract class AbstractRemoteMethodCall<R, T> {
 	 * getRemoteObject is a template method which by defaults returns the stub.
 	 * <p>
 	 * Sub-classes can override if needed.
-	 * 
+	 *
 	 * @return The Remote Stub
 	 * @throws ServerUnavailableException
 	 *             Throws a ServerUnavailable exception if the server isn't available anymore due to
@@ -110,7 +114,7 @@ public abstract class AbstractRemoteMethodCall<R, T> {
 
 	/**
 	 * performRemoteCall is a template method which actually makes the remote method invocation.
-	 * 
+	 *
 	 * @param remoteObject
 	 *            The actual remote object.
 	 * @return The {@link Object} received from the server.
@@ -121,7 +125,7 @@ public abstract class AbstractRemoteMethodCall<R, T> {
 
 	/**
 	 * Returns the selected retry strategy.
-	 * 
+	 *
 	 * @return The retry strategy.
 	 */
 	protected RetryStrategy getRetryStrategy() {
@@ -130,7 +134,7 @@ public abstract class AbstractRemoteMethodCall<R, T> {
 
 	/**
 	 * This method is executed if some calls to the server weren't successful.
-	 * 
+	 *
 	 * @param remoteObject
 	 *            The remote object.
 	 * @throws ServerUnavailableException

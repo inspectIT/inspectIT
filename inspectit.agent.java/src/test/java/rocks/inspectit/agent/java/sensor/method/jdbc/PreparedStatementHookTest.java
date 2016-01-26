@@ -10,7 +10,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.core.impl.IdManager;
+import rocks.inspectit.agent.java.core.impl.PlatformManager;
 import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementHook;
 import rocks.inspectit.agent.java.sensor.method.jdbc.StatementReflectionCache;
@@ -24,7 +24,7 @@ public class PreparedStatementHookTest extends AbstractLogSupport {
 	private Timer timer;
 
 	@Mock
-	private IdManager idManager;
+	private PlatformManager platformManager;
 
 	@Mock
 	private StatementStorage statementStorage;
@@ -51,7 +51,7 @@ public class PreparedStatementHookTest extends AbstractLogSupport {
 
 	@Test
 	public void exceptionLoggingTest() {
-		PreparedStatementHook hook = new PreparedStatementHook(timer, idManager, statementStorage, connectionMetaDataStorage, statementReflectionCache, parameter);
+		PreparedStatementHook hook = new PreparedStatementHook(timer, platformManager, statementStorage, connectionMetaDataStorage, statementReflectionCache, parameter);
 		hook.log = log;
 
 		// Throwing the same exception a few times... (as statement storage always raises the

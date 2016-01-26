@@ -12,7 +12,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
 import rocks.inspectit.agent.java.sensor.method.jdbc.StatementReflectionCache;
 import rocks.inspectit.agent.java.sensor.method.jdbc.StatementSensor;
@@ -31,7 +31,7 @@ public class StatementSensorTest extends AbstractLogSupport {
 	Timer timer;
 
 	@Mock
-	IIdManager idManager;
+	IPlatformManager platformManager;
 
 	@Mock
 	StatementReflectionCache statementReflectionCache;
@@ -43,8 +43,8 @@ public class StatementSensorTest extends AbstractLogSupport {
 	@Test
 	public void initSensor() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		sqlTimerSensor.init(map);
-		verifyNoMoreInteractions(timer, idManager);
+		sqlTimerSensor.initHook(map);
+		verifyNoMoreInteractions(timer, platformManager);
 	}
 
 }

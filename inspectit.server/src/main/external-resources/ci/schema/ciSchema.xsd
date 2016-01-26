@@ -9,8 +9,6 @@
 
   <xs:element name="compilation-sensor-config" type="compilationSensorConfig"/>
 
-  <xs:element name="connection-meta-data-sensor-config" type="connectionMetaDataSensorConfig"/>
-
   <xs:element name="connection-sensor-config" type="connectionSensorConfig"/>
 
   <xs:element name="cpu-sensor-config" type="cpuSensorConfig"/>
@@ -110,7 +108,6 @@
         <xs:complexType>
           <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="connection-meta-data-sensor-config"/>
               <xs:element ref="connection-sensor-config"/>
               <xs:element ref="http-sensor-config"/>
               <xs:element ref="invocation-sequence-sensor-config"/>
@@ -219,7 +216,7 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="connectionMetaDataSensorConfig">
+  <xs:complexType name="connectionSensorConfig">
     <xs:complexContent>
       <xs:extension base="abstractMethodSensorConfig">
         <xs:sequence/>
@@ -229,14 +226,6 @@
 
   <xs:complexType name="abstractMethodSensorConfig" abstract="true">
     <xs:sequence/>
-  </xs:complexType>
-
-  <xs:complexType name="connectionSensorConfig">
-    <xs:complexContent>
-      <xs:extension base="abstractMethodSensorConfig">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="httpSensorConfig">
@@ -431,10 +420,6 @@
   <xs:complexType name="excludeRule">
     <xs:sequence/>
     <xs:attribute name="class-name" type="xs:string" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="configurationDefaultsFactory" final="extension restriction">
-    <xs:sequence/>
   </xs:complexType>
 </xs:schema>
 

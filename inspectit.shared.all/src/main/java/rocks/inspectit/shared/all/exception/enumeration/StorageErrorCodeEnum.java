@@ -51,7 +51,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 	 * Storage already downloaded.
 	 */
 	STORAGE_ALREADY_DOWNLOADED("The selected storage is already fully downloaded.", null, null),
-	
+
 	/**
 	 * Storage can be be uploaded.
 	 */

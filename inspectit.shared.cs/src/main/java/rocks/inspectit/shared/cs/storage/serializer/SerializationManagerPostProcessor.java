@@ -24,7 +24,6 @@ import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -291,7 +290,6 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		// exception sensor config
 		kryo.register(ExceptionSensorConfig.class, new FieldSerializer<ExceptionSensorConfig>(kryo, ExceptionSensorConfig.class), nextRegistrationId++);
 		// method sensor configs
-		kryo.register(ConnectionMetaDataSensorConfig.class, new FieldSerializer<ConnectionMetaDataSensorConfig>(kryo, ConnectionMetaDataSensorConfig.class), nextRegistrationId++);
 		kryo.register(ConnectionSensorConfig.class, new FieldSerializer<ConnectionSensorConfig>(kryo, ConnectionSensorConfig.class), nextRegistrationId++);
 		kryo.register(HttpSensorConfig.class, new FieldSerializer<HttpSensorConfig>(kryo, HttpSensorConfig.class), nextRegistrationId++);
 		kryo.register(InvocationSequenceSensorConfig.class, new FieldSerializer<InvocationSequenceSensorConfig>(kryo, InvocationSequenceSensorConfig.class), nextRegistrationId++);

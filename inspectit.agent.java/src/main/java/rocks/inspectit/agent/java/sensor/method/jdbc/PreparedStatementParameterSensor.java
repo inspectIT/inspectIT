@@ -10,7 +10,7 @@ import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public class PreparedStatementParameterSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -33,7 +33,7 @@ public class PreparedStatementParameterSensor extends AbstractMethodSensor imple
 
 	/**
 	 * The default constructor which needs one parameter for initialization.
-	 * 
+	 *
 	 * @param statementStorage
 	 *            The statement storage.
 	 */
@@ -51,7 +51,8 @@ public class PreparedStatementParameterSensor extends AbstractMethodSensor imple
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
 		preparedStatementParameterHook = new PreparedStatementParameterHook(statementStorage);
 	}
 
