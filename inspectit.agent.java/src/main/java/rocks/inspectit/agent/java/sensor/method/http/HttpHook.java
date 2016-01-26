@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
 import rocks.inspectit.agent.java.sensor.method.timer.TimerHook;
@@ -26,9 +26,9 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
  * This hook measures timer data like the {@link TimerHook} but in addition provides Http
  * information. Another difference is that we ensure that only one Http metric per request is
  * created.
- * 
+ *
  * @author Stefan Siegl
- * 
+ *
  */
 public class HttpHook implements IMethodHook {
 
@@ -48,14 +48,14 @@ public class HttpHook implements IMethodHook {
 	private final Timer timer;
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
-	private final IIdManager idManager;
+	private final IPlatformManager platformManager;
 
 	/**
 	 * The thread MX bean.
 	 */
-	private ThreadMXBean threadMXBean;
+	private final ThreadMXBean threadMXBean;
 
 	/**
 	 * Defines if the thread CPU time is supported.
@@ -75,7 +75,7 @@ public class HttpHook implements IMethodHook {
 	/**
 	 * Extractor for Http parameters.
 	 */
-	private HttpRequestParameterExtractor extractor;
+	private final HttpRequestParameterExtractor extractor;
 
 	/**
 	 * Configuration setting if session data should be captured.
@@ -113,19 +113,19 @@ public class HttpHook implements IMethodHook {
 
 	/**
 	 * This constructor creates a new instance of a <code>HttpHook</code>.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer
-	 * @param idManager
-	 *            The id manager
+	 * @param platformManager
+	 *            The Platform manager
 	 * @param threadMXBean
 	 *            the threadMx Bean for cpu timing
 	 * @param parameters
 	 *            the map containing the configuration parameters
 	 */
-	public HttpHook(Timer timer, IIdManager idManager, Map<String, Object> parameters, ThreadMXBean threadMXBean) {
+	public HttpHook(Timer timer, IPlatformManager platformManager, Map<String, Object> parameters, ThreadMXBean threadMXBean) {
 		this.timer = timer;
-		this.idManager = idManager;
+		this.platformManager = platformManager;
 		this.threadMXBean = threadMXBean;
 		this.extractor = new HttpRequestParameterExtractor(new StringConstraint(parameters));
 
@@ -241,29 +241,27 @@ public class HttpHook implements IMethodHook {
 				if (providesHttpMetrics(servletRequestClass)) {
 
 					try {
-						double endTime = ((Double) timeStack.pop()).doubleValue();
-						double startTime = ((Double) timeStack.pop()).doubleValue();
+						double endTime = timeStack.pop().doubleValue();
+						double startTime = timeStack.pop().doubleValue();
 						double duration = endTime - startTime;
 
 						// default setting to a negative number
 						double cpuDuration = -1.0d;
 						if (threadCPUTimeEnabled) {
-							long cpuEndTime = ((Long) threadCpuTimeStack.pop()).longValue();
-							long cpuStartTime = ((Long) threadCpuTimeStack.pop()).longValue();
+							long cpuEndTime = threadCpuTimeStack.pop().longValue();
+							long cpuStartTime = threadCpuTimeStack.pop().longValue();
 							cpuDuration = (cpuEndTime - cpuStartTime) / 1000000.0d;
 						}
 
-						long platformId = idManager.getPlatformId();
-						long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
-						long registeredMethodId = idManager.getRegisteredMethodId(methodId);
+						long platformId = platformManager.getPlatformId();
 						Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
 						// Creating return data object
 						HttpTimerData data = new HttpTimerData();
 
 						data.setPlatformIdent(platformId);
-						data.setMethodIdent(registeredMethodId);
-						data.setSensorTypeIdent(registeredSensorTypeId);
+						data.setMethodIdent(methodId);
+						data.setSensorTypeIdent(sensorTypeId);
 						data.setTimeStamp(timestamp);
 
 						data.setDuration(duration);
@@ -288,7 +286,7 @@ public class HttpHook implements IMethodHook {
 						data.setCharting(charting);
 
 						// returning gathered information
-						coreService.addMethodSensorData(registeredSensorTypeId, registeredMethodId, null, data);
+						coreService.addMethodSensorData(sensorTypeId, methodId, null, data);
 					} catch (IdNotAvailableException e) {
 						if (LOG.isDebugEnabled()) {
 							LOG.debug("Could not save the timer data because of an unavailable id. " + e.getMessage());
@@ -302,7 +300,7 @@ public class HttpHook implements IMethodHook {
 	/**
 	 * Checks if the given Class is realizing the HttpServletRequest interface directly or
 	 * indirectly. Only if this interface is realized, we can get Http metric information.
-	 * 
+	 *
 	 * @param c
 	 *            The class to check
 	 * @return whether or not the HttpServletRequest interface is realized.
@@ -327,7 +325,7 @@ public class HttpHook implements IMethodHook {
 	 * recursively checks if the given <code>Class</code> object realizes a given interface. This is
 	 * done by recursively checking the implementing interfaces of the current class, then jump to
 	 * the superclass and repeat. If you reach the java.lang.Object class we know that we can stop
-	 * 
+	 *
 	 * @param c
 	 *            the <code>Class</code> object to search for
 	 * @param interfaceName

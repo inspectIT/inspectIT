@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.method.http.HttpHook;
 import rocks.inspectit.agent.java.util.Timer;
@@ -41,7 +41,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	private Timer timer;
 
 	@Mock
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	@Mock
 	private ICoreService coreService;
@@ -69,11 +69,9 @@ public class HttpHookTest extends AbstractLogSupport {
 
 	private HttpHook httpHook;
 
-	private long platformId = 1L;
-	private long methodId = 1L;
-	private long sensorTypeId = 3L;
-	private long registeredMethodId = 13L;
-	private long registeredSensorTypeId = 7L;
+	private final long platformId = 1L;
+	private final long methodId = 1L;
+	private final long sensorTypeId = 3L;
 
 	@BeforeMethod
 	public void initTestClass() {
@@ -84,7 +82,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		MapUtils.putAll(map, new String[][] { { "sessioncapture", "true" } });
-		httpHook = new HttpHook(timer, idManager, map, threadMXBean);
+		httpHook = new HttpHook(timer, platformManager, map, threadMXBean);
 	}
 
 	@Test
@@ -95,13 +93,11 @@ public class HttpHookTest extends AbstractLogSupport {
 		Long firstCpuTimerValue = 5000L;
 		Long secondCpuTimerValue = 6872L;
 
-		MethodSensorData data = new HttpTimerData(null, platformId, registeredSensorTypeId, registeredMethodId);
+		MethodSensorData data = new HttpTimerData(null, platformId, sensorTypeId, methodId);
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		Object[] parameters = new Object[] { httpServletRequest };
 
@@ -111,7 +107,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, registeredSensorConfig);
 
-		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(registeredSensorTypeId), Mockito.eq(registeredMethodId), (String) Mockito.eq(null),
+		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(sensorTypeId), Mockito.eq(methodId), (String) Mockito.eq(null),
 				Mockito.argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
 
 		Mockito.verifyZeroInteractions(result);
@@ -162,7 +158,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		Long firstCpuTimerValue = 5000L;
 		Long secondCpuTimerValue = 6872L;
 
-		HttpTimerData tmp = new HttpTimerData(null, platformId, registeredSensorTypeId, registeredMethodId);
+		HttpTimerData tmp = new HttpTimerData(null, platformId, sensorTypeId, methodId);
 		tmp.getHttpInfo().setRequestMethod(method);
 		tmp.getHttpInfo().setUri(uri);
 		Map<String, String> attributeMap = new HashMap<String, String>();
@@ -182,9 +178,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		when(httpServletRequest.getMethod()).thenReturn(method);
 		when(httpServletRequest.getRequestURI()).thenReturn(uri);
@@ -210,7 +204,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, registeredSensorConfig);
 
-		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(registeredSensorTypeId), Mockito.eq(registeredMethodId), (String) Mockito.eq(null),
+		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(sensorTypeId), Mockito.eq(methodId), (String) Mockito.eq(null),
 				Mockito.argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
 		Mockito.verifyZeroInteractions(result);
 	}
@@ -226,9 +220,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
 
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		Object[] parameters = new Object[] { servletRequest };
 
@@ -259,17 +251,11 @@ public class HttpHookTest extends AbstractLogSupport {
 		// initialize the ids
 		long platformId = 1L;
 		long sensorTypeId = 3L;
-		long registeredSensorTypeId = 7L;
 
 		long methodId11 = 1L;
 		long methodId12 = 2L;
 		long methodId21 = 3L;
 		long methodId22 = 4L;
-
-		long registeredMethodId11 = 11L;
-		long registeredMethodId12 = 12L;
-		long registeredMethodId21 = 13L;
-		long registeredMethodId22 = 14L;
 
 		Double timerS11 = 1000d;
 		Double timerS12 = 1500d;
@@ -292,19 +278,14 @@ public class HttpHookTest extends AbstractLogSupport {
 		Long cpuE21 = 84000L;
 
 		// The second one should have the results!
-		MethodSensorData data1 = new HttpTimerData(null, platformId, registeredSensorTypeId, registeredMethodId12);
-		MethodSensorData data2 = new HttpTimerData(null, platformId, registeredSensorTypeId, registeredMethodId21);
+		MethodSensorData data1 = new HttpTimerData(null, platformId, sensorTypeId, methodId12);
+		MethodSensorData data2 = new HttpTimerData(null, platformId, sensorTypeId, methodId21);
 
 		when(timer.getCurrentTime()).thenReturn(timerS11).thenReturn(timerS12).thenReturn(timerE12).thenReturn(timerE11).thenReturn(timerS21).thenReturn(timerS22).thenReturn(timerE22)
-				.thenReturn(timerE21);
+		.thenReturn(timerE21);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(cpuS11).thenReturn(cpuS12).thenReturn(cpuE12).thenReturn(cpuE11).thenReturn(cpuS21).thenReturn(cpuS22).thenReturn(cpuE22)
-				.thenReturn(cpuE21);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId11)).thenReturn(registeredMethodId11);
-		when(idManager.getRegisteredMethodId(methodId12)).thenReturn(registeredMethodId12);
-		when(idManager.getRegisteredMethodId(methodId21)).thenReturn(registeredMethodId21);
-		when(idManager.getRegisteredMethodId(methodId22)).thenReturn(registeredMethodId22);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		.thenReturn(cpuE21);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		Object[] parametersNoHttp = new Object[] { servletRequest };
 		Object[] parametersHttp = new Object[] { httpServletRequest };
@@ -318,7 +299,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		httpHook.firstAfterBody(methodId11, sensorTypeId, servlet, parametersNoHttp, result, registeredSensorConfig);
 		httpHook.secondAfterBody(coreService, methodId11, sensorTypeId, servlet, parametersNoHttp, result, registeredSensorConfig);
 
-		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(registeredSensorTypeId), Mockito.eq(registeredMethodId12), (String) Mockito.eq(null),
+		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(sensorTypeId), Mockito.eq(methodId12), (String) Mockito.eq(null),
 				Mockito.argThat(new HttpTimerDataVerifier((HttpTimerData) data1)));
 
 		httpHook.beforeBody(methodId21, sensorTypeId, servlet, parametersHttp, registeredSensorConfig);
@@ -330,7 +311,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		httpHook.firstAfterBody(methodId21, sensorTypeId, servlet, parametersHttp, result, registeredSensorConfig);
 		httpHook.secondAfterBody(coreService, methodId21, sensorTypeId, servlet, parametersHttp, result, registeredSensorConfig);
 
-		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(registeredSensorTypeId), Mockito.eq(registeredMethodId21), (String) Mockito.eq(null),
+		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(sensorTypeId), Mockito.eq(methodId21), (String) Mockito.eq(null),
 				Mockito.argThat(new HttpTimerDataVerifier((HttpTimerData) data2)));
 
 		// ensure that there are no exceptions (like "NoSuchElement" which means that before or
@@ -354,17 +335,11 @@ public class HttpHookTest extends AbstractLogSupport {
 		// initialize the ids
 		long platformId = 1L;
 		long sensorTypeId = 3L;
-		long registeredSensorTypeId = 7L;
 
 		long methodId1 = 1L;
 		long methodId2 = 2L;
 		long methodId3 = 3L;
 		long methodId4 = 4L;
-
-		long registeredMethodId1 = 11L;
-		long registeredMethodId2 = 12L;
-		long registeredMethodId3 = 13L;
-		long registeredMethodId4 = 14L;
 
 		Double timerS1 = 1000d;
 		Double timerS2 = 1500d;
@@ -385,16 +360,11 @@ public class HttpHookTest extends AbstractLogSupport {
 		Long cpuE1 = 85000L;
 
 		// The second one should have the results!
-		MethodSensorData data = new HttpTimerData(null, platformId, registeredSensorTypeId, registeredMethodId2);
+		MethodSensorData data = new HttpTimerData(null, platformId, sensorTypeId, methodId2);
 
 		when(timer.getCurrentTime()).thenReturn(timerS1).thenReturn(timerS2).thenReturn(timerS3).thenReturn(timerS4).thenReturn(timerE4).thenReturn(timerE3).thenReturn(timerE2).thenReturn(timerE1);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(cpuS1).thenReturn(cpuS2).thenReturn(cpuS3).thenReturn(cpuS4).thenReturn(cpuE4).thenReturn(cpuE3).thenReturn(cpuE2).thenReturn(cpuE1);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId1)).thenReturn(registeredMethodId1);
-		when(idManager.getRegisteredMethodId(methodId2)).thenReturn(registeredMethodId2);
-		when(idManager.getRegisteredMethodId(methodId3)).thenReturn(registeredMethodId3);
-		when(idManager.getRegisteredMethodId(methodId4)).thenReturn(registeredMethodId4);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		Object[] parameters1 = new Object[] { servletRequest };
 		Object[] parameters2 = new Object[] { httpServletRequest };
@@ -418,7 +388,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		httpHook.firstAfterBody(methodId1, sensorTypeId, servlet, parameters1, result, registeredSensorConfig);
 		httpHook.secondAfterBody(coreService, methodId1, sensorTypeId, servlet, parameters1, result, registeredSensorConfig);
 
-		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(registeredSensorTypeId), Mockito.eq(registeredMethodId2), (String) Mockito.eq(null),
+		Mockito.verify(coreService).addMethodSensorData(Mockito.eq(sensorTypeId), Mockito.eq(methodId2), (String) Mockito.eq(null),
 				Mockito.argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
 
 		// No other data must not be pushed!

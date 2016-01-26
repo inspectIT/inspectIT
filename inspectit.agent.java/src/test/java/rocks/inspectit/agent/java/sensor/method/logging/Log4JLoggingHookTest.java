@@ -2,7 +2,19 @@ package rocks.inspectit.agent.java.sensor.method.logging;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingHook;
+import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory;
+import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory.Framework;
+import rocks.inspectit.shared.all.communication.data.LoggingData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 import org.apache.log4j.Level;
 import org.mockito.ArgumentMatcher;
@@ -11,30 +23,17 @@ import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
-import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingHook;
-import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory;
-import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory.Framework;
-import rocks.inspectit.shared.all.communication.data.LoggingData;
-import rocks.inspectit.shared.all.util.ObjectUtils;
-
 @SuppressWarnings("PMD")
 public class Log4JLoggingHookTest extends AbstractLogSupport {
 
 	@Mock
-	IIdManager idManager;
+	IPlatformManager platformManager;
 
 	@Mock
 	ICoreService coreService;
 
 	@Mock
 	RegisteredSensorConfig rsc;
-
-	private static final String defaultMessage = "the log message";
 
 	// FATAL - ERROR - WARN - INFO - TRACE - DEBUG
 
@@ -45,11 +44,11 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 		Object[][] result = new Object[possibleLevels.length * possibleLevels.length][3];
 
 		int counter = 0;
-		for (int pickMinimumLevel = 0; pickMinimumLevel < possibleLevels.length; pickMinimumLevel++) {
-			for (int logLevel = 0; logLevel < possibleLevels.length; logLevel++) {
-				result[counter][0] = possibleLevels[pickMinimumLevel];
-				result[counter][1] = possibleLevels[logLevel];
-				result[counter][2] = possibleLevels[logLevel].isGreaterOrEqual(possibleLevels[pickMinimumLevel]);
+		for (Level possibleLevel : possibleLevels) {
+			for (Level possibleLevel2 : possibleLevels) {
+				result[counter][0] = possibleLevel;
+				result[counter][1] = possibleLevel2;
+				result[counter][2] = possibleLevel2.isGreaterOrEqual(possibleLevel);
 				counter++;
 			}
 		}
@@ -59,15 +58,13 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 
 	@Test(dataProvider = "allCombinationShouldWeCapture")
 	public void checkForCorrectLogging(Level givenMinimumLevel, Level logThisLevel, Boolean shouldCapture) throws IdNotAvailableException {
-		Log4JLoggingHook hook = new Log4JLoggingHook(idManager, givenMinimumLevel.toString());
+		Log4JLoggingHook hook = new Log4JLoggingHook(platformManager, givenMinimumLevel.toString());
 
 		long methodId = 1l;
 		long sensorTypeId = 3l;
 		long platformId = 9l;
 
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(methodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(sensorTypeId);
-		when(idManager.getPlatformId()).thenReturn(platformId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		String loggingMessage = "a logging message";
 

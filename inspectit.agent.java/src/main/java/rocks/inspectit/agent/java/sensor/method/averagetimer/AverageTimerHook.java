@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.core.impl.CoreService;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
@@ -26,9 +26,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
  * to save the time when the method was called. After the complete original method was executed, it
  * computes the how long the method took to finish. Afterwards, the measurement is added to the
  * {@link CoreService}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class AverageTimerHook implements IMethodHook, IConstructorHook {
 
@@ -40,7 +40,7 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 	/**
 	 * The stack containing the start time values.
 	 */
-	private ThreadLocalStack<Double> timeStack = new ThreadLocalStack<Double>();
+	private final ThreadLocalStack<Double> timeStack = new ThreadLocalStack<Double>();
 
 	/**
 	 * The timer used for accurate measuring.
@@ -48,9 +48,9 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 	private final Timer timer;
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
-	private final IIdManager idManager;
+	private final IPlatformManager platformManager;
 
 	/**
 	 * The property accessor.
@@ -60,23 +60,23 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 	/**
 	 * The StringConstraint to ensure a maximum length of strings.
 	 */
-	private StringConstraint strConstraint;
+	private final StringConstraint strConstraint;
 
 	/**
 	 * The only constructor which needs the {@link Timer}.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer.
-	 * @param idManager
-	 *            The ID manager.
+	 * @param platformManager
+	 *            The Platform manager.
 	 * @param propertyAccessor
 	 *            The property accessor.
 	 * @param param
 	 *            Additional parameters.
 	 */
-	public AverageTimerHook(Timer timer, IIdManager idManager, IPropertyAccessor propertyAccessor, Map<String, Object> param) {
+	public AverageTimerHook(Timer timer, IPlatformManager platformManager, IPropertyAccessor propertyAccessor, Map<String, Object> param) {
 		this.timer = timer;
-		this.idManager = idManager;
+		this.platformManager = platformManager;
 		this.propertyAccessor = propertyAccessor;
 		this.strConstraint = new StringConstraint(param);
 	}
@@ -120,13 +120,11 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 
 		if (null == timerData) {
 			try {
-				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
-				long registeredMethodId = idManager.getRegisteredMethodId(methodId);
+				long platformId = platformManager.getPlatformId();
 
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
-				timerData = new TimerData(timestamp, platformId, registeredSensorTypeId, registeredMethodId, parameterContentData);
+				timerData = new TimerData(timestamp, platformId, sensorTypeId, methodId, parameterContentData);
 				timerData.increaseCount();
 				timerData.addDuration(duration);
 				timerData.calculateMin(duration);

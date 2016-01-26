@@ -9,15 +9,19 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPath;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 
 /**
  * Abstract class for all context captures possibilities - parameter, return or field.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ ReturnContextCapture.class, ParameterContextCapture.class, FieldContextCapture.class })
@@ -40,14 +44,38 @@ public abstract class AbstractContextCapture {
 	 * Returns string notation that should be passed to agent.
 	 * <p>
 	 * Note this is just a temporary utility method.
-	 * 
+	 *
 	 * @return Returns string notation that should be passed to agent.
 	 */
 	public abstract String getAgentStringNotation();
 
 	/**
+	 * Returns correctly set property path start.
+	 *
+	 * @return Returns correctly set property path start.
+	 */
+	public abstract PropertyPathStart getPropertyPathStart();
+
+	/**
+	 * Adds all defined paths to the property path (start).
+	 *
+	 * @param propertyPath
+	 *            {@link PropertyPath}
+	 */
+	protected void addPaths(PropertyPath propertyPath) {
+		if (CollectionUtils.isNotEmpty(paths)) {
+			PropertyPath parent = propertyPath;
+			for (String path : paths) {
+				PropertyPath toContinue = new PropertyPath(path);
+				parent.setPathToContinue(toContinue);
+				parent = toContinue;
+			}
+		}
+	}
+
+	/**
 	 * Gets {@link #displayName}.
-	 * 
+	 *
 	 * @return {@link #displayName}
 	 */
 	public String getDisplayName() {
@@ -56,7 +84,7 @@ public abstract class AbstractContextCapture {
 
 	/**
 	 * Sets {@link #displayName}.
-	 * 
+	 *
 	 * @param displayName
 	 *            New value for {@link #displayName}
 	 */
@@ -66,7 +94,7 @@ public abstract class AbstractContextCapture {
 
 	/**
 	 * Gets {@link #paths}.
-	 * 
+	 *
 	 * @return {@link #paths}
 	 */
 	public List<String> getPaths() {
@@ -75,7 +103,7 @@ public abstract class AbstractContextCapture {
 
 	/**
 	 * Sets {@link #paths}.
-	 * 
+	 *
 	 * @param paths
 	 *            New value for {@link #paths}
 	 */

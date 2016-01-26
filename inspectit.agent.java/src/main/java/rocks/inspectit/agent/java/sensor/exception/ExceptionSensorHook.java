@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
@@ -20,10 +20,10 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 /**
  * This class adds additional code to a constructor of type {@link Throwable}, to the
  * <code>throw</code> statement and to the <code>catch</code> block catching type {@link Throwable}.
- * 
+ *
  * @author Eduard Tudenhoefner
  * @see IExceptionSensorHook
- * 
+ *
  */
 public class ExceptionSensorHook implements IExceptionSensorHook {
 
@@ -33,35 +33,35 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 	private static final Logger LOG = LoggerFactory.getLogger(ExceptionSensorHook.class);
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
-	private final IIdManager idManager;
+	private final IPlatformManager platformManager;
 
 	/**
 	 * The thread local containing the {@link IdentityHashToDataObject} object.
 	 */
-	private ThreadLocal<IdentityHashToDataObject> exceptionDataHolder = new ThreadLocal<IdentityHashToDataObject>();
+	private final ThreadLocal<IdentityHashToDataObject> exceptionDataHolder = new ThreadLocal<IdentityHashToDataObject>();
 
 	/**
 	 * The thread local containing the id of the method where the exception was handled.
 	 */
-	private ThreadLocal<Long> exceptionHandlerId = new ThreadLocal<Long>();
+	private final ThreadLocal<Long> exceptionHandlerId = new ThreadLocal<Long>();
 
 	/**
 	 * The StringConstraint to ensure a maximum length of strings.
 	 */
-	private StringConstraint strConstraint;
+	private final StringConstraint strConstraint;
 
 	/**
 	 * The default constructor which needs one parameter for initialization.
-	 * 
-	 * @param idManager
-	 *            The ID manager.
+	 *
+	 * @param platformManager
+	 *            The Platform manager.
 	 * @param parameter
 	 *            Additional parameters.
 	 */
-	public ExceptionSensorHook(IIdManager idManager, Map<String, Object> parameter) {
-		this.idManager = idManager;
+	public ExceptionSensorHook(IPlatformManager platformManager, Map<String, Object> parameter) {
+		this.platformManager = platformManager;
 		this.strConstraint = new StringConstraint(parameter);
 	}
 
@@ -79,13 +79,11 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 		// getting the actual object class and comparing to the registered sensor config target
 		// class
 		String throwableClass = object.getClass().getName();
-		String rscTragetClassname = rsc.getQualifiedTargetClassName();
+		String rscTragetClassname = rsc.getTargetClassFqn();
 		if (throwableClass.equals(rscTragetClassname)) {
 			try {
-				long platformId = idManager.getPlatformId();
+				long platformId = platformManager.getPlatformId();
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				long registeredConstructorId = idManager.getRegisteredMethodId(methodId);
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
 				Long identityHash = Long.valueOf(System.identityHashCode(object));
 
 				// need to reset the exception handler id
@@ -95,7 +93,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 				Throwable throwable = (Throwable) object;
 
 				// creating the data object
-				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, registeredSensorTypeId, registeredConstructorId);
+				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, methodId);
 				data.setThrowableIdentityHashCode(identityHash.longValue());
 				data.setExceptionEvent(ExceptionEvent.CREATED);
 				data.setThrowableType(throwable.getClass().getName());
@@ -107,7 +105,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 				exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
 
 				// adding the data object to the core service
-				coreService.addExceptionSensorData(registeredSensorTypeId, data.getThrowableIdentityHashCode(), data);
+				coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
 			} catch (IdNotAvailableException e) {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Could not start exception sequence because of a (currently) not mapped ID");
@@ -125,17 +123,15 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 
 		if (null != mappingObject) {
 			try {
-				long platformId = idManager.getPlatformId();
+				long platformId = platformManager.getPlatformId();
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				long registeredMethodId = idManager.getRegisteredMethodId(id);
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
 				Long identityHash = Long.valueOf(System.identityHashCode(exceptionObject));
 
 				// getting the actual object with information
 				Throwable throwable = (Throwable) exceptionObject;
 
 				// creating the data object
-				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, registeredSensorTypeId, registeredMethodId);
+				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, id);
 				data.setThrowableIdentityHashCode(identityHash.longValue());
 				data.setThrowableType(throwable.getClass().getName());
 
@@ -143,7 +139,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 				if (mappingObject.getIdentityHash().equals(identityHash)) {
 					// we have to check whether the Throwable object is just passed or explicitly
 					// rethrown
-					if (null != exceptionHandlerId.get() && registeredMethodId == exceptionHandlerId.get().longValue()) {
+					if (null != exceptionHandlerId.get() && id == exceptionHandlerId.get().longValue()) {
 						// the Throwable object is explicitly rethrown
 						data.setExceptionEvent(ExceptionEvent.RETHROWN);
 					} else {
@@ -169,7 +165,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 				}
 
 				// adding the data object to the core service
-				coreService.addExceptionSensorData(registeredSensorTypeId, data.getThrowableIdentityHashCode(), data);
+				coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
 			} catch (IdNotAvailableException e) {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Could not start exception sequence because of a (currently) not mapped ID");
@@ -187,20 +183,18 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 
 		if (null != mappingObject) {
 			try {
-				long platformId = idManager.getPlatformId();
+				long platformId = platformManager.getPlatformId();
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				long registeredMethodId = idManager.getRegisteredMethodId(id);
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
 				Long identityHash = Long.valueOf(System.identityHashCode(exceptionObject));
 
 				// save id of the method where the exception is catched
-				exceptionHandlerId.set(Long.valueOf(registeredMethodId));
+				exceptionHandlerId.set(Long.valueOf(id));
 
 				// getting the actual object with information
 				Throwable throwable = (Throwable) exceptionObject;
 
 				// creating the data object
-				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, registeredSensorTypeId, registeredMethodId);
+				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, id);
 				data.setThrowableIdentityHashCode(identityHash.longValue());
 				data.setThrowableType(throwable.getClass().getName());
 				data.setExceptionEvent(ExceptionEvent.HANDLED);
@@ -224,7 +218,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 				}
 
 				// adding the data object to the core service
-				coreService.addExceptionSensorData(registeredSensorTypeId, data.getThrowableIdentityHashCode(), data);
+				coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
 			} catch (IdNotAvailableException e) {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Could not start exception sequence because of a (currently) not mapped ID");
@@ -236,7 +230,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 	/**
 	 * Gets static information (class name, stackTrace, cause) from the {@link Throwable} object and
 	 * sets them on the passed data object.
-	 * 
+	 *
 	 * @param exceptionSensorData
 	 *            The {@link ExceptionSensorData} object where to set the information.
 	 * @param throwable
@@ -280,7 +274,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 
 	/**
 	 * Gets the stack trace from the {@link Throwable} object and returns it as a string.
-	 * 
+	 *
 	 * @param throwable
 	 *            The {@link Throwable} object where to get the stack trace from.
 	 * @return A string representation of a stack trace.

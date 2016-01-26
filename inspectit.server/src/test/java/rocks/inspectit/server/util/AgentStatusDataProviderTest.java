@@ -9,15 +9,16 @@ import static org.hamcrest.Matchers.nullValue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.server.event.AgentDeletedEvent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
 
 /**
  * Tests the {@link AgentStatusDataProvider}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class AgentStatusDataProviderTest {
@@ -65,7 +66,10 @@ public class AgentStatusDataProviderTest {
 		assertThat(agentStatusData, is(notNullValue()));
 		assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.DISCONNECTED));
 
-		agentStatusDataProvider.registerDeleted(platformIdent);
+		PlatformIdent p = new PlatformIdent();
+		p.setId(platformIdent);
+		AgentDeletedEvent event = new AgentDeletedEvent(this, p);
+		agentStatusDataProvider.onApplicationEvent(event);
 		assertThat(agentStatusDataProvider.getAgentStatusDataMap().size(), is(0));
 	}
 

@@ -26,10 +26,15 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+import rocks.inspectit.server.ci.event.AgentMappingsUpdateEvent;
+import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
+import rocks.inspectit.server.ci.event.ProfileUpdateEvent;
 import rocks.inspectit.server.jaxb.JAXBTransformator;
+import rocks.inspectit.server.util.CollectionSubtractUtils;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -40,9 +45,9 @@ import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Manages all configuration interface operations.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class ConfigurationInterfaceManager {
@@ -57,12 +62,18 @@ public class ConfigurationInterfaceManager {
 	 * Path resolver.
 	 */
 	@Autowired
-	ConfigurationInterfacePathResolver pathResolver;
+	private ConfigurationInterfacePathResolver pathResolver;
+
+	/**
+	 * Spring {@link ApplicationEventPublisher} for publishing the events.
+	 */
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * {@link JAXBTransformator}.
 	 */
-	private JAXBTransformator transformator = new JAXBTransformator();
+	private final JAXBTransformator transformator = new JAXBTransformator();
 
 	/**
 	 * Existing profiles in the system mapped by the id.
@@ -77,11 +88,11 @@ public class ConfigurationInterfaceManager {
 	/**
 	 * Currently used agent mapping.
 	 */
-	private AtomicReference<AgentMappings> agentMappingsReference = new AtomicReference<>();
+	private final AtomicReference<AgentMappings> agentMappingsReference = new AtomicReference<>();
 
 	/**
 	 * Returns all existing profiles.
-	 * 
+	 *
 	 * @return Returns all existing profiles.
 	 */
 	public List<Profile> getAllProfiles() {
@@ -90,7 +101,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the profile with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of profile.
 	 * @return {@link Profile}
@@ -107,7 +118,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Creates new profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile template.
 	 * @return Returns created profile with correctly set id.
@@ -133,7 +144,7 @@ public class ConfigurationInterfaceManager {
 	 * <li>Profile does not exists on the CMR.
 	 * <li>Profile revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to update.
 	 * @return updated profile instance
@@ -154,7 +165,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Deletes the existing profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to delete.
 	 * @throws IOException
@@ -186,7 +197,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns all existing environment.
-	 * 
+	 *
 	 * @return Returns all existing environment.
 	 */
 	public Collection<Environment> getAllEnvironments() {
@@ -195,7 +206,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the environment with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of environment.
 	 * @return {@link Environment}
@@ -212,7 +223,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Creates new environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment template.
 	 * @return Returns created environment with correctly set id.
@@ -245,7 +256,7 @@ public class ConfigurationInterfaceManager {
 	 * <li>Environment does not exists on the CMR.
 	 * <li>Environment revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to update.
 	 * @param checkProfiles
@@ -283,12 +294,14 @@ public class ConfigurationInterfaceManager {
 			Files.deleteIfExists(pathResolver.getEnvironmentFilePath(local));
 		}
 
+		publishEnvironmentUpdateEvent(local, environment);
+
 		return environment;
 	}
 
 	/**
 	 * Deletes the existing environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to delete.
 	 * @throws IOException
@@ -313,7 +326,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the currently used agent mappings.
-	 * 
+	 *
 	 * @return Returns the currently used agent mappings.
 	 */
 	public AgentMappings getAgentMappings() {
@@ -322,7 +335,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Sets the agent mappings to be used.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings}
 	 * @param checkEnvironments
@@ -353,12 +366,15 @@ public class ConfigurationInterfaceManager {
 
 		agentMappings.setRevision(agentMappings.getRevision() + 1);
 		saveAgentMapping(agentMappings);
+
+		publishAgentMappingsUpdateEvent();
+
 		return agentMappings;
 	}
 
 	/**
 	 * Internal process of updating the profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile being updated.
 	 * @return Updated instance.
@@ -391,12 +407,78 @@ public class ConfigurationInterfaceManager {
 			Files.deleteIfExists(pathResolver.getProfileFilePath(local));
 		}
 
+		// notify listeners
+		publishProfileUpdateEvent(local, profile);
+
 		return profile;
 	}
 
 	/**
+	 * Notifies listeners about profile update.
+	 *
+	 * @param old
+	 *            Old profile instance.
+	 * @param updated
+	 *            Updated profile instance.
+	 */
+	private void publishProfileUpdateEvent(Profile old, Profile updated) {
+		ProfileUpdateEvent profileUpdateEvent = new ProfileUpdateEvent(this, old, updated);
+		eventPublisher.publishEvent(profileUpdateEvent);
+	}
+
+	/**
+	 * Notifies listeners about environment update.
+	 *
+	 * @param old
+	 *            Old environment instance.
+	 * @param updated
+	 *            Updated environment instance.
+	 */
+	private void publishEnvironmentUpdateEvent(Environment old, Environment updated) {
+		Collection<Profile> removedProfiles = getProfileDifference(old, updated);
+		Collection<Profile> addedProfiles = getProfileDifference(updated, old);
+
+		EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, addedProfiles, removedProfiles);
+		eventPublisher.publishEvent(event);
+	}
+
+	/**
+	 * Returns profile differences between two profiles. The result collection will contain profiles
+	 * that exists in the e1 and do not exist in e2.
+	 *
+	 * @param e1
+	 *            First environment.
+	 * @param e2
+	 *            Second environment.
+	 * @return Collection of profiles existing in first environment and not in the second.
+	 */
+	private Collection<Profile> getProfileDifference(Environment e1, Environment e2) {
+		Collection<Profile> profiles = new ArrayList<>();
+		Collection<String> profilesIds = CollectionSubtractUtils.subtractSafe(e1.getProfileIds(), e2.getProfileIds());
+		for (String id : profilesIds) {
+			try {
+				profiles.add(getProfile(id));
+			} catch (BusinessException e) {
+				if (log.isDebugEnabled()) {
+					log.debug("Profile with id " + id + " ignored during profile difference calculation as it does not exist anymore.", e);
+				}
+				continue;
+			}
+		}
+		return profiles;
+	}
+
+	/**
+	 * Notifies listeners about mappings update.
+	 */
+	private void publishAgentMappingsUpdateEvent() {
+		AgentMappingsUpdateEvent event = new AgentMappingsUpdateEvent(this);
+		eventPublisher.publishEvent(event);
+	}
+
+	/**
 	 * Cleans the non-existing profiles from the {@link Environment}.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}.
 	 * @return if environment was changed during the check process
@@ -417,7 +499,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Cleans the non-existing environments from the {@link AgentMappings}.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings}.
 	 * @return if mappings where changed during the check process
@@ -438,7 +520,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves profile and persists it to the list.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to be saved.
 	 * @throws IOException
@@ -457,7 +539,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves {@link Environment} to the disk.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment} to save.
 	 * @throws IOException
@@ -471,7 +553,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves agent mapping.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            To save
 	 * @throws IOException
@@ -485,7 +567,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns given path relative to schema part.
-	 * 
+	 *
 	 * @param path
 	 *            path to relativize
 	 * @return path relative to schema part
@@ -556,7 +638,16 @@ public class ConfigurationInterfaceManager {
 		final Path schemaPath = pathResolver.getSchemaPath();
 
 		if (Files.notExists(path)) {
-			log.info("Default configuration interface environment path does not exists. No environment is loaded.");
+			// create at least one default environment on start-up
+			log.info("||-Default configuration interface environment path does not exists. Creating default environment.");
+			Environment environment = new Environment();
+			environment.setName("Default Environment");
+			environment.setDescription("Environment that contains the default inspectIT monitoring settings and all default profiles.");
+			try {
+				createEnvironment(environment);
+			} catch (Exception e) {
+				log.error("Error creating default Configuration interface environment on the CMR.", e);
+			}
 			return;
 		}
 
@@ -588,18 +679,6 @@ public class ConfigurationInterfaceManager {
 		} catch (IOException e) {
 			log.error("Error exploring Configuration interface environments directory. Directory path: " + path.toString() + ".", e);
 		}
-
-		// create at least one default environment if such does not exist
-		if (MapUtils.isEmpty(existingEnvironments)) {
-			Environment environment = new Environment();
-			environment.setName("Default Environment");
-			environment.setDescription("Environment that contains the default inspectIT monitoring settings and all default profiles.");
-			try {
-				createEnvironment(environment);
-			} catch (Exception e) {
-				log.error("Error creating default Configuration interface environment on the CMR.", e);
-			}
-		}
 	}
 
 	/**
@@ -611,7 +690,20 @@ public class ConfigurationInterfaceManager {
 		AgentMappings agentMappings;
 		Path path = pathResolver.getAgentMappingFilePath();
 		if (Files.notExists(path)) {
+			log.info("||-The agent mappings file does not exists. Creating default mapping.");
 			agentMappings = new AgentMappings(Collections.<AgentMapping> emptyList());
+
+			if (MapUtils.isNotEmpty(existingEnvironments)) {
+				Environment environment = existingEnvironments.values().iterator().next();
+				if (null != environment) {
+					// we expect only one mapping here - the default one
+					AgentMapping mapping = new AgentMapping("*", "*");
+					mapping.setEnvironmentId(environment.getId());
+					Collection<AgentMapping> mappings = new ArrayList<>();
+					mappings.add(mapping);
+					agentMappings.setMappings(mappings);
+				}
+			}
 		} else {
 			try {
 				agentMappings = transformator.unmarshall(path, pathResolver.getSchemaPath(), AgentMappings.class);
@@ -637,7 +729,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * If path is a file that ends with the <i>.xml</i> extension.
-	 * 
+	 *
 	 * @param path
 	 *            Path to the file.
 	 * @return If path is a file that ends with the <i>.xml</i> extension.
@@ -648,7 +740,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the unique String that will be used for IDs.
-	 * 
+	 *
 	 * @return Returns unique string based on the {@link UUID}.
 	 */
 	private String getRandomUUIDString() {

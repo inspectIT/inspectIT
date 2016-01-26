@@ -20,6 +20,7 @@ configurations {
 	}
 	testCompile {
 		extendsFrom configurations.agentJavaTest
+		extendsFrom configurations.jmhbase
 	}
 }
 
@@ -30,12 +31,16 @@ dependencies {
 }
 
 /** Compile compatibility to 1.5 for all compile tasks */
-tasks.withType(JavaCompile) { 
-	sourceCompatibility = '1.5'
-	targetCompatibility = '1.5'
+tasks.withType(JavaCompile) { t ->
+	// jmh can not run with java 1.5
+	if (!(t.getName().contains('jmh') || t.getName().contains('Jmh'))) {
+		sourceCompatibility = '1.5'
+		targetCompatibility = '1.5'
 
-	options.bootClasspath = configurations.java15rt.asPath
+		options.bootClasspath = configurations.java15rt.asPath
+	}
 }
+
 
 /** This is not working when specified in the subprojects{ } part, thus each project must do it */
 cobertura {

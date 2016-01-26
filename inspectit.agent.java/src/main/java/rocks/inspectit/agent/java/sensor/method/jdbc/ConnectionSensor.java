@@ -12,9 +12,9 @@ import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
 /**
  * This sensor initializes the {@link ConnectionHook} to intercept the creation of
  * {@link PreparedStatement} classes.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class ConnectionSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -37,7 +37,7 @@ public class ConnectionSensor extends AbstractMethodSensor implements IMethodSen
 
 	/**
 	 * The default constructor which needs one parameter for initialization.
-	 * 
+	 *
 	 * @param statementStorage
 	 *            The statement storage.
 	 */
@@ -55,7 +55,8 @@ public class ConnectionSensor extends AbstractMethodSensor implements IMethodSen
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
 		connectionHook = new ConnectionHook(statementStorage);
 	}
 

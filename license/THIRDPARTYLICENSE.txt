@@ -242,13 +242,13 @@ explicit notice.
 --------------------------------------------------------------------------------
 
 %% This notice is provided with respect to following libraries:
- # asm
+ # asm-all
  # hessian
 which are included in the inspectIT.
 
 --- begin of LICENSE ---
 
-Copyright (c) 2000,2002,2003 INRIA, France Telecom (asm)
+Copyright (c) 2000,2002,2003 INRIA, France Telecom (asm-all)
 
 Copyright (c) 2001-2004 Caucho Technology, Inc. (hessian)
 
