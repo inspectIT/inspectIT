@@ -1,45 +1,41 @@
 package rocks.inspectit.agent.java.config.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
-import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
-import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
-import rocks.inspectit.agent.java.analyzer.IMatchPattern;
-import rocks.inspectit.agent.java.analyzer.IMatcher;
-import rocks.inspectit.agent.java.analyzer.impl.DirectMatcher;
-import rocks.inspectit.agent.java.analyzer.impl.ModifierMatcher;
-import rocks.inspectit.agent.java.analyzer.impl.SimpleMatchPattern;
-import rocks.inspectit.agent.java.analyzer.impl.SuperclassMatcher;
-import rocks.inspectit.agent.java.config.IConfigurationStorage;
-import rocks.inspectit.agent.java.config.PriorityEnum;
-import rocks.inspectit.agent.java.config.StorageException;
-import rocks.inspectit.agent.java.jrebel.JRebelUtil;
-import rocks.inspectit.shared.all.communication.data.ParameterContentType;
-import rocks.inspectit.shared.all.spring.logger.Log;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javassist.Modifier;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.logback.LogInitializer;
+import rocks.inspectit.agent.java.spring.SpringConfiguration;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
+import rocks.inspectit.shared.all.pattern.IMatchPattern;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
- * The default configuration storage implementation which stores everything in the memory.
- * <p>
- * TODO: Event mechanism is needed so that new definitions can be added and other components are
- * notified that something has been added.
- * 
+ * New version of the {@link IConfigurationStorage} that reads configuration from the
+ * {@link AgentConfig}.
+ *
+ * @author Ivan Senic
  * @author Patrice Bouillet
  * @author Eduard Tudenhoefner
  * @author Alfred Krauss
- * 
  */
 @Component
 public class ConfigurationStorage implements IConfigurationStorage, InitializingBean {
@@ -51,24 +47,25 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	Logger log;
 
 	/**
-	 * The name of the property for the repository IP.
+	 * {@link SpringConfiguration} to process the received configuration.
 	 */
-	private static final String REPOSITORY_PROPERTY = "inspectit.repository";
+	@Autowired
+	private SpringConfiguration springConfiguration;
 
 	/**
 	 * The name of the property for the agent name.
 	 */
-	private static final String AGENT_NAME_PROPERTY = "inspectit.agent.name";
+	static final String AGENT_NAME_PROPERTY = "inspectit.agent.name";
 
 	/**
-	 * The class pool analyzer.
+	 * The name of the property for the repository IP.
 	 */
-	private final IClassPoolAnalyzer classPoolAnalyzer;
+	static final String REPOSITORY_PROPERTY = "inspectit.repository";
 
 	/**
-	 * The inheritance analyzer.
+	 * Default agent name used.
 	 */
-	private final IInheritanceAnalyzer inheritanceAnalyzer;
+	private static final String DEFAULT_AGENT_NAME = "inspectIT";
 
 	/**
 	 * The repository configuration is used to store the needed information to connect to a remote
@@ -82,91 +79,9 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	private String agentName;
 
 	/**
-	 * The used buffer strategy.
+	 * Agent configuration.
 	 */
-	private StrategyConfig bufferStrategy;
-
-	/**
-	 * The list of sending strategies. Default size is set to 1 as it's unlikely that more than one
-	 * is defined.
-	 */
-	private List<StrategyConfig> sendingStrategies = new ArrayList<StrategyConfig>(1);
-
-	/**
-	 * The default size of the method sensor type list.
-	 */
-	private static final int METHOD_LIST_SIZE = 10;
-
-	/**
-	 * The list of method sensor types. Contains objects of type {@link MethodSensorTypeConfig}.
-	 */
-	private List<MethodSensorTypeConfig> methodSensorTypes = new ArrayList<MethodSensorTypeConfig>(METHOD_LIST_SIZE);
-
-	/**
-	 * The default size of the platform sensor type list.
-	 */
-	private static final int PLATFORM_LIST_SIZE = 10;
-
-	/**
-	 * The list of platform sensor types. Contains objects of type {@link PlatformSensorTypeConfig}.
-	 */
-	private List<PlatformSensorTypeConfig> platformSensorTypes = new ArrayList<PlatformSensorTypeConfig>(PLATFORM_LIST_SIZE);
-
-	/**
-	 * The default size of the jmx sensor type list.
-	 */
-	private static final int JMX_LIST_SIZE = 1;
-
-	/**
-	 * The list of jmx sensor types. Contains objects of type {@link JmxSensorTypeConfig}.
-	 */
-	private List<JmxSensorTypeConfig> jmxSensorTypes = new ArrayList<JmxSensorTypeConfig>(JMX_LIST_SIZE);
-
-	/**
-	 * A list containing all the sensor definitions from the configuration.
-	 */
-	private List<UnregisteredSensorConfig> unregisteredSensorConfigs = new ArrayList<UnregisteredSensorConfig>();
-
-	/**
-	 * A list containing all unregistered sensor definitions from the configuration.
-	 */
-	private List<UnregisteredJmxConfig> unregisteredJmxConfigs = new ArrayList<UnregisteredJmxConfig>();
-
-	/**
-	 * Indicates whether the exception sensor is activated or not.
-	 */
-	private boolean exceptionSensorActivated = false;
-
-	/**
-	 * Indicates whether try/catch instrumentation should be used to handle all exception events.
-	 */
-	private boolean enhancedExceptionSensorActivated = false;
-
-	/**
-	 * List of the ignore classes patterns. Classes matching these patterns should be ignored by the
-	 * configuration.
-	 */
-	private List<IMatchPattern> ignoreClassesPatterns = new ArrayList<IMatchPattern>();
-
-	/**
-	 * The matchers that can be used to test if the ClassLoader class should be instrumented in the
-	 * way that class loading is delegated if the class to be loaded is inspectIT class.
-	 */
-	private Collection<IMatcher> classLoaderDelegationMatchers;
-
-	/**
-	 * Default constructor which takes 2 parameter.
-	 * 
-	 * @param classPoolAnalyzer
-	 *            The class pool analyzer used by the sensor configuration.
-	 * @param inheritanceAnalyzer
-	 *            The inheritance analyzer used by the sensor configuration.
-	 */
-	@Autowired
-	public ConfigurationStorage(IClassPoolAnalyzer classPoolAnalyzer, IInheritanceAnalyzer inheritanceAnalyzer) {
-		this.classPoolAnalyzer = classPoolAnalyzer;
-		this.inheritanceAnalyzer = inheritanceAnalyzer;
-	}
+	private AgentConfig agentConfiguration;
 
 	/**
 	 * {@inheritDoc}
@@ -208,6 +123,9 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		// don't allow reseting
 		if (null == agentName) {
 			agentName = name;
+
+			// when we know the name init the logging
+			LogInitializer.setAgentNameAndInitLogging(name);
 		}
 
 		if (log.isInfoEnabled()) {
@@ -223,554 +141,175 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Sets {@link #agentConfiguration}.
+	 *
+	 * @param agentConfiguration
+	 *            New value for {@link #agentConfiguration}
+	 * @throws StorageException
+	 *             If registration of the components defined in the configuration fails.
+	 * @see SpringConfiguration#registerComponents(IConfigurationStorage)
 	 */
-	public void setBufferStrategy(String clazzName, Map<String, String> settings) throws StorageException {
-		if (null == clazzName || "".equals(clazzName)) {
-			throw new StorageException("Buffer strategy class name cannot be null or empty!");
+	public void setAgentConfiguration(AgentConfig agentConfiguration) throws StorageException {
+		if (null == this.agentConfiguration) {
+			this.agentConfiguration = agentConfiguration;
 		}
 
-		if (null == settings) {
-			settings = Collections.emptyMap();
+		try {
+			springConfiguration.registerComponents(this);
+		} catch (Exception e) {
+			throw new StorageException("Registration of the configured components failed.", e);
 		}
 
-		this.bufferStrategy = new StrategyConfig(clazzName, settings);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Buffer strategy set to: " + clazzName);
+		if (log.isInfoEnabled()) {
+			log.info("Agent configuration added with following configuration interface properties:");
+			String[] lines = agentConfiguration.getConfigurationInfo().split("\n");
+			for (String line : lines) {
+				log.info(line);
+			}
+			log.info("Class-cache exists on the server: " + agentConfiguration.isClassCacheExistsOnCmr());
+			if (agentConfiguration.isClassCacheExistsOnCmr()) {
+				log.info("Number of initially instrumented classes: " + agentConfiguration.getInitialInstrumentationResults().size());
+			}
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public StrategyConfig getBufferStrategyConfig() {
+	public StrategyConfig getBufferStrategyConfig() throws StorageException {
+		ensureConfigurationExists();
+
+		StrategyConfig bufferStrategy = agentConfiguration.getBufferStrategyConfig();
+		if (null == bufferStrategy) {
+			throw new StorageException("Buffer strategy not defined in the agent configuration.");
+		}
 		return bufferStrategy;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addSendingStrategy(String clazzName, Map<String, String> settings) throws StorageException {
-		if (null == clazzName || "".equals(clazzName)) {
-			throw new StorageException("Sending strategy class name cannot be null or empty!");
-		}
+	public StrategyConfig getSendingStrategyConfig() throws StorageException {
+		ensureConfigurationExists();
 
-		for (StrategyConfig config : sendingStrategies) {
-			if (clazzName.equals(config.getClazzName())) {
-				throw new StorageException("Sending strategy class is already registered!");
-			}
+		StrategyConfig sendingStrategy = agentConfiguration.getSendingStrategyConfig();
+		if (null == sendingStrategy) {
+			throw new StorageException("Sending strategy not defined in the agent configuration.");
 		}
-
-		if (null == settings) {
-			settings = Collections.emptyMap();
-		}
-
-		sendingStrategies.add(new StrategyConfig(clazzName, settings));
-
-		if (log.isDebugEnabled()) {
-			log.debug("Sending strategy added: " + clazzName);
-		}
+		return sendingStrategy;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<StrategyConfig> getSendingStrategyConfigs() {
-		return Collections.unmodifiableList(sendingStrategies);
+	public List<MethodSensorTypeConfig> getMethodSensorTypes() throws StorageException {
+		ensureConfigurationExists();
+
+		List<MethodSensorTypeConfig> result = new ArrayList<MethodSensorTypeConfig>();
+
+		if (CollectionUtils.isNotEmpty(agentConfiguration.getMethodSensorTypeConfigs())) {
+			result.addAll(agentConfiguration.getMethodSensorTypeConfigs());
+		}
+
+		// exception sensor is also method sensor type
+		if (null != agentConfiguration.getExceptionSensorTypeConfig()) {
+			result.add(agentConfiguration.getExceptionSensorTypeConfig());
+		}
+
+		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addMethodSensorType(String sensorTypeName, String sensorTypeClass, PriorityEnum priority, Map<String, Object> settings) throws StorageException {
-		if (null == sensorTypeName || "".equals(sensorTypeName)) {
-			throw new StorageException("Method sensor type name cannot be null or empty!");
-		}
+	public ExceptionSensorTypeConfig getExceptionSensorType() throws StorageException {
+		ensureConfigurationExists();
 
-		if (null == sensorTypeClass || "".equals(sensorTypeClass)) {
-			throw new StorageException("Method sensor type class name cannot be null or empty!");
-		}
-
-		if (null == priority) {
-			throw new StorageException("Method sensor type priority cannot be null!");
-		}
-
-		if (null == settings) {
-			settings = Collections.emptyMap();
-		}
-
-		MethodSensorTypeConfig sensorTypeConfig = new MethodSensorTypeConfig();
-		sensorTypeConfig.setName(sensorTypeName);
-		sensorTypeConfig.setClassName(sensorTypeClass);
-		sensorTypeConfig.setPriority(priority);
-		sensorTypeConfig.setParameters(settings);
-
-		methodSensorTypes.add(sensorTypeConfig);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Method sensor type added: " + sensorTypeName + " prio: " + priority);
-		}
+		return agentConfiguration.getExceptionSensorTypeConfig();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<MethodSensorTypeConfig> getMethodSensorTypes() {
-		return Collections.unmodifiableList(methodSensorTypes);
-	}
+	public List<PlatformSensorTypeConfig> getPlatformSensorTypes() throws StorageException {
+		ensureConfigurationExists();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addPlatformSensorType(String sensorTypeClass, Map<String, Object> settings) throws StorageException {
-		if (null == sensorTypeClass || "".equals(sensorTypeClass)) {
-			throw new StorageException("Platform sensor type class name cannot be null or empty!");
+		List<PlatformSensorTypeConfig> result = new ArrayList<PlatformSensorTypeConfig>(1);
+
+		if (CollectionUtils.isNotEmpty(agentConfiguration.getPlatformSensorTypeConfigs())) {
+			result.addAll(agentConfiguration.getPlatformSensorTypeConfigs());
 		}
 
-		if (null == settings) {
-			settings = Collections.emptyMap();
-		}
-
-		PlatformSensorTypeConfig sensorTypeConfig = new PlatformSensorTypeConfig();
-		sensorTypeConfig.setClassName(sensorTypeClass);
-		sensorTypeConfig.setParameters(settings);
-
-		platformSensorTypes.add(sensorTypeConfig);
-
-		if (log.isInfoEnabled()) {
-			log.info("Platform sensor type added: " + sensorTypeClass);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<PlatformSensorTypeConfig> getPlatformSensorTypes() {
-		return Collections.unmodifiableList(platformSensorTypes);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addSensor(String sensorTypeName, String targetClassName, String targetMethodName, List<String> parameterList, boolean ignoreSignature, Map<String, Object> settings)
-			throws StorageException {
-		if (null == sensorTypeName || "".equals(sensorTypeName)) {
-			throw new StorageException("Sensor type name for the sensor cannot be null or empty!");
-		}
-
-		if (null == targetClassName || "".equals(targetClassName)) {
-			throw new StorageException("Target class name cannot be null or empty!");
-		}
-
-		if (null == targetMethodName || "".equals(targetMethodName)) {
-			throw new StorageException("Target method name cannot be null or empty!");
-		}
-
-		if (null == settings) {
-			settings = Collections.emptyMap();
-		}
-
-		UnregisteredSensorConfig sensorConfig = new UnregisteredSensorConfig(classPoolAnalyzer, inheritanceAnalyzer);
-		sensorConfig.setTargetClassName(targetClassName);
-		sensorConfig.setTargetMethodName(targetMethodName);
-		if ("<init>".equals(targetMethodName)) {
-			sensorConfig.setConstructor(true);
-		}
-		sensorConfig.setIgnoreSignature(ignoreSignature);
-		sensorConfig.setParameterTypes(parameterList);
-		sensorConfig.setSettings(settings);
-
-		MethodSensorTypeConfig methodSensorTypeConfig = getMethodSensorTypeConfigForName(sensorTypeName);
-		sensorConfig.setSensorTypeConfig(methodSensorTypeConfig);
-
-		// check for a virtual definition
-		if (ignoreSignature) {
-			sensorConfig.setVirtual(true);
-		}
-
-		// check if we are dealing with a superclass definition
-		if (settings.containsKey("superclass") && settings.get("superclass").equals("true")) {
-			sensorConfig.setSuperclass(true);
-		}
-
-		// check if we are dealing with a interface definition
-		if (settings.containsKey("interface") && settings.get("interface").equals("true")) {
-			sensorConfig.setInterface(true);
-		}
-
-		// check for annotation
-		if (settings.containsKey("annotation")) {
-			sensorConfig.setAnnotationClassName((String) settings.get("annotation"));
-		}
-
-		// check if the modifiers are set
-		if (settings.containsKey("modifiers")) {
-			String modifiersString = (String) settings.get("modifiers");
-			String separator = ",";
-			StringTokenizer tokenizer = new StringTokenizer(modifiersString, separator);
-			int modifiers = 0;
-			while (tokenizer.hasMoreTokens()) {
-				String modifier = tokenizer.nextToken().trim();
-				if (modifier != null && modifier.startsWith("pub")) {
-					modifiers |= Modifier.PUBLIC;
-				} else if (modifier != null && modifier.startsWith("priv")) {
-					modifiers |= Modifier.PRIVATE;
-				} else if (modifier != null && modifier.startsWith("prot")) {
-					modifiers |= Modifier.PROTECTED;
-				} else if (modifier != null && modifier.startsWith("def")) {
-					modifiers |= ModifierMatcher.DEFAULT;
-				}
-			}
-			sensorConfig.setModifiers(modifiers);
-		}
-
-		if (settings.containsKey("field")) {
-			@SuppressWarnings("unchecked")
-			List<String> fieldAccessorList = (List<String>) settings.get("field");
-
-			for (String fieldDefinition : fieldAccessorList) {
-				String[] fieldDefinitionParts = fieldDefinition.split(";");
-				String name = fieldDefinitionParts[0];
-				PropertyAccessor.PropertyPathStart start = new PropertyAccessor.PropertyPathStart();
-				start.setName(name);
-				start.setContentType(ParameterContentType.FIELD);
-
-				String[] steps = fieldDefinitionParts[1].split("\\.");
-				PropertyAccessor.PropertyPath parentPath = start;
-				for (String step : steps) {
-					PropertyAccessor.PropertyPath path = new PropertyAccessor.PropertyPath();
-					path.setName(step);
-					parentPath.setPathToContinue(path);
-					parentPath = path;
-				}
-
-				sensorConfig.getPropertyAccessorList().add(start);
-			}
-		}
-
-		if (settings.containsKey("property")) {
-			@SuppressWarnings("unchecked")
-			List<String> propertyAccessorList = (List<String>) settings.get("property");
-
-			for (String fieldDefinition : propertyAccessorList) {
-				String[] fieldDefinitionParts = fieldDefinition.split(";");
-				int position = Integer.parseInt(fieldDefinitionParts[0]);
-				String name = fieldDefinitionParts[1];
-				PropertyAccessor.PropertyPathStart start = new PropertyAccessor.PropertyPathStart();
-				start.setName(name);
-				start.setContentType(ParameterContentType.PARAM);
-				start.setSignaturePosition(position);
-
-				if (3 == fieldDefinitionParts.length) {
-					String[] steps = fieldDefinitionParts[2].split("\\.");
-					PropertyAccessor.PropertyPath parentPath = start;
-					for (String step : steps) {
-						PropertyAccessor.PropertyPath path = new PropertyAccessor.PropertyPath();
-						path.setName(step);
-						parentPath.setPathToContinue(path);
-						parentPath = path;
-					}
-				}
-
-				sensorConfig.getPropertyAccessorList().add(start);
-			}
-		}
-
-		if (settings.containsKey("return") && !sensorConfig.isConstructor()) {
-			@SuppressWarnings("unchecked")
-			List<String> returnAccessorList = (List<String>) settings.get("return");
-
-			for (String returnDefinition : returnAccessorList) {
-				String[] returnDefinitionParts = returnDefinition.split(";");
-				String name = returnDefinitionParts[0];
-				PropertyAccessor.PropertyPathStart start = new PropertyAccessor.PropertyPathStart();
-				start.setName(name);
-				start.setContentType(ParameterContentType.RETURN);
-
-				if (returnDefinitionParts.length > 1) {
-					String[] steps = returnDefinitionParts[1].split("\\.");
-					PropertyAccessor.PropertyPath parentPath = start;
-					for (String step : steps) {
-						PropertyAccessor.PropertyPath path = new PropertyAccessor.PropertyPath();
-						path.setName(step);
-						parentPath.setPathToContinue(path);
-						parentPath = path;
-					}
-				}
-
-				sensorConfig.getPropertyAccessorList().add(start);
-			}
-		}
-
-		sensorConfig.setPropertyAccess(!sensorConfig.getPropertyAccessorList().isEmpty());
-
-		sensorConfig.completeConfiguration();
-
-		unregisteredSensorConfigs.add(sensorConfig);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Sensor configuration added: " + sensorConfig.toString());
-		}
-
-		if (methodSensorTypeConfig.isJRebelActive()) {
-			UnregisteredSensorConfig jRebelSensorConfig = JRebelUtil.getJRebelSensorConfiguration(sensorConfig, classPoolAnalyzer, inheritanceAnalyzer);
-			jRebelSensorConfig.completeConfiguration();
-			unregisteredSensorConfigs.add(jRebelSensorConfig);
-
-			if (log.isDebugEnabled()) {
-				log.debug("Sensor configuration for JRebel enhanced classes added: " + jRebelSensorConfig.toString());
-			}
-		}
-	}
-
-	/**
-	 * Returns the matching {@link MethodSensorTypeConfig} for the passed name.
-	 * 
-	 * @param sensorTypeName
-	 *            The name to look for.
-	 * @return The {@link MethodSensorTypeConfig} which name is equal to the passed sensor type name
-	 *         in the method parameter.
-	 * @throws StorageException
-	 *             Throws the storage exception if no method sensor type configuration can be found.
-	 */
-	private MethodSensorTypeConfig getMethodSensorTypeConfigForName(String sensorTypeName) throws StorageException {
-		for (MethodSensorTypeConfig config : methodSensorTypes) {
-			if (config.getName().equals(sensorTypeName)) {
-				return config;
-			}
-		}
-
-		throw new StorageException("Could not find method sensor type with name: " + sensorTypeName);
-	}
-
-	/**
-	 * Returns the matching {@link MethodSensorTypeConfig} of the Exception Sensor for the passed
-	 * name.
-	 * 
-	 * @param sensorTypeName
-	 *            The name to look for.
-	 * @return The {@link MethodSensorTypeConfig} which name is equal to the passed sensor type name
-	 *         in the method parameter.
-	 * @throws StorageException
-	 *             Throws the storage exception if no method sensor type configuration can be found.
-	 */
-	private MethodSensorTypeConfig getExceptionSensorTypeConfigForName(String sensorTypeName) throws StorageException {
-		for (MethodSensorTypeConfig config : methodSensorTypes) {
-			if (config.getName().equals(sensorTypeName)) {
-				return config;
-			}
-		}
-
-		throw new StorageException("Could not find exception sensor type with name: " + sensorTypeName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<UnregisteredSensorConfig> getUnregisteredSensorConfigs() {
-		return Collections.unmodifiableList(unregisteredSensorConfigs);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<MethodSensorTypeConfig> getExceptionSensorTypes() {
-		// TODO ET: could also be improved by adding the configs directly to exceptionSensorTypes
-		// when they are added to the methodSensorTypes
-		List<MethodSensorTypeConfig> exceptionSensorTypes = new ArrayList<MethodSensorTypeConfig>();
-		for (MethodSensorTypeConfig config : methodSensorTypes) {
-			if (config.getName().equals("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor")) {
-				exceptionSensorTypes.add(config);
-			}
-		}
-
-		return Collections.unmodifiableList(exceptionSensorTypes);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addJmxSensorType(String sensorTypeClass, String sensorName) throws StorageException {
-		if (StringUtils.isEmpty(sensorTypeClass)) {
-			throw new StorageException("Jmx sensor type class name cannot be null or empty!");
-		}
-		JmxSensorTypeConfig sensorTypeConfig = new JmxSensorTypeConfig();
-		sensorTypeConfig.setName(sensorName);
-		sensorTypeConfig.setClassName(sensorTypeClass);
-
-		jmxSensorTypes.add(sensorTypeConfig);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Jmx sensor type added: " + sensorTypeClass + "Name: " + sensorName);
-		}
+		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<JmxSensorTypeConfig> getJmxSensorTypes() {
-		return Collections.unmodifiableList(jmxSensorTypes);
-	}
-
-	/**
-	 * Returns the matching {@link JmxSensorTypeConfig} for the passed name.
-	 * 
-	 * @param jmxSensorTypeConfigname
-	 *            The name to look for.
-	 * @return The {@link JmxSensorTypeConfig} which name is equal to the passed sensor type name in
-	 *         the method parameter.
-	 * @throws StorageException
-	 *             Throws the storage exception if no method sensor type configuration can be found.
-	 */
-	private JmxSensorTypeConfig getJmxSensorTypeConfigForName(String jmxSensorTypeConfigname) throws StorageException {
-		for (JmxSensorTypeConfig jmxSensorTypeConfig : jmxSensorTypes) {
-			if (jmxSensorTypeConfig.getName().equals(jmxSensorTypeConfigname)) {
-				return jmxSensorTypeConfig;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addUnregisteredJmxConfig(String jmxSensorTypeName, String mBeanName, String attributeName) throws StorageException {
-		JmxSensorTypeConfig jstc = this.getJmxSensorTypeConfigForName(jmxSensorTypeName);
-		UnregisteredJmxConfig ujc = new UnregisteredJmxConfig(jstc, mBeanName, attributeName);
-		this.unregisteredJmxConfigs.add(ujc);
+		// TODO read from configuration
+		return Collections.emptyList();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<UnregisteredJmxConfig> getUnregisteredJmxConfigs() {
-		return this.unregisteredJmxConfigs;
+		// TODO depending on decision for the jmx sensor collection
+		return Collections.emptyList();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addExceptionSensorType(String sensorTypeClass, Map<String, Object> settings) throws StorageException {
-		if (null == sensorTypeClass || "".equals(sensorTypeClass)) {
-			throw new StorageException("Exception sensor type class name cannot be null or empty!");
-		}
+	public boolean isExceptionSensorActivated() throws StorageException {
+		ensureConfigurationExists();
 
-		if (null == settings) {
-			settings = Collections.emptyMap();
-		}
-
-		MethodSensorTypeConfig sensorTypeConfig = new MethodSensorTypeConfig();
-		sensorTypeConfig.setName(sensorTypeClass);
-		sensorTypeConfig.setClassName(sensorTypeClass);
-		sensorTypeConfig.setParameters(settings);
-
-		methodSensorTypes.add(sensorTypeConfig);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Exception sensor type added: " + sensorTypeClass);
-		}
+		return null != agentConfiguration.getExceptionSensorTypeConfig();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addExceptionSensorTypeParameter(String sensorTypeName, String targetClassName, boolean isVirtual, Map<String, Object> settings) throws StorageException {
-		if (null == sensorTypeName || "".equals(sensorTypeName)) {
-			throw new StorageException("Sensor type name for the sensor cannot be null or empty!");
+	public boolean isEnhancedExceptionSensorActivated() throws StorageException {
+		ensureConfigurationExists();
+
+		if (isExceptionSensorActivated()) {
+			return agentConfiguration.getExceptionSensorTypeConfig().isEnhanced();
 		}
 
-		if (null == targetClassName || "".equals(targetClassName)) {
-			throw new StorageException("Target class name cannot be null or empty!");
-		}
-
-		if (null == settings) {
-			settings = Collections.emptyMap();
-		}
-
-		UnregisteredSensorConfig sensorConfig = new UnregisteredSensorConfig(classPoolAnalyzer, inheritanceAnalyzer);
-
-		sensorConfig.setVirtual(isVirtual);
-
-		// check if we are dealing with a superclass definition
-		if (settings.containsKey("superclass") && settings.get("superclass").equals("true")) {
-			sensorConfig.setSuperclass(true);
-		}
-
-		// check if we are dealing with a interface definition
-		if (settings.containsKey("interface") && settings.get("interface").equals("true")) {
-			sensorConfig.setInterface(true);
-		}
-
-		// Now set all the given parameters
-		sensorConfig.setTargetClassName(targetClassName);
-		sensorConfig.setSettings(settings);
-		sensorConfig.setSensorTypeConfig(getExceptionSensorTypeConfigForName(sensorTypeName));
-		sensorConfig.setTargetMethodName("");
-		sensorConfig.setConstructor(true);
-		sensorConfig.setExceptionSensorActivated(true);
-		sensorConfig.setIgnoreSignature(true);
-		sensorConfig.completeConfiguration();
-
-		unregisteredSensorConfigs.add(sensorConfig);
-		exceptionSensorActivated = true;
+		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isExceptionSensorActivated() {
-		return exceptionSensorActivated;
-	}
+	public Collection<IMatchPattern> getIgnoreClassesPatterns() throws StorageException {
+		ensureConfigurationExists();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setEnhancedExceptionSensorActivated(boolean isEnhanced) {
-		this.enhancedExceptionSensorActivated = isEnhanced;
-		if (log.isDebugEnabled()) {
-			if (isEnhanced) {
-				log.debug("Using enhanced exception sensor mode");
-			} else {
-				log.debug("Using simple exception sensor mode");
-			}
+		if (CollectionUtils.isNotEmpty(agentConfiguration.getExcludeClassesPatterns())) {
+			return Collections.unmodifiableCollection(agentConfiguration.getExcludeClassesPatterns());
+		} else {
+			return Collections.emptyList();
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isEnhancedExceptionSensorActivated() {
-		return enhancedExceptionSensorActivated;
+	public boolean isClassCacheExistsOnCmr() throws StorageException {
+		ensureConfigurationExists();
+
+		return agentConfiguration.isClassCacheExistsOnCmr();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<IMatchPattern> getIgnoreClassesPatterns() {
-		return ignoreClassesPatterns;
-	}
+	public Map<Collection<String>, InstrumentationDefinition> getInitialInstrumentationResults() throws StorageException {
+		ensureConfigurationExists();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addIgnoreClassesPattern(String patternString) {
-		ignoreClassesPatterns.add(new SimpleMatchPattern(patternString));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Collection<IMatcher> getClassLoaderDelegationMatchers() {
-		return classLoaderDelegationMatchers;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void afterPropertiesSet() throws Exception {
-		loadConfigurationFromJvmParameters();
-		createClassLoaderDelegationMatcher();
+		return agentConfiguration.getInitialInstrumentationResults();
 	}
 
 	/**
@@ -807,29 +346,35 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 			} catch (Exception e) {
 				log.warn("Agent name could not be defined from the data in the JVM parameters", e);
 			}
+		} else {
+			try {
+				setAgentName(DEFAULT_AGENT_NAME);
+			} catch (StorageException e) {
+				log.warn("Agent name could not be defined from default agent name", e);
+			}
 		}
 	}
 
 	/**
-	 * Creates the {@link #classLoaderDelegationMatcher}.
+	 * Helper method to ensure that {@link #agentConfiguration} is not <code>null</code>.
+	 *
+	 * @throws StorageException
+	 *             If configuration is null.
 	 */
-	private void createClassLoaderDelegationMatcher() {
-		UnregisteredSensorConfig superclassSensorConfig = new UnregisteredSensorConfig(classPoolAnalyzer, inheritanceAnalyzer);
-		superclassSensorConfig.setSuperclass(true);
-		superclassSensorConfig.setTargetClassName("java.lang.ClassLoader");
-		superclassSensorConfig.setTargetMethodName("loadClass");
-		superclassSensorConfig.setParameterTypes(Collections.singletonList("java.lang.String"));
-		superclassSensorConfig.setModifiers(Modifier.PUBLIC);
+	private void ensureConfigurationExists() throws StorageException {
+		if (null == agentConfiguration) {
+			throw new StorageException("Agent configuration is not set in the Configuration storage");
+		}
+	}
 
-		UnregisteredSensorConfig directSensorConfig = new UnregisteredSensorConfig(classPoolAnalyzer, inheritanceAnalyzer);
-		directSensorConfig.setTargetClassName("java.lang.ClassLoader");
-		directSensorConfig.setTargetMethodName("loadClass");
-		directSensorConfig.setParameterTypes(Collections.singletonList("java.lang.String"));
-		directSensorConfig.setModifiers(Modifier.PUBLIC);
-
-		IMatcher superclassIMatcher = new SuperclassMatcher(inheritanceAnalyzer, classPoolAnalyzer, superclassSensorConfig);
-		IMatcher directIMatcher = new DirectMatcher(classPoolAnalyzer, superclassSensorConfig);
-		this.classLoaderDelegationMatchers = Arrays.<IMatcher> asList(superclassIMatcher, directIMatcher);
+	/**
+	 * {@inheritDoc}
+	 */
+	public void afterPropertiesSet() throws Exception {
+		loadConfigurationFromJvmParameters();
+		if (null == repository || StringUtils.isEmpty(agentName)) {
+			throw new BeanInitializationException("inspectIT agent must be initialized with IP and port of the CMR via JVM parameters.");
+		}
 	}
 
 }

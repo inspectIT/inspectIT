@@ -1,23 +1,21 @@
 package rocks.inspectit.agent.java.sensor;
 
-import java.util.Map;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AbstractSensorTypeConfig;
 
 /**
- * This interface is used by all sensor which are collecting any kind of data. The
- * {@link #init(Map)} method is used to initialize the sensor with some additional preferences if
- * available.
- * 
+ * This interface is used by all sensor which are collecting any kind of data.
+ *
  * @author Patrice Bouillet
- * 
+ * @author Ivan Senic
+ *
  */
 public interface ISensor {
 
 	/**
-	 * Initialize the sensor.
-	 * 
-	 * @param parameter
-	 *            Some additional parameters.
+	 * Returns the configuration for this sensor.
+	 *
+	 * @return Returns the configuration for this sensor.
 	 */
-	void init(Map<String, Object> parameter);
+	AbstractSensorTypeConfig getSensorTypeConfig();
 
 }

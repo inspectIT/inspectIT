@@ -28,12 +28,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.impl.JmxSensorConfig;
-import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.agent.java.config.impl.UnregisteredJmxConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AbstractSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
@@ -69,10 +70,15 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	private IConfigurationStorage configurationStorage;
 
 	/**
-	 * The ID Manager used to get the correct IDs.
+	 * The Platform manager used to get the correct platform ID.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
+
+	/**
+	 * Sensor configruation.
+	 */
+	private JmxSensorTypeConfig sensorTypeConfig;
 
 	/**
 	 * The MBeanServer providing information about registered MBeans.
@@ -114,7 +120,9 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	public void init(JmxSensorTypeConfig sensorTypeConfig) {
+		this.sensorTypeConfig = sensorTypeConfig;
+
 		unregisteredJmxConfigs.addAll(configurationStorage.getUnregisteredJmxConfigs());
 		mBeanServer = ManagementFactory.getPlatformMBeanServer();
 	}
@@ -122,7 +130,15 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public AbstractSensorTypeConfig getSensorTypeConfig() {
+		return sensorTypeConfig;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = sensorTypeConfig.getId();
 		long currentTime = System.currentTimeMillis();
 
 		// Check if the registerMBeans method should be invoked
@@ -170,11 +186,8 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 				}
 
 				// Create a new JmxSensorValueData to be saved into the database
-				long platformid = idManager.getPlatformId();
-				long sensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
-				long registeredmBeanId = idManager.getRegisteredmBeanId(jsc.getId());
-
-				JmxSensorValueData jsvd = new JmxSensorValueData(registeredmBeanId, value, timestamp, platformid, sensorTypeId);
+				long platformid = platformManager.getPlatformId();
+				JmxSensorValueData jsvd = new JmxSensorValueData(jsc.getId(), value, timestamp, platformid, sensorTypeIdent);
 
 				coreService.addJmxSensorValueData(sensorTypeIdent, jsc.getmBeanObjectName(), jsc.getAttributeName(), jsvd);
 			} catch (AttributeNotFoundException e) {
@@ -229,7 +242,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 								jsc.setmBeanAttributeIsWritable(mBeanAttributeInfo.isWritable());
 								jsc.setmBeanAttributeType(mBeanAttributeInfo.getType());
 
-								idManager.registerJmxSensorConfig(jsc);
+								// TODO send to CMR here
 								registeredJmxSensorConfigs.put(mBeanAttributeKey, jsc);
 								activeAttributes.put(mBeanAttributeKey, jsc);
 								nameStringToObjectName.put(objectName.toString(), objectName);
@@ -269,8 +282,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		for (JmxSensorTypeConfig config : configurationStorage.getJmxSensorTypes()) {
 			if (config.getClassName().equals(this.getClass().getName())) {
-				this.init(config.getParameters());
-				config.setSensorType(this);
+				this.init(config);
 				break;
 			}
 		}
@@ -287,4 +299,5 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	void setUnregisteredJmxConfigs(List<UnregisteredJmxConfig> unregisteredJmxConfigs) {
 		this.unregisteredJmxConfigs = unregisteredJmxConfigs;
 	}
+
 }

@@ -33,10 +33,10 @@ import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
-import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 /**
  * This class is used as a delegator to the real registration service. It is needed because Spring
@@ -162,24 +162,17 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Override
 	@MethodLog
-	public void unregisterPlatformIdent(List<String> definedIPs, String agentName) throws BusinessException {
-		log.info("Trying to unregister the Agent with following network interfaces:");
-		printOutDefinedIPs(definedIPs);
+	public void unregisterPlatformIdent(long platformId) throws BusinessException {
+		log.info("Trying to unregister the Agent with the ID " + platformId);
 
-		List<PlatformIdent> platformIdentResults = platformIdentDao.findByNameAndIps(agentName, definedIPs);
+		PlatformIdent platformIdent = platformIdentDao.load(platformId);
 
-		if (1 == platformIdentResults.size()) {
-			PlatformIdent platformIdent = platformIdentResults.get(0);
+		if (null != platformIdent) {
 			agentStatusDataProvider.registerDisconnected(platformIdent.getId());
 			log.info("The Agent '" + platformIdent.getAgentName() + "' has been successfully unregistered.");
-		} else if (platformIdentResults.size() > 1) {
-			// this cannot occur anymore, if it occurs, then there is something totally wrong!
-			log.error("More than one platform ident has been retrieved! Please send your Database to the NovaTec inspectIT support!");
-			throw new BusinessException("Unregister the agent with name " + agentName + " and following network interfaces " + definedIPs + ".",
-					AgentManagementErrorCodeEnum.MORE_THAN_ONE_AGENT_REGISTERED);
 		} else {
-			log.warn("No registered agent with given network interfaces exists. Unregistration is aborted.");
-			throw new BusinessException("Unregister the agent with name " + agentName + " and following network interfaces " + definedIPs + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			log.warn("No registered agent with given ID exists. Unregistration is aborted.");
+			throw new BusinessException("Unregister the agent with ID " + platformId + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 		}
 	}
 
@@ -326,6 +319,7 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@Transactional
 	@MethodLog
 	public long registerJmxSensorDefinitionDataIdent(long platformId, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs, // NOCHK

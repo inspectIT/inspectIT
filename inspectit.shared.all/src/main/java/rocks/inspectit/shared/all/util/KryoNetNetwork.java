@@ -9,9 +9,9 @@ import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterTCP;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterUDP;
 
+import rocks.inspectit.shared.all.cmr.service.IAgentService;
 import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
-import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
 import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
 
 /**
@@ -31,8 +31,8 @@ public final class KryoNetNetwork {
 	 */
 	public void register(Kryo kryo) {
 		// services to export must be registered due to the bug in KryoNet
-		kryo.register(IRegistrationService.class);
 		kryo.register(IAgentStorageService.class);
+		kryo.register(IAgentService.class);
 		kryo.register(IKeepAliveService.class);
 
 		// below classes must match the registration performed in the KryoSerialization class

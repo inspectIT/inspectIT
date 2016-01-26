@@ -2,11 +2,13 @@ package rocks.inspectit.agent.java.config.impl;
 
 import org.apache.commons.lang.StringUtils;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
+
 /**
  * Class needed to temporarily save information about a MBean.
- * 
+ *
  * @author Alfred Krauss
- * 
+ *
  */
 public class UnregisteredJmxConfig {
 
@@ -25,11 +27,11 @@ public class UnregisteredJmxConfig {
 	/**
 	 * The type-config of the jmx-sensor.
 	 */
-	private JmxSensorTypeConfig jmxSensorTypeConfig;
+	private final JmxSensorTypeConfig jmxSensorTypeConfig;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param jmxSensorTypeConfig
 	 *            JmxSensorTypeConfig for this JmxConfig.
 	 * @param objectNameExpression
@@ -45,7 +47,7 @@ public class UnregisteredJmxConfig {
 
 	/**
 	 * Gets {@link #passedObjectNameExpression}.
-	 * 
+	 *
 	 * @return {@link #passedObjectNameExpression}
 	 */
 	public String getPassedObjectNameExpression() {
@@ -54,7 +56,7 @@ public class UnregisteredJmxConfig {
 
 	/**
 	 * Gets {@link #passedAttributeNameExpression}.
-	 * 
+	 *
 	 * @return {@link #passedAttributeNameExpression}
 	 */
 	public String getPassedAttributeNameExpression() {
@@ -63,7 +65,7 @@ public class UnregisteredJmxConfig {
 
 	/**
 	 * Gets {@link #jmxSensorTypeConfig}.
-	 * 
+	 *
 	 * @return {@link #jmxSensorTypeConfig}
 	 */
 	public JmxSensorTypeConfig getJmxSensorTypeConfig() {

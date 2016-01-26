@@ -22,10 +22,9 @@ import org.springframework.core.io.ClassPathResource;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
-import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.StrategyConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AbstractSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.kryonet.Client;
 import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
 import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
@@ -93,7 +92,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 */
 	@Bean(name = "coreServiceExecutorService")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
-	public ScheduledExecutorService getScheduledExecutorService() {
+	public ScheduledExecutorService getCoreServiceExecutorService() {
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newScheduledThreadPool(1, threadFactory);
 	}
@@ -128,14 +127,13 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		registerBeanDefinitionAndInitialize(beanName, className);
 
 		// sending strategies
-		for (StrategyConfig sendingStrategyConfig : configurationStorage.getSendingStrategyConfigs()) {
-			className = sendingStrategyConfig.getClazzName();
-			beanName = "sendingStrategy[" + className + "]";
-			registerBeanDefinitionAndInitialize(beanName, className);
-		}
+		StrategyConfig sendingStrategyConfig = configurationStorage.getSendingStrategyConfig();
+		className = sendingStrategyConfig.getClazzName();
+		beanName = "sendingStrategy[" + className + "]";
+		registerBeanDefinitionAndInitialize(beanName, className);
 
 		// platform sensor types
-		for (PlatformSensorTypeConfig platformSensorTypeConfig : configurationStorage.getPlatformSensorTypes()) {
+		for (AbstractSensorTypeConfig platformSensorTypeConfig : configurationStorage.getPlatformSensorTypes()) {
 			className = platformSensorTypeConfig.getClassName();
 			beanName = "platformSensorType[" + className + "]";
 			registerBeanDefinitionAndInitialize(beanName, className);
@@ -149,7 +147,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		}
 
 		// method sensor types
-		for (MethodSensorTypeConfig methodSensorTypeConfig : configurationStorage.getMethodSensorTypes()) {
+		for (AbstractSensorTypeConfig methodSensorTypeConfig : configurationStorage.getMethodSensorTypes()) {
 			className = methodSensorTypeConfig.getClassName();
 			beanName = "methodSensorType[" + className + "]";
 			registerBeanDefinitionAndInitialize(beanName, className);

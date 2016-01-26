@@ -2,13 +2,12 @@ package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
@@ -17,9 +16,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the class loading system through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ClassLoadingInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -30,15 +29,15 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 	Logger log;
 
 	/**
-	 * The ID Manager used to get the correct IDs.
+	 * The Platform manager used to get the correct IDs.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the class loading system.
 	 */
-	private RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -48,17 +47,17 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
-	 * @param idManager
-	 *            The ID Manager.
+	 *
+	 * @param platformManager
+	 *            The Platform manager.
 	 */
-	public ClassLoadingInformation(IIdManager idManager) {
-		this.idManager = idManager;
+	public ClassLoadingInformation(IPlatformManager platformManager) {
+		this.platformManager = platformManager;
 	}
 
 	/**
 	 * Returns the number of loaded classes in the virtual machine.
-	 * 
+	 *
 	 * @return The number of loaded classes.
 	 */
 	public int getLoadedClassCount() {
@@ -67,7 +66,7 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * Returns the total number of loaded classes since the virtual machine started.
-	 * 
+	 *
 	 * @return The total number of loaded classes.
 	 */
 	public long getTotalLoadedClassCount() {
@@ -76,7 +75,7 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * Returns the number of unloaded classes since the virtual machine started.
-	 * 
+	 *
 	 * @return The number of unloaded classes.
 	 */
 	public long getUnloadedClassCount() {
@@ -85,14 +84,12 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * Updates all dynamic class loading information.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
-	 * @param sensorTypeIdent
-	 *            The sensorTypeIdent.
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = getSensorTypeConfig().getId();
 		int loadedClassCount = this.getLoadedClassCount();
 		long totalLoadedClassCount = this.getTotalLoadedClassCount();
 		long unloadedClassCount = this.getUnloadedClassCount();
@@ -101,11 +98,10 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 		if (classLoadingData == null) {
 			try {
-				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
+				long platformId = platformManager.getPlatformId();
 				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
 
-				classLoadingData = new ClassLoadingInformationData(timestamp, platformId, registeredSensorTypeId);
+				classLoadingData = new ClassLoadingInformationData(timestamp, platformId, sensorTypeIdent);
 				classLoadingData.incrementCount();
 
 				classLoadingData.addLoadedClassCount(loadedClassCount);
@@ -150,12 +146,6 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 				classLoadingData.setMaxUnloadedClassCount(unloadedClassCount);
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

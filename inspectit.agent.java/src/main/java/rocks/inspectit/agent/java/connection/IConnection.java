@@ -2,25 +2,25 @@ package rocks.inspectit.agent.java.connection;
 
 import java.net.ConnectException;
 import java.util.List;
+import java.util.Map;
 
-import rocks.inspectit.agent.java.config.impl.JmxSensorConfig;
-import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
-import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.instrumentation.classcache.Type;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 
 /**
  * The connection interface to implement different connection types, like RMI, Corba, etc.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface IConnection {
 
 	/**
 	 * Establish the connection to the server.
-	 * 
+	 *
 	 * @param host
 	 *            The host / ip of the server.
 	 * @param port
@@ -37,14 +37,14 @@ public interface IConnection {
 
 	/**
 	 * Returns if the connection is initialized and ready.
-	 * 
+	 *
 	 * @return Is the connection initialized and ready to use.
 	 */
 	boolean isConnected();
 
 	/**
 	 * Sends a keep-alive signal to give a sign of life.
-	 * 
+	 *
 	 * @param platformId
 	 *            The unique id for this platform.
 	 * @throws ServerUnavailableException
@@ -54,7 +54,7 @@ public interface IConnection {
 
 	/**
 	 * Send the measurements to the server for further processing.
-	 * 
+	 *
 	 * @param dataObjects
 	 *            The measurements to send.
 	 * @throws ServerUnavailableException
@@ -63,128 +63,63 @@ public interface IConnection {
 	void sendDataObjects(List<? extends DefaultData> dataObjects) throws ServerUnavailableException;
 
 	/**
-	 * Registers the current platform (composed of the network interface with the Agent name) in the
-	 * CMR and returns a unique value for this platform.
-	 * 
+	 * Registers the agent with the CMR. The CMR will answer with the {@link AgentConfig}
+	 * containing all necessary information for the agent initialization.
+	 *
 	 * @param agentName
-	 *            The name of the agent.
+	 *            The self-defined name of the inspectIT Agent. Can not be <code>null</code>.
 	 * @param version
-	 *            The version of the agent.
-	 * @return The unique id for this platform.
+	 *            The version the agent is currently running with.
+	 * @return {@link AgentConfig}.
 	 * @throws ServerUnavailableException
 	 *             If server to send the request to is unavailable.
 	 * @throws RegistrationException
 	 *             This exception is thrown when a problem with the registration process appears.
+	 * @throws BusinessException If {@link BusinessException} occurs on the server.
 	 */
-	long registerPlatform(String agentName, String version) throws ServerUnavailableException, RegistrationException;
+	AgentConfig register(String agentName, String version) throws ServerUnavailableException, RegistrationException, BusinessException;
 
 	/**
 	 * Unregisters the platform in the CMR by sending the agent name and the network interfaces
 	 * defined by the machine.
-	 * 
-	 * @param agentName
-	 *            Name of the Agent.
+	 *
+	 * @param platformIdent
+	 *            Id of the agent.
+	 * @throws ServerUnavailableException
+	 *             If server to send the request to is unavailable.
 	 * @throws RegistrationException
 	 *             This exception is thrown when a problem with the un-registration process appears.
-	 * @throws ServerUnavailableException
-	 *             If server to send the request to is unavailable.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs on the server.
 	 */
-	void unregisterPlatform(String agentName) throws RegistrationException, ServerUnavailableException;
+	void unregister(long platformIdent) throws ServerUnavailableException, RegistrationException, BusinessException;
 
 	/**
-	 * Registers the specified parameters at the server and returns a unique identifier which will
-	 * be used throughout the sensors.
-	 * 
-	 * @param platformId
-	 *            The unique id for this platform.
-	 * @param sensorConfig
-	 *            The registered sensor configuration.
-	 * 
-	 * @return Returns the unique identifier.
-	 * @throws ServerUnavailableException
-	 *             If server to send the request to is unavailable.
-	 * @throws RegistrationException
-	 *             This exception is thrown when a problem with the registration process appears.
-	 */
-	long registerMethod(long platformId, RegisteredSensorConfig sensorConfig) throws ServerUnavailableException, RegistrationException;
-
-	/**
-	 * Registers the specified method sensor type at the CMR.
-	 * 
-	 * @param platformId
-	 *            The unique id for this platform.
-	 * @param methodSensorTypeConfig
-	 *            The unregistered sensor type configuration.
-	 * 
-	 * @return Returns the unique identifier.
-	 * @throws ServerUnavailableException
-	 *             If server to send the request to is unavailable.
-	 * @throws RegistrationException
-	 *             This exception is thrown when a problem with the registration process appears.
-	 */
-	long registerMethodSensorType(long platformId, MethodSensorTypeConfig methodSensorTypeConfig) throws ServerUnavailableException, RegistrationException;
-
-	/**
-	 * Registers the specified platform sensor type at the CMR.
-	 * 
-	 * @param platformId
-	 *            The unique id for this platform.
-	 * @param platformSensorTypeConfig
-	 *            The unregistered sensor type configuration.
-	 * 
-	 * @return Returns the unique identifier.
-	 * @throws ServerUnavailableException
-	 *             If server to send the request to is unavailable.
-	 * @throws RegistrationException
-	 *             This exception is thrown when a problem with the registration process appears.
-	 */
-	long registerPlatformSensorType(long platformId, PlatformSensorTypeConfig platformSensorTypeConfig) throws ServerUnavailableException, RegistrationException;
-
-	/**
-	 * Registers the specified jmx sensor type at the CMR.
-	 * 
-	 * @param platformId
-	 *            The unique id for this platform.
-	 * @param jmxSensorTypeConfig
-	 *            The unregistered sensor type configuration.
-	 * 
-	 * @return Returns the unique identifier.
-	 * @throws ServerUnavailableException
-	 *             If the sending wasn't successful in any way, a {@link ServerUnavailableException}
-	 *             exception is thrown.
-	 * @throws RegistrationException
-	 *             This exception is thrown when a problem with the registration process appears.
-	 */
-	long registerJmxSensorType(long platformId, JmxSensorTypeConfig jmxSensorTypeConfig) throws ServerUnavailableException, RegistrationException;
-
-	/**
-	 * Adds a MBean Definition Data to the CMR.
-	 * 
+	 * Analyzes the given byte code, returning the {@link InstrumentationDefinition} if the one
+	 * given type should be instrumented on the Agent.
+	 *
 	 * @param platformIdent
-	 *            Ident of the corresponding platform.
-	 * @param config
-	 *            Represents the data on agent-side.
-	 * @return Returns the unique identifier.
-	 * @throws ServerUnavailableException
-	 *             If the sending wasn't successful in any way, a {@link ServerUnavailableException}
-	 *             exception is thrown.
-	 * @throws RegistrationException
-	 *             This exception is thrown when a problem with the registration process appears.
-	 */
-	long registerJmxDefinitionData(long platformIdent, JmxSensorConfig config) throws ServerUnavailableException, RegistrationException;
-
-	/**
-	 * Adds a sensor type to an already registered sensor at the CMR.
-	 * 
-	 * @param sensorTypeId
-	 *            The id of the sensor type.
-	 * @param methodId
-	 *            The id of the method.
+	 *            Id of the agent.
+	 * @param hash
+	 *            Class hash code.
+	 * @param type
+	 *            Type that has been parsed from the byte-code.
+	 * @return Instrumentation definition containing method instrumentation points that should be
+	 *         added for the given type.
 	 * @throws ServerUnavailableException
 	 *             If server to send the request to is unavailable.
-	 * @throws RegistrationException
-	 *             This exception is thrown when a problem with the registration process appears.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} is thrown on the server.
 	 */
-	void addSensorTypeToMethod(long sensorTypeId, long methodId) throws ServerUnavailableException, RegistrationException;
+	InstrumentationDefinition analyze(long platformIdent, String hash, Type type) throws ServerUnavailableException, BusinessException;
 
+	/**
+	 * Informs the CMR that the methods have been instrumented on the agent.
+	 *
+	 * @param methodToSensorMap
+	 *            Map containing method id as key and applied sensor IDs.
+	 * @throws ServerUnavailableException
+	 *             If server to send the request to is unavailable.
+	 */
+	void instrumentationApplied(Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException;
 }

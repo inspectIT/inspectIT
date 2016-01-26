@@ -4,23 +4,23 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 
 /**
  * The {@link ExceptionSensor} which initializes and returns the {@link ExceptionSensorHook} class.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ExceptionSensor extends AbstractMethodSensor implements IExceptionSensor {
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * The used exception sensor hook.
@@ -35,12 +35,12 @@ public class ExceptionSensor extends AbstractMethodSensor implements IExceptionS
 
 	/**
 	 * The default constructor which needs 3 parameter for initialization.
-	 * 
-	 * @param idManager
-	 *            The ID manager.
+	 *
+	 * @param platformManager
+	 *            The Platform manager.
 	 */
-	public ExceptionSensor(IIdManager idManager) {
-		this.idManager = idManager;
+	public ExceptionSensor(IPlatformManager platformManager) {
+		this.platformManager = platformManager;
 	}
 
 	/**
@@ -53,8 +53,9 @@ public class ExceptionSensor extends AbstractMethodSensor implements IExceptionS
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		exceptionSensorHook = new ExceptionSensorHook(idManager, parameter);
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		exceptionSensorHook = new ExceptionSensorHook(platformManager, parameters);
 	}
 
 }

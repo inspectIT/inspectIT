@@ -5,7 +5,7 @@
 	
 	<!-- Use below property specification to place logs in desired folder on the system -->
 	<!-- <property name="logDir" value="/path/to/desired/logging/folder" /> -->
-
+	
 	<!-- The appenders are defined at the top -->
 	
 	<!-- Console output -->

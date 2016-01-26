@@ -50,16 +50,23 @@ import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.filter.FilterComposite;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.util.SafeExecutor;
+import rocks.inspectit.ui.rcp.util.WarningUtils;
 
 /**
  * Profile selection for the environment.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ProfileSelectionPart extends SectionPart implements IProfileChangeListener, IPropertyListener {
+
+	/**
+	 * Id of the exclude profiles ID.
+	 */
+	private static final String EXCLUDE_CLASSES_PROFILE_ID = "exclude-classes";
 
 	/**
 	 * Repository needed for loading all {@link Profile}s.
@@ -88,7 +95,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param formPage
 	 *            {@link FormPage} section belongs to.
 	 * @param parent
@@ -122,7 +129,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 
 	/**
 	 * Creates complete client.
-	 * 
+	 *
 	 * @param section
 	 *            {@link Section}
 	 * @param toolkit
@@ -176,6 +183,14 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 			public void widgetSelected(SelectionEvent e) {
 				if (e.detail == SWT.CHECK && !isDirty()) {
 					markDirty();
+				}
+
+				// warning for the exclude-classes un-checking
+				TableItem item = (TableItem) e.item;
+				Profile profile = (Profile) item.getData();
+				if (e.detail == SWT.CHECK && !item.getChecked() && EXCLUDE_CLASSES_PROFILE_ID.equals(profile.getId())) {
+					WarningUtils.inform("Exlude Classes Profile Removal", "Please note that removing default exclude classes profile from the environment can result in non-operative agent.",
+							PreferencesConstants.EXCLUDE_CLASSES_PROFILE_WARNING);
 				}
 			}
 		});
@@ -254,9 +269,9 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 
 	/**
 	 * Profile label provider.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class ProfileLabelProvider extends StyledCellIndexLabelProvider {
 
@@ -322,9 +337,9 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 
 	/**
 	 * Action for editing the profile.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class EditProfileAction extends Action {
 
@@ -351,9 +366,9 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 
 	/**
 	 * Implementation of the filter for the profiles.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class FilterProfileComposite extends FilterComposite {
 
@@ -384,7 +399,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 
 			/**
 			 * Does a filter select on {@link Profile}.
-			 * 
+			 *
 			 * @param profile
 			 *            {@link Profile}
 			 * @return True if data in {@link Profile} fits the filter string.
@@ -428,7 +443,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 
 		/**
 		 * Gets {@link #filter}.
-		 * 
+		 *
 		 * @return {@link #filter}
 		 */
 		public ViewerFilter getFilter() {

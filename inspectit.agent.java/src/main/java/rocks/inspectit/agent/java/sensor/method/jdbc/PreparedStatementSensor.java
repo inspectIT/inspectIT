@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -12,7 +12,7 @@ import rocks.inspectit.agent.java.util.Timer;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public class PreparedStatementSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -23,10 +23,10 @@ public class PreparedStatementSensor extends AbstractMethodSensor implements IMe
 	private Timer timer;
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * The statement storage.
@@ -61,8 +61,9 @@ public class PreparedStatementSensor extends AbstractMethodSensor implements IMe
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		preparedStatementHook = new PreparedStatementHook(timer, idManager, statementStorage, connectionMetaDataStorage, statementReflectionCache, parameter);
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		preparedStatementHook = new PreparedStatementHook(timer, platformManager, statementStorage, connectionMetaDataStorage, statementReflectionCache, parameters);
 	}
 
 }

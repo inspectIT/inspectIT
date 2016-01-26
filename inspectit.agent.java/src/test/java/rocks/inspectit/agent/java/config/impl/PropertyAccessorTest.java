@@ -19,11 +19,10 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.PropertyAccessException;
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor;
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPath;
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPath;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 
 @SuppressWarnings("PMD")
 public class PropertyAccessorTest extends AbstractLogSupport {

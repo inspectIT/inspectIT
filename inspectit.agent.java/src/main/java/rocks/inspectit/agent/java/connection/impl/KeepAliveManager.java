@@ -12,16 +12,16 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class handles the sending of keep-alive signals to the CMR.
- * 
+ *
  * @author Marius Oehler
- * 
+ *
  */
 @Component
 public class KeepAliveManager implements InitializingBean, DisposableBean {
@@ -33,7 +33,7 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 		public void run() {
 			try {
 				if (connection.isConnected()) {
-					connection.sendKeepAlive(idManager.getPlatformId());
+					connection.sendKeepAlive(platformManager.getPlatformId());
 				}
 			} catch (IdNotAvailableException e) {
 				if (log.isDebugEnabled()) {
@@ -64,10 +64,10 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	private IConnection connection;
 
 	/**
-	 * Id manager.
+	 * Platform manager.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * ScheduledFuture representing pending keep-alive sending task.
@@ -82,18 +82,18 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * Starts the sending of the keep-alive signals.
 	 */
 	public void afterPropertiesSet() throws Exception {
 		if (scheduledTask == null) {
-			scheduledTask = coreService.getScheduledExecutorService().scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
+			scheduledTask = coreService.getExecutorService().scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * Stops the further sending of keep-alive messages.
 	 */
 	public void destroy() throws Exception {
