@@ -7,15 +7,16 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.UnregisteredJmxConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.communication.data.JmxSensorValueData;
+import info.novatec.inspectit.instrumentation.config.impl.JmxSensorTypeConfig;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -85,7 +86,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 
 	/**
 	 * Tests the registration of a mBean.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -122,7 +123,6 @@ public class JmxSensorTest extends AbstractLogSupport {
 		jmxSensor.registerMBeans();
 
 		ArgumentCaptor<JmxSensorConfig> captor = ArgumentCaptor.forClass(JmxSensorConfig.class);
-		verify(idManager, times(1)).registerJmxSensorConfig(captor.capture());
 		verify(activeAttributes, times(1)).put(testMBeanName, captor.getValue());
 		verify(registeredJmxSensorConfigs, times(1)).put(testMBeanName, captor.getValue());
 		verify(nameStringToObjectName, times(1)).put(eq(testObjectName), (ObjectName) Mockito.anyObject());
@@ -140,7 +140,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 
 	/**
 	 * Tests to reactivate a MBean if it was disabled.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -179,7 +179,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 
 	/**
 	 * Tests the update method while adding new sensor values.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -228,7 +228,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 	/**
 	 * Test if an {@link AttributeNotFoundException} occurred in the
 	 * {@link JmxSensor#update(ICoreService, long)} method.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -254,7 +254,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 	/**
 	 * Test if an {@link InstanceNotFoundException} occurred in the
 	 * {@link JmxSensor#update(ICoreService, long)} method.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -280,7 +280,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 	/**
 	 * Test if a {@link ReflectionException} occurred in the
 	 * {@link JmxSensor#update(ICoreService, long)} method.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -306,7 +306,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 	/**
 	 * Test if a {@link IdNotAvailableException} occurred in the
 	 * {@link JmxSensor#update(ICoreService, long)} method.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -331,7 +331,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 	/**
 	 * Test if a {@link MBeanException} occurred in the {@link JmxSensor#update(ICoreService, long)}
 	 * method.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -357,7 +357,7 @@ public class JmxSensorTest extends AbstractLogSupport {
 	/**
 	 * Tests that multiple calls of {@link JmxSensor#registerMBeans()} register the same MBean only
 	 * once.
-	 * 
+	 *
 	 * @throws Exception
 	 *             any occurring exception
 	 */
@@ -395,7 +395,6 @@ public class JmxSensorTest extends AbstractLogSupport {
 		jmxSensor.registerMBeans();
 
 		ArgumentCaptor<JmxSensorConfig> captor = ArgumentCaptor.forClass(JmxSensorConfig.class);
-		verify(idManager, times(1)).registerJmxSensorConfig(captor.capture());
 		verify(activeAttributes, times(1)).put(testMBeanName, captor.getValue());
 		verify(registeredJmxSensorConfigs, times(1)).put(testMBeanName, captor.getValue());
 		verify(nameStringToObjectName, times(1)).put(eq(testObjectName), (ObjectName) Mockito.anyObject());

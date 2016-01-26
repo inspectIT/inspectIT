@@ -1,10 +1,9 @@
 package info.novatec.inspectit.agent.spring;
 
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.StrategyConfig;
+import info.novatec.inspectit.instrumentation.config.impl.AbstractSensorTypeConfig;
+import info.novatec.inspectit.instrumentation.config.impl.JmxSensorTypeConfig;
+import info.novatec.inspectit.instrumentation.config.impl.StrategyConfig;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -93,6 +92,19 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newScheduledThreadPool(1, threadFactory);
 	}
+	
+	/**
+	 * @return Returns coreServiceExecutorService
+	 */
+	@Bean(name = "coreServiceExecutorService")
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	public ScheduledExecutorService getCoreServiceExecutorService() {
+		ThreadFactory threadFactory = new ThreadFactoryBuilder()
+			.setNameFormat("inspectit-core-service-executor-service-thread-%d")
+			.setDaemon(true)
+			.build();
+		return Executors.newScheduledThreadPool(1, threadFactory);
+	}
 
 	/**
 	 * Registers components needed by the configuration to the Spring container.
@@ -116,7 +128,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		}
 
 		// platform sensor types
-		for (PlatformSensorTypeConfig platformSensorTypeConfig : configurationStorage.getPlatformSensorTypes()) {
+		for (AbstractSensorTypeConfig platformSensorTypeConfig : configurationStorage.getPlatformSensorTypes()) {
 			className = platformSensorTypeConfig.getClassName();
 			beanName = "platformSensorType[" + className + "]";
 			registerBeanDefinitionAndInitialize(beanName, className);
@@ -130,7 +142,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		}
 
 		// method sensor types
-		for (MethodSensorTypeConfig methodSensorTypeConfig : configurationStorage.getMethodSensorTypes()) {
+		for (AbstractSensorTypeConfig methodSensorTypeConfig : configurationStorage.getMethodSensorTypes()) {
 			className = methodSensorTypeConfig.getClassName();
 			beanName = "methodSensorType[" + className + "]";
 			registerBeanDefinitionAndInitialize(beanName, className);

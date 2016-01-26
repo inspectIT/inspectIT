@@ -1,18 +1,19 @@
 package info.novatec.inspectit.agent;
 
 import info.novatec.inspectit.agent.analyzer.IByteCodeAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatchPattern;
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.hooking.IHookDispatcher;
 import info.novatec.inspectit.agent.logback.LogInitializer;
 import info.novatec.inspectit.agent.spring.SpringConfiguration;
+import info.novatec.inspectit.pattern.IMatchPattern;
 import info.novatec.inspectit.version.VersionService;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -42,19 +43,40 @@ public class SpringAgent implements IAgent {
 	private static final String CLASS_NAME_PREFIX = "info.novatec.inspectit";
 
 	/**
+	 * Location of inspectIT jar file.
+	 */
+	private static String inspectitJarLocation;
+
+	/**
 	 * The hook dispatcher used by the instrumented methods.
 	 */
 	private IHookDispatcher hookDispatcher;
 
 	/**
-	 * Set to <code>true</code> if something happened while trying to initialize the pico container.
+	 * The configuration storage.
 	 */
-	private boolean initializationError = false;
+	private IConfigurationStorage configurationStorage;
+
+	/**
+	 * The byte code analyzer.
+	 */
+	private IByteCodeAnalyzer byteCodeAnalyzer;
+
+	/**
+	 * Set to <code>true</code> if something happened and we need to disable further
+	 * instrumentation.
+	 */
+	private boolean disableInstrumentation = false;
 
 	/**
 	 * Created bean factory.
 	 */
 	private BeanFactory beanFactory;
+
+	/**
+	 * Ignore classes patterns.
+	 */
+	private Collection<IMatchPattern> ignoreClassesPatterns;
 
 	/**
 	 * Constructor initializing this agent.
@@ -63,9 +85,23 @@ public class SpringAgent implements IAgent {
 	 *            location of inspectIT jar needed for proper logging
 	 */
 	public SpringAgent(String inspectitJarLocation) {
-		LogInitializer.setInspectitJarLocation(inspectitJarLocation);
+		setInspectITJarLocaltion(inspectitJarLocation);
+
+		// init logging
 		LogInitializer.initLogging();
+
+		// init spring
 		this.initSpring();
+	}
+
+	/**
+	 * Sets {@link #inspectitJarLocation} in synch mode.
+	 * 
+	 * @param inspectitJarLocation
+	 *            Location of the inspectIT jar.
+	 */
+	private synchronized void setInspectITJarLocaltion(String inspectitJarLocation) {
+		SpringAgent.inspectitJarLocation = inspectitJarLocation;
 	}
 
 	/**
@@ -76,28 +112,53 @@ public class SpringAgent implements IAgent {
 			LOG.info("Initializing Spring on inspectIT Agent...");
 		}
 
+		// first add shutdown hook so we are informed when shutdown is initialized to stop
+		// instrumenting classes on the shutdown
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				disableInstrumentation = true;
+			};
+		});
+
 		// set inspectIT class loader to be the context class loader
 		// so that bean factory can use correct class loader for finding the classes
 		ClassLoader inspectITClassLoader = this.getClass().getClassLoader();
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(inspectITClassLoader);
 
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-		ctx.register(SpringConfiguration.class);
-		ctx.refresh();
-		beanFactory = ctx;
+		// load spring context in try block, catch exception and set init error to true
+		try {
+			AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+			ctx.register(SpringConfiguration.class);
+			ctx.refresh();
+			beanFactory = ctx;
 
-		if (LOG.isInfoEnabled()) {
-			LOG.info("Spring successfully initialized");
+			if (beanFactory instanceof ConfigurableApplicationContext) {
+				((ConfigurableApplicationContext) beanFactory).registerShutdownHook();
+			}
+
+			if (LOG.isInfoEnabled()) {
+				LOG.info("Spring successfully initialized");
+			}
+
+			// log version
+			if (LOG.isInfoEnabled()) {
+				VersionService versionService = beanFactory.getBean(VersionService.class);
+				LOG.info("Using agent version " + versionService.getVersionAsString() + ".");
+			}
+
+			// load all necessary beans right away
+			hookDispatcher = beanFactory.getBean(IHookDispatcher.class);
+			configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
+			byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
+
+			// load ignore patterns only once
+			ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
+
+		} catch (Throwable throwable) { // NOPMD
+			disableInstrumentation = true;
+			LOG.error("inspectIT agent initialization failed. Agent will not be active.", throwable);
 		}
-
-		// log version
-		if (LOG.isInfoEnabled()) {
-			VersionService versionService = beanFactory.getBean(VersionService.class);
-			LOG.info("Using agent version " + versionService.getVersionAsString() + ".");
-		}
-
-		hookDispatcher = beanFactory.getBean(IHookDispatcher.class);
 
 		// switch back to the original context class loader
 		Thread.currentThread().setContextClassLoader(contextClassLoader);
@@ -109,20 +170,17 @@ public class SpringAgent implements IAgent {
 	public byte[] inspectByteCode(byte[] byteCode, String className, ClassLoader classLoader) {
 		// if an error in the init method was caught, we'll do nothing here.
 		// This prevents further errors.
-		if (initializationError) {
+		if (disableInstrumentation) {
 			return byteCode;
 		}
 
 		// ignore all classes which fit to the patterns in the configuration
-		IConfigurationStorage configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
-		List<IMatchPattern> ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
 		for (IMatchPattern matchPattern : ignoreClassesPatterns) {
 			if (matchPattern.match(className)) {
 				return byteCode;
 			}
 		}
 
-		IByteCodeAnalyzer byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
 		try {
 			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 			return instrumentedByteCode;
@@ -187,6 +245,15 @@ public class SpringAgent implements IAgent {
 	 */
 	public IHookDispatcher getHookDispatcher() {
 		return hookDispatcher;
+	}
+
+	/**
+	 * Gets {@link #inspectitJarLocation}.
+	 * 
+	 * @return {@link #inspectitJarLocation}
+	 */
+	public static String getInspectitJarLocation() {
+		return inspectitJarLocation;
 	}
 
 }

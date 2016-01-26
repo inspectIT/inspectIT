@@ -1,9 +1,15 @@
 package info.novatec.inspectit.ci.assignment.impl;
 
+import info.novatec.inspectit.ci.Environment;
 import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
 import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
+import info.novatec.inspectit.cmr.service.IRegistrationService;
+import info.novatec.inspectit.instrumentation.config.applier.IInstrumentationApplier;
+import info.novatec.inspectit.instrumentation.config.applier.MethodSensorInstrumentationApplier;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,7 +33,7 @@ public class MethodSensorAssignment extends AbstractClassSensorAssignment<IMetho
 	 */
 	@XmlAttribute(name = "sensor-config-class", required = true)
 	private Class<? extends IMethodSensorConfig> sensorConfig;
-	
+
 	/**
 	 * Method name/pattern.
 	 */
@@ -79,7 +85,8 @@ public class MethodSensorAssignment extends AbstractClassSensorAssignment<IMetho
 	/**
 	 * Default constructor.
 	 * 
-	 * @param sensorConfig Method sensor config class begin assigned.
+	 * @param sensorConfig
+	 *            Method sensor config class begin assigned.
 	 */
 	public MethodSensorAssignment(Class<? extends IMethodSensorConfig> sensorConfig) {
 		this.sensorConfig = sensorConfig;
@@ -91,6 +98,22 @@ public class MethodSensorAssignment extends AbstractClassSensorAssignment<IMetho
 	@Override
 	public Class<? extends IMethodSensorConfig> getSensorConfigClass() {
 		return sensorConfig;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<String, Object> getSettings() {
+		return Collections.emptyMap();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IInstrumentationApplier getInstrumentationApplier(Environment environment, IRegistrationService registrationService) {
+		return new MethodSensorInstrumentationApplier(this, environment, registrationService);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr.service;
 
+import info.novatec.inspectit.cmr.AgentDeletedEvent;
 import info.novatec.inspectit.cmr.dao.DefaultDataDao;
 import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
@@ -24,12 +25,13 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 @Service
 @Transactional
@@ -58,8 +60,15 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	AgentStatusDataProvider agentStatusProvider;
 
 	/**
+	 * Event publisher.
+	 */
+	@Autowired
+	ApplicationEventPublisher eventPublisher;
+
+	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public Map<PlatformIdent, AgentStatusData> getAgentsOverview() {
 		List<PlatformIdent> agents = platformIdentDao.findAll();
@@ -75,6 +84,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public PlatformIdent getCompleteAgent(long id) throws BusinessException {
 		PlatformIdent platformIdent = platformIdentDao.findInitialized(id);
@@ -86,9 +96,10 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	}
 
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public void deleteAgent(long platformId) throws BusinessException {
 		PlatformIdent platformIdent = platformIdentDao.load(platformId);
@@ -102,7 +113,9 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 
 			platformIdentDao.delete(platformIdent);
 			defaultDataDao.deleteAll(platformIdent.getId());
-			agentStatusProvider.registerDeleted(platformId);
+
+			AgentDeletedEvent event = new AgentDeletedEvent(this, platformIdent);
+			eventPublisher.publishEvent(event);
 
 			log.info("The Agent '" + platformIdent.getAgentName() + "' with the ID " + platformIdent.getId() + " was successfully deleted from the CMR.");
 		} else {
@@ -113,6 +126,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<DefaultData> getLastDataObjects(DefaultData template, long timeInterval) {
 		List<DefaultData> result = defaultDataDao.findByExampleWithLastInterval(template, timeInterval);
@@ -122,6 +136,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public DefaultData getLastDataObject(DefaultData template) {
 		DefaultData result = defaultDataDao.findByExampleLastData(template);
@@ -131,6 +146,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<? extends DefaultData> getDataObjectsFromToDate(DefaultData template, Date fromDate, Date toDate) {
 		if (fromDate.after(toDate)) {
@@ -144,6 +160,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<? extends DefaultData> getTemplatesDataObjectsFromToDate(Collection<DefaultData> templates, Date fromDate, Date toDate) {
 		if (fromDate.after(toDate)) {
@@ -161,6 +178,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<DefaultData> getDataObjectsSinceId(DefaultData template) {
 		List<DefaultData> result = defaultDataDao.findByExampleSinceId(template);
@@ -170,6 +188,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<DefaultData> getDataObjectsSinceIdIgnoreMethodId(DefaultData template) {
 		List<DefaultData> result = defaultDataDao.findByExampleSinceIdIgnoreMethodId(template);
@@ -178,7 +197,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

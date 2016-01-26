@@ -41,9 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
  * This class is used as a delegator to the real registration service. It is needed because Spring
  * weaves a proxy around the real registration service which cannot be used in an RMI context with
  * Java 1.4 (as no pre-generated stub is available).
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Service
 @Transactional
@@ -110,6 +110,7 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public synchronized long registerPlatformIdent(List<String> definedIPs, String agentName, String version) throws BusinessException {
 		if (log.isInfoEnabled()) {
@@ -155,9 +156,10 @@ public class RegistrationService implements IRegistrationService {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws BusinessException
 	 */
+	@Override
 	@MethodLog
 	public void unregisterPlatformIdent(List<String> definedIPs, String agentName) throws BusinessException {
 		log.info("Trying to unregister the Agent with following network interfaces:");
@@ -183,6 +185,7 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public long registerMethodIdent(long platformId, String packageName, String className, String methodName, List<String> parameterTypes, String returnType, int modifiers) {
 		MethodIdent methodIdent = new MethodIdent();
@@ -216,6 +219,7 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public long registerMethodSensorTypeIdent(long platformId, String fullyQualifiedClassName, Map<String, Object> parameters) {
 		MethodSensorTypeIdent methodSensorTypeIdent;
@@ -223,20 +227,24 @@ public class RegistrationService implements IRegistrationService {
 		List<MethodSensorTypeIdent> methodSensorTypeIdents = methodSensorTypeIdentDao.findByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
 		if (1 == methodSensorTypeIdents.size()) {
 			methodSensorTypeIdent = methodSensorTypeIdents.get(0);
+
+			// update preferences
+			methodSensorTypeIdent.setSettings(parameters);
+			methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
 		} else {
 			// only if the new sensor is registered we need to update the platform ident
 			PlatformIdent platformIdent = platformIdentDao.load(platformId);
 			methodSensorTypeIdent = new MethodSensorTypeIdent();
 			methodSensorTypeIdent.setPlatformIdent(platformIdent);
 			methodSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
+			methodSensorTypeIdent.setSettings(parameters);
 
 			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
 			sensorTypeIdents.add(methodSensorTypeIdent);
+
+			methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
 			platformIdentDao.saveOrUpdate(platformIdent);
 		}
-		methodSensorTypeIdent.setSettings(parameters);
-
-		methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
 
 		return methodSensorTypeIdent.getId();
 	}
@@ -244,6 +252,7 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public void addSensorTypeToMethod(long methodSensorTypeId, long methodId) {
 		MethodIdentToSensorType methodIdentToSensorType = methodIdentToSensorTypeDao.find(methodId, methodSensorTypeId);
@@ -262,6 +271,7 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public long registerPlatformSensorTypeIdent(long platformId, String fullyQualifiedClassName) {
 		PlatformSensorTypeIdent platformSensorTypeIdent;
@@ -283,6 +293,23 @@ public class RegistrationService implements IRegistrationService {
 		}
 
 		return platformSensorTypeIdent.getId();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	@MethodLog
+	public void refreshMethodIdentToSensorType(long methodId, long... sensorIds) {
+		MethodIdent methodIdent = methodIdentDao.load(methodId);
+		if (null != methodIdent) {
+			Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
+			for (MethodIdentToSensorType methodIdentToSensorType : methodIdent.getMethodIdentToSensorTypes()) {
+				methodIdentToSensorType.setTimestamp(timestamp);
+			}
+			methodIdentDao.saveOrUpdate(methodIdent);
+		}
 	}
 
 	/**
@@ -348,7 +375,7 @@ public class RegistrationService implements IRegistrationService {
 	 * |- IPv4: 127.0.0.1<br>
 	 * |- IPv6: fe80:0:0:0:221:5cff:fe1d:ffdf%3<br>
 	 * |- IPv6: 0:0:0:0:0:0:0:1%1
-	 * 
+	 *
 	 * @param definedIPs
 	 *            List of IPv4 and IPv6 IPs.
 	 */

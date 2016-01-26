@@ -1,11 +1,11 @@
 package info.novatec.inspectit.agent.sensor.exception;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.communication.ExceptionEvent;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.util.StringConstraint;
 
 import java.io.PrintWriter;
@@ -79,7 +79,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 		// getting the actual object class and comparing to the registered sensor config target
 		// class
 		String throwableClass = object.getClass().getName();
-		String rscTragetClassname = rsc.getQualifiedTargetClassName();
+		String rscTragetClassname = rsc.getTargetClassFqn();
 		if (throwableClass.equals(rscTragetClassname)) {
 			try {
 				long platformId = idManager.getPlatformId();

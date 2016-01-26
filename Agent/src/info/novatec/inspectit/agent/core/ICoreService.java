@@ -165,5 +165,5 @@ public interface ICoreService {
 	 * 
 	 * @return a {@link ScheduledExecutorService}
 	 */
-	ScheduledExecutorService getScheduledExecutorService();
+	ScheduledExecutorService getExecutorService();
 }

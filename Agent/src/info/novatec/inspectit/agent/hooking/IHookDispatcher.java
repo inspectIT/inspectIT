@@ -1,5 +1,6 @@
 package info.novatec.inspectit.agent.hooking;
 
+
 /**
  * The hook dispatcher interface defines methods to add method and constructor mappings and methods
  * to dispatch the calls from the instrumented methods in the target application.

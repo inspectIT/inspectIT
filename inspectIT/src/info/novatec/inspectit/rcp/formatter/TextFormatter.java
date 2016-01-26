@@ -4,7 +4,6 @@ import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
 import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
 import info.novatec.inspectit.ci.sensor.ISensorConfig;
 import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -704,8 +703,6 @@ public final class TextFormatter {
 	public static String getSensorConfigName(Class<? extends ISensorConfig> sensorClass) {
 		if (ObjectUtils.equals(sensorClass, ExceptionSensorConfig.class)) {
 			return "Exception Sensor";
-		} else if (ObjectUtils.equals(sensorClass, ConnectionMetaDataSensorConfig.class)) {
-			return "JDBC Connection Meta-Data Sensor";
 		} else if (ObjectUtils.equals(sensorClass, ConnectionSensorConfig.class)) {
 			return "JDBC Connection Sensor";
 		} else if (ObjectUtils.equals(sensorClass, HttpSensorConfig.class)) {

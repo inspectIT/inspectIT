@@ -1,5 +1,7 @@
 package info.novatec.inspectit.agent.config.impl;
 
+import info.novatec.inspectit.instrumentation.config.impl.JmxSensorTypeConfig;
+
 /**
  * Container for the values which describe the monitored JMX MBean. It stores all the values defined in a config
  * file for later access.

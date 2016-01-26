@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The average timer sensor which initializes and returns the {@link AverageTimerHook} class.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class AverageTimerSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -50,7 +50,7 @@ public class AverageTimerSensor extends AbstractMethodSensor implements IMethodS
 
 	/**
 	 * The default constructor which needs 3 parameter for initialization.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer used for accurate measuring.
 	 * @param idManager
@@ -74,8 +74,9 @@ public class AverageTimerSensor extends AbstractMethodSensor implements IMethodS
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		averageTimerHook = new AverageTimerHook(timer, idManager, propertyAccessor, parameter);
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		averageTimerHook = new AverageTimerHook(timer, idManager, propertyAccessor, parameters);
 	}
 
 }

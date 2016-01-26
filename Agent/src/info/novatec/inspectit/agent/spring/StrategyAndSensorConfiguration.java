@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 /**
  * This class enables that {@link SpringConfiguration} processes the {@link ConfigurationStorage}
  * after it has been successfully initialized.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component("strategyAndSensorConfiguration")
-@DependsOn({ "configurationReader" })
+@DependsOn({ "idManager" })
 public class StrategyAndSensorConfiguration implements InitializingBean {
 
 	/**
@@ -35,7 +35,8 @@ public class StrategyAndSensorConfiguration implements InitializingBean {
 	 * {@inheritDoc}
 	 */
 	public void afterPropertiesSet() throws Exception {
+		// here check if we have configuration at this point
+		// if not we must throw exception
 		springConfiguration.registerComponents(configurationStorage);
 	}
-
 }

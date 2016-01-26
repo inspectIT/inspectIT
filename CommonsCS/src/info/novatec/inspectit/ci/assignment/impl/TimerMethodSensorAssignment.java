@@ -1,12 +1,18 @@
 package info.novatec.inspectit.ci.assignment.impl;
 
+import info.novatec.inspectit.ci.Environment;
 import info.novatec.inspectit.ci.context.AbstractContextCapture;
 import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
 import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
 import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
 import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
+import info.novatec.inspectit.cmr.service.IRegistrationService;
+import info.novatec.inspectit.instrumentation.config.applier.IInstrumentationApplier;
+import info.novatec.inspectit.instrumentation.config.applier.TimerMethodSensorInstrumentationApplier;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,6 +21,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.collections.MapUtils;
 
 /**
  * Timer sensor assignment.
@@ -56,6 +64,36 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 	 */
 	public TimerMethodSensorAssignment() {
 		super(TimerSensorConfig.class);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<String, Object> getSettings() {
+		Map<String, Object> settings = super.getSettings();
+		if (MapUtils.isEmpty(settings)) {
+			settings = new HashMap<>();
+		}
+
+		// charting
+		if (charting) {
+			settings.put("charting", Boolean.TRUE);
+		}
+
+		if (minInvocationDuration > 0) {
+			settings.put("minduration", minInvocationDuration);
+		}
+
+		return settings;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IInstrumentationApplier getInstrumentationApplier(Environment environment, IRegistrationService registrationService) {
+		return new TimerMethodSensorInstrumentationApplier(this, environment, registrationService);
 	}
 
 	/**

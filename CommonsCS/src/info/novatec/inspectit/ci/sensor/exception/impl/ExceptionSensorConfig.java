@@ -2,7 +2,7 @@ package info.novatec.inspectit.ci.sensor.exception.impl;
 
 import info.novatec.inspectit.ci.sensor.StringConstraintSensorConfig;
 import info.novatec.inspectit.ci.sensor.exception.IExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+import info.novatec.inspectit.instrumentation.config.PriorityEnum;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -72,8 +72,8 @@ public class ExceptionSensorConfig extends StringConstraintSensorConfig implemen
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodSensorPriorityEnum getPriority() {
-		return MethodSensorPriorityEnum.NORMAL;
+	public PriorityEnum getPriority() {
+		return PriorityEnum.NORMAL;
 	}
 
 	/**

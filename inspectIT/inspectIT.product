@@ -98,7 +98,6 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="com.springsource.javax.inject"/>
       <plugin id="com.springsource.net.sf.cglib"/>
       <plugin id="com.springsource.org.aopalliance"/>
-      <plugin id="info.novatec.asm"/>
       <plugin id="info.novatec.hamcrest-all"/>
       <plugin id="info.novatec.high-scale-lib"/>
       <plugin id="info.novatec.httpclient"/>
@@ -167,6 +166,7 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="org.eclipse.ui.intro"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.hibernate.javax.persistence.hibernate-jpa-2.1-api"/>
+      <plugin id="org.objectweb.asm.all"/>
       <plugin id="org.objenesis"/>
       <plugin id="org.springframework.aop"/>
       <plugin id="org.springframework.beans"/>

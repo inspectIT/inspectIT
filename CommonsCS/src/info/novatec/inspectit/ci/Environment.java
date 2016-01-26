@@ -4,7 +4,6 @@ import info.novatec.inspectit.ci.factory.ConfigurationDefaultsFactory;
 import info.novatec.inspectit.ci.sensor.exception.IExceptionSensorConfig;
 import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -103,9 +102,9 @@ public class Environment {
 	 * List of the method sensor configurations.
 	 */
 	@XmlElementWrapper(name = "method-sensor-configs")
-	@XmlElementRefs({ @XmlElementRef(type = ConnectionMetaDataSensorConfig.class), @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class),
-			@XmlElementRef(type = InvocationSequenceSensorConfig.class), @XmlElementRef(type = PreparedStatementParameterSensorConfig.class),
-			@XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class), @XmlElementRef(type = TimerSensorConfig.class) })
+	@XmlElementRefs({ @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class), @XmlElementRef(type = InvocationSequenceSensorConfig.class),
+			@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
+			@XmlElementRef(type = TimerSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**
@@ -126,6 +125,23 @@ public class Environment {
 	 */
 	@XmlElement(name = "classLoadingDelegation")
 	private boolean classLoadingDelegation = true;
+
+	/**
+	 * Returns the {@link IMethodSensorConfig} for the given {@link IMethodSensorConfig} class.
+	 * 
+	 * @param clazz
+	 *            Class to look for.
+	 * @return Returns the {@link IMethodSensorConfig} for the given {@link IMethodSensorConfig}
+	 *         class.
+	 */
+	public IMethodSensorConfig getMethodSensorTypeConfig(Class<? extends IMethodSensorConfig> clazz) {
+		for (IMethodSensorConfig config : methodSensorConfigs) {
+			if (config.getClass().equals(clazz)) {
+				return config;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Gets {@link #id}.
