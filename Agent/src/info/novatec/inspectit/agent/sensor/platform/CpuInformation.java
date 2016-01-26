@@ -10,16 +10,15 @@ import info.novatec.inspectit.spring.logger.Log;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class provides dynamic information about the underlying operating system through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class CpuInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -39,7 +38,7 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 	 * The {@link OperatingSystemInfoProvider} used to retrieve information from the operating
 	 * system.
 	 */
-	private OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
+	private final OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -49,7 +48,7 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
+	 *
 	 * @param idManager
 	 *            The ID Manager.
 	 */
@@ -59,7 +58,7 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 
 	/**
 	 * Returns the process cpu time.
-	 * 
+	 *
 	 * @return the process cpu time.
 	 */
 	public long getProcessCpuTime() {
@@ -68,10 +67,10 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 
 	/**
 	 * Updates all dynamic cpu information.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The sensorTypeIdent.
 	 */
@@ -114,12 +113,6 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 			}
 		}
 
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

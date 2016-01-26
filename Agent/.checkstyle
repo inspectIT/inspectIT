@@ -8,7 +8,7 @@
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
   <filter name="FilesFromPackage" enabled="true">
-    <filter-data value="src/com"/>
     <filter-data value="test"/>
+    <filter-data value="perf"/>
   </filter>
 </fileset-config>

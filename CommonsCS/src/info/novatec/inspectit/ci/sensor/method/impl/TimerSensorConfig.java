@@ -2,7 +2,7 @@ package info.novatec.inspectit.ci.sensor.method.impl;
 
 import info.novatec.inspectit.ci.sensor.StringConstraintSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+import info.novatec.inspectit.instrumentation.config.PriorityEnum;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -53,8 +53,8 @@ public class TimerSensorConfig extends StringConstraintSensorConfig implements I
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodSensorPriorityEnum getPriority() {
-		return MethodSensorPriorityEnum.MAX;
+	public PriorityEnum getPriority() {
+		return PriorityEnum.MAX;
 	}
 
 	/**

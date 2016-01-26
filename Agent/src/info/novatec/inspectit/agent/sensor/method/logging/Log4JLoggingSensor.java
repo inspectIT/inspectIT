@@ -4,19 +4,14 @@ import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.hooking.IHook;
 import info.novatec.inspectit.agent.sensor.method.AbstractMethodSensor;
 import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelper;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory.Framework;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Logging sensor to capture log4j loggings.
- * 
+ *
  * @author Stefan Siegl
  */
 public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodSensor {
@@ -36,9 +31,10 @@ public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodS
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
 		// read the desired minimum level and pass it to the hook
-		String minimumLevelToCapture = (String) parameter.get(CONFIG_KEY_MINIMUM_LEVEL);
+		String minimumLevelToCapture = (String) parameters.get(CONFIG_KEY_MINIMUM_LEVEL);
 		hook = new Log4JLoggingHook(idManager, minimumLevelToCapture);
 	}
 
@@ -48,4 +44,5 @@ public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodS
 	public IHook getHook() {
 		return hook;
 	}
+
 }

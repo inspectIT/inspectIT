@@ -8,6 +8,7 @@ import info.novatec.inspectit.ci.factory.ConfigurationDefaultsFactory;
 import info.novatec.inspectit.ci.sensor.ISensorConfig;
 import info.novatec.inspectit.ci.sensor.exception.IExceptionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
 import info.novatec.inspectit.rcp.formatter.ImageFormatter;
 import info.novatec.inspectit.rcp.formatter.TextFormatter;
@@ -94,6 +95,11 @@ public class SensorAssignmentSelectionDialog extends ListDialog {
 	private static Object getInput(boolean showAdvanced) {
 		List<IMethodSensorConfig> input = new ArrayList<IMethodSensorConfig>();
 		for (IMethodSensorConfig sensorConfig : ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs()) {
+			if (sensorConfig instanceof InvocationSequenceSensorConfig) {
+				// skip invocation sensor, as we don't want to allow direct configuration on the UI
+				continue;
+			}
+
 			if (showAdvanced || !sensorConfig.isAdvanced()) {
 				input.add(sensorConfig);
 			}
@@ -127,7 +133,7 @@ public class SensorAssignmentSelectionDialog extends ListDialog {
 				return new TimerMethodSensorAssignment();
 			} else if (sensorConfig instanceof IMethodSensorConfig) {
 				return new MethodSensorAssignment((Class<? extends IMethodSensorConfig>) sensorConfig.getClass());
-			} 
+			}
 		}
 		return null;
 	}

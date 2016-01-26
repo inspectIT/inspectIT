@@ -3,9 +3,12 @@ package info.novatec.inspectit.ci.context;
 import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
 import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
 import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
+import info.novatec.inspectit.instrumentation.config.impl.PropertyPath;
+import info.novatec.inspectit.instrumentation.config.impl.PropertyPathStart;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -44,6 +47,30 @@ public abstract class AbstractContextCapture {
 	 * @return Returns string notation that should be passed to agent.
 	 */
 	public abstract String getAgentStringNotation();
+
+	/**
+	 * Returns correctly set property path start.
+	 * 
+	 * @return Returns correctly set property path start.
+	 */
+	public abstract PropertyPathStart getPropertyPathStart();
+
+	/**
+	 * Adds all defined paths to the property path start.
+	 * 
+	 * @param propertyPathStart
+	 *            {@link PropertyPathStart}
+	 */
+	protected void addPaths(PropertyPathStart propertyPathStart) {
+		if (CollectionUtils.isNotEmpty(paths)) {
+			PropertyPath parent = propertyPathStart;
+			for (String path : paths) {
+				PropertyPath toContinue = new PropertyPath(path);
+				parent.setPathToContinue(toContinue);
+				parent = toContinue;
+			}
+		}
+	}
 
 	/**
 	 * Gets {@link #displayName}.

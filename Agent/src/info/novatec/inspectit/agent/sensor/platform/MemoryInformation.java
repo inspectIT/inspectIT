@@ -11,16 +11,15 @@ import info.novatec.inspectit.spring.logger.Log;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class provides dynamic information about the memory system through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class MemoryInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -39,12 +38,12 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * The {@link MemoryInfoProvider} used to retrieve heap memory information.
 	 */
-	private MemoryInfoProvider memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
+	private final MemoryInfoProvider memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
 
 	/**
 	 * The {@link OperatingSystemInfoProvider} used to retrieve physical memory information.
 	 */
-	private OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
+	private final OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -54,7 +53,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
+	 *
 	 * @param idManager
 	 *            The ID Manager.
 	 */
@@ -64,7 +63,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the amount of free physical memory.
-	 * 
+	 *
 	 * @return the free physical memory.
 	 */
 	public long getFreePhysMemory() {
@@ -73,7 +72,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the amount of free swap space.
-	 * 
+	 *
 	 * @return the free swap space.
 	 */
 	public long getFreeSwapSpace() {
@@ -83,7 +82,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * Returns the amount of virtual memory that is guaranteed to be available to the running
 	 * process.
-	 * 
+	 *
 	 * @return the virtual memory size.
 	 */
 	public long getComittedVirtualMemSize() {
@@ -92,7 +91,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the memory usage of the heap that is used for object allocation.
-	 * 
+	 *
 	 * @return the memory usage of the heap for object allocation.
 	 */
 	public long getUsedHeapMemorySize() {
@@ -102,7 +101,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * Returns the amount of memory that is guaranteed to be available for use by the virtual
 	 * machine for heap memory usage.
-	 * 
+	 *
 	 * @return the amount of guaranteed to be available memory for heap memory usage.
 	 */
 	public long getComittedHeapMemorySize() {
@@ -111,7 +110,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Returns the amount of memory for non-heap memory usage of the virtual machine.
-	 * 
+	 *
 	 * @return the amount of memory for non-heap memory usage.
 	 */
 	public long getUsedNonHeapMemorySize() {
@@ -121,7 +120,7 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 	/**
 	 * Returns the amount of memory that is guaranteed to be available for use by the virtual
 	 * machine for non-heap memory usage.
-	 * 
+	 *
 	 * @return the guaranteed to be available memory for non-heap memory usage.
 	 */
 	public long getComittedNonHeapMemoryUsage() {
@@ -130,10 +129,10 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 
 	/**
 	 * Updates all dynamic memory informations.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The sensorTypeIdent.
 	 */
@@ -243,12 +242,6 @@ public class MemoryInformation extends AbstractPlatformSensor implements IPlatfo
 				memoryData.setMaxComittedNonHeapMemorySize(comittedNonHeapMemorySize);
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

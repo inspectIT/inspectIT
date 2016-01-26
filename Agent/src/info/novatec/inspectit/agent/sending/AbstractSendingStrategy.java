@@ -1,8 +1,8 @@
 package info.novatec.inspectit.agent.sending;
 
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.StrategyConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
+import info.novatec.inspectit.instrumentation.config.impl.StrategyConfig;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

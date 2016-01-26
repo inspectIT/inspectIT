@@ -2,7 +2,16 @@ package info.novatec.inspectit.agent.sensor.method.logging;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
+
+import info.novatec.inspectit.agent.AbstractLogSupport;
+import info.novatec.inspectit.agent.core.ICoreService;
+import info.novatec.inspectit.agent.core.IIdManager;
+import info.novatec.inspectit.agent.core.IdNotAvailableException;
+import info.novatec.inspectit.communication.data.LoggingData;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
+import info.novatec.inspectit.util.ObjectUtils;
 
 import org.apache.log4j.Level;
 import org.mockito.ArgumentMatcher;
@@ -10,16 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory.Framework;
-import info.novatec.inspectit.communication.data.LoggingData;
-import info.novatec.inspectit.util.ObjectUtils;
 
 @SuppressWarnings("PMD")
 public class Log4JLoggingHookTest extends AbstractLogSupport {
@@ -32,8 +31,6 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 
 	@Mock
 	RegisteredSensorConfig rsc;
-
-	private static final String defaultMessage = "the log message";
 
 	// FATAL - ERROR - WARN - INFO - TRACE - DEBUG
 

@@ -70,4 +70,15 @@
 			<class name="info.novatec.inspectit.ci.CiXmlTransformationTest" />
 		</classes>
 	</test>
+		<test name="Instrumentation">
+		<classes>
+			<class name="info.novatec.inspectit.instrumentation.config.applier.AbstractSensorInstrumentationApplierTest" />
+			<class name="info.novatec.inspectit.instrumentation.config.applier.ExceptionSensorInstrumentationApplierTest" />
+			<class name="info.novatec.inspectit.instrumentation.config.applier.FunctionalInstrumentationApplierTest" />
+			<class name="info.novatec.inspectit.instrumentation.config.applier.MethodSensorInstrumentationApplierTest" />
+			<class name="info.novatec.inspectit.instrumentation.config.applier.TimerMethodSensorInstrumentationApplierTest" />
+			<class name="info.novatec.inspectit.instrumentation.config.filter.ClassSensorAssignmentFilterTest" />
+			<class name="info.novatec.inspectit.instrumentation.config.filter.MethodSensorAssignmentFilterTest" />
+		</classes>
+	</test>
 </suite>

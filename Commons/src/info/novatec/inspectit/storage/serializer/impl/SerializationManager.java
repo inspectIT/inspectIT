@@ -51,6 +51,30 @@ import info.novatec.inspectit.exception.TechnicalException;
 import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
+import info.novatec.inspectit.instrumentation.classcache.AnnotationType;
+import info.novatec.inspectit.instrumentation.classcache.ClassType;
+import info.novatec.inspectit.instrumentation.classcache.InterfaceType;
+import info.novatec.inspectit.instrumentation.classcache.MethodType;
+import info.novatec.inspectit.instrumentation.classcache.util.ArraySet;
+import info.novatec.inspectit.instrumentation.classcache.util.MethodTypeSet;
+import info.novatec.inspectit.instrumentation.classcache.util.SortedArraySet;
+import info.novatec.inspectit.instrumentation.classcache.util.TypeSet;
+import info.novatec.inspectit.instrumentation.classcache.util.TypeWithAnnotationsSet;
+import info.novatec.inspectit.instrumentation.config.FunctionalInstrumentationType;
+import info.novatec.inspectit.instrumentation.config.PriorityEnum;
+import info.novatec.inspectit.instrumentation.config.impl.AgentConfiguration;
+import info.novatec.inspectit.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import info.novatec.inspectit.instrumentation.config.impl.FunctionalInstrumentationPoint;
+import info.novatec.inspectit.instrumentation.config.impl.InstrumentationResult;
+import info.novatec.inspectit.instrumentation.config.impl.MethodInstrumentationConfig;
+import info.novatec.inspectit.instrumentation.config.impl.MethodSensorTypeConfig;
+import info.novatec.inspectit.instrumentation.config.impl.PlatformSensorTypeConfig;
+import info.novatec.inspectit.instrumentation.config.impl.PropertyPath;
+import info.novatec.inspectit.instrumentation.config.impl.PropertyPathStart;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
+import info.novatec.inspectit.instrumentation.config.impl.StrategyConfig;
+import info.novatec.inspectit.pattern.EqualsMatchPattern;
+import info.novatec.inspectit.pattern.WildcardMatchPattern;
 import info.novatec.inspectit.storage.serializer.HibernateAwareClassResolver;
 import info.novatec.inspectit.storage.serializer.IKryoProvider;
 import info.novatec.inspectit.storage.serializer.ISerializer;
@@ -319,6 +343,33 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));
 		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager));
 		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager));
+
+		// added with INSPECTIT-1919
+		kryo.register(AgentConfiguration.class, new FieldSerializer<AgentConfiguration>(kryo, AgentConfiguration.class));
+		kryo.register(StrategyConfig.class, new FieldSerializer<StrategyConfig>(kryo, StrategyConfig.class));
+		kryo.register(PlatformSensorTypeConfig.class, new FieldSerializer<PlatformSensorTypeConfig>(kryo, PlatformSensorTypeConfig.class));
+		kryo.register(MethodSensorTypeConfig.class, new FieldSerializer<MethodSensorTypeConfig>(kryo, MethodSensorTypeConfig.class));
+		kryo.register(ExceptionSensorTypeConfig.class, new FieldSerializer<ExceptionSensorTypeConfig>(kryo, ExceptionSensorTypeConfig.class));
+		kryo.register(PropertyPath.class, new FieldSerializer<PropertyPath>(kryo, PropertyPath.class));
+		kryo.register(PropertyPathStart.class, new FieldSerializer<PropertyPathStart>(kryo, PropertyPathStart.class));
+		kryo.register(InstrumentationResult.class, new FieldSerializer<InstrumentationResult>(kryo, InstrumentationResult.class));
+		kryo.register(MethodInstrumentationConfig.class, new FieldSerializer<MethodInstrumentationConfig>(kryo, MethodInstrumentationConfig.class));
+		kryo.register(RegisteredSensorConfig.class, new FieldSerializer<RegisteredSensorConfig>(kryo, RegisteredSensorConfig.class));
+		kryo.register(FunctionalInstrumentationPoint.class, new FieldSerializer<FunctionalInstrumentationPoint>(kryo, FunctionalInstrumentationPoint.class));
+		kryo.register(FunctionalInstrumentationType.class, new EnumSerializer(FunctionalInstrumentationType.class));
+		kryo.register(PriorityEnum.class, new EnumSerializer(PriorityEnum.class));
+		kryo.register(EqualsMatchPattern.class, new FieldSerializer<EqualsMatchPattern>(kryo, EqualsMatchPattern.class));
+		kryo.register(WildcardMatchPattern.class, new FieldSerializer<WildcardMatchPattern>(kryo, WildcardMatchPattern.class));
+		// class cache structures
+		kryo.register(ClassType.class, new FieldSerializer<ClassType>(kryo, ClassType.class));
+		kryo.register(InterfaceType.class, new FieldSerializer<InterfaceType>(kryo, InterfaceType.class));
+		kryo.register(AnnotationType.class, new FieldSerializer<AnnotationType>(kryo, AnnotationType.class));
+		kryo.register(MethodType.class, new FieldSerializer<MethodType>(kryo, MethodType.class));
+		kryo.register(ArraySet.class, new CollectionSerializer());
+		kryo.register(SortedArraySet.class, new CollectionSerializer());
+		kryo.register(MethodTypeSet.class, new CollectionSerializer());
+		kryo.register(TypeSet.class, new CollectionSerializer());
+		kryo.register(TypeWithAnnotationsSet.class, new CollectionSerializer());
 	}
 
 	/**
