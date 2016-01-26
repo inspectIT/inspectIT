@@ -12,13 +12,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IObjectStorage;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.agent.core.impl.IdManager;
 import info.novatec.inspectit.communication.MethodSensorData;
 import info.novatec.inspectit.communication.data.SqlStatementData;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.util.Timer;
 
 import java.sql.Timestamp;

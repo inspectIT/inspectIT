@@ -10,16 +10,15 @@ import info.novatec.inspectit.spring.logger.Log;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class provides dynamic information about the class loading system through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ClassLoadingInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -38,7 +37,7 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the class loading system.
 	 */
-	private RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -48,7 +47,7 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
+	 *
 	 * @param idManager
 	 *            The ID Manager.
 	 */
@@ -58,7 +57,7 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * Returns the number of loaded classes in the virtual machine.
-	 * 
+	 *
 	 * @return The number of loaded classes.
 	 */
 	public int getLoadedClassCount() {
@@ -67,7 +66,7 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * Returns the total number of loaded classes since the virtual machine started.
-	 * 
+	 *
 	 * @return The total number of loaded classes.
 	 */
 	public long getTotalLoadedClassCount() {
@@ -76,7 +75,7 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * Returns the number of unloaded classes since the virtual machine started.
-	 * 
+	 *
 	 * @return The number of unloaded classes.
 	 */
 	public long getUnloadedClassCount() {
@@ -85,10 +84,10 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 
 	/**
 	 * Updates all dynamic class loading information.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The sensorTypeIdent.
 	 */
@@ -150,12 +149,6 @@ public class ClassLoadingInformation extends AbstractPlatformSensor implements I
 				classLoadingData.setMaxUnloadedClassCount(unloadedClassCount);
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

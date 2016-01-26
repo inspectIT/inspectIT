@@ -1,8 +1,8 @@
 package info.novatec.inspectit.agent.sensor.exception;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.hooking.IConstructorHook;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
 
 /**
  * Classes which add additional instructions to the constructor of type {@link Throwable}, to the

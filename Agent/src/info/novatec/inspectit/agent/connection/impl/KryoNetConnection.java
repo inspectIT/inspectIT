@@ -1,20 +1,19 @@
 package info.novatec.inspectit.agent.connection.impl;
 
-import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.connection.FailFastRemoteMethodCall;
 import info.novatec.inspectit.agent.connection.IConnection;
 import info.novatec.inspectit.agent.connection.RegistrationException;
 import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.spring.PrototypesProvider;
+import info.novatec.inspectit.cmr.service.IAgentService;
 import info.novatec.inspectit.cmr.service.IAgentStorageService;
 import info.novatec.inspectit.cmr.service.IKeepAliveService;
-import info.novatec.inspectit.cmr.service.IRegistrationService;
 import info.novatec.inspectit.cmr.service.ServiceInterface;
 import info.novatec.inspectit.communication.DefaultData;
+import info.novatec.inspectit.exception.BusinessException;
+import info.novatec.inspectit.instrumentation.classcache.Type;
+import info.novatec.inspectit.instrumentation.config.impl.AgentConfiguration;
+import info.novatec.inspectit.instrumentation.config.impl.InstrumentationResult;
 import info.novatec.inspectit.kryonet.Client;
 import info.novatec.inspectit.kryonet.ExtendedSerializationImpl;
 import info.novatec.inspectit.kryonet.IExtendedSerialization;
@@ -28,8 +27,10 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,9 +39,9 @@ import com.esotericsoftware.kryonet.rmi.RemoteObject;
 
 /**
  * Implements the {@link IConnection} interface using the kryo-net.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Component
 public class KryoNetConnection implements IConnection {
@@ -68,9 +69,9 @@ public class KryoNetConnection implements IConnection {
 	private IAgentStorageService agentStorageService;
 
 	/**
-	 * The registration remote object which will be used for the registration of the sensors.
+	 * Agent service.
 	 */
-	private IRegistrationService registrationService;
+	private IAgentService agentService;
 
 	/**
 	 * THe keep-alive service remote object to send keep-alive messages.
@@ -104,15 +105,15 @@ public class KryoNetConnection implements IConnection {
 				((RemoteObject) agentStorageService).setNonBlocking(true);
 				((RemoteObject) agentStorageService).setTransmitReturnValue(false);
 
-				int registrationServiceServiceId = IRegistrationService.class.getAnnotation(ServiceInterface.class).serviceId();
-				registrationService = ObjectSpace.getRemoteObject(client, registrationServiceServiceId, IRegistrationService.class);
-				((RemoteObject) registrationService).setNonBlocking(false);
-				((RemoteObject) registrationService).setTransmitReturnValue(true);
+				int agentServiceServiceId = IAgentService.class.getAnnotation(ServiceInterface.class).serviceId();
+				agentService = ObjectSpace.getRemoteObject(client, agentServiceServiceId, IAgentService.class);
+				((RemoteObject) agentService).setNonBlocking(false);
+				((RemoteObject) agentService).setTransmitReturnValue(true);
 
 				int keepAliveServiceId = IKeepAliveService.class.getAnnotation(ServiceInterface.class).serviceId();
 				keepAliveService = ObjectSpace.getRemoteObject(client, keepAliveServiceId, IKeepAliveService.class);
 				((RemoteObject) keepAliveService).setNonBlocking(true);
-				((RemoteObject) registrationService).setTransmitReturnValue(false);
+				((RemoteObject) keepAliveService).setTransmitReturnValue(false);
 
 				log.info("KryoNet: Connection established!");
 				connectionException = false;
@@ -134,7 +135,7 @@ public class KryoNetConnection implements IConnection {
 
 	/**
 	 * Creates new client and tries to connect to host.
-	 * 
+	 *
 	 * @param host
 	 *            Host IP address.
 	 * @param port
@@ -159,7 +160,7 @@ public class KryoNetConnection implements IConnection {
 			client = null; // NOPMD
 		}
 		agentStorageService = null; // NOPMD
-		registrationService = null; // NOPMD
+		agentService = null; // NOPMD
 		keepAliveService = null; // NOPMD
 	}
 
@@ -190,7 +191,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
-	public long registerPlatform(final String agentName, final String version) throws ServerUnavailableException, RegistrationException {
+	public AgentConfiguration register(final String agentName, final String version) throws ServerUnavailableException, RegistrationException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
 		}
@@ -203,16 +204,16 @@ public class KryoNetConnection implements IConnection {
 		} catch (SocketException socketException) {
 			log.error("Could not obtain network interfaces from this machine!");
 			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", socketException);
+				log.trace("unregister(List,String)", socketException);
 			}
 			throw new RegistrationException("Could not un-register the platform", socketException);
 		}
 
 		// make call
-		FailFastRemoteMethodCall<IRegistrationService, Long> call = new FailFastRemoteMethodCall<IRegistrationService, Long>(registrationService) {
+		FailFastRemoteMethodCall<IAgentService, AgentConfiguration> call = new FailFastRemoteMethodCall<IAgentService, AgentConfiguration>(agentService) {
 			@Override
-			protected Long performRemoteCall(IRegistrationService service) throws Exception {
-				return service.registerPlatformIdent(networkInterfaces, agentName, version);
+			protected AgentConfiguration performRemoteCall(IAgentService service) throws Exception {
+				return agentService.register(networkInterfaces, agentName, version);
 			}
 		};
 
@@ -220,7 +221,7 @@ public class KryoNetConnection implements IConnection {
 			return call.makeCall();
 		} catch (ExecutionException executionException) {
 			if (log.isTraceEnabled()) {
-				log.trace("registerPlatform(String)", executionException);
+				log.trace("register(String)", executionException);
 			}
 			throw new RegistrationException("Could not register the platform", executionException);
 		}
@@ -229,7 +230,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void unregisterPlatform(final String agentName) throws ServerUnavailableException, RegistrationException {
+	public void unregister(final String agentName) throws ServerUnavailableException, RegistrationException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
 		}
@@ -242,16 +243,16 @@ public class KryoNetConnection implements IConnection {
 		} catch (SocketException socketException) {
 			log.error("Could not obtain network interfaces from this machine!");
 			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", socketException);
+				log.trace("unregister(List,String)", socketException);
 			}
 			throw new RegistrationException("Could not un-register the platform", socketException);
 		}
 
 		// make call
-		FailFastRemoteMethodCall<IRegistrationService, Void> call = new FailFastRemoteMethodCall<IRegistrationService, Void>(registrationService) {
+		FailFastRemoteMethodCall<IAgentService, Void> call = new FailFastRemoteMethodCall<IAgentService, Void>(agentService) {
 			@Override
-			protected Void performRemoteCall(IRegistrationService service) throws Exception {
-				service.unregisterPlatformIdent(networkInterfaces, agentName);
+			protected Void performRemoteCall(IAgentService service) throws Exception {
+				service.unregister(networkInterfaces, agentName);
 				return null;
 			}
 		};
@@ -260,7 +261,7 @@ public class KryoNetConnection implements IConnection {
 			call.makeCall();
 		} catch (ExecutionException executionException) {
 			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", executionException);
+				log.trace("unregister(List,String)", executionException);
 			}
 			throw new RegistrationException("Could not un-register the platform", executionException);
 		}
@@ -288,124 +289,62 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
-	public long registerMethod(long platformId, RegisteredSensorConfig sensorConfig) throws ServerUnavailableException, RegistrationException {
+	public InstrumentationResult analyzeAndInstrument(final long platformIdent, final String hash, final Type type) throws ServerUnavailableException, BusinessException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
 		}
 
-		RegisterMethodIdent register = new RegisterMethodIdent(registrationService, sensorConfig, platformId);
+		// make call
+		FailFastRemoteMethodCall<IAgentService, InstrumentationResult> call = new FailFastRemoteMethodCall<IAgentService, InstrumentationResult>(agentService) {
+			@Override
+			protected InstrumentationResult performRemoteCall(IAgentService service) throws Exception {
+				return agentService.analyzeAndInstrument(platformIdent, hash, type);
+			}
+		};
+
 		try {
-			Long id = register.makeCall();
-			return id.longValue();
+			return call.makeCall();
 		} catch (ExecutionException executionException) {
-			// there should be no execution exception
-			log.error("Could not register the method", executionException);
-			throw new RegistrationException("Could not register the method", executionException);
+			if (log.isTraceEnabled()) {
+				log.trace("analyzeAndInstrument(List,String)", executionException);
+			}
+
+			// check for business exception
+			if (executionException.getCause() instanceof BusinessException) {
+				throw ((BusinessException) executionException.getCause()); // NOPMD
+			}
+
+			// otherwise we log and return null as it's unexpected exception for us
+			log.error("Could not get instrumentation result", executionException);
+			return null;
 		}
+
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public long registerMethodSensorType(long platformId, MethodSensorTypeConfig methodSensorTypeConfig) throws ServerUnavailableException, RegistrationException {
+	public void instrumentationApplied(Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
 		}
 
-		RegisterMethodSensorType register = new RegisterMethodSensorType(registrationService, methodSensorTypeConfig, platformId);
-		try {
-			Long id = register.makeCall();
-			return id.longValue();
-		} catch (ExecutionException executionException) {
-			// there should be no execution exception
-			log.error("Could not register the method sensor type", executionException);
-			throw new RegistrationException("Could not register the method sensor type", executionException);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long registerPlatformSensorType(long platformId, PlatformSensorTypeConfig platformSensorTypeConfig) throws ServerUnavailableException, RegistrationException {
-		if (!isConnected()) {
-			throw new ServerUnavailableException();
-		}
-
-		RegisterPlatformSensorType register = new RegisterPlatformSensorType(registrationService, platformSensorTypeConfig, platformId);
-		try {
-			Long id = register.makeCall();
-			return id.longValue();
-		} catch (ExecutionException executionException) {
-			// there should be no execution exception
-			log.error("Could not register the platform sensor type", executionException);
-			throw new RegistrationException("Could not register the platform sensor type", executionException);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long registerJmxSensorType(long platformId, JmxSensorTypeConfig jmxSensorTypeConfig) throws ServerUnavailableException, RegistrationException {
-		if (!isConnected()) {
-			throw new ServerUnavailableException();
-		}
-
-		RegisterJmxSensorType register = new RegisterJmxSensorType(registrationService, jmxSensorTypeConfig, platformId);
-		try {
-			Long id = register.makeCall();
-			return id.longValue();
-		} catch (ExecutionException executionException) {
-			// there should be no execution exception
-			log.error("Could not register the jmx sensor type", executionException);
-			throw new RegistrationException("Could not register the method sensor type", executionException);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long registerJmxDefinitionData(long platformId, JmxSensorConfig config) throws ServerUnavailableException, RegistrationException {
-		if (!isConnected()) {
-			throw new ServerUnavailableException();
-		}
-
-		if (config.getmBeanObjectName() != null) {
-			RegisterJmxDefinitionDataIdent register = new RegisterJmxDefinitionDataIdent(registrationService, config, platformId);
+		if (MapUtils.isNotEmpty(methodToSensorMap)) {
 			try {
-				Long id = register.makeCall();
-				return id.longValue();
+				InstrumentationAppliedCall call = new InstrumentationAppliedCall(agentService, methodToSensorMap);
+				call.makeCall();
 			} catch (ExecutionException executionException) {
 				// there should be no execution exception
-				log.error("Could not register the jmx sensor type", executionException);
-				throw new RegistrationException("Could not register the jmx definition data", executionException);
+				log.error("Could not sent instrumented method ids", executionException);
 			}
-		} else {
-			throw new RegistrationException("Could not register the jmx definition data - empty set of data");
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addSensorTypeToMethod(long sensorTypeId, long methodId) throws ServerUnavailableException, RegistrationException {
-		if (!isConnected()) {
-			throw new ServerUnavailableException();
 		}
 
-		AddSensorTypeToMethod addTypeToSensor = new AddSensorTypeToMethod(registrationService, sensorTypeId, methodId);
-		try {
-			addTypeToSensor.makeCall();
-		} catch (ExecutionException executionException) {
-			// there should be no execution exception
-			log.error("Could not add the sensor type to a method", executionException);
-			throw new RegistrationException("Could not add the sensor type to a method", executionException);
-		}
 	}
 
 	/**
 	 * Loads all the network interfaces and transforms the enumeration to the list of strings
 	 * containing all addresses.
-	 * 
+	 *
 	 * @return List of all network interfaces.
 	 * @throws SocketException
 	 *             If {@link SocketException} occurs.
@@ -415,10 +354,10 @@ public class KryoNetConnection implements IConnection {
 		List<String> networkInterfaces = new ArrayList<String>();
 
 		while (interfaces.hasMoreElements()) {
-			NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
+			NetworkInterface networkInterface = interfaces.nextElement();
 			Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
 			while (addresses.hasMoreElements()) {
-				InetAddress address = (InetAddress) addresses.nextElement();
+				InetAddress address = addresses.nextElement();
 				networkInterfaces.add(address.getHostAddress());
 			}
 		}

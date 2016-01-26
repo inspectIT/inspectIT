@@ -3,7 +3,6 @@ package info.novatec.inspectit.ci.factory;
 import info.novatec.inspectit.ci.sensor.exception.IExceptionSensorConfig;
 import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -26,12 +25,15 @@ import info.novatec.inspectit.ci.strategy.impl.TimeSendingStrategyConfig;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  * Defaults factory defines what is default for our configuration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
+@XmlTransient
 public final class ConfigurationDefaultsFactory {
 
 	/**
@@ -42,7 +44,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns default sending strategy, that's {@link TimeSendingStrategyConfig}.
-	 * 
+	 *
 	 * @return Returns default sending strategy.
 	 */
 	public static IStrategyConfig getDefaultSendingStrategy() {
@@ -51,7 +53,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns default buffer strategy. That's {@link SimpleBufferStrategyConfig}.
-	 * 
+	 *
 	 * @return Returns default buffer strategy.
 	 */
 	public static IStrategyConfig getDefaultBufferStrategy() {
@@ -60,7 +62,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns all available {@link IPlatformSensorConfig}s.
-	 * 
+	 *
 	 * @return Returns all available {@link IPlatformSensorConfig}s.
 	 */
 	public static List<IPlatformSensorConfig> getAvailablePlatformSensorConfigs() {
@@ -77,12 +79,11 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns all available {@link IMethodSensorConfig}s.
-	 * 
+	 *
 	 * @return Returns all available {@link IMethodSensorConfig}s.
 	 */
 	public static List<IMethodSensorConfig> getAvailableMethodSensorConfigs() {
 		List<IMethodSensorConfig> methodSensorConfigs = new ArrayList<>();
-		methodSensorConfigs.add(new ConnectionMetaDataSensorConfig());
 		methodSensorConfigs.add(new ConnectionSensorConfig());
 		methodSensorConfigs.add(new HttpSensorConfig());
 		methodSensorConfigs.add(new InvocationSequenceSensorConfig());
@@ -95,7 +96,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns default {@link IExceptionSensorConfig}. That's {@link ExceptionSensorConfig}.
-	 * 
+	 *
 	 * @return Returns default {@link IExceptionSensorConfig}.
 	 */
 	public static IExceptionSensorConfig getDefaultExceptionSensorConfig() {

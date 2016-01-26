@@ -1,12 +1,12 @@
 package info.novatec.inspectit.agent.sensor.method.http;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.agent.hooking.IMethodHook;
 import info.novatec.inspectit.agent.sensor.method.timer.TimerHook;
 import info.novatec.inspectit.communication.data.HttpTimerData;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.util.StringConstraint;
 import info.novatec.inspectit.util.ThreadLocalStack;
 import info.novatec.inspectit.util.Timer;

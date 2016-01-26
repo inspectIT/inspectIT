@@ -1,6 +1,5 @@
 package info.novatec.inspectit.agent.sensor.method.logging;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
@@ -9,6 +8,7 @@ import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelpe
 import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory;
 import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory.Framework;
 import info.novatec.inspectit.communication.data.LoggingData;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
 
 import java.sql.Timestamp;
 
@@ -19,15 +19,15 @@ import org.slf4j.LoggerFactory;
  * The logging hook for log4j logging capturing. This hook captures all loggings from log4j if the
  * loggings are with a level "greater" than the provided minimum logging level (see
  * {@link SeverityHelper}).
- * 
+ *
  * If the minimum logging level is not provided or cannot be found in log4j default levels, the
  * logging hook will not capture any loggings.
- * 
+ *
  * This hook is expected to be placed on the method
  * <code>protected void forcedLog(String fqcn, Priority level, Object message, Throwable
  * t)</code> of the class <code>org.apache.log4j.Priority</code>. Putting this hook to other
  * classes/methods can lead to errors.
- * 
+ *
  * @author Stefan Siegl
  */
 public class Log4JLoggingHook implements IMethodHook {
@@ -36,17 +36,17 @@ public class Log4JLoggingHook implements IMethodHook {
 	private static final Logger LOG = LoggerFactory.getLogger(Log4JLoggingHook.class);
 
 	/** the id manager. */
-	private IIdManager idManager;
+	private final IIdManager idManager;
 
 	/** the level checker. */
-	private SeverityHelper checker;
+	private final SeverityHelper checker;
 
 	/** caches whether the hook has a correct minimum level. */
 	// private final boolean correctlyInitialized;
 
 	/**
 	 * Creates a new instance of the Log4J Logging hook.
-	 * 
+	 *
 	 * @param idManager
 	 *            the idManager.
 	 * @param minimumLevelToCapture

@@ -1,6 +1,8 @@
 package info.novatec.inspectit.ci.context.impl;
 
 import info.novatec.inspectit.ci.context.AbstractContextCapture;
+import info.novatec.inspectit.communication.data.ParameterContentType;
+import info.novatec.inspectit.instrumentation.config.impl.PropertyPathStart;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -41,6 +43,19 @@ public class FieldContextCapture extends AbstractContextCapture {
 			}
 		}
 		return stringBuffer.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PropertyPathStart getPropertyPathStart() {
+		PropertyPathStart propertyPathStart = new PropertyPathStart();
+		// note for field we can not use display name
+		propertyPathStart.setName(fieldName);
+		propertyPathStart.setContentType(ParameterContentType.FIELD);
+		addPaths(propertyPathStart);
+		return propertyPathStart;
 	}
 
 	/**

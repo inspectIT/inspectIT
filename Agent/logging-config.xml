@@ -5,14 +5,14 @@
 	
 	<!-- Use below property specification to place logs in desired folder on the system -->
 	<!-- <property name="logDir" value="/path/to/desired/logging/folder" /> -->
-
+	
 	<!-- The appenders are defined at the top -->
 	
 	<!-- Console output -->
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<Target>System.out</Target>
 		<encoder>
-			<pattern>%d{ISO8601}: [inspectIT] %-6r [%15.15t] %-5p %30.30c - %m%n%nopex</pattern>
+			<pattern>%d{ISO8601}: [inspectIT] %-6r [%15.15t] %-5p %30.30c - %m%n%rEx{0}</pattern>
 		</encoder>
 	</appender>
 

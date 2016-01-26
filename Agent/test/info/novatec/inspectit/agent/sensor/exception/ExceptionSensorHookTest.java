@@ -17,12 +17,12 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.analyzer.classes.MyTestException;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.communication.ExceptionEvent;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.util.StringConstraint;
 
 import java.lang.reflect.Field;
@@ -74,7 +74,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
 		when(idManager.getPlatformId()).thenReturn(platformId);
 
-		when(registeredSensorConfig.getQualifiedTargetClassName()).thenReturn(MyTestException.class.getName());
+		when(registeredSensorConfig.getTargetClassFqn()).thenReturn(MyTestException.class.getName());
 
 		exceptionHook.afterConstructor(coreService, constructorId, sensorTypeId, exceptionObject, parameters, registeredSensorConfig);
 		verify(idManager, times(1)).getRegisteredMethodId(constructorId);
@@ -99,7 +99,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
 		when(idManager.getPlatformId()).thenReturn(platformId);
 
-		when(registeredSensorConfig.getQualifiedTargetClassName()).thenReturn(MyTestException.class.getName());
+		when(registeredSensorConfig.getTargetClassFqn()).thenReturn(MyTestException.class.getName());
 
 		exceptionHook.afterConstructor(coreService, constructorId, sensorTypeId, exceptionObject, parameters, registeredSensorConfig);
 
@@ -132,7 +132,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
 		when(idManager.getPlatformId()).thenReturn(platformId);
 
-		when(registeredSensorConfig.getQualifiedTargetClassName()).thenReturn(MyTestException.class.getName());
+		when(registeredSensorConfig.getTargetClassFqn()).thenReturn(MyTestException.class.getName());
 
 		exceptionSensorData.setExceptionEvent(ExceptionEvent.CREATED);
 		exceptionHook.afterConstructor(coreService, constructorId, sensorTypeId, exceptionObject, parameters, registeredSensorConfig);
@@ -181,7 +181,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
 		when(idManager.getPlatformId()).thenReturn(platformId);
 
-		when(registeredSensorConfig.getQualifiedTargetClassName()).thenReturn(MyTestException.class.getName());
+		when(registeredSensorConfig.getTargetClassFqn()).thenReturn(MyTestException.class.getName());
 
 		exceptionHook.afterConstructor(coreService, constructorId, sensorTypeId, firstExceptionObject, parameters, registeredSensorConfig);
 		verify(idManager, times(1)).getRegisteredMethodId(constructorId);
@@ -234,7 +234,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
 		when(idManager.getPlatformId()).thenReturn(platformId);
 
-		when(registeredSensorConfig.getQualifiedTargetClassName()).thenReturn(MyTestException.class.getName());
+		when(registeredSensorConfig.getTargetClassFqn()).thenReturn(MyTestException.class.getName());
 
 		exceptionSensorData.setExceptionEvent(ExceptionEvent.CREATED);
 		exceptionHook.afterConstructor(coreService, constructorId, sensorTypeId, exceptionObject, parameters, registeredSensorConfig);
@@ -294,7 +294,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
 		when(idManager.getPlatformId()).thenReturn(platformId);
 
-		when(registeredSensorConfig.getQualifiedTargetClassName()).thenReturn(MyTestException.class.getName());
+		when(registeredSensorConfig.getTargetClassFqn()).thenReturn(MyTestException.class.getName());
 
 		exceptionHook.afterConstructor(coreService, constructorId, sensorTypeId, exceptionObject, parameters, registeredSensorConfig);
 		verify(idManager, times(1)).getRegisteredMethodId(constructorId);

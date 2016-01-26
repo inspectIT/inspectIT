@@ -32,4 +32,19 @@
 			<class name="info.novatec.inspectit.jpa.MapStringConverterTest" />
 		</classes>
 	</test>
+	<test name="Patterns">
+		<classes>
+			<class name="info.novatec.inspectit.pattern.WildcardMatchPatternTest" />
+		</classes>
+	</test>
+	<test name="Instrumentation">
+		<classes>
+			<class name="info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfigTest" />
+			<class name="info.novatec.inspectit.instrumentation.classcache.AnnotationTypeTest" />
+			<class name="info.novatec.inspectit.instrumentation.classcache.ClassTypeTest" />
+			<class name="info.novatec.inspectit.instrumentation.classcache.InterfaceTypeTest" />
+			<class name="info.novatec.inspectit.instrumentation.classcache.MethodTypeTest" />
+			<class name="info.novatec.inspectit.instrumentation.classcache.ModifiersTest" />
+		</classes>
+	</test>
 </suite>

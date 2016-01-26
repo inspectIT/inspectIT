@@ -1,6 +1,7 @@
 package info.novatec.inspectit.agent.sensor.method.jdbc;
 
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.util.Timer;
@@ -38,7 +39,7 @@ public class StatementSensorTest extends AbstractLogSupport {
 	@Test
 	public void initSensor() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		sqlTimerSensor.init(map);
+		sqlTimerSensor.initHook(map);
 		verifyNoMoreInteractions(timer, idManager);
 	}
 

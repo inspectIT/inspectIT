@@ -2,12 +2,13 @@ package info.novatec.inspectit.agent.sensor.jmx;
 
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
 import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.UnregisteredJmxConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 import info.novatec.inspectit.agent.core.IIdManager;
 import info.novatec.inspectit.agent.core.IdNotAvailableException;
 import info.novatec.inspectit.communication.data.JmxSensorValueData;
+import info.novatec.inspectit.instrumentation.config.impl.AbstractSensorTypeConfig;
+import info.novatec.inspectit.instrumentation.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.spring.logger.Log;
 
 import java.lang.management.ManagementFactory;
@@ -38,10 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The implementation of the JmxSensor.
- * 
+ *
  * @author Alfred Krauss
  * @author Marius Oehler
- * 
+ *
  */
 public class JmxSensor implements IJmxSensor, InitializingBean {
 
@@ -73,6 +74,11 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	 */
 	@Autowired
 	IIdManager idManager;
+
+	/**
+	 * Sensor configruation.
+	 */
+	private JmxSensorTypeConfig sensorTypeConfig;
 
 	/**
 	 * The MBeanServer providing information about registered MBeans.
@@ -114,9 +120,18 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
+	public void init(JmxSensorTypeConfig sensorTypeConfig) {
+		this.sensorTypeConfig = sensorTypeConfig;
+
 		unregisteredJmxConfigs.addAll(configurationStorage.getUnregisteredJmxConfigs());
 		mBeanServer = ManagementFactory.getPlatformMBeanServer();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public AbstractSensorTypeConfig getSensorTypeConfig() {
+		return sensorTypeConfig;
 	}
 
 	/**
@@ -145,7 +160,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 
 	/**
 	 * Collects the data and sends it to the CMR.
-	 * 
+	 *
 	 * @param coreService
 	 *            The core service which is needed to store the measurements to.
 	 * @param sensorTypeIdent
@@ -228,7 +243,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 								jsc.setmBeanAttributeIsWritable(mBeanAttributeInfo.isWritable());
 								jsc.setmBeanAttributeType(mBeanAttributeInfo.getType());
 
-								idManager.registerJmxSensorConfig(jsc);
+								// TODO send to CMR here
 								registeredJmxSensorConfigs.put(mBeanAttributeKey, jsc);
 								activeAttributes.put(mBeanAttributeKey, jsc);
 								nameStringToObjectName.put(objectName.toString(), objectName);
@@ -268,10 +283,10 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		for (JmxSensorTypeConfig config : configurationStorage.getJmxSensorTypes()) {
 			if (config.getClassName().equals(this.getClass().getName())) {
-				this.init(config.getParameters());
-				config.setSensorType(this);
+				this.init(config);
 				break;
 			}
 		}
 	}
+
 }

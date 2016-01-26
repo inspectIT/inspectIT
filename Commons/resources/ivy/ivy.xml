@@ -50,7 +50,13 @@
 		<dependency org="javax.validation" name="validation-api" rev="1.1.0.Final" conf="prod->default" />
 		<dependency org="javax.inject" name="com.springsource.javax.inject" rev="1.0.0" conf="prod->default" />
 		
+		<!-- asm is dependency for reflectasm as well, thus ading here as agent can use-->
+		<dependency org="org.ow2.asm" name="info.novatec.asm-all-shaded" rev="5.0.4" conf="prod->default" />
+		<!-- <dependency org="org.ow2.asm" name="asm-all" rev="5.0.4" conf="prod->default" />-->
+		
 		<dependency org="com.google.guava" name="guava-jdk5" rev="13.0" conf="prod->default" />
+		
+		<dependency org="com.github.stephenc.high-scale-lib" name="info.novatec.high-scale-lib" rev="1.1.2" conf="prod->default" />
 		
 		<!-- Test -->
 		<!-- Test NG should be on the build path via the Eclipse plug-in -->

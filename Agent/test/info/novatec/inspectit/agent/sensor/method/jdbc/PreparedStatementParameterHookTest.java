@@ -1,8 +1,8 @@
 package info.novatec.inspectit.agent.sensor.method.jdbc;
 
 import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
+import info.novatec.inspectit.instrumentation.config.impl.RegisteredSensorConfig;
 
 import java.util.List;
 

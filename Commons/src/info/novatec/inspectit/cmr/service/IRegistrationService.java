@@ -2,7 +2,6 @@ package info.novatec.inspectit.cmr.service;
 
 import info.novatec.inspectit.exception.BusinessException;
 
-import java.rmi.Remote;
 import java.util.List;
 import java.util.Map;
 
@@ -16,21 +15,20 @@ import java.util.Map;
  * <p>
  * All of this information will be persisted in the database. The returned values are basically
  * representing the index of the data in the db.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
-@ServiceInterface(exporter = ServiceExporterType.RMI, serviceId = 1)
-public interface IRegistrationService extends Remote {
+public interface IRegistrationService {
 
 	/**
 	 * A unique platform identifier is generated out of the network interfaces from the target
 	 * server and by specifying a self-defined Agent name.
-	 * 
+	 *
 	 * Note: the version String of the agent is not used to match existing platform identifications,
 	 * that is even if the version String changes the platform identification will still be the
 	 * same.
-	 * 
+	 *
 	 * @param definedIPs
 	 *            The list of all network interfaces.
 	 * @param agentName
@@ -45,7 +43,7 @@ public interface IRegistrationService extends Remote {
 
 	/**
 	 * Unregisters a platform by passing the network interfaces from the target server.
-	 * 
+	 *
 	 * @param definedIPs
 	 *            The list of all network interfaces.
 	 * @param agentName
@@ -59,7 +57,7 @@ public interface IRegistrationService extends Remote {
 	 * Every instrumented method has to be registered from every Agent. This method returns a unique
 	 * value for this method so that measurements acquired from these methods can be linked in the
 	 * database.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The unique identifier of the platform.
 	 * @param packageName
@@ -81,7 +79,7 @@ public interface IRegistrationService extends Remote {
 	/**
 	 * Every sensor type which is called by an instrumented method to gather data has to be
 	 * registered by calling this method.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The unique identifier of the platform.
 	 * @param fullyQualifiedClassName
@@ -94,7 +92,7 @@ public interface IRegistrationService extends Remote {
 
 	/**
 	 * This method is used to map a registered method sensor type to a registered method.
-	 * 
+	 *
 	 * @param methodSensorTypeIdent
 	 *            The unique identifier of the sensor type.
 	 * @param methodIdent
@@ -105,7 +103,7 @@ public interface IRegistrationService extends Remote {
 	/**
 	 * Every sensor type which gathers information about the target platform/system has to be
 	 * registered by calling this method.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The unique identifier of the platform.
 	 * @param fullyQualifiedClassName
