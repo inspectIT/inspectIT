@@ -2,7 +2,6 @@ package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the runtime of the Virtual Machine through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class RuntimeInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -38,7 +37,7 @@ public class RuntimeInformation extends AbstractPlatformSensor implements IPlatf
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the runtime.
 	 */
-	private RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -48,7 +47,7 @@ public class RuntimeInformation extends AbstractPlatformSensor implements IPlatf
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
+	 *
 	 * @param idManager
 	 *            The ID Manager.
 	 */
@@ -58,7 +57,7 @@ public class RuntimeInformation extends AbstractPlatformSensor implements IPlatf
 
 	/**
 	 * Returns the uptime of the virtual machine in milliseconds.
-	 * 
+	 *
 	 * @return the uptime in milliseconds.
 	 */
 	public long getUptime() {
@@ -67,14 +66,12 @@ public class RuntimeInformation extends AbstractPlatformSensor implements IPlatf
 
 	/**
 	 * Updates all dynamic runtime informations.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
-	 * @param sensorTypeIdent
-	 *            The sensorTypeIdent.
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = getSensorTypeConfig().getId();
 		long uptime = this.getUptime();
 
 		RuntimeInformationData runtimeData = (RuntimeInformationData) coreService.getPlatformSensorData(sensorTypeIdent);
@@ -82,9 +79,8 @@ public class RuntimeInformation extends AbstractPlatformSensor implements IPlatf
 		if (runtimeData == null) {
 			try {
 				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
 				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
-				runtimeData = new RuntimeInformationData(timestamp, platformId, registeredSensorTypeId);
+				runtimeData = new RuntimeInformationData(timestamp, platformId, sensorTypeIdent);
 
 				runtimeData.incrementCount();
 				runtimeData.addUptime(uptime);
@@ -108,12 +104,6 @@ public class RuntimeInformation extends AbstractPlatformSensor implements IPlatf
 				runtimeData.setMaxUptime(uptime);
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

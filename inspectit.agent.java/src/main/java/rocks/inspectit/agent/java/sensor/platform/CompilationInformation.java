@@ -2,7 +2,6 @@ package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the compilation system through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class CompilationInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -38,7 +37,7 @@ public class CompilationInformation extends AbstractPlatformSensor implements IP
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the compilation system.
 	 */
-	private RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -48,7 +47,7 @@ public class CompilationInformation extends AbstractPlatformSensor implements IP
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
+	 *
 	 * @param idManager
 	 *            The ID Manager.
 	 */
@@ -58,7 +57,7 @@ public class CompilationInformation extends AbstractPlatformSensor implements IP
 
 	/**
 	 * Returns the approximate accumulated elapsed time (milliseconds) spent in compilation.
-	 * 
+	 *
 	 * @return The compilation time in milliseconds.
 	 */
 	public long getTotalCompilationTime() {
@@ -67,14 +66,12 @@ public class CompilationInformation extends AbstractPlatformSensor implements IP
 
 	/**
 	 * Updates all dynamic compilation information.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
-	 * @param sensorTypeIdent
-	 *            The sensorTypeIdent.
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = getSensorTypeConfig().getId();
 		long totalCompilationTime = this.getTotalCompilationTime();
 
 		CompilationInformationData compilationData = (CompilationInformationData) coreService.getPlatformSensorData(sensorTypeIdent);
@@ -82,10 +79,9 @@ public class CompilationInformation extends AbstractPlatformSensor implements IP
 		if (compilationData == null) {
 			try {
 				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
 				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
 
-				compilationData = new CompilationInformationData(timestamp, platformId, registeredSensorTypeId);
+				compilationData = new CompilationInformationData(timestamp, platformId, sensorTypeIdent);
 				compilationData.incrementCount();
 
 				compilationData.addTotalCompilationTime(totalCompilationTime);
@@ -108,12 +104,6 @@ public class CompilationInformation extends AbstractPlatformSensor implements IP
 				compilationData.setMaxTotalCompilationTime(totalCompilationTime);
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

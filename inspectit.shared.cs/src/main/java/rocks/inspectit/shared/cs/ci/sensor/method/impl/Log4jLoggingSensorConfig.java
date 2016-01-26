@@ -1,6 +1,3 @@
-/**
- *
- */
 package rocks.inspectit.shared.cs.ci.sensor.method.impl;
 
 import java.util.Arrays;
@@ -14,10 +11,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.ArrayUtils;
 
+import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.cs.ci.sensor.method.AbstractMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.ILoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
 
 /**
  * @author Ivan Senic
@@ -75,8 +72,8 @@ public class Log4jLoggingSensorConfig extends AbstractMethodSensorConfig impleme
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodSensorPriorityEnum getPriority() {
-		return MethodSensorPriorityEnum.MIN;
+	public PriorityEnum getPriority() {
+		return PriorityEnum.MIN;
 	}
 
 	/**
@@ -94,7 +91,7 @@ public class Log4jLoggingSensorConfig extends AbstractMethodSensorConfig impleme
 	 */
 	@Override
 	public Map<String, Object> getParameters() {
-		return Collections.<String, Object> singletonMap("minLevel", minLevel);
+		return Collections.<String, Object> singletonMap("minlevel", minLevel);
 	}
 
 	/**

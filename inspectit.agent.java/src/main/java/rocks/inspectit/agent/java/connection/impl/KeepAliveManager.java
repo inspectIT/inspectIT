@@ -87,7 +87,7 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	 */
 	public void afterPropertiesSet() throws Exception {
 		if (scheduledTask == null) {
-			scheduledTask = coreService.getScheduledExecutorService().scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
+			scheduledTask = coreService.getExecutorService().scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
 		}
 	}
 

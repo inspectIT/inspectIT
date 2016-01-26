@@ -13,7 +13,7 @@ import rocks.inspectit.agent.java.util.Timer;
 
 /**
  * The http sensor which initializes and returns the {@link HttpHook} class.
- * 
+ *
  * @author Stefan Siegl
  */
 public class HttpSensor extends AbstractMethodSensor implements IMethodSensor {
@@ -43,7 +43,7 @@ public class HttpSensor extends AbstractMethodSensor implements IMethodSensor {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param timer
 	 *            the timer.
 	 * @param idManager
@@ -57,7 +57,8 @@ public class HttpSensor extends AbstractMethodSensor implements IMethodSensor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameters) {
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
 		hook = new HttpHook(timer, idManager, parameters, ManagementFactory.getThreadMXBean());
 	}
 

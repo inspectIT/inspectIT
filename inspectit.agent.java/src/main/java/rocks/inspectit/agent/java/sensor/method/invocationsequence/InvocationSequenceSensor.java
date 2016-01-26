@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
+import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.core.IIdManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
@@ -15,9 +16,9 @@ import rocks.inspectit.agent.java.util.Timer;
 /**
  * The invocation sequence sensor which initializes and returns the {@link InvocationSequenceHook}
  * class.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class InvocationSequenceSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -58,7 +59,7 @@ public class InvocationSequenceSensor extends AbstractMethodSensor implements IM
 
 	/**
 	 * The default constructor which needs 2 parameter for initialization.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer used for accurate measuring.
 	 * @param idManager
@@ -85,8 +86,16 @@ public class InvocationSequenceSensor extends AbstractMethodSensor implements IM
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		invocationSequenceHook = new InvocationSequenceHook(timer, idManager, propertyAccessor, parameter, configurationStorage.isEnhancedExceptionSensorActivated());
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		boolean enhancedExceptionSensor;
+		try {
+			enhancedExceptionSensor = configurationStorage.isEnhancedExceptionSensorActivated();
+		} catch (StorageException storageException) {
+			enhancedExceptionSensor = false;
+		}
+
+		invocationSequenceHook = new InvocationSequenceHook(timer, idManager, propertyAccessor, parameters, enhancedExceptionSensor);
 	}
 
 }

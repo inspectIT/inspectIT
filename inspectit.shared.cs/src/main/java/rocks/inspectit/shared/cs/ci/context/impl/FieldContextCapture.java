@@ -7,13 +7,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
 
 /**
  * {@link AbstractContextCapture} for fields. Saves field name to capture.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "field-capture")
@@ -44,8 +46,21 @@ public class FieldContextCapture extends AbstractContextCapture {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PropertyPathStart getPropertyPathStart() {
+		PropertyPathStart propertyPathStart = new PropertyPathStart();
+		// note for field we can not use display name
+		propertyPathStart.setName(fieldName);
+		propertyPathStart.setContentType(ParameterContentType.FIELD);
+		addPaths(propertyPathStart);
+		return propertyPathStart;
+	}
+
+	/**
 	 * Gets {@link #fieldName}.
-	 * 
+	 *
 	 * @return {@link #fieldName}
 	 */
 	public String getFieldName() {
@@ -54,7 +69,7 @@ public class FieldContextCapture extends AbstractContextCapture {
 
 	/**
 	 * Sets {@link #fieldName}.
-	 * 
+	 *
 	 * @param fieldName
 	 *            New value for {@link #fieldName}
 	 */
