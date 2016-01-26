@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
@@ -28,9 +28,9 @@ import rocks.inspectit.shared.all.communication.data.ParameterContentData;
  * The difference to the {@link AverageTimerHook} is that it's using {@link ITimerStorage} objects
  * to save the values. The {@link ITimerStorage} is responsible for the actual data saving, so
  * different strategies can be chosen from (set through the configuration file).
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TimerHook implements IMethodHook, IConstructorHook {
 
@@ -50,9 +50,9 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	private final Timer timer;
 
 	/**
-	 * The ID manager.
+	 * The Platform manager.
 	 */
-	private final IIdManager idManager;
+	private final IPlatformManager platformManager;
 
 	/**
 	 * The property accessor.
@@ -68,12 +68,12 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	/**
 	 * The StringConstraint to ensure a maximum length of strings.
 	 */
-	private StringConstraint strConstraint;
+	private final StringConstraint strConstraint;
 
 	/**
 	 * The thread MX bean.
 	 */
-	private ThreadMXBean threadMXBean;
+	private final ThreadMXBean threadMXBean;
 
 	/**
 	 * Defines if the thread CPU time is supported.
@@ -93,11 +93,11 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	/**
 	 * The only constructor which needs the used {@link ICoreService} implementation and the used
 	 * {@link Timer}.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer.
-	 * @param idManager
-	 *            The ID manager.
+	 * @param platformManager
+	 *            The Platform manager.
 	 * @param propertyAccessor
 	 *            The property accessor.
 	 * @param param
@@ -106,9 +106,9 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	 * @param threadMXBean
 	 *            The bean used to access the cpu time.
 	 */
-	public TimerHook(Timer timer, IIdManager idManager, IPropertyAccessor propertyAccessor, Map<String, Object> param, ThreadMXBean threadMXBean) {
+	public TimerHook(Timer timer, IPlatformManager platformManager, IPropertyAccessor propertyAccessor, Map<String, Object> param, ThreadMXBean threadMXBean) {
 		this.timer = timer;
-		this.idManager = idManager;
+		this.platformManager = platformManager;
 		this.propertyAccessor = propertyAccessor;
 		this.threadMXBean = threadMXBean;
 
@@ -188,15 +188,13 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 
 		if (null == storage) {
 			try {
-				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
-				long registeredMethodId = idManager.getRegisteredMethodId(methodId);
+				long platformId = platformManager.getPlatformId();
 
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
 				boolean charting = "true".equals(rsc.getSettings().get("charting"));
 
-				storage = timerStorageFactory.newStorage(timestamp, platformId, registeredSensorTypeId, registeredMethodId, parameterContentData, charting);
+				storage = timerStorageFactory.newStorage(timestamp, platformId, sensorTypeId, methodId, parameterContentData, charting);
 				storage.addData(duration, cpuDuration);
 
 				coreService.addObjectStorage(sensorTypeId, methodId, prefix, storage);

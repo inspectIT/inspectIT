@@ -208,6 +208,7 @@ def releaseSingle(os, arch) {
 			exclude('ci/profiles/*.xml')
 			// startups separatelly
 			exclude('startup.*')
+			includeEmptyDirs = false
 		}
 		into('CMR') {
 			from file("${mainExtResources}/startup.bat")

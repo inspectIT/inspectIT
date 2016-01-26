@@ -34,7 +34,7 @@ import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IObjectStorage;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.method.timer.AggregateTimerStorage;
@@ -55,7 +55,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	private Timer timer;
 
 	@Mock
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	@Mock
 	private IPropertyAccessor propertyAccessor;
@@ -77,7 +77,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		settings.put("mode", "raw");
 		when(threadMXBean.isThreadCpuTimeEnabled()).thenReturn(true);
 		when(threadMXBean.isThreadCpuTimeSupported()).thenReturn(true);
-		timerHook = new TimerHook(timer, idManager, propertyAccessor, settings, threadMXBean);
+		timerHook = new TimerHook(timer, platformManager, propertyAccessor, settings, threadMXBean);
 	}
 
 	@Test
@@ -85,9 +85,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -98,9 +96,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		Double fourthTimerValue = 2812.0d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue).thenReturn(thirdTimerValue).thenReturn(fourthTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 		when(registeredSensorConfig.getSettings()).thenReturn(Collections.<String, Object> singletonMap("charting", Boolean.TRUE));
 
 		// First call
@@ -111,13 +107,11 @@ public class TimerHookTest extends AbstractLogSupport {
 		verify(timer, times(2)).getCurrentTime();
 
 		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		verify(idManager).getPlatformId();
-		verify(idManager).getRegisteredMethodId(methodId);
-		verify(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		verify(platformManager).getPlatformId();
 		verify(coreService).getObjectStorage(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
 
-		PlainTimerStorage plainTimerStorage = new PlainTimerStorage(null, platformId, registeredSensorTypeId, registeredMethodId, null, true);
+		PlainTimerStorage plainTimerStorage = new PlainTimerStorage(null, platformId, sensorTypeId, methodId, null, true);
 		plainTimerStorage.addData(secondTimerValue - firstTimerValue, 0.0d);
 		verify(coreService).addObjectStorage(eq(sensorTypeId), eq(methodId), (String) eq(null), argThat(new PlainTimerStorageVerifier(plainTimerStorage)));
 
@@ -136,12 +130,12 @@ public class TimerHookTest extends AbstractLogSupport {
 
 		TimerRawVO timerRawVO = (TimerRawVO) plainTimerStorage.finalizeDataObject();
 		assertThat(timerRawVO.getPlatformIdent(), is(equalTo(platformId)));
-		assertThat(timerRawVO.getMethodIdent(), is(equalTo(registeredMethodId)));
-		assertThat(timerRawVO.getSensorTypeIdent(), is(equalTo(registeredSensorTypeId)));
-		assertThat(((TimerRawContainer) timerRawVO.getData().get(0)).getData()[0], is(equalTo(secondTimerValue - firstTimerValue)));
-		assertThat(((TimerRawContainer) timerRawVO.getData().get(0)).getData()[1], is(equalTo(fourthTimerValue - thirdTimerValue)));
+		assertThat(timerRawVO.getMethodIdent(), is(equalTo(methodId)));
+		assertThat(timerRawVO.getSensorTypeIdent(), is(equalTo(sensorTypeId)));
+		assertThat(timerRawVO.getData().get(0).getData()[0], is(equalTo(secondTimerValue - firstTimerValue)));
+		assertThat(timerRawVO.getData().get(0).getData()[1], is(equalTo(fourthTimerValue - thirdTimerValue)));
 
-		verifyNoMoreInteractions(timer, idManager, coreService, registeredSensorConfig);
+		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 		verifyZeroInteractions(propertyAccessor, object, result);
 	}
 
@@ -192,57 +186,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		Double secondTimerValue = 1323.675d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		doThrow(new IdNotAvailableException("")).when(idManager).getPlatformId();
-
-		timerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
-		timerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-
-		verify(coreService, never()).addObjectStorage(anyLong(), anyLong(), anyString(), (IObjectStorage) isNull());
-	}
-
-	@Test
-	public void methodIdNotAvailable() throws IdNotAvailableException {
-		// set up data
-		long platformId = 1L;
-		long methodId = 3L;
-		long sensorTypeId = 11L;
-		Object object = mock(Object.class);
-		Object[] parameters = new Object[0];
-		Object result = mock(Object.class);
-
-		Double firstTimerValue = 1000.453d;
-		Double secondTimerValue = 1323.675d;
-
-		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		doThrow(new IdNotAvailableException("")).when(idManager).getRegisteredMethodId(methodId);
-
-		timerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
-		timerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-
-		verify(coreService, never()).addObjectStorage(anyLong(), anyLong(), anyString(), (IObjectStorage) isNull());
-	}
-
-	@Test
-	public void sensorTypeIdNotAvailable() throws IdNotAvailableException {
-		// set up data
-		long platformId = 1L;
-		long methodId = 3L;
-		long registeredMethodId = 13L;
-		long sensorTypeId = 11L;
-		Object object = mock(Object.class);
-		Object[] parameters = new Object[0];
-		Object result = mock(Object.class);
-
-		Double firstTimerValue = 1000.453d;
-		Double secondTimerValue = 1323.675d;
-
-		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		doThrow(new IdNotAvailableException("")).when(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		doThrow(new IdNotAvailableException("")).when(platformManager).getPlatformId();
 
 		timerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		timerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
@@ -256,7 +200,6 @@ public class TimerHookTest extends AbstractLogSupport {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[2];
@@ -266,9 +209,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		Double secondTimerValue = 1323.675d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		doThrow(new IdNotAvailableException("")).when(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 		when(registeredSensorConfig.isPropertyAccess()).thenReturn(true);
 
 		timerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
@@ -283,14 +224,12 @@ public class TimerHookTest extends AbstractLogSupport {
 	public void aggregateStorage() throws IdNotAvailableException {
 		Map<String, Object> settings = new HashMap<String, Object>();
 		settings.put("mode", "aggregate");
-		timerHook = new TimerHook(timer, idManager, propertyAccessor, settings, ManagementFactory.getThreadMXBean());
+		timerHook = new TimerHook(timer, platformManager, propertyAccessor, settings, ManagementFactory.getThreadMXBean());
 
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -299,9 +238,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		Double secondTimerValue = 1323.675d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		when(registeredSensorConfig.getSettings()).thenReturn(Collections.<String, Object> singletonMap("charting", Boolean.TRUE));
 
@@ -312,18 +249,16 @@ public class TimerHookTest extends AbstractLogSupport {
 		verify(timer, times(2)).getCurrentTime();
 
 		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		verify(idManager).getPlatformId();
-		verify(idManager).getRegisteredMethodId(methodId);
-		verify(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		verify(platformManager).getPlatformId();
 		verify(coreService).getObjectStorage(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
 		verify(registeredSensorConfig).getSettings();
 
-		AggregateTimerStorage aggregateTimerStorage = new AggregateTimerStorage(null, platformId, registeredSensorTypeId, registeredMethodId, null, true);
+		AggregateTimerStorage aggregateTimerStorage = new AggregateTimerStorage(null, platformId, sensorTypeId, methodId, null, true);
 		aggregateTimerStorage.addData(secondTimerValue - firstTimerValue, -1.0d);
 		verify(coreService).addObjectStorage(eq(sensorTypeId), eq(methodId), (String) eq(null), argThat(new AggregateTimerStorageVerifier(aggregateTimerStorage)));
 
-		verifyNoMoreInteractions(timer, idManager, coreService, registeredSensorConfig);
+		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 		verifyZeroInteractions(propertyAccessor, object, result);
 	}
 
@@ -371,14 +306,12 @@ public class TimerHookTest extends AbstractLogSupport {
 	public void optimizedStorage() throws IdNotAvailableException {
 		Map<String, Object> settings = new HashMap<String, Object>();
 		settings.put("mode", "optimized");
-		timerHook = new TimerHook(timer, idManager, propertyAccessor, settings, ManagementFactory.getThreadMXBean());
+		timerHook = new TimerHook(timer, platformManager, propertyAccessor, settings, ManagementFactory.getThreadMXBean());
 
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -387,9 +320,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		Double secondTimerValue = 1323.675d;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		when(registeredSensorConfig.getSettings()).thenReturn(Collections.<String, Object> singletonMap("charting", Boolean.TRUE));
 
@@ -400,18 +331,16 @@ public class TimerHookTest extends AbstractLogSupport {
 		verify(timer, times(2)).getCurrentTime();
 
 		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		verify(idManager).getPlatformId();
-		verify(idManager).getRegisteredMethodId(methodId);
-		verify(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		verify(platformManager).getPlatformId();
 		verify(coreService).getObjectStorage(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
 		verify(registeredSensorConfig).getSettings();
 
-		OptimizedTimerStorage optimizedTimerStorage = new OptimizedTimerStorage(null, platformId, registeredSensorTypeId, registeredMethodId, null, true);
+		OptimizedTimerStorage optimizedTimerStorage = new OptimizedTimerStorage(null, platformId, sensorTypeId, methodId, null, true);
 		optimizedTimerStorage.addData(secondTimerValue - firstTimerValue, -1.0d);
 		verify(coreService).addObjectStorage(eq(sensorTypeId), eq(methodId), (String) eq(null), argThat(new OptimizedTimerStorageVerifier(optimizedTimerStorage)));
 
-		verifyNoMoreInteractions(timer, idManager, coreService, registeredSensorConfig);
+		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 		verifyZeroInteractions(propertyAccessor, object, result);
 	}
 
@@ -462,9 +391,7 @@ public class TimerHookTest extends AbstractLogSupport {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
-		long registeredMethodId = 13L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -477,9 +404,7 @@ public class TimerHookTest extends AbstractLogSupport {
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(registeredMethodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		when(registeredSensorConfig.getSettings()).thenReturn(Collections.<String, Object> singletonMap("charting", Boolean.TRUE));
 
@@ -490,18 +415,16 @@ public class TimerHookTest extends AbstractLogSupport {
 		verify(timer, times(2)).getCurrentTime();
 
 		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		verify(idManager).getPlatformId();
-		verify(idManager).getRegisteredMethodId(methodId);
-		verify(idManager).getRegisteredSensorTypeId(sensorTypeId);
+		verify(platformManager).getPlatformId();
 		verify(coreService).getObjectStorage(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
 		verify(registeredSensorConfig).getSettings();
 
-		PlainTimerStorage plainTimerStorage = new PlainTimerStorage(null, platformId, registeredSensorTypeId, registeredMethodId, null, true);
+		PlainTimerStorage plainTimerStorage = new PlainTimerStorage(null, platformId, sensorTypeId, methodId, null, true);
 		plainTimerStorage.addData(secondTimerValue - firstTimerValue, (secondCpuTimerValue - firstCpuTimerValue) / 1000000.0d);
 		verify(coreService).addObjectStorage(eq(sensorTypeId), eq(methodId), (String) eq(null), argThat(new PlainTimerStorageVerifier(plainTimerStorage)));
 
-		verifyNoMoreInteractions(timer, idManager, coreService, registeredSensorConfig);
+		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 		verifyZeroInteractions(propertyAccessor, object, result);
 	}
 
@@ -509,11 +432,8 @@ public class TimerHookTest extends AbstractLogSupport {
 	public void twoRecordsWithCpuTime() throws IdNotAvailableException {
 		long platformId = 1L;
 		long methodIdOne = 3L;
-		long registeredMethodIdOne = 13L;
 		long methodIdTwo = 9L;
-		long registeredMethodIdTwo = 15L;
 		long sensorTypeId = 11L;
-		long registeredSensorTypeId = 7L;
 		Object object = mock(Object.class);
 		Object[] parameters = new Object[0];
 		Object result = mock(Object.class);
@@ -530,23 +450,20 @@ public class TimerHookTest extends AbstractLogSupport {
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue).thenReturn(thirdTimerValue).thenReturn(fourthTimerValue);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue).thenReturn(thirdCpuTimerValue).thenReturn(fourthCpuTimerValue);
-		when(idManager.getPlatformId()).thenReturn(platformId);
-		when(idManager.getRegisteredMethodId(methodIdOne)).thenReturn(registeredMethodIdOne);
-		when(idManager.getRegisteredMethodId(methodIdTwo)).thenReturn(registeredMethodIdTwo);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(registeredSensorTypeId);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		timerHook.beforeBody(methodIdOne, sensorTypeId, object, parameters, registeredSensorConfig);
 		timerHook.beforeBody(methodIdTwo, sensorTypeId, object, parameters, registeredSensorConfig);
 
 		timerHook.firstAfterBody(methodIdTwo, sensorTypeId, object, parameters, result, registeredSensorConfig);
 		timerHook.secondAfterBody(coreService, methodIdTwo, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		PlainTimerStorage plainTimerStorageTwo = new PlainTimerStorage(null, platformId, registeredSensorTypeId, registeredMethodIdTwo, null, true);
+		PlainTimerStorage plainTimerStorageTwo = new PlainTimerStorage(null, platformId, sensorTypeId, methodIdTwo, null, true);
 		plainTimerStorageTwo.addData(thirdTimerValue - secondTimerValue, (thirdCpuTimerValue - secondCpuTimerValue) / 1000000.0d);
 		verify(coreService).addObjectStorage(eq(sensorTypeId), eq(methodIdTwo), (String) eq(null), argThat(new PlainTimerStorageVerifier(plainTimerStorageTwo)));
 
 		timerHook.firstAfterBody(methodIdOne, sensorTypeId, object, parameters, result, registeredSensorConfig);
 		timerHook.secondAfterBody(coreService, methodIdOne, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		PlainTimerStorage plainTimerStorageOne = new PlainTimerStorage(null, platformId, registeredSensorTypeId, registeredMethodIdOne, null, true);
+		PlainTimerStorage plainTimerStorageOne = new PlainTimerStorage(null, platformId, sensorTypeId, methodIdOne, null, true);
 		plainTimerStorageOne.addData(fourthTimerValue - firstTimerValue, (fourthCpuTimerValue - firstCpuTimerValue) / 1000000.0d);
 		verify(coreService).addObjectStorage(eq(sensorTypeId), eq(methodIdOne), (String) eq(null), argThat(new PlainTimerStorageVerifier(plainTimerStorageOne)));
 	}

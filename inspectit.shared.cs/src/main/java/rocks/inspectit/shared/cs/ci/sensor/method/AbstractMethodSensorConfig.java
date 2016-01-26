@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -20,8 +19,8 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
  * @author Ivan Senic
  * 
  */
-@XmlSeeAlso({ ConnectionMetaDataSensorConfig.class, ConnectionSensorConfig.class, HttpSensorConfig.class, InvocationSequenceSensorConfig.class, PreparedStatementParameterSensorConfig.class,
-		PreparedStatementSensorConfig.class, StatementSensorConfig.class, TimerSensorConfig.class })
+@XmlSeeAlso({ ConnectionSensorConfig.class, HttpSensorConfig.class, InvocationSequenceSensorConfig.class, PreparedStatementParameterSensorConfig.class, PreparedStatementSensorConfig.class,
+		StatementSensorConfig.class, TimerSensorConfig.class })
 public abstract class AbstractMethodSensorConfig implements IMethodSensorConfig {
 
 	/**

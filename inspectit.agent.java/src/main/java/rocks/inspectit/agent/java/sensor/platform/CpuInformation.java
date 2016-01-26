@@ -2,13 +2,12 @@ package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
@@ -17,9 +16,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the underlying operating system through MXBeans.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class CpuInformation extends AbstractPlatformSensor implements IPlatformSensor {
 
@@ -30,16 +29,16 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 	Logger log;
 
 	/**
-	 * The ID Manager used to get the correct IDs.
+	 * The Platform manager used to get the correct IDs.
 	 */
 	@Autowired
-	private IIdManager idManager;
+	private IPlatformManager platformManager;
 
 	/**
 	 * The {@link OperatingSystemInfoProvider} used to retrieve information from the operating
 	 * system.
 	 */
-	private OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
+	private final OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
 
 	/**
 	 * No-arg constructor needed for Spring.
@@ -49,17 +48,17 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 
 	/**
 	 * The default constructor which needs one parameter.
-	 * 
-	 * @param idManager
-	 *            The ID Manager.
+	 *
+	 * @param platformManager
+	 *            The Platform manager.
 	 */
-	public CpuInformation(IIdManager idManager) {
-		this.idManager = idManager;
+	public CpuInformation(IPlatformManager platformManager) {
+		this.platformManager = platformManager;
 	}
 
 	/**
 	 * Returns the process cpu time.
-	 * 
+	 *
 	 * @return the process cpu time.
 	 */
 	public long getProcessCpuTime() {
@@ -68,14 +67,12 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 
 	/**
 	 * Updates all dynamic cpu information.
-	 * 
+	 *
 	 * @param coreService
 	 *            The {@link ICoreService}.
-	 * 
-	 * @param sensorTypeIdent
-	 *            The sensorTypeIdent.
 	 */
-	public void update(ICoreService coreService, long sensorTypeIdent) {
+	public void update(ICoreService coreService) {
+		long sensorTypeIdent = getSensorTypeConfig().getId();
 		long processCpuTime = this.getProcessCpuTime();
 		float cpuUsage = osBean.retrieveCpuUsage();
 
@@ -83,11 +80,10 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 
 		if (osData == null) {
 			try {
-				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeIdent);
+				long platformId = platformManager.getPlatformId();
 				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
 
-				osData = new CpuInformationData(timestamp, platformId, registeredSensorTypeId);
+				osData = new CpuInformationData(timestamp, platformId, sensorTypeIdent);
 				osData.incrementCount();
 
 				osData.updateProcessCpuTime(processCpuTime);
@@ -114,12 +110,6 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 			}
 		}
 
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Map<String, Object> parameter) {
 	}
 
 	/**

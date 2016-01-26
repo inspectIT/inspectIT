@@ -3,10 +3,11 @@ package rocks.inspectit.shared.cs.ci.factory;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -33,6 +34,7 @@ import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
  * @author Ivan Senic
  *
  */
+@XmlTransient
 public final class ConfigurationDefaultsFactory {
 
 	/**
@@ -83,7 +85,6 @@ public final class ConfigurationDefaultsFactory {
 	 */
 	public static List<IMethodSensorConfig> getAvailableMethodSensorConfigs() {
 		List<IMethodSensorConfig> methodSensorConfigs = new ArrayList<>();
-		methodSensorConfigs.add(new ConnectionMetaDataSensorConfig());
 		methodSensorConfigs.add(new ConnectionSensorConfig());
 		methodSensorConfigs.add(new HttpSensorConfig());
 		methodSensorConfigs.add(new InvocationSequenceSensorConfig());

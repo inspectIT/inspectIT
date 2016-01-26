@@ -25,7 +25,6 @@ import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -364,8 +363,6 @@ public final class ImageFormatter {
 	public static Image getSensorConfigImage(Class<? extends ISensorConfig> sensorClass) {
 		if (ObjectUtils.equals(sensorClass, ExceptionSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR);
-		} else if (ObjectUtils.equals(sensorClass, ConnectionMetaDataSensorConfig.class)) {
-			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
 		} else if (ObjectUtils.equals(sensorClass, ConnectionSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
 		} else if (ObjectUtils.equals(sensorClass, HttpSensorConfig.class)) {

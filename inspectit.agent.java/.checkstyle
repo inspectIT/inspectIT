@@ -9,5 +9,6 @@
   </fileset>
   <filter name="FilesFromPackage" enabled="true">
     <filter-data value="src/test/java"/>
+    <filter-data value="src/jmh/java"/>
   </filter>
 </fileset-config>

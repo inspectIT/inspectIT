@@ -1,9 +1,11 @@
 package rocks.inspectit.agent.java.config.impl;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
+
 /**
  * Container for the values which describe the monitored JMX MBean. It stores all the values defined in a config
  * file for later access.
- * 
+ *
  * @author Alfred Krauss
  */
 public class JmxSensorConfig {
@@ -60,7 +62,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Returns the config of the Sensor if assigned else a new one is created and stored.
-	 * 
+	 *
 	 * @return JmxSensorType config of this sensor.
 	 */
 	public JmxSensorTypeConfig getJmxSensorTypeConfig() {
@@ -69,7 +71,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public long getId() {
@@ -78,7 +80,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -88,7 +90,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #attributeName}.
-	 * 
+	 *
 	 * @return {@link #attributeName}
 	 */
 	public String getAttributeName() {
@@ -97,7 +99,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #attributeName}.
-	 * 
+	 *
 	 * @param attributeName
 	 *            New value for {@link #attributeName}
 	 */
@@ -107,7 +109,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #mBeanObjectName}.
-	 * 
+	 *
 	 * @return {@link #mBeanObjectName}
 	 */
 	public String getmBeanObjectName() {
@@ -116,7 +118,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #mBeanObjectName}.
-	 * 
+	 *
 	 * @param mBeanObjectName
 	 *            New value for {@link #mBeanObjectName}
 	 */
@@ -126,7 +128,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #mBeanAttributeId}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeId}
 	 */
 	public long getmBeanAttributeId() {
@@ -135,7 +137,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #mBeanAttributeId}.
-	 * 
+	 *
 	 * @param mBeanAttributeId
 	 *            New value for {@link #mBeanAttributeId}
 	 */
@@ -145,7 +147,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #mBeanAttributeDescription}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeDescription}
 	 */
 	public String getmBeanAttributeDescription() {
@@ -154,7 +156,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #mBeanAttributeDescription}.
-	 * 
+	 *
 	 * @param mBeanAttributeDescription
 	 *            New value for {@link #mBeanAttributeDescription}
 	 */
@@ -164,7 +166,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #mBeanAttributeType}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeType}
 	 */
 	public String getmBeanAttributeType() {
@@ -173,7 +175,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #mBeanAttributeType}.
-	 * 
+	 *
 	 * @param mBeanAttributeType
 	 *            New value for {@link #mBeanAttributeType}
 	 */
@@ -183,7 +185,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #mBeanAttributeIsIs}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeIsIs}
 	 */
 	public Boolean getmBeanAttributeIsIs() {
@@ -192,7 +194,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #mBeanAttributeIsIs}.
-	 * 
+	 *
 	 * @param mBeanAttributeIsIs
 	 *            New value for {@link #mBeanAttributeIsIs}
 	 */
@@ -202,7 +204,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #mBeanAttributeIsReadable}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeIsReadable}
 	 */
 	public Boolean getmBeanAttributeIsReadable() {
@@ -211,7 +213,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #mBeanAttributeIsReadable}.
-	 * 
+	 *
 	 * @param mBeanAttributeIsReadable
 	 *            New value for {@link #mBeanAttributeIsReadable}
 	 */
@@ -221,7 +223,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Gets {@link #mBeanAttributeIsWritable}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeIsWritable}
 	 */
 	public Boolean getmBeanAttributeIsWritable() {
@@ -230,7 +232,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #mBeanAttributeIsWritable}.
-	 * 
+	 *
 	 * @param mBeanAttributeIsWritable
 	 *            New value for {@link #mBeanAttributeIsWritable}
 	 */
@@ -240,7 +242,7 @@ public class JmxSensorConfig {
 
 	/**
 	 * Sets {@link #jmxSensorTypeConfig}.
-	 * 
+	 *
 	 * @param jmxSensorTypeConfig
 	 *            New value for {@link #jmxSensorTypeConfig}
 	 */
