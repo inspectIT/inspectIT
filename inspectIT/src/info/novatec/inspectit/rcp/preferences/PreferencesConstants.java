@@ -4,9 +4,9 @@ import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataS
 
 /**
  * Interface that just holds the all inspectIT preferences keys.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface PreferencesConstants {
 
@@ -89,4 +89,9 @@ public interface PreferencesConstants {
 	 * Map of the selected {@link AbstractPlotDataSolver}.
 	 */
 	String JMX_PLOT_DATA_SOLVER = "JMX_PLOT_DATA_SOLVER";
+
+	/**
+	 * Warning for removing the exclude classes profile.
+	 */
+	String EXCLUDE_CLASSES_PROFILE_WARNING = "EXCLUDE_CLASSES_PROFILE_WARNING";
 }

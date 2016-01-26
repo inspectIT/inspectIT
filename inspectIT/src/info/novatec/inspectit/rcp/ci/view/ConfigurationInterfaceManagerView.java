@@ -20,7 +20,6 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatu
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
 import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.util.SelectionProviderAdapter;
-import info.novatec.inspectit.rcp.util.UnfinishedWarningUtils;
 import info.novatec.inspectit.rcp.view.IRefreshableView;
 
 import java.util.ArrayList;
@@ -115,7 +114,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	/**
 	 * Cached statuses of CMR repository definitions.
 	 */
-	private Map<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
+	private final Map<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
 
 	/**
 	 * Input list of profiles.
@@ -157,7 +156,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	/**
 	 * Adapter to publish the selection to the Site.
 	 */
-	private SelectionProviderAdapter selectionProviderAdapter = new SelectionProviderAdapter();
+	private final SelectionProviderAdapter selectionProviderAdapter = new SelectionProviderAdapter();
 
 	/**
 	 * Button for environment selection.
@@ -276,12 +275,6 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		});
 		getSite().setSelectionProvider(selectionProviderAdapter);
 		selectionProviderAdapter.setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
-
-		// TODO: This needs to be removed as soon as the configuration interface is fully
-		// functional.
-		UnfinishedWarningUtils.inform(
-				"The configuration interface is not yet connected with the agent instrumentation. You can play around with this preview, but the instrumentations will not be effective.",
-				"UNFINISHED_WARNING_CONFIGURATION_INTERFACE");
 	}
 
 	/**
@@ -978,7 +971,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		/**
 		 * CMR repository to change to.
 		 */
-		private CmrRepositoryDefinition cmrRepositoryDefinition;
+		private final CmrRepositoryDefinition cmrRepositoryDefinition;
 
 		/**
 		 * Default constructor.

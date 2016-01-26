@@ -39,7 +39,7 @@ public class StatementSensorTest extends AbstractLogSupport {
 	@Test
 	public void initSensor() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		sqlTimerSensor.init(map);
+		sqlTimerSensor.initHook(map);
 		verifyNoMoreInteractions(timer, idManager);
 	}
 

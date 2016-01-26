@@ -103,7 +103,6 @@ public class SystemInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 		when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
 		when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
 
@@ -190,7 +189,6 @@ public class SystemInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 		when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
 		when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
 
@@ -282,7 +280,6 @@ public class SystemInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 		when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
 		when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
 
@@ -367,7 +364,6 @@ public class SystemInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 		when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
 		when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
 

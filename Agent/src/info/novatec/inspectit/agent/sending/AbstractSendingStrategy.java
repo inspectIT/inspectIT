@@ -1,7 +1,6 @@
 package info.novatec.inspectit.agent.sending;
 
 import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.StrategyConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -12,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * creating an instance is {@link #start()}. An event listener or starting a thread has to be
  * implemented there. {@link #stop()} immediately stops the strategy. {@link #reset()} is called
  * after a successful {@link #sendNow()} is executed.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class AbstractSendingStrategy implements ISendingStrategy, InitializingBean {
 
@@ -57,7 +56,7 @@ public abstract class AbstractSendingStrategy implements ISendingStrategy, Initi
 
 	/**
 	 * Returns the value storage.
-	 * 
+	 *
 	 * @return The value storage implementation.
 	 */
 	protected final ICoreService getCoreService() {
@@ -68,12 +67,7 @@ public abstract class AbstractSendingStrategy implements ISendingStrategy, Initi
 	 * {@inheritDoc}
 	 */
 	public void afterPropertiesSet() throws Exception {
-		for (StrategyConfig sendingStrategyConfig : configurationStorage.getSendingStrategyConfigs()) {
-			if (sendingStrategyConfig.getClazzName().equals(this.getClass().getName())) {
-				this.init(sendingStrategyConfig.getSettings());
-				break;
-			}
-		}
+		this.init(configurationStorage.getSendingStrategyConfig().getSettings());
 	}
 
 }

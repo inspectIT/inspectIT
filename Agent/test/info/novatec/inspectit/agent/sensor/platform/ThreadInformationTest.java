@@ -67,7 +67,6 @@ public class ThreadInformationTest extends AbstractLogSupport {
 		when(threadBean.getTotalStartedThreadCount()).thenReturn(totalStartedThreadCount);
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
@@ -119,7 +118,6 @@ public class ThreadInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		// ------------------------
 		// FIRST UPDATE CALL
@@ -216,7 +214,6 @@ public class ThreadInformationTest extends AbstractLogSupport {
 		when(threadBean.getTotalStartedThreadCount()).thenReturn(totalStartedThreadCount);
 
 		when(idManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenThrow(new IdNotAvailableException("expected"));
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);

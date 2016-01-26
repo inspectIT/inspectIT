@@ -70,7 +70,6 @@ public class CpuInformationTest extends AbstractLogSupport {
 		when(osBean.retrieveCpuUsage()).thenReturn(cpuUsage);
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorType)).thenReturn(sensorType);
 
 		// no current data object is available
 		when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);
@@ -125,7 +124,6 @@ public class CpuInformationTest extends AbstractLogSupport {
 		when(osBean.retrieveCpuUsage()).thenReturn(cpuUsage1).thenReturn(cpuUsage2);
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorType)).thenReturn(sensorType);
 
 		// ------------------------
 		// FIRST UPDATE CALL
@@ -193,7 +191,6 @@ public class CpuInformationTest extends AbstractLogSupport {
 		when(osBean.getProcessCpuTime()).thenReturn(processCpuTime);
 
 		when(idManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
-		when(idManager.getRegisteredSensorTypeId(sensorType)).thenThrow(new IdNotAvailableException("expected"));
 
 		// no current data object is available
 		when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);

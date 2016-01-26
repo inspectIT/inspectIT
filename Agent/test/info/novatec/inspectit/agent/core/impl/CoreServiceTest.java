@@ -3,7 +3,6 @@ package info.novatec.inspectit.agent.core.impl;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,9 +10,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.buffer.IBufferStrategy;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
+import info.novatec.inspectit.agent.config.StorageException;
 import info.novatec.inspectit.agent.connection.IConnection;
 import info.novatec.inspectit.agent.connection.ServerUnavailableException;
 import info.novatec.inspectit.agent.core.IIdManager;
@@ -29,21 +27,27 @@ import info.novatec.inspectit.communication.data.CpuInformationData;
 import info.novatec.inspectit.communication.data.ExceptionSensorData;
 import info.novatec.inspectit.communication.data.ParameterContentData;
 import info.novatec.inspectit.communication.data.TimerData;
+import info.novatec.inspectit.testbase.TestBase;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@SuppressWarnings("PMD")
-public class CoreServiceTest extends AbstractLogSupport {
+@SuppressWarnings({ "PMD", "unchecked" })
+public class CoreServiceTest extends TestBase {
+
+	@InjectMocks
+	private CoreService coreService;
 
 	@Mock
-	private IConfigurationStorage configurationStorage;
+	private Logger log;
 
 	@Mock
 	private IConnection connection;
@@ -53,21 +57,20 @@ public class CoreServiceTest extends AbstractLogSupport {
 	private IBufferStrategy bufferStrategy;
 
 	@Mock
+	private List<ISendingStrategy> sendingStrategies;
+
+	@Mock
 	private ISendingStrategy sendingStrategy;
 
 	@Mock
 	private IIdManager idManager;
 
-	private CoreService coreService;
-
-	@SuppressWarnings("unchecked")
 	@BeforeMethod
-	public void initTestClass() {
-		List<ISendingStrategy> sendingStrategies = new ArrayList<ISendingStrategy>();
-		sendingStrategies.add(sendingStrategy);
-
-		coreService = new CoreService(configurationStorage, connection, bufferStrategy, sendingStrategies, idManager);
-		coreService.log = LoggerFactory.getLogger(CoreService.class);
+	public void sendingStrategyMock() {
+		Iterator<ISendingStrategy> itr = mock(Iterator.class);
+		when(itr.hasNext()).thenReturn(true, false);
+		when(itr.next()).thenReturn(sendingStrategy);
+		when(sendingStrategies.iterator()).thenReturn(itr);
 	}
 
 	/**
@@ -75,7 +78,7 @@ public class CoreServiceTest extends AbstractLogSupport {
 	 * no reliable way to make this test always successful.
 	 */
 	@Test(enabled = false)
-	public void startStop() throws InterruptedException {
+	public void startStop() throws InterruptedException, StorageException {
 		coreService.start();
 		verify(sendingStrategy, times(1)).start(coreService);
 
@@ -87,17 +90,15 @@ public class CoreServiceTest extends AbstractLogSupport {
 
 		coreService.stop();
 		verify(sendingStrategy, times(1)).stop();
-		verify(configurationStorage, atLeastOnce()).getPlatformSensorTypes();
 
-		verifyNoMoreInteractions(sendingStrategy, configurationStorage);
+		verifyNoMoreInteractions(sendingStrategy);
 		verifyZeroInteractions(connection, bufferStrategy, idManager);
 	}
 
 	/**
 	 * This method could also <b>fail</b> due to race conditions.
-	 * 
+	 *
 	 */
-	@SuppressWarnings("unchecked")
 	@Test(dependsOnMethods = { "startStop" }, enabled = false)
 	public void sendOneMethodSensorData() throws InterruptedException, ServerUnavailableException {
 		coreService.start();
@@ -130,9 +131,8 @@ public class CoreServiceTest extends AbstractLogSupport {
 
 	/**
 	 * This method could also <b>fail</b> due to race conditions.
-	 * 
+	 *
 	 */
-	@SuppressWarnings("unchecked")
 	@Test(dependsOnMethods = { "startStop" }, enabled = false)
 	public void sendOnePlatformSensorData() throws InterruptedException, ServerUnavailableException {
 		coreService.start();
@@ -162,7 +162,6 @@ public class CoreServiceTest extends AbstractLogSupport {
 		verifyZeroInteractions(idManager);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test(dependsOnMethods = { "startStop" }, enabled = false)
 	public void sendOneExceptionSensorData() throws InterruptedException, ServerUnavailableException {
 		coreService.start();
@@ -195,9 +194,8 @@ public class CoreServiceTest extends AbstractLogSupport {
 
 	/**
 	 * This method could also <b>fail</b> due to race conditions.
-	 * 
+	 *
 	 */
-	@SuppressWarnings("unchecked")
 	@Test(dependsOnMethods = { "startStop" }, enabled = false)
 	public void sendOneObjectStorageData() throws InterruptedException, ServerUnavailableException {
 		coreService.start();
@@ -228,7 +226,6 @@ public class CoreServiceTest extends AbstractLogSupport {
 		verifyZeroInteractions(idManager);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void verifyListListenerMethodData() {
 		ListListener<TimerData> listener = mock(ListListener.class);
@@ -247,7 +244,6 @@ public class CoreServiceTest extends AbstractLogSupport {
 		verifyZeroInteractions(idManager);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void verifyListListenerPlatformData() {
 		ListListener<SystemSensorData> listener = mock(ListListener.class);
@@ -266,7 +262,6 @@ public class CoreServiceTest extends AbstractLogSupport {
 		verifyZeroInteractions(idManager);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void verifyListListenerExceptionData() {
 		ListListener<ExceptionSensorData> listener = mock(ListListener.class);
@@ -288,7 +283,6 @@ public class CoreServiceTest extends AbstractLogSupport {
 		verifyZeroInteractions(idManager);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void verifyListListenerObjectStorageData() {
 		ListListener<IObjectStorage> listener = mock(ListListener.class);

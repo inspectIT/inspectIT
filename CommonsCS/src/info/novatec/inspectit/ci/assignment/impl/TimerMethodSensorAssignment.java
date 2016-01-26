@@ -1,12 +1,18 @@
 package info.novatec.inspectit.ci.assignment.impl;
 
+import info.novatec.inspectit.ci.Environment;
 import info.novatec.inspectit.ci.context.AbstractContextCapture;
 import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
 import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
 import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
 import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
+import info.novatec.inspectit.cmr.service.IRegistrationService;
+import info.novatec.inspectit.instrumentation.config.applier.IInstrumentationApplier;
+import info.novatec.inspectit.instrumentation.config.applier.TimerMethodSensorInstrumentationApplier;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,11 +22,13 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.collections.MapUtils;
+
 /**
  * Timer sensor assignment.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "timer-method-sensor-assignment")
@@ -59,8 +67,39 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<String, Object> getSettings() {
+		Map<String, Object> settings = super.getSettings();
+		if (MapUtils.isEmpty(settings)) {
+			settings = new HashMap<>();
+		}
+
+		// charting
+		if (charting) {
+			settings.put("charting", Boolean.TRUE);
+		}
+
+		// min duration
+		if (minInvocationDuration > 0) {
+			settings.put("minduration", minInvocationDuration);
+		}
+
+		return settings;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IInstrumentationApplier getInstrumentationApplier(Environment environment, IRegistrationService registrationService) {
+		return new TimerMethodSensorInstrumentationApplier(this, environment, registrationService);
+	}
+
+	/**
 	 * Gets {@link #charting}.
-	 * 
+	 *
 	 * @return {@link #charting}
 	 */
 	public boolean isCharting() {
@@ -69,7 +108,7 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
 	 * Sets {@link #charting}.
-	 * 
+	 *
 	 * @param charting
 	 *            New value for {@link #charting}
 	 */
@@ -79,7 +118,7 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
 	 * Gets {@link #startsInvocation}.
-	 * 
+	 *
 	 * @return {@link #startsInvocation}
 	 */
 	public boolean isStartsInvocation() {
@@ -88,7 +127,7 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
 	 * Sets {@link #startsInvocation}.
-	 * 
+	 *
 	 * @param startsInvocation
 	 *            New value for {@link #startsInvocation}
 	 */
@@ -98,7 +137,7 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
 	 * Gets {@link #minInvocationDuration}.
-	 * 
+	 *
 	 * @return {@link #minInvocationDuration}
 	 */
 	public long getMinInvocationDuration() {
@@ -107,7 +146,7 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
 	 * Sets {@link #minInvocationDuration}.
-	 * 
+	 *
 	 * @param minInvocationDuration
 	 *            New value for {@link #minInvocationDuration}
 	 */
@@ -117,7 +156,7 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
 	 * Gets {@link #contextCaptures}.
-	 * 
+	 *
 	 * @return {@link #contextCaptures}
 	 */
 	public List<AbstractContextCapture> getContextCaptures() {
@@ -126,7 +165,7 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
 	 * Sets {@link #contextCaptures}.
-	 * 
+	 *
 	 * @param contextCaptures
 	 *            New value for {@link #contextCaptures}
 	 */

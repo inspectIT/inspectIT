@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
  * The difference to the {@link AverageTimerHook} is that it's using {@link ITimerStorage} objects
  * to save the values. The {@link ITimerStorage} is responsible for the actual data saving, so
  * different strategies can be chosen from (set through the configuration file).
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TimerHook implements IMethodHook, IConstructorHook {
 
@@ -68,12 +68,12 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	/**
 	 * The StringConstraint to ensure a maximum length of strings.
 	 */
-	private StringConstraint strConstraint;
+	private final StringConstraint strConstraint;
 
 	/**
 	 * The thread MX bean.
 	 */
-	private ThreadMXBean threadMXBean;
+	private final ThreadMXBean threadMXBean;
 
 	/**
 	 * Defines if the thread CPU time is supported.
@@ -93,7 +93,7 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	/**
 	 * The only constructor which needs the used {@link ICoreService} implementation and the used
 	 * {@link Timer}.
-	 * 
+	 *
 	 * @param timer
 	 *            The timer.
 	 * @param idManager
@@ -189,14 +189,12 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 		if (null == storage) {
 			try {
 				long platformId = idManager.getPlatformId();
-				long registeredSensorTypeId = idManager.getRegisteredSensorTypeId(sensorTypeId);
-				long registeredMethodId = idManager.getRegisteredMethodId(methodId);
 
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
 				boolean charting = "true".equals(rsc.getSettings().get("charting"));
 
-				storage = timerStorageFactory.newStorage(timestamp, platformId, registeredSensorTypeId, registeredMethodId, parameterContentData, charting);
+				storage = timerStorageFactory.newStorage(timestamp, platformId, sensorTypeId, methodId, parameterContentData, charting);
 				storage.addData(duration, cpuDuration);
 
 				coreService.addObjectStorage(sensorTypeId, methodId, prefix, storage);
