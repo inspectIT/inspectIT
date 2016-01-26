@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,16 +13,17 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.PropertyAccessException;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
-import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPath;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class is used to programmatically build the path to access a specific method parameter or a
  * field of a class.
- * 
+ *
  * @author Patrice Bouillet
  * @author Stefan Siegl
- * 
+ *
  */
 @Component
 public class PropertyAccessor implements IPropertyAccessor {
@@ -54,11 +54,11 @@ public class PropertyAccessor implements IPropertyAccessor {
 			throw new PropertyAccessException("Property path start cannot be null!");
 		}
 
-		if (null == propertyPathStart.contentType) {
+		if (null == propertyPathStart.getContentType()) {
 			throw new PropertyAccessException("Content type is not defined.");
 		}
 
-		switch (propertyPathStart.contentType) {
+		switch (propertyPathStart.getContentType()) {
 		case FIELD:
 			if (null == clazz) {
 				throw new PropertyAccessException("Class reference cannot be null!");
@@ -84,20 +84,19 @@ public class PropertyAccessor implements IPropertyAccessor {
 				return getPropertyContent(propertyPathStart.getPathToContinue(), returnValue);
 			}
 		default:
-			throw new PropertyAccessException("Missing handler for type " + propertyPathStart.contentType);
+			throw new PropertyAccessException("Missing handler for type " + propertyPathStart.getContentType());
 		}
 	}
 
 	/**
 	 * Checks whether or not the method may be called within the parameter storage algorithm.
-	 * 
+	 *
 	 * @param method
 	 *            The method name to check for.
 	 * @return <code>true</code> if the method is accepted.
 	 */
 	private boolean isAcceptedMethod(String method) {
-		for (int i = 0; i < ALLOWED_METHODS.length; i++) {
-			String allowed = ALLOWED_METHODS[i];
+		for (String allowed : ALLOWED_METHODS) {
 			if (allowed.equals(method)) {
 				return true;
 			}
@@ -107,9 +106,9 @@ public class PropertyAccessor implements IPropertyAccessor {
 
 	/**
 	 * Inner static recursive method to go along the given path.
-	 * 
+	 *
 	 * @see PropertyPath
-	 * 
+	 *
 	 * @param propertyPath
 	 *            The path to follow.
 	 * @param object
@@ -173,8 +172,7 @@ public class PropertyAccessor implements IPropertyAccessor {
 				// the
 				// call to getMethods() will not
 				Method[] methods = c.getDeclaredMethods();
-				for (int i = 0; i < methods.length; i++) {
-					Method method = methods[i];
+				for (Method method : methods) {
 					if (methodName.equals(method.getName())) {
 
 						// We are only calling methods that do not take an
@@ -210,8 +208,7 @@ public class PropertyAccessor implements IPropertyAccessor {
 			// call
 			do {
 				Field[] fields = c.getDeclaredFields();
-				for (int i = 0; i < fields.length; i++) {
-					Field field = fields[i];
+				for (Field field : fields) {
 					if (propertyPath.getName().equals(field.getName())) {
 						try {
 							field.setAccessible(true);
@@ -242,9 +239,7 @@ public class PropertyAccessor implements IPropertyAccessor {
 	 */
 	public List<ParameterContentData> getParameterContentData(List<PropertyPathStart> propertyAccessorList, Object clazz, Object[] parameters, Object returnValue) {
 		List<ParameterContentData> parameterContentData = new ArrayList<ParameterContentData>();
-		for (Iterator<PropertyPathStart> iterator = propertyAccessorList.iterator(); iterator.hasNext();) {
-			PropertyPathStart start = iterator.next();
-
+		for (PropertyPathStart start : propertyAccessorList) {
 			try {
 				String content = this.getPropertyContent(start, clazz, parameters, returnValue);
 				ParameterContentData paramContentData = new ParameterContentData();
@@ -267,145 +262,6 @@ public class PropertyAccessor implements IPropertyAccessor {
 		}
 
 		return parameterContentData;
-	}
-
-	/**
-	 * Every path can have another follower path. These classes are used to describe the way to find
-	 * a specific property in an object.
-	 * 
-	 * @author Patrice Bouillet
-	 * 
-	 */
-	public static class PropertyPath {
-
-		/**
-		 * The name of this path.
-		 */
-		private String name;
-
-		/**
-		 * The path to continue.
-		 */
-		private PropertyPath pathToContinue;
-
-		/**
-		 * Creates a new instance and leaves the name empty.
-		 */
-		public PropertyPath() {
-		}
-
-		/**
-		 * Creates a new instance and sets the name.
-		 * 
-		 * @param name
-		 *            the name of this path.
-		 */
-		public PropertyPath(String name) {
-			this.name = name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setPathToContinue(PropertyPath pathToContinue) {
-			this.pathToContinue = pathToContinue;
-		}
-
-		public PropertyPath getPathToContinue() {
-			return pathToContinue;
-		}
-
-		public boolean isMethodCall() {
-			return name.endsWith("()");
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public String toString() {
-			if (null != pathToContinue) {
-				return name + "-->" + pathToContinue.toString();
-			} else {
-				return name;
-			}
-		}
-
-	}
-
-	/**
-	 * The start definition of a property accessor.
-	 * 
-	 * @author Patrice Bouillet
-	 * 
-	 */
-	public static class PropertyPathStart extends PropertyPath {
-
-		/**
-		 * Defines what type of property we are capturing.
-		 */
-		private ParameterContentType contentType;
-
-		/**
-		 * The position of the parameter in the signature if the <code>classOfExecutedMethod</code>
-		 * value is set to <code>false</code>. Only set if <code>contentType</code> is set to
-		 * <code>Parameter</code>
-		 */
-		private int signaturePosition = -1;
-
-		/**
-		 * Gets {@link #contentType}.
-		 * 
-		 * @return {@link #contentType}
-		 */
-		public ParameterContentType getContentType() {
-			return contentType;
-		}
-
-		/**
-		 * Sets {@link #contentType}.
-		 * 
-		 * @param contentType
-		 *            New value for {@link #platformIdent}
-		 */
-		public void setContentType(ParameterContentType contentType) {
-			this.contentType = contentType;
-		}
-
-		/**
-		 * sets the position of the parameter in the signature to read.
-		 * 
-		 * @param signaturePosition
-		 *            the position of the parameter in the signature to read.
-		 */
-		public void setSignaturePosition(int signaturePosition) {
-			this.signaturePosition = signaturePosition;
-		}
-
-		/**
-		 * returns the position of the parameter in the signature to read.
-		 * 
-		 * @return position of the parameter in the signature to read.
-		 */
-		public int getSignaturePosition() {
-			return signaturePosition;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public String toString() {
-			if (null != getPathToContinue()) {
-				return "[" + getName() + "] " + getPathToContinue().toString();
-			} else {
-				return "[" + getName() + "]";
-			}
-		}
-
 	}
 
 }

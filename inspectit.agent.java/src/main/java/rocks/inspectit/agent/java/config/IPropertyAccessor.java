@@ -2,26 +2,26 @@ package rocks.inspectit.agent.java.config;
 
 import java.util.List;
 
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPath;
-import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPath;
+import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 
 /**
  * This interface defines methods to access the contents of the fields and method parameters of
  * classes.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface IPropertyAccessor {
 
 	/**
 	 * Returns the content of the property. Either a field of a class will be accessed, a method
 	 * parameter or the return value.
-	 * 
+	 *
 	 * @see PropertyPathStart
 	 * @see PropertyPath
-	 * 
+	 *
 	 * @param propertyPathStart
 	 *            This parameter defines the start of the path.
 	 * @param clazz
@@ -40,7 +40,7 @@ public interface IPropertyAccessor {
 	/**
 	 * Converts the list of property accessors {@link PropertyPathStart} into a list of
 	 * {@link ParameterContentData}.
-	 * 
+	 *
 	 * @param propertyAccessorList
 	 *            The list of property accessors.
 	 * @param clazz

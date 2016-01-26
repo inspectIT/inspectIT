@@ -12,13 +12,14 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.PropertyDefinerBase;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
+import rocks.inspectit.agent.java.SpringAgent;
 import rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger;
 
 /**
  * The component responsible for log initializations.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class LogInitializer extends PropertyDefinerBase {
 
@@ -38,20 +39,16 @@ public final class LogInitializer extends PropertyDefinerBase {
 	private static String logDirLocation;
 
 	/**
-	 * Location of inspectIT jar file.
-	 */
-	private static String inspectitJarLocation;
-
-	/**
 	 * Initializes the logging.
 	 */
 	public static void initLogging() {
-		if (null == inspectitJarLocation) {
+		// set the location of logs
+		File agentJar = SpringAgent.getInspectitJarFile();
+		if (null == agentJar) {
 			return;
 		}
 
-		// set the location of logs
-		File agentJar = new File(inspectitJarLocation).getAbsoluteFile();
+		initLogDirLocation();
 
 		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
@@ -100,36 +97,32 @@ public final class LogInitializer extends PropertyDefinerBase {
 	}
 
 	/**
+	 * Initializes log directory location.
+	 */
+	private static synchronized void initLogDirLocation() {
+		if (null == logDirLocation) {
+			// set the location of logs to just [agent-path]/logs/startup for start
+			File agentJar = SpringAgent.getInspectitJarFile();
+			logDirLocation = agentJar.getParent() + File.separator + "logs" + File.separator + "startup"; // NOPMD
+		}
+	}
+
+	/**
 	 * Sets the agent name and re-initializes the logging so that the agentName is used as folder
 	 * for logging.
-	 * 
+	 *
 	 * @param agentName
 	 *            Agent name.
 	 */
 	public static void setAgentNameAndInitLogging(String agentName) {
-		if (null == inspectitJarLocation) {
+		File agentJar = SpringAgent.getInspectitJarFile();
+		if (null == agentJar) {
 			return;
 		}
 
 		// set the location of logs based to agent name
-		File agentJar = new File(inspectitJarLocation).getAbsoluteFile();
 		logDirLocation = agentJar.getParent() + File.separator + "logs" + File.separator + agentName;
-
 		initLogging();
-	}
-
-	/**
-	 * Sets {@link #inspectitJarLocation}.
-	 * 
-	 * @param inspectitJarLoc
-	 *            New value for {@link #inspectitJarLocation}
-	 */
-	public static void setInspectitJarLocation(String inspectitJarLoc) {
-		inspectitJarLocation = inspectitJarLoc;
-
-		// set the location of logs to just [agent-path]/logs/startup for start
-		File agentJar = new File(inspectitJarLocation).getAbsoluteFile();
-		logDirLocation = agentJar.getParent() + File.separator + "logs" + File.separator + "startup";
 	}
 
 	/**

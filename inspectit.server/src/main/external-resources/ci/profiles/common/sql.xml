@@ -35,10 +35,6 @@
 	<!-- Derby meta-data queries SQL Connection -->
 	<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig" class-name="org.apache.derby.impl.jdbc.EmbedConnection" method-name="prepareMetaDataStatement" parameters="java.lang.String" />
 
-	<!-- Connection Meta-Data -->
-	<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig" class-name="java.sql.Connection" constructor="true" interface="true" />
-	<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig" class-name="weblogic.jdbc.wrapper.Connection" constructor="true" interface="true" />
-
 	<!-- SQL Prepared Statement -->
 	<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="java.sql.PreparedStatement" constructor="true" interface="true" />
 	<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig" class-name="java.sql.PreparedStatement" method-name="execute" interface="true" />
