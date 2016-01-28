@@ -29,15 +29,14 @@
 		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="prod->default" />
 		<dependency org="commons-pool" name="commons-pool" rev="1.6" conf="prod->default" />
 
-		<dependency org="org.springframework" name="org.springframework.core" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.beans" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.context" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.web" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.expression" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.aop" rev="3.2.4.RELEASE" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-core" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-beans" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-context" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-web" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-expression" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-aop" rev="3.2.16" conf="prod->default" />
 		<dependency org="org.aopalliance" name="com.springsource.org.aopalliance" rev="1.0.0" conf="prod->default" />
 		<dependency org="javax.servlet" name="javax.servlet" rev="3.0.0.v201103241009" conf="prod->default" />
-		<dependency org="net.sourceforge.cglib" name="com.springsource.net.sf.cglib" rev="2.2.0" conf="prod->default" />
 
 		<dependency org="com.esotericsoftware.kryo" name="kryo" rev="2.24.0" conf="prod->default" />
 		<dependency org="com.esotericsoftware.kryonet" name="info.novatec.kryonet" rev="2.21" conf="prod->default" />
