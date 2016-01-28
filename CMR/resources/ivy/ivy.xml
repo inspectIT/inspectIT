@@ -28,17 +28,15 @@
 		<dependency org="ch.qos.logback" name="logback-classic" rev="1.0.13" conf="prod->default" />
 		<dependency org="uk.org.lidalia" name="info.novatec.sysout-over-slf4j" rev="1.0.2" conf="prod->default" />
 		
-		<dependency org="org.springframework" name="org.springframework.context.support" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.orm" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.transaction" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="org.springframework.jdbc" rev="3.2.4.RELEASE" conf="prod->default" />
-		<dependency org="org.springframework" name="spring-webmvc" rev="3.2.4.RELEASE" transitive="false" conf="prod->default"/>
-		<dependency org="org.springframework" name="spring-oxm" rev="3.2.4.RELEASE" transitive="false" conf="prod->default"/>
+		<dependency org="org.springframework" name="info.novatec.spring-context-support" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-orm" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-tx" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-jdbc" rev="3.2.16" conf="prod->default" />
+		<dependency org="org.springframework" name="info.novatec.spring-webmvc" rev="3.2.16" transitive="false" conf="prod->default"/>
+		<dependency org="org.springframework" name="info.novatec.spring-oxm" rev="3.2.16" transitive="false" conf="prod->default"/>
 
-		<dependency org="org.aspectj" name="aspectjweaver" rev="1.7.2" conf="prod->default" />
-		<dependency org="org.aspectj" name="aspectjrt" rev="1.7.2" conf="prod->default" />
-		<dependency org="com.caucho" name="hessian" rev="3.1.5" conf="prod->default" />
-		<dependency org="javax.transaction" name="com.springsource.javax.transaction" rev="1.1.0" conf="prod->default" />
+		<dependency org="org.aspectj" name="aspectjweaver" rev="1.7.4" conf="prod->default" />
+		<dependency org="org.aspectj" name="aspectjrt" rev="1.7.4" conf="prod->default" />
 		<dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.3" transitive="false" conf="prod->default"/>
 		<dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.3" transitive="false" conf="prod->default"/>
 
@@ -50,6 +48,7 @@
 		<dependency org="org.hibernate" name="hibernate-core" rev="5.0.4.Final" conf="prod->default" />
 		<dependency org="org.hibernate" name="hibernate-entitymanager" rev="5.0.4.Final" conf="prod->default" />
 		<dependency org="org.hibernate.common" name="hibernate-commons-annotations" rev="5.0.0.Final" conf="prod->default" />
+		<dependency org="javax.transaction" name="com.springsource.javax.transaction" rev="1.1.0" conf="prod->default" />
 		<dependency org="org.jboss.logging" name="jboss-logging" rev="3.3.0.Final" conf="prod->default" />
 		<dependency org="org.jboss" name="jandex" rev="2.0.0.Final" conf="prod->default" />
 		<dependency org="org.javassist" name="javassist" rev="3.18.1-GA" conf="prod->default" />
@@ -64,7 +63,6 @@
 		<dependency org="org.springframework" name="spring-test" rev="3.2.4.RELEASE" conf="test->default" />
 		<dependency org="classmexer" name="classmexer" rev="0.0.3" conf="test->default" />
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />
-		<dependency org="nl.jqno.equalsverifier" name="equalsverifier" rev="1.0.2" conf="test->default" />
 		
 		<!-- Performance -->
 		<dependency org="org.openjdk.jmh" name="jmh-core" rev="1.11.2" conf="perf->default" />
