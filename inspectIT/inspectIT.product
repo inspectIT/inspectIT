@@ -14,7 +14,8 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xmx1024M -Xms128m</vmArgs>
+      <vmArgs>-Xmx1024M -Xms128m
+      </vmArgs>
    </launcherArgs>
 
    <windowImages i16="/inspectIT/icons/selfmade/16x16.png" i32="/inspectIT/icons/selfmade/32x32.png" i48="/inspectIT/icons/selfmade/48x48.png" i64="/inspectIT/icons/selfmade/64x64.png" i128="/inspectIT/icons/selfmade/128x128.png"/>
@@ -115,6 +116,12 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="info.novatec.kryonet"/>
       <plugin id="info.novatec.minlog"/>
       <plugin id="info.novatec.reflectasm"/>
+      <plugin id="info.novatec.spring-aop"/>
+      <plugin id="info.novatec.spring-beans"/>
+      <plugin id="info.novatec.spring-context"/>
+      <plugin id="info.novatec.spring-core"/>
+      <plugin id="info.novatec.spring-expression"/>
+      <plugin id="info.novatec.spring-web"/>
       <plugin id="info.novatec.swtgraphics2d"/>
       <plugin id="info.novatec.sysout-over-slf4j"/>
       <plugin id="javax.servlet"/>
@@ -168,15 +175,9 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.hibernate.javax.persistence.hibernate-jpa-2.1-api"/>
       <plugin id="org.objenesis"/>
-      <plugin id="org.springframework.aop"/>
-      <plugin id="org.springframework.beans"/>
-      <plugin id="org.springframework.context"/>
-      <plugin id="org.springframework.core"/>
-      <plugin id="org.springframework.expression"/>
       <plugin id="org.springframework.osgi.core"/>
       <plugin id="org.springframework.osgi.extender"/>
       <plugin id="org.springframework.osgi.io"/>
-      <plugin id="org.springframework.web"/>
       <plugin id="slf4j.api"/>
    </plugins>
 
