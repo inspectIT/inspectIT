@@ -33,6 +33,5 @@
 		<!-- Test -->
 		<!-- Test NG should be on the build path via the Eclipse plug-in -->
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />
-		<dependency org="nl.jqno.equalsverifier" name="equalsverifier" rev="1.0.2" conf="test->default"/>
 	</dependencies>
 </ivy-module>
