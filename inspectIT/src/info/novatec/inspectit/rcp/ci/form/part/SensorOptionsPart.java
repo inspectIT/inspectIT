@@ -6,6 +6,7 @@ import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
@@ -25,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -43,9 +45,9 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * Part for displaying sensor options.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SensorOptionsPart extends SectionPart implements IPropertyListener {
 
@@ -65,18 +67,23 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 	private Button exceptionEnhanced;
 
 	/**
+	 * Combo for selection of the min level for the log4j logging sesnor.
+	 */
+	private Combo log4jLevelCombo;
+
+	/**
 	 * All {@link StringConstraintComponent} on the page.
 	 */
-	private List<StringConstraintComponent> constrainComponents = new ArrayList<>();
+	private final List<StringConstraintComponent> constrainComponents = new ArrayList<>();
 
 	/**
 	 * Form page part belongs to.
 	 */
-	private FormPage formPage;
+	private final FormPage formPage;
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param formPage
 	 *            {@link FormPage} section belongs to.
 	 * @param parent
@@ -105,7 +112,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 	/**
 	 * Creates complete client.
-	 * 
+	 *
 	 * @param section
 	 *            {@link Section}
 	 * @param toolkit
@@ -142,6 +149,33 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 					stringConstraintComponent.createComponent(mainComposite, toolkit, "String length of SQLs:",
 							"Defines the maximum string length of SQL strings and parameters for statement sensor.", layoutColumns);
 				}
+			}
+
+			if (methodSensorConfig instanceof Log4jLoggingSensorConfig) {
+				// log4j logging sensor
+				Log4jLoggingSensorConfig log4jLoggingSensorConfig = (Log4jLoggingSensorConfig) methodSensorConfig;
+
+				// title
+				FormText timerText = toolkit.createFormText(mainComposite, false);
+				timerText.setText("<form><p><img href=\"img\" /> <b>" + TextFormatter.getSensorConfigName(methodSensorConfig) + "</b></p></form>", true, false);
+				timerText.setImage("img", ImageFormatter.getSensorConfigImage(methodSensorConfig));
+				timerText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, layoutColumns, 1));
+
+				// options
+				toolkit.createLabel(mainComposite, "Minimum level:").setLayoutData(getIndentGridData());
+				log4jLevelCombo = new Combo(mainComposite, SWT.READ_ONLY);
+				toolkit.adapt(log4jLevelCombo, false, false);
+				log4jLevelCombo.add("FATAL");
+				log4jLevelCombo.add("ERROR");
+				log4jLevelCombo.add("WARN");
+				log4jLevelCombo.add("INFO");
+				log4jLevelCombo.add("DEBUG");
+				log4jLevelCombo.add("TRACE");
+				log4jLevelCombo.select(log4jLevelCombo.indexOf(log4jLoggingSensorConfig.getMinLevel()));
+				log4jLevelCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+				// info box
+				createInfoLabel(mainComposite, toolkit,
+						"Select the minimum level that a logging needs to have in order to be captured. For example, when selecting WARN all log with FATAL, ERROR or WARN level will be captured by inspectIT.");
 			}
 		}
 
@@ -182,6 +216,10 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 		for (StringConstraintComponent constraintComponent : constrainComponents) {
 			constraintComponent.addDirtyListener(dirtyListener);
 		}
+		// null check just in case we have old environment without log4j
+		if (null != log4jLevelCombo) {
+			log4jLevelCombo.addListener(SWT.Selection, dirtyListener);
+		}
 		exceptionSimple.addListener(SWT.Selection, dirtyListener);
 		exceptionEnhanced.addListener(SWT.Selection, dirtyListener);
 	}
@@ -198,6 +236,14 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 				constraintComponent.validateUpdate(true);
 			}
 			((ExceptionSensorConfig) environment.getExceptionSensorConfig()).setEnhanced(exceptionEnhanced.getSelection());
+
+			if (null != log4jLevelCombo) {
+				for (IMethodSensorConfig sensorConfig : environment.getMethodSensorConfigs()) {
+					if (sensorConfig instanceof Log4jLoggingSensorConfig) {
+						((Log4jLoggingSensorConfig) sensorConfig).setMinLevel(log4jLevelCombo.getText());
+					}
+				}
+			}
 		}
 	}
 
@@ -222,7 +268,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 	/**
 	 * Creates info icon with given text as tool-tip.
-	 * 
+	 *
 	 * @param parent
 	 *            Composite to create on.
 	 * @param toolkit
@@ -238,9 +284,9 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 	/**
 	 * Help class for managing {@link StringConstraintSensorConfig}s.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class StringConstraintComponent {
 
@@ -252,7 +298,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 		/**
 		 * Message manager to use in the validation control decoration.
 		 */
-		private IMessageManager messageManager;
+		private final IMessageManager messageManager;
 
 		/**
 		 * Unlimited button.
@@ -276,7 +322,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param sensorConfig
 		 *            Sensor config.
 		 * @param messageManager
@@ -289,7 +335,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Creates component.
-		 * 
+		 *
 		 * @param parent
 		 *            Parent composite
 		 * @param toolkit
@@ -353,7 +399,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Adds dirty listener to needed controls.
-		 * 
+		 *
 		 * @param listener
 		 *            Dirty listener.
 		 */
@@ -365,7 +411,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Validates the value and updates if needed.
-		 * 
+		 *
 		 * @param update
 		 *            If beside validation an update on the model object should be done.
 		 * @return if value in the control is valid
@@ -412,7 +458,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Updates the sensor config if it's relating to the same class.
-		 * 
+		 *
 		 * @param sensorConfig
 		 *            new config
 		 * @return <code>true</code> if update occurred

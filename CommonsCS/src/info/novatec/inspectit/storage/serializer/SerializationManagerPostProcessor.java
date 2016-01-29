@@ -16,6 +16,7 @@ import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConf
 import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
@@ -123,9 +124,9 @@ import com.esotericsoftware.kryo.serializers.FieldSerializer;
 /**
  * Registers all classes from the CommonsCS project after {@link SerializationManager} has been
  * created.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class SerializationManagerPostProcessor implements BeanPostProcessor {
@@ -152,7 +153,7 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 	/**
 	 * Registers all classes in the CommonsCS project that needed to be registered to any
 	 * {@link SerializationManager} instance.
-	 * 
+	 *
 	 * @param serializationManager
 	 *            {@link SerializationManager}.
 	 */
@@ -315,6 +316,9 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(ListSendingStrategyConfig.class, new FieldSerializer<ListSendingStrategyConfig>(kryo, ListSendingStrategyConfig.class), nextRegistrationId++);
 		kryo.register(SimpleBufferStrategyConfig.class, new FieldSerializer<SimpleBufferStrategyConfig>(kryo, SimpleBufferStrategyConfig.class), nextRegistrationId++);
 		kryo.register(SizeBufferStrategyConfig.class, new FieldSerializer<SizeBufferStrategyConfig>(kryo, SizeBufferStrategyConfig.class), nextRegistrationId++);
+
+		// INSPECTIT-2020
+		kryo.register(Log4jLoggingSensorConfig.class, new FieldSerializer<Log4jLoggingSensorConfig>(kryo, Log4jLoggingSensorConfig.class), nextRegistrationId++);
 	}
 
 }
