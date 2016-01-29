@@ -36,7 +36,7 @@ public class LoggingDetailsGenerator implements IDetailsGenerator {
 
 		DetailsTable table = new DetailsTable(parent, toolkit, "Logging Info", 1);
 		table.addContentRow("Level:", InspectIT.getDefault().getImage(InspectITImages.IMG_LOGGING_LEVEL), new DetailsCellContent[] { new DetailsCellContent(loggingData.getLevel()) });
-		table.addContentRow("Message:", InspectIT.getDefault().getImage(InspectITImages.IMG_LOGGING_MESSAGE), new DetailsCellContent[] { new DetailsCellContent(loggingData.getMessage()) });
+		table.addContentRow("Message:", InspectIT.getDefault().getImage(InspectITImages.IMG_LOG), new DetailsCellContent[] { new DetailsCellContent(loggingData.getMessage()) });
 		return table;
 	}
 

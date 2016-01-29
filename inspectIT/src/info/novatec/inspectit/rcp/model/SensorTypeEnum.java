@@ -72,7 +72,7 @@ public enum SensorTypeEnum {
 	/** The multi invocation timer data sensor type. */
 	MULTI_INVOC_DATA("info.novatec.inspectit.agent.sensor.method.MultiInvocSensor", InspectITImages.IMG_INVOCATION),
 	/** Log4JLogging sensor. */
-	LOG4J_LOGGING_DATA("info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingSensor", InspectITImages.IMG_LOGGING_MESSAGE),
+	LOG4J_LOGGING_DATA("info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingSensor", InspectITImages.IMG_LOG),
 	/** The JMX sensor data type. */
 	JMX_SENSOR_DATA("info.novatec.inspectit.agent.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
 	/** The JMX sensor data type. */

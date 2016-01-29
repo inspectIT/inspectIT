@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<profile id="ejb" name="EJB v2" common="true" created-on="2015-02-24T12:00:00" description="Profile for the EJBs (versions 1.x and 2.x)."
+<profile id="ejb_v2" name="EJB v2" common="true" created-on="2015-02-24T12:00:00" description="Profile for the EJBs (versions 1.x and 2.x)."
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<!-- Configuration for EJB v. < 3 -->
