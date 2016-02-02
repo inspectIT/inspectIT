@@ -15,6 +15,7 @@
 	<!--                      S E T T I N G S                            -->
 	<!-- *************************************************************** -->
 
+	<property environment="env" />
 	<property file="${basedir}/build.properties" />
 
 	<import file="${build.common-targets.file}" />
