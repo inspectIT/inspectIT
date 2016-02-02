@@ -28,9 +28,9 @@ import org.eclipse.swt.widgets.ToolBar;
 /**
  * A composite to be the head client of the form that
  * {@link info.novatec.inspectit.rcp.editor.root.FormRootEditor} is made of.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class BreadcrumbTitleComposite extends Composite implements CmrRepositoryChangeListener, StorageChangeListener {
 
@@ -76,7 +76,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 * @param style
@@ -129,7 +129,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Gets {@link #toolBarManager}.
-	 * 
+	 *
 	 * @return {@link #toolBarManager}
 	 */
 	public ToolBarManager getToolBarManager() {
@@ -138,7 +138,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Sets {@link #repositoryDefinition}.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            New value for {@link #repositoryDefinition}
 	 */
@@ -156,7 +156,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Sets the agent name.
-	 * 
+	 *
 	 * @param agentName
 	 *            Agent name.
 	 * @param agentImg
@@ -173,7 +173,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Sets the title text and image.
-	 * 
+	 *
 	 * @param group
 	 *            Group description.
 	 * @param groupdImg
@@ -191,7 +191,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Sets the description.
-	 * 
+	 *
 	 * @param view
 	 *            View description.
 	 * @param viewImg
@@ -216,6 +216,9 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 			getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
+					if (isDisposed()) {
+						return;
+					}
 					repositoryLabel.setImage(ImageFormatter.getCmrRepositoryImage((CmrRepositoryDefinition) repositoryDefinition, true));
 				}
 			});
@@ -232,6 +235,9 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 			getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
+					if (isDisposed()) {
+						return;
+					}
 					repositoryLabel.setText(repositoryDefinition.getName());
 					layoutInternal();
 				}
@@ -294,7 +300,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Updates storage name and icon if given storageData is displayed currently on the breadcrumb.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData}
 	 */
@@ -305,6 +311,9 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 				getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
 						repositoryLabel.setText(repositoryDefinition.getName());
 						repositoryLabel.setImage(ImageFormatter.getStorageRepositoryImage(storageRepositoryDefinition));
 						layoutInternal();
@@ -316,7 +325,7 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 	/**
 	 * Returns textual representation of the displayed data for the copy purposes.
-	 * 
+	 *
 	 * @return Returns textual representation of the displayed data for the copy purposes.
 	 */
 	public String getCopyString() {
