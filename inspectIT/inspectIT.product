@@ -14,6 +14,10 @@
    </configIni>
 
    <launcherArgs>
+      <programArgsMac>
+         <argsX86_64>-vm
+../../../jre/lib/jli/libjli.dylib</argsX86_64>
+      </programArgsMac>
       <vmArgs>-Xmx1024M -Xms128m
       </vmArgs>
    </launcherArgs>
