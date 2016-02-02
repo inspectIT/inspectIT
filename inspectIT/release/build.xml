@@ -310,11 +310,6 @@
 			<zipfileset src="${jvm.root}/jre7-linux-x64.zip" prefix="inspectit/jre" filemode="775" />
 			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
 		</zip>
-		<!-- No JRE packing for the Mac x32 version -->
-		<zip destfile="${release.basedir}/dist/inspectit-macosx.cocoa.x86.zip" update="true">
-			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
-			<zipfileset dir=".." prefix="inspectit" includes="logging-config.xml" />
-		</zip>
 		<zip destfile="${release.basedir}/dist/inspectit-macosx.cocoa.x86_64.zip" update="true">
 			<zipfileset dir="${basedir}/../../" prefix="inspectit" includes="*LICENSE*.txt" />
 			<zipfileset src="${jvm.root}/jre7-macosx-x64.zip" prefix="inspectit/jre" filemode="775" />
