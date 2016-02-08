@@ -72,6 +72,7 @@
 			<class name="info.novatec.inspectit.agent.sensor.platform.RuntimeInformationTest" />
 			<class name="info.novatec.inspectit.agent.sensor.platform.SystemInformationTest" />
 			<class name="info.novatec.inspectit.agent.sensor.platform.ThreadInformationTest" />
+			<class name="info.novatec.inspectit.agent.sensor.jmx.JmxSensorTest" />
 		</classes>
 	</test>
 		<test name="Sending Strategies">

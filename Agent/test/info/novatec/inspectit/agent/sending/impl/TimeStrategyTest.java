@@ -3,29 +3,25 @@ package info.novatec.inspectit.agent.sending.impl;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import info.novatec.inspectit.agent.MockInit;
+
+import info.novatec.inspectit.agent.TestBase;
 import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.sending.ISendingStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-public class TimeStrategyTest extends MockInit {
+public class TimeStrategyTest extends TestBase {
 
 	@Mock
 	private ICoreService coreService;
 
-	private ISendingStrategy sendingStrategy;
-
-	@BeforeMethod
-	public void initTestClass() {
-		sendingStrategy = new TimeStrategy();
-	}
+	@InjectMocks
+	private TimeStrategy sendingStrategy;
 
 	@Test
 	public void startStop() {

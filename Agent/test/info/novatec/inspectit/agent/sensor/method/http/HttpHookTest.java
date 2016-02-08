@@ -74,7 +74,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	private long registeredMethodId = 13L;
 	private long registeredSensorTypeId = 7L;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		Map<String, String> settings = new HashMap<String, String>();
 		settings.put("sessioncapture", "false");

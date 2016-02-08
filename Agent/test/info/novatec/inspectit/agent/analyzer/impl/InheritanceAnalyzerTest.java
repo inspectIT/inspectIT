@@ -9,7 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.MockInit;
+
+import info.novatec.inspectit.agent.TestBase;
 import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
 import info.novatec.inspectit.agent.analyzer.classes.AbstractSubTest;
 import info.novatec.inspectit.agent.analyzer.classes.AbstractTest;
@@ -24,24 +25,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.NotFoundException;
-
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.NotFoundException;
+
 @SuppressWarnings("PMD")
-public class InheritanceAnalyzerTest extends MockInit {
+public class InheritanceAnalyzerTest extends TestBase {
 
 	@Mock
 	private IClassPoolAnalyzer classPoolAnalyzer;
 
 	private InheritanceAnalyzer inheritanceAnalyzer;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		inheritanceAnalyzer = new InheritanceAnalyzer(classPoolAnalyzer);
 		inheritanceAnalyzer.log = LoggerFactory.getLogger(InheritanceAnalyzer.class);
