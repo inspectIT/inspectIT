@@ -11,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
 import info.novatec.inspectit.agent.AbstractLogSupport;
 import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
 import info.novatec.inspectit.agent.core.ICoreService;
@@ -60,7 +61,7 @@ public class StatementHookTest extends AbstractLogSupport {
 
 	private StatementHook statementHook2;
 
-	@BeforeMethod(dependsOnMethods = { "initMocks" })
+	@BeforeMethod
 	public void initTestClass() {
 		statementHook = new StatementHook(timer, idManager, connectionMetaDataStorage, statementReflectionCache, parameter);
 		statementHook2 = new StatementHook(timer, idManager, connectionMetaDataStorage, statementReflectionCache, parameter);

@@ -38,10 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The implementation of the JmxSensor.
- * 
+ *
  * @author Alfred Krauss
  * @author Marius Oehler
- * 
+ *
  */
 public class JmxSensor implements IJmxSensor, InitializingBean {
 
@@ -66,50 +66,50 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	 * The instance of the configuration storage.
 	 */
 	@Autowired
-	IConfigurationStorage configurationStorage;
+	private IConfigurationStorage configurationStorage;
 
 	/**
 	 * The ID Manager used to get the correct IDs.
 	 */
 	@Autowired
-	IIdManager idManager;
+	private IIdManager idManager;
 
 	/**
 	 * The MBeanServer providing information about registered MBeans.
 	 */
-	MBeanServer mBeanServer;
+	private MBeanServer mBeanServer;
 
 	/**
 	 * List of unregistered JmxConfigs.
 	 */
-	List<UnregisteredJmxConfig> unregisteredJmxConfigs = new ArrayList<UnregisteredJmxConfig>();
+	private List<UnregisteredJmxConfig> unregisteredJmxConfigs = new ArrayList<UnregisteredJmxConfig>();
 
 	/**
 	 * Map of registeredJmxSensorConfigs. Name of the, in the config specified, attribute is the
 	 * key.
 	 */
-	Map<String, JmxSensorConfig> registeredJmxSensorConfigs = new HashMap<String, JmxSensorConfig>();
+	private final Map<String, JmxSensorConfig> registeredJmxSensorConfigs = new HashMap<String, JmxSensorConfig>();
 
 	/**
 	 * Map used to connect the ObjectName of a MBean with the string-representation of the same
 	 * MBean. Recreation of the ObjectName is no longer necessary for the update-method.
 	 */
-	Map<String, ObjectName> nameStringToObjectName = new HashMap<String, ObjectName>();
+	private final Map<String, ObjectName> nameStringToObjectName = new HashMap<String, ObjectName>();
 
 	/**
 	 * The timestamp of the last {@link #collectData(ICoreService, long)} method invocation.
 	 */
-	private long lastDataCollectionTimestamp = 0;
+	long lastDataCollectionTimestamp = 0;
 
 	/**
 	 * The timestamp of the last {@link ##registerMBeans()} method invocation.
 	 */
-	private long lastRegisterBeanTimestamp = 0;
+	long lastRegisterBeanTimestamp = 0;
 
 	/**
 	 * Map of active attributes.
 	 */
-	Map<String, JmxSensorConfig> activeAttributes = new HashMap<String, JmxSensorConfig>();
+	private final Map<String, JmxSensorConfig> activeAttributes = new HashMap<String, JmxSensorConfig>();
 
 	/**
 	 * {@inheritDoc}
@@ -145,13 +145,13 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 
 	/**
 	 * Collects the data and sends it to the CMR.
-	 * 
+	 *
 	 * @param coreService
 	 *            The core service which is needed to store the measurements to.
 	 * @param sensorTypeIdent
 	 *            The ID of the sensor type so that old data can be found. (for aggregating etc.)
 	 */
-	void collectData(ICoreService coreService, long sensorTypeIdent) {
+	private void collectData(ICoreService coreService, long sensorTypeIdent) {
 		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTime().getTime());
 
 		for (Iterator<Entry<String, JmxSensorConfig>> iterator = activeAttributes.entrySet().iterator(); iterator.hasNext();) {
@@ -200,7 +200,8 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 	/**
 	 * Registers a new MBean on the first appearance.
 	 */
-	void registerMBeans() {
+	@SuppressWarnings("unchecked")
+	private void registerMBeans() {
 		for (Iterator<UnregisteredJmxConfig> iterator = unregisteredJmxConfigs.iterator(); iterator.hasNext();) {
 
 			UnregisteredJmxConfig ujc = iterator.next();
@@ -273,5 +274,17 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Sets {@link #unregisteredJmxConfigs}.
+	 * <P>
+	 * For testing purposes.
+	 *
+	 * @param unregisteredJmxConfigs
+	 *            New value for {@link #unregisteredJmxConfigs}
+	 */
+	void setUnregisteredJmxConfigs(List<UnregisteredJmxConfig> unregisteredJmxConfigs) {
+		this.unregisteredJmxConfigs = unregisteredJmxConfigs;
 	}
 }
