@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Commons</name>
+	<name>inspectit.shared.all</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -38,4 +38,17 @@
 		<nature>net.sourceforge.pmd.eclipse.plugin.pmdNature</nature>
 		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>shared</name>
+			<type>2</type>
+			<locationURI>shared</locationURI>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>shared</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/shared-resources</value>
+		</variable>
+	</variableList>
 </projectDescription>
