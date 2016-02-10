@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
-  <local-check-config name="inspectIT" location="../Commons/resources/shared/config/checkstyle/inspectit-checkstyle.xml" type="project" description="">
+  <local-check-config name="inspectIT" location="/inspectit.root/shared-resources/config/checkstyle/inspectit-checkstyle.xml" type="project" description="">
     <additional-data name="protect-config-file" value="false"/>
   </local-check-config>
   <fileset name="all" enabled="true" check-config-name="inspectIT" local="true">
@@ -10,5 +10,4 @@
   <filter name="FilesFromPackage" enabled="true">
     <filter-data value="test"/>
   </filter>
-  <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>

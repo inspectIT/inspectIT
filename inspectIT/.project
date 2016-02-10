@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>inspectIT</name>
+	<name>inspectit.ui.rcp</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -48,7 +48,7 @@
 	<variableList>
 		<variable>
 			<name>shared</name>
-			<value>$%7BPARENT-1-PROJECT_LOC%7D/Commons/resources/shared</value>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/shared-resources</value>
 		</variable>
 	</variableList>
 </projectDescription>
