@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import rocks.inspectit.server.CMR;
+import rocks.inspectit.shared.all.util.ResourcesPathResolver;
 
 /**
  * This abstract class provides general logging support for the test classes that need normal spring
@@ -36,7 +36,7 @@ public abstract class AbstractTestNGLogSupport {
 		configurator.setContext(context);
 		context.reset();
 
-		Path logPath = Paths.get("src", "main", "external-resources", CMR.DEFAULT_LOG_FILE_NAME).toAbsolutePath();
+		Path logPath = ResourcesPathResolver.getResourceFile(CMR.DEFAULT_LOG_FILE_NAME).toPath().toAbsolutePath();
 		try (InputStream is = Files.newInputStream(logPath, StandardOpenOption.READ)) {
 
 			configurator.doConfigure(is);

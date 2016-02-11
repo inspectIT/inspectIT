@@ -1,5 +1,6 @@
 @echo off
 
+if not exist "logs" mkdir logs
 :RESTART
 #COMMAND#
 

@@ -1,3 +1,5 @@
+#!/bin/sh
+mkdir -p logs
 while true; do
 	#COMMAND#
 	CMR_STATUS=$?

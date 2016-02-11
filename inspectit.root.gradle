@@ -1,0 +1,381 @@
+/**
+ * Gradle build file for the inspectit.root project. Contains shared tasks.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+buildscript {
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath "net.saliman:gradle-cobertura-plugin:2.3.1"
+		classpath "de.aaschmid.gradle.plugins:gradle-cpd-plugin:0.5"
+		classpath "gradle.plugin.me.champeau.gradle:jmh-gradle-plugin:0.3.0"
+	}
+}
+
+/** apply cpd to the root project, as this was how the plugin is intended to be used **/
+apply plugin: 'de.aaschmid.cpd'
+
+File propertiesFile = file("properties.gradle")
+File dependenciesFile = file("dependencies.gradle")
+
+allprojects {
+	apply from: file(propertiesFile.absolutePath)
+	apply from: file(dependenciesFile.absolutePath)
+
+	/**
+	 * If -PintegrateVersionInfo=true is passed with the build, then we will create versionInfo property for the project.
+	 */
+	if (project.hasProperty('integrateVersionInfo')) {
+		ext.versionInfo = System.getProperty('env.RELEASE_VERSION') + "." + System.getProperty('env.BUILD_NUMBER')
+	}
+}
+
+/**
+ * Unzips the Eclipse base from the configurations.eclipseBase. Only does it if the eclipse directory is not yet created.
+ */
+task unzipEclipse (type: Copy){
+	description = 'Unpacks the eclipse base needed for the PDE build.'
+	group = 'Build Setup'
+	
+	def outputDir = file(eclipseDir)
+	outputs.dir outputDir
+	
+	into ('') {
+		from zipTree(configurations.eclipseBase.asPath)
+	}
+	destinationDir = outputDir
+}
+unzipEclipse.onlyIf { !file(eclipseDir).exists() }
+
+/**
+ * Easy way to copy all dependencies that are needed by the inspectIT.target file
+ */
+task copyTargetDependencies {
+	description = 'Copies all productive dependencies to the "prod/lib" folder for all plug-in projects. Run this task before setting the inspectIT.target in Eclipse IDE.'
+
+	dependsOn(':inspectit.shared.all:prodToLib', ':inspectit.shared.cs:prodToLib', ':inspectit.ui.rcp:prodToLib')
+}
+
+gradle.projectsEvaluated {
+
+	/**
+	 * Release all installers. Must be in the projectsEvaluated closure as depending projects and tasks must be evaluated first.
+	 */
+	task releaseInstallers {
+		description = 'Releases inspectIT installers.'
+		group = 'Release'
+
+		dependsOn(izpack('inspectit.installer-all.windows.x86', 'Windows', '32', 'release-windows-x86', 'release-inspectit-win32.win32.x86'))
+		dependsOn(izpack('inspectit.installer-all.windows.x64', 'Windows', '64', 'release-windows-x64', 'release-inspectit-win32.win32.x86_64'))
+		dependsOn(izpack('inspectit.installer-all.linux.x86', 'Linux', '32', 'release-linux-x86', 'release-inspectit-linux.gtk.x86'))
+		dependsOn(izpack('inspectit.installer-all.linux.x64', 'Linux', '64', 'release-linux-x64', 'release-inspectit-linux.gtk.x86_64'))
+	}
+}
+
+/** Specify description and group for all main targets */
+task release {
+	description = 'Releases all artifacts in the sub-projects.'
+	group = 'Release'
+}
+
+task analyze {
+	description = 'Runs all unit tests and all checks in the sub-projects.'
+	group = 'Verification'
+}
+
+task releaseAndAnalyze {
+	description = "Runs all unit tests, all checks and releases all artifacts in the sub-projects."
+	group = 'Release'
+}
+
+/**
+ * Method to create task that produces one izpack installer artifacts.
+ *
+ * @param installerName Name of the installer file (without extension). Name of created tasks will include this as well.
+ * @param os Operating system to target ('Windows' or 'Linux').
+ * @param arch Achitecture ('32' or '64').
+ * @param cmrReleaseTask Task from the inspectit.server project that outputs the correct CMR package.
+ * @param uiReleaseTask Task from the inspectit.ui.rcp project that outputs the correct UI package.
+ */
+def izpack(installerName, os, arch, cmrReleaseTask, uiReleaseTask) {
+	return tasks.create(name: "release-${installerName}", dependsOn: [":inspectit.agent.java:release", ":inspectit.server:${cmrReleaseTask}", ":inspectit.ui.rcp:${uiReleaseTask}"]) {
+
+		// definition of all files needed, plus the output file
+		def agentPointer = project(':inspectit.agent.java').tasks.getByName('release').outputs.files.getSingleFile()
+		def cmrPointer = project(':inspectit.server').tasks.getByName(cmrReleaseTask).outputs.files.getSingleFile()
+		def uiPointer = project(':inspectit.ui.rcp').tasks.getByName(uiReleaseTask).outputs.files.getSingleFile()
+		def serviceInstallTemplate = file(installerWindowsServiceInstallTemplate)
+		def serviceUninstallTemplate = file(installerWindowsServiceUninstallTemplate)
+		def outputFile = file("${buildReleaseRoot}/${installerName}-${versionInfo}.jar")
+
+		inputs.file agentPointer
+		inputs.file cmrPointer
+		inputs.file uiPointer
+		inputs.file serviceInstallTemplate
+		inputs.file serviceUninstallTemplate
+		outputs.file outputFile
+
+		doLast {
+			// make a directory for output (otherwise we will fail with izpack)
+			file(buildReleaseRoot).mkdirs()
+			
+			// copy service bat files if it's windows
+			if (os == 'Windows') {
+				// create command for the install service template
+				def commandOpts
+				if (arch == '32') {
+					commandOpts =  project(':inspectit.server').serverJavaMemory32bit + ' '  + project(':inspectit.server').serverJavaOpts32bit
+				} else if (arch == '64') {
+					commandOpts =  project(':inspectit.server').serverJavaMemory64bit + ' '  + project(':inspectit.server').serverJavaOpts64bit
+				}
+				commandOpts += ' ' + project(':inspectit.server').serverJavaOptsWin + ' ' + project(':inspectit.server').serverJavaLocgcWin
+				// adapt for the procrun
+				def procrunCommandOpts = ''
+				commandOpts.split(" ").each {
+					procrunCommandOpts += procrunJvmoptsPrefix + it + " "
+				}
+				procrunCommandOpts = procrunCommandOpts.substring(0, procrunCommandOpts.length() - 1)
+
+				// copy the bat files and filter on the fly
+				copy {
+					from serviceInstallTemplate
+					into file(buildInstallerRoot)
+					filter {
+						line -> line.replaceAll('#COMMAND_OPTS#', procrunCommandOpts)
+					}
+					rename('template_installService.bat', 'installService.bat')
+				}
+				copy {
+					from serviceUninstallTemplate
+					into file(buildInstallerRoot)
+					rename('template_uninstallService.bat', 'uninstallService.bat')
+				}
+			}
+
+			// configure task, installer resources must be on classpath
+			ant.taskdef(name: 'izpack', classname: 'com.izforge.izpack.ant.IzPackTask', classpath: configurations.izpack.asPath) {
+				classpath {
+					pathelement(location: installerResources)
+				}
+			}
+
+			// copy all existing properties to the ant
+			project.properties.entrySet().each {
+				ant.property(name: it.key, value: it.value)
+			}
+
+			// set specific properties
+			ant.property(name: 'targetOs', value: os)
+			ant.property(name: 'targetOsArch', value: arch)
+			ant.property(name: 'installerAgentPointer', value: agentPointer.absolutePath)
+			ant.property(name: 'installerCmrPointer', value: cmrPointer.absolutePath)
+			ant.property(name: 'installerUiPointer', value: uiPointer.absolutePath)
+			ant.property(name: 'installerApplicationVersion', value: versionInfo)
+			if (os == 'Windows') {
+				ant.property(name: 'installerInstallServiceBat', value: file("${buildInstallerRoot}/installService.bat").absolutePath)
+				ant.property(name: 'installerUninstallServiceBat', value: file("${buildInstallerRoot}/uninstallService.bat").absolutePath)
+			
+				if (arch == '64') {
+					ant.property(name: 'installerWindowsServiceDisplayNamePointer', value: installerWindowsService64DisplayName)
+				} else if (arch == '32') {
+					ant.property(name: 'installerWindowsServiceDisplayNamePointer', value: installerWindowsService32DisplayName)
+				}
+			}
+
+			// fire the task
+			ant.izpack(
+				input: "${installerResources}/install.xml",
+				output: outputFile.absolutePath,
+				basedir: installerBase,
+				inheritAll: 'true'
+			)
+		}
+	}
+}
+
+/**
+ * All tasks that sub-projects can use.
+ */
+subprojects {
+
+	/** All plugins */
+	apply plugin: 'java'
+	apply plugin: 'pmd'
+	apply plugin: 'checkstyle'
+	apply plugin: 'findbugs'
+	apply plugin: 'net.saliman.cobertura'
+	apply plugin: 'me.champeau.gradle.jmh'
+	
+	/** all compile, test and runtime configurations to transitive = false */
+	configurations.compile.transitive = false
+	configurations.compileOnly.transitive = false
+	configurations.compileClasspath.transitive = false
+	configurations.testCompile.transitive = false
+	configurations.testCompileOnly.transitive = false
+	configurations.testCompileClasspath.transitive = false
+	configurations.runtime.transitive = false
+	configurations.testRuntime.transitive = false
+
+	/**
+	 * Defaults of the compile tasks.
+	 */
+	compileJava {
+		options.compilerArgs << '-Xlint:unchecked'
+		options.debug = 'true'
+		options.fork = 'true'
+		options.encoding = 'UTF-8'
+	}
+	compileTestJava {
+		options.compilerArgs << '-Xlint:unchecked'
+		options.debug = 'true'
+		options.fork = 'true'
+		options.encoding = 'UTF-8'
+	}
+
+	/**
+	 * Defaults of the jar task and integrate version tasks.
+	 */
+	jar {
+		libsDirName = 'release'
+	}
+
+	/**
+	 * All projects have same analyze task.
+	 */
+	task analyze {
+		description = 'Runs all unit tests and all checks.'
+		group = 'Verification'
+		dependsOn(project.tasks.cobertura, check)
+	}
+
+	/**
+	 * Copies all productive dependencies to the lib/prod folder
+	 */
+	task prodToLib (type: Copy) {
+		description = 'Copies all productive dependencies to the "lib/prod" folder.'
+		into file("${libRoot}/prod") 
+		from project.configurations.compile
+	}
+
+	/**
+	 *  Tasks for the TestNG and Cobertura.
+	 */
+	cobertura {
+		// ignore getters and setters, new options from Cobertura
+		// can not be used for now due to the https://github.com/cobertura/cobertura/issues/200
+		//coverageIgnoreTrivial = true
+
+		//reporting
+		coverageReportDir = file(buildQATestCoveragedata)
+		coverageFormats = ['xml', 'html']
+	}
+
+	/**
+	 * Definition of the test properties.
+	 */
+	test {
+		useTestNG() {
+			outputDirectory = file(buildQATestTestdata)
+			useDefaultListeners = true
+		}
+		reports.html.destination = file(buildQATestTestdata)
+
+		ext.customJvmArgs = '-XX:-UseSplitVerifier'
+		jvmArgs = [customJvmArgs]
+		
+		//create html pages that link to the interesting parts
+		doLast {
+			new File(buildQATest, "coverage.html").text = "<meta http-equiv=\"refresh\" content=\"0; url=coveragedata/index.html\" >"
+			new File(buildQATest, "testresult.html").text = "<meta http-equiv=\"refresh\" content=\"0; url=testdata/index.html\" >"
+			new File(buildQATest, "testreport.html").text = "<meta http-equiv=\"refresh\" content=\"0; url=testdata/emailable-report.html\" >"
+		}
+	}
+
+	/**
+	 *  Task for the PMD.
+	 */
+	pmd {
+		sourceSets = [sourceSets.main]
+		ruleSetFiles = files(pmdRulesFile)
+		ruleSets = []
+		reportsDir = file(buildQAAnalysisPMD)
+		toolVersion = '5.1.0'
+	}
+
+	task pmdHtmlReport << {
+		ant.xslt(in: "${buildQAAnalysisPMD}/main.xml", style: pmdReportFile, out: "${buildQAAnalysisPMD}/sortable_report.html")
+		ant.copy(todir: buildQAAnalysisPMD, file: pmdSortableFile)      
+		new File(buildQAAnalysis, "pmd.html").text = "<meta http-equiv=\"refresh\" content=\"0; url=pmd/sortable_report.html\" >"
+	}
+	pmdMain.finalizedBy pmdHtmlReport
+
+	/**
+	 *  Task for the Checkstyle.
+	 */
+	checkstyle {
+		sourceSets = [sourceSets.main]
+		configFile = file(checkstyleConfigFile)
+		reportsDir = file(buildQAAnalysisCheckstyle)
+		toolVersion = '5.6'
+	}
+
+	task checkstyleHtmlReport << {
+		ant.xslt(in: "${buildQAAnalysisCheckstyle}/main.xml", style: "${checkstyleReportFile}", out: "${buildQAAnalysisCheckstyle}/../checkstyle.html")
+	}
+	checkstyleMain.finalizedBy checkstyleHtmlReport
+
+	/**
+	 *  Task for the Findbugs.
+	 */
+	findbugs {
+		sourceSets = [sourceSets.main]
+		includeFilter = file(findbugsConfigInclude)
+		excludeFilter = file(findbugsConfigExclude)
+		reportsDir = file(buildQAAnalysisFindbugs)
+		toolVersion = '2.0.0'
+	}
+
+	task findbugsHtmlReport << {
+		ant.xslt(in: "${buildQAAnalysisFindbugs}/main.xml", style: findbugsConfigFancyHist, out: "${buildQAAnalysisFindbugs}/../findbugs.html")
+	} 
+	findbugsMain.finalizedBy findbugsHtmlReport
+
+	/**
+	 *  Task for the CPD.
+	 */
+	cpd {
+		skipLexicalErrors = true
+		minimumTokenCount = 100
+	}
+
+	cpdCheck {
+		// ignoring CPD failures on purpose
+		ignoreFailures = true
+		reports {
+			xml {
+				enabled = true
+				destination = file("${buildQAAnalysisCPD}/main.xml")
+			}
+		}
+	}
+
+	task cpdHtmlReport << {
+		ant.xslt(in: "${buildQAAnalysisCPD}/main.xml", style: cpdReportFile, out: "${buildQAAnalysisCPD}/../cpd.html")
+	}
+	cpdCheck.finalizedBy cpdHtmlReport
+	check.dependsOn(':cpdCheck')
+
+	/** 
+	 * JMH-Perf tests.
+	 */
+	jmh {
+		
+		humanOutputFile = file("${buildQAPerfTest}/jmh/human.txt") 
+		resultsFile = file("${buildQAPerfTest}/jmh/results.txt")
+	}
+}

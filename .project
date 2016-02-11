@@ -10,15 +10,24 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1456912834406</id>
+			<id>1456927517295</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.notFilterMatcher</id>
 				<arguments>
 					<matcher>
-						<id>org.eclipse.ui.ide.multiFilter</id>
-						<arguments>1.0-name-matches-false-false-resources</arguments>
+						<id>org.eclipse.ui.ide.orFilterMatcher</id>
+						<arguments>
+							<matcher>
+								<id>org.eclipse.ui.ide.multiFilter</id>
+								<arguments>1.0-name-matches-false-false-resources</arguments>
+							</matcher>
+							<matcher>
+								<id>org.eclipse.ui.ide.multiFilter</id>
+								<arguments>1.0-name-matches-false-false-build</arguments>
+							</matcher>
+						</arguments>
 					</matcher>
 				</arguments>
 			</matcher>

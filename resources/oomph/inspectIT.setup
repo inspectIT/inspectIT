@@ -65,14 +65,13 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
-      label="Ivy"
+      id=""
+      label="Gradle IDE"
       licenseConfirmationDisabled="true">
     <requirement
-        name="org.apache.ivyde.feature.feature.group"/>
-    <requirement
-        name="org.apache.ivy.feature.feature.group"/>
+        name="org.springsource.ide.eclipse.gradle.feature.feature.group"/>
     <repository
-        url="http://www.apache.org/dist/ant/ivyde/updatesite"/>
+        url="http://dist.springsource.com/release/TOOLS/update/e4.5/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask

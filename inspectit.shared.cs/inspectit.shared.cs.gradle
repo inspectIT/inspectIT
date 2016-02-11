@@ -1,0 +1,65 @@
+/**
+ * Gradle build file for the inspectit.shared.cs project.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+evaluationDependsOn(':inspectit.shared.all')
+defaultTasks 'releaseAndAnalyze'
+
+/** Artifact names */
+ext {
+	distJarName = 'inspectit-shared-cs'
+	pluginName = 'rocks.inspectit.shared.cs'
+}
+
+/** Setting compile configuration as plugin in Eclipse needs it */
+configurations {
+	compile {
+		extendsFrom configurations.sharedCsProd
+	}
+	testCompile {
+		extendsFrom configurations.sharedCsTest
+	}
+}
+
+/** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
+dependencies {
+	compile project(':inspectit.shared.all')
+	testCompile project(':inspectit.shared.all').sourceSets.test.output
+}
+
+/** Compile compatibility to 1.7 for all compile tasks */
+tasks.withType(JavaCompile) { 
+	sourceCompatibility = '1.7'
+	targetCompatibility = '1.7'
+}
+
+/** Include shared.all also for the coverage */
+cobertura {
+	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
+}
+
+/**
+ * Creates the jar. If needed update the version in the MANIFEST.MF.
+ */
+jar {
+	archivesBaseName = distJarName
+
+	manifest {
+		from ("${mainResources}/META-INF/MANIFEST.MF") {
+			eachEntry { details ->
+				if (details.key == 'Bundle-Version' && project.hasProperty('versionInfo')) {
+					details.value =  versionInfo
+				}
+			}
+		}
+	}
+}
+
+task releaseAndAnalyze {
+	description = "Runs all unit tests, all checks and assembles a jar archive."
+	group = 'Release'
+
+	dependsOn(analyze, jar)
+}

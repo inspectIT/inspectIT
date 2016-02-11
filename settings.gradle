@@ -1,0 +1,21 @@
+/**
+ * Gradle settings.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+rootProject.name = "inspectit.root" 
+include 'inspectit.agent.java', 'inspectit.server', 'inspectit.shared.all', 'inspectit.shared.cs', 'inspectit.ui.rcp'
+
+/**
+ * Sets the name of the project build file (and all of its sub-projects) to be "${project.name}.gradle" pattern.
+ * This is done as the Gradle expects build file to be named build.gradle. 
+ */
+def renameBuildFiles(project){
+	project.buildFileName = "${project.name}.gradle"
+	project.children.each{ childProject ->
+		renameBuildFiles(childProject)
+	}
+}
+renameBuildFiles(rootProject)
+

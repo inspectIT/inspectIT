@@ -1,11 +1,15 @@
 package rocks.inspectit.server.ci;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.shared.all.util.ResourcesPathResolver;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 
@@ -49,10 +53,21 @@ public class ConfigurationInterfacePathResolver {
 	private static final String AGENT_MAPPING_FILE = "agent-mappings.xml";
 
 	/**
-	 * Path to the external resources.
+	 * Used with {@link ResourcesPathResolver} to get the file of the ci dir.
 	 */
-	@Value("${externalResourcesPath}")
-	private String externalResourcesPath;
+	private File ciDirFile;
+
+	/**
+	 * Initializes {@link #configDirFile}.
+	 */
+	@PostConstruct
+	protected void init() {
+		try {
+			ciDirFile = ResourcesPathResolver.getResourceFile(DEFAULT_CI_FOLDER);
+		} catch (IOException exception) {
+			throw new BeanInitializationException("Property manager can not locate configuration directory.", exception);
+		}
+	}
 
 	/**
 	 * Returns the default CI folder.
@@ -60,7 +75,7 @@ public class ConfigurationInterfacePathResolver {
 	 * @return Returns the default CI folder.
 	 */
 	public Path getDefaultCiPath() {
-		return Paths.get(externalResourcesPath, DEFAULT_CI_FOLDER);
+		return ciDirFile.toPath();
 	}
 
 	/**
@@ -69,7 +84,7 @@ public class ConfigurationInterfacePathResolver {
 	 * @return Returns the schema path.
 	 */
 	public Path getSchemaPath() {
-		return Paths.get(externalResourcesPath, DEFAULT_CI_FOLDER, SCHEMA_FOLDER, SCHEMA_FILE);
+		return getDefaultCiPath().resolve(SCHEMA_FOLDER).resolve(SCHEMA_FILE);
 	}
 
 	/**
@@ -78,7 +93,7 @@ public class ConfigurationInterfacePathResolver {
 	 * @return Profiles directory path.
 	 */
 	public Path getProfilesPath() {
-		return Paths.get(externalResourcesPath, DEFAULT_CI_FOLDER, PROFILES_FOLDER);
+		return getDefaultCiPath().resolve(PROFILES_FOLDER);
 	}
 
 	/**
@@ -99,7 +114,7 @@ public class ConfigurationInterfacePathResolver {
 	 * @return Environments directory path.
 	 */
 	public Path getEnvironmentPath() {
-		return Paths.get(externalResourcesPath, DEFAULT_CI_FOLDER, ENVIRONMENTS_FOLDER);
+		return getDefaultCiPath().resolve(ENVIRONMENTS_FOLDER);
 	}
 
 	/**
@@ -120,6 +135,6 @@ public class ConfigurationInterfacePathResolver {
 	 * @return Path to the file.
 	 */
 	public Path getAgentMappingFilePath() {
-		return Paths.get(externalResourcesPath, DEFAULT_CI_FOLDER, AGENT_MAPPING_FILE);
+		return getDefaultCiPath().resolve(AGENT_MAPPING_FILE);
 	}
 }

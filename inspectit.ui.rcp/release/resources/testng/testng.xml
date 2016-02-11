@@ -1,8 +1,0 @@
-<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
-<suite name="inspectIT">
-	<test name="TimeframeDivider">
-		<classes>
-			<class name="rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.test.TimeframeDividerTest" />
-		</classes>
-	</test>
-</suite>
