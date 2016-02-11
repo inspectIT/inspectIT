@@ -3,39 +3,39 @@
 <!-- Main installation file for all installer types -->
 <installation version="1.0">
 	<info>
-		<appname>@{installer.application.name}</appname>
-		<appversion>@{installer.application.version}</appversion>
+		<appname>@{installerApplicationName}</appname>
+		<appversion>@{installerApplicationVersion}</appversion>
 		<authors>
-			<author email="@{installer.author.email}" name="@{installer.author.name}" />
+			<author email="@{installerAuthorEmail}" name="@{installerAuthorName}" />
 		</authors>
-		<url>@{installer.application.homepage}</url>
+		<url>@{installerApplicationHomepage}</url>
 	</info>
 
 	<variables>
 		<!-- Operation system and architecture information for IzPack -->
-		<variable name="OS_VER" value="@{target.os}" />
-		<variable name="ARCH_VER" value="@{target.os.arch}" />
+		<variable name="OS_VER" value="@{targetOs}" />
+		<variable name="ARCH_VER" value="@{targetOsArch}" />
 
 		<!-- Build number of inspectIT -->
 		<variable name="BUILD_VER" value="dev" />
 
 		<!-- Windows Service variables for parsing installService.bat and uninstallService.bat -->
 		<!-- For manipulating the variable values see corresponding properties build file -->
-		<variable name="PR_EXE" value="@{procrun.exe}" />
-		<variable name="SERVICE_NAME" value="@{inspectit.windows.service.name}" />
-		<variable name="PR_DESCRIPTION" value="@{inspectit.windows.service.description}" />
-		<variable name="PR_DISPLAYNAME" value="@{inspectit.windows.service.display.name.pointer}" />
-		<variable name="PR_JVM" value="@{inspectit.windows.service.jvm.path}" />
-		<variable name="PR_CLASSPATH" value="@{inspectit.windows.service.jvm.classpath}" />
-		<variable name="PR_STARTUP" value="@{procrun.startup}" />
-		<variable name="PR_STARTMODE" value="@{procrun.startmode}" />
-		<variable name="PR_STARTCLASS" value="@{procrun.startclass}" />
-		<variable name="PR_STARTMETHOD" value="@{procrun.startmethod}" />
-		<variable name="PR_STARTPARAMS" value="@{procrun.startparams}" />
-		<variable name="PR_STOPMODE" value="@{procrun.stopmode}" />
-		<variable name="PR_STOPCLASS" value="@{procrun.stopclass}" />
-		<variable name="PR_STOPMETHOD" value="@{procrun.stopmethod}" />
-		<variable name="PR_STOPPARAMS" value="@{procrun.stopparams}" />
+		<variable name="PR_EXE" value="@{procrunExe}" />
+		<variable name="SERVICE_NAME" value="@{installerWindowsServiceName}" />
+		<variable name="PR_DESCRIPTION" value="@{installerWindowsServiceDescription}" />
+		<variable name="PR_DISPLAYNAME" value="@{installerWindowsServiceDisplayNamePointer}" />
+		<variable name="PR_JVM" value="@{installerWindowsServiceJvmPath}" />
+		<variable name="PR_CLASSPATH" value="@{installerWindowsServiceJvmClasspath}" />
+		<variable name="PR_STARTUP" value="@{procrunStartup}" />
+		<variable name="PR_STARTMODE" value="@{procrunStartMode}" />
+		<variable name="PR_STARTCLASS" value="@{procrunStartClass}" />
+		<variable name="PR_STARTMETHOD" value="@{procrunStartMethod}" />
+		<variable name="PR_STARTPARAMS" value="@{procrunStartParams}" />
+		<variable name="PR_STOPMODE" value="@{procrunStopMode}" />
+		<variable name="PR_STOPCLASS" value="@{procrunStopClass}" />
+		<variable name="PR_STOPMETHOD" value="@{procrunStopMethod}" />
+		<variable name="PR_STOPPARAMS" value="@{procrunStopParams}" />
 
 		<!-- Information for the shortcuts -->
 		<variable name="PROGRAMM_GROUP" value="inspectIT" />
@@ -110,8 +110,8 @@
 		<!-- inspectIT UI -->
 		<!-- Parent node in the pack tree -->
 		<pack name="inspectIT UI" preselected="yes" required="no">
-			<description>@{inspectit.ui.description.long}</description>
-			<file override="update" src="@{installer.ui.pointer}" unpack="true" targetdir="$INSTALL_PATH" />
+			<description>@{installerUiDescriptionLong}</description>
+			<file override="update" src="@{installerUiPointer}" unpack="true" targetdir="$INSTALL_PATH" />
 
 			<!-- Set executable flag to inspectIT files after installation (important for GNU/Linux OS or OSX) -->
 			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT.app/Contents/MacOS/inspectIT" condition="izpack.macinstall" />
@@ -133,11 +133,10 @@
 		<!-- inspectIT CMR -->
 		<!-- Parent node in the pack tree -->
 		<pack name="inspectIT Server (CMR)" preselected="yes" required="no">
-			<description>@{inspectit.cmr.description.long}</description>
+			<description>@{installerCmrDescriptionLong}</description>
 
 			<!-- Installation files -->
-			<!-- Cannot use unpack=true because izpack doesn't support tar.gz -->
-			<file override="update" src="@{installer.cmr.pointer}" targetdir="$INSTALL_PATH" />
+			<file override="update" src="@{installerCmrPointer}" unpack="true" targetdir="$INSTALL_PATH" />
 
 			<!-- Set executable flag to inspectIT files after installation (important for GNU/Linux OS or OSX) -->
 			<executable targetfile="$INSTALL_PATH/CMR/startup.sh" condition="izpack.linuxinstall|izpack.macinstall" />
@@ -154,13 +153,13 @@
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/tnameserv" condition="izpack.linuxinstall|izpack.macinstall" />
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/unpack200" condition="izpack.linuxinstall|izpack.macinstall" />
 
-			<file override="update" src="@{commons.installer.resources}/service/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is64" />
-			<file override="update" src="@{commons.installer.resources}/service/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is32" />
+			<file override="update" src="@{installerResources}/service/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is64" />
+			<file override="update" src="@{installerResources}/service/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is32" />
 
-			<file override="update" src="@{commons.installer.resources}/service/inspectITCMRw.exe" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
+			<file override="update" src="@{installerResources}/service/inspectITCMRw.exe" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
 
-			<parsable targetfile="$INSTALL_PATH/CMR/installService.bat" condition="izpack.windowsinstall" />
-			<parsable targetfile="$INSTALL_PATH/CMR/uninstallService.bat" condition="izpack.windowsinstall" />
+			<parsable targetfile="@{installerInstallServiceBat}" condition="izpack.windowsinstall" />
+			<parsable targetfile="@{installerUninstallServiceBat}" condition="izpack.windowsinstall" />
 
 			<executable type="bin" stage="postinstall" targetfile="$INSTALL_PATH/CMR/uninstallService.bat" keep="true" condition="izpack.windowsinstall" />
 			<executable type="bin" stage="postinstall" targetfile="$INSTALL_PATH/CMR/installService.bat" keep="true" condition="izpack.windowsinstall" />
@@ -170,8 +169,8 @@
 		<!-- inspectIT Agent -->
 		<!-- Parent node in the pack tree -->
 		<pack name="inspectIT Java Agent" preselected="yes" required="no">
-			<description>@{inspectit.agent.description.long}</description>
-			<file override="update" src="@{agent.build}" unpack="true" targetdir="$INSTALL_PATH" />
+			<description>@{installerAgentDescriptionLong}</description>
+			<file override="update" src="@{installerAgentPointer}" unpack="true" targetdir="$INSTALL_PATH" />
 		</pack>
 	</packs>
 </installation>

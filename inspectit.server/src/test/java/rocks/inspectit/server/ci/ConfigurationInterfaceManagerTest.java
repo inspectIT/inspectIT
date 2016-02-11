@@ -30,8 +30,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
-import rocks.inspectit.server.ci.ConfigurationInterfacePathResolver;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
@@ -41,12 +39,17 @@ import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
 
 /**
  * Test for the {@link ConfigurationInterfaceManager}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class ConfigurationInterfaceManagerTest {
+
+	/**
+	 * Path to the external resources folder.
+	 */
+	private static final Path EXT_RESOURCES_PATH = Paths.get("src", "main", "external-resources").toAbsolutePath();
 
 	/**
 	 * What folder to use for testing.
@@ -73,21 +76,24 @@ public class ConfigurationInterfaceManagerTest {
 		MockitoAnnotations.initMocks(this);
 
 		final ConfigurationInterfacePathResolver resolverHelper = new ConfigurationInterfacePathResolver();
+		resolverHelper.init();
 		when(pathResolver.getDefaultCiPath()).thenReturn(Paths.get(TEST_FOLDER));
-		when(pathResolver.getAgentMappingFilePath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getAgentMappingFilePath()));
-		when(pathResolver.getEnvironmentPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getEnvironmentPath()));
-		when(pathResolver.getProfilesPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getProfilesPath()));
-		when(pathResolver.getSchemaPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(resolverHelper.getSchemaPath()));
+		when(pathResolver.getAgentMappingFilePath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getAgentMappingFilePath())));
+		when(pathResolver.getEnvironmentPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentPath())));
+		when(pathResolver.getProfilesPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getProfilesPath())));
+		when(pathResolver.getSchemaPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getSchemaPath())));
 		doAnswer(new Answer<Path>() {
 			@Override
 			public Path answer(InvocationOnMock invocation) throws Throwable {
-				return Paths.get(TEST_FOLDER).resolve(resolverHelper.getEnvironmentPath()).resolve(resolverHelper.getEnvironmentFilePath((Environment) invocation.getArguments()[0]));
+				return Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentPath()))
+						.resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentFilePath((Environment) invocation.getArguments()[0])));
 			}
 		}).when(pathResolver).getEnvironmentFilePath(Mockito.<Environment> any());
 		doAnswer(new Answer<Path>() {
 			@Override
 			public Path answer(InvocationOnMock invocation) throws Throwable {
-				return Paths.get(TEST_FOLDER).resolve(resolverHelper.getEnvironmentPath()).resolve(resolverHelper.getProfileFilePath((Profile) invocation.getArguments()[0]));
+				return Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentPath()))
+						.resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getProfileFilePath((Profile) invocation.getArguments()[0])));
 			}
 		}).when(pathResolver).getProfileFilePath(Mockito.<Profile> any());
 

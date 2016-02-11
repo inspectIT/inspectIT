@@ -1,0 +1,255 @@
+/**
+ * Gradle build file for the inspectit.server project.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+apply from: 'inspectit.server.properties.gradle'
+evaluationDependsOn(':inspectit.shared.all')
+evaluationDependsOn(':inspectit.shared.cs')
+defaultTasks 'releaseAndAnalyze'
+
+/** Some server specific properties */
+ext {
+	distJarName = 'inspectit-cmr'
+	sharedCsMainJava = project(':inspectit.shared.cs').projectDir.absolutePath + '/src/main/java'
+}
+
+/** Setting compile configuration as plugin in Eclipse needs it */
+configurations {
+	compile {
+		extendsFrom configurations.serverProd
+	}
+	testCompile {
+		extendsFrom configurations.serverTest
+		extendsFrom configurations.jmhbase
+	}
+}
+
+/** Depend on inspectit.shared.all and cs, testCompile must depend on shared all test sources because of TestBase class */
+dependencies {
+	compile project(':inspectit.shared.all')
+	compile project(':inspectit.shared.cs')
+	testCompile project(':inspectit.shared.all').sourceSets.test.output
+}
+
+/** Compile compatibility to 1.7 for all compile tasks */
+tasks.withType(JavaCompile) { 
+	sourceCompatibility = '1.7'
+	targetCompatibility = '1.7'
+}
+
+/** 
+ * Schema generation for the configuration (properties). Two schemas are generated. 
+ */
+task schemagenConfiguration {
+	description = 'Schema (.xsd) generation for the server configuration (properties).'
+	group = BasePlugin.BUILD_GROUP
+
+	inputs.dir project(':inspectit.shared.cs').sourceSets.main.java.srcDirs
+	outputs.file file("${mainExtResources}/config/schema/configurationSchema.xsd")
+	outputs.file file("${mainExtResources}/config/schema/configurationUpdateSchema.xsd")
+
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/cmr/property/configuration", "${mainExtResources}/config/schema", "configurationSchema.xsd", "validation/**"))
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/cmr/property/update", "${mainExtResources}/config/schema", "configurationUpdateSchema.xsd", ""))
+}
+
+/**
+ * Checks if the configuration schemas as up-to-date. Set to run always after classes task.
+ */
+task configurationSchemaCheck () {
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/cmr/property/configuration", "${buildRoot}/schema-check", "configurationSchemaCheck.xsd", "validation/**"))
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/cmr/property/update", "${buildRoot}/schema-check", "configurationUpdateSchemaCheck.xsd", ""))
+
+	doLast {
+		// first file
+		def fileMatch = new org.apache.tools.ant.taskdefs.condition.FilesMatch()
+		fileMatch.setTextfile true
+		fileMatch.setFile1 file("${buildRoot}/schema-check/configurationSchemaCheck.xsd")
+		fileMatch.setFile2 file("${mainExtResources}/config/schema/configurationSchema.xsd")
+		if (!fileMatch.eval()) {
+			throw new GradleException("Configuration schema (${mainExtResources}/config/schema/configurationSchema.xsd) is not up-to-date. Please re-generate.")
+		}
+
+		// second file
+		fileMatch = new org.apache.tools.ant.taskdefs.condition.FilesMatch()
+		fileMatch.setTextfile true
+		fileMatch.setFile1 file("${buildRoot}/schema-check/configurationUpdateSchemaCheck.xsd")
+		fileMatch.setFile2 file("${mainExtResources}/config/schema/configurationUpdateSchema.xsd")
+		if (!fileMatch.eval()) {
+			throw new GradleException("Configuration update schema (${mainExtResources}/config/schema/configurationUpdateSchema.xsd) is not up-to-date. Please re-generate.")
+		}
+	}
+}
+classes.finalizedBy configurationSchemaCheck
+
+/** 
+ * Schema generation for the configuration interface. 
+ */
+task schemagenCi {
+	description = 'Schema (.xsd) generation for the configuration interface.'
+	group = BasePlugin.BUILD_GROUP
+	
+	inputs.dir project(':inspectit.shared.cs').sourceSets.main.java.srcDirs
+	outputs.file file("${mainExtResources}/ci/schema/ciSchema.xsd")
+
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${mainExtResources}/ci/schema", "ciSchema.xsd", ""))
+}
+
+/**
+ * Uses ant SchemaGenTask to generate .xsd schema from the annotated classes.
+ *
+ * @param sourceDir Directory where java files are located.
+ * @param outputDir Directory where to store schema.
+ * @param fileName Name of the schema file.
+ * @param excludes Any excludes patterns to pass to the ant task.
+ */
+def schemagen(sourceDir, outputDir, fileName, excludes) {
+	return tasks.create(name: "schemagen-${fileName}") {
+		inputs.sourceDir(sourceDir)
+		outputs.file file("${outputDir}/${fileName}")
+	
+		doLast {
+			file(outputDir).mkdirs()
+			ant.taskdef(name: 'schemagen', classname: 'com.sun.tools.jxc.SchemaGenTask', classpath: configurations.xjc.asPath)
+			ant.schemagen (
+				srcdir: sourceDir,
+				destdir: outputDir,
+				excludes: excludes,
+				includeAntRuntime: 'false',
+				debug: 'true'
+			)
+
+			file("${outputDir}/schema1.xsd").renameTo(file("${outputDir}/${fileName}"))
+		}
+	}
+}
+
+/** Tests on the server must run with specific properties */
+test {
+	def classmexerPath = configurations.classmexer.asPath
+	jvmArgs += '-javaagent:' + classmexerPath
+	jvmArgs += serverJavaOptsForTests
+}
+
+/** Include shared.all & shared.cs also for the coverage */
+cobertura {
+	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
+	coverageDirs += project(':inspectit.shared.cs').sourceSets.main.output.classesDir.path
+}
+
+/**
+ * Creates the jar. Manifest 'Class-Path' is constructed from the configurations.serverProd and jars from the depending projects.
+ */ 
+jar {
+	libsDirName = buildReleaseRoot
+	archivesBaseName = distJarName
+	
+	// to create manifest we need all libs that are dependencies
+	def allLibs = [configurations.serverProd, project(':inspectit.shared.all').jar.outputs, project(':inspectit.shared.cs').jar.outputs]
+	def manifestLibs = ''
+	allLibs.each { lib ->
+		manifestLibs += lib.files.collect{'libs/' + it.name}.iterator().join(' ')
+		manifestLibs += ' '
+	}
+	manifest {
+		attributes(
+			'Main-Class': 'rocks.inspectit.server.CMR',
+			'Class-Path': manifestLibs
+		)
+	}
+}
+
+/** Release all packages we have. */
+task release {
+	description = 'Releases the server packages for the windows, linux and macosx.'
+	group = 'Release'
+	
+	dependsOn(releaseSingle('windows', 'x86'))
+	dependsOn(releaseSingle('windows', 'x64'))
+	dependsOn(releaseSingle('linux', 'x86'))
+	dependsOn(releaseSingle('linux', 'x64'))
+	dependsOn(releaseSingle('macosx', 'x64'))
+}
+
+/**
+ * Packs a single package based on the operating system and architecture. 
+ * Note that the JVM must exists for the given combination (f.e. jre7-linux-x64.zip).
+ * 
+ * @param os Operating system ('windows', 'linux' or 'macosx')
+ * @param arch Architecture ('x86' or 'x64')
+ */
+def releaseSingle(os, arch) {	
+	return tasks.create(name: "release-${os}-${arch}", type: Zip, dependsOn: jar) {
+		archiveName = "inspectit-cmr.${os}.${arch}-${versionInfo}.zip"
+		destinationDir = file(buildReleasePackages)
+	
+		def jreFile
+		configurations.jvms.getFiles().each { path ->
+			if (path.getName().contains("${os}-${arch}")) {
+				logger.debug "for ${os}-${arch} using jvm " + path
+				jreFile = file(path)
+			}
+		}
+
+		into('CMR/libs') {
+			from project(':inspectit.shared.all').jar.outputs
+			from project(':inspectit.shared.cs').jar.outputs
+			from configurations.serverProd
+		}
+		into('CMR') {
+			from jar.outputs
+			from file(sharedResourcesLicense)
+			from file(mainExtResources)
+			// exclude ignored resources so local builds also work
+			exclude('config/updates/*')
+			exclude('ci/agent-mappings.xml')
+			exclude('ci/environments/*xml')
+			exclude('ci/profiles/*.xml')
+			// startups separatelly
+			exclude('startup.*')
+		}
+		into('CMR') {
+			from file("${mainExtResources}/startup.bat")
+			from file("${mainExtResources}/startup.sh")
+			fileMode = 0755
+
+			// exclude for the os/file combination
+			exclude({ file ->
+				if (file.getName().equals('startup.bat')) {
+					return !os.equals('windows')
+				} else if (file.getName().equals('startup.sh')) {
+					return os.equals('windows')
+				}
+				return false;
+			})
+
+			// change the #COMMAND# on the fly
+			def command
+			if (os.equals('windows') && arch.equals('x86')) {
+				command = "${serverJavaCommandWin} ${serverJavaMemory32bit} ${serverJavaOpts32bit} ${serverJavaOptsWin} ${serverJavaLocgcWin} -jar ${distJarName}.jar"
+			} else if (os.equals('windows') && arch.equals('x64')) {
+				command = "${serverJavaCommandWin} ${serverJavaMemory64bit} ${serverJavaOpts64bit} ${serverJavaOptsWin} ${serverJavaLocgcWin} -jar ${distJarName}.jar"
+			} else if (arch.equals('x86')) {
+				command = "${serverJavaCommandLinux} ${serverJavaMemory32bit} ${serverJavaOpts32bit} ${serverJavaOptsLinux} ${serverJavaLocgcLinux} -jar ${distJarName}.jar"
+			} else {
+				// macosx and linux x64 have same command
+				command = "${serverJavaCommandLinux} ${serverJavaMemory64bit} ${serverJavaOpts64bit} ${serverJavaOptsLinux} ${serverJavaLocgcLinux} -jar ${distJarName}.jar"
+			} 
+			filter {	
+				String line -> line.replaceAll('#COMMAND#', command)
+			}
+		}
+		// also jre
+		into('CMR/jre') {
+			from zipTree(jreFile)
+		}
+	}
+}
+
+task releaseAndAnalyze {
+	description = "Runs all unit tests, all checks and releases the server packages for the windows, linux and macosx."
+	group = 'Release'
+
+	dependsOn(release, analyze)
+}
