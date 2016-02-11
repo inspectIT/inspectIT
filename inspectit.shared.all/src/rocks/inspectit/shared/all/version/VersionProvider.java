@@ -1,4 +1,4 @@
-package info.novatec.inspectit.version;
+package rocks.inspectit.shared.all.version;
 
 /**
  * Provider for the version string in inspectIT.

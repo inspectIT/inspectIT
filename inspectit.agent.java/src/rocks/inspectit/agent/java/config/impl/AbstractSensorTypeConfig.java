@@ -1,9 +1,9 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.sensor.ISensor;
+package rocks.inspectit.agent.java.config.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import rocks.inspectit.agent.java.sensor.ISensor;
 
 /**
  * Abstract sensor type configuration class which is used by the {@link MethodSensorTypeConfig} and

@@ -1,10 +1,10 @@
-package info.novatec.inspectit.indexing.aggregation.impl;
-
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
+package rocks.inspectit.shared.cs.indexing.aggregation.impl;
 
 import java.io.Serializable;
+
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * {@link IAggregator} for {@link MemoryInformationData}.

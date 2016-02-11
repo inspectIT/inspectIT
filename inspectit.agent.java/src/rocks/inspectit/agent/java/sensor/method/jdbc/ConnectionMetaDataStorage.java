@@ -1,7 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.util.ReflectionCache;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -14,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
+import rocks.inspectit.agent.java.util.ReflectionCache;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 /**
  * Storage for the meta information of JDBC connection classes.

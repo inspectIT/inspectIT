@@ -1,11 +1,11 @@
-package info.novatec.inspectit.cmr.processor;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
+package rocks.inspectit.server.processor;
 
 import java.util.Collection;
 
 import javax.persistence.EntityManager;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * Abstract processor class for CMR data.

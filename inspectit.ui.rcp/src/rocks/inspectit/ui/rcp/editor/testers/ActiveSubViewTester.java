@@ -1,15 +1,15 @@
-package info.novatec.inspectit.rcp.editor.testers;
-
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.composite.AbstractCompositeSubView;
-import info.novatec.inspectit.rcp.editor.graph.GraphSubView;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.editor.search.ISearchExecutor;
-import info.novatec.inspectit.rcp.editor.table.TableSubView;
-import info.novatec.inspectit.rcp.editor.tree.SteppingTreeSubView;
-import info.novatec.inspectit.rcp.editor.tree.TreeSubView;
+package rocks.inspectit.ui.rcp.editor.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.composite.AbstractCompositeSubView;
+import rocks.inspectit.ui.rcp.editor.graph.GraphSubView;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.editor.search.ISearchExecutor;
+import rocks.inspectit.ui.rcp.editor.table.TableSubView;
+import rocks.inspectit.ui.rcp.editor.tree.SteppingTreeSubView;
+import rocks.inspectit.ui.rcp.editor.tree.TreeSubView;
 
 /**
  * @author Patrice Bouillet

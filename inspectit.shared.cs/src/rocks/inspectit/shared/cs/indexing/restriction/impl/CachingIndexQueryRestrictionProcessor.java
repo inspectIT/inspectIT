@@ -1,8 +1,4 @@
-package info.novatec.inspectit.indexing.restriction.impl;
-
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestriction;
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestrictionProcessor;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.shared.cs.indexing.restriction.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,6 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.indexing.restriction.IIndexQueryRestrictionProcessor;
 
 /**
  * This restriction processor caches the methods of each class that needs to be invoke. It also

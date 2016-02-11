@@ -1,15 +1,15 @@
-package info.novatec.inspectit.indexing.query.factory.impl;
-
-import info.novatec.inspectit.communication.data.AggregatedTimerData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.query.factory.AbstractQueryFactory;
+package rocks.inspectit.shared.cs.indexing.query.factory.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.query.factory.AbstractQueryFactory;
 
 /**
  * Factory for all queries for the {@link TimerData}.

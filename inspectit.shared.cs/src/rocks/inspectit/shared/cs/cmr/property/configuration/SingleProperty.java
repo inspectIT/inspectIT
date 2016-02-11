@@ -1,25 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration;
-
-import info.novatec.inspectit.cmr.property.configuration.impl.BooleanProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.ByteProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.LongProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.PercentageProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.StringProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidationException;
-import info.novatec.inspectit.cmr.property.configuration.validator.ISinglePropertyValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.FullyQualifiedClassNameValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.GreaterValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.LessOrEqualValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.LessValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.NegativeValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.NotEmptyValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.PercentageValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.PositiveValidator;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.RestoreDefaultPropertyUpdate;
+package rocks.inspectit.shared.cs.cmr.property.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +13,27 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.BooleanProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.ByteProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.LongProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.PercentageProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.StringProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidationException;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePropertyValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.FullyQualifiedClassNameValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.LessOrEqualValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.LessValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.NegativeValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.NotEmptyValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.PercentageValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.PositiveValidator;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.RestoreDefaultPropertyUpdate;
 
 /**
  * Single property denotes one concrete configuration in the CMR with logical name and value.

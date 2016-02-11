@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.editor.inputdefinition.extra;
-
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.util.data.RegExAggregatedHttpTimerData;
+package rocks.inspectit.ui.rcp.editor.inputdefinition.extra;
 
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
 
 /**
  * Input definition extra for the HTTP charting editors.

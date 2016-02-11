@@ -1,7 +1,7 @@
-package info.novatec.inspectit.communication.comparator;
+package rocks.inspectit.shared.all.communication.comparator;
 
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Interface for all our comparators.

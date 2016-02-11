@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.ExceptionSensorData
+class: rocks.inspectit.shared.all.communication.data.ExceptionSensorData
 # Default Data
 1: id
 2: platformIdent

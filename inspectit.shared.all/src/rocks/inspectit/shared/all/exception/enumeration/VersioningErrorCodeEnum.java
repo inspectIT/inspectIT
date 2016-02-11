@@ -1,8 +1,8 @@
-package info.novatec.inspectit.exception.enumeration;
+package rocks.inspectit.shared.all.exception.enumeration;
 
 import org.apache.commons.lang.WordUtils;
 
-import info.novatec.inspectit.exception.IErrorCode;
+import rocks.inspectit.shared.all.exception.IErrorCode;
 
 /**
  * Error code enumeration for the versioning component.

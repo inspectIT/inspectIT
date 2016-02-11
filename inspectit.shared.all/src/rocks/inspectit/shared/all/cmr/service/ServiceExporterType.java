@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.service;
+package rocks.inspectit.shared.all.cmr.service;
 
 /**
  * Enumeration used to define the type of the service exporter. Depending on the type, some optional

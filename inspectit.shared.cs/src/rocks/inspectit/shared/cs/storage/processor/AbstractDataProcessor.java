@@ -1,7 +1,4 @@
-package info.novatec.inspectit.storage.processor;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.storage.IWriter;
+package rocks.inspectit.shared.cs.storage.processor;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -9,6 +6,9 @@ import java.util.Collections;
 import java.util.concurrent.Future;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.storage.IWriter;
 
 /**
  * Abstract class for all storage data processors.

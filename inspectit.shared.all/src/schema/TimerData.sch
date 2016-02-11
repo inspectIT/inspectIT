@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.TimerData
+class: rocks.inspectit.shared.all.communication.data.TimerData
 
 # Default Data
 1: id

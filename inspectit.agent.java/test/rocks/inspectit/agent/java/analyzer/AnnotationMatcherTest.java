@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer;
+package rocks.inspectit.agent.java.analyzer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -8,10 +8,6 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import info.novatec.inspectit.agent.TestBase;
-import info.novatec.inspectit.agent.analyzer.impl.AnnotationMatcher;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +24,9 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.impl.AnnotationMatcher;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings("PMD")
 public class AnnotationMatcherTest extends TestBase {
@@ -273,6 +272,7 @@ public class AnnotationMatcherTest extends TestBase {
 
 	public static class ExtendedTestClass extends TestClass {
 
+		@Override
 		public void dummyMethod() {
 		}
 	}

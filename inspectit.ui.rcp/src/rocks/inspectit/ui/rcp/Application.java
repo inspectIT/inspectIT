@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp;
+package rocks.inspectit.ui.rcp;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;

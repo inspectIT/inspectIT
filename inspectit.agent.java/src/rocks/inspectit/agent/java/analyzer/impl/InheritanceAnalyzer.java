@@ -1,8 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.impl;
-
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +10,9 @@ import java.util.Set;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.ci.view;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.provider.IEnvironmentProvider;
+package rocks.inspectit.ui.rcp.ci.view;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.provider.IEnvironmentProvider;
 
 /**
  * Environment label provider.

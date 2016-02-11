@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.service.rest;
+package rocks.inspectit.server.service.rest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
@@ -13,13 +13,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.communication.data.cmr.RecordingData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.processor.impl.InvocationExtractorDataProcessor;
-import info.novatec.inspectit.storage.recording.RecordingProperties;
-import info.novatec.inspectit.storage.recording.RecordingState;
 
 import java.util.Collections;
 import java.util.Date;
@@ -31,6 +24,15 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.service.rest.StorageRestfulService;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.cmr.service.IStorageService;
+import rocks.inspectit.shared.cs.communication.data.cmr.RecordingData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.processor.impl.InvocationExtractorDataProcessor;
+import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * Tests the {@link StorageRestfulService}.

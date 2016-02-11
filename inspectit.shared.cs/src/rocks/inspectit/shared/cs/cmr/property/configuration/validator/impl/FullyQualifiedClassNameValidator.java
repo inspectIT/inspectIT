@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.property.configuration.validator.impl;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validator.AbstractSinglePropertyValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.ISinglePropertyValidator;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.StringUtils;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.AbstractSinglePropertyValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePropertyValidator;
 
 /**
  * Is FQN validator.

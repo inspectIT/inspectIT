@@ -1,10 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.SystemSensorData;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
 
@@ -13,6 +7,12 @@ import javax.persistence.Entity;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
+
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 
 /**
  * This class is needed to store the values of a single attribute.

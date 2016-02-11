@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.inputdefinition.extra;
+package rocks.inspectit.ui.rcp.editor.inputdefinition.extra;
 
 import com.google.common.base.Objects;
 

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.model;
+package rocks.inspectit.shared.all.cmr.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

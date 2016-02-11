@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.job;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
-import info.novatec.inspectit.version.InvalidVersionException;
-import info.novatec.inspectit.version.Version;
-import info.novatec.inspectit.version.VersionRelease;
-import info.novatec.inspectit.version.VersionService;
+package rocks.inspectit.ui.rcp.job;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +36,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import rocks.inspectit.shared.all.version.InvalidVersionException;
+import rocks.inspectit.shared.all.version.Version;
+import rocks.inspectit.shared.all.version.VersionRelease;
+import rocks.inspectit.shared.all.version.VersionService;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 
 /**
  * Job for checking if a new version of inspectIT exists on the GitHub.

@@ -1,18 +1,4 @@
-package info.novatec.inspectit.storage;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.cmr.WritingStatus;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.nio.WriteReadCompletionRunnable;
-import info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferOutputStream;
-import info.novatec.inspectit.storage.nio.stream.StreamProvider;
-import info.novatec.inspectit.storage.nio.write.WritingChannelManager;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.processor.write.AbstractWriteDataProcessor;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
+package rocks.inspectit.shared.cs.storage;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -47,6 +33,20 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
+import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
+import rocks.inspectit.shared.cs.storage.nio.write.WritingChannelManager;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.write.AbstractWriteDataProcessor;
 
 /**
  * {@link StorageWriter} is class that contains shared functionality for writing data on one

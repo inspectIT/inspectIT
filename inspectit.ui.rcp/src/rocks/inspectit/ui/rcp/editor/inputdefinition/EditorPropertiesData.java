@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.inputdefinition;
+package rocks.inspectit.ui.rcp.editor.inputdefinition;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.Image;

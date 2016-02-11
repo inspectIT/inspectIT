@@ -1,4 +1,4 @@
-package info.novatec.inspectit.minlog;
+package rocks.inspectit.shared.all.minlog;
 
 import org.slf4j.LoggerFactory;
 

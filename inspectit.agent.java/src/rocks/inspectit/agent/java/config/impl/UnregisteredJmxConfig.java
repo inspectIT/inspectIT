@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
+package rocks.inspectit.agent.java.config.impl;
 
 import org.apache.commons.lang.StringUtils;
 

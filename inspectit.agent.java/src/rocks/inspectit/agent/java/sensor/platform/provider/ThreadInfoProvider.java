@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.platform.provider;
+package rocks.inspectit.agent.java.sensor.platform.provider;
 
 /**
  * The management interface for the thread system of the Java virtual machine.

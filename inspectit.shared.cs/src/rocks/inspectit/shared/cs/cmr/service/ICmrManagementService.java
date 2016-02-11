@@ -1,10 +1,12 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.property.configuration.PropertySection;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
-import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
+package rocks.inspectit.shared.cs.cmr.service;
 
 import java.util.Collection;
+
+import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
+import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
 
 /**
  * Service that provides general management of the CMR.

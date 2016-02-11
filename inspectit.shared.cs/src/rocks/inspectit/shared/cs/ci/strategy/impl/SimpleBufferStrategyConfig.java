@@ -1,6 +1,4 @@
-package info.novatec.inspectit.ci.strategy.impl;
-
-import info.novatec.inspectit.ci.strategy.IStrategyConfig;
+package rocks.inspectit.shared.cs.ci.strategy.impl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -9,11 +7,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
+
 /**
  * Configuration for the simple buffer strategy.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "simple-buffer-strategy-config")
@@ -22,7 +22,7 @@ public class SimpleBufferStrategyConfig implements IStrategyConfig {
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.buffer.impl.SimpleBufferStrategy";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.buffer.impl.SimpleBufferStrategy";
 
 	/**
 	 * {@inheritDoc}

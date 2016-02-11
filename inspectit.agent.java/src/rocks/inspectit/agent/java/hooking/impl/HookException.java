@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.hooking.impl;
+package rocks.inspectit.agent.java.hooking.impl;
 
 /**
  * This exception is thrown when a something bad happened at hooking a class/method.

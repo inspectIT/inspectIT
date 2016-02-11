@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.editor;
-
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor;
 
 import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
+
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Common abstract class for all sub-views.

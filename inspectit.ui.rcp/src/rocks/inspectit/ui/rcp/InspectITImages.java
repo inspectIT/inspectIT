@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp;
+package rocks.inspectit.ui.rcp;
 
 /**
  * Defines all the images for the InspectIT UI. Note that all images are automatically added to the

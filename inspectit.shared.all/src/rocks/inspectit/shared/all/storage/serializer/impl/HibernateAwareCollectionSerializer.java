@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.serializer.impl;
-
-import info.novatec.inspectit.util.IHibernateUtil;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import java.util.Collection;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+
+import rocks.inspectit.shared.all.util.IHibernateUtil;
 
 /**
  * Collections serializer that check if the collection is of hibernate type and if it is not

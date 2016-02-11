@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.cache.impl;
+package rocks.inspectit.server.cache.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -9,11 +9,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.cache.IBufferElement;
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
 
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +19,17 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.cache.IBufferElement;
+import rocks.inspectit.server.cache.impl.AtomicBuffer;
+import rocks.inspectit.server.cache.impl.BufferAnalyzer;
+import rocks.inspectit.server.cache.impl.BufferElement;
+import rocks.inspectit.server.cache.impl.BufferIndexer;
+import rocks.inspectit.server.cache.impl.BufferProperties;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 
 /**
  * Testing of the functionality of the {@link AtomicBuffer}.

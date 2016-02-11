@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.connection;
+package rocks.inspectit.agent.java.connection;
 
 import java.io.Externalizable;
 import java.io.IOException;

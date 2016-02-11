@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.label.type;
+package rocks.inspectit.shared.cs.storage.label.type;
 
 import java.io.Serializable;
 

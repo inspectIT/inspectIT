@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.action;
+package rocks.inspectit.ui.rcp.action;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;

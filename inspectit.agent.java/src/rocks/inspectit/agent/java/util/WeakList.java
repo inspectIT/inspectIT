@@ -1,4 +1,4 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.agent.java.util;
 
 import java.lang.ref.SoftReference;
 import java.util.AbstractList;

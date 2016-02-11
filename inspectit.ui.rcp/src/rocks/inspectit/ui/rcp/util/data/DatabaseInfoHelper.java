@@ -1,8 +1,8 @@
-package info.novatec.inspectit.rcp.util.data;
-
-import info.novatec.inspectit.communication.data.SqlStatementData;
+package rocks.inspectit.ui.rcp.util.data;
 
 import org.apache.commons.lang.StringUtils;
+
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 /**
  * Helper class for displaying the database info.

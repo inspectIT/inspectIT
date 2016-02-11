@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.formatter;
+package rocks.inspectit.ui.rcp.formatter;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;

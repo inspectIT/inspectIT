@@ -1,6 +1,6 @@
-package info.novatec.inspectit.communication.data;
+package rocks.inspectit.shared.all.communication.data;
 
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 
 /**
  * Data class for logging data capturing.

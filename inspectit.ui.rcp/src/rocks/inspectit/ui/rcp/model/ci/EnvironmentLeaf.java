@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp.model.ci;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.rcp.model.Leaf;
-import info.novatec.inspectit.rcp.provider.IEnvironmentProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.model.ci;
 
 import org.eclipse.core.runtime.Assert;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.ui.rcp.model.Leaf;
+import rocks.inspectit.ui.rcp.provider.IEnvironmentProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Environment leaf for displaying in the tree.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.storage;
+package rocks.inspectit.shared.cs.indexing.storage;
 
 /**
  * Abstract descriptor for handling comparing.

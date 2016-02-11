@@ -1,6 +1,4 @@
-package info.novatec.inspectit.ci.strategy.impl;
-
-import info.novatec.inspectit.ci.strategy.IStrategyConfig;
+package rocks.inspectit.shared.cs.ci.strategy.impl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -10,11 +8,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
+
 /**
  * Configuration for the list size sending strategy.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "list-sending-strategy-config")
@@ -23,7 +23,7 @@ public class ListSendingStrategyConfig implements IStrategyConfig {
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sending.impl.ListSizeStrategy";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sending.impl.ListSizeStrategy";
 
 	/**
 	 * Size of data in the list before send is executed.
@@ -51,7 +51,7 @@ public class ListSendingStrategyConfig implements IStrategyConfig {
 
 	/**
 	 * Gets {@link #listSize}.
-	 * 
+	 *
 	 * @return {@link #listSize}
 	 */
 	public int getListSize() {
@@ -60,7 +60,7 @@ public class ListSendingStrategyConfig implements IStrategyConfig {
 
 	/**
 	 * Sets {@link #listSize}.
-	 * 
+	 *
 	 * @param listSize
 	 *            New value for {@link #listSize}
 	 */

@@ -1,7 +1,7 @@
-package info.novatec.inspectit.cmr.property.configuration.validator;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validator;
 
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 
 /**
  * Validator interface working on the {@link SingleProperty}.

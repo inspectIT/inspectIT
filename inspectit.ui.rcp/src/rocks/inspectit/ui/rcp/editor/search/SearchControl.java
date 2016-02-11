@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.editor.search;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchCriteria;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchResult;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.editor.search;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -37,6 +31,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchResult;
+
 /**
  * Control that is displayed for search purposes.
  * 
@@ -46,7 +46,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 public class SearchControl {
 
 	/**
-	 * {@link info.novatec.inspectit.rcp.editor.ISubView} to notify about search.
+	 * {@link rocks.inspectit.ui.rcp.editor.ISubView} to notify about search.
 	 */
 	private ISearchExecutor searchExecutor;
 

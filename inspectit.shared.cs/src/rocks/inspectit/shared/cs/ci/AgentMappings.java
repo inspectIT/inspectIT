@@ -1,4 +1,4 @@
-package info.novatec.inspectit.ci;
+package rocks.inspectit.shared.cs.ci;
 
 import java.util.Collection;
 

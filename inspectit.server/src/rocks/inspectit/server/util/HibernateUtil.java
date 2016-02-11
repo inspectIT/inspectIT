@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.util;
-
-import info.novatec.inspectit.util.IHibernateUtil;
+package rocks.inspectit.server.util;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Hibernate;
@@ -10,6 +8,8 @@ import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.util.IHibernateUtil;
 
 /**
  * Our own Hibernate utility class.

@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.editor.tree.TreeSubView;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.Iterator;
 
@@ -14,6 +11,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.editor.tree.TreeSubView;
+
 /**
  * Collapse handler for trees.
  * 
@@ -25,7 +25,7 @@ public class TreeCollapseHandler extends AbstractHandler implements IHandler {
 	/**
 	 * Parameter that defines if collapse is performed on all elements or just the selected ones.
 	 */
-	public static final String IS_COLLAPSE_ALL_PARAMETER = "info.novatec.inspectit.rcp.commands.collapse.isCollapseAll";
+	public static final String IS_COLLAPSE_ALL_PARAMETER = "rocks.inspectit.ui.rcp.commands.collapse.isCollapseAll";
 
 	/**
 	 * {@inheritDoc}

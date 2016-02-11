@@ -1,8 +1,7 @@
-package info.novatec.inspectit.storage.util;
+package rocks.inspectit.shared.cs.storage.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.storage.StorageFileType;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +11,11 @@ import java.nio.file.Paths;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.storage.StorageFileType;
+import rocks.inspectit.shared.cs.storage.util.CopyMoveFileVisitor;
+import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
+import rocks.inspectit.shared.cs.storage.util.StorageDeleteFileVisitor;
 
 /**
  * Tests for the file visitors we have implemented.

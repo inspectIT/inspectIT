@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage;
+package rocks.inspectit.shared.cs.storage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -12,20 +12,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.storage.StorageWriter.WriteTask;
-import info.novatec.inspectit.storage.nio.WriteReadCompletionRunnable;
-import info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferOutputStream;
-import info.novatec.inspectit.storage.nio.stream.StreamProvider;
-import info.novatec.inspectit.storage.nio.write.WritingChannelManager;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.processor.write.AbstractWriteDataProcessor;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.util.DeleteFileVisitor;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +36,25 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
+import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageIndexingTreeHandler;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.StorageWriter.WriteTask;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
+import rocks.inspectit.shared.cs.storage.nio.write.WritingChannelManager;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.write.AbstractWriteDataProcessor;
+import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
 
 @SuppressWarnings("PMD")
 public class StorageWriterTest {

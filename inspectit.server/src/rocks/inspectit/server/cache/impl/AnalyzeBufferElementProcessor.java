@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.cache.impl;
-
-import info.novatec.inspectit.cmr.cache.IBufferElement;
-import info.novatec.inspectit.cmr.cache.IBufferElement.BufferElementState;
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.server.cache.impl;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+
+import rocks.inspectit.server.cache.IBufferElement;
+import rocks.inspectit.server.cache.IBufferElement.BufferElementState;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Analyze processor. Performs analyzing of element sizes in the buffer.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.validation;
+package rocks.inspectit.ui.rcp.validation;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IInputValidator;

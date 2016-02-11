@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.model.storage;
-
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.model.Leaf;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.storage.StorageData;
+package rocks.inspectit.ui.rcp.model.storage;
 
 import org.eclipse.core.runtime.Assert;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.model.Leaf;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Leaf used for displaying the storages in the storage tree.

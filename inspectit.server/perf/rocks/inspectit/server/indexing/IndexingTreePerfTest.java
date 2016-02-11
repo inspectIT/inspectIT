@@ -1,24 +1,4 @@
-package info.novatec.inspectit.indexing;
-
-import info.novatec.inspectit.cmr.indexing.impl.RootBranchFactory;
-import info.novatec.inspectit.cmr.indexing.impl.RootBranchFactory.RootBranch;
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.cmr.processor.impl.CacheIdGeneratorCmrProcessor;
-import info.novatec.inspectit.cmr.processor.impl.IndexerCmrProcessor;
-import info.novatec.inspectit.cmr.processor.impl.InvocationModifierCmrProcessor;
-import info.novatec.inspectit.cmr.util.CacheIdGenerator;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.impl.IndexQuery;
-import info.novatec.inspectit.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
-import info.novatec.inspectit.indexing.query.factory.impl.TimerDataQueryFactory;
-import info.novatec.inspectit.indexing.query.provider.impl.IndexQueryProvider;
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestrictionProcessor;
-import info.novatec.inspectit.indexing.restriction.impl.CachingIndexQueryRestrictionProcessor;
+package rocks.inspectit.server.indexing;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -42,6 +22,26 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
+
+import rocks.inspectit.server.indexing.impl.RootBranchFactory;
+import rocks.inspectit.server.indexing.impl.RootBranchFactory.RootBranch;
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.server.processor.impl.CacheIdGeneratorCmrProcessor;
+import rocks.inspectit.server.processor.impl.IndexerCmrProcessor;
+import rocks.inspectit.server.processor.impl.InvocationModifierCmrProcessor;
+import rocks.inspectit.server.util.CacheIdGenerator;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.TimerDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.query.provider.impl.IndexQueryProvider;
+import rocks.inspectit.shared.cs.indexing.restriction.IIndexQueryRestrictionProcessor;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.CachingIndexQueryRestrictionProcessor;
 
 
 @BenchmarkMode(Mode.AverageTime)

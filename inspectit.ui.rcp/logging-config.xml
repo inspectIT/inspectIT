@@ -61,20 +61,20 @@
 	<logger name="uk" level="error" />
 	
 	<!-- Storage, set this to debug for more information about: - storage-->
-	<logger name="info.novatec.inspectit.storage" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage" level="info" />
 	
 	<!-- Set this to debug for more information about: - IO write/read -->
-	<logger name="info.novatec.inspectit.storage.nio" level="info" />
-	<logger name="info.novatec.inspectit.storage.write" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.nio" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.write" level="info" />
 	
 	<!-- Set this to debug for more information about: - serialization -->
-	<logger name="info.novatec.inspectit.storage.serializer" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.serializer" level="info" />
 	
 	<!-- Set this to debug for more information about: - schema loading for serialization -->
-	<logger name="info.novatec.inspectit.storage.serializer.schema" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.serializer.schema" level="info" />
 	
 	<!-- Needed for bridging minlog to slf4j -->
 	<!-- Set this to debug for more information about libs that use minlog: kryo, kryonet -->
-	<logger name="info.novatec.inspectit.minlog.MinlogToSLF4JLogger" level="warn" />
+	<logger name="rocks.inspectit.shared.cs.minlog.MinlogToSLF4JLogger" level="warn" />
 
 </configuration>

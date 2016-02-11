@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -12,15 +12,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IObjectStorage;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.core.impl.IdManager;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.util.Timer;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -32,6 +23,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IObjectStorage;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.core.impl.IdManager;
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
+import rocks.inspectit.agent.java.sensor.method.jdbc.StatementHook;
+import rocks.inspectit.agent.java.sensor.method.jdbc.StatementReflectionCache;
+import rocks.inspectit.agent.java.util.Timer;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 @SuppressWarnings("PMD")
 public class StatementHookTest extends AbstractLogSupport {

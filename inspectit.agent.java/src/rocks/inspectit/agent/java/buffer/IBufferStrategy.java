@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.buffer;
+package rocks.inspectit.agent.java.buffer;
 
 import java.util.Iterator;
 import java.util.List;

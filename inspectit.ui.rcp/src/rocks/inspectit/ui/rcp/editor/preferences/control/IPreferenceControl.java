@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.editor.preferences.control;
-
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
+package rocks.inspectit.ui.rcp.editor.preferences.control;
 
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 
 /**
  * The interface for all concrete preference control creators.

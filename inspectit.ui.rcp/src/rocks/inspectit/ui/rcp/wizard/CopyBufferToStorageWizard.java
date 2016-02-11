@@ -1,24 +1,4 @@
-package info.novatec.inspectit.rcp.wizard;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.rcp.wizard.page.AddStorageLabelWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.DefineDataProcessorsWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.DefineNewStorageWizzardPage;
-import info.novatec.inspectit.rcp.wizard.page.DefineTimelineWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.NewOrExistsingStorageWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.SelectAgentsWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.SelectExistingStorageWizardPage;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.processor.impl.TimeFrameDataProcessor;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +19,26 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.TimeFrameDataProcessor;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
+import rocks.inspectit.ui.rcp.wizard.page.AddStorageLabelWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.DefineDataProcessorsWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.DefineNewStorageWizzardPage;
+import rocks.inspectit.ui.rcp.wizard.page.DefineTimelineWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.NewOrExistsingStorageWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.SelectAgentsWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.SelectExistingStorageWizardPage;
 
 /**
  * Wizard for copying the buffer content of the {@link CmrRepositoryDefinition} to Storage.

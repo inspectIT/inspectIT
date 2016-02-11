@@ -1,8 +1,4 @@
-package info.novatec.inspectit.cmr.spring.exporter;
-
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
+package rocks.inspectit.server.spring.exporter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +14,10 @@ import org.springframework.remoting.support.RemoteInvocationResult;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 
 /**
  * This service exporter using kryo for (de-)serialization is nearly the same as the one with plain

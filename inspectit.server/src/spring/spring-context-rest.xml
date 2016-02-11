@@ -12,7 +12,7 @@
 	http://www.springframework.org/schema/util/spring-util-3.1.xsd" >
 
 	<context:annotation-config />
-	<context:component-scan base-package="info.novatec.inspectit.cmr.service.rest" />
+	<context:component-scan base-package="rocks.inspectit.server.service.rest" />
 
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
 

@@ -1,7 +1,7 @@
-package info.novatec.inspectit.rcp.details;
+package rocks.inspectit.ui.rcp.details;
 
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * This {@link DetailsCellContent} sub-class displays Yes/No image with tool-tip based the boolean

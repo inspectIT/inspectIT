@@ -1,10 +1,10 @@
-package info.novatec.inspectit.storage;
-
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.shared.cs.storage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Local storage data holds all information about a storage that will be saved on the client

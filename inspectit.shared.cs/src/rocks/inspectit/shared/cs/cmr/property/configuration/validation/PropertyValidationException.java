@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration.validation;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validation;
 
 import javax.xml.bind.annotation.XmlTransient;
 

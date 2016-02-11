@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.cache.impl;
-
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.cache.impl;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
@@ -15,6 +13,8 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Set of properties for one buffer.

@@ -1,8 +1,5 @@
 <FindBugsFilter>
 	<Match>
-		<Package name="~info\.novatec\.inspectit\.javassist.*" />
-	</Match>
-	<Match>
 		<Class name="~.*\.*Test" />
 	</Match>
 	<Match>
@@ -18,37 +15,37 @@
 
 	<!-- Agent ignores START -->
 	<Match>
-		<Class name="info.novatec.inspectit.agent.javaagent.JavaAgent" />
+		<Class name="rocks.inspectit.agent.java.javaagent.JavaAgent" />
 		<Field name="operationInProgress" />
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementHook" />
+		<Class name="rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementHook" />
 		<Field name="preparedStatementsWithExceptions" />
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.util.StringConstraint" />
+		<Class name="rocks.inspectit.agent.java.util.StringConstraint" />
 		<Method name="crop" />
 		<Bug pattern="ES_COMPARING_STRINGS_WITH_EQ" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.agent.Agent" />
+		<Class name="rocks.inspectit.agent.java.Agent" />
 		<Field name="agent" />
 		<Bug pattern="MS_CANNOT_BE_FINAL" />
 	</Match>
 	<Match> <!-- This ignore should be removed after Agent sending/buffering restructuring -->
-		<Class name="info.novatec.inspectit.agent.core.impl.CoreService$PreparingThread" />
+		<Class name="rocks.inspectit.agent.java.core.impl.CoreService$PreparingThread" />
 		<Method name="run" />
 		<Bug pattern="UW_UNCOND_WAIT" />
 	</Match>
 	<Match> <!-- This ignore should be removed after Agent sending/buffering restructuring -->
-		<Class name="info.novatec.inspectit.agent.core.impl.CoreService$SendingThread" />
+		<Class name="rocks.inspectit.agent.java.core.impl.CoreService$SendingThread" />
 		<Method name="run" />
 		<Bug pattern="UW_UNCOND_WAIT" />
 	</Match>
 	<Match> <!-- This ignore should be removed after Agent sending/buffering restructuring -->
-		<Class name="info.novatec.inspectit.agent.javaagent.JavaAgent" />
+		<Class name="rocks.inspectit.agent.java.javaagent.JavaAgent" />
 		<Method name="premain" />
 		<Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" />
 	</Match>
@@ -56,31 +53,26 @@
 
 	<!-- CMR ignores START -->
 	<Match>
-		<Class name="info.novatec.inspectit.cmr.util.LicenseUtil" />
-		<Method name="initializeLicense" />
-		<Bug pattern="DM_EXIT" />
-	</Match>
-	<Match>
-		<Class name="info.novatec.inspectit.cmr.cache.impl.AtomicBuffer" />
+		<Class name="rocks.inspectit.server.cache.impl.AtomicBuffer" />
 		<Method name="~(analyze|index)Next" />
 		<Bug pattern="UL_UNRELEASED_LOCK_EXCEPTION_PATH" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.cmr.storage.CmrStorageRecorder" />
+		<Class name="rocks.inspectit.server.storage.CmrStorageRecorder" />
 		<Field name="~(storageWriter|recordingProperties)" />
 		<Bug pattern="IS2_INCONSISTENT_SYNC" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.cmr.dao.impl.TimerDataAggregator" />
+		<Class name="rocks.inspectit.server.dao.impl.TimerDataAggregator" />
 		<Method name="processTimerData" />
 		<Bug pattern="AT_OPERATION_SEQUENCE_ON_CONCURRENT_ABSTRACTION" />
 	</Match>
 	<Match>
-		<Class name="~info.novatec.inspectit.cmr.util.ShutdownService.*" />
+		<Class name="~rocks.inspectit.server.util.ShutdownService.*" />
 		<Bug pattern="DM_EXIT" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.cmr.jaxb.JAXBTransformator" />
+		<Class name="rocks.inspectit.server.jaxb.JAXBTransformator" />
 		<Method name="unmarshall" />
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
 	</Match>
@@ -89,11 +81,11 @@
 	<!-- Commons ignores START -->
 	<!-- KryoNet complete -->
 	<Match>
-		<Package name="~info\.novatec\.inspectit\.kryonet.*"/>
+		<Package name="~rocks\.inspectit\.shared\.all\.kryonet.*"/>
 	</Match>
 	
 	<Match><!-- There is default case, but FindBugs is still complaining -->
-		<Class name="info.novatec.inspectit.cmr.property.configuration.impl.ByteProperty" />
+		<Class name="rocks.inspectit.shared.cs.cmr.property.configuration.impl.ByteProperty" />
 		<Method name="fromString" />
 		<Bug pattern="SF_SWITCH_NO_DEFAULT" />
 	</Match>
@@ -101,17 +93,17 @@
 
 	<!-- CommonsCS ignores START -->
 	<Match>
-		<Class name="info.novatec.inspectit.storage.StorageWriter" />
+		<Class name="rocks.inspectit.shared.cs.storage.StorageWriter" />
 		<Field name="~(storageData|writingFolderPath)" />
 		<Bug pattern="IS2_INCONSISTENT_SYNC" />
 	</Match>
 	<Match> <!-- This is a strange FindBugs behavior, since the field is read in one public method. -->
-		<Class name="info.novatec.inspectit.storage.StorageManager" />
+		<Class name="rocks.inspectit.shared.cs.storage.StorageManager" />
 		<Filed name="hardDriveSize" />
 		<Bug pattern="URF_UNREAD_FIELD" />
 	</Match>
 		<Match> <!-- Meant to be so -->	
-		<Class name="info.novatec.inspectit.storage.StorageWriter" />
+		<Class name="rocks.inspectit.shared.cs.storage.StorageWriter" />
 		<Filed name="waitForPendingWritingTasks" />
 		<Bug pattern="SWL_SLEEP_WITH_LOCK_HELD" />
 	</Match>
@@ -119,20 +111,20 @@
 
 	<!-- RCP ignores START -->
 	<Match>
-		<Class name="info.novatec.inspectit.rcp.InspectIT" />
+		<Class name="rocks.inspectit.ui.rcp.InspectIT" />
 		<Field name="plugin" />
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.rcp.editor.graph.plot.DateAxisZoomNotify" />
+		<Class name="rocks.inspectit.ui.rcp.editor.graph.plot.DateAxisZoomNotify" />
+		<Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+	</Match>
+	<Match>
+		<Class name="rocks.inspectit.ui.rcp.editor.table.input.HttpTimerDataInputController$RegExHttpAggregator" />
 		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
 	</Match>
 	<Match>
-		<Class name="info.novatec.inspectit.rcp.editor.table.input.HttpTimerDataInputController$RegExHttpAggregator" />
-		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
-	</Match>
-	<Match>
-		<Class name="~info\.novatec\.inspectit\.rcp\.ci\.form\.part\.MethodSensorAssignmentDetailsPage.*" />
+		<Class name="~rocks\.inspectit\.ui\.rcp\.ci\.form\.part\.MethodSensorAssignmentDetailsPage.*" />
 		<Method name="handleEvent" />
 		<Bug pattern="ES_COMPARING_STRINGS_WITH_EQ" />
 	</Match>

@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.config.PriorityEnum;
+package rocks.inspectit.agent.java.config.impl;
 
 import org.apache.commons.collections.MapUtils;
+
+import rocks.inspectit.agent.java.config.PriorityEnum;
 
 /**
  * Container for the values of a sensor type configuration. stores all the values defined in a

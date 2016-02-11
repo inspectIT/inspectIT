@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.editor.viewers;
+package rocks.inspectit.ui.rcp.editor.viewers;
 
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.cmr.service.cache.CachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.comparator.IDataComparator;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 
 /**
  * Extension of {@link ResultComparator} to solve problems with raw/aggregated comparison on the UI.

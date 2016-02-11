@@ -1,26 +1,4 @@
-package info.novatec.inspectit.rcp.form;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.handlers.AddStorageLabelHandler;
-import info.novatec.inspectit.rcp.handlers.RemoveStorageLabelHandler;
-import info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.storage.label.edit.LabelValueEditingSupport;
-import info.novatec.inspectit.rcp.storage.label.edit.LabelValueEditingSupport.LabelEditListener;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +46,28 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.handlers.IHandlerService;
 
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.handlers.AddStorageLabelHandler;
+import rocks.inspectit.ui.rcp.handlers.RemoveStorageLabelHandler;
+import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.storage.label.edit.LabelValueEditingSupport;
+import rocks.inspectit.ui.rcp.storage.label.edit.LabelValueEditingSupport.LabelEditListener;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
+
 /**
  * Form for displaying the {@link StorageData} properties.
  * 
@@ -94,17 +94,17 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	/**
 	 * Toolkit used to create widgets.
 	 */
-	private FormToolkit toolkit;
+	private final FormToolkit toolkit;
 
 	/**
 	 * {@link ManagedForm}.
 	 */
-	private ManagedForm managedForm;
+	private final ManagedForm managedForm;
 
 	/**
 	 * Form that will be created.
 	 */
-	private ScrolledForm form;
+	private final ScrolledForm form;
 
 	/**
 	 * Label for ID.

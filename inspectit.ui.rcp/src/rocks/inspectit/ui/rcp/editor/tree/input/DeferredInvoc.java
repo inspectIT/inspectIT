@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree.input;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.util.List;
 
@@ -9,6 +7,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.progress.IElementCollector;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 /**
  * This class is used to create the UI elements of tree-based views only if the parent element is

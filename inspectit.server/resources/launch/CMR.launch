@@ -6,14 +6,14 @@
 <listEntry value="/CMR/bin"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/inspectit.server/src/info/novatec/inspectit/cmr/CMR.java"/>
+<listEntry value="/inspectit.server/src/rocks/inspectit/server/CMR.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="info.novatec.inspectit.cmr.CMR"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="rocks.inspectit.server.CMR"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="inspectit.server"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms1024m -Xmx1024m -Xmn384M -XX:MaxPermSize=128m -XX:PermSize=128m -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=80 -XX:+UseCMSInitiatingOccupancyOnly -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+DisableExplicitGC -XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90  -XX:BiasedLockingStartupDelay=500 -XX:+UseFastAccessorMethods -XX:+UseBiasedLocking -server -XX:+HeapDumpOnOutOfMemoryError -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -Xloggc:logs/gc.log"/>
 </launchConfiguration>

@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.AggregatedHttpTimerData
+class: rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData
 
 # Default Data
 1: id

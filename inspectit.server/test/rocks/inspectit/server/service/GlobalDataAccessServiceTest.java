@@ -1,16 +1,8 @@
-package info.novatec.inspectit.cmr.service;
+package rocks.inspectit.server.service;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.dao.DefaultDataDao;
-import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
-import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
-import info.novatec.inspectit.exception.BusinessException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +12,16 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.dao.DefaultDataDao;
+import rocks.inspectit.server.dao.PlatformIdentDao;
+import rocks.inspectit.server.service.GlobalDataAccessService;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.shared.all.exception.BusinessException;
 
 @SuppressWarnings("PMD")
 public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {

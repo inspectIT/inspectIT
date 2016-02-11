@@ -1,10 +1,10 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.exception.BusinessException;
+package rocks.inspectit.shared.all.cmr.service;
 
 import java.rmi.Remote;
 import java.util.List;
 import java.util.Map;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
 
 /**
  * The registration service is used and called by all inspectIT Agents. First, they have to call the

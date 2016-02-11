@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.serializer.SerializationException;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +14,16 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
+
 /**
  * Handler for removing a list of labels from storage.
  * 
@@ -35,7 +35,7 @@ public class RemoveStorageLabelHandler extends AbstractHandler implements IHandl
 	/**
 	 * Command ID.
 	 */
-	public static final String COMMAND = "info.novatec.inspectit.rcp.commands.removeStorageLabel";
+	public static final String COMMAND = "rocks.inspectit.ui.rcp.commands.removeStorageLabel";
 
 	/**
 	 * Input ID.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.search;
+package rocks.inspectit.ui.rcp.editor.search;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

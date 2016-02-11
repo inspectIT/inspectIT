@@ -1,10 +1,10 @@
-package info.novatec.inspectit.indexing;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestriction;
+package rocks.inspectit.shared.all.indexing;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
 
 /**
  * Interface for query that queries the indexing tree.

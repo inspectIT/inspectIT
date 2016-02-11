@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.editor.viewers;
-
-import info.novatec.inspectit.rcp.InspectIT;
+package rocks.inspectit.ui.rcp.editor.viewers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,6 +14,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
 import ch.qos.logback.core.status.Status;
+import rocks.inspectit.ui.rcp.InspectIT;
 
 /**
  * Extension of the {@link StyledCellLabelProvider} that fixes the Eclipse bug with the image sizes

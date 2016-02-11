@@ -1,9 +1,11 @@
-package info.novatec.inspectit.indexing;
+package rocks.inspectit.shared.cs.indexing;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
+
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
 
 /**
  * Queries through the branches and creates new tasks for each branch.

@@ -1,12 +1,12 @@
-package info.novatec.inspectit.communication.comparator;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.shared.all.communication.comparator;
 
 import java.util.Comparator;
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Comparators for {@link MethodSensorData}.

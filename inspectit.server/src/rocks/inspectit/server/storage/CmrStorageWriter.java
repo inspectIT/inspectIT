@@ -1,14 +1,4 @@
-package info.novatec.inspectit.cmr.storage;
-
-import info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoImpl;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.StorageFileType;
-import info.novatec.inspectit.storage.StorageWriter;
-import info.novatec.inspectit.storage.label.ObjectStorageLabel;
-import info.novatec.inspectit.storage.label.type.impl.DataTimeFrameLabelType;
-import info.novatec.inspectit.util.TimeFrame;
+package rocks.inspectit.server.storage;
 
 import java.io.IOException;
 import java.util.Date;
@@ -25,6 +15,16 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.util.TimeFrame;
+import rocks.inspectit.shared.cs.storage.StorageFileType;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.label.ObjectStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.impl.DataTimeFrameLabelType;
 
 /**
  * {@link StorageWriter} implementation for the CMR.

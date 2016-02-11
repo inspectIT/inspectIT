@@ -1,15 +1,15 @@
-package info.novatec.inspectit.agent.buffer.impl;
-
-import info.novatec.inspectit.agent.buffer.AbstractBufferStrategy;
-import info.novatec.inspectit.agent.buffer.IBufferStrategy;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.buffer.impl;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
+
+import rocks.inspectit.agent.java.buffer.AbstractBufferStrategy;
+import rocks.inspectit.agent.java.buffer.IBufferStrategy;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This implementation will hold all list of measurements for the given size. It works as a FILO

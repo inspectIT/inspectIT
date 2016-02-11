@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.editor.inputdefinition;
-
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.IInputDefinitionExtra;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory.InputDefinitionExtraMarker;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.inputdefinition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +8,13 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.IInputDefinitionExtra;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory.InputDefinitionExtraMarker;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * This class is used as the input definition for all editors in the application. Nearly all

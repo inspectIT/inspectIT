@@ -1,16 +1,16 @@
-package info.novatec.inspectit.cmr.processor.impl;
-
-import info.novatec.inspectit.cmr.cache.IBuffer;
-import info.novatec.inspectit.cmr.cache.impl.BufferElement;
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+package rocks.inspectit.server.processor.impl;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.cache.impl.BufferElement;
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 /**
  * Buffer inserter data processor. Inserts only {@link MethodSensorData} data objects that are not

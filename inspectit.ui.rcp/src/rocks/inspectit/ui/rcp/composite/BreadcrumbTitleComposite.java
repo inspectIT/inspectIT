@@ -1,18 +1,4 @@
-package info.novatec.inspectit.rcp.composite;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
-import info.novatec.inspectit.rcp.util.AccessibleArrowImage;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.storage.IStorageData;
+package rocks.inspectit.ui.rcp.composite;
 
 import java.util.Objects;
 
@@ -26,9 +12,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
+import rocks.inspectit.ui.rcp.util.AccessibleArrowImage;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+
 /**
  * A composite to be the head client of the form that
- * {@link info.novatec.inspectit.rcp.editor.root.FormRootEditor} is made of.
+ * {@link rocks.inspectit.ui.rcp.editor.root.FormRootEditor} is made of.
  * 
  * @author Ivan Senic
  * 

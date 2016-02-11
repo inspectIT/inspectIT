@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.provider;
+package rocks.inspectit.ui.rcp.provider;
 
-import info.novatec.inspectit.ci.Profile;
+import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Interface for {@link Profile} provider. Note that this interface extends the

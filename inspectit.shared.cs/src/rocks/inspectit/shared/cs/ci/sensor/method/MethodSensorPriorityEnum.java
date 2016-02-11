@@ -1,4 +1,4 @@
-package info.novatec.inspectit.ci.sensor.method;
+package rocks.inspectit.shared.cs.ci.sensor.method;
 
 /**
  * Enumeration used for the priority system of the sensor types.

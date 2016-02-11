@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.ci;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
+package rocks.inspectit.server.ci;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Class that knows how to resolve paths related to the configuration interface.

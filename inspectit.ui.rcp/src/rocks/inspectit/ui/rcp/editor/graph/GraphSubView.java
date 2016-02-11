@@ -1,21 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.AbstractSubView;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.graph.plot.DateAxisZoomNotify;
-import info.novatec.inspectit.rcp.editor.graph.plot.PlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.ZoomListener;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.LiveMode;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.impl.DataTimeFrameLabelType;
-import info.novatec.inspectit.util.TimeFrame;
+package rocks.inspectit.ui.rcp.editor.graph;
 
 import java.awt.Color;
 import java.text.DateFormat;
@@ -48,6 +31,23 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.Range;
 import org.jfree.experimental.chart.swt.ChartComposite;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.util.TimeFrame;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.impl.DataTimeFrameLabelType;
+import rocks.inspectit.ui.rcp.editor.AbstractSubView;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.graph.plot.DateAxisZoomNotify;
+import rocks.inspectit.ui.rcp.editor.graph.plot.PlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.ZoomListener;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 
 /**
  * This sub-view can create charts which can contain themselves some plots. The plots are defined by

@@ -2,72 +2,72 @@
 <suite name="CommonsCSTest">
 	<test name="Aggregators">
 		<classes>
-			<class name="info.novatec.inspectit.indexing.aggregation.impl.HttpDataAggregatorTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpDataAggregatorTest" />
 		</classes>
 	</test>
 	<test name="Indexing">
 		<classes>
-			<class name="info.novatec.inspectit.indexing.buffer.impl.BufferBranchIndexerTest" />
-			<class name="info.novatec.inspectit.indexing.buffer.impl.BranchTest" />
-			<class name="info.novatec.inspectit.indexing.impl.BufferIndexingTest" />
-			<class name="info.novatec.inspectit.indexing.impl.StorageIndexingTest" />
-			<class name="info.novatec.inspectit.indexing.indexer.impl.BranchIndexersTest" />
-			<class name="info.novatec.inspectit.indexing.restriction.IndexQueryRestrictionProcessorTest" />
-			<class name="info.novatec.inspectit.indexing.storage.impl.ArrayBasedStorageLeafTest" />
-			<class name="info.novatec.inspectit.indexing.storage.impl.StorageBranchIndexerTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexerTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.buffer.impl.BranchTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.impl.BufferIndexingTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.impl.StorageIndexingTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.indexer.impl.BranchIndexersTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.restriction.IndexQueryRestrictionProcessorTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeafTest" />
+			<class name="rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranchIndexerTest" />
 		</classes>
 	</test>
 	<test name="Service">
 		<classes>
-			<class name="info.novatec.inspectit.cmr.service.cache.CachedDataServiceTest" />
+			<class name="rocks.inspectit.shared.cs.cmr.service.cache.CachedDataServiceTest" />
 		</classes>
 	</test>
 	<test name="Storage">
 		<classes>
-			<class name="info.novatec.inspectit.storage.StorageDataTest" />
-			<class name="info.novatec.inspectit.storage.StorageIndexingTreeHandlerTest" />
-			<class name="info.novatec.inspectit.storage.StorageWriterTest" />
-			<class name="info.novatec.inspectit.storage.label.management.impl.LabelManagementActionsTest" />
-			<class name="info.novatec.inspectit.storage.processor.impl.StorageDataProcessorsTest" />
+			<class name="rocks.inspectit.shared.cs.storage.StorageDataTest" />
+			<class name="rocks.inspectit.shared.cs.storage.StorageIndexingTreeHandlerTest" />
+			<class name="rocks.inspectit.shared.cs.storage.StorageWriterTest" />
+			<class name="rocks.inspectit.shared.cs.storage.label.management.impl.LabelManagementActionsTest" />
+			<class name="rocks.inspectit.shared.cs.storage.processor.impl.StorageDataProcessorsTest" />
 		</classes>
 	</test>
 	<test name="Serializer">
 		<classes>
-			<class name="info.novatec.inspectit.storage.serializer.impl.SerializerTest" />
+			<class name="rocks.inspectit.shared.cs.storage.serializer.impl.SerializerTest" />
 		</classes>
 	</test>
 	<test name="NIO">
 		<classes>
-			<class name="info.novatec.inspectit.storage.nio.ByteBufferProviderTest" />
-			<class name="info.novatec.inspectit.storage.nio.ChannelManagersTest" />
-			<class name="info.novatec.inspectit.storage.nio.CompletionHandlersTest" />
-			<class name="info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferInputStreamTest" />
-			<class name="info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferOutputStreamTest" />
+			<!--<class name="rocks.inspectit.shared.cs.storage.nio.ByteBufferProviderTest" />-->
+			<class name="rocks.inspectit.shared.cs.storage.nio.ChannelManagersTest" />
+			<class name="rocks.inspectit.shared.cs.storage.nio.CompletionHandlersTest" />
+			<class name="rocks.inspectit.shared.cs.storage.nio.stream.ExtendedByteBufferInputStreamTest" />
+			<!--<class name="rocks.inspectit.shared.cs.storage.nio.stream.ExtendedByteBufferOutputStreamTest" />-->
 		</classes>
 	</test>
 	<test name="Schema">
 		<classes>
-			<class name="info.novatec.inspectit.storage.serializer.schema.SchemaTest" />
+			<class name="rocks.inspectit.shared.all.storage.serializer.schema.SchemaTest" />
 		</classes>
 	</test>
 	<test name="Util">
 		<classes>
-			<class name="info.novatec.inspectit.storage.util.FileVisitorsTest" />
+			<class name="rocks.inspectit.shared.cs.storage.util.FileVisitorsTest" />
 		</classes>
 	</test>
 	<test name="Properties">
 		<classes>
-			<class name="info.novatec.inspectit.cmr.property.PropertiesXmlTransformationTest" />
-			<class name="info.novatec.inspectit.cmr.property.configuration.GroupedPropertyTest" />
-			<class name="info.novatec.inspectit.cmr.property.configuration.SinglePropertyTest" />
-			<class name="info.novatec.inspectit.cmr.property.configuration.ConfigurationTest" />
-			<class name="info.novatec.inspectit.cmr.property.configuration.validator.ValidatorsTest" />
-			<class name="info.novatec.inspectit.cmr.property.update.ConfigurationUpdateTest" />
+			<class name="rocks.inspectit.shared.cs.cmr.property.PropertiesXmlTransformationTest" />
+			<class name="rocks.inspectit.shared.cs.cmr.property.configuration.GroupedPropertyTest" />
+			<class name="rocks.inspectit.shared.cs.cmr.property.configuration.SinglePropertyTest" />
+			<class name="rocks.inspectit.shared.cs.cmr.property.configuration.ConfigurationTest" />
+			<class name="rocks.inspectit.shared.cs.cmr.property.configuration.validator.ValidatorsTest" />
+			<class name="rocks.inspectit.shared.cs.cmr.property.update.ConfigurationUpdateTest" />
 		</classes>
 	</test>
 	<test name="CI">
 		<classes>
-			<class name="info.novatec.inspectit.ci.CiXmlTransformationTest" />
+			<class name="rocks.inspectit.shared.cs.ci.CiXmlTransformationTest" />
 		</classes>
 	</test>
 </suite>

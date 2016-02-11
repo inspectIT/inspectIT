@@ -1,44 +1,4 @@
-package info.novatec.inspectit.rcp.view.impl;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.action.MenuAction;
-import info.novatec.inspectit.rcp.filter.FilterComposite;
-import info.novatec.inspectit.rcp.form.StorageDataPropertyForm;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.handlers.CloseAndShowStorageHandler;
-import info.novatec.inspectit.rcp.handlers.ShowRepositoryHandler;
-import info.novatec.inspectit.rcp.model.Component;
-import info.novatec.inspectit.rcp.model.GroupedLabelsComposite;
-import info.novatec.inspectit.rcp.model.storage.LocalStorageLeaf;
-import info.novatec.inspectit.rcp.model.storage.LocalStorageTreeModelManager;
-import info.novatec.inspectit.rcp.model.storage.StorageLeaf;
-import info.novatec.inspectit.rcp.model.storage.StorageTreeModelManager;
-import info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
-import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.rcp.view.IRefreshableView;
-import info.novatec.inspectit.rcp.view.tree.StorageManagerTreeContentProvider;
-import info.novatec.inspectit.rcp.view.tree.StorageManagerTreeLabelProvider;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageData.StorageState;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.view.impl;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -110,6 +70,46 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageData.StorageState;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.action.MenuAction;
+import rocks.inspectit.ui.rcp.filter.FilterComposite;
+import rocks.inspectit.ui.rcp.form.StorageDataPropertyForm;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.handlers.CloseAndShowStorageHandler;
+import rocks.inspectit.ui.rcp.handlers.ShowRepositoryHandler;
+import rocks.inspectit.ui.rcp.model.Component;
+import rocks.inspectit.ui.rcp.model.GroupedLabelsComposite;
+import rocks.inspectit.ui.rcp.model.storage.LocalStorageLeaf;
+import rocks.inspectit.ui.rcp.model.storage.LocalStorageTreeModelManager;
+import rocks.inspectit.ui.rcp.model.storage.StorageLeaf;
+import rocks.inspectit.ui.rcp.model.storage.StorageTreeModelManager;
+import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
+import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+import rocks.inspectit.ui.rcp.view.IRefreshableView;
+import rocks.inspectit.ui.rcp.view.tree.StorageManagerTreeContentProvider;
+import rocks.inspectit.ui.rcp.view.tree.StorageManagerTreeLabelProvider;
+
 /**
  * 
  * @author Ivan Senic
@@ -120,37 +120,37 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 	/**
 	 * View id.
 	 */
-	public static final String VIEW_ID = "info.novatec.inspectit.rcp.view.storageManager";
+	public static final String VIEW_ID = "rocks.inspectit.ui.rcp.view.storageManager";
 
 	/**
 	 * Menu id.
 	 */
-	public static final String MENU_ID = "info.novatec.inspectit.rcp.view.storageManager.storageTree";
+	public static final String MENU_ID = "rocks.inspectit.ui.rcp.view.storageManager.storageTree";
 
 	/**
 	 * {@link CmrRepositoryManager}.
 	 */
-	private CmrRepositoryManager cmrRepositoryManager;
+	private final CmrRepositoryManager cmrRepositoryManager;
 
 	/**
 	 * {@link InspectITStorageManager}.
 	 */
-	private InspectITStorageManager storageManager;
+	private final InspectITStorageManager storageManager;
 
 	/**
 	 * Map of storages and their repositories.
 	 */
-	private Map<StorageData, CmrRepositoryDefinition> storageRepositoryMap = new ConcurrentHashMap<StorageData, CmrRepositoryDefinition>();
+	private final Map<StorageData, CmrRepositoryDefinition> storageRepositoryMap = new ConcurrentHashMap<StorageData, CmrRepositoryDefinition>();
 
 	/**
 	 * Cashed statuses of CMR repository definitions.
 	 */
-	private ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
+	private final ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
 
 	/**
 	 * Set of downloaded storages.
 	 */
-	private Set<LocalStorageData> downloadedStorages = Collections.newSetFromMap(new ConcurrentHashMap<LocalStorageData, Boolean>());
+	private final Set<LocalStorageData> downloadedStorages = Collections.newSetFromMap(new ConcurrentHashMap<LocalStorageData, Boolean>());
 
 	/**
 	 * Toolkit for decorations.
@@ -170,7 +170,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 	/**
 	 * Filter for the tree.
 	 */
-	private TreeFilter treeFilter = new TreeFilter();
+	private final TreeFilter treeFilter = new TreeFilter();
 
 	/**
 	 * Composite for message displaying.
@@ -792,6 +792,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void refresh() {
 		performUpdate(true);
 	}
@@ -941,12 +942,12 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		/**
 		 * Set of excluded repositories.
 		 */
-		private Set<CmrRepositoryDefinition> filteredRespositories = new HashSet<CmrRepositoryDefinition>();
+		private final Set<CmrRepositoryDefinition> filteredRespositories = new HashSet<CmrRepositoryDefinition>();
 
 		/**
 		 * Set of excluded states.
 		 */
-		private Set<StorageState> filteredStates = new HashSet<StorageState>();
+		private final Set<StorageState> filteredStates = new HashSet<StorageState>();
 
 		/**
 		 * {@inheritDoc}
@@ -992,7 +993,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		/**
 		 * Label type to group.
 		 */
-		private AbstractStorageLabelType<?> labelType;
+		private final AbstractStorageLabelType<?> labelType;
 
 		/**
 		 * Constructor.
@@ -1036,7 +1037,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		/**
 		 * Cmr to exclude/include.
 		 */
-		private CmrRepositoryDefinition cmrRepositoryDefinition;
+		private final CmrRepositoryDefinition cmrRepositoryDefinition;
 
 		/**
 		 * @param cmrRepositoryDefinition
@@ -1080,7 +1081,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		/**
 		 * Storage state to exclude/include.
 		 */
-		private StorageState state;
+		private final StorageState state;
 
 		/**
 		 * 
@@ -1137,6 +1138,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void run() {
 			if (isChecked()) {
 				setShowProperties(true);
@@ -1163,7 +1165,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		/**
 		 * Filter.
 		 */
-		private ViewerFilter filter = new ViewerFilter() {
+		private final ViewerFilter filter = new ViewerFilter() {
 
 			/**
 			 * {@inheritDoc}
@@ -1291,6 +1293,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void doubleClick(final DoubleClickEvent event) {
 			UIJob openDataExplorerJob = new UIJob("Opening Data Explorer..") {
 

@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.editor.preferences.control.samplingrate;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
+package rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -10,6 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 
 /**
  * The enumeration for sampling rate modes.

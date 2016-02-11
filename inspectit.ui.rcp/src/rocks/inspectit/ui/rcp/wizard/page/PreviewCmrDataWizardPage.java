@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.wizard.page;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.wizard.page;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -18,6 +12,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.internal.forms.widgets.BusyIndicator;
 import org.eclipse.ui.progress.IProgressConstants;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * The wizard page that displays the CMR info and checks for the connection status.
@@ -160,7 +160,7 @@ public class PreviewCmrDataWizardPage extends WizardPage {
 		/**
 		 * CMR to check.
 		 */
-		private CmrRepositoryDefinition cmrRepositoryDefinition;
+		private final CmrRepositoryDefinition cmrRepositoryDefinition;
 
 		/**
 		 * Default constructor.
@@ -222,6 +222,7 @@ public class PreviewCmrDataWizardPage extends WizardPage {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		protected void canceling() {
 			isCanceled = true;
 		};

@@ -1,18 +1,18 @@
-package info.novatec.inspectit.ci.sensor.method;
-
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
+package rocks.inspectit.shared.cs.ci.sensor.method;
 
 import java.util.Collections;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 
 /**
  * Abstract class for all platform sensor configurations.

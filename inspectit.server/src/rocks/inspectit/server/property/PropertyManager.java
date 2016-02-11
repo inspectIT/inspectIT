@@ -1,15 +1,4 @@
-package info.novatec.inspectit.cmr.property;
-
-import info.novatec.inspectit.cmr.jaxb.JAXBTransformator;
-import info.novatec.inspectit.cmr.property.configuration.AbstractProperty;
-import info.novatec.inspectit.cmr.property.configuration.Configuration;
-import info.novatec.inspectit.cmr.property.configuration.PropertySection;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
-import info.novatec.inspectit.cmr.util.ShutdownService;
+package rocks.inspectit.server.property;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +22,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.xml.sax.SAXException;
+
+import rocks.inspectit.server.jaxb.JAXBTransformator;
+import rocks.inspectit.server.util.ShutdownService;
+import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
 
 /**
  * Properties manager bean that controls all properties specified in the configuration files and

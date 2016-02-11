@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table;
+package rocks.inspectit.ui.rcp.editor.table;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;

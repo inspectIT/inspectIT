@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
-import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.List;
+
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Listener for the sensor assignment master block.

@@ -1,6 +1,4 @@
-package info.novatec.inspectit.storage.util;
-
-import info.novatec.inspectit.storage.StorageFileType;
+package rocks.inspectit.shared.cs.storage.util;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -8,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.apache.commons.lang.ArrayUtils;
+
+import rocks.inspectit.shared.cs.storage.StorageFileType;
 
 /**
  * Delete file visitor that can delete storage files based on the type.

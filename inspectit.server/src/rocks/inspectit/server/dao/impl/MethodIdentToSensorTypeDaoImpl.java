@@ -1,13 +1,13 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
-import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.List;
 
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+
+import rocks.inspectit.server.dao.MethodIdentToSensorTypeDao;
+import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
 
 /**
  * The default implementation of the {@link MethodIdentToSensorTypeDao} interface by using Entity

@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.def;
-
-import info.novatec.inspectit.agent.sensor.platform.provider.OperatingSystemInfoProvider;
+package rocks.inspectit.agent.java.sensor.platform.provider.def;
 
 import java.lang.management.ManagementFactory;
+
+import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
 
 /**
  * Uses the {@link java.lang.management.OperatingSystemMXBean} in order to retrieve a subpart of the

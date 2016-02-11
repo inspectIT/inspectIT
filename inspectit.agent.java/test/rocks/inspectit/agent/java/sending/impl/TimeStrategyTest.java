@@ -1,11 +1,8 @@
-package info.novatec.inspectit.agent.sending.impl;
+package rocks.inspectit.agent.java.sending.impl;
 
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-
-import info.novatec.inspectit.agent.TestBase;
-import info.novatec.inspectit.agent.core.ICoreService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +10,9 @@ import java.util.Map;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings("PMD")
 public class TimeStrategyTest extends TestBase {

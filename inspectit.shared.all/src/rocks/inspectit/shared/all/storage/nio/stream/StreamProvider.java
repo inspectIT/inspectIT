@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.nio.stream;
+package rocks.inspectit.shared.all.storage.nio.stream;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;

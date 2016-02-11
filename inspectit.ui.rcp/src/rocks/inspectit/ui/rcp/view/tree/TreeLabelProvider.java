@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.view.tree;
-
-import info.novatec.inspectit.rcp.model.Component;
+package rocks.inspectit.ui.rcp.view.tree;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
@@ -8,6 +6,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+
+import rocks.inspectit.ui.rcp.model.Component;
 
 /**
  * @author Patrice Bouillet

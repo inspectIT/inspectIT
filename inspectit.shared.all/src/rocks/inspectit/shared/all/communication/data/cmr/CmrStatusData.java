@@ -1,9 +1,9 @@
-package info.novatec.inspectit.communication.data.cmr;
-
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.shared.all.communication.data.cmr;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Class that hold all information about a CMR status.

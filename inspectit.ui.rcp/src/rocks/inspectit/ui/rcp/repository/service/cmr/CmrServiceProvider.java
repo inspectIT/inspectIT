@@ -1,17 +1,17 @@
-package info.novatec.inspectit.rcp.repository.service.cmr;
+package rocks.inspectit.ui.rcp.repository.service.cmr;
 
-import info.novatec.inspectit.cmr.service.ICmrManagementService;
-import info.novatec.inspectit.cmr.service.IConfigurationInterfaceService;
-import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
-import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
-import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
-import info.novatec.inspectit.cmr.service.IServerStatusService;
-import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
-import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
+import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
+import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
+import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IStorageService;
+import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Provider of the {@link ICmrService}s via Spring.

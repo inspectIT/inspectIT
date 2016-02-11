@@ -1,14 +1,4 @@
-package info.novatec.inspectit.cmr.util;
-
-import info.novatec.inspectit.cmr.cache.IBuffer;
-import info.novatec.inspectit.cmr.service.AgentStorageService;
-import info.novatec.inspectit.cmr.service.ICmrManagementService;
-import info.novatec.inspectit.cmr.storage.CmrStorageManager;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.nio.ByteBufferProvider;
-import info.novatec.inspectit.storage.nio.write.WritingChannelManager;
-import info.novatec.inspectit.storage.recording.RecordingState;
+package rocks.inspectit.server.util;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -24,6 +14,16 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.service.AgentStorageService;
+import rocks.inspectit.server.storage.CmrStorageManager;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.nio.write.WritingChannelManager;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * This service is used to check the health of the CMR in terms of cpu, memory, some overall

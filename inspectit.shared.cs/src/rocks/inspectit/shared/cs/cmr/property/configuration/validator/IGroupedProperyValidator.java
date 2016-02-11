@@ -1,10 +1,10 @@
-package info.novatec.inspectit.cmr.property.configuration.validator;
-
-import info.novatec.inspectit.cmr.property.configuration.GroupedProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validator;
 
 import java.util.Collection;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Validator interface for validating {@link GroupedProperty}.

@@ -1,6 +1,4 @@
-package info.novatec.inspectit.ci.strategy.impl;
-
-import info.novatec.inspectit.ci.strategy.IStrategyConfig;
+package rocks.inspectit.shared.cs.ci.strategy.impl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -10,11 +8,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
+
 /**
  * Configuration for the size buffer strategy.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "size-buffer-strategy-config")
@@ -23,7 +23,7 @@ public class SizeBufferStrategyConfig implements IStrategyConfig {
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.buffer.impl.SizeBufferStrategy";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.buffer.impl.SizeBufferStrategy";
 
 	/**
 	 * Buffer size.
@@ -51,7 +51,7 @@ public class SizeBufferStrategyConfig implements IStrategyConfig {
 
 	/**
 	 * Gets {@link #size}.
-	 * 
+	 *
 	 * @return {@link #size}
 	 */
 	public int getSize() {
@@ -60,7 +60,7 @@ public class SizeBufferStrategyConfig implements IStrategyConfig {
 
 	/**
 	 * Sets {@link #size}.
-	 * 
+	 *
 	 * @param size
 	 *            New value for {@link #size}
 	 */

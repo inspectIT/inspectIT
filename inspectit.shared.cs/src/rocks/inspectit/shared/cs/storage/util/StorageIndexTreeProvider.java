@@ -1,6 +1,6 @@
-package info.novatec.inspectit.storage.util;
+package rocks.inspectit.shared.cs.storage.util;
 
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Abstract class that is enhanced from Spring to provide the storage indexing tree.

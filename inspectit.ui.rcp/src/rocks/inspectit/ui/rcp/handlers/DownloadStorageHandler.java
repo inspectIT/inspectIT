@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.wizard.DownloadStorageWizard;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +13,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.wizard.DownloadStorageWizard;
 
 /**
  * Handler for downloading the complete storage.

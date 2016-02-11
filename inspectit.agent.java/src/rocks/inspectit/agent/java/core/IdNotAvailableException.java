@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.core;
+package rocks.inspectit.agent.java.core;
 
-import info.novatec.inspectit.agent.core.impl.IdManager;
+import rocks.inspectit.agent.java.core.impl.IdManager;
 
 /**
  * This exception is thrown whenever something happens unexpectedly while accessing or registering

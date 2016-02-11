@@ -1,22 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.AbstractSubView;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.root.FormRootEditor;
-import info.novatec.inspectit.rcp.editor.root.SubViewClassificationController.SubViewClassification;
-import info.novatec.inspectit.rcp.editor.search.ISearchExecutor;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchCriteria;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchResult;
-import info.novatec.inspectit.rcp.editor.search.helper.DeferredTreeViewerSearchHelper;
-import info.novatec.inspectit.rcp.editor.tooltip.ColumnAwareToolTipSupport;
-import info.novatec.inspectit.rcp.editor.tooltip.IColumnToolTipProvider;
-import info.novatec.inspectit.rcp.editor.tree.input.TreeInputController;
-import info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler;
-import info.novatec.inspectit.rcp.menu.ShowHideMenuManager;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.editor.tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +35,24 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.AbstractSubView;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.root.FormRootEditor;
+import rocks.inspectit.ui.rcp.editor.root.SubViewClassificationController.SubViewClassification;
+import rocks.inspectit.ui.rcp.editor.search.ISearchExecutor;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchResult;
+import rocks.inspectit.ui.rcp.editor.search.helper.DeferredTreeViewerSearchHelper;
+import rocks.inspectit.ui.rcp.editor.tooltip.ColumnAwareToolTipSupport;
+import rocks.inspectit.ui.rcp.editor.tooltip.IColumnToolTipProvider;
+import rocks.inspectit.ui.rcp.editor.tree.input.TreeInputController;
+import rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler;
+import rocks.inspectit.ui.rcp.menu.ShowHideMenuManager;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Sub-view which is used to create a tree.
@@ -105,6 +105,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		final Tree tree = toolkit.createTree(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.VIRTUAL | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		tree.setHeaderVisible(true);
@@ -119,6 +120,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 			ColumnAwareToolTipSupport.enableFor(treeViewer);
 		}
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				treeInputController.doubleClick(event);
 				TreeSelection selection = (TreeSelection) event.getSelection();
@@ -244,6 +246,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		if (!jobInSchedule) {
 			jobInSchedule = true;
@@ -254,6 +257,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 					try {
 						treeInputController.doRefresh(monitor, getRootEditor());
 						SafeExecutor.asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								if (checkDisposed()) {
 									return;
@@ -285,6 +289,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDataInput(List<? extends DefaultData> data) {
 		if (checkDisposed()) {
 			return;
@@ -304,6 +309,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Control getControl() {
 		return treeViewer.getControl();
 	}
@@ -311,6 +317,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return treeViewer;
 	}
@@ -318,6 +325,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		return treeInputController.getPreferenceIds();
 	}
@@ -325,6 +333,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		if (checkDisposed()) {
 			return;

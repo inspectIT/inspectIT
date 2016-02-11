@@ -1,14 +1,10 @@
-package info.novatec.inspectit.storage.label.management.impl;
+package rocks.inspectit.shared.cs.storage.label.management.impl;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
 
 import java.util.Collections;
 
@@ -16,6 +12,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.cmr.service.IStorageService;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.management.impl.AddLabelManagementAction;
+import rocks.inspectit.shared.cs.storage.label.management.impl.RemoveLabelManagementAction;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Test the label management actions.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.storage.impl;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -15,11 +15,15 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageBranchIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf;
+import rocks.inspectit.shared.cs.indexing.storage.impl.LeafWithNoDescriptors;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranch;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranchIndexer;
 
 /**
  * Tests the {@link StorageBranchIndexer} class.

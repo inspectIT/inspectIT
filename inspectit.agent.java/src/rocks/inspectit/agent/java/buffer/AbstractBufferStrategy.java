@@ -1,9 +1,9 @@
-package info.novatec.inspectit.agent.buffer;
-
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
+package rocks.inspectit.agent.java.buffer;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
 
 /**
  * Abstract class for all {@link IBufferStrategy} for correct initialization with Spring.

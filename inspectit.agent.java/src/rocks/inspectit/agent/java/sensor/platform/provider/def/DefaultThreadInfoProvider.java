@@ -1,9 +1,9 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.def;
-
-import info.novatec.inspectit.agent.sensor.platform.provider.ThreadInfoProvider;
+package rocks.inspectit.agent.java.sensor.platform.provider.def;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+
+import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
 
 /**
  * Uses the {@link java.lang.management.ThreadMXBean} in order to retrieve all needed information.

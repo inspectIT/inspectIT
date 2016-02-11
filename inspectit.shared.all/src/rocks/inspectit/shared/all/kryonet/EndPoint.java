@@ -1,4 +1,4 @@
-package info.novatec.inspectit.kryonet;
+package rocks.inspectit.shared.all.kryonet;
 
 import java.io.IOException;
 

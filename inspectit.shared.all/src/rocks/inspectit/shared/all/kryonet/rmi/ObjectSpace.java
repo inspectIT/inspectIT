@@ -1,4 +1,4 @@
-package info.novatec.inspectit.kryonet.rmi;
+package rocks.inspectit.shared.all.kryonet.rmi;
 
 import static com.esotericsoftware.minlog.Log.DEBUG;
 import static com.esotericsoftware.minlog.Log.TRACE;
@@ -6,9 +6,6 @@ import static com.esotericsoftware.minlog.Log.WARN;
 import static com.esotericsoftware.minlog.Log.debug;
 import static com.esotericsoftware.minlog.Log.trace;
 import static com.esotericsoftware.minlog.Log.warn;
-import info.novatec.inspectit.kryonet.Connection;
-import info.novatec.inspectit.kryonet.EndPoint;
-import info.novatec.inspectit.kryonet.Listener;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -38,6 +35,10 @@ import com.esotericsoftware.kryo.util.IntMap;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
 import com.esotericsoftware.kryonet.rmi.TimeoutException;
+
+import rocks.inspectit.shared.all.kryonet.Connection;
+import rocks.inspectit.shared.all.kryonet.EndPoint;
+import rocks.inspectit.shared.all.kryonet.Listener;
 
 /**
  * Allows methods on objects to be invoked remotely over TCP. Objects are

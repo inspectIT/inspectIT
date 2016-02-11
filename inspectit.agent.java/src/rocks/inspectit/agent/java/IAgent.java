@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent;
+package rocks.inspectit.agent.java;
 
-import info.novatec.inspectit.agent.hooking.IHookDispatcher;
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 
 /**
  * Interface for accessing the real agent implementation from the SUD and our JavaAgent.
@@ -40,7 +40,7 @@ public interface IAgent {
 	 * Loading will be delegated only if parameters are of size 1 and that single parameter is
 	 * String type.
 	 * 
-	 * @see info.novatec.inspectit.agent.PicoAgent#loadClass(String)
+	 * @see rocks.inspectit.agent.java.PicoAgent#loadClass(String)
 	 * @param params
 	 *            Original parameters passed to class loader.
 	 * @return Loaded class or <code>null</code>.

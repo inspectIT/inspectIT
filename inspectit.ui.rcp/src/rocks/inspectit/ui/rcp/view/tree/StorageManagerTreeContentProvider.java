@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp.view.tree;
-
-import info.novatec.inspectit.rcp.model.Component;
-import info.novatec.inspectit.rcp.model.Composite;
-import info.novatec.inspectit.rcp.model.storage.LocalStorageTreeModelManager;
-import info.novatec.inspectit.rcp.model.storage.StorageTreeModelManager;
+package rocks.inspectit.ui.rcp.view.tree;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+
+import rocks.inspectit.ui.rcp.model.Component;
+import rocks.inspectit.ui.rcp.model.Composite;
+import rocks.inspectit.ui.rcp.model.storage.LocalStorageTreeModelManager;
+import rocks.inspectit.ui.rcp.model.storage.StorageTreeModelManager;
 
 /**
  * Content provider for the storage tree.

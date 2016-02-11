@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer;
+package rocks.inspectit.agent.java.analyzer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -13,10 +13,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.TestBase;
-import info.novatec.inspectit.agent.analyzer.impl.IndirectMatcher;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +25,9 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.impl.IndirectMatcher;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings("PMD")
 public class IndirectMatcherTest extends TestBase {

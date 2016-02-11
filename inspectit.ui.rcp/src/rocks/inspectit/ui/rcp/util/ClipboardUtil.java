@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.util;
+package rocks.inspectit.ui.rcp.util;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.dnd.Clipboard;

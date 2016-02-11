@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.editor.composite;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.AbstractSubView;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
+package rocks.inspectit.ui.rcp.editor.composite;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.AbstractSubView;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 
 /**
  * Some general methods for composite views are implemented in here.

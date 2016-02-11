@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl;
-
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.PlotDataSolver;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 
 /**
  * Factory to access the implementation of the {@link AbstractPlotDataSolver}.

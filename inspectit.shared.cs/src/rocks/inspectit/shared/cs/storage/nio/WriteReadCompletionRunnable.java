@@ -1,9 +1,9 @@
-package info.novatec.inspectit.storage.nio;
-
-import info.novatec.inspectit.storage.nio.read.ReadingCompletionHandler;
-import info.novatec.inspectit.storage.nio.write.WritingCompletionHandler;
+package rocks.inspectit.shared.cs.storage.nio;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import rocks.inspectit.shared.cs.storage.nio.read.ReadingCompletionHandler;
+import rocks.inspectit.shared.cs.storage.nio.write.WritingCompletionHandler;
 
 /**
  * Completion runnable that know if the IO operation was successful.

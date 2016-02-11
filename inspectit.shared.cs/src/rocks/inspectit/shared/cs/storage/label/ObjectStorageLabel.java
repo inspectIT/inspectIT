@@ -1,6 +1,6 @@
-package info.novatec.inspectit.storage.label;
+package rocks.inspectit.shared.cs.storage.label;
 
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Type of the label that can hold arbitrary object as the value.

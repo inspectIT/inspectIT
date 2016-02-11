@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.rcp.wizard.AddStorageLabelWizard;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -15,6 +11,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
+import rocks.inspectit.ui.rcp.wizard.AddStorageLabelWizard;
+
 /**
  * Handler for adding a label to storage.
  * 
@@ -26,7 +26,7 @@ public class AddStorageLabelHandler extends AbstractHandler implements IHandler 
 	/**
 	 * The corresponding command id.
 	 */
-	public static final String COMMAND = "info.novatec.inspectit.rcp.commands.addStorageLabel";
+	public static final String COMMAND = "rocks.inspectit.ui.rcp.commands.addStorageLabel";
 
 	/**
 	 * {@inheritDoc}

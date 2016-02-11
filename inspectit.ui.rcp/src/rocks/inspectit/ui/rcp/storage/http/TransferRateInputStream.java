@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.storage.http;
+package rocks.inspectit.ui.rcp.storage.http;
 
 import java.io.FilterInputStream;
 import java.io.IOException;

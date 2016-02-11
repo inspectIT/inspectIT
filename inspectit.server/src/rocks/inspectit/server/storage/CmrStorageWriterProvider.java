@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.storage;
+package rocks.inspectit.server.storage;
 
 /**
  * Class for providing instances of {@link CmrStorageWriter} when needed.

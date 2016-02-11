@@ -7,27 +7,27 @@
 
 	<!-- holds definition for other UI related beans -->
 
-	<bean id="detailsGenerationFactory" class="info.novatec.inspectit.rcp.details.DetailsGenerationFactory">
+	<bean id="detailsGenerationFactory" class="rocks.inspectit.ui.rcp.details.DetailsGenerationFactory">
 		<property name="generators">
-			<util:list value-type="info.novatec.inspectit.rcp.details.generator.IDetailsGenerator">
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.GeneralInfoDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.MethodInfoDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.InvocationSequenceDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.SqlDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.ExceptionDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.InvocationAffiliationDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.DurationDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.AggregatedDurationDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.HttpDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.ParameterContentDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.LoggingDetailsGenerator" />
-				<bean class="info.novatec.inspectit.rcp.details.generator.impl.JmxDetailsGenerator" />
+			<util:list value-type="rocks.inspectit.ui.rcp.details.generator.IDetailsGenerator">
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.GeneralInfoDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.MethodInfoDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.InvocationSequenceDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.SqlDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.ExceptionDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.InvocationAffiliationDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.DurationDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.AggregatedDurationDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.HttpDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.ParameterContentDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.LoggingDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.JmxDetailsGenerator" />
 			</util:list>
 		</property>
 	</bean>
 	
-	<bean id="versionService" class="info.novatec.inspectit.version.VersionService" />
-	<bean id="versionProvider" class="info.novatec.inspectit.rcp.version.BundleVersionProvider" />
-	<bean id="documentationService" class="info.novatec.inspectit.rcp.documentation.DocumentationService" />
+	<bean id="versionService" class="rocks.inspectit.shared.all.version.VersionService" />
+	<bean id="versionProvider" class="rocks.inspectit.ui.rcp.version.BundleVersionProvider" />
+	<bean id="documentationService" class="rocks.inspectit.ui.rcp.documentation.DocumentationService" />
 	
 </beans>

@@ -1,21 +1,4 @@
-package info.novatec.inspectit.rcp.form;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
-import info.novatec.inspectit.communication.data.cmr.RecordingData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.Component;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.recording.RecordingState;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.form;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -51,6 +34,23 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.progress.UIJob;
 
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.communication.data.cmr.RecordingData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.Component;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+
 /**
  * Class having a form for displaying the properties of a {@link CmrRepositoryDefinition}.
  * 
@@ -77,17 +77,17 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 	/**
 	 * Job for recording end count-down.
 	 */
-	private RecordCountdownJob recordCountdownJob = new RecordCountdownJob();
+	private final RecordCountdownJob recordCountdownJob = new RecordCountdownJob();
 
 	/**
 	 * Job for updating the CMR properties.
 	 */
-	private UpdateCmrPropertiesJob updateCmrPropertiesJob = new UpdateCmrPropertiesJob();
+	private final UpdateCmrPropertiesJob updateCmrPropertiesJob = new UpdateCmrPropertiesJob();
 
 	private Composite mainComposite; // NOCHK
-	private FormToolkit toolkit; // NOCHK
-	private ManagedForm managedForm; // NOCHK
-	private ScrolledForm form; // NOCHK
+	private final FormToolkit toolkit; // NOCHK
+	private final ManagedForm managedForm; // NOCHK
+	private final ScrolledForm form; // NOCHK
 	private Label address; // NOCHK
 	private FormText description; // NOCHK
 	private Label recordingIcon; // NOCHK

@@ -1,9 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.JmxDefinitionDataIdentDao;
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.util.PlatformIdentCache;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.List;
 
@@ -11,6 +6,11 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import rocks.inspectit.server.dao.JmxDefinitionDataIdentDao;
+import rocks.inspectit.server.util.PlatformIdentCache;
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * The default implementation of the {@link JmxDefinitionDataIdentDao} interface by using Entity

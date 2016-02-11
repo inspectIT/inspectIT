@@ -1,13 +1,8 @@
-package info.novatec.inspectit.agent.config.impl;
+package rocks.inspectit.agent.java.config.impl;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.ParserException;
-import info.novatec.inspectit.agent.config.PriorityEnum;
-import info.novatec.inspectit.agent.config.StorageException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,6 +21,13 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.ParserException;
+import rocks.inspectit.agent.java.config.PriorityEnum;
+import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.config.impl.FileConfigurationReader;
 
 @SuppressWarnings("PMD")
 public class FileConfigurationReaderTest extends AbstractLogSupport {
@@ -77,7 +79,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	@Test
 	public void loadAndVerifyMethodSensorType() throws ParserException, StorageException {
 		String name = "average-timer";
-		String clazz = "info.novatec.inspectit.agent.sensor.method.averagetimer.AverageTimerSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerSensor";
 		PriorityEnum priority = PriorityEnum.HIGH;
 
 		writer.println("method-sensor-type " + name + " " + clazz + " " + priority);
@@ -91,7 +93,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	@Test
 	public void loadAndVerifyJmxSensorType() throws ParserException, StorageException {
 		String name = "jmx_test";
-		String clazz = "info.novatec.inspectit.agent.sensor.jmx.JmxSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.jmx.JmxSensor";
 
 		writer.println("jmx-sensor-type " + name + " " + clazz);
 		writer.close();
@@ -132,7 +134,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	@Test
 	public void loadAndVerifyMethodSensorTypeWithParameter() throws ParserException, StorageException {
 		String name = "average-timer";
-		String clazz = "info.novatec.inspectit.agent.sensor.method.averagetimer.AverageTimerSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerSensor";
 		PriorityEnum priority = PriorityEnum.HIGH;
 
 		Map<String, Object> settings = new HashMap<String, Object>();
@@ -149,7 +151,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 
 	@Test
 	public void loadAndVerifyPlatformSensorType() throws ParserException, StorageException {
-		String clazz = "info.novatec.inspectit.agent.sensor.platform.ClassLoadingInformation";
+		String clazz = "rocks.inspectit.agent.java.sensor.platform.ClassLoadingInformation";
 
 		writer.println("platform-sensor-type " + clazz);
 		writer.close();
@@ -162,7 +164,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	@Test
 	public void loadAndVerifyExceptionSensorType() throws ParserException, StorageException {
 		String name = "exception-sensor-type";
-		String clazz = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 
 		writer.println(name + " " + clazz);
 		writer.close();
@@ -176,7 +178,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	@Test
 	public void loadAndVerifyExceptionSensorTypeAdvanced() throws ParserException, StorageException {
 		String name = "exception-sensor-type";
-		String clazz = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 
 		Map<String, Object> settings = new HashMap<String, Object>();
 		settings.put("mode", "enhanced");
@@ -194,7 +196,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 
 	@Test
 	public void loadAndVerifyExceptionSensorNoParameter() throws ParserException, StorageException {
-		String clazz = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 		String name = "exception-sensor";
 		String targetClass = "java.lang.Throwable";
 		writer.println(name + " " + targetClass);
@@ -207,7 +209,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 
 	@Test
 	public void loadAndVerifyExceptionSensorWithParameter() throws ParserException, StorageException {
-		String clazz = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 		String name = "exception-sensor";
 		String targetClass = "java.lang.Throwable";
 
@@ -225,7 +227,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 
 	@Test
 	public void loadAndVerifyExceptionSensorWildcardParameter() throws ParserException, StorageException {
-		String clazz = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 		String name = "exception-sensor";
 		String targetClass = "java.lang.*";
 		writer.println(name + " " + targetClass);
@@ -239,7 +241,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	@Test
 	public void loadAndVerifyExceptionSensorModeSimple() throws ParserException, StorageException {
 		String name = "exception-sensor-type";
-		String clazz = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 		String mode = "mode=simple";
 		writer.println(name + " " + clazz + " " + mode);
 		writer.close();
@@ -253,7 +255,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 	@Test
 	public void loadAndVerifyExceptionSensorModeEnhanced() throws ParserException, StorageException {
 		String name = "exception-sensor-type";
-		String clazz = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String clazz = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 		String mode = "mode=enhanced";
 		writer.println(name + " " + clazz + " " + mode);
 		writer.close();
@@ -266,7 +268,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 
 	@Test
 	public void loadAndVerifyBufferStrategy() throws ParserException, StorageException {
-		String clazz = "info.novatec.inspectit.agent.buffer.impl.SimpleBufferStrategy";
+		String clazz = "rocks.inspectit.agent.java.buffer.impl.SimpleBufferStrategy";
 
 		writer.println("buffer-strategy " + clazz);
 		writer.close();
@@ -278,7 +280,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 
 	@Test
 	public void loadAndVerifySendingStrategy() throws ParserException, StorageException {
-		String clazz = "info.novatec.inspectit.agent.sending.impl.TimeStrategy";
+		String clazz = "rocks.inspectit.agent.java.sending.impl.TimeStrategy";
 		String time = "time=5000";
 
 		writer.println("send-strategy " + clazz + " " + time);

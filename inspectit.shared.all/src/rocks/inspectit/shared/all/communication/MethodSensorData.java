@@ -1,8 +1,4 @@
-package info.novatec.inspectit.communication;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.indexing.IIndexQuery;
+package rocks.inspectit.shared.all.communication;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -13,6 +9,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
 
 /**
  * The {@link MethodSensorData} abstract class is extended by all data & value objects which are

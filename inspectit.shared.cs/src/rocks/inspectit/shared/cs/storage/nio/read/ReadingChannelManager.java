@@ -1,16 +1,16 @@
-package info.novatec.inspectit.storage.nio.read;
-
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.nio.AbstractChannelManager;
-import info.novatec.inspectit.storage.nio.CustomAsyncChannel;
-import info.novatec.inspectit.storage.nio.WriteReadAttachment;
-import info.novatec.inspectit.storage.nio.WriteReadCompletionRunnable;
+package rocks.inspectit.shared.cs.storage.nio.read;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 
 import org.slf4j.Logger;
+
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.storage.nio.AbstractChannelManager;
+import rocks.inspectit.shared.cs.storage.nio.CustomAsyncChannel;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadAttachment;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 
 /**
  * Channel manager that performs reading.

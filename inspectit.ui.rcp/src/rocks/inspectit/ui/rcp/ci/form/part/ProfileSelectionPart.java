@@ -1,18 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.input.EnvironmentEditorInput;
-import info.novatec.inspectit.rcp.ci.job.OpenProfileJob;
-import info.novatec.inspectit.rcp.ci.listener.IProfileChangeListener;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.filter.FilterComposite;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,6 +39,20 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
+import rocks.inspectit.ui.rcp.ci.job.OpenProfileJob;
+import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.filter.FilterComposite;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+
 /**
  * Profile selection for the environment.
  * 
@@ -64,7 +64,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 	/**
 	 * Repository needed for loading all {@link Profile}s.
 	 */
-	private CmrRepositoryDefinition cmrRepositoryDefinition;
+	private final CmrRepositoryDefinition cmrRepositoryDefinition;
 
 	/**
 	 * Environment being edited.
@@ -74,12 +74,12 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 	/**
 	 * Profiles environment can be linked to.
 	 */
-	private List<Profile> profiles;
+	private final List<Profile> profiles;
 
 	/**
 	 * {@link FormPage} section belongs to.
 	 */
-	private FormPage formPage;
+	private final FormPage formPage;
 
 	/**
 	 * Table displaying the profiles.
@@ -365,7 +365,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 		/**
 		 * Filter.
 		 */
-		private ViewerFilter filter = new ViewerFilter() {
+		private final ViewerFilter filter = new ViewerFilter() {
 
 			/**
 			 * {@inheritDoc}

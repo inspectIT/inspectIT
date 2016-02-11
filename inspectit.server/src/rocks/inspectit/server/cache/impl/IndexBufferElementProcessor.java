@@ -1,14 +1,14 @@
-package info.novatec.inspectit.cmr.cache.impl;
-
-import info.novatec.inspectit.cmr.cache.IBufferElement;
-import info.novatec.inspectit.cmr.cache.IBufferElement.BufferElementState;
-import info.novatec.inspectit.cmr.util.Converter;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.impl.IndexingException;
+package rocks.inspectit.server.cache.impl;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+
+import rocks.inspectit.server.cache.IBufferElement;
+import rocks.inspectit.server.cache.IBufferElement.BufferElementState;
+import rocks.inspectit.server.util.Converter;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 
 /**
  * Index processor. Performs indexing of the elements, update of indexing tree size and cleaning the

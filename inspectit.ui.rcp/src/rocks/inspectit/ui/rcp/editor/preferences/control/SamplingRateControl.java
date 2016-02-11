@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.editor.preferences.control;
-
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferencePanel;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
+package rocks.inspectit.ui.rcp.editor.preferences.control;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +15,13 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+
 /**
  * This class creates a control group with a sampling rate slider in the
- * {@link info.novatec.inspectit.rcp.editor.preferences.FormPreferencePanel}.
+ * {@link rocks.inspectit.ui.rcp.editor.preferences.FormPreferencePanel}.
  * 
  * @author Eduard Tudenhoefner
  * 

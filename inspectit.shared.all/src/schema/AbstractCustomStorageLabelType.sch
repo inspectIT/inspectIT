@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.storage.label.type.AbstractCustomStorageLabelType
+class: rocks.inspectit.shared.cs.storage.label.type.AbstractCustomStorageLabelType
 
 1: id
 2: onePerStorage

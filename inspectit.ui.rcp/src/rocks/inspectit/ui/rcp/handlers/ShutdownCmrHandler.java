@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -22,6 +16,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
+
 /**
  * Handler that performs shutdown and restart of the CMR.
  * 
@@ -33,7 +33,7 @@ public class ShutdownCmrHandler extends AbstractHandler implements IHandler {
 	/**
 	 * Parameter that defines if restart should be executed after along shutdown of CMR.
 	 */
-	public static final String SHOULD_RESTART_PARAMETER = "info.novatec.inspectit.rcp.commands.shutdown.shouldRestart";
+	public static final String SHOULD_RESTART_PARAMETER = "rocks.inspectit.ui.rcp.commands.shutdown.shouldRestart";
 
 	/**
 	 * {@inheritDoc}

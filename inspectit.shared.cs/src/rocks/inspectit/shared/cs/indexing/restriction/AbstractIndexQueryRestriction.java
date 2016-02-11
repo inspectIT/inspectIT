@@ -1,10 +1,12 @@
-package info.novatec.inspectit.indexing.restriction;
+package rocks.inspectit.shared.cs.indexing.restriction;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+
+import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
 
 /**
  * Abstract class for all index query restriction classes.

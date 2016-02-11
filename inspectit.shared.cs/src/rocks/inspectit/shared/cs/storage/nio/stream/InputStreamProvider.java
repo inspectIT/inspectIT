@@ -1,10 +1,10 @@
-package info.novatec.inspectit.storage.nio.stream;
-
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.storage.IStorageData;
+package rocks.inspectit.shared.cs.storage.nio.stream;
 
 import java.io.IOException;
 import java.util.List;
+
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.storage.IStorageData;
 
 /**
  * Class that is used for providing the correct instance of {@link ExtendedByteBufferInputStream}

@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl;
-
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.data.RangeType;
+
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * This class is used to plot data as memory data.

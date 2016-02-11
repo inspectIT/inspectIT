@@ -1,4 +1,4 @@
-package info.novatec.inspectit.exception;
+package rocks.inspectit.shared.all.exception;
 
 /**
  * General interface for the error code.

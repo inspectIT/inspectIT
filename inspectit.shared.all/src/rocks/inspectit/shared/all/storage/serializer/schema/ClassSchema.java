@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.serializer.schema;
+package rocks.inspectit.shared.all.storage.serializer.schema;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.ci;
+package rocks.inspectit.shared.cs.ci;
 
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,6 +17,11 @@ import javax.xml.bind.Unmarshaller;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
 
 @SuppressWarnings("PMD")
 public class CiXmlTransformationTest {

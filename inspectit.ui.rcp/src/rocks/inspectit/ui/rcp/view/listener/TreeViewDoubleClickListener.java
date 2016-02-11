@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.view.listener;
-
-import info.novatec.inspectit.rcp.handlers.OpenViewHandler;
-import info.novatec.inspectit.rcp.model.Component;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
+package rocks.inspectit.ui.rcp.view.listener;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -16,6 +12,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+
+import rocks.inspectit.ui.rcp.handlers.OpenViewHandler;
+import rocks.inspectit.ui.rcp.model.Component;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 
 /**
  * Double click listener for the explorers trees.

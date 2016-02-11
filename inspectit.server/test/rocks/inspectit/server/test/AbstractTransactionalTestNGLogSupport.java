@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.test;
-
-import info.novatec.inspectit.cmr.CMR;
+package rocks.inspectit.server.test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +15,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
+import rocks.inspectit.server.CMR;
 
 /**
  * This abstract class provides general logging support for the test classes that need transactional

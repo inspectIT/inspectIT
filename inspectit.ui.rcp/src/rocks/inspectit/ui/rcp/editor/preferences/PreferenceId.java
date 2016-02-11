@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.preferences;
+package rocks.inspectit.ui.rcp.editor.preferences;
 
 /**
  * The enumeration set for the unique preference group ids. By adding new enumerations you should
@@ -23,7 +23,7 @@ public enum PreferenceId {
 	public enum TimeLine implements IPreferenceGroup {
 		/**
 		 * The identifiers of the elements in the
-		 * {@link info.novatec.inspectit.rcp.editor.preferences.control.TimeLineControl}.
+		 * {@link rocks.inspectit.ui.rcp.editor.preferences.control.TimeLineControl}.
 		 */
 		FROM_DATE_ID, TO_DATE_ID;
 
@@ -42,7 +42,7 @@ public enum PreferenceId {
 	public enum SamplingRate implements IPreferenceGroup {
 		/**
 		 * The identifiers of the elements in the
-		 * {@link info.novatec.inspectit.rcp.editor.preferences.control.SamplingRateControl} .
+		 * {@link rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl} .
 		 */
 		SLIDER_ID, DIVIDER_ID, TIMEFRAME_DIVIDER_ID;
 	}

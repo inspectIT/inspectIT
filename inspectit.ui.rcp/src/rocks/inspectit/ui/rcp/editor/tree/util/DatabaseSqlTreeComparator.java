@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.editor.tree.util;
-
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.rcp.editor.tree.TreeViewerComparator;
-import info.novatec.inspectit.rcp.util.data.DatabaseInfoHelper;
+package rocks.inspectit.ui.rcp.editor.tree.util;
 
 import org.eclipse.jface.viewers.Viewer;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.ui.rcp.editor.tree.TreeViewerComparator;
+import rocks.inspectit.ui.rcp.util.data.DatabaseInfoHelper;
 
 /**
  * Special comparator to avoid the comparison of {@link DatabaseInfoHelper}s.

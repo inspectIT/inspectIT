@@ -1,9 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
-import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.TimerData;
+package rocks.inspectit.server.service;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -16,6 +11,13 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.service.AgentStorageService;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 
 /**
  * Tests the agent storage service.

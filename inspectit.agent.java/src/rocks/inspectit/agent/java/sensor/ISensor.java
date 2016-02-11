@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor;
+package rocks.inspectit.agent.java.sensor;
 
 import java.util.Map;
 

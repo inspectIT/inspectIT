@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp;
+package rocks.inspectit.ui.rcp;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;

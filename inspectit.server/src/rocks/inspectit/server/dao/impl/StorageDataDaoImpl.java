@@ -1,23 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.StorageDataDao;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.SystemSensorData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.indexing.query.provider.impl.IndexQueryProvider;
-import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.StringStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
-import info.novatec.inspectit.storage.label.type.impl.AssigneeLabelType;
-import info.novatec.inspectit.storage.label.type.impl.RatingLabelType;
-import info.novatec.inspectit.storage.label.type.impl.StatusLabelType;
-import info.novatec.inspectit.storage.label.type.impl.UseCaseLabelType;
+package rocks.inspectit.server.dao.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -42,6 +23,25 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import rocks.inspectit.server.dao.StorageDataDao;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.query.provider.impl.IndexQueryProvider;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestrictionFactory;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.StringStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.AssigneeLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.RatingLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.StatusLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.UseCaseLabelType;
 
 /**
  * DAO support for the storage purposes.

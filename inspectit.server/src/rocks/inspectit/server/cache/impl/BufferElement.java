@@ -1,8 +1,8 @@
-package info.novatec.inspectit.cmr.cache.impl;
+package rocks.inspectit.server.cache.impl;
 
-import info.novatec.inspectit.cmr.cache.IBufferElement;
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.DefaultData;
+import rocks.inspectit.server.cache.IBufferElement;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Simple implementation of the {@link IBufferElement} interface.

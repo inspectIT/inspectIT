@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.assignment.impl.ExceptionSensorAssignment;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -10,6 +8,8 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+
+import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
 
 /**
  * Details page for the {@link ExceptionSensorAssignment}.

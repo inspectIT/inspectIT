@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.statushandlers;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.dialog.BusinessExceptionDialog;
-import info.novatec.inspectit.rcp.dialog.ThrowableDialog;
+package rocks.inspectit.ui.rcp.statushandlers;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -13,6 +9,10 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.statushandlers.WorkbenchErrorHandler;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.ui.rcp.dialog.BusinessExceptionDialog;
+import rocks.inspectit.ui.rcp.dialog.ThrowableDialog;
 
 /**
  * Custom status manager for displaying statuses and exceptions correctly.

@@ -1,7 +1,7 @@
-package info.novatec.inspectit.indexing.query.provider.impl;
+package rocks.inspectit.shared.cs.indexing.query.provider.impl;
 
-import info.novatec.inspectit.indexing.query.provider.IIndexQueryProvider;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+import rocks.inspectit.shared.cs.indexing.query.provider.IIndexQueryProvider;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * Abstract class for providing the {@link StorageIndexQuery} by Spring.

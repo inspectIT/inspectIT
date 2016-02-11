@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.property.control.impl;
-
-import info.novatec.inspectit.cmr.property.configuration.impl.LongProperty;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.property.IPropertyUpdateListener;
-import info.novatec.inspectit.rcp.property.control.AbstractPropertyControl;
+package rocks.inspectit.ui.rcp.property.control.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
@@ -16,6 +11,11 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.LongProperty;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.property.IPropertyUpdateListener;
+import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * {@link AbstractPropertyControl} for the long property.

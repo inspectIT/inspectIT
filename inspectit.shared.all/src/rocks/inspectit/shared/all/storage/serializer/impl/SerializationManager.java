@@ -1,65 +1,4 @@
-package info.novatec.inspectit.storage.serializer.impl;
-
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
-import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.DefaultDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.ExceptionSensorDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.HttpTimerDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.InvocationAwareDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.MethodSensorDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.communication.comparator.SqlStatementDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.TimerDataComparatorEnum;
-import info.novatec.inspectit.communication.data.AggregatedExceptionSensorData;
-import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
-import info.novatec.inspectit.communication.data.AggregatedSqlStatementData;
-import info.novatec.inspectit.communication.data.AggregatedTimerData;
-import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
-import info.novatec.inspectit.communication.data.CompilationInformationData;
-import info.novatec.inspectit.communication.data.CpuInformationData;
-import info.novatec.inspectit.communication.data.DatabaseAggregatedTimerData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationAwareData.MutableInt;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.communication.data.LoggingData;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.data.ParameterContentType;
-import info.novatec.inspectit.communication.data.RuntimeInformationData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.communication.data.ThreadInformationData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.communication.data.VmArgumentData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
-import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.RemoteException;
-import info.novatec.inspectit.exception.TechnicalException;
-import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
-import info.novatec.inspectit.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
-import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
-import info.novatec.inspectit.storage.serializer.HibernateAwareClassResolver;
-import info.novatec.inspectit.storage.serializer.IKryoProvider;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
-import info.novatec.inspectit.util.IHibernateUtil;
-import info.novatec.inspectit.util.KryoNetNetwork;
-import info.novatec.inspectit.util.TimeFrame;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
@@ -105,6 +44,66 @@ import com.esotericsoftware.kryo.util.ObjectMap;
 
 import de.javakaffee.kryoserializers.SynchronizedCollectionsSerializer;
 import de.javakaffee.kryoserializers.UnmodifiableCollectionsSerializer;
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
+import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.ExceptionSensorDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.HttpTimerDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.all.communication.comparator.SqlStatementDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
+import rocks.inspectit.shared.all.communication.data.AggregatedSqlStatementData;
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData;
+import rocks.inspectit.shared.all.communication.data.CompilationInformationData;
+import rocks.inspectit.shared.all.communication.data.CpuInformationData;
+import rocks.inspectit.shared.all.communication.data.DatabaseAggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData.MutableInt;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.LoggingData;
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.communication.data.RuntimeInformationData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.data.VmArgumentData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.RemoteException;
+import rocks.inspectit.shared.all.exception.TechnicalException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
+import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
+import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.all.storage.serializer.HibernateAwareClassResolver;
+import rocks.inspectit.shared.all.storage.serializer.IKryoProvider;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.util.IHibernateUtil;
+import rocks.inspectit.shared.all.util.KryoNetNetwork;
+import rocks.inspectit.shared.all.util.TimeFrame;
 
 /**
  * Implementation of the {@link ISerializer} that uses Kryo library for serializing the objects.
@@ -147,7 +146,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	/**
 	 * Initialize {@link Kryo} properties.
 	 */
-	protected void initKryo() {
+	public void initKryo() {
 		// if hibernateUtil is provided, we create special kind of class resolver
 		ClassResolver classResolver;
 		if (null != hibernateUtil) {
@@ -320,7 +319,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));
 		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager));
 		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager));
-		
+
 		// added with INSPECTIT-1849
 		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager));
 	}

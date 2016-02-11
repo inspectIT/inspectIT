@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.editor.viewers.AbstractViewerComparator;
+package rocks.inspectit.ui.rcp.editor.table;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -12,6 +7,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.editor.viewers.AbstractViewerComparator;
 
 /**
  * Abstract class for all table views that need remote sorting. Implementing classes should

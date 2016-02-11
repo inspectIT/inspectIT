@@ -1,4 +1,6 @@
-package info.novatec.inspectit.cmr.cache;
+package rocks.inspectit.server.cache;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 
 /**
  * Interface that defines behavior of one element in the buffer.

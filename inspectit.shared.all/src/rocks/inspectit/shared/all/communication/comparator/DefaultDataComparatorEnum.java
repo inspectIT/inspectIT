@@ -1,10 +1,10 @@
-package info.novatec.inspectit.communication.comparator;
-
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.shared.all.communication.comparator;
 
 import java.util.Comparator;
+
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Available comparators for all {@link DefaultData} objects.

@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.storage.serializer.SerializationException;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +13,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
 
 /**
  * Handler for deleting the local storage.

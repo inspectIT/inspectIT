@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.platform.provider;
+package rocks.inspectit.agent.java.sensor.platform.provider;
 
 /**
  * Interface for a provider platform sensor infos.

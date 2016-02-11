@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.validation;
+package rocks.inspectit.ui.rcp.validation;
 
 import java.util.Collection;
 import java.util.HashSet;

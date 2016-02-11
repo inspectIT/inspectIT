@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.nio.stream;
+package rocks.inspectit.shared.cs.storage.nio.stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -10,13 +10,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.impl.StorageDescriptor;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.nio.ByteBufferProvider;
-import info.novatec.inspectit.storage.nio.WriteReadCompletionRunnable;
-import info.novatec.inspectit.storage.nio.read.ReadingChannelManager;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -34,6 +27,15 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageDescriptor;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
+import rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager;
+import rocks.inspectit.shared.cs.storage.nio.stream.ExtendedByteBufferInputStream;
 
 /**
  * Testing of the {@link ExtendedByteBufferInputStream} class.

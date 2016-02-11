@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.model;
+package rocks.inspectit.ui.rcp.model;
 
 /**
  * This enum helps identifying the deferred composite type so that specific actions can be performed

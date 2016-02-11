@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.editor.preferences;
-
-import info.novatec.inspectit.rcp.editor.preferences.control.IPreferenceControl;
-import info.novatec.inspectit.rcp.editor.preferences.control.SamplingRateControl;
-import info.novatec.inspectit.rcp.editor.preferences.control.TimeLineControl;
+package rocks.inspectit.ui.rcp.editor.preferences;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.ui.rcp.editor.preferences.control.IPreferenceControl;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl;
+import rocks.inspectit.ui.rcp.editor.preferences.control.TimeLineControl;
 
 /**
  * This factory creates the preference control groups and adds it to a list, because one class can

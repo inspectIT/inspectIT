@@ -1,12 +1,12 @@
-package info.novatec.inspectit.indexing.indexer.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
+package rocks.inspectit.shared.cs.indexing.indexer.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * {@link IBranchIndexer} that indexes on the timestamp of the {@link DefaultData}. The index is

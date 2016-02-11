@@ -1,10 +1,10 @@
-package info.novatec.inspectit.communication.comparator;
+package rocks.inspectit.shared.all.communication.comparator;
 
 import org.apache.commons.lang.BooleanUtils;
 
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
  * Comparators for the {@link JmxSensorValueData}.

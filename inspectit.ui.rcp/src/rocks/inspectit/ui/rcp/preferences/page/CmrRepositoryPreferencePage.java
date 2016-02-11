@@ -1,16 +1,4 @@
-package info.novatec.inspectit.rcp.preferences.page;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.dialog.AddCmrRepositoryDefinitionDialog;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.rcp.wizard.ManageLabelWizard;
+package rocks.inspectit.ui.rcp.preferences.page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +30,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.dialog.AddCmrRepositoryDefinitionDialog;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+import rocks.inspectit.ui.rcp.wizard.ManageLabelWizard;
 
 /**
  * Preference page for {@link CmrRepositoryDefinition} management.
@@ -198,7 +198,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 				StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
 				for (Object selectedObject : selection.toArray()) {
 					if (selectedObject instanceof CmrRepositoryDefinition) {
-						inputList.remove((CmrRepositoryDefinition) selectedObject);
+						inputList.remove(selectedObject);
 					}
 				}
 				tableViewer.refresh();
@@ -258,6 +258,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 	 * <p>
 	 * Does nothing.
 	 */
+	@Override
 	public void repositoryAdded(CmrRepositoryDefinition repositoryDefinition) {
 	}
 
@@ -266,12 +267,14 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 	 * <p>
 	 * Does nothing.
 	 */
+	@Override
 	public void repositoryRemoved(CmrRepositoryDefinition repositoryDefinition) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryOnlineStatusUpdated(final CmrRepositoryDefinition repositoryDefinition, OnlineStatus oldStatus, OnlineStatus newStatus) {
 		if (newStatus != OnlineStatus.CHECKING && inputList.containsKey(repositoryDefinition)) {
 			OnlineStatus oldRegisteredStatus = inputList.get(repositoryDefinition);

@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.dialog;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.dialog;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -28,6 +22,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.forms.widgets.BusyIndicator;
 import org.eclipse.ui.progress.IProgressConstants;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Dialog for add repository definition action.
@@ -165,6 +165,7 @@ public class AddCmrRepositoryDefinitionDialog extends TitleAreaDialog {
 						}
 						final boolean testOkFinal = testOk;
 						SafeExecutor.asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								if (!busyIndicator.isDisposed() && !testLabel.isDisposed()) {
 									if (busyIndicator.isBusy()) {

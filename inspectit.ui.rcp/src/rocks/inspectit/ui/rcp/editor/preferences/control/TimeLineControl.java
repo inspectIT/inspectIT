@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.editor.preferences.control;
-
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferencePanel;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
+package rocks.inspectit.ui.rcp.editor.preferences.control;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +18,11 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 
 /**
  * The time line control for the views that has set of links for fast setting of the time-frame, as

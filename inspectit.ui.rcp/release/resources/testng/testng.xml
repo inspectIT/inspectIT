@@ -2,7 +2,7 @@
 <suite name="inspectIT">
 	<test name="TimeframeDivider">
 		<classes>
-			<class name="info.novatec.inspectit.rcp.editor.preferences.control.samplingrate.test.TimeframeDividerTest" />
+			<class name="rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.test.TimeframeDividerTest" />
 		</classes>
 	</test>
 </suite>

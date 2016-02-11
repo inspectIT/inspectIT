@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.viewers;
+package rocks.inspectit.ui.rcp.editor.viewers;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.StyledString;

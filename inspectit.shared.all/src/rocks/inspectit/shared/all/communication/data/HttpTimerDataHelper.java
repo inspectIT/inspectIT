@@ -1,10 +1,10 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Helper class for {@link HttpTimerData}.

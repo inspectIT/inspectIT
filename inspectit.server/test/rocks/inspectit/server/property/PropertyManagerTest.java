@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.property;
+package rocks.inspectit.server.property;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -15,17 +15,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.jaxb.JAXBTransformator;
-import info.novatec.inspectit.cmr.property.configuration.AbstractProperty;
-import info.novatec.inspectit.cmr.property.configuration.Configuration;
-import info.novatec.inspectit.cmr.property.configuration.PropertySection;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.LongProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.StringProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -49,6 +38,20 @@ import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
+
+import rocks.inspectit.server.jaxb.JAXBTransformator;
+import rocks.inspectit.server.property.PropertyManager;
+import rocks.inspectit.server.property.PropertyUpdateExecutor;
+import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.LongProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.StringProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
 
 @SuppressWarnings("PMD")
 public class PropertyManagerTest {

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.hooking;
+package rocks.inspectit.agent.java.hooking;
 
 /**
  * The hook dispatcher interface defines methods to add method and constructor mappings and methods

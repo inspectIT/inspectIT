@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent;
+package rocks.inspectit.agent.java;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -9,13 +9,14 @@ import org.testng.annotations.BeforeSuite;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.util.StatusPrinter;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
  * This abstract class is used if the logging level needs to be changed. The default of
  * {@link Level#INFO} is most of the time not used.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class AbstractLogSupport extends TestBase {
 

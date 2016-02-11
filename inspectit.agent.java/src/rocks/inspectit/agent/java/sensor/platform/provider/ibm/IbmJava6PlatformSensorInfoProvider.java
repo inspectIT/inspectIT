@@ -1,13 +1,13 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.ibm;
+package rocks.inspectit.agent.java.sensor.platform.provider.ibm;
 
-import info.novatec.inspectit.agent.sensor.platform.provider.MemoryInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.OperatingSystemInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.PlatformSensorInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.RuntimeInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.ThreadInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultMemoryInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultRuntimeInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultThreadInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.PlatformSensorInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultMemoryInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultRuntimeInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultThreadInfoProvider;
 
 /**
  * {@link PlatformSensorInfoProvider} for IBM Java virtual machine. Only for Java version 1.6+.

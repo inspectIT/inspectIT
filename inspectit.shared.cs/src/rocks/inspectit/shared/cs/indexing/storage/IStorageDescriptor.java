@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.storage;
+package rocks.inspectit.shared.cs.indexing.storage;
 
 /**
  * Interface for the peace of data describing one entry/object in the data file. The descriptor

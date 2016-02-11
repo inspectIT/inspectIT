@@ -1,4 +1,4 @@
-package info.novatec.inspectit.ci.exclude;
+package rocks.inspectit.shared.cs.ci.exclude;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

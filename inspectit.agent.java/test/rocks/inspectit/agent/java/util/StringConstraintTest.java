@@ -1,4 +1,4 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.agent.java.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.endsWith;
@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import info.novatec.inspectit.agent.AbstractLogSupport;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,6 +17,9 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.util.StringConstraint;
 
 @SuppressWarnings("PMD")
 public class StringConstraintTest extends AbstractLogSupport {

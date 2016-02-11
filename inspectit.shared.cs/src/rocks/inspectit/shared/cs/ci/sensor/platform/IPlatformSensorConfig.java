@@ -1,6 +1,6 @@
-package info.novatec.inspectit.ci.sensor.platform;
+package rocks.inspectit.shared.cs.ci.sensor.platform;
 
-import info.novatec.inspectit.ci.sensor.ISensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 
 /**
  * Marker for platform sensors.

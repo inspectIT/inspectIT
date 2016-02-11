@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.util;
+package rocks.inspectit.ui.rcp.util;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.widgets.Display;

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.ci.sensor;
+package rocks.inspectit.shared.cs.ci.sensor;
 
 import java.util.Map;
 

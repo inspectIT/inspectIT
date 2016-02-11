@@ -1,6 +1,4 @@
-package info.novatec.inspectit.storage.label.type;
-
-import info.novatec.inspectit.storage.StorageData;
+package rocks.inspectit.shared.cs.storage.label.type;
 
 import java.io.Serializable;
 
@@ -12,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.NamedQuery;
+
+import rocks.inspectit.shared.cs.storage.StorageData;
 
 /**
  * Abstract class for all storage label types.

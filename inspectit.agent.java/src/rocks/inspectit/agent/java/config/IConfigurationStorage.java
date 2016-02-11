@@ -1,19 +1,19 @@
-package info.novatec.inspectit.agent.config;
-
-import info.novatec.inspectit.agent.analyzer.IMatchPattern;
-import info.novatec.inspectit.agent.analyzer.IMatcher;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RepositoryConfig;
-import info.novatec.inspectit.agent.config.impl.StrategyConfig;
-import info.novatec.inspectit.agent.config.impl.UnregisteredJmxConfig;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
-import info.novatec.inspectit.agent.sensor.exception.IExceptionSensor;
+package rocks.inspectit.agent.java.config;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import rocks.inspectit.agent.java.analyzer.IMatchPattern;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RepositoryConfig;
+import rocks.inspectit.agent.java.config.impl.StrategyConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredJmxConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.agent.java.sensor.exception.IExceptionSensor;
 
 /**
  * This storage is used by all configuration readers to store the information into.

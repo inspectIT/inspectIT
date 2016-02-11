@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.util;
+package rocks.inspectit.server.util;
 
 /**
  * Converter utility class.

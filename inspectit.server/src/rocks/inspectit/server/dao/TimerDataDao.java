@@ -1,9 +1,9 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.communication.data.TimerData;
+package rocks.inspectit.server.dao;
 
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * The DAO for timer data objects.

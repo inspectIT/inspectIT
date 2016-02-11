@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.indexer.impl;
+package rocks.inspectit.shared.cs.indexing.indexer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
@@ -8,13 +8,6 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.impl.IndexQuery;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -24,6 +17,21 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.InvocationChildrenIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.SensorTypeIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.SqlStringIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * Tests all available branch indexer classes.

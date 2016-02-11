@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.repository.service.cmr.proxy;
-
-import info.novatec.inspectit.rcp.repository.service.cmr.ICmrService;
+package rocks.inspectit.ui.rcp.repository.service.cmr.proxy;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+
+import rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService;
 
 /**
  * {@link MethodInterceptor} that delegates the call to the concrete service of a

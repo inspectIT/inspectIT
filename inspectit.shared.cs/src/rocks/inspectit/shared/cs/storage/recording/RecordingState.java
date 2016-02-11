@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.recording;
+package rocks.inspectit.shared.cs.storage.recording;
 
 /**
  * Enum that describes three state recording can be in.

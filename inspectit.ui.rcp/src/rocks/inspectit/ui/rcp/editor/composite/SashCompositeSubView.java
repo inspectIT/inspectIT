@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.editor.composite;
-
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.editor.composite;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +17,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.editor.ISubView;
 
 /**
  * The sash composite can create a composite sub-view which lays out its children either vertical or

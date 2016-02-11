@@ -1,7 +1,4 @@
-package info.novatec.inspectit.storage.serializer.schema;
-
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
+package rocks.inspectit.shared.all.storage.serializer.schema;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,6 +17,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 
 /**
  * {@link ClassSchemaManager} holds all schemas that are defined, and provides them to the

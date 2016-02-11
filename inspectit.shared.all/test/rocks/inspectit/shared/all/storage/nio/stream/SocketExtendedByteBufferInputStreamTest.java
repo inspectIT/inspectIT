@@ -1,10 +1,9 @@
-package info.novatec.inspectit.storage.nio.stream;
+package rocks.inspectit.shared.all.storage.nio.stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.storage.nio.ByteBufferProvider;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,6 +19,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
+import rocks.inspectit.shared.all.storage.nio.stream.SocketExtendedByteBufferInputStream;
 
 public class SocketExtendedByteBufferInputStreamTest {
 

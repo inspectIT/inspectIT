@@ -1,15 +1,4 @@
-package info.novatec.inspectit.agent.hooking.impl;
-
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.hooking.IConstructorHook;
-import info.novatec.inspectit.agent.hooking.IHook;
-import info.novatec.inspectit.agent.hooking.IHookDispatcher;
-import info.novatec.inspectit.agent.hooking.IHookDispatcherMapper;
-import info.novatec.inspectit.agent.hooking.IMethodHook;
-import info.novatec.inspectit.agent.sensor.exception.IExceptionSensorHook;
-import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.hooking.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +6,17 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.hooking.IConstructorHook;
+import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
+import rocks.inspectit.agent.java.hooking.IMethodHook;
+import rocks.inspectit.agent.java.sensor.exception.IExceptionSensorHook;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * The hook dispatching service which is called by all the hooks throughout the instrumented target

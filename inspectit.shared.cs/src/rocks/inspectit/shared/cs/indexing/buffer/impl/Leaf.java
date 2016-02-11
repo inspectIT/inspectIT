@@ -1,10 +1,4 @@
-package info.novatec.inspectit.indexing.buffer.impl;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.LeafTask;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
+package rocks.inspectit.shared.cs.indexing.buffer.impl;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -18,6 +12,12 @@ import java.util.concurrent.RecursiveTask;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.cliffc.high_scale_lib.NonBlockingHashMapLong;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.LeafTask;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 
 /**
  * Leaf class is the one that holds the weak references to objects, thus last in tree structure.

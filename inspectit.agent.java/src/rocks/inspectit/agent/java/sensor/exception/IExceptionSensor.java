@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.sensor.exception;
+package rocks.inspectit.agent.java.sensor.exception;
 
-import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
 
 /**
  * The main interface for all exception sensors.

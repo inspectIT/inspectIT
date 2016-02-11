@@ -1,9 +1,4 @@
-package info.novatec.inspectit.indexing.query.factory.impl;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.query.factory.AbstractQueryFactory;
-import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
+package rocks.inspectit.shared.cs.indexing.query.factory.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,6 +6,11 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.query.factory.AbstractQueryFactory;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestrictionFactory;
 
 /**
  * Factory for all queries for the {@link InvocationSequenceData}.

@@ -1,7 +1,4 @@
-package info.novatec.inspectit.kryonet;
-
-import info.novatec.inspectit.storage.serializer.IKryoProvider;
-import info.novatec.inspectit.storage.serializer.ISerializerProvider;
+package rocks.inspectit.shared.all.kryonet;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,6 +9,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.storage.serializer.IKryoProvider;
+import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
 
 /**
  * Implementation of the {@link IExtendedSerialization} with some additional methods we need for

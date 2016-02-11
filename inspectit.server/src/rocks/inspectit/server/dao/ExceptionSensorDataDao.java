@@ -1,11 +1,11 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.communication.data.AggregatedExceptionSensorData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
+package rocks.inspectit.server.dao;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 /**
  * This layer is used to access the exception sensor information.

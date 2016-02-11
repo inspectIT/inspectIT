@@ -1,11 +1,9 @@
-package info.novatec.inspectit.storage.serializer.impl;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchema;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
 
 import java.util.Random;
 
@@ -19,6 +17,10 @@ import org.testng.annotations.Test;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.storage.serializer.impl.CustomCompatibleFieldSerializer;
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchema;
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
 
 @SuppressWarnings("PMD")
 public class BackwardForwardCompatibilityTest {

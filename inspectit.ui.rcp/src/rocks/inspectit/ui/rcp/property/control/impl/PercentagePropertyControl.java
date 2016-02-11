@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.property.control.impl;
-
-import info.novatec.inspectit.cmr.property.configuration.impl.PercentageProperty;
-import info.novatec.inspectit.rcp.property.IPropertyUpdateListener;
-import info.novatec.inspectit.rcp.property.control.AbstractPropertyControl;
+package rocks.inspectit.ui.rcp.property.control.impl;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -13,6 +9,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.PercentageProperty;
+import rocks.inspectit.ui.rcp.property.IPropertyUpdateListener;
+import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * {@link AbstractPropertyControl} for the percentage property.

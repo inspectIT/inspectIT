@@ -1,12 +1,12 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPathStart;
+package rocks.inspectit.agent.java.config.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
 
 /**
  * The abstract sensor configuration which is used by the registered and unregistered sensor

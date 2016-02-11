@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp.storage.util;
-
-import info.novatec.inspectit.rcp.storage.http.TransferDataMonitor;
-import info.novatec.inspectit.rcp.storage.http.TransferRateInputStream;
+package rocks.inspectit.ui.rcp.storage.util;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.HttpEntityWrapper;
+
+import rocks.inspectit.ui.rcp.storage.http.TransferDataMonitor;
+import rocks.inspectit.ui.rcp.storage.http.TransferRateInputStream;
 
 /**
  * Wrapping entity to support download speed monitoring.

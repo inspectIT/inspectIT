@@ -1,7 +1,7 @@
-package info.novatec.inspectit.version;
+package rocks.inspectit.shared.all.version;
 
-import info.novatec.inspectit.exception.TechnicalException;
-import info.novatec.inspectit.exception.enumeration.VersioningErrorCodeEnum;
+import rocks.inspectit.shared.all.exception.TechnicalException;
+import rocks.inspectit.shared.all.exception.enumeration.VersioningErrorCodeEnum;
 
 /**
  * Exception raised if the version of inspectIT is unknown. This can happen during development where

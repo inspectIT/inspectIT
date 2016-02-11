@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config;
+package rocks.inspectit.agent.java.config;
 
 /**
  * This exception is thrown whenever something unexpected happens while trying to access/store/load

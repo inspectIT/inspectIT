@@ -1,10 +1,10 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
+package rocks.inspectit.server.dao;
 
 import java.util.List;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
 
 /**
  * This DAO is used to handle all {@link JmxSensorTypeIdent} objects.

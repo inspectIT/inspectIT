@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.storage;
+package rocks.inspectit.server.storage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -9,15 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.dao.StorageDataDao;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.storage.StorageWriter;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.recording.RecordingProperties;
-import info.novatec.inspectit.storage.serializer.SerializationException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -30,6 +21,18 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.dao.StorageDataDao;
+import rocks.inspectit.server.storage.CmrStorageManager;
+import rocks.inspectit.server.storage.CmrStorageRecorder;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
 
 /**
  * Test for the {@link CmrStorageRecorder}.

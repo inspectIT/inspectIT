@@ -1,13 +1,13 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.sun;
+package rocks.inspectit.agent.java.sensor.platform.provider.sun;
 
-import info.novatec.inspectit.agent.sensor.platform.provider.MemoryInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.OperatingSystemInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.PlatformSensorInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.RuntimeInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.ThreadInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultMemoryInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultRuntimeInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultThreadInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.PlatformSensorInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultMemoryInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultRuntimeInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultThreadInfoProvider;
 
 /**
  * Special {@link PlatformSensorInfoProvider} for SunVM..

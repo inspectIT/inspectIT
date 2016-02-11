@@ -1,6 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
 import java.util.Map;
@@ -10,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 
 /**
  * Data object holding http based timer data. All timer related information are inherited from the

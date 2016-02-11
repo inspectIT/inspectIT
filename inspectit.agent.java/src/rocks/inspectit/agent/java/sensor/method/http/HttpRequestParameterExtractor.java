@@ -1,7 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.http;
-
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.util.StringConstraint;
+package rocks.inspectit.agent.java.sensor.method.http;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -12,6 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rocks.inspectit.agent.java.util.StringConstraint;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
 
 /**
  * Thread-safe realization to extract information from <code>HttpServletRequests</code>.

@@ -1,7 +1,4 @@
-package info.novatec.inspectit.indexing.storage.impl;
-
-import info.novatec.inspectit.indexing.impl.IndexQuery;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import java.util.List;
 
@@ -10,6 +7,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Extended index query that fits better when querying the {@link IStorageTreeComponent}.

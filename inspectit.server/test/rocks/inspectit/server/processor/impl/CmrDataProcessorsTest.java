@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.processor.impl;
+package rocks.inspectit.server.processor.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -15,29 +15,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.cmr.cache.IBuffer;
-import info.novatec.inspectit.cmr.cache.IBufferElement;
-import info.novatec.inspectit.cmr.dao.impl.TimerDataAggregator;
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.cmr.storage.CmrStorageManager;
-import info.novatec.inspectit.cmr.util.CacheIdGenerator;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.CpuInformationData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.storage.recording.RecordingState;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
-
 import java.util.Collections;
 
 import javax.persistence.EntityManager;
@@ -53,6 +30,38 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.cache.IBufferElement;
+import rocks.inspectit.server.dao.impl.TimerDataAggregator;
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.server.processor.impl.BufferInserterCmrProcessor;
+import rocks.inspectit.server.processor.impl.CacheIdGeneratorCmrProcessor;
+import rocks.inspectit.server.processor.impl.ExceptionMessageCmrProcessor;
+import rocks.inspectit.server.processor.impl.IndexerCmrProcessor;
+import rocks.inspectit.server.processor.impl.InvocationModifierCmrProcessor;
+import rocks.inspectit.server.processor.impl.PersistingCmrProcessor;
+import rocks.inspectit.server.processor.impl.RecorderCmrProcessor;
+import rocks.inspectit.server.processor.impl.SqlExclusiveTimeCmrProcessor;
+import rocks.inspectit.server.processor.impl.TimerDataChartingCmrProcessor;
+import rocks.inspectit.server.storage.CmrStorageManager;
+import rocks.inspectit.server.util.CacheIdGenerator;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.CpuInformationData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * Tests for the all cmr data processors we have.

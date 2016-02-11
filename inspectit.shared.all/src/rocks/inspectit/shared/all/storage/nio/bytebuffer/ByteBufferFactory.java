@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.nio.bytebuffer;
+package rocks.inspectit.shared.all.storage.nio.bytebuffer;
 
 import java.nio.ByteBuffer;
 

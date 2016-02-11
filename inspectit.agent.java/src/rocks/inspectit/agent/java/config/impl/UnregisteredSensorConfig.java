@@ -1,21 +1,20 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.AnnotationMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.DirectMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.IndirectMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.InterfaceMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.ModifierMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.SimpleMatchPattern;
-import info.novatec.inspectit.agent.analyzer.impl.SuperclassMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.ThrowableMatcher;
+package rocks.inspectit.agent.java.config.impl;
 
 import java.util.List;
 import java.util.regex.Matcher;
 
 import javassist.Modifier;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.AnnotationMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.DirectMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.IndirectMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.InterfaceMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.ModifierMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.SimpleMatchPattern;
+import rocks.inspectit.agent.java.analyzer.impl.SuperclassMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.ThrowableMatcher;
 
 /**
  * Container for the values of a sensor configuration. It stores all the values defined in a config

@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.dialog;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.IErrorCode;
-import info.novatec.inspectit.exception.TechnicalException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
+package rocks.inspectit.ui.rcp.dialog;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -21,6 +15,12 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.IErrorCode;
+import rocks.inspectit.shared.all.exception.TechnicalException;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * Dialog for displaying {@link BusinessException}s.

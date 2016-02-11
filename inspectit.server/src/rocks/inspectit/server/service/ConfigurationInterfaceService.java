@@ -1,13 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.cmr.ci.ConfigurationInterfaceManager;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.TechnicalException;
-import info.novatec.inspectit.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.service;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -19,6 +10,17 @@ import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.TechnicalException;
+import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
+import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 
 /**
  * Implementation of the {@link ICmrManagementService}.

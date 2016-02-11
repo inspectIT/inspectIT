@@ -1,7 +1,7 @@
-package info.novatec.inspectit.agent.hooking;
+package rocks.inspectit.agent.java.hooking;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
 
 /**
  * Classes which add a hook into a method before and after it is called, have to implement this

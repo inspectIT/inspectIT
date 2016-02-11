@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.ci.handler;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.rcp.ci.wizard.CreateProfileWizard;
-import info.novatec.inspectit.rcp.provider.IProfileProvider;
+package rocks.inspectit.ui.rcp.ci.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -11,6 +7,10 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.ci.wizard.CreateProfileWizard;
+import rocks.inspectit.ui.rcp.provider.IProfileProvider;
 
 /**
  * Handler for the duplicate profile.

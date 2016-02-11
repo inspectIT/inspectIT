@@ -2,109 +2,109 @@
 <suite name="Agent">
 	<test name="Analyzers">
 		<classes>
-			<class name="info.novatec.inspectit.agent.analyzer.impl.ByteCodeAnalyzerTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.impl.InheritanceAnalyzerTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.impl.ClassPoolAnalyzerTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.impl.ByteCodeAnalyzerTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.impl.InheritanceAnalyzerTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.impl.ClassPoolAnalyzerTest" />
 		</classes>
 	</test>
 	<test name="Configuration">
 		<classes>
-			<class name="info.novatec.inspectit.agent.config.impl.ConfigurationFilesTest" />
-			<class name="info.novatec.inspectit.agent.config.impl.ConfigurationStorageTest" />
-			<class name="info.novatec.inspectit.agent.config.impl.FileConfigurationReaderTest" />
+			<class name="rocks.inspectit.agent.java.config.impl.ConfigurationFilesTest" />
+			<class name="rocks.inspectit.agent.java.config.impl.ConfigurationStorageTest" />
+			<class name="rocks.inspectit.agent.java.config.impl.FileConfigurationReaderTest" />
 		</classes>
 	</test>
 	<test name="Connection">
 		<classes>
-			<class name="info.novatec.inspectit.agent.connection.impl.KryoNetConnectionTest" />
+			<class name="rocks.inspectit.agent.java.connection.impl.KryoNetConnectionTest" />
 		</classes>
 	</test>
 	<test name="Core">
 		<classes>
-			<class name="info.novatec.inspectit.agent.core.impl.CoreServiceTest" />
-			<class name="info.novatec.inspectit.agent.core.impl.IdManagerTest" />
+			<class name="rocks.inspectit.agent.java.core.impl.CoreServiceTest" />
+			<class name="rocks.inspectit.agent.java.core.impl.IdManagerTest" />
 		</classes>
 	</test>
 	<test name="Hooking">
 		<classes>
-			<class name="info.novatec.inspectit.agent.hooking.impl.HookDispatcherTest" />
-			<class name="info.novatec.inspectit.agent.hooking.impl.HookInstrumenterTest" />
+			<class name="rocks.inspectit.agent.java.hooking.impl.HookDispatcherTest" />
+			<class name="rocks.inspectit.agent.java.hooking.impl.HookInstrumenterTest" />
 		</classes>
 	</test>
 	<test name="Matchers">
 		<classes>
-			<class name="info.novatec.inspectit.agent.analyzer.AnnotationMatcherTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.DirectMatcherTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.IndirectMatcherTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.InterfaceMatcherTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.ModifierMatcherTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.SuperclassMatcherTest" />
-			<class name="info.novatec.inspectit.agent.analyzer.SimpleMatchPatternTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.AnnotationMatcherTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.DirectMatcherTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.IndirectMatcherTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.InterfaceMatcherTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.ModifierMatcherTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.SuperclassMatcherTest" />
+			<class name="rocks.inspectit.agent.java.analyzer.SimpleMatchPatternTest" />
 		</classes>
 	</test>
 	<test name="Hooks">
 		<classes>
-			<class name="info.novatec.inspectit.agent.sensor.exception.ExceptionSensorHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.averagetimer.AverageTimerHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.StatementHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementParameterHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.http.HttpHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.timer.TimerHookTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.exception.ExceptionSensorHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.StatementHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.http.HttpHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.timer.TimerHookTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingHookTest" />
 		</classes>
 	</test>
 	<test name="Connection Meta Data Extraction">
 		<classes>
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.JDBCUrlExtractorTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataExtractorTest" />
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorageTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.JDBCUrlExtractorTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataExtractorTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorageTest" />
 		</classes>
 	</test>
 		<test name="Sensors">
 		<classes>
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.StatementSensorTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.ClassLoadingInformationTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.CompilationInformationTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.CpuInformationTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.MemoryInformationTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.RuntimeInformationTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.SystemInformationTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.ThreadInformationTest" />
-			<class name="info.novatec.inspectit.agent.sensor.jmx.JmxSensorTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.StatementSensorTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.ClassLoadingInformationTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.CompilationInformationTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.CpuInformationTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.MemoryInformationTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.RuntimeInformationTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.SystemInformationTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.ThreadInformationTest" />
+			<class name="rocks.inspectit.agent.java.sensor.jmx.JmxSensorTest" />
 		</classes>
 	</test>
 		<test name="Sending Strategies">
 		<classes>
-			<class name="info.novatec.inspectit.agent.sending.impl.ListSizeStrategyTest" />
-			<class name="info.novatec.inspectit.agent.sending.impl.TimeStrategyTest" />
+			<class name="rocks.inspectit.agent.java.sending.impl.ListSizeStrategyTest" />
+			<class name="rocks.inspectit.agent.java.sending.impl.TimeStrategyTest" />
 		</classes>
 	</test>
 		<test name="Buffer Strategies">
 		<classes>
-			<class name="info.novatec.inspectit.agent.buffer.impl.SimpleBufferStrategyTest" />
-			<class name="info.novatec.inspectit.agent.buffer.impl.SizeBufferStrategyTest" />
+			<class name="rocks.inspectit.agent.java.buffer.impl.SimpleBufferStrategyTest" />
+			<class name="rocks.inspectit.agent.java.buffer.impl.SizeBufferStrategyTest" />
 		</classes>
 	</test>
 	<test name="Property Accessor">
 		<classes>
-			<class name="info.novatec.inspectit.agent.config.impl.PropertyAccessorTest" />
+			<class name="rocks.inspectit.agent.java.config.impl.PropertyAccessorTest" />
 		</classes>
 	</test>
 		<test name="SQL Statement Storage">
 		<classes>
-			<class name="info.novatec.inspectit.agent.sensor.method.jdbc.StatementStorageTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.jdbc.StatementStorageTest" />
 		</classes>
 	</test>
 	<test name="Util">
 		<classes>
-			<class name="info.novatec.inspectit.agent.sensor.method.http.HttpRequestParameterExtractorTest" />
-			<class name="info.novatec.inspectit.agent.sensor.platform.CpuUsageCalculatorTest" />
-			<class name="info.novatec.inspectit.util.ThreadLocalStackTest" />
-			<class name="info.novatec.inspectit.util.WeakListTest" />
-			<class name="info.novatec.inspectit.util.StringConstraintTest" />
-			<class name="info.novatec.inspectit.util.ReflectionCacheTest" />
+			<class name="rocks.inspectit.agent.java.sensor.method.http.HttpRequestParameterExtractorTest" />
+			<class name="rocks.inspectit.agent.java.sensor.platform.CpuUsageCalculatorTest" />
+			<class name="rocks.inspectit.agent.java.util.ThreadLocalStackTest" />
+			<class name="rocks.inspectit.agent.java.util.WeakListTest" />
+			<class name="rocks.inspectit.agent.java.util.StringConstraintTest" />
+			<class name="rocks.inspectit.agent.java.util.ReflectionCacheTest" />
 		</classes>
 	</test>
 </suite>

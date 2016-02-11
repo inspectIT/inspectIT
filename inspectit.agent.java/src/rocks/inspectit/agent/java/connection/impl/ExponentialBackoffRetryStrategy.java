@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.connection.impl;
+package rocks.inspectit.agent.java.connection.impl;
 
-import info.novatec.inspectit.agent.connection.RetryStrategy;
+import rocks.inspectit.agent.java.connection.RetryStrategy;
 
 /**
  * The classic "if it doesn't get fixed in n seconds, wait 2n seconds and try again" strategy. Using

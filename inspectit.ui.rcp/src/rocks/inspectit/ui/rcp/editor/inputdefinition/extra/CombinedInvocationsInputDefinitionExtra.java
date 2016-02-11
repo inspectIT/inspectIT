@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.editor.inputdefinition.extra;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+package rocks.inspectit.ui.rcp.editor.inputdefinition.extra;
 
 import java.util.List;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 /**
  * Additional input definition data used for the combined invocations view.

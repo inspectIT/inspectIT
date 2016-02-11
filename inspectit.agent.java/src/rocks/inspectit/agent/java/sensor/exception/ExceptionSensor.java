@@ -1,12 +1,12 @@
-package info.novatec.inspectit.agent.sensor.exception;
-
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.hooking.IHook;
-import info.novatec.inspectit.agent.sensor.method.AbstractMethodSensor;
+package rocks.inspectit.agent.java.sensor.exception;
 
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 
 /**
  * The {@link ExceptionSensor} which initializes and returns the {@link ExceptionSensorHook} class.

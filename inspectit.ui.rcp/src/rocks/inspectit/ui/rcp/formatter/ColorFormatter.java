@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.formatter;
+package rocks.inspectit.ui.rcp.formatter;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ResourceManager;

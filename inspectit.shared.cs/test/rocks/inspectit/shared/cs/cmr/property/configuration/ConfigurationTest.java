@@ -1,11 +1,10 @@
-package info.novatec.inspectit.cmr.property.configuration;
+package rocks.inspectit.shared.cs.cmr.property.configuration;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
 
 import java.util.Map;
 
@@ -13,6 +12,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 
 @SuppressWarnings("PMD")
 public class ConfigurationTest {

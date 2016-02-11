@@ -1,16 +1,18 @@
-package info.novatec.inspectit.cmr.property.update;
+package rocks.inspectit.shared.cs.cmr.property.update;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
 
 @SuppressWarnings("PMD")
 public class ConfigurationUpdateTest {

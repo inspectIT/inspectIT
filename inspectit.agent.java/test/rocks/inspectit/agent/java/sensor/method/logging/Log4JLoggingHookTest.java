@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.logging;
+package rocks.inspectit.agent.java.sensor.method.logging;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -11,15 +11,16 @@ import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory.Framework;
-import info.novatec.inspectit.communication.data.LoggingData;
-import info.novatec.inspectit.util.ObjectUtils;
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingHook;
+import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory;
+import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory.Framework;
+import rocks.inspectit.shared.all.communication.data.LoggingData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 @SuppressWarnings("PMD")
 public class Log4JLoggingHookTest extends AbstractLogSupport {

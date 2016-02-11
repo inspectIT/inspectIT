@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.connection;
+package rocks.inspectit.agent.java.connection;
 
-import info.novatec.inspectit.agent.connection.impl.FailFastRetryStrategy;
+import rocks.inspectit.agent.java.connection.impl.FailFastRetryStrategy;
 
 /**
  * Helper class for the fail fast remote method calls.

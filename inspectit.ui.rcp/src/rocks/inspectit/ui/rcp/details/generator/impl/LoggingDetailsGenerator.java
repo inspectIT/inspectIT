@@ -1,16 +1,16 @@
-package info.novatec.inspectit.rcp.details.generator.impl;
+package rocks.inspectit.ui.rcp.details.generator.impl;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.LoggingData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.details.DetailsCellContent;
-import info.novatec.inspectit.rcp.details.DetailsTable;
-import info.novatec.inspectit.rcp.details.generator.IDetailsGenerator;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.LoggingData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.details.DetailsCellContent;
+import rocks.inspectit.ui.rcp.details.DetailsTable;
+import rocks.inspectit.ui.rcp.details.generator.IDetailsGenerator;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Realization of the <code>IDetailsGenerator</code> for logging entries.

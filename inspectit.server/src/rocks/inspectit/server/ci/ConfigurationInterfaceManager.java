@@ -1,13 +1,4 @@
-package info.novatec.inspectit.cmr.ci;
-
-import info.novatec.inspectit.ci.AgentMapping;
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.cmr.jaxb.JAXBTransformator;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.ci;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -37,6 +28,15 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
+
+import rocks.inspectit.server.jaxb.JAXBTransformator;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Manages all configuration interface operations.

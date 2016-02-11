@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.editor;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.ci.form.input.EnvironmentEditorInput;
-import info.novatec.inspectit.rcp.ci.form.page.EnvironmentSettingsPage;
-import info.novatec.inspectit.rcp.ci.listener.IEnvironmentChangeListener;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.ci.form.editor;
 
 import java.util.Objects;
 
@@ -18,6 +8,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
+import rocks.inspectit.ui.rcp.ci.form.page.EnvironmentSettingsPage;
+import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Editor for the {@link Environment}.
@@ -30,7 +30,7 @@ public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor 
 	/**
 	 * Editor ID.
 	 */
-	public static final String ID = "info.novatec.inspectit.rcp.ci.editor.environmentEditor";
+	public static final String ID = "rocks.inspectit.ui.rcp.ci.editor.environmentEditor";
 
 	/**
 	 * {@inheritDoc}

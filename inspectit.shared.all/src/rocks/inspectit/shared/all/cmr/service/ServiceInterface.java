@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.service;
+package rocks.inspectit.shared.all.cmr.service;
 
 import java.awt.Component;
 import java.lang.annotation.Documented;

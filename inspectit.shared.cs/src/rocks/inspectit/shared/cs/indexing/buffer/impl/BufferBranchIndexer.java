@@ -1,12 +1,12 @@
-package info.novatec.inspectit.indexing.buffer.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.buffer.IBufferBranchIndexer;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
+package rocks.inspectit.shared.cs.indexing.buffer.impl;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * Implementation of branch indexer for the {@link IBufferTreeComponent}. This indexer is delegating

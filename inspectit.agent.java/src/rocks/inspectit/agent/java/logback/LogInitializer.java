@@ -1,6 +1,4 @@
-package info.novatec.inspectit.agent.logback;
-
-import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
+package rocks.inspectit.agent.java.logback;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +12,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.PropertyDefinerBase;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
+import rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger;
 
 /**
  * The component responsible for log initializations.

@@ -1,6 +1,6 @@
-package info.novatec.inspectit.cmr.cache.impl;
+package rocks.inspectit.server.cache.impl;
 
-import info.novatec.inspectit.cmr.cache.IBuffer;
+import rocks.inspectit.server.cache.IBuffer;
 
 /**
  * Abstract class for all threads that work on the buffer. The work each worker performs is defined

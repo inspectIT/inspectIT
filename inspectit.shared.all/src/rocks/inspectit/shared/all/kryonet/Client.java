@@ -1,4 +1,4 @@
-package info.novatec.inspectit.kryonet;
+package rocks.inspectit.shared.all.kryonet;
 
 import static com.esotericsoftware.minlog.Log.DEBUG;
 import static com.esotericsoftware.minlog.Log.ERROR;
@@ -8,7 +8,6 @@ import static com.esotericsoftware.minlog.Log.debug;
 import static com.esotericsoftware.minlog.Log.error;
 import static com.esotericsoftware.minlog.Log.info;
 import static com.esotericsoftware.minlog.Log.trace;
-import info.novatec.inspectit.storage.nio.stream.StreamProvider;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -33,6 +32,9 @@ import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.FrameworkMessage.DiscoverHost;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterTCP;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterUDP;
+
+import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
+
 import com.esotericsoftware.kryonet.KryoNetException;
 
 /**

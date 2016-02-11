@@ -1,16 +1,16 @@
-package info.novatec.inspectit.ci.sensor.method.impl;
-
-import info.novatec.inspectit.ci.sensor.method.AbstractMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+package rocks.inspectit.shared.cs.ci.sensor.method.impl;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.sensor.method.AbstractMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
+
 /**
  * JDBC connection meta data sensor config.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlRootElement(name = "connection-meta-data-sensor-config")
 public class ConnectionMetaDataSensorConfig extends AbstractMethodSensorConfig implements IMethodSensorConfig {
@@ -23,7 +23,7 @@ public class ConnectionMetaDataSensorConfig extends AbstractMethodSensorConfig i
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataSensor";
+	private static final String CLASS_NAME = "rrocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataSensor";
 
 	/**
 	 * {@inheritDoc}

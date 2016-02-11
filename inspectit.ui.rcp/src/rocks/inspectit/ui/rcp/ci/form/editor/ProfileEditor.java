@@ -1,16 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.editor;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.input.ProfileEditorInput;
-import info.novatec.inspectit.rcp.ci.form.page.ExcludeRulesPage;
-import info.novatec.inspectit.rcp.ci.form.page.MethodSensorDefinitionsPage;
-import info.novatec.inspectit.rcp.ci.listener.IProfileChangeListener;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.ci.form.editor;
 
 import java.util.Objects;
 
@@ -22,6 +10,18 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.input.ProfileEditorInput;
+import rocks.inspectit.ui.rcp.ci.form.page.ExcludeRulesPage;
+import rocks.inspectit.ui.rcp.ci.form.page.MethodSensorDefinitionsPage;
+import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * {@link Profile} editor. This is a {@link FormEditor} consisted out of following pages:
@@ -39,7 +39,7 @@ public class ProfileEditor extends AbstractConfigurationInterfaceFormEditor impl
 	/**
 	 * Editor ID.
 	 */
-	public static final String ID = "info.novatec.inspectit.rcp.ci.editor.profileEditor";
+	public static final String ID = "rocks.inspectit.ui.rcp.ci.editor.profileEditor";
 
 	/**
 	 * {@inheritDoc}

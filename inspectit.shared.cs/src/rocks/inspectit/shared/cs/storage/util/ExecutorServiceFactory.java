@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.util;
+package rocks.inspectit.shared.cs.storage.util;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

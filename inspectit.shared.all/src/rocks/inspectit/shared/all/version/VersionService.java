@@ -1,4 +1,4 @@
-package info.novatec.inspectit.version;
+package rocks.inspectit.shared.all.version;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

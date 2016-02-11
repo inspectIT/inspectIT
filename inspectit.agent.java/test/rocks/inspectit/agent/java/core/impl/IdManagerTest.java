@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.core.impl;
+package rocks.inspectit.agent.java.core.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -14,16 +14,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.config.impl.RepositoryConfig;
-import info.novatec.inspectit.agent.connection.IConnection;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.version.VersionService;
-
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +22,17 @@ import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.RepositoryConfig;
+import rocks.inspectit.agent.java.connection.IConnection;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.core.impl.IdManager;
+import rocks.inspectit.shared.all.version.VersionService;
 
 @SuppressWarnings("PMD")
 public class IdManagerTest extends AbstractLogSupport {

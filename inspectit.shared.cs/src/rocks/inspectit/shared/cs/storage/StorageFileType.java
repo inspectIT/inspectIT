@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage;
+package rocks.inspectit.shared.cs.storage;
 
 import java.util.EnumSet;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.view;
+package rocks.inspectit.ui.rcp.view;
 
 /**
  * Interface for all view that are refreshable.

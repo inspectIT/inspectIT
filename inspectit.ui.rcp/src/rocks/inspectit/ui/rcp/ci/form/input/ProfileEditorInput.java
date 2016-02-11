@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp.ci.form.input;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.rcp.provider.IProfileProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.ci.form.input;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.provider.IProfileProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Input for profile editor.

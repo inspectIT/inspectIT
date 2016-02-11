@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration;
-
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
+package rocks.inspectit.shared.cs.cmr.property.configuration;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +12,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 
 /**
  * Root element of the XML configuration. Holding list of sections that define the configuration.

@@ -1,12 +1,12 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.hooking.IMethodHook;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.hooking.IMethodHook;
 
 /**
  * This hook is intended to intercept the methods which are used to set some specific parameter

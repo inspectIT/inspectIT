@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.model.ci;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.rcp.model.Leaf;
-import info.novatec.inspectit.rcp.provider.IProfileProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.model.ci;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.model.Leaf;
+import rocks.inspectit.ui.rcp.provider.IProfileProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Profile leaf for displaying the the tree.

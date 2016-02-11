@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.preferences.valueproviders;
+package rocks.inspectit.ui.rcp.preferences.valueproviders;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.documentation;
+package rocks.inspectit.ui.rcp.documentation;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import info.novatec.inspectit.version.InvalidVersionException;
-import info.novatec.inspectit.version.Version;
-import info.novatec.inspectit.version.VersionService;
+import rocks.inspectit.shared.all.version.InvalidVersionException;
+import rocks.inspectit.shared.all.version.Version;
+import rocks.inspectit.shared.all.version.VersionService;
 
 /**
  * Provides services to access the publicly available documentation page of inspectIT.

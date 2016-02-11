@@ -1,10 +1,9 @@
-package info.novatec.inspectit.agent.buffer.impl;
+package rocks.inspectit.agent.java.buffer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import info.novatec.inspectit.communication.MethodSensorData;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +12,9 @@ import java.util.NoSuchElementException;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.buffer.impl.SimpleBufferStrategy;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
 
 @SuppressWarnings("PMD")
 public class SimpleBufferStrategyTest {

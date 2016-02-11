@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.ci.exclude.ExcludeRule;
-import info.novatec.inspectit.rcp.ci.form.input.ProfileEditorInput;
-import info.novatec.inspectit.rcp.validation.validator.FqnWildcardValidator;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +27,11 @@ import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.ui.rcp.ci.form.input.ProfileEditorInput;
+import rocks.inspectit.ui.rcp.validation.validator.FqnWildcardValidator;
 
 /**
  * Part for defining the exclude rules.
