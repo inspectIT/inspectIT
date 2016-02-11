@@ -1,0 +1,215 @@
+/**
+ * Gradle build file for the inspectit.ui.rcp project.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+apply from: 'inspectit.ui.rcp.properties.gradle'
+evaluationDependsOn(':inspectit.shared.all')
+evaluationDependsOn(':inspectit.shared.cs')
+defaultTasks 'releaseAndAnalyze'
+
+/** Setting compile configuration as plugin in Eclipse needs it */
+configurations {
+	compile {
+		extendsFrom configurations.uiRcpProd
+	}
+	testCompile {
+		extendsFrom configurations.uiRcpTest
+	}
+}
+
+/** Depend on inspectit.shared.all and cs, testCompile must depend on shared all test sources because of TestBase class */
+dependencies {
+	compile project(':inspectit.shared.all')
+	compile project(':inspectit.shared.cs')
+	testCompile project(':inspectit.shared.all').sourceSets.test.output
+}
+
+/** Compile compatibility to 1.7 for all compile tasks */
+tasks.withType(JavaCompile) { 
+	sourceCompatibility = '1.7'
+	targetCompatibility = '1.7'
+}
+
+/** Include shared.all & shared.cs also for the coverage Extend auxiliaryClasspath so that corbertura can find eclipse-base jars. */
+cobertura {
+	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
+	coverageDirs += project(':inspectit.shared.cs').sourceSets.main.output.classesDir.path
+	auxiliaryClasspath += fileTree(include: '**/*.jar', dir: eclipsePlugins) 
+}
+
+/**
+ * Copies relevant files for the PDE build to the 'plugins' folder.
+ */
+task preparePdeBuild(type: Copy) {
+	description = 'Prepares artifacts for the PDE build.'
+	group = 'Build Setup'
+
+	// all dependencies and our shared jars (we rename it to mach the plugin name)
+	into ('plugins') {
+		from configurations.uiRcpProd
+		from project(':inspectit.shared.all').jar.outputs
+		from project(':inspectit.shared.cs').jar.outputs
+		exclude '**/*sources*.jar'
+		rename project(':inspectit.shared.all').ext.distJarName, project(':inspectit.shared.all').ext.pluginName
+		rename project(':inspectit.shared.cs').ext.distJarName, project(':inspectit.shared.cs').ext.pluginName
+	}
+	// to the main folder all resources (build.properties, plugin.xml, etc)
+	into ('plugins/rocks.inspectit.ui.rcp') {
+		from project.sourceSets.main.resources.srcDirs
+		// these files separatelly to change some things
+		exclude 'plugin.properties'
+		exclude 'META-INF/MANIFEST.MF'
+		exclude 'inspectIT.product'
+	}
+	// changes for plugin.properties (copyright, build id, version)
+	into ('plugins/rocks.inspectit.ui.rcp') {
+		from file("${mainResources}/plugin.properties")
+		filter { line ->
+			line.replaceAll("Copyright \\(c\\) 2008-([0-9]+).", "Copyright (c) 2008-" + Calendar.getInstance().get(Calendar.YEAR))
+			line.replaceAll("Build ID: ([0-9]+)", "Build ID: " + new Date().format('yyyyMMddHHmmss'))
+		}
+		if (project.hasProperty('versionInfo')) {
+			filter { line ->
+				line.replaceAll("Version: ([\\.0-9]+)", "Version: ${versionInfo}")
+			}
+		}
+	}
+	// changes for inspectIT.product (version)
+	into ('plugins/rocks.inspectit.ui.rcp') {
+		from file("${mainResources}/inspectIT.product")
+		if (project.hasProperty('versionInfo')) {
+			filter { line ->
+				line.replaceAll("application=\\\"rocks.inspectit.ui.rcp.application\\\" version=\\\"([\\.0-9]+)\\\"", "application=\"rocks.inspectit.ui.rcp.application\" version=\"${versionInfo}\"")
+			}
+		}
+	}
+	// changes for the manifest (version)
+	into ('plugins/rocks.inspectit.ui.rcp/META-INF') {
+		from file("${mainResources}/META-INF/MANIFEST.MF")
+		if (project.hasProperty('versionInfo')) {
+			filter { line ->
+				line.replaceAll("Bundle-Version: ([\\.0-9]+)", "Bundle-Version: ${versionInfo}")
+			}
+		}
+	}
+	// classes to compile must be in ../java relative to the build.properties 
+	into ('plugins/java') {
+		from project.sourceSets.main.java.srcDirs
+	}
+	destinationDir = file(pdeBuildDir)
+}
+
+/**
+ * Executes the PDE-Build by executing java with 'org.eclipse.equinox.launcher.Main' as main class. 
+ */ 
+task pdeBuild (type: JavaExec,  dependsOn: [rootProject.unzipEclipse, preparePdeBuild]) {
+	description = 'Runs the PDE build.'
+	group = BasePlugin.BUILD_GROUP
+	
+	def packagesDir = file("${pdeBuildDir}/I.inspectit")
+	def builtClassesDir = file("${pdeBuildDir}/plugins/rocks.inspectit.ui.rcp/@dot")
+	def logfile = file("${pdeBuildDir}/build.log")
+	
+	inputs.files preparePdeBuild.outputs
+	outputs.dir builtClassesDir
+	outputs.dir packagesDir
+	
+	// setup for the log file, delete if exists, then create first directories, then new file
+	if (logfile.exists()) {
+		logfile.delete()
+	}
+	file(pdeBuildDir).mkdirs()
+	logfile.createNewFile()
+	logger.info "PDE build output is logged in the file " + logfile
+
+	def logOutputStream = logfile.newOutputStream()
+	standardOutput = logOutputStream
+	errorOutput = logOutputStream
+	classpath = files("${eclipseBaseDir}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar")
+	main = 'org.eclipse.equinox.launcher.Main'
+	args = ['-application', 'org.eclipse.ant.core.antRunner', '-buildfile', "${eclipseBaseDir}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/productBuild/productBuild.xml", "-Drelease.basedir=${buildRoot}", "-Declipse.basedir=${eclipseDir}", "-Dbuilder=${mainExtResources}/pdebuild"]
+}
+
+/**
+ * Overwrites the compileJava task as we can not compile the sources in the main due to the missing eclipse-base jars.
+ * This task only copies the classes compiled by the pdeBuild task to the expected location.
+ */
+task compileJava (overwrite: true,  dependsOn: pdeBuild) {
+	def builtClassesDir = file("${pdeBuildDir}/plugins/rocks.inspectit.ui.rcp/@dot")
+	def buildClassesMainDir = file(buildClassesMain)
+
+	inputs.dir builtClassesDir
+	outputs.dir buildClassesMainDir
+
+	doLast {
+		copy {
+			into buildClassesMainDir
+			from builtClassesDir
+		}
+	}
+}
+
+test {
+	// need to exclude this test as it depends on eclipse runtime
+	// same was with ant build before
+	exclude 'rocks/inspectit/ui/rcp/editor/search/factory/SearchFactoryTest*'
+}
+
+/** Release all packages we have. */
+task release {
+	description = 'Releases RCP packages for the windows, linux and macosx.'
+	group = 'Release'
+
+	dependsOn(releaseSingle('windows', 'x86', 'inspectit-win32.win32.x86'))
+	dependsOn(releaseSingle('windows', 'x64', 'inspectit-win32.win32.x86_64'))
+	dependsOn(releaseSingle('linux', 'x86', 'inspectit-linux.gtk.x86'))
+	dependsOn(releaseSingle('linux', 'x64', 'inspectit-linux.gtk.x86_64'))
+	dependsOn(releaseSingle('macosx', 'x64', 'inspectit-macosx.cocoa.x86_64'))
+}
+
+/**
+ * Creates the task that adds jre, license and log configuration to the already existing package produced in the pdeBuild task.
+ *
+ * @param os Operating system ('windows', 'linux' or 'macosx')
+ * @param arch Architecture ('x86' or 'x64')
+ * @param distName Name of the release file that the pdeBuild produced (without extension).
+ */
+def releaseSingle(os, arch, distName) {
+	return tasks.create(name: "release-${distName}", type: Zip, dependsOn: pdeBuild) {
+		// definition of all files
+		def distNameWithExtension = "${distName}.zip"
+		def archiveFile  = file("${pdeBuildDir}/I.inspectit/${distNameWithExtension}")
+		def distDir = file(buildReleasePackages)
+		def logConfigFile = file("${mainExtResources}/logging-config.xml")
+		// match the correct jre
+		def jreFile
+		configurations.jvms.getFiles().each { path ->
+			if (path.getName().contains("${os}-${arch}")) {
+				logger.debug "for ${os}-${arch} using jvm " + path
+				jreFile = file(path)
+			}
+		}
+
+		// task properties
+		archiveName = "${distName}-${versionInfo}.zip"
+		destinationDir = distDir
+		// packing
+		from zipTree(archiveFile)
+		into('inspectit'){
+			from files(sharedResourcesLicense)
+			from logConfigFile
+		}
+		into('inspectit/jre'){
+			from zipTree(jreFile)
+		}
+	}
+}
+
+task releaseAndAnalyze {
+	description = "Runs all unit tests, all checks and releases the RCP packages for the windows, linux and macosx."
+	group = 'Release'
+
+	dependsOn(release, analyze)
+}

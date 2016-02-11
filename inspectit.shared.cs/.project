@@ -35,7 +35,7 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
-		<nature>org.apache.ivyde.eclipse.ivynature</nature>
+		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
 		<nature>net.sourceforge.pmd.eclipse.plugin.pmdNature</nature>
 	</natures>
 	<linkedResources>
