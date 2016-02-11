@@ -1,0 +1,123 @@
+/**
+ * General settings for the build.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+ext {
+	/** 
+	 * Version settings for local builds.
+	 * Can be overwritten with -PintegrateVersionInfo=true -Denv.RELEASE_VERSION= -Denv.BUILD_NUMBER=
+	 */
+	versionInfo = '1.6.0.SNAPSHOT'
+
+	/** QA settings */
+	baseDir = project.projectDir
+	buildRoot = "${baseDir}/build"
+	buildClassesRoot = "${buildRoot}/classes"
+	buildClassesMain = "${buildClassesRoot}/main"
+	buildClassesTest = "${buildClassesRoot}/test"
+	buildReleaseRoot = "${buildRoot}/release"
+	buildReleasePackages = "${buildReleaseRoot}/packages"
+	buildInstallerRoot = "${buildRoot}/installer"
+	buildQARoot = "${buildRoot}/QA"
+	buildQAAnalysis = "${buildQARoot}/static_analysis"
+	buildQAAnalysisPMD = "${buildQAAnalysis}/pmd"
+	buildQAAnalysisFindbugs =  "${buildQAAnalysis}/findbugs"
+	buildQAAnalysisCheckstyle =  "${buildQAAnalysis}/checkstyle"
+	buildQAAnalysisCPD =  "${buildQAAnalysis}/cpd"
+	buildQATest = "${buildQARoot}/functional_tests"
+	buildQATestTestdata = "${buildQATest}/testdata"
+	buildQATestCoveragedata = "${buildQATest}/coveragedata"
+	buildQAPerfTest = "${buildQARoot}/perf_tests"
+
+	/** General settings */
+	srcRoot = "${baseDir}/src"
+	// main
+	mainRoot = "${srcRoot}/main"
+	mainJava = "${mainRoot}/java"
+	mainResources = "${mainRoot}/resources"
+	mainExtResources = "${mainRoot}/external-resources"
+ 	// test
+	testRoot = "${srcRoot}/test"
+	testJava = "${testRoot}/java"
+	testResources = "${testRoot}/resources"
+	// other
+	libRoot = "${baseDir}/lib"
+	buildInstrumentedClasses = "${buildClassesRoot}/instrumented"
+
+	/** Shared resources settings. */
+	sharedResources = rootProject.projectDir.absolutePath + "/resources"
+	sharedBuildRoot = rootProject.projectDir.absolutePath + "/build"
+	sharedResourcesLicense = rootProject.projectDir.absolutePath + "/license"
+	sharedResourcesConfig = "${sharedResources}/config"
+
+	/** PMD settings */
+	pmdConfigRoot = "${sharedResourcesConfig}/pmd"
+	pmdRulesFile = "${pmdConfigRoot}/pmd_rules.xml"
+	pmdReportFile = "${pmdConfigRoot}/pmd-report.xslt"
+	pmdSortableFile = "${pmdConfigRoot}/sorttable.js"	
+
+	/** Checkstyle settings */
+	checkstyleConfigRoot = "${sharedResourcesConfig}/checkstyle"
+	checkstyleConfigFile = "${checkstyleConfigRoot}/inspectit-checkstyle.xml"
+	checkstyleReportFile = "${checkstyleConfigRoot}/checkstyle.xsl"
+	checkstyleMaxErrors = 0
+	checkstyleMaxWarning = 0
+
+	/** FindBugs settings */
+	findbugsConfigRoot = "${sharedResourcesConfig}/findbugs"
+	findbugsConfigFancyHist = "${findbugsConfigRoot}/fancy-hist.xsl"
+	findbugsConfigInclude = "${findbugsConfigRoot}/findBugsIncludeFilter.xml"
+	findbugsConfigExclude = "${findbugsConfigRoot}/findBugsExcludeFilter.xml"
+
+	/** CPD settings */
+	cpdConfigRoot = "${sharedResourcesConfig}/cpd"
+	cpdReportFile ="${cpdConfigRoot}/cpdhtml.xslt"
+	
+	/** Eclipse base */
+	eclipseDir = "${sharedBuildRoot}/eclipse"
+	eclipseBaseDir = "${eclipseDir}/base/eclipse"
+	eclipsePlugins = "${eclipseBaseDir}/plugins"
+	
+	/** Installers */
+	// folder structure
+	installerBase = "${sharedResources}/installer"
+	installerResources = "${installerBase}/installer-commons"
+	// Installer meta information
+	installerApplicationName = 'inspectIT'
+	installerApplicationVersion = '1.6' //TODO chnage to read from versionInfo
+	installerApplicationHomepage = 'http://www.inspectit.eu'
+	installerAuthorEmail = 'info.inspectit@novatec-gmbh.de'
+	installerAuthorName = 'NovaTec Consulting GmbH'
+	// inspectIT descriptions
+	installerUiDescriptionLong = 'The user interface of inspectIT. Install this component if you want to analyze the measurement data from this computer.'
+	installerCmrDescriptionLong = 'The CMR (central measurement repository) collects the measurements from the inspectIT agents and provides them to the inspectIT user interface. Install this component if you want this computer to serve as your inspectIT central.'
+	installerCmrDescriptionShort = 'Central measurement repository.'
+	installerCmrWinserviceDescriptionLong = 'Windows Service for inspectIT CMR.'
+	installerAgentDescriptionLong = 'The Java Agent integrates with Java applications and sent measurement data to the CMR. Install this component if you want to monitor an application running on this computer.'
+	// Windows Service templates
+	installerWindowsServiceInstallTemplate = "${installerResources}/service/template_installService.bat"
+	installerWindowsServiceUninstallTemplate = "${installerResources}/service/template_uninstallService.bat"
+	// Windows Service meta settings
+	installerWindowsServiceName = 'inspectITCMR'
+	installerWindowsServiceDescription = 'inspectIT Server - http://www.inspectit.eu/'
+	installerWindowsService64DisplayName = 'inspectIT CMR (64 Bit)'
+	installerWindowsService32DisplayName = 'inspectIT CMR (32 Bit)'
+	// Windows Service java settings
+	installerWindowsServiceJvmPath = 'jvm.dll'
+	installerWindowsServiceJvmClasspath = 'inspectit-cmr.jar'
+	// Procrun specific settings
+	procrunJvmoptsPrefix = '++JvmOptions='
+	procrunExe = 'prunsrv.exe'
+	procrunStartup = 'auto'
+	procrunStartMode = 'jvm'
+	procrunStartClass = 'rocks.inspectit.server.CMR'
+	procrunStartMethod = 'start'
+	procrunStartParams = 'start'
+	procrunStopMode = 'jvm'
+	procrunStopClass = 'rocks.inspectit.server.CMR'
+	procrunStopMethod = 'stop'
+	procrunStopParams = 'stop'
+}
+	

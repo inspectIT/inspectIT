@@ -5,8 +5,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -74,6 +72,7 @@ public class PropertyManagerTest {
 	@BeforeMethod
 	public void init() {
 		MockitoAnnotations.initMocks(this);
+		propertyManager.init();
 	}
 
 	/**
@@ -109,9 +108,8 @@ public class PropertyManagerTest {
 		when(configuration.getAllProperties()).thenReturn(Collections.<AbstractProperty> singleton(property));
 
 		Properties properties = propertyManager.getProperties();
-		assertThat(properties.get("externalResourcesPath"), is(not(nullValue())));
 		assertThat(properties.getProperty("property1"), is(equalTo("value1")));
-		assertThat(properties.size(), is(2));
+		assertThat(properties.size(), is(1));
 	}
 
 	/**
@@ -130,9 +128,8 @@ public class PropertyManagerTest {
 		when(configuration.validate()).thenReturn(MapUtils.putAll(new HashMap<AbstractProperty, PropertyValidation>(), new Object[][] { { property, propertyValidation } }));
 
 		Properties properties = propertyManager.getProperties();
-		assertThat(properties.get("externalResourcesPath"), is(not(nullValue())));
 		verify(property, times(0)).register(Mockito.<Properties> anyObject());
-		assertThat(properties.size(), is(1));
+		assertThat(properties.size(), is(0));
 	}
 
 	/**
@@ -157,9 +154,8 @@ public class PropertyManagerTest {
 		when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
 
 		Properties properties = propertyManager.getProperties();
-		assertThat(properties.get("externalResourcesPath"), is(not(nullValue())));
 		assertThat(properties.getProperty("property1"), is(equalTo("updatedValue")));
-		assertThat(properties.size(), is(2));
+		assertThat(properties.size(), is(1));
 	}
 
 	/**
@@ -183,9 +179,8 @@ public class PropertyManagerTest {
 		when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
 
 		Properties properties = propertyManager.getProperties();
-		assertThat(properties.get("externalResourcesPath"), is(not(nullValue())));
 		assertThat(Long.valueOf(properties.getProperty("property1")), is(10L));
-		assertThat(properties.size(), is(2));
+		assertThat(properties.size(), is(1));
 	}
 
 	/**

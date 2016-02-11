@@ -1,0 +1,269 @@
+/**
+ * Dependency settings for all projects.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+repositories {
+	mavenCentral()
+	maven {
+		name 'Nexus@NT'
+		url "http://repository.novatec-gmbh.de/content/repositories/3rd_party_libs/"
+	}
+	maven {
+		name 'SpringSource - External Bundle Releases'
+		url "http://repository.springsource.com/maven/bundles/external/"
+	}
+	maven {
+		name 'SpringSource - SpringSource Bundle Releases'
+		url "http://repository.springsource.com/maven/bundles/release/"
+	}
+	maven {
+		name 'JBoss Public'
+		url "https://repository.jboss.org/nexus/content/groups/public/"
+	}
+}
+
+configurations.all*.transitive = false	
+configurations {
+
+	/** Productive configurations */
+	sharedAllProd
+	sharedCsProd {
+		extendsFrom configurations.sharedAllProd
+	}
+	agentJavaProd {
+		extendsFrom configurations.sharedAllProd
+	}
+	serverProd {
+		extendsFrom configurations.sharedAllProd
+		extendsFrom configurations.sharedCsProd
+	}
+	uiRcpProd {
+		extendsFrom configurations.sharedAllProd
+		extendsFrom configurations.sharedCsProd
+	}
+
+	/** Test configurations */
+	testbase
+	classmexer
+	sharedAllTest {
+		extendsFrom configurations.testbase
+		extendsFrom configurations.sharedAllProd
+	}
+	sharedCsTest {
+		extendsFrom configurations.testbase
+		extendsFrom configurations.sharedCsProd
+	}
+	agentJavaTest {
+		extendsFrom configurations.testbase
+		extendsFrom configurations.agentJavaProd
+	}
+	serverTest {
+		extendsFrom configurations.testbase
+		extendsFrom configurations.classmexer
+		extendsFrom configurations.serverProd
+	}
+	uiRcpTest {
+		extendsFrom configurations.testbase
+		extendsFrom configurations.uiRcpProd
+	}
+
+	/** JMH test configurations */
+	jmh {
+		transitive = true
+	}
+
+	/** Static analysis configurations */
+	checkstyle {
+		transitive = true
+	}
+	findbugs {
+		transitive = true
+	}	
+	pmd {
+		transitive = true
+	}
+	cobertura {
+		transitive = true
+	}
+	cpd {
+		transitive = true
+	}
+	
+	/** Build */
+	xjc { 
+		transitive = true
+	}
+	izpack {
+		transitive = true
+	}
+	jvms
+	java15rt
+	eclipseBase
+}
+
+dependencies {
+
+	/** inspectit.shared.all */
+	sharedAllProd (
+		'org.slf4j:slf4j-api:1.7.5',
+
+		'commons-lang:commons-lang:2.5',
+		'commons-collections:commons-collections:3.2.1',
+		'commons-pool:commons-pool:1.6',
+
+		'org.springframework:info.novatec.spring-core:3.2.16',
+		'org.springframework:info.novatec.spring-beans:3.2.16',
+		'org.springframework:info.novatec.spring-context:3.2.16',
+		'org.springframework:info.novatec.spring-web:3.2.16',
+		'org.springframework:info.novatec.spring-expression:3.2.16',
+		'org.springframework:info.novatec.spring-aop:3.2.16',
+		'org.aopalliance:com.springsource.org.aopalliance:1.0.0',
+		'javax.servlet:javax.servlet:3.0.0.v201103241009',
+
+		'com.esotericsoftware.kryo:kryo:2.24.0',
+		'com.esotericsoftware.kryonet:info.novatec.kryonet:2.21',
+		'de.javakaffee:info.novatec.kryo-serializers:0.23',
+		'com.esotericsoftware.reflectasm:info.novatec.reflectasm:1.07',
+		'com.esotericsoftware.minlog:info.novatec.minlog:1.2',
+		'org.ow2.asm:info.novatec.asm:4.0',
+		'org.objenesis:objenesis:2.1',
+
+		'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final',
+		'javax.validation:validation-api:1.1.0.Final',
+		'javax.inject:com.springsource.javax.inject:1.0.0',
+
+		'com.google.guava:guava-jdk5:13.0'
+	) 
+	sharedAllTest (
+		'nl.jqno.equalsverifier:equalsverifier:1.0.2',
+		'cglib:cglib-nodep:2.2'
+	)
+
+	/** inspectit.shared.cs */
+	sharedCsProd (
+		'commons-pool:commons-pool:1.6',
+		'commons-collections:commons-collections:3.2.1',
+		'org.hamcrest:info.novatec.hamcrest-all:1.3',
+		'com.github.stephenc.high-scale-lib:info.novatec.high-scale-lib:1.1.2'
+	)
+
+	/** inspectit.agent.java */
+	agentJavaProd (
+		'org.javassist:info.novatec.javassist:3.20.0-GA',
+		'org.slf4j:jcl-over-slf4j:1.7.5',
+		'org.slf4j:log4j-over-slf4j:1.7.5',
+		'ch.qos.logback:logback-core:1.0.13',
+		'ch.qos.logback:logback-classic:1.0.13'
+	)
+
+	/** inspectit.server */
+	serverProd (
+		'org.slf4j:jcl-over-slf4j:1.7.5',
+		'org.slf4j:log4j-over-slf4j:1.7.5',
+		'ch.qos.logback:logback-core:1.0.13',
+		'ch.qos.logback:logback-classic:1.0.13',
+		'uk.org.lidalia:info.novatec.sysout-over-slf4j:1.0.2',
+		
+		'org.springframework:info.novatec.spring-context-support:3.2.16',
+		'org.springframework:info.novatec.spring-orm:3.2.16',
+		'org.springframework:info.novatec.spring-tx:3.2.16',
+		'org.springframework:info.novatec.spring-jdbc:3.2.16',
+		'org.springframework:info.novatec.spring-webmvc:3.2.16',
+		'org.springframework:info.novatec.spring-oxm:3.2.16',
+
+		'org.aspectj:aspectjweaver:1.7.4',
+		'org.aspectj:aspectjrt:1.7.4',
+		'org.codehaus.jackson:jackson-core-asl:1.9.3',
+		'org.codehaus.jackson:jackson-mapper-asl:1.9.3',
+
+		'commons-codec:commons-codec:1.3',
+
+		'org.mortbay.jetty:jetty:6.1.26',
+		'org.mortbay.jetty:jetty-util:6.1.26',
+
+		'org.hibernate:hibernate-core:5.0.4.Final',
+		'org.hibernate:hibernate-entitymanager:5.0.4.Final',
+		'org.hibernate.common:hibernate-commons-annotations:5.0.0.Final',
+		'javax.transaction:com.springsource.javax.transaction:1.1.0',
+		'org.jboss.logging:jboss-logging:3.3.0.Final',
+		'org.jboss:jandex:2.0.0.Final',
+		'org.javassist:javassist:3.18.1-GA',
+		'dom4j:dom4j:1.6.1',
+		'antlr:antlr:2.7.7',
+		'com.h2database:h2:1.3.176',
+		'com.mchange:c3p0:0.9.5.1',
+		'com.mchange:mchange-commons-java:0.2.10'
+	)
+		
+	serverTest (
+		'org.springframework:spring-test:3.2.4.RELEASE',
+	)
+
+	/** inspectit.server */
+	uiRcpProd (
+		'org.slf4j:jcl-over-slf4j:1.7.5',
+		'org.slf4j:log4j-over-slf4j:1.7.5',
+		'ch.qos.logback:logback-core:1.0.13',
+		'ch.qos.logback:logback-classic:1.0.13',
+		'uk.org.lidalia:info.novatec.sysout-over-slf4j:1.0.2',
+
+		'commons-fileupload:commons-fileupload:1.2.2',
+		'commons-io:commons-io:2.4',
+
+		'org.springframework.osgi:org.springframework.osgi.core:1.2.1',
+		'org.springframework.osgi:org.springframework.osgi.extender:1.2.1',
+		'org.springframework.osgi:org.springframework.osgi.io:1.2.1',
+
+		'org.eclipse.nebula:cwt:0.9.0.201311081230',
+		'org.eclipse.nebula:cdatetime:0.14.0.201311081230',
+		
+		'com.google.code.gson:gson:2.3.1',
+
+		'jfree:info.novatec.jcommon:1.0.20',
+		'jfree:info.novatec.jfreechart:1.0.16',
+		'jfree:info.novatec.jfreechart-experimental:1.0.16',
+		'jfree:info.novatec.jfreechart-swt:1.0.16',
+		'jfree:info.novatec.swtgraphics2d:1.0.16',
+
+		'org.apache.httpcomponents:info.novatec.httpclient:4.1.1',
+		'org.apache.httpcomponents:info.novatec.httpcore:4.1.1',
+		'org.apache.httpcomponents:info.novatec.httpmime:4.1.1'
+	)
+
+	/** other */
+	testbase (
+		'org.testng:testng:6.8.7',
+		'com.beust:jcommander:1.30',
+		'org.mockito:mockito-core:1.9.0',
+		'org.objenesis:objenesis:2.1',
+		'org.hamcrest:info.novatec.hamcrest-all:1.3'
+	)
+	classmexer (
+		'classmexer:classmexer:0.0.3'
+	)
+	xjc (
+		'com.sun.xml.bind:jaxb-xjc:2.2.4-1'
+	)
+	izpack (
+		'org.codehaus.izpack:izpack-standalone-compiler:4.3.5',
+	)
+	jmh (
+		'org.openjdk.jmh:jmh-core:1.11.3',
+		'org.openjdk.jmh:jmh-generator-annprocess:1.11.3'
+	)
+	jvms (
+		'org.openjdk:openjdk-7-jre-windows-x86:1.7.0-u80-unofficial',
+		'org.openjdk:openjdk-7-jre-windows-x64:1.7.0-u80-unofficial',
+		'org.openjdk:openjdk-7-jre-linux-x86:1.7.0-u80-unofficial',
+		'org.openjdk:openjdk-7-jre-linux-x64:1.7.0-u80-unofficial',
+		'org.openjdk:openjdk-7-jre-macosx-x64:1.7.0-u80-unofficial'
+	)
+	java15rt (
+		'com.sun:rt:1.5.0_22'
+	)
+	eclipseBase (
+		'org.eclipse:eclipse-base:3.8.2'
+	)
+}

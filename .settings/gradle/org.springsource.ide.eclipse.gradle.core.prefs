@@ -1,0 +1,4 @@
+#org.springsource.ide.eclipse.gradle.core.preferences.GradleProjectPreferences
+#Thu Feb 11 14:24:40 CET 2016
+build.family.org.gradle.tooling.model.eclipse.HierarchicalEclipseProject=;inspectit.agent.java;inspectit.server;inspectit.shared.all;inspectit.shared.cs;inspectit.ui.rcp;
+org.springsource.ide.eclipse.gradle.rootprojectloc=

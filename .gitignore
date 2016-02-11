@@ -2,3 +2,5 @@
 *.svn
 version.log
 .metadata/
+.gradle/
+build/

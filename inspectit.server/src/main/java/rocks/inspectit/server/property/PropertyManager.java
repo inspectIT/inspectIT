@@ -19,12 +19,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.xml.sax.SAXException;
 
 import rocks.inspectit.server.jaxb.JAXBTransformator;
 import rocks.inspectit.server.util.ShutdownService;
+import rocks.inspectit.shared.all.util.ResourcesPathResolver;
 import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
 import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
@@ -53,11 +55,6 @@ public class PropertyManager {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyManager.class);
 
 	/**
-	 * System property to point to the external resources folder.
-	 */
-	public static final String EXTERNAL_RESOURCES_PROPERTY = "inspectit.external.resources";
-
-	/**
 	 * Name of the local properties bean that will be created.
 	 */
 	public static final String LOCAL_PROPERTIES_BEAN_NAME = "localPropertiesBean";
@@ -70,7 +67,7 @@ public class PropertyManager {
 	/**
 	 * Directory where configuration files are places.
 	 */
-	private static final String SCHEMA_DIR = CONFIG_DIR + File.separatorChar + "schema";
+	private static final String SCHEMA_DIR = "schema";
 
 	/**
 	 * Name of the schema file for configuration.
@@ -93,9 +90,9 @@ public class PropertyManager {
 	private static final String CONFIG_UPDATE_FILE = "configurationUpdates.xml";
 
 	/**
-	 * Path to the external resources, loaded at the start and placed as property for others to use.
+	 * Used with {@link ResourcesPathResolver} to get the file of the config dir.
 	 */
-	private String externalResourcesPath;
+	private File configDirFile;
 
 	/**
 	 * Default configuration.
@@ -206,7 +203,7 @@ public class PropertyManager {
 
 		// flush the new configuration update
 		try {
-			transformator.marshall(getConfigurationUpdatePath(), configurationUpdate, Paths.get(CONFIG_DIR).relativize(getConfigurationUpdateSchemaPath()).toString());
+			transformator.marshall(getConfigurationUpdatePath(), configurationUpdate, getBaseConfigDir().relativize(getConfigurationUpdateSchemaPath()).toString());
 		} catch (JAXBException | IOException e) {
 			LOG.warn("Could not flush the new configuration update", e);
 		}
@@ -228,7 +225,7 @@ public class PropertyManager {
 	 */
 	@Bean(name = LOCAL_PROPERTIES_BEAN_NAME)
 	protected synchronized Properties getProperties() {
-		externalResourcesPath = System.getProperty(EXTERNAL_RESOURCES_PROPERTY, "");
+		init();
 
 		try {
 			loadConfigurationAndUpdates();
@@ -269,7 +266,7 @@ public class PropertyManager {
 					+ " can not be performed either because property does not exist in the default configuration or the update value is not valid");
 				}
 				try {
-					transformator.marshall(getConfigurationUpdatePath(), configurationUpdate, Paths.get(CONFIG_DIR).relativize(getConfigurationUpdateSchemaPath()).toString());
+					transformator.marshall(getConfigurationUpdatePath(), configurationUpdate, getBaseConfigDir().relativize(getConfigurationUpdateSchemaPath()).toString());
 				} catch (JAXBException | IOException e) {
 					LOG.warn("|-CMR Configuration update can not be re-written", e);
 				}
@@ -298,7 +295,6 @@ public class PropertyManager {
 			}
 		}
 
-		properties.put("externalResourcesPath", externalResourcesPath);
 		return properties;
 	}
 
@@ -314,33 +310,51 @@ public class PropertyManager {
 	protected PropertyManager getPropertyManager() {
 		return this;
 	}
+	
+	/**
+	 * Initializes {@link #configDirFile}.
+	 */
+	protected void init() {
+		try {
+			configDirFile = ResourcesPathResolver.getResourceFile(CONFIG_DIR);
+		} catch (IOException exception) {
+			throw new BeanInitializationException("Property manager can not locate configuration directory.", exception);
+		}
+	}
+
+	/**
+	 * @return Returns base config directory.
+	 */
+	Path getBaseConfigDir() {
+		return configDirFile.toPath();
+	}
 
 	/**
 	 * @return Returns path to the default configuration path.
 	 */
 	Path getDefaultConfigurationPath() {
-		return Paths.get(externalResourcesPath, CONFIG_DIR, DEFAULT_CONFIG_FILE);
+		return getBaseConfigDir().resolve(DEFAULT_CONFIG_FILE);
 	}
 
 	/**
 	 * @return Returns path to the current configuration update path.
 	 */
 	Path getConfigurationUpdatePath() {
-		return Paths.get(externalResourcesPath, CONFIG_DIR, CONFIG_UPDATE_FILE);
+		return getBaseConfigDir().resolve(CONFIG_UPDATE_FILE);
 	}
 
 	/**
 	 * @return Returns path to the configuration XSD schema file.
 	 */
 	Path getConfigurationSchemaPath() {
-		return Paths.get(externalResourcesPath, SCHEMA_DIR, CONFIGURATION_SCHEMA_FILE);
+		return getBaseConfigDir().resolve(SCHEMA_DIR).resolve(CONFIGURATION_SCHEMA_FILE);
 	}
 
 	/**
 	 * @return Returns path to the configuration update XSD schema file.
 	 */
 	Path getConfigurationUpdateSchemaPath() {
-		return Paths.get(externalResourcesPath, SCHEMA_DIR, CONFIGURATION_UPDATE_SCHEMA_FILE);
+		return getBaseConfigDir().resolve(SCHEMA_DIR).resolve(CONFIGURATION_UPDATE_SCHEMA_FILE);
 	}
 
 	/**

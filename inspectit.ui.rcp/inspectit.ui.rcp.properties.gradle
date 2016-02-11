@@ -1,0 +1,7 @@
+ext {
+	// properties for staring the pde build
+	pdeBuildDir = "${buildRoot}/pdebuild"
+	equinoxLauncherPluginVersion="1.3.0.v20120522-1813"
+	pdeBuildPluginVersion="3.8.2.v20121114-140810"
+}
+

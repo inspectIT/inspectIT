@@ -31,16 +31,17 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.LoggerFactory;
 
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger;
+import rocks.inspectit.shared.all.util.ResourcesPathResolver;
 import rocks.inspectit.ui.rcp.ci.InspectITConfigurationInterfaceManager;
 import rocks.inspectit.ui.rcp.log.LogListener;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager;
 import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
+import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -141,6 +142,10 @@ public class InspectIT extends AbstractUIPlugin {
 
 		if (null != bundleFile && bundleFile.isDirectory()) {
 			runtimeDir = Paths.get(bundleFile.getAbsolutePath());
+			// in development bundle file is in src/main/resources
+			if (runtimeDir.toString().endsWith("src/main/resources")) {
+				runtimeDir = runtimeDir.getParent().getParent().getParent().toAbsolutePath();
+			}
 		} else {
 			runtimeDir = Paths.get("");
 		}
@@ -170,7 +175,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 			// then fail to default if none is specified
 			if (null == is) {
-				Path logPath = getRuntimeDir().resolve(DEFAULT_LOG_FILE_NAME).toAbsolutePath();
+				Path logPath = ResourcesPathResolver.getResourceFile(DEFAULT_LOG_FILE_NAME, runtimeDir.toFile()).toPath().toAbsolutePath();
 				if (Files.exists(logPath)) {
 					is = Files.newInputStream(logPath, StandardOpenOption.READ);
 				}

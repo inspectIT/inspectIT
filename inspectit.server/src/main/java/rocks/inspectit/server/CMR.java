@@ -24,6 +24,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import rocks.inspectit.server.util.Converter;
 import rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger;
+import rocks.inspectit.shared.all.util.ResourcesPathResolver;
 import rocks.inspectit.shared.all.version.VersionService;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
@@ -190,7 +191,7 @@ public final class CMR {
 
 			// then fail to default if none is specified
 			if (null == is) {
-				Path logPath = Paths.get(DEFAULT_LOG_FILE_NAME).toAbsolutePath();
+				Path logPath = ResourcesPathResolver.getResourceFile(DEFAULT_LOG_FILE_NAME).toPath().toAbsolutePath();
 				if (Files.exists(logPath)) {
 					is = Files.newInputStream(logPath, StandardOpenOption.READ);
 				}

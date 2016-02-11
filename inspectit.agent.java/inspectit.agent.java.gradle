@@ -1,0 +1,84 @@
+/**
+ * Gradle build file for the inspecit.agent.java project.
+ * 
+ * @author Rene Kugel
+ * @author Ivan Senic
+ */
+evaluationDependsOn(':inspectit.shared.all')
+defaultTasks 'releaseAndAnalyze'
+
+/** Some agent specific properties */
+ext {
+	distJarName = 'inspectit-agent'
+	releaseNameSun15 = "inspectit-agent-sun1.5-{versionInfo}.zip"
+}
+
+/** Setting compile configuration as plugin in Eclipse needs it */
+configurations {
+	compile {
+		extendsFrom configurations.agentJavaProd
+	}
+	testCompile {
+		extendsFrom configurations.agentJavaTest
+	}
+}
+
+/** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
+dependencies {
+	compile project(':inspectit.shared.all')
+	testCompile project(':inspectit.shared.all').sourceSets.test.output
+}
+
+/** Compile compatibility to 1.5 for all compile tasks */
+tasks.withType(JavaCompile) { 
+	sourceCompatibility = '1.5'
+	targetCompatibility = '1.5'
+
+	options.bootClasspath = configurations.java15rt.asPath
+}
+
+/** This is not working when specified in the subprojects{ } part, thus each project must do it */
+cobertura {
+	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
+}
+
+/**
+ * Creates the jar. Excludes libs from the configurations.agentJavaProd that are not Java5 compatible. Uses existing manifest.
+ */
+jar {
+	archivesBaseName = distJarName
+	
+	into('libs') {
+		from project(':inspectit.shared.all').jar.outputs
+		from configurations.agentJavaProd
+
+		// exclude due to the incompatibility with Java5
+		exclude('validation-api*')
+		exclude('hibernate-jpa-2.1-api*')
+	}
+
+	manifest {
+		from file("${mainResources}/META-INF/MANIFEST.MF")
+	}
+}
+
+/**
+ * Creates the release package.
+ */
+task release (type: Zip, dependsOn: jar) {
+	description = "Releases the ${releaseNameSun15} package."
+	group = 'Release'
+	destinationDir = file(buildReleasePackages)
+	archiveName = releaseNameSun15
+	into('agent') {
+		from jar.outputs
+		from file(mainExtResources)
+		from file(sharedResourcesLicense)
+	}
+}
+
+task releaseAndAnalyze {
+	description = "Runs all unit tests, all checks and releases the ${releaseNameSun15} package."
+	group = 'Release'
+	dependsOn(analyze, release)
+}
