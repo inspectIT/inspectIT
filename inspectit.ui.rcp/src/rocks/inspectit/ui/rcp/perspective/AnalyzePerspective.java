@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.perspective;
-
-import info.novatec.inspectit.rcp.view.impl.DataExplorerView;
-import info.novatec.inspectit.rcp.view.impl.RepositoryManagerView;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
+package rocks.inspectit.ui.rcp.perspective;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+
+import rocks.inspectit.ui.rcp.view.impl.DataExplorerView;
+import rocks.inspectit.ui.rcp.view.impl.RepositoryManagerView;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
 
 /**
  * The default perspective and layout of the InspectIT UI.
@@ -19,7 +19,7 @@ public class AnalyzePerspective implements IPerspectiveFactory {
 	/**
 	 * The ID of this perspective.
 	 */
-	public static final String PERSPECTIVE_ID = "info.novatec.inspectit.rcp.perspective.analyze";
+	public static final String PERSPECTIVE_ID = "rocks.inspectit.ui.rcp.perspective.analyze";
 
 	/**
 	 * {@inheritDoc}

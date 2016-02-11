@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.preferences;
+package rocks.inspectit.ui.rcp.preferences;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

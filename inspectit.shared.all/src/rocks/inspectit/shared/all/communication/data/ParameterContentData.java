@@ -1,8 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.Sizeable;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.io.Serializable;
 
@@ -13,6 +9,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.Sizeable;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Stores the content and meta-data of a method parameter or of a field of a class.

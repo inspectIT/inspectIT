@@ -1,14 +1,4 @@
-package info.novatec.inspectit.agent.sensor.jmx;
-
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.UnregisteredJmxConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.sensor.jmx;
 
 import java.lang.management.ManagementFactory;
 import java.sql.Timestamp;
@@ -35,6 +25,16 @@ import javax.management.ReflectionException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.JmxSensorConfig;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredJmxConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * The implementation of the JmxSensor.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.storage.util;
+package rocks.inspectit.ui.rcp.storage.util;
 
 import java.util.StringTokenizer;
 

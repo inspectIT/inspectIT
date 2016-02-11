@@ -1,8 +1,8 @@
-package info.novatec.inspectit.rcp.editor.testers;
-
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
+package rocks.inspectit.ui.rcp.editor.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 
 /**
  * Tester that checks if the active sub-view can be maximized/minimized.

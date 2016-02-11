@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.util;
+package rocks.inspectit.agent.java.sensor.platform.provider.util;
 
 /**
  * This class is used to calculate the cpu usage of the underlying Virtual Machine.

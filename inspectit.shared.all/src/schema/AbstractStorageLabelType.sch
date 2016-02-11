@@ -1,3 +1,3 @@
-class: info.novatec.inspectit.storage.label.type.AbstractStorageLabelType
+class: rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType
 
 1: id

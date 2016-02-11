@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.cache;
+package rocks.inspectit.server.cache;
 
 /**
  * Interface for Buffer functionality.

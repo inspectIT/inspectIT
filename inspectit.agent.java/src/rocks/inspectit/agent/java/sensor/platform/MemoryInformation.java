@@ -1,13 +1,4 @@
-package info.novatec.inspectit.agent.sensor.platform;
-
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.sensor.platform.provider.MemoryInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.OperatingSystemInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
@@ -15,6 +6,15 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the memory system through MXBeans.

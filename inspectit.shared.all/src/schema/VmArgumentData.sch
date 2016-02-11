@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.VmArgumentData
+class: rocks.inspectit.shared.all.communication.data.VmArgumentData
 
 # Vm Argument Data
 1: id

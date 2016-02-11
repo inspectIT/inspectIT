@@ -1,11 +1,4 @@
-package info.novatec.inspectit.storage.nio.write;
-
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.nio.AbstractChannelManager;
-import info.novatec.inspectit.storage.nio.CustomAsyncChannel;
-import info.novatec.inspectit.storage.nio.WriteReadAttachment;
-import info.novatec.inspectit.storage.nio.WriteReadCompletionRunnable;
-import info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferOutputStream;
+package rocks.inspectit.shared.cs.storage.nio.write;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,6 +8,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
+import rocks.inspectit.shared.cs.storage.nio.AbstractChannelManager;
+import rocks.inspectit.shared.cs.storage.nio.CustomAsyncChannel;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadAttachment;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 
 /**
  * Channel manager for writing the data.

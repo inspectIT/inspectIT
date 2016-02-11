@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.ci.form.editor.AgentMappingEditor;
-import info.novatec.inspectit.rcp.ci.job.OpenMappingsJob;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,6 +8,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.ui.rcp.ci.form.editor.AgentMappingEditor;
+import rocks.inspectit.ui.rcp.ci.job.OpenMappingsJob;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler that opens {@link AgentMappingEditor}.

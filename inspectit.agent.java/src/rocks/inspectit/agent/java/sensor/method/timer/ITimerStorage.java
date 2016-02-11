@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.sensor.method.timer;
+package rocks.inspectit.agent.java.sensor.method.timer;
 
-import info.novatec.inspectit.agent.core.IObjectStorage;
+import rocks.inspectit.agent.java.core.IObjectStorage;
 
 /**
  * A {@link ITimerStorage} just accepts time data through {@link #addData(double, double)}.

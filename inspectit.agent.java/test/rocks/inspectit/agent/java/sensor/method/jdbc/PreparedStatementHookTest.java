@@ -1,8 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.core.impl.IdManager;
-import info.novatec.inspectit.util.Timer;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -12,6 +8,14 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.core.impl.IdManager;
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
+import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementHook;
+import rocks.inspectit.agent.java.sensor.method.jdbc.StatementReflectionCache;
+import rocks.inspectit.agent.java.sensor.method.jdbc.StatementStorage;
+import rocks.inspectit.agent.java.util.Timer;
 
 @SuppressWarnings("PMD")
 public class PreparedStatementHookTest extends AbstractLogSupport {

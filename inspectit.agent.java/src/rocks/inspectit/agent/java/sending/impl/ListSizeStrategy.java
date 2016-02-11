@@ -1,11 +1,11 @@
-package info.novatec.inspectit.agent.sending.impl;
-
-import info.novatec.inspectit.agent.core.ListListener;
-import info.novatec.inspectit.agent.sending.AbstractSendingStrategy;
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.agent.java.sending.impl;
 
 import java.util.List;
 import java.util.Map;
+
+import rocks.inspectit.agent.java.core.ListListener;
+import rocks.inspectit.agent.java.sending.AbstractSendingStrategy;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * A simple implementation which checks the size of the list of the current value objects. If the

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.jpa;
+package rocks.inspectit.shared.all.jpa;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.jpa.ListStringConverter;
 
 @SuppressWarnings("unchecked")
 public class ListStringConverterTest {

@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.preferences.valueproviders;
-
-import info.novatec.inspectit.rcp.preferences.PreferenceException;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.valueproviders.PreferenceValueProviderFactory.PreferenceValueProvider;
+package rocks.inspectit.ui.rcp.preferences.valueproviders;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.ui.rcp.preferences.PreferenceException;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProviderFactory.PreferenceValueProvider;
 
 /**
  * This {@link PreferenceValueProvider} converts any collection that members in primitive warper

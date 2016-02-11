@@ -1,4 +1,4 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.agent.java.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -12,6 +12,8 @@ import java.util.NoSuchElementException;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.util.ThreadLocalStack;
 
 @SuppressWarnings("PMD")
 public class ThreadLocalStackTest {

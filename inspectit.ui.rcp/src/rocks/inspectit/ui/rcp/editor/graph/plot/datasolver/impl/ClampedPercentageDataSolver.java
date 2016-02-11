@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl;
 
 import org.jfree.chart.axis.NumberAxis;
 

@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp.editor.table;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.rcp.editor.viewers.AbstractViewerComparator;
+package rocks.inspectit.ui.rcp.editor.table;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.ui.rcp.editor.viewers.AbstractViewerComparator;
 
 /**
  * Local table viewer comparator uses provided comparators to sort specific columns.

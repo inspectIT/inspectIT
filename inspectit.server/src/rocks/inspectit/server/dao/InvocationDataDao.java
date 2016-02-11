@@ -1,11 +1,11 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+package rocks.inspectit.server.dao;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 /**
  * This layer is used to access the stored invocations.

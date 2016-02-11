@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent;
+package rocks.inspectit.agent.java;
 
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot;
+package rocks.inspectit.ui.rcp.editor.graph.plot;
 
 import org.jfree.data.xy.YIntervalDataItem;
 import org.jfree.data.xy.YIntervalSeries;

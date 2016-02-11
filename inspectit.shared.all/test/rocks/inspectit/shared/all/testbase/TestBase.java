@@ -1,4 +1,4 @@
-package info.novatec.inspectit.testbase;
+package rocks.inspectit.shared.all.testbase;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

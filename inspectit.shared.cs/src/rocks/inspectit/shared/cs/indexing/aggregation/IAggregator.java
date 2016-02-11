@@ -1,7 +1,7 @@
-package info.novatec.inspectit.indexing.aggregation;
+package rocks.inspectit.shared.cs.indexing.aggregation;
 
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
 
 /**
  * Interface that defines the operations needed to do a aggregation on the objects. This interface

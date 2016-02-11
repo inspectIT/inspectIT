@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service;
-
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.cache.CachedDataService;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.repository.service;
 
 import java.util.Objects;
 
@@ -13,6 +7,12 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * The {@link CachedDataService} to be used on the UI. When refresh of idents is triggered, all

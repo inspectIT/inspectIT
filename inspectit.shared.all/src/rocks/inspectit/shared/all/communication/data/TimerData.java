@@ -1,7 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -9,6 +6,9 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * The timer data class stores information about the execution time of a java method.

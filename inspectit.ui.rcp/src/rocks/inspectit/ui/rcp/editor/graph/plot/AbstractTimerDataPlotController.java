@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot;
-
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.graph.plot;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -35,6 +31,10 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYBarDataset;
 import org.jfree.data.xy.YIntervalSeriesCollection;
 import org.jfree.ui.RectangleInsets;
+
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Abstract plot controller for all graphs concerning the timer data and it's sub-classes.

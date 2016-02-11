@@ -1,13 +1,13 @@
-package info.novatec.inspectit.cmr.processor.impl;
-
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.cmr.storage.CmrStorageManager;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.storage.recording.RecordingState;
+package rocks.inspectit.server.processor.impl;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.server.storage.CmrStorageManager;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * Simple {@link AbstractCmrDataProcessor} that passes data to be recorded if recording is "ON" on

@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.cmr.model.MethodIdent
+class: rocks.inspectit.shared.all.cmr.model.MethodIdent
 
 # Method Ident
 1: id

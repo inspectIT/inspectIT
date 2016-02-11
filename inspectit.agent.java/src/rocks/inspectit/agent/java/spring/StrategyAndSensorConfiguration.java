@@ -1,12 +1,12 @@
-package info.novatec.inspectit.agent.spring;
-
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.ConfigurationStorage;
+package rocks.inspectit.agent.java.spring;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.ConfigurationStorage;
 
 /**
  * This class enables that {@link SpringConfiguration} processes the {@link ConfigurationStorage}

@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.editor.testers;
-
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.editor.root.SubViewClassificationController.SubViewClassification;
-import info.novatec.inspectit.rcp.editor.table.TableSubView;
-import info.novatec.inspectit.rcp.editor.tree.TreeSubView;
+package rocks.inspectit.ui.rcp.editor.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.editor.root.SubViewClassificationController.SubViewClassification;
+import rocks.inspectit.ui.rcp.editor.table.TableSubView;
+import rocks.inspectit.ui.rcp.editor.tree.TreeSubView;
 
 /**
  * Tester for testing the sub view classification. The tester can test if the view is master or

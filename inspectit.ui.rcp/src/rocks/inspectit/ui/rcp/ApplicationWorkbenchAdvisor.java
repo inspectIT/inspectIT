@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp;
-
-import info.novatec.inspectit.rcp.job.CheckNewVersionJob;
-import info.novatec.inspectit.rcp.perspective.AnalyzePerspective;
+package rocks.inspectit.ui.rcp;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+
+import rocks.inspectit.ui.rcp.job.CheckNewVersionJob;
+import rocks.inspectit.ui.rcp.perspective.AnalyzePerspective;
 
 /**
  * Our extension to the {@link WorkbenchAdvisor} where we define the workbench related things like

@@ -1,9 +1,9 @@
-package info.novatec.inspectit.indexing.storage.impl;
-
-import info.novatec.inspectit.indexing.storage.AbstractStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.cs.indexing.storage.AbstractStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
 
 /**
  * Storage descriptor. POJO that keeps information about where element is stored on disk.

@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.editor.root;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferencePanel;
+package rocks.inspectit.ui.rcp.editor.root;
 
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
 
 /**
  * Interface for all root editors.

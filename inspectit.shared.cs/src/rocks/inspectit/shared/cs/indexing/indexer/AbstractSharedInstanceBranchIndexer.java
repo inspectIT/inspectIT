@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.indexer;
+package rocks.inspectit.shared.cs.indexing.indexer;
 
 /**
  * 

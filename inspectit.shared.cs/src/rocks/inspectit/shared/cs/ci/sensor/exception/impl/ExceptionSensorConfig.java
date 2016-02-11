@@ -1,19 +1,19 @@
-package info.novatec.inspectit.ci.sensor.exception.impl;
-
-import info.novatec.inspectit.ci.sensor.StringConstraintSensorConfig;
-import info.novatec.inspectit.ci.sensor.exception.IExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+package rocks.inspectit.shared.cs.ci.sensor.exception.impl;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.sensor.StringConstraintSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
+
 /**
  * Configuration of the exception sensor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "exception-sensor-config")
@@ -27,7 +27,7 @@ public class ExceptionSensorConfig extends StringConstraintSensorConfig implemen
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 
 	/**
 	 * If sensor mode is enhanced.
@@ -86,7 +86,7 @@ public class ExceptionSensorConfig extends StringConstraintSensorConfig implemen
 
 	/**
 	 * Sets {@link #enhanced}.
-	 * 
+	 *
 	 * @param enhanced
 	 *            New value for {@link #enhanced}
 	 */

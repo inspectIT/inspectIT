@@ -1,6 +1,4 @@
-package info.novatec.inspectit.ci.strategy.impl;
-
-import info.novatec.inspectit.ci.strategy.IStrategyConfig;
+package rocks.inspectit.shared.cs.ci.strategy.impl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -10,20 +8,22 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
+
 /**
  * Configuration for the time sending strategy.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "time-sending-strategy-config")
 public class TimeSendingStrategyConfig implements IStrategyConfig {
-	
+
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sending.impl.TimeStrategy";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sending.impl.TimeStrategy";
 
 	/**
 	 * Sending time in milliseconds.
@@ -51,7 +51,7 @@ public class TimeSendingStrategyConfig implements IStrategyConfig {
 
 	/**
 	 * Gets {@link #time}.
-	 * 
+	 *
 	 * @return {@link #time}
 	 */
 	public long getTime() {
@@ -60,7 +60,7 @@ public class TimeSendingStrategyConfig implements IStrategyConfig {
 
 	/**
 	 * Sets {@link #time}.
-	 * 
+	 *
 	 * @param time
 	 *            New value for {@link #time}
 	 */

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.spring.logger;
+package rocks.inspectit.shared.all.spring.logger;
 
 import java.lang.reflect.Field;
 

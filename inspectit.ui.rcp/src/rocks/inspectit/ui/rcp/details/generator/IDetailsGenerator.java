@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.details.generator;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.details.DetailsTable;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.details.generator;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.details.DetailsTable;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Interface for details generator.

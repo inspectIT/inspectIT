@@ -1,13 +1,14 @@
-package info.novatec.inspectit.rcp.model;
+package rocks.inspectit.ui.rcp.model;
 
-import static info.novatec.inspectit.rcp.model.Modifier.isPackage;
-import static info.novatec.inspectit.rcp.model.Modifier.isPrivate;
-import static info.novatec.inspectit.rcp.model.Modifier.isProtected;
-import static info.novatec.inspectit.rcp.model.Modifier.isPublic;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
+import static rocks.inspectit.ui.rcp.model.Modifier.isPackage;
+import static rocks.inspectit.ui.rcp.model.Modifier.isPrivate;
+import static rocks.inspectit.ui.rcp.model.Modifier.isProtected;
+import static rocks.inspectit.ui.rcp.model.Modifier.isPublic;
 
 import org.eclipse.swt.graphics.Image;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * Creates the appropriate method visibility image for the int value.

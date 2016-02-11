@@ -80,43 +80,43 @@
 	<logger name="java" level="warn" />
 
 	<!-- service logging, set this to 'debug' to get additional information about: - Number of timer objects being stored - information about the exception sensor - information about the combined metric sensor -->
-	<logger name="info.novatec.inspectit.cmr.service" level="info" />
+	<logger name="rocks.inspectit.server.service" level="info" />
 	
 	<!-- service logging, set this to 'debug' to get additional information about: - DAOs -->
-	<logger name="info.novatec.inspectit.cmr.dao" level="info" />
+	<logger name="rocks.inspectit.server.dao" level="info" />
 
 	<!-- RMI Exporter Logging - this logger provides the information to which ip/port the RMI services are bound -->
 	<logger name="org.springframework.remoting.rmi" level="info" />
 
 	<!-- This service logs information about the health status of the CMR. By default this is only being logged into a specific file. Set additivity to true if you want to print this information in the default 
 		appender, too. -->
-	<logger name="info.novatec.inspectit.cmr.util.HealthStatus" additivity="false" level="info">
+	<logger name="rocks.inspectit.server.util.HealthStatus" additivity="false" level="info">
 		<appender-ref ref="statistics" />
 	</logger>
 
 	<!-- Buffer information -->
-	<logger name="info.novatec.inspectit.cmr.cache.impl.AtomicBuffer" level="info" />
+	<logger name="rocks.inspectit.server.cache.impl.AtomicBuffer" level="info" />
 
 	<!-- Storage, set this to debug for more information about: - storage and failed storage serializations -->
-	<logger name="info.novatec.inspectit.storage" level="info" />
-	<logger name="info.novatec.inspectit.cmr.storage" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage" level="info" />
+	<logger name="rocks.inspectit.server.storage" level="info" />
 
 	<!-- Set this to debug for more information about: - IO write/read -->
-	<logger name="info.novatec.inspectit.storage.nio" level="info" />
-	<logger name="info.novatec.inspectit.storage.write" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.nio" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.write" level="info" />
 	
 	<!-- Set this to debug for more information about: - serialization -->
-	<logger name="info.novatec.inspectit.storage.serializer" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.serializer" level="info" />
 
 	<!-- Set this to debug for more information about: - schema loading for serialization -->
-	<logger name="info.novatec.inspectit.storage.serializer.schema" level="info" />
+	<logger name="rocks.inspectit.shared.cs.storage.serializer.schema" level="info" />
 	
 	<!-- Needed for bridging minlog to slf4j -->
 	<!-- Set this to debug for more information about libs that use minlog: kryo, kryonet -->
-	<logger name="info.novatec.inspectit.minlog.MinlogToSLF4JLogger" level="warn" />
+	<logger name="rocks.inspectit.shared.cs.minlog.MinlogToSLF4JLogger" level="warn" />
 
 	<!-- Set this to debug for more information about: - business exceptions occurring -->
-	<logger name="info.novatec.inspectit.cmr.spring.aop.ExceptionInterceptor" level="info" />
+	<logger name="rocks.inspectit.server.spring.aop.ExceptionInterceptor" level="info" />
 	
 	<!-- Disabled loggers from down here -->
 

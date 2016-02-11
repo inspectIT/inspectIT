@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.ParameterContentData
+class: rocks.inspectit.shared.all.communication.data.ParameterContentData
 
 # Parameter Content Data
 1: id

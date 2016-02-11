@@ -1,14 +1,4 @@
-package info.novatec.inspectit.cmr.storage;
-
-import info.novatec.inspectit.cmr.dao.StorageDataDao;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageWriter;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.recording.RecordingProperties;
-import info.novatec.inspectit.storage.recording.RecordingState;
+package rocks.inspectit.server.storage;
 
 import java.util.Collection;
 import java.util.Date;
@@ -26,6 +16,16 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.server.dao.StorageDataDao;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * CMR storage recorder that uses the {@link StorageWriter} to provide recording functionality..

@@ -1,7 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.communication.data.DatabaseAggregatedTimerData;
-import info.novatec.inspectit.communication.data.TimerData;
+package rocks.inspectit.server.dao.impl;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -19,6 +16,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import rocks.inspectit.shared.all.communication.data.DatabaseAggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Aggregator for the {@link TimerData} objects that need to be persisted to the DB.

@@ -1,10 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.config.IPropertyAccessor;
-import info.novatec.inspectit.agent.config.PropertyAccessException;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.data.ParameterContentType;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.config.impl;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -16,6 +10,12 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.agent.java.config.IPropertyAccessor;
+import rocks.inspectit.agent.java.config.PropertyAccessException;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class is used to programmatically build the path to access a specific method parameter or a

@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.view.impl.DataExplorerView;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -15,6 +11,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.view.impl.DataExplorerView;
+
 /**
  * Opens the {@link RepositoryDefinition} in the {@link DataExplorerView}.
  * 
@@ -26,7 +26,7 @@ public class ShowRepositoryHandler extends AbstractHandler implements IHandler {
 	/**
 	 * The corresponding command id.
 	 */
-	public static final String COMMAND = "info.novatec.inspectit.rcp.commands.showRepository";
+	public static final String COMMAND = "rocks.inspectit.ui.rcp.commands.showRepository";
 
 	/**
 	 * The repository to look up.

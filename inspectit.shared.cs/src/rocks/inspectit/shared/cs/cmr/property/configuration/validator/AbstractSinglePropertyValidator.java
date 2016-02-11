@@ -1,10 +1,10 @@
-package info.novatec.inspectit.cmr.property.configuration.validator;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.ValidationError;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validator;
 
 import java.util.Collections;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
 
 /**
  * Abstract class for property validation.

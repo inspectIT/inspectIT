@@ -1,7 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.impl;
-
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +12,8 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
 
 /**
  * This implementation compares directly the class name, method name and parameter types. 'Direct'

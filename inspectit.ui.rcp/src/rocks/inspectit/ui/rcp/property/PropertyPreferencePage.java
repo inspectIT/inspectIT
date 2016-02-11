@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.property;
-
-import info.novatec.inspectit.cmr.property.configuration.PropertySection;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.ValidationError;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
-import info.novatec.inspectit.rcp.property.control.AbstractPropertyControl;
+package rocks.inspectit.ui.rcp.property;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +21,14 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormText;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * Preference page for displaying the CMR properties.

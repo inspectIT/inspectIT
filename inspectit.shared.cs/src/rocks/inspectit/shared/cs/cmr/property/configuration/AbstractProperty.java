@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration;
-
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
+package rocks.inspectit.shared.cs.cmr.property.configuration;
 
 import java.util.Properties;
 
@@ -8,6 +6,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 
 /**
  * Abstract property class.

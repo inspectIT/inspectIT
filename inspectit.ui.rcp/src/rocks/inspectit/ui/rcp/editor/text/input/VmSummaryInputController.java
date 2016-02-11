@@ -1,16 +1,4 @@
-package info.novatec.inspectit.rcp.editor.text.input;
-
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
-import info.novatec.inspectit.communication.data.CompilationInformationData;
-import info.novatec.inspectit.communication.data.CpuInformationData;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.communication.data.RuntimeInformationData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.communication.data.ThreadInformationData;
-import info.novatec.inspectit.communication.data.VmArgumentData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+package rocks.inspectit.ui.rcp.editor.text.input;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -27,6 +15,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData;
+import rocks.inspectit.shared.all.communication.data.CompilationInformationData;
+import rocks.inspectit.shared.all.communication.data.CpuInformationData;
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.all.communication.data.RuntimeInformationData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
+import rocks.inspectit.shared.all.communication.data.VmArgumentData;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * This class represents the textual view of all platform-sensor-types. The shown informations are

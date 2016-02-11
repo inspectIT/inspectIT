@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer;
+package rocks.inspectit.agent.java.analyzer;
 
 /**
  * This interface is used to delegate the analysis and instrumentation of the given bytecode from

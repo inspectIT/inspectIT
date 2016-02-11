@@ -1,10 +1,10 @@
-package info.novatec.inspectit.storage.label.type.impl;
-
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
-import info.novatec.inspectit.util.TimeFrame;
+package rocks.inspectit.shared.cs.storage.label.type.impl;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+
+import rocks.inspectit.shared.all.util.TimeFrame;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Label type to define the data time-frame in storage.

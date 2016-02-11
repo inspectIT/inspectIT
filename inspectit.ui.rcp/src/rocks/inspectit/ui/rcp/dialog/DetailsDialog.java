@@ -1,18 +1,4 @@
-package info.novatec.inspectit.rcp.dialog;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.composite.BreadcrumbTitleComposite;
-import info.novatec.inspectit.rcp.details.DetailsGenerationFactory;
-import info.novatec.inspectit.rcp.details.DetailsTable;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.util.AccessibleArrowImage;
-import info.novatec.inspectit.rcp.util.ClipboardUtil;
+package rocks.inspectit.ui.rcp.dialog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +28,20 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.composite.BreadcrumbTitleComposite;
+import rocks.inspectit.ui.rcp.details.DetailsGenerationFactory;
+import rocks.inspectit.ui.rcp.details.DetailsTable;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.util.AccessibleArrowImage;
+import rocks.inspectit.ui.rcp.util.ClipboardUtil;
+
 /**
  * The dialog that displays details of the element.
  * 
@@ -61,16 +61,16 @@ public class DetailsDialog extends Dialog {
 	private static final Map<String, String> ACTION_COMMANDS_IDS = new HashMap<>();
 
 	static {
-		NAVIGATE_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.navigateToAggregatedSqlData", "Aggregated SQL Data");
-		NAVIGATE_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.navigateToAggregatedTimerData", "Aggregated Timer Data");
-		NAVIGATE_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.navigateToInvocations", "Invocation(s)");
-		NAVIGATE_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.navigateToStartMethodInvocations", "Only This Method Invocation(s)");
-		NAVIGATE_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.navigateToSingleExceptionType", "Exception Type");
-		NAVIGATE_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType", "Grouped Exception View");
+		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToAggregatedSqlData", "Aggregated SQL Data");
+		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToAggregatedTimerData", "Aggregated Timer Data");
+		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToInvocations", "Invocation(s)");
+		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToStartMethodInvocations", "Only This Method Invocation(s)");
+		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToSingleExceptionType", "Exception Type");
+		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToGroupedExceptionType", "Grouped Exception View");
 
-		ACTION_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.copySqlQuery", "Copy SQL Query");
-		ACTION_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.copyLogMessage", "Copy Log Message");
-		ACTION_COMMANDS_IDS.put("info.novatec.inspectit.rcp.commands.displayInChart", "Display in Chart");
+		ACTION_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.copySqlQuery", "Copy SQL Query");
+		ACTION_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.copyLogMessage", "Copy Log Message");
+		ACTION_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.displayInChart", "Display in Chart");
 		ACTION_COMMANDS_IDS.put("org.eclipse.ui.file.save", "Save to Server");
 	}
 

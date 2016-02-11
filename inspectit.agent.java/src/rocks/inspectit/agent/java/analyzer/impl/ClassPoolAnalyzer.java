@@ -1,8 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.impl;
-
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.util.WeakList;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +12,9 @@ import javassist.CtMethod;
 import javassist.LoaderClassPath;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.util.WeakList;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;

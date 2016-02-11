@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.search.criteria;
+package rocks.inspectit.ui.rcp.editor.search.criteria;
 
 /**
  * Class holding the search result.

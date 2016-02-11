@@ -1,13 +1,13 @@
-package info.novatec.inspectit.storage.processor.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.storage.StorageWriter;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
+package rocks.inspectit.shared.cs.storage.processor.impl;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.Future;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * This processor writes an cloned invocation without children to the {@link StorageWriter}.

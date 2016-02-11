@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.storage.label.composite;
-
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
+package rocks.inspectit.ui.rcp.storage.label.composite;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
+
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
 
 /**
  * Abstract class for all composite that are able to define a {@link AbstractStorageLabel}.

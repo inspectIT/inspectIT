@@ -1,28 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table.input;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.comparator.DefaultDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.IDataComparator;
-import info.novatec.inspectit.communication.comparator.MethodSensorDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.TimerDataComparatorEnum;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
-import info.novatec.inspectit.indexing.aggregation.impl.TimerDataAggregator;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.table.TableViewerComparator;
-import info.novatec.inspectit.rcp.editor.viewers.RawAggregatedResultComparator;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler;
+package rocks.inspectit.ui.rcp.editor.table.input;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +20,30 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
+import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler;
 
 /**
  * This input controller displays details of all methods involved in an invocation sequence.

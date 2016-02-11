@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.editor.preferences.control;
+package rocks.inspectit.ui.rcp.editor.preferences.control;
 
-import info.novatec.inspectit.rcp.editor.preferences.IPreferencePanel;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
 
 /**
  * Abstract class for all preference controls.

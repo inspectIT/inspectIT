@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.model;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Agent leaf for the tree in the Repository Manager.

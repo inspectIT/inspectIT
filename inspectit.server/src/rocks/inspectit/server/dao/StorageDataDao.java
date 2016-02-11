@@ -1,14 +1,14 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.server.dao;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Storage data dao interface.

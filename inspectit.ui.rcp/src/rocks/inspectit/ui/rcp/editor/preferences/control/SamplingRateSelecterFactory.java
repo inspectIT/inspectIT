@@ -1,7 +1,7 @@
-package info.novatec.inspectit.rcp.editor.preferences.control;
+package rocks.inspectit.ui.rcp.editor.preferences.control;
 
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.SamplingRate;
-import info.novatec.inspectit.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.SamplingRate;
+import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
 
 /**
  * The factory for sampling rate mode selection.

@@ -1,28 +1,4 @@
-package info.novatec.inspectit.rcp.view.impl;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.tree.DeferredTreeViewer;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.form.CmrRepositoryPropertyForm;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.handlers.ShowRepositoryHandler;
-import info.novatec.inspectit.rcp.model.AgentLeaf;
-import info.novatec.inspectit.rcp.model.Component;
-import info.novatec.inspectit.rcp.model.DeferredAgentsComposite;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.view.IRefreshableView;
-import info.novatec.inspectit.rcp.view.tree.TreeContentProvider;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.view.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,6 +59,30 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.ui.progress.UIJob;
 
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.tree.DeferredTreeViewer;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.form.CmrRepositoryPropertyForm;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.handlers.ShowRepositoryHandler;
+import rocks.inspectit.ui.rcp.model.AgentLeaf;
+import rocks.inspectit.ui.rcp.model.Component;
+import rocks.inspectit.ui.rcp.model.DeferredAgentsComposite;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
+import rocks.inspectit.ui.rcp.view.IRefreshableView;
+import rocks.inspectit.ui.rcp.view.tree.TreeContentProvider;
+
 /**
  * Repository manager view where user can work with repositories, check agents, and give input for
  * the data explorer view.
@@ -95,12 +95,12 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	/**
 	 * ID of this view.
 	 */
-	public static final String VIEW_ID = "info.novatec.inspectit.rcp.view.repositoryManager";
+	public static final String VIEW_ID = "rocks.inspectit.ui.rcp.view.repositoryManager";
 
 	/**
 	 * ID for tree menu.
 	 */
-	private static final String MENU_ID = "info.novatec.inspectit.rcp.view.repositoryManager.repositoryTree";
+	private static final String MENU_ID = "rocks.inspectit.ui.rcp.view.repositoryManager.repositoryTree";
 
 	/**
 	 * {@link CmrRepositoryManager}.
@@ -232,9 +232,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		treeViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof info.novatec.inspectit.rcp.model.Composite && !(e2 instanceof info.novatec.inspectit.rcp.model.Composite)) {
+				if (e1 instanceof rocks.inspectit.ui.rcp.model.Composite && !(e2 instanceof rocks.inspectit.ui.rcp.model.Composite)) {
 					return -1;
-				} else if (!(e1 instanceof info.novatec.inspectit.rcp.model.Composite) && e2 instanceof info.novatec.inspectit.rcp.model.Composite) {
+				} else if (!(e1 instanceof rocks.inspectit.ui.rcp.model.Composite) && e2 instanceof rocks.inspectit.ui.rcp.model.Composite) {
 					return 1;
 				} else if (e1 instanceof Component && e2 instanceof Component) {
 					return ((Component) e1).getName().compareToIgnoreCase(((Component) e2).getName());

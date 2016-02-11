@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.formatter;
+package rocks.inspectit.ui.rcp.formatter;
 
 /**
  * This enumeration contains strings/tooltips for the availability of different sensor-types.

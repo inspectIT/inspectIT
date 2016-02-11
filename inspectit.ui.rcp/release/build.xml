@@ -236,9 +236,9 @@
 
 		<!-- Prepare FindBugs -->
 		<property name="findbugs.sourcepath" value="${src.root}" />
-		<property name="findbugs.classlocation" value="${buildDirectory}/plugins/info.novatec.inspectit.rcp/@dot" />
+		<property name="findbugs.classlocation" value="${buildDirectory}/plugins/rocks.inspectit.ui.rcp/@dot" />
 		<path id="findbugs.path">
-			<fileset dir="${buildDirectory}/plugins" includes="**/*.class,**/*.jar" excludes="**/info.novatec.inspectit.rcp/**" />
+			<fileset dir="${buildDirectory}/plugins" includes="**/*.class,**/*.jar" excludes="**/rocks.inspectit.ui.rcp/**" />
 			<fileset dir="${base}/eclipse/plugins" includes="**/*.jar" />
 		</path>
 
@@ -275,7 +275,7 @@
 
 		<!--  Need to copy the compiled class files in order to later be used by the functional-tests and static-analysis targets -->
 		<copy todir="${build.rcp.classes}">
-			<fileset dir="${buildDirectory}/plugins/info.novatec.inspectit.rcp/@dot" includes="**/*.class" />
+			<fileset dir="${buildDirectory}/plugins/rocks.inspectit.ui.rcp/@dot" includes="**/*.class" />
 		</copy>
 	</target>
 
@@ -331,7 +331,7 @@
 			<format property="YEAR" pattern="yyyy" locale="en,GB" />
 		</tstamp>
 
-		<replaceregexp file="${basedir}/../inspectIT.product" match="application=&quot;info.novatec.inspectit.rcp.application&quot; version=&quot;([\.0-9]+)&quot;" replace="application=&quot;info.novatec.inspectit.rcp.application&quot; version=&quot;${version}&quot;" byline="true" />
+		<replaceregexp file="${basedir}/../inspectIT.product" match="application=&quot;rocks.inspectit.ui.rcp.application&quot; version=&quot;([\.0-9]+)&quot;" replace="application=&quot;rocks.inspectit.ui.rcp.application&quot; version=&quot;${version}&quot;" byline="true" />
 		
 		<replaceregexp file="${basedir}/../plugin.properties" match="Copyright \(c\) 2008-([0-9]+)." replace="Copyright (c) 2008-${YEAR}," byline="true" />
 		<replaceregexp file="${basedir}/../plugin.properties" match="Version: ([\.0-9]+)\\n" replace="Version: ${version}\\\\n" byline="true" />

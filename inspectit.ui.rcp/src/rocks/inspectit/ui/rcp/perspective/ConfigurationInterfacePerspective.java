@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.perspective;
-
-import info.novatec.inspectit.rcp.ci.view.ConfigurationInterfaceManagerView;
+package rocks.inspectit.ui.rcp.perspective;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+
+import rocks.inspectit.ui.rcp.ci.view.ConfigurationInterfaceManagerView;
 
 /**
  * The perspective for the Configuration Interface.
@@ -17,7 +17,7 @@ public class ConfigurationInterfacePerspective implements IPerspectiveFactory {
 	/**
 	 * The ID of this perspective.
 	 */
-	public static final String PERSPECTIVE_ID = "info.novatec.inspectit.rcp.perspective.configurationinterface";
+	public static final String PERSPECTIVE_ID = "rocks.inspectit.ui.rcp.perspective.configurationinterface";
 
 	/**
 	 * {@inheritDoc}

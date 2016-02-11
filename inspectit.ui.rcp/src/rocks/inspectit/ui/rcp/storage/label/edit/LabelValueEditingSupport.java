@@ -1,17 +1,4 @@
-package info.novatec.inspectit.rcp.storage.label.edit;
-
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.storage.label.composite.AbstractStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.BooleanStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.DateStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.NumberStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.StringStorageLabelComposite;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.BooleanStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.ui.rcp.storage.label.edit;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +21,19 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.BooleanStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.storage.label.composite.AbstractStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.BooleanStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.DateStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.NumberStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.StringStorageLabelComposite;
 
 /**
  * Editing support for the values of the table.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config;
+package rocks.inspectit.agent.java.config;
 
 /**
  * Enumeration used for the priority system of the sensor types.

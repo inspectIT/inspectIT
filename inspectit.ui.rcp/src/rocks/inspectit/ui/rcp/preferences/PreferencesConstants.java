@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.preferences;
+package rocks.inspectit.ui.rcp.preferences;
 
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
 
 /**
  * Interface that just holds the all inspectIT preferences keys.

@@ -1,14 +1,15 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.dao.TimerDataDao;
-import info.novatec.inspectit.cmr.spring.aop.MethodLog;
-import info.novatec.inspectit.communication.data.TimerData;
+package rocks.inspectit.server.service;
 
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.server.dao.TimerDataDao;
+import rocks.inspectit.server.spring.aop.MethodLog;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 
 /**
  * Timer data service.

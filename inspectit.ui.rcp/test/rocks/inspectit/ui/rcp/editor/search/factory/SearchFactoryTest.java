@@ -1,20 +1,10 @@
-package info.novatec.inspectit.rcp.editor.search.factory;
+package rocks.inspectit.ui.rcp.editor.search.factory;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.service.cache.CachedDataService;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchCriteria;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +16,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
+import rocks.inspectit.ui.rcp.editor.search.factory.SearchFactory;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Tests the {@link SearchFactory} class.

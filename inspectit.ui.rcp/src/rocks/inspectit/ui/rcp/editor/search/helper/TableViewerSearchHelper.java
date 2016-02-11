@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.editor.search.helper;
-
-import info.novatec.inspectit.rcp.editor.table.input.TableInputController;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.search.helper;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableColumn;
+
+import rocks.inspectit.ui.rcp.editor.table.input.TableInputController;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Search helper for {@link TableViewer}.
@@ -34,7 +34,7 @@ public class TableViewerSearchHelper extends AbstractSearchHelper {
 	 *            {@link TableInputController}.
 	 * @param repositoryDefinition
 	 *            {@link RepositoryDefinition}. Needed for
-	 *            {@link info.novatec.inspectit.rcp.editor.search.factory.SearchFactory}.
+	 *            {@link rocks.inspectit.ui.rcp.editor.search.factory.SearchFactory}.
 	 */
 	public TableViewerSearchHelper(TableViewer tableViewer, TableInputController tableInputController, RepositoryDefinition repositoryDefinition) {
 		super(repositoryDefinition);

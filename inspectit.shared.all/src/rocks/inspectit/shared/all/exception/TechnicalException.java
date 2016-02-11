@@ -1,4 +1,4 @@
-package info.novatec.inspectit.exception;
+package rocks.inspectit.shared.all.exception;
 
 /**
  * Technical exception is special type of exception that occurred due to the technical problem

@@ -1,15 +1,15 @@
-package info.novatec.inspectit.rcp.preferences.valueproviders;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.preferences.PreferenceException;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.valueproviders.PreferenceValueProviderFactory.PreferenceValueProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.storage.LocalStorageData;
+package rocks.inspectit.ui.rcp.preferences.valueproviders;
 
 import java.util.Objects;
+
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.preferences.PreferenceException;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProviderFactory.PreferenceValueProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 
 /**
  * Preference value provider that tries to save and load the last selected repository.

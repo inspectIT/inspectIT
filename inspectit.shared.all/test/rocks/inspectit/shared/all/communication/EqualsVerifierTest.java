@@ -1,26 +1,25 @@
-package info.novatec.inspectit.communication;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
-import info.novatec.inspectit.communication.data.CompilationInformationData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.communication.data.RuntimeInformationData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.communication.data.ThreadInformationData;
-import info.novatec.inspectit.communication.data.TimerData;
+package rocks.inspectit.shared.all.communication;
 
 import java.sql.Timestamp;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData;
+import rocks.inspectit.shared.all.communication.data.CompilationInformationData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.all.communication.data.RuntimeInformationData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

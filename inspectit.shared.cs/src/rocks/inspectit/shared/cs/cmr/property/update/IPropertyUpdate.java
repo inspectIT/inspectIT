@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.property.update;
+package rocks.inspectit.shared.cs.cmr.property.update;
 
 /**
  * Interface for property update.

@@ -1,16 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.dao.DefaultDataDao;
-import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.spring.aop.MethodLog;
-import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +14,19 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import rocks.inspectit.server.dao.DefaultDataDao;
+import rocks.inspectit.server.dao.PlatformIdentDao;
+import rocks.inspectit.server.spring.aop.MethodLog;
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 
 /**
  * @author Patrice Bouillet

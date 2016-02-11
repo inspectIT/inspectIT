@@ -1,26 +1,4 @@
-package info.novatec.inspectit.rcp.ci.view;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.ci.job.OpenEnvironmentJob;
-import info.novatec.inspectit.rcp.ci.job.OpenProfileJob;
-import info.novatec.inspectit.rcp.ci.listener.IEnvironmentChangeListener;
-import info.novatec.inspectit.rcp.ci.listener.IProfileChangeListener;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.ci.EnvironmentLeaf;
-import info.novatec.inspectit.rcp.model.ci.ProfileLeaf;
-import info.novatec.inspectit.rcp.provider.IEnvironmentProvider;
-import info.novatec.inspectit.rcp.provider.IProfileProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
-import info.novatec.inspectit.rcp.util.SelectionProviderAdapter;
-import info.novatec.inspectit.rcp.util.UnfinishedWarningUtils;
-import info.novatec.inspectit.rcp.view.IRefreshableView;
+package rocks.inspectit.ui.rcp.ci.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,6 +59,28 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.ci.job.OpenEnvironmentJob;
+import rocks.inspectit.ui.rcp.ci.job.OpenProfileJob;
+import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
+import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.ci.EnvironmentLeaf;
+import rocks.inspectit.ui.rcp.model.ci.ProfileLeaf;
+import rocks.inspectit.ui.rcp.provider.IEnvironmentProvider;
+import rocks.inspectit.ui.rcp.provider.IProfileProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.util.SelectionProviderAdapter;
+import rocks.inspectit.ui.rcp.util.UnfinishedWarningUtils;
+import rocks.inspectit.ui.rcp.view.IRefreshableView;
+
 /**
  * View displaying {@link Profile}s and {@link Environment}s.
  * 
@@ -92,12 +92,12 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	/**
 	 * View id.
 	 */
-	public static final String VIEW_ID = "info.novatec.inspectit.rcp.ci.view.ciManager";
+	public static final String VIEW_ID = "rocks.inspectit.ui.rcp.ci.view.ciManager";
 
 	/**
 	 * Menu to be bounded.
 	 */
-	private static final String MENU_ID = "info.novatec.inspectit.rcp.view.configurationInterfaceManager.table";
+	private static final String MENU_ID = "rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table";
 
 	/** Logic */
 

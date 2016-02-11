@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.ci.job;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.ci.form.editor.EnvironmentEditor;
-import info.novatec.inspectit.rcp.ci.form.input.EnvironmentEditorInput;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.ci.job;
 
 import java.util.Collection;
 
@@ -18,6 +9,15 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.ci.form.editor.EnvironmentEditor;
+import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Job for loading of the environment from the CMR and opening the environment editor.

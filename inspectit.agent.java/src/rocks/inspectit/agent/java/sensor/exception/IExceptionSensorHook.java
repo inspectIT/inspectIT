@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.sensor.exception;
+package rocks.inspectit.agent.java.sensor.exception;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.hooking.IConstructorHook;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.hooking.IConstructorHook;
 
 /**
  * Classes which add additional instructions to the constructor of type {@link Throwable}, to the

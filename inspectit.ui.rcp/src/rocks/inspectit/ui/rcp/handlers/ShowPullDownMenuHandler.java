@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

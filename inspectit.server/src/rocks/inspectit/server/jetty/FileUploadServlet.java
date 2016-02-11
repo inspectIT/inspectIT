@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.jetty;
+package rocks.inspectit.server.jetty;
 
 import java.io.File;
 import java.io.IOException;

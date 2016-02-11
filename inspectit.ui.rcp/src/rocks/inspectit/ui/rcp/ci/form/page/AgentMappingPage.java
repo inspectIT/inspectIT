@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.page;
-
-import info.novatec.inspectit.rcp.ci.form.part.AgentMappingPart;
+package rocks.inspectit.ui.rcp.ci.form.page;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -9,6 +7,8 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+
+import rocks.inspectit.ui.rcp.ci.form.part.AgentMappingPart;
 
 /**
  * Page for agent mapping.

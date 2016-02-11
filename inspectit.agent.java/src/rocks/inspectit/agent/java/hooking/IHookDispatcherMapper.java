@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.hooking;
+package rocks.inspectit.agent.java.hooking;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 
 /**
  * Extended version of the {@link IHookDispatcher} to over come problems of loading the

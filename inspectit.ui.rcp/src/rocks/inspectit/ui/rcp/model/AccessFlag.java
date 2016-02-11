@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.model;
+package rocks.inspectit.ui.rcp.model;
 
 /**
  * A support class providing static methods and constants for access modifiers such as public,

@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.model.storage;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.model.Leaf;
-import info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider;
-import info.novatec.inspectit.storage.LocalStorageData;
+package rocks.inspectit.ui.rcp.model.storage;
 
 import org.eclipse.core.runtime.Assert;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.model.Leaf;
+import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
 
 /**
  * Leaf used for displaying the local storages in the storage tree.

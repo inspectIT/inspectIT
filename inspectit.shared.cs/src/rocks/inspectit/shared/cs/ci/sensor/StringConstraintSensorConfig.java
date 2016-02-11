@@ -1,6 +1,4 @@
-package info.novatec.inspectit.ci.sensor;
-
-import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
+package rocks.inspectit.shared.cs.ci.sensor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +7,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 
 /**
  * Abstract class for all sensor configs that can define string length.

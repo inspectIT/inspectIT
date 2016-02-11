@@ -1,15 +1,17 @@
-package info.novatec.inspectit.cmr.util;
+package rocks.inspectit.server.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
 
 /**
  * Tests the {@link AgentStatusDataProvider}.

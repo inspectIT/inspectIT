@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.view.tree;
-
-import info.novatec.inspectit.rcp.model.Composite;
-import info.novatec.inspectit.rcp.model.TreeModelManager;
-import info.novatec.inspectit.rcp.util.ListenerList;
+package rocks.inspectit.ui.rcp.view.tree;
 
 import java.util.Iterator;
 
@@ -11,6 +7,10 @@ import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
+
+import rocks.inspectit.ui.rcp.model.Composite;
+import rocks.inspectit.ui.rcp.model.TreeModelManager;
+import rocks.inspectit.ui.rcp.util.ListenerList;
 
 /**
  * The content provider for the tree viewer used for every single available CMR.

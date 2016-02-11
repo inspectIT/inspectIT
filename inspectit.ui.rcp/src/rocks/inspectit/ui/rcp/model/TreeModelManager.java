@@ -1,19 +1,4 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
-import info.novatec.inspectit.rcp.formatter.SensorTypeAvailabilityEnum;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,11 +8,26 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 
+import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
+import rocks.inspectit.ui.rcp.formatter.SensorTypeAvailabilityEnum;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+
 /**
  * The manager is used to create a tree model currently used by the {@link ServerView}.
  * 
  * @author Patrice Bouillet
- * @author Eduard Tudenhöfner
+ * @author Eduard Tudenhï¿½fner
  * @author Stefan Siegl
  * @author Alfred Krauss
  */

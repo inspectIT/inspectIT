@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.impl;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -14,25 +14,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatcher;
-import info.novatec.inspectit.agent.analyzer.classes.MyTestException;
-import info.novatec.inspectit.agent.analyzer.classes.TestClass;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPathStart;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
-import info.novatec.inspectit.agent.hooking.IHookInstrumenter;
-import info.novatec.inspectit.agent.hooking.impl.HookException;
-import info.novatec.inspectit.agent.sensor.exception.ExceptionSensor;
-import info.novatec.inspectit.agent.sensor.exception.IExceptionSensor;
-import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
-import info.novatec.inspectit.communication.data.ParameterContentType;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +26,26 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.analyzer.classes.MyTestException;
+import rocks.inspectit.agent.java.analyzer.classes.TestClass;
+import rocks.inspectit.agent.java.analyzer.impl.ByteCodeAnalyzer;
+import rocks.inspectit.agent.java.analyzer.impl.ThrowableMatcher;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
+import rocks.inspectit.agent.java.hooking.IHookInstrumenter;
+import rocks.inspectit.agent.java.hooking.impl.HookException;
+import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
+import rocks.inspectit.agent.java.sensor.exception.IExceptionSensor;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;

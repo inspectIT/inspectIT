@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +13,9 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
+
 /**
  * This class is a handler for show/hide of columns, but also a cache for saving the state of the
  * columns.
@@ -28,22 +28,22 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 	/**
 	 * Command ID.
 	 */
-	public static final String COMMAND_ID = "info.novatec.inspectit.rcp.commands.showHideColumn";
+	public static final String COMMAND_ID = "rocks.inspectit.ui.rcp.commands.showHideColumn";
 
 	/**
 	 * Column parameter.
 	 */
-	public static final String COLUMN_PARAM = "info.novatec.inspectit.rcp.commands.showHideColumn.Column";
+	public static final String COLUMN_PARAM = "rocks.inspectit.ui.rcp.commands.showHideColumn.Column";
 
 	/**
 	 * Visible parameter.
 	 */
-	public static final String VISIBLE_PARAM = "info.novatec.inspectit.rcp.commands.showHideColumn.Visible";
+	public static final String VISIBLE_PARAM = "rocks.inspectit.ui.rcp.commands.showHideColumn.Visible";
 
 	/**
 	 * Controller class parameter.
 	 */
-	public static final String CONTROLLER_CLASS_PARAM = "info.novatec.inspectit.rcp.commands.showHideColumn.ControllerClass";
+	public static final String CONTROLLER_CLASS_PARAM = "rocks.inspectit.ui.rcp.commands.showHideColumn.ControllerClass";
 
 	/**
 	 * Map for saving columns size.
@@ -170,7 +170,7 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 	 * Returns if the cache has any knowledge of the column's width.
 	 * 
 	 * @param controllerClass
-	 *            {@link info.novatec.inspectit.rcp.editor.table.input.TableInputController} class
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
 	 *            where this column is defined.
 	 * @param columnName
 	 *            Column name.
@@ -185,7 +185,7 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 	 * Returns if the cache has any knowledge if the column is hidden.
 	 * 
 	 * @param controllerClass
-	 *            {@link info.novatec.inspectit.rcp.editor.table.input.TableInputController} class
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
 	 *            where this column is defined.
 	 * @param columnName
 	 *            Column name.
@@ -227,7 +227,7 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 	 * saved.
 	 * 
 	 * @param controllerClass
-	 *            {@link info.novatec.inspectit.rcp.editor.table.input.TableInputController} class
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
 	 *            where this column is defined.
 	 * @param columnName
 	 *            Column name.
@@ -244,11 +244,11 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 
 	/**
 	 * Creates hash code for column by its name and the
-	 * {@link info.novatec.inspectit.rcp.editor.table.input.TableInputController} class it is
+	 * {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class it is
 	 * located.
 	 * 
 	 * @param controllerClass
-	 *            {@link info.novatec.inspectit.rcp.editor.table.input.TableInputController} class
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
 	 *            where this column is defined.
 	 * @param columnName
 	 *            Column name.

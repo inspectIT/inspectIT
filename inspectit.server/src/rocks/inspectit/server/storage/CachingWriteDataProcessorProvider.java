@@ -1,18 +1,4 @@
-package info.novatec.inspectit.cmr.storage;
-
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.aggregation.Aggregators;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.query.factory.impl.ExceptionSensorDataQueryFactory;
-import info.novatec.inspectit.indexing.query.factory.impl.SqlStatementDataQueryFactory;
-import info.novatec.inspectit.indexing.query.factory.impl.TimerDataQueryFactory;
-import info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
-import info.novatec.inspectit.storage.processor.write.AbstractWriteDataProcessor;
-import info.novatec.inspectit.storage.processor.write.impl.QueryCachingDataProcessor;
+package rocks.inspectit.server.storage;
 
 import javax.annotation.PostConstruct;
 
@@ -22,6 +8,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.ExceptionSensorDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.SqlStatementDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.TimerDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.query.provider.impl.StorageIndexQueryProvider;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
+import rocks.inspectit.shared.cs.storage.processor.write.AbstractWriteDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.write.impl.QueryCachingDataProcessor;
 
 /**
  * Configuration class for specifying the caching processors for the storage writer.

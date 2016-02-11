@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.processor.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.storage.processor.AbstractChainedDataProcessor;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
+package rocks.inspectit.shared.cs.storage.processor.impl;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.storage.processor.AbstractChainedDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * Processor that filters out data based on the agent id.

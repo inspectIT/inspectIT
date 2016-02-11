@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.preferences;
+package rocks.inspectit.ui.rcp.preferences;
 
 /**
  * Exception that is thrown with regard to preference saving and loading.

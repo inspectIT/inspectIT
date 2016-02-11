@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.storage.StorageData
+class: rocks.inspectit.shared.cs.storage.StorageData
 # Storage Data
 1: id
 2: name

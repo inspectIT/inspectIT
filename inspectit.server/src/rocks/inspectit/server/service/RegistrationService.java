@@ -1,25 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.dao.JmxDefinitionDataIdentDao;
-import info.novatec.inspectit.cmr.dao.JmxSensorTypeIdentDao;
-import info.novatec.inspectit.cmr.dao.MethodIdentDao;
-import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
-import info.novatec.inspectit.cmr.dao.MethodSensorTypeIdentDao;
-import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
-import info.novatec.inspectit.cmr.dao.PlatformSensorTypeIdentDao;
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
-import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.cmr.spring.aop.MethodLog;
-import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -36,6 +15,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import rocks.inspectit.server.dao.JmxDefinitionDataIdentDao;
+import rocks.inspectit.server.dao.JmxSensorTypeIdentDao;
+import rocks.inspectit.server.dao.MethodIdentDao;
+import rocks.inspectit.server.dao.MethodIdentToSensorTypeDao;
+import rocks.inspectit.server.dao.MethodSensorTypeIdentDao;
+import rocks.inspectit.server.dao.PlatformIdentDao;
+import rocks.inspectit.server.dao.PlatformSensorTypeIdentDao;
+import rocks.inspectit.server.spring.aop.MethodLog;
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
+import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class is used as a delegator to the real registration service. It is needed because Spring

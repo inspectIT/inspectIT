@@ -1,27 +1,4 @@
-package info.novatec.inspectit.rcp.wizard.page;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.label.composite.AbstractStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.BooleanStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.DateStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.NumberStorageLabelComposite;
-import info.novatec.inspectit.rcp.storage.label.composite.impl.StringStorageLabelComposite;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
-import info.novatec.inspectit.storage.label.management.impl.AddLabelManagementAction;
-import info.novatec.inspectit.storage.label.management.impl.RemoveLabelManagementAction;
-import info.novatec.inspectit.storage.label.type.AbstractCustomStorageLabelType;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
-import info.novatec.inspectit.storage.label.type.impl.CustomBooleanLabelType;
-import info.novatec.inspectit.storage.label.type.impl.CustomDateLabelType;
-import info.novatec.inspectit.storage.label.type.impl.CustomNumberLabelType;
-import info.novatec.inspectit.storage.label.type.impl.CustomStringLabelType;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.wizard.page;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +52,29 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormText;
+
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.management.AbstractLabelManagementAction;
+import rocks.inspectit.shared.cs.storage.label.management.impl.AddLabelManagementAction;
+import rocks.inspectit.shared.cs.storage.label.management.impl.RemoveLabelManagementAction;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractCustomStorageLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.CustomBooleanLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.CustomDateLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.CustomNumberLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.CustomStringLabelType;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.label.composite.AbstractStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.BooleanStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.DateStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.NumberStorageLabelComposite;
+import rocks.inspectit.ui.rcp.storage.label.composite.impl.StringStorageLabelComposite;
 
 /**
  * Manage label page.

@@ -1,8 +1,8 @@
-package info.novatec.inspectit.rcp.tester;
-
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
+package rocks.inspectit.ui.rcp.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
  * Tester for charting possibilities of {@link JmxSensorValueData}.

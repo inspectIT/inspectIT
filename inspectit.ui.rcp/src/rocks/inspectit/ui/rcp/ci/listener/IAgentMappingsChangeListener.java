@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.ci.listener;
-
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.ci.listener;
 
 import java.util.EventListener;
+
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Interface for the listeners on the {@link AgentMappings} changes.

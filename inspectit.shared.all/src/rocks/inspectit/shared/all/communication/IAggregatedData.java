@@ -1,4 +1,4 @@
-package info.novatec.inspectit.communication;
+package rocks.inspectit.shared.all.communication;
 
 /**
  * Interface that marks that the data is aggregated.

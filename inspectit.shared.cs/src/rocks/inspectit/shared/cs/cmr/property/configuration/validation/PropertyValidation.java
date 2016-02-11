@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration.validation;
-
-import info.novatec.inspectit.cmr.property.configuration.AbstractProperty;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +7,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
 
 /**
  * Class containing result of {@link AbstractProperty} validation.

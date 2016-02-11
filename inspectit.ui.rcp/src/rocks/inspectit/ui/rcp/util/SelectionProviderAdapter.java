@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.util;
+package rocks.inspectit.ui.rcp.util;
 
 import java.util.ArrayList;
 import java.util.List;

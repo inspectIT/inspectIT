@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.repository;
+package rocks.inspectit.ui.rcp.repository;
 
 /**
  * Spring enhanced class for getting the {@link StorageRepositoryDefinition}.

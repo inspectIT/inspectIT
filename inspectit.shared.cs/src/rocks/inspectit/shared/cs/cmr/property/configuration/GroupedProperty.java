@@ -1,13 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration;
-
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidationException;
-import info.novatec.inspectit.cmr.property.configuration.validator.IGroupedProperyValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.GreaterValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.LessOrEqualValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.LessValidator;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
+package rocks.inspectit.shared.cs.cmr.property.configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +15,15 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidationException;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.IGroupedProperyValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.LessOrEqualValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.LessValidator;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Property that is consisted out of several {@link SingleProperty}ies.

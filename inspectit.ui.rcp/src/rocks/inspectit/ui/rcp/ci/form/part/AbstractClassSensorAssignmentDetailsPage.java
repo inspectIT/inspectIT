@@ -1,17 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
-import info.novatec.inspectit.ci.sensor.ISensorConfig;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.part.SensorAssignmentMasterBlock.RemoveSelection;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.validation.IControlValidationListener;
-import info.novatec.inspectit.rcp.validation.InputValidatorControlDecoration;
-import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
-import info.novatec.inspectit.rcp.validation.validator.FqnWildcardValidator;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +29,19 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
+
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.part.SensorAssignmentMasterBlock.RemoveSelection;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.validation.IControlValidationListener;
+import rocks.inspectit.ui.rcp.validation.InputValidatorControlDecoration;
+import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
+import rocks.inspectit.ui.rcp.validation.validator.FqnWildcardValidator;
 
 /**
  * The abstract class for all the class sensor assignments.
@@ -244,7 +244,7 @@ public abstract class AbstractClassSensorAssignmentDetailsPage implements IDetai
 		createInfoLabel(
 				mainComposite,
 				toolkit,
-				"The class/interface that should be monitored including the package name using the standard Java notation (e.g. info.novatec.inspectit.MyTestClass). The wildcard * can be used to match any length of characters.");
+				"The class/interface that should be monitored including the package name using the standard Java notation (e.g. rocks.inspectit.shared.cs.MyTestClass). The wildcard * can be used to match any length of characters.");
 
 		// class validation
 		ValidationControlDecoration<Text> classValidationDecoration = new InputValidatorControlDecoration(classText, this, new FqnWildcardValidator(false, false));

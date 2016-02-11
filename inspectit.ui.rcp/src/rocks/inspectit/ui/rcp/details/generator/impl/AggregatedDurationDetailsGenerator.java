@@ -1,16 +1,16 @@
-package info.novatec.inspectit.rcp.details.generator.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.details.DetailsCellContent;
-import info.novatec.inspectit.rcp.details.DetailsTable;
-import info.novatec.inspectit.rcp.details.generator.IDetailsGenerator;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.details.generator.impl;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.details.DetailsCellContent;
+import rocks.inspectit.ui.rcp.details.DetailsTable;
+import rocks.inspectit.ui.rcp.details.generator.IDetailsGenerator;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Generator that displays the duration info from the {@link TimerData} and it's subclasses.

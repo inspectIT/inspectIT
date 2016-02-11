@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.editor.preferences.IPreferencePanel;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +15,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceScopes;
 
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+
 /**
  * Handler for the maximize/minimize the active sub-view. At the same time this Handler implements
  * the {@link IElementUpdater} interface so that we can manually update the checked state of the UI
@@ -31,7 +31,7 @@ public class MaximizeActiveViewHandler extends AbstractHandler implements IHandl
 	/**
 	 * Command id.
 	 */
-	public static final String COMMAND_ID = "info.novatec.inspectit.rcp.commands.maximizeActiveView";
+	public static final String COMMAND_ID = "rocks.inspectit.ui.rcp.commands.maximizeActiveView";
 
 	/**
 	 * Preference panel id parameter needed for this command.

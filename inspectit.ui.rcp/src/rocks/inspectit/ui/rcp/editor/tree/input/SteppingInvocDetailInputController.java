@@ -1,18 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree.input;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.util.ElementOccurrenceCount;
-import info.novatec.inspectit.rcp.util.OccurrenceFinderFactory;
+package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +6,23 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.util.ElementOccurrenceCount;
+import rocks.inspectit.ui.rcp.util.OccurrenceFinderFactory;
+
 /**
  * Extension of the {@link InvocDetailInputController} adapted to serve as an input for a
- * {@link info.novatec.inspectit.rcp.editor.tree.SteppingTreeSubView}.
+ * {@link rocks.inspectit.ui.rcp.editor.tree.SteppingTreeSubView}.
  * 
  * @author Ivan Senic
  * 

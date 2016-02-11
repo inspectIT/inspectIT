@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.http;
+package rocks.inspectit.agent.java.sensor.method.http;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -7,10 +7,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
-
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.util.StringConstraint;
 
 import java.util.Collections;
 import java.util.Enumeration;
@@ -26,6 +22,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.sensor.method.http.HttpRequestParameterExtractor;
+import rocks.inspectit.agent.java.util.StringConstraint;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
 
 @SuppressWarnings("PMD")
 public class HttpRequestParameterExtractorTest extends AbstractLogSupport {

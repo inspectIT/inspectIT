@@ -1,9 +1,4 @@
-package info.novatec.inspectit.util;
-
-import info.novatec.inspectit.cmr.service.IAgentStorageService;
-import info.novatec.inspectit.cmr.service.IKeepAliveService;
-import info.novatec.inspectit.cmr.service.IRegistrationService;
-import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
+package rocks.inspectit.shared.all.util;
 
 import org.springframework.stereotype.Component;
 
@@ -13,6 +8,11 @@ import com.esotericsoftware.kryonet.FrameworkMessage.KeepAlive;
 import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterTCP;
 import com.esotericsoftware.kryonet.FrameworkMessage.RegisterUDP;
+
+import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
+import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
+import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
+import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
 
 /**
  * Utility class for Network registrations when using kryonet.

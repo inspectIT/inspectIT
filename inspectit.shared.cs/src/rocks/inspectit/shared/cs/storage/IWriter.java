@@ -1,9 +1,9 @@
-package info.novatec.inspectit.storage;
-
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.shared.cs.storage;
 
 import java.util.Map;
 import java.util.concurrent.Future;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Interface for the classes that can write data to disk.. Main implementation is storage writer.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.impl;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -9,16 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.MockInit;
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.classes.AbstractSubTest;
-import info.novatec.inspectit.agent.analyzer.classes.AbstractTest;
-import info.novatec.inspectit.agent.analyzer.classes.ISubTest;
-import info.novatec.inspectit.agent.analyzer.classes.ITest;
-import info.novatec.inspectit.agent.analyzer.classes.ITestTwo;
-import info.novatec.inspectit.agent.analyzer.classes.MyTestError;
-import info.novatec.inspectit.agent.analyzer.classes.MyTestException;
-import info.novatec.inspectit.agent.analyzer.classes.TestClass;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +17,17 @@ import java.util.List;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.MockInit;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.classes.AbstractSubTest;
+import rocks.inspectit.agent.java.analyzer.classes.AbstractTest;
+import rocks.inspectit.agent.java.analyzer.classes.ISubTest;
+import rocks.inspectit.agent.java.analyzer.classes.ITest;
+import rocks.inspectit.agent.java.analyzer.classes.ITestTwo;
+import rocks.inspectit.agent.java.analyzer.classes.MyTestError;
+import rocks.inspectit.agent.java.analyzer.classes.MyTestException;
+import rocks.inspectit.agent.java.analyzer.classes.TestClass;
+import rocks.inspectit.agent.java.analyzer.impl.InheritanceAnalyzer;
 
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;

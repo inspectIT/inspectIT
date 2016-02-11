@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.SqlStatementData
+class: rocks.inspectit.shared.all.communication.data.SqlStatementData
 
 # Default Data
 1: id

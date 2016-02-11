@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.editor.search.helper;
-
-import info.novatec.inspectit.rcp.editor.search.ISearchExecutor;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchCriteria;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchResult;
-import info.novatec.inspectit.rcp.editor.search.factory.SearchFactory;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.editor.search.helper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +9,13 @@ import java.util.List;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.events.SelectionAdapter;
+
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.editor.search.ISearchExecutor;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchResult;
+import rocks.inspectit.ui.rcp.editor.search.factory.SearchFactory;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Abstract search helper. Joins the search logics and delegates specific actions to the

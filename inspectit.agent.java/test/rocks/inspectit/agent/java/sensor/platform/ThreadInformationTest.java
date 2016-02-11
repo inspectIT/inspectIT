@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.platform;
+package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -8,13 +8,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.sensor.platform.provider.ThreadInfoProvider;
-import info.novatec.inspectit.communication.SystemSensorData;
-import info.novatec.inspectit.communication.data.ThreadInformationData;
 
 import java.lang.reflect.Field;
 import java.util.logging.Level;
@@ -24,6 +17,15 @@ import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.sensor.platform.ThreadInformation;
+import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
 
 @SuppressWarnings("PMD")
 public class ThreadInformationTest extends AbstractLogSupport {

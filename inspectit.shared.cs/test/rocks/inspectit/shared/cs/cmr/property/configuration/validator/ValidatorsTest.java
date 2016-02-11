@@ -1,23 +1,10 @@
-package info.novatec.inspectit.cmr.property.configuration.validator;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validator;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.property.configuration.GroupedProperty;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.ValidationError;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.FullyQualifiedClassNameValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.GreaterValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.LessOrEqualValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.LessValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.NegativeValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.NotEmptyValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.PercentageValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.PositiveValidator;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,6 +15,20 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.FullyQualifiedClassNameValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.LessOrEqualValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.LessValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.NegativeValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.NotEmptyValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.PercentageValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.PositiveValidator;
 
 @SuppressWarnings({ "PMD", "unchecked", "rawtypes" })
 public class ValidatorsTest {

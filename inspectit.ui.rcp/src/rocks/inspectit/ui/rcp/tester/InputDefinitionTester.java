@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.tester;
-
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.provider.IInputDefinitionProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
+package rocks.inspectit.ui.rcp.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 
 /**
  * Tests the input definition for different properties.

@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.sensor.ISensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.AbstractPlatformSensorConfig;
-import info.novatec.inspectit.rcp.ci.form.input.EnvironmentEditorInput;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -28,6 +21,13 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.AbstractPlatformSensorConfig;
+import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
  * Part responsible for selection of platform sensors.

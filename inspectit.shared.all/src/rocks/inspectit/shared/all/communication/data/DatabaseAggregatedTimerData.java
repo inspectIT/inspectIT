@@ -1,4 +1,4 @@
-package info.novatec.inspectit.communication.data;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
 

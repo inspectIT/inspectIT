@@ -1,10 +1,10 @@
-package info.novatec.inspectit.cmr.util;
-
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.server.util;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Class that generates the ID for the objects that reside in cache. The ID can be generated either

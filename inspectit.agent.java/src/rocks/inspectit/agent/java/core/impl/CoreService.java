@@ -1,25 +1,4 @@
-package info.novatec.inspectit.agent.core.impl;
-
-import info.novatec.inspectit.agent.buffer.IBufferStrategy;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.connection.IConnection;
-import info.novatec.inspectit.agent.connection.ServerUnavailableException;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IObjectStorage;
-import info.novatec.inspectit.agent.core.ListListener;
-import info.novatec.inspectit.agent.sending.ISendingStrategy;
-import info.novatec.inspectit.agent.sensor.jmx.IJmxSensor;
-import info.novatec.inspectit.agent.sensor.platform.IPlatformSensor;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.SystemSensorData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.core.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,6 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.agent.java.buffer.IBufferStrategy;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.connection.IConnection;
+import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IObjectStorage;
+import rocks.inspectit.agent.java.core.ListListener;
+import rocks.inspectit.agent.java.sending.ISendingStrategy;
+import rocks.inspectit.agent.java.sensor.jmx.IJmxSensor;
+import rocks.inspectit.agent.java.sensor.platform.IPlatformSensor;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Default implementation of the {@link ICoreService} interface.

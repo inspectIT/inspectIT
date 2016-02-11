@@ -1,8 +1,8 @@
-package info.novatec.inspectit.storage.processor;
-
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.shared.cs.storage.processor;
 
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * This type of chained processor does not pass the data to process to the chained processors, but

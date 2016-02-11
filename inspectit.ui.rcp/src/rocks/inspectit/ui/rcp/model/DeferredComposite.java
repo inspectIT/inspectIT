@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.progress.IElementCollector;
+
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Abstract class of a deferred composite type where the sub tree is only initialized if it is

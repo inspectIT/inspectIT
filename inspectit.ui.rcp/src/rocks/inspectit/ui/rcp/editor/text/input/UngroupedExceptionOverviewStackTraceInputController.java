@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.editor.text.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
+package rocks.inspectit.ui.rcp.editor.text.input;
 
 import java.util.List;
 
@@ -10,6 +7,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 /**
  * Textual input controller for displaying the stack trace of a single {@link ExceptionSensorData}

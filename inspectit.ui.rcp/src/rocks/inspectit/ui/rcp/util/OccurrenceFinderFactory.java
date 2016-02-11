@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.util;
-
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.AggregatedTimerData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +10,15 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.eclipse.jface.viewers.ViewerFilter;
+
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.InspectIT;
 
 /**
  * Factory for finding the occurrence of elements in the {@link InvocationSequenceData} based on the

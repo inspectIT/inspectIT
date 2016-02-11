@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.ci.job;
-
-import info.novatec.inspectit.ci.AgentMapping;
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.ci.form.editor.AgentMappingEditor;
-import info.novatec.inspectit.rcp.ci.form.input.AgentMappingInput;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.ci.job;
 
 import java.util.Collection;
 
@@ -18,6 +9,15 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.ci.form.editor.AgentMappingEditor;
+import rocks.inspectit.ui.rcp.ci.form.input.AgentMappingInput;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Job for loading of the {@link AgentMapping}s from the CMR and opening the editor.

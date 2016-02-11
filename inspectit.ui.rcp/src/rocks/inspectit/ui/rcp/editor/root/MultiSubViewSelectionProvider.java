@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.editor.root;
-
-import info.novatec.inspectit.rcp.editor.ISubView;
+package rocks.inspectit.ui.rcp.editor.root;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ListenerList;
@@ -12,6 +10,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+
+import rocks.inspectit.ui.rcp.editor.ISubView;
 
 /**
  * @author Patrice Bouillet

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.model;
+package rocks.inspectit.ui.rcp.model;
 
 /**
  * Leaf is the {@link Component} that can not have children.

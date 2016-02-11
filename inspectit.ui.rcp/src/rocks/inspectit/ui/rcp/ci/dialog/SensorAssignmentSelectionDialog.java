@@ -1,16 +1,4 @@
-package info.novatec.inspectit.rcp.ci.dialog;
-
-import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.ExceptionSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.TimerMethodSensorAssignment;
-import info.novatec.inspectit.ci.factory.ConfigurationDefaultsFactory;
-import info.novatec.inspectit.ci.sensor.ISensorConfig;
-import info.novatec.inspectit.ci.sensor.exception.IExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
+package rocks.inspectit.ui.rcp.ci.dialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +17,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
+
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
+import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
  * Dialog for the selecting the sensor type for the sensor assignment.

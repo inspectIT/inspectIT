@@ -1,15 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.http;
-
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.hooking.IMethodHook;
-import info.novatec.inspectit.agent.sensor.method.timer.TimerHook;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.util.StringConstraint;
-import info.novatec.inspectit.util.ThreadLocalStack;
-import info.novatec.inspectit.util.Timer;
+package rocks.inspectit.agent.java.sensor.method.http;
 
 import java.lang.management.ThreadMXBean;
 import java.sql.Timestamp;
@@ -18,6 +7,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.hooking.IMethodHook;
+import rocks.inspectit.agent.java.sensor.method.timer.TimerHook;
+import rocks.inspectit.agent.java.util.StringConstraint;
+import rocks.inspectit.agent.java.util.ThreadLocalStack;
+import rocks.inspectit.agent.java.util.Timer;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 
 /**
  * The hook implementation for the http sensor. It uses the {@link ThreadLocalStack} class to save

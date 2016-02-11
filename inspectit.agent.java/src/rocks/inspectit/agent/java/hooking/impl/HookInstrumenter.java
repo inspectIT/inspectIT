@@ -1,12 +1,5 @@
-package info.novatec.inspectit.agent.hooking.impl;
+package rocks.inspectit.agent.java.hooking.impl;
 
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.hooking.IHookDispatcherMapper;
-import info.novatec.inspectit.agent.hooking.IHookInstrumenter;
-import info.novatec.inspectit.spring.logger.Log;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -16,6 +9,13 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.expr.ExprEditor;
 import javassist.expr.Handler;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
+import rocks.inspectit.agent.java.hooking.IHookInstrumenter;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +42,12 @@ public class HookInstrumenter implements IHookInstrumenter {
 	 * The hook dispatcher. This string shouldn't be touched. For changing the dispatcher, alter the
 	 * hook dispatcher instance in the Agent class.
 	 */
-	private static String hookDispatcherTarget = "info.novatec.inspectit.agent.Agent#agent.getHookDispatcher()";
+	private static String hookDispatcherTarget = "rocks.inspectit.agent.java.Agent#agent.getHookDispatcher()";
 
 	/**
 	 * The agent target as string.
 	 */
-	private static String agentTarget = "info.novatec.inspectit.agent.Agent#agent";
+	private static String agentTarget = "rocks.inspectit.agent.java.Agent#agent";
 
 	/**
 	 * The hook dispatching service.
@@ -218,7 +218,7 @@ public class HookInstrumenter implements IHookInstrumenter {
 	 * The passed {@link CtMethod} is instrumented with an internal <code>try-catch</code> block to
 	 * get an event when an exception is thrown in a method body.
 	 * 
-	 * @see info.novatec.inspectit.javassist.CtMethod#addCatch(String, CtClass)
+	 * @see rocks.inspectit.shared.all.javassist.CtMethod#addCatch(String, CtClass)
 	 * 
 	 * @param method
 	 *            The {@link CtMethod} where additional instructions are added.
@@ -256,7 +256,7 @@ public class HookInstrumenter implements IHookInstrumenter {
 	 * The passed {@link CtConstructor} is instrumented with an internal <code>try-catch</code>
 	 * block to get an event when an exception is thrown in a constructor body.
 	 * 
-	 * @see info.novatec.inspectit.javassist.CtConstructor#addCatch(String, CtClass)
+	 * @see rocks.inspectit.shared.all.javassist.CtConstructor#addCatch(String, CtClass)
 	 * 
 	 * @param constructor
 	 *            The {@link CtConstructor} where additional instructions are added.
@@ -287,7 +287,7 @@ public class HookInstrumenter implements IHookInstrumenter {
 	 * inspect and modify the given expression. The modification is reflected on the original method
 	 * body. If <code>edit()</code> does nothing, the original method body is not changed.
 	 * 
-	 * @see info.novatec.inspectit.javassist.expr.ExprEditor
+	 * @see rocks.inspectit.shared.all.javassist.expr.ExprEditor
 	 * 
 	 * @author Eduard Tudenhoefner
 	 * 
@@ -328,7 +328,7 @@ public class HookInstrumenter implements IHookInstrumenter {
 	 * reflected on the original constructor body. If <code>edit()</code> does nothing, the original
 	 * constructor body is not changed.
 	 * 
-	 * @see info.novatec.inspectit.javassist.expr.ExprEditor
+	 * @see rocks.inspectit.shared.all.javassist.expr.ExprEditor
 	 * 
 	 * @author Eduard Tudenhoefner
 	 * 

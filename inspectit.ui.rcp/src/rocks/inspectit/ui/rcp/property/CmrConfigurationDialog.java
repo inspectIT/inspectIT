@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.property;
-
-import info.novatec.inspectit.cmr.property.configuration.AbstractProperty;
-import info.novatec.inspectit.cmr.property.configuration.GroupedProperty;
-import info.novatec.inspectit.cmr.property.configuration.PropertySection;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.property;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +26,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.dialogs.FilteredPreferenceDialog;
 import org.eclipse.ui.internal.dialogs.PreferenceNodeFilter;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Dialog for displaying the CMR configuration.

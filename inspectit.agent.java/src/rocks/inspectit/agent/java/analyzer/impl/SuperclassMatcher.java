@@ -1,9 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.impl;
-
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatcher;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +8,10 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
 
 /**
  * The super class matcher implementation is used to check if the class name of the configuration is

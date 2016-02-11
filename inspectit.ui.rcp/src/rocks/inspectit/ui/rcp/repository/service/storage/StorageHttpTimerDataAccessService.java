@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.indexing.aggregation.impl.HttpTimerDataAggregator;
-import info.novatec.inspectit.indexing.query.factory.impl.HttpTimerDataQueryFactory;
-import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +9,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpTimerDataAggregator;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.HttpTimerDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestrictionFactory;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link IHttpTimerDataAccessService} for storage purposes.

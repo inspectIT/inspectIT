@@ -16,7 +16,7 @@
 				<property name="database" value="H2" />
 			</bean>
 		</property>
-		<property name="packagesToScan" value="info.novatec.inspectit" />
+		<property name="packagesToScan" value="rocks.inspectit" />
 		<property name="persistenceUnitName" value="DefaultPersistenceUnit" />
 		<property name="jpaPropertyMap">
 			<map>

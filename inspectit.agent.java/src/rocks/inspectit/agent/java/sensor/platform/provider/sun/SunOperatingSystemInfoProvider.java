@@ -1,12 +1,12 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.sun;
-
-import info.novatec.inspectit.agent.sensor.platform.provider.OperatingSystemInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.util.CpuUsageCalculator;
+package rocks.inspectit.agent.java.sensor.platform.provider.sun;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 
 import com.sun.management.OperatingSystemMXBean;
+
+import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.util.CpuUsageCalculator;
 
 /**
  * This class retrieves all the data as {@link OperatingSystemInfoProvider} from

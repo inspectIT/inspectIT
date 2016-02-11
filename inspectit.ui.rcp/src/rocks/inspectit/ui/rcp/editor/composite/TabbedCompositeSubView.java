@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.editor.composite;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+package rocks.inspectit.ui.rcp.editor.composite;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +18,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 
 /**
  * This implementation of a composite view lays out its children in its own tabs. Every tab can be

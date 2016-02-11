@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.editor.composite;
-
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.editor.composite;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +15,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.editor.ISubView;
 
 /**
  * This implementation of a composite sub view uses the {@link GridLayout} to layout the associated

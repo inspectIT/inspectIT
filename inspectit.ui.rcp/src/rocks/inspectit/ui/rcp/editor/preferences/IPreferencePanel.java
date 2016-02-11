@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.editor.preferences;
-
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+package rocks.inspectit.ui.rcp.editor.preferences;
 
 import java.util.Set;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
+
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 
 /**
  * The interface for all preference panels.

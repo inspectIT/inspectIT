@@ -1,12 +1,12 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.SystemSensorData;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
 
 import javax.persistence.Entity;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 
 /**
  * This class provide dynamic informations about the threads running/started in the virtual machine.

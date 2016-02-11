@@ -1,11 +1,11 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.def;
-
-import info.novatec.inspectit.agent.sensor.platform.provider.RuntimeInfoProvider;
+package rocks.inspectit.agent.java.sensor.platform.provider.def;
 
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.CompilationMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+
+import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
 
 /**
  * Uses the {@link java.lang.management.CompilationMXBean},

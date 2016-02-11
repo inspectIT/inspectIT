@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer;
+package rocks.inspectit.agent.java.analyzer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -12,9 +12,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.MockInit;
-import info.novatec.inspectit.agent.analyzer.impl.DirectMatcher;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +20,12 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.MockInit;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.DirectMatcher;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
 
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;

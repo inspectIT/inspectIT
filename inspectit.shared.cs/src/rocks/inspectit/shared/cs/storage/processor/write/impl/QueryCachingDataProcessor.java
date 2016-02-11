@@ -1,20 +1,20 @@
-package info.novatec.inspectit.storage.processor.write.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.InvocationAwareData.MutableInt;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.StorageWriter;
-import info.novatec.inspectit.storage.processor.write.AbstractWriteDataProcessor;
-import info.novatec.inspectit.storage.serializer.util.KryoSerializationPreferences;
+package rocks.inspectit.shared.cs.storage.processor.write.impl;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData.MutableInt;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.processor.write.AbstractWriteDataProcessor;
 
 /**
  * Processor that can create a cached result set for a storage with given query and aggregator.

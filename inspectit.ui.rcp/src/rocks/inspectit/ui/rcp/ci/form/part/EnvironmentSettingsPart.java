@@ -1,15 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.strategy.IStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.ListSendingStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.SimpleBufferStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.SizeBufferStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.TimeSendingStrategyConfig;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.input.EnvironmentEditorInput;
-import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.swt.SWT;
@@ -31,6 +20,17 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.ListSendingStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.SimpleBufferStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.SizeBufferStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
+import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Part for defining the environment general setting.

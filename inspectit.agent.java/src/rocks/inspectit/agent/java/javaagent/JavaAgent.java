@@ -1,8 +1,4 @@
-package info.novatec.inspectit.agent.javaagent;
-
-import info.novatec.inspectit.agent.Agent;
-import info.novatec.inspectit.agent.IAgent;
-import info.novatec.inspectit.agent.hooking.IHookDispatcher;
+package rocks.inspectit.agent.java.javaagent;
 
 import java.io.Closeable;
 import java.io.File;
@@ -33,6 +29,10 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import rocks.inspectit.agent.java.Agent;
+import rocks.inspectit.agent.java.IAgent;
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 
 /**
  * The JavaAgent is used since Java 5.0 to instrument classes before they are actually loaded by the
@@ -69,7 +69,7 @@ public class JavaAgent implements ClassFileTransformer {
 	/**
 	 * Defines the class of our current real agent to use.
 	 */
-	private static final String INSPECTIT_AGENT = "info.novatec.inspectit.agent.SpringAgent";
+	private static final String INSPECTIT_AGENT = "rocks.inspectit.agent.java.SpringAgent";
 
 	/**
 	 * Defines the self first classes which should be loaded by this class loader instead of

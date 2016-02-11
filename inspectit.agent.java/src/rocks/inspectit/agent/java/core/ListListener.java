@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.core;
+package rocks.inspectit.agent.java.core;
 
 import java.util.EventListener;
 import java.util.List;

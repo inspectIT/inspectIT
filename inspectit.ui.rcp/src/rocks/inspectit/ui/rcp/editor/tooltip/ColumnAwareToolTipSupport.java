@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tooltip;
+package rocks.inspectit.ui.rcp.editor.tooltip;
 
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.CellLabelProvider;

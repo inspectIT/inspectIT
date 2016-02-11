@@ -1,16 +1,16 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.HttpTimerDataDao;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.aggregation.impl.HttpTimerDataAggregator;
-import info.novatec.inspectit.indexing.query.factory.impl.HttpTimerDataQueryFactory;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import rocks.inspectit.server.dao.HttpTimerDataDao;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpTimerDataAggregator;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.HttpTimerDataQueryFactory;
 
 /**
  * Provides <code>HttpTimerData</code> information from the CMR internal in memory buffer.

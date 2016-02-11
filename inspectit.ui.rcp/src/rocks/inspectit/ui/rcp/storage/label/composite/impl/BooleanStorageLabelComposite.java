@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.storage.label.composite.impl;
-
-import info.novatec.inspectit.rcp.storage.label.composite.AbstractStorageLabelComposite;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.BooleanStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.ui.rcp.storage.label.composite.impl;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -11,6 +6,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.BooleanStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.ui.rcp.storage.label.composite.AbstractStorageLabelComposite;
 
 /**
  * Composite for selecting the {@link BooleanStorageLabel}.

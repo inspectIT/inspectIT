@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.processor.write;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.StorageWriter;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
+package rocks.inspectit.shared.cs.storage.processor.write;
 
 import java.util.Map;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * Special type of processor that performs operations on the elements that have been written to

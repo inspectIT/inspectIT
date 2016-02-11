@@ -1,18 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.impl;
-
-import info.novatec.inspectit.agent.analyzer.IByteCodeAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatcher;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.StorageException;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPathStart;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
-import info.novatec.inspectit.agent.hooking.IHookInstrumenter;
-import info.novatec.inspectit.agent.hooking.impl.HookException;
-import info.novatec.inspectit.communication.data.ParameterContentType;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +17,19 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.LoaderClassPath;
 import javassist.NotFoundException;
+import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
+import rocks.inspectit.agent.java.hooking.IHookInstrumenter;
+import rocks.inspectit.agent.java.hooking.impl.HookException;
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -381,7 +380,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 	 * the property accessor certain checks are already in place. For example it is checked that no
 	 * return value capturing is set on a constructor. Please ensure that checks that could be done
 	 * at creation time are already performed at this time ({@link
-	 * info.novatec.inspectit.agent.config.impl.ConfigurationStorage.addSensor()}).
+	 * rocks.inspectit.agent.java.config.impl.ConfigurationStorage.addSensor()}).
 	 * 
 	 * Certain checks cannot be done on creation time. One example is the return value capturing on
 	 * method defining a void return type. At creation time the information that the method the

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.connection;
+package rocks.inspectit.agent.java.connection;
 
 /**
  * <b>IMPORTANT:</b> The class code is copied/taken from <a

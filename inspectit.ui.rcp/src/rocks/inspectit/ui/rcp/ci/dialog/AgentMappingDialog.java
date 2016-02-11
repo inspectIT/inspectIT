@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.ci.dialog;
-
-import info.novatec.inspectit.ci.AgentMapping;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.validation.IControlValidationListener;
-import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
+package rocks.inspectit.ui.rcp.ci.dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +20,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.validation.IControlValidationListener;
+import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Dialog for creating new {@link AgentMapping}.

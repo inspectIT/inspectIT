@@ -1,12 +1,12 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.IIdsAwareAggregatedData;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.IIdsAwareAggregatedData;
 
 /**
  * Aggregated exception sensor data. This objects are used for the purpose of grouping the

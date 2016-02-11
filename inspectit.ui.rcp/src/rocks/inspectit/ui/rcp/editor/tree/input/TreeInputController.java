@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
-import info.novatec.inspectit.rcp.editor.root.SubViewClassificationController;
+package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.util.List;
 import java.util.Set;
@@ -18,6 +11,13 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.TreeColumn;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
+import rocks.inspectit.ui.rcp.editor.root.SubViewClassificationController;
 
 /**
  * The interface for all tree input controller.
@@ -44,9 +44,9 @@ public interface TreeInputController extends SubViewClassificationController {
 	void createColumns(TreeViewer treeViewer);
 
 	/**
-	 * The {@link info.novatec.inspectit.rcp.editor.tree.TreeSubView} might need to alter the column
+	 * The {@link rocks.inspectit.ui.rcp.editor.tree.TreeSubView} might need to alter the column
 	 * width/visibility if the column has the remembered size. With this method the controller gives
-	 * or denies the {@link info.novatec.inspectit.rcp.editor.tree.TreeSubView} to alter the column
+	 * or denies the {@link rocks.inspectit.ui.rcp.editor.tree.TreeSubView} to alter the column
 	 * width.
 	 * 
 	 * @param treeColumn
@@ -69,7 +69,7 @@ public interface TreeInputController extends SubViewClassificationController {
 	 * indicates most of the time that there is no default list or object to display in the table.
 	 * For some {@link DefaultData} objects, the method {@link #canOpenInput(List)} should return
 	 * true so that the input object is set by the
-	 * {@link info.novatec.inspectit.rcp.editor.tree.TreeSubView}.
+	 * {@link rocks.inspectit.ui.rcp.editor.tree.TreeSubView}.
 	 * 
 	 * @return The tree input or <code>null</code> if nothing to display for default.
 	 */

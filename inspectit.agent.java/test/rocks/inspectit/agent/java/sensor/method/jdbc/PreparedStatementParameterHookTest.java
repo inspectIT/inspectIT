@@ -1,8 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.util.List;
 
@@ -11,6 +7,12 @@ import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterHook;
+import rocks.inspectit.agent.java.sensor.method.jdbc.StatementStorage;
 
 /**
  * Tests the {@link PreparedStatementParameterHook}.

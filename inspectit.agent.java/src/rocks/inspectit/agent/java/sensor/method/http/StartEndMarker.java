@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.sensor.method.http;
+package rocks.inspectit.agent.java.sensor.method.http;
 
-import info.novatec.inspectit.agent.sensor.method.http.StartEndMarker.MutableInteger;
+import rocks.inspectit.agent.java.sensor.method.http.StartEndMarker.MutableInteger;
 
 /**
  * Provides a thread local means to store the information if we returned to the end of a given

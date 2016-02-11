@@ -1,6 +1,8 @@
-package info.novatec.inspectit.indexing.restriction;
+package rocks.inspectit.shared.cs.indexing.restriction;
 
 import java.util.List;
+
+import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
 
 /**
  * The index query restriction processor is responsible for checking if the all restrictions

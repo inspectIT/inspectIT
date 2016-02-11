@@ -1,16 +1,16 @@
-package info.novatec.inspectit.ci.sensor.method.impl;
-
-import info.novatec.inspectit.ci.sensor.StringConstraintSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+package rocks.inspectit.shared.cs.ci.sensor.method.impl;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.sensor.StringConstraintSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
+
 /**
  * Invocation sequence sensor configuration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlRootElement(name = "invocation-sequence-sensor-config")
 public class InvocationSequenceSensorConfig extends StringConstraintSensorConfig implements IMethodSensorConfig {
@@ -23,7 +23,7 @@ public class InvocationSequenceSensorConfig extends StringConstraintSensorConfig
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceSensor";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceSensor";
 
 
 	/**

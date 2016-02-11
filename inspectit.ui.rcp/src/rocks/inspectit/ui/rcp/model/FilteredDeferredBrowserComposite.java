@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.model;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Filtered package composite delegates the children creation to the

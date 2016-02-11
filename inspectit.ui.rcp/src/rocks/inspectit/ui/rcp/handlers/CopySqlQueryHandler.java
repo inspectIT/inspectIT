@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.rcp.util.ClipboardUtil;
+package rocks.inspectit.ui.rcp.handlers;
 
 import static org.hamcrest.Matchers.instanceOf;
 
@@ -12,6 +8,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * Handler that copies the SQL Query string to the clipboard.

@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.preferences;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.preferences.valueproviders.PreferenceValueProviderFactory;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.preferences;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -10,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProviderFactory;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Utility for using preferences stores.
@@ -366,7 +366,7 @@ public final class PreferencesUtils {
 	/**
 	 * Loads the primitive collection from a preference store. Note that the preference key provided
 	 * has to be mapped to the
-	 * {@link info.novatec.inspectit.rcp.preferences.valueproviders.CollectionPreferenceValueProvider}
+	 * {@link rocks.inspectit.ui.rcp.preferences.valueproviders.CollectionPreferenceValueProvider}
 	 * in the {@link PreferenceValueProviderFactory}.
 	 * 
 	 * @param <E>
@@ -394,7 +394,7 @@ public final class PreferencesUtils {
 	/**
 	 * Loads the primitive keys and values map from a preference store. Note that the preference key
 	 * provided has to be mapped to the
-	 * {@link info.novatec.inspectit.rcp.preferences.valueproviders.MapPreferenceValueProvider} in
+	 * {@link rocks.inspectit.ui.rcp.preferences.valueproviders.MapPreferenceValueProvider} in
 	 * the {@link PreferenceValueProviderFactory}.
 	 * 
 	 * @param <K>

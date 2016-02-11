@@ -1,10 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.dao.InvocationDataDao;
-import info.novatec.inspectit.cmr.spring.aop.MethodLog;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.service;
 
 import java.util.Collection;
 import java.util.Date;
@@ -15,6 +9,14 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.server.dao.InvocationDataDao;
+import rocks.inspectit.server.spring.aop.MethodLog;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 
 /**
  * @author Patrice Bouillet

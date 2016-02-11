@@ -1,6 +1,6 @@
-package info.novatec.inspectit.cmr.dao.impl;
+package rocks.inspectit.server.dao.impl;
 
-import info.novatec.inspectit.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Cache cleaner, or thread that is constantly checking if there is something to be persisted.

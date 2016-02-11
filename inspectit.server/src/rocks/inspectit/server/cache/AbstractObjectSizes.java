@@ -1,7 +1,4 @@
-package info.novatec.inspectit.cmr.cache;
-
-import info.novatec.inspectit.communication.Sizeable;
-import info.novatec.inspectit.util.UnderlyingSystemInfo;
+package rocks.inspectit.server.cache;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -9,6 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.Sizeable;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
 
 /**
  * This is an abstract class that holds general calculations and object sizes that are equal in both

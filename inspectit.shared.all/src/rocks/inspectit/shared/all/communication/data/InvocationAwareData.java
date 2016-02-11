@@ -1,7 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.MethodSensorData;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -13,6 +10,9 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
 
 /**
  * This is an abstract class for all object that can be found in invocations and should be aware of

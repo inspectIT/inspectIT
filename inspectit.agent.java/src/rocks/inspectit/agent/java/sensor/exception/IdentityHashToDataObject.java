@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.sensor.exception;
+package rocks.inspectit.agent.java.sensor.exception;
 
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 /**
  * This class maps the identity hashcode of a {@link Throwable} object to the

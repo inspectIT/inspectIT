@@ -1,9 +1,9 @@
-package info.novatec.inspectit.indexing.query.factory;
-
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.query.provider.IIndexQueryProvider;
+package rocks.inspectit.shared.cs.indexing.query.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.query.provider.IIndexQueryProvider;
 
 /**
  * Abstract query factory, has only the instance to the {@link IIndexQueryProvider}.

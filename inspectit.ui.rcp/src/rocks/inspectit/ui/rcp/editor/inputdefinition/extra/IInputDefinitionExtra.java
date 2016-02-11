@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.inputdefinition.extra;
+package rocks.inspectit.ui.rcp.editor.inputdefinition.extra;
 
 /**
  * Common interface for all input definition extras.

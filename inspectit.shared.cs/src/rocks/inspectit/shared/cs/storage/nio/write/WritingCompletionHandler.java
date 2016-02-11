@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.nio.write;
-
-import info.novatec.inspectit.storage.nio.WriteReadAttachment;
-import info.novatec.inspectit.storage.nio.WriteReadCompletionRunnable;
+package rocks.inspectit.shared.cs.storage.nio.write;
 
 import java.nio.channels.CompletionHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rocks.inspectit.shared.cs.storage.nio.WriteReadAttachment;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 
 /**
  * Completion handler for asynchronous writing.

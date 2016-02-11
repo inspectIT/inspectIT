@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.cmr.model.PlatformIdent
+class: rocks.inspectit.shared.all.cmr.model.PlatformIdent
 
 # Platform Ident
 1: id

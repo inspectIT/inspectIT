@@ -1,9 +1,9 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.communication.data.SqlStatementData;
+package rocks.inspectit.server.dao;
 
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 /**
  * @author Patrice Bouillet

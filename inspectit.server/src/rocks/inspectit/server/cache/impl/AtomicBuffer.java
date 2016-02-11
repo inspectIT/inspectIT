@@ -1,13 +1,4 @@
-package info.novatec.inspectit.cmr.cache.impl;
-
-import info.novatec.inspectit.cmr.cache.IBuffer;
-import info.novatec.inspectit.cmr.cache.IBufferElement;
-import info.novatec.inspectit.cmr.cache.IBufferElement.BufferElementState;
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.cmr.property.spring.PropertyUpdate;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.cache.impl;
 
 import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +17,15 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.cache.IBufferElement;
+import rocks.inspectit.server.cache.IBufferElement.BufferElementState;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 
 /**
  * Buffer uses atomic variables and references to handle the synchronization. Thus, non of its
@@ -721,12 +721,12 @@ public class AtomicBuffer<E extends DefaultData> implements IBuffer<E> {
 		}
 
 		@Override
-		public info.novatec.inspectit.cmr.cache.IBufferElement.BufferElementState getBufferElementState() {
+		public rocks.inspectit.server.cache.IBufferElement.BufferElementState getBufferElementState() {
 			return null;
 		}
 
 		@Override
-		public void setBufferElementState(info.novatec.inspectit.cmr.cache.IBufferElement.BufferElementState bufferElementState) {
+		public void setBufferElementState(rocks.inspectit.server.cache.IBufferElement.BufferElementState bufferElementState) {
 		}
 
 	}

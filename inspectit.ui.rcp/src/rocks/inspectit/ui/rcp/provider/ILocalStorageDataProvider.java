@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.provider;
+package rocks.inspectit.ui.rcp.provider;
 
-import info.novatec.inspectit.storage.LocalStorageData;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
 
 /**
  * Interface for all model components that can provide the information about the local storage.

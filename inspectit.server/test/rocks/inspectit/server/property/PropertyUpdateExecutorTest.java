@@ -1,10 +1,8 @@
-package info.novatec.inspectit.cmr.property;
+package rocks.inspectit.server.property;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.spring.PropertyUpdate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.property.PropertyUpdateExecutor;
+import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 
 @SuppressWarnings("PMD")
 public class PropertyUpdateExecutorTest {

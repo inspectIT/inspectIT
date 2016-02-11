@@ -1,7 +1,4 @@
-package info.novatec.inspectit.storage.processor;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.storage.IWriter;
+package rocks.inspectit.shared.cs.storage.processor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +7,9 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.storage.IWriter;
 
 /**
  * This is a processor that has additional processors connected to it. Thus, this kind of processors

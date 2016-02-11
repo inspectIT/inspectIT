@@ -1,20 +1,4 @@
-package info.novatec.inspectit.agent.core.impl;
-
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.AbstractSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.config.impl.RepositoryConfig;
-import info.novatec.inspectit.agent.connection.IConnection;
-import info.novatec.inspectit.agent.connection.RegistrationException;
-import info.novatec.inspectit.agent.connection.ServerUnavailableException;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.version.VersionService;
+package rocks.inspectit.agent.java.core.impl;
 
 import java.net.ConnectException;
 import java.util.HashMap;
@@ -26,6 +10,22 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.AbstractSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.JmxSensorConfig;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.RepositoryConfig;
+import rocks.inspectit.agent.java.connection.IConnection;
+import rocks.inspectit.agent.java.connection.RegistrationException;
+import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.version.VersionService;
 
 /**
  * The default implementation of the ID Manager.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
+package rocks.inspectit.agent.java.config.impl;
 
 /**
  * Class used by the {@link ConfigurationStorage} implementation to store the information of a

@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.menu;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.handlers.OpenUrlHandler.SearchDocumentationHandler;
+package rocks.inspectit.ui.rcp.menu;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +22,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.eclipse.ui.services.IEvaluationService;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.handlers.OpenUrlHandler.SearchDocumentationHandler;
 
 /**
  * The documentation search contribution item displayed in the main toolbar.
@@ -130,7 +130,7 @@ public class SearchDocumentationContributionItem extends WorkbenchWindowControlC
 			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			IEvaluationService evaluationService = (IEvaluationService) PlatformUI.getWorkbench().getService(IEvaluationService.class);
 			try {
-				Command searchCommand = commandService.getCommand("info.novatec.inspectit.rcp.commands.searchDocumentation");
+				Command searchCommand = commandService.getCommand("rocks.inspectit.ui.rcp.commands.searchDocumentation");
 				Map<String, String> params = new HashMap<String, String>();
 				params.put(SearchDocumentationHandler.SEARCH_DOCUMENTATION_PARAMETER, searchString);
 				searchCommand.executeWithChecks(new ExecutionEvent(searchCommand, params, searchText, evaluationService.getCurrentState()));

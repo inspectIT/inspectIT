@@ -1,6 +1,4 @@
-package info.novatec.inspectit.storage.label;
-
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.shared.cs.storage.label;
 
 import java.io.Serializable;
 
@@ -15,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
+
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * The abstract class for all labels.

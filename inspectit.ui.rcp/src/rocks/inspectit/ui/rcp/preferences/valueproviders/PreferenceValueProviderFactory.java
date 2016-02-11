@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.preferences.valueproviders;
-
-import info.novatec.inspectit.rcp.preferences.PreferenceException;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
+package rocks.inspectit.ui.rcp.preferences.valueproviders;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import rocks.inspectit.ui.rcp.preferences.PreferenceException;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 
 /**
  * Factory for providing the preference strings for objects and vice verse.

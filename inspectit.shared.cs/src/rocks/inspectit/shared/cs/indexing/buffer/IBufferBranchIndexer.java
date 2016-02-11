@@ -1,6 +1,6 @@
-package info.novatec.inspectit.indexing.buffer;
+package rocks.inspectit.shared.cs.indexing.buffer;
 
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * Branch indexer for the {@link IBufferTreeComponent}.

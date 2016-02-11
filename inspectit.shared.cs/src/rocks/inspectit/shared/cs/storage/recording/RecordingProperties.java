@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.recording;
-
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
+package rocks.inspectit.shared.cs.storage.recording;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * Class for holding the recording properties.

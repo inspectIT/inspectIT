@@ -1,24 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.AbstractSubView;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.root.FormRootEditor;
-import info.novatec.inspectit.rcp.editor.root.SubViewClassificationController.SubViewClassification;
-import info.novatec.inspectit.rcp.editor.search.ISearchExecutor;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchCriteria;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchResult;
-import info.novatec.inspectit.rcp.editor.search.helper.TableViewerSearchHelper;
-import info.novatec.inspectit.rcp.editor.table.input.TableInputController;
-import info.novatec.inspectit.rcp.editor.tooltip.ColumnAwareToolTipSupport;
-import info.novatec.inspectit.rcp.editor.tooltip.IColumnToolTipProvider;
-import info.novatec.inspectit.rcp.editor.viewers.CheckedDelegatingIndexLabelProvider;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler;
-import info.novatec.inspectit.rcp.menu.ShowHideMenuManager;
+package rocks.inspectit.ui.rcp.editor.table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +35,26 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.AbstractSubView;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.root.FormRootEditor;
+import rocks.inspectit.ui.rcp.editor.root.SubViewClassificationController.SubViewClassification;
+import rocks.inspectit.ui.rcp.editor.search.ISearchExecutor;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchResult;
+import rocks.inspectit.ui.rcp.editor.search.helper.TableViewerSearchHelper;
+import rocks.inspectit.ui.rcp.editor.table.input.TableInputController;
+import rocks.inspectit.ui.rcp.editor.tooltip.ColumnAwareToolTipSupport;
+import rocks.inspectit.ui.rcp.editor.tooltip.IColumnToolTipProvider;
+import rocks.inspectit.ui.rcp.editor.viewers.CheckedDelegatingIndexLabelProvider;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler;
+import rocks.inspectit.ui.rcp.menu.ShowHideMenuManager;
 
 /**
  * Sub-view which is used to create a table.

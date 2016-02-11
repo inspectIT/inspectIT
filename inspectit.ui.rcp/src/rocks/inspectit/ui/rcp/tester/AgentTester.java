@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.tester;
-
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
-import info.novatec.inspectit.rcp.model.AgentLeaf;
+package rocks.inspectit.ui.rcp.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.ui.rcp.model.AgentLeaf;
 
 /**
  * Tester for {@link AgentLeaf}.

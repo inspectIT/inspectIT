@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.cmr.model.MethodSensorTypeIdent
+class: rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent
 
 # Sensor Type Ident
 1: id

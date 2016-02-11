@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration;
+package rocks.inspectit.shared.cs.cmr.property.configuration;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

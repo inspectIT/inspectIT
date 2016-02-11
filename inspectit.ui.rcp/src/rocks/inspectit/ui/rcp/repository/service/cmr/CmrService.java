@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.repository.service.cmr;
-
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
+package rocks.inspectit.ui.rcp.repository.service.cmr;
 
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
+
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Abstract class for all {@link CmrRepositoryDefinition} service classes.

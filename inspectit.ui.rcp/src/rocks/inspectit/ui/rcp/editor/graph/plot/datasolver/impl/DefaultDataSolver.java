@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl;
-
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.data.RangeType;
+
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
 
 /**
  * Default implementation of the {@link AbstractPlotDataSolver}. This implementation will be used by

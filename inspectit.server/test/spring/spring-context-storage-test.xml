@@ -5,7 +5,7 @@
 	default-autowire="autodetect">
 
 	<bean id="readingChannelManager"
-		class="info.novatec.inspectit.storage.nio.read.ReadingChannelManager">
+		class="rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager">
 		<property name="executorService" ref="IOExecutorService" />
 	</bean>
 

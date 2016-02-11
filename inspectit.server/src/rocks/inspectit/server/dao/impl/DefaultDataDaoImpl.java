@@ -1,14 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.DefaultDataDao;
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.dao.impl;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -33,6 +23,16 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import rocks.inspectit.server.dao.DefaultDataDao;
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * The default implementation of the {@link DefaultDataDao} interface by using the Entity manager.

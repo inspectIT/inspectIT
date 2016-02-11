@@ -1,31 +1,4 @@
-package info.novatec.inspectit.cmr.service.rest;
-
-import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.cmr.service.rest.error.JsonError;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
-import info.novatec.inspectit.communication.data.CpuInformationData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.communication.data.ThreadInformationData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.communication.data.cmr.RecordingData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
-import info.novatec.inspectit.indexing.aggregation.impl.SqlStatementDataAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.TimerDataAggregator;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.processor.impl.DataAggregatorProcessor;
-import info.novatec.inspectit.storage.processor.impl.DataSaverProcessor;
-import info.novatec.inspectit.storage.processor.impl.InvocationClonerDataProcessor;
-import info.novatec.inspectit.storage.processor.impl.InvocationExtractorDataProcessor;
-import info.novatec.inspectit.storage.recording.RecordingProperties;
-import info.novatec.inspectit.storage.recording.RecordingState;
+package rocks.inspectit.server.service.rest;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -45,6 +18,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import rocks.inspectit.server.service.rest.error.JsonError;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData;
+import rocks.inspectit.shared.all.communication.data.CpuInformationData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.cs.cmr.service.IStorageService;
+import rocks.inspectit.shared.cs.communication.data.cmr.RecordingData;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.SqlStatementDataAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.DataAggregatorProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.DataSaverProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.InvocationClonerDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.InvocationExtractorDataProcessor;
+import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * Restful service provider for storages.

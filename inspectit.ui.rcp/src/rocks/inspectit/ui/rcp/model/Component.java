@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
+package rocks.inspectit.ui.rcp.model;
 
 import org.eclipse.swt.graphics.Image;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
  * A component can be used in any tree based views.

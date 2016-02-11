@@ -1,12 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.dao.DefaultDataDao;
-import info.novatec.inspectit.cmr.property.spring.PropertyUpdate;
-import info.novatec.inspectit.cmr.spring.aop.MethodLog;
-import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
-import info.novatec.inspectit.cmr.util.Converter;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.service;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -20,6 +12,16 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.server.dao.DefaultDataDao;
+import rocks.inspectit.server.spring.aop.MethodLog;
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.server.util.Converter;
+import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
+import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 
 /**
  * The default implementation of the {@link IAgentStorageService} interface. Uses an implementation

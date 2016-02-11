@@ -1,18 +1,4 @@
-package info.novatec.inspectit.storage;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.impl.StorageDescriptor;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
-import info.novatec.inspectit.storage.util.DeleteFileVisitor;
-import info.novatec.inspectit.storage.util.StorageDeleteFileVisitor;
+package rocks.inspectit.shared.cs.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +28,20 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageDescriptor;
+import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
+import rocks.inspectit.shared.cs.storage.util.StorageDeleteFileVisitor;
 
 /**
  * Abstract class that defines basic storage functionality and properties.

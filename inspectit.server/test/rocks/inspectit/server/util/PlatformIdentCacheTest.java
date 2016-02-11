@@ -1,18 +1,20 @@
-package info.novatec.inspectit.cmr.util;
+package rocks.inspectit.server.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
 
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.server.util.PlatformIdentCache;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * Small test for {@link PlatformIdentCache}.

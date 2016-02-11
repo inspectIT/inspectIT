@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.JmxSensorValueData
+class: rocks.inspectit.shared.all.communication.data.JmxSensorValueData
 
 # Default Data
 1: id

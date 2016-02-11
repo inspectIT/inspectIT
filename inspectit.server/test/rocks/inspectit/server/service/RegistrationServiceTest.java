@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.service;
+package rocks.inspectit.server.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -12,27 +12,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.dao.JmxDefinitionDataIdentDao;
-import info.novatec.inspectit.cmr.dao.MethodIdentDao;
-import info.novatec.inspectit.cmr.dao.MethodIdentToSensorTypeDao;
-import info.novatec.inspectit.cmr.dao.MethodSensorTypeIdentDao;
-import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
-import info.novatec.inspectit.cmr.dao.PlatformSensorTypeIdentDao;
-import info.novatec.inspectit.cmr.dao.impl.JmxSensorTypeIdentDaoImpl;
-import info.novatec.inspectit.cmr.dao.impl.MethodIdentDaoImpl;
-import info.novatec.inspectit.cmr.dao.impl.MethodSensorTypeIdentDaoImpl;
-import info.novatec.inspectit.cmr.dao.impl.PlatformIdentDaoImpl;
-import info.novatec.inspectit.cmr.dao.impl.PlatformSensorTypeIdentDaoImpl;
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.JmxSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.model.MethodIdentToSensorType;
-import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
-import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
-import info.novatec.inspectit.exception.BusinessException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -51,6 +30,29 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.dao.JmxDefinitionDataIdentDao;
+import rocks.inspectit.server.dao.MethodIdentDao;
+import rocks.inspectit.server.dao.MethodIdentToSensorTypeDao;
+import rocks.inspectit.server.dao.MethodSensorTypeIdentDao;
+import rocks.inspectit.server.dao.PlatformIdentDao;
+import rocks.inspectit.server.dao.PlatformSensorTypeIdentDao;
+import rocks.inspectit.server.dao.impl.JmxSensorTypeIdentDaoImpl;
+import rocks.inspectit.server.dao.impl.MethodIdentDaoImpl;
+import rocks.inspectit.server.dao.impl.MethodSensorTypeIdentDaoImpl;
+import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
+import rocks.inspectit.server.dao.impl.PlatformSensorTypeIdentDaoImpl;
+import rocks.inspectit.server.service.RegistrationService;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
+import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
+import rocks.inspectit.shared.all.exception.BusinessException;
 
 /**
  * Thesting the {@link RegistrationService} of CMR.

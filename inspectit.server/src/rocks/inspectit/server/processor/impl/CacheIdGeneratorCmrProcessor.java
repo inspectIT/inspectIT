@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.processor.impl;
-
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.cmr.util.CacheIdGenerator;
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.server.processor.impl;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.server.util.CacheIdGenerator;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Simple {@link AbstractCmrDataProcessor} that can assign the ID for the {@link DefaultData} using

@@ -1,9 +1,4 @@
-package info.novatec.inspectit.ci;
-
-import info.novatec.inspectit.ci.assignment.impl.ExceptionSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.TimerMethodSensorAssignment;
-import info.novatec.inspectit.ci.exclude.ExcludeRule;
+package rocks.inspectit.shared.cs.ci;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +9,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 
 /**
  * Profile defines sensor assignments and exclude rules.

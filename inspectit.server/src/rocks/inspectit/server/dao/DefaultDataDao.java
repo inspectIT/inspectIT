@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
+package rocks.inspectit.server.dao;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
  * All implementing classes of this interface are storing and retrieving the default data objects,

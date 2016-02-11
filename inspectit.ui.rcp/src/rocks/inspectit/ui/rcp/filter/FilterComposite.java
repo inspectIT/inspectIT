@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.filter;
+package rocks.inspectit.ui.rcp.filter;
 
 import java.util.Objects;
 

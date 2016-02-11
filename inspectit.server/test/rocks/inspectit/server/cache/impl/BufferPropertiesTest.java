@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.cache.impl;
+package rocks.inspectit.server.cache.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -8,12 +8,14 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.mockito.Mockito.mock;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
 
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.cache.impl.BufferProperties;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 
 /**
  * Testing the calculations inside of {@link BufferProperties} class.

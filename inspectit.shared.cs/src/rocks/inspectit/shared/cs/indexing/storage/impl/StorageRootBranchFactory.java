@@ -1,16 +1,16 @@
-package info.novatec.inspectit.indexing.storage.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.indexer.impl.InvocationChildrenIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.MethodIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.ObjectTypeIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.PlatformIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.SqlStringIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.TimestampIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.InvocationChildrenIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.SqlStringIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Factory for producing {@link IStorageTreeComponent}.

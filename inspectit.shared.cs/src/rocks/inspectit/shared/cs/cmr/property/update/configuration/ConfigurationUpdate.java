@@ -1,9 +1,4 @@
-package info.novatec.inspectit.cmr.property.update.configuration;
-
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.RestoreDefaultPropertyUpdate;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.shared.cs.cmr.property.update.configuration;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +12,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.RestoreDefaultPropertyUpdate;
 
 /**
  * Class holding all the {@link AbstractPropertyUpdate}s for one configuration.

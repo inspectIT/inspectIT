@@ -1,23 +1,4 @@
-package info.novatec.inspectit.rcp.storage.util;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.impl.StorageDescriptor;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.http.TransferDataMonitor;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageFileType;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.nio.stream.InputStreamProvider;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
-import info.novatec.inspectit.storage.serializer.util.KryoUtil;
-import info.novatec.inspectit.storage.util.RangeDescriptor;
+package rocks.inspectit.ui.rcp.storage.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,6 +41,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus.Series;
 
 import com.esotericsoftware.kryo.io.Input;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.shared.all.storage.serializer.util.KryoUtil;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageDescriptor;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageFileType;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.nio.stream.InputStreamProvider;
+import rocks.inspectit.shared.cs.storage.util.RangeDescriptor;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.http.TransferDataMonitor;
 
 /**
  * Class responsible for retrieving the data via HTTP, and de-serializing the data into objects.

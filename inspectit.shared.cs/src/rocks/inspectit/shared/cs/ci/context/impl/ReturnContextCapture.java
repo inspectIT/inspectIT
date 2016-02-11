@@ -1,12 +1,12 @@
-package info.novatec.inspectit.ci.context.impl;
-
-import info.novatec.inspectit.ci.context.AbstractContextCapture;
+package rocks.inspectit.shared.cs.ci.context.impl;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
 
 /**
  * {@link AbstractContextCapture} for return values.

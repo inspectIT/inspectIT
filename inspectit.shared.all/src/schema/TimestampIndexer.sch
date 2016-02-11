@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.indexing.indexer.impl.TimestampIndexer
+class: rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer
 
 # Timestamp Indexer
 1: createdKeysMap

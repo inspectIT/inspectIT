@@ -1,8 +1,8 @@
-package info.novatec.inspectit.indexing.query.provider.impl;
+package rocks.inspectit.shared.cs.indexing.query.provider.impl;
 
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.impl.IndexQuery;
-import info.novatec.inspectit.indexing.query.provider.IIndexQueryProvider;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
+import rocks.inspectit.shared.cs.indexing.query.provider.IIndexQueryProvider;
 
 /**
  * Class that is used for providing the correct instance of {@link IIndexQuery} via Spring

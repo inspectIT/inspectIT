@@ -1,8 +1,8 @@
-package info.novatec.inspectit.rcp.property;
+package rocks.inspectit.ui.rcp.property;
 
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Update listener that property controls will report the updates.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.preferences.control.samplingrate.test;
+package rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -8,12 +8,6 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
-import info.novatec.inspectit.indexing.aggregation.impl.ClassLoadingInformationDataAggregator;
-import info.novatec.inspectit.rcp.editor.preferences.control.SamplingRateControl;
-import info.novatec.inspectit.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
-import info.novatec.inspectit.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,6 +16,13 @@ import java.util.List;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.ClassLoadingInformationDataAggregator;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
+import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
 
 @SuppressWarnings("PMD")
 public class TimeframeDividerTest {

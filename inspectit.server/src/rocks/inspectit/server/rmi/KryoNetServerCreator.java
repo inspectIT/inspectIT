@@ -1,14 +1,4 @@
-package info.novatec.inspectit.cmr.rmi;
-
-import info.novatec.inspectit.kryonet.Connection;
-import info.novatec.inspectit.kryonet.ExtendedSerializationImpl;
-import info.novatec.inspectit.kryonet.IExtendedSerialization;
-import info.novatec.inspectit.kryonet.Listener;
-import info.novatec.inspectit.kryonet.Server;
-import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.nio.stream.StreamProvider;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
+package rocks.inspectit.server.rmi;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +13,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import com.esotericsoftware.kryo.Kryo;
+
+import rocks.inspectit.shared.all.kryonet.Connection;
+import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
+import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
+import rocks.inspectit.shared.all.kryonet.Listener;
+import rocks.inspectit.shared.all.kryonet.Server;
+import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 
 /**
  * COnfiguration of the {@link Server} that will be used for communication with the agent.

@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service.cmr.proxy;
-
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.service.cmr.ICmrService;
+package rocks.inspectit.ui.rcp.repository.service.cmr.proxy;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +9,9 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.framework.ReflectiveMethodInvocation;
 
 import com.google.common.base.Defaults;
+
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService;
 
 /**
  * Utilities that will be used in interceptors.

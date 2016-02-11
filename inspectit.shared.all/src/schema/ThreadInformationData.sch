@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.ThreadInformationData
+class: rocks.inspectit.shared.all.communication.data.ThreadInformationData
 
 # Default Data
 1: id

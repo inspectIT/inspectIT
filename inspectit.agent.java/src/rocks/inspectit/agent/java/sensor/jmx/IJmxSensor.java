@@ -1,7 +1,7 @@
-package info.novatec.inspectit.agent.sensor.jmx;
+package rocks.inspectit.agent.java.sensor.jmx;
 
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.sensor.ISensor;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.sensor.ISensor;
 
 /**
  * This interface is implemented by classes which provide information about MBeans registered on a

@@ -4,50 +4,50 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<bean id="indexQueryProvider" class="info.novatec.inspectit.indexing.query.provider.impl.IndexQueryProvider">
+	<bean id="indexQueryProvider" class="rocks.inspectit.shared.cs.indexing.query.provider.impl.IndexQueryProvider">
 		<lookup-method name="createNewIndexQuery" bean="indexQuery" />
 	</bean>
 
-	<bean id="storageIndexQueryProvider" class="info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider">
+	<bean id="storageIndexQueryProvider" class="rocks.inspectit.shared.cs.indexing.query.provider.impl.StorageIndexQueryProvider">
 		<lookup-method name="createNewStorageIndexQuery" bean="storageIndexQuery" />
 	</bean>
 	
-	<bean id="streamProvider" class="info.novatec.inspectit.storage.nio.stream.StreamProvider">
+	<bean id="streamProvider" class="rocks.inspectit.shared.all.storage.nio.stream.StreamProvider">
 		<lookup-method name="createExtendedByteBufferOutputStream" bean="extendedByteBufferOutputStream" />
 		<lookup-method name="createSocketExtendedByteBufferInputStream" bean="socketExtendedByteBufferInputStream" />
 	</bean>
 	
-	<bean id="inputStreamProvider" class="info.novatec.inspectit.storage.nio.stream.InputStreamProvider">
+	<bean id="inputStreamProvider" class="rocks.inspectit.shared.cs.storage.nio.stream.InputStreamProvider">
 		<lookup-method name="createExtendedByteBufferInputStream" bean="extendedByteBufferInputStream" />
 	</bean>
 
-	<bean id="serializationManagerProvider" class="info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider">
+	<bean id="serializationManagerProvider" class="rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider">
 		<lookup-method name="createSerializer" bean="serializationManager" />
 	</bean>
 
-	<bean id="storageWriterProvider" class="info.novatec.inspectit.cmr.storage.CmrStorageWriterProvider">
+	<bean id="storageWriterProvider" class="rocks.inspectit.server.storage.CmrStorageWriterProvider">
 		<lookup-method name="getCmrStorageWriter" bean="cmrStorageWriter" />
 	</bean>
 
-	<bean id="storageIndexingTreeProvider" class="info.novatec.inspectit.storage.util.StorageIndexTreeProvider">
+	<bean id="storageIndexingTreeProvider" class="rocks.inspectit.shared.cs.storage.util.StorageIndexTreeProvider">
 		<lookup-method name="getStorageIndexingTree" bean="storageRootBranchFactory" />
 	</bean>
 
-	<bean id="IOExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
+	<bean id="IOExecutorService" class="rocks.inspectit.shared.cs.storage.util.ExecutorServiceFactory">
 		<property name="threadNamePrefix" value="io-executor-service" />
 		<property name="daemon" value="true" />
 		<property name="executorThreads" value="${storage.ioExecutorThreads}" />
 		<property name="beanSingleton" value="true" />
 	</bean>
 
-	<bean id="storageExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
+	<bean id="storageExecutorService" class="rocks.inspectit.shared.cs.storage.util.ExecutorServiceFactory">
 		<property name="threadNamePrefix" value="storage-executor-service" />
 		<property name="daemon" value="false" />
 		<property name="executorThreads" value="${storage.storageExecutorThreads}" />
 		<property name="scheduledExecutor" value="true" />
 	</bean>
 
-	<bean id="scheduledExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
+	<bean id="scheduledExecutorService" class="rocks.inspectit.shared.cs.storage.util.ExecutorServiceFactory">
 		<property name="threadNamePrefix" value="scheduled-executor-service" />
 		<property name="daemon" value="true" />
 		<property name="executorThreads" value="5" />
@@ -55,7 +55,7 @@
 		<property name="beanSingleton" value="true" />
 	</bean>
 	
-	<bean id="socketReadExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
+	<bean id="socketReadExecutorService" class="rocks.inspectit.shared.cs.storage.util.ExecutorServiceFactory">
 		<property name="threadNamePrefix" value="socket-read-executor-service" />
 		<property name="daemon" value="true" />
 		<property name="executorThreads" value="2" />
@@ -63,7 +63,7 @@
 		<property name="beanSingleton" value="true" />
 	</bean>
 
-	<bean id="kryoNetObjectSpaceExecutorService" class="info.novatec.inspectit.storage.util.ExecutorServiceFactory">
+	<bean id="kryoNetObjectSpaceExecutorService" class="rocks.inspectit.shared.cs.storage.util.ExecutorServiceFactory">
 		<property name="threadNamePrefix" value="kryo-net-object-space-executor-service" />
 		<property name="daemon" value="true" />
 		<property name="executorThreads" value="3" />
@@ -71,7 +71,7 @@
 		<property name="beanSingleton" value="true" />
 	</bean>
 	
-	<bean id="forkJoinWorkerThreadFactory" class="info.novatec.inspectit.indexing.util.ForkJoinPoolWorkerThreadFactoryFactory">
+	<bean id="forkJoinWorkerThreadFactory" class="rocks.inspectit.shared.cs.indexing.util.ForkJoinPoolWorkerThreadFactoryFactory">
 		<property name="threadNamePrefix" value="indexingTreeForkJoinThread" />
 	</bean>
 	

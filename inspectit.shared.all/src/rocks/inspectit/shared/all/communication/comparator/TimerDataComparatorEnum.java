@@ -1,9 +1,9 @@
-package info.novatec.inspectit.communication.comparator;
-
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.data.TimerData;
+package rocks.inspectit.shared.all.communication.comparator;
 
 import java.util.Comparator;
+
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Comparators for the {@link TimerData}.

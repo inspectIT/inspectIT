@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.core.impl;
+package rocks.inspectit.agent.java.core.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -10,24 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.buffer.IBufferStrategy;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.connection.IConnection;
-import info.novatec.inspectit.agent.connection.ServerUnavailableException;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IObjectStorage;
-import info.novatec.inspectit.agent.core.ListListener;
-import info.novatec.inspectit.agent.sending.ISendingStrategy;
-import info.novatec.inspectit.agent.sensor.method.timer.PlainTimerStorage;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.SystemSensorData;
-import info.novatec.inspectit.communication.data.CpuInformationData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.data.TimerData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +19,26 @@ import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.buffer.IBufferStrategy;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.connection.IConnection;
+import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IObjectStorage;
+import rocks.inspectit.agent.java.core.ListListener;
+import rocks.inspectit.agent.java.core.impl.CoreService;
+import rocks.inspectit.agent.java.sending.ISendingStrategy;
+import rocks.inspectit.agent.java.sensor.method.timer.PlainTimerStorage;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.CpuInformationData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 @SuppressWarnings("PMD")
 public class CoreServiceTest extends AbstractLogSupport {

@@ -1,35 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table.input;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.DefaultDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.ExceptionSensorDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.IDataComparator;
-import info.novatec.inspectit.communication.comparator.MethodSensorDataComparatorEnum;
-import info.novatec.inspectit.communication.data.AggregatedExceptionSensorData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
-import info.novatec.inspectit.indexing.aggregation.impl.ExceptionDataAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.ExceptionDataAggregator.ExceptionAggregationType;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.table.TableViewerComparator;
-import info.novatec.inspectit.rcp.editor.viewers.RawAggregatedResultComparator;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler;
-import info.novatec.inspectit.rcp.model.ExceptionImageFactory;
-import info.novatec.inspectit.rcp.model.ModifiersImageFactory;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.editor.table.input;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -52,6 +21,37 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.ExceptionSensorDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator.ExceptionAggregationType;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
+import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler;
+import rocks.inspectit.ui.rcp.model.ExceptionImageFactory;
+import rocks.inspectit.ui.rcp.model.ModifiersImageFactory;
 
 /**
  * This input controller displays the contents of {@link ExceptionSensorData} objects in an

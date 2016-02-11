@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.property.spring;
+package rocks.inspectit.shared.all.cmr.property.spring;
 
 import static java.lang.annotation.ElementType.METHOD;
 

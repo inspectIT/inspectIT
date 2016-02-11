@@ -1,11 +1,12 @@
-package info.novatec.inspectit.indexing;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.indexing.impl.IndexingException;
+package rocks.inspectit.shared.cs.indexing;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 
 /**
  * Interface that defines the operations that each component in indexed tree has to implement.

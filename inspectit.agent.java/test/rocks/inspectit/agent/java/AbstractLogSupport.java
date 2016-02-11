@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent;
+package rocks.inspectit.agent.java;
 
 import java.io.IOException;
 import java.util.logging.Level;

@@ -1,13 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.analyzer.IMatchPattern;
-import info.novatec.inspectit.agent.config.IConfigurationReader;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.ParserException;
-import info.novatec.inspectit.agent.config.PriorityEnum;
-import info.novatec.inspectit.agent.config.StorageException;
-import info.novatec.inspectit.agent.logback.LogInitializer;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.config.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +21,15 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.agent.java.analyzer.IMatchPattern;
+import rocks.inspectit.agent.java.config.IConfigurationReader;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.ParserException;
+import rocks.inspectit.agent.java.config.PriorityEnum;
+import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.logback.LogInitializer;
+import rocks.inspectit.shared.all.spring.logger.Log;
+
 /**
  * This config reader class reads simple config files. Simple in the way as you don't need any
  * additional java libraries and every statement is in one line.
@@ -50,7 +50,7 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 	/**
 	 * Default ignore classes patterns. These will be used if no patterns is supplied by the user.
 	 */
-	private static final String[] DEFAULT_IGNORE_PATTERNS = new String[] { "java.security.SecureClassLoader", "info.novatec.inspectit.*", "$Proxy*", "sun.*", "java.lang.ThreadLocal",
+	private static final String[] DEFAULT_IGNORE_PATTERNS = new String[] { "java.security.SecureClassLoader", "rocks.inspectit.shared.all.*", "$Proxy*", "sun.*", "java.lang.ThreadLocal",
 			"java.lang.ref.Reference", "*_WLStub", "*[]" };
 
 	/**
@@ -373,7 +373,7 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 	private void processExceptionSensorLine(StringTokenizer tokenizer) throws ParserException {
 		// the sensor name is hardcoded here, because we don't define the
 		// fully-qualified name of the exception sensor in the config file.
-		String sensorTypeClass = "info.novatec.inspectit.agent.sensor.exception.ExceptionSensor";
+		String sensorTypeClass = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 		String targetClassName = tokenizer.nextToken();
 		boolean isVirtual = false;
 

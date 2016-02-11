@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.ci.testers;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.rcp.provider.IProfileProvider;
+package rocks.inspectit.ui.rcp.ci.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.provider.IProfileProvider;
 
 /**
  * Tester for the {@link Profile} properties.

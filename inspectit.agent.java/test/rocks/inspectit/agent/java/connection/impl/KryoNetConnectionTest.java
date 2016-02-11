@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.connection.impl;
+package rocks.inspectit.agent.java.connection.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -15,19 +15,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.connection.RegistrationException;
-import info.novatec.inspectit.agent.connection.ServerUnavailableException;
-import info.novatec.inspectit.cmr.service.IAgentStorageService;
-import info.novatec.inspectit.cmr.service.IKeepAliveService;
-import info.novatec.inspectit.cmr.service.IRegistrationService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.kryonet.Client;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +29,21 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryonet.rmi.TimeoutException;
+
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.connection.RegistrationException;
+import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.agent.java.connection.impl.AdditiveWaitRetryStrategy;
+import rocks.inspectit.agent.java.connection.impl.KryoNetConnection;
+import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
+import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
+import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.kryonet.Client;
 
 @SuppressWarnings("PMD")
 public class KryoNetConnectionTest {

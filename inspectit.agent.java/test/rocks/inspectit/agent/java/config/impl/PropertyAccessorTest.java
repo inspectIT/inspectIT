@@ -1,16 +1,10 @@
-package info.novatec.inspectit.agent.config.impl;
+package rocks.inspectit.agent.java.config.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.PropertyAccessException;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPath;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPathStart;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.data.ParameterContentType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +16,14 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.PropertyAccessException;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPath;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
 
 @SuppressWarnings("PMD")
 public class PropertyAccessorTest extends AbstractLogSupport {

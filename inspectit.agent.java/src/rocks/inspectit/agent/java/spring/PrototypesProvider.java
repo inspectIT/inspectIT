@@ -1,14 +1,14 @@
-package info.novatec.inspectit.agent.spring;
-
-import info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferOutputStream;
-import info.novatec.inspectit.storage.nio.stream.SocketExtendedByteBufferInputStream;
-import info.novatec.inspectit.storage.nio.stream.StreamProvider;
-import info.novatec.inspectit.storage.serializer.ISerializerProvider;
-import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
+package rocks.inspectit.agent.java.spring;
 
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
+import rocks.inspectit.shared.all.storage.nio.stream.SocketExtendedByteBufferInputStream;
+import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
+import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
+import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 
 /**
  * Provider for all needed prototypes since we don't have spring config files anymore.

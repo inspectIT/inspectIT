@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.view.tree;
-
-import info.novatec.inspectit.rcp.model.DeferredComposite;
+package rocks.inspectit.ui.rcp.view.tree;
 
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -9,6 +7,8 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreePathViewerSorter;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
+
+import rocks.inspectit.ui.rcp.model.DeferredComposite;
 
 /**
  * This comparator is used to sort the elements in the server view. Only the ones in the

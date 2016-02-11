@@ -1,12 +1,4 @@
-package info.novatec.inspectit.agent;
-
-import info.novatec.inspectit.agent.analyzer.IByteCodeAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatchPattern;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.hooking.IHookDispatcher;
-import info.novatec.inspectit.agent.logback.LogInitializer;
-import info.novatec.inspectit.agent.spring.SpringConfiguration;
-import info.novatec.inspectit.version.VersionService;
+package rocks.inspectit.agent.java;
 
 import java.util.List;
 
@@ -14,6 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatchPattern;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+import rocks.inspectit.agent.java.logback.LogInitializer;
+import rocks.inspectit.agent.java.spring.SpringConfiguration;
+import rocks.inspectit.shared.all.version.VersionService;
 
 /**
  * The {@link SpringAgent} is used by the javaagent to analyze the passed bytecode if its needed to
@@ -39,7 +39,7 @@ public class SpringAgent implements IAgent {
 	/**
 	 * Our class start with {@value #CLASS_NAME_PREFIX}.
 	 */
-	private static final String CLASS_NAME_PREFIX = "info.novatec.inspectit";
+	private static final String CLASS_NAME_PREFIX = "rocks.inspectit.shared.all";
 
 	/**
 	 * The hook dispatcher used by the instrumented methods.

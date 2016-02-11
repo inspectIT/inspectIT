@@ -1,23 +1,23 @@
-package info.novatec.inspectit.rcp.editor.graph.plot;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.SamplingRate;
-import info.novatec.inspectit.rcp.editor.preferences.control.SamplingRateControl;
-import info.novatec.inspectit.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
-import info.novatec.inspectit.rcp.editor.preferences.control.SamplingRateSelecterFactory;
-import info.novatec.inspectit.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
+package rocks.inspectit.ui.rcp.editor.graph.plot;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.SamplingRate;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateSelecterFactory;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
+import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 
 /**
  * The abstract class of the {@link PlotController} interface to provide some standard methods.

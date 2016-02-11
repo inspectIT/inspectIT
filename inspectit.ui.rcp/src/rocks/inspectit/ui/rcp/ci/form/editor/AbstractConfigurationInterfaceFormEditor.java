@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.editor;
+package rocks.inspectit.ui.rcp.ci.form.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;

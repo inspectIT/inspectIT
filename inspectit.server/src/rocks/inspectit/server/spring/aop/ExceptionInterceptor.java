@@ -1,8 +1,4 @@
-package info.novatec.inspectit.cmr.spring.aop;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.RemoteException;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.spring.aop;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,9 +12,13 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.RemoteException;
+import rocks.inspectit.shared.all.spring.logger.Log;
+
 /**
  * Aspect that defines the around advice that is bounded to all methods of all classes in the
- * info.novatec.inspectit.cmr.service package. The advice prints the exception if one is raised and
+ * rocks.inspectit.server.service package. The advice prints the exception if one is raised and
  * provides additional information like what method was executed, what parameters where passed, etc.
  * In addition all exceptions except our BusinessException are transformed to a
  * {@link RemoteException}.
@@ -61,7 +61,7 @@ public class ExceptionInterceptor {
 	 * @throws Exception
 	 *             If exception occurs we re-throw the {@link Exception} of some kind
 	 */
-	@Around("execution(* info.novatec.inspectit.cmr.service.*.*(..))")
+	@Around("execution(* rocks.inspectit.server.service.*.*(..))")
 	public Object logServiceException(ProceedingJoinPoint jp) throws Exception {
 		try {
 			return jp.proceed();

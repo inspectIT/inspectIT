@@ -1,11 +1,8 @@
-package info.novatec.inspectit.storage.nio;
+package rocks.inspectit.shared.cs.storage.nio;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.storage.nio.read.ReadingChannelManager;
-import info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferOutputStream;
-import info.novatec.inspectit.storage.nio.write.WritingChannelManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +24,11 @@ import org.mockito.Mockito;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
+import rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager;
+import rocks.inspectit.shared.cs.storage.nio.write.WritingChannelManager;
 
 /**
  * Test's if the data wrote by a {@link WritingChannelManager} is readable by

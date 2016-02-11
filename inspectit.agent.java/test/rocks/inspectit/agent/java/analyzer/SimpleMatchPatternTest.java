@@ -1,10 +1,11 @@
-package info.novatec.inspectit.agent.analyzer;
+package rocks.inspectit.agent.java.analyzer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.agent.analyzer.impl.SimpleMatchPattern;
 
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.analyzer.impl.SimpleMatchPattern;
 
 @SuppressWarnings("PMD")
 public class SimpleMatchPatternTest {

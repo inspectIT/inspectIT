@@ -1,11 +1,11 @@
-package info.novatec.inspectit.cmr.cache.impl;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.util.UnderlyingSystemInfo;
-import info.novatec.inspectit.util.UnderlyingSystemInfo.JvmProvider;
+package rocks.inspectit.server.cache.impl;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
 
 /**
  * Factory for returning the correct instance of {@link IObjectSizes} for Spring initialization. The

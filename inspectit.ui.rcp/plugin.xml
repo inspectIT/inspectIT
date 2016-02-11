@@ -12,7 +12,7 @@
             thread="main"
             visible="true">
          <run
-               class="info.novatec.inspectit.rcp.Application">
+               class="rocks.inspectit.ui.rcp.Application">
          </run>
       </application>
    </extension>
@@ -20,7 +20,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="info.novatec.inspectit.rcp.application"
+            application="rocks.inspectit.ui.rcp.application"
             name="inspectIT">
          <property
                name="aboutText"
@@ -55,14 +55,14 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="info.novatec.inspectit.rcp.preferences.InspectITPreferenceInitializer">
+            class="rocks.inspectit.ui.rcp.preferences.InspectITPreferenceInitializer">
       </initializer>
    </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="info.novatec.inspectit.communication.data.InvocationSequenceData"
-            class="info.novatec.inspectit.rcp.editor.tree.input.DeferredInvocAdapterFactory">
+            adaptableType="rocks.inspectit.shared.all.communication.data.InvocationSequenceData"
+            class="rocks.inspectit.ui.rcp.editor.tree.input.DeferredInvocAdapterFactory">
          <adapter
                type="org.eclipse.ui.progress.IDeferredWorkbenchAdapter">
          </adapter>
@@ -71,17 +71,17 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="info.novatec.inspectit.rcp.perspective.AnalyzePerspective"
+            class="rocks.inspectit.ui.rcp.perspective.AnalyzePerspective"
             fixed="true"
             icon="icons/selfmade/16x16.png"
-            id="info.novatec.inspectit.rcp.perspective.analyze"
+            id="rocks.inspectit.ui.rcp.perspective.analyze"
             name="Analyze">
       </perspective>
       <perspective
-            class="info.novatec.inspectit.rcp.perspective.ConfigurationInterfacePerspective"
+            class="rocks.inspectit.ui.rcp.perspective.ConfigurationInterfacePerspective"
             fixed="true"
             icon="icons/fugue/compass.png"
-            id="info.novatec.inspectit.rcp.perspective.configurationinterface"
+            id="rocks.inspectit.ui.rcp.perspective.configurationinterface"
             name="Configuration Interface">
       </perspective>
    </extension>
@@ -89,23 +89,23 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="info.novatec.inspectit.rcp.view.impl.StorageManagerView"
+            class="rocks.inspectit.ui.rcp.view.impl.StorageManagerView"
             icon="icons/eclipse/storage.gif"
-            id="info.novatec.inspectit.rcp.view.storageManager"
+            id="rocks.inspectit.ui.rcp.view.storageManager"
             name="Storage Manager"
             restorable="true">
       </view>
       <view
-            class="info.novatec.inspectit.rcp.view.impl.DataExplorerView"
+            class="rocks.inspectit.ui.rcp.view.impl.DataExplorerView"
             icon="icons/eclipse/catalog.gif"
-            id="info.novatec.inspectit.rcp.view.dataExplorer"
+            id="rocks.inspectit.ui.rcp.view.dataExplorer"
             name="Data Explorer"
             restorable="true">
       </view>
       <view
-            class="info.novatec.inspectit.rcp.view.impl.RepositoryManagerView"
+            class="rocks.inspectit.ui.rcp.view.impl.RepositoryManagerView"
             icon="icons/eclipse/server_instance.gif"
-            id="info.novatec.inspectit.rcp.view.repositoryManager"
+            id="rocks.inspectit.ui.rcp.view.repositoryManager"
             name="Repository Manager"
             restorable="true">
       </view>
@@ -117,9 +117,9 @@
             restorable="true">
       </view>
       <view
-            class="info.novatec.inspectit.rcp.ci.view.ConfigurationInterfaceManagerView"
+            class="rocks.inspectit.ui.rcp.ci.view.ConfigurationInterfaceManagerView"
             icon="icons/fugue/compass.png"
-            id="info.novatec.inspectit.rcp.ci.view.ciManager"
+            id="rocks.inspectit.ui.rcp.ci.view.ciManager"
             name="Configuration Manager"
             restorable="true">
       </view>
@@ -127,107 +127,107 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="info.novatec.inspectit.rcp.editor.root.FormRootEditor"
+            class="rocks.inspectit.ui.rcp.editor.root.FormRootEditor"
             default="false"
             id="inspectit.editor.formrooteditor"
             name="Form Root Editor">
       </editor>
       <editor
-            class="info.novatec.inspectit.rcp.ci.form.editor.ProfileEditor"
+            class="rocks.inspectit.ui.rcp.ci.form.editor.ProfileEditor"
             default="false"
             icon="icons/fugue/address-book.png"
-            id="info.novatec.inspectit.rcp.ci.editor.profileEditor"
+            id="rocks.inspectit.ui.rcp.ci.editor.profileEditor"
             name="Profile Editor">
       </editor>
       <editor
-            class="info.novatec.inspectit.rcp.ci.form.editor.EnvironmentEditor"
+            class="rocks.inspectit.ui.rcp.ci.form.editor.EnvironmentEditor"
             default="false"
             icon="icons/fugue/block.png"
-            id="info.novatec.inspectit.rcp.ci.editor.environmentEditor"
+            id="rocks.inspectit.ui.rcp.ci.editor.environmentEditor"
             name="Environment Editor">
       </editor>
       <editor
-            class="info.novatec.inspectit.rcp.ci.form.editor.AgentMappingEditor"
+            class="rocks.inspectit.ui.rcp.ci.form.editor.AgentMappingEditor"
             default="false"
             icon="icons/eclipse/agent.gif"
-            id="info.novatec.inspectit.rcp.ci.editor.agentMappingEditor"
+            id="rocks.inspectit.ui.rcp.ci.editor.agentMappingEditor"
             name="Agent Mapping Editor">
       </editor>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.CreateStorageWizard"
+            class="rocks.inspectit.ui.rcp.wizard.CreateStorageWizard"
             icon="icons/eclipse/add_obj.gif"
-            id="info.novatec.inspectit.rcp.wizard.createStorageWizard"
+            id="rocks.inspectit.ui.rcp.wizard.createStorageWizard"
             name="Create Storage">
          <description>
             Create Storage
          </description>
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.AddStorageLabelWizard"
+            class="rocks.inspectit.ui.rcp.wizard.AddStorageLabelWizard"
             icon="icons/eclipse/label_add.gif"
-            id="info.novatec.inspectit.rcp.wizard.addStorageLabelWizard"
+            id="rocks.inspectit.ui.rcp.wizard.addStorageLabelWizard"
             name="Add Storage Label Wizard">
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.CopyBufferToStorageWizard"
+            class="rocks.inspectit.ui.rcp.wizard.CopyBufferToStorageWizard"
             icon="icons/eclipse/buffer_copy.gif"
-            id="info.novatec.inspectit.rcp.wizard.copyBufferToStorageWizard"
+            id="rocks.inspectit.ui.rcp.wizard.copyBufferToStorageWizard"
             name="Copy Buffer to Storage Wizard">
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.StartRecordingWizard"
+            class="rocks.inspectit.ui.rcp.wizard.StartRecordingWizard"
             icon="icons/eclipse/storage_recording.gif"
-            id="info.novatec.inspectit.rcp.wizard.startRecordingWizard"
+            id="rocks.inspectit.ui.rcp.wizard.startRecordingWizard"
             name="Start Recording Wizard">
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.ManageLabelWizard"
+            class="rocks.inspectit.ui.rcp.wizard.ManageLabelWizard"
             icon="icons/eclipse/label.gif"
-            id="info.novatec.inspectit.rcp.wizard.manageLabelsWizard"
+            id="rocks.inspectit.ui.rcp.wizard.manageLabelsWizard"
             name="Manage Labels Wizard">
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.CopyDataToStorageWizard"
-            id="info.novatec.inspectit.rcp.wizard.copyDataToStorageWizard"
+            class="rocks.inspectit.ui.rcp.wizard.CopyDataToStorageWizard"
+            id="rocks.inspectit.ui.rcp.wizard.copyDataToStorageWizard"
             name="Copy Data to Storage Wizard">
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.DownloadStorageWizard"
+            class="rocks.inspectit.ui.rcp.wizard.DownloadStorageWizard"
             icon="icons/eclipse/storage_download.gif"
-            id="info.novatec.inspectit.rcp.wizard.downloadStorageWizard"
+            id="rocks.inspectit.ui.rcp.wizard.downloadStorageWizard"
             name="Download Storage Wizard">
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.AddCmrRepositoryWizard"
+            class="rocks.inspectit.ui.rcp.wizard.AddCmrRepositoryWizard"
             icon="icons/eclipse/add_obj.gif"
-            id="info.novatec.inspectit.rcp.wizard.addCmrRepositoryWizard"
+            id="rocks.inspectit.ui.rcp.wizard.addCmrRepositoryWizard"
             name="Add Central Management Repository (CMR)">
          <description>
             Add Central Management Repository (CMR)
          </description>
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.UploadStorageWizard"
+            class="rocks.inspectit.ui.rcp.wizard.UploadStorageWizard"
             icon="icons/eclipse/storage_upload.gif"
-            id="info.novatec.inspectit.rcp.wizard.uploadStorageWizard"
+            id="rocks.inspectit.ui.rcp.wizard.uploadStorageWizard"
             name="Upload Storage Wizard">
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.ci.wizard.CreateProfileWizard"
+            class="rocks.inspectit.ui.rcp.ci.wizard.CreateProfileWizard"
             icon="icons/eclipse/add_obj.gif"
-            id="info.novatec.inspectit.rcp.ci.wizard.createProfileWizard"
+            id="rocks.inspectit.ui.rcp.ci.wizard.createProfileWizard"
             name="Create Profile">
          <description>
             Create Profile
          </description>
       </wizard>
       <wizard
-            class="info.novatec.inspectit.rcp.ci.wizard.CreateEnvironmentWizard"
+            class="rocks.inspectit.ui.rcp.ci.wizard.CreateEnvironmentWizard"
             icon="icons/eclipse/add_obj.gif"
-            id="info.novatec.inspectit.rcp.ci.wizard.createEnvironmentWizard"
+            id="rocks.inspectit.ui.rcp.ci.wizard.createEnvironmentWizard"
             name="Create Environment">
          <description>
             Create Environment
@@ -237,9 +237,9 @@
    <extension
          point="org.eclipse.ui.importWizards">
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.ImportStorageWizard"
+            class="rocks.inspectit.ui.rcp.wizard.ImportStorageWizard"
             icon="icons/eclipse/import.gif"
-            id="info.novatec.inspectit.rcp.wizard.importStorageWizard"
+            id="rocks.inspectit.ui.rcp.wizard.importStorageWizard"
             name="Import Storage">
          <description>
             Import Storage
@@ -249,9 +249,9 @@
    <extension
          point="org.eclipse.ui.exportWizards">
       <wizard
-            class="info.novatec.inspectit.rcp.wizard.ExportStorageWizard"
+            class="rocks.inspectit.ui.rcp.wizard.ExportStorageWizard"
             icon="icons/eclipse/export.gif"
-            id="info.novatec.inspectit.rcp.wizard.exportStorageWizard"
+            id="rocks.inspectit.ui.rcp.wizard.exportStorageWizard"
             name="Export Storage">
          <description>
             Export Storage
@@ -261,251 +261,251 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            id="info.novatec.inspectit.rcp.commands.openView"
+            id="rocks.inspectit.ui.rcp.commands.openView"
             name="Open View">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.details"
+            id="rocks.inspectit.ui.rcp.commands.details"
             name="Details">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.documentation"
+            id="rocks.inspectit.ui.rcp.commands.documentation"
             name="Documentation">
 	  </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.navigateToInvocations"
+            id="rocks.inspectit.ui.rcp.commands.navigateToInvocations"
             name="Invocation(s)">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.navigateToPlotting"
+            id="rocks.inspectit.ui.rcp.commands.navigateToPlotting"
             name="History Graph">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.navigateToStartMethodInvocations"
+            id="rocks.inspectit.ui.rcp.commands.navigateToStartMethodInvocations"
             name="Only This Method Invocations">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.addToSteppingObjects"
+            id="rocks.inspectit.ui.rcp.commands.addToSteppingObjects"
             name="Locate in Call Hierarchy">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.invocationsAggregatedTimerData"
+            id="rocks.inspectit.ui.rcp.commands.invocationsAggregatedTimerData"
             name="Invocations Aggregated Timer Data">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.showHideColumn"
+            id="rocks.inspectit.ui.rcp.commands.showHideColumn"
             name="Show/Hide Column">
          <commandParameter
-               id="info.novatec.inspectit.rcp.commands.showHideColumn.Column"
+               id="rocks.inspectit.ui.rcp.commands.showHideColumn.Column"
                name="Column"
                optional="false">
          </commandParameter>
          <commandParameter
-               id="info.novatec.inspectit.rcp.commands.showHideColumn.Visible"
+               id="rocks.inspectit.ui.rcp.commands.showHideColumn.Visible"
                name="Visible"
                optional="false">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.maximizeActiveView"
+            id="rocks.inspectit.ui.rcp.commands.maximizeActiveView"
             name="Maximize Active Sub-View">
          <commandParameter
-               id="info.novatec.inspectit.rcp.commands.maximizeActiveView.preferencePanelId"
+               id="rocks.inspectit.ui.rcp.commands.maximizeActiveView.preferencePanelId"
                name="Parameter"
                optional="true">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.createStorage"
+            id="rocks.inspectit.ui.rcp.commands.createStorage"
             name="Create Storage">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.closeStorage"
+            id="rocks.inspectit.ui.rcp.commands.closeStorage"
             name="Close Storage">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.addStorageLabel"
+            id="rocks.inspectit.ui.rcp.commands.addStorageLabel"
             name="Add Storage Label">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.removeStorageLabel"
+            id="rocks.inspectit.ui.rcp.commands.removeStorageLabel"
             name="Remove Storage Label">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.startRecording"
+            id="rocks.inspectit.ui.rcp.commands.startRecording"
             name="Start Recording">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.stopRecording"
+            id="rocks.inspectit.ui.rcp.commands.stopRecording"
             name="Stop Recording">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.showRepository"
+            id="rocks.inspectit.ui.rcp.commands.showRepository"
             name="Show Repository">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.copyBufferToStorage"
+            id="rocks.inspectit.ui.rcp.commands.copyBufferToStorage"
             name="Copy Buffer to Storage">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.clearRepositoryBuffer"
+            id="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer"
             name="Clear Repository Buffer">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.removeCmrRepository"
+            id="rocks.inspectit.ui.rcp.commands.removeCmrRepository"
             name="Remove CMR Repository">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.showLabelsManager"
+            id="rocks.inspectit.ui.rcp.commands.showLabelsManager"
             name="Show Labels Manager">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.closeAndShowStorage"
+            id="rocks.inspectit.ui.rcp.commands.closeAndShowStorage"
             name="Close And Show Storage">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.copySqlQuery"
+            id="rocks.inspectit.ui.rcp.commands.copySqlQuery"
             name="Copy SQL Query">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.sendFeedback"
+            id="rocks.inspectit.ui.rcp.commands.sendFeedback"
             name="Send Feedback">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.requestSupport"
+            id="rocks.inspectit.ui.rcp.commands.requestSupport"
             name="Request Support">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.searchDocumentation"
+            id="rocks.inspectit.ui.rcp.commands.searchDocumentation"
             name="Search Documentation">
          <commandParameter
-               id="info.novatec.inspectit.rcp.commands.searchDocumentation.searchString"
+               id="rocks.inspectit.ui.rcp.commands.searchDocumentation.searchString"
                name="Search string"
                optional="false">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.downloadStorage"
+            id="rocks.inspectit.ui.rcp.commands.downloadStorage"
             name="Download Storage">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.navigateToAggregatedSqlData"
+            id="rocks.inspectit.ui.rcp.commands.navigateToAggregatedSqlData"
             name="Navigate To Aggregated SQL Data">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.navigateToAggregatedTimerData"
+            id="rocks.inspectit.ui.rcp.commands.navigateToAggregatedTimerData"
             name="Navigate To Aggregated Timer Data">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.menu.addMenu"
+            id="rocks.inspectit.ui.rcp.menu.addMenu"
             name="Add Menu Command">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.exportStorage"
+            id="rocks.inspectit.ui.rcp.commands.exportStorage"
             name="Export Storage">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.uploadStorage"
+            id="rocks.inspectit.ui.rcp.commands.uploadStorage"
             name="Upload Storage">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.collapse"
+            id="rocks.inspectit.ui.rcp.commands.collapse"
             name="Collapse">
          <commandParameter
-               id="info.novatec.inspectit.rcp.commands.collapse.isCollapseAll"
+               id="rocks.inspectit.ui.rcp.commands.collapse.isCollapseAll"
                name="isCollapseAll"
                optional="false">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.expand"
+            id="rocks.inspectit.ui.rcp.commands.expand"
             name="Expand">
          <commandParameter
-               id="info.novatec.inspectit.rcp.commands.expand.isExpandAll"
+               id="rocks.inspectit.ui.rcp.commands.expand.isExpandAll"
                name="isExpandAll"
                optional="false">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.displayInChart"
+            id="rocks.inspectit.ui.rcp.commands.displayInChart"
             name="Display in Chart">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.cmrConfiguration"
+            id="rocks.inspectit.ui.rcp.commands.cmrConfiguration"
             name="CMR Configuration">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.shutdown"
+            id="rocks.inspectit.ui.rcp.shutdown"
             name="Shutdown CMR">
          <commandParameter
-               id="info.novatec.inspectit.rcp.commands.shutdown.shouldRestart"
+               id="rocks.inspectit.ui.rcp.commands.shutdown.shouldRestart"
                name="Should Restart"
                optional="false">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.navigateToSingleExceptionType"
+            id="rocks.inspectit.ui.rcp.commands.navigateToSingleExceptionType"
             name="Navigate To Single Exception Type">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.sendErrorReport"
+            id="rocks.inspectit.ui.rcp.sendErrorReport"
             name="Send Error Report to Support">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType"
+            id="rocks.inspectit.ui.rcp.commands.navigateToGroupedExceptionType"
             name="Navigate To Grouped Exception Type">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.copyContextParameters"
+            id="rocks.inspectit.ui.rcp.commands.copyContextParameters"
             name="Copy Context Parameters">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.ci.agentMapping"
+            id="rocks.inspectit.ui.rcp.ci.agentMapping"
             name="Agent Mapping">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.commands.checkForNewVersion"
+            id="rocks.inspectit.ui.rcp.commands.checkForNewVersion"
             name="Check for New Version">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu"
+            id="rocks.inspectit.ui.rcp.ci.menu.addProfileEnvironmentMenu"
             name="Add Profile Environment Menu">
       </command>
       <command
-            id="info.novatec.inspectit.rcp.ci.activateProfile"
+            id="rocks.inspectit.ui.rcp.ci.activateProfile"
             name="Active/Deactivate Profile">
          <commandParameter
-               id="info.novatec.inspectit.rcp.ci.activateProfile.active"
+               id="rocks.inspectit.ui.rcp.ci.activateProfile.active"
                name="Active?"
                optional="false">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.ci.setDefaultProfile"
+            id="rocks.inspectit.ui.rcp.ci.setDefaultProfile"
             name="Set (Non-)Default Profile">
          <commandParameter
-               id="info.novatec.inspectit.rcp.ci.setDefaultProfile.default"
+               id="rocks.inspectit.ui.rcp.ci.setDefaultProfile.default"
                name="Default?"
                optional="false">
          </commandParameter>
       </command>
       <command
-            id="info.novatec.inspectit.rcp.ci.duplicateProfile"
+            id="rocks.inspectit.ui.rcp.ci.duplicateProfile"
             name="Duplicate Profile">
       </command>
       <command 
-      		id="info.novatec.inspectit.rcp.commands.copyLogMessage" 
+      		id="rocks.inspectit.ui.rcp.commands.copyLogMessage" 
       		name="Copy Log Message">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="info.novatec.inspectit.rcp.handlers.OpenViewHandler"
-            commandId="info.novatec.inspectit.rcp.commands.openView">
+            class="rocks.inspectit.ui.rcp.handlers.OpenViewHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.openView">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.TreeCopyHandler"
+            class="rocks.inspectit.ui.rcp.handlers.TreeCopyHandler"
             commandId="org.eclipse.ui.edit.copy">
          <activeWhen>
             <and>
@@ -515,16 +515,16 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.DefaultData">
+                        value="rocks.inspectit.shared.all.communication.DefaultData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.activeSubView"
+                        property="rocks.inspectit.ui.rcp.activeSubView"
                         value="treeSubView">
                   </test>
                </with>
@@ -532,7 +532,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.TableCopyHandler"
+            class="rocks.inspectit.ui.rcp.handlers.TableCopyHandler"
             commandId="org.eclipse.ui.edit.copy">
          <activeWhen>
             <and>
@@ -542,16 +542,16 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.DefaultData">
+                        value="rocks.inspectit.shared.all.communication.DefaultData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.activeSubView"
+                        property="rocks.inspectit.ui.rcp.activeSubView"
                         value="tableSubView">
                   </test>
                </with>
@@ -559,12 +559,12 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.OpenUrlHandler$OpenDocumentationHandler"
-            commandId="info.novatec.inspectit.rcp.commands.documentation">
+            class="rocks.inspectit.ui.rcp.handlers.OpenUrlHandler$OpenDocumentationHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.documentation">
 	  </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToInvocationsHandler"
-            commandId="info.novatec.inspectit.rcp.commands.navigateToInvocations">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToInvocationsHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.navigateToInvocations">
          <activeWhen>
             <and>
                <count
@@ -573,27 +573,27 @@
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                </with>
                <with
                      variable="selection">
                   <test
-                        property="info.novatec.inspectit.canNavigateToInvocations">
+                        property="rocks.inspectit.ui.rcp.canNavigateToInvocations">
                   </test>
                </with>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.InvocationAwareData">
+                        value="rocks.inspectit.shared.all.communication.data.InvocationAwareData">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToStartMethodInvocationHandler"
-            commandId="info.novatec.inspectit.rcp.commands.navigateToStartMethodInvocations">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToStartMethodInvocationHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.navigateToStartMethodInvocations">
          <activeWhen>
             <and>
                <count
@@ -601,16 +601,16 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                        value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.activeSubView"
+                        property="rocks.inspectit.ui.rcp.activeSubView"
                         value="tableSubView">
                   </test>
                </with>
@@ -618,37 +618,37 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.RefreshEditorHandler"
+            class="rocks.inspectit.ui.rcp.handlers.RefreshEditorHandler"
             commandId="org.eclipse.ui.file.refresh">
          <activeWhen>
             <and>
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                </with>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.RefreshViewHandler"
+            class="rocks.inspectit.ui.rcp.handlers.RefreshViewHandler"
             commandId="org.eclipse.ui.file.refresh">
          <activeWhen>
             <with
                   variable="activePart">
                <instanceof
-                     value="info.novatec.inspectit.rcp.view.IRefreshableView">
+                     value="rocks.inspectit.ui.rcp.view.IRefreshableView">
                </instanceof>
                <test
-                     property="info.novatec.inspectit.canRefresh">
+                     property="rocks.inspectit.ui.rcp.canRefresh">
                </test>
             </with>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CloseStorageHandler"
-            commandId="info.novatec.inspectit.rcp.commands.closeStorage">
+            class="rocks.inspectit.ui.rcp.handlers.CloseStorageHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.closeStorage">
          <activeWhen>
             <and>
                <count
@@ -656,10 +656,10 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.storageState"
+                        property="rocks.inspectit.ui.rcp.storageState"
                         value="OPENED">
                   </test>
                </iterate>
@@ -667,7 +667,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.DeleteStorageHandler"
+            class="rocks.inspectit.ui.rcp.handlers.DeleteStorageHandler"
             commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
             <and>
@@ -677,11 +677,11 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
                   </instanceof>
                   <not>
                      <test
-                           property="info.novatec.inspectit.storageState"
+                           property="rocks.inspectit.ui.rcp.storageState"
                            value="RECORDING">
                      </test>
                   </not>
@@ -690,8 +690,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.AddStorageLabelHandler"
-            commandId="info.novatec.inspectit.rcp.commands.addStorageLabel">
+            class="rocks.inspectit.ui.rcp.handlers.AddStorageLabelHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addStorageLabel">
          <activeWhen>
             <and>
                <count
@@ -699,15 +699,15 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.RemoveStorageLabelHandler"
-            commandId="info.novatec.inspectit.rcp.commands.removeStorageLabel">
+            class="rocks.inspectit.ui.rcp.handlers.RemoveStorageLabelHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.removeStorageLabel">
          <activeWhen>
             <and>
                <count
@@ -715,15 +715,15 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.StartRecordingHandler"
-            commandId="info.novatec.inspectit.rcp.commands.startRecording">
+            class="rocks.inspectit.ui.rcp.handlers.StartRecordingHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.startRecording">
          <activeWhen>
             <and>
                <count
@@ -732,18 +732,18 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                      </instanceof>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider">
                      </instanceof>
                   </or>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                   <test
-                        property="info.novatec.inspectit.recordingActive"
+                        property="rocks.inspectit.ui.rcp.recordingActive"
                         value="false">
                   </test>
                </iterate>
@@ -751,8 +751,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.StopRecordingHanlder"
-            commandId="info.novatec.inspectit.rcp.commands.stopRecording">
+            class="rocks.inspectit.ui.rcp.handlers.StopRecordingHanlder"
+            commandId="rocks.inspectit.ui.rcp.commands.stopRecording">
          <activeWhen>
             <and>
                <count
@@ -761,18 +761,18 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                      </instanceof>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider">
                      </instanceof>
                   </or>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                   <test
-                        property="info.novatec.inspectit.recordingActive"
+                        property="rocks.inspectit.ui.rcp.recordingActive"
                         value="true">
                   </test>
                </iterate>
@@ -780,32 +780,32 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ShowRepositoryHandler"
-            commandId="info.novatec.inspectit.rcp.commands.showRepository">
+            class="rocks.inspectit.ui.rcp.handlers.ShowRepositoryHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.showRepository">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ClearRepositoryBufferHandler"
-            commandId="info.novatec.inspectit.rcp.commands.clearRepositoryBuffer">
+            class="rocks.inspectit.ui.rcp.handlers.ClearRepositoryBufferHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer">
          <activeWhen>
             <or>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
                <with
                      variable="activePart">
                   <test
-                        property="info.novatec.inspectit.repositoryType"
+                        property="rocks.inspectit.ui.rcp.repositoryType"
                         value="cmrRepositoryDefinition">
                   </test>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </with>
@@ -813,8 +813,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.RemoveCmrRepositoryHandler"
-            commandId="info.novatec.inspectit.rcp.commands.removeCmrRepository">
+            class="rocks.inspectit.ui.rcp.handlers.RemoveCmrRepositoryHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.removeCmrRepository">
          <activeWhen>
             <and>
                <count
@@ -822,15 +822,15 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CopyBufferToStorageHandler"
-            commandId="info.novatec.inspectit.rcp.commands.copyBufferToStorage">
+            class="rocks.inspectit.ui.rcp.handlers.CopyBufferToStorageHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.copyBufferToStorage">
          <activeWhen>
             <and>
                <count
@@ -839,14 +839,14 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                      </instanceof>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider">
                      </instanceof>
                   </or>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
@@ -854,8 +854,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ShowLabelsManagerHandler"
-            commandId="info.novatec.inspectit.rcp.commands.showLabelsManager">
+            class="rocks.inspectit.ui.rcp.handlers.ShowLabelsManagerHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.showLabelsManager">
          <activeWhen>
             <and>
                <count
@@ -863,10 +863,10 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
@@ -874,7 +874,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CopyDataToStorageHandler"
+            class="rocks.inspectit.ui.rcp.handlers.CopyDataToStorageHandler"
             commandId="org.eclipse.ui.file.save">
          <activeWhen>
             <and>
@@ -884,16 +884,16 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.MethodSensorData">
+                        value="rocks.inspectit.shared.all.communication.MethodSensorData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.repositoryType"
+                        property="rocks.inspectit.ui.rcp.repositoryType"
                         value="cmrRepositoryDefinition">
                   </test>
                </with>
@@ -907,11 +907,11 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler"
-            commandId="info.novatec.inspectit.rcp.commands.showHideColumn">
+            class="rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.showHideColumn">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.FindHandler"
+            class="rocks.inspectit.ui.rcp.handlers.FindHandler"
             commandId="org.eclipse.ui.edit.findReplace">
          <activeWhen>
             <and>
@@ -923,7 +923,7 @@
                      </equals>
                   </not>
                   <test
-                        property="info.novatec.inspectit.hasSubView"
+                        property="rocks.inspectit.ui.rcp.hasSubView"
                         value="searchExecutor">
                   </test>
                </with>
@@ -931,21 +931,21 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.MaximizeActiveViewHandler"
-            commandId="info.novatec.inspectit.rcp.commands.maximizeActiveView">
+            class="rocks.inspectit.ui.rcp.handlers.MaximizeActiveViewHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.maximizeActiveView">
          <activeWhen>
             <and>
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <or>
                      <test
-                           property="info.novatec.inspectit.canMaximize">
+                           property="rocks.inspectit.ui.rcp.canMaximize">
                      </test>
                      <test
-                           property="info.novatec.inspectit.canMinimize">
+                           property="rocks.inspectit.ui.rcp.canMinimize">
                      </test>
                   </or>
                </with>
@@ -953,7 +953,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.EditCmrRepositoryHandler"
+            class="rocks.inspectit.ui.rcp.handlers.EditCmrRepositoryHandler"
             commandId="org.eclipse.ui.edit.rename">
          <activeWhen>
             <and>
@@ -962,24 +962,24 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <not>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                           value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                      </instanceof>
                   </not>
                   <not>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                           value="rocks.inspectit.ui.rcp.provider.IEnvironmentProvider">
                      </instanceof>
                   </not></iterate>
             </and>
          </activeWhen>
       </handler>
        <handler
-            class="info.novatec.inspectit.rcp.handlers.InvocationsCombineDataHandler"
-            commandId="info.novatec.inspectit.rcp.commands.invocationsAggregatedTimerData">
+            class="rocks.inspectit.ui.rcp.handlers.InvocationsCombineDataHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.invocationsAggregatedTimerData">
          <activeWhen>
             <and>
                <count
@@ -988,14 +988,14 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                        value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.EditStorageDataHandler"
+            class="rocks.inspectit.ui.rcp.handlers.EditStorageDataHandler"
             commandId="org.eclipse.ui.edit.rename">
          <activeWhen>
             <and>
@@ -1004,19 +1004,19 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CloseAndShowStorageHandler"
-            commandId="info.novatec.inspectit.rcp.commands.closeAndShowStorage">
+            class="rocks.inspectit.ui.rcp.handlers.CloseAndShowStorageHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.closeAndShowStorage">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CopySqlQueryHandler"
-            commandId="info.novatec.inspectit.rcp.commands.copySqlQuery">
+            class="rocks.inspectit.ui.rcp.handlers.CopySqlQueryHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.copySqlQuery">
          <activeWhen>
             <and>
                <count
@@ -1025,15 +1025,15 @@
                <or>
                   <iterate>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.SqlStatementData">
+                           value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
                      </instanceof>
                   </iterate>
                   <iterate>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                           value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                      </instanceof>
                      <test
-                           property="info.novatec.inspectit.hasSQLData"
+                           property="rocks.inspectit.ui.rcp.hasSQLData"
                            value="true">
                      </test>
                   </iterate>
@@ -1042,8 +1042,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.LocateHandler$SqlLocateHandler"
-            commandId="info.novatec.inspectit.rcp.commands.addToSteppingObjects">
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$SqlLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
          <activeWhen>
             <and>
                <count
@@ -1052,13 +1052,13 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.SqlStatementData">
+                        value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <test
-                        property="info.novatec.inspectit.hasSubView"
+                        property="rocks.inspectit.ui.rcp.hasSubView"
                         value="steppingTreeSubView">
                   </test>
                </with>
@@ -1066,8 +1066,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.LocateHandler$ExceptionLocateHandler"
-            commandId="info.novatec.inspectit.rcp.commands.addToSteppingObjects">
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$ExceptionLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
          <activeWhen>
             <and>
                <count
@@ -1076,13 +1076,13 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.ExceptionSensorData">
+                        value="rocks.inspectit.shared.all.communication.data.ExceptionSensorData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <test
-                        property="info.novatec.inspectit.hasSubView"
+                        property="rocks.inspectit.ui.rcp.hasSubView"
                         value="steppingTreeSubView">
                   </test>
                </with>
@@ -1090,8 +1090,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.LocateHandler$InvocationLocateHandler"
-            commandId="info.novatec.inspectit.rcp.commands.addToSteppingObjects">
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$InvocationLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
          <activeWhen>
             <and>
                <count
@@ -1100,17 +1100,17 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                        value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <test
-                        property="info.novatec.inspectit.hasSubView"
+                        property="rocks.inspectit.ui.rcp.hasSubView"
                         value="steppingTreeSubView">
                   </test>
                   <test
-                        property="info.novatec.inspectit.activeSubView"
+                        property="rocks.inspectit.ui.rcp.activeSubView"
                         value="treeSubView">
                   </test>
                </with>
@@ -1118,8 +1118,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.DownloadStorageHandler"
-            commandId="info.novatec.inspectit.rcp.commands.downloadStorage">
+            class="rocks.inspectit.ui.rcp.handlers.DownloadStorageHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.downloadStorage">
          <activeWhen>
             <and>
                <count
@@ -1127,14 +1127,14 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.storageState"
+                        property="rocks.inspectit.ui.rcp.storageState"
                         value="CLOSED">
                   </test>
                   <test
-                        property="info.novatec.inspectit.isStorageDownloaded"
+                        property="rocks.inspectit.ui.rcp.isStorageDownloaded"
                         value="false">
                   </test>
                </iterate>
@@ -1142,33 +1142,33 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToAggregatedSqlDataHandler"
-            commandId="info.novatec.inspectit.rcp.commands.navigateToAggregatedSqlData">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToAggregatedSqlDataHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.navigateToAggregatedSqlData">
             <activeWhen>
             	<and>
             	<iterate
                    ifEmpty="false">
                   <or>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.SqlStatementData">
+                           value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
                      </instanceof>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                           value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                      </instanceof>
                   </or>
                </iterate>
                <with
                      variable="selection">
                   <test
-                        property="info.novatec.inspectit.canNavigateToAggregatedSqlData">
+                        property="rocks.inspectit.ui.rcp.canNavigateToAggregatedSqlData">
                   </test>
                </with>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.LocateHandler$TimerLocateHandler"
-            commandId="info.novatec.inspectit.rcp.commands.addToSteppingObjects">
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$TimerLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
          <activeWhen>
             <and>
                <count
@@ -1178,22 +1178,22 @@
                      ifEmpty="false">
                   <not>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.SqlStatementData">
+                           value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
                      </instanceof>
                   </not>
                   <not>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.HttpTimerData">
+                           value="rocks.inspectit.shared.all.communication.data.HttpTimerData">
                      </instanceof>
                   </not>
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.TimerData">
+                        value="rocks.inspectit.shared.all.communication.data.TimerData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <test
-                        property="info.novatec.inspectit.hasSubView"
+                        property="rocks.inspectit.ui.rcp.hasSubView"
                         value="steppingTreeSubView">
                   </test>
                </with>
@@ -1201,34 +1201,34 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.OpenUrlHandler$GiveFeedbackHandler"
-            commandId="info.novatec.inspectit.rcp.commands.sendFeedback">
+            class="rocks.inspectit.ui.rcp.handlers.OpenUrlHandler$GiveFeedbackHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.sendFeedback">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.OpenUrlHandler$RequestSupportHandler"
-            commandId="info.novatec.inspectit.rcp.commands.requestSupport">
+            class="rocks.inspectit.ui.rcp.handlers.OpenUrlHandler$RequestSupportHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.requestSupport">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.OpenUrlHandler$SearchDocumentationHandler"
-            commandId="info.novatec.inspectit.rcp.commands.searchDocumentation">
+            class="rocks.inspectit.ui.rcp.handlers.OpenUrlHandler$SearchDocumentationHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.searchDocumentation">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.DeleteLocalStorageHandler"
+            class="rocks.inspectit.ui.rcp.handlers.DeleteLocalStorageHandler"
             commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
             <and>
             	<iterate
                    ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToAggregatedTimerDataHandler"
-            commandId="info.novatec.inspectit.rcp.commands.navigateToAggregatedTimerData">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToAggregatedTimerDataHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.navigateToAggregatedTimerData">
          <activeWhen>
             <and>
                <count
@@ -1237,20 +1237,20 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                           value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                      </instanceof>
                      <and>
                         <instanceof
-                              value="info.novatec.inspectit.communication.data.TimerData">
+                              value="rocks.inspectit.shared.all.communication.data.TimerData">
                         </instanceof>
                         <not>
                            <instanceof
-                                 value="info.novatec.inspectit.communication.data.SqlStatementData">
+                                 value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
                            </instanceof>
                         </not>
                         <not>
                            <instanceof
-                                 value="info.novatec.inspectit.communication.data.HttpTimerData">
+                                 value="rocks.inspectit.shared.all.communication.data.HttpTimerData">
                            </instanceof>
                         </not>
                      </and>
@@ -1259,19 +1259,19 @@
                <with
                      variable="selection">
                   <test
-                        property="info.novatec.inspectit.canNavigateToAggregatedTimerData">
+                        property="rocks.inspectit.ui.rcp.canNavigateToAggregatedTimerData">
                   </test>
                </with>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ShowPullDownMenuHandler"
-            commandId="info.novatec.inspectit.rcp.menu.addMenu">
+            class="rocks.inspectit.ui.rcp.handlers.ShowPullDownMenuHandler"
+            commandId="rocks.inspectit.ui.rcp.menu.addMenu">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ExportLocalStorageHandler"
-            commandId="info.novatec.inspectit.rcp.commands.exportStorage">
+            class="rocks.inspectit.ui.rcp.handlers.ExportLocalStorageHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.exportStorage">
          <activeWhen>
             <and>
                <count
@@ -1280,15 +1280,15 @@
                <or>
                   <iterate>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider">
+                           value="rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider">
                      </instanceof>
                   </iterate>
                   <iterate>
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+                           value="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
                      </instanceof>
                      <test
-                           property="info.novatec.inspectit.storageState"
+                           property="rocks.inspectit.ui.rcp.storageState"
                            value="CLOSED">
                      </test>
                   </iterate>
@@ -1297,8 +1297,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.UploadStorageHandler"
-            commandId="info.novatec.inspectit.rcp.commands.uploadStorage">
+            class="rocks.inspectit.ui.rcp.handlers.UploadStorageHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.uploadStorage">
          <activeWhen>
             <and>
                <count
@@ -1306,15 +1306,15 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.TreeCollapseHandler"
-            commandId="info.novatec.inspectit.rcp.commands.collapse">
+            class="rocks.inspectit.ui.rcp.handlers.TreeCollapseHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.collapse">
          <activeWhen>
             <and>
                <count
@@ -1323,10 +1323,10 @@
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.activeSubView"
+                        property="rocks.inspectit.ui.rcp.activeSubView"
                         value="treeSubView">
                   </test>
                </with>
@@ -1334,8 +1334,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.TreeExpandHandler"
-            commandId="info.novatec.inspectit.rcp.commands.expand">
+            class="rocks.inspectit.ui.rcp.handlers.TreeExpandHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.expand">
          <activeWhen>
             <and>
                <count
@@ -1344,10 +1344,10 @@
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.activeSubView"
+                        property="rocks.inspectit.ui.rcp.activeSubView"
                         value="treeSubView">
                   </test>
                </with>
@@ -1355,7 +1355,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.DeleteAgentHandler"
+            class="rocks.inspectit.ui.rcp.handlers.DeleteAgentHandler"
             commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
             <and>
@@ -1365,18 +1365,18 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.model.AgentLeaf">
+                        value="rocks.inspectit.ui.rcp.model.AgentLeaf">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.canDelete">
+                        property="rocks.inspectit.ui.rcp.canDelete">
                   </test>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.HttpDisplayInChartHandler"
-            commandId="info.novatec.inspectit.rcp.commands.displayInChart">
+            class="rocks.inspectit.ui.rcp.handlers.HttpDisplayInChartHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.displayInChart">
          <activeWhen>
             <and>
                <count
@@ -1384,10 +1384,10 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.HttpTimerData">
+                        value="rocks.inspectit.shared.all.communication.data.HttpTimerData">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.canChart"
+                        property="rocks.inspectit.ui.rcp.canChart"
                         value="true">
                   </test>
                </iterate>
@@ -1395,8 +1395,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CmrConfigurationHandler"
-            commandId="info.novatec.inspectit.rcp.commands.cmrConfiguration">
+            class="rocks.inspectit.ui.rcp.handlers.CmrConfigurationHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.cmrConfiguration">
          <activeWhen>
             <and>
                <count
@@ -1404,10 +1404,10 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
@@ -1415,8 +1415,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ShutdownCmrHandler"
-            commandId="info.novatec.inspectit.rcp.shutdown">
+            class="rocks.inspectit.ui.rcp.handlers.ShutdownCmrHandler"
+            commandId="rocks.inspectit.ui.rcp.shutdown">
          <activeWhen>
             <and>
                <count
@@ -1424,10 +1424,10 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
@@ -1435,8 +1435,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToPlotting"
-            commandId="info.novatec.inspectit.rcp.commands.displayInChart">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToPlotting"
+            commandId="rocks.inspectit.ui.rcp.commands.displayInChart">
          <activeWhen>
             <and>
                <count
@@ -1446,46 +1446,46 @@
                   <or>
                      <and>
                         <instanceof
-                              value="info.novatec.inspectit.communication.data.TimerData">
+                              value="rocks.inspectit.shared.all.communication.data.TimerData">
                         </instanceof>
                         <not>
                            <instanceof
-                                 value="info.novatec.inspectit.communication.data.SqlStatementData">
+                                 value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
                            </instanceof>
                         </not>
                         <not>
                            <instanceof
-                                 value="info.novatec.inspectit.communication.data.HttpTimerData">
+                                 value="rocks.inspectit.shared.all.communication.data.HttpTimerData">
                            </instanceof>
                         </not>
                         <test
-                              property="info.novatec.inspectit.canChart"
+                              property="rocks.inspectit.ui.rcp.canChart"
                               value="true">
                         </test>
                      </and>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                           value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                      </instanceof>
                   </or>
                </iterate>
                <with
                      variable="activeEditor">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                   <or>
                      <test
-                           property="info.novatec.inspectit.activeSubView"
+                           property="rocks.inspectit.ui.rcp.activeSubView"
                            value="tableSubView">
                      </test>
                      <test
-                           property="info.novatec.inspectit.activeSubView"
+                           property="rocks.inspectit.ui.rcp.activeSubView"
                            value="treeSubView">
                      </test>
                   </or>
                   <not>
                      <test
-                           property="info.novatec.inspectit.hasSubView"
+                           property="rocks.inspectit.ui.rcp.hasSubView"
                            value="graphSubView">
                      </test>
                   </not>
@@ -1493,32 +1493,32 @@
                <with
                      variable="selection">
                   <test
-                        property="info.novatec.inspectit.canNavigateToPlotting">
+                        property="rocks.inspectit.ui.rcp.canNavigateToPlotting">
                   </test>
                </with>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.RenameEditorHandler"
+            class="rocks.inspectit.ui.rcp.handlers.RenameEditorHandler"
             commandId="org.eclipse.ui.edit.rename">
          <activeWhen>
             <and>
                <with
                      variable="activePart">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                        value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                   </instanceof>
                </with></and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.OpenUrlHandler$ExceptionSupportHandler"
-            commandId="info.novatec.inspectit.rcp.sendErrorReport">
+            class="rocks.inspectit.ui.rcp.handlers.OpenUrlHandler$ExceptionSupportHandler"
+            commandId="rocks.inspectit.ui.rcp.sendErrorReport">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.AgentMappingHandler"
-            commandId="info.novatec.inspectit.rcp.ci.agentMapping">
+            class="rocks.inspectit.ui.rcp.handlers.AgentMappingHandler"
+            commandId="rocks.inspectit.ui.rcp.ci.agentMapping">
          <activeWhen>
             <and>
                <count
@@ -1526,10 +1526,10 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
@@ -1537,8 +1537,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.DetailsHandler"
-            commandId="info.novatec.inspectit.rcp.commands.details">
+            class="rocks.inspectit.ui.rcp.handlers.DetailsHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.details">
          <activeWhen>
             <and>
                <count
@@ -1546,31 +1546,31 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.communication.DefaultData">
+                        value="rocks.inspectit.shared.all.communication.DefaultData">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.ShowPullDownMenuHandler"
-            commandId="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu">
+            class="rocks.inspectit.ui.rcp.handlers.ShowPullDownMenuHandler"
+            commandId="rocks.inspectit.ui.rcp.ci.menu.addProfileEnvironmentMenu">
          <enabledWhen>
             <iterate
                   ifEmpty="false">
                <instanceof
-                     value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                     value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                </instanceof>
                <test
-                     property="info.novatec.inspectit.onlineStatus"
+                     property="rocks.inspectit.ui.rcp.onlineStatus"
                      value="ONLINE">
                </test>
             </iterate>
          </enabledWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToExceptionTypeHandler$NavigateToSingleExceptionTypeHandler"
-            commandId="info.novatec.inspectit.rcp.commands.navigateToSingleExceptionType">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToExceptionTypeHandler$NavigateToSingleExceptionTypeHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.navigateToSingleExceptionType">
          <activeWhen>
             <and>
                <count
@@ -1579,25 +1579,25 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.ExceptionSensorData">
+                           value="rocks.inspectit.shared.all.communication.data.ExceptionSensorData">
                      </instanceof>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                           value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                      </instanceof>
                   </or>
                </iterate>
                <with
                      variable="selection">
                   <test
-                        property="info.novatec.inspectit.canNavigateToExceptionType">
+                        property="rocks.inspectit.ui.rcp.canNavigateToExceptionType">
                   </test>
                </with>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToExceptionTypeHandler$NavigateToGroupedExceptionTypeHandler"
-            commandId="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToExceptionTypeHandler$NavigateToGroupedExceptionTypeHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.navigateToGroupedExceptionType">
          <activeWhen>
             <and>
                <count
@@ -1606,29 +1606,29 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.ExceptionSensorData">
+                           value="rocks.inspectit.shared.all.communication.data.ExceptionSensorData">
                      </instanceof>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                           value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                      </instanceof>
                   </or>
                </iterate>
                <with
                      variable="selection">
                   <test
-                        property="info.novatec.inspectit.canNavigateToExceptionType">
+                        property="rocks.inspectit.ui.rcp.canNavigateToExceptionType">
                   </test>
                </with>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CheckNewVersionHandler"
-            commandId="info.novatec.inspectit.rcp.commands.checkForNewVersion">
+            class="rocks.inspectit.ui.rcp.handlers.CheckNewVersionHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.checkForNewVersion">
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CopyContextParametersHandler"
-            commandId="info.novatec.inspectit.rcp.commands.copyContextParameters">
+            class="rocks.inspectit.ui.rcp.handlers.CopyContextParametersHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.copyContextParameters">
          <activeWhen>
             <and>
                <count
@@ -1636,13 +1636,13 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                        value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                   </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
                   <test
-                        property="info.novatec.inspectit.subViewClassification"
+                        property="rocks.inspectit.ui.rcp.subViewClassification"
                         value="slave">
                   </test>
                </with>
@@ -1650,7 +1650,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.ci.handler.DeleteProfileHandler"
+            class="rocks.inspectit.ui.rcp.ci.handler.DeleteProfileHandler"
             commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
             <and>
@@ -1660,20 +1660,20 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.isCommonProfile"
+                        property="rocks.inspectit.ui.rcp.isCommonProfile"
                         value="false">
                   </test>
                </iterate>
@@ -1681,7 +1681,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.ci.handler.DeleteEnvironmentHandler"
+            class="rocks.inspectit.ui.rcp.ci.handler.DeleteEnvironmentHandler"
             commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
             <and>
@@ -1691,25 +1691,25 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IEnvironmentProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.ci.handler.ActivateProfileHandler"
-            commandId="info.novatec.inspectit.rcp.ci.activateProfile">
+            class="rocks.inspectit.ui.rcp.ci.handler.ActivateProfileHandler"
+            commandId="rocks.inspectit.ui.rcp.ci.activateProfile">
          <activeWhen>
             <and>
                <count
@@ -1718,25 +1718,25 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.ci.handler.SetDefaultProfileHandler"
-            commandId="info.novatec.inspectit.rcp.ci.setDefaultProfile">
+            class="rocks.inspectit.ui.rcp.ci.handler.SetDefaultProfileHandler"
+            commandId="rocks.inspectit.ui.rcp.ci.setDefaultProfile">
          <activeWhen>
             <and>
                <count
@@ -1745,24 +1745,24 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.ci.handler.EditProfileHandler"
+            class="rocks.inspectit.ui.rcp.ci.handler.EditProfileHandler"
             commandId="org.eclipse.ui.edit.rename">
          <activeWhen>
             <and>
@@ -1772,20 +1772,20 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.isCommonProfile"
+                        property="rocks.inspectit.ui.rcp.isCommonProfile"
                         value="false">
                   </test>
                </iterate>
@@ -1793,7 +1793,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.ci.handler.EditEnvironmentHandler"
+            class="rocks.inspectit.ui.rcp.ci.handler.EditEnvironmentHandler"
             commandId="org.eclipse.ui.edit.rename">
          <activeWhen>
             <and>
@@ -1803,25 +1803,25 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.onlineStatus"
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
                </iterate>
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IEnvironmentProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.NavigateToJmxPlottingHandler"
-            commandId="info.novatec.inspectit.rcp.commands.displayInChart">
+            class="rocks.inspectit.ui.rcp.handlers.NavigateToJmxPlottingHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.displayInChart">
          <activeWhen>
             <and>
                <count
@@ -1830,10 +1830,10 @@
                <iterate>
                   <and>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.JmxSensorValueData">
+                           value="rocks.inspectit.shared.all.communication.data.JmxSensorValueData">
                      </instanceof>
                      <test
-                           property="info.novatec.inspectit.canChart"
+                           property="rocks.inspectit.ui.rcp.canChart"
                            value="true">
                      </test>
                   </and>
@@ -1842,8 +1842,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.ci.handler.DuplicateProfileHandler"
-            commandId="info.novatec.inspectit.rcp.ci.duplicateProfile">
+            class="rocks.inspectit.ui.rcp.ci.handler.DuplicateProfileHandler"
+            commandId="rocks.inspectit.ui.rcp.ci.duplicateProfile">
          <activeWhen>
             <and>
                <count
@@ -1851,15 +1851,15 @@
                </count>
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                </iterate>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="info.novatec.inspectit.rcp.handlers.CopyLogMessageHandler"
-            commandId="info.novatec.inspectit.rcp.commands.copyLogMessage">
+            class="rocks.inspectit.ui.rcp.handlers.CopyLogMessageHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.copyLogMessage">
          <activeWhen>
             <and>
                <count
@@ -1868,15 +1868,15 @@
                <or>
                   <iterate>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.LoggingData">
+                           value="rocks.inspectit.shared.all.communication.data.LoggingData">
                      </instanceof>
                   </iterate>
                   <iterate>
                      <instanceof
-                           value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                           value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                      </instanceof>
                      <test
-                           property="info.novatec.inspectit.hasLoggingData"
+                           property="rocks.inspectit.ui.rcp.hasLoggingData"
                            value="true">
                      </test>
                   </iterate>
@@ -1888,122 +1888,122 @@
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="info.novatec.inspectit.rcp.editor.testers.ActiveSubViewTester"
-            id="info.novatec.inspectit.ActiveSubViewTester"
-            namespace="info.novatec.inspectit"
+            class="rocks.inspectit.ui.rcp.editor.testers.ActiveSubViewTester"
+            id="rocks.inspectit.ui.rcp.ActiveSubViewTester"
+            namespace="rocks.inspectit.ui.rcp"
             properties="activeSubView, hasSubView"
-            type="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+            type="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.editor.testers.SubViewClassificationTester"
-            id="info.novatec.inspectit.SubViewClassificationTester"
-            namespace="info.novatec.inspectit"
+            class="rocks.inspectit.ui.rcp.editor.testers.SubViewClassificationTester"
+            id="rocks.inspectit.ui.rcp.SubViewClassificationTester"
+            namespace="rocks.inspectit.ui.rcp"
             properties="subViewClassification"
-            type="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+            type="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.editor.testers.NavigationTester"
-            id="info.novatec.inspectit.NavigationTester"
-            namespace="info.novatec.inspectit"
+            class="rocks.inspectit.ui.rcp.editor.testers.NavigationTester"
+            id="rocks.inspectit.ui.rcp.NavigationTester"
+            namespace="rocks.inspectit.ui.rcp"
             properties="canNavigateToPlotting, canNavigateToInvocations, canNavigateToExceptionType, canNavigateToAggregatedTimerData, canNavigateToAggregatedSqlData"
             type="org.eclipse.jface.viewers.StructuredSelection">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.editor.testers.AddToSteppingObjectsTester"
-            id="info.novatec.inspectit.AddToSteppingObjectsTester"
-            namespace="info.novatec.inspectit"
+            class="rocks.inspectit.ui.rcp.editor.testers.AddToSteppingObjectsTester"
+            id="rocks.inspectit.ui.rcp.AddToSteppingObjectsTester"
+            namespace="rocks.inspectit.ui.rcp"
             properties="canAddToSteppingObjects"
             type="org.eclipse.jface.viewers.StructuredSelection">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.editor.testers.MaximizeMinimizeTester"
-            id="info.novatec.inspectit.MaximizeMinimizeTester"
-            namespace="info.novatec.inspectit"
+            class="rocks.inspectit.ui.rcp.editor.testers.MaximizeMinimizeTester"
+            id="rocks.inspectit.ui.rcp.MaximizeMinimizeTester"
+            namespace="rocks.inspectit.ui.rcp"
             properties="canMaximize, canMinimize"
-            type="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+            type="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.StorageStateTester"
+            class="rocks.inspectit.ui.rcp.tester.StorageStateTester"
             id="info.inspectit.rcp.StorageStateTester"
-            namespace="info.novatec.inspectit"          properties="storageState, isStorageMounted, isStorageDownloaded"
-            type="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+            namespace="rocks.inspectit.ui.rcp"          properties="storageState, isStorageMounted, isStorageDownloaded"
+            type="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.CmrOnlineStatusTester"
+            class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
             id="info.inspectit.rcp.CmrTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
-            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+            type="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.CmrOnlineStatusTester"
+            class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
             id="info.inspectit.rcp.CmrTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
-            type="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+            type="rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.CmrOnlineStatusTester"
+            class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
             id="info.inspectit.rcp.CmrTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
-            type="info.novatec.inspectit.rcp.provider.IStorageDataProvider">
+            type="rocks.inspectit.ui.rcp.provider.IStorageDataProvider">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.CmrOnlineStatusTester"
+            class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
             id="info.inspectit.rcp.CmrTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
-            type="info.novatec.inspectit.rcp.provider.IInputDefinitionProvider">
+            type="rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.InputDefinitionTester"
+            class="rocks.inspectit.ui.rcp.tester.InputDefinitionTester"
             id="info.inspectit.rcp.InputDefinitionTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="repositoryType"
-            type="info.novatec.inspectit.rcp.provider.IInputDefinitionProvider">
+            type="rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.CanRefreshViewTester"
+            class="rocks.inspectit.ui.rcp.tester.CanRefreshViewTester"
             id="info.inspectit.rcp.CanRefreshTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="canRefresh"
-            type="info.novatec.inspectit.rcp.view.IRefreshableView">
+            type="rocks.inspectit.ui.rcp.view.IRefreshableView">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.AgentTester"
+            class="rocks.inspectit.ui.rcp.tester.AgentTester"
             id="info.inspectit.rcp.AgentTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="canDelete"
-            type="info.novatec.inspectit.rcp.model.AgentLeaf">
+            type="rocks.inspectit.ui.rcp.model.AgentLeaf">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.TimerDataTester"
+            class="rocks.inspectit.ui.rcp.tester.TimerDataTester"
             id="info.inspectit.rcp.TimerDataTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="canChart"
-            type="info.novatec.inspectit.communication.data.TimerData">
+            type="rocks.inspectit.shared.all.communication.data.TimerData">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.JmxSensorValueDataTester"
+            class="rocks.inspectit.ui.rcp.tester.JmxSensorValueDataTester"
             id="info.inspectit.rcp.JmxSensorValueDataTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="canChart"
-            type="info.novatec.inspectit.communication.data.JmxSensorValueData">
+            type="rocks.inspectit.shared.all.communication.data.JmxSensorValueData">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.ci.testers.ProfileTester"
+            class="rocks.inspectit.ui.rcp.ci.testers.ProfileTester"
             id="info.inspectit.rcp.ProfileTester"
-            namespace="info.novatec.inspectit"
+            namespace="rocks.inspectit.ui.rcp"
             properties="isCommonProfile, isDefaultProfile, isActiveProfile"
-            type="info.novatec.inspectit.rcp.provider.IProfileProvider">
+            type="rocks.inspectit.ui.rcp.provider.IProfileProvider">
       </propertyTester>
       <propertyTester
-            class="info.novatec.inspectit.rcp.tester.InvocationDataTester"
-            id="info.novatec.inspectit.InvocationDataTester"
-            namespace="info.novatec.inspectit"
+            class="rocks.inspectit.ui.rcp.tester.InvocationDataTester"
+            id="rocks.inspectit.ui.rcp.InvocationDataTester"
+            namespace="rocks.inspectit.ui.rcp"
             properties="hasLoggingData, hasSQLData"
-            type="info.novatec.inspectit.communication.data.InvocationSequenceData">
+            type="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
       </propertyTester>
    </extension>
    <extension
@@ -2011,14 +2011,14 @@
       <menuContribution
             locationURI="popup:inspectit.editor.formrooteditor.treesubview">
          <command
-               commandId="info.novatec.inspectit.rcp.commands.details"
+               commandId="rocks.inspectit.ui.rcp.commands.details"
                style="push">
          </command>
          <menu
                icon="icons/eclipse/next_nav.gif"
                label="Navigate To">
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToInvocations"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToInvocations"
                   icon="icons/fugue/arrow-switch.png"
                   style="push">
                <visibleWhen
@@ -2026,7 +2026,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToAggregatedTimerData"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToAggregatedTimerData"
                   icon="icons/eclipse/method_time.gif"
                   label="Aggregated Timer Data"
                   style="push">
@@ -2035,7 +2035,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToSingleExceptionType"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToSingleExceptionType"
                   icon="icons/eclipse/exceptiontracer.gif"
                   label="Exception Type"
                   style="push">
@@ -2044,7 +2044,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToGroupedExceptionType"
                   icon="icons/eclipse/exceptiontracer.gif"
                   label="Grouped Exception View"
                   style="push">
@@ -2053,7 +2053,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToAggregatedSqlData"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToAggregatedSqlData"
                   icon="icons/fugue/database-sql.png"
                   label="Aggregated SQL Statement"
                   style="push">
@@ -2062,7 +2062,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.displayInChart"
+                  commandId="rocks.inspectit.ui.rcp.commands.displayInChart"
                	  icon="icons/eclipse/graph_pie.gif"
                   style="push">
                <visibleWhen
@@ -2071,7 +2071,7 @@
             </command>
          </menu>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.addToSteppingObjects"
+               commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects"
                icon="icons/eclipse/locate_in_hierarchy.gif"
                style="push">
             <visibleWhen
@@ -2099,21 +2099,21 @@
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.copyLogMessage"
+               commandId="rocks.inspectit.ui.rcp.commands.copyLogMessage"
                style="push">
             <visibleWhen
                   checkEnabled="true">
             </visibleWhen>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.copySqlQuery"
+               commandId="rocks.inspectit.ui.rcp.commands.copySqlQuery"
                style="push">
             <visibleWhen
                   checkEnabled="true">
             </visibleWhen>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.copyContextParameters"
+               commandId="rocks.inspectit.ui.rcp.commands.copyContextParameters"
                style="push">
          </command>
          <separator
@@ -2121,20 +2121,20 @@
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.expand"
+               commandId="rocks.inspectit.ui.rcp.commands.expand"
                label="Expand All"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.expand.isExpandAll"
+                  name="rocks.inspectit.ui.rcp.commands.expand.isExpandAll"
                   value="true">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.expand"
+               commandId="rocks.inspectit.ui.rcp.commands.expand"
                label="Expand This"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.expand.isExpandAll"
+                  name="rocks.inspectit.ui.rcp.commands.expand.isExpandAll"
                   value="false">
             </parameter>
          </command>
@@ -2143,20 +2143,20 @@
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.collapse"
+               commandId="rocks.inspectit.ui.rcp.commands.collapse"
                label="Collapse All"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.collapse.isCollapseAll"
+                  name="rocks.inspectit.ui.rcp.commands.collapse.isCollapseAll"
                   value="true">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.collapse"
+               commandId="rocks.inspectit.ui.rcp.commands.collapse"
                label="Collapse This"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.collapse.isCollapseAll"
+                  name="rocks.inspectit.ui.rcp.commands.collapse.isCollapseAll"
                   value="false">
             </parameter>
          </command>
@@ -2164,14 +2164,14 @@
       <menuContribution
             locationURI="popup:inspectit.editor.formrooteditor.tablesubview">
          <command
-               commandId="info.novatec.inspectit.rcp.commands.details"
+               commandId="rocks.inspectit.ui.rcp.commands.details"
                style="push">
          </command>
          <menu
                icon="icons/eclipse/next_nav.gif"
                label="Navigate To">
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToInvocations"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToInvocations"
                   icon="icons/fugue/arrow-switch.png"
                   style="push">
                <visibleWhen
@@ -2179,7 +2179,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToStartMethodInvocations"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToStartMethodInvocations"
                   icon="icons/fugue/arrow-switch.png"
                   style="push">
                <visibleWhen
@@ -2190,16 +2190,16 @@
                      </count>
                      <iterate>
                         <instanceof
-                              value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                              value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                         </instanceof>
                      </iterate>
                      <with
                            variable="activeEditor">
                         <instanceof
-                              value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                              value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                         </instanceof>
                         <test
-                              property="info.novatec.inspectit.activeSubView"
+                              property="rocks.inspectit.ui.rcp.activeSubView"
                               value="tableSubView">
                         </test>
                      </with>
@@ -2207,7 +2207,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToAggregatedTimerData"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToAggregatedTimerData"
                   icon="icons/eclipse/method_time.gif"
                   label="Aggregated Timer Data"
                   style="push">
@@ -2216,7 +2216,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToSingleExceptionType"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToSingleExceptionType"
                   icon="icons/eclipse/exceptiontracer.gif"
                   label="Exception Type"
                   style="push">
@@ -2225,7 +2225,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToGroupedExceptionType"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToGroupedExceptionType"
                   icon="icons/eclipse/exceptiontracer.gif"
                   label="Grouped Exception View"
                   style="push">
@@ -2234,7 +2234,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.navigateToAggregatedSqlData"
+                  commandId="rocks.inspectit.ui.rcp.commands.navigateToAggregatedSqlData"
                   icon="icons/fugue/database-sql.png"
                   label="Aggregated SQL Statement"
                   style="push">
@@ -2243,7 +2243,7 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.displayInChart"
+                  commandId="rocks.inspectit.ui.rcp.commands.displayInChart"
                   icon="icons/eclipse/graph_pie.gif"
                   style="push">
                <visibleWhen
@@ -2255,7 +2255,7 @@
                icon="icons/eclipse/graph_bar.gif"
                label="Analyze">
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.invocationsAggregatedTimerData"
+                  commandId="rocks.inspectit.ui.rcp.commands.invocationsAggregatedTimerData"
                   icon="icons/fugue/arrow-switch.png"
                   label="Combine Data"
                   style="push">
@@ -2271,16 +2271,16 @@
                         </count></not>
                      <iterate>
                         <instanceof
-                              value="info.novatec.inspectit.communication.data.InvocationSequenceData">
+                              value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
                         </instanceof>
                      </iterate>
                      <with
                            variable="activeEditor">
                         <instanceof
-                              value="info.novatec.inspectit.rcp.editor.root.AbstractRootEditor">
+                              value="rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor">
                         </instanceof>
                         <test
-                              property="info.novatec.inspectit.activeSubView"
+                              property="rocks.inspectit.ui.rcp.activeSubView"
                               value="tableSubView">
                         </test>
                      </with>
@@ -2289,7 +2289,7 @@
             </command>
          </menu>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.addToSteppingObjects"
+               commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects"
                icon="icons/eclipse/locate_in_hierarchy.gif"
                style="push">
             <visibleWhen
@@ -2305,7 +2305,7 @@
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.copySqlQuery"
+               commandId="rocks.inspectit.ui.rcp.commands.copySqlQuery"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -2345,7 +2345,7 @@
                      style="push">
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
-                        value="info.novatec.inspectit.rcp.view.dataExplorer">
+                        value="rocks.inspectit.ui.rcp.view.dataExplorer">
                   </parameter>
                   <visibleWhen
                         checkEnabled="false">
@@ -2364,7 +2364,7 @@
                      style="push">
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
-                        value="info.novatec.inspectit.rcp.view.storageManager">
+                        value="rocks.inspectit.ui.rcp.view.storageManager">
                   </parameter>
                   <visibleWhen
                         checkEnabled="false">
@@ -2383,7 +2383,7 @@
                      style="push">
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
-                        value="info.novatec.inspectit.rcp.view.repositoryManager">
+                        value="rocks.inspectit.ui.rcp.view.repositoryManager">
                   </parameter>
                   <visibleWhen
                         checkEnabled="false">
@@ -2406,7 +2406,7 @@
                      style="push">
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
-                        value="info.novatec.inspectit.rcp.ci.view.ciManager">
+                        value="rocks.inspectit.ui.rcp.ci.view.ciManager">
                   </parameter>
                   <visibleWhen
                         checkEnabled="false">
@@ -2428,7 +2428,7 @@
                      style="push">
                   <parameter
                         name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                        value="info.novatec.inspectit.rcp.perspective.analyze">
+                        value="rocks.inspectit.ui.rcp.perspective.analyze">
                   </parameter>
                </command>
                <command
@@ -2438,7 +2438,7 @@
                      style="push">
                   <parameter
                         name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                        value="info.novatec.inspectit.rcp.perspective.configurationinterface">
+                        value="rocks.inspectit.ui.rcp.perspective.configurationinterface">
                   </parameter>
                </command>
             </menu>
@@ -2455,7 +2455,7 @@
                   style="push">
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.documentation"
+                  commandId="rocks.inspectit.ui.rcp.commands.documentation"
                   style="push">
             </command>
             <separator
@@ -2463,7 +2463,7 @@
                   visible="true">
             </separator>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.checkForNewVersion"
+                  commandId="rocks.inspectit.ui.rcp.commands.checkForNewVersion"
                   style="push">
             </command>
             <command
@@ -2474,11 +2474,11 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:info.novatec.inspectit.rcp.view.dataExplorer">
+            locationURI="toolbar:rocks.inspectit.ui.rcp.view.dataExplorer">
          <command
-               commandId="info.novatec.inspectit.rcp.commands.clearRepositoryBuffer"
+               commandId="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer"
                icon="icons/eclipse/buffer_clear.gif"
-               id="info.novatec.inspectit.rcp.view.dataExplorer.clearBuffer"
+               id="rocks.inspectit.ui.rcp.view.dataExplorer.clearBuffer"
                label="Clear Repository Buffer"
                style="push"
                tooltip="Clear Repository Buffer">
@@ -2492,7 +2492,7 @@
          <command
                commandId="org.eclipse.ui.file.refresh"
                icon="icons/eclipse/refresh.gif"
-               id="info.novatec.inspectit.rcp.view.dataExplorer.refresh"
+               id="rocks.inspectit.ui.rcp.view.dataExplorer.refresh"
                style="push"
                tooltip="Update Repository">
             <visibleWhen
@@ -2505,7 +2505,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:info.novatec.inspectit.rcp.view.storageManager">
+            locationURI="toolbar:rocks.inspectit.ui.rcp.view.storageManager">
          <command
                commandId="org.eclipse.ui.newWizard"
                icon="icons/eclipse/add_obj.gif"
@@ -2513,7 +2513,7 @@
                tooltip="Create Storage">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.wizard.createStorageWizard">
+                  value="rocks.inspectit.ui.rcp.wizard.createStorageWizard">
             </parameter>
          </command>
          <command
@@ -2523,13 +2523,13 @@
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.addStorageLabel"
+               commandId="rocks.inspectit.ui.rcp.commands.addStorageLabel"
                icon="icons/eclipse/label_add.gif"
                label="Add Label"
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.closeStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.closeStorage"
                icon="icons/eclipse/storage_finalize.gif"
                style="push"
                tooltip="Finalize Storage">
@@ -2540,17 +2540,17 @@
                tooltip="Delete Storage">
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.storageManagerToolbar.separator1"
+               name="rocks.inspectit.ui.rcp.storageManagerToolbar.separator1"
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.downloadStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.downloadStorage"
                icon="icons/eclipse/storage_download.gif"
                style="push"
                tooltip="Fully Download Storage - Makes storage accessible offline">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.uploadStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.uploadStorage"
                icon="icons/eclipse/storage_upload.gif"
                label="Upload Storage to an available CMR (Central Management Repository)"
                style="push">
@@ -2561,16 +2561,16 @@
                style="push">
             <parameter
                   name="importWizardId"
-                  value="info.novatec.inspectit.rcp.wizard.importStorageWizard">
+                  value="rocks.inspectit.ui.rcp.wizard.importStorageWizard">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.exportStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.exportStorage"
                icon="icons/eclipse/export.gif"
                style="push">
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.storageManagerToolbar.separator2"
+               name="rocks.inspectit.ui.rcp.storageManagerToolbar.separator2"
                visible="true">
          </separator>
          <command
@@ -2582,7 +2582,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:info.novatec.inspectit.rcp.view.repositoryManager">
+            locationURI="toolbar:rocks.inspectit.ui.rcp.view.repositoryManager">
          <command
                commandId="org.eclipse.ui.newWizard"
                icon="icons/eclipse/add_obj.gif"
@@ -2590,11 +2590,11 @@
                tooltip="Add Central Management Repository (CMR)">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.wizard.addCmrRepositoryWizard">
+                  value="rocks.inspectit.ui.rcp.wizard.addCmrRepositoryWizard">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.removeCmrRepository"
+               commandId="rocks.inspectit.ui.rcp.commands.removeCmrRepository"
                icon="icons/eclipse/remove_correction.gif"
                style="push"
                tooltip="Remove Central Management Repository (CMR)">
@@ -2606,72 +2606,72 @@
                tooltip="Edit Central Management Repository (CMR)">
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator1"
+               name="rocks.inspectit.ui.rcp.repositoryManagerToolbar.separator1"
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.startRecording"
+               commandId="rocks.inspectit.ui.rcp.commands.startRecording"
                icon="icons/eclipse/record.gif"
                style="push"
                tooltip="Start Recording">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.stopRecording"
+               commandId="rocks.inspectit.ui.rcp.commands.stopRecording"
                icon="icons/eclipse/record_term.gif"
                style="push"
                tooltip="Stop Recording">
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator2"
+               name="rocks.inspectit.ui.rcp.repositoryManagerToolbar.separator2"
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.copyBufferToStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.copyBufferToStorage"
                icon="icons/eclipse/buffer_copy.gif"
                style="push"
                tooltip="Copy Repository Buffer to Storage">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.clearRepositoryBuffer"
+               commandId="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer"
                icon="icons/eclipse/buffer_clear.gif"
                style="push"
                tooltip="Clear Repository Buffer">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.showLabelsManager"
+               commandId="rocks.inspectit.ui.rcp.commands.showLabelsManager"
                icon="icons/eclipse/label.gif"
                style="push"
                tooltip="Manage Labels on Repository">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.shutdown"
+               commandId="rocks.inspectit.ui.rcp.shutdown"
                icon="icons/eclipse/term_restart.gif"
                style="push"
                tooltip="Restart CMR">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.shutdown.shouldRestart"
+                  name="rocks.inspectit.ui.rcp.commands.shutdown.shouldRestart"
                   value="true">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.shutdown"
+               commandId="rocks.inspectit.ui.rcp.shutdown"
                icon="icons/eclipse/terminate_co.gif"
                style="push"
                tooltip="Shutdown CMR">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.shutdown.shouldRestart"
+                  name="rocks.inspectit.ui.rcp.commands.shutdown.shouldRestart"
                   value="false">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.cmrConfiguration"
+               commandId="rocks.inspectit.ui.rcp.commands.cmrConfiguration"
                icon="icons/eclipse/build.gif"
                label="Configure Repository"
                style="push"
                tooltip="Configure Repository">
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator3"
+               name="rocks.inspectit.ui.rcp.repositoryManagerToolbar.separator3"
                visible="true">
          </separator>
          <command
@@ -2683,15 +2683,15 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:info.novatec.inspectit.rcp.ci.view.ciManager">
+            locationURI="toolbar:rocks.inspectit.ui.rcp.ci.view.ciManager">
          <command
-               commandId="info.novatec.inspectit.rcp.ci.agentMapping"
+               commandId="rocks.inspectit.ui.rcp.ci.agentMapping"
                icon="icons/eclipse/agent.gif"
                style="push"
                tooltip="Agent Mapping Settings">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu"
+               commandId="rocks.inspectit.ui.rcp.ci.menu.addProfileEnvironmentMenu"
                icon="icons/eclipse/add_obj.gif"
                style="pulldown">
          </command>
@@ -2706,13 +2706,13 @@
                   <iterate
                         ifEmpty="false">
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                           value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                      </instanceof>
                   </iterate>
                   <iterate
                         ifEmpty="false">
                      <instanceof
-                           value="info.novatec.inspectit.rcp.provider.IEnvironmentProvider">
+                           value="rocks.inspectit.ui.rcp.provider.IEnvironmentProvider">
                      </instanceof>
                   </iterate>
                </or>
@@ -2731,7 +2731,7 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:info.novatec.inspectit.rcp.view.storageManager.storageTree">
+            locationURI="popup:rocks.inspectit.ui.rcp.view.storageManager.storageTree">
          <command
                commandId="org.eclipse.ui.edit.rename"
                icon="icons/eclipse/edit.gif"
@@ -2739,13 +2739,13 @@
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.addStorageLabel"
+               commandId="rocks.inspectit.ui.rcp.commands.addStorageLabel"
                icon="icons/eclipse/label_add.gif"
                label="Add Label"
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.closeStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.closeStorage"
                icon="icons/eclipse/storage_finalize.gif"
                label="Finalize Storage"
                style="push">
@@ -2756,17 +2756,17 @@
                style="push">
          </command>
          <separator
-               name="info.novatec.inspectit.storageManagerView.storageTree.separator1"
+               name="rocks.inspectit.ui.rcp.storageManagerView.storageTree.separator1"
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.downloadStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.downloadStorage"
                icon="icons/eclipse/storage_download.gif"
                style="push"
                tooltip="Fully Download Storage - Makes storage accessible offline">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.uploadStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.uploadStorage"
                icon="icons/eclipse/storage_upload.gif"
                style="push">
          </command>
@@ -2776,17 +2776,17 @@
                style="push">
             <parameter
                   name="importWizardId"
-                  value="info.novatec.inspectit.rcp.wizard.importStorageWizard">
+                  value="rocks.inspectit.ui.rcp.wizard.importStorageWizard">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.exportStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.exportStorage"
                icon="icons/eclipse/export.gif"
                style="push">
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:info.novatec.inspectit.rcp.view.repositoryManager.repositoryTree">
+            locationURI="popup:rocks.inspectit.ui.rcp.view.repositoryManager.repositoryTree">
          <command
                commandId="org.eclipse.ui.edit.rename"
                icon="icons/eclipse/edit.gif"
@@ -2794,86 +2794,86 @@
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.removeCmrRepository"
+               commandId="rocks.inspectit.ui.rcp.commands.removeCmrRepository"
                icon="icons/eclipse/remove_correction.gif"
                label="Remove"
                style="push"
                tooltip="Remove Central Management Repository (CMR)">
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator1"
+               name="rocks.inspectit.ui.rcp.repositoryManagerToolbar.separator1"
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.startRecording"
+               commandId="rocks.inspectit.ui.rcp.commands.startRecording"
                icon="icons/eclipse/record.gif"
                label="Start Recording"
                style="push"
                tooltip="Start Recording">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.stopRecording"
+               commandId="rocks.inspectit.ui.rcp.commands.stopRecording"
                icon="icons/eclipse/record_term.gif"
                label="Stop Recording"
                style="push"
                tooltip="Stop Recording">
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator2"
+               name="rocks.inspectit.ui.rcp.repositoryManagerToolbar.separator2"
                visible="true">
          </separator>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.copyBufferToStorage"
+               commandId="rocks.inspectit.ui.rcp.commands.copyBufferToStorage"
                icon="icons/eclipse/buffer_copy.gif"
                label="Copy Repository Buffer to Storage"
                style="push"
                tooltip="Copy Repository Buffer to Storage">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.clearRepositoryBuffer"
+               commandId="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer"
                icon="icons/eclipse/buffer_clear.gif"
                label="Clear Repository Buffer"
                style="push"
                tooltip="Clear Repository Buffer">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.showLabelsManager"
+               commandId="rocks.inspectit.ui.rcp.commands.showLabelsManager"
                icon="icons/eclipse/label.gif"
                label="Manage Labels on Repository"
                style="push"
                tooltip="Manage Labels on Repository">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.shutdown"
+               commandId="rocks.inspectit.ui.rcp.shutdown"
                icon="icons/eclipse/term_restart.gif"
                label="Restart CMR"
                style="push"
                tooltip="Restart CMR">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.shutdown.shouldRestart"
+                  name="rocks.inspectit.ui.rcp.commands.shutdown.shouldRestart"
                   value="true">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.shutdown"
+               commandId="rocks.inspectit.ui.rcp.shutdown"
                icon="icons/eclipse/terminate_co.gif"
                label="Shutdown CMR"
                style="push"
                tooltip="Shutdown CMR">
             <parameter
-                  name="info.novatec.inspectit.rcp.commands.shutdown.shouldRestart"
+                  name="rocks.inspectit.ui.rcp.commands.shutdown.shouldRestart"
                   value="false">
             </parameter>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.commands.cmrConfiguration"
+               commandId="rocks.inspectit.ui.rcp.commands.cmrConfiguration"
                icon="icons/eclipse/build.gif"
                label="Configure Repository"
                style="push"
                tooltip="Configure Repository">
          </command>         
          <separator
-               name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator3"
+               name="rocks.inspectit.ui.rcp.repositoryManagerToolbar.separator3"
                visible="true">
          </separator>
          <command
@@ -2886,9 +2886,9 @@
             allPopups="false"
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
          <toolbar
-               id="info.novatec.inspectit.rcp.addImportToolbar">
+               id="rocks.inspectit.ui.rcp.addImportToolbar">
             <command
-                  commandId="info.novatec.inspectit.rcp.menu.addMenu"
+                  commandId="rocks.inspectit.ui.rcp.menu.addMenu"
                   icon="icons/eclipse/add_obj.gif"
                   style="pulldown">
             </command>
@@ -2898,15 +2898,15 @@
             </command>
          </toolbar>
          <toolbar
-               id="info.novatec.inspectit.rcp.selectionToolbar">
+               id="rocks.inspectit.ui.rcp.selectionToolbar">
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.details"
+                  commandId="rocks.inspectit.ui.rcp.commands.details"
                   icon="icons/eclipse/properties.gif"
                   style="push"
                   tooltip="Details">
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.clearRepositoryBuffer"
+                  commandId="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer"
                   icon="icons/eclipse/buffer_clear.gif"
                   style="push">
             </command>
@@ -2928,31 +2928,31 @@
             </command>
          </toolbar>
          <toolbar
-               id="info.novatec.inspectit.rcp.helpToolbar">
+               id="rocks.inspectit.ui.rcp.helpToolbar">
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.sendFeedback"
+                  commandId="rocks.inspectit.ui.rcp.commands.sendFeedback"
                   icon="icons/eclipse/message.gif"
                   style="push">
             </command>
             <command
-                  commandId="info.novatec.inspectit.rcp.commands.requestSupport"
+                  commandId="rocks.inspectit.ui.rcp.commands.requestSupport"
                   icon="icons/eclipse/help.gif"
                   style="push">
             </command>
             <control
-                  class="info.novatec.inspectit.rcp.menu.SearchDocumentationContributionItem">
+                  class="rocks.inspectit.ui.rcp.menu.SearchDocumentationContributionItem">
             </control>
          </toolbar>
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:info.novatec.inspectit.rcp.menu.addMenu">
+            locationURI="menu:rocks.inspectit.ui.rcp.menu.addMenu">
          <command
                commandId="org.eclipse.ui.newWizard"
                style="push">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.wizard.addCmrRepositoryWizard">
+                  value="rocks.inspectit.ui.rcp.wizard.addCmrRepositoryWizard">
             </parameter>
          </command>
          <command
@@ -2960,25 +2960,25 @@
                style="push">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.wizard.createStorageWizard">
+                  value="rocks.inspectit.ui.rcp.wizard.createStorageWizard">
             </parameter>
          </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:info.novatec.inspectit.rcp.ci.menu.addProfileEnvironmentMenu">
+            locationURI="menu:rocks.inspectit.ui.rcp.ci.menu.addProfileEnvironmentMenu">
          <command
                commandId="org.eclipse.ui.newWizard"
                style="push">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.ci.wizard.createEnvironmentWizard">
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createEnvironmentWizard">
             </parameter>
             <visibleWhen
                   checkEnabled="false">
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                </iterate>
             </visibleWhen>
@@ -2988,19 +2988,19 @@
                style="push">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.ci.wizard.createProfileWizard">
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createProfileWizard">
             </parameter>
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:info.novatec.inspectit.rcp.view.configurationInterfaceManager.table">
+            locationURI="popup:rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table">
          <command
                commandId="org.eclipse.ui.newWizard"
                icon="icons/eclipse/add_obj.gif"
                style="push">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.ci.wizard.createEnvironmentWizard">
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createEnvironmentWizard">
             </parameter>
          </command>
          <command
@@ -3009,11 +3009,11 @@
                style="push">
             <parameter
                   name="newWizardId"
-                  value="info.novatec.inspectit.rcp.ci.wizard.createProfileWizard">
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createProfileWizard">
             </parameter>
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.view.configurationInterfaceManager.table.separator1"
+               name="rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table.separator1"
                visible="true">
          </separator>
          <command
@@ -3023,7 +3023,7 @@
                style="push">
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.ci.duplicateProfile"
+               commandId="rocks.inspectit.ui.rcp.ci.duplicateProfile"
                icon="icons/fugue/address-book-plus.png"
                label="Duplicate"
                style="push">
@@ -3032,107 +3032,107 @@
             </visibleWhen>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.ci.activateProfile"
+               commandId="rocks.inspectit.ui.rcp.ci.activateProfile"
                label="Activate"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.ci.activateProfile.active"
+                  name="rocks.inspectit.ui.rcp.ci.activateProfile.active"
                   value="true">
             </parameter>
             <visibleWhen
                   checkEnabled="false">
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.isActiveProfile"
+                        property="rocks.inspectit.ui.rcp.isActiveProfile"
                         value="false">
                   </test>
                   <test
-                        property="info.novatec.inspectit.isCommonProfile"
+                        property="rocks.inspectit.ui.rcp.isCommonProfile"
                         value="false">
                   </test>
                </iterate>
             </visibleWhen>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.ci.activateProfile"
+               commandId="rocks.inspectit.ui.rcp.ci.activateProfile"
                label="Deactivate"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.ci.activateProfile.active"
+                  name="rocks.inspectit.ui.rcp.ci.activateProfile.active"
                   value="false">
             </parameter>
             <visibleWhen
                   checkEnabled="false">
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.isActiveProfile"
+                        property="rocks.inspectit.ui.rcp.isActiveProfile"
                         value="true">
                   </test>
                   <test
-                        property="info.novatec.inspectit.isCommonProfile"
+                        property="rocks.inspectit.ui.rcp.isCommonProfile"
                         value="false">
                   </test>
                </iterate>
             </visibleWhen>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.ci.setDefaultProfile"
+               commandId="rocks.inspectit.ui.rcp.ci.setDefaultProfile"
                label="Set Default"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.ci.setDefaultProfile.default"
+                  name="rocks.inspectit.ui.rcp.ci.setDefaultProfile.default"
                   value="true">
             </parameter>
             <visibleWhen
                   checkEnabled="false">
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.isDefaultProfile"
+                        property="rocks.inspectit.ui.rcp.isDefaultProfile"
                         value="false">
                   </test>
                   <test
-                        property="info.novatec.inspectit.isCommonProfile"
+                        property="rocks.inspectit.ui.rcp.isCommonProfile"
                         value="false">
                   </test>
                </iterate>
             </visibleWhen>
          </command>
          <command
-               commandId="info.novatec.inspectit.rcp.ci.setDefaultProfile"
+               commandId="rocks.inspectit.ui.rcp.ci.setDefaultProfile"
                label="Set Not Default"
                style="push">
             <parameter
-                  name="info.novatec.inspectit.rcp.ci.setDefaultProfile.default"
+                  name="rocks.inspectit.ui.rcp.ci.setDefaultProfile.default"
                   value="false">
             </parameter>
             <visibleWhen
                   checkEnabled="false">
                <iterate>
                   <instanceof
-                        value="info.novatec.inspectit.rcp.provider.IProfileProvider">
+                        value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
                   </instanceof>
                   <test
-                        property="info.novatec.inspectit.isDefaultProfile"
+                        property="rocks.inspectit.ui.rcp.isDefaultProfile"
                         value="true">
                   </test>
                   <test
-                        property="info.novatec.inspectit.isCommonProfile"
+                        property="rocks.inspectit.ui.rcp.isCommonProfile"
                         value="false">
                   </test>
                </iterate>
             </visibleWhen>
          </command>
          <separator
-               name="info.novatec.inspectit.rcp.view.configurationInterfaceManager.table.separator2"
+               name="rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table.separator2"
                visible="true">
          </separator>
          <command
@@ -3145,12 +3145,12 @@
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="info.novatec.inspectit.rcp.commands.clearRepositoryBuffer"
+            commandId="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+D">
       </key>
       <key
-            commandId="info.novatec.inspectit.rcp.commands.maximizeActiveView"
+            commandId="rocks.inspectit.ui.rcp.commands.maximizeActiveView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+M">
       </key>
@@ -3160,19 +3160,19 @@
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
             icon="icons/selfmade/16x16.png"
-            id="info.novatec.inspectit.rcp.intro">
+            id="rocks.inspectit.ui.rcp.intro">
       </intro>
       <introProductBinding
-            introId="info.novatec.inspectit.rcp.intro"
-            productId="info.novatec.inspectit.rcp.product">
+            introId="rocks.inspectit.ui.rcp.intro"
+            productId="rocks.inspectit.ui.rcp.product">
       </introProductBinding>
    </extension>
    <extension
          point="org.eclipse.ui.intro.config">
       <config
             content="content/introContent.xml"
-            id="info.novatec.inspectit.rcp.introConfigId"
-            introId="info.novatec.inspectit.rcp.intro">
+            id="rocks.inspectit.ui.rcp.introConfigId"
+            introId="rocks.inspectit.ui.rcp.intro">
          <presentation
                home-page-id="root">
             <implementation
@@ -3186,12 +3186,12 @@
    <extension
          point="org.eclipse.ui.statusHandlers">
       <statusHandler
-            class="info.novatec.inspectit.rcp.statushandlers.CustomStatusHandler"
-            id="info.novatec.inspectit.customStatusHandler">
+            class="rocks.inspectit.ui.rcp.statushandlers.CustomStatusHandler"
+            id="rocks.inspectit.ui.rcp.customStatusHandler">
       </statusHandler>
       <statusHandlerProductBinding
-            handlerId="info.novatec.inspectit.customStatusHandler"
-            productId="info.novatec.inspectit.rcp.product">
+            handlerId="rocks.inspectit.ui.rcp.customStatusHandler"
+            productId="rocks.inspectit.ui.rcp.product">
       </statusHandlerProductBinding>
    </extension>
 

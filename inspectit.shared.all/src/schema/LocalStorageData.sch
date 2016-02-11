@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.storage.LocalStorageData
+class: rocks.inspectit.shared.cs.storage.LocalStorageData
 # Local Storage Data
 1: id
 2: name

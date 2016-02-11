@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.hooking.impl;
+package rocks.inspectit.agent.java.hooking.impl;
 
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -9,17 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.analyzer.classes.MyTestException;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.hooking.IConstructorHook;
-import info.novatec.inspectit.agent.hooking.IHook;
-import info.novatec.inspectit.agent.hooking.IMethodHook;
-import info.novatec.inspectit.agent.sensor.exception.ExceptionSensorHook;
-import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
-import info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceHook;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,6 +18,19 @@ import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.analyzer.classes.MyTestException;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.hooking.IConstructorHook;
+import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.hooking.IMethodHook;
+import rocks.inspectit.agent.java.hooking.impl.HookDispatcher;
+import rocks.inspectit.agent.java.sensor.exception.ExceptionSensorHook;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceHook;
 
 @SuppressWarnings("PMD")
 public class HookDispatcherTest extends AbstractLogSupport {
@@ -460,7 +462,7 @@ public class HookDispatcherTest extends AbstractLogSupport {
 
 		// the exception sensor type config
 		MethodSensorTypeConfig sensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(sensorTypeConfig.getName()).thenReturn("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor");
+		when(sensorTypeConfig.getName()).thenReturn("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor");
 		when(sensorTypeConfig.getId()).thenReturn(exceptionSensorTypeId);
 
 		// the exception sensor hook
@@ -551,7 +553,7 @@ public class HookDispatcherTest extends AbstractLogSupport {
 
 		// the exception sensor type config
 		MethodSensorTypeConfig sensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(sensorTypeConfig.getName()).thenReturn("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor");
+		when(sensorTypeConfig.getName()).thenReturn("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor");
 		when(sensorTypeConfig.getId()).thenReturn(exceptionSensorTypeId);
 		when(registeredSensorConfig.getExceptionSensorTypeConfig()).thenReturn(sensorTypeConfig);
 		when(registeredConstructorSensorConfig.getExceptionSensorTypeConfig()).thenReturn(sensorTypeConfig);
@@ -642,7 +644,7 @@ public class HookDispatcherTest extends AbstractLogSupport {
 
 		// the exception sensor type config
 		MethodSensorTypeConfig sensorTypeConfig = mock(MethodSensorTypeConfig.class);
-		when(sensorTypeConfig.getName()).thenReturn("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor");
+		when(sensorTypeConfig.getName()).thenReturn("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor");
 		when(sensorTypeConfig.getId()).thenReturn(exceptionSensorTypeId);
 		when(registeredSensorConfig.getExceptionSensorTypeConfig()).thenReturn(sensorTypeConfig);
 		when(registeredConstructorSensorConfig.getExceptionSensorTypeConfig()).thenReturn(sensorTypeConfig);

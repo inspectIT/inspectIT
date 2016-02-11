@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
+package rocks.inspectit.agent.java.config.impl;
 
 /**
  * Only a marker class currently to define the platform sensor type configurations. They have no

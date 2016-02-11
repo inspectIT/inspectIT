@@ -1,13 +1,14 @@
-package info.novatec.inspectit.cmr.service;
+package rocks.inspectit.server.service;
 
 import javax.annotation.PostConstruct;
-
-import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
-import info.novatec.inspectit.spring.logger.Log;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Service to keep track of the online-status of registered agents.

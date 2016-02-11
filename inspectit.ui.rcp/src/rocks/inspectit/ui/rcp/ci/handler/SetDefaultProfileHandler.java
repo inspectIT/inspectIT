@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.ci.handler;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.provider.IProfileProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.ci.handler;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
@@ -13,6 +7,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.provider.IProfileProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler for making profiles default or not.
@@ -25,7 +25,7 @@ public class SetDefaultProfileHandler extends AbstractHandler implements IHandle
 	/**
 	 * Active parameter. If profile should be activated or deactivated.
 	 */
-	public static final String DEFAULT_PARAM = "info.novatec.inspectit.rcp.ci.setDefaultProfile.default";
+	public static final String DEFAULT_PARAM = "rocks.inspectit.ui.rcp.ci.setDefaultProfile.default";
 
 	/**
 	 * {@inheritDoc}

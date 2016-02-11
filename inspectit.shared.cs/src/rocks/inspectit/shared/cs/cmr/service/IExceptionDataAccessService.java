@@ -1,11 +1,13 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.communication.data.AggregatedExceptionSensorData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
+package rocks.inspectit.shared.cs.cmr.service;
 
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 /**
  * Service interface which defines the methods to retrieve data objects based on the exception

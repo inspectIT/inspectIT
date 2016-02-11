@@ -1,9 +1,11 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
+package rocks.inspectit.shared.cs.cmr.service;
 
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
  * 

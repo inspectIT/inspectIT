@@ -1,8 +1,8 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
+package rocks.inspectit.server.dao;
 
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
 
 /**
  * This DAO is used to handle all {@link MethodSensorTypeIdent} objects.

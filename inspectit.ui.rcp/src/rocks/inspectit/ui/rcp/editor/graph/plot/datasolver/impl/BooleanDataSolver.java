@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl;
-
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl;
 
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -10,6 +8,8 @@ import java.text.ParsePosition;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.data.Range;
+
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
 
 /**
  * This class is used to plot boolean data.

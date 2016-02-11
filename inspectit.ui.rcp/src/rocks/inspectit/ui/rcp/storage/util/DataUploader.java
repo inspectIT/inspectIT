@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.storage.util;
-
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.http.TransferDataMonitor;
+package rocks.inspectit.ui.rcp.storage.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +15,9 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.eclipse.core.runtime.SubMonitor;
+
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.http.TransferDataMonitor;
 
 /**
  * Utility class for uploading data.

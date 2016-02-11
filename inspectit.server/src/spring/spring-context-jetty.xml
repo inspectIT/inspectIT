@@ -6,7 +6,7 @@
 	http://www.springframework.org/schema/util
 	http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<bean class="info.novatec.inspectit.cmr.jetty.JettyWebApplicationContextInitializer">
+	<bean class="rocks.inspectit.server.jetty.JettyWebApplicationContextInitializer">
 		<property name="contextAttribute">
 			<util:constant static-field="org.springframework.web.context.WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE" />
 		</property>
@@ -231,7 +231,7 @@
 	<!-- END -->
 
 	<!-- UPLOAD SERVLET FOR UPLOADING FILES -->
-	<bean id="uploadServlet" class="info.novatec.inspectit.cmr.jetty.FileUploadServlet">
+	<bean id="uploadServlet" class="rocks.inspectit.server.jetty.FileUploadServlet">
 		<property name="directoryToStore" value="${storage.storageDefaultFolder}/uploads" />
 	</bean>
 

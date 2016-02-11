@@ -1,10 +1,10 @@
-package info.novatec.inspectit.indexing.indexer.impl;
+package rocks.inspectit.shared.cs.indexing.indexer.impl;
 
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.ITreeComponent;
-import info.novatec.inspectit.indexing.indexer.AbstractSharedInstanceBranchIndexer;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.ITreeComponent;
+import rocks.inspectit.shared.cs.indexing.indexer.AbstractSharedInstanceBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * {@link IBranchIndexer} that makes indexes based on a object class. Thus all same object types

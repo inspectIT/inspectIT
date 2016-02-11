@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp.view.tree;
-
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.Component;
-import info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
+package rocks.inspectit.ui.rcp.view.tree;
 
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.Component;
+import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
 
 /**
  * Styled cell label provider for the tree of storages.

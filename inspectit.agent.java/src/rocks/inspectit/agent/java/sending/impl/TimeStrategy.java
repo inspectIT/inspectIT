@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.sending.impl;
-
-import info.novatec.inspectit.agent.sending.AbstractSendingStrategy;
+package rocks.inspectit.agent.java.sending.impl;
 
 import java.util.Map;
+
+import rocks.inspectit.agent.java.sending.AbstractSendingStrategy;
 
 /**
  * Implements a strategy to wait a specific (user-defined) time and then executes the sending of the

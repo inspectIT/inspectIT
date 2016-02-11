@@ -1,9 +1,4 @@
-package info.novatec.inspectit.indexing.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestriction;
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestrictionProcessor;
+package rocks.inspectit.shared.cs.indexing.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -16,6 +11,11 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
+import rocks.inspectit.shared.cs.indexing.restriction.IIndexQueryRestrictionProcessor;
 
 /**
  * {@link IndexQuery} represent an object that is used in querying the tree structure of the buffer.

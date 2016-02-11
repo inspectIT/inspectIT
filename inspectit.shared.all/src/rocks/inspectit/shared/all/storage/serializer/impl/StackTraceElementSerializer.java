@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.serializer.impl;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import java.lang.reflect.Constructor;
 

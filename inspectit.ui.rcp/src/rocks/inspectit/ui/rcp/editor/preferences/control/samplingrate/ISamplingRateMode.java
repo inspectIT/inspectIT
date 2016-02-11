@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.editor.preferences.control.samplingrate;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
+package rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate;
 
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * The interface for the sampling rate modes.

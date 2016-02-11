@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
+package rocks.inspectit.agent.java.config.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -13,19 +13,6 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatchPattern;
-import info.novatec.inspectit.agent.analyzer.impl.DirectMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.IndirectMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.InterfaceMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.SuperclassMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.ThrowableMatcher;
-import info.novatec.inspectit.agent.config.PriorityEnum;
-import info.novatec.inspectit.agent.config.StorageException;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPath;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPathStart;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +21,26 @@ import java.util.List;
 import java.util.Map;
 
 import javassist.Modifier;
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatchPattern;
+import rocks.inspectit.agent.java.analyzer.impl.DirectMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.IndirectMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.InterfaceMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.SuperclassMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.ThrowableMatcher;
+import rocks.inspectit.agent.java.config.PriorityEnum;
+import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.config.impl.ConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.StrategyConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredJmxConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPath;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
 
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
@@ -65,48 +72,48 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		configurationStorage.setRepository("localhost", 1099);
 
 		// jmx sensor types
-		configurationStorage.addJmxSensorType("info.novatec.inspectit.agent.sensor.jmx.JmxSensor", "jmx_test");
+		configurationStorage.addJmxSensorType("rocks.inspectit.agent.java.sensor.jmx.JmxSensor", "jmx_test");
 
 		// method sensor types
 		Map<String, Object> settings = new HashMap<String, Object>(1);
 		settings.put("mode", "optimized");
-		configurationStorage.addMethodSensorType("timer", "info.novatec.inspectit.agent.sensor.method.timer.TimerSensor", PriorityEnum.MAX, settings);
-		configurationStorage.addMethodSensorType("isequence", "info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceSensor", PriorityEnum.INVOC, null);
+		configurationStorage.addMethodSensorType("timer", "rocks.inspectit.agent.java.sensor.method.timer.TimerSensor", PriorityEnum.MAX, settings);
+		configurationStorage.addMethodSensorType("isequence", "rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceSensor", PriorityEnum.INVOC, null);
 
 		// platform sensor types
-		configurationStorage.addPlatformSensorType("info.novatec.inspectit.agent.sensor.platform.ClassLoadingInformation", null);
-		configurationStorage.addPlatformSensorType("info.novatec.inspectit.agent.sensor.platform.CompilationInformation", null);
-		configurationStorage.addPlatformSensorType("info.novatec.inspectit.agent.sensor.platform.RuntimeInformation", null);
+		configurationStorage.addPlatformSensorType("rocks.inspectit.agent.java.sensor.platform.ClassLoadingInformation", null);
+		configurationStorage.addPlatformSensorType("rocks.inspectit.agent.java.sensor.platform.CompilationInformation", null);
+		configurationStorage.addPlatformSensorType("rocks.inspectit.agent.java.sensor.platform.RuntimeInformation", null);
 
 		// exception sensor
-		configurationStorage.addExceptionSensorType("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor", null);
+		configurationStorage.addExceptionSensorType("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor", null);
 
 		// exception sensor parameters
 		settings = new HashMap<String, Object>();
 		settings.put("superclass", "true");
-		configurationStorage.addExceptionSensorTypeParameter("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor", "java.lang.Throwable", false, settings);
+		configurationStorage.addExceptionSensorTypeParameter("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor", "java.lang.Throwable", false, settings);
 
 		settings = new HashMap<String, Object>();
 		settings.put("interface", "true");
-		configurationStorage.addExceptionSensorTypeParameter("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor", "info.novatec.inspectit.agent.analyzer.test.classes.IException", false,
+		configurationStorage.addExceptionSensorTypeParameter("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor", "rocks.inspectit.agent.java.analyzer.test.classes.IException", false,
 				settings);
 
-		configurationStorage.addExceptionSensorTypeParameter("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor", "info.novatec.inspectit.agent.analyzer.test.classes.My*Exception", true,
+		configurationStorage.addExceptionSensorTypeParameter("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor", "rocks.inspectit.agent.java.analyzer.test.classes.My*Exception", true,
 				Collections.<String, Object> emptyMap());
-		configurationStorage.addExceptionSensorTypeParameter("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor", "info.novatec.inspectit.agent.analyzer.test.classes.MyException", false,
+		configurationStorage.addExceptionSensorTypeParameter("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor", "rocks.inspectit.agent.java.analyzer.test.classes.MyException", false,
 				Collections.<String, Object> emptyMap());
 
 		// sending strategies
 		Map<String, String> sendingSettings = new HashMap<String, String>(1);
 		sendingSettings.put("time", "5000");
-		configurationStorage.addSendingStrategy("info.novatec.inspectit.agent.sending.impl.TimeStrategy", sendingSettings);
+		configurationStorage.addSendingStrategy("rocks.inspectit.agent.java.sending.impl.TimeStrategy", sendingSettings);
 
 		sendingSettings = new HashMap<String, String>(1);
 		sendingSettings.put("size", "10");
-		configurationStorage.addSendingStrategy("info.novatec.inspectit.agent.sending.impl.ListSizeStrategy", sendingSettings);
+		configurationStorage.addSendingStrategy("rocks.inspectit.agent.java.sending.impl.ListSizeStrategy", sendingSettings);
 
 		// buffer strategy
-		configurationStorage.setBufferStrategy("info.novatec.inspectit.agent.buffer.impl.SimpleBufferStrategy", null);
+		configurationStorage.setBufferStrategy("rocks.inspectit.agent.java.buffer.impl.SimpleBufferStrategy", null);
 
 		// sensor definitions
 		configurationStorage.addUnregisteredJmxConfig("jmx_test", "Catalina:type=Server", "port");
@@ -214,7 +221,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		assertThat(jmxSensorTypeConfigs, hasSize(1));
 		JmxSensorTypeConfig jmxSensorTypeConfig = jmxSensorTypeConfigs.get(0);
 		assertThat(jmxSensorTypeConfig.getName(), is(equalTo("jmx_test")));
-		assertThat(jmxSensorTypeConfig.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.jmx.JmxSensor")));
+		assertThat(jmxSensorTypeConfig.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.jmx.JmxSensor")));
 		
 
 		List<UnregisteredJmxConfig> jmxConfigs = configurationStorage.getUnregisteredJmxConfigs();
@@ -234,7 +241,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// first
 		MethodSensorTypeConfig config = configs.get(0);
-		assertThat(config.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.method.timer.TimerSensor")));
+		assertThat(config.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.method.timer.TimerSensor")));
 		assertThat(config.getName(), is(equalTo("timer")));
 		assertThat(config.getParameters(), is(notNullValue()));
 		Map<String, Object> settings = config.getParameters();
@@ -246,7 +253,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// second
 		config = configs.get(1);
-		assertThat(config.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.method.invocationsequence.InvocationSequenceSensor")));
+		assertThat(config.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceSensor")));
 		assertThat(config.getName(), is(equalTo("isequence")));
 		assertThat(config.getParameters(), is(notNullValue()));
 		assertThat(config.getParameters().size(), is(0));
@@ -299,21 +306,21 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// first
 		PlatformSensorTypeConfig config = configs.get(0);
-		assertThat(config.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.platform.ClassLoadingInformation")));
+		assertThat(config.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.platform.ClassLoadingInformation")));
 		assertThat(config.getParameters(), is(notNullValue()));
 		assertThat(config.getParameters().size(), is(0));
 		assertThat(config.getSensorType(), is(nullValue()));
 
 		// second
 		config = configs.get(1);
-		assertThat(config.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.platform.CompilationInformation")));
+		assertThat(config.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.platform.CompilationInformation")));
 		assertThat(config.getParameters(), is(notNullValue()));
 		assertThat(config.getParameters().size(), is(0));
 		assertThat(config.getSensorType(), is(nullValue()));
 
 		// third
 		config = configs.get(2);
-		assertThat(config.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.platform.RuntimeInformation")));
+		assertThat(config.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.platform.RuntimeInformation")));
 		assertThat(config.getParameters(), is(notNullValue()));
 		assertThat(config.getParameters().size(), is(0));
 		assertThat(config.getSensorType(), is(nullValue()));
@@ -342,7 +349,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		assertThat(configs, hasSize(1));
 
 		MethodSensorTypeConfig config = configs.get(0);
-		assertThat(config.getClassName(), is(equalTo("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor")));
+		assertThat(config.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor")));
 		assertThat(config.getParameters(), is(notNullValue()));
 		assertThat(config.getParameters().size(), is(0));
 		assertThat(config.getSensorType(), is(nullValue()));
@@ -382,7 +389,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// second
 		config = configs.get(1);
-		assertThat(config.getTargetClassName(), is(equalTo("info.novatec.inspectit.agent.analyzer.test.classes.IException")));
+		assertThat(config.getTargetClassName(), is(equalTo("rocks.inspectit.agent.java.analyzer.test.classes.IException")));
 		assertThat(config.getTargetMethodName(), is(equalTo("")));
 		assertThat(config.getTargetPackageName(), is(nullValue()));
 		assertThat(config.isConstructor(), is(true));
@@ -398,7 +405,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// third
 		config = configs.get(2);
-		assertThat(config.getTargetClassName(), is(equalTo("info.novatec.inspectit.agent.analyzer.test.classes.My*Exception")));
+		assertThat(config.getTargetClassName(), is(equalTo("rocks.inspectit.agent.java.analyzer.test.classes.My*Exception")));
 		assertThat(config.getTargetMethodName(), is(equalTo("")));
 		assertThat(config.getTargetPackageName(), is(nullValue()));
 		assertThat(config.isConstructor(), is(true));
@@ -414,7 +421,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// fourth
 		config = configs.get(3);
-		assertThat(config.getTargetClassName(), is(equalTo("info.novatec.inspectit.agent.analyzer.test.classes.MyException")));
+		assertThat(config.getTargetClassName(), is(equalTo("rocks.inspectit.agent.java.analyzer.test.classes.MyException")));
 		assertThat(config.getTargetMethodName(), is(equalTo("")));
 		assertThat(config.getTargetPackageName(), is(nullValue()));
 		assertThat(config.isConstructor(), is(true));
@@ -448,7 +455,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// first
 		StrategyConfig config = strategies.get(0);
-		assertThat(config.getClazzName(), is(equalTo("info.novatec.inspectit.agent.sending.impl.TimeStrategy")));
+		assertThat(config.getClazzName(), is(equalTo("rocks.inspectit.agent.java.sending.impl.TimeStrategy")));
 		assertThat(config.getSettings(), is(notNullValue()));
 		Map<String, String> settings = config.getSettings();
 		assertThat(settings.size(), is(1));
@@ -457,7 +464,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 
 		// second
 		config = strategies.get(1);
-		assertThat(config.getClazzName(), is(equalTo("info.novatec.inspectit.agent.sending.impl.ListSizeStrategy")));
+		assertThat(config.getClazzName(), is(equalTo("rocks.inspectit.agent.java.sending.impl.ListSizeStrategy")));
 		assertThat(config.getSettings(), is(notNullValue()));
 		settings = config.getSettings();
 		assertThat(settings.size(), is(1));
@@ -486,7 +493,7 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		StrategyConfig config = configurationStorage.getBufferStrategyConfig();
 		assertThat(config, is(notNullValue()));
 
-		assertThat(config.getClazzName(), is(equalTo("info.novatec.inspectit.agent.buffer.impl.SimpleBufferStrategy")));
+		assertThat(config.getClazzName(), is(equalTo("rocks.inspectit.agent.java.buffer.impl.SimpleBufferStrategy")));
 		assertThat(config.getSettings(), is(notNullValue()));
 		assertThat(config.getSettings().size(), is(0));
 

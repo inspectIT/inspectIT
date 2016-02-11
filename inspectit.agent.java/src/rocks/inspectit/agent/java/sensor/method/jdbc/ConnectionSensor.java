@@ -1,13 +1,13 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.agent.hooking.IHook;
-import info.novatec.inspectit.agent.sensor.method.AbstractMethodSensor;
-import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.sql.PreparedStatement;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
 
 /**
  * This sensor initializes the {@link ConnectionHook} to intercept the creation of

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.validation;
+package rocks.inspectit.ui.rcp.validation;
 
 /**
  * Interface for listeners on the validation control decoration.

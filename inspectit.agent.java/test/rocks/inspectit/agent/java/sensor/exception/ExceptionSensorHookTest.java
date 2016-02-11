@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.exception;
+package rocks.inspectit.agent.java.sensor.exception;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -15,15 +15,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.analyzer.classes.MyTestException;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.util.StringConstraint;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -34,6 +25,17 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.analyzer.classes.MyTestException;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.sensor.exception.ExceptionSensorHook;
+import rocks.inspectit.agent.java.util.StringConstraint;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 @SuppressWarnings("PMD")
 public class ExceptionSensorHookTest extends AbstractLogSupport {

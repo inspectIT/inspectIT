@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.model.storage;
-
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.Composite;
-import info.novatec.inspectit.rcp.model.Leaf;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.ui.rcp.model.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.Composite;
+import rocks.inspectit.ui.rcp.model.Leaf;
 
 /**
  * Tree model manager for storage manager view that displays the local storage data.
@@ -50,10 +50,10 @@ public class LocalStorageTreeModelManager {
 
 	/**
 	 * Returns objects divided either by the provided label class, or by
-	 * {@link info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition} they are located to.
+	 * {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are located to.
 	 * 
 	 * @return Returns objects divided either by the provided label class, or by
-	 *         {@link info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition} they are
+	 *         {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are
 	 *         located to.
 	 */
 	public Object[] getRootObjects() {

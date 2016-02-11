@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.dialog;
-
-import info.novatec.inspectit.exception.RemoteException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.handlers.OpenUrlHandler.ExceptionSupportHandler;
+package rocks.inspectit.ui.rcp.dialog;
 
 import java.util.Objects;
 
@@ -39,6 +34,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.handlers.IHandlerService;
+
+import rocks.inspectit.shared.all.exception.RemoteException;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.handlers.OpenUrlHandler.ExceptionSupportHandler;
 
 /**
  * The dialog for any kind of unexpected messages.

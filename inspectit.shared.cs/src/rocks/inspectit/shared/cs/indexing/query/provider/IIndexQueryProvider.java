@@ -1,7 +1,7 @@
-package info.novatec.inspectit.indexing.query.provider;
+package rocks.inspectit.shared.cs.indexing.query.provider;
 
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.impl.IndexQuery;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
 
 /**
  * Common interface for all query providers.

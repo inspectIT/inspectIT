@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.invocationsequence;
+package rocks.inspectit.agent.java.sensor.method.invocationsequence;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -10,23 +10,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.IPropertyAccessor;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.core.impl.CoreService;
-import info.novatec.inspectit.agent.sensor.ISensor;
-import info.novatec.inspectit.agent.sensor.exception.ExceptionSensor;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionSensor;
-import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementParameterSensor;
-import info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementSensor;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.util.Timer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +24,25 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.IPropertyAccessor;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.core.impl.CoreService;
+import rocks.inspectit.agent.java.sensor.ISensor;
+import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
+import rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceHook;
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor;
+import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterSensor;
+import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor;
+import rocks.inspectit.agent.java.util.Timer;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Testing the {@link InvocationSequenceHook}.

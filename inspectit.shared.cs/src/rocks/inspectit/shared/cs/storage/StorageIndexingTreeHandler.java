@@ -1,13 +1,4 @@
-package info.novatec.inspectit.storage;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.StorageWriter.WriteTask;
-import info.novatec.inspectit.storage.util.StorageIndexTreeProvider;
+package rocks.inspectit.shared.cs.storage;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +22,15 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.storage.StorageWriter.WriteTask;
+import rocks.inspectit.shared.cs.storage.util.StorageIndexTreeProvider;
 
 /**
  * This class provides a layer of abstraction between {@link StorageWriter} and

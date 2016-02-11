@@ -1,11 +1,11 @@
-package info.novatec.inspectit.storage.serializer.impl;
-
-import info.novatec.inspectit.cmr.service.IServerStatusService.ServerStatus;
+package rocks.inspectit.shared.cs.storage.serializer.impl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.DefaultSerializers.EnumSerializer;
+
+import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
 
 /**
  * Special type of {@link EnumSerializer} for the {@link ServerStatus} enumeration so that key of

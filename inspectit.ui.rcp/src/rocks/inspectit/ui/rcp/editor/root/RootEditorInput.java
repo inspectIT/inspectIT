@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.editor.root;
-
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
+package rocks.inspectit.ui.rcp.editor.root;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
  * This editor input is used for all views and can only be set in the composite view controller as

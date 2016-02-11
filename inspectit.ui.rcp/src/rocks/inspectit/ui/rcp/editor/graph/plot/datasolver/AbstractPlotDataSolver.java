@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver;
-
-import info.novatec.inspectit.rcp.InspectIT;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver;
 
 import org.eclipse.core.runtime.IStatus;
 import org.jfree.chart.axis.NumberAxis;
+
+import rocks.inspectit.ui.rcp.InspectIT;
 
 /**
  * The implementation of this interface define how specific data will be plotted by providing a

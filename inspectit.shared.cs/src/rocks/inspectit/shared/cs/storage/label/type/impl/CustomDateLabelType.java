@@ -1,11 +1,11 @@
-package info.novatec.inspectit.storage.label.type.impl;
-
-import info.novatec.inspectit.storage.label.type.AbstractCustomStorageLabelType;
+package rocks.inspectit.shared.cs.storage.label.type.impl;
 
 import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+
+import rocks.inspectit.shared.cs.storage.label.type.AbstractCustomStorageLabelType;
 
 /**
  * Custom label type that holds {@link Date} values.

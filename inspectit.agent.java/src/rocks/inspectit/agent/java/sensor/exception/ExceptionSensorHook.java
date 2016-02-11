@@ -1,12 +1,4 @@
-package info.novatec.inspectit.agent.sensor.exception;
-
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.util.StringConstraint;
+package rocks.inspectit.agent.java.sensor.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,6 +8,14 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.util.StringConstraint;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 /**
  * This class adds additional code to a constructor of type {@link Throwable}, to the

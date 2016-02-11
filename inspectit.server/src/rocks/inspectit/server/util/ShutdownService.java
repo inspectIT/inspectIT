@@ -1,7 +1,4 @@
-package info.novatec.inspectit.cmr.util;
-
-import info.novatec.inspectit.cmr.CMR;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.util;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -13,6 +10,9 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.server.CMR;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This component can shutdown or restart the CMR.

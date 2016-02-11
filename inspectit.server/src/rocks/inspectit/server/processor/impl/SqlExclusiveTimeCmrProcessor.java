@@ -1,10 +1,10 @@
-package info.novatec.inspectit.cmr.processor.impl;
-
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
+package rocks.inspectit.server.processor.impl;
 
 import javax.persistence.EntityManager;
+
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 /**
  * Processor that sets the correct exclusive time for {@link SqlStatementData} because it's always

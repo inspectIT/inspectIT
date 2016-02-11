@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="inspectIT" uid="info.novatec.inspectit.rcp.product" id="info.novatec.inspectit.rcp.product" application="info.novatec.inspectit.rcp.application" version="1.6.0" useFeatures="false" includeLaunchers="true">
+<product name="inspectIT" uid="rocks.inspectit.ui.rcp.product" id="rocks.inspectit.ui.rcp.product" application="rocks.inspectit.ui.rcp.application" version="1.6.0" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="about.png"/>
@@ -25,20 +25,20 @@
    <windowImages i16="/inspectIT/icons/selfmade/16x16.png" i32="/inspectIT/icons/selfmade/32x32.png" i48="/inspectIT/icons/selfmade/48x48.png" i64="/inspectIT/icons/selfmade/64x64.png" i128="/inspectIT/icons/selfmade/128x128.png"/>
 
    <splash
-      location="info.novatec.inspectit.rcp"
+      location="rocks.inspectit.ui.rcp"
       startupMessageRect="5,10,560,20"
       startupForegroundColor="FFFFFF" />
    <launcher name="inspectIT">
-      <linux icon="info.novatec.inspectit.rcp/icons/selfmade/inspectIT.xpm"/>
-      <macosx icon="info.novatec.inspectit.rcp/icons/selfmade/inspectIT.icns"/>
+      <linux icon="rocks.inspectit.ui.rcp/icons/selfmade/inspectIT.xpm"/>
+      <macosx icon="rocks.inspectit.ui.rcp/icons/selfmade/inspectIT.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="info.novatec.inspectit.rcp/icons/selfmade/inspectIT.ico"/>
+         <ico path="rocks.inspectit.ui.rcp/icons/selfmade/inspectIT.ico"/>
          <bmp/>
       </win>
    </launcher>
 
-   <intro introId="info.novatec.inspectit.rcp.intro"/>
+   <intro introId="rocks.inspectit.ui.rcp.intro"/>
 
    <vm>
    </vm>
@@ -108,9 +108,6 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="info.novatec.httpclient"/>
       <plugin id="info.novatec.httpcore"/>
       <plugin id="info.novatec.httpmime"/>
-      <plugin id="info.novatec.inspectit.commons"/>
-      <plugin id="info.novatec.inspectit.commonscs"/>
-      <plugin id="info.novatec.inspectit.rcp"/>
       <plugin id="info.novatec.jcommon"/>
       <plugin id="info.novatec.jfreechart"/>
       <plugin id="info.novatec.jfreechart-experimental"/>
@@ -181,6 +178,9 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="org.springframework.osgi.core"/>
       <plugin id="org.springframework.osgi.extender"/>
       <plugin id="org.springframework.osgi.io"/>
+      <plugin id="rocks.inspectit.shared.all"/>
+      <plugin id="rocks.inspectit.shared.cs"/>
+      <plugin id="rocks.inspectit.ui.rcp"/>
       <plugin id="slf4j.api"/>
    </plugins>
 

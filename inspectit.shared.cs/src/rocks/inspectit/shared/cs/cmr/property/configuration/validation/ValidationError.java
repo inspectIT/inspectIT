@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.property.configuration.validation;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validation;
 
 import java.util.Collection;
 
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 
 /**
  * Single validation error containing the message describing the validation.

@@ -1,7 +1,4 @@
-package info.novatec.inspectit.cmr.spring.exporter;
-
-import info.novatec.inspectit.cmr.service.ServiceExporterType;
-import info.novatec.inspectit.cmr.service.ServiceInterface;
+package rocks.inspectit.server.spring.exporter;
 
 import java.lang.annotation.Annotation;
 
@@ -20,6 +17,9 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 
 /**
  * Provides automatic remote export of services found inside a Spring context.

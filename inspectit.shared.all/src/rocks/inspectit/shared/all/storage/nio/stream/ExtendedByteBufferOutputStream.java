@@ -1,6 +1,4 @@
-package info.novatec.inspectit.storage.nio.stream;
-
-import info.novatec.inspectit.storage.nio.ByteBufferProvider;
+package rocks.inspectit.shared.all.storage.nio.stream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,6 +13,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.esotericsoftware.kryo.io.ByteBufferOutputStream;
+
+import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
 
 /**
  * This class extends the {@link ByteBufferOutputStream} in the way that it caches the

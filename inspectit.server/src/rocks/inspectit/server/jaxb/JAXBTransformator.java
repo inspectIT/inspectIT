@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.jaxb;
+package rocks.inspectit.server.jaxb;
 
 import java.io.IOException;
 import java.io.InputStream;

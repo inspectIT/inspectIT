@@ -2,34 +2,36 @@
 <suite name="CommonsTest">
 	<test name="Data">
 		<classes>
-			<class name="info.novatec.inspectit.cmr.cache.impl.ObjectSizesPrimitiveTypesSizeTest" />
-			<class name="info.novatec.inspectit.communication.EqualsVerifierTest" />
-			<class name="info.novatec.inspectit.communication.data.InvocationAwareDataTest" />
-			<class name="info.novatec.inspectit.communication.data.AggregatedDataTest" />
-			<class name="info.novatec.inspectit.communication.valueobject.TimerRawVOTest" />
+			<class name="rocks.inspectit.shared.all.cmr.cache.impl.ObjectSizesPrimitiveTypesSizeTest" />
+			<class name="rocks.inspectit.shared.all.communication.EqualsVerifierTest" />
+			<class name="rocks.inspectit.shared.all.communication.data.InvocationAwareDataTest" />
+			<class name="rocks.inspectit.shared.all.communication.data.AggregatedDataTest" />
+			<class name="rocks.inspectit.shared.all.communication.valueobject.TimerRawVOTest" />
 		</classes>
 	</test>
 	<test name="Serializer">
 		<classes>
-			<class name="info.novatec.inspectit.storage.serializer.impl.BackwardForwardCompatibilityTest" />
+			<class name="rocks.inspectit.shared.all.storage.serializer.impl.BackwardForwardCompatibilityTest" />
 		</classes>
 	</test>
 	<test name="NIO">
 		<classes>
-			<class name="info.novatec.inspectit.storage.nio.stream.SocketExtendedByteBufferInputStreamTest" />
+			<class name="rocks.inspectit.shared.all.storage.nio.ByteBufferProviderTest" />
+			<class name="rocks.inspectit.shared.all.storage.nio.stream.SocketExtendedByteBufferInputStreamTest" />
+			<class name="rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStreamTest" />
 		</classes>
 	</test>
 	<test name="Versioning">
 		<classes>
-			<class name="info.novatec.inspectit.versioning.FileBasedVersionReaderTest" />
-			<class name="info.novatec.inspectit.versioning.VersionServiceTest" />
-			<class name="info.novatec.inspectit.versioning.VersionTest" />
+			<class name="rocks.inspectit.shared.all.versioning.FileBasedVersionReaderTest" />
+			<class name="rocks.inspectit.shared.all.versioning.VersionServiceTest" />
+			<class name="rocks.inspectit.shared.all.versioning.VersionTest" />
 		</classes>
 	</test>
 	<test name="JPA">
 		<classes>
-			<class name="info.novatec.inspectit.jpa.ListStringConverterTest" />
-			<class name="info.novatec.inspectit.jpa.MapStringConverterTest" />
+			<class name="rocks.inspectit.shared.all.jpa.ListStringConverterTest" />
+			<class name="rocks.inspectit.shared.all.jpa.MapStringConverterTest" />
 		</classes>
 	</test>
 </suite>

@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.storage.http;
-
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+package rocks.inspectit.ui.rcp.storage.http;
 
 import java.util.Map;
 
@@ -9,6 +7,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.progress.UIJob;
+
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * Transfer monitor class that collects {@link DataSample}s during the transfer and provides

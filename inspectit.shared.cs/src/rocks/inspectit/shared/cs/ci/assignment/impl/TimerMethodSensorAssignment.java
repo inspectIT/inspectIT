@@ -1,10 +1,4 @@
-package info.novatec.inspectit.ci.assignment.impl;
-
-import info.novatec.inspectit.ci.context.AbstractContextCapture;
-import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
-import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
-import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
-import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
+package rocks.inspectit.shared.cs.ci.assignment.impl;
 
 import java.util.List;
 
@@ -15,6 +9,12 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 
 /**
  * Timer sensor assignment.

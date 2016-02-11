@@ -1,23 +1,4 @@
-package info.novatec.inspectit.rcp.property.control;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.BooleanProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.ByteProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.LongProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.PercentageProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.StringProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidationException;
-import info.novatec.inspectit.cmr.property.configuration.validation.ValidationError;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.property.IPropertyUpdateListener;
-import info.novatec.inspectit.rcp.property.control.impl.BooleanPropertyControl;
-import info.novatec.inspectit.rcp.property.control.impl.BytePropertyControl;
-import info.novatec.inspectit.rcp.property.control.impl.LongPropertyControl;
-import info.novatec.inspectit.rcp.property.control.impl.PercentagePropertyControl;
-import info.novatec.inspectit.rcp.property.control.impl.StringPropertyControl;
+package rocks.inspectit.ui.rcp.property.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +12,25 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.BooleanProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.ByteProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.LongProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.PercentageProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.StringProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidationException;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.property.IPropertyUpdateListener;
+import rocks.inspectit.ui.rcp.property.control.impl.BooleanPropertyControl;
+import rocks.inspectit.ui.rcp.property.control.impl.BytePropertyControl;
+import rocks.inspectit.ui.rcp.property.control.impl.LongPropertyControl;
+import rocks.inspectit.ui.rcp.property.control.impl.PercentagePropertyControl;
+import rocks.inspectit.ui.rcp.property.control.impl.StringPropertyControl;
 
 /**
  * Abstract class for all property controls.

@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.property.control.impl;
-
-import info.novatec.inspectit.cmr.property.configuration.impl.ByteProperty;
-import info.novatec.inspectit.rcp.property.IPropertyUpdateListener;
-import info.novatec.inspectit.rcp.property.control.AbstractPropertyControl;
+package rocks.inspectit.ui.rcp.property.control.impl;
 
 import java.util.Locale;
 
@@ -22,6 +18,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.ByteProperty;
+import rocks.inspectit.ui.rcp.property.IPropertyUpdateListener;
+import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * Property control for {@link ByteProperty}.

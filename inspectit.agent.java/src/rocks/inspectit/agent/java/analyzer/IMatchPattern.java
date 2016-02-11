@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.analyzer;
+package rocks.inspectit.agent.java.analyzer;
 
-import info.novatec.inspectit.agent.config.IConfigurationReader;
+import rocks.inspectit.agent.java.config.IConfigurationReader;
 
 /**
  * The interface is used by some {@link IConfigurationReader} to try to match a given pattern to a

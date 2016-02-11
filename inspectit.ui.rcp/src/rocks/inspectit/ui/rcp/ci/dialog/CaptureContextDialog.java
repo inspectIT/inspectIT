@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.ci.dialog;
-
-import info.novatec.inspectit.ci.context.AbstractContextCapture;
-import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
-import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
-import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.validation.IControlValidationListener;
-import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
+package rocks.inspectit.ui.rcp.ci.dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +23,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.validation.IControlValidationListener;
+import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Dialog for creating new {@link AbstractContextCapture}.

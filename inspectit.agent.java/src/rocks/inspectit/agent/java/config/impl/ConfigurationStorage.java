@@ -1,19 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatchPattern;
-import info.novatec.inspectit.agent.analyzer.IMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.DirectMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.ModifierMatcher;
-import info.novatec.inspectit.agent.analyzer.impl.SimpleMatchPattern;
-import info.novatec.inspectit.agent.analyzer.impl.SuperclassMatcher;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.PriorityEnum;
-import info.novatec.inspectit.agent.config.StorageException;
-import info.novatec.inspectit.agent.jrebel.JRebelUtil;
-import info.novatec.inspectit.communication.data.ParameterContentType;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.config.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +9,20 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import javassist.Modifier;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatchPattern;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.DirectMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.ModifierMatcher;
+import rocks.inspectit.agent.java.analyzer.impl.SimpleMatchPattern;
+import rocks.inspectit.agent.java.analyzer.impl.SuperclassMatcher;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.PriorityEnum;
+import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.jrebel.JRebelUtil;
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -576,7 +575,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		// when they are added to the methodSensorTypes
 		List<MethodSensorTypeConfig> exceptionSensorTypes = new ArrayList<MethodSensorTypeConfig>();
 		for (MethodSensorTypeConfig config : methodSensorTypes) {
-			if (config.getName().equals("info.novatec.inspectit.agent.sensor.exception.ExceptionSensor")) {
+			if (config.getName().equals("rocks.inspectit.agent.java.sensor.exception.ExceptionSensor")) {
 				exceptionSensorTypes.add(config);
 			}
 		}

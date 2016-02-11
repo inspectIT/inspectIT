@@ -1,4 +1,4 @@
-package info.novatec.inspectit.communication.data.cmr;
+package rocks.inspectit.shared.all.communication.data.cmr;
 
 import java.io.Serializable;
 

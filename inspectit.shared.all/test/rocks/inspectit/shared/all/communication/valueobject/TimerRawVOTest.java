@@ -1,13 +1,15 @@
-package info.novatec.inspectit.communication.valueobject;
+package rocks.inspectit.shared.all.communication.valueobject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.TimerData;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO;
 
 /**
  * Tests the functionality of {@link TimerRawVO}.

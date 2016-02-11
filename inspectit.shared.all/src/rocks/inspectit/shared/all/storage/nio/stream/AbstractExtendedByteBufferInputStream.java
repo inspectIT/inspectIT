@@ -1,6 +1,4 @@
-package info.novatec.inspectit.storage.nio.stream;
-
-import info.novatec.inspectit.storage.nio.ByteBufferProvider;
+package rocks.inspectit.shared.all.storage.nio.stream;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,6 +7,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.esotericsoftware.kryo.io.ByteBufferInputStream;
+
+import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
 
 /**
  * This is abstract class for all input streams that can read data with limited numbers of buffers.

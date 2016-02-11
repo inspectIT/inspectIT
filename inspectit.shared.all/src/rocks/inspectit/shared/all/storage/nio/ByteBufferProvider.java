@@ -1,10 +1,4 @@
-package info.novatec.inspectit.storage.nio;
-
-import info.novatec.inspectit.cmr.property.spring.PropertyUpdate;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.nio.bytebuffer.ByteBufferFactory;
-import info.novatec.inspectit.util.UnderlyingSystemInfo;
-import info.novatec.inspectit.util.UnderlyingSystemInfo.JvmProvider;
+package rocks.inspectit.shared.all.storage.nio;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -17,6 +11,12 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.nio.bytebuffer.ByteBufferFactory;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
 
 /**
  * This component enables reusing of the {@link ByteBuffer}s. It creates a set of initial buffers

@@ -1,13 +1,13 @@
-package info.novatec.inspectit.ci.assignment;
-
-import info.novatec.inspectit.ci.assignment.impl.ExceptionSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
-import info.novatec.inspectit.ci.sensor.ISensorConfig;
+package rocks.inspectit.shared.cs.ci.assignment;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 
 /**
  * Class for class sensor assignment.

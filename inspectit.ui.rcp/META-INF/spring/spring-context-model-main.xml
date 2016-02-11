@@ -11,18 +11,18 @@
 	<!-- needed for the automatic AOP usage -->
 	<bean id="advisorFactory" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 
-	<bean id="interfaceInterceptor" class="info.novatec.inspectit.rcp.repository.service.cmr.proxy.ServiceInterfaceDelegateInterceptor" />
+	<bean id="interfaceInterceptor" class="rocks.inspectit.ui.rcp.repository.service.cmr.proxy.ServiceInterfaceDelegateInterceptor" />
 
-	<bean id="serviceMethodInterceptor" class="info.novatec.inspectit.rcp.repository.service.cmr.proxy.ServiceMethodInterceptor" />
+	<bean id="serviceMethodInterceptor" class="rocks.inspectit.ui.rcp.repository.service.cmr.proxy.ServiceMethodInterceptor" />
 
-	<bean id="cachingPlatformIdentInterceptor" class="info.novatec.inspectit.rcp.repository.service.cmr.proxy.CachingPlatformIdentInterceptor" />
+	<bean id="cachingPlatformIdentInterceptor" class="rocks.inspectit.ui.rcp.repository.service.cmr.proxy.CachingPlatformIdentInterceptor" />
 
 	<bean id="cachingPlatformAdvice" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
 		<property name="advice" ref="cachingPlatformIdentInterceptor" />
 		<property name="pattern" value=".*Proxy.*getCompleteAgent.*" />
 	</bean>
 
-	<bean id="cmrServiceProvider" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrServiceProvider">
+	<bean id="cmrServiceProvider" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrServiceProvider">
 		<lookup-method name="getCmrManagementService" bean="cmrManagementService" />
 		<lookup-method name="getExceptionDataAccessService" bean="exceptionDataAccessService" />
 		<lookup-method name="getJmxDataAccessService" bean="jmxDataAccessService" />
@@ -40,8 +40,8 @@
 	<bean id="cmrManagementService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.ICmrManagementService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.ICmrManagementService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="cmrManagementServiceTarget" />
@@ -53,8 +53,8 @@
 		</property>
 	</bean>
 
-	<bean id="cmrManagementServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.ICmrManagementService" />
+	<bean id="cmrManagementServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.ICmrManagementService" />
 		<property name="serviceName" value="CmrManagementService" />
 		<property name="defaultValueOnError" value="false" />
 	</bean>
@@ -64,8 +64,8 @@
 	<bean id="exceptionDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IExceptionDataAccessService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="exceptionDataAccessServiceTarget" />
@@ -77,8 +77,8 @@
 		</property>
 	</bean>
 
-	<bean id="exceptionDataAccessServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IExceptionDataAccessService" />
+	<bean id="exceptionDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService" />
 		<property name="serviceName" value="ExceptionDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
 	</bean>
@@ -88,8 +88,8 @@
 	<bean id="jmxDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IJmxDataAccessService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="jmxDataAccessServiceTarget" />
@@ -101,8 +101,8 @@
 		</property>
 	</bean>
 
-	<bean id="jmxDataAccessServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IJmxDataAccessService" />
+	<bean id="jmxDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService" />
 		<property name="serviceName" value="JmxDataAccessService" />
 	</bean>
 	<!-- JmxDataAccessService End -->
@@ -111,8 +111,8 @@
 	<bean id="globalDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IGlobalDataAccessService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="globalDataAccessServiceTarget" />
@@ -124,8 +124,8 @@
 		</property>
 	</bean>
 
-	<bean id="globalDataAccessServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IGlobalDataAccessService" />
+	<bean id="globalDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService" />
 		<property name="serviceName" value="GlobalDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
 	</bean>
@@ -135,8 +135,8 @@
 	<bean id="invocationDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IInvocationDataAccessService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="invocationDataAccessServiceTarget" />
@@ -148,8 +148,8 @@
 		</property>
 	</bean>
 
-	<bean id="invocationDataAccessServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IInvocationDataAccessService" />
+	<bean id="invocationDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService" />
 		<property name="serviceName" value="InvocationDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
 	</bean>
@@ -159,8 +159,8 @@
 	<bean id="serverStatusService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IServerStatusService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IServerStatusService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="serverStatusServiceTarget" />
@@ -171,8 +171,8 @@
 		</property>
 	</bean>
 
-	<bean id="serverStatusServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IServerStatusService" />
+	<bean id="serverStatusServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IServerStatusService" />
 		<property name="serviceName" value="ServerStatusService" />
 		<property name="defaultValueOnError" value="false" />
 	</bean>
@@ -182,8 +182,8 @@
 	<bean id="sqlDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.ISqlDataAccessService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="sqlDataAccessServiceTarget" />
@@ -195,8 +195,8 @@
 		</property>
 	</bean>
 
-	<bean id="sqlDataAccessServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.ISqlDataAccessService" />
+	<bean id="sqlDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService" />
 		<property name="serviceName" value="SqlDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
 	</bean>
@@ -206,8 +206,8 @@
 	<bean id="timerDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.ITimerDataAccessService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="timerDataAccessServiceTarget" />
@@ -219,8 +219,8 @@
 		</property>
 	</bean>
 
-	<bean id="timerDataAccessServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.ITimerDataAccessService" />
+	<bean id="timerDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService" />
 		<property name="serviceName" value="TimerDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
 	</bean>
@@ -230,8 +230,8 @@
 	<bean id="httpTimerDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="httpTimerDataAccessServiceTarget" />
@@ -243,8 +243,8 @@
 		</property>
 	</bean>
 
-	<bean id="httpTimerDataAccessServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService" />
+	<bean id="httpTimerDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService" />
 		<property name="serviceName" value="HttpTimerDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
 	</bean>
@@ -254,8 +254,8 @@
 	<bean id="storageService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IStorageService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IStorageService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="storageServiceTarget" />
@@ -267,8 +267,8 @@
 		</property>
 	</bean>
 
-	<bean id="storageServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IStorageService" />
+	<bean id="storageServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IStorageService" />
 		<property name="serviceName" value="StorageService" />
 		<property name="defaultValueOnError" value="false" />
 	</bean>
@@ -278,8 +278,8 @@
 	<bean id="configurationInterfaceService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
 		<property name="proxyInterfaces">
 			<list>
-				<value>info.novatec.inspectit.cmr.service.IConfigurationInterfaceService</value>
-				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+				<value>rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
 			</list>
 		</property>
 		<property name="target" ref="configurationInterfaceServiceTarget" />
@@ -291,28 +291,28 @@
 		</property>
 	</bean>
 
-	<bean id="configurationInterfaceServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
-		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IConfigurationInterfaceService" />
+	<bean id="configurationInterfaceServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService" />
 		<property name="serviceName" value="ConfigurationInterfaceService" />
 		<property name="defaultValueOnError" value="false" />
 	</bean>
 	<!-- ConfigurationInterfaceService End -->
 
-	<bean id="loggerPostProcessor" class="info.novatec.inspectit.spring.logger.LoggerPostProcessor" />
+	<bean id="loggerPostProcessor" class="rocks.inspectit.shared.all.spring.logger.LoggerPostProcessor" />
 
-	<bean id="classSchemaManager" class="info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager">
+	<bean id="classSchemaManager" class="rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager">
 		<property name="schemaListFile" value="classpath:schema/schemaList.txt" />
 	</bean>
 
-	<bean id="serializationManager" class="info.novatec.inspectit.storage.serializer.impl.SerializationManager" scope="prototype" lazy-init="true" />
+	<bean id="serializationManager" class="rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager" scope="prototype" lazy-init="true" />
 
-	<bean id="kryoNetNetwork" class="info.novatec.inspectit.util.KryoNetNetwork" />
+	<bean id="kryoNetNetwork" class="rocks.inspectit.shared.all.util.KryoNetNetwork" />
 
-	<bean id="serializationManagerProvider" class="info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider">
+	<bean id="serializationManagerProvider" class="rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider">
 		<lookup-method name="createSerializer" bean="serializationManager" />
 	</bean>
 
-	<bean class="info.novatec.inspectit.rcp.details.generator.impl.JmxDetailsGenerator" />
-	<bean id="configurationInterfaceManager" class="info.novatec.inspectit.rcp.ci.InspectITConfigurationInterfaceManager" />
-	<bean id="serializationManagerPostProcessor" class="info.novatec.inspectit.storage.serializer.SerializationManagerPostProcessor" />
+	<bean class="rocks.inspectit.ui.rcp.details.generator.impl.JmxDetailsGenerator" />
+	<bean id="configurationInterfaceManager" class="rocks.inspectit.ui.rcp.ci.InspectITConfigurationInterfaceManager" />
+	<bean id="serializationManagerPostProcessor" class="rocks.inspectit.shared.cs.storage.serializer.SerializationManagerPostProcessor" />
 </beans>

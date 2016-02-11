@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.util;
+package rocks.inspectit.ui.rcp.util;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.swt.SWT;

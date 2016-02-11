@@ -1,13 +1,9 @@
-package info.novatec.inspectit.agent.sending.impl;
+package rocks.inspectit.agent.java.sending.impl;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.MockInit;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.ListListener;
-import info.novatec.inspectit.agent.sending.ISendingStrategy;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +12,12 @@ import java.util.Map;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.MockInit;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.ListListener;
+import rocks.inspectit.agent.java.sending.ISendingStrategy;
+import rocks.inspectit.agent.java.sending.impl.ListSizeStrategy;
 
 @SuppressWarnings("PMD")
 public class ListSizeStrategyTest extends MockInit {

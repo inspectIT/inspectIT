@@ -1,7 +1,7 @@
-package info.novatec.inspectit.rcp.editor.search;
+package rocks.inspectit.ui.rcp.editor.search;
 
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchCriteria;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchResult;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchResult;
 
 /**
  * Interface for components that can execute the search.

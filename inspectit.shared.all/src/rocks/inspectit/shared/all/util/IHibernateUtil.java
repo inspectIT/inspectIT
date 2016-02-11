@@ -1,4 +1,4 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.shared.all.util;
 
 /**
  * Interface for Hibernate utility class.

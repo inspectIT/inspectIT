@@ -1,7 +1,7 @@
 /**
  *
  */
-package info.novatec.inspectit.agent.sensor.method.jdbc;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -9,11 +9,13 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import info.novatec.inspectit.agent.AbstractLogSupport;
 
 import java.util.List;
 
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.sensor.method.jdbc.StatementStorage;
 
 /**
  * @author Stefan Siegl

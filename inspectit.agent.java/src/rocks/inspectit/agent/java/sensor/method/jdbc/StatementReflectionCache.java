@@ -1,10 +1,10 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.util.ReflectionCache;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.sql.Connection;
 
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.agent.java.util.ReflectionCache;
 
 /**
  * Provides the connection for a given statement.
