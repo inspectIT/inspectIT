@@ -1,25 +1,25 @@
-package info.novatec.inspectit.rcp.editor.search.factory;
-
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.communication.data.AggregatedExceptionSensorData;
-import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
-import info.novatec.inspectit.communication.data.AggregatedSqlStatementData;
-import info.novatec.inspectit.communication.data.AggregatedTimerData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.editor.search.criteria.SearchCriteria;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.search.factory;
 
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
+import rocks.inspectit.shared.all.communication.data.AggregatedSqlStatementData;
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Class for supporting the search functionality.

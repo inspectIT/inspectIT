@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.menu;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler;
+package rocks.inspectit.ui.rcp.menu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +24,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler;
 
 /**
  * Menu manager for displaying the show/hide columns group.

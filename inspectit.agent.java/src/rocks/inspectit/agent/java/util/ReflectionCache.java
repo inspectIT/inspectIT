@@ -1,4 +1,4 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.agent.java.util;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;

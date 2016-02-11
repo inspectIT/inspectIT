@@ -1,6 +1,6 @@
-package info.novatec.inspectit.communication;
+package rocks.inspectit.shared.all.communication;
 
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 
 /**
  * Interface for all objects that can report its size.

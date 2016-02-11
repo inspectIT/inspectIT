@@ -1,4 +1,4 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.agent.java.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -9,6 +9,8 @@ import static org.hamcrest.Matchers.nullValue;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.util.WeakList;
 
 @SuppressWarnings("PMD")
 public class WeakListTest {

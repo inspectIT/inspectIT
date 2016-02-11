@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing;
+package rocks.inspectit.shared.cs.indexing;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +13,11 @@ import java.util.concurrent.RecursiveTask;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.indexing.buffer.impl.Branch;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * Abstract class for all {@link ITreeComponent}s that are a branch.

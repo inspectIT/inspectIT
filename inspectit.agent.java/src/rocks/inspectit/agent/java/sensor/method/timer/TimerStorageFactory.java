@@ -1,10 +1,10 @@
-package info.novatec.inspectit.agent.sensor.method.timer;
-
-import info.novatec.inspectit.communication.data.ParameterContentData;
+package rocks.inspectit.agent.java.sensor.method.timer;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 
 /**
  * Factory for creating storage objects for the Timer sensor according to the definition in the

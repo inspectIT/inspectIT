@@ -1,4 +1,4 @@
-package info.novatec.inspectit.spring.logger;
+package rocks.inspectit.shared.all.spring.logger;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

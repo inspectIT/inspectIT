@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp;
-
-import info.novatec.inspectit.rcp.ci.InspectITConfigurationInterfaceManager;
-import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
-import info.novatec.inspectit.rcp.log.LogListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
-import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
+package rocks.inspectit.ui.rcp;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +36,11 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
+import rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger;
+import rocks.inspectit.ui.rcp.ci.InspectITConfigurationInterfaceManager;
+import rocks.inspectit.ui.rcp.log.LogListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager;
+import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -51,7 +50,7 @@ public class InspectIT extends AbstractUIPlugin {
 	/**
 	 * The id of this plugin.
 	 */
-	public static final String ID = "info.novatec.inspectit.rcp";
+	public static final String ID = "rocks.inspectit.ui.rcp";
 
 	/**
 	 * Default name of the log file.

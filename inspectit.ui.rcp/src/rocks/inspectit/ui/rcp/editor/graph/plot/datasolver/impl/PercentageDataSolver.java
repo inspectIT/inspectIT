@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl;
-
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl;
 
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -11,6 +8,9 @@ import java.text.ParsePosition;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.data.Range;
+
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * This class is used to plot data as percentage data.

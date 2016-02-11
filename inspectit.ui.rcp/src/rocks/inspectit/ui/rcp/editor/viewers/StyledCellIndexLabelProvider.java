@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.editor.viewers;
-
-import info.novatec.inspectit.rcp.editor.tooltip.IColumnToolTipProvider;
+package rocks.inspectit.ui.rcp.editor.viewers;
 
 import java.util.Arrays;
 
@@ -12,6 +10,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
+
+import rocks.inspectit.ui.rcp.editor.tooltip.IColumnToolTipProvider;
 
 /**
  * This class extends the {@link StyledCellLabelProvider} with support for the index of the cell,

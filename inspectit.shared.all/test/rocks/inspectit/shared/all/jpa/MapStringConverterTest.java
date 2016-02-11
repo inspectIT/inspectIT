@@ -1,4 +1,4 @@
-package info.novatec.inspectit.jpa;
+package rocks.inspectit.shared.all.jpa;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
@@ -14,6 +14,8 @@ import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.jpa.MapStringConverter;
 
 @SuppressWarnings("unchecked")
 public class MapStringConverterTest {

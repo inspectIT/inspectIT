@@ -1,9 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration.validator.impl;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.ValidationError;
-import info.novatec.inspectit.cmr.property.configuration.validator.AbstractComparingValidator;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +7,11 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hamcrest.Matchers;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.AbstractComparingValidator;
 
 /**
  * Is greater than validator.

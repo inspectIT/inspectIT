@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.impl;
+package rocks.inspectit.shared.cs.indexing.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
@@ -20,25 +20,26 @@ import java.util.concurrent.ForkJoinPool;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.indexer.impl.MethodIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.ObjectTypeIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.PlatformIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.SensorTypeIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.TimestampIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.ArrayBasedStorageLeaf;
-import info.novatec.inspectit.indexing.storage.impl.CombinedStorageBranch;
-import info.novatec.inspectit.indexing.storage.impl.LeafWithNoDescriptors;
-import info.novatec.inspectit.indexing.storage.impl.StorageBranch;
-import info.novatec.inspectit.indexing.storage.impl.StorageBranchIndexer;
-import info.novatec.inspectit.indexing.storage.impl.StorageDescriptor;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.SensorTypeIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf;
+import rocks.inspectit.shared.cs.indexing.storage.impl.CombinedStorageBranch;
+import rocks.inspectit.shared.cs.indexing.storage.impl.LeafWithNoDescriptors;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranch;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * Test for checking the {@link IStorageTreeComponent}s.

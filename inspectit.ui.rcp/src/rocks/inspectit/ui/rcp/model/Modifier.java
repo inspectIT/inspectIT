@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.model;
+package rocks.inspectit.ui.rcp.model;
 
 /**
  * The Modifier class provides static methods and constants to decode class and member access

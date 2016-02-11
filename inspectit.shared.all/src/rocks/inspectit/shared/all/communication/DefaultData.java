@@ -1,7 +1,4 @@
-package info.novatec.inspectit.communication;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.indexing.IIndexQuery;
+package rocks.inspectit.shared.all.communication;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -15,6 +12,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
 
 /**
  * The {@link DefaultData} class is the base class for all data and value objects. Data objects are

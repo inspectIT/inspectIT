@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.service.rest.error;
+package rocks.inspectit.server.service.rest.error;
 
 import java.util.HashMap;
 import java.util.Map;

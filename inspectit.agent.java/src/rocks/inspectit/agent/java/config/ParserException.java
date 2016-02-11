@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config;
+package rocks.inspectit.agent.java.config;
 
 /**
  * This exception is thrown whenever {@link IConfigurationReader} implementation tries to parse a

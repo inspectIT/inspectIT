@@ -1,9 +1,4 @@
-package info.novatec.inspectit.communication.valueobject;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.data.TimerData;
+package rocks.inspectit.shared.all.communication.valueobject;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -11,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * This value object is used to store the raw time measurements from the executed methods.

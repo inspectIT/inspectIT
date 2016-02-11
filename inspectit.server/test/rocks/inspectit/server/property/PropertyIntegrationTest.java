@@ -1,14 +1,8 @@
-package info.novatec.inspectit.cmr.property;
+package rocks.inspectit.server.property;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.cmr.cache.impl.AtomicBuffer;
-import info.novatec.inspectit.cmr.cache.impl.BufferProperties;
-import info.novatec.inspectit.cmr.property.configuration.Configuration;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
-import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.cache.impl.AtomicBuffer;
+import rocks.inspectit.server.cache.impl.BufferProperties;
+import rocks.inspectit.server.property.PropertyManager;
+import rocks.inspectit.server.test.AbstractTransactionalTestNGLogSupport;
+import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
 
 /**
  * Test that some of the properties updates are working fine in integration mode.

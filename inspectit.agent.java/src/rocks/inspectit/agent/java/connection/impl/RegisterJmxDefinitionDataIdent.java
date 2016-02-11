@@ -1,11 +1,11 @@
-package info.novatec.inspectit.agent.connection.impl;
-
-import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.connection.AbstractRemoteMethodCall;
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.service.IRegistrationService;
+package rocks.inspectit.agent.java.connection.impl;
 
 import java.rmi.Remote;
+
+import rocks.inspectit.agent.java.config.impl.JmxSensorConfig;
+import rocks.inspectit.agent.java.connection.AbstractRemoteMethodCall;
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
 
 /**
  * This class is used to register the static information of a MBean once on the CMR.

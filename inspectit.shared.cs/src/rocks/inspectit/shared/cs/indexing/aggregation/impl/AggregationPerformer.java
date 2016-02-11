@@ -1,14 +1,14 @@
-package info.novatec.inspectit.indexing.aggregation.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
+package rocks.inspectit.shared.cs.indexing.aggregation.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * This class encapsulates the aggregation process. When ever aggregation is needed, it this class

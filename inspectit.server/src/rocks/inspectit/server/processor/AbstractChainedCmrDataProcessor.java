@@ -1,11 +1,11 @@
-package info.novatec.inspectit.cmr.processor;
-
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.server.processor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Abstract data processor that passes data to chained processors.

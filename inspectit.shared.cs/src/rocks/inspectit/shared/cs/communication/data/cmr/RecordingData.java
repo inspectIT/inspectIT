@@ -1,6 +1,4 @@
-package info.novatec.inspectit.communication.data.cmr;
-
-import info.novatec.inspectit.storage.StorageData;
+package rocks.inspectit.shared.cs.communication.data.cmr;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -8,6 +6,8 @@ import java.util.Date;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.cs.storage.StorageData;
 
 /**
  * This POJO joins several recording information data.

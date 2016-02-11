@@ -1,25 +1,4 @@
-package info.novatec.inspectit.rcp.editor.preferences;
-
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.action.MenuAction;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.PlotDataSolver;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.LiveMode;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.TimeResolution;
-import info.novatec.inspectit.rcp.editor.preferences.control.IPreferenceControl;
-import info.novatec.inspectit.rcp.handlers.MaximizeActiveViewHandler;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.editor.preferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +28,27 @@ import org.eclipse.ui.internal.menus.CommandMessages;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
+
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.action.MenuAction;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.TimeResolution;
+import rocks.inspectit.ui.rcp.editor.preferences.control.IPreferenceControl;
+import rocks.inspectit.ui.rcp.handlers.MaximizeActiveViewHandler;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 
 /**
  * This is the class where the preference panel is created.

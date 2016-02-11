@@ -1,10 +1,10 @@
-package info.novatec.inspectit.storage.serializer.impl;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
 
 /**
  * {@link CustomCompatibleFieldSerializer} for the {@link InvocationSequenceData} that in the

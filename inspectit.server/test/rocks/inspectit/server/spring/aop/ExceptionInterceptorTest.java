@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.spring.aop;
+package rocks.inspectit.server.spring.aop;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -11,8 +11,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.RemoteException;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -21,6 +19,10 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.spring.aop.ExceptionInterceptor;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.RemoteException;
 
 /**
  * Tests for the {@link ExceptionInterceptor}.

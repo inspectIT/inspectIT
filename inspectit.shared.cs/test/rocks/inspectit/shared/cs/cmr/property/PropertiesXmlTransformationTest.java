@@ -1,29 +1,9 @@
-package info.novatec.inspectit.cmr.property;
+package rocks.inspectit.shared.cs.cmr.property;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.cmr.property.configuration.Configuration;
-import info.novatec.inspectit.cmr.property.configuration.GroupedProperty;
-import info.novatec.inspectit.cmr.property.configuration.PropertySection;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.BooleanProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.ByteProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.LongProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.PercentageProperty;
-import info.novatec.inspectit.cmr.property.configuration.impl.StringProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidationException;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.LessValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.NotEmptyValidator;
-import info.novatec.inspectit.cmr.property.configuration.validator.impl.PositiveValidator;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.BooleanPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.BytePropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.LongPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.PercentagePropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.StringPropertyUpdate;
 
 import java.io.File;
 import java.util.Random;
@@ -37,6 +17,27 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
+import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.BooleanProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.ByteProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.LongProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.PercentageProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.impl.StringProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidationException;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.LessValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.NotEmptyValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.PositiveValidator;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.BooleanPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.BytePropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.LongPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.PercentagePropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.StringPropertyUpdate;
 
 @SuppressWarnings("PMD")
 public class PropertiesXmlTransformationTest {

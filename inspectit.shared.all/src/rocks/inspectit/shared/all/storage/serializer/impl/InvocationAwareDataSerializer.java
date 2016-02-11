@@ -1,9 +1,4 @@
-package info.novatec.inspectit.storage.serializer.impl;
-
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.InvocationAwareData.MutableInt;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
-import info.novatec.inspectit.storage.serializer.util.KryoSerializationPreferences;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -11,6 +6,11 @@ import java.util.Map;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.util.ObjectMap;
+
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData.MutableInt;
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
 
 /**
  * Special serializer that can dismiss writing of the

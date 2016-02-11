@@ -1,15 +1,15 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.communication.ExceptionEvent;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
+package rocks.inspectit.ui.rcp.model;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.swt.graphics.Image;
+
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * Factory currently used for the overlay icons which can be placed on arbitrary images being

@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.AggregatedExceptionSensorData
+class: rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData
 # Default Data
 1: id
 2: platformIdent

@@ -1,17 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.AgentMapping;
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.dialog.AgentMappingDialog;
-import info.novatec.inspectit.rcp.ci.form.input.AgentMappingInput;
-import info.novatec.inspectit.rcp.ci.listener.IEnvironmentChangeListener;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +35,19 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.dialog.AgentMappingDialog;
+import rocks.inspectit.ui.rcp.ci.form.input.AgentMappingInput;
+import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+
 /**
  * Part for agent mapping.
  * 
@@ -59,7 +59,7 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 	/**
 	 * CMR to define the mappings for.
 	 */
-	private CmrRepositoryDefinition cmrRepositoryDefinition;
+	private final CmrRepositoryDefinition cmrRepositoryDefinition;
 
 	/**
 	 * Mappings.
@@ -69,22 +69,22 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 	/**
 	 * Input list that will be displayed in table.
 	 */
-	private Collection<AgentMapping> inputList;
+	private final Collection<AgentMapping> inputList;
 
 	/**
 	 * Available environments.
 	 */
-	private List<Environment> environments;
+	private final List<Environment> environments;
 
 	/**
 	 * {@link IManagedForm}.
 	 */
-	private IManagedForm managedForm;
+	private final IManagedForm managedForm;
 
 	/**
 	 * {@link FormPage} part is created on.
 	 */
-	private FormPage formPage;
+	private final FormPage formPage;
 
 	/**
 	 * Table viewer for displaying the current mappings.
@@ -279,7 +279,7 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
 		for (Object selectedObject : selection.toArray()) {
 			if (selectedObject instanceof AgentMapping) {
-				inputList.remove((AgentMapping) selectedObject);
+				inputList.remove(selectedObject);
 			}
 		}
 		updateInternal(true);

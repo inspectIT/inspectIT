@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.label.management.impl;
-
-import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.shared.cs.storage.label.management.impl;
 
 import java.util.Collection;
 import java.util.Collections;
+
+import rocks.inspectit.shared.cs.cmr.service.IStorageService;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.management.AbstractLabelManagementAction;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Action for the adding of data related to labels and label types.

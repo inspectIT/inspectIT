@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.connection;
+package rocks.inspectit.agent.java.connection;
 
 /**
  * The registration exception which is thrown whenever a problem occurs in the registration process.

@@ -1,27 +1,4 @@
-package info.novatec.inspectit.rcp.editor.root;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.SubViewFactory;
-import info.novatec.inspectit.rcp.editor.composite.AbstractCompositeSubView;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferencePanel;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.LiveMode;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.provider.IInputDefinitionProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.editor.root;
 
 import java.util.List;
 import java.util.Timer;
@@ -44,6 +21,29 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.SubViewFactory;
+import rocks.inspectit.ui.rcp.editor.composite.AbstractCompositeSubView;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
 
 /**
  * The abstract root editor is the base class of all editors (or more specific the views).

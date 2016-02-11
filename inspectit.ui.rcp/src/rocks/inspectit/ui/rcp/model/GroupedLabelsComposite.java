@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.model;
+package rocks.inspectit.ui.rcp.model;
 
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
 
 /**
  * Composite for storage leafs when grouping by labels is used.

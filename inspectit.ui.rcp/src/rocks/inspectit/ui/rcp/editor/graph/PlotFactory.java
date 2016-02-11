@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.editor.graph;
+package rocks.inspectit.ui.rcp.editor.graph;
 
-import info.novatec.inspectit.rcp.editor.graph.plot.DefaultClassesPlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.DefaultCpuPlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.DefaultMemoryPlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.DefaultThreadsPlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.HttpTimerPlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.JmxPlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.PlotController;
-import info.novatec.inspectit.rcp.editor.graph.plot.TimerPlotController;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.editor.graph.plot.DefaultClassesPlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.DefaultCpuPlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.DefaultMemoryPlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.DefaultThreadsPlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.HttpTimerPlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.JmxPlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.PlotController;
+import rocks.inspectit.ui.rcp.editor.graph.plot.TimerPlotController;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 
 /**
  * The factory for the plot creation.

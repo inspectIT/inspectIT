@@ -1,13 +1,13 @@
-package info.novatec.inspectit.storage;
-
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.DateStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
-import info.novatec.inspectit.storage.label.type.impl.CreationDateLabelType;
+package rocks.inspectit.shared.cs.storage;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.DateStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
+import rocks.inspectit.shared.cs.storage.label.type.impl.CreationDateLabelType;
 
 /**
  * Class that defines the storage information.

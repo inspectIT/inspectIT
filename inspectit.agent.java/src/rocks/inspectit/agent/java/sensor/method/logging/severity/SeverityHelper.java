@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.logging.severity;
+package rocks.inspectit.agent.java.sensor.method.logging.severity;
 
 import java.util.List;
 

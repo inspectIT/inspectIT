@@ -1,13 +1,10 @@
-package info.novatec.inspectit.indexing.aggregation.impl;
+package rocks.inspectit.shared.cs.indexing.aggregation.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +14,11 @@ import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpTimerDataAggregator;
 
 /**
  * Tests the buffer aggregation of <code>HttpTimerData</code> elements.

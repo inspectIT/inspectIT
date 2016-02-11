@@ -1,11 +1,11 @@
-package info.novatec.inspectit.communication.comparator;
-
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.shared.all.communication.comparator;
 
 import java.util.Comparator;
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Comparators for {@link SqlStatementData}.

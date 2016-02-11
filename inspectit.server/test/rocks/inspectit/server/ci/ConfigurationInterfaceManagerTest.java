@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.ci;
+package rocks.inspectit.server.ci;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -9,12 +9,6 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.ci.AgentMapping;
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.storage.util.DeleteFileVisitor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,6 +29,15 @@ import org.slf4j.Logger;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
+import rocks.inspectit.server.ci.ConfigurationInterfacePathResolver;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
 
 /**
  * Test for the {@link ConfigurationInterfaceManager}.

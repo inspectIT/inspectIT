@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.view.util;
+package rocks.inspectit.ui.rcp.view.util;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.IPostSelectionProvider;

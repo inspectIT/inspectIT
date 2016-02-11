@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.editor.viewers;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
+package rocks.inspectit.ui.rcp.editor.viewers;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 
 /**
  * Viewer comparator uses provided comparators to sort specific columns.

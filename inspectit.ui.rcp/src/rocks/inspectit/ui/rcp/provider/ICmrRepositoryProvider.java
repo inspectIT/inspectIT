@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.provider;
+package rocks.inspectit.ui.rcp.provider;
 
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * INterface for all model classes that can provide a {@link CmrRepositoryDefinition} when they are

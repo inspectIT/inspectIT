@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.editor.text.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
+package rocks.inspectit.ui.rcp.editor.text.input;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +14,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
  * General implementation of {@link TextInputController}, where most of the methods are not doing

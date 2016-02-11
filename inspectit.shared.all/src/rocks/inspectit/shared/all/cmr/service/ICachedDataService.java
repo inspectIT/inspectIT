@@ -1,9 +1,9 @@
-package info.novatec.inspectit.cmr.service;
+package rocks.inspectit.shared.all.cmr.service;
 
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 
 /**
  * Interface for the cached data service. Provides platform, sensor and method ident from the cache.

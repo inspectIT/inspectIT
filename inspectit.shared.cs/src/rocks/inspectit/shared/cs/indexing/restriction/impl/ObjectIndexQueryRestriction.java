@@ -1,6 +1,6 @@
-package info.novatec.inspectit.indexing.restriction.impl;
+package rocks.inspectit.shared.cs.indexing.restriction.impl;
 
-import info.novatec.inspectit.indexing.restriction.AbstractIndexQueryRestriction;
+import rocks.inspectit.shared.cs.indexing.restriction.AbstractIndexQueryRestriction;
 
 /**
  * Abstract class for all restrictions that use object as restriction values.

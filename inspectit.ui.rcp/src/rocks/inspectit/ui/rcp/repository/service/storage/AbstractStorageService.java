@@ -1,20 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.util.DataRetriever;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.serializer.SerializationException;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +7,22 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.util.DataRetriever;
 
 /**
  * Abstract class for all storage services.

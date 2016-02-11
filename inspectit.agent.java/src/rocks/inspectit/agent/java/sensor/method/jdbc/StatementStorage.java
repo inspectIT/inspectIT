@@ -1,6 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.util.ThreadLocalStack;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -15,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
+import rocks.inspectit.agent.java.util.ThreadLocalStack;
 
 /**
  * Stores the mapping between statements and objects so that these statements are later accessible.

@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.tester;
+package rocks.inspectit.ui.rcp.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
 
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 
 /**
  * Property Tester to check for specific criteria within an invocation sequence

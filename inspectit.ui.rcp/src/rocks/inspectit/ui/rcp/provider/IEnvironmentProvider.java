@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.provider;
+package rocks.inspectit.ui.rcp.provider;
 
-import info.novatec.inspectit.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Environment;
 
 /**
  * Interface for {@link Environment} provider. Note that this interface extends the

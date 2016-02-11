@@ -1,8 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration.impl;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.BytePropertyUpdate;
+package rocks.inspectit.shared.cs.cmr.property.configuration.impl;
 
 import java.util.Locale;
 
@@ -10,6 +6,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.BytePropertyUpdate;
 
 /**
  * Property holding byte count values. This property parses {@link String} values that represent the

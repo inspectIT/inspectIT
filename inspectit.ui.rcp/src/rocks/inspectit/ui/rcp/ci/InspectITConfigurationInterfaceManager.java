@@ -1,13 +1,13 @@
-package info.novatec.inspectit.rcp.ci;
+package rocks.inspectit.ui.rcp.ci;
 
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.rcp.ci.listener.IAgentMappingsChangeListener;
-import info.novatec.inspectit.rcp.ci.listener.IEnvironmentChangeListener;
-import info.novatec.inspectit.rcp.ci.listener.IProfileChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.util.ListenerList;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.ci.listener.IAgentMappingsChangeListener;
+import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
+import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.util.ListenerList;
 
 /**
  * Manager for the CI related UI actions. Listens and delegates the CI events.

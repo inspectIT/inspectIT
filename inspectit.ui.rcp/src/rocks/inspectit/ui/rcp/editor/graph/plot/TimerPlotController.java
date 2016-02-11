@@ -1,18 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
-import info.novatec.inspectit.cmr.service.cache.CachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.TimerDataAggregator;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.TimerDataChartingInputDefinitionExtra;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
+package rocks.inspectit.ui.rcp.editor.graph.plot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +10,20 @@ import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.swt.widgets.Display;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.TimerDataChartingInputDefinitionExtra;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
  * {@link PlotController} for displaying many Http requests in the graph.

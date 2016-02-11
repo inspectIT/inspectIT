@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.indexing.aggregation.Aggregators;
-import info.novatec.inspectit.indexing.query.factory.impl.SqlStatementDataQueryFactory;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
+import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.SqlStatementDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link ISqlDataAccessService} for storage purposes.

@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.wizard;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.wizard.page.AddStorageLabelWizardPage;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
+package rocks.inspectit.ui.rcp.wizard;
 
 import java.util.List;
 
@@ -17,6 +7,16 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.wizard.page.AddStorageLabelWizardPage;
 
 /**
  * Wizard for adding label to storage.

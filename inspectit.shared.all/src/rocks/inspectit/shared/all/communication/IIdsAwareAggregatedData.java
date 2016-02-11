@@ -1,4 +1,4 @@
-package info.novatec.inspectit.communication;
+package rocks.inspectit.shared.all.communication;
 
 import java.util.Collection;
 

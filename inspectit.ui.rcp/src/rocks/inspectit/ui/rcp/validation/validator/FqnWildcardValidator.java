@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.validation.validator;
+package rocks.inspectit.ui.rcp.validation.validator;
 
 import java.util.regex.Pattern;
 

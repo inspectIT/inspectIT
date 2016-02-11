@@ -1,9 +1,9 @@
-package info.novatec.inspectit.indexing.buffer;
-
-import info.novatec.inspectit.indexing.ITreeComponent;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
+package rocks.inspectit.shared.cs.indexing.buffer;
 
 import java.util.concurrent.ExecutorService;
+
+import rocks.inspectit.shared.cs.indexing.ITreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Branch indexer for the {@link IStorageTreeComponent}.

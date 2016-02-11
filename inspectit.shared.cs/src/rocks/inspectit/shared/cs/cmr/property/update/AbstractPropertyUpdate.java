@@ -1,16 +1,16 @@
-package info.novatec.inspectit.cmr.property.update;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.update.impl.BooleanPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.BytePropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.LongPropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.PercentagePropertyUpdate;
-import info.novatec.inspectit.cmr.property.update.impl.StringPropertyUpdate;
+package rocks.inspectit.shared.cs.cmr.property.update;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.BooleanPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.BytePropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.LongPropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.PercentagePropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.update.impl.StringPropertyUpdate;
 
 /**
  * Abstract class representing the property update.

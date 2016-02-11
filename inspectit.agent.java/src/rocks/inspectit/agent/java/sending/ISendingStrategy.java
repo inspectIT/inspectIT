@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.sending;
-
-import info.novatec.inspectit.agent.core.ICoreService;
+package rocks.inspectit.agent.java.sending;
 
 import java.util.Map;
+
+import rocks.inspectit.agent.java.core.ICoreService;
 
 /**
  * All sending strategies are first initialized via the {@link #init(Map)} method. Afterwards, the

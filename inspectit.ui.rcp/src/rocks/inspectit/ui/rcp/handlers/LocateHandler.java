@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.editor.tree.SteppingTreeSubView;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +8,15 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.editor.tree.SteppingTreeSubView;
 
 /**
  * Abstract handler for all other handlers that are working with locate functionality.
@@ -61,7 +61,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 	public abstract List<DefaultData> getTemplates(StructuredSelection structuredSelection);
 
 	/**
-	 * {@link LocateHandler} for {@link info.novatec.inspectit.communication.data.SqlStatementData}.
+	 * {@link LocateHandler} for {@link rocks.inspectit.shared.cs.communication.data.SqlStatementData}.
 	 * 
 	 * @author Ivan Senic
 	 * 
@@ -86,7 +86,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 
 	/**
 	 * {@link LocateHandler} for
-	 * {@link info.novatec.inspectit.communication.data.ExceptionSensorData}.
+	 * {@link rocks.inspectit.shared.cs.communication.data.ExceptionSensorData}.
 	 * 
 	 * @author Ivan Senic
 	 * 
@@ -111,7 +111,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 
 	/**
 	 * {@link LocateHandler} for
-	 * {@link info.novatec.inspectit.communication.data.InvocationSequenceData}.
+	 * {@link rocks.inspectit.shared.cs.communication.data.InvocationSequenceData}.
 	 * 
 	 * @author Ivan Senic
 	 * 
@@ -174,7 +174,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 	}
 
 	/**
-	 * {@link LocateHandler} for {@link info.novatec.inspectit.communication.data.TimerData}.
+	 * {@link LocateHandler} for {@link rocks.inspectit.shared.cs.communication.data.TimerData}.
 	 * 
 	 * @author Ivan Senic
 	 * 

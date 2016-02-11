@@ -1,9 +1,9 @@
-package info.novatec.inspectit.agent.analyzer.impl;
-
-import info.novatec.inspectit.agent.analyzer.IMatchPattern;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rocks.inspectit.agent.java.analyzer.IMatchPattern;
 
 /**
  * Pattern matcher for simple strings with '*' wildcard characters. The supplied template may take

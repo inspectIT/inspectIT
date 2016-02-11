@@ -1,12 +1,13 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.JDBCUrlExtractor;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.JDBCUrlExtractor;
 
 public class JDBCUrlExtractorTest {
 

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.model;
+package rocks.inspectit.shared.all.cmr.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

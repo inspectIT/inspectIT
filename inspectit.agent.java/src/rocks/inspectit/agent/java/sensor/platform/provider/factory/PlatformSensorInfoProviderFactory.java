@@ -1,15 +1,15 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.factory;
-
-import info.novatec.inspectit.agent.sensor.platform.provider.PlatformSensorInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultPlatformSensorInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.ibm.IbmJava6PlatformSensorInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.sun.SunPlatformSensorInfoProvider;
-import info.novatec.inspectit.util.UnderlyingSystemInfo;
-import info.novatec.inspectit.util.UnderlyingSystemInfo.JavaVersion;
-import info.novatec.inspectit.util.UnderlyingSystemInfo.JvmProvider;
+package rocks.inspectit.agent.java.sensor.platform.provider.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rocks.inspectit.agent.java.sensor.platform.provider.PlatformSensorInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultPlatformSensorInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.ibm.IbmJava6PlatformSensorInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.sun.SunPlatformSensorInfoProvider;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JavaVersion;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
 
 /**
  * This class decides which {@link PlatformSensorInfoProvider} will be used.

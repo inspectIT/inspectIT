@@ -1,9 +1,9 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.Sizeable;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.io.Serializable;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.Sizeable;
 
 /**
  * This enumeration defines the possible types of the parameter capturing approach.

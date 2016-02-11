@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.serializer.impl;
-
-import info.novatec.inspectit.util.IHibernateUtil;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import java.util.Map;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
+
+import rocks.inspectit.shared.all.util.IHibernateUtil;
 
 /**
  * Map serializer that check if the map is of hibernate type and if it is not initialized just

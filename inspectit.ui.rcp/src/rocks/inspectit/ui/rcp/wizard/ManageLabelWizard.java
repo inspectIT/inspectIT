@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.wizard;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.wizard.page.ManageLabelWizardPage;
-import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
+package rocks.inspectit.ui.rcp.wizard;
 
 import java.util.List;
 
@@ -14,6 +6,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.storage.label.management.AbstractLabelManagementAction;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.wizard.page.ManageLabelWizardPage;
 
 /**
  * Manage Labels wizard.

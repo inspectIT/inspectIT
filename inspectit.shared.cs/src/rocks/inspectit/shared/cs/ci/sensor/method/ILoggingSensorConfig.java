@@ -1,9 +1,9 @@
 /**
  *
  */
-package info.novatec.inspectit.ci.sensor.method;
+package rocks.inspectit.shared.cs.ci.sensor.method;
 
-import info.novatec.inspectit.ci.sensor.ISensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 
 /**
  * Interface for the logging sensors configurations.

@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.processor.impl;
-
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.server.processor.impl;
 
 import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Processor that saves objects to database via {@link EntityManager}.

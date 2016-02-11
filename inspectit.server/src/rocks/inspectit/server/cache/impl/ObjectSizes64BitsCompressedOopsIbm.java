@@ -1,6 +1,6 @@
-package info.novatec.inspectit.cmr.cache.impl;
+package rocks.inspectit.server.cache.impl;
 
-import info.novatec.inspectit.cmr.cache.AbstractObjectSizesIbm;
+import rocks.inspectit.server.cache.AbstractObjectSizesIbm;
 
 /**
  * The object size class for 64bit IBM JVM with compressed Oops. Works only with Java 7.

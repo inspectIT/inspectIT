@@ -1,15 +1,4 @@
-package info.novatec.inspectit.cmr.processor.impl;
-
-import info.novatec.inspectit.cmr.dao.impl.TimerDataAggregator;
-import info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
+package rocks.inspectit.server.processor.impl;
 
 import java.util.List;
 
@@ -23,6 +12,17 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.server.dao.impl.TimerDataAggregator;
+import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 
 /**
  * Processor that saves {@link TimerData} or {@link HttpTimerData} to database correctly if the

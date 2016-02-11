@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.cache;
-
-import info.novatec.inspectit.communication.Sizeable;
+package rocks.inspectit.shared.all.cmr.cache;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.Sizeable;
 
 /**
  * This interface defines necessary methods that are needed for object size calculations.
@@ -280,7 +280,7 @@ public interface IObjectSizes {
 
 	/**
 	 * Returns size of our own
-	 * {@link info.novatec.inspectit.indexing.buffer.impl.Leaf.CustomWeakReference} without the
+	 * {@link rocks.inspectit.shared.all.indexing.buffer.impl.Leaf.CustomWeakReference} without the
 	 * referred object.
 	 * 
 	 * @return Size in bytes.

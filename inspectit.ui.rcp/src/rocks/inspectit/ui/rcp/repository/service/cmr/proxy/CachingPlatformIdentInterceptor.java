@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.repository.service.cmr.proxy;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.repository.service.cmr.proxy;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * An interceptor that populates the CachedDataService cache with the loaded {@link PlatformIdent}

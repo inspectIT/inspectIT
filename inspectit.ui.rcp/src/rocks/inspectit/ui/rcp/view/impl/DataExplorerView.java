@@ -1,32 +1,4 @@
-package info.novatec.inspectit.rcp.view.impl;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.tree.DeferredTreeViewer;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.TreeModelManager;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.rcp.util.SelectionProviderAdapter;
-import info.novatec.inspectit.rcp.view.IRefreshableView;
-import info.novatec.inspectit.rcp.view.listener.TreeViewDoubleClickListener;
-import info.novatec.inspectit.rcp.view.tree.TreeContentProvider;
-import info.novatec.inspectit.rcp.view.tree.TreeLabelProvider;
-import info.novatec.inspectit.rcp.view.tree.TreeViewerComparator;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.view.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +43,34 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.google.common.base.Objects;
 
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.tree.DeferredTreeViewer;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.TreeModelManager;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+import rocks.inspectit.ui.rcp.util.SelectionProviderAdapter;
+import rocks.inspectit.ui.rcp.view.IRefreshableView;
+import rocks.inspectit.ui.rcp.view.listener.TreeViewDoubleClickListener;
+import rocks.inspectit.ui.rcp.view.tree.TreeContentProvider;
+import rocks.inspectit.ui.rcp.view.tree.TreeLabelProvider;
+import rocks.inspectit.ui.rcp.view.tree.TreeViewerComparator;
+
 /**
  * Data explorer view show one Agent from a given {@link RepositoryDefinition}. Other agents can be
  * selected via view menu.
@@ -83,17 +83,17 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * ID of the refresh contribution item needed for setting the visibility.
 	 */
-	private static final String REFRESH_CONTRIBUTION_ITEM = "info.novatec.inspectit.rcp.view.dataExplorer.refresh";
+	private static final String REFRESH_CONTRIBUTION_ITEM = "rocks.inspectit.ui.rcp.view.dataExplorer.refresh";
 
 	/**
 	 * ID of the refresh contribution item needed for setting the visibility.
 	 */
-	private static final String CLEAR_BUFFER_CONTRIBUTION_ITEM = "info.novatec.inspectit.rcp.view.dataExplorer.clearBuffer";
+	private static final String CLEAR_BUFFER_CONTRIBUTION_ITEM = "rocks.inspectit.ui.rcp.view.dataExplorer.clearBuffer";
 
 	/**
 	 * ID of this view.
 	 */
-	public static final String VIEW_ID = "info.novatec.inspectit.rcp.view.dataExplorer";
+	public static final String VIEW_ID = "rocks.inspectit.ui.rcp.view.dataExplorer";
 
 	/**
 	 * Displayed repository.
@@ -113,7 +113,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * Cashed statuses of CMR repository definitions.
 	 */
-	private ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
+	private final ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
 
 	/**
 	 * Listener for tree double clicks.
@@ -148,7 +148,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * Adapter to publish the selection to the Site.
 	 */
-	private SelectionProviderAdapter selectionProviderAdapter = new SelectionProviderAdapter();
+	private final SelectionProviderAdapter selectionProviderAdapter = new SelectionProviderAdapter();
 
 	/**
 	 * Combo where agents are displayed.
@@ -165,7 +165,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 * for this map is the combined hash code that can be obtained by calling method
 	 * {@link #getHashCodeForAgentRepository(PlatformIdent, RepositoryDefinition)}.
 	 */
-	private Map<Integer, List<Object>> expandedElementsPerAgent = new ConcurrentHashMap<Integer, List<Object>>();
+	private final Map<Integer, List<Object>> expandedElementsPerAgent = new ConcurrentHashMap<Integer, List<Object>>();
 
 	/**
 	 * If the inactive instrumentations should be hidden.
@@ -635,6 +635,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryOnlineStatusUpdated(CmrRepositoryDefinition repositoryDefinition, OnlineStatus oldStatus, OnlineStatus newStatus) {
 		if (newStatus != OnlineStatus.CHECKING) {
 			boolean shouldUpdate = ObjectUtils.equals(displayedRepositoryDefinition, repositoryDefinition);
@@ -697,12 +698,14 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryAdded(CmrRepositoryDefinition cmrRepositoryDefinition) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryRemoved(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		if (ObjectUtils.equals(cmrRepositoryDefinition, displayedRepositoryDefinition)) {
 			displayedRepositoryDefinition = null; // NOPMD
@@ -726,6 +729,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryAgentDeleted(CmrRepositoryDefinition cmrRepositoryDefinition, PlatformIdent agent) {
 		if (ObjectUtils.equals(cmrRepositoryDefinition, displayedRepositoryDefinition)) {
 			availableAgents.remove(agent);
@@ -740,6 +744,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void storageDataUpdated(IStorageData storageData) {
 		if (displayedRepositoryDefinition instanceof StorageRepositoryDefinition) {
 			final StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) displayedRepositoryDefinition;
@@ -757,6 +762,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void storageRemotelyDeleted(IStorageData storageData) {
 		if (displayedRepositoryDefinition instanceof StorageRepositoryDefinition) {
 			final StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) displayedRepositoryDefinition;
@@ -776,6 +782,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void storageLocallyDeleted(IStorageData storageData) {
 		if (displayedRepositoryDefinition instanceof StorageRepositoryDefinition) {
 			final StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) displayedRepositoryDefinition;

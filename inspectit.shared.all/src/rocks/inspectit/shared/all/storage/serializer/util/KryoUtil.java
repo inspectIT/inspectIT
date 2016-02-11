@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.serializer.util;
+package rocks.inspectit.shared.all.storage.serializer.util;
 
 import java.io.IOException;
 

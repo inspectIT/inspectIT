@@ -1,6 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.editor.root.FormRootEditor;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
@@ -12,6 +10,8 @@ import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.ui.rcp.editor.root.FormRootEditor;
 
 /**
  * Handler for changing the name of the editor.

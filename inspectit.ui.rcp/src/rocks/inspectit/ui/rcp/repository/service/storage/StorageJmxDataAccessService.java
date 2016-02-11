@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider;
-import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -15,6 +7,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.shared.cs.indexing.query.provider.impl.StorageIndexQueryProvider;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestrictionFactory;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link IJmxDataAccessService} for storage purposes. This class indirectly uses the

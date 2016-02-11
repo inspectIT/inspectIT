@@ -1,32 +1,4 @@
-package info.novatec.inspectit.rcp.wizard;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.IIdsAwareAggregatedData;
-import info.novatec.inspectit.communication.data.AggregatedExceptionSensorData;
-import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
-import info.novatec.inspectit.communication.data.AggregatedSqlStatementData;
-import info.novatec.inspectit.communication.data.AggregatedTimerData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.rcp.wizard.page.AddStorageLabelWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.DefineDataProcessorsWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.DefineNewStorageWizzardPage;
-import info.novatec.inspectit.rcp.wizard.page.NewOrExistsingStorageWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.SelectExistingStorageWizardPage;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.wizard;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,6 +18,34 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.IIdsAwareAggregatedData;
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
+import rocks.inspectit.shared.all.communication.data.AggregatedSqlStatementData;
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
+import rocks.inspectit.ui.rcp.wizard.page.AddStorageLabelWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.DefineDataProcessorsWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.DefineNewStorageWizzardPage;
+import rocks.inspectit.ui.rcp.wizard.page.NewOrExistsingStorageWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.SelectExistingStorageWizardPage;
 
 /**
  * Wizard for copying the selected data to one storage.

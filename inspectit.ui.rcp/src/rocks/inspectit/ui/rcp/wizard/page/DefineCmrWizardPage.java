@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.wizard.page;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.wizard.page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +13,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Wizard page for definition of the new or existing {@link CmrRepositoryDefinition}.

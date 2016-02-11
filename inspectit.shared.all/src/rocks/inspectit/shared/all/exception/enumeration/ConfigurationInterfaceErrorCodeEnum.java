@@ -1,8 +1,8 @@
-package info.novatec.inspectit.exception.enumeration;
-
-import info.novatec.inspectit.exception.IErrorCode;
+package rocks.inspectit.shared.all.exception.enumeration;
 
 import org.apache.commons.lang.WordUtils;
+
+import rocks.inspectit.shared.all.exception.IErrorCode;
 
 /**
  * Error code enumeration for the CI component.

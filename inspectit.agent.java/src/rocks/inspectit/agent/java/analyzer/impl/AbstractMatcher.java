@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.analyzer.impl;
+package rocks.inspectit.agent.java.analyzer.impl;
 
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IMatcher;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IMatcher;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
 
 /**
  * The abstract matcher class used to store the reference to the sensor configuration.

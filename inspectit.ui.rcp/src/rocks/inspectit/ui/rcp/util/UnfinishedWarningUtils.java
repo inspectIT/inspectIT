@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.util;
-
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
+package rocks.inspectit.ui.rcp.util;
 
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
+
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 
 /**
  * A default popup with some default settings that can be used to notify the user that a certain

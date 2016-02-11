@@ -1,11 +1,11 @@
-package info.novatec.inspectit.indexing.indexer.impl;
+package rocks.inspectit.shared.cs.indexing.indexer.impl;
 
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.indexer.AbstractSharedInstanceBranchIndexer;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.indexer.AbstractSharedInstanceBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * Special indexer, that indexes invocations without children in one branch and every other object,

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.preferences;
+package rocks.inspectit.ui.rcp.editor.preferences;
 
 /**
  * The marker interface for inner enumerations in the {@link PreferenceId}.

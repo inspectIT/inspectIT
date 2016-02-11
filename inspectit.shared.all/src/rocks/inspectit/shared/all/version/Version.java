@@ -1,9 +1,9 @@
-package info.novatec.inspectit.version;
+package rocks.inspectit.shared.all.version;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 
-import info.novatec.inspectit.exception.enumeration.VersioningErrorCodeEnum;
+import rocks.inspectit.shared.all.exception.enumeration.VersioningErrorCodeEnum;
 
 /**
  * Mirrors the version scheme of inspectIT.

@@ -3,7 +3,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<!-- Default exclude rules -->
-	<exclude-rule class-name="info.novatec.inspectit.*"/>
+	<exclude-rule class-name="rocks.inspectit.*"/>
 	<exclude-rule class-name="*$Proxy*"/>
 	<exclude-rule class-name="sun.*"/>
 	<exclude-rule class-name="java.lang.ThreadLocal"/>

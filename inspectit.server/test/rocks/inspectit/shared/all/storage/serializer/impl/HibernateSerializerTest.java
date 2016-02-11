@@ -1,15 +1,9 @@
-package info.novatec.inspectit.storage.serializer.impl;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import info.novatec.inspectit.cmr.util.HibernateUtil;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
-import info.novatec.inspectit.storage.serializer.schema.SchemaManagerTestProvider;
-import info.novatec.inspectit.util.KryoNetNetwork;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,7 +14,10 @@ import java.util.Set;
 import org.hibernate.collection.internal.PersistentList;
 import org.hibernate.collection.internal.PersistentMap;
 import org.hibernate.collection.internal.PersistentSet;
-import org.testng.annotations.BeforeClass;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -29,14 +26,21 @@ import com.esotericsoftware.kryo.io.ByteBufferOutputStream;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import rocks.inspectit.server.util.HibernateUtil;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.util.KryoNetNetwork;
+
 /**
  * Test the implementation of the {@link ISerializer} for correctness.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
-public class HibernateSerializerTest {
+public class HibernateSerializerTest extends TestBase {
 
 	/**
 	 * Serializer.
@@ -46,17 +50,25 @@ public class HibernateSerializerTest {
 	/**
 	 * Byte buffer.
 	 */
-	private ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1024 * 1024 * 20);
+	private final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1024 * 1024 * 20);
+
+	@InjectMocks
+	private ClassSchemaManager schemaManager;
+
+	@Mock
+	private Logger log;
 
 	/**
 	 * Instantiates the {@link SerializationManager}.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
-	@BeforeClass
+	@BeforeMethod
 	public void initSerializer() throws IOException {
-		ClassSchemaManager schemaManager = SchemaManagerTestProvider.getClassSchemaManagerForTests();
+		schemaManager.setSchemaListFile(new ClassPathResource(ClassSchemaManager.SCHEMA_DIR + "/" + ClassSchemaManager.SCHEMA_LIST_FILE, schemaManager.getClass().getClassLoader()));
+		schemaManager.loadSchemasFromLocations();
+
 		serializer = new SerializationManager();
 		serializer.hibernateUtil = new HibernateUtil();
 		serializer.setSchemaManager(schemaManager);
@@ -75,7 +87,7 @@ public class HibernateSerializerTest {
 	/**
 	 * Tests that the Hibernate {@link PersistentList} can be serialized, but in way that
 	 * deserialized class will be java list and but not {@link PersistentList}.
-	 * 
+	 *
 	 * @throws SerializationException
 	 *             SerializationException
 	 */
@@ -90,7 +102,7 @@ public class HibernateSerializerTest {
 	/**
 	 * Tests that the Hibernate {@link PersistentSet} can be serialized, but in way that
 	 * deserialized class will be java set and but not {@link PersistentSet}.
-	 * 
+	 *
 	 * @throws SerializationException
 	 *             SerializationException
 	 */
@@ -105,7 +117,7 @@ public class HibernateSerializerTest {
 	/**
 	 * Tests that the Hibernate {@link PersistentMap} can be serialized, but in way that
 	 * deserialized class will be java map and but not {@link PersistentMap}.
-	 * 
+	 *
 	 * @throws SerializationException
 	 *             SerializationException
 	 */
@@ -120,7 +132,7 @@ public class HibernateSerializerTest {
 	/**
 	 * Performs the serialization of the given object to bytes and then performs de-serialization
 	 * from those bytes and returns the de-serialized object back.
-	 * 
+	 *
 	 * @param original
 	 *            Original object.
 	 * @return De-serialized objects from bytes gotten from the serialization of original.

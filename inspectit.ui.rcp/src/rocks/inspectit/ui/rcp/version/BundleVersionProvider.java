@@ -1,8 +1,8 @@
-package info.novatec.inspectit.rcp.version;
+package rocks.inspectit.ui.rcp.version;
 
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.version.InvalidVersionException;
-import info.novatec.inspectit.version.VersionProvider;
+import rocks.inspectit.shared.all.version.InvalidVersionException;
+import rocks.inspectit.shared.all.version.VersionProvider;
+import rocks.inspectit.ui.rcp.InspectIT;
 
 /**
  * Provides the version of inspectIT in an OSGI environment.

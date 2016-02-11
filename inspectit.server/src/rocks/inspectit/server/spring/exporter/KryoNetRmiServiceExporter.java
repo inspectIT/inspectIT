@@ -1,14 +1,14 @@
-package info.novatec.inspectit.cmr.spring.exporter;
-
-import info.novatec.inspectit.kryonet.Server;
-import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.spring.exporter;
 
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.shared.all.kryonet.Server;
+import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Exporter that starts the {@link Server}, binds it to the given TCP port and register the object

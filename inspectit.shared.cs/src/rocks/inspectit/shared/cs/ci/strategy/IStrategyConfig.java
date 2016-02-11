@@ -1,4 +1,4 @@
-package info.novatec.inspectit.ci.strategy;
+package rocks.inspectit.shared.cs.ci.strategy;
 
 import java.util.Map;
 

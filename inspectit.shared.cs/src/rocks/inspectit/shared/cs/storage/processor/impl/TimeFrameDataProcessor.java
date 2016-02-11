@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.processor.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.storage.processor.AbstractChainedDataProcessor;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
+package rocks.inspectit.shared.cs.storage.processor.impl;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.storage.processor.AbstractChainedDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * This processor serves as a time frame restriction processor. It will check if the time stamp of

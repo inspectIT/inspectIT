@@ -1,8 +1,4 @@
-package info.novatec.inspectit.cmr;
-
-import info.novatec.inspectit.cmr.util.Converter;
-import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
-import info.novatec.inspectit.version.VersionService;
+package rocks.inspectit.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +22,9 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
+import rocks.inspectit.server.util.Converter;
+import rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger;
+import rocks.inspectit.shared.all.version.VersionService;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**

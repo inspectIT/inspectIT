@@ -1,6 +1,6 @@
-package info.novatec.inspectit.indexing.storage;
+package rocks.inspectit.shared.cs.indexing.storage;
 
-import info.novatec.inspectit.indexing.ITreeComponent;
+import rocks.inspectit.shared.cs.indexing.ITreeComponent;
 
 /**
  * Special tree component for purposes of indexing for storage.

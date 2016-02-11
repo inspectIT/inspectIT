@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.buffer.impl;
+package rocks.inspectit.shared.cs.indexing.buffer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -8,15 +8,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.buffer.IBufferBranchIndexer;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Leaf;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * Test for the {@link BufferBranchIndexer} class.

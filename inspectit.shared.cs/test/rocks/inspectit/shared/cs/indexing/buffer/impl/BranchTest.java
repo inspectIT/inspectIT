@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.buffer.impl;
+package rocks.inspectit.shared.cs.indexing.buffer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -6,10 +6,6 @@ import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.ITreeComponent;
-import info.novatec.inspectit.indexing.buffer.IBufferBranchIndexer;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +16,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.ITreeComponent;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
 
 /**
  * Testing of the buffer branch class.

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.exception;
+package rocks.inspectit.shared.all.exception;
 
 /**
  * This is base exception class for all the exception we throw, thus expected exceptions or business

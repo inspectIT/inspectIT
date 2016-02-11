@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.List;
 

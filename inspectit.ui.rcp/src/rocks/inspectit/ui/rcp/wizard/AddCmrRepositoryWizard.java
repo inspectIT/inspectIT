@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.wizard;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.wizard.page.DefineCmrWizardPage;
-import info.novatec.inspectit.rcp.wizard.page.PreviewCmrDataWizardPage;
+package rocks.inspectit.ui.rcp.wizard;
 
 import java.util.Objects;
 
@@ -14,8 +8,14 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.wizard.page.DefineCmrWizardPage;
+import rocks.inspectit.ui.rcp.wizard.page.PreviewCmrDataWizardPage;
+
 /**
- * Wizard for adding the {@link info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition}.
+ * Wizard for adding the {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition}.
  * 
  * @author Ivan Senic
  * 

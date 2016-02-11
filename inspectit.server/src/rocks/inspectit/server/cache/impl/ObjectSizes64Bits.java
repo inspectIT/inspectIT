@@ -1,9 +1,9 @@
-package info.novatec.inspectit.cmr.cache.impl;
-
-import info.novatec.inspectit.cmr.cache.AbstractObjectSizes;
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
+package rocks.inspectit.server.cache.impl;
 
 import java.util.List;
+
+import rocks.inspectit.server.cache.AbstractObjectSizes;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 
 /**
  * This class provides a implementation of {@link IObjectSizes} appropriate for calculations of

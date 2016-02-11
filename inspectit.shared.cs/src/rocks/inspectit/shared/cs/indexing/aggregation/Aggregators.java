@@ -1,12 +1,12 @@
-package info.novatec.inspectit.indexing.aggregation;
+package rocks.inspectit.shared.cs.indexing.aggregation;
 
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.aggregation.impl.ExceptionDataAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.ExceptionDataAggregator.ExceptionAggregationType;
-import info.novatec.inspectit.indexing.aggregation.impl.SqlStatementDataAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.TimerDataAggregator;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.SqlStatementDataAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator.ExceptionAggregationType;
 
 /**
  * This class provides commonly used aggregators.

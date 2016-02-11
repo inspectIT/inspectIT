@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferenceGroup;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.tree.input.SteppingTreeInputController;
-import info.novatec.inspectit.rcp.util.ElementOccurrenceCount;
+package rocks.inspectit.ui.rcp.editor.tree;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +16,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.tree.input.SteppingTreeInputController;
+import rocks.inspectit.ui.rcp.util.ElementOccurrenceCount;
 
 /**
  * View that enables locating the element in the tree via {@link SteppingControl}.
@@ -55,7 +55,7 @@ public class SteppingTreeSubView extends TreeSubView {
 	 * 
 	 * @param treeInputController
 	 *            Stepping tree input controller.
-	 * @see TreeSubView#TreeSubView(info.novatec.inspectit.rcp.editor.tree.input.TreeInputController)
+	 * @see TreeSubView#TreeSubView(rocks.inspectit.ui.rcp.editor.tree.input.TreeInputController)
 	 */
 	public SteppingTreeSubView(SteppingTreeInputController treeInputController) {
 		super(treeInputController);

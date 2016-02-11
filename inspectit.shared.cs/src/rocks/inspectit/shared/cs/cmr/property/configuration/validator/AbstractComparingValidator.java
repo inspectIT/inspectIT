@@ -1,10 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration.validator;
-
-import info.novatec.inspectit.cmr.property.configuration.GroupedProperty;
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.ValidationError;
-import info.novatec.inspectit.cmr.property.update.IPropertyUpdate;
+package rocks.inspectit.shared.cs.cmr.property.configuration.validator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +10,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 import org.apache.commons.lang.StringUtils;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
+import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Abstract validator for all comparing validators.

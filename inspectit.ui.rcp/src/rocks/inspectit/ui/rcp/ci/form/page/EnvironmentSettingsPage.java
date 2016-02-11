@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.page;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.part.EnvironmentSettingsPart;
-import info.novatec.inspectit.rcp.ci.form.part.LoggingSensorOptionsPart;
-import info.novatec.inspectit.rcp.ci.form.part.PlatformSensorSelectionPart;
-import info.novatec.inspectit.rcp.ci.form.part.ProfileSelectionPart;
-import info.novatec.inspectit.rcp.ci.form.part.SensorOptionsPart;
+package rocks.inspectit.ui.rcp.ci.form.page;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -18,6 +10,14 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.part.EnvironmentSettingsPart;
+import rocks.inspectit.ui.rcp.ci.form.part.LoggingSensorOptionsPart;
+import rocks.inspectit.ui.rcp.ci.form.part.PlatformSensorSelectionPart;
+import rocks.inspectit.ui.rcp.ci.form.part.ProfileSelectionPart;
+import rocks.inspectit.ui.rcp.ci.form.part.SensorOptionsPart;
 
 /**
  * Page for the environment general settings.

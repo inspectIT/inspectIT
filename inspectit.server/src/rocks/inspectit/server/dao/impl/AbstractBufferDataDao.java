@@ -1,10 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +8,12 @@ import java.util.concurrent.ForkJoinPool;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 
 /**
  * Abstract class for all buffer data DAO service.

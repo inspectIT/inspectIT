@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent
+class: rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent
 
 1: id
 2: mBeanObjectName

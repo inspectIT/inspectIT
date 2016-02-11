@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.InvocationSequenceData
+class: rocks.inspectit.shared.all.communication.data.InvocationSequenceData
 
 # Default Data
 1: id

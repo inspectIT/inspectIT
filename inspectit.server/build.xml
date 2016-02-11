@@ -258,7 +258,7 @@
 
 			<!-- define MANIFEST.MF -->
 			<manifest>
-				<attribute name="Main-Class" value="info.novatec.inspectit.cmr.CMR" />
+				<attribute name="Main-Class" value="rocks.inspectit.server.CMR" />
 				<attribute name="Class-Path" value="${libs.project}" />
 			</manifest>
 		</jar>

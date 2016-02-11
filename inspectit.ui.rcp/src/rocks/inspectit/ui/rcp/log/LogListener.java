@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.log;
+package rocks.inspectit.ui.rcp.log;
 
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;

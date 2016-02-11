@@ -1,10 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.dao.DefaultDataDao;
-import info.novatec.inspectit.cmr.dao.HttpTimerDataDao;
-import info.novatec.inspectit.cmr.spring.aop.MethodLog;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.service;
 
 import java.util.Collection;
 import java.util.Date;
@@ -14,6 +8,13 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.server.dao.DefaultDataDao;
+import rocks.inspectit.server.dao.HttpTimerDataDao;
+import rocks.inspectit.server.spring.aop.MethodLog;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 
 /**
  * This class provides access to the http related data in the CMR.

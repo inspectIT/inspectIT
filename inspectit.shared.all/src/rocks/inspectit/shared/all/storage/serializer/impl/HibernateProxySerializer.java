@@ -1,11 +1,11 @@
-package info.novatec.inspectit.storage.serializer.impl;
-
-import info.novatec.inspectit.util.IHibernateUtil;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.util.IHibernateUtil;
 
 /**
  * This serializer is unproxing the Hibernate proxies and passes the correctly initialized entity to

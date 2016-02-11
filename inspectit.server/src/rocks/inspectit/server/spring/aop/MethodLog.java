@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.spring.aop;
+package rocks.inspectit.server.spring.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

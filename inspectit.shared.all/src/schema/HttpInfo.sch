@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.HttpInfo
+class: rocks.inspectit.shared.all.communication.data.HttpInfo
 
 # HttpInfo
 1: id

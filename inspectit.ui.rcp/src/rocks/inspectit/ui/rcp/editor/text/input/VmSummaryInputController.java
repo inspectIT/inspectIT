@@ -1,17 +1,4 @@
-package info.novatec.inspectit.rcp.editor.text.input;
-
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
-import info.novatec.inspectit.communication.data.CompilationInformationData;
-import info.novatec.inspectit.communication.data.CpuInformationData;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.communication.data.RuntimeInformationData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.communication.data.ThreadInformationData;
-import info.novatec.inspectit.communication.data.VmArgumentData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.editor.text.input;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -27,6 +14,19 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData;
+import rocks.inspectit.shared.all.communication.data.CompilationInformationData;
+import rocks.inspectit.shared.all.communication.data.CpuInformationData;
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.all.communication.data.RuntimeInformationData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
+import rocks.inspectit.shared.all.communication.data.VmArgumentData;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * This class represents the textual view of all platform-sensor-types. The shown informations are
@@ -125,7 +125,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	/**
 	 * The {@link HashMap} containing the minimized sections.
 	 */
-	private Map<String, Composite> minimizedSections = new HashMap<String, Composite>();
+	private final Map<String, Composite> minimizedSections = new HashMap<String, Composite>();
 
 	/**
 	 * The label for loaded classes.
@@ -215,6 +215,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
 
@@ -247,6 +248,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		scrolledForm = toolkit.createScrolledForm(parent);
 		scrolledForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -463,6 +465,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 
 			// sorting vm arguments
 			TreeSet<VmArgumentData> treeSet = new TreeSet<VmArgumentData>(new Comparator<VmArgumentData>() {
+				@Override
 				public int compare(VmArgumentData one, VmArgumentData two) {
 					return one.getVmName().compareTo(two.getVmName());
 				}
@@ -589,6 +592,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		ClassLoadingInformationData classLoadingData = (ClassLoadingInformationData) dataAccessService.getLastDataObject(classLoadingObj);
 		CpuInformationData cpuData = (CpuInformationData) dataAccessService.getLastDataObject(cpuObj);
@@ -693,6 +697,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 

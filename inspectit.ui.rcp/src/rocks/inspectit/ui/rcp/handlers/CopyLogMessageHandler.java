@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.LoggingData;
-import info.novatec.inspectit.rcp.util.ClipboardUtil;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -10,6 +6,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.LoggingData;
+import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * Handler that copies the logging message to the clipboard.

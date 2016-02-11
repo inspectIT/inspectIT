@@ -1,21 +1,21 @@
-package info.novatec.inspectit.cmr.indexing.impl;
-
-import info.novatec.inspectit.cmr.indexing.impl.RootBranchFactory.RootBranch;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.buffer.IBufferBranchIndexer;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
-import info.novatec.inspectit.indexing.buffer.impl.Branch;
-import info.novatec.inspectit.indexing.buffer.impl.BufferBranchIndexer;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.indexing.indexer.impl.ObjectTypeIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.PlatformIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.TimestampIndexer;
+package rocks.inspectit.server.indexing.impl;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.server.indexing.impl.RootBranchFactory.RootBranch;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
 
 /**
  * Factory that creates the root branch for indexing tree. This root branch will be injected in

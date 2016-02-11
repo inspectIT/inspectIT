@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.hooking.IMethodHook;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.hooking.IMethodHook;
 
 /**
  * This hook records the creation of statements so that they can be later retrieved by other hooks

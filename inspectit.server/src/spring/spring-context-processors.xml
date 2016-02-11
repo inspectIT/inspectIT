@@ -4,29 +4,29 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<bean id="cacheIdGeneratorCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.CacheIdGeneratorCmrProcessor" />
-	<bean id="bufferInserterCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.BufferInserterCmrProcessor" />
-	<bean id="exceptionMessageCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.ExceptionMessageCmrProcessor" />
-	<bean id="indexerCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.IndexerCmrProcessor" />
-	<bean id="persistingCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.PersistingCmrProcessor" >
+	<bean id="cacheIdGeneratorCmrProcessor" class="rocks.inspectit.server.processor.impl.CacheIdGeneratorCmrProcessor" />
+	<bean id="bufferInserterCmrProcessor" class="rocks.inspectit.server.processor.impl.BufferInserterCmrProcessor" />
+	<bean id="exceptionMessageCmrProcessor" class="rocks.inspectit.server.processor.impl.ExceptionMessageCmrProcessor" />
+	<bean id="indexerCmrProcessor" class="rocks.inspectit.server.processor.impl.IndexerCmrProcessor" />
+	<bean id="persistingCmrProcessor" class="rocks.inspectit.server.processor.impl.PersistingCmrProcessor" >
 		<constructor-arg>
 				<util:list value-type="java.lang.Class">
-					<value>info.novatec.inspectit.communication.data.ClassLoadingInformationData</value>
-					<value>info.novatec.inspectit.communication.data.CompilationInformationData</value>
-					<value>info.novatec.inspectit.communication.data.CpuInformationData</value>
-					<value>info.novatec.inspectit.communication.data.MemoryInformationData</value>
-					<value>info.novatec.inspectit.communication.data.RuntimeInformationData</value>
-					<value>info.novatec.inspectit.communication.data.ThreadInformationData</value>
-					<value>info.novatec.inspectit.communication.data.SystemInformationData</value>
-					<value>info.novatec.inspectit.communication.data.JmxSensorValueData</value>
+					<value>rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData</value>
+					<value>rocks.inspectit.shared.all.communication.data.CompilationInformationData</value>
+					<value>rocks.inspectit.shared.all.communication.data.CpuInformationData</value>
+					<value>rocks.inspectit.shared.all.communication.data.MemoryInformationData</value>
+					<value>rocks.inspectit.shared.all.communication.data.RuntimeInformationData</value>
+					<value>rocks.inspectit.shared.all.communication.data.ThreadInformationData</value>
+					<value>rocks.inspectit.shared.all.communication.data.SystemInformationData</value>
+					<value>rocks.inspectit.shared.all.communication.data.JmxSensorValueData</value>
 				</util:list>
 		</constructor-arg>
 	</bean>
-	<bean id="sqlExclusiveTimeCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.SqlExclusiveTimeCmrProcessor" />
-	<bean id="timerDataChartingCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.TimerDataChartingCmrProcessor" />
-	<bean id="invocationModifierCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.InvocationModifierCmrProcessor">
+	<bean id="sqlExclusiveTimeCmrProcessor" class="rocks.inspectit.server.processor.impl.SqlExclusiveTimeCmrProcessor" />
+	<bean id="timerDataChartingCmrProcessor" class="rocks.inspectit.server.processor.impl.TimerDataChartingCmrProcessor" />
+	<bean id="invocationModifierCmrProcessor" class="rocks.inspectit.server.processor.impl.InvocationModifierCmrProcessor">
 		<constructor-arg>
-			<util:list value-type="info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor">
+			<util:list value-type="rocks.inspectit.server.processor.AbstractCmrDataProcessor">
 				<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
 				<ref bean="timerDataChartingCmrProcessor" />
 				<ref bean="indexerCmrProcessor" />
@@ -34,9 +34,9 @@
 			</util:list>
 		</constructor-arg>
 	</bean>
-	<bean id="recorderCmrProcessor" class="info.novatec.inspectit.cmr.processor.impl.RecorderCmrProcessor" />
+	<bean id="recorderCmrProcessor" class="rocks.inspectit.server.processor.impl.RecorderCmrProcessor" />
 
-	<util:list value-type="info.novatec.inspectit.cmr.processor.AbstractCmrDataProcessor" id="cmrDataProcessorList">
+	<util:list value-type="rocks.inspectit.server.processor.AbstractCmrDataProcessor" id="cmrDataProcessorList">
 		<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
 		<ref bean="bufferInserterCmrProcessor" />
 		<ref bean="exceptionMessageCmrProcessor" />

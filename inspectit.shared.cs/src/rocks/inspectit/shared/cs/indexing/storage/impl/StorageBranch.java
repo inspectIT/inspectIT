@@ -1,12 +1,12 @@
-package info.novatec.inspectit.indexing.storage.impl;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.AbstractBranch;
-import info.novatec.inspectit.indexing.ITreeComponent;
-import info.novatec.inspectit.indexing.storage.IStorageBranchIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.AbstractBranch;
+import rocks.inspectit.shared.cs.indexing.ITreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Storage branch type that implements the {@link IStorageTreeComponent}.

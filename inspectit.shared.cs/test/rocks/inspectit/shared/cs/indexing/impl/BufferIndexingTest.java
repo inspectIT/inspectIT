@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.impl;
+package rocks.inspectit.shared.cs.indexing.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -11,19 +11,6 @@ import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
-import info.novatec.inspectit.indexing.buffer.impl.Branch;
-import info.novatec.inspectit.indexing.buffer.impl.BufferBranchIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.MethodIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.ObjectTypeIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.PlatformIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.SensorTypeIdentIndexer;
-import info.novatec.inspectit.indexing.indexer.impl.TimestampIndexer;
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestrictionProcessor;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -34,6 +21,22 @@ import java.util.concurrent.ForkJoinPool;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.SensorTypeIdentIndexer;
+import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
+import rocks.inspectit.shared.cs.indexing.restriction.IIndexQueryRestrictionProcessor;
 
 /**
  * Test class for testing functionality of {@link IBufferTreeComponent}.

@@ -1,11 +1,9 @@
-package info.novatec.inspectit.storage.nio;
+package rocks.inspectit.shared.all.storage.nio;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-
-import info.novatec.inspectit.storage.nio.bytebuffer.ByteBufferFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,6 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.storage.nio.bytebuffer.ByteBufferFactory;
 
 /**
  * Tests the {@link ByteBufferProvider}.
@@ -157,7 +157,6 @@ public class ByteBufferProviderTest {
 
 		for (int i = 0; i < threadCount; i++) {
 			new Thread(new Runnable() {
-				@Override
 				public void run() {
 					for (int i = 0; i < iterationsPerThread; i++) {
 						try {

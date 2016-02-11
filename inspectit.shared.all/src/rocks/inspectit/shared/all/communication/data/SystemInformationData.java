@@ -1,7 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.SystemSensorData;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -14,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 
 /**
  * Here are the static informations of a system. These informations don't change at runtime.

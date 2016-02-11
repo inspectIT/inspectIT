@@ -1,4 +1,4 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.shared.all.util;
 
 /**
  * This is a utility class that provides the {@link #binarySearch(long[], int, int, long)} method

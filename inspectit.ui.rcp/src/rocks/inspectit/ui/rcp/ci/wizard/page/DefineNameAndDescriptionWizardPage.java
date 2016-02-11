@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.ci.wizard.page;
+package rocks.inspectit.ui.rcp.ci.wizard.page;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
+package rocks.inspectit.server.dao.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -14,10 +14,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
-import info.novatec.inspectit.communication.data.DatabaseAggregatedTimerData;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.data.TimerData;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -33,6 +29,12 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.dao.impl.TimerDataAggregator;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.shared.all.communication.data.DatabaseAggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Test of {@link TimerDataAggregator}.

@@ -1,14 +1,14 @@
-package info.novatec.inspectit.indexing.buffer.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.AbstractBranch;
-import info.novatec.inspectit.indexing.ITreeComponent;
-import info.novatec.inspectit.indexing.buffer.IBufferBranchIndexer;
-import info.novatec.inspectit.indexing.buffer.IBufferTreeComponent;
+package rocks.inspectit.shared.cs.indexing.buffer.impl;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.AbstractBranch;
+import rocks.inspectit.shared.cs.indexing.ITreeComponent;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 
 /**
  * {@link Branch} is a {@link ITreeComponent} that holds references to other {@link ITreeComponent}

@@ -1,17 +1,17 @@
-package info.novatec.inspectit.rcp.editor.text.input;
-
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.communication.data.MemoryInformationData;
-import info.novatec.inspectit.communication.data.SystemInformationData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.editor.text.input;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * This class represents the textual view of the {@link MemoryInformation} sensor-type.
@@ -84,6 +84,7 @@ public class MemoryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
 
@@ -99,6 +100,7 @@ public class MemoryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		addSection(parent, toolkit, SECTION_MEMORY);
 
@@ -172,6 +174,7 @@ public class MemoryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		final MemoryInformationData data = (MemoryInformationData) dataAccessService.getLastDataObject(memoryObj);
 
@@ -219,6 +222,7 @@ public class MemoryInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 

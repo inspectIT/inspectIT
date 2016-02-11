@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.ci.handler;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.dialog.EditNameDescriptionDialog;
-import info.novatec.inspectit.rcp.provider.IProfileProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.ci.handler;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
@@ -15,6 +8,13 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.dialog.EditNameDescriptionDialog;
+import rocks.inspectit.ui.rcp.provider.IProfileProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler for editing profile.

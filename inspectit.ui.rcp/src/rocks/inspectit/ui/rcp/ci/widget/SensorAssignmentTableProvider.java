@@ -1,19 +1,4 @@
-package info.novatec.inspectit.rcp.ci.widget;
-
-import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.TimerMethodSensorAssignment;
-import info.novatec.inspectit.ci.context.AbstractContextCapture;
-import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
-import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
-import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.part.SensorAssignmentMasterBlock;
-import info.novatec.inspectit.rcp.editor.tooltip.ColumnAwareToolTipSupport;
-import info.novatec.inspectit.rcp.editor.viewers.ImageFixStyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
+package rocks.inspectit.ui.rcp.ci.widget;
 
 import java.util.List;
 
@@ -34,6 +19,21 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.part.SensorAssignmentMasterBlock;
+import rocks.inspectit.ui.rcp.editor.tooltip.ColumnAwareToolTipSupport;
+import rocks.inspectit.ui.rcp.editor.viewers.ImageFixStyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
  * Table provider for the tab folder containing the sensor assignments.

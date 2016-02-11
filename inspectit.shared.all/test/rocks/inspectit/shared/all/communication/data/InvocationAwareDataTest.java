@@ -1,4 +1,4 @@
-package info.novatec.inspectit.communication.data;
+package rocks.inspectit.shared.all.communication.data;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 
 /**
  * Tests that functionality in the {@link InvocationAwareData} is correct.

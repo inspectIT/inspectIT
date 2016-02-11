@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.core;
+package rocks.inspectit.agent.java.core;
 
-import info.novatec.inspectit.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * The purpose of an object storage is to handle the data from the sensors and create an appropriate

@@ -1,18 +1,18 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.storage.LocalStorageData;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 
 /**
  * Provider of all storage related services. This classes correctly initialize the service with help

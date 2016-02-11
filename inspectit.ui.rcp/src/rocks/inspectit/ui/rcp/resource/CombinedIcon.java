@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.resource;
+package rocks.inspectit.ui.rcp.resource;
 
 import java.util.Arrays;
 

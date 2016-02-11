@@ -1,9 +1,9 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 
 /**
  * {@link SqlStatementData} holds the information about the executed SQL. The executed SQL statement

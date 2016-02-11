@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
-import info.novatec.inspectit.rcp.editor.root.SubViewClassificationController;
+package rocks.inspectit.ui.rcp.editor.table.input;
 
 import java.util.List;
 import java.util.Set;
@@ -17,6 +10,13 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.widgets.TableColumn;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
+import rocks.inspectit.ui.rcp.editor.root.SubViewClassificationController;
 
 /**
  * The interface for all table input controller.
@@ -43,9 +43,9 @@ public interface TableInputController extends SubViewClassificationController {
 	void createColumns(TableViewer tableViewer);
 
 	/**
-	 * The {@link info.novatec.inspectit.rcp.editor.table.TableSubView} might need to alter the
+	 * The {@link rocks.inspectit.ui.rcp.editor.table.TableSubView} might need to alter the
 	 * column width/visibility if the column has the remembered size. With this method the
-	 * controller gives or denies the {@link info.novatec.inspectit.rcp.editor.table.TableSubView}
+	 * controller gives or denies the {@link rocks.inspectit.ui.rcp.editor.table.TableSubView}
 	 * to alter the column width.
 	 * 
 	 * @param tableColumn
@@ -60,7 +60,7 @@ public interface TableInputController extends SubViewClassificationController {
 	 * indicates most of the time that there is no default list or object to display in the table.
 	 * For some {@link DefaultData} objects, the method {@link #canOpenInput(List)} should return
 	 * true so that the input object is set by the
-	 * {@link info.novatec.inspectit.rcp.editor.table.TableSubView}.
+	 * {@link rocks.inspectit.ui.rcp.editor.table.TableSubView}.
 	 * 
 	 * @return The table input or <code>null</code> if nothing to display for default.
 	 */

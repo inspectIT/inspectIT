@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.storage;
+package rocks.inspectit.server.storage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -12,22 +12,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.cache.IBuffer;
-import info.novatec.inspectit.cmr.dao.StorageDataDao;
-import info.novatec.inspectit.cmr.service.IServerStatusService;
-import info.novatec.inspectit.cmr.test.AbstractTestNGLogSupport;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.cmr.WritingStatus;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.recording.RecordingProperties;
-import info.novatec.inspectit.storage.recording.RecordingState;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
-import info.novatec.inspectit.version.VersionService;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -50,6 +34,27 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.dao.StorageDataDao;
+import rocks.inspectit.server.storage.CmrStorageManager;
+import rocks.inspectit.server.storage.CmrStorageRecorder;
+import rocks.inspectit.server.storage.CmrStorageWriter;
+import rocks.inspectit.server.storage.CmrStorageWriterProvider;
+import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.shared.all.version.VersionService;
+import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
+import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * Test the {@link CmrStorageManager} class.

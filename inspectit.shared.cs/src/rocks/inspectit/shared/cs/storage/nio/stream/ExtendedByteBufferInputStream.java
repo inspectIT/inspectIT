@@ -1,13 +1,4 @@
-package info.novatec.inspectit.storage.nio.stream;
-
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.nio.ByteBufferProvider;
-import info.novatec.inspectit.storage.nio.WriteReadCompletionRunnable;
-import info.novatec.inspectit.storage.nio.read.ReadingChannelManager;
+package rocks.inspectit.shared.cs.storage.nio.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +23,16 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
+import rocks.inspectit.shared.all.storage.nio.stream.AbstractExtendedByteBufferInputStream;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
+import rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager;
 
 /**
  * This is a specially designed {@link InputStream} to read the data from our storage. The stream

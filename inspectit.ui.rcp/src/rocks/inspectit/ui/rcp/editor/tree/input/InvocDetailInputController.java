@@ -1,27 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree.input;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
-import info.novatec.inspectit.communication.data.LoggingData;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.ExceptionImageFactory;
-import info.novatec.inspectit.rcp.model.ModifiersImageFactory;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
+package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +23,29 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.all.communication.data.LoggingData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.ExceptionImageFactory;
+import rocks.inspectit.ui.rcp.model.ModifiersImageFactory;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 
 /**
  * This input controller displays the detail contents of {@link InvocationSequenceData} objects.

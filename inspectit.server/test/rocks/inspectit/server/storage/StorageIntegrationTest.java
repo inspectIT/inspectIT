@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage;
+package rocks.inspectit.server.storage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -11,23 +11,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import info.novatec.inspectit.cmr.storage.CmrStorageManager;
-import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
-import info.novatec.inspectit.storage.label.StringStorageLabel;
-import info.novatec.inspectit.storage.label.type.impl.RatingLabelType;
-import info.novatec.inspectit.storage.nio.stream.InputStreamProvider;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.processor.impl.DataSaverProcessor;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.util.KryoUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,6 +33,27 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryo.io.Input;
+
+import rocks.inspectit.server.storage.CmrStorageManager;
+import rocks.inspectit.server.test.AbstractTransactionalTestNGLogSupport;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.util.KryoUtil;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageFileType;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.label.StringStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.impl.RatingLabelType;
+import rocks.inspectit.shared.cs.storage.nio.stream.InputStreamProvider;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.DataSaverProcessor;
 
 /**
  * Tests the complete CMR storage functionality.

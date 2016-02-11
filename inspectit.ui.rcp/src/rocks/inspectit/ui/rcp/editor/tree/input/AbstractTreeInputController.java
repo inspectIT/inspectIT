@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
+package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -23,6 +17,12 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.TreeColumn;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 
 /**
  * The abstract class of the {@link TreeInputController} interface to provide some standard methods.

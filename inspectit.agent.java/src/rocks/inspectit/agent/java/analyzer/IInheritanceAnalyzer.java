@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer;
+package rocks.inspectit.agent.java.analyzer;
 
 import java.util.Iterator;
 

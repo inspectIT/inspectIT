@@ -1,12 +1,12 @@
-package info.novatec.inspectit.indexing.aggregation.impl;
-
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
-import info.novatec.inspectit.communication.data.HttpInfo;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
+package rocks.inspectit.shared.cs.indexing.aggregation.impl;
 
 import java.io.Serializable;
+
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpInfo;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * Aggregation for {@link HttpTimerData}.

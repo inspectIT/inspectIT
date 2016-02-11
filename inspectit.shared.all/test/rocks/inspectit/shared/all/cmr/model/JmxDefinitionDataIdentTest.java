@@ -1,10 +1,12 @@
-package info.novatec.inspectit.cmr.model;
+package rocks.inspectit.shared.all.cmr.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
 
 /**
  * This tests checks the "getDerived..()" methods of the {@link JmxDefinitionDataIdent} class.

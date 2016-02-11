@@ -1,15 +1,4 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.cache.IBuffer;
-import info.novatec.inspectit.cmr.property.PropertyManager;
-import info.novatec.inspectit.cmr.property.configuration.PropertySection;
-import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
-import info.novatec.inspectit.cmr.spring.aop.MethodLog;
-import info.novatec.inspectit.cmr.util.ShutdownService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.StorageManager;
+package rocks.inspectit.server.service;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -27,6 +16,18 @@ import org.apache.commons.lang.mutable.MutableLong;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.property.PropertyManager;
+import rocks.inspectit.server.spring.aop.MethodLog;
+import rocks.inspectit.server.util.ShutdownService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
+import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
+import rocks.inspectit.shared.cs.storage.StorageManager;
 
 /**
  * Implementation of the {@link ICmrManagementService}. Provides general management of the CMR.

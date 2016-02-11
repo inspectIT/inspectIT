@@ -1,6 +1,4 @@
-package info.novatec.inspectit.agent.connection;
-
-import info.novatec.inspectit.agent.connection.impl.AdditiveWaitRetryStrategy;
+package rocks.inspectit.agent.java.connection;
 
 import java.util.concurrent.ExecutionException;
 
@@ -8,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.esotericsoftware.kryonet.rmi.TimeoutException;
+
+import rocks.inspectit.agent.java.connection.impl.AdditiveWaitRetryStrategy;
 
 /**
  * <b>IMPORTANT:</b> The class code is copied/taken from <a

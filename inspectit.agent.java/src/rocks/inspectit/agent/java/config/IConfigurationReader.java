@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config;
+package rocks.inspectit.agent.java.config;
 
 /**
  * Defines an interface for the configuration files. Every configuration syntax (plain text, XML,

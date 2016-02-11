@@ -1,18 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.AgentManagementErrorCodeEnum;
-import info.novatec.inspectit.indexing.query.provider.impl.StorageIndexQueryProvider;
-import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,6 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.shared.cs.indexing.query.provider.impl.StorageIndexQueryProvider;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestrictionFactory;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link IGlobalDataAccessService} for storage purposes. This class indirectly uses the

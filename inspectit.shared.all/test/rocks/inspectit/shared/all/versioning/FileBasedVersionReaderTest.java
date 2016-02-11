@@ -1,4 +1,4 @@
-package info.novatec.inspectit.versioning;
+package rocks.inspectit.shared.all.versioning;
 
 import static org.mockito.Mockito.when;
 
@@ -10,10 +10,10 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import info.novatec.inspectit.testbase.TestBase;
-import info.novatec.inspectit.util.ResourceUtils;
-import info.novatec.inspectit.version.FileBasedVersionReader;
-import info.novatec.inspectit.version.InvalidVersionException;
+import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.util.ResourceUtils;
+import rocks.inspectit.shared.all.version.FileBasedVersionReader;
+import rocks.inspectit.shared.all.version.InvalidVersionException;
 
 /**
  * Tests the <code>FileBasedVersionReader</code>

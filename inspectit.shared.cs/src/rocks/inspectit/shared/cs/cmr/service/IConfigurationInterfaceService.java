@@ -1,12 +1,14 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.exception.BusinessException;
+package rocks.inspectit.shared.cs.cmr.service;
 
 import java.util.Collection;
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Service for the CI.

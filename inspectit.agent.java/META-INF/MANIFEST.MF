@@ -1,2 +1,2 @@
-Premain-Class: info.novatec.inspectit.agent.javaagent.JavaAgent
+Premain-Class: rocks.inspectit.agent.java.javaagent.JavaAgent
 Can-Redefine-Classes: true

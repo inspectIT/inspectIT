@@ -1,8 +1,8 @@
-package info.novatec.inspectit.agent.connection.impl;
+package rocks.inspectit.agent.java.connection.impl;
 
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.connection.AbstractRemoteMethodCall;
-import info.novatec.inspectit.cmr.service.IRegistrationService;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.connection.AbstractRemoteMethodCall;
+import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
 
 /**
  * Class which encapsulates the request to the remote object {@link IRegistrationService}. The

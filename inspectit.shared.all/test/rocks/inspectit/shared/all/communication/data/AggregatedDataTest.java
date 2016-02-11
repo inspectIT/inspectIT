@@ -1,10 +1,7 @@
-package info.novatec.inspectit.communication.data;
+package rocks.inspectit.shared.all.communication.data;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.IIdsAwareAggregatedData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +9,18 @@ import java.util.List;
 import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.IIdsAwareAggregatedData;
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
+import rocks.inspectit.shared.all.communication.data.AggregatedSqlStatementData;
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 @SuppressWarnings("PMD")
 public class AggregatedDataTest {

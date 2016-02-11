@@ -1,4 +1,4 @@
-package info.novatec.inspectit.jpa;
+package rocks.inspectit.shared.all.jpa;
 
 import java.util.Arrays;
 import java.util.Collections;

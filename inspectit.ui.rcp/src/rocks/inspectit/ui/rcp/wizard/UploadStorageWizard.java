@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.wizard;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.provider.ILocalStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.rcp.wizard.page.UploadStorageWizardPage;
-import info.novatec.inspectit.storage.LocalStorageData;
+package rocks.inspectit.ui.rcp.wizard;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -22,6 +13,15 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
+
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
+import rocks.inspectit.ui.rcp.wizard.page.UploadStorageWizardPage;
 
 /**
  * Wizard for uploading a storage.

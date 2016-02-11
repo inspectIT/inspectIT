@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.classes;
+package rocks.inspectit.agent.java.analyzer.classes;
 
 /**
  * DO NOT MODIFY THIS CLASS UNLESS YOU KNOW WHAT YOU'RE DOING.

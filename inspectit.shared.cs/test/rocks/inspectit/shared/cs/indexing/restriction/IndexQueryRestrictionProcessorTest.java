@@ -1,13 +1,7 @@
-package info.novatec.inspectit.indexing.restriction;
+package rocks.inspectit.shared.cs.indexing.restriction;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.restriction.impl.CachingIndexQueryRestrictionProcessor;
-import info.novatec.inspectit.indexing.restriction.impl.IndexQueryRestrictionFactory;
-import info.novatec.inspectit.testbase.TestBase;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +10,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
+import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.CachingIndexQueryRestrictionProcessor;
+import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestrictionFactory;
 
 /**
  * Tests the indexing restriction used with index queries.

@@ -1,20 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.sensor.StringConstraintSensorConfig;
-import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.input.EnvironmentEditorInput;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.validation.ValidationControlDecoration;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +24,22 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.sensor.StringConstraintSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Part for displaying sensor options.

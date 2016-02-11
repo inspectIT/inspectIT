@@ -1,4 +1,4 @@
-package info.novatec.inspectit.communication.data.cmr;
+package rocks.inspectit.shared.cs.communication.data.cmr;
 
 /**
  * Status of the writing.

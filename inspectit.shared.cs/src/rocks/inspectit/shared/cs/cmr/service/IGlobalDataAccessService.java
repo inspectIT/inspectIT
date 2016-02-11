@@ -1,14 +1,16 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.exception.BusinessException;
+package rocks.inspectit.shared.cs.cmr.service;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.exception.BusinessException;
 
 /**
  * Interface used to define all methods which clients (be it graphical/textual) can access the

@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.connection.impl;
+package rocks.inspectit.agent.java.connection.impl;
 
-import info.novatec.inspectit.agent.connection.RetryStrategy;
+import rocks.inspectit.agent.java.connection.RetryStrategy;
 
 /**
  * Strategy that fails fast. Has 1 retry attempts and has no waiting.

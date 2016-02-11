@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -7,9 +7,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaData;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaDataExtractor;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.JDBCUrlExtractor;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -19,6 +16,10 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaData;
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaDataExtractor;
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.JDBCUrlExtractor;
 
 @SuppressWarnings("PMD")
 public class ConnectionMetaDataExtractorTest {

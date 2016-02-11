@@ -1,12 +1,7 @@
 /**
  *
  */
-package info.novatec.inspectit.ci.sensor.method.impl;
-
-import info.novatec.inspectit.ci.sensor.method.AbstractMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.ILoggingSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+package rocks.inspectit.shared.cs.ci.sensor.method.impl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +13,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.ArrayUtils;
+
+import rocks.inspectit.shared.cs.ci.sensor.method.AbstractMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.ILoggingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
 
 /**
  * @author Ivan Senic
@@ -35,7 +35,7 @@ public class Log4jLoggingSensorConfig extends AbstractMethodSensorConfig impleme
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.logging.Log4JLoggingSensor";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingSensor";
 
 	/**
 	 * Name of the logging technology.

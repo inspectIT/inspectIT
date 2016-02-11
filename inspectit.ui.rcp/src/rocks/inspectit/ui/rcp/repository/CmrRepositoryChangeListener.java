@@ -1,7 +1,7 @@
-package info.novatec.inspectit.rcp.repository;
+package rocks.inspectit.ui.rcp.repository;
 
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Extended {@link RepositoryChangeListener} only for events on the {@link CmrRepositoryDefinition}

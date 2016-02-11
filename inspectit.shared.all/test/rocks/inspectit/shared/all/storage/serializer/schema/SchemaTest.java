@@ -1,10 +1,10 @@
-package info.novatec.inspectit.storage.serializer.schema;
+package rocks.inspectit.shared.all.storage.serializer.schema;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -15,16 +15,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+
 /**
  * Tests if the schemas for serialization are up-to-date. Any change of the domain classes, needs to
  * be reflected in the schema. Thus, this test should prove that all schemas are correct.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class SchemaTest {
@@ -33,26 +37,28 @@ public class SchemaTest {
 	 * Schema manager.
 	 */
 	private ClassSchemaManager schemaManager;
-
 	/**
 	 * Initializes the {@link ClassSchemaManager}.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
 	@BeforeClass
 	public void init() throws IOException {
-		schemaManager = SchemaManagerTestProvider.getClassSchemaManagerForTests();
+		schemaManager = new ClassSchemaManager();
+		schemaManager.log = mock(Logger.class);
+		schemaManager.setSchemaListFile(new ClassPathResource(ClassSchemaManager.SCHEMA_DIR + "/" + ClassSchemaManager.SCHEMA_LIST_FILE, schemaManager.getClass().getClassLoader()));
+		schemaManager.loadSchemasFromLocations();
 	}
 
 	/**
 	 * Tests schemas for correctness.
-	 * 
+	 *
 	 * @param className
 	 *            Name of the class to test.
 	 * @param schema
 	 *            {@link ClassSchema} for given class.
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 *             If class loading fails.
 	 */

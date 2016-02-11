@@ -1,13 +1,4 @@
-package info.novatec.inspectit.storage.processor.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.IIdsAwareAggregatedData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.serializer.util.KryoSerializationPreferences;
+package rocks.inspectit.shared.cs.storage.processor.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,6 +12,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.IIdsAwareAggregatedData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * This class aggregates data and writes only aggregated objects to the writer.

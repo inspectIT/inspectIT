@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.editor;
-
-import info.novatec.inspectit.ci.AgentMapping;
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.ci.form.input.AgentMappingInput;
-import info.novatec.inspectit.rcp.ci.form.page.AgentMappingPage;
-import info.novatec.inspectit.rcp.ci.listener.IAgentMappingsChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.ci.form.editor;
 
 import java.util.Objects;
 
@@ -18,6 +8,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.ci.form.input.AgentMappingInput;
+import rocks.inspectit.ui.rcp.ci.form.page.AgentMappingPage;
+import rocks.inspectit.ui.rcp.ci.listener.IAgentMappingsChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Editor for the {@link AgentMapping}.
@@ -30,7 +30,7 @@ public class AgentMappingEditor extends AbstractConfigurationInterfaceFormEditor
 	/**
 	 * Id of the editor.
 	 */
-	public static final String ID = "info.novatec.inspectit.rcp.ci.editor.agentMappingEditor";
+	public static final String ID = "rocks.inspectit.ui.rcp.ci.editor.agentMappingEditor";
 
 	/**
 	 * {@inheritDoc}

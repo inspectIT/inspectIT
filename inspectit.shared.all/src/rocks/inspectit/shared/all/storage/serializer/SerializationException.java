@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.serializer;
+package rocks.inspectit.shared.all.storage.serializer;
 
 /**
  * Serialization exception class.

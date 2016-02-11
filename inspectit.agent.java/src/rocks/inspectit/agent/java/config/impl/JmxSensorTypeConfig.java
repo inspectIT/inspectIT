@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
+package rocks.inspectit.agent.java.config.impl;
 
 /**
  * Container for the values of a sensor type configuration. Stores all the values defined in a

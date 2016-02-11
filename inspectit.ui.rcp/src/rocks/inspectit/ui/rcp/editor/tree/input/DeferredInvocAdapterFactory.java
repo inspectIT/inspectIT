@@ -1,9 +1,9 @@
-package info.novatec.inspectit.rcp.editor.tree.input;
-
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
+
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 /**
  * Adapter Factory which is used to create the {@link DeferredInvoc} objects if the adaptable object

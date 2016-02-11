@@ -1,9 +1,4 @@
-package info.novatec.inspectit.storage.processor.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.serializer.util.KryoSerializationPreferences;
+package rocks.inspectit.shared.cs.storage.processor.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * {@link DataSaverProcessor} enables definition of classes which objects need to be saved to the

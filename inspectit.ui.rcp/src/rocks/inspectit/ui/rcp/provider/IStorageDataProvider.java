@@ -1,7 +1,7 @@
-package info.novatec.inspectit.rcp.provider;
+package rocks.inspectit.ui.rcp.provider;
 
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Interface for all model components that can provide the information about the storage.

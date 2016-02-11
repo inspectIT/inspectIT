@@ -1,7 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.documentation.DocumentationService;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -18,6 +15,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.documentation.DocumentationService;
 
 /**
  * Handler that opens that InspectIT Documentation page on Confluence.
@@ -125,12 +125,12 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 		/**
 		 * ID of the command.
 		 */
-		public static final String COMMAND = "info.novatec.inspectit.rcp.sendErrorReport";
+		public static final String COMMAND = "rocks.inspectit.ui.rcp.sendErrorReport";
 
 		/**
 		 * ID of the input which should be exception.
 		 */
-		public static final String INPUT = "info.novatec.inspectit.rcp.sendErrorReport.throwable";
+		public static final String INPUT = "rocks.inspectit.ui.rcp.sendErrorReport.throwable";
 
 		/**
 		 * {@inheritDoc}
@@ -185,7 +185,7 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 		/**
 		 * Parameter for the SearchDocumentationHandler.
 		 */
-		public static final String SEARCH_DOCUMENTATION_PARAMETER = "info.novatec.inspectit.rcp.commands.searchDocumentation.searchString";
+		public static final String SEARCH_DOCUMENTATION_PARAMETER = "rocks.inspectit.ui.rcp.commands.searchDocumentation.searchString";
 
 		/**
 		 * {@inheritDoc}

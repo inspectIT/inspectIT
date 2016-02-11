@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service.cmr.proxy;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.repository.service.cmr.proxy;
 
 import java.net.ConnectException;
 
@@ -10,6 +6,10 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.eclipse.core.runtime.IStatus;
 import org.springframework.remoting.RemoteConnectFailureException;
+
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Our service method interceptor that will catch {@link InspectITCommunicationException} and if the

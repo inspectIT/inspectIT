@@ -1,12 +1,12 @@
-package info.novatec.inspectit.agent.jrebel;
-
-import info.novatec.inspectit.agent.analyzer.IClassPoolAnalyzer;
-import info.novatec.inspectit.agent.analyzer.IInheritanceAnalyzer;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPathStart;
-import info.novatec.inspectit.agent.config.impl.UnregisteredSensorConfig;
-import info.novatec.inspectit.communication.data.ParameterContentType;
+package rocks.inspectit.agent.java.jrebel;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
+import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
+import rocks.inspectit.agent.java.config.impl.UnregisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
+import rocks.inspectit.shared.all.communication.data.ParameterContentType;
 
 /**
  * Small utility provide JRebel compatibility.

@@ -1,9 +1,4 @@
-package info.novatec.inspectit.cmr.service.rest;
-
-import info.novatec.inspectit.cmr.service.ICmrManagementService;
-import info.novatec.inspectit.cmr.service.rest.error.JsonError;
-import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
-import info.novatec.inspectit.version.VersionService;
+package rocks.inspectit.server.service.rest;
 
 import java.io.IOException;
 
@@ -14,6 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import rocks.inspectit.server.service.rest.error.JsonError;
+import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.all.version.VersionService;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 
 /**
  * Restful service provider for CMR information.

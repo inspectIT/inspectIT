@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.model;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +9,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.progress.IElementCollector;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * This composite holds Agents of one CMR as the deferred children.

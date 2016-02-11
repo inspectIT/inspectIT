@@ -1,15 +1,15 @@
-package info.novatec.inspectit.rcp.util.data;
-
-import info.novatec.inspectit.cmr.model.MethodSensorTypeIdent;
-import info.novatec.inspectit.cmr.model.MethodSensorTypeIdentHelper;
-import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.HttpTimerDataHelper;
+package rocks.inspectit.ui.rcp.util.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
+import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdentHelper;
+import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 
 /**
  * Simple extension of {@link AggregatedHttpTimerData}.

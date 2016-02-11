@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.job.CheckNewVersionJob;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.jobs.Job;
+
+import rocks.inspectit.ui.rcp.job.CheckNewVersionJob;
 
 /**
  * Handler for checking the new version. Just start the new {@link CheckNewVersionJob}.

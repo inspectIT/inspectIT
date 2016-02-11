@@ -1,6 +1,6 @@
-package info.novatec.inspectit.ci.sensor.exception;
+package rocks.inspectit.shared.cs.ci.sensor.exception;
 
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 
 /**
  * Interface for exception sensor configurations.

@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.model;
-
-import info.novatec.inspectit.jpa.ListStringConverter;
+package rocks.inspectit.shared.all.cmr.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -21,6 +19,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
+
+import rocks.inspectit.shared.all.jpa.ListStringConverter;
 
 /**
  * The Platform Ident class is used to store the unique information of an Agent, so every Agent in

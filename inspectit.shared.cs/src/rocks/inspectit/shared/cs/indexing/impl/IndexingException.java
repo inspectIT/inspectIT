@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.impl;
+package rocks.inspectit.shared.cs.indexing.impl;
 
 /**
  * Indexing exception class. Used for signaling problems with indexing elements.

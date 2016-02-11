@@ -1,16 +1,16 @@
-package info.novatec.inspectit.rcp.tester;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageData.StorageState;
+package rocks.inspectit.ui.rcp.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
 
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageData.StorageState;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
+
 /**
  * Testing the state of storage. Works if receiver is {@link StorageData} or
- * {@link info.novatec.inspectit.rcp.model.storage.StorageLeaf}.
+ * {@link rocks.inspectit.ui.rcp.model.storage.StorageLeaf}.
  * 
  * @author Ivan Senic
  * 

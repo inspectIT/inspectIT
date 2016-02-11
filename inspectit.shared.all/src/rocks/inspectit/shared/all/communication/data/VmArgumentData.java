@@ -1,7 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.Sizeable;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.io.Serializable;
 
@@ -12,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.Sizeable;
 
 import org.apache.commons.lang.StringUtils;
 

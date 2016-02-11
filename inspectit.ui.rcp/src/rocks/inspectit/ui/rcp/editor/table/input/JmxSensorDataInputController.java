@@ -1,24 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table.input;
-
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
-import info.novatec.inspectit.communication.comparator.DefaultDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.IDataComparator;
-import info.novatec.inspectit.communication.comparator.JmxDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.LiveMode;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
-import info.novatec.inspectit.rcp.editor.table.TableViewerComparator;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.table.input;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +17,26 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.all.communication.comparator.JmxDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
+import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * This input controller displays the acquired jmx sensor data in a table.
@@ -101,7 +101,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 		 *            The width of the column.
 		 * @param imageName
 		 *            The name of the image. Names are defined in
-		 *            {@link info.novatec.inspectit.rcp.InspectITImages}.
+		 *            {@link rocks.inspectit.ui.rcp.InspectITImages}.
 		 * @param dataComparator
 		 *            Comparator for the column.
 		 */

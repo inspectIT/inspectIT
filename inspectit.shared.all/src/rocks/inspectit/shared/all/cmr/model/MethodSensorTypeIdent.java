@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.model;
-
-import info.novatec.inspectit.jpa.MapStringConverter;
+package rocks.inspectit.shared.all.cmr.model;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +13,8 @@ import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+
+import rocks.inspectit.shared.all.jpa.MapStringConverter;
 
 /**
  * The Method Sensor Type Ident class is used to store the sensor types which are used for methods

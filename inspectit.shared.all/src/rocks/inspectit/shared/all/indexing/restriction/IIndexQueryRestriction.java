@@ -1,8 +1,8 @@
-package info.novatec.inspectit.indexing.restriction;
-
-import info.novatec.inspectit.indexing.IIndexQuery;
+package rocks.inspectit.shared.all.indexing.restriction;
 
 import java.util.List;
+
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
 
 /**
  * Interface that defines the restriction behavior for indexing query when searching for objects in

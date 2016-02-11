@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.util;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
+package rocks.inspectit.server.util;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * Bean for caching the {@link PlatformIdent} objects, so that they don't have to be loaded from the

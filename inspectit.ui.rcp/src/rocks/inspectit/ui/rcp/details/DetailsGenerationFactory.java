@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.details;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.rcp.details.generator.IDetailsGenerator;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.details;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +6,11 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.ui.rcp.details.generator.IDetailsGenerator;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Factory for generation of the details composites. This class is initialized by Spring.

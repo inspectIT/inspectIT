@@ -1,7 +1,4 @@
-package info.novatec.inspectit.storage.serializer;
-
-import info.novatec.inspectit.storage.serializer.impl.HibernateProxySerializer;
-import info.novatec.inspectit.util.IHibernateUtil;
+package rocks.inspectit.shared.all.storage.serializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +8,9 @@ import java.util.Map;
 import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.util.DefaultClassResolver;
+
+import rocks.inspectit.shared.all.storage.serializer.impl.HibernateProxySerializer;
+import rocks.inspectit.shared.all.util.IHibernateUtil;
 
 /**
  * Class resolver that writes java collections and maps instead of the hibernate ones.

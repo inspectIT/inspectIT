@@ -1,15 +1,4 @@
-package info.novatec.inspectit.ci;
-
-import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.ExceptionSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.MethodSensorAssignment;
-import info.novatec.inspectit.ci.assignment.impl.TimerMethodSensorAssignment;
-import info.novatec.inspectit.ci.context.AbstractContextCapture;
-import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
-import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
-import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
-import info.novatec.inspectit.ci.exclude.ExcludeRule;
-import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
+package rocks.inspectit.shared.cs.ci;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +7,20 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+
+import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
+import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 
 /**
  * Only for testing purposes.

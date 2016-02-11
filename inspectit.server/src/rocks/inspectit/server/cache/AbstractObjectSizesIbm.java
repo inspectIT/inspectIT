@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.cache;
+package rocks.inspectit.server.cache;
 
 /**
  * This class has some changes in the calculations for the memory size of the objects when IBM JVM

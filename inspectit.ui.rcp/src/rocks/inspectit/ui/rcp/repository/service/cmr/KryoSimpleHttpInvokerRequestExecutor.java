@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.repository.service.cmr;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
+package rocks.inspectit.ui.rcp.repository.service.cmr;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +10,11 @@ import org.springframework.remoting.support.RemoteInvocationResult;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.ui.rcp.InspectIT;
 
 /**
  * This class extends the simple http one by using Kryo for (de-)serializing.

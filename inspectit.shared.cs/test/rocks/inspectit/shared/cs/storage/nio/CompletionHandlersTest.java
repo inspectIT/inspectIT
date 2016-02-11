@@ -1,12 +1,10 @@
-package info.novatec.inspectit.storage.nio;
+package rocks.inspectit.shared.cs.storage.nio;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.storage.nio.read.ReadingCompletionHandler;
-import info.novatec.inspectit.storage.nio.write.WritingCompletionHandler;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
@@ -18,6 +16,11 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.storage.nio.WriteReadAttachment;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
+import rocks.inspectit.shared.cs.storage.nio.read.ReadingCompletionHandler;
+import rocks.inspectit.shared.cs.storage.nio.write.WritingCompletionHandler;
 
 @SuppressWarnings("PMD")
 public class CompletionHandlersTest {

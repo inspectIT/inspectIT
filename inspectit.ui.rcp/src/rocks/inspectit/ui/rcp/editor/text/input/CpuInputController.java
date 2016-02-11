@@ -1,16 +1,16 @@
-package info.novatec.inspectit.rcp.editor.text.input;
-
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.communication.data.CpuInformationData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
+package rocks.inspectit.ui.rcp.editor.text.input;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.data.CpuInformationData;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * This class represents the textual view of the {@link CpuInformation} sensor-type.
@@ -58,6 +58,7 @@ public class CpuInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
 
@@ -70,6 +71,7 @@ public class CpuInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		addSection(parent, toolkit, SECTION_CPU);
 
@@ -88,6 +90,7 @@ public class CpuInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		final CpuInformationData data = (CpuInformationData) dataAccessService.getLastDataObject(cpuObj);
 
@@ -114,6 +117,7 @@ public class CpuInputController extends AbstractTextInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 

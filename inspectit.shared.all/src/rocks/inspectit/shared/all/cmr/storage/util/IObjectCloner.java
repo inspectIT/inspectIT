@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.storage.util;
+package rocks.inspectit.shared.all.cmr.storage.util;
 
 /**
  * Interface for the object cloning utility.

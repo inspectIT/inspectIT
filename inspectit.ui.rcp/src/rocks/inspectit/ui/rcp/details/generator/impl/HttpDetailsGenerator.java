@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.details.generator.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.rcp.details.DetailsCellContent;
-import info.novatec.inspectit.rcp.details.DetailsTable;
-import info.novatec.inspectit.rcp.details.generator.IDetailsGenerator;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.details.generator.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +10,14 @@ import java.util.Map;
 import org.apache.commons.collections.MapUtils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.ui.rcp.details.DetailsCellContent;
+import rocks.inspectit.ui.rcp.details.DetailsTable;
+import rocks.inspectit.ui.rcp.details.generator.IDetailsGenerator;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * HTTP details generator. Displays information like URI, request method, parameters, attributes,

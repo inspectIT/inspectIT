@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.storage.impl;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,13 +7,13 @@ import java.util.concurrent.RecursiveTask;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.QueryTask;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.QueryTask;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * This classes enables joining of many storage indexing trees, so that all of them can be queried.

@@ -1,10 +1,10 @@
-package info.novatec.inspectit.agent.config;
-
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPath;
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor.PropertyPathStart;
-import info.novatec.inspectit.communication.data.ParameterContentData;
+package rocks.inspectit.agent.java.config;
 
 import java.util.List;
+
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPath;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor.PropertyPathStart;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 
 /**
  * This interface defines methods to access the contents of the fields and method parameters of

@@ -1,10 +1,10 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.def;
+package rocks.inspectit.agent.java.sensor.platform.provider.def;
 
-import info.novatec.inspectit.agent.sensor.platform.provider.MemoryInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.OperatingSystemInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.PlatformSensorInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.RuntimeInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.ThreadInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.PlatformSensorInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
 
 /**
  * Default {@link PlatformSensorInfoProvider}.

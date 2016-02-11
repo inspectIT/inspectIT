@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.editor.root;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.composite.BreadcrumbTitleComposite;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
-import info.novatec.inspectit.rcp.editor.preferences.FormPreferencePanel;
-import info.novatec.inspectit.rcp.editor.preferences.IPreferencePanel;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.root;
 
 import java.util.Objects;
 
@@ -18,6 +8,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.composite.BreadcrumbTitleComposite;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
+import rocks.inspectit.ui.rcp.editor.preferences.FormPreferencePanel;
+import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * An implementation of a root editor which uses a form to create a nicer view.

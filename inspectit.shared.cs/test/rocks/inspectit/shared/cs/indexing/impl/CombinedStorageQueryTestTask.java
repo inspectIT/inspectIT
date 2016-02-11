@@ -1,12 +1,12 @@
-package info.novatec.inspectit.indexing.impl;
+package rocks.inspectit.shared.cs.indexing.impl;
 
 
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.impl.CombinedStorageBranch;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.impl.CombinedStorageBranch;
 
 /**
  * This class is a test class which returns the given resultList, to test the functionality of the

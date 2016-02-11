@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.impl.ExploredByLabelType;
-import info.novatec.inspectit.storage.serializer.SerializationException;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +23,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressConstants;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.impl.ExploredByLabelType;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Handler for deleting a Storage. Handler will inform the user about the users who have mounted the

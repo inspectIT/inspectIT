@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.spring.aop;
-
-import info.novatec.inspectit.cmr.util.Converter;
+package rocks.inspectit.server.spring.aop;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import rocks.inspectit.server.util.Converter;
 
 /**
  * The logging interceptor which will be active for each method being annotated with @
@@ -97,7 +96,7 @@ public class MethodLogInterceptor {
 	 * @throws Throwable
 	 *             If {@link Throwable} is result of method invocation.
 	 */
-	@Around("@annotation(info.novatec.inspectit.cmr.spring.aop.MethodLog) && @annotation(methodLog)")
+	@Around("@annotation(rocks.inspectit.server.spring.aop.MethodLog) && @annotation(methodLog)")
 	public Object doMethodLog(ProceedingJoinPoint joinPoint, MethodLog methodLog) throws Throwable {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Logger logger = (Logger) LoggerFactory.getLogger(joinPoint.getTarget().getClass());

@@ -1,16 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.ModifiersImageFactory;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
@@ -26,6 +14,18 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.ModifiersImageFactory;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler for showing only invocations sequences for a specific method ID.

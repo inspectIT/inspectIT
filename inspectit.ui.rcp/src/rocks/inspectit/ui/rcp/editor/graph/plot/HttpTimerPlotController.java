@@ -1,14 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot;
-
-import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.data.AggregatedHttpTimerData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.HttpChartingInputDefinitionExtra;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
-import info.novatec.inspectit.rcp.util.data.RegExAggregatedHttpTimerData;
+package rocks.inspectit.ui.rcp.editor.graph.plot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +11,16 @@ import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.swt.widgets.Display;
+
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.HttpChartingInputDefinitionExtra;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
+import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
 
 /**
  * {@link PlotController} for displaying many Http requests in the graph.

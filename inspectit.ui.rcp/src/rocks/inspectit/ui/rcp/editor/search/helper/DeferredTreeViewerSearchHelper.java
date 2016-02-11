@@ -1,11 +1,11 @@
-package info.novatec.inspectit.rcp.editor.search.helper;
-
-import info.novatec.inspectit.rcp.editor.tree.DeferredTreeViewer;
-import info.novatec.inspectit.rcp.editor.tree.input.TreeInputController;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.search.helper;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.TreeColumn;
+
+import rocks.inspectit.ui.rcp.editor.tree.DeferredTreeViewer;
+import rocks.inspectit.ui.rcp.editor.tree.input.TreeInputController;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Search helper for {@link DeferredTreeViewer}.
@@ -35,7 +35,7 @@ public class DeferredTreeViewerSearchHelper extends AbstractSearchHelper {
 	 *            {@link TreeInputController}.
 	 * @param repositoryDefinition
 	 *            {@link RepositoryDefinition}. Needed for
-	 *            {@link info.novatec.inspectit.rcp.editor.search.factory.SearchFactory}.
+	 *            {@link rocks.inspectit.ui.rcp.editor.search.factory.SearchFactory}.
 	 */
 	public DeferredTreeViewerSearchHelper(DeferredTreeViewer treeViewer, TreeInputController treeInputController, RepositoryDefinition repositoryDefinition) {
 		super(repositoryDefinition);

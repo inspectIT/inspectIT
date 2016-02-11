@@ -1,12 +1,12 @@
-package info.novatec.inspectit.storage.label;
-
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.shared.cs.storage.label;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
+
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Label that has a {@link Date} as a value.

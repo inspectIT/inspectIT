@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.classes;
+package rocks.inspectit.agent.java.analyzer.classes;
 
 public abstract class AbstractTest implements ISubTest {
 

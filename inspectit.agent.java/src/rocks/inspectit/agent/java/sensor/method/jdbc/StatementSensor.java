@@ -1,14 +1,14 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
-
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.hooking.IHook;
-import info.novatec.inspectit.agent.sensor.method.AbstractMethodSensor;
-import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
-import info.novatec.inspectit.util.Timer;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.util.Timer;
 
 /**
  * The SQL timer sensor which initializes and returns the {@link StatementHook} class.

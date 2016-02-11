@@ -1,22 +1,4 @@
-package info.novatec.inspectit.rcp.editor.graph.plot;
-
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.cache.CachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.JmxSensorValueDataAggregator;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.PlotDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl.PlotDataSolverFactory;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.graph.plot;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -40,6 +22,24 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.DeviationRenderer;
 import org.jfree.data.xy.YIntervalSeriesCollection;
 import org.jfree.ui.RectangleInsets;
+
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.JmxSensorValueDataAggregator;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.PlotDataSolverFactory;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * This input controller displays the JMX sensor data in a chart.

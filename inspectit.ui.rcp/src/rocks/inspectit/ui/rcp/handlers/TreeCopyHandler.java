@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.editor.tree.TreeSubView;
-import info.novatec.inspectit.rcp.util.ClipboardUtil;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +8,10 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.editor.tree.TreeSubView;
+import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * The handler to execute a copy command on our tree sub views.

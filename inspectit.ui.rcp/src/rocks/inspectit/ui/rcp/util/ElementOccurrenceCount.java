@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.util;
+package rocks.inspectit.ui.rcp.util;
 
 /**
  * Simple POJO for occurrence counting in the invocation sequence data.

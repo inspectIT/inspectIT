@@ -1,11 +1,11 @@
-package info.novatec.inspectit.agent.sensor.method.timer;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.valueobject.TimerRawVO;
+package rocks.inspectit.agent.java.sensor.method.timer;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO;
 
 /**
  * Class which stores the data as they arrive without further processing. This will increase memory

@@ -1,21 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.NavigationSteppingInputDefinitionExtra;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,6 +17,23 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.NavigationSteppingInputDefinitionExtra;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler for navigating from table view that contains {@link IInvocationAwareData}, to the

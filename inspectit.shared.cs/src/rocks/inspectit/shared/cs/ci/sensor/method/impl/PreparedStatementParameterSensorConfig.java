@@ -1,16 +1,16 @@
-package info.novatec.inspectit.ci.sensor.method.impl;
-
-import info.novatec.inspectit.ci.sensor.method.AbstractMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.MethodSensorPriorityEnum;
+package rocks.inspectit.shared.cs.ci.sensor.method.impl;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.sensor.method.AbstractMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.MethodSensorPriorityEnum;
+
 /**
  * JDBC prepared statement parameter config.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlRootElement(name = "prepared-statement-parameter-sensor-config")
 public class PreparedStatementParameterSensorConfig extends AbstractMethodSensorConfig implements IMethodSensorConfig {
@@ -23,7 +23,7 @@ public class PreparedStatementParameterSensorConfig extends AbstractMethodSensor
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "info.novatec.inspectit.agent.sensor.method.jdbc.PreparedStatementParameterSensor";
+	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterSensor";
 
 	/**
 	 * {@inheritDoc}

@@ -1,9 +1,9 @@
-package info.novatec.inspectit.indexing.storage;
+package rocks.inspectit.shared.cs.indexing.storage;
 
-import info.novatec.inspectit.indexing.ITreeComponent;
-import info.novatec.inspectit.indexing.buffer.impl.Branch;
-import info.novatec.inspectit.indexing.buffer.impl.Leaf;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.ITreeComponent;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Leaf;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * Indexer for the {@link IStorageTreeComponent}.

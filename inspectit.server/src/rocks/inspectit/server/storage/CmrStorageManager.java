@@ -1,30 +1,4 @@
-package info.novatec.inspectit.cmr.storage;
-
-import info.novatec.inspectit.cmr.cache.IBuffer;
-import info.novatec.inspectit.cmr.dao.StorageDataDao;
-import info.novatec.inspectit.cmr.dao.impl.DefaultDataDaoImpl;
-import info.novatec.inspectit.cmr.service.IServerStatusService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.cmr.WritingStatus;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
-import info.novatec.inspectit.spring.logger.Log;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageData.StorageState;
-import info.novatec.inspectit.storage.StorageFileType;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.StorageWriter;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.processor.impl.TimeFrameDataProcessor;
-import info.novatec.inspectit.storage.recording.RecordingProperties;
-import info.novatec.inspectit.storage.recording.RecordingState;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.util.CopyMoveFileVisitor;
-import info.novatec.inspectit.storage.util.DeleteFileVisitor;
-import info.novatec.inspectit.version.VersionService;
+package rocks.inspectit.server.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +35,32 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.esotericsoftware.kryo.io.Input;
+
+import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.dao.StorageDataDao;
+import rocks.inspectit.server.dao.impl.DefaultDataDaoImpl;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.version.VersionService;
+import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
+import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageFileType;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.StorageWriter;
+import rocks.inspectit.shared.cs.storage.StorageData.StorageState;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.TimeFrameDataProcessor;
+import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
+import rocks.inspectit.shared.cs.storage.util.CopyMoveFileVisitor;
+import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
 
 /**
  * Storage manager for the CMR. Manages creation, opening and closing of storages, as well as

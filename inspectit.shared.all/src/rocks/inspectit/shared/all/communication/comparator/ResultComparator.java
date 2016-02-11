@@ -1,9 +1,9 @@
-package info.novatec.inspectit.communication.comparator;
-
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.shared.all.communication.comparator;
 
 import java.util.Comparator;
+
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Result comparator implements the {@link Comparator} interface and serves to keep track on sorting

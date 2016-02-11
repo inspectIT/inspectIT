@@ -1,6 +1,6 @@
-package info.novatec.inspectit.ci.assignment;
+package rocks.inspectit.shared.cs.ci.assignment;
 
-import info.novatec.inspectit.ci.sensor.ISensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 
 /**
  * Base interface for all sensor assignments.

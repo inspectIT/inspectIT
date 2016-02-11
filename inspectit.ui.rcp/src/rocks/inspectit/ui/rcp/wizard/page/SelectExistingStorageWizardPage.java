@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.wizard.page;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.recording.RecordingState;
+package rocks.inspectit.ui.rcp.wizard.page;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +20,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
+
 /**
  * Selection of existing storage.
  * 
@@ -43,7 +43,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 	/**
 	 * List of available repositories.
 	 */
-	private List<CmrRepositoryDefinition> cmrRepositories;
+	private final List<CmrRepositoryDefinition> cmrRepositories;
 
 	/**
 	 * {@link CmrRepositoryDefinition} that should be initially selected.
@@ -115,6 +115,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(2, false));

@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.input;
-
-import info.novatec.inspectit.ci.AgentMappings;
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+package rocks.inspectit.ui.rcp.ci.form.input;
 
 import java.util.Collection;
 
@@ -12,6 +6,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+
+import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Input for the agent mapping editor.

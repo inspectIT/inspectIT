@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.dialog.DetailsDialog;
-import info.novatec.inspectit.rcp.provider.IInputDefinitionProvider;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
@@ -16,6 +10,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.dialog.DetailsDialog;
+import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler for displaying new details window.

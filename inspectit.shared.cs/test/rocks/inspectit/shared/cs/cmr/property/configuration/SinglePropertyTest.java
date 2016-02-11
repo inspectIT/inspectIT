@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.property.configuration;
+package rocks.inspectit.shared.cs.cmr.property.configuration;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -9,10 +9,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.cmr.property.configuration.validation.PropertyValidation;
-import info.novatec.inspectit.cmr.property.configuration.validation.ValidationError;
-import info.novatec.inspectit.cmr.property.configuration.validator.ISinglePropertyValidator;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -25,6 +21,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePropertyValidator;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
 
 @SuppressWarnings("PMD")
 public class SinglePropertyTest {

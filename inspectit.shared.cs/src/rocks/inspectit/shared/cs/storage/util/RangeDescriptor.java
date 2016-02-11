@@ -1,6 +1,6 @@
-package info.novatec.inspectit.storage.util;
+package rocks.inspectit.shared.cs.storage.util;
 
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
 
 /**
  * Small class to keep track of ranges that need to be downloaded by HTTP requests.

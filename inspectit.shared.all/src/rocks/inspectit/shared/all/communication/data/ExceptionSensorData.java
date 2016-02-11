@@ -1,9 +1,9 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.ExceptionEvent;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.sql.Timestamp;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.ExceptionEvent;
 
 /**
  * The exception sensor data object used to store all information collected on an instrumented

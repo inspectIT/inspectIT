@@ -1,31 +1,4 @@
-package info.novatec.inspectit.rcp.storage;
-
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.exception.enumeration.StorageErrorCodeEnum;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.ArrayBasedStorageLeaf;
-import info.novatec.inspectit.indexing.storage.impl.CombinedStorageBranch;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinitionProvider;
-import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
-import info.novatec.inspectit.rcp.storage.util.DataRetriever;
-import info.novatec.inspectit.rcp.storage.util.DataUploader;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.StorageFileType;
-import info.novatec.inspectit.storage.StorageManager;
-import info.novatec.inspectit.storage.label.StringStorageLabel;
-import info.novatec.inspectit.storage.label.type.impl.ExploredByLabelType;
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +26,33 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.swt.widgets.Display;
 
 import com.esotericsoftware.kryo.io.Input;
+
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf;
+import rocks.inspectit.shared.cs.indexing.storage.impl.CombinedStorageBranch;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.shared.cs.storage.StorageFileType;
+import rocks.inspectit.shared.cs.storage.StorageManager;
+import rocks.inspectit.shared.cs.storage.label.StringStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.impl.ExploredByLabelType;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinitionProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
+import rocks.inspectit.ui.rcp.storage.util.DataRetriever;
+import rocks.inspectit.ui.rcp.storage.util.DataUploader;
 
 /**
  * {@link StorageManager} for GUI.

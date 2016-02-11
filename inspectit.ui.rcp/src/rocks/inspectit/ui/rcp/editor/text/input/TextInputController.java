@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.editor.text.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
+package rocks.inspectit.ui.rcp.editor.text.input;
 
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
  * The controller for all text inputs.
@@ -51,7 +51,7 @@ public interface TextInputController {
 
 	/**
 	 * This method is called when the input of the
-	 * {@link info.novatec.inspectit.rcp.editor.text.TextSubView} has been changed.
+	 * {@link rocks.inspectit.ui.rcp.editor.text.TextSubView} has been changed.
 	 * 
 	 * @param data
 	 *            New input.

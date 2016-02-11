@@ -1,4 +1,7 @@
-package info.novatec.inspectit.cmr.service;
+package rocks.inspectit.shared.cs.cmr.service;
+
+import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 
 /**
  * This interface is used to retrieve the status of the CMR.

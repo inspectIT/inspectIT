@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.nio;
+package rocks.inspectit.shared.cs.storage.nio;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;

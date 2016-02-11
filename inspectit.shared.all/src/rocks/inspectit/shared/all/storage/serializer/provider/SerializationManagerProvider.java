@@ -1,8 +1,8 @@
-package info.novatec.inspectit.storage.serializer.provider;
+package rocks.inspectit.shared.all.storage.serializer.provider;
 
-import info.novatec.inspectit.storage.serializer.ISerializer;
-import info.novatec.inspectit.storage.serializer.ISerializerProvider;
-import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.storage.serializer.ISerializer;
+import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
+import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 
 /**
  * This is a typical provider of the new instances enhanced by Spring. Returns the

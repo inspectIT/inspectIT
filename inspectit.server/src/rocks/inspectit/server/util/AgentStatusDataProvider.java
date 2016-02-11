@@ -1,9 +1,4 @@
-package info.novatec.inspectit.cmr.util;
-
-import info.novatec.inspectit.cmr.service.IKeepAliveService;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData;
-import info.novatec.inspectit.communication.data.cmr.AgentStatusData.AgentConnection;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +14,11 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Bean that saves the time when the last time platform ident received the data.

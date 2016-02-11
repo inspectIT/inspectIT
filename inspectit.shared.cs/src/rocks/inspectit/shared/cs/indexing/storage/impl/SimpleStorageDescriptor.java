@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.storage.impl;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 

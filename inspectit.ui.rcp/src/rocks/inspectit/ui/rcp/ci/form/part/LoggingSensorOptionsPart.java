@@ -1,13 +1,4 @@
-package info.novatec.inspectit.rcp.ci.form.part;
-
-import info.novatec.inspectit.ci.Environment;
-import info.novatec.inspectit.ci.sensor.StringConstraintSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.ILoggingSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.ci.form.input.EnvironmentEditorInput;
-import info.novatec.inspectit.rcp.formatter.ImageFormatter;
+package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +20,15 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
+import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.sensor.StringConstraintSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.ILoggingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 
 /**
  * Part for displaying logging sensor options.

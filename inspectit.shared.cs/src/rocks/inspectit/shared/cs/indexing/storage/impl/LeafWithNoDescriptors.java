@@ -1,14 +1,4 @@
-package info.novatec.inspectit.indexing.storage.impl;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.LeafTask;
-import info.novatec.inspectit.indexing.impl.IndexingException;
-import info.novatec.inspectit.indexing.storage.AbstractStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageDescriptor;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.storage.util.StorageUtil;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +6,16 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.LeafTask;
+import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
+import rocks.inspectit.shared.cs.indexing.storage.AbstractStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.storage.util.StorageUtil;
 
 /**
  * This leaf for the storage is not keeping the {@link SimpleStorageDescriptor} for each element.

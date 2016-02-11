@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.aggregation.impl.AggregationPerformer;
-import info.novatec.inspectit.indexing.aggregation.impl.TimerDataAggregator;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+package rocks.inspectit.ui.rcp.editor.table.input;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +13,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * This input controller displays an aggregated summary of the timer data objects in a table.
@@ -72,7 +72,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 		 *            The width of the column.
 		 * @param imageName
 		 *            The name of the image. Names are defined in
-		 *            {@link info.novatec.inspectit.rcp.InspectITImages}.
+		 *            {@link rocks.inspectit.ui.rcp.InspectITImages}.
 		 */
 		private Column(String name, int width, String imageName) {
 			this.name = name;

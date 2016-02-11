@@ -1,8 +1,4 @@
-package info.novatec.inspectit.ci.context;
-
-import info.novatec.inspectit.ci.context.impl.FieldContextCapture;
-import info.novatec.inspectit.ci.context.impl.ParameterContextCapture;
-import info.novatec.inspectit.ci.context.impl.ReturnContextCapture;
+package rocks.inspectit.shared.cs.ci.context;
 
 import java.util.List;
 
@@ -12,6 +8,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
+import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 
 /**
  * Abstract class for all context captures possibilities - parameter, return or field.

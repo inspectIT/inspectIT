@@ -1,14 +1,14 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.aggregation.Aggregators;
-import info.novatec.inspectit.indexing.query.factory.impl.TimerDataQueryFactory;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
+import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.TimerDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link ITimerDataAccessService} for storage purposes.

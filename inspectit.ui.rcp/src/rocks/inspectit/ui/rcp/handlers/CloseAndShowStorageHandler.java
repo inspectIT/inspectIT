@@ -1,16 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
-import info.novatec.inspectit.rcp.view.impl.DataExplorerView;
-import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.storage.serializer.SerializationException;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.io.IOException;
 
@@ -31,6 +19,18 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
+import rocks.inspectit.ui.rcp.view.impl.DataExplorerView;
+import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
+
 /**
  * This handler starts the storage finalization job, and when it is done opens the finalized storage
  * in the {@link DataExplorerView}.
@@ -43,12 +43,12 @@ public class CloseAndShowStorageHandler extends CloseStorageHandler implements I
 	/**
 	 * Command id.
 	 */
-	public static final String COMMAND = "info.novatec.inspectit.rcp.commands.closeAndShowStorage";
+	public static final String COMMAND = "rocks.inspectit.ui.rcp.commands.closeAndShowStorage";
 
 	/**
 	 * Parameter id.
 	 */
-	public static final String STORAGE_DATA_PROVIDER = "info.novatec.inspectit.rcp.commands.closeAndShowStorage.param";
+	public static final String STORAGE_DATA_PROVIDER = "rocks.inspectit.ui.rcp.commands.closeAndShowStorage.param";
 
 	/**
 	 * {@inheritDoc}

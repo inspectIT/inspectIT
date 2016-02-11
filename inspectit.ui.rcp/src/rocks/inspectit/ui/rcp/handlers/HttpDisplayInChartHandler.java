@@ -1,17 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.HttpChartingInputDefinitionExtra;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.editor.table.input.TaggedHttpTimerDataInputController;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.rcp.util.data.RegExAggregatedHttpTimerData;
+package rocks.inspectit.ui.rcp.handlers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,6 +20,19 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
+
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.HttpChartingInputDefinitionExtra;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.editor.table.input.TaggedHttpTimerDataInputController;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
 
 /**
  * Handler for displaying the {@link HttpTimerData} in charts.

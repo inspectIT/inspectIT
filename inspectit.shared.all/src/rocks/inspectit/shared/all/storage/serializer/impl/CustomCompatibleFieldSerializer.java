@@ -1,9 +1,7 @@
-package info.novatec.inspectit.storage.serializer.impl;
+package rocks.inspectit.shared.all.storage.serializer.impl;
 
 import static com.esotericsoftware.minlog.Log.TRACE;
 import static com.esotericsoftware.minlog.Log.trace;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchema;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
 
 import java.lang.reflect.Field;
 
@@ -15,6 +13,9 @@ import com.esotericsoftware.kryo.io.OutputChunked;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryo.util.ObjectMap;
+
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchema;
+import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
 
 /**
  * This is the custom compatible {@link FieldSerializer} that uses our {@link ClassSchemaManager} to

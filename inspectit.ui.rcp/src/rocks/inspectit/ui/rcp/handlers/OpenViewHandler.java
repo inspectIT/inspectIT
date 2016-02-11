@@ -1,8 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.root.FormRootEditor;
-import info.novatec.inspectit.rcp.editor.root.RootEditorInput;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -12,6 +8,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.root.FormRootEditor;
+import rocks.inspectit.ui.rcp.editor.root.RootEditorInput;
 
 /**
  * The open view handler which takes care of opening a view by retrieving the
@@ -25,7 +25,7 @@ public class OpenViewHandler extends AbstractHandler {
 	/**
 	 * The corresponding command id.
 	 */
-	public static final String COMMAND = "info.novatec.inspectit.rcp.commands.openView";
+	public static final String COMMAND = "rocks.inspectit.ui.rcp.commands.openView";
 
 	/**
 	 * The input definition id to look up.

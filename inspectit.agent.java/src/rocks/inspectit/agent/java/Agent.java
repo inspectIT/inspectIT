@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent;
+package rocks.inspectit.agent.java;
 
 /**
  * Another agent which is there for the sole purpose of classloading issues. The JavaAgent class can

@@ -1,33 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree.input;
-
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.comparator.IDataComparator;
-import info.novatec.inspectit.communication.comparator.InvocationAwareDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.communication.comparator.SqlStatementDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.TimerDataComparatorEnum;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
-import info.novatec.inspectit.rcp.editor.inputdefinition.extra.SqlStatementInputDefinitionExtra;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId.LiveMode;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
-import info.novatec.inspectit.rcp.editor.text.input.SqlStatementTextInputController.SqlHolderHelper;
-import info.novatec.inspectit.rcp.editor.tree.TreeViewerComparator;
-import info.novatec.inspectit.rcp.editor.tree.util.DatabaseSqlTreeComparator;
-import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.formatter.TextFormatter;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.util.data.DatabaseInfoHelper;
+package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -59,6 +30,35 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.all.communication.comparator.SqlStatementDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.SqlStatementInputDefinitionExtra;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
+import rocks.inspectit.ui.rcp.editor.text.input.SqlStatementTextInputController.SqlHolderHelper;
+import rocks.inspectit.ui.rcp.editor.tree.TreeViewerComparator;
+import rocks.inspectit.ui.rcp.editor.tree.util.DatabaseSqlTreeComparator;
+import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.util.data.DatabaseInfoHelper;
 
 /**
  * This input controller displays the contents of {@link SqlStatementData} objects.

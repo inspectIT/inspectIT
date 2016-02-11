@@ -1,13 +1,10 @@
-package info.novatec.inspectit.agent.sensor.platform;
+package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.sensor.platform.provider.OperatingSystemInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.sun.SunOperatingSystemInfoProvider;
 
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
@@ -17,6 +14,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.sun.management.OperatingSystemMXBean;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.sun.SunOperatingSystemInfoProvider;
 
 @SuppressWarnings("PMD")
 public class CpuUsageCalculatorTest extends AbstractLogSupport {

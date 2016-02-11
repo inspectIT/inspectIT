@@ -1,10 +1,10 @@
-package info.novatec.inspectit.rcp.editor.graph.plot.datasolver;
+package rocks.inspectit.ui.rcp.editor.graph.plot.datasolver;
 
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl.BooleanDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl.ClampedPercentageDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl.DefaultDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl.MemoryDataSolver;
-import info.novatec.inspectit.rcp.editor.graph.plot.datasolver.impl.PercentageDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.BooleanDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.ClampedPercentageDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.DefaultDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.MemoryDataSolver;
+import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.PercentageDataSolver;
 
 /**
  * Enumeration of the implemented {@link AbstractPlotDataSolver}.

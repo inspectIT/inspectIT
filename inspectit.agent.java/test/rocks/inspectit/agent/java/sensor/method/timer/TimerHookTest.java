@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.timer;
+package rocks.inspectit.agent.java.sensor.method.timer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -17,18 +17,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.IPropertyAccessor;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IObjectStorage;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.communication.valueobject.TimerRawVO;
-import info.novatec.inspectit.communication.valueobject.TimerRawVO.TimerRawContainer;
-import info.novatec.inspectit.util.ObjectUtils;
-import info.novatec.inspectit.util.Timer;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
@@ -41,6 +29,24 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.IPropertyAccessor;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IObjectStorage;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.sensor.method.timer.AggregateTimerStorage;
+import rocks.inspectit.agent.java.sensor.method.timer.ITimerStorage;
+import rocks.inspectit.agent.java.sensor.method.timer.OptimizedTimerStorage;
+import rocks.inspectit.agent.java.sensor.method.timer.PlainTimerStorage;
+import rocks.inspectit.agent.java.sensor.method.timer.TimerHook;
+import rocks.inspectit.agent.java.util.Timer;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO;
+import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO.TimerRawContainer;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 @SuppressWarnings("PMD")
 public class TimerHookTest extends AbstractLogSupport {

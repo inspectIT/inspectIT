@@ -1,4 +1,4 @@
-package info.novatec.inspectit.version;
+package rocks.inspectit.shared.all.version;
 
 /**
  * Holds information about an released version. Beside {@link #version} information, this class

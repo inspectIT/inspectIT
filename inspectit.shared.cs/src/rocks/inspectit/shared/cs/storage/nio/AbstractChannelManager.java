@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.nio;
+package rocks.inspectit.shared.cs.storage.nio;
 
 import java.io.IOException;
 import java.nio.file.Path;

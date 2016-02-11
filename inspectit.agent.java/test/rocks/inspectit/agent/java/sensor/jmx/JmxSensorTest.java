@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.jmx;
+package rocks.inspectit.agent.java.sensor.jmx;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -9,15 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-
-import info.novatec.inspectit.agent.TestBase;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.UnregisteredJmxConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +32,15 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.JmxSensorConfig;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.UnregisteredJmxConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings({ "unchecked", "PMD" })
 public class JmxSensorTest extends TestBase {

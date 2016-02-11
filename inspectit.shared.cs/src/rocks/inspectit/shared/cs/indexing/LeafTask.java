@@ -1,7 +1,9 @@
-package info.novatec.inspectit.indexing;
+package rocks.inspectit.shared.cs.indexing;
 
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
+
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
 /**
  * Returns the objects of the commited leaf.
  * @author Tobias Angerstein

@@ -1,8 +1,8 @@
-package info.novatec.inspectit.rcp.storage.listener;
-
-import info.novatec.inspectit.storage.IStorageData;
+package rocks.inspectit.ui.rcp.storage.listener;
 
 import java.util.EventListener;
+
+import rocks.inspectit.shared.cs.storage.IStorageData;
 
 /**
  * Storage change listener.

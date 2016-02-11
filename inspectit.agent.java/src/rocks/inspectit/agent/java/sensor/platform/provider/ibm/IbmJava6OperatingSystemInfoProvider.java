@@ -1,7 +1,4 @@
-package info.novatec.inspectit.agent.sensor.platform.provider.ibm;
-
-import info.novatec.inspectit.agent.sensor.platform.provider.def.DefaultOperatingSystemInfoProvider;
-import info.novatec.inspectit.agent.sensor.platform.provider.util.CpuUsageCalculator;
+package rocks.inspectit.agent.java.sensor.platform.provider.ibm;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -9,6 +6,9 @@ import java.lang.reflect.Method;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultOperatingSystemInfoProvider;
+import rocks.inspectit.agent.java.sensor.platform.provider.util.CpuUsageCalculator;
 
 /**
  * This class provide the information about the operating system when the

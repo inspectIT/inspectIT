@@ -1,13 +1,13 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.PlatformSensorTypeIdentDao;
-import info.novatec.inspectit.cmr.model.PlatformSensorTypeIdent;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.List;
 
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+
+import rocks.inspectit.server.dao.PlatformSensorTypeIdentDao;
+import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
 
 /**
  * The default implementation of the {@link PlatformSensorTypeIdentDao} interface by using the

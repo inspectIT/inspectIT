@@ -1,18 +1,18 @@
-package info.novatec.inspectit.agent.sensor.method.logging;
-
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.hooking.IHook;
-import info.novatec.inspectit.agent.sensor.method.AbstractMethodSensor;
-import info.novatec.inspectit.agent.sensor.method.IMethodSensor;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelper;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory.Framework;
+package rocks.inspectit.agent.java.sensor.method.logging;
 
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
+import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelper;
+import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory;
+import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory.Framework;
 
 /**
  * Logging sensor to capture log4j loggings.

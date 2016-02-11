@@ -1,17 +1,17 @@
-package info.novatec.inspectit.rcp.repository.service.storage;
-
-import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
-import info.novatec.inspectit.communication.comparator.DefaultDataComparatorEnum;
-import info.novatec.inspectit.communication.comparator.ResultComparator;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.indexing.storage.impl.StorageIndexQuery;
+package rocks.inspectit.ui.rcp.repository.service.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link IInvocationDataAccessService} for storage purposes.

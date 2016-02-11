@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.indexing.storage.impl.ArrayBasedStorageLeaf
+class: rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf
 # Array Based Storage Leaf
 1: id
 2: capacity

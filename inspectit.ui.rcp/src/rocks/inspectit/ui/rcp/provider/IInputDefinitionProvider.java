@@ -1,6 +1,6 @@
-package info.novatec.inspectit.rcp.provider;
+package rocks.inspectit.ui.rcp.provider;
 
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
  * Marker for all classes that can provide an {@link InputDefinition}.

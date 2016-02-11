@@ -1,12 +1,14 @@
-package info.novatec.inspectit.util;
+package rocks.inspectit.agent.java.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import info.novatec.inspectit.agent.AbstractLogSupport;
 
 import org.mockito.InjectMocks;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.util.ReflectionCache;
 
 /**
  * Tests for the {@link ReflectionCache} class.

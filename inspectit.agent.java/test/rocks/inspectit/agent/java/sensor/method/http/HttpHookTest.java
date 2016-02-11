@@ -1,18 +1,9 @@
-package info.novatec.inspectit.agent.sensor.method.http;
+package rocks.inspectit.agent.java.sensor.method.http;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.util.Timer;
 
 import java.lang.management.ThreadMXBean;
 import java.util.Collections;
@@ -32,6 +23,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IIdManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.java.sensor.method.http.HttpHook;
+import rocks.inspectit.agent.java.util.Timer;
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 
 @SuppressWarnings("PMD")
 public class HttpHookTest extends AbstractLogSupport {

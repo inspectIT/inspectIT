@@ -1,11 +1,11 @@
-package info.novatec.inspectit.agent.core;
-
-import info.novatec.inspectit.communication.MethodSensorData;
-import info.novatec.inspectit.communication.SystemSensorData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.JmxSensorValueData;
+package rocks.inspectit.agent.java.core;
 
 import java.util.concurrent.ScheduledExecutorService;
+
+import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
  * Interface definition for the core service. The core service is the central point of the Agent

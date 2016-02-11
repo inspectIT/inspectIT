@@ -1,8 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.util.PlatformIdentCache;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +16,10 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import rocks.inspectit.server.dao.PlatformIdentDao;
+import rocks.inspectit.server.util.PlatformIdentCache;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * The default implementation of the {@link PlatformIdentDao} interface by using the Entity manager.

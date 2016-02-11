@@ -1,7 +1,4 @@
-package info.novatec.inspectit.communication.data;
-
-import info.novatec.inspectit.cmr.cache.IObjectSizes;
-import info.novatec.inspectit.communication.Sizeable;
+package rocks.inspectit.shared.all.communication.data;
 
 import java.io.Serializable;
 
@@ -12,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+
+import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
+import rocks.inspectit.shared.all.communication.Sizeable;
 
 /**
  * Entity for holding HTTP info information.

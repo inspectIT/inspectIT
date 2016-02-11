@@ -1,10 +1,7 @@
-package info.novatec.inspectit.kryonet;
+package rocks.inspectit.shared.all.kryonet;
 
 import static com.esotericsoftware.minlog.Log.DEBUG;
 import static com.esotericsoftware.minlog.Log.debug;
-import info.novatec.inspectit.storage.nio.stream.ExtendedByteBufferOutputStream;
-import info.novatec.inspectit.storage.nio.stream.SocketExtendedByteBufferInputStream;
-import info.novatec.inspectit.storage.nio.stream.StreamProvider;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -20,6 +17,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.esotericsoftware.kryonet.KryoNetException;
+
+import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
+import rocks.inspectit.shared.all.storage.nio.stream.SocketExtendedByteBufferInputStream;
+import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
 
 /**
  * <b>IMPORTANT:</b> The class code is copied/taken/based from <a

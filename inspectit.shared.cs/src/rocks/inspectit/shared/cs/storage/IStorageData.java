@@ -1,8 +1,8 @@
-package info.novatec.inspectit.storage;
-
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
+package rocks.inspectit.shared.cs.storage;
 
 import java.util.List;
+
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
 
 /**
  * This interface serves as the connection between {@link StorageData} and {@link LocalStorageData},

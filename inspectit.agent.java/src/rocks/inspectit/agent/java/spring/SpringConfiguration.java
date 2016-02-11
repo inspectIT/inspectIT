@@ -1,10 +1,4 @@
-package info.novatec.inspectit.agent.spring;
-
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.StrategyConfig;
+package rocks.inspectit.agent.java.spring;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,14 +20,20 @@ import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.StrategyConfig;
+
 /**
  * Post process configuration storage to define buffer and sending strategy beans.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Configuration
-@ComponentScan("info.novatec.inspectit")
+@ComponentScan("rocks.inspectit")
 public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor {
 
 	/**
@@ -62,7 +62,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 
 	/**
 	 * Returns {@link PropertyPlaceholderConfigurer} for the Agent.
-	 * 
+	 *
 	 * @return Returns {@link PropertyPlaceholderConfigurer} for the Agent.
 	 */
 	@Bean
@@ -83,7 +83,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newFixedThreadPool(1, threadFactory);
 	}
-	
+
 	/**
 	 * @return Returns coreServiceExecutorService
 	 */
@@ -96,7 +96,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 
 	/**
 	 * Registers components needed by the configuration to the Spring container.
-	 * 
+	 *
 	 * @param configurationStorage
 	 *            {@link IConfigurationStorage} with the settings.
 	 * @throws Exception
@@ -121,7 +121,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 			beanName = "platformSensorType[" + className + "]";
 			registerBeanDefinitionAndInitialize(beanName, className);
 		}
-		
+
 		// jmx sensor types
 		for (JmxSensorTypeConfig jmxSensorTypeConfig : configurationStorage.getJmxSensorTypes()) {
 			className = jmxSensorTypeConfig.getClassName();
@@ -145,7 +145,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 * <i>This is the only way to initialize the bean definitions that no other component has
 	 * dependency to, since we add the definitions in the moment when the lookup has been finished
 	 * and bean creation has started.</i>
-	 * 
+	 *
 	 * @param beanName
 	 *            Name of the bean to register.
 	 * @param className

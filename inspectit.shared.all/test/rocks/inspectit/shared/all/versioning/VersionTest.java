@@ -1,13 +1,13 @@
-package info.novatec.inspectit.versioning;
+package rocks.inspectit.shared.all.versioning;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import info.novatec.inspectit.testbase.TestBase;
-import info.novatec.inspectit.version.InvalidVersionException;
-import info.novatec.inspectit.version.Version;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
+import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.version.InvalidVersionException;
+import rocks.inspectit.shared.all.version.Version;
 
 public class VersionTest extends TestBase {
 

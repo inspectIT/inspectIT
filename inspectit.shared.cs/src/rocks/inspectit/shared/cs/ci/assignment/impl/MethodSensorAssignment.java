@@ -1,7 +1,4 @@
-package info.novatec.inspectit.ci.assignment.impl;
-
-import info.novatec.inspectit.ci.assignment.AbstractClassSensorAssignment;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
+package rocks.inspectit.shared.cs.ci.assignment.impl;
 
 import java.util.List;
 
@@ -10,6 +7,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 
 /**
  * Class for method sensor assignment.

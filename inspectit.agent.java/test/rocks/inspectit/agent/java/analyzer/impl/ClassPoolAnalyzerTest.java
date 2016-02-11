@@ -1,18 +1,19 @@
-package info.novatec.inspectit.agent.analyzer.impl;
+package rocks.inspectit.agent.java.analyzer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.analyzer.classes.TestClass;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 import javassist.ClassPool;
 import javassist.CtMethod;
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.analyzer.classes.TestClass;
+import rocks.inspectit.agent.java.analyzer.impl.ClassPoolAnalyzer;
 
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;

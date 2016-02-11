@@ -1,10 +1,4 @@
-package info.novatec.inspectit.rcp.editor.table.input;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
-import info.novatec.inspectit.rcp.editor.preferences.PreferenceId;
-import info.novatec.inspectit.rcp.editor.root.IRootEditor;
+package rocks.inspectit.ui.rcp.editor.table.input;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,6 +12,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 
 /**
  * The abstract class of the {@link TableInputController} interface to provide some standard

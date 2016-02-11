@@ -1,14 +1,14 @@
-package info.novatec.inspectit.indexing.storage.impl;
-
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.indexer.IBranchIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageBranchIndexer;
-import info.novatec.inspectit.indexing.storage.IStorageTreeComponent;
-import info.novatec.inspectit.storage.util.StorageUtil;
+package rocks.inspectit.shared.cs.indexing.storage.impl;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageBranchIndexer;
+import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
+import rocks.inspectit.shared.cs.storage.util.StorageUtil;
 
 /**
  * Implementation of the indexer for the {@link IStorageTreeComponent}. This indexer delegate the

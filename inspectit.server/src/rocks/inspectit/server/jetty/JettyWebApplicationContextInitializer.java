@@ -1,6 +1,4 @@
-package info.novatec.inspectit.cmr.jetty;
-
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.server.jetty;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -10,6 +8,8 @@ import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.support.GenericWebApplicationContext;
+
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class binds an empty Spring {@link GenericWebApplicationContext} to the

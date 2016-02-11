@@ -1,4 +1,4 @@
-package info.novatec.inspectit.indexing.util;
+package rocks.inspectit.shared.cs.indexing.util;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;

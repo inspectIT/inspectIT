@@ -1,11 +1,11 @@
-package info.novatec.inspectit.agent.sending;
-
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.impl.StrategyConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
+package rocks.inspectit.agent.java.sending;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.impl.StrategyConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
 
 /**
  * Every send strategy has to extend this abstract class. The first method that is called after

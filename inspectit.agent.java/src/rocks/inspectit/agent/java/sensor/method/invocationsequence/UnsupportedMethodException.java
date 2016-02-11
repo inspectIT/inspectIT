@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.sensor.method.invocationsequence;
+package rocks.inspectit.agent.java.sensor.method.invocationsequence;
 
-import info.novatec.inspectit.agent.core.ICoreService;
+import rocks.inspectit.agent.java.core.ICoreService;
 
 /**
  * Exception used in the {@link InvocationSequenceHook} to mark the methods from the

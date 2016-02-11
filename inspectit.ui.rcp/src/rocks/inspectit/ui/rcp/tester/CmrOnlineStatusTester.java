@@ -1,15 +1,15 @@
-package info.novatec.inspectit.rcp.tester;
-
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
-import info.novatec.inspectit.rcp.provider.IInputDefinitionProvider;
-import info.novatec.inspectit.rcp.provider.IStorageDataProvider;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
-import info.novatec.inspectit.storage.recording.RecordingState;
+package rocks.inspectit.ui.rcp.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
+
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
+import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Tester for CMR Online Status.

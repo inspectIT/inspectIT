@@ -1,4 +1,4 @@
-package info.novatec.inspectit.exception;
+package rocks.inspectit.shared.all.exception;
 
 /**
  * Remote exception that transforms any checked or un-checked exception occurring in the services.

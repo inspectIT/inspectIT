@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.sensor.method.jdbc;
+package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -7,14 +7,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaData;
-import info.novatec.inspectit.agent.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaDataExtractor;
-import info.novatec.inspectit.communication.data.SqlStatementData;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaData;
+import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaDataExtractor;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 public class ConnectionMetaDataStorageTest {
 

@@ -1,4 +1,4 @@
-package info.novatec.inspectit.storage.processor.impl;
+package rocks.inspectit.shared.cs.storage.processor.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -13,17 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.communication.IAggregatedData;
-import info.novatec.inspectit.communication.data.AggregatedTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.indexing.aggregation.IAggregator;
-import info.novatec.inspectit.indexing.aggregation.impl.TimerDataAggregator;
-import info.novatec.inspectit.storage.IWriter;
-import info.novatec.inspectit.storage.processor.AbstractDataProcessor;
-import info.novatec.inspectit.storage.serializer.util.KryoSerializationPreferences;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -43,6 +32,24 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.IAggregatedData;
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
+import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
+import rocks.inspectit.shared.cs.storage.IWriter;
+import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.AgentFilterDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.DataAggregatorProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.DataSaverProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.InvocationClonerDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.InvocationExtractorDataProcessor;
+import rocks.inspectit.shared.cs.storage.processor.impl.TimeFrameDataProcessor;
 
 /**
  * Tests all {@link AbstractDataProcessor}s for the correct functionality.

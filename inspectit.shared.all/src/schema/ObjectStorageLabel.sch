@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.storage.label.ObjectStorageLabel
+class: rocks.inspectit.shared.cs.storage.label.ObjectStorageLabel
 
 1: id
 2: storageLabelType

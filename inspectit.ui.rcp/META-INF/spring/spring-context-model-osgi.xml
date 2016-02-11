@@ -8,14 +8,14 @@
 
 	<!-- holds definitions for exposed osgi services add a bean here if you want to have it available via InspectIT.getService() -->
 
-	<osgi:service id="storageManagerService" ref="storageManager" interface="info.novatec.inspectit.rcp.storage.InspectITStorageManager" />
-	<osgi:service id="cmrServiceProviderService" ref="cmrServiceProvider" interface="info.novatec.inspectit.rcp.repository.service.cmr.CmrServiceProvider" />
-	<osgi:service id="detailsGenerationFactoryService" ref="detailsGenerationFactory" interface="info.novatec.inspectit.rcp.details.DetailsGenerationFactory" />
+	<osgi:service id="storageManagerService" ref="storageManager" interface="rocks.inspectit.ui.rcp.storage.InspectITStorageManager" />
+	<osgi:service id="cmrServiceProviderService" ref="cmrServiceProvider" interface="rocks.inspectit.ui.rcp.repository.service.cmr.CmrServiceProvider" />
+	<osgi:service id="detailsGenerationFactoryService" ref="detailsGenerationFactory" interface="rocks.inspectit.ui.rcp.details.DetailsGenerationFactory" />
 	<osgi:service id="configurationInterfaceManagerService" ref="configurationInterfaceManager"
-		interface="info.novatec.inspectit.rcp.ci.InspectITConfigurationInterfaceManager" />
+		interface="rocks.inspectit.ui.rcp.ci.InspectITConfigurationInterfaceManager" />
 	<osgi:service id="exposedVersionService" ref="versionService"
-		interface="info.novatec.inspectit.version.VersionService" />
+		interface="rocks.inspectit.shared.all.version.VersionService" />
 	<osgi:service id="exposedDocumentationService" ref="documentationService" 
-		interface="info.novatec.inspectit.rcp.documentation.DocumentationService" />
+		interface="rocks.inspectit.ui.rcp.documentation.DocumentationService" />
 
 </beans>

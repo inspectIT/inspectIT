@@ -1,7 +1,7 @@
-package info.novatec.inspectit.rcp.provider;
+package rocks.inspectit.ui.rcp.provider;
 
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Interface for UI elements that can provide {@link PlatformIdent} alongside CMR repository

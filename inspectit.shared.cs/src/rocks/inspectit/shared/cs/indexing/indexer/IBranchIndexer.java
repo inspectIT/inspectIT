@@ -1,7 +1,7 @@
-package info.novatec.inspectit.indexing.indexer;
+package rocks.inspectit.shared.cs.indexing.indexer;
 
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.buffer.impl.Branch;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
 
 /**
  * {@link IBranchIndexer} supplies the {@link Branch} with information about mapping keys.

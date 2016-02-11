@@ -1,8 +1,4 @@
-package info.novatec.inspectit.agent.config.impl;
-
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.IConfigurationStorage;
-import info.novatec.inspectit.agent.config.ParserException;
+package rocks.inspectit.agent.java.config.impl;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -20,6 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.ParserException;
+import rocks.inspectit.agent.java.config.impl.FileConfigurationReader;
 
 public class ConfigurationFilesTest extends AbstractLogSupport {
 

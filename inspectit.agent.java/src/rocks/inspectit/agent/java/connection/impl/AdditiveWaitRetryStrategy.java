@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.connection.impl;
+package rocks.inspectit.agent.java.connection.impl;
 
-import info.novatec.inspectit.agent.connection.RetryStrategy;
+import rocks.inspectit.agent.java.connection.RetryStrategy;
 
 /**
  * The most commonly used retry strategy; it extends the waiting period by a constant amount with

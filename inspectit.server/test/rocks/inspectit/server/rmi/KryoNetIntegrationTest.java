@@ -1,4 +1,4 @@
-package info.novatec.inspectit.cmr.rmi;
+package rocks.inspectit.server.rmi;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -7,18 +7,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
-import info.novatec.inspectit.kryonet.Client;
-import info.novatec.inspectit.kryonet.Connection;
-import info.novatec.inspectit.kryonet.ExtendedSerializationImpl;
-import info.novatec.inspectit.kryonet.IExtendedSerialization;
-import info.novatec.inspectit.kryonet.Listener;
-import info.novatec.inspectit.kryonet.Server;
-import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
-import info.novatec.inspectit.storage.nio.stream.StreamProvider;
-import info.novatec.inspectit.storage.serializer.IKryoProvider;
-import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,11 +33,23 @@ import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
 
+import rocks.inspectit.server.test.AbstractTransactionalTestNGLogSupport;
+import rocks.inspectit.shared.all.kryonet.Client;
+import rocks.inspectit.shared.all.kryonet.Connection;
+import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
+import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
+import rocks.inspectit.shared.all.kryonet.Listener;
+import rocks.inspectit.shared.all.kryonet.Server;
+import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
+import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
+import rocks.inspectit.shared.all.storage.serializer.IKryoProvider;
+import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+
 /**
  * Tests the complete kryonet server-client communication.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:spring/spring-context-global.xml", "classpath:spring/spring-context-database.xml", "classpath:spring/spring-context-beans.xml",
@@ -269,7 +269,7 @@ public class KryoNetIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Invoker for the {@link RemothMethodInvocation#multiThreaded()} method.
-	 * 
+	 *
 	 * @author Ivan Senic
 	 *
 	 */

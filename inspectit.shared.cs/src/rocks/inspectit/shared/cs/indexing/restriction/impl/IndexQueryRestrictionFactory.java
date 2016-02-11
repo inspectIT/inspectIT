@@ -1,9 +1,9 @@
-package info.novatec.inspectit.indexing.restriction.impl;
-
-import info.novatec.inspectit.indexing.restriction.AbstractIndexQueryRestriction;
-import info.novatec.inspectit.indexing.restriction.IIndexQueryRestriction;
+package rocks.inspectit.shared.cs.indexing.restriction.impl;
 
 import java.util.Collection;
+
+import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
+import rocks.inspectit.shared.cs.indexing.restriction.AbstractIndexQueryRestriction;
 
 /**
  * 

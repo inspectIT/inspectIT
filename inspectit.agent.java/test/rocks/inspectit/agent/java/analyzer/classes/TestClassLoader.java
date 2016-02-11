@@ -1,4 +1,4 @@
-package info.novatec.inspectit.agent.analyzer.classes;
+package rocks.inspectit.agent.java.analyzer.classes;
 
 /**
  * Test {@link ClassLoader} that always returns it's own class in {@link #loadClass(String)}.

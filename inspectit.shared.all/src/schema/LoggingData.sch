@@ -1,4 +1,4 @@
-class: info.novatec.inspectit.communication.data.LoggingData
+class: rocks.inspectit.shared.all.communication.data.LoggingData
 
 # Default Data
 1: id

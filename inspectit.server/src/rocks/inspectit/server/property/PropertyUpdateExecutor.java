@@ -1,7 +1,4 @@
-package info.novatec.inspectit.cmr.property;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.spring.PropertyUpdate;
+package rocks.inspectit.server.property;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -26,6 +23,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ReflectionUtils.FieldCallback;
 import org.springframework.util.ReflectionUtils.MethodCallback;
+
+import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 
 /**
  * This class executes method annotated with {@link PropertyUpdate} annotation.

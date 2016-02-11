@@ -1,9 +1,9 @@
-package info.novatec.inspectit.cmr.dao;
-
-import info.novatec.inspectit.cmr.model.JmxDefinitionDataIdent;
-import info.novatec.inspectit.cmr.model.PlatformIdent;
+package rocks.inspectit.server.dao;
 
 import java.util.List;
+
+import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * This DAO is used to handle all {@link JmxDefinitionDataIdent} objects.

@@ -1,13 +1,4 @@
-package info.novatec.inspectit.cmr.dao.impl;
-
-import info.novatec.inspectit.cmr.dao.ExceptionSensorDataDao;
-import info.novatec.inspectit.communication.comparator.DefaultDataComparatorEnum;
-import info.novatec.inspectit.communication.data.AggregatedExceptionSensorData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.indexing.AbstractBranch;
-import info.novatec.inspectit.indexing.IIndexQuery;
-import info.novatec.inspectit.indexing.aggregation.Aggregators;
-import info.novatec.inspectit.indexing.query.factory.impl.ExceptionSensorDataQueryFactory;
+package rocks.inspectit.server.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +8,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import rocks.inspectit.server.dao.ExceptionSensorDataDao;
+import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.indexing.AbstractBranch;
+import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
+import rocks.inspectit.shared.cs.indexing.query.factory.impl.ExceptionSensorDataQueryFactory;
 
 /**
  * {@link ExceptionSensorDataDao} that works with the data from the buffer.

@@ -1,12 +1,4 @@
-package info.novatec.inspectit.rcp.ci.job;
-
-import info.novatec.inspectit.ci.Profile;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.ci.form.editor.ProfileEditor;
-import info.novatec.inspectit.rcp.ci.form.input.ProfileEditorInput;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+package rocks.inspectit.ui.rcp.ci.job;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -15,6 +7,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.ci.form.editor.ProfileEditor;
+import rocks.inspectit.ui.rcp.ci.form.input.ProfileEditorInput;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Job for loading of the profile from the CMR and opening the profile editor.

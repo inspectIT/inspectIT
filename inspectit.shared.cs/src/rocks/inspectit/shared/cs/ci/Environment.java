@@ -1,31 +1,4 @@
-package info.novatec.inspectit.ci;
-
-import info.novatec.inspectit.ci.factory.ConfigurationDefaultsFactory;
-import info.novatec.inspectit.ci.sensor.exception.IExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.exception.impl.ExceptionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.IMethodSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.Log4jLoggingSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
-import info.novatec.inspectit.ci.sensor.method.impl.TimerSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.IPlatformSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.ClassLoadingSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.CompilationSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.CpuSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.MemorySensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.RuntimeSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.SystemSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.ThreadSensorConfig;
-import info.novatec.inspectit.ci.strategy.IStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.ListSendingStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.SimpleBufferStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.SizeBufferStrategyConfig;
-import info.novatec.inspectit.ci.strategy.impl.TimeSendingStrategyConfig;
+package rocks.inspectit.shared.cs.ci;
 
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +12,33 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
+import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CpuSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
+import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.ListSendingStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.SimpleBufferStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.SizeBufferStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
 
 /**
  * Environment definition. Defines sending & buffer strategies, sensors and their options. Also has

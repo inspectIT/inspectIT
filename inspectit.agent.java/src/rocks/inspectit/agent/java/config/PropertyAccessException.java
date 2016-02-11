@@ -1,6 +1,6 @@
-package info.novatec.inspectit.agent.config;
+package rocks.inspectit.agent.java.config;
 
-import info.novatec.inspectit.agent.config.impl.PropertyAccessor;
+import rocks.inspectit.agent.java.config.impl.PropertyAccessor;
 
 /**
  * This exception is thrown whenever something unexpected happens while accessing a property.

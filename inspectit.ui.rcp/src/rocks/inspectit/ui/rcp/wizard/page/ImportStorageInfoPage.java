@@ -1,16 +1,4 @@
-package info.novatec.inspectit.rcp.wizard.page;
-
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.composite.StorageInfoComposite;
-import info.novatec.inspectit.rcp.formatter.NumberFormatter;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
-import info.novatec.inspectit.rcp.util.SafeExecutor;
-import info.novatec.inspectit.storage.IStorageData;
-import info.novatec.inspectit.storage.LocalStorageData;
-import info.novatec.inspectit.storage.StorageData;
-import info.novatec.inspectit.util.ObjectUtils;
+package rocks.inspectit.ui.rcp.wizard.page;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +13,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+
+import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.storage.IStorageData;
+import rocks.inspectit.shared.cs.storage.LocalStorageData;
+import rocks.inspectit.shared.cs.storage.StorageData;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.composite.StorageInfoComposite;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
+import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * The page that displays the data about storage to be loaded after the file for import has been

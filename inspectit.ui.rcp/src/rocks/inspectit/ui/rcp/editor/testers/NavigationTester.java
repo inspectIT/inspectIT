@@ -1,15 +1,4 @@
-package info.novatec.inspectit.rcp.editor.testers;
-
-import info.novatec.inspectit.cmr.model.SensorTypeIdent;
-import info.novatec.inspectit.communication.data.AggregatedTimerData;
-import info.novatec.inspectit.communication.data.ExceptionSensorData;
-import info.novatec.inspectit.communication.data.InvocationAwareData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
-import info.novatec.inspectit.communication.data.TimerData;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.model.SensorTypeEnum;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.editor.testers;
 
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +7,17 @@ import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+
+import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
+import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Tester for all navigations.

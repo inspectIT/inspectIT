@@ -1,12 +1,4 @@
-package info.novatec.inspectit.ci.sensor.platform;
-
-import info.novatec.inspectit.ci.sensor.platform.impl.ClassLoadingSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.CompilationSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.CpuSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.MemorySensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.RuntimeSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.SystemSensorConfig;
-import info.novatec.inspectit.ci.sensor.platform.impl.ThreadSensorConfig;
+package rocks.inspectit.shared.cs.ci.sensor.platform;
 
 import java.util.Collections;
 import java.util.Map;
@@ -15,6 +7,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CpuSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
 
 /**
  * Abstract class for all platform sensor configurations.

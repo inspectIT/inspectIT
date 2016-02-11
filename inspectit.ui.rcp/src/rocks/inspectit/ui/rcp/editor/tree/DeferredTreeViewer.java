@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.tree;
+package rocks.inspectit.ui.rcp.editor.tree;
 
 import java.util.ArrayList;
 import java.util.Collections;

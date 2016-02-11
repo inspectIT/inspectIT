@@ -1,11 +1,11 @@
-package info.novatec.inspectit.indexing.util;
+package rocks.inspectit.shared.cs.indexing.util;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import info.novatec.inspectit.spring.logger.Log;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Logs uncaught exceptions.

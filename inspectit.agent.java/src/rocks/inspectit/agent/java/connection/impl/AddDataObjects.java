@@ -1,10 +1,10 @@
-package info.novatec.inspectit.agent.connection.impl;
-
-import info.novatec.inspectit.agent.connection.AbstractRemoteMethodCall;
-import info.novatec.inspectit.cmr.service.IAgentStorageService;
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.agent.java.connection.impl;
 
 import java.util.List;
+
+import rocks.inspectit.agent.java.connection.AbstractRemoteMethodCall;
+import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Class which encapsulates the request to the remote object {@link IAgentStorageService}.

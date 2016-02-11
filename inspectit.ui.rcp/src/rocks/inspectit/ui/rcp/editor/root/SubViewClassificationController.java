@@ -1,4 +1,4 @@
-package info.novatec.inspectit.rcp.editor.root;
+package rocks.inspectit.ui.rcp.editor.root;
 
 /**
  * Interface for defining the classification of sub views, so that different actions can be

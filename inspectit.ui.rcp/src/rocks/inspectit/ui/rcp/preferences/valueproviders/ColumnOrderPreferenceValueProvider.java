@@ -1,12 +1,12 @@
-package info.novatec.inspectit.rcp.preferences.valueproviders;
-
-import info.novatec.inspectit.rcp.preferences.PreferenceException;
-import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
-import info.novatec.inspectit.rcp.preferences.valueproviders.PreferenceValueProviderFactory.PreferenceValueProvider;
+package rocks.inspectit.ui.rcp.preferences.valueproviders;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import rocks.inspectit.ui.rcp.preferences.PreferenceException;
+import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
+import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProviderFactory.PreferenceValueProvider;
 
 /**
  * Custom {@link PreferenceValueProvider} for the map of column orders in the tables.

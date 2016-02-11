@@ -1,13 +1,13 @@
-package info.novatec.inspectit.storage.label.management;
-
-import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.exception.BusinessException;
-import info.novatec.inspectit.storage.label.AbstractStorageLabel;
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.shared.cs.storage.label.management;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.cmr.service.IStorageService;
+import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Abstract class for all label management actions.

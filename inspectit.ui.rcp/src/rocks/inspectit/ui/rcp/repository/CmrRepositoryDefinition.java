@@ -1,27 +1,27 @@
-package info.novatec.inspectit.rcp.repository;
-
-import info.novatec.inspectit.cmr.service.ICmrManagementService;
-import info.novatec.inspectit.cmr.service.IConfigurationInterfaceService;
-import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
-import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
-import info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService;
-import info.novatec.inspectit.cmr.service.IInvocationDataAccessService;
-import info.novatec.inspectit.cmr.service.IJmxDataAccessService;
-import info.novatec.inspectit.cmr.service.IServerStatusService;
-import info.novatec.inspectit.cmr.service.IServerStatusService.ServerStatus;
-import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
-import info.novatec.inspectit.cmr.service.IStorageService;
-import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
-import info.novatec.inspectit.cmr.service.cache.CachedDataService;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
-import info.novatec.inspectit.rcp.repository.service.RefreshEditorsCachedDataService;
-import info.novatec.inspectit.rcp.repository.service.cmr.CmrServiceProvider;
-import info.novatec.inspectit.version.VersionService;
+package rocks.inspectit.ui.rcp.repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import rocks.inspectit.shared.all.version.VersionService;
+import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
+import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
+import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
+import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IStorageService;
+import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
+import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.repository.service.RefreshEditorsCachedDataService;
+import rocks.inspectit.ui.rcp.repository.service.cmr.CmrServiceProvider;
 
 /**
  * The CMR repository definition initializes the services exposed by the CMR.

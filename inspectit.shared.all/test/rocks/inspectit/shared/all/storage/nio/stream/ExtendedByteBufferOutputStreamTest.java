@@ -1,9 +1,8 @@
-package info.novatec.inspectit.storage.nio.stream;
+package rocks.inspectit.shared.all.storage.nio.stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import info.novatec.inspectit.storage.nio.ByteBufferProvider;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -17,6 +16,8 @@ import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
+
 /**
  * Tests the {@link ExtendedByteBufferOutputStream}.
  * 
@@ -29,7 +30,7 @@ public class ExtendedByteBufferOutputStreamTest {
 	/**
 	 * Size of buffers {@link ByteBufferProvider} will return.
 	 */
-	private int bufferSize = 1024;
+	private final int bufferSize = 1024;
 
 	/**
 	 * Mocked {@link ByteBufferProvider}.
@@ -49,8 +50,6 @@ public class ExtendedByteBufferOutputStreamTest {
 	public void init() throws IOException {
 		MockitoAnnotations.initMocks(this);
 		Mockito.when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
-
-			@Override
 			public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
 				return ByteBuffer.allocate(bufferSize);
 			}

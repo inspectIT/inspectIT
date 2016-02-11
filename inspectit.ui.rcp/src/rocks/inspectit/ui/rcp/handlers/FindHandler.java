@@ -1,11 +1,4 @@
-package info.novatec.inspectit.rcp.handlers;
-
-import info.novatec.inspectit.rcp.editor.ISubView;
-import info.novatec.inspectit.rcp.editor.composite.AbstractCompositeSubView;
-import info.novatec.inspectit.rcp.editor.root.AbstractRootEditor;
-import info.novatec.inspectit.rcp.editor.search.ISearchExecutor;
-import info.novatec.inspectit.rcp.editor.search.OpenedSearchControlCache;
-import info.novatec.inspectit.rcp.editor.search.SearchControl;
+package rocks.inspectit.ui.rcp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,6 +6,13 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import rocks.inspectit.ui.rcp.editor.ISubView;
+import rocks.inspectit.ui.rcp.editor.composite.AbstractCompositeSubView;
+import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
+import rocks.inspectit.ui.rcp.editor.search.ISearchExecutor;
+import rocks.inspectit.ui.rcp.editor.search.OpenedSearchControlCache;
+import rocks.inspectit.ui.rcp.editor.search.SearchControl;
 
 /**
  * The handler for activating the search box.

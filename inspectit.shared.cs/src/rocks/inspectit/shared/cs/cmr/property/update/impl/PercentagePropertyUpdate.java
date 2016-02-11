@@ -1,12 +1,12 @@
-package info.novatec.inspectit.cmr.property.update.impl;
-
-import info.novatec.inspectit.cmr.property.configuration.SingleProperty;
-import info.novatec.inspectit.cmr.property.update.AbstractPropertyUpdate;
+package rocks.inspectit.shared.cs.cmr.property.update.impl;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
+import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
 
 /**
  * {@link AbstractPropertyUpdate} for percentage property.

@@ -1,11 +1,11 @@
-package info.novatec.inspectit.storage.label.type.impl;
-
-import info.novatec.inspectit.storage.label.type.AbstractStorageLabelType;
+package rocks.inspectit.shared.cs.storage.label.type.impl;
 
 import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+
+import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Type of the label to denote the date Storage was created.

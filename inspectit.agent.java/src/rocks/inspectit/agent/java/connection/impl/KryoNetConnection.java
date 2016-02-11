@@ -1,25 +1,4 @@
-package info.novatec.inspectit.agent.connection.impl;
-
-import info.novatec.inspectit.agent.config.impl.JmxSensorConfig;
-import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.connection.FailFastRemoteMethodCall;
-import info.novatec.inspectit.agent.connection.IConnection;
-import info.novatec.inspectit.agent.connection.RegistrationException;
-import info.novatec.inspectit.agent.connection.ServerUnavailableException;
-import info.novatec.inspectit.agent.spring.PrototypesProvider;
-import info.novatec.inspectit.cmr.service.IAgentStorageService;
-import info.novatec.inspectit.cmr.service.IKeepAliveService;
-import info.novatec.inspectit.cmr.service.IRegistrationService;
-import info.novatec.inspectit.cmr.service.ServiceInterface;
-import info.novatec.inspectit.communication.DefaultData;
-import info.novatec.inspectit.kryonet.Client;
-import info.novatec.inspectit.kryonet.ExtendedSerializationImpl;
-import info.novatec.inspectit.kryonet.IExtendedSerialization;
-import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
-import info.novatec.inspectit.spring.logger.Log;
+package rocks.inspectit.agent.java.connection.impl;
 
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -35,6 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
+
+import rocks.inspectit.agent.java.config.impl.JmxSensorConfig;
+import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.connection.FailFastRemoteMethodCall;
+import rocks.inspectit.agent.java.connection.IConnection;
+import rocks.inspectit.agent.java.connection.RegistrationException;
+import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.agent.java.spring.PrototypesProvider;
+import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
+import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
+import rocks.inspectit.shared.all.cmr.service.IRegistrationService;
+import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
+import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.kryonet.Client;
+import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
+import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
+import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Implements the {@link IConnection} interface using the kryo-net.

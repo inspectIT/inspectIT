@@ -1,9 +1,9 @@
-package info.novatec.inspectit.cmr.service;
-
-import info.novatec.inspectit.communication.DefaultData;
+package rocks.inspectit.shared.all.cmr.service;
 
 import java.rmi.Remote;
 import java.util.List;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * This service is used by the Agents to send their data objects to and it is used by all the

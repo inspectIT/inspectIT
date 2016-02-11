@@ -1,9 +1,4 @@
-package info.novatec.inspectit.rcp.model;
-
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.rcp.InspectIT;
-import info.novatec.inspectit.rcp.InspectITImages;
-import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+package rocks.inspectit.ui.rcp.model;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,6 +9,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.progress.IElementCollector;
 
 import com.google.common.base.Objects;
+
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * This class only initializes the sub-tree if it is requested. Furthermore, the creation of the
