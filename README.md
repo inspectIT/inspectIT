@@ -1,7 +1,11 @@
 [![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](http://jenkins.inspectit.rocks/buildStatus/icon?job=inspectIT%20-%20Integration)](http://jenkins.inspectit.rocks/job/inspectIT%20-%20Integration/) [![License](https://img.shields.io/badge/License-AGPLv3--with--exception-brightgreen.svg)](https://github.com/inspectIT/inspectIT/blob/master/LICENSE.txt)
 
-# inspectIT APM
-inspectIT (http://inspectit.rocks) APM (application performance management) is a powerful software product for monitoring and analyzing your software applications. Through various sensors inspectIT captures end-to-end information for every request from the end user, to the business tier all the way to the backends. inspectIT is based on an application-centric, business-focused approach, where each technical request is mapped to an application and to a business usecase. With inspectIT you always know about the health of your software and can easily analyze any problems that arise.
+## Overview
+inspectIT (http://inspectit.rocks) is the leading Open Source APM (application performance management) tool for monitoring and analyzing your Java(EE) software applications.
+
+Various sensors capture end-to-end information for every request from the end user, to the business tier all the way to the backends. inspectIT is based on an application-centric, business-focused approach, where each technical request is mapped to an application and to a business usecase. With inspectIT you always know about the health of your software and can easily analyze any problems that arise.
+
+The integration of inspectIT is into your application is completely transparent, you do not have to change a single line of code.
 
 We hope that together we can build an alternative to the (great!) commercial tools available so that it is up the end user to choose his tooling. **Let's make inspectIT even more awesome!**
 
@@ -9,7 +13,7 @@ We hope that together we can build an alternative to the (great!) commercial too
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 |![](http://inspectit.github.io/inspectIT/screenshots/httOverview.png) | ![](http://inspectit.github.io/inspectIT/screenshots/invocWithSQLLocate.png) | ![](http://inspectit.github.io/inspectIT/screenshots/sqlOverviewWithStorage.png) | ![](http://inspectit.github.io/inspectIT/screenshots/graphsRepo.png)|
 
-### Features
+## Features
 - Detailed trace representation (invocation sequence) for every request containing all interactions with the systems.
 - Automatic enrichment of every trace with HTTP information, SQL queries, exceptions, parameters and many more.
 - Detailed exception capturing allows to analyze functional problems.
@@ -29,10 +33,41 @@ We hope that together we can build an alternative to the (great!) commercial too
 - Fully adaptable user interface.
 - Extensible system: Missing something? Write your own extensions.
 
-### Get in touch
+### Out-of-the-box profiles
+inspectIT already ships with out-of-the-box instrumentations for commonly used Java technologies. If your technology is missing, you can easily instrument it manually (or [request a new profile](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Add+feature+requests)). We currently support:
+- Java Persistence
+  - Hibernate
+  - JPA
+  - JDBC
+- JavaEE
+  - Enterprise Java Beans (EJB)
+  - Servlets API
+  - Java Server Faces (JSF)
+  - WebServices
+  - Java Transaction API (JTA)
+- Apache Struts
+- Apache MyFaces Trinidad
+
+### Supported application platforms
+- IBM WebSphere
+- Oracle Weblogic
+- JBoss
+- Wildfly
+- Tomcat
+- Glassfish
+- Any plain java application
+
+
+### Related projects
+- Experimental features and supporting components of inspectIT are located at [inspectIT Labs]( https://github.com/inspectIT-labs)
+- Our Docker integration projects are located at [inspectIT Docker](https://github.com/inspectit-docker)
+
+
+
+## Get in touch
 We are interested in your feedback. Come chat with us and other users on [![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). Visit the [forum](https://groups.google.com/forum/#!forum/inspectit) or simply drop us a [line](mailto:info.inspectit@novatec-gmbh.de). You also might want to follow at Twitter: [@inspectIT_apm](https://twitter.com/inspectit_apm)
 
-### Download
+## Download
 [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/inspectit.svg?label=docker pulls UI)](https://registry.hub.docker.com/u/inspectit/inspectit/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/cmr.svg?label=docker pulls CMR)](https://registry.hub.docker.com/u/inspectit/cmr/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/jetty.svg?label=docker pulls agent jetty)](https://registry.hub.docker.com/u/inspectit/jetty/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/jboss.svg?label=docker pulls agent jboss)](https://registry.hub.docker.com/u/inspectit/jboss/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/glassfish.svg?label=docker pulls agent glassfish)](https://registry.hub.docker.com/u/inspectit/glassfish/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/tomcat.svg?label=docker pulls agent tomcat)](https://registry.hub.docker.com/u/inspectit/tomcat/)
 
 You can get inspectIT in three ways:
@@ -42,11 +77,11 @@ You can get inspectIT in three ways:
 
 The [end user documentation](https://inspectit-performance.atlassian.net/wiki/display/DOC/End+User+Documentation+Home) provides in-depth documentation on the installation of inspectIT. If you have further questions please get in touch with us.
 
-### End user / Development Documentation
+## End user / Development Documentation
 We are running an Atlassian Confluence for all sorts of [documentation](https://inspectit-performance.atlassian.net/wiki) (thanks to Atlassian for the free license):
 From [end user documentation](https://inspectit-performance.atlassian.net/wiki/display/DOC/End+User+Documentation+Home) to the [roadmap](https://inspectit-performance.atlassian.net/wiki/display/ROAD/Roadmap+Home).
 
-### Contribute
+## Contribute
 You do not have to be a programmer to contribute to inspectIT, but if you are you are certainly welcome. Here is a short list of how you can contribute. Please see our [Contribution Documentation](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Contribute+Home)
 - [Improve the documentation](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Contribute+documentation)
 - [Let us know about bugs](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Contribute+a+bug+report)
@@ -60,10 +95,10 @@ If you want to fix Bugs or implement Features on your own, you're very welcome t
 ### Ticketing
 We primarily use [Atlassian JIRA](https://inspectit-performance.atlassian.net/secure/Dashboard.jspa) for ticketing. But if you are in a hurry, please feel free to open a GitHub issue.
 
-### Licensing
+## Licensing
 inspectIT is licensed under [AGPLv3](https://github.com/inspectIT/inspectIT/blob/master/LICENSE.txt) (with [exception clause](https://github.com/inspectIT/inspectIT/blob/master/LICENSEEXCEPTIONS.txt)), which basically means you can change inspectIT but must open source all your changes and put them under the AGPLv3 license. Please see our [licensing documentation](https://inspectit-performance.atlassian.net/wiki/display/LIC/Licensing) for more details.
 
-### Sponsoring
+## Sponsoring
 inspectIT is mainly driven by [NovaTec Consulting GmbH](http://www.novatec-gmbh.de/), a German consultancy firm that specializes in software performance. Sponsoring a feature in inspectIT is always possible and welcome. Just get in touch with us through [Sponsor a feature](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Sponsor+a+feature).
 
 ### Research / Further readings
