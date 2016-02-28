@@ -3,10 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=CommonsCS&amp;ivyXmlPath=resources%2Fivy%2Fivy.xml&amp;confs=prod&amp;ivySettingsPath=%24%7Bivyproject_loc%7D%2F..%2FCommons%2Fresources%2Fshared%2Fconfig%2Fivy%2Fivysettings.xml&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=CommonsCS&amp;ivyXmlPath=resources%2Fivy%2Fivy.xml&amp;confs=test&amp;ivySettingsPath=%24%7Bivyproject_loc%7D%2F..%2FCommons%2Fresources%2Fshared%2Fconfig%2Fivy%2Fivysettings.xml&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_51"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
