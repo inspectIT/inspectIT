@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -192,14 +191,14 @@ public class AddRoleDialog extends TitleAreaDialog {
 			}
 			Set<String> permissionSetNew = new HashSet<String>(rolePermissions);
 			if (permissionSetExisting.equals(permissionSetNew)) {
-				similarRoles+="\"" + list.getTitle() + "\", ";
+				similarRoles += "\"" + list.getTitle() + "\", ";
 			}
 		}
 
-		if (similarRoles != "") {
-			String Warning = "One or more roles with the same set of permissions already exists." + "\n" + "\nDetected roles: " + similarRoles.substring(0, similarRoles.length()-2) +"\n" 
+		if (!"".equals(similarRoles)) {
+			String warning = "One or more roles with the same set of permissions already exists." + "\n" + "\nDetected roles: " + similarRoles.substring(0, similarRoles.length() - 2) + "\n" 
 					+ "\nDo you really want to add the role \"" + name + "\"?";
-			Boolean confirm = MessageDialog.openConfirm(null, "Similar role already exists!", Warning);
+			Boolean confirm = MessageDialog.openConfirm(null, "Similar role already exists!", warning);
 			if (!confirm) {
 				return;
 					

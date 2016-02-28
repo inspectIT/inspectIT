@@ -3,30 +3,22 @@ package info.novatec.inspectit.rcp.dialog;
 import java.util.List;
 
 import info.novatec.inspectit.communication.data.cmr.Permission;
-import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Display;
-
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
 /**
  * 
@@ -134,7 +126,7 @@ public class ShowAllUsersDialog extends TitleAreaDialog {
 				if (table.getSelectionIndex() != -1) {
 					TableItem[] tableItems = table.getItems();
 					User user = cmrRepositoryDefinition.getSecurityService().getUser(tableItems[table.getSelectionIndex()].getText(0));
-					editUserDialog(main.getShell(), user);
+					userDialog(main.getShell(), user);
 				}
 			}
 		});
@@ -151,7 +143,7 @@ public class ShowAllUsersDialog extends TitleAreaDialog {
 	 * @param user
 	 * 		 	  the user to edit.
 	 */
-	private void editUserDialog(Shell parentShell, User user) {
+	private void userDialog(Shell parentShell, User user) {
 		editUserDialog = new EditUserDialog(parentShell, cmrRepositoryDefinition, user);
 		editUserDialog.open();
 	}

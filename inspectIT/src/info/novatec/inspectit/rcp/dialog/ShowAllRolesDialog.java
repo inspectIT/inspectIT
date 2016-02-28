@@ -2,30 +2,22 @@ package info.novatec.inspectit.rcp.dialog;
 
 import java.util.List;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Display;
-
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
-import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
 /**
  * 
@@ -115,7 +107,7 @@ public class ShowAllRolesDialog extends TitleAreaDialog {
 				    	}
 				    }
 					Role role = cmrRepositoryDefinition.getSecurityService().getRoleByID(id);
-					editRoleDialog(main.getShell(), role);
+					roleDialog(main.getShell(), role);
 					roles = cmrRepositoryDefinition.getSecurityService().getAllRoles();
 					updateTable();
 				}
@@ -134,7 +126,7 @@ public class ShowAllRolesDialog extends TitleAreaDialog {
 	 * @param role
 	 * 		 	  the role to edit.
 	 */
-	private void editRoleDialog(Shell parentShell, Role role) {
+	private void roleDialog(Shell parentShell, Role role) {
 		editRoleDialog = new EditRoleDialog(parentShell, cmrRepositoryDefinition, role);
 		editRoleDialog.open();
 	}

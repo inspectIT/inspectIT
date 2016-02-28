@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?><target name="inspectIT Main Target" sequenceNumber="11">
+<?pde version="3.8"?><target name="inspectIT Main Target" sequenceNumber="11">
 <locations>
 <location path="${project_loc}/lib/osgi" type="Directory"/>
-<location includeAllPlatforms="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.platform.sdk" version="3.8.2.M20130131-0800"/>
 <repository location="http://download.eclipse.org/eclipse/updates/3.8"/>
 </location>

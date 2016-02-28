@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,11 +56,7 @@ public class EditUserDialog extends TitleAreaDialog {
 	 * List of all Roles.
 	 */
 	private List<Role> rolesList;
-	
-	/**
-	 * List of all Users.
-	 */
-	private List<String> userList;
+
 	/**
 	 * The user to edit.
 	 */
@@ -86,7 +80,6 @@ public class EditUserDialog extends TitleAreaDialog {
 		super(parentShell);
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
 		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
-		userList = cmrRepositoryDefinition.getSecurityService().getAllUsers();
 		userOld = user;
 	}
 

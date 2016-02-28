@@ -98,8 +98,6 @@ public interface ISecurityService {
 	 * 		name of the new role
 	 * @param newPermissions
 	 * 		list of new permissions
-	 * @param id
-	 * 		the role id which stays the same
 	 */
 	void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions);
 

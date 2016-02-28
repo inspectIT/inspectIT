@@ -13,10 +13,7 @@ import info.novatec.inspectit.rcp.dialog.ShowAllUsersDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.dialog.AddRoleDialog;
 import info.novatec.inspectit.rcp.dialog.AddUserDialog;
-import info.novatec.inspectit.rcp.dialog.SearchPermissionsDialog;
-import info.novatec.inspectit.rcp.dialog.SearchRolesDialog;
 import info.novatec.inspectit.rcp.dialog.SearchUsersDialog;
-import info.novatec.inspectit.rcp.dialog.ShowAllPermissionsDialog;
 
 /**
  * Wizard Page for managing users on the CMR.
@@ -58,16 +55,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	 * The dialog to show available users.
 	 */
 	private ShowAllUsersDialog showAllUsersDialog;
-
-	/**
-	 * The dialog to search available permissions.
-	 */
-	private SearchPermissionsDialog searchPermissionsDialog;
-
-	/**
-	 * The dialog to search available roles.
-	 */
-	private SearchRolesDialog searchRolesDialog;
 
 	/**
 	 * The dialog to search available users.

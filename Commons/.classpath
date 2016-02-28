@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_51"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Commons&amp;ivyXmlPath=resources%2Fivy%2Fivy.xml&amp;confs=prod&amp;ivySettingsPath=%24%7Bivyproject_loc%7D%2Fresources%2Fshared%2Fconfig%2Fivy%2Fivysettings.xml&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Commons&amp;ivyXmlPath=resources%2Fivy%2Fivy.xml&amp;confs=test&amp;ivySettingsPath=%24%7Bivyproject_loc%7D%2Fresources%2Fshared%2Fconfig%2Fivy%2Fivysettings.xml&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>

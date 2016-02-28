@@ -3,7 +3,6 @@ package info.novatec.inspectit.rcp.dialog;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -139,7 +138,7 @@ public class SearchUsersDialog extends TitleAreaDialog {
 				if (table.getSelectionIndex() != -1) {
 					TableItem[] tableItems = table.getItems();
 					User user = cmrRepositoryDefinition.getSecurityService().getUser(tableItems[table.getSelectionIndex()].getText(0));
-					editUserDialog(main.getShell(), user);
+					userDialog(main.getShell(), user);
 				}
 			}
 		});
@@ -240,7 +239,7 @@ public class SearchUsersDialog extends TitleAreaDialog {
 		if (searchBox.getText().isEmpty()) {
 			return false;
 		}
-		if (searchOptions.getText() == "") {
+		if ("".equals(searchOptions.getText())) {
 			return false;
 		} 
 		return true;
@@ -254,7 +253,7 @@ public class SearchUsersDialog extends TitleAreaDialog {
 	 * @param user
 	 * 		 	  the user to edit.
 	 */
-	private void editUserDialog(Shell parentShell, User user) {
+	private void userDialog(Shell parentShell, User user) {
 		editUserDialog = new EditUserDialog(parentShell, cmrRepositoryDefinition, user);
 		editUserDialog.open();
 		parentShell.close();

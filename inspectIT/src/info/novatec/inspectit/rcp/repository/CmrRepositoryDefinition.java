@@ -688,7 +688,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		return this.grantedPermissions != null && this.grantedPermissions.contains(permission);
 	}
 	
-	public Serializable getSessionId(){
+	public Serializable getSessionId() {
 		return sessionId;
 	}
 }
