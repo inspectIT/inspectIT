@@ -203,7 +203,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		if (passwordBox.getText().isEmpty()) {
 			return false;
 		}
-		if (roles.getText() == "") {
+		if ("".equals(roles.getText())) {
 			return false;
 		} 
 		return true;

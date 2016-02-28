@@ -115,7 +115,7 @@ public class ShowAllUsersDialog extends TitleAreaDialog {
 				if (table.getSelectionIndex() != -1) {
 					TableItem[] tableItems = table.getItems();
 					User user = cmrRepositoryDefinition.getSecurityService().getUser(tableItems[table.getSelectionIndex()].getText(0));
-					editUserDialog(main.getShell(), user);
+					userDialog(main.getShell(), user);
 					users = cmrRepositoryDefinition.getSecurityService().getAllUsers();
 					updateTable();
 				}
@@ -134,7 +134,7 @@ public class ShowAllUsersDialog extends TitleAreaDialog {
 	 * @param user
 	 * 		 	  the user to edit.
 	 */
-	private void editUserDialog(Shell parentShell, User user) {
+	private void userDialog(Shell parentShell, User user) {
 		editUserDialog = new EditUserDialog(parentShell, cmrRepositoryDefinition, user);
 		editUserDialog.open();
 	}

@@ -1,7 +1,6 @@
 package info.novatec.inspectit.cmr.service;
 
 import java.io.Serializable;
-import java.security.Permissions;
 import java.util.ArrayList;
 import java.util.List;
 

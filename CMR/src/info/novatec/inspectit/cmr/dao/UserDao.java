@@ -1,6 +1,5 @@
 package info.novatec.inspectit.cmr.dao;
 
-import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 
 import java.util.List;
