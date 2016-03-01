@@ -249,7 +249,12 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void deleteUser(User user) {
+	public void deleteUser(User user, Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+		String currentName = (String) currentUser.getPrincipal();
+		if (currentName.equals(user.getEmail())) {
+			currentUser.logout();
+		}
 		userDao.delete(user);
 	}
 

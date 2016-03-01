@@ -149,9 +149,11 @@ public interface ISecurityService {
 	 * Deletes the given User Object from the Database.
 	 * 
 	 * @param user
-	 *            user
+	 *     	 user
+	 * @param sessionId
+	 * 		the sessionId
 	 */
-	void deleteUser(User user);
+	void deleteUser(User user, Serializable sessionId);
 
 	/**
 	 * 
