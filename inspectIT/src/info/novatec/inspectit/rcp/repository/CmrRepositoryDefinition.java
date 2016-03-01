@@ -588,6 +588,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	}
 
 	/**
+	 * Standard Session-ID.
+	 */
+	private final Serializable standardSessionId = -1;
+	
+	/**
 	 * Method to login on the CMR.
 	 * 
 	 * @param email
@@ -604,7 +609,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			return true;
 		}
 
-		sessionId = null;
+		sessionId = standardSessionId;
 		return false;
 	}
 
@@ -614,7 +619,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	public void logout() {
 		if (null != sessionId) {
 			securityService.logout(sessionId);
-			sessionId = null;
+			sessionId = standardSessionId;
 		}
 		refreshLoginStatus();
 	}
@@ -632,7 +637,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			 * "You are no longer logged in."); }
 			 */
 			loginStatus = LoginStatus.LOGGEDOUT;
-			sessionId = null;
+			sessionId = standardSessionId;
 		}
 		refreshPermissions();
 	}
@@ -643,7 +648,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * @return Returns if the user is logged in.
 	 */
 	public boolean isLoggedIn() {
-		if (!isOnline() || null == sessionId) {
+		if (!isOnline() || standardSessionId.equals(sessionId)) {
 			return false;
 		}
 		return securityService.existsSession(sessionId);
