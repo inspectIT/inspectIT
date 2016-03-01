@@ -356,6 +356,12 @@ public class SecurityService implements ISecurityService {
 		Role roleNew = new Role(roleOld.getId(), name, newPermissions);
 		roleDao.saveOrUpdate(roleNew);
 	}
+	
+	@Override
+	public void deleteRole(Role role) {
+		roleDao.delete(role);
+	}
+
 
 	// TODO Make more methods available for the administrator module...
 }

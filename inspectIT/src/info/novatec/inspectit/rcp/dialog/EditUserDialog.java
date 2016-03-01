@@ -48,6 +48,11 @@ public class EditUserDialog extends TitleAreaDialog {
 	private Button editButton;
 	
 	/**
+	 * Delete user button.
+	 */
+	private Button deleteUserButton;
+	
+	/**
 	 * Dropdown menu for roles.
 	 */
 	private Combo roles;
@@ -65,6 +70,11 @@ public class EditUserDialog extends TitleAreaDialog {
 	 * Reset button id.
 	 */
 	private static final int EDIT_ID = 0; //IDialogConstants.OK_ID;
+	
+	/**
+	 * Delete user button id.
+	 */
+	private static final int DELETE_USER_ID = 2;
 
 	/**
 	 * Default constructor.
@@ -139,6 +149,8 @@ public class EditUserDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		deleteUserButton = createButton(parent, DELETE_USER_ID, "Delete User", true);
+		deleteUserButton.setEnabled(true);
 		editButton = createButton(parent, EDIT_ID, "Edit", true);
 		editButton.setEnabled(true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CLOSE_LABEL, false);
@@ -151,6 +163,8 @@ public class EditUserDialog extends TitleAreaDialog {
 	protected void buttonPressed(int buttonId) {
 		if (EDIT_ID == buttonId) {
 			editPressed();
+		} else if (DELETE_USER_ID == buttonId) {
+			deletePressed();
 		} else if (IDialogConstants.CANCEL_ID == buttonId) {
 			cancelPressed();
 		}
@@ -175,6 +189,14 @@ public class EditUserDialog extends TitleAreaDialog {
 	    	passwordChanged = false;
 	    }
 	    cmrRepositoryDefinition.getSecurityService().changeUserAttribute(userOld, mail, password, id, passwordChanged, cmrRepositoryDefinition.getSessionId());
+		okPressed();
+	}
+	
+	/**
+	 * Notifies that the delete user button has been pressed.
+	 */
+	private void deletePressed() {
+		cmrRepositoryDefinition.getSecurityService().deleteUser(userOld);
 		okPressed();
 	}
 }

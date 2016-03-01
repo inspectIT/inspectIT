@@ -41,6 +41,11 @@ public class EditRoleDialog extends TitleAreaDialog {
 	 * Edit button.
 	 */
 	private Button editButton;
+	
+	/**
+	 * Delete Role button.
+	 */
+	private Button deleteRoleButton;
 
 	/**
 	 * The role to edit.
@@ -48,9 +53,14 @@ public class EditRoleDialog extends TitleAreaDialog {
 	private Role roleOld;
 
 	/**
-	 * Reset button id.
+	 * Edit button id.
 	 */
 	private static final int EDIT_ID = 0; //IDialogConstants.OK_ID;
+	
+	/**
+	 * Delete role button id.
+	 */
+	private static final int DELETE_ROLE_ID = 2;
 	/**
 	 * List of permissions that the current user can give to the new role.
 	 */
@@ -128,6 +138,8 @@ public class EditRoleDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		deleteRoleButton = createButton(parent, DELETE_ROLE_ID, "Delete Role", true);
+		deleteRoleButton.setEnabled(true);
 		editButton = createButton(parent, EDIT_ID, "Edit", true);
 		editButton.setEnabled(true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CLOSE_LABEL, false);
@@ -140,6 +152,8 @@ public class EditRoleDialog extends TitleAreaDialog {
 	protected void buttonPressed(int buttonId) {
 		if (EDIT_ID == buttonId) {
 			editPressed();
+		} else if (DELETE_ROLE_ID == buttonId) {
+			deletePressed();
 		} else if (IDialogConstants.CANCEL_ID == buttonId) {
 			cancelPressed();
 		}
@@ -162,6 +176,14 @@ public class EditRoleDialog extends TitleAreaDialog {
 			}
 		}
 		cmrRepositoryDefinition.getSecurityService().changeRoleAttribute(roleOld, name, newPermissions);
+		okPressed();
+	}
+	
+	/**
+	 * Notifies that the delete role button has been pressed.
+	 */
+	private void deletePressed() {
+		cmrRepositoryDefinition.getSecurityService().deleteRole(roleOld);
 		okPressed();
 	}
 }
