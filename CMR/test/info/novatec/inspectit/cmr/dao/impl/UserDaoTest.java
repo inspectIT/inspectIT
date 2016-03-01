@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.cmr.test.AbstractTransactionalTestNGLogSupport;
@@ -17,6 +16,7 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:spring/spring-context-global.xml", "classpath:spring/spring-context-database.xml", "classpath:spring/spring-context-beans.xml",
 		"classpath:spring/spring-context-processors.xml", "classpath:spring/spring-context-storage-test.xml" })
+@SuppressWarnings("PMD")
 public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 	@Autowired
@@ -32,14 +32,6 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 		userDao.saveOrUpdate(user);
 		
-		List<User> users = userDao.loadAll();
-        
-        for(User u : users){
-
-            System.out.println(u.toString());
-        }
-        
-        User retrievedUser = userDao.load("TestName");
         
 //        List<User> listOfUsers = userDao.findByEmail("email");
 //        
@@ -47,7 +39,6 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 //        	System.out.println(u.toString());
 //        }
         
-        System.out.println("Name of user: " + retrievedUser.getEmail());
         
 
 		userDao.delete(user);
