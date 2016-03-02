@@ -88,7 +88,6 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 		//if the given permission is present in the database, adapt the id of the permission
 		if (tmpPermission != null) {
 			permission.setId(tmpPermission.getId());
-			tmpPermission = null;
 		}
 		getHibernateTemplate().saveOrUpdate(permission);
 	}

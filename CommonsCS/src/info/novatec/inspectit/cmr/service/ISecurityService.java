@@ -83,15 +83,23 @@ public interface ISecurityService {
 	List<Role> getAllRoles();
 
 	/**
-	 * Adds a new Role to the CMR.
-	 * 
-	 * @param title
-	 *            The title of the new role.
-	 * @param permissions
-	 *            The permissions assigned to this role.
-	 * @return The id of the created Role.
+	 * Method to add a new role.
+	 * @param name
+	 * 				Name of role.
+	 * @param rolePermissions
+	 * 				Permissions of role in string-form.
 	 */
-	// int addRole(String title, List<Permission> permissions);
+	void addRole(String name, List<String> rolePermissions);
+	/**
+	 * Method to edit a role.
+	 * @param roleOld
+	 * 		the role to edit
+	 * @param name
+	 * 		name of the new role
+	 * @param newPermissions
+	 * 		list of new permissions
+	 */
+	void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions);
 
 	// | USER |---------------
 	/**
@@ -102,6 +110,14 @@ public interface ISecurityService {
 	 */
 	List<String> getAllUsers();
 
+	/**
+	 * Should return all the users with the given roleID.
+	 * @param id
+	 * 			Given roleID.
+	 * @return List<String>
+	 * 				Found User by email.
+	 */
+	List<String> getUsersByRole(long id);
 	/**
 	 * Adds a new User to the Database. Throws an exception, if there is an existing registered User
 	 * with the given email-address. Throws an exception, if the given role-id does not exist.
@@ -129,12 +145,21 @@ public interface ISecurityService {
 	void deleteUser(User user);
 
 	/**
-	 * Change any attribute of a User. Email cannot be changed.
 	 * 
-	 * @param user
-	 *            user
+	 * @param userOld 
+	 * 		the user that is edited and now needs to be deleted
+	 * @param email
+	 * 		the new email
+	 * @param password
+	 * 		the new password
+	 * @param roleID
+	 * 		the new roleID
+	 * @param passwordChanged
+	 * 		boolean to see if password was changed and needs to be hashed
+	 * @param sessionId
+	 * 		the sessionId
 	 */
-	void changeUserAttribute(User user);
+	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId);
 
 	// | PERMISSION |---------
 	/**
@@ -152,13 +177,9 @@ public interface ISecurityService {
 	 */
 	List<Permission> getAllPermissions();
 
-	/**
-	 * Method to add a new role.
-	 * @param name
-	 * 				Name of role.
-	 * @param rolePermissions
-	 * 				Permissions of role in string-form.
-	 */
-	void addRole(String name, List<String> rolePermissions);
+	
+
+	
+
 }
 
