@@ -30,6 +30,8 @@
 		
 		<dependency org="com.github.stephenc.high-scale-lib" name="info.novatec.high-scale-lib" rev="1.1.2" conf="prod->default" />
 		
+			<!-- Shiro Security Framework -->
+		<dependency org="org.apache.shiro" name="shiro-core" rev="1.2.4" conf="prod->default" />
 		<!-- Test -->
 		<!-- Test NG should be on the build path via the Eclipse plug-in -->
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />

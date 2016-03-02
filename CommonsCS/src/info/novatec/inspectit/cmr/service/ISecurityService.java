@@ -6,6 +6,7 @@ import java.util.List;
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
+import org.apache.shiro.authc.AuthenticationException;
 
 /**
  * Provides general security operations for client<->cmr interaction.
@@ -64,7 +65,7 @@ public interface ISecurityService {
 	 * @throws AuthenticationException
 	 *             if the email was not found.
 	 */
-	Role getRoleOfUser(String email);
+	Role getRoleOfUser(String email)throws AuthenticationException;
 
 	/**
 	 * Searches for the Role matching a given ID.

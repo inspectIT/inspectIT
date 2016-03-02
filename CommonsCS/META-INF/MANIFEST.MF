@@ -66,4 +66,5 @@ Require-Bundle: info.novatec.inspectit.commons;bundle-version="1.5.0",
  com.esotericsoftware.kryo;bundle-version="2.24.0",
  info.novatec.hamcrest-all;bundle-version="1.3.0",
  com.google.guava.jdk5;bundle-version="13.0.0",
- info.novatec.high-scale-lib;bundle-version="1.1.2"
+ info.novatec.high-scale-lib;bundle-version="1.1.2",
+ org.apache.shiro.core;bundle-version="1.2.4"
