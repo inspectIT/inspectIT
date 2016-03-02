@@ -40,24 +40,24 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>config</name>
+			<type>2</type>
+			<locationURI>config</locationURI>
+		</link>
+		<link>
 			<name>plugin_customization.ini</name>
 			<type>1</type>
 			<locationURI>pluginini</locationURI>
 		</link>
-		<link>
-			<name>shared</name>
-			<type>2</type>
-			<locationURI>shared</locationURI>
-		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
-			<name>pluginini</name>
-			<value>$%7BPROJECT_LOC%7D/src/main/resources/plugin_customization.ini</value>
+			<name>config</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/resources/config</value>
 		</variable>
 		<variable>
-			<name>shared</name>
-			<value>$%7BPARENT-1-PROJECT_LOC%7D/shared-resources</value>
+			<name>pluginini</name>
+			<value>$%7BPROJECT_LOC%7D/src/main/resources/plugin_customization.ini</value>
 		</variable>
 	</variableList>
 </projectDescription>

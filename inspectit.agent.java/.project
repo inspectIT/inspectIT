@@ -29,15 +29,15 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>shared</name>
+			<name>config</name>
 			<type>2</type>
-			<locationURI>shared</locationURI>
+			<locationURI>config</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
-			<name>shared</name>
-			<value>$%7BPARENT-1-PROJECT_LOC%7D/shared-resources</value>
+			<name>config</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/resources/config</value>
 		</variable>
 	</variableList>
 </projectDescription>
