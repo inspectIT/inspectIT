@@ -6,7 +6,7 @@
 <listEntry value="/CMR/bin"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/inspectit.server/src/rocks/inspectit/server/CMR.java"/>
+<listEntry value="/inspectit.server/src/main/java/rocks/inspectit/server/CMR.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
