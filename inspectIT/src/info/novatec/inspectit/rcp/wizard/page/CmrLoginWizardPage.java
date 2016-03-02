@@ -83,6 +83,18 @@ public class CmrLoginWizardPage extends WizardPage {
 		passwordBox = new Text(main, SWT.BORDER | SWT.PASSWORD);
 		passwordBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
+		final Button checkBox = new Button(main, SWT.CHECK);
+		checkBox.setText("Login as Guest");
+		checkBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean selected = checkBox.getSelection();
+                if (selected) {
+                	mailBox.setText("guest");
+    				passwordBox.setText("guest");                  
+                }
+               }
+		});
 		Button forgotPassword = new Button(main, SWT.PUSH);
 		forgotPassword.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		forgotPassword.setText("Forgot password?");
