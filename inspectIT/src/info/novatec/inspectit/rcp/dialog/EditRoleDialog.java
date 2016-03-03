@@ -2,6 +2,7 @@ package info.novatec.inspectit.rcp.dialog;
 
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
+import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -51,6 +53,11 @@ public class EditRoleDialog extends TitleAreaDialog {
 	 * The role to edit.
 	 */
 	private Role roleOld;
+	
+	/**
+	 * List of all Roles.
+	 */
+	private List<Role> rolesList;
 
 	/**
 	 * Edit button id.
@@ -82,6 +89,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 	public EditRoleDialog(Shell parentShell, CmrRepositoryDefinition cmrRepositoryDefinition, Role role) {
 		super(parentShell);
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
+		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
 		roleOld = role;
 	}
 
@@ -166,6 +174,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 		String name = roleNameBox.getText();
 		List<Permission> allPermissions = cmrRepositoryDefinition.getSecurityService().getAllPermissions();
 		List<Permission> newPermissions = new ArrayList<Permission>();
+		List<Permission> rolePermissions = roleOld.getPermissions();
 		for (Button but : grantedPermissionsButtons) {
 			if (but.getSelection()) {
 				for (Permission perm : allPermissions) {
@@ -173,6 +182,24 @@ public class EditRoleDialog extends TitleAreaDialog {
 						newPermissions.add(perm);
 					}
 				}
+			}
+		}
+		boolean admin = false;
+		for (Permission perm : rolePermissions) {
+			if (perm.getTitle().equals("cmrAdministrationPermission")) { 
+				admin = true;
+			}
+		}
+		if (admin) {
+			boolean stillAdmin = false;
+			for (Permission perm : newPermissions) {
+				if (perm.getTitle().equals("cmrAdministrationPermission")) {
+					stillAdmin = true;
+				}
+			}
+			if (!stillAdmin) {
+				MessageDialog.openWarning(null, "Warning", "You are about to remove the last admin role. Please make sure there is at least one admin role remaining.");
+				return;
 			}
 		}
 		cmrRepositoryDefinition.getSecurityService().changeRoleAttribute(roleOld, name, newPermissions);
@@ -183,6 +210,50 @@ public class EditRoleDialog extends TitleAreaDialog {
 	 * Notifies that the delete role button has been pressed.
 	 */
 	private void deletePressed() {
+		if (roleOld.getTitle().equals("freshRole")) {
+			MessageDialog.openWarning(null, "Warning", "This role is required for guest access and can not be deleted.");
+			return;
+		}
+		long id = roleOld.getId();
+		List<String> userEmails = cmrRepositoryDefinition.getSecurityService().getUsersByRole(id);
+		List<Permission> rolePermissions = roleOld.getPermissions();
+		boolean admin = false;
+		for (Permission perm : rolePermissions) {
+			if (perm.getTitle().equals("cmrAdministrationPermission")) { 
+				admin = true;
+			}
+		}
+		if (admin) {
+			List<Role> adminRoles = new ArrayList<Role>();
+			for	(Role role : rolesList) {
+				List<Permission> permissions = role.getPermissions();
+				for (Permission perm: permissions) {
+					if (perm.getTitle().equals("cmrAdministrationPermission")) {
+						adminRoles.add(role);
+					}
+				}
+			}
+			if (adminRoles.size() < 2) {
+				MessageDialog.openWarning(null, "Warning", "You are about to remove the last admin role. Please make sure there is at least one admin role remaining.");
+				return;
+			}
+		}
+		if (!userEmails.isEmpty()) {
+			List<User> users = new ArrayList<User>();
+			String warning = "By deleting this role the following users will also get deleted: ";
+			for (String email : userEmails) {
+				users.add(cmrRepositoryDefinition.getSecurityService().getUser(email));
+				warning += " " + email;
+			}
+			Boolean confirm = MessageDialog.openConfirm(null, "Delete role", warning);
+			if (!confirm) {
+				return;
+			}
+			for (User user : users) {
+				cmrRepositoryDefinition.getSecurityService().deleteUser(user, cmrRepositoryDefinition.getSessionId());
+			}
+		}
+		
 		cmrRepositoryDefinition.getSecurityService().deleteRole(roleOld);
 		okPressed();
 	}

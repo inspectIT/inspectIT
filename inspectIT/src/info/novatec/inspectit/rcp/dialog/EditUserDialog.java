@@ -201,16 +201,6 @@ public class EditUserDialog extends TitleAreaDialog {
 	private void deletePressed() {
 		Role userRole = cmrRepositoryDefinition.getSecurityService().getRoleOfUser(userOld.getEmail());
 		List<Permission> userPermissions = userRole.getPermissions();
-		List<Role> adminRoles = new ArrayList<Role>();
-		List<String> adminUsers = new ArrayList<String>();
-		for	(Role role : rolesList) {
-			List<Permission> rolePermissions = role.getPermissions();
-			for (Permission perm: rolePermissions) {
-				if (perm.getTitle().equals("cmrAdministrationPermission")) {
-					adminRoles.add(role);
-				}
-			}
-		}
 		boolean admin = false;
 		for (Permission perm : userPermissions) {
 			if (perm.getTitle().equals("cmrAdministrationPermission")) { 
@@ -218,6 +208,16 @@ public class EditUserDialog extends TitleAreaDialog {
 			}
 		}
 		if (admin) {
+			List<Role> adminRoles = new ArrayList<Role>();
+			List<String> adminUsers = new ArrayList<String>();
+			for	(Role role : rolesList) {
+				List<Permission> rolePermissions = role.getPermissions();
+				for (Permission perm: rolePermissions) {
+					if (perm.getTitle().equals("cmrAdministrationPermission")) {
+						adminRoles.add(role);
+					}
+				}
+			}
 			for (Role role : adminRoles) {
 				long id = role.getId();
 				adminUsers.addAll(cmrRepositoryDefinition.getSecurityService().getUsersByRole(id));
