@@ -6,7 +6,6 @@ import java.util.List;
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
-import org.apache.shiro.authc.AuthenticationException;
 
 /**
  * Provides general security operations for client<->cmr interaction.
