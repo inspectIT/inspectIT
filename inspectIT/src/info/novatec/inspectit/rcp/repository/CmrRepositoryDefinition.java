@@ -19,6 +19,7 @@ import info.novatec.inspectit.cmr.service.ISqlDataAccessService;
 import info.novatec.inspectit.cmr.service.IStorageService;
 import info.novatec.inspectit.cmr.service.ITimerDataAccessService;
 import info.novatec.inspectit.cmr.service.cache.CachedDataService;
+import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.service.RefreshEditorsCachedDataService;
@@ -63,7 +64,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * List for access to granted rights.
 	 */
-	private List<String> grantedPermissions = null;
+	private List<Permission> grantedPermissions = null;
 
 	/**
 	 * Enumeration for the login status.
@@ -588,6 +589,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	}
 
 	/**
+	 * Standard Session-ID.
+	 */
+	public static final Serializable STANDARD_SESSION_ID = -1;
+	
+	/**
 	 * Method to login on the CMR.
 	 * 
 	 * @param email
@@ -604,7 +610,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			return true;
 		}
 
-		sessionId = null;
+		sessionId = STANDARD_SESSION_ID;
 		return false;
 	}
 
@@ -614,7 +620,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	public void logout() {
 		if (null != sessionId) {
 			securityService.logout(sessionId);
-			sessionId = null;
+			sessionId = STANDARD_SESSION_ID;
 		}
 		refreshLoginStatus();
 	}
@@ -632,7 +638,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			 * "You are no longer logged in."); }
 			 */
 			loginStatus = LoginStatus.LOGGEDOUT;
-			sessionId = null;
+			sessionId = STANDARD_SESSION_ID;
 		}
 		refreshPermissions();
 	}
@@ -643,7 +649,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * @return Returns if the user is logged in.
 	 */
 	public boolean isLoggedIn() {
-		if (!isOnline() || null == sessionId) {
+		if (!isOnline() || STANDARD_SESSION_ID.equals(sessionId)) {
 			return false;
 		}
 		return securityService.existsSession(sessionId);
@@ -669,11 +675,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		return loginStatus;
 	}
 
-	private void setGrantedPermissions(List<String> grantedPermissions) {
-		this.grantedPermissions = grantedPermissions;
+	private void setGrantedPermissions(List<Permission> list) {
+		this.grantedPermissions = list;
 	}
 	
-	public List<String> getGrantedPermissions() {
+	public List<Permission> getGrantedPermissions() {
 		return this.grantedPermissions;
 	}
 
@@ -685,7 +691,14 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * @return true if has Permission.
 	 */
 	public boolean hasPermission(String permission) {
-		return this.grantedPermissions != null && this.grantedPermissions.contains(permission);
+		if (this.grantedPermissions != null) {
+				for (int i = 0; i < grantedPermissions.size(); i++) {
+			if (grantedPermissions.get(i).getTitle().equals(permission)) {
+				return true;
+			}
+		}
+		}
+		return false; 
 	}
 	
 	public Serializable getSessionId() {

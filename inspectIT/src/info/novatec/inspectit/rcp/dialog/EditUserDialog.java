@@ -114,7 +114,7 @@ public class EditUserDialog extends TitleAreaDialog {
 		Label passwordLabel = new Label(main, SWT.NONE);
 		passwordLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		passwordLabel.setText("Password:");
-		passwordBox = new Text(main, SWT.BORDER);
+		passwordBox = new Text(main, SWT.BORDER | SWT.PASSWORD);
 		passwordBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		passwordBox.setText("");
 		
