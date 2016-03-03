@@ -91,7 +91,14 @@ public class CmrLoginWizardPage extends WizardPage {
 				boolean selected = checkBox.getSelection();
                 if (selected) {
                 	mailBox.setText("guest");
-    				passwordBox.setText("guest");                  
+    				passwordBox.setText("guest");
+    				mailBox.setEditable(false);
+    				passwordBox.setEditable(false);
+                } else {
+                	mailBox.setText("");
+    				passwordBox.setText("");
+    				mailBox.setEditable(true);
+    				passwordBox.setEditable(true);
                 }
                }
 		});

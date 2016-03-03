@@ -54,7 +54,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 	/**
 	 * List of permissions that the current user can give to the new role.
 	 */
-	private List<String> grantedPermissions; 
+	private List<String> grantedPermissionsStrings; 
 	/**
 	 * Array of buttons to display the permissions that can be granted.
 	 */
@@ -107,13 +107,16 @@ public class EditRoleDialog extends TitleAreaDialog {
 		textPermissionLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
 		textPermissionLabel.setText("Mark the permissions, that the new role should have:");
 		List<Permission> permissionList = roleOld.getPermissions();
-		this.grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
-		this.grantedPermissionsButtons = new Button[grantedPermissions.size()];
+		List<Permission> grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
 		for (int i = 0; i < grantedPermissions.size(); i++) {
+			this.grantedPermissionsStrings.add(grantedPermissions.get(i).getTitle());
+			}
+		this.grantedPermissionsButtons = new Button[grantedPermissionsStrings.size()];
+		for (int i = 0; i < grantedPermissionsStrings.size(); i++) {
 			grantedPermissionsButtons[i] = new Button(parent, SWT.CHECK);
-			grantedPermissionsButtons[i].setText(grantedPermissions.get(i));
+			grantedPermissionsButtons[i].setText(grantedPermissionsStrings.get(i));
 			for (Permission perm : permissionList) {
-				if (perm.getTitle().equals(grantedPermissions.get(i))) { 
+				if (perm.getTitle().equals(grantedPermissionsStrings.get(i))) { 
 					grantedPermissionsButtons[i].setSelection(true);
 				}
 			}
