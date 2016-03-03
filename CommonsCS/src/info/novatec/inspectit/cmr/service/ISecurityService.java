@@ -53,7 +53,7 @@ public interface ISecurityService {
 	 *            sessionId
 	 * @return List with the users permissions.
 	 */
-	List<String> getPermissions(Serializable sessionId);
+	List<Permission> getPermissions(Serializable sessionId);
 
 	// | ROLE | --------------
 	/**
@@ -62,8 +62,6 @@ public interface ISecurityService {
 	 * @param email
 	 *            email
 	 * @return a Role object with given Email of the user.
-	 * @throws AuthenticationException
-	 *             if the email was not found.
 	 */
 	Role getRoleOfUser(String email);
 

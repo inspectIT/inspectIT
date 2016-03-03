@@ -65,8 +65,12 @@ public class SecurityInitialization {
 			
 		//Standarduser - has to be changed on first login
 		User admin = new User(Permutation.hashString("admin"), "admin", adminUser.getId());
-				
+		
+		//Guestuser - can be edited to give a user without an account rights
+		User guest = new User(Permutation.hashString("guest"), "guest", freshUser.getId());
+		
 		//Transfers users to databse.		
+		userDao.saveOrUpdate(guest);
 		userDao.saveOrUpdate(admin);			   
 	}
 }
