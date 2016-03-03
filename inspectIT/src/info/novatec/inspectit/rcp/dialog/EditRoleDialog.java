@@ -194,13 +194,22 @@ public class EditRoleDialog extends TitleAreaDialog {
 			}
 		}
 		if (admin) {
+			List<Role> adminRoles = new ArrayList<Role>();
+			for	(Role role : rolesList) {
+				List<Permission> permissions = role.getPermissions();
+				for (Permission perm: permissions) {
+					if (perm.getTitle().equals("cmrAdministrationPermission")) {
+						adminRoles.add(role);
+					}
+				}
+			}
 			boolean stillAdmin = false;
 			for (Permission perm : newPermissions) {
 				if (perm.getTitle().equals("cmrAdministrationPermission")) {
 					stillAdmin = true;
 				}
 			}
-			if (!stillAdmin) {
+			if (!stillAdmin && adminRoles.size() < 2) {
 				MessageDialog.openWarning(null, "Warning", "You are about to remove the last admin role. Please make sure there is at least one admin role remaining.");
 				return;
 			}
