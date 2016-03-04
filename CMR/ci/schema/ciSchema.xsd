@@ -31,6 +31,8 @@
 
   <xs:element name="list-sending-strategy-config" type="listSendingStrategyConfig"/>
 
+  <xs:element name="log4j-logging-sensor-config" type="log4JLoggingSensorConfig"/>
+
   <xs:element name="memory-sensor-config" type="memorySensorConfig"/>
 
   <xs:element name="method-sensor-assignment" type="methodSensorAssignment"/>
@@ -116,6 +118,7 @@
               <xs:element ref="prepared-statement-sensor-config"/>
               <xs:element ref="statement-sensor-config"/>
               <xs:element ref="timer-sensor-config"/>
+              <xs:element ref="log4j-logging-sensor-config"/>
             </xs:choice>
           </xs:sequence>
         </xs:complexType>
@@ -294,6 +297,15 @@
     <xs:complexContent>
       <xs:extension base="stringConstraintSensorConfig">
         <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="log4JLoggingSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
+        <xs:attribute name="minLevel" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

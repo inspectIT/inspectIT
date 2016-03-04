@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="logging-log4j" name="Logging for log4j" common="true" created-on="2016-01-29T12:00:00" description="Profile for the log4j logging capturing."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- Configuration for Log4j -->
+	<method-sensor-assignment sensor-config-class="info.novatec.inspectit.ci.sensor.method.impl.Log4jLoggingSensorConfig" class-name="org.apache.log4j.Category" method-name="forcedLog" parameters="java.lang.String org.apache.log4j.Priority java.lang.Object java.lang.Throwable" private-mod="false" protected-mod="false" default-mod="false" />
+
+</profile>
