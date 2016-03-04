@@ -3,6 +3,7 @@ package info.novatec.inspectit.rcp.ci.form.page;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.ci.form.part.EnvironmentSettingsPart;
+import info.novatec.inspectit.rcp.ci.form.part.LoggingSensorOptionsPart;
 import info.novatec.inspectit.rcp.ci.form.part.PlatformSensorSelectionPart;
 import info.novatec.inspectit.rcp.ci.form.part.ProfileSelectionPart;
 import info.novatec.inspectit.rcp.ci.form.part.SensorOptionsPart;
@@ -20,9 +21,9 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * Page for the environment general settings.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EnvironmentSettingsPage extends FormPage {
 
@@ -38,7 +39,7 @@ public class EnvironmentSettingsPage extends FormPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param editor
 	 *            {@link FormEditor} page belongs to.
 	 */
@@ -86,6 +87,10 @@ public class EnvironmentSettingsPage extends FormPage {
 		SensorOptionsPart sensorOptionsPart = new SensorOptionsPart(this, right, toolkit, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
 		sensorOptionsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(sensorOptionsPart);
+
+		LoggingSensorOptionsPart loggingSensorOptionsPart = new LoggingSensorOptionsPart(this, right, toolkit, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+		loggingSensorOptionsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		managedForm.addPart(loggingSensorOptionsPart);
 	}
 
 	/**

@@ -7,6 +7,7 @@ import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConf
 import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import info.novatec.inspectit.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.StatementSensorConfig;
@@ -28,9 +29,9 @@ import java.util.List;
 
 /**
  * Defaults factory defines what is default for our configuration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class ConfigurationDefaultsFactory {
 
@@ -42,7 +43,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns default sending strategy, that's {@link TimeSendingStrategyConfig}.
-	 * 
+	 *
 	 * @return Returns default sending strategy.
 	 */
 	public static IStrategyConfig getDefaultSendingStrategy() {
@@ -51,7 +52,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns default buffer strategy. That's {@link SimpleBufferStrategyConfig}.
-	 * 
+	 *
 	 * @return Returns default buffer strategy.
 	 */
 	public static IStrategyConfig getDefaultBufferStrategy() {
@@ -60,7 +61,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns all available {@link IPlatformSensorConfig}s.
-	 * 
+	 *
 	 * @return Returns all available {@link IPlatformSensorConfig}s.
 	 */
 	public static List<IPlatformSensorConfig> getAvailablePlatformSensorConfigs() {
@@ -77,7 +78,7 @@ public final class ConfigurationDefaultsFactory {
 
 	/**
 	 * Returns all available {@link IMethodSensorConfig}s.
-	 * 
+	 *
 	 * @return Returns all available {@link IMethodSensorConfig}s.
 	 */
 	public static List<IMethodSensorConfig> getAvailableMethodSensorConfigs() {
@@ -90,12 +91,13 @@ public final class ConfigurationDefaultsFactory {
 		methodSensorConfigs.add(new PreparedStatementSensorConfig());
 		methodSensorConfigs.add(new StatementSensorConfig());
 		methodSensorConfigs.add(new TimerSensorConfig());
+		methodSensorConfigs.add(new Log4jLoggingSensorConfig());
 		return methodSensorConfigs;
 	}
 
 	/**
 	 * Returns default {@link IExceptionSensorConfig}. That's {@link ExceptionSensorConfig}.
-	 * 
+	 *
 	 * @return Returns default {@link IExceptionSensorConfig}.
 	 */
 	public static IExceptionSensorConfig getDefaultExceptionSensorConfig() {
