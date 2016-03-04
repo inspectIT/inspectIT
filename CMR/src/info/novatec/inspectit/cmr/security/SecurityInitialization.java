@@ -40,6 +40,7 @@ public class SecurityInitialization {
 	 * Initializes the database with the given roles and permissions.
 	 */
 	public void start() {
+		if (permissionDao.loadAll().isEmpty()) {
 		Permission cmrRecordingPermission = new Permission("cmrRecordingPermission", "Permission start recording from Agent");
 		Permission cmrShutdownAndRestartPermission = new Permission("cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR");
 		Permission cmrDeleteAgentPermission = new Permission("cmrDeleteAgentPermission", "Permission for deleting Agent");
@@ -72,6 +73,6 @@ public class SecurityInitialization {
 		//Transfers users to databse.		
 		userDao.saveOrUpdate(guest);
 		userDao.saveOrUpdate(admin);	
-				
+		}	
 	}
 }

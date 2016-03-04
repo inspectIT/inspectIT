@@ -31,28 +31,14 @@ public class Permission implements Serializable {
 	 * Parameter for advanced permissions.
 	 */
 	private String parameter;
-	
+
 	/**
-	 * Default constructor for Permission.
+	 * Default constructor for permission.
 	 */
-	
 	public Permission() {
 		
 	}
 	
-	/**
-	 * The constructor for a permission.
-	 * @param id The id of the permission. [id should no longer be hardcoded]
-	 * @param title The short title of the permission.
-	 * @param description The more detailed description of the permission.
-	 */
-	public Permission(long id, String title, String description) {
-		super();
-		this.title = title;
-		this.description = description;
-		this.id = id;
-		this.parameter = "No parameter given";
-	}
 	/**
 	 * The constructor for a permission.
 	 * @param title The short title of the permission.
@@ -62,23 +48,8 @@ public class Permission implements Serializable {
 		super();
 		this.title = title;
 		this.description = description;
-		this.id = 0;
 		this.parameter = "No parameter given";
-	}
-	
-	/**
-	 * The constructor for a permission with a parameter.
-	 * @param id The id of the permission. [id should no longer be hardcoded]
-	 * @param title The short title of the permission.
-	 * @param description The more detailed description of the permission.
-	 * @param parameter for advanced permissions.
-	 */
-	public Permission(long id, String title, String description, String parameter) {
-		super();
-		this.title = title;
-		this.description = description;
-		this.id = id;
-		this.parameter = parameter;
+		this.id = 0;
 	}
 	
 	/**
@@ -91,8 +62,8 @@ public class Permission implements Serializable {
 		super();
 		this.title = title;
 		this.description = description;
-		this.id = 0;
 		this.parameter = parameter;
+		this.id = 0;
 	}
 	
 	/**

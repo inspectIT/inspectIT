@@ -9,6 +9,6 @@
 		
 		<property name="description" column="description" />
 		
-		<property name="parameter" column="parameter" unique="false" />
+		<property name="parameter" column="parameter" />
 	</class>
 </hibernate-mapping>

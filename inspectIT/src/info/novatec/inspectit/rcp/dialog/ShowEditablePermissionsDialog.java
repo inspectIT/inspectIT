@@ -133,7 +133,6 @@ public class ShowEditablePermissionsDialog extends TitleAreaDialog {
 			TableItem item = new TableItem(table, SWT.NONE);
 
 			String parameter = allPermissions.get(i).getParameter();
-			System.out.println(allPermissions.get(i).getTitle());
 			item.setText(0, allPermissions.get(i).getTitle());
 			item.setText(1, parameter);	
 			

@@ -14,7 +14,6 @@ import info.novatec.inspectit.rcp.dialog.ShowEditablePermissionsDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.dialog.AddRoleDialog;
 import info.novatec.inspectit.rcp.dialog.AddUserDialog;
-import info.novatec.inspectit.rcp.dialog.EditPermissionDialog;
 import info.novatec.inspectit.rcp.dialog.SearchUsersDialog;
 
 /**
