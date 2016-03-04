@@ -7,6 +7,7 @@ import java.io.Serializable;
  * 
  * @author Joshua Hartmann
  * @author Andreas Herzog
+ * @author Lucca Hellriegel
  */
 public class Permission implements Serializable {
 	/**
@@ -25,6 +26,12 @@ public class Permission implements Serializable {
 	 * A more detailed description for the functionality the permission covers.
 	 */
 	private String description;
+	
+	/**
+	 * Parameter for advanced permissions.
+	 */
+	private String parameter;
+	
 	/**
 	 * Default constructor for Permission.
 	 */
@@ -44,6 +51,7 @@ public class Permission implements Serializable {
 		this.title = title;
 		this.description = description;
 		this.id = id;
+		this.parameter = "No parameter given";
 	}
 	/**
 	 * The constructor for a permission.
@@ -55,6 +63,7 @@ public class Permission implements Serializable {
 		this.title = title;
 		this.description = description;
 		this.id = 0;
+		this.parameter = "No parameter given";
 	}
 	
 	/**
@@ -64,7 +73,7 @@ public class Permission implements Serializable {
 	 * @param description The more detailed description of the permission.
 	 * @param parameter for advanced permissions.
 	 */
-	public Permission(long id, String title, String description, Object parameter) {
+	public Permission(long id, String title, String description, String parameter) {
 		super();
 		this.title = title;
 		this.description = description;
@@ -78,7 +87,7 @@ public class Permission implements Serializable {
 	 * @param description The more detailed description of the permission.
 	 * @param parameter for advanced permissions.
 	 */
-	public Permission(String title, String description, Object parameter) {
+	public Permission(String title, String description, String parameter) {
 		super();
 		this.title = title;
 		this.description = description;
@@ -115,7 +124,7 @@ public class Permission implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Permission [id=" + id + ", title=" + title + ", description=" + description + "]";
+		return "Permission [id=" + id + ", title=" + title + ", description=" + description + ", parameter=" + parameter + "]";
 	}
 	
 	/**  
@@ -149,20 +158,17 @@ public class Permission implements Serializable {
 	/**
 	 * @return the parameter
 	 */
-	public Object getParameter() {
+	public String getParameter() {
 		return parameter;
 	}
 
 	/**
 	 * @param parameter the parameter to set
 	 */
-	public void setParameter(Object parameter) {
+	public void setParameter(String parameter) {
 		this.parameter = parameter;
 	}
 
-	/**
-	 * Parameter for advanced permissions.
-	 */
-	private Object parameter = -1;
+	
 	
 }

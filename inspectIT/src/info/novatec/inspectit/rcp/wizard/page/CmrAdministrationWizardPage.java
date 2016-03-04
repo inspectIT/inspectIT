@@ -10,9 +10,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import info.novatec.inspectit.rcp.dialog.ShowAllRolesDialog;
 import info.novatec.inspectit.rcp.dialog.ShowAllUsersDialog;
+import info.novatec.inspectit.rcp.dialog.ShowEditablePermissionsDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.dialog.AddRoleDialog;
 import info.novatec.inspectit.rcp.dialog.AddUserDialog;
+import info.novatec.inspectit.rcp.dialog.EditPermissionDialog;
 import info.novatec.inspectit.rcp.dialog.SearchUsersDialog;
 
 /**
@@ -70,6 +72,11 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	 * The dialog to add new users.
 	 */
 	private AddUserDialog addUserDialog;
+	
+	/**
+	 * The dialog to show permissions.
+	 */
+	private ShowEditablePermissionsDialog showEditablePermissionsDialog;
 
 	/**
 	 * {@inheritDoc}
@@ -135,6 +142,16 @@ public class CmrAdministrationWizardPage extends WizardPage {
 			}
 		});
 
+		Button editPermissions = new Button(main, SWT.CENTER);
+		editPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		editPermissions.setText("Edit Permissions");
+		editPermissions.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				showEditablePermissionsDialog = new ShowEditablePermissionsDialog(main.getShell(), cmrRepositoryDefinition);
+				showEditablePermissionsDialog.open();
+			}
+		});
 		
 		setControl(main);
 	}
