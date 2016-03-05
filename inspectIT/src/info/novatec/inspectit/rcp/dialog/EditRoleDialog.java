@@ -3,8 +3,6 @@ package info.novatec.inspectit.rcp.dialog;
 import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Dialog for resetting password in case Button in {@link CmrLoginWizardPage} is pressed.
+ * Dialog for editing roles.
  * 
  * @author Mario Rose
  *
@@ -54,7 +52,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 	/**
 	 * List of permissions that the current user can give to the new role.
 	 */
-	private List<String> grantedPermissionsStrings; 
+	private List<String> grantedPermissionsStrings = new ArrayList<String>(); 
 	/**
 	 * Array of buttons to display the permissions that can be granted.
 	 */
@@ -98,7 +96,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 
 		Label roleNameBoxLabel = new Label(main, SWT.NONE);
 		roleNameBoxLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		roleNameBoxLabel.setText("name:");
+		roleNameBoxLabel.setText("Name:");
 		roleNameBox = new Text(main, SWT.BORDER);
 		roleNameBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		roleNameBox.setText(roleOld.getTitle());

@@ -62,7 +62,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 	/**
 	 * List of permissions that the current user can give to the new role.
 	 */
-	private List<String> grantedPermissionsStrings;
+	private List<String> grantedPermissionsStrings = new ArrayList<String>();
 
 	/**
 	 * Array of buttons to display the permissions that can be granted.

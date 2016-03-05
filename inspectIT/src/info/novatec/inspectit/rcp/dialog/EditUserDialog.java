@@ -3,8 +3,6 @@ package info.novatec.inspectit.rcp.dialog;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.communication.data.cmr.User;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
-import info.novatec.inspectit.rcp.wizard.page.CmrLoginWizardPage;
-
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -21,7 +19,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Dialog for resetting password in case Button in {@link CmrLoginWizardPage} is pressed.
+ * Dialog for editing users.
  * 
  * @author Mario Rose
  *
@@ -120,7 +118,7 @@ public class EditUserDialog extends TitleAreaDialog {
 		
 		Label rolesLabel = new Label(main, SWT.NONE);
 		rolesLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		rolesLabel.setText("role:");
+		rolesLabel.setText("Role:");
 		roles = new Combo(main, SWT.READ_ONLY);
 	    for (Role role : rolesList) {
 	    	roles.add(role.getTitle());
