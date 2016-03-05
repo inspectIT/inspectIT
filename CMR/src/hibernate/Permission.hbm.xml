@@ -8,5 +8,7 @@
 		<property name="title" column="title" unique="true" />
 		
 		<property name="description" column="description" />
+		
+		<property name="parameter" column="parameter" />
 	</class>
 </hibernate-mapping>

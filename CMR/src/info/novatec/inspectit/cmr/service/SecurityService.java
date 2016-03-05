@@ -368,5 +368,10 @@ public class SecurityService implements ISecurityService {
 	}
 
 
-	// TODO Make more methods available for the administrator module...
+	@Override
+	public void changePermissionParameter(Permission permission) {
+		permissionDao.saveOrUpdate(permission);
+		
+	}
+		// TODO Make more methods available for the administrator module...
 }

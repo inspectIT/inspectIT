@@ -186,6 +186,13 @@ public interface ISecurityService {
 	 */
 	List<Permission> getAllPermissions();
 
+	/**
+	 * Changes the parameter for a permission.
+	 * @param permission
+	 * 				the permission with the actualized parameter.
+	 */
+	void changePermissionParameter(Permission permission);
+
 	
 
 	
