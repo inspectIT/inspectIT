@@ -249,7 +249,12 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void deleteUser(User user) {
+	public void deleteUser(User user, Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+		String currentName = (String) currentUser.getPrincipal();
+		if (currentName.equals(user.getEmail())) {
+			currentUser.logout();
+		}
 		userDao.delete(user);
 	}
 
@@ -356,6 +361,12 @@ public class SecurityService implements ISecurityService {
 		Role roleNew = new Role(roleOld.getId(), name, newPermissions);
 		roleDao.saveOrUpdate(roleNew);
 	}
+	
+	@Override
+	public void deleteRole(Role role) {
+		roleDao.delete(role);
+	}
+
 
 	@Override
 	public void changePermissionParameter(Permission permission) {
