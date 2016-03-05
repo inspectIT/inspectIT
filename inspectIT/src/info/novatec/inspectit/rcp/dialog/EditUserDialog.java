@@ -197,6 +197,10 @@ public class EditUserDialog extends TitleAreaDialog {
 	 * Notifies that the delete user button has been pressed.
 	 */
 	private void deletePressed() {
+		if (userOld.getEmail().equals("guest")) {
+			MessageDialog.openWarning(null, "Warning", "This user is required for guest access and can not be deleted.");
+			return;
+		}
 		Role userRole = cmrRepositoryDefinition.getSecurityService().getRoleOfUser(userOld.getEmail());
 		List<Permission> userPermissions = userRole.getPermissions();
 		boolean admin = false;

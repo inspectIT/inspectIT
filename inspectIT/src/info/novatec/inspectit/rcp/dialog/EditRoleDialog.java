@@ -220,7 +220,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 	 * Notifies that the delete role button has been pressed.
 	 */
 	private void deletePressed() {
-		if (roleOld.getTitle().equals("freshRole")) {
+		if (roleOld.getTitle().equals("guestRole")) {
 			MessageDialog.openWarning(null, "Warning", "This role is required for guest access and can not be deleted.");
 			return;
 		}
