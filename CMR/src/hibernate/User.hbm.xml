@@ -5,5 +5,6 @@
 		<id name="email" column="email" />
 		<property name="password" column="password" />
 		<property name="roleId" column="role_id" />
+		<property name="locked" column="locked" />
 	</class>
 </hibernate-mapping>
