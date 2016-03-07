@@ -10,7 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This class provide informations about system properties of the virtual machine.
@@ -27,6 +30,11 @@ public class VmArgumentData implements Serializable, Sizeable {
 	private static final long serialVersionUID = -8210901536567725333L;
 
 	/**
+	 * Max length of parameter name and value.
+	 */
+	private static final int MAX_LENGTH = 10000;
+
+	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
 	@Id
@@ -37,13 +45,13 @@ public class VmArgumentData implements Serializable, Sizeable {
 	/**
 	 * The name of the virtual machine system property.
 	 */
-	@Column(length = 10000)
+	@Column(length = MAX_LENGTH)
 	private String vmName;
 
 	/**
 	 * The value of the virtual machine system property.
 	 */
-	@Column(length = 10000)
+	@Column(length = MAX_LENGTH)
 	private String vmValue;
 
 	/**
@@ -120,6 +128,19 @@ public class VmArgumentData implements Serializable, Sizeable {
 	 */
 	public void setVmValue(String vmValue) {
 		this.vmValue = vmValue;
+	}
+
+	/**
+	 * Checks for the {@link #vmName} and {@link #vmValue} lengths prior to persisting.
+	 */
+	@PrePersist
+	protected void checkLengths() {
+		if (StringUtils.isNotEmpty(vmName) && vmName.length() > MAX_LENGTH) {
+			vmName = vmName.substring(0, MAX_LENGTH);
+		}
+		if (StringUtils.isNotEmpty(vmValue) && vmValue.length() > MAX_LENGTH) {
+			vmValue = vmValue.substring(0, MAX_LENGTH);
+		}
 	}
 
 	/**
