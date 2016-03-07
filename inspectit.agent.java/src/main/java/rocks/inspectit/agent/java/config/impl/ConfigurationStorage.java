@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javassist.Modifier;
 import rocks.inspectit.agent.java.analyzer.IClassPoolAnalyzer;
 import rocks.inspectit.agent.java.analyzer.IInheritanceAnalyzer;
 import rocks.inspectit.agent.java.analyzer.IMatchPattern;
@@ -23,12 +22,13 @@ import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.jrebel.JRebelUtil;
 import rocks.inspectit.shared.all.communication.data.ParameterContentType;
 import rocks.inspectit.shared.all.spring.logger.Log;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javassist.Modifier;
 
 /**
  * The default configuration storage implementation which stores everything in the memory.
@@ -54,6 +54,11 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 * The name of the property for the repository IP.
 	 */
 	private static final String REPOSITORY_PROPERTY = "inspectit.repository";
+
+	/**
+	 * The name of the property for the agent name.
+	 */
+	private static final String AGENT_NAME_PROPERTY = "inspectit.agent.name";
 
 	/**
 	 * The class pool analyzer.
@@ -776,19 +781,12 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		// check if the information about the repository and agent is provided with the JVM params
 		String repositoryProperty = System.getProperty(REPOSITORY_PROPERTY);
 
-		if (null == repositoryProperty) {
-			return;
-		}
-
-		// expecting data in the form ip:port;name
-		StringTokenizer tokenizer = new StringTokenizer(repositoryProperty, ";");
-		if (tokenizer.countTokens() == 2) {
-			// ip and host
-			String[] repositoryIpHost = tokenizer.nextToken().split(":");
+		if (null != repositoryProperty) {
+			String[] repositoryIpHost = repositoryProperty.split(":");
 			if (repositoryIpHost.length == 2) {
 				String repositoryIp = repositoryIpHost[0];
 				String repositoryPort = repositoryIpHost[1];
-				if (null != repositoryIp && !"".equals(repositoryIp) && null != repositoryPort && !"".equals(repositoryPort)) {
+				if (StringUtils.isNotBlank(repositoryIp) && StringUtils.isNotBlank(repositoryPort)) {
 					log.info("Repository information found in the JVM parameters: IP=" + repositoryIp + " Port=" + repositoryPort);
 					try {
 						int port = Integer.parseInt(repositoryPort);
@@ -798,16 +796,16 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 					}
 				}
 			}
+		}
 
-			// agent
-			String agentName = tokenizer.nextToken();
-			if (null != agentName && !"".equals(agentName)) {
-				try {
-					log.info("Agent name found in the JVM parameters: AgentName=" + agentName);
-					setAgentName(agentName);
-				} catch (Exception e) {
-					log.warn("Agent name could not be defined from the data in the JVM parameters", e);
-				}
+		// agent name
+		String agentName = System.getProperty(AGENT_NAME_PROPERTY);
+		if (StringUtils.isNotBlank(agentName)) {
+			try {
+				log.info("Agent name found in the JVM parameters: AgentName=" + agentName);
+				setAgentName(agentName);
+			} catch (Exception e) {
+				log.warn("Agent name could not be defined from the data in the JVM parameters", e);
 			}
 		}
 	}
