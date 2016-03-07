@@ -57,12 +57,12 @@ public class AddUserDialog extends TitleAreaDialog {
 	private static final int ADD_ID = 0; //IDialogConstants.OK_ID;
 
 	/**
-	 * Array of all Users.
+	 * List of all Users.
 	 */
 	private List<String> userList;
 	
 	/**
-	 * Array of all Roles.
+	 * List of all Roles.
 	 */
 	private List<Role> rolesList;
 	
@@ -203,7 +203,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		if (passwordBox.getText().isEmpty()) {
 			return false;
 		}
-		if (roles.getText() == "") {
+		if ("".equals(roles.getText())) {
 			return false;
 		} 
 		return true;

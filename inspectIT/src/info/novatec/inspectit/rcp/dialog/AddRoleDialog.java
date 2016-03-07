@@ -1,7 +1,9 @@
 package info.novatec.inspectit.rcp.dialog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -18,6 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.Role;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 
@@ -59,13 +62,13 @@ public class AddRoleDialog extends TitleAreaDialog {
 	/**
 	 * List of permissions that the current user can give to the new role.
 	 */
-	private List<String> grantedPermissions; 
-	
+	private List<String> grantedPermissionsStrings = new ArrayList<String>();
+
 	/**
 	 * Array of buttons to display the permissions that can be granted.
 	 */
-	private Button[] grantedPermissionsButtons; 
-	
+	private Button[] grantedPermissionsButtons;
+
 	/**
 	 * Default constructor.
 	 * 
@@ -79,7 +82,7 @@ public class AddRoleDialog extends TitleAreaDialog {
 		super(parentShell);
 		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
-		
+
 	}
 
 	/**
@@ -116,16 +119,16 @@ public class AddRoleDialog extends TitleAreaDialog {
 		Label textPermissionLabel = new Label(main, SWT.NONE);
 		textPermissionLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 2, 5));
 		textPermissionLabel.setText("Mark the permissions, that the new role should have:");
-
-		this.grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
-		this.grantedPermissionsButtons = new Button[grantedPermissions.size()];
+		List<Permission> grantedPermissions = cmrRepositoryDefinition.getGrantedPermissions();
 		for (int i = 0; i < grantedPermissions.size(); i++) {
+			this.grantedPermissionsStrings.add(grantedPermissions.get(i).getTitle());
+			}
+		this.grantedPermissionsButtons = new Button[grantedPermissionsStrings.size()];
+		for (int i = 0; i < grantedPermissionsStrings.size(); i++) {
 			grantedPermissionsButtons[i] = new Button(parent, SWT.CHECK);
-			grantedPermissionsButtons[i].setText(grantedPermissions.get(i));
+			grantedPermissionsButtons[i].setText(grantedPermissionsStrings.get(i));
 		}
-		
 
-		
 		ModifyListener modifyListener = new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -168,24 +171,49 @@ public class AddRoleDialog extends TitleAreaDialog {
 	 * Finishes the role-creation.
 	 */
 	private void addPressed() {
-		if (rolesList.contains(roleNameBox.getText())) {
-			MessageDialog.openError(null, "Role already exists!", "The Role you chose is already taken! ");
-			return;
+		for (Role list : rolesList) {
+			if (list.getTitle().equals(roleNameBox.getText())) {
+				MessageDialog.openError(null, "Title already exists!", "The Title you chose is already taken! ");
+				return;
+			}
 		}
+
 		String name = roleNameBox.getText();
 		List<String> rolePermissions = new ArrayList<String>();
-		for (int i = 0; i < grantedPermissions.size(); i++) {
-			if (grantedPermissionsButtons[i].isEnabled()) {
-				rolePermissions.add(grantedPermissions.get(i));
+		for (int i = 0; i < grantedPermissionsStrings.size(); i++) {
+			if (grantedPermissionsButtons[i].getSelection()) {
+				rolePermissions.add(grantedPermissionsStrings.get(i));
 			}
-			
 		}
+		String similarRoles = "";
+		for (Role list : rolesList) {
+			Set<String> permissionSetExisting = new HashSet<String>();
+			for (Permission permission : list.getPermissions()) {
+				permissionSetExisting.add(permission.getTitle());
+			}
+			Set<String> permissionSetNew = new HashSet<String>(rolePermissions);
+			if (permissionSetExisting.equals(permissionSetNew)) {
+				similarRoles += "\"" + list.getTitle() + "\", ";
+			}
+		}
+
+		if (!"".equals(similarRoles)) {
+			String warning = "One or more roles with the same set of permissions already exists." + "\n" + "\nDetected roles: " + similarRoles.substring(0, similarRoles.length() - 2) + "\n" 
+					+ "\nDo you really want to add the role \"" + name + "\"?";
+			Boolean confirm = MessageDialog.openConfirm(null, "Similar role already exists!", warning);
+			if (!confirm) {
+				return;
+					
+			}
+		}
+		
 		cmrRepositoryDefinition.getSecurityService().addRole(name, rolePermissions);
 		okPressed();
 	}
 
 	/**
 	 * Checks if the name-box is not empty.
+	 * 
 	 * @return true if not empty
 	 */
 	private boolean isInputValid() {

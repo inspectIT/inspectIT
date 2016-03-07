@@ -14,6 +14,7 @@ import info.novatec.inspectit.communication.data.cmr.User;
  * @author Clemens Geibel
  * @author Lucca Hellriegel
  * @author Joshua Hartmann
+ * @author Mario Rose
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface ISecurityService {
@@ -52,7 +53,7 @@ public interface ISecurityService {
 	 *            sessionId
 	 * @return List with the users permissions.
 	 */
-	List<String> getPermissions(Serializable sessionId);
+	List<Permission> getPermissions(Serializable sessionId);
 
 	// | ROLE | --------------
 	/**
@@ -61,8 +62,6 @@ public interface ISecurityService {
 	 * @param email
 	 *            email
 	 * @return a Role object with given Email of the user.
-	 * @throws AuthenticationException
-	 *             if the email was not found.
 	 */
 	Role getRoleOfUser(String email);
 
@@ -83,15 +82,31 @@ public interface ISecurityService {
 	List<Role> getAllRoles();
 
 	/**
-	 * Adds a new Role to the CMR.
-	 * 
-	 * @param title
-	 *            The title of the new role.
-	 * @param permissions
-	 *            The permissions assigned to this role.
-	 * @return The id of the created Role.
+	 * Method to add a new role.
+	 * @param name
+	 * 				Name of role.
+	 * @param rolePermissions
+	 * 				Permissions of role in string-form.
 	 */
-	// int addRole(String title, List<Permission> permissions);
+	void addRole(String name, List<String> rolePermissions);
+	/**
+	 * Method to edit a role.
+	 * @param roleOld
+	 * 		the role to edit
+	 * @param name
+	 * 		name of the new role
+	 * @param newPermissions
+	 * 		list of new permissions
+	 */
+	void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions);
+	
+	/**
+	 * Deletes the given Role Object from the Database.
+	 * 
+	 * @param role
+	 *            role
+	 */
+	void deleteRole(Role role);
 
 	// | USER |---------------
 	/**
@@ -102,6 +117,14 @@ public interface ISecurityService {
 	 */
 	List<String> getAllUsers();
 
+	/**
+	 * Should return all the users with the given roleID.
+	 * @param id
+	 * 			Given roleID.
+	 * @return List<String>
+	 * 				Found User by email.
+	 */
+	List<String> getUsersByRole(long id);
 	/**
 	 * Adds a new User to the Database. Throws an exception, if there is an existing registered User
 	 * with the given email-address. Throws an exception, if the given role-id does not exist.
@@ -124,17 +147,28 @@ public interface ISecurityService {
 	 * Deletes the given User Object from the Database.
 	 * 
 	 * @param user
-	 *            user
+	 *     	 user
+	 * @param sessionId
+	 * 		the sessionId
 	 */
-	void deleteUser(User user);
+	void deleteUser(User user, Serializable sessionId);
 
 	/**
-	 * Change any attribute of a User. Email cannot be changed.
 	 * 
-	 * @param user
-	 *            user
+	 * @param userOld 
+	 * 		the user that is edited and now needs to be deleted
+	 * @param email
+	 * 		the new email
+	 * @param password
+	 * 		the new password
+	 * @param roleID
+	 * 		the new roleID
+	 * @param passwordChanged
+	 * 		boolean to see if password was changed and needs to be hashed
+	 * @param sessionId
+	 * 		the sessionId
 	 */
-	void changeUserAttribute(User user);
+	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId);
 
 	// | PERMISSION |---------
 	/**
@@ -153,12 +187,15 @@ public interface ISecurityService {
 	List<Permission> getAllPermissions();
 
 	/**
-	 * Method to add a new role.
-	 * @param name
-	 * 				Name of role.
-	 * @param rolePermissions
-	 * 				Permissions of role in string-form.
+	 * Changes the parameter for a permission.
+	 * @param permission
+	 * 				the permission with the actualized parameter.
 	 */
-	void addRole(String name, List<String> rolePermissions);
+	void changePermissionParameter(Permission permission);
+
+	
+
+	
+
 }
 

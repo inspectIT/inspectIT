@@ -1,7 +1,6 @@
 package info.novatec.inspectit.cmr.service;
 
 import java.io.Serializable;
-import java.security.Permissions;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +37,7 @@ import info.novatec.inspectit.spring.logger.Log;
  * @author Andreas Herzog
  * @author Clemens Geibel
  * @author Lucca Hellriegel
+ * @author Mario Rose
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -142,14 +142,14 @@ public class SecurityService implements ISecurityService {
 	 * @return List with the users permissions.
 	 */
 	@Override
-	public List<String> getPermissions(Serializable sessionId) {
+	public List<Permission> getPermissions(Serializable sessionId) {
 		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
-
-		List<String> grantedPermissions = new ArrayList<String>();
+		
+		List<Permission> grantedPermissions = new ArrayList<Permission>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
 		for (int i = 0; i < existingPermissions.size(); i++) {
 			if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
-				grantedPermissions.add(existingPermissions.get(i).getTitle());
+				grantedPermissions.add(existingPermissions.get(i));
 			}
 		}
 
@@ -195,7 +195,6 @@ public class SecurityService implements ISecurityService {
 			return (permission.getDescription().length() < 100);
 		} else if (data instanceof Role) {
 			//TODO: make real data integrity tests
-			Role role = (Role) data;
 			return true;
 		}
 		
@@ -208,6 +207,17 @@ public class SecurityService implements ISecurityService {
 		List<User> users = userDao.loadAll();
 		List<String> userEmails = new ArrayList<String>();
 		for (User user : users) {
+			userEmails.add(user.getEmail());
+		}
+
+		return userEmails;
+	}
+	
+	@Override
+	public List<String> getUsersByRole(long id) {
+		List<User> foundUsers = userDao.findByRole(id);
+		List<String> userEmails = new ArrayList<String>();
+		for (User user : foundUsers) {
 			userEmails.add(user.getEmail());
 		}
 
@@ -239,22 +249,31 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void deleteUser(User user) {
+	public void deleteUser(User user, Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+		String currentName = (String) currentUser.getPrincipal();
+		if (currentName.equals(user.getEmail())) {
+			currentUser.logout();
+		}
 		userDao.delete(user);
 	}
 
+	//TODO: TESTMETHODE!
 	@Override
-	public void changeUserAttribute(User user) throws DataIntegrityViolationException, DataRetrievalFailureException {
-		List<User> foundUsers = userDao.findByEmail(user.getEmail());
-		if (!checkDataIntegrity(user)) {
-			throw new DataIntegrityViolationException("Data integrity test failed!");
-		} else if (foundUsers.size() == 1) {
-			userDao.delete(foundUsers.get(0));
-			userDao.saveOrUpdate(user);
-		} else if (foundUsers.size() > 1) {
-			throw new DataIntegrityViolationException("Multiple users with same email found!");
+	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+		String currentName = (String) currentUser.getPrincipal();
+		if (currentName.equals(userOld.getEmail())) {
+			currentUser.logout();
+		}
+		if (passwordChanged) {
+			User userNew = new User(password, email, roleID);
+			userDao.delete(userOld);
+			addUser(userNew);
 		} else {
-			throw new DataRetrievalFailureException("The user you wanted to update does not exist!");
+			User userNew = new User(userOld.getPassword(), email, roleID);
+			userDao.delete(userOld);
+			userDao.saveOrUpdate(userNew); //this way the old password is not hashed twice.
 		}
 	}
 
@@ -336,6 +355,23 @@ public class SecurityService implements ISecurityService {
 			roleDao.saveOrUpdate(role);
 		}
 	}
+	
+	@Override
+	public void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions) {
+		Role roleNew = new Role(roleOld.getId(), name, newPermissions);
+		roleDao.saveOrUpdate(roleNew);
+	}
+	
+	@Override
+	public void deleteRole(Role role) {
+		roleDao.delete(role);
+	}
 
-	// TODO Make more methods available for the administrator module...
+
+	@Override
+	public void changePermissionParameter(Permission permission) {
+		permissionDao.saveOrUpdate(permission);
+		
+	}
+		// TODO Make more methods available for the administrator module...
 }

@@ -95,6 +95,15 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 		criteria.add(Restrictions.eq("email", email));
 		return getHibernateTemplate().findByCriteria(criteria);
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public List<User> findByRole(long roleId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+		criteria.add(Restrictions.eq("roleId", roleId));
+		return getHibernateTemplate().findByCriteria(criteria);
+	}
 
 }

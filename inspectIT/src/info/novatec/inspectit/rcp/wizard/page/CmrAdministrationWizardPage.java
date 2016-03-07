@@ -10,13 +10,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import info.novatec.inspectit.rcp.dialog.ShowAllRolesDialog;
 import info.novatec.inspectit.rcp.dialog.ShowAllUsersDialog;
+import info.novatec.inspectit.rcp.dialog.ShowEditablePermissionsDialog;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.dialog.AddRoleDialog;
 import info.novatec.inspectit.rcp.dialog.AddUserDialog;
-import info.novatec.inspectit.rcp.dialog.SearchPermissionsDialog;
-import info.novatec.inspectit.rcp.dialog.SearchRolesDialog;
 import info.novatec.inspectit.rcp.dialog.SearchUsersDialog;
-import info.novatec.inspectit.rcp.dialog.ShowAllPermissionsDialog;
 
 /**
  * Wizard Page for managing users on the CMR.
@@ -50,11 +48,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	}
 
 	/**
-	 * The dialog to show available permissions.
-	 */
-	private ShowAllPermissionsDialog showAllPermissionsDialog;
-
-	/**
 	 * The dialog to show available roles.
 	 */
 	private ShowAllRolesDialog showAllRolesDialog;
@@ -63,16 +56,6 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	 * The dialog to show available users.
 	 */
 	private ShowAllUsersDialog showAllUsersDialog;
-
-	/**
-	 * The dialog to search available permissions.
-	 */
-	private SearchPermissionsDialog searchPermissionsDialog;
-
-	/**
-	 * The dialog to search available roles.
-	 */
-	private SearchRolesDialog searchRolesDialog;
 
 	/**
 	 * The dialog to search available users.
@@ -88,6 +71,11 @@ public class CmrAdministrationWizardPage extends WizardPage {
 	 * The dialog to add new users.
 	 */
 	private AddUserDialog addUserDialog;
+	
+	/**
+	 * The dialog to show permissions.
+	 */
+	private ShowEditablePermissionsDialog showEditablePermissionsDialog;
 
 	/**
 	 * {@inheritDoc}
@@ -122,11 +110,11 @@ public class CmrAdministrationWizardPage extends WizardPage {
 
 		Button searchUsers = new Button(main, SWT.CENTER);
 		searchUsers.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		searchUsers.setText("Search All Users");
+		searchUsers.setText("Search Users");
 		searchUsers.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				searchUsersDialog = new SearchUsersDialog(main.getShell());
+				searchUsersDialog = new SearchUsersDialog(main.getShell(), cmrRepositoryDefinition);
 				searchUsersDialog.open();
 			}
 		});
@@ -148,41 +136,19 @@ public class CmrAdministrationWizardPage extends WizardPage {
 		showRoles.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				showAllRolesDialog = new ShowAllRolesDialog(main.getShell());
+				showAllRolesDialog = new ShowAllRolesDialog(main.getShell(), cmrRepositoryDefinition);
 				showAllRolesDialog.open();
 			}
 		});
 
-		Button searchRoles = new Button(main, SWT.CENTER);
-		searchRoles.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		searchRoles.setText("Search All Roles");
-		searchRoles.addSelectionListener(new SelectionAdapter() {
+		Button editPermissions = new Button(main, SWT.CENTER);
+		editPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		editPermissions.setText("Edit Permissions");
+		editPermissions.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				searchRolesDialog = new SearchRolesDialog(main.getShell());
-				searchRolesDialog.open();
-			}
-		});
-		
-		Button showPermissions = new Button(main, SWT.CENTER);
-		showPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		showPermissions.setText("Show All Permissions");
-		showPermissions.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				showAllPermissionsDialog = new ShowAllPermissionsDialog(main.getShell());
-				showAllPermissionsDialog.open();
-			}
-		});
-
-		Button searchPermissions = new Button(main, SWT.CENTER);
-		searchPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		searchPermissions.setText("Search All Permissions");
-		searchPermissions.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				searchPermissionsDialog = new SearchPermissionsDialog(main.getShell());
-				searchPermissionsDialog.open();
+				showEditablePermissionsDialog = new ShowEditablePermissionsDialog(main.getShell(), cmrRepositoryDefinition);
+				showEditablePermissionsDialog.open();
 			}
 		});
 		
