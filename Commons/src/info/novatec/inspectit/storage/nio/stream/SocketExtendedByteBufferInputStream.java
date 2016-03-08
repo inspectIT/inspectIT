@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 /**
  * Input stream that uses {@link SocketChannel} as input and provides bytes via our
  * {@link AbstractExtendedByteBufferInputStream} methodology.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -44,7 +44,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 		super.prepare();
 
 		if (getTotalSize() > 0) {
-			executorService.execute(new SocketReadRunnable());
+			executorService.execute(new SocketReadRunnable(getTotalSize()));
 		}
 	}
 
@@ -53,7 +53,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 	 * <p>
 	 * This method makes stream reusable. Caller must ensure that all the bytes from previous read
 	 * have been read, otherwise they will be lost.
-	 * 
+	 *
 	 * @param length
 	 *            New wanted length of read.
 	 */
@@ -69,14 +69,14 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 
 		setTotalSize(length);
 		setPosition(0);
-		executorService.execute(new SocketReadRunnable());
+		executorService.execute(new SocketReadRunnable(length));
 	}
 
 	/**
 	 * Runnable that reads from socket.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class SocketReadRunnable implements Runnable {
 
@@ -86,11 +86,33 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 		private int totalRead;
 
 		/**
+		 * Length that this task has to read.
+		 */
+		private final long length;
+
+		/**
+		 * Default constructor.
+		 *
+		 * @param length
+		 *            Amount of bytes that should be read in this task.
+		 */
+		SocketReadRunnable(long length) {
+			this.length = length;
+		}
+
+		/**
 		 * {@inheritDoc}
 		 */
 		public void run() {
-			while (totalRead < getTotalSize()) {
-				int bytesLeff = (int) (getTotalSize() - totalRead);
+			while (true) {
+				long bytesLeft = length - totalRead;
+
+				// break if nothing
+				if (bytesLeft == 0) {
+					break;
+				}
+
+				// otherwise take an empty buffer
 				ByteBuffer byteBuffer = null;
 				try {
 					byteBuffer = getEmptyBuffers().take();
@@ -99,9 +121,11 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 				}
 
 				if (null != byteBuffer) {
-					// ensure we don't read too much, only what is needed
-					if (byteBuffer.remaining() > bytesLeff) {
-						byteBuffer.limit(byteBuffer.position() + bytesLeff);
+					// clear just in case and then set to bytesLeft if its less than remaining
+					// capacity
+					byteBuffer.clear();
+					if (byteBuffer.remaining() > bytesLeft) {
+						byteBuffer.limit((int) bytesLeft);
 					}
 
 					try {
@@ -118,16 +142,14 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 						byteBuffer.clear();
 						getEmptyBuffers().add(byteBuffer);
 					}
-
 				}
-
 			}
 		}
 	}
 
 	/**
 	 * Sets {@link #socketChannel}.
-	 * 
+	 *
 	 * @param socketChannel
 	 *            New value for {@link #socketChannel}
 	 */
@@ -137,7 +159,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 
 	/**
 	 * Sets {@link #executorService}.
-	 * 
+	 *
 	 * @param executorService
 	 *            New value for {@link #executorService}
 	 */
