@@ -44,7 +44,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 		super.prepare();
 
 		if (getTotalSize() > 0) {
-			executorService.execute(new SocketReadRunnable());
+			executorService.execute(new SocketReadRunnable((int) getTotalSize()));
 		}
 	}
 
@@ -69,7 +69,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 
 		setTotalSize(length);
 		setPosition(0);
-		executorService.execute(new SocketReadRunnable());
+		executorService.execute(new SocketReadRunnable(length));
 	}
 
 	/**
@@ -86,11 +86,34 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 		private int totalRead;
 
 		/**
+		 * Length that this task has to read.
+		 */
+		private final int length;
+
+		/**
+		 * Default constructor.
+		 * 
+		 * @param length
+		 *            Amount of bytes that should be read in this task.
+		 */
+		SocketReadRunnable(int length) {
+			this.length = length;
+		}
+
+		/**
 		 * {@inheritDoc}
 		 */
 		public void run() {
-			while (totalRead < getTotalSize()) {
-				int bytesLeff = (int) (getTotalSize() - totalRead);
+			while (true) {
+				// how much is left to read
+				int bytesLeft = (int) (length - totalRead);
+
+				// break if nothing
+				if (bytesLeft == 0) {
+					break;
+				}
+
+				// otherwise take an empty buffer
 				ByteBuffer byteBuffer = null;
 				try {
 					byteBuffer = getEmptyBuffers().take();
@@ -100,8 +123,8 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 
 				if (null != byteBuffer) {
 					// ensure we don't read too much, only what is needed
-					if (byteBuffer.remaining() > bytesLeff) {
-						byteBuffer.limit(byteBuffer.position() + bytesLeff);
+					if (byteBuffer.remaining() > bytesLeft) {
+						byteBuffer.limit(byteBuffer.position() + bytesLeft);
 					}
 
 					try {
@@ -118,9 +141,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 						byteBuffer.clear();
 						getEmptyBuffers().add(byteBuffer);
 					}
-
 				}
-
 			}
 		}
 	}
