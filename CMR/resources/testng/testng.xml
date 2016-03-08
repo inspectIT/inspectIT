@@ -61,4 +61,9 @@
 			<class name="info.novatec.inspectit.cmr.ci.ConfigurationInterfaceManagerTest" />
 		</classes>
 	</test>	
+	<test name="Communication">
+		<classes>
+			<class name="info.novatec.inspectit.cmr.rmi.KryoNetIntegrationTest" />
+		</classes>
+	</test>
 </suite>
