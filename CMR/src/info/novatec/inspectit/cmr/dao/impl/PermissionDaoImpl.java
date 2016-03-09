@@ -101,34 +101,7 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 		criteria.add(Restrictions.eq("title", permission.getTitle()));
 		return getHibernateTemplate().findByCriteria(criteria);
 	}
-	
-	///**
-	// * {@inheritDoc}
-	// */
-	/*
-	@SuppressWarnings("unchecked")
-	public Permission findByCriteria(Permission permission, boolean id, boolean title, boolean desciption) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class);
-		if (id) {
-			criteria.add(Restrictions.eq("id", permission.getId()));			
-		}
-		if (title) {
-			criteria.add(Restrictions.eq("title", permission.getTitle()));			
-		}
-		if (desciption) {
-			criteria.add(Restrictions.eq("desciption", permission.getDescription()));			
-		}
-		List<Permission> possiblePermissions = getHibernateTemplate().findByCriteria(criteria);
 		
-		if (possiblePermissions.size() > 1) {
-			return null; //hier evtl auch ein fehler werfen
-		} else if (possiblePermissions.size() == 1) {
-			return possiblePermissions.get(0);
-		} else {
-			return null;
-		}
-	}*/
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -137,7 +110,8 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 		List<Permission> possiblePermissions = getHibernateTemplate().findByExample(permission);
 		
 		if (possiblePermissions.size() > 1) {
-			return null; //hier evtl auch ein fehler werfen
+			//if there is more than one, we don't know which to choose, so just return null
+			return null;
 		} else if (possiblePermissions.size() == 1) {
 			return possiblePermissions.get(0);
 		} else {

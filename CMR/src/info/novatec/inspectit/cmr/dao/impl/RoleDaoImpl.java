@@ -81,7 +81,8 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 		List<Role> possibleRoles = getHibernateTemplate().findByCriteria(criteria);
 		
 		if (possibleRoles.size() > 1) {
-			return null; //hier evtl auch ein fehler werfen
+			//if there is more than one, we don't know which to choose, so just return nul
+			return null;
 		} else if (possibleRoles.size() == 1) {
 			return possibleRoles.get(0);
 		} else {
@@ -128,7 +129,8 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
 		List<Role> possibleRoles = getHibernateTemplate().findByExample(role);
 		
 		if (possibleRoles.size() > 1) {
-			return null; //hier evtl auch ein fehler werfen
+			//if there is more than one, we don't know which to choose, so just return nul
+			return null;
 		} else if (possibleRoles.size() == 1) {
 			return possibleRoles.get(0);
 		} else {
