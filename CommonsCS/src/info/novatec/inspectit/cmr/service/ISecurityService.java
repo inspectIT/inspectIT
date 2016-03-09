@@ -14,6 +14,7 @@ import info.novatec.inspectit.communication.data.cmr.User;
  * @author Clemens Geibel
  * @author Lucca Hellriegel
  * @author Joshua Hartmann
+ * @author Mario Rose
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface ISecurityService {
@@ -52,7 +53,7 @@ public interface ISecurityService {
 	 *            sessionId
 	 * @return List with the users permissions.
 	 */
-	List<String> getPermissions(Serializable sessionId);
+	List<Permission> getPermissions(Serializable sessionId);
 
 	// | ROLE | --------------
 	/**
@@ -61,8 +62,6 @@ public interface ISecurityService {
 	 * @param email
 	 *            email
 	 * @return a Role object with given Email of the user.
-	 * @throws AuthenticationException
-	 *             if the email was not found.
 	 */
 	Role getRoleOfUser(String email);
 
@@ -100,6 +99,14 @@ public interface ISecurityService {
 	 * 		list of new permissions
 	 */
 	void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions);
+	
+	/**
+	 * Deletes the given Role Object from the Database.
+	 * 
+	 * @param role
+	 *            role
+	 */
+	void deleteRole(Role role);
 
 	// | USER |---------------
 	/**
@@ -140,9 +147,11 @@ public interface ISecurityService {
 	 * Deletes the given User Object from the Database.
 	 * 
 	 * @param user
-	 *            user
+	 *     	 user
+	 * @param sessionId
+	 * 		the sessionId
 	 */
-	void deleteUser(User user);
+	void deleteUser(User user, Serializable sessionId);
 
 	/**
 	 * 
@@ -176,6 +185,13 @@ public interface ISecurityService {
 	 * @return An List containing all Roles
 	 */
 	List<Permission> getAllPermissions();
+
+	/**
+	 * Changes the parameter for a permission.
+	 * @param permission
+	 * 				the permission with the actualized parameter.
+	 */
+	void changePermissionParameter(Permission permission);
 
 	
 

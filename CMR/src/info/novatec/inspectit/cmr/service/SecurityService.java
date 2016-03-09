@@ -142,14 +142,14 @@ public class SecurityService implements ISecurityService {
 	 * @return List with the users permissions.
 	 */
 	@Override
-	public List<String> getPermissions(Serializable sessionId) {
+	public List<Permission> getPermissions(Serializable sessionId) {
 		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
-
-		List<String> grantedPermissions = new ArrayList<String>();
+		
+		List<Permission> grantedPermissions = new ArrayList<Permission>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
 		for (int i = 0; i < existingPermissions.size(); i++) {
 			if (currentUser.isPermitted(existingPermissions.get(i).getTitle())) {
-				grantedPermissions.add(existingPermissions.get(i).getTitle());
+				grantedPermissions.add(existingPermissions.get(i));
 			}
 		}
 
@@ -249,7 +249,12 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void deleteUser(User user) {
+	public void deleteUser(User user, Serializable sessionId) {
+		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+		String currentName = (String) currentUser.getPrincipal();
+		if (currentName.equals(user.getEmail())) {
+			currentUser.logout();
+		}
 		userDao.delete(user);
 	}
 
@@ -356,6 +361,17 @@ public class SecurityService implements ISecurityService {
 		Role roleNew = new Role(roleOld.getId(), name, newPermissions);
 		roleDao.saveOrUpdate(roleNew);
 	}
+	
+	@Override
+	public void deleteRole(Role role) {
+		roleDao.delete(role);
+	}
 
-	// TODO Make more methods available for the administrator module...
+
+	@Override
+	public void changePermissionParameter(Permission permission) {
+		permissionDao.saveOrUpdate(permission);
+		
+	}
+		// TODO Make more methods available for the administrator module...
 }
