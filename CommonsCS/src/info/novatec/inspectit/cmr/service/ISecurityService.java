@@ -46,14 +46,6 @@ public interface ISecurityService {
 	 */
 	boolean existsSession(Serializable sessionId);
 
-	/**
-	 * Returns titles of permissions as Strings.
-	 * 
-	 * @param sessionId
-	 *            sessionId
-	 * @return List with the users permissions.
-	 */
-	List<Permission> getPermissions(Serializable sessionId);
 
 	// | ROLE | --------------
 	/**
@@ -64,7 +56,14 @@ public interface ISecurityService {
 	 * @return a Role object with given Email of the user.
 	 */
 	Role getRoleOfUser(String email);
-
+	
+	/**
+	 * Changes the description of the role, just a wrapper for changeRoleAttributes.
+	 * @param role the role to be changed
+	 * @param newDescription the new description
+	 */
+	void changeRoleDescription(Role role, String newDescription);
+	
 	/**
 	 * Searches for the Role matching a given ID.
 	 * 
@@ -90,15 +89,17 @@ public interface ISecurityService {
 	 */
 	void addRole(String name, List<String> rolePermissions);
 	/**
-	 * Method to edit a role.
-	 * @param roleOld
+	 * Method to edit the attributes of a role.
+	 * @param role
 	 * 		the role to edit
-	 * @param name
-	 * 		name of the new role
+	 * @param newDescription
+	 * 		new description of the role
+	 * @param newTitle
+	 * 		new title of the role
 	 * @param newPermissions
 	 * 		list of new permissions
 	 */
-	void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions);
+	void changeRoleAttribute(Role role, String newTitle, String newDescription, List<Permission> newPermissions);
 	
 	/**
 	 * Deletes the given Role Object from the Database.
@@ -170,9 +171,19 @@ public interface ISecurityService {
 	 */
 	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId);
 
-	// | PERMISSION |---------
+	// | PERMISSION |---------	
+	
 	/**
-	 * Change the description of a Permission. Other changes should not be possible.
+	 * Changes all Attributes of the given Permission.
+	 * @param perm The Permission to be modified.
+	 * @param newTitle The new title of the permission.
+	 * @param newDescription The new description of the permission.
+	 * @param newParamter The new parameter of the permission.
+	 */
+	void changePermissionAttributes(Permission perm, String newTitle, String newDescription, String newParamter);
+	
+	/**
+	 * Change the description of a Permission. Other changes should not be possible, just a wrapper for changePermissionAttributes.
 	 * 
 	 * @param permission
 	 *            permission
@@ -187,15 +198,19 @@ public interface ISecurityService {
 	List<Permission> getAllPermissions();
 
 	/**
-	 * Changes the parameter for a permission.
+	 * Changes the parameter for a permission, just a wrapper for changePermissionAttributes.
 	 * @param permission
 	 * 				the permission with the actualized parameter.
 	 */
-	void changePermissionParameter(Permission permission);
+	void changePermissionParameter(Permission permission);	
 
-	
-
-	
+	/**
+	 * Returns titles of permissions as Strings.
+	 * 
+	 * @param sessionId
+	 *            sessionId
+	 * @return List with the users permissions.
+	 */
+	List<Permission> getPermissions(Serializable sessionId);
 
 }
-

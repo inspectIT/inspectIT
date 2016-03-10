@@ -1,10 +1,7 @@
 package info.novatec.inspectit.cmr.security;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import info.novatec.inspectit.cmr.dao.PermissionDao;
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
@@ -19,7 +16,7 @@ import info.novatec.inspectit.communication.data.cmr.User;
  * @author Lucca Hellriegel
  *
  */
-public class SecurityInitialization {
+public class SecurityInitialization {	
 	/**
 	 * PermissionDao.
 	 */
@@ -73,6 +70,6 @@ public class SecurityInitialization {
 			//Transfers users to databse.		
 			userDao.saveOrUpdate(guest);
 			userDao.saveOrUpdate(admin);			
-		}	
+		}		
 	}
 }

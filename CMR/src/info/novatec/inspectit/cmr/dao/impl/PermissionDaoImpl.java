@@ -96,10 +96,17 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Permission> findByTitle(Permission permission) {
+	public Permission findByTitle(String title) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class);
-		criteria.add(Restrictions.eq("title", permission.getTitle()));
-		return getHibernateTemplate().findByCriteria(criteria);
+		criteria.add(Restrictions.eq("title", title));
+		 		
+ 		List<Permission> result = getHibernateTemplate().findByCriteria(criteria);
+ 		
+ 		if (result.isEmpty()) {
+ 			return null;
+ 		} else {
+ 			return result.get(0);
+		}
 	}
 		
 	/**
