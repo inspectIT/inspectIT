@@ -212,7 +212,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 				return;
 			}
 		}
-		cmrRepositoryDefinition.getSecurityService().changeRoleAttribute(roleOld, name, newPermissions);
+		cmrRepositoryDefinition.getSecurityService().changeRoleAttribute(roleOld, name, roleOld.getDescription(), newPermissions);
 		okPressed();
 	}
 	
