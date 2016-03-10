@@ -11,6 +11,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -42,7 +44,12 @@ public class EditUserDialog extends TitleAreaDialog {
 	 * password text box.
 	 */
 	private Text passwordBox;
-
+	
+	/**
+	 * Boolean to see if user is locked.
+	 */
+	private boolean isLocked;
+	
 	/**
 	 * Edit button.
 	 */
@@ -92,6 +99,7 @@ public class EditUserDialog extends TitleAreaDialog {
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
 		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
 		userOld = user;
+		isLocked = userOld.isLocked();
 	}
 
 	/**
@@ -142,6 +150,22 @@ public class EditUserDialog extends TitleAreaDialog {
 			}
 		}
 
+		final Button checkBox = new Button(main, SWT.CHECK);
+		checkBox.setText("Lock user?");
+		checkBox.setSelection(isLocked);
+		checkBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean selected = checkBox.getSelection();
+                if (selected) {
+                	isLocked = true;
+                } else {
+                	isLocked = false;
+                }
+            }
+		});
+               
+		
 		return main;
 	}
 
@@ -189,7 +213,7 @@ public class EditUserDialog extends TitleAreaDialog {
 		if (passwordBox.getText().isEmpty()) {
 			passwordChanged = false;
 		}
-		cmrRepositoryDefinition.getSecurityService().changeUserAttribute(userOld, mail, password, id, passwordChanged, cmrRepositoryDefinition.getSessionId());
+		cmrRepositoryDefinition.getSecurityService().changeUserAttribute(userOld, mail, password, id, passwordChanged, isLocked, cmrRepositoryDefinition.getSessionId());
 		okPressed();
 	}
 

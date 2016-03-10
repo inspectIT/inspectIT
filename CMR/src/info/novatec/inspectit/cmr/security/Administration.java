@@ -17,6 +17,7 @@ import info.novatec.inspectit.communication.data.cmr.User;
  * 
  * 
  * @author Joshua Hartmann
+ * @author Lucca Hellriegel
  *
  */
 public class Administration {
@@ -37,11 +38,12 @@ public class Administration {
 	 * Adds a new User for the CMR.
 	 * @param email The email of the user.
 	 * @param roleId The ID of the users role.
+	 * @param isLocked boolean to see if user is locked by admin
 	 * @return the assigned password.
 	 */
-	public String addUser(String email, int roleId)	{
+	public String addUser(String email, int roleId, boolean isLocked)	{
 		String password = generatePassword(10);
-		addUser(email, password, roleId);
+		addUser(email, password, roleId, isLocked);
 		return password;
 	}
 	
@@ -50,9 +52,10 @@ public class Administration {
 	 * @param email The email of the user.
 	 * @param password The password of the user.
 	 * @param roleId The ID of the users role.
+	 * @param isLocked boolean to see if user is locked by admin
 	 */
-	private void addUser(String email, String password, int roleId)	{
-		User user = new User(Permutation.hashString(password), email, roleId);
+	private void addUser(String email, String password, int roleId, boolean isLocked)	{
+		User user = new User(Permutation.hashString(password), email, roleId, isLocked);
 		
 		userDao.saveOrUpdate(user);
 	}
@@ -81,10 +84,11 @@ public class Administration {
 	 * @param newEmail The new email the user should have
 	 * @param newPassword The new password the user should have
 	 * @param newRole The new role the user should have
+	 * @param isLocked boolean to see if user is locked by admin
 	 */
-	public void changeUser(String oldEmail, String newEmail, String newPassword, int newRole) {
+	public void changeUser(String oldEmail, String newEmail, String newPassword, int newRole, boolean isLocked) {
 		deleteUser(oldEmail);
-		addUser(newEmail, newPassword, newRole);
+		addUser(newEmail, newPassword, newRole, isLocked);
 	}	
 	
 	/**

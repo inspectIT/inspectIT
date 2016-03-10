@@ -166,10 +166,12 @@ public interface ISecurityService {
 	 * 		the new roleID
 	 * @param passwordChanged
 	 * 		boolean to see if password was changed and needs to be hashed
+	 * @param isLocked
+	 * 		boolean to see if user was locked by admin
 	 * @param sessionId
 	 * 		the sessionId
 	 */
-	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId);
+	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, boolean isLocked, Serializable sessionId);
 
 	// | PERMISSION |---------	
 	

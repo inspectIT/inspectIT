@@ -56,7 +56,8 @@ public class SecurityInitialization {
 			permissionDao.saveOrUpdate(cmrDeleteAgentPermission);
 			permissionDao.saveOrUpdate(cmrStoragePermission);
 			permissionDao.saveOrUpdate(cmrAdministrationPermission);
-		
+			permissionDao.saveOrUpdate(cmrLookAtAgentsPermission);
+			
 			//Predefined roles
 			Role guestRole = new Role("guestRole", new ArrayList<Permission>());
 			Role restrictedRole = new Role("restrictedRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrLookAtAgentsPermission));
@@ -68,10 +69,10 @@ public class SecurityInitialization {
 			roleDao.saveOrUpdate(adminRole);
 				
 			//Standarduser - has to be changed on first login
-			User admin = new User(Permutation.hashString("admin"), "admin", adminRole.getId());
+			User admin = new User(Permutation.hashString("admin"), "admin", adminRole.getId(), false);
 			
 			//Guestuser - can be edited to give a user without an account rights
-			User guest = new User(Permutation.hashString("guest"), "guest", guestRole.getId());
+			User guest = new User(Permutation.hashString("guest"), "guest", guestRole.getId(), false);
 						
 			//Transfers users to databse.		
 			userDao.saveOrUpdate(guest);

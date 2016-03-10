@@ -103,7 +103,11 @@ public class SecurityService implements ISecurityService {
 		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
 
 		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
-
+		
+		if (userDao.load(email).isLocked()) { 
+			return null; 
+			}
+		
 		if (!currentUser.isAuthenticated()) {
 			try {
 				currentUser.login(token);
@@ -261,18 +265,18 @@ public class SecurityService implements ISecurityService {
 
 	//TODO: TESTMETHODE!
 	@Override
-	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId) {
+	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, boolean isLocked, Serializable sessionId) {
 		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
 		String currentName = (String) currentUser.getPrincipal();
 		if (currentName.equals(userOld.getEmail())) {
 			currentUser.logout();
 		}
 		if (passwordChanged) {
-			User userNew = new User(password, email, roleID);
+			User userNew = new User(password, email, roleID, isLocked);
 			userDao.delete(userOld);
 			addUser(userNew);
 		} else {
-			User userNew = new User(userOld.getPassword(), email, roleID);
+			User userNew = new User(userOld.getPassword(), email, roleID, isLocked);
 			userDao.delete(userOld);
 			userDao.saveOrUpdate(userNew); //this way the old password is not hashed twice.
 		}
