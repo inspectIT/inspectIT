@@ -38,9 +38,14 @@ public class EditPermissionDialog extends TitleAreaDialog {
 		private Permission permissionOld;
 
 		/**
-		 * permission-parameter text box.
+		 * Permission-parameter text box.
 		 */
 		private Text permissionParameterBox;
+		
+		/**
+		 * Description-parameter text box.
+		 */
+		private Text permissionDescriptionBox;
 		
 		/**
 		 * Reset button id.
@@ -90,6 +95,13 @@ public class EditPermissionDialog extends TitleAreaDialog {
 			permissionParameterBox = new Text(main, SWT.BORDER);
 			permissionParameterBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			permissionParameterBox.setText(permissionOld.getParameter());
+			
+			Label permissionDescriptionLabel = new Label(main, SWT.NONE);
+			permissionDescriptionLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+			permissionDescriptionLabel.setText("Description:");
+			permissionDescriptionBox = new Text(main, SWT.BORDER);
+			permissionDescriptionBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			permissionDescriptionBox.setText(permissionOld.getDescription());
 			
 			return main;
 		}

@@ -143,7 +143,7 @@ public class CmrAdministrationWizardPage extends WizardPage {
 
 		Button editPermissions = new Button(main, SWT.CENTER);
 		editPermissions.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		editPermissions.setText("Edit Permissions");
+		editPermissions.setText("Show All Permissions");
 		editPermissions.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

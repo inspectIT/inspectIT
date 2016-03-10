@@ -119,19 +119,19 @@ public class AddUserDialog extends TitleAreaDialog {
 
 		Label mailLabel = new Label(main, SWT.NONE);
 		mailLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		mailLabel.setText("e-mail:");
+		mailLabel.setText("E-mail:");
 		mailBox = new Text(main, SWT.BORDER);
 		mailBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		Label passwordLabel = new Label(main, SWT.NONE);
 		passwordLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		passwordLabel.setText("password:");
+		passwordLabel.setText("Password:");
 		passwordBox = new Text(main, SWT.BORDER | SWT.PASSWORD);
 		passwordBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		Label rolesLabel = new Label(main, SWT.NONE);
 		rolesLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		rolesLabel.setText("role:");
+		rolesLabel.setText("Role:");
 		roles = new Combo(main, SWT.READ_ONLY);
 	    for (Role role : rolesList) {
 	    	roles.add(role.getTitle());

@@ -340,7 +340,7 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void addRole(String name, List<String> rolePermissions) throws DataIntegrityViolationException {
+	public void addRole(String name, List<String> rolePermissions, String description) throws DataIntegrityViolationException {
 		List<Permission> allPermissions = getAllPermissions();
 		List<Permission> grantedPermissions = new ArrayList<Permission>();
 		for (int i = 0; i < rolePermissions.size(); i++) {
@@ -351,7 +351,7 @@ public class SecurityService implements ISecurityService {
 				}
 			}
 		}
-		Role role = new Role(name, grantedPermissions);		
+		Role role = new Role(name, grantedPermissions, description);		
 			
 		if (!checkDataIntegrity(role)) {
 			throw new DataIntegrityViolationException("Data integrity test failed!");

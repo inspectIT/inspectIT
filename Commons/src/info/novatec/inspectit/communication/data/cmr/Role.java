@@ -26,7 +26,7 @@ public class Role implements Serializable {
 	/**
 	 * A more detailed description for the role.
 	 */
-	private String description;
+	private String description = "";
 	
 	/**
 	 * The id of the Role.
@@ -46,25 +46,27 @@ public class Role implements Serializable {
 	 * @param id The id of the role. [id should no longer be hardcoded]
 	 * @param permissions The permissions this role has.
 	 * @param title The title for the role.
+	 * @param description Description of the role.
 	 */
-	public Role(long id, String title, List<Permission> permissions) {
+	public Role(long id, String title, List<Permission> permissions, String description) {
 		super();
 		this.permissions = permissions;
 		this.title = title;
 		this.id = id;
-		this.description = "";
+		this.description = description;
 	}
 	/**
 	 * The constructor for a role.
 	 * @param permissions The permissions this role has.
 	 * @param title The title for the role.
+	 * @param description Description of the role.
 	 */
-	public Role(String title, List<Permission> permissions) {
+	public Role(String title, List<Permission> permissions, String description) {
 		super();
 		this.permissions = permissions;
 		this.title = title;
 		this.id = 0;
-		this.description = "";
+		this.description = description;
 	}	
 	/**
 	 * Gets {@link #permissions}.

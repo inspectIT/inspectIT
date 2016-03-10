@@ -86,8 +86,9 @@ public interface ISecurityService {
 	 * 				Name of role.
 	 * @param rolePermissions
 	 * 				Permissions of role in string-form.
+	 * @param description Description of the role.
 	 */
-	void addRole(String name, List<String> rolePermissions);
+	void addRole(String name, List<String> rolePermissions, String description);
 	/**
 	 * Method to edit the attributes of a role.
 	 * @param role

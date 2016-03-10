@@ -90,10 +90,13 @@ public class ShowEditablePermissionsDialog extends TitleAreaDialog {
 		// columns
 		TableColumn column1 = new TableColumn(table, SWT.NONE);
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
+		TableColumn column3 = new TableColumn(table, SWT.NONE);
 		column1.setText("Permissions");
 		column1.pack();
 		column2.setText("Parameters");
 		column2.pack();
+		column3.setText("Description");
+		column3.pack();
 		updateTable();
 		table.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -132,9 +135,9 @@ public class ShowEditablePermissionsDialog extends TitleAreaDialog {
 		for (int i = 0; i < allPermissions.size(); i++) {
 			TableItem item = new TableItem(table, SWT.NONE);
 
-			String parameter = allPermissions.get(i).getParameter();
 			item.setText(0, allPermissions.get(i).getTitle());
-			item.setText(1, parameter);	
+			item.setText(1, allPermissions.get(i).getParameter());	
+			item.setText(2, allPermissions.get(i).getDescription());
 			
 		}
 		for (TableColumn column : table.getColumns()) {

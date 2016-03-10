@@ -2,7 +2,6 @@ package info.novatec.inspectit.rcp.dialog;
 
 import java.util.List;
 
-import info.novatec.inspectit.communication.data.cmr.Permission;
 import info.novatec.inspectit.communication.data.cmr.User;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -74,7 +73,7 @@ public class ShowAllUsersDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		final Composite main = new Composite(parent, SWT.NONE);
-		main.setLayout(new GridLayout(2, false));
+		main.setLayout(new GridLayout(2, true));
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.widthHint = 400;
 		gd.heightHint = 100;
@@ -94,13 +93,10 @@ public class ShowAllUsersDialog extends TitleAreaDialog {
 		// columns
 		TableColumn column1 = new TableColumn(table, SWT.NONE);
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		TableColumn column3 = new TableColumn(table, SWT.NONE);
 		column1.setText("Name");
 		column1.pack();
 		column2.setText("Role");
 		column2.pack();
-		column3.setText("Permissions");
-		column3.pack();
 		updateTable();
 		table.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -141,16 +137,10 @@ public class ShowAllUsersDialog extends TitleAreaDialog {
 			TableItem item = new TableItem(table, SWT.NONE);
 
 			String role = cmrRepositoryDefinition.getSecurityService().getRoleOfUser(users.get(i)).getTitle();
-			List<Permission> permissions = cmrRepositoryDefinition.getSecurityService().getRoleOfUser(users.get(i)).getPermissions();
-			String perm = "";
-			for (int k = 0; k < permissions.size(); k++) {
-				perm += permissions.get(k).getTitle() + ", ";
-			}
-
+			
 			item.setText(0, users.get(i));
 			item.setText(1, role);	
-			item.setText(2, perm);
-		}
+			}
 		for (TableColumn column : table.getColumns()) {
 			column.pack();
 		}

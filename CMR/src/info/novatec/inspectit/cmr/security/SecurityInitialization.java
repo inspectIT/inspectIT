@@ -39,9 +39,9 @@ public class SecurityInitialization {
 	public void start() {
 		if (permissionDao.loadAll().isEmpty()) {
 
-			Permission cmrRecordingPermission = new Permission("cmrRecordingPermission", "Permission start recording from Agent");
-			Permission cmrShutdownAndRestartPermission = new Permission("cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR");
-			Permission cmrDeleteAgentPermission = new Permission("cmrDeleteAgentPermission", "Permission for deleting Agent");
+			Permission cmrRecordingPermission = new Permission("cmrRecordingPermission", "Permission to start recording from Agent");
+			Permission cmrShutdownAndRestartPermission = new Permission("cmrShutdownAndRestartPermission", "Permission for shutting down and restarting the CMR");
+			Permission cmrDeleteAgentPermission = new Permission("cmrDeleteAgentPermission", "Permission for deleting an Agent");
 			Permission cmrStoragePermission = new Permission("cmrStoragePermission", "Permission for accessing basic storage options");
 			Permission cmrAdministrationPermission = new Permission("cmrAdministrationPermission", "Permission for accessing the CMR Administration");
 			Permission cmrLookAtAgentsPermission = new Permission("cmrLookAtAgentsPermission", "General permission to look at agents.");
@@ -56,9 +56,9 @@ public class SecurityInitialization {
 			permissionDao.saveOrUpdate(cmrLookAtAgentsPermission);
 			
 			//Predefined roles
-			Role guestRole = new Role("guestRole", new ArrayList<Permission>());
-			Role restrictedRole = new Role("restrictedRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrLookAtAgentsPermission));
-			Role adminRole = new Role("adminRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrDeleteAgentPermission, cmrShutdownAndRestartPermission, cmrAdministrationPermission, cmrLookAtAgentsPermission));
+			Role guestRole = new Role("guestRole", new ArrayList<Permission>(), "The role of a guest-user.");
+			Role restrictedRole = new Role("restrictedRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrLookAtAgentsPermission), "The role of a restricted-user.");
+			Role adminRole = new Role("adminRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrDeleteAgentPermission, cmrShutdownAndRestartPermission, cmrAdministrationPermission, cmrLookAtAgentsPermission), "The role of an admin-user.");
 			
 			//Transfers roles to database.
 			roleDao.saveOrUpdate(guestRole);
