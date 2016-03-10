@@ -22,9 +22,6 @@
 	 -->
 
 	<dependencies>
-		<dependency org="commons-pool" name="commons-pool" rev="1.6" conf="prod->default" />
-		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="prod->default" />
-		
 		<!-- Using Hamcrest matchers in Validators -->
 		<dependency org="org.hamcrest" name="info.novatec.hamcrest-all" rev="1.3" conf="prod->default" />
 		
