@@ -373,5 +373,5 @@ public class SecurityService implements ISecurityService {
 		permissionDao.saveOrUpdate(permission);
 		
 	}
-		// TODO Make more methods available for the administrator module...
+	
 }

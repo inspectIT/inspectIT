@@ -20,8 +20,6 @@ import info.novatec.inspectit.communication.data.cmr.User;
  *
  */
 public class Administration {
-
-	//TODO: restrict access to this methods!
 	
 	/**
 	 * Data Access Object.

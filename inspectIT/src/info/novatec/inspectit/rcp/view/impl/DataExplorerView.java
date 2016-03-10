@@ -13,6 +13,7 @@ import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
 import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
@@ -283,12 +284,21 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 			}
 		});
 		try {
+			//Check if displayedRepositoryDefinition is CmrRepositoryManager and then check if it has permission for agents
+			boolean hasPermissionforAgents = false;
+			if (displayedRepositoryDefinition instanceof CmrRepositoryDefinition) {
+				hasPermissionforAgents = ((CmrRepositoryDefinition) displayedRepositoryDefinition).hasPermission("cmrLookAtAgentsPermission");
+				} else { 
+					hasPermissionforAgents = true;
+				}
+			if (hasPermissionforAgents) {
 			if (null != agent && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(agent)) {
 				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
 				PreferencesUtils.saveLongValue(PreferencesConstants.LAST_SELECTED_AGENT, agent.getId().longValue(), false);
 			} else if (CollectionUtils.isNotEmpty(availableAgents)) {
 				agent = availableAgents.iterator().next();
 				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
+			}
 			} else {
 				displayedAgent = null; // NOPMD
 			}
