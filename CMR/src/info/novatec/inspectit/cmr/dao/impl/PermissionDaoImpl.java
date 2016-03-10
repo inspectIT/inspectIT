@@ -99,13 +99,13 @@ public class PermissionDaoImpl extends HibernateDaoSupport implements Permission
 	public Permission findByTitle(String title) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(Permission.class);
 		criteria.add(Restrictions.eq("title", title));
-		
-		List<Permission> result = getHibernateTemplate().findByCriteria(criteria);
-		
-		if (result.isEmpty()) {
-			return null;
-		} else {
-			return result.get(0);
+		 		
+ 		List<Permission> result = getHibernateTemplate().findByCriteria(criteria);
+ 		
+ 		if (result.isEmpty()) {
+ 			return null;
+ 		} else {
+ 			return result.get(0);
 		}
 	}
 		

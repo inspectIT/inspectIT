@@ -216,4 +216,3 @@ public interface ISecurityService {
 	List<Permission> getPermissions(Serializable sessionId);
 
 }
-
