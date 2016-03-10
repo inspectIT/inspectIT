@@ -69,10 +69,10 @@ public interface PermissionDao {
 
 	/**
 	 * Returns a permission object with the same title as the parameter.
-	 * @param permission permission
+	 * @param title the title of the permission
 	 * @return a permission
 	 */
-	List<Permission> findByTitle(Permission permission);
+	Permission findByTitle(String title);
 	
 	/**
 	 * Searches for a Permission in the Database matching the example.
