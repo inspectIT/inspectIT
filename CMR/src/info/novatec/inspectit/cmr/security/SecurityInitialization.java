@@ -41,40 +41,41 @@ public class SecurityInitialization {
 	 */
 	public void start() {
 		if (permissionDao.loadAll().isEmpty()) {
-		Permission cmrRecordingPermission = new Permission("cmrRecordingPermission", "Permission start recording from Agent");
-		Permission cmrShutdownAndRestartPermission = new Permission("cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR");
-		Permission cmrDeleteAgentPermission = new Permission("cmrDeleteAgentPermission", "Permission for deleting Agent");
-		Permission cmrStoragePermission = new Permission("cmrStoragePermission", "Permission for accessing basic storage options");
-		Permission cmrAdministrationPermission = new Permission("cmrAdministrationPermission", "Permission for accessing the CMR Administration");
-		Permission cmrLookAtAgentsPermission = new Permission("cmrLookAtAgentsPermission", "General permission to look at agents.");
-		
-		//Transfers permissions to database.
-		permissionDao.saveOrUpdate(cmrRecordingPermission);
-		permissionDao.saveOrUpdate(cmrShutdownAndRestartPermission);
-		permissionDao.saveOrUpdate(cmrDeleteAgentPermission);
-		permissionDao.saveOrUpdate(cmrStoragePermission);
-		permissionDao.saveOrUpdate(cmrAdministrationPermission);
-		permissionDao.saveOrUpdate(cmrLookAtAgentsPermission);
-		
-		//Predefined roles
-		Role guestRole = new Role("guestRole", new ArrayList<Permission>());
-		Role restrictedRole = new Role("restrictedRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrLookAtAgentsPermission));
-		Role adminRole = new Role("adminRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrDeleteAgentPermission, cmrShutdownAndRestartPermission, cmrAdministrationPermission, cmrLookAtAgentsPermission));
-		
-		//Transfers roles to database.
-		roleDao.saveOrUpdate(guestRole);
-		roleDao.saveOrUpdate(restrictedRole);
-		roleDao.saveOrUpdate(adminRole);
+
+			Permission cmrRecordingPermission = new Permission("cmrRecordingPermission", "Permission start recording from Agent");
+			Permission cmrShutdownAndRestartPermission = new Permission("cmrShutdownAndRestartPermission", "Permission for shuting down and restarting the CMR");
+			Permission cmrDeleteAgentPermission = new Permission("cmrDeleteAgentPermission", "Permission for deleting Agent");
+			Permission cmrStoragePermission = new Permission("cmrStoragePermission", "Permission for accessing basic storage options");
+			Permission cmrAdministrationPermission = new Permission("cmrAdministrationPermission", "Permission for accessing the CMR Administration");
+			Permission cmrLookAtAgentsPermission = new Permission("cmrLookAtAgentsPermission", "General permission to look at agents.");
+
 			
-		//Standarduser - has to be changed on first login
-		User admin = new User(Permutation.hashString("admin"), "admin", adminRole.getId());
+			//Transfers permissions to database.
+			permissionDao.saveOrUpdate(cmrRecordingPermission);
+			permissionDao.saveOrUpdate(cmrShutdownAndRestartPermission);
+			permissionDao.saveOrUpdate(cmrDeleteAgentPermission);
+			permissionDao.saveOrUpdate(cmrStoragePermission);
+			permissionDao.saveOrUpdate(cmrAdministrationPermission);
 		
-		//Guestuser - can be edited to give a user without an account rights
-		User guest = new User(Permutation.hashString("guest"), "guest", guestRole.getId());
-		
-		//Transfers users to databse.		
-		userDao.saveOrUpdate(guest);
-		userDao.saveOrUpdate(admin);	
+			//Predefined roles
+			Role guestRole = new Role("guestRole", new ArrayList<Permission>());
+			Role restrictedRole = new Role("restrictedRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrLookAtAgentsPermission));
+			Role adminRole = new Role("adminRole", Arrays.asList(cmrRecordingPermission, cmrStoragePermission, cmrDeleteAgentPermission, cmrShutdownAndRestartPermission, cmrAdministrationPermission, cmrLookAtAgentsPermission));
+			
+			//Transfers roles to database.
+			roleDao.saveOrUpdate(guestRole);
+			roleDao.saveOrUpdate(restrictedRole);
+			roleDao.saveOrUpdate(adminRole);
+				
+			//Standarduser - has to be changed on first login
+			User admin = new User(Permutation.hashString("admin"), "admin", adminRole.getId());
+			
+			//Guestuser - can be edited to give a user without an account rights
+			User guest = new User(Permutation.hashString("guest"), "guest", guestRole.getId());
+						
+			//Transfers users to databse.		
+			userDao.saveOrUpdate(guest);
+			userDao.saveOrUpdate(admin);			
 		}	
 	}
 }
