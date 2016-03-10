@@ -26,7 +26,7 @@
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5" conf="prod->default" />
 
 		<dependency org="commons-lang" name="commons-lang" rev="2.5" conf="prod->default" />
-		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="prod->default" />
+		<dependency org="commons-collections" name="commons-collections" rev="3.2.2" conf="prod->default" />
 		<dependency org="commons-pool" name="commons-pool" rev="1.6" conf="prod->default" />
 
 		<dependency org="org.springframework" name="info.novatec.spring-core" rev="3.2.16" conf="prod->default" />
