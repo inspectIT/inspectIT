@@ -26,8 +26,8 @@ public class RoleDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 */
 	@Test
 	public void saveAndDeleteRole() {
-        Role role1 = new Role(1, "Normal-User", null);
-        Role role2 = new Role(2, "Power-User", null);
+        Role role1 = new Role(1, "Normal-User", null, "");
+        Role role2 = new Role(2, "Power-User", null, "");
 
         roleDao.saveOrUpdate(role1);
         roleDao.saveOrUpdate(role2);

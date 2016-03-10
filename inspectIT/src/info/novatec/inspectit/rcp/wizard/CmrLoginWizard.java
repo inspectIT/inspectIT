@@ -72,7 +72,7 @@ public class CmrLoginWizard extends Wizard implements INewWizard {
 			if (loggedin) {
 				MessageDialog.openInformation(null, "Successfully authenticated at selected CMR", "You are now logged in.");
 			} else {
-				MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect!");
+				MessageDialog.openError(null, "Login failed", "E-Mail or Password is incorrect or you are locked by admin!");
 			}
 			return loggedin;
 		} else {

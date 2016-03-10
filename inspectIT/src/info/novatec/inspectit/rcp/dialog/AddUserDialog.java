@@ -8,6 +8,8 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -45,6 +47,11 @@ public class AddUserDialog extends TitleAreaDialog {
 	 * password text box.
 	 */
 	private Text passwordBox;
+	
+	/**
+	 * Boolean to see if user is locked.
+	 */
+	private boolean isLocked = false;
 
 	/**
 	 * Add user button.
@@ -83,6 +90,7 @@ public class AddUserDialog extends TitleAreaDialog {
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
 		rolesList = cmrRepositoryDefinition.getSecurityService().getAllRoles();
 		userList = cmrRepositoryDefinition.getSecurityService().getAllUsers();
+		
 
 	}
 	/**
@@ -111,19 +119,19 @@ public class AddUserDialog extends TitleAreaDialog {
 
 		Label mailLabel = new Label(main, SWT.NONE);
 		mailLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		mailLabel.setText("e-mail:");
+		mailLabel.setText("E-mail:");
 		mailBox = new Text(main, SWT.BORDER);
 		mailBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		Label passwordLabel = new Label(main, SWT.NONE);
 		passwordLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		passwordLabel.setText("password:");
+		passwordLabel.setText("Password:");
 		passwordBox = new Text(main, SWT.BORDER | SWT.PASSWORD);
 		passwordBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		Label rolesLabel = new Label(main, SWT.NONE);
 		rolesLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		rolesLabel.setText("role:");
+		rolesLabel.setText("Role:");
 		roles = new Combo(main, SWT.READ_ONLY);
 	    for (Role role : rolesList) {
 	    	roles.add(role.getTitle());
@@ -144,6 +152,22 @@ public class AddUserDialog extends TitleAreaDialog {
 		mailBox.addModifyListener(modifyListener);
 		passwordBox.addModifyListener(modifyListener);
 		roles.addModifyListener(modifyListener);
+		
+		final Button checkBox = new Button(main, SWT.CHECK);
+		checkBox.setText("Lock user?");
+		checkBox.setSelection(isLocked);
+		checkBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean selected = checkBox.getSelection();
+                if (selected) {
+                	isLocked = true;
+                } else {
+                	isLocked = false;
+                }
+            }
+		});
+		
 
 		return main;
 	}
@@ -187,7 +211,7 @@ public class AddUserDialog extends TitleAreaDialog {
 	    		id = r.getId();
 	    	}
 	    }
-	    User user = new User(password, mail , id);
+	    User user = new User(password, mail , id, isLocked);
 	    cmrRepositoryDefinition.getSecurityService().addUser(user);
 		okPressed();
 	}

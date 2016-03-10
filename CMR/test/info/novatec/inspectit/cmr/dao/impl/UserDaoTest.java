@@ -28,7 +28,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGLogSupport {
 	 */
 	@Test
 	public void saveAndDeleteUser() throws NoSuchAlgorithmException {
-		User user = new User("TestPassword", "email", 1);
+		User user = new User("TestPassword", "email", 1, false);
 
 		userDao.saveOrUpdate(user);
 		

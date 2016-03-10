@@ -36,6 +36,11 @@ public class EditRoleDialog extends TitleAreaDialog {
 	 * role name text box.
 	 */
 	private Text roleNameBox;
+	
+	/**
+	 * Role-description text box.
+	 */
+	private Text roleDescriptionBox;
 
 	/**
 	 * Edit button.
@@ -138,7 +143,12 @@ public class EditRoleDialog extends TitleAreaDialog {
 			}
 		}
 
-
+		Label roleDescriptionBoxLabel = new Label(main, SWT.NONE);
+		roleDescriptionBoxLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		roleDescriptionBoxLabel.setText("Description:");
+		roleDescriptionBox = new Text(main, SWT.BORDER);
+		roleDescriptionBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
 		return main;
 	}
 
@@ -212,7 +222,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 				return;
 			}
 		}
-		cmrRepositoryDefinition.getSecurityService().changeRoleAttribute(roleOld, name, newPermissions);
+		cmrRepositoryDefinition.getSecurityService().changeRoleAttribute(roleOld, name, roleDescriptionBox.getText(), newPermissions);
 		okPressed();
 	}
 	

@@ -86,8 +86,9 @@ public interface ISecurityService {
 	 * 				Name of role.
 	 * @param rolePermissions
 	 * 				Permissions of role in string-form.
+	 * @param description Description of the role.
 	 */
-	void addRole(String name, List<String> rolePermissions);
+	void addRole(String name, List<String> rolePermissions, String description);
 	/**
 	 * Method to edit the attributes of a role.
 	 * @param role
@@ -166,10 +167,12 @@ public interface ISecurityService {
 	 * 		the new roleID
 	 * @param passwordChanged
 	 * 		boolean to see if password was changed and needs to be hashed
+	 * @param isLocked
+	 * 		boolean to see if user was locked by admin
 	 * @param sessionId
 	 * 		the sessionId
 	 */
-	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, Serializable sessionId);
+	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, boolean isLocked, Serializable sessionId);
 
 	// | PERMISSION |---------	
 	

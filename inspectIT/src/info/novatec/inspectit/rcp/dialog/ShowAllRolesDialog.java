@@ -72,7 +72,7 @@ public class ShowAllRolesDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		final Composite main = new Composite(parent, SWT.NONE);
-		main.setLayout(new GridLayout(2, false));
+		main.setLayout(new GridLayout(2, true));
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.widthHint = 400;
 		gd.heightHint = 100;

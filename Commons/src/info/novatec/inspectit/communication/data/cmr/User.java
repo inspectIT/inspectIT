@@ -48,11 +48,14 @@ public class User implements Serializable {
 	 *            The email of the user
 	 * @param roleId
 	 *            The id of the role the user is attached to
+	 * @param isLocked
+	 * 			boolean to see if user is locked by admin
 	 */
-	public User(String password, String email, long roleId) {
+	public User(String password, String email, long roleId, boolean isLocked) {
 		this.password = password;
 		this.email = email;
 		this.roleId = roleId;
+		this.locked = isLocked;
 	}
 	
 	/**
@@ -122,7 +125,7 @@ public class User implements Serializable {
 	}
 	/**
 	 * Indicating if the user is locked or not.
-	 * @return True if the user is locked, fals if not.
+	 * @return True if the user is locked, false if not.
 	 */
 	public boolean isLocked() {
 		return locked;
