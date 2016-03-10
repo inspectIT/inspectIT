@@ -22,12 +22,7 @@ public class Role implements Serializable {
 	 * A short title to name the role.
 	 */
 	private String title;
-	
-	/**
-	 * A more detailed description for the role.
-	 */
-	private String description;
-	
+
 	/**
 	 * The id of the Role.
 	 */
@@ -52,7 +47,6 @@ public class Role implements Serializable {
 		this.permissions = permissions;
 		this.title = title;
 		this.id = id;
-		this.description = "";
 	}
 	/**
 	 * The constructor for a role.
@@ -64,7 +58,6 @@ public class Role implements Serializable {
 		this.permissions = permissions;
 		this.title = title;
 		this.id = 0;
-		this.description = "";
 	}	
 	/**
 	 * Gets {@link #permissions}.
@@ -91,19 +84,11 @@ public class Role implements Serializable {
 		return id;
 	}
 	/**
-	 * Gets {@link #description}.
-	 *   
-	 * @return {@link #description}  
-	 */
-	public String getDescription() {
-		return description;
-	}
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return "Role [permissions=" + getPermissions().toString() + ", title='" + title + "', description='" + description + "', id=" + id + "]";
+		return "Role [permissions=" + getPermissions().toString() + ", title=" + title + ", id=" + id + "]";
 	}
 	/**  
 	 * Sets {@link #permissions}.  
@@ -132,14 +117,7 @@ public class Role implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
-	/**
-	 * Sets {@link #description}.
-	 * @param description
-	 * 						New value for {@link #description}
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	
 	
 	
 }

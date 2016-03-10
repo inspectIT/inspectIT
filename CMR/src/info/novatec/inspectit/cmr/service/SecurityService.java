@@ -38,7 +38,6 @@ import info.novatec.inspectit.spring.logger.Log;
  * @author Clemens Geibel
  * @author Lucca Hellriegel
  * @author Mario Rose
- * @author Joshua Hartmann
  */
 @Service
 public class SecurityService implements ISecurityService {
@@ -279,26 +278,21 @@ public class SecurityService implements ISecurityService {
 	}
 
 	// | PERMISSION |---------
-	
 	@Override
 	public void changePermissionDescription(Permission permission) {
-		changePermissionAttributes(permission, permission.getTitle(), permission.getDescription(), permission.getParameter());
+		List<Permission> foundPermissions = permissionDao.findByTitle(permission);
+		if (!checkDataIntegrity(permission)) {
+			throw new DataIntegrityViolationException("Data integrity test failed!");
+		} else if (foundPermissions.size() == 1) {
+			permissionDao.delete(foundPermissions.get(0));
+			permissionDao.saveOrUpdate(permission);
+		} else if (foundPermissions.size() > 1) {
+			throw new DataIntegrityViolationException("Multiple permissions with same title found!");
+		} else {
+			throw new DataRetrievalFailureException("The permission you wanted to update does not exist!");
+		}
 	}
 
-	@Override
-	public void changePermissionParameter(Permission permission) {
-		permissionDao.saveOrUpdate(permission);		
-	}	
-	
-	@Override
-	public void changePermissionAttributes(Permission perm, String newTitle, String newDescription, String newParamter) {
-		perm.setTitle(newTitle);
-		perm.setDescription(newDescription);
-		perm.setParameter(newParamter);
-		
-		permissionDao.saveOrUpdate(perm);
-	}
-	
 	@Override
 	public List<Permission> getAllPermissions() {
 		return permissionDao.loadAll();
@@ -344,33 +338,28 @@ public class SecurityService implements ISecurityService {
 				if (rolePermissions.get(i).equals(allPermissions.get(y).getTitle())) {
 					grantedPermissions.add(allPermissions.get(y));
 					break;
-				}
+					}
 			}
 		}
-		Role role = new Role(name, grantedPermissions);		
-			
+	   Role role = new Role(name, grantedPermissions);
+		
+		
 		if (!checkDataIntegrity(role)) {
 			throw new DataIntegrityViolationException("Data integrity test failed!");
 		}
 		List<Role> allRole = roleDao.loadAll();
 		if (allRole.contains(role)) {
 			throw new DataIntegrityViolationException("Role already exist!");
-		} else {			
+		} else {
+			
 			roleDao.saveOrUpdate(role);
 		}
 	}
 	
 	@Override
-	public void changeRoleDescription(Role role, String newDescription)	{
-		changeRoleAttribute(role, role.getTitle(), newDescription, role.getPermissions());
-	}
-	
-	@Override
-	public void changeRoleAttribute(Role role, String newTitle, String newDescription, List<Permission> newPermissions) {
-		role.setTitle(newTitle);
-		role.setDescription(newDescription);
-		role.setPermissions(newPermissions);
-		roleDao.saveOrUpdate(role);
+	public void changeRoleAttribute(Role roleOld, String name, List<Permission> newPermissions) {
+		Role roleNew = new Role(roleOld.getId(), name, newPermissions);
+		roleDao.saveOrUpdate(roleNew);
 	}
 	
 	@Override
@@ -379,5 +368,10 @@ public class SecurityService implements ISecurityService {
 	}
 
 
+	@Override
+	public void changePermissionParameter(Permission permission) {
+		permissionDao.saveOrUpdate(permission);
+		
+	}
 		// TODO Make more methods available for the administrator module...
 }
