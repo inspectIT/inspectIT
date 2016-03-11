@@ -2459,11 +2459,63 @@
                commandId="info.novatec.inspectit.rcp.commands.cmrLogin"
                label="CMR Login"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <or>
+                        <instanceof
+                              value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        </instanceof>
+                        <instanceof
+                              value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                        </instanceof>
+                     </or>
+                     <test
+                           property="info.novatec.inspectit.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                     <test
+                           property="info.novatec.inspectit.cmrLoginStatus"
+                           value="LOGGEDOUT">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
          </command>
          <command
                commandId="info.novatec.inspectit.rcp.commands.cmrLogout"
                label="CMR Logout"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <or>
+                        <instanceof
+                              value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        </instanceof>
+                        <instanceof
+                              value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                        </instanceof>
+                     </or>
+                     <test
+                           property="info.novatec.inspectit.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                     <test
+                           property="info.novatec.inspectit.cmrLoginStatus"
+                           value="LOGGEDIN">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
          </command>
          <command
                commandId="info.novatec.inspectit.rcp.commands.cmrAdministration"
