@@ -16,9 +16,9 @@ import org.eclipse.ui.forms.IMessageManager;
 
 /**
  * Abstract class for all {@link ValidationControlDecoration}s.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type of control to decorate.
  */
@@ -69,7 +69,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 	/**
 	 * Validation listeners.
 	 */
-	private Collection<IControlValidationListener> validationListeners = new HashSet<>();
+	private final Collection<IControlValidationListener> validationListeners = new HashSet<>();
 
 	/**
 	 * Listener used to be hooked to the events.
@@ -83,7 +83,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Simple constructor. Control decoration will be handled by message manager if one is supplied.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param messageManager
@@ -96,7 +96,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 	/**
 	 * Simple constructor. Control decoration will not be handled by message manager.Registers
 	 * listener to the list of validation listeners.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param listener
@@ -110,7 +110,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 	/**
 	 * Default constructor that allows setting of the {@link #alterControlBackround}. Control
 	 * decoration will be handled by message manager if one is supplied.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param messageManager
@@ -137,7 +137,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Constructor. Registers listener to the list of validation listeners.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param messageManager
@@ -153,7 +153,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 	/**
 	 * Constructor allowing setting of all fields. Registers listener to the list of validation
 	 * listeners.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param messageManager
@@ -184,7 +184,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Validates the current value in the control.
-	 * 
+	 *
 	 * @param control
 	 *            {@link Control}
 	 * @return <code>true</code> if validation passed, false otherwise.
@@ -193,9 +193,20 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Executes the validation, shows or hides the decoration and informs the
-	 * {@link #validationListeners}.
+	 * {@link #validationListeners} only if the validation value changed.
 	 */
 	public void executeValidation() {
+		executeValidation(false);
+	}
+
+	/**
+	 * Executes the validation, shows or hides the decoration and informs the
+	 * {@link #validationListeners}.
+	 *
+	 * @param informListenerAlways
+	 *            Always inform the listener even if the results of the validation did not change.
+	 */
+	public void executeValidation(boolean informListenerAlways) {
 		boolean tmp = valid;
 		if (controlActive()) {
 			valid = validate(control);
@@ -209,6 +220,9 @@ public abstract class ValidationControlDecoration<T extends Control> {
 			} else {
 				show();
 			}
+		}
+
+		if (informListenerAlways || tmp != valid) {
 			for (IControlValidationListener listener : validationListeners) {
 				listener.validationStateChanged(valid, ValidationControlDecoration.this);
 			}
@@ -245,7 +259,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Register event type when validation should kick in.
-	 * 
+	 *
 	 * @param eventType
 	 *            Event type.
 	 */
@@ -255,7 +269,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Register event type when validation should kick in with any arbitrary control.
-	 * 
+	 *
 	 * @param control
 	 *            to register validation to
 	 * @param eventType
@@ -269,11 +283,11 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Adds {@link IControlValidationListener} to the list of listeners.
-	 * 
+	 *
 	 * @param validationListener
 	 *            {@link IControlValidationListener}.
 	 */
-	public void addControlValidationListener(IControlValidationListener validationListener) {
+	public final void addControlValidationListener(IControlValidationListener validationListener) {
 		if (null != validationListener) {
 			validationListeners.add(validationListener);
 		}
@@ -281,7 +295,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Returns if control is active. No validation will be process when control is not active.
-	 * 
+	 *
 	 * @return Returns if control is active. No validation will be process when control is not
 	 *         active.
 	 */
@@ -291,7 +305,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Gets {@link #valid}.
-	 * 
+	 *
 	 * @return {@link #valid}
 	 */
 	public boolean isValid() {
@@ -300,7 +314,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Gets {@link #control}.
-	 * 
+	 *
 	 * @return {@link #control}
 	 */
 	public T getControl() {
@@ -309,7 +323,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Gets {@link #descriptionText}.
-	 * 
+	 *
 	 * @return {@link #descriptionText}
 	 */
 	public String getDescriptionText() {
@@ -318,7 +332,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 
 	/**
 	 * Sets {@link #descriptionText}.
-	 * 
+	 *
 	 * @param descriptionText
 	 *            New value for {@link #descriptionText}
 	 */
