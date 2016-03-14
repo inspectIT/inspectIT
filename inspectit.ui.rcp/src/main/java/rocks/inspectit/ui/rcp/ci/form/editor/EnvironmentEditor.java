@@ -12,6 +12,7 @@ import org.eclipse.ui.PartInitException;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
 import rocks.inspectit.ui.rcp.ci.form.page.EnvironmentSettingsPage;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
@@ -21,9 +22,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Editor for the {@link Environment}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor implements IEnvironmentChangeListener {
 
@@ -58,6 +59,7 @@ public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor 
 	protected void addPages() {
 		try {
 			addPage(new EnvironmentSettingsPage(this));
+			setPageImage(0, InspectIT.getDefault().getImage(InspectITImages.IMG_TOOL));
 		} catch (PartInitException e) {
 			InspectIT.getDefault().log(IStatus.ERROR, "Error occurred trying to open the Environment editor.", e);
 		}

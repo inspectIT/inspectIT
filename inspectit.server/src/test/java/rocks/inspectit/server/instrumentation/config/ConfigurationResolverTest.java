@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -40,6 +41,8 @@ import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignmen
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
+import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 @SuppressWarnings("PMD")
@@ -64,6 +67,12 @@ public class ConfigurationResolverTest extends TestBase {
 
 	@Mock
 	Profile profile;
+
+	@Mock
+	SensorAssignmentProfileData sensorAssignmentProfileData;
+
+	@Mock
+	ExcludeRulesProfileData excludeRulesProfileData;
 
 	@Mock
 	Logger log;
@@ -187,6 +196,11 @@ public class ConfigurationResolverTest extends TestBase {
 
 	public static class GetInstrumentationAppliers extends ConfigurationResolverTest {
 
+		@BeforeMethod
+		public void setupProfileData() {
+			when(sensorAssignmentProfileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(true);
+		}
+
 		@Test
 		public void nullEnvironment() {
 			Collection<IInstrumentationApplier> appliers = configurationResolver.getInstrumentationAppliers(null);
@@ -224,7 +238,8 @@ public class ConfigurationResolverTest extends TestBase {
 			MethodSensorAssignment assignment = mock(MethodSensorAssignment.class);
 			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
 			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
-			when(profile.getMethodSensorAssignments()).thenReturn(Collections.singletonList(assignment));
+			doReturn(sensorAssignmentProfileData).when(profile).getProfileData();
+			doReturn(Collections.singletonList(assignment)).when(sensorAssignmentProfileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(false);
 
 			Collection<IInstrumentationApplier> appliers = configurationResolver.getInstrumentationAppliers(environment);
@@ -240,7 +255,8 @@ public class ConfigurationResolverTest extends TestBase {
 			MethodSensorAssignment assignment = mock(MethodSensorAssignment.class);
 			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
 			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
-			when(profile.getMethodSensorAssignments()).thenReturn(Collections.singletonList(assignment));
+			doReturn(sensorAssignmentProfileData).when(profile).getProfileData();
+			doReturn(Collections.singletonList(assignment)).when(sensorAssignmentProfileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(true);
 
 			Collection<IInstrumentationApplier> appliers = configurationResolver.getInstrumentationAppliers(environment);
@@ -258,7 +274,8 @@ public class ConfigurationResolverTest extends TestBase {
 			TimerMethodSensorAssignment assignment = mock(TimerMethodSensorAssignment.class);
 			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
 			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
-			when(profile.getMethodSensorAssignments()).thenReturn(Collections.<MethodSensorAssignment> singletonList(assignment));
+			doReturn(sensorAssignmentProfileData).when(profile).getProfileData();
+			doReturn(Collections.singletonList(assignment)).when(sensorAssignmentProfileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(true);
 
 			Collection<IInstrumentationApplier> appliers = configurationResolver.getInstrumentationAppliers(environment);
@@ -276,7 +293,8 @@ public class ConfigurationResolverTest extends TestBase {
 			ExceptionSensorAssignment assignment = mock(ExceptionSensorAssignment.class);
 			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
 			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
-			when(profile.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(assignment));
+			doReturn(sensorAssignmentProfileData).when(profile).getProfileData();
+			doReturn(Collections.singletonList(assignment)).when(sensorAssignmentProfileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(true);
 
 			Collection<IInstrumentationApplier> appliers = configurationResolver.getInstrumentationAppliers(environment);
@@ -300,6 +318,20 @@ public class ConfigurationResolverTest extends TestBase {
 			IInstrumentationApplier applier = appliers.iterator().next();
 			assertThat(applier, is(instanceOf(SpecialInstrumentationApplier.class)));
 			assertThat((SpecialMethodSensorAssignment) applier.getSensorAssignment(), is(assignment));
+
+			verify(functionalAssignmentFactory).getSpecialAssignments(environment);
+		}
+
+		@Test
+		public void wrongProfileData() throws BusinessException {
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
+			doReturn(new ExcludeRulesProfileData()).when(profile).getProfileData();
+			when(profile.isActive()).thenReturn(true);
+
+			Collection<IInstrumentationApplier> appliers = configurationResolver.getInstrumentationAppliers(environment);
+
+			assertThat(appliers, is(empty()));
 
 			verify(functionalAssignmentFactory).getSpecialAssignments(environment);
 		}
@@ -355,6 +387,11 @@ public class ConfigurationResolverTest extends TestBase {
 		@Mock
 		private ExcludeRule excludeRule;
 
+		@BeforeMethod
+		public void setupProfileData() {
+			when(excludeRulesProfileData.isOfType(ExcludeRulesProfileData.class)).thenReturn(true);
+		}
+
 		@Test
 		public void nullEnvironment() {
 			Collection<ExcludeRule> rules = configurationResolver.getAllExcludeRules(null);
@@ -387,7 +424,8 @@ public class ConfigurationResolverTest extends TestBase {
 		public void profileNotActive() throws BusinessException {
 			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
 			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
-			when(profile.getExcludeRules()).thenReturn(Collections.singletonList(excludeRule));
+			doReturn(excludeRulesProfileData).when(profile).getProfileData();
+			when(excludeRulesProfileData.getData(ExcludeRulesProfileData.class)).thenReturn(Collections.singletonList(excludeRule));
 			when(profile.isActive()).thenReturn(false);
 
 			Collection<ExcludeRule> rules = configurationResolver.getAllExcludeRules(environment);
@@ -399,13 +437,26 @@ public class ConfigurationResolverTest extends TestBase {
 		public void excludeRule() throws BusinessException {
 			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
 			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
-			when(profile.getExcludeRules()).thenReturn(Collections.singletonList(excludeRule));
+			doReturn(excludeRulesProfileData).when(profile).getProfileData();
+			when(excludeRulesProfileData.getData(ExcludeRulesProfileData.class)).thenReturn(Collections.singletonList(excludeRule));
 			when(profile.isActive()).thenReturn(true);
 
 			Collection<ExcludeRule> rules = configurationResolver.getAllExcludeRules(environment);
 
 			assertThat(rules, hasSize(1));
 			assertThat(rules, hasItem(excludeRule));
+		}
+
+		@Test
+		public void wrongProfileData() throws BusinessException {
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
+			doReturn(new SensorAssignmentProfileData()).when(profile).getProfileData();
+			when(profile.isActive()).thenReturn(true);
+
+			Collection<ExcludeRule> rules = configurationResolver.getAllExcludeRules(environment);
+
+			assertThat(rules, is(empty()));
 		}
 
 	}
