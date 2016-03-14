@@ -6,11 +6,16 @@ import rocks.inspectit.shared.all.exception.IErrorCode;
 
 /**
  * Error code enumeration for the CI component.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
+
+	/**
+	 * Profile does not have profile data.
+	 */
+	PROFILE_DOES_NOT_HAVE_CORRECT_PROFILE_DATA("The profile to execute the selected does not have correct profile data set.", null, null),
 
 	/**
 	 * Profile not existing on the CMR.
@@ -77,7 +82,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param description
 	 *            Description of the error code.
 	 * @param possibleCause
@@ -110,7 +115,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
 	public String getDescription() {
@@ -119,7 +124,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleCause}.
-	 * 
+	 *
 	 * @return {@link #possibleCause}
 	 */
 	public String getPossibleCause() {
@@ -128,7 +133,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleSolution}.
-	 * 
+	 *
 	 * @return {@link #possibleSolution}
 	 */
 	public String getPossibleSolution() {

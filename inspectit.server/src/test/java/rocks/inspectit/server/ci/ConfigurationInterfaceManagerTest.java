@@ -50,6 +50,7 @@ import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
 
 /**
@@ -58,7 +59,7 @@ import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
  * @author Ivan Senic
  *
  */
-@SuppressWarnings("all")
+@SuppressWarnings({ "all", "unchecked" })
 public class ConfigurationInterfaceManagerTest extends TestBase {
 
 	/**
@@ -122,6 +123,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		public void createProfileCheckId() throws Exception {
 			Profile profile = new Profile();
 			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
 
 			manager.createProfile(profile);
 
@@ -133,6 +135,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		public void createProfileCheckExists() throws Exception {
 			Profile profile = new Profile();
 			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
 
 			manager.createProfile(profile);
 
@@ -142,10 +145,19 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 	public class GetProfile extends ConfigurationInterfaceManagerTest {
 
+		@Test(expectedExceptions = BusinessException.class)
+		public void createProfileNoProfileData() throws Exception {
+			Profile profile = new Profile();
+			profile.setName("test");
+
+			manager.createProfile(profile);
+		}
+
 		@Test
 		public void get() throws Exception {
 			Profile profile = new Profile();
 			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
 			profile = manager.createProfile(profile);
 
 			Profile result = manager.getProfile(profile.getId());
@@ -165,6 +177,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		public void deleteProfile() throws Exception {
 			Profile profile = new Profile();
 			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
 			profile = manager.createProfile(profile);
 
 			manager.deleteProfile(profile);
@@ -176,6 +189,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		public void deleteProfileRemovedFromEnvironment() throws Exception {
 			Profile profile = new Profile();
 			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
 			profile = manager.createProfile(profile);
 			Environment environment = new Environment();
 			environment.setName("Test");
@@ -205,6 +219,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		public void updateProfile() throws Exception {
 			Profile profile = new Profile();
 			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
 			profile = manager.createProfile(profile);
 			profile.setName("new");
 
@@ -225,24 +240,31 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 			Profile profile = new Profile();
 			profile.setName("test");
-			profile.setMethodSensorAssignments(Collections.singletonList(methodSensorAssignment1));
+			SensorAssignmentProfileData profileData = new SensorAssignmentProfileData();
+			profileData.setMethodSensorAssignments(Collections.singletonList(methodSensorAssignment1));
+			profile.setProfileData(profileData);
 			Profile created = manager.createProfile(profile);
-			assertThat(profile.getMethodSensorAssignments(), hasItem(methodSensorAssignment1));
+			assertThat((Collection<MethodSensorAssignment>) profile.getProfileData().getData(SensorAssignmentProfileData.class), hasItem(methodSensorAssignment1));
 
 			profile = new Profile();
 			profile.setId(created.getId());
 			profile.setRevision(created.getRevision());
 			profile.setName(created.getName());
-			profile.setMethodSensorAssignments(Collections.singletonList(methodSensorAssignment2));
+			profileData = new SensorAssignmentProfileData();
+			profileData.setMethodSensorAssignments(Collections.singletonList(methodSensorAssignment2));
+			profile.setProfileData(profileData);
 
 			Profile updated = manager.updateProfile(profile);
 
-			assertThat(profile.getMethodSensorAssignments(), hasItem(methodSensorAssignment2));
+			assertThat((Collection<MethodSensorAssignment>) profile.getProfileData().getData(SensorAssignmentProfileData.class), hasItem(methodSensorAssignment2));
 			assertThat(updated.getRevision(), is(2));
 
 			ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
 			verify(eventPublisher).publishEvent(captor.capture());
 			assertThat(captor.getValue(), is(instanceOf(ProfileUpdateEvent.class)));
+			ProfileUpdateEvent profileUpdateEvent = (ProfileUpdateEvent) captor.getValue();
+			assertThat(profileUpdateEvent.getRemovedSensorAssignments(), hasItem(methodSensorAssignment1));
+			assertThat(profileUpdateEvent.getAddedSensorAssignments(), hasItem(methodSensorAssignment2));
 		}
 
 		@Test
@@ -252,33 +274,38 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 			Profile profile = new Profile();
 			profile.setName("test");
-			profile.setExceptionSensorAssignments(Collections.singletonList(exceptionSensorAssignment1));
+			SensorAssignmentProfileData profileData = new SensorAssignmentProfileData();
+			profileData.setExceptionSensorAssignments(Collections.singletonList(exceptionSensorAssignment1));
+			profile.setProfileData(profileData);
 			Profile created = manager.createProfile(profile);
-			assertThat(profile.getExceptionSensorAssignments(), hasItem(exceptionSensorAssignment1));
+			assertThat((Collection<ExceptionSensorAssignment>) profile.getProfileData().getData(SensorAssignmentProfileData.class), hasItem(exceptionSensorAssignment1));
 
 			profile = new Profile();
 			profile.setId(created.getId());
 			profile.setRevision(created.getRevision());
 			profile.setName(created.getName());
-			profile.setExceptionSensorAssignments(Collections.singletonList(exceptionSensorAssignment2));
+			profileData = new SensorAssignmentProfileData();
+			profileData.setExceptionSensorAssignments(Collections.singletonList(exceptionSensorAssignment2));
+			profile.setProfileData(profileData);
 
 			Profile updated = manager.updateProfile(profile);
 
-			assertThat(profile.getExceptionSensorAssignments(), hasItem(exceptionSensorAssignment2));
+			assertThat((Collection<ExceptionSensorAssignment>) profile.getProfileData().getData(SensorAssignmentProfileData.class), hasItem(exceptionSensorAssignment2));
 			assertThat(updated.getRevision(), is(2));
-
-			ArgumentCaptor<Collection> addedSensorsCaptor = ArgumentCaptor.forClass(Collection.class);
-			ArgumentCaptor<Collection> removedSensorsCaptor = ArgumentCaptor.forClass(Collection.class);
 
 			ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
 			verify(eventPublisher).publishEvent(captor.capture());
 			assertThat(captor.getValue(), is(instanceOf(ProfileUpdateEvent.class)));
+			ProfileUpdateEvent profileUpdateEvent = (ProfileUpdateEvent) captor.getValue();
+			assertThat(profileUpdateEvent.getRemovedSensorAssignments(), hasItem(exceptionSensorAssignment1));
+			assertThat(profileUpdateEvent.getAddedSensorAssignments(), hasItem(exceptionSensorAssignment2));
 		}
 
 		@Test(expectedExceptions = { Exception.class })
 		public void updateProfileRevisionFails() throws Exception {
 			Profile profile = new Profile();
 			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
 			profile = manager.createProfile(profile);
 
 			Profile clone = new Profile();
@@ -335,6 +362,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 			Profile profile = new Profile();
 			profile.setName("test");
 			profile.setDefaultProfile(true);
+			profile.setProfileData(new SensorAssignmentProfileData());
 			profile = manager.createProfile(profile);
 			Environment environment = new Environment();
 			environment.setName("test");
@@ -419,9 +447,11 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		public void updateEnvironmentProfileUpdate() throws Exception {
 			Profile profile1 = new Profile();
 			profile1.setName("profile1");
+			profile1.setProfileData(new SensorAssignmentProfileData());
 			profile1 = manager.createProfile(profile1);
 			Profile profile2 = new Profile();
 			profile2.setName("profile2");
+			profile2.setProfileData(new SensorAssignmentProfileData());
 			profile2 = manager.createProfile(profile2);
 
 			Environment environment = new Environment();

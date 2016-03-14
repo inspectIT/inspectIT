@@ -236,21 +236,28 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 		activeColumn.getColumn().setMoveable(true);
 		activeColumn.getColumn().setResizable(true);
 		activeColumn.getColumn().setText("Active");
-		activeColumn.getColumn().setWidth(60);
+		activeColumn.getColumn().setWidth(40);
 		activeColumn.getColumn().setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
 
 		TableViewerColumn defaultColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		defaultColumn.getColumn().setMoveable(true);
 		defaultColumn.getColumn().setResizable(true);
 		defaultColumn.getColumn().setText("Default");
-		defaultColumn.getColumn().setWidth(60);
+		defaultColumn.getColumn().setWidth(40);
 		defaultColumn.getColumn().setToolTipText("If profile is default or not, note that default profile will be added to any new created Environment.");
+
+		TableViewerColumn typeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+		typeColumn.getColumn().setMoveable(true);
+		typeColumn.getColumn().setResizable(true);
+		typeColumn.getColumn().setText("Type");
+		typeColumn.getColumn().setWidth(40);
+		typeColumn.getColumn().setToolTipText("Type of data profile is holding.");
 
 		TableViewerColumn descriptionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		descriptionColumn.getColumn().setMoveable(true);
 		descriptionColumn.getColumn().setResizable(true);
 		descriptionColumn.getColumn().setText("Description");
-		descriptionColumn.getColumn().setWidth(150);
+		descriptionColumn.getColumn().setWidth(250);
 		descriptionColumn.getColumn().setToolTipText("Profile description.");
 	}
 
@@ -305,7 +312,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 				switch (index) {
 				case 1:
 					return new StyledString(profile.getName());
-				case 4:
+				case 5:
 					return TextFormatter.emptyStyledStringIfNull(TextFormatter.clearLineBreaks(profile.getDescription()));
 				default:
 					return EMPTY;
@@ -328,6 +335,8 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 					return profile.isActive() ? InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK) : null; // NOPMD
 				case 3:
 					return profile.isDefaultProfile() ? InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK) : null; // NOPMD
+				case 4:
+					return ImageFormatter.getProfileDataImage(profile.getProfileData());
 				default:
 					return super.getColumnImage(element, index);
 				}
@@ -348,6 +357,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 			}
 			return super.getForeground(element, index);
 		}
+
 	}
 
 	/**

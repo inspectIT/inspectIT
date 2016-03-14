@@ -2,20 +2,22 @@ package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.List;
 
-import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Listener for the sensor assignment master block.
- * 
+ *
+ * @param <A>
+ *            type of the assignment
  * @author Ivan Senic
- * 
+ *
  */
-public interface ISensorAssignmentUpdateListener {
+public interface ISensorAssignmentUpdateListener<A extends ISensorAssignment<?>> {
 
 	/**
 	 * Informs the listener that the sensor assignment was edited (in the details part).
-	 * 
+	 *
 	 * @param sensorAssignment
 	 *            Element being edited.
 	 * @param dirty
@@ -26,5 +28,5 @@ public interface ISensorAssignmentUpdateListener {
 	 *            List of {@link ValidationControlDecoration} that are used on the given assignment
 	 *            to generate the valid state.
 	 */
-	void sensorAssignmentUpdated(AbstractClassSensorAssignment<?> sensorAssignment, boolean dirty, boolean isValid, List<ValidationControlDecoration<?>> validationDecorations);
+	void sensorAssignmentUpdated(A sensorAssignment, boolean dirty, boolean isValid, List<ValidationControlDecoration<?>> validationDecorations);
 }

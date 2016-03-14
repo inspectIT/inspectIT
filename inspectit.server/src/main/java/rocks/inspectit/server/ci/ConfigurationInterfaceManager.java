@@ -130,6 +130,10 @@ public class ConfigurationInterfaceManager {
 	 *             If {@link JAXBException} occurs during save.
 	 */
 	public Profile createProfile(Profile profile) throws BusinessException, JAXBException, IOException {
+		if (null == profile.getProfileData()) {
+			throw new BusinessException("Create new profile.", ConfigurationInterfaceErrorCodeEnum.PROFILE_DOES_NOT_HAVE_CORRECT_PROFILE_DATA);
+		}
+
 		profile.setId(getRandomUUIDString());
 		profile.setCreatedDate(new Date());
 		existingProfiles.put(profile.getId(), profile);

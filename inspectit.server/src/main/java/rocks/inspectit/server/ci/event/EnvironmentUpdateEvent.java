@@ -2,6 +2,7 @@ package rocks.inspectit.server.ci.event;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -13,6 +14,8 @@ import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
+import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 
 /**
  * Event that signals that an {@link Environment} has been updated via CI.
@@ -137,11 +140,12 @@ public class EnvironmentUpdateEvent extends ApplicationEvent {
 		if (CollectionUtils.isNotEmpty(profiles)) {
 			for (Profile profile : profiles) {
 				if (profile.isActive()) {
-					if (CollectionUtils.isNotEmpty(profile.getMethodSensorAssignments())) {
-						assignments.addAll(profile.getMethodSensorAssignments());
-					}
-					if (CollectionUtils.isNotEmpty(profile.getExceptionSensorAssignments())) {
-						assignments.addAll(profile.getExceptionSensorAssignments());
+					AbstractProfileData<?> profileData = profile.getProfileData();
+					if (profileData.isOfType(SensorAssignmentProfileData.class)) {
+						List<? extends AbstractClassSensorAssignment<?>> data = profileData.getData(SensorAssignmentProfileData.class);
+						if (CollectionUtils.isNotEmpty(data)) {
+							assignments.addAll(data);
+						}
 					}
 				}
 			}
