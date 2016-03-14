@@ -25,15 +25,14 @@ import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
-import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.validation.IControlValidationListener;
 import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Dialog for creating new {@link AgentMapping}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentMappingDialog extends TitleAreaDialog implements IControlValidationListener {
 
@@ -45,12 +44,12 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 	/**
 	 * Possible environments to map to.
 	 */
-	private List<Environment> environments;
+	private final List<Environment> environments;
 
 	/**
 	 * All {@link ValidationControlDecoration}s.
 	 */
-	private List<ValidationControlDecoration<?>> validationControlDecorations = new ArrayList<>();
+	private final List<ValidationControlDecoration<?>> validationControlDecorations = new ArrayList<>();
 
 	/**
 	 * OK button.
@@ -84,7 +83,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell.
 	 * @param environments
@@ -96,7 +95,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Edit mode constructor. Data will be populated with the given {@link AgentMapping}.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell.
 	 * @param agentMapping
@@ -133,7 +132,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Defines dialog title.
-	 * 
+	 *
 	 * @return Title
 	 */
 	private String getTitle() {
@@ -266,7 +265,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 			activeButton.setSelection(agentMapping.isActive());
 			nameText.setText(agentMapping.getAgentName());
 			ipText.setText(agentMapping.getIpAddress());
-			descriptionText.setText(TextFormatter.emptyStringIfNull(agentMapping.getDescription()));
+			descriptionText.setText(StringUtils.defaultString(agentMapping.getDescription()));
 			for (Environment environment : environments) {
 				if (Objects.equals(environment.getId(), agentMapping.getEnvironmentId())) {
 					environmentCombo.select(environments.indexOf(environment));
@@ -281,7 +280,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Gets {@link #agentMapping}.
-	 * 
+	 *
 	 * @return {@link #agentMapping}
 	 */
 	public AgentMapping getAgentMapping() {
@@ -308,7 +307,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Creates info icon with given text as tool-tip.
-	 * 
+	 *
 	 * @param parent
 	 *            Composite to create on.
 	 * @param text
