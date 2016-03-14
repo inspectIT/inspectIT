@@ -34,12 +34,13 @@ import rocks.inspectit.ui.rcp.editor.tooltip.ColumnAwareToolTipSupport;
 import rocks.inspectit.ui.rcp.editor.viewers.ImageFixStyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.viewer.ReferenceElementComparer;
 
 /**
  * Table provider for the tab folder containing the sensor assignments.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SensorAssignmentTableProvider {
 
@@ -50,7 +51,7 @@ public class SensorAssignmentTableProvider {
 
 	/**
 	 * Constructor. Table can be retrieved by calling {@link #getTableViewer()}.
-	 * 
+	 *
 	 * @param masterBlock
 	 *            Master block containing this table.
 	 * @param parent
@@ -62,7 +63,7 @@ public class SensorAssignmentTableProvider {
 
 	/**
 	 * Initializes the table.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite
 	 * @param selectionChangedListener
@@ -78,6 +79,7 @@ public class SensorAssignmentTableProvider {
 
 		tableViewer = new TableViewer(table);
 		tableViewer.setUseHashlookup(false);
+		tableViewer.setComparer(ReferenceElementComparer.INSTANCE);
 		createColumns(tableViewer);
 		tableViewer.setContentProvider(getContentProvider());
 		tableViewer.setLabelProvider(getLabelProvider());
@@ -90,7 +92,7 @@ public class SensorAssignmentTableProvider {
 
 	/**
 	 * Gets {@link #tableViewer}.
-	 * 
+	 *
 	 * @return {@link #tableViewer}
 	 */
 	public TableViewer getTableViewer() {
@@ -99,7 +101,7 @@ public class SensorAssignmentTableProvider {
 
 	/**
 	 * Sets the input for the table in the tab item.
-	 * 
+	 *
 	 * @param assignments
 	 *            Assignments as input.
 	 */
@@ -110,7 +112,7 @@ public class SensorAssignmentTableProvider {
 
 	/**
 	 * Creates columns for Table.
-	 * 
+	 *
 	 * @param tableViewer
 	 *            Table viewer to create columns for.
 	 */
@@ -152,7 +154,7 @@ public class SensorAssignmentTableProvider {
 			/**
 			 * The resource manager is used for the images etc.
 			 */
-			private LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
+			private final LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
 
 			/**
 			 * Empty styled string.

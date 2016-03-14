@@ -1,7 +1,5 @@
 package rocks.inspectit.shared.cs.ci.assignment;
 
-import java.util.Map;
-
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 
 /**
@@ -19,12 +17,5 @@ public interface ISensorAssignment<T extends ISensorConfig> {
 	 * @return Returns the class of the sensor config.
 	 */
 	Class<? extends T> getSensorConfigClass();
-
-	/**
-	 * Return settings for the sensor assignment.
-	 *
-	 * @return Return settings for the sensor assignment.
-	 */
-	Map<String, Object> getSettings();
 
 }

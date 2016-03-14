@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,17 +13,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.mockito.Mock;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
-import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
-import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 
 /**
  * @author Ivan Senic
@@ -45,6 +45,15 @@ public class EnvironmentUpdateEventTest extends TestBase {
 	@Mock
 	Profile profile;
 
+	@Mock
+	SensorAssignmentProfileData profileData;
+
+	@BeforeMethod
+	public void setupProfileData() {
+		doReturn(profileData).when(profile).getProfileData();
+		when(profileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(true);
+	}
+
 	public static class Constructor extends EnvironmentUpdateEventTest {
 
 		@Test(expectedExceptions = IllegalArgumentException.class)
@@ -62,31 +71,26 @@ public class EnvironmentUpdateEventTest extends TestBase {
 		public void profileRemoved() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			MethodSensorAssignment methodAssignment = mock(MethodSensorAssignment.class);
-			ExceptionSensorAssignment exceptionAssignment = mock(ExceptionSensorAssignment.class);
+			AbstractClassSensorAssignment<?> assignment = mock(AbstractClassSensorAssignment.class);
 
-			when(profile.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(profile.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(profileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(true);
 
 			EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, null, Collections.singletonList(profile));
 
 			Collection<AbstractClassSensorAssignment<?>> removed = event.getRemovedSensorAssignments(functionalAssignmentFactory);
 
-			assertThat(removed, hasSize(2));
-			assertThat(removed, hasItem(methodAssignment));
-			assertThat(removed, hasItem(exceptionAssignment));
+			assertThat(removed, hasSize(1));
+			assertThat(removed, hasItem(assignment));
 		}
 
 		@Test
 		public void profileRemovedNotActive() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			MethodSensorAssignment methodAssignment = mock(MethodSensorAssignment.class);
-			ExceptionSensorAssignment exceptionAssignment = mock(ExceptionSensorAssignment.class);
+			AbstractClassSensorAssignment<?> assignment = mock(AbstractClassSensorAssignment.class);
 
-			when(profile.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(profile.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(profileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(false);
 
 			EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, null, Collections.singletonList(profile));
@@ -128,6 +132,22 @@ public class EnvironmentUpdateEventTest extends TestBase {
 
 			assertThat(removed, is(empty()));
 		}
+
+		@Test
+		public void wrongProfileData() {
+			when(old.getId()).thenReturn(ID);
+			when(updated.getId()).thenReturn(ID);
+
+			when(profileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(false);
+			when(profile.isActive()).thenReturn(true);
+
+			EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, null, Collections.singletonList(profile));
+
+			Collection<AbstractClassSensorAssignment<?>> removed = event.getRemovedSensorAssignments(functionalAssignmentFactory);
+
+			assertThat(removed, is(empty()));
+		}
+
 	}
 
 	public static class GetAddedSensorAssignments extends EnvironmentUpdateEventTest {
@@ -136,31 +156,26 @@ public class EnvironmentUpdateEventTest extends TestBase {
 		public void profileAdded() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			MethodSensorAssignment methodAssignment = mock(MethodSensorAssignment.class);
-			ExceptionSensorAssignment exceptionAssignment = mock(ExceptionSensorAssignment.class);
+			AbstractClassSensorAssignment<?> assignment = mock(AbstractClassSensorAssignment.class);
 
-			when(profile.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(profile.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(profileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(true);
 
 			EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, Collections.singletonList(profile), null);
 
 			Collection<AbstractClassSensorAssignment<?>> added = event.getAddedSensorAssignments(functionalAssignmentFactory);
 
-			assertThat(added, hasSize(2));
-			assertThat(added, hasItem(methodAssignment));
-			assertThat(added, hasItem(exceptionAssignment));
+			assertThat(added, hasSize(1));
+			assertThat(added, hasItem(assignment));
 		}
 
 		@Test
 		public void profileRemovedNotActive() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			MethodSensorAssignment methodAssignment = mock(MethodSensorAssignment.class);
-			ExceptionSensorAssignment exceptionAssignment = mock(ExceptionSensorAssignment.class);
+			AbstractClassSensorAssignment<?> assignment = mock(AbstractClassSensorAssignment.class);
 
-			when(profile.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(profile.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(profileData).getData(SensorAssignmentProfileData.class);
 			when(profile.isActive()).thenReturn(false);
 
 			EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, Collections.singletonList(profile), null);
@@ -197,6 +212,21 @@ public class EnvironmentUpdateEventTest extends TestBase {
 			when(functionalAssignmentFactory.getSpecialAssignments(updated)).thenReturn(Collections.singletonList(functionalAssignment));
 
 			EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, null, null);
+
+			Collection<AbstractClassSensorAssignment<?>> added = event.getAddedSensorAssignments(functionalAssignmentFactory);
+
+			assertThat(added, is(empty()));
+		}
+
+		@Test
+		public void wrongProfileData() {
+			when(old.getId()).thenReturn(ID);
+			when(updated.getId()).thenReturn(ID);
+
+			when(profileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(false);
+			when(profile.isActive()).thenReturn(true);
+
+			EnvironmentUpdateEvent event = new EnvironmentUpdateEvent(this, old, updated, null, Collections.singletonList(profile));
 
 			Collection<AbstractClassSensorAssignment<?>> added = event.getAddedSensorAssignments(functionalAssignmentFactory);
 

@@ -93,7 +93,7 @@ task schemagenCi {
 	inputs.dir project(':inspectit.shared.cs').sourceSets.main.java.srcDirs
 	outputs.file file("${mainExtResources}/ci/schema/ciSchema.xsd")
 
-	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${mainExtResources}/ci/schema", "ciSchema.xsd", ""))
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${mainExtResources}/ci/schema", "ciSchema.xsd", "factory/**"))
 }
 
 /**
