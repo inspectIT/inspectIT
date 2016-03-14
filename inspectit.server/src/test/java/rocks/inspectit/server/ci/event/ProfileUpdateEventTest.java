@@ -5,20 +5,20 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.Collections;
 
 import org.mockito.Mock;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.ci.event.ProfileUpdateEvent;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
-import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
-import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 
 /**
  * @author Ivan Senic
@@ -36,10 +36,21 @@ public class ProfileUpdateEventTest extends TestBase {
 	Profile updated;
 
 	@Mock
-	MethodSensorAssignment methodAssignment;
+	SensorAssignmentProfileData oldProfileData;
 
 	@Mock
-	ExceptionSensorAssignment exceptionAssignment;
+	SensorAssignmentProfileData updatedProfileData;
+
+	@Mock
+	AbstractClassSensorAssignment<?> assignment;
+
+	@BeforeMethod
+	public void setupProfileData() {
+		doReturn(oldProfileData).when(old).getProfileData();
+		doReturn(updatedProfileData).when(updated).getProfileData();
+		when(oldProfileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(true);
+		when(updatedProfileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(true);
+	}
 
 	public static class Constructor extends ProfileUpdateEventTest {
 
@@ -142,29 +153,24 @@ public class ProfileUpdateEventTest extends TestBase {
 		public void removedAssignments() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.<MethodSensorAssignment> emptyList());
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.<ExceptionSensorAssignment> emptyList());
+			doReturn(Collections.singletonList(assignment)).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.<AbstractClassSensorAssignment<?>> emptyList()).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(true);
 			when(updated.isActive()).thenReturn(true);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
 
 			Collection<AbstractClassSensorAssignment<?>> removed = event.getRemovedSensorAssignments();
 
-			assertThat(removed, hasSize(2));
-			assertThat(removed, hasItem(methodAssignment));
-			assertThat(removed, hasItem(exceptionAssignment));
+			assertThat(removed, hasSize(1));
+			assertThat(removed, hasItem(assignment));
 		}
 
 		@Test
 		public void noChange() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.singletonList(assignment)).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(true);
 			when(updated.isActive()).thenReturn(true);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
@@ -178,30 +184,40 @@ public class ProfileUpdateEventTest extends TestBase {
 		public void deactivated() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.singletonList(assignment)).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(true);
 			when(updated.isActive()).thenReturn(false);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
 
 			Collection<AbstractClassSensorAssignment<?>> removed = event.getRemovedSensorAssignments();
 
-			assertThat(removed, hasSize(2));
-			assertThat(removed, hasItem(methodAssignment));
-			assertThat(removed, hasItem(exceptionAssignment));
+			assertThat(removed, hasSize(1));
+			assertThat(removed, hasItem(assignment));
 		}
 
 		@Test
 		public void activated() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.singletonList(assignment)).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(false);
+			when(updated.isActive()).thenReturn(true);
+			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
+
+			Collection<AbstractClassSensorAssignment<?>> removed = event.getRemovedSensorAssignments();
+
+			assertThat(removed, is(empty()));
+		}
+
+		@Test
+		public void wrongProfileData() {
+			when(old.getId()).thenReturn(ID);
+			when(updated.getId()).thenReturn(ID);
+			when(oldProfileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(false);
+			when(updatedProfileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(false);
+			when(old.isActive()).thenReturn(true);
 			when(updated.isActive()).thenReturn(true);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
 
@@ -217,29 +233,24 @@ public class ProfileUpdateEventTest extends TestBase {
 		public void addedAssignments() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.<MethodSensorAssignment> emptyList());
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.<ExceptionSensorAssignment> emptyList());
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.<AbstractClassSensorAssignment<?>> emptyList()).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.singletonList(assignment)).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(true);
 			when(updated.isActive()).thenReturn(true);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
 
 			Collection<AbstractClassSensorAssignment<?>> added = event.getAddedSensorAssignments();
 
-			assertThat(added, hasSize(2));
-			assertThat(added, hasItem(methodAssignment));
-			assertThat(added, hasItem(exceptionAssignment));
+			assertThat(added, hasSize(1));
+			assertThat(added, hasItem(assignment));
 		}
 
 		@Test
 		public void noChange() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.singletonList(assignment)).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(true);
 			when(updated.isActive()).thenReturn(true);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
@@ -253,10 +264,8 @@ public class ProfileUpdateEventTest extends TestBase {
 		public void deactivated() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.singletonList(assignment)).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(true);
 			when(updated.isActive()).thenReturn(false);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
@@ -270,21 +279,32 @@ public class ProfileUpdateEventTest extends TestBase {
 		public void activated() {
 			when(old.getId()).thenReturn(ID);
 			when(updated.getId()).thenReturn(ID);
-			when(old.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(old.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
-			when(updated.getMethodSensorAssignments()).thenReturn(Collections.singletonList(methodAssignment));
-			when(updated.getExceptionSensorAssignments()).thenReturn(Collections.singletonList(exceptionAssignment));
+			doReturn(Collections.singletonList(assignment)).when(oldProfileData).getData(SensorAssignmentProfileData.class);
+			doReturn(Collections.singletonList(assignment)).when(updatedProfileData).getData(SensorAssignmentProfileData.class);
 			when(old.isActive()).thenReturn(false);
 			when(updated.isActive()).thenReturn(true);
 			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
 
 			Collection<AbstractClassSensorAssignment<?>> added = event.getAddedSensorAssignments();
 
-			assertThat(added, hasSize(2));
-			assertThat(added, hasItem(methodAssignment));
-			assertThat(added, hasItem(exceptionAssignment));
+			assertThat(added, hasSize(1));
+			assertThat(added, hasItem(assignment));
 		}
 
+		@Test
+		public void wrongProfileData() {
+			when(old.getId()).thenReturn(ID);
+			when(updated.getId()).thenReturn(ID);
+			when(oldProfileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(false);
+			when(updatedProfileData.isOfType(SensorAssignmentProfileData.class)).thenReturn(false);
+			when(old.isActive()).thenReturn(true);
+			when(updated.isActive()).thenReturn(true);
+			ProfileUpdateEvent event = new ProfileUpdateEvent(this, old, updated);
+
+			Collection<AbstractClassSensorAssignment<?>> added = event.getAddedSensorAssignments();
+
+			assertThat(added, is(empty()));
+		}
 	}
 
 }

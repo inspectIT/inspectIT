@@ -26,7 +26,6 @@ import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
-import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.validation.IControlValidationListener;
 import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
@@ -259,7 +258,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 			activeButton.setSelection(agentMapping.isActive());
 			nameText.setText(agentMapping.getAgentName());
 			ipText.setText(agentMapping.getIpAddress());
-			descriptionText.setText(TextFormatter.emptyStringIfNull(agentMapping.getDescription()));
+			descriptionText.setText(StringUtils.defaultString(agentMapping.getDescription()));
 			for (Environment environment : environments) {
 				if (Objects.equals(environment.getId(), agentMapping.getEnvironmentId())) {
 					environmentCombo.select(environments.indexOf(environment));
