@@ -17,9 +17,9 @@ import rocks.inspectit.ui.rcp.provider.IProfileProvider;
 
 /**
  * Profile label provider.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 class ProfileLabelProvider extends StyledCellIndexLabelProvider {
 
@@ -44,7 +44,7 @@ class ProfileLabelProvider extends StyledCellIndexLabelProvider {
 				} else {
 					return new StyledString(NumberFormatter.formatTime(profile.getCreatedDate()));
 				}
-			case 4:
+			case 5:
 				return TextFormatter.emptyStyledStringIfNull(TextFormatter.clearLineBreaks(profile.getDescription()));
 			default:
 				return EMPTY;
@@ -67,6 +67,8 @@ class ProfileLabelProvider extends StyledCellIndexLabelProvider {
 				return profile.isActive() ? InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK) : null; // NOPMD
 			case 3:
 				return profile.isDefaultProfile() ? InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK) : null; // NOPMD
+			case 4:
+				return ImageFormatter.getProfileDataImage(profile.getProfileData());
 			default:
 				return super.getColumnImage(element, index);
 			}
@@ -87,4 +89,5 @@ class ProfileLabelProvider extends StyledCellIndexLabelProvider {
 		}
 		return super.getForeground(element, index);
 	}
+
 }
