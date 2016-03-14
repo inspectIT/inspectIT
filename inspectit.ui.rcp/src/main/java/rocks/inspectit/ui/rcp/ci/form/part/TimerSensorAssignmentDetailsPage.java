@@ -32,6 +32,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
@@ -41,13 +42,15 @@ import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.dialog.CaptureContextDialog;
+import rocks.inspectit.ui.rcp.ci.listener.IDetailsModifiedListener;
+import rocks.inspectit.ui.rcp.validation.AbstractValidationManager;
 import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * The details page for the {@link TimerMethodSensorAssignment}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimerSensorAssignmentDetailsPage extends MethodSensorAssignmentDetailsPage {
 
@@ -59,7 +62,7 @@ public class TimerSensorAssignmentDetailsPage extends MethodSensorAssignmentDeta
 	/**
 	 * Context captures being displayed.
 	 */
-	private List<AbstractContextCapture> contextCaptures = new ArrayList<>();
+	private final List<AbstractContextCapture> contextCaptures = new ArrayList<>();
 
 	/**
 	 * Selection for activating context capturing.
@@ -98,14 +101,17 @@ public class TimerSensorAssignmentDetailsPage extends MethodSensorAssignmentDeta
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param masterBlockListener
+	 *
+	 * @param detailsModifiedListener
 	 *            listener to inform the master block on changes to the input
+	 * @param validationManager
+	 *            validation manager of the master part
 	 * @param canEdit
 	 *            If the data can be edited.
 	 */
-	public TimerSensorAssignmentDetailsPage(ISensorAssignmentUpdateListener masterBlockListener, boolean canEdit) {
-		super(masterBlockListener, canEdit);
+	public TimerSensorAssignmentDetailsPage(IDetailsModifiedListener<AbstractClassSensorAssignment<?>> detailsModifiedListener,
+			AbstractValidationManager<AbstractClassSensorAssignment<?>> validationManager, boolean canEdit) {
+		super(detailsModifiedListener, validationManager, canEdit);
 	}
 
 	/**

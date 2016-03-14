@@ -35,15 +35,6 @@ import rocks.inspectit.server.cache.IBuffer;
 import rocks.inspectit.server.cache.IBufferElement;
 import rocks.inspectit.server.dao.impl.TimerDataAggregator;
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
-import rocks.inspectit.server.processor.impl.BufferInserterCmrProcessor;
-import rocks.inspectit.server.processor.impl.CacheIdGeneratorCmrProcessor;
-import rocks.inspectit.server.processor.impl.ExceptionMessageCmrProcessor;
-import rocks.inspectit.server.processor.impl.IndexerCmrProcessor;
-import rocks.inspectit.server.processor.impl.InvocationModifierCmrProcessor;
-import rocks.inspectit.server.processor.impl.PersistingCmrProcessor;
-import rocks.inspectit.server.processor.impl.RecorderCmrProcessor;
-import rocks.inspectit.server.processor.impl.SqlExclusiveTimeCmrProcessor;
-import rocks.inspectit.server.processor.impl.TimerDataChartingCmrProcessor;
 import rocks.inspectit.server.storage.CmrStorageManager;
 import rocks.inspectit.server.util.CacheIdGenerator;
 import rocks.inspectit.shared.all.communication.DefaultData;
@@ -65,11 +56,11 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * Tests for the all cmr data processors we have.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
-@SuppressWarnings("all")
+@SuppressWarnings({ "all", "unchecked" })
 public class CmrDataProcessorsTest {
 
 	@Mock

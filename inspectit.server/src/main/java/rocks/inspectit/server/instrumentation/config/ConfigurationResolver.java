@@ -25,6 +25,7 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
@@ -32,6 +33,9 @@ import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignmen
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
+import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 /**
@@ -89,14 +93,15 @@ public class ConfigurationResolver {
 					continue;
 				}
 
-				// first all method assignments
-				for (MethodSensorAssignment methodSensorAssignment : profile.getMethodSensorAssignments()) {
-					appliers.add(getInstrumentationApplier(methodSensorAssignment, environment));
-				}
-
-				// then all exception ones
-				for (ExceptionSensorAssignment exceptionSensorAssignment : profile.getExceptionSensorAssignments()) {
-					appliers.add(getInstrumentationApplier(exceptionSensorAssignment, environment));
+				// all assignments
+				AbstractProfileData<?> profileData = profile.getProfileData();
+				if (profileData.isOfType(SensorAssignmentProfileData.class)) {
+					List<? extends AbstractClassSensorAssignment<?>> assignments = profileData.getData(SensorAssignmentProfileData.class);
+					if (CollectionUtils.isNotEmpty(assignments)) {
+						for (AbstractClassSensorAssignment<?> assignment : assignments) {
+							appliers.add(getInstrumentationApplier(assignment, environment));
+						}
+					}
 				}
 			} catch (BusinessException e) {
 				// on exception just exclude the profile
@@ -154,7 +159,7 @@ public class ConfigurationResolver {
 			return Collections.emptyList();
 		}
 
-		Collection<ExcludeRule> assignments = new ArrayList<>();
+		Collection<ExcludeRule> rules = new ArrayList<>();
 		for (String profileId : environment.getProfileIds()) {
 			try {
 				Profile profile = configurationInterfaceManager.getProfile(profileId);
@@ -163,7 +168,13 @@ public class ConfigurationResolver {
 					continue;
 				}
 
-				assignments.addAll(profile.getExcludeRules());
+				AbstractProfileData<?> profileData = profile.getProfileData();
+				if (profileData.isOfType(ExcludeRulesProfileData.class)) {
+					List<ExcludeRule> data = profileData.getData(ExcludeRulesProfileData.class);
+					if (CollectionUtils.isNotEmpty(data)) {
+						rules.addAll(data);
+					}
+				}
 			} catch (Exception e) {
 				if (log.isDebugEnabled()) {
 					log.debug("Profile with id " + profileId + " ignored during profile difference calculation due to the exception.", e);
@@ -171,7 +182,7 @@ public class ConfigurationResolver {
 				continue;
 			}
 		}
-		return assignments;
+		return rules;
 	}
 
 	/**
