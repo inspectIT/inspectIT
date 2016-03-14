@@ -13,15 +13,16 @@ import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.ci.job.OpenProfileJob;
 import rocks.inspectit.ui.rcp.ci.wizard.page.DefineNameAndDescriptionWizardPage;
+import rocks.inspectit.ui.rcp.ci.wizard.page.DefineProfileWizardPage;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Wizard for creating new profile.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CreateProfileWizard extends Wizard implements INewWizard {
 
@@ -53,7 +54,7 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 	/**
 	 * {@link DefineNameAndDescriptionWizardPage}.
 	 */
-	private DefineNameAndDescriptionWizardPage defineNameAndDescriptionWizardPage;
+	private DefineProfileWizardPage defineProfileWizardPage;
 
 	/**
 	 * Workbench of the wizard.
@@ -72,7 +73,7 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 	 * <p>
 	 * Note that {@link #init(IWorkbench, IStructuredSelection)} must be called if this constructor
 	 * is used.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to be duplicated.
 	 */
@@ -89,8 +90,8 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		defineNameAndDescriptionWizardPage = new DefineNameAndDescriptionWizardPage(getTitle(), MESSAGE);
-		addPage(defineNameAndDescriptionWizardPage);
+		defineProfileWizardPage = new DefineProfileWizardPage(getTitle(), MESSAGE, duplicateProfile);
+		addPage(defineProfileWizardPage);
 	}
 
 	/**
@@ -115,8 +116,8 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 			return false;
 		}
 
-		String name = defineNameAndDescriptionWizardPage.getName();
-		String description = defineNameAndDescriptionWizardPage.getDescription();
+		String name = defineProfileWizardPage.getName();
+		String description = defineProfileWizardPage.getDescription();
 		Profile profile = new Profile();
 		profile.setName(name);
 		if (StringUtils.isNotBlank(description)) {
@@ -124,11 +125,11 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 		}
 
 		if (isDuplicate()) {
-			profile.setMethodSensorAssignments(duplicateProfile.getMethodSensorAssignments());
-			profile.setExceptionSensorAssignments(duplicateProfile.getExceptionSensorAssignments());
-			profile.setExcludeRules(duplicateProfile.getExcludeRules());
+			profile.setProfileData(duplicateProfile.getProfileData());
 			profile.setActive(duplicateProfile.isActive());
 			profile.setDefaultProfile(duplicateProfile.isDefaultProfile());
+		} else {
+			profile.setProfileData(defineProfileWizardPage.getProfileData());
 		}
 
 		try {

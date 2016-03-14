@@ -1,5 +1,7 @@
 package rocks.inspectit.shared.cs.ci.assignment;
 
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -11,11 +13,11 @@ import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 
 /**
  * Class for class sensor assignment.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>Type of the sensor config that relates to the assignment.
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ MethodSensorAssignment.class, ExceptionSensorAssignment.class })
@@ -46,8 +48,15 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	private String annotation;
 
 	/**
+	 * Return settings for the sensor assignment.
+	 *
+	 * @return Return settings for the sensor assignment.
+	 */
+	public abstract Map<String, Object> getSettings();
+
+	/**
 	 * Gets {@link #className}.
-	 * 
+	 *
 	 * @return {@link #className}
 	 */
 	public String getClassName() {
@@ -56,7 +65,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Sets {@link #className}.
-	 * 
+	 *
 	 * @param className
 	 *            New value for {@link #className}
 	 */
@@ -66,7 +75,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Gets {@link #superclass}.
-	 * 
+	 *
 	 * @return {@link #superclass}
 	 */
 	public boolean isSuperclass() {
@@ -75,7 +84,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Sets {@link #superclass}.
-	 * 
+	 *
 	 * @param superclass
 	 *            New value for {@link #superclass}
 	 */
@@ -85,7 +94,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Gets {@link #interf}.
-	 * 
+	 *
 	 * @return {@link #interf}
 	 */
 	public boolean isInterf() {
@@ -94,7 +103,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Sets {@link #interf}.
-	 * 
+	 *
 	 * @param interf
 	 *            New value for {@link #interf}
 	 */
@@ -104,7 +113,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Gets {@link #annotation}.
-	 * 
+	 *
 	 * @return {@link #annotation}
 	 */
 	public String getAnnotation() {
@@ -113,7 +122,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 
 	/**
 	 * Sets {@link #annotation}.
-	 * 
+	 *
 	 * @param annotation
 	 *            New value for {@link #annotation}
 	 */

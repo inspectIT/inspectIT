@@ -2,7 +2,6 @@ package rocks.inspectit.ui.rcp.ci.form.editor;
 
 import java.util.Objects;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
@@ -13,10 +12,14 @@ import org.eclipse.ui.forms.editor.FormEditor;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.JmxDefinitionProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.form.input.ProfileEditorInput;
 import rocks.inspectit.ui.rcp.ci.form.page.ExcludeRulesPage;
+import rocks.inspectit.ui.rcp.ci.form.page.JmxBeanDefinitionsPage;
 import rocks.inspectit.ui.rcp.ci.form.page.MethodSensorDefinitionsPage;
 import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
@@ -29,10 +32,10 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
  * <li>{@link MethodSensorDefinitionsPage}
  * <li>{@link ExcludeRulesPage}
  * </ul>
- * 
- * 
+ *
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ProfileEditor extends AbstractConfigurationInterfaceFormEditor implements IProfileChangeListener {
 
@@ -66,19 +69,18 @@ public class ProfileEditor extends AbstractConfigurationInterfaceFormEditor impl
 	@Override
 	protected void addPages() {
 		try {
-			int index = 0;
 			Profile profile = ((ProfileEditorInput) getEditorInput()).getProfile();
 
-			// not display all pages if it is common profile
-			// first MethodSensorDefinitionsPage
-			if (!profile.isCommonProfile() || CollectionUtils.isNotEmpty(profile.getMethodSensorAssignments()) || CollectionUtils.isNotEmpty(profile.getExceptionSensorAssignments())) {
+			// check for correct page
+			if (profile.getProfileData().isOfType(SensorAssignmentProfileData.class)) {
 				addPage(new MethodSensorDefinitionsPage(this));
-				setPageImage(index++, InspectIT.getDefault().getImage(InspectITImages.IMG_TIMER));
-			}
-			// then ExcludeRulesPage
-			if (!profile.isCommonProfile() || CollectionUtils.isNotEmpty(profile.getExcludeRules())) {
+				setPageImage(0, InspectIT.getDefault().getImage(InspectITImages.IMG_TIMER));
+			} else if (profile.getProfileData().isOfType(ExcludeRulesProfileData.class)) {
 				addPage(new ExcludeRulesPage(this));
-				setPageImage(index++, InspectIT.getDefault().getImage(InspectITImages.IMG_CLASS_EXCLUDE));
+				setPageImage(0, InspectIT.getDefault().getImage(InspectITImages.IMG_CLASS_EXCLUDE));
+			} else if (profile.getProfileData().isOfType(JmxDefinitionProfileData.class)) {
+				addPage(new JmxBeanDefinitionsPage(this));
+				setPageImage(0, InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN));
 			}
 		} catch (PartInitException e) {
 			InspectIT.getDefault().log(IStatus.ERROR, "Error occurred trying to open the Environment editor.", e);

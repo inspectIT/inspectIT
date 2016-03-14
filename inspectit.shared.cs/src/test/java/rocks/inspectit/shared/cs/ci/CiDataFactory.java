@@ -1,18 +1,18 @@
 package rocks.inspectit.shared.cs.ci;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 
-import rocks.inspectit.shared.cs.ci.AgentMapping;
-import rocks.inspectit.shared.cs.ci.Environment;
-import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
@@ -20,13 +20,16 @@ import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.JmxDefinitionProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 
 /**
  * Only for testing purposes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 // NOCHKALL
 @SuppressWarnings("PMD")
@@ -56,9 +59,24 @@ public final class CiDataFactory {
 		Profile profile = new Profile();
 		profile.setName(getRandomNamePrefix() + " Profile");
 		profile.setDescription(RandomStringUtils.randomAlphabetic(30));
-		profile.setMethodSensorAssignments(getMethodSensorAssignment(RandomUtils.nextInt(5)));
-		profile.setExceptionSensorAssignments(getExceptionSensorAssignments(RandomUtils.nextInt(5)));
-		profile.setExcludeRules(Collections.singletonList(getExcludeRule()));
+
+		SensorAssignmentProfileData sensorAssignmentProfileData = new SensorAssignmentProfileData();
+		sensorAssignmentProfileData.setMethodSensorAssignments(getMethodSensorAssignment(RandomUtils.nextInt(5)));
+		sensorAssignmentProfileData.setExceptionSensorAssignments(getExceptionSensorAssignments(RandomUtils.nextInt(5)));
+
+		ExcludeRulesProfileData excludeRulesProfileData = new ExcludeRulesProfileData();
+		excludeRulesProfileData.setExcludeRules(Collections.singletonList(getExcludeRule()));
+
+		JmxDefinitionProfileData jmxDefinitionProfileData = new JmxDefinitionProfileData();
+		jmxDefinitionProfileData.setJmxBeanAssignments(Collections.singletonList(getJmxBeanSensorAssignment()));
+
+		if (RandomUtils.nextBoolean()) {
+			profile.setProfileData(sensorAssignmentProfileData);
+		} else if (RandomUtils.nextBoolean()) {
+			profile.setProfileData(excludeRulesProfileData);
+		} else {
+			profile.setProfileData(jmxDefinitionProfileData);
+		}
 		return profile;
 	}
 
@@ -153,6 +171,14 @@ public final class CiDataFactory {
 		ExcludeRule rule = new ExcludeRule();
 		rule.setClassName(getRandomClass());
 		return rule;
+	}
+
+	public static JmxBeanSensorAssignment getJmxBeanSensorAssignment() {
+		JmxBeanSensorAssignment jmxAssignment = new JmxBeanSensorAssignment();
+		jmxAssignment.setDomain("domain");
+		jmxAssignment.setObjectNameParameters(Collections.singletonMap("type", "Type"));
+		jmxAssignment.setAttributes(new HashSet<>(Arrays.asList("att1, att2")));
+		return jmxAssignment;
 	}
 
 	public static TimerMethodSensorAssignment getTimerMethodSensorAssignment() {

@@ -13,9 +13,7 @@
 	<osgi:service id="detailsGenerationFactoryService" ref="detailsGenerationFactory" interface="rocks.inspectit.ui.rcp.details.DetailsGenerationFactory" />
 	<osgi:service id="configurationInterfaceManagerService" ref="configurationInterfaceManager"
 		interface="rocks.inspectit.ui.rcp.ci.InspectITConfigurationInterfaceManager" />
-	<osgi:service id="exposedVersionService" ref="versionService"
-		interface="rocks.inspectit.shared.all.version.VersionService" />
-	<osgi:service id="exposedDocumentationService" ref="documentationService" 
-		interface="rocks.inspectit.ui.rcp.documentation.DocumentationService" />
-
+	<osgi:service id="exposedVersionService" ref="versionService" interface="rocks.inspectit.shared.all.version.VersionService" />
+	<osgi:service id="exposedDocumentationService" ref="documentationService" interface="rocks.inspectit.ui.rcp.documentation.DocumentationService" />
+	<osgi:service id="serializationManagerProviderService" ref="serializationManagerProvider" interface="rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider" />
 </beans>

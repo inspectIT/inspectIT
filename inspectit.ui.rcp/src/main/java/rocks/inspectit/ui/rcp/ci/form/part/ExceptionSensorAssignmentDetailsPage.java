@@ -9,15 +9,18 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.ui.rcp.ci.listener.IDetailsModifiedListener;
+import rocks.inspectit.ui.rcp.validation.AbstractValidationManager;
 
 /**
  * Details page for the {@link ExceptionSensorAssignment}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
-public class ExceptionSensorAssignmentDetailsPage extends AbstractClassSensorAssignmentDetailsPage {
+public class ExceptionSensorAssignmentDetailsPage extends AbstractClassSensorAssignmentDetailsPage<AbstractClassSensorAssignment<?>> {
 
 	/**
 	 * {@link ExceptionSensorAssignment}.
@@ -26,14 +29,17 @@ public class ExceptionSensorAssignmentDetailsPage extends AbstractClassSensorAss
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param masterBlockListener
+	 *
+	 * @param detailsModifiedListener
 	 *            listener to inform the master block on changes to the input
+	 * @param validationManager
+	 *            validation manager of the master part
 	 * @param canEdit
 	 *            If the data can be edited.
 	 */
-	public ExceptionSensorAssignmentDetailsPage(ISensorAssignmentUpdateListener masterBlockListener, boolean canEdit) {
-		super(masterBlockListener, canEdit);
+	public ExceptionSensorAssignmentDetailsPage(IDetailsModifiedListener<AbstractClassSensorAssignment<?>> detailsModifiedListener,
+			AbstractValidationManager<AbstractClassSensorAssignment<?>> validationManager, boolean canEdit) {
+		super(detailsModifiedListener, validationManager, canEdit);
 	}
 
 	/**

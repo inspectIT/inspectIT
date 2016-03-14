@@ -30,6 +30,7 @@ import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -664,24 +665,7 @@ public final class TextFormatter {
 	 *         <code>null</code>.
 	 */
 	public static StyledString emptyStyledStringIfNull(String text) {
-		return new StyledString(emptyStringIfNull(text));
-	}
-
-	/**
-	 * Returns a String that contains the given text or "" if the given text was in fact
-	 * <code>null</code>.
-	 *
-	 * @param text
-	 *            the text to display, may be null.
-	 * @return a new StyledString that contains the given text or "" if the given text was in fact
-	 *         <code>null</code>.
-	 */
-	public static String emptyStringIfNull(String text) {
-		if (!StringUtils.isEmpty(text)) {
-			return text;
-		} else {
-			return "";
-		}
+		return new StyledString(StringUtils.defaultIfEmpty(text, StringUtils.EMPTY));
 	}
 
 	/**
@@ -735,6 +719,8 @@ public final class TextFormatter {
 			return "System Information";
 		} else if (ObjectUtils.equals(sensorClass, ThreadSensorConfig.class)) {
 			return "Thread Information";
+		} else if (ObjectUtils.equals(sensorClass, JmxSensorConfig.class)) {
+			return "JMX Sensor";
 		}
 		return null;
 	}
