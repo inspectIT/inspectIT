@@ -30,6 +30,7 @@ import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
@@ -738,6 +739,8 @@ public final class TextFormatter {
 			return "System Information";
 		} else if (ObjectUtils.equals(sensorClass, ThreadSensorConfig.class)) {
 			return "Thread Information";
+		} else if (ObjectUtils.equals(sensorClass, JmxSensorConfig.class)) {
+			return "JMX Sensor";
 		}
 		return null;
 	}

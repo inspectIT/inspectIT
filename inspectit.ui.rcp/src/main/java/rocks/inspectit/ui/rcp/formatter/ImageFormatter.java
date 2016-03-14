@@ -12,6 +12,7 @@ import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.cs.ci.Environment;
@@ -23,8 +24,13 @@ import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
+import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.JmxDefinitionProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssigmentProfileData;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
@@ -271,6 +277,37 @@ public final class ImageFormatter {
 	}
 
 	/**
+	 * Returns an overlayed icon of the passed main image using the passed images as overlays.
+	 *
+	 * @param main
+	 *            main image to be overlayed
+	 * @param resourceManager
+	 *            Resource manager that image will be created with. It is responsibility of a caller
+	 *            to provide {@link ResourceManager} for correct image disposing.
+	 * @param scaleFactor
+	 *            scale factor to be used to scale the overlay images. 1.0 means exactly the
+	 *            original size, 0.5 half size, 2.0 double size.
+	 * @param overlays
+	 *            1 to 4 overlay images. 1: top-left, 2: top-right, 3: bottom-left, 4: button-right.
+	 *            Any of the overlay positions can be null to not draw an overlay at that position.
+	 * @return an overlayed image
+	 */
+	public static Image getOverlayedImage(Image main, ResourceManager resourceManager, double scaleFactor, Image... overlays) {
+		ImageDescriptor[] descriptors = new ImageDescriptor[overlays.length];
+		for (int i = 0; i < overlays.length; i++) {
+			if (null != overlays[i]) {
+				ImageData imageData = overlays[i].getImageData();
+				imageData = imageData.scaledTo((int) (scaleFactor * imageData.width), (int) (scaleFactor * imageData.height));
+				descriptors[i] = ImageDescriptor.createFromImageData(imageData);
+			}
+		}
+
+		DecorationOverlayIcon icon = new DecorationOverlayIcon(main, descriptors);
+		Image img = resourceManager.createImage(icon);
+		return img;
+	}
+
+	/**
 	 * Returns the combined image for given array of descriptors. Orientation can be vertical or
 	 * horizontal.
 	 *
@@ -396,6 +433,8 @@ public final class ImageFormatter {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_SYSTEM_OVERVIEW);
 		} else if (ObjectUtils.equals(sensorClass, ThreadSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_THREADS_OVERVIEW);
+		} else if (ObjectUtils.equals(sensorClass, JmxSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
 		}
 		return null;
 	}
@@ -518,5 +557,23 @@ public final class ImageFormatter {
 		} else {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_ADDRESSBOOK);
 		}
+	}
+
+	/**
+	 * Returns profile data image.
+	 *
+	 * @param profileData
+	 *            Profile data to get image for.
+	 * @return Returns profile data image.
+	 */
+	public static Image getProfileDataImage(AbstractProfileData<?> profileData) {
+		if (profileData.isOfType(SensorAssigmentProfileData.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_TIMER);
+		} else if (profileData.isOfType(ExcludeRulesProfileData.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_CLASS_EXCLUDE);
+		} else if (profileData.isOfType(JmxDefinitionProfileData.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
+		}
+		return null;
 	}
 }

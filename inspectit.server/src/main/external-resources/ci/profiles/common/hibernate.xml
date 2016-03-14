@@ -3,20 +3,22 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<!-- Hibernate-->
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.QueryImpl" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
+	<sensor-assignment-profile-data>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.QueryImpl" method-name="*" private-mod="false" protected-mod="false" default-mod="false" />
 
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="load" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="get" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="evict" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="flush" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="forceFlush" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="find" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="list" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="iterate" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="delete" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="executeUpdate" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="executeNativeUpdate" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="load" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="get" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="evict" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="flush" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="forceFlush" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="find" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="list" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="iterate" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="delete" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="executeUpdate" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionImpl" method-name="executeNativeUpdate" private-mod="false" protected-mod="false" default-mod="false" />
 
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionFactoryImpl" method-name="openSession" private-mod="false" protected-mod="false" default-mod="false" />
-
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.hibernate.impl.SessionFactoryImpl" method-name="openSession" private-mod="false" protected-mod="false" default-mod="false" />
+	</sensor-assignment-profile-data>
+	
 </profile>

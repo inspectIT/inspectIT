@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -30,14 +31,15 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
 import rocks.inspectit.ui.rcp.ci.form.input.ProfileEditorInput;
 import rocks.inspectit.ui.rcp.validation.validator.FqnWildcardValidator;
 
 /**
  * Part for defining the exclude rules.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListener {
 
@@ -49,12 +51,17 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 	/**
 	 * List of exclude rules.
 	 */
-	private List<ExcludeRule> excludeRules = new ArrayList<>();
+	private final List<ExcludeRule> excludeRules = new ArrayList<>();
 
 	/**
 	 * {@link Profile} being edited.
 	 */
 	private Profile profile;
+
+	/**
+	 * Profile data.
+	 */
+	private ExcludeRulesProfileData profileData;
 
 	/**
 	 * {@link FormPage} part is being created on.
@@ -78,7 +85,7 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param formPage
 	 *            {@link FormPage} creating the part.
 	 * @param parent
@@ -87,16 +94,23 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 	 *            {@link FormToolkit}
 	 */
 	public ExcludeRulesPart(FormPage formPage, Composite parent, FormToolkit toolkit) {
+		ProfileEditorInput input = (ProfileEditorInput) formPage.getEditor().getEditorInput();
+
+		Assert.isNotNull(input.getProfile());
+		Assert.isNotNull(input.getProfile().getProfileData());
+		Assert.isLegal(input.getProfile().getProfileData().isOfType(ExcludeRulesProfileData.class), "Given profile can not be opened with the exclude rules part.");
+
+		this.profile = input.getProfile();
+		this.profileData = profile.getProfileData().getIfInstance(ExcludeRulesProfileData.class);
 		this.formPage = formPage;
 		this.formPage.getEditor().addPropertyListener(this);
-		ProfileEditorInput input = (ProfileEditorInput) formPage.getEditor().getEditorInput();
-		this.profile = input.getProfile();
+
 		createPart(parent, toolkit);
 	}
 
 	/**
 	 * Creates complete client.
-	 * 
+	 *
 	 * @param parent
 	 *            {@link Composite}
 	 * @param toolkit
@@ -116,8 +130,8 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 		tableViewer = new TableViewer(table);
 		createColumns();
 		tableViewer.setContentProvider(new ArrayContentProvider());
-		if (CollectionUtils.isNotEmpty(profile.getExcludeRules())) {
-			excludeRules.addAll(profile.getExcludeRules());
+		if (CollectionUtils.isNotEmpty(profileData.getExcludeRules())) {
+			excludeRules.addAll(profileData.getExcludeRules());
 		}
 		tableViewer.setInput(excludeRules);
 		tableViewer.refresh();
@@ -206,7 +220,7 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 
 	/**
 	 * To be called when add is requested to the table.
-	 * 
+	 *
 	 * @return Returns new {@link ExcludeRule} or <code>null</code> if definition of one has been
 	 *         canceled.
 	 */
@@ -244,7 +258,7 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 		if (onSave) {
 			super.commit(onSave);
 
-			profile.setExcludeRules(new ArrayList<>(excludeRules));
+			profileData.setExcludeRules(new ArrayList<>(excludeRules));
 		}
 	}
 
@@ -255,7 +269,13 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 	public void propertyChanged(Object source, int propId) {
 		if (propId == IEditorPart.PROP_INPUT) {
 			ProfileEditorInput input = (ProfileEditorInput) formPage.getEditor().getEditorInput();
+
+			Assert.isNotNull(input.getProfile());
+			Assert.isNotNull(input.getProfile().getProfileData());
+			Assert.isLegal(input.getProfile().getProfileData().isOfType(ExcludeRulesProfileData.class), "Given profile can not be opened with the exclude rules part.");
+
 			profile = input.getProfile();
+			profileData = profile.getProfileData().getIfInstance(ExcludeRulesProfileData.class);
 		}
 
 	}

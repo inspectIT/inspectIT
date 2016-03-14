@@ -3,9 +3,11 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<!-- Configuration for EJB v. 3 -->
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Stateless" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Stateful" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Singleton" private-mod="false" protected-mod="false" default-mod="false" />
-	<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.MessageDriven" private-mod="false" protected-mod="false" default-mod="false" />
+	<sensor-assignment-profile-data>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Stateless" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Stateful" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.Singleton" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.ejb.MessageDriven" private-mod="false" protected-mod="false" default-mod="false" />
+	</sensor-assignment-profile-data>
 	
 </profile>

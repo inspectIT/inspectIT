@@ -35,6 +35,7 @@ import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssigmentProfileData;
 import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
 
 /**
@@ -104,6 +105,7 @@ public class ConfigurationInterfaceManagerTest {
 	public void createProfileCheckId() throws Exception {
 		Profile profile = new Profile();
 		profile.setName("test");
+		profile.setProfileData(new SensorAssigmentProfileData());
 
 		manager.createProfile(profile);
 
@@ -115,16 +117,26 @@ public class ConfigurationInterfaceManagerTest {
 	public void createProfileCheckExists() throws Exception {
 		Profile profile = new Profile();
 		profile.setName("test");
+		profile.setProfileData(new SensorAssigmentProfileData());
 
 		manager.createProfile(profile);
 
 		assertThat(manager.getAllProfiles(), hasItem(profile));
 	}
 
+	@Test(expectedExceptions = BusinessException.class)
+	public void createProfileNoProfileData() throws Exception {
+		Profile profile = new Profile();
+		profile.setName("test");
+
+		manager.createProfile(profile);
+	}
+
 	@Test
 	public void deleteProfile() throws Exception {
 		Profile profile = new Profile();
 		profile.setName("test");
+		profile.setProfileData(new SensorAssigmentProfileData());
 
 		profile = manager.createProfile(profile);
 		manager.deleteProfile(profile);
@@ -136,6 +148,7 @@ public class ConfigurationInterfaceManagerTest {
 	public void updateProfile() throws Exception {
 		Profile profile = new Profile();
 		profile.setName("test");
+		profile.setProfileData(new SensorAssigmentProfileData());
 
 		profile = manager.createProfile(profile);
 		profile.setName("new");
@@ -149,6 +162,7 @@ public class ConfigurationInterfaceManagerTest {
 	public void updateProfileRevisionFails() throws Exception {
 		Profile profile = new Profile();
 		profile.setName("test");
+		profile.setProfileData(new SensorAssigmentProfileData());
 		profile = manager.createProfile(profile);
 
 		Profile clone = new Profile();

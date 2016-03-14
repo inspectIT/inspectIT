@@ -1,13 +1,16 @@
 package rocks.inspectit.shared.cs.ci.sensor.method;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  * Enumeration used for the priority system of the sensor types.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 // TODO remove this class when PriorityEnum is moved to Commons (server-side instrumentation ticket
 // INSPECTIT-1919)
+@XmlTransient
 public enum MethodSensorPriorityEnum {
 
 	/** The priority used by the invocation tracing system. */

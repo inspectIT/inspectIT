@@ -17,12 +17,16 @@ import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.JmxDefinitionProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssigmentProfileData;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
@@ -319,6 +323,12 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 
 		// INSPECTIT-2020
 		kryo.register(Log4jLoggingSensorConfig.class, new FieldSerializer<Log4jLoggingSensorConfig>(kryo, Log4jLoggingSensorConfig.class), nextRegistrationId++);
+
+		// INSPECTIT-2021
+		kryo.register(JmxBeanSensorAssignment.class, new FieldSerializer<JmxBeanSensorAssignment>(kryo, JmxBeanSensorAssignment.class), nextRegistrationId++);
+		kryo.register(SensorAssigmentProfileData.class, new FieldSerializer<SensorAssigmentProfileData>(kryo, SensorAssigmentProfileData.class), nextRegistrationId++);
+		kryo.register(ExcludeRulesProfileData.class, new FieldSerializer<ExcludeRulesProfileData>(kryo, ExcludeRulesProfileData.class), nextRegistrationId++);
+		kryo.register(JmxDefinitionProfileData.class, new FieldSerializer<JmxDefinitionProfileData>(kryo, JmxDefinitionProfileData.class), nextRegistrationId++);
 	}
 
 }
