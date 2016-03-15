@@ -57,7 +57,9 @@
 		<dependency org="c3p0" name="c3p0" rev="0.9.1.2" conf="prod->default" />
 		
 		<!-- Shiro Security Framework -->
-		<dependency org="org.apache.shiro" name="shiro-core" rev="1.2.4" conf="prod->default" />
+		<dependency org="org.apache.shiro" name="shiro-core" rev="1.2.4" conf="prod->default" /> 
+		<dependency org="org.apache.shiro" name="shiro-spring" rev="1.2.4" conf="prod->default" />
+		<dependency org="org.apache.shiro" name="shiro-web" rev="1.2.4" conf="prod->default" />
 		
 		
 		<!-- Test -->

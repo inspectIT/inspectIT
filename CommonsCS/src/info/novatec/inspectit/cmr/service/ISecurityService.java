@@ -1,6 +1,5 @@
 package info.novatec.inspectit.cmr.service;
 
-import java.io.Serializable;
 import java.util.List;
 
 import info.novatec.inspectit.communication.data.cmr.Permission;
@@ -25,26 +24,22 @@ public interface ISecurityService {
 	 *            users password
 	 * @param email
 	 *            email
-	 * @return sessionId if the user was authenticated
+	 * @return whether the login was successful
 	 */
-	Serializable authenticate(String pw, String email);
+	boolean authenticate(String pw, String email);
 
 	/**
 	 * Ends the session.
 	 * 
-	 * @param sessionId
-	 *            Session id from the session to end
 	 */
-	void logout(Serializable sessionId);
-
+	void logout();
+	
 	/**
-	 * Checks whether session of a specific sessionId exists.
+	 * Returns whether the user is authenticated.
 	 * 
-	 * @param sessionId
-	 *            The id to check.
-	 * @return Boolean whether the session exists.
+	 * @return Returns whether the user is authenticated.
 	 */
-	boolean existsSession(Serializable sessionId);
+	boolean isAuthenticated();
 
 
 	// | ROLE | --------------
@@ -150,10 +145,8 @@ public interface ISecurityService {
 	 * 
 	 * @param user
 	 *     	 user
-	 * @param sessionId
-	 * 		the sessionId
 	 */
-	void deleteUser(User user, Serializable sessionId);
+	void deleteUser(User user);
 
 	/**
 	 * 
@@ -169,10 +162,8 @@ public interface ISecurityService {
 	 * 		boolean to see if password was changed and needs to be hashed
 	 * @param isLocked
 	 * 		boolean to see if user was locked by admin
-	 * @param sessionId
-	 * 		the sessionId
 	 */
-	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, boolean isLocked, Serializable sessionId);
+	void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, boolean isLocked);
 
 	// | PERMISSION |---------	
 	
@@ -210,10 +201,8 @@ public interface ISecurityService {
 	/**
 	 * Returns titles of permissions as Strings.
 	 * 
-	 * @param sessionId
-	 *            sessionId
 	 * @return List with the users permissions.
 	 */
-	List<Permission> getPermissions(Serializable sessionId);
+	List<Permission> getPermissions();
 
 }

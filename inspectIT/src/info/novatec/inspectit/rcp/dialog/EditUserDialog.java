@@ -213,7 +213,7 @@ public class EditUserDialog extends TitleAreaDialog {
 		if (passwordBox.getText().isEmpty()) {
 			passwordChanged = false;
 		}
-		cmrRepositoryDefinition.getSecurityService().changeUserAttribute(userOld, mail, password, id, passwordChanged, isLocked, cmrRepositoryDefinition.getSessionId());
+		cmrRepositoryDefinition.getSecurityService().changeUserAttribute(userOld, mail, password, id, passwordChanged, isLocked);
 		okPressed();
 	}
 
@@ -257,7 +257,7 @@ public class EditUserDialog extends TitleAreaDialog {
 		if (!confirm) {
 			return;
 		}
-		cmrRepositoryDefinition.getSecurityService().deleteUser(userOld, cmrRepositoryDefinition.getSessionId());
+		cmrRepositoryDefinition.getSecurityService().deleteUser(userOld);
 		okPressed();
 
 	}
