@@ -1,6 +1,5 @@
 package info.novatec.inspectit.cmr.service;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +8,6 @@ import javax.annotation.PostConstruct;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +73,6 @@ public class SecurityService implements ISecurityService {
 	 */
 	@PostConstruct
 	public void postConstruct() {
-		SecurityUtils.setSecurityManager(cmrSecurityManager);
 		if (log.isInfoEnabled()) {
 			log.info("|-Security Service active...");
 		}
@@ -95,17 +89,16 @@ public class SecurityService implements ISecurityService {
 	 *            users password
 	 * @param email
 	 *            email
-	 * @return sessionId if the user was authenticated
+	 * @return whether the login was successful
 	 */
 	@Override
-	public Serializable authenticate(String pw, String email) {
+	public boolean authenticate(String pw, String email) {
 		UsernamePasswordToken token = new UsernamePasswordToken(email, pw);
-		PrincipalCollection identity = new SimplePrincipalCollection(email, "cmrRealm");
 
-		Subject currentUser = new Subject.Builder().principals(identity).buildSubject();
+		Subject currentUser = SecurityUtils.getSubject();
 		
 		if (userDao.load(email).isLocked()) { 
-			return null; 
+			return false; 
 			}
 		
 		if (!currentUser.isAuthenticated()) {
@@ -116,39 +109,38 @@ public class SecurityService implements ISecurityService {
 				log.info(uae.getMessage() + uae.getClass().toString());
 				log.info("User [" + currentUser.getPrincipal() + "] failed to log in successfully.");
 				currentUser.logout();
-				return null;
+				return false;
 			}
 		}
 
-		return currentUser.getSession().getId();
+		return true;
 	}
 
 	/**
 	 * Ends the session.
-	 * 
-	 * @param sessionId
-	 *            Session id from the session to end
 	 */
 	@Override
-	public void logout(Serializable sessionId) {
-		if (existsSession(sessionId)) {
-			Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
-			log.info("SessionId [" + currentUser.getSession(false).getId() + "], Name [" + currentUser.getPrincipal() + "].");
-			currentUser.logout();
-			log.info("Logged out successfully.");
-		}
+	public void logout() {
+		SecurityUtils.getSubject().logout();
+	}
+	
+	/**
+	 * Returns whether the user is authenticated.
+	 * 
+	 * @return Returns whether the user is authenticated.
+	 */
+	public boolean isAuthenticated() {
+		return SecurityUtils.getSubject().isAuthenticated();
 	}
 
 	/**
 	 * Returns titles of permissions as Strings.
 	 * 
-	 * @param sessionId
-	 *            sessionId
 	 * @return List with the users permissions.
 	 */
 	@Override
-	public List<Permission> getPermissions(Serializable sessionId) {
-		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+	public List<Permission> getPermissions() {
+		Subject currentUser = SecurityUtils.getSubject();
 		
 		List<Permission> grantedPermissions = new ArrayList<Permission>();
 		List<Permission> existingPermissions = permissionDao.loadAll();
@@ -159,24 +151,6 @@ public class SecurityService implements ISecurityService {
 		}
 
 		return grantedPermissions;
-	}
-
-	/**
-	 * Checks whether session of a specific sessionId exists.
-	 * 
-	 * @param sessionId
-	 *            The id to check.
-	 * @return Boolean whether the session exists.
-	 */
-	@Override
-	public boolean existsSession(Serializable sessionId) {
-		DefaultSessionManager sm = (DefaultSessionManager) cmrSecurityManager.getSessionManager();
-		for (Session session : sm.getSessionDAO().getActiveSessions()) {
-			if (session.getId().equals(sessionId)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	// +-------------------------------------------------------------------------------------------+
@@ -254,8 +228,8 @@ public class SecurityService implements ISecurityService {
 	}
 
 	@Override
-	public void deleteUser(User user, Serializable sessionId) {
-		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+	public void deleteUser(User user) {
+		Subject currentUser = SecurityUtils.getSubject();
 		String currentName = (String) currentUser.getPrincipal();
 		if (currentName.equals(user.getEmail())) {
 			currentUser.logout();
@@ -265,8 +239,8 @@ public class SecurityService implements ISecurityService {
 
 	//TODO: TESTMETHODE!
 	@Override
-	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, boolean isLocked, Serializable sessionId) {
-		Subject currentUser = new Subject.Builder().sessionId(sessionId).buildSubject();
+	public void changeUserAttribute(User userOld, String email, String password, long roleID, boolean passwordChanged, boolean isLocked) {
+		Subject currentUser = SecurityUtils.getSubject();
 		String currentName = (String) currentUser.getPrincipal();
 		if (currentName.equals(userOld.getEmail())) {
 			currentUser.logout();

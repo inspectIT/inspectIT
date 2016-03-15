@@ -50,7 +50,16 @@ public class KryoSimpleHttpInvokerRequestExecutor extends SimpleHttpInvokerReque
 	protected RemoteInvocationResult readRemoteInvocationResult(InputStream is, String codebaseUrl) throws IOException, ClassNotFoundException {
 		try {
 			ISerializer serializer = serializationManagerProvider.createSerializer();
-			return (RemoteInvocationResult) serializer.deserialize(new Input(is));
+			Input input = new Input(is);
+			
+			Object sessionId = serializer.deserialize(input);
+			if (null != sessionId) {
+				System.setProperty("shiro.session.id", sessionId.toString());
+			} else {
+				System.clearProperty("shiro.session.id");
+			}
+			
+			return (RemoteInvocationResult) serializer.deserialize(input);
 		} catch (SerializationException e) {
 			InspectIT.getDefault().createErrorDialog(e.getMessage(), e, -1);
 			throw new IOException(e);

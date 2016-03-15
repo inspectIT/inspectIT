@@ -24,4 +24,6 @@
 		</property>
 	</bean>
 	
+	<bean class="org.apache.shiro.spring.remoting.SecureRemoteInvocationFactory" id="secureRemoteInvocationFactory"/>
+	
 </beans>

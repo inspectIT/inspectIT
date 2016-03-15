@@ -1,11 +1,8 @@
 package info.novatec.inspectit.rcp.repository;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-// import org.eclipse.jface.dialogs.MessageDialog;
 
 import info.novatec.inspectit.cmr.service.ICmrManagementService;
 import info.novatec.inspectit.cmr.service.IExceptionDataAccessService;
@@ -55,11 +52,6 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * Default description.
 	 */
 	public static final String DEFAULT_DESCRIPTION = "This Central Management Repository (CMR) is automatically added by default when you first start the inspectIT.";
-
-	/**
-	 * Users sessionId.
-	 */
-	private Serializable sessionId;
 
 	/**
 	 * List for access to granted rights.
@@ -587,11 +579,6 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	public String toString() {
 		return "Repository definition :: Name=" + name + " IP=" + ip + " Port=" + port;
 	}
-
-	/**
-	 * Standard Session-ID.
-	 */
-	public static final Serializable STANDARD_SESSION_ID = -1;
 	
 	/**
 	 * Method to login on the CMR.
@@ -603,25 +590,16 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * @return Returns whether the login was successful
 	 */
 	public boolean login(String email, String password) {
-		Serializable authenticate = securityService.authenticate(password, email);
+		boolean authenticated = securityService.authenticate(password, email);
 		refreshLoginStatus();
-		if (null != authenticate) {
-			sessionId = authenticate;
-			return true;
-		}
-
-		sessionId = STANDARD_SESSION_ID;
-		return false;
+		return authenticated;
 	}
 
 	/**
 	 * Method for logging out.
 	 */
 	public void logout() {
-		if (null != sessionId) {
-			securityService.logout(sessionId);
-			sessionId = STANDARD_SESSION_ID;
-		}
+		securityService.logout();
 		refreshLoginStatus();
 	}
 
@@ -632,13 +610,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		if (isLoggedIn()) {
 			loginStatus = LoginStatus.LOGGEDIN;
 		} else {
-			/*
-			 * MessageDialog causes an "unhandled loop exception" in Windows. if
-			 * (LoginStatus.LOGGEDIN == loginStatus) { MessageDialog.openError(null, "Warning",
-			 * "You are no longer logged in."); }
-			 */
 			loginStatus = LoginStatus.LOGGEDOUT;
-			sessionId = STANDARD_SESSION_ID;
 		}
 		refreshPermissions();
 	}
@@ -649,10 +621,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * @return Returns if the user is logged in.
 	 */
 	public boolean isLoggedIn() {
-		if (!isOnline() || STANDARD_SESSION_ID.equals(sessionId)) {
-			return false;
-		}
-		return securityService.existsSession(sessionId);
+		return securityService.isAuthenticated();
 	}
 
 	/**
@@ -660,7 +629,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 */
 	public void refreshPermissions() {
 		if (LoginStatus.LOGGEDIN == loginStatus) {
-			setGrantedPermissions(securityService.getPermissions(sessionId));
+			setGrantedPermissions(securityService.getPermissions());
 		} else {
 			setGrantedPermissions(null);
 		}
@@ -699,9 +668,5 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		}
 		}
 		return false; 
-	}
-	
-	public Serializable getSessionId() {
-		return sessionId;
 	}
 }

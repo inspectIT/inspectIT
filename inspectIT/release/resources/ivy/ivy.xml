@@ -49,7 +49,8 @@
 		<dependency org="org.apache.httpcomponents" name="info.novatec.httpmime" rev="4.1.1" conf="osgi->default" />
 
 		<!-- Shiro Security Framework -->
-		<dependency org="org.apache.shiro" name="shiro-core" rev="1.2.4" conf="osgi->default" />
+		<dependency org="org.apache.shiro" name="shiro-core" rev="1.2.4" conf="osgi->default" /> 
+		<dependency org="org.apache.shiro" name="info.novatec.shiro-spring" rev="1.2.4" conf="osgi->default" />
 		
 		<!-- Test -->
 		<!-- Test NG should be on the build path via the Eclipse plug-in -->

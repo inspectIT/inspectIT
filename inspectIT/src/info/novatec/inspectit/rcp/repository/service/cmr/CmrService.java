@@ -4,6 +4,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.storage.serializer.provider.SerializationManagerProvider;
 
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
+import org.springframework.remoting.support.RemoteInvocationFactory;
 
 /**
  * Abstract class for all {@link CmrRepositoryDefinition} service classes.
@@ -42,6 +43,11 @@ public class CmrService implements ICmrService {
 	 * Service name.
 	 */
 	private String serviceName;
+	
+	/**
+	 * Remote invocation factory.
+	 */
+	private RemoteInvocationFactory remoteInvocationFactory;
 
 	/**
 	 * The serialization manager for kryo.
@@ -68,6 +74,7 @@ public class CmrService implements ICmrService {
 
 		httpInvokerProxyFactoryBean.setServiceInterface(serviceInterface);
 		httpInvokerProxyFactoryBean.setServiceUrl(PROTOCOL + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + REMOTING + serviceName);
+		httpInvokerProxyFactoryBean.setRemoteInvocationFactory(remoteInvocationFactory);
 		httpInvokerProxyFactoryBean.afterPropertiesSet();
 
 		service = httpInvokerProxyFactoryBean.getObject();
@@ -124,6 +131,16 @@ public class CmrService implements ICmrService {
 	 */
 	public void setSerializationManagerProvider(SerializationManagerProvider serializationManagerProvider) {
 		this.serializationManagerProvider = serializationManagerProvider;
+	}
+	
+	/**
+	 * Sets {@link #remoteInvocationFactory}.
+	 * 
+	 * @param remoteInvocationFactory
+	 * 			  New value for {@link #remoteInvocationFactory}
+	 */
+	public void setRemoteInvocationFactory(RemoteInvocationFactory remoteInvocationFactory) {
+		this.remoteInvocationFactory = remoteInvocationFactory;
 	}
 
 }

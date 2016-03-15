@@ -90,9 +90,36 @@
 		<property name="beanSingleton" value="true" />
 	</bean>
 
-	<bean id="SecurityInitialization" class="info.novatec.inspectit.cmr.security.SecurityInitialization" />
+	<!--bean id="SecurityInitialization" class="info.novatec.inspectit.cmr.security.SecurityInitialization" />
 	
 	<bean id="cmrSecurityManager" class="info.novatec.inspectit.cmr.security.CmrSecurityManager" />
 	
+	<bean id="cmrRealm" class="info.novatec.inspectit.cmr.security.CmrRealm" /-->
+	
+	<!-- SHIRO SETTINGS -->
+	<bean id="SecurityInitialization" class="info.novatec.inspectit.cmr.security.SecurityInitialization" />
+	
 	<bean id="cmrRealm" class="info.novatec.inspectit.cmr.security.CmrRealm" />
+	
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager" />
+	
+	<bean id="cmrSecurityManager" class="info.novatec.inspectit.cmr.security.CmrSecurityManager">
+		<property name="realm" ref="cmrRealm" />
+		<property name="sessionManager" ref="sessionManager" />
+	</bean>
+	
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	
+	<!-- Enable Shiro Annotations for Spring-configured beans.  Only run after -->
+	<!-- the lifecycleBeanProcessor has run: -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    	<property name="securityManager" ref="cmrSecurityManager"/>
+	</bean>
+	
+	<!-- Secure Spring remoting:  Ensure any Spring Remoting method invocations -->
+	<!-- can be associated with a Subject for security checks. -->
+	<bean id="secureRemoteInvocationExecutor" class="org.apache.shiro.spring.remoting.SecureRemoteInvocationExecutor">
+    	<property name="securityManager" ref="cmrSecurityManager"/>
+	</bean>
 </beans>

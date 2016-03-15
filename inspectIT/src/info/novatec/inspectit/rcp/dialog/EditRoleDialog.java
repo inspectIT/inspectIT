@@ -270,7 +270,7 @@ public class EditRoleDialog extends TitleAreaDialog {
 				return;
 			}
 			for (User user : users) {
-				cmrRepositoryDefinition.getSecurityService().deleteUser(user, cmrRepositoryDefinition.getSessionId());
+				cmrRepositoryDefinition.getSecurityService().deleteUser(user);
 			}
 		}
 		

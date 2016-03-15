@@ -232,6 +232,22 @@
 		<property name="pathSpec" value="/fileupload" />
 	</bean>
 	<!-- END -->
+	
+	<!-- SHIRO FILTER -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="cmrSecurityManager" />
+	</bean>
+	
+	<bean id="shiroFilterHolder" class="org.mortbay.jetty.servlet.FilterHolder">
+		<property name="name" value="shiroFilterExporter" />
+		<property name="filter" ref="shiroFilter" />
+	</bean>
+	
+	<bean id="shiroFilterMapping" class="org.mortbay.jetty.servlet.FilterMapping">
+		<property name="filterName" value="shiroFilterExporter" />
+		<property name="pathSpec" value="*" />
+	</bean>
+	<!-- END -->
 
 	<!-- MULTIPART FILTER -->
 	<bean id="multiPartFilter" class="org.mortbay.servlet.MultiPartFilter" />
@@ -330,12 +346,14 @@
 		</property>
 		<property name="filters">
 			<list>
+				<ref bean="shiroFilterHolder" />
 				<ref bean="multiPartFilterHolder" />
 				<ref bean="gzipFilterHolder" />
 			</list>
 		</property>
 		<property name="filterMappings">
 			<list>
+				<ref bean="shiroFilterMapping" />
 				<ref bean="multiPartFilterMapping" />
 				<ref bean="gzipFilterMapping" />
 			</list>

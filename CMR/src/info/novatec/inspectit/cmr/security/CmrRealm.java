@@ -2,8 +2,6 @@ package info.novatec.inspectit.cmr.security;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import info.novatec.inspectit.cmr.dao.RoleDao;
 import info.novatec.inspectit.cmr.dao.UserDao;
 import info.novatec.inspectit.communication.data.cmr.Permission;
@@ -50,16 +48,6 @@ public class CmrRealm extends AuthorizingRealm {
 	 */
 	@Autowired
 	RoleDao roleDao;
-
-	/**
-	 * Is executed after dependency injection is done to perform any initialization.
-	 */
-	@PostConstruct
-	public void postConstruct() {
-		if (log.isInfoEnabled()) {
-			log.info("|-CmrRealm active...");
-		}
-	}
 
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {

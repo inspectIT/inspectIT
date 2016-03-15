@@ -1,13 +1,11 @@
 package info.novatec.inspectit.cmr.security;
 
-import javax.annotation.PostConstruct;
-
 import info.novatec.inspectit.spring.logger.Log;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Andreas Herzog
  * @author Lucca Hellriegel
  */
-public class CmrSecurityManager extends DefaultSecurityManager {
+public class CmrSecurityManager extends DefaultWebSecurityManager {
 	
 	/**
 	 * Logger of this Class.
@@ -43,15 +41,5 @@ public class CmrSecurityManager extends DefaultSecurityManager {
 	@Override
 	public AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
 		return cmrRealm.doGetAuthenticationInfo(token);
-	}
-	
-	/**
-	 * Is executed after dependency injection is done to perform any initialization.
-	 */
-	@PostConstruct
-	public void postConstruct() {
-		if (log.isInfoEnabled()) {
-			log.info("|-CmrSecurityManager active...");
-		}
 	}
 }

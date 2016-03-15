@@ -47,7 +47,8 @@ Require-Bundle: org.eclipse.ui,
  info.novatec.sysout-over-slf4j;bundle-version="1.0.2",
  com.esotericsoftware.kryo;bundle-version="2.24.0",
  com.google.guava.jdk5;bundle-version="13.0.0",
- org.apache.shiro.core;bundle-version="1.2.4"
+ org.apache.shiro.core;bundle-version="1.2.4",
+ info.novatec.shiro-spring;bundle-version="1.2.4"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
