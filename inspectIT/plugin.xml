@@ -2457,6 +2457,7 @@
          </separator>
          <command
                commandId="info.novatec.inspectit.rcp.commands.cmrLogin"
+               icon="icons/selfmade/log_in_out.png"
                label="CMR Login"
                style="push">
             <visibleWhen
@@ -2488,6 +2489,7 @@
          </command>
          <command
                commandId="info.novatec.inspectit.rcp.commands.cmrLogout"
+               icon="icons/selfmade/log_in_out.png"
                label="CMR Logout"
                style="push">
             <visibleWhen
@@ -2519,8 +2521,34 @@
          </command>
          <command
                commandId="info.novatec.inspectit.rcp.commands.cmrAdministration"
+               icon="icons/selfmade/cmr_administration.png"
                label="CMR Administration"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <or>
+                        <instanceof
+                              value="info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider">
+                        </instanceof>
+                        <instanceof
+                              value="info.novatec.inspectit.rcp.provider.ICmrRepositoryAndAgentProvider">
+                        </instanceof>
+                     </or>
+                     <test
+                           property="info.novatec.inspectit.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                     <test
+                           property="info.novatec.inspectit.cmrAdministrationPermission">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
          </command>
          <separator
                name="info.novatec.inspectit.rcp.repositoryManagerToolbar.separator4"
