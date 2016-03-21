@@ -20,7 +20,7 @@
 		<property name="persistenceUnitName" value="DefaultPersistenceUnit" />
 		<property name="jpaPropertyMap">
 			<map>
-				<entry key="hibernate.hbm2ddl.auto" value="create" />
+				<entry key="hibernate.hbm2ddl.auto" value="update" />
 				<entry key="hibernate.dialect" value="${database.dialect}" />
 				<entry key="hibernate.show_sql" value="${database.showsql}" />
 				<entry key="hibernate.format_sql" value="${database.formatsql}" />
