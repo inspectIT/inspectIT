@@ -9,6 +9,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.wizard.ManageLabelWizard;
 
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbench;
@@ -276,13 +276,13 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 		if (newStatus != OnlineStatus.CHECKING && inputList.containsKey(repositoryDefinition)) {
 			OnlineStatus oldRegisteredStatus = inputList.get(repositoryDefinition);
 			if (!oldRegisteredStatus.equals(newStatus)) {
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						tableViewer.refresh(repositoryDefinition);
 						updateButtonsState();
 					}
-				});
+				}, tableViewer.getTable(), removeButton, manageLabelsButton);
 				inputList.put(repositoryDefinition, newStatus);
 			}
 		}
@@ -293,12 +293,12 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 	 */
 	@Override
 	public void repositoryDataUpdated(final CmrRepositoryDefinition cmrRepositoryDefinition) {
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				tableViewer.refresh(cmrRepositoryDefinition);
 			}
-		});
+		}, tableViewer.getTable());
 	}
 
 	/**

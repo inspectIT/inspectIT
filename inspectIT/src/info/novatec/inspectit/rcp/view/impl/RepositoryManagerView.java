@@ -20,6 +20,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatu
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
 import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.view.IRefreshableView;
 import info.novatec.inspectit.rcp.view.tree.TreeContentProvider;
 import info.novatec.inspectit.util.ObjectUtils;
@@ -400,7 +401,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 			OnlineStatus cachedStatus = cachedStatusMap.get(repositoryDefinition);
 			if (null != cachedStatus) {
 				if (cachedStatus != newStatus) { // NOPMD
-					Display.getDefault().asyncExec(new Runnable() {
+					SafeExecutor.asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
@@ -420,7 +421,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 							}
 							mainForm.setBusy(false);
 						}
-					});
+					}, mainForm, treeViewer.getTree());
 				}
 			}
 			cachedStatusMap.put(repositoryDefinition, newStatus);
@@ -432,8 +433,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	 */
 	@Override
 	public void repositoryDataUpdated(final CmrRepositoryDefinition cmrRepositoryDefinition) {
-		Display.getDefault().asyncExec(new Runnable() {
-
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				mainForm.setBusy(true);
@@ -445,7 +445,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 				}
 				mainForm.setBusy(false);
 			}
-		});
+		}, mainForm, treeViewer.getTree());
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		OnlineStatus onlineStatus = cmrRepositoryDefinition.getOnlineStatus();
 		cachedStatusMap.put(cmrRepositoryDefinition, onlineStatus);
 
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				mainForm.setBusy(true);
@@ -473,7 +473,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 				}
 				mainForm.setBusy(false);
 			}
-		});
+		}, mainForm, treeViewer.getTree());
 	}
 
 	/**
@@ -493,7 +493,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		}
 		cachedStatusMap.remove(cmrRepositoryDefinition);
 
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				if (ObjectUtils.equals(cmrRepositoryDefinition, lastSelectedRepository.getRepositoryDefinition())) {
@@ -506,7 +506,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 					treeViewer.refresh();
 				}
 			}
-		});
+		}, treeViewer.getTree(), mainForm.getBody());
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 		if (null != toUpdate) {
 			final DeferredAgentsComposite finalToUpdate = toUpdate;
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					treeViewer.refresh(finalToUpdate, true);
@@ -537,7 +537,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 						}
 					}
 				}
-			});
+			}, treeViewer.getTree());
 		}
 	}
 
@@ -576,7 +576,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 					}
 					if (null != toUpdate) {
 						final DeferredAgentsComposite finalToUpdate = toUpdate;
-						Display.getDefault().asyncExec(new Runnable() {
+						SafeExecutor.asyncExec(new Runnable() {
 							@Override
 							public void run() {
 								treeViewer.refresh(finalToUpdate, true);
@@ -586,7 +586,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 									}
 								}
 							}
-						});
+						}, treeViewer.getTree());
 					}
 					updateRepositoryJob.removeJobChangeListener(this);
 				}
@@ -919,12 +919,12 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 					}
 				}
 				if (CollectionUtils.isNotEmpty(toUpdate)) {
-					Display.getDefault().asyncExec(new Runnable() {
+					SafeExecutor.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							treeViewer.update(toUpdate.toArray(), null);
 						}
-					});
+					}, treeViewer.getTree());
 				}
 
 			}

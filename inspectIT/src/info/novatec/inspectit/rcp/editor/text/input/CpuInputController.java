@@ -4,11 +4,11 @@ import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.communication.data.CpuInformationData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -92,7 +92,7 @@ public class CpuInputController extends AbstractTextInputController {
 		final CpuInformationData data = (CpuInformationData) dataAccessService.getLastDataObject(cpuObj);
 
 		if (null != data) {
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					int count = data.getCount();
@@ -107,7 +107,7 @@ public class CpuInputController extends AbstractTextInputController {
 						processCpuTime.setText(NOT_AVAILABLE);
 					}
 				}
-			});
+			}, cpuUsage, processCpuTime);
 		}
 	}
 

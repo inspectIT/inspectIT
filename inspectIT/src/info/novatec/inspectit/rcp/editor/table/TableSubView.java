@@ -19,6 +19,7 @@ import info.novatec.inspectit.rcp.editor.viewers.CheckedDelegatingIndexLabelProv
 import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler;
 import info.novatec.inspectit.rcp.menu.ShowHideMenuManager;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -276,7 +277,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						tableInputController.doRefresh(monitor, getRootEditor());
-						Display.getDefault().asyncExec(new Runnable() {
+						SafeExecutor.asyncExec(new Runnable() {
 							public void run() {
 								if (checkDisposed()) {
 									return;
@@ -299,7 +300,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 
 								}
 							}
-						});
+						}, tableViewer.getTable());
 					} catch (Throwable throwable) { // NOPMD
 						throw new RuntimeException("Unknown exception occurred trying to refresh the view.", throwable);
 					} finally {

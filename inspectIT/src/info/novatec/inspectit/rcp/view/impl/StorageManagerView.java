@@ -27,6 +27,7 @@ import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
 import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
 import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.view.IRefreshableView;
 import info.novatec.inspectit.rcp.view.tree.StorageManagerTreeContentProvider;
 import info.novatec.inspectit.rcp.view.tree.StorageManagerTreeLabelProvider;
@@ -654,7 +655,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 			updateStorageList(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					Display.getDefault().asyncExec(new Runnable() {
+					SafeExecutor.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							mainForm.setBusy(true);
@@ -663,11 +664,11 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 							mainForm.setBusy(false);
 							mainForm.layout();
 						}
-					});
+					}, mainForm);
 				}
 			});
 		} else {
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					mainForm.setBusy(true);
@@ -676,7 +677,7 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 					mainForm.setBusy(false);
 					mainForm.layout();
 				}
-			});
+			}, mainForm);
 		}
 
 	}
@@ -704,12 +705,12 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 				updateStorageList(repositoryDefinition, false, new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
-						Display.getDefault().asyncExec(new Runnable() {
+						SafeExecutor.asyncExec(new Runnable() {
 							@Override
 							public void run() {
 								updateFormBody();
 							}
-						});
+						}, mainForm);
 					}
 				});
 
@@ -721,12 +722,12 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 				updateStorageList(repositoryDefinition, true, new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
-						Display.getDefault().asyncExec(new Runnable() {
+						SafeExecutor.asyncExec(new Runnable() {
 							@Override
 							public void run() {
 								updateFormBody();
 							}
-						});
+						}, mainForm);
 					}
 				});
 
@@ -771,14 +772,14 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 	 */
 	@Override
 	public void repositoryDataUpdated(CmrRepositoryDefinition cmrRepositoryDefinition) {
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				updateFormBody();
 				updateViewToolbar();
 			}
-		});
+		}, mainForm);
 	}
 
 	/**
@@ -883,14 +884,14 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		for (Iterator<Entry<StorageData, CmrRepositoryDefinition>> it = storageRepositoryMap.entrySet().iterator(); it.hasNext();) {
 			if (Objects.equals(it.next().getKey().getId(), storageData.getId())) {
 				it.remove();
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						if (remoteStorageSelection.getSelection()) {
 							refreshWithoutCmrCall();
 						}
 					}
-				});
+				}, remoteStorageSelection);
 
 				break;
 			}
@@ -906,14 +907,14 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		for (Iterator<LocalStorageData> it = downloadedStorages.iterator(); it.hasNext();) {
 			if (Objects.equals(it.next().getId(), storageData.getId())) {
 				it.remove();
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						if (localStorageSelection.getSelection()) {
 							refreshWithoutCmrCall();
 						}
 					}
-				});
+				}, localStorageSelection);
 				break;
 			}
 		}

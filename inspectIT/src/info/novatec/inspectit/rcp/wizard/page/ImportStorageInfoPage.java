@@ -6,6 +6,7 @@ import info.novatec.inspectit.rcp.formatter.NumberFormatter;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.storage.InspectITStorageManager;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.LocalStorageData;
 import info.novatec.inspectit.storage.StorageData;
@@ -23,7 +24,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
 /**
@@ -124,7 +124,7 @@ public class ImportStorageInfoPage extends WizardPage {
 				final List<StorageData> existingStorages = callServices ? cmrRepositoryDefinition.getStorageService().getExistingStorages() : Collections.<StorageData> emptyList();
 				final long spaceLeftOnCmr = callServices ? cmrRepositoryDefinition.getCmrManagementService().getCmrStatusData().getStorageDataSpaceLeft() : 0;
 
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						if (null == fileName) {
@@ -200,7 +200,7 @@ public class ImportStorageInfoPage extends WizardPage {
 						}
 						setPageComplete(isPageComplete());
 					}
-				});
+				}, file, importTo, storageInfoComposite, main);
 
 				return Status.OK_STATUS;
 			}

@@ -3,6 +3,7 @@ package info.novatec.inspectit.rcp.wizard.page;
 import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.storage.StorageData;
 import info.novatec.inspectit.storage.recording.RecordingState;
 
@@ -22,7 +23,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -244,7 +244,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 				} else {
 					storageList = Collections.emptyList();
 				}
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						storageSelection.removeAll();
@@ -262,7 +262,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 							storageSelection.setEnabled(false);
 						}
 					}
-				});
+				}, storageSelection);
 				return Status.OK_STATUS;
 			}
 		};

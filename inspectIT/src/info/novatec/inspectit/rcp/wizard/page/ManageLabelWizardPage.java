@@ -11,6 +11,7 @@ import info.novatec.inspectit.rcp.storage.label.composite.impl.BooleanStorageLab
 import info.novatec.inspectit.rcp.storage.label.composite.impl.DateStorageLabelComposite;
 import info.novatec.inspectit.rcp.storage.label.composite.impl.NumberStorageLabelComposite;
 import info.novatec.inspectit.rcp.storage.label.composite.impl.StringStorageLabelComposite;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
 import info.novatec.inspectit.storage.label.management.AbstractLabelManagementAction;
 import info.novatec.inspectit.storage.label.management.impl.AddLabelManagementAction;
@@ -325,13 +326,13 @@ public class ManageLabelWizardPage extends WizardPage {
 				labelTypeList.addAll(cmrRepositoryDefinition.getStorageService().getAllLabelTypes());
 				labelList.addAll(cmrRepositoryDefinition.getStorageService().getAllLabels());
 
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						labelsTableViewer.refresh();
 						labelTypeTableViewer.refresh();
 					}
-				});
+				}, labelsTableViewer.getTable(), labelTypeTableViewer.getTable());
 
 				return Status.OK_STATUS;
 			}

@@ -15,6 +15,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.storage.label.edit.LabelValueEditingSupport;
 import info.novatec.inspectit.rcp.storage.label.edit.LabelValueEditingSupport.LabelEditListener;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.view.impl.StorageManagerView;
 import info.novatec.inspectit.storage.IStorageData;
 import info.novatec.inspectit.storage.StorageData;
@@ -469,7 +470,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	 */
 	private void refreshData() {
 		// refresh data asynchronously
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				form.setBusy(true);
@@ -518,7 +519,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 				form.getBody().layout(true, true);
 				form.setBusy(false);
 			}
-		});
+		}, form);
 	}
 
 	/**

@@ -11,6 +11,7 @@ import info.novatec.inspectit.rcp.ci.listener.IEnvironmentChangeListener;
 import info.novatec.inspectit.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import info.novatec.inspectit.rcp.formatter.TextFormatter;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +39,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorPart;
@@ -460,12 +460,12 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 
 		environments.add(environment);
 
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				checkEnvironments();
 			}
-		});
+		}, tableViewer.getTable(), addButton, managedForm.getForm());
 	}
 
 	/**
@@ -484,12 +484,12 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 				it.remove();
 				environments.add(index, environment);
 
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						tableViewer.refresh();
 					}
-				});
+				}, tableViewer.getTable());
 
 				break;
 			}
@@ -518,7 +518,7 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 				}
 				inputList.removeAll(removeList);
 
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						tableViewer.remove(removeList.toArray());
@@ -526,7 +526,7 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 						checkEnvironments();
 					}
 
-				});
+				}, tableViewer.getTable(), addButton, managedForm.getForm());
 
 				break;
 			}

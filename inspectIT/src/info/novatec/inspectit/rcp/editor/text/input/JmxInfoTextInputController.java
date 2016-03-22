@@ -13,6 +13,7 @@ import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
 import info.novatec.inspectit.rcp.preferences.PreferencesConstants;
 import info.novatec.inspectit.rcp.preferences.PreferencesUtils;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,6 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -232,7 +232,7 @@ public class JmxInfoTextInputController extends AbstractTextInputController {
 
 			final String[] aggregatedData = getAggregatedData(dataSolver);
 
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					packageLabel.setText(jmxIdent.getDerivedDomainName());
@@ -249,7 +249,7 @@ public class JmxInfoTextInputController extends AbstractTextInputController {
 					maxValueLabel.setText(aggregatedData[2]);
 					countLabel.setText(aggregatedData[3]);
 				}
-			});
+			}, packageLabel, typeLabel, attributeLabel, dataTypeLabel, descriptionLabel, timestampLabel, valueLabel, averageValueLabel, minValueLabel, maxValueLabel, countLabel);
 		}
 	}
 

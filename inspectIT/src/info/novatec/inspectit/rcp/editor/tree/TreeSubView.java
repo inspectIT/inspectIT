@@ -16,6 +16,7 @@ import info.novatec.inspectit.rcp.editor.tooltip.IColumnToolTipProvider;
 import info.novatec.inspectit.rcp.editor.tree.input.TreeInputController;
 import info.novatec.inspectit.rcp.handlers.ShowHideColumnsHandler;
 import info.novatec.inspectit.rcp.menu.ShowHideMenuManager;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -252,7 +253,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						treeInputController.doRefresh(monitor, getRootEditor());
-						Display.getDefault().asyncExec(new Runnable() {
+						SafeExecutor.asyncExec(new Runnable() {
 							public void run() {
 								if (checkDisposed()) {
 									return;
@@ -268,7 +269,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 									}
 								}
 							}
-						});
+						}, treeViewer.getTree());
 					} catch (Throwable throwable) { // NOPMD
 						throw new RuntimeException("Unknown exception occurred trying to refresh the view.", throwable);
 					} finally {

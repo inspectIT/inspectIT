@@ -5,11 +5,11 @@ import info.novatec.inspectit.communication.data.MemoryInformationData;
 import info.novatec.inspectit.communication.data.SystemInformationData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -176,7 +176,7 @@ public class MemoryInputController extends AbstractTextInputController {
 		final MemoryInformationData data = (MemoryInformationData) dataAccessService.getLastDataObject(memoryObj);
 
 		if (null != data) {
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					// updates the labels
@@ -212,7 +212,7 @@ public class MemoryInputController extends AbstractTextInputController {
 						usedNonHeapMemorySize.setText(NOT_AVAILABLE);
 					}
 				}
-			});
+			}, freePhysMemory, freeSwapSpace, committedHeapMemorySize, committedNonHeapMemorySize, usedHeapMemorySize, usedNonHeapMemorySize);
 		}
 	}
 

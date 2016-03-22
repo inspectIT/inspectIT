@@ -11,6 +11,7 @@ import info.novatec.inspectit.communication.data.ThreadInformationData;
 import info.novatec.inspectit.communication.data.VmArgumentData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -22,7 +23,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -618,7 +618,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	 */
 	private void updateLabels(final ClassLoadingInformationData classLoadingData, final CpuInformationData cpuData, final CompilationInformationData compilationData,
 			final MemoryInformationData memoryData, final RuntimeInformationData runtimeData, final ThreadInformationData threadData) {
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				if (classLoadingData != null) {
@@ -686,7 +686,8 @@ public class VmSummaryInputController extends AbstractTextInputController {
 					totalStartedThreadCount.setText(NumberFormatter.formatLong(threadData.getTotalTotalStartedThreadCount() / count));
 				}
 			}
-		});
+		}, loadedClassCount, totalLoadedClassCount, unloadedClassCount, processCpuTime, totalCompilationTime, freePhysMemory, freeSwapSpace, committedHeapMemorySize, committedNonHeapMemorySize,
+				usedHeapMemorySize, usedNonHeapMemorySize);
 	}
 
 	/**
