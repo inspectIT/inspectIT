@@ -12,6 +12,7 @@ import info.novatec.inspectit.rcp.filter.FilterComposite;
 import info.novatec.inspectit.rcp.formatter.ImageFormatter;
 import info.novatec.inspectit.rcp.formatter.TextFormatter;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -447,13 +448,13 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 		}
 
 		profiles.add(profile);
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				tableViewer.refresh();
 				updateCheckedItems();
 			}
-		});
+		}, tableViewer.getTable());
 	}
 
 	@Override
@@ -469,13 +470,13 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 				it.remove();
 				profiles.add(profile);
 
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						tableViewer.refresh();
 						updateCheckedItems();
 					}
-				});
+				}, tableViewer.getTable());
 
 				break;
 			}
@@ -498,12 +499,12 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 			if (Objects.equals(displayed.getId(), profile.getId())) {
 				it.remove();
 
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						tableViewer.remove(displayed);
 					}
-				});
+				}, tableViewer.getTable());
 
 				break;
 			}

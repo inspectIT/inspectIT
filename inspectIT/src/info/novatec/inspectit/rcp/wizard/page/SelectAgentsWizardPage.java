@@ -6,6 +6,7 @@ import info.novatec.inspectit.rcp.formatter.ImageFormatter;
 import info.novatec.inspectit.rcp.formatter.TextFormatter;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -205,7 +206,7 @@ public class SelectAgentsWizardPage extends WizardPage {
 								return a1.getAgentName().compareToIgnoreCase(a2.getAgentName());
 							}
 						});
-						Display.getDefault().asyncExec(new Runnable() {
+						SafeExecutor.asyncExec(new Runnable() {
 							@Override
 							public void run() {
 								main.setLayout(new GridLayout(1, false));
@@ -265,7 +266,7 @@ public class SelectAgentsWizardPage extends WizardPage {
 
 								main.layout();
 							}
-						});
+						}, main, allAgents, agentSelection, specificAgents);
 						return Status.OK_STATUS;
 					}
 				};

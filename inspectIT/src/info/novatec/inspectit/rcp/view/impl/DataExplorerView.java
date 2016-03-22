@@ -17,6 +17,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryManager.UpdateReposito
 import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
 import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.util.SelectionProviderAdapter;
 import info.novatec.inspectit.rcp.view.IRefreshableView;
 import info.novatec.inspectit.rcp.view.listener.TreeViewDoubleClickListener;
@@ -235,7 +236,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 *            Agent to select. Can be null. If the repository does not
 	 */
 	public void showRepository(final RepositoryDefinition repositoryDefinition, final PlatformIdent agent) {
-		Display.getDefault().syncExec(new Runnable() {
+		SafeExecutor.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				mainForm.setBusy(true);
@@ -246,7 +247,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 				agentsCombo.removeAll();
 				displayMessage("Loading agents for repository " + repositoryDefinition.getName(), Display.getDefault().getSystemImage(SWT.ICON_WORKING));
 			}
-		});
+		}, mainForm, agentsCombo);
 		displayedRepositoryDefinition = repositoryDefinition;
 
 		PreferencesUtils.saveObject(PreferencesConstants.LAST_SELECTED_REPOSITORY, displayedRepositoryDefinition, false);
@@ -278,13 +279,13 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 *            Hint for agent selection.
 	 */
 	private void selectAgentForDisplay(PlatformIdent agent) {
-		Display.getDefault().syncExec(new Runnable() {
+		SafeExecutor.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				mainForm.setBusy(true);
 				displayMessage("Loading agent tree..", Display.getDefault().getSystemImage(SWT.ICON_WORKING));
 			}
-		});
+		}, mainForm);
 		try {
 			if (null != agent && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(agent)) {
 				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
@@ -548,7 +549,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 * Updates the form.
 	 */
 	public void performUpdate() {
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				mainForm.setBusy(true);
@@ -566,7 +567,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 				}
 				mainForm.setBusy(false);
 			}
-		});
+		}, mainForm, agentsCombo, treeViewer.getTree());
 	}
 
 	/**
@@ -646,7 +647,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 					updateAvailableAgents(displayedRepositoryDefinition, new JobChangeAdapter() {
 						@Override
 						public void done(IJobChangeEvent event) {
-							Display.getDefault().asyncExec(new Runnable() {
+							SafeExecutor.asyncExec(new Runnable() {
 								@Override
 								public void run() {
 									mainForm.setBusy(true);
@@ -656,11 +657,11 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 									updateViewToolbar();
 									mainForm.setBusy(false);
 								}
-							});
+							}, mainForm, agentsCombo);
 						}
 					});
 				} else if (cachedStatus == OnlineStatus.ONLINE && newStatus == OnlineStatus.OFFLINE) {
-					Display.getDefault().asyncExec(new Runnable() {
+					SafeExecutor.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							mainForm.setBusy(true);
@@ -669,7 +670,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 							updateViewToolbar();
 							mainForm.setBusy(false);
 						}
-					});
+					}, mainForm, agentsCombo);
 				}
 			}
 			cachedOnlineStatus.put(repositoryDefinition, newStatus);
@@ -682,14 +683,14 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	@Override
 	public void repositoryDataUpdated(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		if (ObjectUtils.equals(cmrRepositoryDefinition, displayedRepositoryDefinition)) {
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					mainForm.setBusy(true);
 					updateFormTitle();
 					mainForm.setBusy(false);
 				}
-			});
+			}, mainForm);
 		}
 	}
 
@@ -706,23 +707,18 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 		if (ObjectUtils.equals(cmrRepositoryDefinition, displayedRepositoryDefinition)) {
 			displayedRepositoryDefinition = null; // NOPMD
 			displayedAgent = null; // NOPMD
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					performUpdate();
-				}
-			});
+			performUpdate();
 		} else if (displayedRepositoryDefinition instanceof StorageRepositoryDefinition) {
 			StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) displayedRepositoryDefinition;
 			if (ObjectUtils.equals(cmrRepositoryDefinition, storageRepositoryDefinition.getCmrRepositoryDefinition()) && !storageRepositoryDefinition.getLocalStorageData().isFullyDownloaded()) {
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						agentsCombo.removeAll();
 						agentsCombo.setEnabled(false);
 						displayMessage("CMR Repository for selected storage was removed.", Display.getDefault().getSystemImage(SWT.ICON_WARNING));
 					}
-				});
+				}, agentsCombo);
 			}
 		}
 	}
@@ -737,12 +733,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 				selectAgentForDisplay(null);
 			}
 
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					performUpdate();
-				}
-			});
+			performUpdate();
 		}
 	}
 
@@ -753,12 +744,12 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 		if (displayedRepositoryDefinition instanceof StorageRepositoryDefinition) {
 			final StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) displayedRepositoryDefinition;
 			if (ObjectUtils.equals(storageData.getId(), storageRepositoryDefinition.getLocalStorageData().getId())) {
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						updateFormTitle();
 					}
-				});
+				}, mainForm);
 			}
 		}
 	}
@@ -770,14 +761,14 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 		if (displayedRepositoryDefinition instanceof StorageRepositoryDefinition) {
 			final StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) displayedRepositoryDefinition;
 			if (!storageRepositoryDefinition.getLocalStorageData().isFullyDownloaded() && ObjectUtils.equals(storageData.getId(), storageRepositoryDefinition.getLocalStorageData().getId())) {
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						agentsCombo.removeAll();
 						agentsCombo.setEnabled(false);
 						displayMessage("Selected storage was remotely deleted and is not available anymore.", Display.getDefault().getSystemImage(SWT.ICON_WARNING));
 					}
-				});
+				}, agentsCombo);
 			}
 		}
 	}
@@ -794,14 +785,14 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 					performUpdate();
 				} else {
 					// if it is not available on the CMR, remove everything
-					Display.getDefault().asyncExec(new Runnable() {
+					SafeExecutor.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							agentsCombo.removeAll();
 							agentsCombo.setEnabled(false);
 							displayMessage("Selected storage was locally deleted and is not available anymore.", Display.getDefault().getSystemImage(SWT.ICON_WARNING));
 						}
-					});
+					}, agentsCombo);
 				}
 			}
 		}

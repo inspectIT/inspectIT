@@ -4,6 +4,7 @@ import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -22,7 +23,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -164,7 +164,7 @@ public class AddCmrRepositoryDefinitionDialog extends TitleAreaDialog {
 							testOk = false;
 						}
 						final boolean testOkFinal = testOk;
-						Display.getDefault().asyncExec(new Runnable() {
+						SafeExecutor.asyncExec(new Runnable() {
 							public void run() {
 								if (!busyIndicator.isDisposed() && !testLabel.isDisposed()) {
 									if (busyIndicator.isBusy()) {
@@ -179,7 +179,7 @@ public class AddCmrRepositoryDefinitionDialog extends TitleAreaDialog {
 									}
 								}
 							}
-						});
+						}, busyIndicator, testLabel);
 						return Status.OK_STATUS;
 					}
 				};

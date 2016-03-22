@@ -11,6 +11,7 @@ import info.novatec.inspectit.rcp.repository.RepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.StorageRepositoryDefinition;
 import info.novatec.inspectit.rcp.storage.listener.StorageChangeListener;
 import info.novatec.inspectit.rcp.util.AccessibleArrowImage;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.storage.IStorageData;
 
 import java.util.Objects;
@@ -213,12 +214,12 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 	@Override
 	public void repositoryOnlineStatusUpdated(CmrRepositoryDefinition cmrRepositoryDefinition, OnlineStatus oldStatus, OnlineStatus newStatus) {
 		if (newStatus != OnlineStatus.CHECKING && Objects.equals(repositoryDefinition, cmrRepositoryDefinition)) {
-			getDisplay().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					repositoryLabel.setImage(ImageFormatter.getCmrRepositoryImage((CmrRepositoryDefinition) repositoryDefinition, true));
 				}
-			});
+			}, getDisplay(), repositoryLabel);
 
 		}
 	}
@@ -229,13 +230,13 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 	@Override
 	public void repositoryDataUpdated(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		if (Objects.equals(repositoryDefinition, cmrRepositoryDefinition)) {
-			getDisplay().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					repositoryLabel.setText(repositoryDefinition.getName());
 					layoutInternal();
 				}
-			});
+			}, getDisplay(), repositoryLabel);
 		}
 
 	}
@@ -302,14 +303,14 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 		if (repositoryDefinition instanceof StorageRepositoryDefinition) {
 			final StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) repositoryDefinition;
 			if (Objects.equals(storageRepositoryDefinition.getLocalStorageData(), storageData)) {
-				getDisplay().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						repositoryLabel.setText(repositoryDefinition.getName());
 						repositoryLabel.setImage(ImageFormatter.getStorageRepositoryImage(storageRepositoryDefinition));
 						layoutInternal();
 					}
-				});
+				}, getDisplay(), repositoryLabel);
 			}
 		}
 	}

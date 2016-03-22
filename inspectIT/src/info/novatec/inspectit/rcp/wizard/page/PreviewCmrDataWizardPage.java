@@ -4,6 +4,7 @@ import info.novatec.inspectit.rcp.InspectIT;
 import info.novatec.inspectit.rcp.InspectITImages;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -14,7 +15,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.internal.forms.widgets.BusyIndicator;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -200,7 +200,7 @@ public class PreviewCmrDataWizardPage extends WizardPage {
 
 			final boolean testOkFinal = testOk;
 			final String verFinal = ver;
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					if (!main.isDisposed()) {
@@ -215,7 +215,7 @@ public class PreviewCmrDataWizardPage extends WizardPage {
 						main.layout();
 					}
 				}
-			});
+			}, main);
 			return Status.OK_STATUS;
 		}
 

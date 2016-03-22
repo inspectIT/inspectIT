@@ -4,11 +4,11 @@ import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -96,7 +96,7 @@ public class ClassesInputController extends AbstractTextInputController {
 		final ClassLoadingInformationData data = (ClassLoadingInformationData) dataAccessService.getLastDataObject(classLoadingObj);
 
 		if (null != data) {
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					// updates the labels
@@ -105,7 +105,7 @@ public class ClassesInputController extends AbstractTextInputController {
 					totalLoadedClassCount.setText(NumberFormatter.formatLong(data.getTotalTotalLoadedClassCount() / count));
 					unloadedClassCount.setText(NumberFormatter.formatLong(data.getTotalUnloadedClassCount() / count));
 				}
-			});
+			}, loadedClassCount, totalLoadedClassCount, unloadedClassCount);
 		}
 	}
 

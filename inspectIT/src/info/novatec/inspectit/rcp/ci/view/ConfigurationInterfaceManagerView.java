@@ -18,6 +18,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryChangeListener;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryManager;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.util.SelectionProviderAdapter;
 import info.novatec.inspectit.rcp.util.UnfinishedWarningUtils;
 import info.novatec.inspectit.rcp.view.IRefreshableView;
@@ -552,12 +553,12 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	@Override
 	public void repositoryAdded(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		cachedOnlineStatus.put(cmrRepositoryDefinition, cmrRepositoryDefinition.getOnlineStatus());
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				updateFormMenuManager();
 			}
-		});
+		}, mainForm);
 	}
 
 	/**
@@ -566,7 +567,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	@Override
 	public void repositoryRemoved(final CmrRepositoryDefinition cmrRepositoryDefinition) {
 		cachedOnlineStatus.remove(cmrRepositoryDefinition);
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				updateFormMenuManager();
@@ -576,7 +577,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 					selectDisplayedCmrRepositoryDefinition();
 				}
 			}
-		});
+		}, mainForm);
 	}
 
 	/**
@@ -584,7 +585,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	 */
 	@Override
 	public void repositoryDataUpdated(final CmrRepositoryDefinition cmrRepositoryDefinition) {
-		Display.getDefault().asyncExec(new Runnable() {
+		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				updateFormMenuManager();
@@ -593,7 +594,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 					updateFormTitle();
 				}
 			}
-		});
+		}, mainForm);
 	}
 
 	/**
@@ -803,7 +804,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 			updateProfilesAndEnvironments(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					Display.getDefault().asyncExec(new Runnable() {
+					SafeExecutor.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							mainForm.setBusy(true);
@@ -813,11 +814,11 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 							mainForm.setBusy(false);
 							mainForm.layout();
 						}
-					});
+					}, mainForm);
 				}
 			});
 		} else {
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					mainForm.setBusy(true);
@@ -827,7 +828,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 					mainForm.setBusy(false);
 					mainForm.layout();
 				}
-			});
+			}, mainForm);
 		}
 
 	}

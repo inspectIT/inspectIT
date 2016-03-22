@@ -12,6 +12,7 @@ import info.novatec.inspectit.rcp.model.Component;
 import info.novatec.inspectit.rcp.provider.ICmrRepositoryProvider;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.storage.StorageData;
 import info.novatec.inspectit.storage.recording.RecordingState;
 import info.novatec.inspectit.util.ObjectUtils;
@@ -558,7 +559,7 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 				final OnlineStatus onlineStatus = cmrRepositoryDefinition.getOnlineStatus();
 				final CmrStatusData cmrStatusData = (onlineStatus == OnlineStatus.ONLINE) ? cmrRepositoryDefinition.getCmrManagementService().getCmrStatusData() : null; // NOPMD
 				recordingData = (onlineStatus == OnlineStatus.ONLINE) ? cmrRepositoryDefinition.getStorageService().getRecordingData() : null; // NOPMD
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 
 					@Override
 					public void run() {
@@ -593,7 +594,7 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 						form.getBody().layout(true, true);
 						form.setBusy(false);
 					}
-				});
+				}, form, mainComposite);
 			} else {
 
 				Display.getDefault().asyncExec(new Runnable() {

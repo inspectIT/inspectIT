@@ -9,6 +9,7 @@ import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition;
 import info.novatec.inspectit.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import info.novatec.inspectit.rcp.storage.label.edit.LabelValueEditingSupport;
 import info.novatec.inspectit.rcp.storage.label.edit.LabelValueEditingSupport.LabelEditListener;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 import info.novatec.inspectit.rcp.wizard.ManageLabelWizard;
 import info.novatec.inspectit.storage.StorageData;
 import info.novatec.inspectit.storage.label.AbstractStorageLabel;
@@ -51,7 +52,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -322,7 +322,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 				} else {
 					labelTypeList = Collections.emptyList();
 				}
-				Display.getDefault().asyncExec(new Runnable() {
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						labelTypeSelection.removeAll();
@@ -330,7 +330,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 							labelTypeSelection.add(TextFormatter.getLabelName(labelType));
 						}
 					}
-				});
+				}, labelTypeSelection);
 				return Status.OK_STATUS;
 			}
 		};

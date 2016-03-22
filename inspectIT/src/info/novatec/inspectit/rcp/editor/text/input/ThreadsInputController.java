@@ -4,11 +4,11 @@ import info.novatec.inspectit.cmr.service.IGlobalDataAccessService;
 import info.novatec.inspectit.communication.data.ThreadInformationData;
 import info.novatec.inspectit.rcp.editor.inputdefinition.InputDefinition;
 import info.novatec.inspectit.rcp.formatter.NumberFormatter;
+import info.novatec.inspectit.rcp.util.SafeExecutor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -105,7 +105,7 @@ public class ThreadsInputController extends AbstractTextInputController {
 		final ThreadInformationData data = (ThreadInformationData) dataAccessService.getLastDataObject(threadObj);
 
 		if (null != data) {
-			Display.getDefault().asyncExec(new Runnable() {
+			SafeExecutor.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					// updates the labels
@@ -115,7 +115,7 @@ public class ThreadsInputController extends AbstractTextInputController {
 					totalStartedThreadCount.setText(NumberFormatter.formatLong(data.getTotalTotalStartedThreadCount() / count));
 					peakThreadCount.setText(NumberFormatter.formatInteger(data.getTotalPeakThreadCount() / count));
 				}
-			});
+			}, liveThreadCount, daemonThreadCount, totalStartedThreadCount, peakThreadCount);
 
 		}
 	}
