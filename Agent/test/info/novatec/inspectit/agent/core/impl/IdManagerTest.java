@@ -159,6 +159,7 @@ public class IdManagerTest extends AbstractLogSupport {
 		idManager.unregisterPlatform();
 
 		verify(connection, times(1)).unregisterPlatform("testAgent");
+		verify(connection, times(1)).disconnect();
 	}
 
 	/**

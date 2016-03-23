@@ -29,10 +29,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * The default implementation of the ID Manager.
- * 
+ *
  * @author Patrice Bouillet
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @Component
 public class IdManager implements IIdManager, InitializingBean, DisposableBean {
@@ -67,17 +67,17 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * The mapping between the local and remote method ids.
 	 */
-	private Map<Long, Long> methodIdMap = new HashMap<Long, Long>();
+	private final Map<Long, Long> methodIdMap = new HashMap<Long, Long>();
 
 	/**
 	 * The mapping between the local and remote sensor type ids.
 	 */
-	private Map<Long, Long> sensorTypeIdMap = new HashMap<Long, Long>();
+	private final Map<Long, Long> sensorTypeIdMap = new HashMap<Long, Long>();
 
 	/**
 	 * The mapping between the local and remote jmxDefinitionData ids.
 	 */
-	private Map<Long, Long> jmxDefinitionDataIdMap = new HashMap<Long, Long>();
+	private final Map<Long, Long> jmxDefinitionDataIdMap = new HashMap<Long, Long>();
 
 	/**
 	 * The {@link Thread} used to register the outstanding methods, sensor types etc.
@@ -87,22 +87,22 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * The methods to register at the server.
 	 */
-	private LinkedList<RegisteredSensorConfig> methodsToRegister = new LinkedList<RegisteredSensorConfig>(); // NOPMD
+	private final LinkedList<RegisteredSensorConfig> methodsToRegister = new LinkedList<RegisteredSensorConfig>(); // NOPMD
 
 	/**
 	 * The jmx definition data to register at the server.
 	 */
-	private LinkedList<JmxSensorConfig> jmxDefinitionDataIdentToRegister = new LinkedList<JmxSensorConfig>(); // NOPMD
+	private final LinkedList<JmxSensorConfig> jmxDefinitionDataIdentToRegister = new LinkedList<JmxSensorConfig>(); // NOPMD
 
 	/**
 	 * The sensor types to register at the server.
 	 */
-	private LinkedList<AbstractSensorTypeConfig> sensorTypesToRegister = new LinkedList<AbstractSensorTypeConfig>(); // NOPMD
+	private final LinkedList<AbstractSensorTypeConfig> sensorTypesToRegister = new LinkedList<AbstractSensorTypeConfig>(); // NOPMD
 
 	/**
 	 * The mapping between the sensor types and methods to register at the server.
 	 */
-	private LinkedList<SensorTypeToMethodMapping> sensorTypeToMethodRegister = new LinkedList<SensorTypeToMethodMapping>(); // NOPMD
+	private final LinkedList<SensorTypeToMethodMapping> sensorTypeToMethodRegister = new LinkedList<SensorTypeToMethodMapping>(); // NOPMD
 
 	/**
 	 * If set to <code>true</code>, the connection to server created an exception.
@@ -118,7 +118,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * Default constructor. Needs an implementation of the {@link IConnection} interface to
 	 * establish the connection to the server.
-	 * 
+	 *
 	 * @param configurationStorage
 	 *            The configuration storage.
 	 * @param connection
@@ -226,6 +226,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		if (connection.isConnected() && isPlatformRegistered()) {
 			try {
 				connection.unregisterPlatform(configurationStorage.getAgentName());
+				connection.disconnect();
 				platformId = -1;
 			} catch (Throwable e) { // NOPMD
 				log.warn("Could not un-register the platform.");
@@ -274,7 +275,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		if (!sensorTypeIdMap.containsKey(mBeanIdentifier)) {
 			throw new IdNotAvailableException("mBean '" + mBeanId + "' is not mapped");
 		} else {
-			Long registeredSensorTypeIdentifier = (Long) jmxDefinitionDataIdMap.get(mBeanIdentifier);
+			Long registeredSensorTypeIdentifier = jmxDefinitionDataIdMap.get(mBeanIdentifier);
 			return registeredSensorTypeIdentifier.longValue();
 		}
 	}
@@ -493,25 +494,25 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 	/**
 	 * Private inner class used to store the mapping between the sensor type IDs and the method IDs.
 	 * Only used if they are not yet registered.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private static class SensorTypeToMethodMapping {
 
 		/**
 		 * The sensor type identifier.
 		 */
-		private long sensorTypeId;
+		private final long sensorTypeId;
 
 		/**
 		 * The method identifier.
 		 */
-		private long methodId;
+		private final long methodId;
 
 		/**
 		 * Creates a new instance.
-		 * 
+		 *
 		 * @param sensorTypeId
 		 *            the sensor type id.
 		 * @param methodId
@@ -534,9 +535,9 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 	/**
 	 * The {@link Thread} used to register the outstanding methods, sensor types etc.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private class RegistrationThread extends Thread {
 
@@ -624,7 +625,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Establish the connection to the server.
-		 * 
+		 *
 		 * @exception ConnectException
 		 *                Throws a ConnectException if there was a problem connecting to the
 		 *                repository.
@@ -636,7 +637,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers the platform at the CMR.
-		 * 
+		 *
 		 * @throws ServerUnavailableException
 		 *             If the sending wasn't successful in any way, a
 		 *             {@link ServerUnavailableException} exception is thrown.
@@ -654,7 +655,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers all sensor type to method mappings on the server.
-		 * 
+		 *
 		 * @throws ServerUnavailableException
 		 *             Thrown if a server error occurred.
 		 * @throws RegistrationException
@@ -678,7 +679,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers the mapping between the sensor type and a method.
-		 * 
+		 *
 		 * @param sensorTypeId
 		 *            The sensor type id.
 		 * @param methodId
@@ -710,7 +711,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers all sensor types on the server.
-		 * 
+		 *
 		 * @throws ServerUnavailableException
 		 *             Thrown if a server error occured.
 		 * @throws RegistrationException
@@ -731,7 +732,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		/**
 		 * Registers a sensor type configuration at the server. Accepts
 		 * {@link MethodSensorTypeConfig} and {@link PlatformSensorTypeConfig} objects.
-		 * 
+		 *
 		 * @param astc
 		 *            The sensor type configuration.
 		 * @throws ServerUnavailableException
@@ -764,7 +765,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers all methods on the server.
-		 * 
+		 *
 		 * @throws ServerUnavailableException
 		 *             Thrown if a server error occurred.
 		 * @throws RegistrationException
@@ -784,7 +785,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers a method on the server and maps the local and global id.
-		 * 
+		 *
 		 * @param rsc
 		 *            The {@link RegisteredSensorConfig} to be registered at the server.
 		 * @throws ServerUnavailableException
@@ -807,7 +808,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers all jmxDefinitionData on the server.
-		 * 
+		 *
 		 * @throws ServerUnavailableException
 		 *             Thrown if a server error occurred.
 		 * @throws RegistrationException
@@ -816,7 +817,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		 */
 		private void registerJmxDefinitionDataIdents() throws ServerUnavailableException, RegistrationException {
 			while (!jmxDefinitionDataIdentToRegister.isEmpty()) {
-				JmxSensorConfig jsc = (JmxSensorConfig) jmxDefinitionDataIdentToRegister.getFirst();
+				JmxSensorConfig jsc = jmxDefinitionDataIdentToRegister.getFirst();
 				this.registerJmxDefinitionData(jsc);
 				synchronized (jmxDefinitionDataIdentToRegister) {
 					jmxDefinitionDataIdentToRegister.removeFirst();
@@ -826,7 +827,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
 		/**
 		 * Registers a JmxDefinitionData on the server and maps the local and global id.
-		 * 
+		 *
 		 * @param config
 		 *            The {@link JmxSensorConfig} to be registered at the server.
 		 * @throws ServerUnavailableException
@@ -840,7 +841,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 			synchronized (jmxDefinitionDataIdentToRegister) {
 				Long localId = Long.valueOf(jmxDefinitionDataIdMap.size());
 				jmxDefinitionDataIdMap.put(localId, Long.valueOf(registeredId));
-				
+
 				if (log.isDebugEnabled()) {
 					log.debug("Method " + config.toString() + " registered. ID (local/global): " + localId + "/" + registeredId);
 				}

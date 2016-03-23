@@ -5,6 +5,9 @@ import info.novatec.inspectit.agent.config.impl.JmxSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.MethodSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.PlatformSensorTypeConfig;
 import info.novatec.inspectit.agent.config.impl.StrategyConfig;
+import info.novatec.inspectit.kryonet.Client;
+import info.novatec.inspectit.kryonet.ExtendedSerializationImpl;
+import info.novatec.inspectit.kryonet.IExtendedSerialization;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,6 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -28,9 +32,9 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 /**
  * Post process configuration storage to define buffer and sending strategy beans.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Configuration
 @ComponentScan("info.novatec.inspectit")
@@ -62,7 +66,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 
 	/**
 	 * Returns {@link PropertyPlaceholderConfigurer} for the Agent.
-	 * 
+	 *
 	 * @return Returns {@link PropertyPlaceholderConfigurer} for the Agent.
 	 */
 	@Bean
@@ -83,7 +87,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newFixedThreadPool(1, threadFactory);
 	}
-	
+
 	/**
 	 * @return Returns coreServiceExecutorService
 	 */
@@ -95,8 +99,23 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	}
 
 	/**
+	 * Creates the client bean.
+	 *
+	 * @param prototypesProvider
+	 *            {@link PrototypesProvider} (autowired)
+	 * @return Created bean
+	 */
+	@Bean(name = "kryonet-client")
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	@Autowired
+	public Client getClient(PrototypesProvider prototypesProvider) {
+		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
+		return new Client(serialization, prototypesProvider);
+	}
+
+	/**
 	 * Registers components needed by the configuration to the Spring container.
-	 * 
+	 *
 	 * @param configurationStorage
 	 *            {@link IConfigurationStorage} with the settings.
 	 * @throws Exception
@@ -121,7 +140,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 			beanName = "platformSensorType[" + className + "]";
 			registerBeanDefinitionAndInitialize(beanName, className);
 		}
-		
+
 		// jmx sensor types
 		for (JmxSensorTypeConfig jmxSensorTypeConfig : configurationStorage.getJmxSensorTypes()) {
 			className = jmxSensorTypeConfig.getClassName();
@@ -145,7 +164,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 * <i>This is the only way to initialize the bean definitions that no other component has
 	 * dependency to, since we add the definitions in the moment when the lookup has been finished
 	 * and bean creation has started.</i>
-	 * 
+	 *
 	 * @param beanName
 	 *            Name of the bean to register.
 	 * @param className

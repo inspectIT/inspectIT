@@ -8,6 +8,7 @@ import static com.esotericsoftware.minlog.Log.debug;
 import static com.esotericsoftware.minlog.Log.error;
 import static com.esotericsoftware.minlog.Log.info;
 import static com.esotericsoftware.minlog.Log.trace;
+
 import info.novatec.inspectit.storage.nio.stream.StreamProvider;
 
 import java.io.IOException;
@@ -432,6 +433,13 @@ public class Client extends Connection implements EndPoint {
 		if (TRACE)
 			trace("kryonet", "Client thread stopping.");
 		shutdown = true;
+		// Try to let any previous update thread stop. (added by ISE)
+		if (updateThread != null) {
+			try {
+				updateThread.join(5000);
+			} catch (InterruptedException ignored) {
+			}
+		}
 		selector.wakeup();
 	}
 
