@@ -21,6 +21,7 @@ import info.novatec.inspectit.kryonet.IExtendedSerialization;
 import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
 import info.novatec.inspectit.spring.logger.Log;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +45,7 @@ import com.esotericsoftware.kryonet.rmi.RemoteObject;
  * 
  */
 @Component
-public class KryoNetConnection implements IConnection {
+public class KryoNetConnection implements IConnection, InitializingBean {
 
 	/**
 	 * The logger of the class.
@@ -92,12 +94,13 @@ public class KryoNetConnection implements IConnection {
 	 * {@inheritDoc}
 	 */
 	public void connect(String host, int port) throws ConnectException {
-		if (null == client) {
+		if (!isConnected()) {
 			try {
 				if (!connectionException) {
 					log.info("KryoNet: Connecting to " + host + ":" + port);
 				}
-				initClient(host, port);
+
+				startClient(host, port);
 
 				int agentStorageServiceId = IAgentStorageService.class.getAnnotation(ServiceInterface.class).serviceId();
 				agentStorageService = ObjectSpace.getRemoteObject(client, agentStorageServiceId, IAgentStorageService.class);
@@ -121,7 +124,7 @@ public class KryoNetConnection implements IConnection {
 					log.info("KryoNet: Connection to the server failed.");
 				}
 				connectionException = true;
-				disconnect();
+				stopClient();
 				if (log.isTraceEnabled()) {
 					log.trace("connect()", exception);
 				}
@@ -133,34 +136,49 @@ public class KryoNetConnection implements IConnection {
 	}
 
 	/**
-	 * Creates new client and tries to connect to host.
+	 * {@inheritDoc}
+	 */
+	public void disconnect() {
+		stopClient();
+
+		agentStorageService = null; // NOPMD
+		registrationService = null; // NOPMD
+		keepAliveService = null; // NOPMD
+	}
+
+	/**
+	 * Creates new client.
+	 */
+	private void initClient() {
+		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
+		client = new Client(serialization, prototypesProvider);
+	}
+
+	/**
+	 * Starts the client and tries to make a connection to the given host/port.
 	 * 
 	 * @param host
 	 *            Host IP address.
 	 * @param port
 	 *            Port to connect to.
-	 * @throws Exception
-	 *             If {@link Exception} occurs during communication.
+	 * 
+	 * @throws IOException
+	 *             If {@link IOException} occurs during the connection.
 	 */
-	private void initClient(String host, int port) throws Exception {
-		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
-
-		client = new Client(serialization, prototypesProvider);
-		client.start();
-		client.connect(5000, host, port);
+	private void startClient(String host, int port) throws IOException {
+		if (null != client) {
+			client.start();
+			client.connect(5000, host, port);
+		}
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Stops the client.
 	 */
-	public void disconnect() {
+	private void stopClient() {
 		if (null != client) {
 			client.stop();
-			client = null; // NOPMD
 		}
-		agentStorageService = null; // NOPMD
-		registrationService = null; // NOPMD
-		keepAliveService = null; // NOPMD
 	}
 
 	/**
@@ -431,6 +449,13 @@ public class KryoNetConnection implements IConnection {
 	 */
 	public boolean isConnected() {
 		return null != client && client.isConnected();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void afterPropertiesSet() throws Exception {
+		initClient();
 	}
 
 }
