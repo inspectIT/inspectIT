@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -25,6 +26,9 @@ import rocks.inspectit.agent.java.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.agent.java.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.agent.java.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.agent.java.config.impl.StrategyConfig;
+import rocks.inspectit.shared.all.kryonet.Client;
+import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
+import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
 
 /**
  * Post process configuration storage to define buffer and sending strategy beans.
@@ -92,6 +96,21 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	public ScheduledExecutorService getScheduledExecutorService() {
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newScheduledThreadPool(1, threadFactory);
+	}
+
+	/**
+	 * Creates the client bean.
+	 *
+	 * @param prototypesProvider
+	 *            {@link PrototypesProvider} (autowired)
+	 * @return Created bean
+	 */
+	@Bean(name = "kryonet-client")
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	@Autowired
+	public Client getClient(PrototypesProvider prototypesProvider) {
+		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
+		return new Client(serialization, prototypesProvider);
 	}
 
 	/**
