@@ -1,5 +1,6 @@
 package rocks.inspectit.agent.java.connection.impl;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -38,9 +39,10 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Implements the {@link IConnection} interface using the kryo-net.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ * @author Ivan Senic
+ *
  */
 @Component
 public class KryoNetConnection implements IConnection {
@@ -52,14 +54,9 @@ public class KryoNetConnection implements IConnection {
 	Logger log;
 
 	/**
-	 * {@link PrototypesProvider}.
-	 */
-	@Autowired
-	private PrototypesProvider prototypesProvider;
-
-	/**
 	 * The kryonet client to connect to the CMR.
 	 */
+	@Autowired
 	private Client client;
 
 	/**
@@ -92,12 +89,13 @@ public class KryoNetConnection implements IConnection {
 	 * {@inheritDoc}
 	 */
 	public void connect(String host, int port) throws ConnectException {
-		if (null == client) {
+		if (!isConnected()) {
 			try {
 				if (!connectionException) {
 					log.info("KryoNet: Connecting to " + host + ":" + port);
 				}
-				initClient(host, port);
+
+				startClient(host, port);
 
 				int agentStorageServiceId = IAgentStorageService.class.getAnnotation(ServiceInterface.class).serviceId();
 				agentStorageService = ObjectSpace.getRemoteObject(client, agentStorageServiceId, IAgentStorageService.class);
@@ -121,7 +119,7 @@ public class KryoNetConnection implements IConnection {
 					log.info("KryoNet: Connection to the server failed.");
 				}
 				connectionException = true;
-				disconnect();
+				stopClient();
 				if (log.isTraceEnabled()) {
 					log.trace("connect()", exception);
 				}
@@ -133,34 +131,41 @@ public class KryoNetConnection implements IConnection {
 	}
 
 	/**
-	 * Creates new client and tries to connect to host.
-	 * 
+	 * {@inheritDoc}
+	 */
+	public void disconnect() {
+		stopClient();
+
+		agentStorageService = null; // NOPMD
+		registrationService = null; // NOPMD
+		keepAliveService = null; // NOPMD
+	}
+
+	/**
+	 * Starts the client and tries to make a connection to the given host/port.
+	 *
 	 * @param host
 	 *            Host IP address.
 	 * @param port
 	 *            Port to connect to.
-	 * @throws Exception
-	 *             If {@link Exception} occurs during communication.
+	 *
+	 * @throws IOException
+	 *             If {@link IOException} occurs during the connection.
 	 */
-	private void initClient(String host, int port) throws Exception {
-		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
-
-		client = new Client(serialization, prototypesProvider);
-		client.start();
-		client.connect(5000, host, port);
+	private void startClient(String host, int port) throws IOException {
+		if (null != client) {
+			client.start();
+			client.connect(5000, host, port);
+		}
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Stops the client.
 	 */
-	public void disconnect() {
+	private void stopClient() {
 		if (null != client) {
 			client.stop();
-			client = null; // NOPMD
 		}
-		agentStorageService = null; // NOPMD
-		registrationService = null; // NOPMD
-		keepAliveService = null; // NOPMD
 	}
 
 	/**
@@ -405,7 +410,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * Loads all the network interfaces and transforms the enumeration to the list of strings
 	 * containing all addresses.
-	 * 
+	 *
 	 * @return List of all network interfaces.
 	 * @throws SocketException
 	 *             If {@link SocketException} occurs.
@@ -415,10 +420,10 @@ public class KryoNetConnection implements IConnection {
 		List<String> networkInterfaces = new ArrayList<String>();
 
 		while (interfaces.hasMoreElements()) {
-			NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
+			NetworkInterface networkInterface = interfaces.nextElement();
 			Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
 			while (addresses.hasMoreElements()) {
-				InetAddress address = (InetAddress) addresses.nextElement();
+				InetAddress address = addresses.nextElement();
 				networkInterfaces.add(address.getHostAddress());
 			}
 		}

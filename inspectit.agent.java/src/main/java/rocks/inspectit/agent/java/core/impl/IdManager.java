@@ -228,6 +228,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		if (connection.isConnected() && isPlatformRegistered()) {
 			try {
 				connection.unregisterPlatform(configurationStorage.getAgentName());
+				connection.disconnect();
 				platformId = -1;
 			} catch (Throwable e) { // NOPMD
 				log.warn("Could not un-register the platform.");
