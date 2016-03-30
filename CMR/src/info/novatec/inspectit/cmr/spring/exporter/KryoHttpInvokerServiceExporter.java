@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,7 +34,13 @@ public class KryoHttpInvokerServiceExporter extends HttpInvokerServiceExporter {
 	 */
 	@Autowired
 	private SerializationManagerProvider serializationManagerProvider;
-
+	
+	/**
+	 * The secure remote invocation executor.
+	 */
+	@Autowired
+	private SessionAwareSecureRemoteInvocationExecutor sessionAwareSecureExecutor;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -59,10 +66,23 @@ public class KryoHttpInvokerServiceExporter extends HttpInvokerServiceExporter {
 			}
 
 			ISerializer serializer = serializationManagerProvider.createSerializer();
+						
+			// if there is a session id write it first, or null if there is not
+			Object sessionId = sessionAwareSecureExecutor.getSessionId();
+			serializer.serialize(sessionId, output);
+			
 			serializer.serialize(result, output);
 		} catch (SerializationException e) {
 			throw new IOException(e);
 		}
 	}
-
+	
+	/**
+	 * Post constructor.
+	 */
+	@PostConstruct
+	protected void init() {
+		setRemoteInvocationExecutor(sessionAwareSecureExecutor);
+	}
+	
 }

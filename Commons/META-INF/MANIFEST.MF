@@ -56,4 +56,5 @@ Require-Bundle: info.novatec.asm;bundle-version="4.0.0",
  info.novatec.spring-context;bundle-version="3.2.16",
  info.novatec.spring-core;bundle-version="3.2.16",
  info.novatec.spring-expression;bundle-version="3.2.16",
- info.novatec.spring-web;bundle-version="3.2.16"
+ info.novatec.spring-web;bundle-version="3.2.16",
+ org.apache.commons.codec;bundle-version="1.3.0"

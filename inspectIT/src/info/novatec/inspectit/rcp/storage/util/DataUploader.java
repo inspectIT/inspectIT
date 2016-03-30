@@ -108,6 +108,7 @@ public class DataUploader {
 				// wrap entity
 				UploadHttpEntityWrapper entityWrapper = new UploadHttpEntityWrapper(entity, transferDataMonitor);
 				httpPost.setEntity(entityWrapper);
+				httpPost.setHeader("sessionid", System.getProperty("shiro.session.id"));
 
 				// execute upload
 				transferDataMonitor.startTransfer(file.toString());

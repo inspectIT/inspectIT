@@ -4,6 +4,8 @@ import info.novatec.inspectit.cmr.cache.IBuffer;
 import info.novatec.inspectit.cmr.property.PropertyManager;
 import info.novatec.inspectit.cmr.property.configuration.PropertySection;
 import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
+import info.novatec.inspectit.cmr.security.CmrSecurityManager;
+import info.novatec.inspectit.cmr.service.rest.unsafe.IUnsafeEntryForCmrManagement;
 import info.novatec.inspectit.cmr.spring.aop.MethodLog;
 import info.novatec.inspectit.cmr.util.ShutdownService;
 import info.novatec.inspectit.communication.DefaultData;
@@ -35,7 +37,7 @@ import org.springframework.stereotype.Service;
  * 
  */
 @Service
-public class CmrManagementService implements ICmrManagementService {
+public class CmrManagementService implements ICmrManagementService, IUnsafeEntryForCmrManagement {
 
 	/**
 	 * Name of the folder where database is stored.
@@ -63,6 +65,12 @@ public class CmrManagementService implements ICmrManagementService {
 	 */
 	@Autowired
 	private PropertyManager propertyManager;
+	
+	/**
+	 * {@link CmrSecurityManager}.
+	 */
+	@Autowired
+	private CmrSecurityManager securityManager;
 
 	/**
 	 * Count of dropped data due to high volume of incoming data objects.
@@ -90,6 +98,13 @@ public class CmrManagementService implements ICmrManagementService {
 	 */
 	@Override
 	public void restart() {
+		if (securityManager.isPermitted("cmrShutdownAndRestartPermission")) {
+			shutdownService.restart();
+		}
+	}
+	
+	@Override
+	public void unsafeRestart() {
 		shutdownService.restart();
 	}
 
@@ -98,6 +113,13 @@ public class CmrManagementService implements ICmrManagementService {
 	 */
 	@Override
 	public void shutdown() {
+		if (securityManager.isPermitted("cmrShutdownAndRestartPermission")) {
+			shutdownService.shutdown();
+		}
+	}
+	
+	@Override
+	public void unsafeShutdown() {
 		shutdownService.shutdown();
 	}
 
