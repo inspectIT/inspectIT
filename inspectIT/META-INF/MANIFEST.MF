@@ -45,7 +45,9 @@ Require-Bundle: org.eclipse.ui,
  info.novatec.spring-context;bundle-version="3.2.16",
  info.novatec.spring-core;bundle-version="3.2.16",
  info.novatec.spring-expression;bundle-version="3.2.16",
- info.novatec.spring-web;bundle-version="3.2.16"
+ info.novatec.spring-web;bundle-version="3.2.16",
+ org.apache.shiro.core;bundle-version="1.2.4",
+ info.novatec.shiro-spring;bundle-version="1.2.4"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

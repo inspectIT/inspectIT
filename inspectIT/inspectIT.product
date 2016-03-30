@@ -119,6 +119,7 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="info.novatec.kryonet"/>
       <plugin id="info.novatec.minlog"/>
       <plugin id="info.novatec.reflectasm"/>
+      <plugin id="info.novatec.shiro-spring"/>
       <plugin id="info.novatec.spring-aop"/>
       <plugin id="info.novatec.spring-beans"/>
       <plugin id="info.novatec.spring-context"/>
@@ -131,11 +132,13 @@ NTSales_Allgemeine_Nutzungsbedingungen_inspectIT_en.doc_V2.0 / 24.07.2012
       <plugin id="javax.validation.api"/>
       <plugin id="jcl.over.slf4j"/>
       <plugin id="log4j.over.slf4j"/>
+      <plugin id="org.apache.commons.codec"/>
       <plugin id="org.apache.commons.collections"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
       <plugin id="org.apache.commons.lang"/>
       <plugin id="org.apache.commons.pool"/>
+      <plugin id="org.apache.shiro.core"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>

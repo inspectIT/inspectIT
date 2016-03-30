@@ -35,14 +35,17 @@
  # spring-osgi-io
  # spring-tx
  # spring-web
+ # shiro-core
+ # shiro-spring
+ # shiro-web
  # validation-api
 which are included in the inspectIT.
 
 --- begin of LICENSE ---
 
-Copyright (c) 1999-2012 The Apache Software Foundation. (cglib, commons-codec, 
-commons-collections, commons-fileupload, commons-io, commons-lang, commons-net 
-, commons-pool, httpclient, httpcore, httpmime)
+Copyright (c) 1999-2015 The Apache Software Foundation. (cglib, commons-codec,
+commons-collections, commons-fileupload, commons-io, commons-lang, commons-net
+, commons-pool, httpclient, httpcore, httpmime, shiro-core, shiro-spring, shiro-web)
 
 Copyright (c) 2002-2011 SpringSource, a division of VMware, Inc. (spring-aop, 
 spring-asm, spring-beans, spring-context, spring-context-support, spring-core, 

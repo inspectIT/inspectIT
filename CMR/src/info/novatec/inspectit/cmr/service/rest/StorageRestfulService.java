@@ -2,6 +2,7 @@ package info.novatec.inspectit.cmr.service.rest;
 
 import info.novatec.inspectit.cmr.service.IStorageService;
 import info.novatec.inspectit.cmr.service.rest.error.JsonError;
+import info.novatec.inspectit.cmr.service.rest.unsafe.IUnsafeStorageService;
 import info.novatec.inspectit.communication.DefaultData;
 import info.novatec.inspectit.communication.data.ClassLoadingInformationData;
 import info.novatec.inspectit.communication.data.CpuInformationData;
@@ -60,7 +61,7 @@ public class StorageRestfulService {
 	 * Reference to the existing {@link IStorageService}.
 	 */
 	@Autowired
-	IStorageService storageService;
+	IUnsafeStorageService storageService;
 
 	/**
 	 * Handling of all the exceptions happening in this controller.
