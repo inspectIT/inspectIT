@@ -1,7 +1,7 @@
 package info.novatec.inspectit.cmr.service.rest;
 
-import info.novatec.inspectit.cmr.service.ICmrManagementService;
 import info.novatec.inspectit.cmr.service.rest.error.JsonError;
+import info.novatec.inspectit.cmr.service.rest.unsafe.IUnsafeCmrManagementService;
 import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
 import info.novatec.inspectit.version.VersionService;
 
@@ -35,7 +35,7 @@ public class CmrRestfulService {
 	 * Reference to the existing {@link IVersioningService}.
 	 */
 	@Autowired
-	private ICmrManagementService cmrManagementService;
+	private IUnsafeCmrManagementService cmrManagementService;
 
 	/**
 	 * Handling of all the exceptions happening in this controller.

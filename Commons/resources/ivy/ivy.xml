@@ -49,7 +49,8 @@
 		<dependency org="org.hibernate.javax.persistence" name="hibernate-jpa-2.1-api" rev="1.0.0.Final" conf="prod->default" />
 		<dependency org="javax.validation" name="validation-api" rev="1.1.0.Final" conf="prod->default" />
 		<dependency org="javax.inject" name="com.springsource.javax.inject" rev="1.0.0" conf="prod->default" />
-		
+		<dependency org="commons-codec" name="commons-codec" rev="1.10" conf="prod->default" />
+				
 		<dependency org="com.google.guava" name="guava-jdk5" rev="13.0" conf="prod->default" />
 		
 		<!-- Test -->

@@ -1,5 +1,6 @@
 package info.novatec.inspectit.cmr;
 
+import info.novatec.inspectit.cmr.security.SecurityInitialization;
 import info.novatec.inspectit.cmr.util.Converter;
 import info.novatec.inspectit.minlog.MinlogToSLF4JLogger;
 import info.novatec.inspectit.version.VersionService;
@@ -106,6 +107,13 @@ public final class CMR {
 			LOGGER.info("Starting CMR in version " + versionService.getVersionAsString()
 					+ ". Please note that inspectIT does not provide any guarantee on backwards compatibility. Only if the version match exactly we ensure that the components are compatible.");
 		}
+
+		SecurityInitialization databaseStartup = (SecurityInitialization) beanFactory.getBean("SecurityInitialization");
+
+		databaseStartup.start();
+
+		LOGGER.info("User-Database initialised.");
+
 	}
 
 	/**

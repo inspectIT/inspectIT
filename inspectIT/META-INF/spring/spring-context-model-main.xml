@@ -34,6 +34,7 @@
 		<lookup-method name="getHttpTimerDataAccessService" bean="httpTimerDataAccessService" />
 		<lookup-method name="getStorageService" bean="storageService" />
 		<lookup-method name="getConfigurationInterfaceService" bean="configurationInterfaceService" />
+		<lookup-method name="getSecurityService" bean="securityService" />
 	</bean>
 
 	<!-- CmrManagementService -->
@@ -57,6 +58,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.ICmrManagementService" />
 		<property name="serviceName" value="CmrManagementService" />
 		<property name="defaultValueOnError" value="false" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- CmrManagementService End -->
 
@@ -81,6 +83,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IExceptionDataAccessService" />
 		<property name="serviceName" value="ExceptionDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- ExceptionDataAccessService End -->
 
@@ -128,6 +131,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IGlobalDataAccessService" />
 		<property name="serviceName" value="GlobalDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- GlobalDataAccessService End -->
 
@@ -152,6 +156,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IInvocationDataAccessService" />
 		<property name="serviceName" value="InvocationDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- InvocationDataAccessService End -->
 
@@ -175,6 +180,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IServerStatusService" />
 		<property name="serviceName" value="ServerStatusService" />
 		<property name="defaultValueOnError" value="false" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- ServerStatusService End -->
 
@@ -199,6 +205,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.ISqlDataAccessService" />
 		<property name="serviceName" value="SqlDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- SqlDataAccessService End -->
 
@@ -223,6 +230,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.ITimerDataAccessService" />
 		<property name="serviceName" value="TimerDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!--TimerDataAccessService End -->
 
@@ -247,6 +255,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IHttpTimerDataAccessService" />
 		<property name="serviceName" value="HttpTimerDataAccessService" />
 		<property name="defaultValueOnError" value="true" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- HttpTimerDataAccessService End -->
 
@@ -271,6 +280,7 @@
 		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.IStorageService" />
 		<property name="serviceName" value="StorageService" />
 		<property name="defaultValueOnError" value="false" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
 	</bean>
 	<!-- StorageService End -->
 	
@@ -297,6 +307,30 @@
 		<property name="defaultValueOnError" value="false" />
 	</bean>
 	<!-- ConfigurationInterfaceService End -->
+	
+		<!-- SecurityService -->
+	<bean id="securityService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
+		<property name="proxyInterfaces">
+			<list>
+				<value>info.novatec.inspectit.cmr.service.ISecurityService</value>
+				<value>info.novatec.inspectit.rcp.repository.service.cmr.ICmrService</value>
+			</list>
+		</property>
+		<property name="target" ref="securityServiceTarget" />
+		<property name="interceptorNames">
+			<list>
+				<value>serviceMethodInterceptor</value>
+				<value>interfaceInterceptor</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="securityServiceTarget" class="info.novatec.inspectit.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="info.novatec.inspectit.cmr.service.ISecurityService" />
+		<property name="serviceName" value="SecurityService" />
+		<property name="remoteInvocationFactory" ref="secureRemoteInvocationFactory"/>
+	</bean>
+	<!-- SecurityService End -->
 
 	<bean id="loggerPostProcessor" class="info.novatec.inspectit.spring.logger.LoggerPostProcessor" />
 
