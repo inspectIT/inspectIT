@@ -61,7 +61,6 @@ public class ClassLoadingInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		when(runtimeBean.getLoadedClassCount()).thenReturn(loadedClassCount);
 		when(runtimeBean.getTotalLoadedClassCount()).thenReturn(totalLoadedClassCount);
@@ -111,7 +110,6 @@ public class ClassLoadingInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		// ------------------------
 		// FIRST UPDATE CALL
@@ -197,7 +195,6 @@ public class ClassLoadingInformationTest extends AbstractLogSupport {
 		when(runtimeBean.getUnloadedClassCount()).thenReturn(unloadedClassCount);
 
 		when(idManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenThrow(new IdNotAvailableException("expected"));
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);

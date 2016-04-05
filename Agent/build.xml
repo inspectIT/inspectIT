@@ -151,6 +151,32 @@
 			</test.classes-to-instrument>
 		</execute-testng>
 	</target>
+	
+	<target name="perf-tests" depends="build-agent,init-perf-tests">
+		<path id="perftest.compile.classpath">
+			<pathelement location="${build.agent.classes}" />
+			<fileset dir="${commons.build.release}" includes="*.jar" />
+			<path refid="lib.prod" />
+			<path refid="lib.prod.commons" />
+		</path>
+
+		<property name="perftest.javac.source" value="1.5"/>
+		<property name="perftest.javac.target" value="1.7"/>
+
+		<execute-perf-tests 
+			perftest.root="${perftest.root}"
+			perftest.javac.source="${perftest.javac.source}" 
+			perftest.javac.target="${perftest.javac.target}"
+			build.perftest.classes="${build.perftest.classes}">
+					
+			<perftest.compile.classpath>
+				<classpath>
+					<path refid="perftest.compile.classpath"/>
+				</classpath>
+			</perftest.compile.classpath>
+
+		</execute-perf-tests>
+	</target>
 
 	<target name="static-analysis" depends="build-agent,init-static-analysis">
 		<!-- Prepare PDM -->
@@ -218,11 +244,6 @@
 		<delete dir="${build.release}/sun1.5-data" failonerror="false" />
 		<mkdir dir="${build.release}/sun1.5-data" />
 		<mkdir dir="${build.release}/sun1.5-data/agent" />
-		<mkdir dir="${build.release}/sun1.5-data/agent/config" />
-
-		<copy todir="${build.release}/sun1.5-data/agent/config">
-			<fileset dir="${config.root}" includes="**/*.*" />
-		</copy>
 		
 		<copy todir="${build.release}/sun1.5-data/agent">
 			<fileset dir="${basedir}" includes="logging-config.xml" />

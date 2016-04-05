@@ -82,4 +82,9 @@ public class TestClass extends AbstractSubTest {
 		return new String[] { "test123", "bla" };
 	}
 
+	// added for class loading delegation testing
+	public Class<?> loadClass(String name) {
+		return null;
+	}
+
 }

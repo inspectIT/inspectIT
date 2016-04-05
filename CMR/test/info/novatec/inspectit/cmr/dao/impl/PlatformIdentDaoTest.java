@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:spring/spring-context-global.xml", "classpath:spring/spring-context-database.xml", "classpath:spring/spring-context-beans.xml",
 		"classpath:spring/spring-context-processors.xml", "classpath:spring/spring-context-storage-test.xml" })
+@SuppressWarnings("PMD")
 public class PlatformIdentDaoTest extends AbstractTransactionalTestNGLogSupport {
 
 	@Autowired

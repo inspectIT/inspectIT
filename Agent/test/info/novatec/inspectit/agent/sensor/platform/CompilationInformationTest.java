@@ -60,7 +60,6 @@ public class CompilationInformationTest extends AbstractLogSupport {
 		when(runtimeBean.getTotalCompilationTime()).thenReturn(totalCompilationTime);
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
@@ -94,7 +93,6 @@ public class CompilationInformationTest extends AbstractLogSupport {
 		long platformIdent = 11L;
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
@@ -150,7 +148,7 @@ public class CompilationInformationTest extends AbstractLogSupport {
 	 * Maybe this test is obsolete because we don't expect an exception to be thrown directly in
 	 * {@link CompilationInformation#getTotalCompilationTime()} but only in
 	 * {@link DefaultRuntimeMXBean#getTotalCompilationTime()}
-	 * 
+	 *
 	 * @throws IdNotAvailableException
 	 */
 	@Test
@@ -162,7 +160,6 @@ public class CompilationInformationTest extends AbstractLogSupport {
 		when(runtimeBean.getTotalCompilationTime()).thenReturn(-1L);
 
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
@@ -197,7 +194,6 @@ public class CompilationInformationTest extends AbstractLogSupport {
 		when(runtimeBean.getTotalCompilationTime()).thenReturn(totalCompilationTime);
 
 		when(idManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenThrow(new IdNotAvailableException("expected"));
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);

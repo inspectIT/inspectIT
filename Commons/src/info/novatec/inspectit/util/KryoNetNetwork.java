@@ -1,8 +1,8 @@
 package info.novatec.inspectit.util;
 
+import info.novatec.inspectit.cmr.service.IAgentService;
 import info.novatec.inspectit.cmr.service.IAgentStorageService;
 import info.novatec.inspectit.cmr.service.IKeepAliveService;
-import info.novatec.inspectit.cmr.service.IRegistrationService;
 import info.novatec.inspectit.kryonet.rmi.ObjectSpace;
 
 import org.springframework.stereotype.Component;
@@ -31,8 +31,8 @@ public final class KryoNetNetwork {
 	 */
 	public void register(Kryo kryo) {
 		// services to export must be registered due to the bug in KryoNet
-		kryo.register(IRegistrationService.class);
 		kryo.register(IAgentStorageService.class);
+		kryo.register(IAgentService.class);
 		kryo.register(IKeepAliveService.class);
 
 		// below classes must match the registration performed in the KryoSerialization class

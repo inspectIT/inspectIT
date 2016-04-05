@@ -1,5 +1,7 @@
 package info.novatec.inspectit.agent.config.impl;
 
+import info.novatec.inspectit.instrumentation.config.impl.JmxSensorTypeConfig;
+
 import org.apache.commons.lang.StringUtils;
 
 /**

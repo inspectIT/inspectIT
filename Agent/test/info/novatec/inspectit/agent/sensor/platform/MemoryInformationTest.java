@@ -84,7 +84,6 @@ public class MemoryInformationTest extends AbstractLogSupport {
 		when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
 		when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		when(osBean.getFreePhysicalMemorySize()).thenReturn(freePhysicalMemory);
 		when(osBean.getFreeSwapSpaceSize()).thenReturn(freeSwapSpace);
@@ -164,7 +163,6 @@ public class MemoryInformationTest extends AbstractLogSupport {
 		when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
 		when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
 		when(idManager.getPlatformId()).thenReturn(platformIdent);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenReturn(sensorTypeIdent);
 
 		// ------------------------
 		// FIRST UPDATE CALL
@@ -305,7 +303,6 @@ public class MemoryInformationTest extends AbstractLogSupport {
 		when(memoryBean.getNonHeapMemoryUsage().getUsed()).thenReturn(usedNonHeapMemorySize);
 
 		when(idManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
-		when(idManager.getRegisteredSensorTypeId(sensorTypeIdent)).thenThrow(new IdNotAvailableException("expected"));
 
 		// there is no current data object available
 		when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);

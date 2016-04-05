@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public class PreparedStatementSensor extends AbstractMethodSensor implements IMethodSensor {
 
@@ -61,8 +61,9 @@ public class PreparedStatementSensor extends AbstractMethodSensor implements IMe
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(Map<String, Object> parameter) {
-		preparedStatementHook = new PreparedStatementHook(timer, idManager, statementStorage, connectionMetaDataStorage, statementReflectionCache, parameter);
+	@Override
+	protected void initHook(Map<String, Object> parameters) {
+		preparedStatementHook = new PreparedStatementHook(timer, idManager, statementStorage, connectionMetaDataStorage, statementReflectionCache, parameters);
 	}
 
 }

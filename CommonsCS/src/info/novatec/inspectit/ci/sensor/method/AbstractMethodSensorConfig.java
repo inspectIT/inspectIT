@@ -1,6 +1,5 @@
 package info.novatec.inspectit.ci.sensor.method;
 
-import info.novatec.inspectit.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.ConnectionSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.HttpSensorConfig;
 import info.novatec.inspectit.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -20,8 +19,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @author Ivan Senic
  * 
  */
-@XmlSeeAlso({ ConnectionMetaDataSensorConfig.class, ConnectionSensorConfig.class, HttpSensorConfig.class, InvocationSequenceSensorConfig.class, PreparedStatementParameterSensorConfig.class,
-		PreparedStatementSensorConfig.class, StatementSensorConfig.class, TimerSensorConfig.class })
+@XmlSeeAlso({ ConnectionSensorConfig.class, HttpSensorConfig.class, InvocationSequenceSensorConfig.class, PreparedStatementParameterSensorConfig.class, PreparedStatementSensorConfig.class,
+		StatementSensorConfig.class, TimerSensorConfig.class })
 public abstract class AbstractMethodSensorConfig implements IMethodSensorConfig {
 
 	/**

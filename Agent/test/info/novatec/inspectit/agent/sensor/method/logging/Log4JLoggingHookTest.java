@@ -2,7 +2,16 @@ package info.novatec.inspectit.agent.sensor.method.logging;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
+
+import info.novatec.inspectit.agent.AbstractLogSupport;
+import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
+import info.novatec.inspectit.agent.core.ICoreService;
+import info.novatec.inspectit.agent.core.IIdManager;
+import info.novatec.inspectit.agent.core.IdNotAvailableException;
+import info.novatec.inspectit.communication.data.LoggingData;
+import info.novatec.inspectit.util.ObjectUtils;
 
 import org.apache.log4j.Level;
 import org.mockito.ArgumentMatcher;
@@ -10,16 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import info.novatec.inspectit.agent.AbstractLogSupport;
-import info.novatec.inspectit.agent.config.impl.RegisteredSensorConfig;
-import info.novatec.inspectit.agent.core.ICoreService;
-import info.novatec.inspectit.agent.core.IIdManager;
-import info.novatec.inspectit.agent.core.IdNotAvailableException;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory;
-import info.novatec.inspectit.agent.sensor.method.logging.severity.SeverityHelperFactory.Framework;
-import info.novatec.inspectit.communication.data.LoggingData;
-import info.novatec.inspectit.util.ObjectUtils;
 
 @SuppressWarnings("PMD")
 public class Log4JLoggingHookTest extends AbstractLogSupport {
@@ -33,8 +32,6 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 	@Mock
 	RegisteredSensorConfig rsc;
 
-	private static final String defaultMessage = "the log message";
-
 	// FATAL - ERROR - WARN - INFO - TRACE - DEBUG
 
 	private static final Level[] possibleLevels = new Level[] { Level.FATAL, Level.ERROR, Level.WARN, Level.INFO, Level.TRACE, Level.DEBUG };
@@ -44,11 +41,11 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 		Object[][] result = new Object[possibleLevels.length * possibleLevels.length][3];
 
 		int counter = 0;
-		for (int pickMinimumLevel = 0; pickMinimumLevel < possibleLevels.length; pickMinimumLevel++) {
-			for (int logLevel = 0; logLevel < possibleLevels.length; logLevel++) {
-				result[counter][0] = possibleLevels[pickMinimumLevel];
-				result[counter][1] = possibleLevels[logLevel];
-				result[counter][2] = possibleLevels[logLevel].isGreaterOrEqual(possibleLevels[pickMinimumLevel]);
+		for (Level possibleLevel : possibleLevels) {
+			for (Level possibleLevel2 : possibleLevels) {
+				result[counter][0] = possibleLevel;
+				result[counter][1] = possibleLevel2;
+				result[counter][2] = possibleLevel2.isGreaterOrEqual(possibleLevel);
 				counter++;
 			}
 		}
@@ -64,8 +61,6 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 		long sensorTypeId = 3l;
 		long platformId = 9l;
 
-		when(idManager.getRegisteredMethodId(methodId)).thenReturn(methodId);
-		when(idManager.getRegisteredSensorTypeId(sensorTypeId)).thenReturn(sensorTypeId);
 		when(idManager.getPlatformId()).thenReturn(platformId);
 
 		String loggingMessage = "a logging message";
