@@ -1,0 +1,75 @@
+package info.novatec.inspectit.cmr.service.rest.unsafe;
+
+import info.novatec.inspectit.cmr.property.configuration.PropertySection;
+import info.novatec.inspectit.cmr.property.update.configuration.ConfigurationUpdate;
+import info.novatec.inspectit.communication.data.cmr.CmrStatusData;
+
+import java.util.Collection;
+
+/**
+ * Part of the special unsafe access to the CMR services built for the REST services.
+ */
+public interface IUnsafeEntryForCmrManagement {
+	
+	/**
+	 * Restarting the CMR without a permission check.
+	 */
+	void unsafeRestart();
+	
+	/**
+	 * Shutting down the CMR without a permission check.
+	 */
+	void unsafeShutdown();
+
+	
+	// ---  unrestricted Methods in safe and unsafe interface
+	
+	/**
+	 * Clear whole buffer.
+	 */
+	void clearBuffer();
+
+	/**
+	 * Returns the current buffer status via {@link CmrStatusData}.
+	 * 
+	 * @return {@link CmrStatusData}.
+	 */
+	CmrStatusData getCmrStatusData();
+
+	/**
+	 * Reports that an amount of data has been dropped.
+	 * 
+	 * @param count
+	 *            Dropped amount.
+	 */
+	void addDroppedDataCount(int count);
+
+	/**
+	 * Returns the number of data objects that have been dropped on the CMR, due to the high
+	 * incoming load.
+	 * 
+	 * @return Returns the number of data objects that have been dropped on the CMR, due to the high
+	 *         incoming load.
+	 */
+	int getDroppedDataCount();
+
+	/**
+	 * Returns the currently existing {@link PropertySection} in the CMR configuration.
+	 * 
+	 * @return Returns the currently existing {@link PropertySection} in the CMR configuration.
+	 */
+	Collection<PropertySection> getConfigurationPropertySections();
+
+	/**
+	 * Updates the current CMR configuration.
+	 * 
+	 * @param configurationUpdate
+	 *            {@link ConfigurationUpdate}
+	 * @param executeRestart
+	 *            If user has selected that restart should be automatically executed.
+	 * @throws Exception
+	 *             If {@link ConfigurationUpdate} contains not valid updates.
+	 */
+	void updateConfiguration(ConfigurationUpdate configurationUpdate, boolean executeRestart) throws Exception;
+
+}

@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import info.novatec.inspectit.cmr.service.IStorageService;
+import info.novatec.inspectit.cmr.service.rest.unsafe.IUnsafeStorageService;
 import info.novatec.inspectit.communication.data.cmr.RecordingData;
 import info.novatec.inspectit.exception.BusinessException;
 import info.novatec.inspectit.storage.StorageData;
@@ -50,7 +51,7 @@ public class StorageRestfulServiceTest {
 	 * Mocked {@link IStorageService}.
 	 */
 	@Mock
-	private IStorageService storageService;
+	private IUnsafeStorageService storageService;
 
 	/**
 	 * {@link StorageData}.

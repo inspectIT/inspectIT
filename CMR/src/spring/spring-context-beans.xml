@@ -70,7 +70,7 @@
 		<property name="scheduledExecutor" value="false" />
 		<property name="beanSingleton" value="true" />
 	</bean>
-	
+
 	<bean id="forkJoinWorkerThreadFactory" class="info.novatec.inspectit.indexing.util.ForkJoinPoolWorkerThreadFactoryFactory">
 		<property name="threadNamePrefix" value="indexingTreeForkJoinThread" />
 	</bean>
@@ -80,4 +80,27 @@
 		<property name="uncaughtExceptionHandler" ref="forkJoinPoolExceptionHandler" />
 	</bean>
 	
+	<!-- Unsafe Services for REST Services -->
+	<bean id="cmrManagementUnsafe" class="info.novatec.inspectit.cmr.service.rest.unsafe.UnsafeCmrManagementService"/>	
+	<bean id="storageServiceUnsafe" class="info.novatec.inspectit.cmr.service.rest.unsafe.UnsafeStorageService"/>
+	
+	<!-- SHIRO SETTINGS -->
+	<bean id="SecurityInitialization" class="info.novatec.inspectit.cmr.security.SecurityInitialization" />
+	
+	<bean id="cmrRealm" class="info.novatec.inspectit.cmr.security.CmrRealm" />
+
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager" />
+	
+	<bean id="cmrSecurityManager" class="info.novatec.inspectit.cmr.security.CmrSecurityManager">
+		<property name="realm" ref="cmrRealm" />
+		<property name="sessionManager" ref="sessionManager" />
+	</bean>
+	
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+		
+	<!-- Secure Spring remoting:  Ensure any Spring Remoting method invocations -->
+	<!-- can be associated with a Subject for security checks. -->
+	<bean id="secureRemoteInvocationExecutor" class="org.apache.shiro.spring.remoting.SecureRemoteInvocationExecutor">
+    	<property name="securityManager" ref="cmrSecurityManager"/>
+	</bean>
 </beans>

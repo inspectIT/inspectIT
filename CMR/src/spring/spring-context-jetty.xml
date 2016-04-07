@@ -208,7 +208,23 @@
 		<property name="pathSpec" value="/remoting/ConfigurationInterfaceService" />
 	</bean>
 	<!-- END -->
+	
+	<!-- Security Service -->
+	<bean name="securityServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
 
+	<bean id="securityServiceServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="securityServiceExporter" />
+		<property name="servlet" ref="securityServiceRequestHandlerServlet" />
+	</bean>
+
+
+	<bean id="securityServiceServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="securityServiceExporter" />
+		<property name="pathSpec" value="/remoting/SecurityService" />
+	</bean>
+	<!-- END -->
+	
 	<!-- DEFAULT SERVER FOR STATIC CONTENT -->
 	<bean id="defaultServlet" class="org.mortbay.jetty.servlet.DefaultServlet" />
 
@@ -243,6 +259,34 @@
 	<bean id="uploadServletMapping" class="org.mortbay.jetty.servlet.ServletMapping">
 		<property name="servletName" value="uploadServletExporter" />
 		<property name="pathSpec" value="/fileupload" />
+	</bean>
+	<!-- END -->
+	
+	<!-- SHIRO FILTER -->
+	<bean id="authorizationFilter" class="info.novatec.inspectit.cmr.security.SessionAwarePermissionsAuthorizationFilter" />
+	
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="cmrSecurityManager" />
+		<property name="filters">
+        	<util:map>
+            	<entry key="permissions" value-ref="authorizationFilter"/>
+        	</util:map>
+    	</property>
+		<property name="filterChainDefinitions">
+			<value>
+				/fileupload = permissions[cmrStoragePermission]
+			</value>
+		</property>
+	</bean>
+	
+	<bean id="shiroFilterHolder" class="org.mortbay.jetty.servlet.FilterHolder">
+		<property name="name" value="shiroFilterExporter" />
+		<property name="filter" ref="shiroFilter" />
+	</bean>
+	
+	<bean id="shiroFilterMapping" class="org.mortbay.jetty.servlet.FilterMapping">
+		<property name="filterName" value="shiroFilterExporter" />
+		<property name="pathSpec" value="*" />
 	</bean>
 	<!-- END -->
 
@@ -323,6 +367,7 @@
 				<ref bean="defaultServletHolder" />
 				<ref bean="uploadServletHolder" />
 				<ref bean="springDispatcherServletHolder" />
+				<ref bean="securityServiceServletHolder" />
 			</list>
 		</property>
 		<property name="servletMappings">
@@ -341,16 +386,19 @@
 				<ref bean="defaultServletMapping" />
 				<ref bean="uploadServletMapping" />
 				<ref bean="springDispatcherServletMapping" />
+				<ref bean="securityServiceServiceMapping" />
 			</list>
 		</property>
 		<property name="filters">
 			<list>
+				<ref bean="shiroFilterHolder" />
 				<ref bean="multiPartFilterHolder" />
 				<ref bean="gzipFilterHolder" />
 			</list>
 		</property>
 		<property name="filterMappings">
 			<list>
+				<ref bean="shiroFilterMapping" />
 				<ref bean="multiPartFilterMapping" />
 				<ref bean="gzipFilterMapping" />
 			</list>

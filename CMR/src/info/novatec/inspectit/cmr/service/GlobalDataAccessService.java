@@ -3,6 +3,7 @@ package info.novatec.inspectit.cmr.service;
 import info.novatec.inspectit.cmr.dao.DefaultDataDao;
 import info.novatec.inspectit.cmr.dao.PlatformIdentDao;
 import info.novatec.inspectit.cmr.model.PlatformIdent;
+import info.novatec.inspectit.cmr.security.CmrSecurityManager;
 import info.novatec.inspectit.cmr.spring.aop.MethodLog;
 import info.novatec.inspectit.cmr.util.AgentStatusDataProvider;
 import info.novatec.inspectit.communication.DefaultData;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,12 +58,22 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	 */
 	@Autowired
 	AgentStatusDataProvider agentStatusProvider;
+	
+	/**
+	 * {@link CmrSecurityManager}.
+	 */
+	@Autowired
+	CmrSecurityManager securityManager;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@MethodLog
 	public Map<PlatformIdent, AgentStatusData> getAgentsOverview() {
+		if (!securityManager.isPermitted("cmrLookAtAgentsPermission")) {
+			return new HashMap<PlatformIdent, AgentStatusData>();
+		}
+		
 		List<PlatformIdent> agents = platformIdentDao.findAll();
 		Map<Long, AgentStatusData> agentStatusMap = agentStatusProvider.getAgentStatusDataMap();
 
@@ -77,6 +89,10 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	 */
 	@MethodLog
 	public PlatformIdent getCompleteAgent(long id) throws BusinessException {
+		if (!securityManager.isPermitted("cmrLookAtAgentsPermission")) {
+			return null;
+		}
+		
 		PlatformIdent platformIdent = platformIdentDao.findInitialized(id);
 		if (null != platformIdent) {
 			return platformIdent;
@@ -91,6 +107,10 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	 */
 	@MethodLog
 	public void deleteAgent(long platformId) throws BusinessException {
+		if (!securityManager.isPermitted("cmrDeleteAgentPermission")) {
+			return;
+		}
+		
 		PlatformIdent platformIdent = platformIdentDao.load(platformId);
 		if (null != platformIdent) {
 			AgentStatusData agentStatusData = agentStatusProvider.getAgentStatusDataMap().get(platformIdent.getId());
@@ -184,6 +204,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	 */
 	@PostConstruct
 	public void postConstruct() throws Exception {
+		ThreadContext.bind(securityManager);
 		if (log.isInfoEnabled()) {
 			log.info("|-Global Data Access Service active...");
 		}

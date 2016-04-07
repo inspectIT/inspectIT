@@ -29,5 +29,5 @@
 	<bean id="versionService" class="info.novatec.inspectit.version.VersionService" />
 	<bean id="versionProvider" class="info.novatec.inspectit.rcp.version.BundleVersionProvider" />
 	<bean id="documentationService" class="info.novatec.inspectit.rcp.documentation.DocumentationService" />
-	
+	<bean class="org.apache.shiro.spring.remoting.SecureRemoteInvocationFactory" id="secureRemoteInvocationFactory"/>
 </beans>
