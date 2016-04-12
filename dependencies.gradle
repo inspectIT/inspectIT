@@ -97,7 +97,7 @@ dependencies {
 
 	/** inspectit.shared.all */
 	sharedAllProd (
-		'org.slf4j:slf4j-api:1.7.5',
+		'org.slf4j:slf4j-api:1.7.21',
 
 		'commons-lang:commons-lang:2.5',
 		'commons-collections:commons-collections:3.2.1',
@@ -142,18 +142,18 @@ dependencies {
 	/** inspectit.agent.java */
 	agentJavaProd (
 		'org.javassist:info.novatec.javassist:3.20.0-GA',
-		'org.slf4j:jcl-over-slf4j:1.7.5',
-		'org.slf4j:log4j-over-slf4j:1.7.5',
-		'ch.qos.logback:logback-core:1.0.13',
-		'ch.qos.logback:logback-classic:1.0.13'
+		'org.slf4j:jcl-over-slf4j:1.7.21',
+		'org.slf4j:log4j-over-slf4j:1.7.21',
+		'ch.qos.logback:logback-core:1.1.7',
+		'ch.qos.logback:logback-classic:1.1.7'
 	)
 
 	/** inspectit.server */
 	serverProd (
-		'org.slf4j:jcl-over-slf4j:1.7.5',
-		'org.slf4j:log4j-over-slf4j:1.7.5',
-		'ch.qos.logback:logback-core:1.0.13',
-		'ch.qos.logback:logback-classic:1.0.13',
+		'org.slf4j:jcl-over-slf4j:1.7.21',
+		'org.slf4j:log4j-over-slf4j:1.7.21',
+		'ch.qos.logback:logback-core:1.1.7',
+		'ch.qos.logback:logback-classic:1.1.7',
 		'uk.org.lidalia:info.novatec.sysout-over-slf4j:1.0.2',
 		
 		'org.springframework:info.novatec.spring-context-support:3.2.16',
@@ -193,10 +193,10 @@ dependencies {
 
 	/** inspectit.server */
 	uiRcpProd (
-		'org.slf4j:jcl-over-slf4j:1.7.5',
-		'org.slf4j:log4j-over-slf4j:1.7.5',
-		'ch.qos.logback:logback-core:1.0.13',
-		'ch.qos.logback:logback-classic:1.0.13',
+		'org.slf4j:jcl-over-slf4j:1.7.21',
+		'org.slf4j:log4j-over-slf4j:1.7.21',
+		'ch.qos.logback:logback-core:1.1.7',
+		'ch.qos.logback:logback-classic:1.1.7',
 		'uk.org.lidalia:info.novatec.sysout-over-slf4j:1.0.2',
 
 		'commons-fileupload:commons-fileupload:1.2.2',
