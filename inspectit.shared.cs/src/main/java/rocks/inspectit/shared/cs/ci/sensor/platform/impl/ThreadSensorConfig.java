@@ -17,7 +17,7 @@ public class ThreadSensorConfig extends AbstractPlatformSensorConfig implements 
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.ThreadInformation";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.ThreadInformation";
 
 	/**
 	 * {@inheritDoc}

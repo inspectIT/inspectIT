@@ -35,7 +35,7 @@ public class Log4jLoggingSensorConfig extends AbstractMethodSensorConfig impleme
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingSensor";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingSensor";
 
 	/**
 	 * Name of the logging technology.

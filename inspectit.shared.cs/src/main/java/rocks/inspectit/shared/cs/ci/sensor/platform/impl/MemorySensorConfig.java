@@ -17,7 +17,7 @@ public class MemorySensorConfig extends AbstractPlatformSensorConfig implements 
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.MemoryInformation";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.MemoryInformation";
 
 	/**
 	 * {@inheritDoc}
