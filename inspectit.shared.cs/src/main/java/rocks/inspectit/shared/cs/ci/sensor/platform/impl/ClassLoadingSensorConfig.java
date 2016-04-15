@@ -17,7 +17,7 @@ public class ClassLoadingSensorConfig extends AbstractPlatformSensorConfig imple
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.ClassLoadingInformation";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.ClassLoadingInformation";
 
 	/**
 	 * {@inheritDoc}

@@ -9,76 +9,86 @@ import org.eclipse.swt.graphics.Image;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
+import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CpuSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * This enumeration holds all available sensor types with their full qualified name and their image.
- * 
+ *
  * @author Patrice Bouillet
  * @author Stefan Siegl
  */
 public enum SensorTypeEnum {
 	/** The timer sensor type. */
-	TIMER("rocks.inspectit.shared.cs.agent.sensor.method.timer.TimerSensor", InspectITImages.IMG_TIMER),
-	/** The average timer sensor type. */
-	AVERAGE_TIMER("rocks.inspectit.shared.cs.agent.sensor.method.averagetimer.AverageTimerSensor", InspectITImages.IMG_TIMER),
+	TIMER(TimerSensorConfig.CLASS_NAME, InspectITImages.IMG_TIMER),
+	/** The average timer sensor type. hard-coded the sensor name as it will be removed in future */
+	AVERAGE_TIMER("rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerSensor", InspectITImages.IMG_TIMER),
 	/** Charting with single timers. */
-	CHARTING_TIMER("rocks.inspectit.shared.cs.agent.sensor.method.averagetimer.ChartingTimer", InspectITImages.IMG_TIMER),
+	CHARTING_TIMER(TimerSensorConfig.CLASS_NAME + "#charting", InspectITImages.IMG_TIMER),
 	/** Charting with multiple timers. */
-	CHARTING_MULTI_TIMER("rocks.inspectit.shared.cs.agent.sensor.method.averagetimer.ChartingMultiTimer", InspectITImages.IMG_TIMER),
+	CHARTING_MULTI_TIMER(TimerSensorConfig.CLASS_NAME + "#chartingMulti", InspectITImages.IMG_TIMER),
 	/** The invocation sequence sensor type. */
-	INVOCATION_SEQUENCE("rocks.inspectit.shared.cs.agent.sensor.method.invocationsequence.InvocationSequenceSensor", InspectITImages.IMG_INVOCATION),
+	INVOCATION_SEQUENCE(InvocationSequenceSensorConfig.CLASS_NAME, InspectITImages.IMG_INVOCATION),
 	/** The sql sensor type. */
-	SQL("rocks.inspectit.shared.cs.agent.sensor.method.jdbc.SQLTimerSensor", InspectITImages.IMG_DATABASE),
+	SQL("rocks.inspectit.agent.java.sensor.method.jdbc", InspectITImages.IMG_DATABASE),
 	/** The jdbc connection sensor type. */
-	JDBC_CONNECTION("rocks.inspectit.shared.cs.agent.sensor.method.jdbc.ConnectionSensor", InspectITImages.IMG_DATABASE, false),
-	/** Meta data from the connection. */
-	JDBC_CONNECTION_META_DATA("rocks.inspectit.shared.cs.agent.sensor.method.jdbc.ConnectionMetaDataSensor", InspectITImages.IMG_DATABASE, false),
+	JDBC_CONNECTION(ConnectionSensorConfig.CLASS_NAME, InspectITImages.IMG_DATABASE, false),
 	/** The jdbc statement sensor type. */
-	JDBC_STATEMENT("rocks.inspectit.shared.cs.agent.sensor.method.jdbc.StatementSensor", InspectITImages.IMG_DATABASE, false),
+	JDBC_STATEMENT(StatementSensorConfig.CLASS_NAME, InspectITImages.IMG_DATABASE, false),
 	/** The jdbc prepared statement sensor type. */
-	JDBC_PREPARED_STATEMENT("rocks.inspectit.shared.cs.agent.sensor.method.jdbc.PreparedStatementSensor", InspectITImages.IMG_DATABASE, false),
+	JDBC_PREPARED_STATEMENT(PreparedStatementSensorConfig.CLASS_NAME, InspectITImages.IMG_DATABASE, false),
 	/** The jdbc prepared statement parameter sensor type. */
-	JDBC_PREPARED_STATEMENT_PARAMETER("rocks.inspectit.shared.cs.agent.sensor.method.jdbc.PreparedStatementParameterSensor", InspectITImages.IMG_DATABASE, false),
+	JDBC_PREPARED_STATEMENT_PARAMETER(PreparedStatementParameterSensorConfig.CLASS_NAME, InspectITImages.IMG_DATABASE, false),
 	/** The exception sensor. */
-	EXCEPTION_SENSOR("rocks.inspectit.shared.cs.agent.sensor.exception.ExceptionSensor", InspectITImages.IMG_EXCEPTION_SENSOR),
+	EXCEPTION_SENSOR(ExceptionSensorConfig.CLASS_NAME, InspectITImages.IMG_EXCEPTION_SENSOR),
 	/** The exception sensor overview. */
-	EXCEPTION_SENSOR_GROUPED("rocks.inspectit.shared.cs.agent.sensor.exception.ExceptionSensorOverview", InspectITImages.IMG_EXCEPTION_SENSOR),
-	/** The combined metrics sensor type. */
-	MARVIN_WORKFLOW("rocks.inspectit.shared.cs.agent.sensor.method.marvintimer.MarvinWorkflowSensor", InspectITImages.IMG_INVOCATION),
+	EXCEPTION_SENSOR_GROUPED(ExceptionSensorConfig.CLASS_NAME + "#grouped", InspectITImages.IMG_EXCEPTION_SENSOR),
 	/** The Http timer sensor type. */
-	HTTP_TIMER_SENSOR("rocks.inspectit.shared.cs.agent.sensor.method.http.HttpSensor", InspectITImages.IMG_HTTP),
+	HTTP_TIMER_SENSOR(HttpSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP),
 	/** The Http timer sensor type. */
-	TAGGED_HTTP_TIMER_SENSOR("rocks.inspectit.shared.cs.agent.sensor.method.http.HttpSensor", InspectITImages.IMG_HTTP),
+	TAGGED_HTTP_TIMER_SENSOR(HttpSensorConfig.CLASS_NAME + "#tagged", InspectITImages.IMG_HTTP),
 	/** The charting Http timer sensor type. */
-	CHARTING_HTTP_TIMER_SENSOR("rocks.inspectit.shared.cs.agent.sensor.method.http.ChartingHttpSensor", InspectITImages.IMG_HTTP),
+	CHARTING_HTTP_TIMER_SENSOR(HttpSensorConfig.CLASS_NAME + "#charting", InspectITImages.IMG_HTTP),
 	/** The classloading information sensor type. */
-	CLASSLOADING_INFORMATION("rocks.inspectit.shared.cs.agent.sensor.platform.ClassLoadingInformation", InspectITImages.IMG_CLASS_OVERVIEW),
+	CLASSLOADING_INFORMATION(ClassLoadingSensorConfig.CLASS_NAME, InspectITImages.IMG_CLASS_OVERVIEW),
 	/** The compilation information sensor type. */
-	COMPILATION_INFORMATION("rocks.inspectit.shared.cs.agent.sensor.platform.CompilationInformation", null),
+	COMPILATION_INFORMATION(CompilationSensorConfig.CLASS_NAME, null),
 	/** The memory information sensor type. */
-	MEMORY_INFORMATION("rocks.inspectit.shared.cs.agent.sensor.platform.MemoryInformation", InspectITImages.IMG_MEMORY_OVERVIEW),
+	MEMORY_INFORMATION(MemorySensorConfig.CLASS_NAME, InspectITImages.IMG_MEMORY_OVERVIEW),
 	/** The cpu information sensor type. */
-	CPU_INFORMATION("rocks.inspectit.shared.cs.agent.sensor.platform.CpuInformation", InspectITImages.IMG_CPU_OVERVIEW),
+	CPU_INFORMATION(CpuSensorConfig.CLASS_NAME, InspectITImages.IMG_CPU_OVERVIEW),
 	/** The runtime information sensor type. */
-	RUNTIME_INFORMATION("rocks.inspectit.shared.cs.agent.sensor.platform.RuntimeInformation", null),
+	RUNTIME_INFORMATION(RuntimeSensorConfig.CLASS_NAME, null),
 	/** The system information sensor type. */
-	SYSTEM_INFORMATION("rocks.inspectit.shared.cs.agent.sensor.platform.SystemInformation", InspectITImages.IMG_SYSTEM_OVERVIEW),
+	SYSTEM_INFORMATION(SystemSensorConfig.CLASS_NAME, InspectITImages.IMG_SYSTEM_OVERVIEW),
 	/** The thread information sensor type. */
-	THREAD_INFORMATION("rocks.inspectit.shared.cs.agent.sensor.platform.ThreadInformation", InspectITImages.IMG_THREADS_OVERVIEW),
+	THREAD_INFORMATION(ThreadSensorConfig.CLASS_NAME, InspectITImages.IMG_THREADS_OVERVIEW),
 	/** The navigation invocation sequence sensor type. */
-	NAVIGATION_INVOCATION("rocks.inspectit.shared.cs.agent.sensor.method.invocationsequence.NavigationInvocationSequenceSensor", InspectITImages.IMG_INVOCATION),
+	NAVIGATION_INVOCATION(InvocationSequenceSensorConfig.CLASS_NAME + "#navigation", InspectITImages.IMG_INVOCATION),
 	/** The multi invocation timer data sensor type. */
-	MULTI_INVOC_DATA("rocks.inspectit.shared.cs.agent.sensor.method.MultiInvocSensor", InspectITImages.IMG_INVOCATION),
+	MULTI_INVOC_DATA(InvocationSequenceSensorConfig.CLASS_NAME + "#multi", InspectITImages.IMG_INVOCATION),
 	/** Log4JLogging sensor. */
-	LOG4J_LOGGING_DATA("rocks.inspectit.shared.cs.agent.sensor.method.logging.Log4JLoggingSensor", InspectITImages.IMG_LOG),
-	/** The JMX sensor data type. */
-	JMX_SENSOR_DATA("rocks.inspectit.shared.cs.agent.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
-	/** The JMX sensor data type. */
-	CHARTING_JMX_SENSOR_DATA("rocks.inspectit.shared.cs.agent.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN);
-	
-	
+	LOG4J_LOGGING_DATA(Log4jLoggingSensorConfig.CLASS_NAME, InspectITImages.IMG_LOG),
+	/** The JMX sensor data type. hard-coded until support for the JMX in CI */
+	JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
+	/** The JMX sensor data type. hard-coded until support for the JMX in CI */
+	CHARTING_JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor#charting", InspectITImages.IMG_BEAN);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full
@@ -109,7 +119,7 @@ public enum SensorTypeEnum {
 
 	/**
 	 * Constructs an element of the enumeration with the given full qualified name string.
-	 * 
+	 *
 	 * @param fqn
 	 *            The full qualified name.
 	 * @param imageName
@@ -122,7 +132,7 @@ public enum SensorTypeEnum {
 
 	/**
 	 * Same as standard constructor but the openable can be specified in addition.
-	 * 
+	 *
 	 * @param fqn
 	 *            The full qualified name.
 	 * @param imageName
@@ -138,7 +148,7 @@ public enum SensorTypeEnum {
 
 	/**
 	 * The full qualified name of the sensor type.
-	 * 
+	 *
 	 * @return The full qualified name.
 	 */
 	public String getFqn() {
@@ -147,7 +157,7 @@ public enum SensorTypeEnum {
 
 	/**
 	 * Returns an element of the enumeration for the given full qualified name.
-	 * 
+	 *
 	 * @param fqn
 	 *            The full qualified class name of the sensor type.
 	 * @return An element of the enumeration.
@@ -159,7 +169,7 @@ public enum SensorTypeEnum {
 	/**
 	 * Returns all elements of the enumeration for the given list of {@link MethodIdentToSensorType}
 	 * objects.
-	 * 
+	 *
 	 * @param methodIdentToSensorTypes
 	 *            The passed {@link MethodIdentToSensorType} objects.
 	 * @return A set of SensorTypeEnum objects.
@@ -182,7 +192,7 @@ public enum SensorTypeEnum {
 
 	/**
 	 * Returns an image descriptor for this sensor type.
-	 * 
+	 *
 	 * @return The sensor type image descriptor.
 	 */
 	public Image getImage() {
@@ -191,7 +201,7 @@ public enum SensorTypeEnum {
 
 	/**
 	 * Returns a displayable name of the sensor type.
-	 * 
+	 *
 	 * @return The displayable name.
 	 */
 	public String getDisplayName() {
@@ -215,7 +225,7 @@ public enum SensorTypeEnum {
 
 	/**
 	 * Returns if this sensor type can be opened somehow.
-	 * 
+	 *
 	 * @return if its openable.
 	 */
 	public boolean isOpenable() {

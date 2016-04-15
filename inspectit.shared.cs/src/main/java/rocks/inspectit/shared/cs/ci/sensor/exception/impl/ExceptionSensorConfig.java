@@ -27,7 +27,7 @@ public class ExceptionSensorConfig extends StringConstraintSensorConfig implemen
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.exception.ExceptionSensor";
 
 	/**
 	 * If sensor mode is enhanced.

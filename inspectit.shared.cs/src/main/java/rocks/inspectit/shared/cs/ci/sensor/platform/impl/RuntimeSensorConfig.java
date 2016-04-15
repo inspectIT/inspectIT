@@ -17,7 +17,7 @@ public class RuntimeSensorConfig extends AbstractPlatformSensorConfig implements
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.RuntimeInformation";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.RuntimeInformation";
 
 	/**
 	 * {@inheritDoc}

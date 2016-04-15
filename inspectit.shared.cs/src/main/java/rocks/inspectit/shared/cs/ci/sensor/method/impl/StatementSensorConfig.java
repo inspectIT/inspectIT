@@ -23,7 +23,7 @@ public class StatementSensorConfig extends StringConstraintSensorConfig implemen
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.StatementSensor";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.StatementSensor";
 
 
 	/**

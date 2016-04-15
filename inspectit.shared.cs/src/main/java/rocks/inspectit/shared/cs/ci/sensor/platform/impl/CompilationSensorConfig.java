@@ -17,7 +17,7 @@ public class CompilationSensorConfig extends AbstractPlatformSensorConfig implem
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.CompilationInformation";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.CompilationInformation";
 
 	/**
 	 * {@inheritDoc}

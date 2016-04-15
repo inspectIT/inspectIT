@@ -23,7 +23,7 @@ public class ConnectionSensorConfig extends AbstractMethodSensorConfig implement
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor";
 
 	/**
 	 * {@inheritDoc}

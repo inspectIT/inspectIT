@@ -23,7 +23,7 @@ public class PreparedStatementSensorConfig extends StringConstraintSensorConfig 
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor";
 
 
 	/**

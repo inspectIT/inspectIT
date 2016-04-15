@@ -17,7 +17,7 @@ public class CpuSensorConfig extends AbstractPlatformSensorConfig implements IPl
 	/**
 	 * Implementing class name.
 	 */
-	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.CpuInformation";
+	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.CpuInformation";
 
 	/**
 	 * {@inheritDoc}
