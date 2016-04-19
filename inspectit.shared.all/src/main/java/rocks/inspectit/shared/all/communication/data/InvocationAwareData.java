@@ -11,6 +11,10 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 
@@ -22,6 +26,7 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
  *
  */
 @Entity
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
@@ -34,6 +39,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 	 * appearances in this invocation.
 	 */
 	@Transient
+	@JsonIgnore
 	private Map<Long, MutableInt> invocationsParentsIdMap;
 
 	/**
@@ -171,6 +177,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 	 *
 	 * @return Double ranging from 0 to 1.
 	 */
+	@JsonIgnore
 	public abstract double getInvocationAffiliationPercentage();
 
 	/**

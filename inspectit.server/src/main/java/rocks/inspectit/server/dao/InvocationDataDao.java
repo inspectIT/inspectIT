@@ -124,6 +124,29 @@ public interface InvocationDataDao {
 	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Collection<Long> invocationIdCollection, int limit, Comparator<? super InvocationSequenceData> comparator);
 
 	/**
+	 * Returns a list of {@link InvocationSequenceData} objects which contain no associations to
+	 * other objects. Thus this list can be used to get an overview of the available invocation
+	 * sequences. The limit defines the size of the list.
+	 *
+	 * @param platformId
+	 *            Platform ID where to look for the objects. If the zero value is passed, looking
+	 *            for the object will be done in all platforms.
+	 * @param fromDate
+	 *            Date include invocation from.
+	 * @param toDate
+	 *            Date include invocation to.
+	 * @param minId
+	 *            Only invocations with equal or higher id are returned.
+	 * @param limit
+	 *            The limit/size of the list.
+	 * @param comparator
+	 *            Comparator to compare results with. If <code>null</code> is passed default
+	 *            comparator will be used (in this case Timestamp comparator).
+	 * @return Returns the list of invocation sequences.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, Comparator<? super InvocationSequenceData> comparator);
+
+	/**
 	 * This service method is used to get all the details of a specific invocation sequence.
 	 *
 	 * @param template

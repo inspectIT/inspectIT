@@ -77,7 +77,11 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 
 		Map<PlatformIdent, AgentStatusData> resultMap = new HashMap<>();
 		for (PlatformIdent platformIdent : agents) {
-			resultMap.put(platformIdent, agentStatusMap.get(platformIdent.getId()));
+			AgentStatusData status = agentStatusMap.get(platformIdent.getId());
+			if (null == status) {
+				status = new AgentStatusData(AgentConnection.NEVER_CONNECTED);
+			}
+			resultMap.put(platformIdent, status);
 		}
 		return resultMap;
 	}

@@ -43,6 +43,7 @@ import rocks.inspectit.shared.cs.indexing.query.provider.impl.IndexQueryProvider
 import rocks.inspectit.shared.cs.indexing.restriction.IIndexQueryRestrictionProcessor;
 import rocks.inspectit.shared.cs.indexing.restriction.impl.CachingIndexQueryRestrictionProcessor;
 
+
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 10)
@@ -112,6 +113,7 @@ public class IndexingTreePerfTest {
 	 */
 	private IndexQuery invocationOverviewQuery;
 
+
 	/**
 	 * ForkJoinPool
 	 */
@@ -137,7 +139,7 @@ public class IndexingTreePerfTest {
 		idProcessor.setCacheIdGenerator(new CacheIdGenerator());
 		IndexerCmrProcessor indexerProcessor = new IndexerCmrProcessor();
 		indexerProcessor.setIndexingTree(indexingTree);
-		List<AbstractCmrDataProcessor> chained = new ArrayList<>(2);
+		List<AbstractCmrDataProcessor> chained = new ArrayList<AbstractCmrDataProcessor>(2);
 		chained.add(idProcessor);
 		chained.add(indexerProcessor);
 		InvocationModifierCmrProcessor invocationProcessor = new InvocationModifierCmrProcessor(chained);
@@ -167,7 +169,7 @@ public class IndexingTreePerfTest {
 		};
 
 		// timer data
-		TimerDataQueryFactory<IndexQuery> timerDataQueryFactory = new TimerDataQueryFactory<>();
+		TimerDataQueryFactory<IndexQuery> timerDataQueryFactory = new TimerDataQueryFactory<IndexQuery>();
 		timerDataQueryFactory.setIndexQueryProvider(indexQueryProvider);
 
 		aggregatedTimerDataQuery = timerDataQueryFactory.getAggregatedTimerDataQuery(new TimerData(null, platformIdent, 0, 0), null, null);
@@ -187,10 +189,10 @@ public class IndexingTreePerfTest {
 		aggregatedTimerDataQuery15MinsTimeframe = timerDataQueryFactory.getAggregatedTimerDataQuery(new TimerData(null, platformIdent, 0, 0), fromDate, toDate);
 
 		// invocation data
-		InvocationSequenceDataQueryFactory<IndexQuery> invocationSequenceDataQueryFactory = new InvocationSequenceDataQueryFactory<>();
+		InvocationSequenceDataQueryFactory<IndexQuery> invocationSequenceDataQueryFactory = new InvocationSequenceDataQueryFactory<IndexQuery>();
 		invocationSequenceDataQueryFactory.setIndexQueryProvider(indexQueryProvider);
 
-		invocationOverviewQuery = invocationSequenceDataQueryFactory.getInvocationSequenceOverview(platformIdent, 0, 0, null, null);
+		invocationOverviewQuery = invocationSequenceDataQueryFactory.getInvocationSequenceOverview(platformIdent, 0, null, null);
 	}
 
 	// Query fork&join benchmarks
@@ -247,7 +249,7 @@ public class IndexingTreePerfTest {
 			return invData;
 		}
 
-		List<InvocationSequenceData> children = new ArrayList<>();
+		List<InvocationSequenceData> children = new ArrayList<InvocationSequenceData>();
 		for (int i = 0; i < childCount;) {
 			int childCountForChild = childCount / 10;
 			if ((childCountForChild + i + 1) > childCount) {

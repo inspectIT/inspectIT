@@ -7,6 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.DefaultData;
 
@@ -31,6 +36,8 @@ import rocks.inspectit.shared.all.communication.DefaultData;
  */
 @Entity
 @Table(indexes = { @Index(name = "time_stamp_idx", columnList = "timeStamp") })
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE)
 public class TimerData extends InvocationAwareData {
 
 	/**
@@ -61,6 +68,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * The variance (optional parameter).
 	 */
+	@JsonIgnore
 	private double variance;
 
 	/**
@@ -101,6 +109,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * Defines if the data should be saved to database and available for charting.
 	 */
+	@JsonIgnore
 	private boolean charting;
 
 	/**
