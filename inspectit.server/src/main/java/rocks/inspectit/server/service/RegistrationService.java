@@ -2,6 +2,7 @@ package rocks.inspectit.server.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -231,6 +232,7 @@ public class RegistrationService implements IRegistrationService {
 
 			// update preferences
 			methodSensorTypeIdent.setSettings(parameters);
+			methodSensorTypeIdent.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
 		} else {
 			// only if the new sensor is registered we need to update the platform ident
@@ -239,12 +241,14 @@ public class RegistrationService implements IRegistrationService {
 			methodSensorTypeIdent.setPlatformIdent(platformIdent);
 			methodSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
 			methodSensorTypeIdent.setSettings(parameters);
+			methodSensorTypeIdent.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
 			sensorTypeIdents.add(methodSensorTypeIdent);
 
 			methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
 			platformIdentDao.saveOrUpdate(platformIdent);
+
 		}
 
 		return methodSensorTypeIdent.getId();
@@ -279,12 +283,14 @@ public class RegistrationService implements IRegistrationService {
 		List<PlatformSensorTypeIdent> platformSensorTypeIdents = platformSensorTypeIdentDao.findByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
 		if (1 == platformSensorTypeIdents.size()) {
 			platformSensorTypeIdent = platformSensorTypeIdents.get(0);
+			platformSensorTypeIdent.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		} else {
 			// only if it s not registered we need updating
 			PlatformIdent platformIdent = platformIdentDao.load(platformId);
 			platformSensorTypeIdent = new PlatformSensorTypeIdent();
 			platformSensorTypeIdent.setPlatformIdent(platformIdent);
 			platformSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
+			platformSensorTypeIdent.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
 			sensorTypeIdents.add(platformSensorTypeIdent);
@@ -309,9 +315,11 @@ public class RegistrationService implements IRegistrationService {
 		List<JmxSensorTypeIdent> jmxSensorTypeIdents = jmxSensorTypeIdentDao.findByExample(platformId, jmxSensorTypeIdent);
 		if (1 == jmxSensorTypeIdents.size()) {
 			jmxSensorTypeIdent = jmxSensorTypeIdents.get(0);
+			jmxSensorTypeIdent.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		} else {
 			PlatformIdent platformIdent = platformIdentDao.load(platformId);
 			jmxSensorTypeIdent.setPlatformIdent(platformIdent);
+			jmxSensorTypeIdent.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
 			sensorTypeIdents.add(jmxSensorTypeIdent);
@@ -326,6 +334,7 @@ public class RegistrationService implements IRegistrationService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@Transactional
 	@MethodLog
 	public long registerJmxSensorDefinitionDataIdent(long platformId, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs, // NOCHK

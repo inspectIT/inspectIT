@@ -10,3 +10,4 @@ class: rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent
 5: methodIdentToSensorTypes
 6: platformIdent
 7: settings
+8: timestamp
