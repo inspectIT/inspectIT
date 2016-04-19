@@ -14,6 +14,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.jpa.MapStringConverter;
 
 /**
@@ -48,6 +51,8 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 	 * The one-to-many association to the {@link MethodIdentToSensorType} objects.
 	 */
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "methodSensorTypeIdent", cascade = CascadeType.ALL)
+	@JsonBackReference
+	@JsonIgnore
 	private Set<MethodIdentToSensorType> methodIdentToSensorTypes = new HashSet<MethodIdentToSensorType>(0);
 
 	/**
@@ -81,6 +86,7 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 	 *
 	 * @return {@link #settings}
 	 */
+	@JsonIgnore
 	public Map<String, Object> getSettings() {
 		return settings;
 	}
