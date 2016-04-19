@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestriction
 
 /**
  * Factory for all queries for the {@link InvocationSequenceData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 @Component
@@ -24,9 +24,9 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 
 	/**
 	 * Returns query for invocation overview.
-	 * 
+	 *
 	 * @param platformId
-	 *            The ID of the platform.
+	 *            The ID of the platform/agent.
 	 * @param methodId
 	 *            The ID of the method.
 	 * @param limit
@@ -35,7 +35,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 	 *            Date include invocation from.
 	 * @param toDate
 	 *            Date include invocation to.
-	 * 
+	 *
 	 * @return Returns the query for invocation sequence overview.
 	 */
 	public E getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate) {
@@ -56,7 +56,39 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 
 	/**
 	 * Returns query for invocation overview.
-	 * 
+	 *
+	 * @param platformId
+	 *            The ID of the platform/agent.
+	 * @param limit
+	 *            The limit/size of the list.
+	 * @param fromDate
+	 *            Date include invocation from.
+	 * @param toDate
+	 *            Date include invocation to.
+	 * @param minId
+	 *            The minimum ID for objects to be returned.
+	 *
+	 * @return Returns the query for invocation sequence overview.
+	 */
+	public E getInvocationSequenceOverview(long platformId, int limit, Date fromDate, Date toDate, long minId) {
+		E query = getIndexQueryProvider().getIndexQuery();
+		query.setPlatformIdent(platformId);
+		query.setMinId(minId);
+		ArrayList<Class<?>> searchedClasses = new ArrayList<Class<?>>();
+		searchedClasses.add(InvocationSequenceData.class);
+		query.setObjectClasses(searchedClasses);
+		if (fromDate != null) {
+			query.setFromDate(new Timestamp(fromDate.getTime()));
+		}
+		if (toDate != null) {
+			query.setToDate(new Timestamp(toDate.getTime()));
+		}
+		return query;
+	}
+
+	/**
+	 * Returns query for invocation overview.
+	 *
 	 * @param platformId
 	 *            Platform ID where to look for the objects. If the zero value is passed, looking
 	 *            for the object will be done in all platforms.
@@ -64,7 +96,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 	 *            Collections of invocations IDs to search.
 	 * @param limit
 	 *            The limit/size of the list.
-	 * 
+	 *
 	 * @return Returns the query for invocation sequence overview.
 	 */
 	public E getInvocationSequenceOverview(long platformId, Collection<Long> invocationIdCollection, int limit) {
