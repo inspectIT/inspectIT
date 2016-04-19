@@ -28,7 +28,7 @@ public class InvocationClonerDataProcessor extends AbstractDataProcessor {
 	protected Collection<Future<Void>> processData(DefaultData defaultData) {
 		if (defaultData instanceof InvocationSequenceData) {
 			InvocationSequenceData invocation = (InvocationSequenceData) defaultData;
-			InvocationSequenceData clone = invocation.getClonedInvocationSequence();
+			InvocationSequenceData clone = invocation.cloneWithoutNestedSequences();
 			Future<Void> future = getStorageWriter().write(clone);
 			if (null != future) {
 				return Collections.singleton(future);

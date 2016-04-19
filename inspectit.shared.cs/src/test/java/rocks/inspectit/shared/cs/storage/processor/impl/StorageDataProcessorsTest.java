@@ -158,8 +158,8 @@ public class StorageDataProcessorsTest {
 		dataProcessor.process(invocationSequenceData);
 		dataProcessor.process(defaultData);
 
-		verify(invocationSequenceData, times(1)).getClonedInvocationSequence();
-		verify(writer, times(1)).write(invocationSequenceData.getClonedInvocationSequence());
+		verify(invocationSequenceData, times(1)).cloneWithoutNestedSequences();
+		verify(writer, times(1)).write(invocationSequenceData.cloneWithoutNestedSequences());
 		verify(writer, times(0)).write(invocationSequenceData);
 	}
 
