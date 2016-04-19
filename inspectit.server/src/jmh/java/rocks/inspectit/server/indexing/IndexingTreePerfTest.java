@@ -190,7 +190,7 @@ public class IndexingTreePerfTest {
 		InvocationSequenceDataQueryFactory<IndexQuery> invocationSequenceDataQueryFactory = new InvocationSequenceDataQueryFactory<>();
 		invocationSequenceDataQueryFactory.setIndexQueryProvider(indexQueryProvider);
 
-		invocationOverviewQuery = invocationSequenceDataQueryFactory.getInvocationSequenceOverview(platformIdent, 0, 0, null, null);
+		invocationOverviewQuery = invocationSequenceDataQueryFactory.getInvocationSequenceOverview(platformIdent, 0, null, null);
 	}
 
 	// Query fork&join benchmarks

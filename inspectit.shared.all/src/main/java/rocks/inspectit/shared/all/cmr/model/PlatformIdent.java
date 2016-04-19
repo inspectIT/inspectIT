@@ -20,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.jpa.ListStringConverter;
 
 /**
@@ -67,17 +69,20 @@ public class PlatformIdent implements Serializable {
 	 * The many-to-many association to the {@link SensorTypeIdent} objects.
 	 */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@JsonIgnore
 	private Set<SensorTypeIdent> sensorTypeIdents = new HashSet<SensorTypeIdent>(0);
 
 	/**
 	 * The one-to-many association to the {@link MethodIdent} objects.
 	 */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@JsonIgnore
 	private Set<MethodIdent> methodIdents = new HashSet<MethodIdent>(0);
 
 	/**
 	 * The one-to-many association to the {@link JmxDefinitionDataIdent} objects.
 	 */
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	private Set<JmxDefinitionDataIdent> jmxDefinitionDataIdents = new HashSet<JmxDefinitionDataIdent>(0);
 

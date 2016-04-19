@@ -5,3 +5,4 @@ class: rocks.inspectit.shared.all.cmr.model.SensorTypeIdent
 #2: platformIdents
 3: fullyQualifiedClassName
 4: platformIdent
+5: timestamp

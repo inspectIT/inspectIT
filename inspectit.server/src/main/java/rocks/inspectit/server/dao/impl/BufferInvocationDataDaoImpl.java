@@ -63,7 +63,7 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	 */
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator) {
-		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, limit, fromDate, toDate);
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, methodId, fromDate, toDate);
 		List<InvocationSequenceData> resultWithChildren;
 		if (null != comparator) {
 			resultWithChildren = super.executeQuery(query, comparator, limit, false);
@@ -91,6 +91,25 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 		List<InvocationSequenceData> realResults = new ArrayList<>(resultWithChildren.size());
+		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {
+			realResults.add(invocationSequenceData.getClonedInvocationSequence());
+		}
+		return realResults;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, Comparator<? super InvocationSequenceData> comparator) {
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequenceOverview(platformId, fromDate, toDate, minId);
+		List<InvocationSequenceData> resultWithChildren;
+		if (null != comparator) {
+			resultWithChildren = super.executeQuery(query, comparator, limit, false);
+		} else {
+			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
+		}
+		List<InvocationSequenceData> realResults = new ArrayList<InvocationSequenceData>(resultWithChildren.size());
 		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {
 			realResults.add(invocationSequenceData.getClonedInvocationSequence());
 		}
