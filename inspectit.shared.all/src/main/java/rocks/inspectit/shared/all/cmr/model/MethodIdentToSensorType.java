@@ -15,12 +15,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 /**
  * Class that connects the {@link MethodIdent} and {@link MethodSensorTypeIdent} and provides
  * additional information on the relationship.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Table(indexes = { @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodIdent"), @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodSensorTypeIdent") })
 @NamedQuery(name = MethodIdentToSensorType.FIND_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, query = "SELECT m from MethodIdentToSensorType m JOIN m.methodIdent mi JOIN m.methodSensorTypeIdent ms WHERE mi.id=:methodIdentId AND ms.id=:methodSensorTypeIdentId")
@@ -57,6 +59,7 @@ public class MethodIdentToSensorType implements Serializable {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "methodIdent")
+	@JsonBackReference
 	private MethodIdent methodIdent;
 
 	/**
@@ -65,6 +68,7 @@ public class MethodIdentToSensorType implements Serializable {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "methodSensorTypeIdent")
+	@JsonBackReference
 	private MethodSensorTypeIdent methodSensorTypeIdent;
 
 	/**
@@ -81,7 +85,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Constructor that allows setting all values.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            {@link MethodIdent}.
 	 * @param methodSensorTypeIdent
@@ -98,7 +102,7 @@ public class MethodIdentToSensorType implements Serializable {
 	/**
 	 * Returns if the {@link MethodIdentToSensorType} is active, meaning if the latest agent
 	 * registration included this instrumentation.
-	 * 
+	 *
 	 * @return True if the latest agent registration included the {@link MethodSensorTypeIdent}
 	 *         instrumentation on {@link MethodIdent}.
 	 */
@@ -108,7 +112,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public Long getId() {
@@ -117,7 +121,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -127,7 +131,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Gets {@link #methodIdent}.
-	 * 
+	 *
 	 * @return {@link #methodIdent}
 	 */
 	public MethodIdent getMethodIdent() {
@@ -136,7 +140,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Sets {@link #methodIdent}.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            New value for {@link #methodIdent}
 	 */
@@ -146,7 +150,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Gets {@link #methodSensorTypeIdent}.
-	 * 
+	 *
 	 * @return {@link #methodSensorTypeIdent}
 	 */
 	public MethodSensorTypeIdent getMethodSensorTypeIdent() {
@@ -155,7 +159,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Sets {@link #methodSensorTypeIdent}.
-	 * 
+	 *
 	 * @param methodSensorTypeIdent
 	 *            New value for {@link #methodSensorTypeIdent}
 	 */
@@ -165,7 +169,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Gets {@link #timestamp}.
-	 * 
+	 *
 	 * @return {@link #timestamp}
 	 */
 	public Timestamp getTimestamp() {
@@ -174,7 +178,7 @@ public class MethodIdentToSensorType implements Serializable {
 
 	/**
 	 * Sets {@link #timestamp}.
-	 * 
+	 *
 	 * @param timestamp
 	 *            New value for {@link #timestamp}
 	 */

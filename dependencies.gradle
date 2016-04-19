@@ -124,6 +124,9 @@ dependencies {
 		'javax.validation:validation-api:1.1.0.Final',
 		'javax.inject:com.springsource.javax.inject:1.0.0',
 
+		'org.codehaus.jackson:jackson-core-asl:1.9.13',
+		'org.codehaus.jackson:jackson-mapper-asl:1.9.13',
+
 		'com.google.guava:guava-jdk5:13.0'
 	) 
 	sharedAllTest (
