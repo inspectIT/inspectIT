@@ -11,15 +11,17 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 
 /**
  * This is an abstract class for all object that can be found in invocations and should be aware of
  * it.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 public abstract class InvocationAwareData extends MethodSensorData {
@@ -44,7 +46,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Creates a new instance.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            the timestamp.
 	 * @param platformIdent
@@ -60,7 +62,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Creates a new instance.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            the timestamp.
 	 * @param platformIdent
@@ -78,7 +80,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Adds one invocation sequence data ID to the set of invocation IDs where this object is found.
-	 * 
+	 *
 	 * @param id
 	 *            Invocation id.
 	 */
@@ -87,7 +89,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 			if (null == invocationsParentsIdMap) {
 				invocationsParentsIdMap = new HashMap<Long, MutableInt>();
 			}
-			MutableInt count = (MutableInt) invocationsParentsIdMap.get(id);
+			MutableInt count = invocationsParentsIdMap.get(id);
 			if (null != count) {
 				count.increase();
 			} else {
@@ -98,9 +100,10 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Returns set of invocation parents IDS.
-	 * 
+	 *
 	 * @return Returns set of invocation parents IDS.
 	 */
+	@JsonIgnore
 	public Set<Long> getInvocationParentsIdSet() {
 		if (null != invocationsParentsIdMap) {
 			return invocationsParentsIdMap.keySet();
@@ -111,7 +114,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Gets {@link #invocationsParentsIdMap}.
-	 * 
+	 *
 	 * @return {@link #invocationsParentsIdMap}
 	 */
 	public Map<Long, MutableInt> getInvocationsParentsIdMap() {
@@ -120,7 +123,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Sets {@link #invocationsParentsIdMap}.
-	 * 
+	 *
 	 * @param invocationsParentsIdMap
 	 *            New value for {@link #invocationsParentsIdMap}
 	 */
@@ -130,7 +133,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Returns how much objects are contained in the invocation parents.
-	 * 
+	 *
 	 * @return Returns how much objects are contained in the invocation parents.
 	 */
 	public int getObjectsInInvocationsCount() {
@@ -146,7 +149,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 	/**
 	 * Aggregates the data correlated to the invocation parents. Note that this method has to be
 	 * called from the subclasses when they implement any kind of aggregation.
-	 * 
+	 *
 	 * @param invocationAwareData
 	 *            Data to aggregate to current object.
 	 */
@@ -168,9 +171,10 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Returns the percentage of objects that are found in invocations as double.
-	 * 
+	 *
 	 * @return Double ranging from 0 to 1.
 	 */
+	@JsonIgnore
 	public abstract double getInvocationAffiliationPercentage();
 
 	/**
@@ -190,6 +194,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -200,6 +205,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -224,6 +230,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
@@ -242,9 +249,9 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 	/**
 	 * Simple mutable integer class for internal purposes.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static class MutableInt implements Serializable {
 
@@ -266,7 +273,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 		/**
 		 * Constructor that sets initial value.
-		 * 
+		 *
 		 * @param value
 		 *            Initial value.
 		 */
@@ -290,7 +297,7 @@ public abstract class InvocationAwareData extends MethodSensorData {
 
 		/**
 		 * Adds delta to the value.
-		 * 
+		 *
 		 * @param delta
 		 *            Delta.
 		 */

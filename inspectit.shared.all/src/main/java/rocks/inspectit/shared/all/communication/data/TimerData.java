@@ -7,12 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * The timer data class stores information about the execution time of a java method.
- * 
+ *
  * Notes
  * <ul>
  * <li>This class is used for multiple purposes over time. Be aware that although this class
@@ -24,13 +27,14 @@ import rocks.inspectit.shared.all.communication.DefaultData;
  * these deal with the internals in a correct way (we must initialize some fields seemingly in a
  * strange way but we want to improve performance and size)</li>
  * </ul>
- * 
+ *
  * @author Patrice Bouillet
  * @author Stefan Siegl
- * 
+ *
  */
 @Entity
 @Table(indexes = { @Index(name = "time_stamp_idx", columnList = "timeStamp") })
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class TimerData extends InvocationAwareData {
 
 	/**
@@ -101,6 +105,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * Defines if the data should be saved to database and available for charting.
 	 */
+	@JsonIgnore
 	private boolean charting;
 
 	/**
@@ -111,7 +116,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Creates a new instance of the <code>Timerdata</code>.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            the timestamp.
 	 * @param platformIdent
@@ -127,7 +132,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Creates a new instance of the <code>Timerdata</code>.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            the timestamp.
 	 * @param platformIdent
@@ -145,7 +150,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * <b> CAREFUL! min is initialized to -1 due to data transfer sizes! </b>
-	 * 
+	 *
 	 * @return the min time.
 	 */
 	public double getMin() {
@@ -154,7 +159,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets the minimum and deals with the -1 initialization!.
-	 * 
+	 *
 	 * @param min
 	 *            the minimum value to be set to if it is smaller than the minimum.
 	 */
@@ -168,7 +173,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #max}.
-	 * 
+	 *
 	 * @return {@link #max}
 	 */
 	public double getMax() {
@@ -177,7 +182,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets the maximum if the given value is bigger than the current value.
-	 * 
+	 *
 	 * @param max
 	 *            the maximum to be set
 	 */
@@ -187,16 +192,17 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #count}.
-	 * 
+	 *
 	 * @return {@link #count}
 	 */
+	@JsonIgnore
 	public long getCount() {
 		return count;
 	}
 
 	/**
 	 * Sets {@link #count}.
-	 * 
+	 *
 	 * @param count
 	 *            New value for {@link #count}
 	 */
@@ -213,7 +219,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #duration}.
-	 * 
+	 *
 	 * @return {@link #duration}
 	 */
 	public double getDuration() {
@@ -222,7 +228,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #duration}.
-	 * 
+	 *
 	 * @param duration
 	 *            New value for {@link #duration}
 	 */
@@ -232,7 +238,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * adds the given time to the duration.
-	 * 
+	 *
 	 * @param duration
 	 *            the duration to add.
 	 */
@@ -242,16 +248,17 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Returns average time.
-	 * 
+	 *
 	 * @return Returns average time.
 	 */
+	@JsonIgnore
 	public double getAverage() {
 		return duration / count;
 	}
 
 	/**
 	 * Gets {@link #variance}.
-	 * 
+	 *
 	 * @return {@link #variance}
 	 */
 	public double getVariance() {
@@ -260,7 +267,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #variance}.
-	 * 
+	 *
 	 * @param variance
 	 *            New value for {@link #variance}
 	 */
@@ -270,7 +277,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Checks if this data object contains captured parameters.
-	 * 
+	 *
 	 * @return if this data object contains captured parameters.
 	 */
 	public boolean providesCapturedParameters() {
@@ -279,7 +286,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets the minimum and deals with the -1 initialization!.
-	 * 
+	 *
 	 * @param min
 	 *            the minimum value to be set to if it is smaller than the minimum.
 	 */
@@ -293,7 +300,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets the maximum if the given value is bigger than the current value.
-	 * 
+	 *
 	 * @param time
 	 *            the maximum to be set
 	 */
@@ -304,7 +311,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isCpuMetricDataAvailable() </code> if cpu metric
 	 * data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return the cpuMin
 	 */
 	public double getCpuMin() {
@@ -314,7 +321,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isCpuMetricDataAvailable() </code> if cpu metric
 	 * data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return the cpuMax
 	 */
 	public double getCpuMax() {
@@ -324,7 +331,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isCpuMetricDataAvailable() </code> if cpu metric
 	 * data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return the cpuDuration
 	 */
 	public double getCpuDuration() {
@@ -350,9 +357,10 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isCpuMetricDataAvailable() </code> if cpu metric
 	 * data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return the cpuAverage
 	 */
+	@JsonIgnore
 	public double getCpuAverage() {
 		return cpuDuration / count;
 	}
@@ -360,7 +368,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isExclusiveMetricDataAvailable() </code> if cpu
 	 * metric data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return exclusive count
 	 */
 	public long getExclusiveCount() {
@@ -369,7 +377,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #exclusiveCount}.
-	 * 
+	 *
 	 * @param exclusiveCount
 	 *            New value for {@link #exclusiveCount}
 	 */
@@ -387,7 +395,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isExclusiveMetricDataAvailable() </code> if cpu
 	 * metric data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return duration
 	 */
 	public double getExclusiveDuration() {
@@ -396,7 +404,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #exclusiveDuration}.
-	 * 
+	 *
 	 * @param exclusiveDuration
 	 *            New value for {@link #exclusiveDuration}
 	 */
@@ -406,7 +414,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * adds the given time to the exclusive duration.
-	 * 
+	 *
 	 * @param exclusiveDuration
 	 *            the duration to add.
 	 */
@@ -417,7 +425,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isExclusiveMetricDataAvailable() </code> if cpu
 	 * metric data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return exlusive max
 	 */
 	public double getExclusiveMax() {
@@ -426,7 +434,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets the maximum if the given value is bigger than the current value.
-	 * 
+	 *
 	 * @param max
 	 *            the maximum to be set
 	 */
@@ -437,7 +445,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * <b> Notice: ensure to check using the <code> isExclusiveMetricDataAvailable() </code> if cpu
 	 * metric data is in fact available, otherwise you might get strange results. </b>
-	 * 
+	 *
 	 * @return the exclusive minimum time.
 	 */
 	public double getExclusiveMin() {
@@ -446,7 +454,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets the minimum and deals with the -1 initialization!.
-	 * 
+	 *
 	 * @param min
 	 *            the minimum value to be set to if it is smaller than the minimum.
 	 */
@@ -460,9 +468,10 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Returns the average exclusive time calculated as exclusive duration % count.
-	 * 
+	 *
 	 * @return Average exclusive time.
 	 */
+	@JsonIgnore
 	public double getExclusiveAverage() {
 		return exclusiveDuration / exclusiveCount;
 	}
@@ -501,7 +510,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #charting}.
-	 * 
+	 *
 	 * @return {@link #charting}
 	 */
 	public boolean isCharting() {
@@ -510,7 +519,7 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #charting}.
-	 * 
+	 *
 	 * @param charting
 	 *            New value for {@link #charting}
 	 */
@@ -521,6 +530,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DefaultData finalizeData() {
 		// no need
 		return this;
@@ -529,6 +539,7 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(0, 1, 0, 0, 2, 10);
@@ -542,15 +553,17 @@ public class TimerData extends InvocationAwareData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public double getInvocationAffiliationPercentage() {
 		return (double) getObjectsInInvocationsCount() / count;
 	}
 
 	/**
 	 * Whether or not this timer data contains cpu related metrics.
-	 * 
+	 *
 	 * @return Whether or not this timer data contains cpu related metrics.
 	 */
+	@JsonIgnore
 	public boolean isCpuMetricDataAvailable() {
 		// cpu duration cannot be used as comparison, because:
 		// in the timer hook cpu time is calculated using an JVM JMX bean that only has a resolution
@@ -562,25 +575,27 @@ public class TimerData extends InvocationAwareData {
 
 	/**
 	 * Whether or not this timer data contains exclusive time metrics.
-	 * 
+	 *
 	 * @return Whether or not this timer data contains exclusive time metrics.
 	 */
+	@JsonIgnore
 	public boolean isExclusiveTimeDataAvailable() {
 		return exclusiveMin != -1;
 	}
 
 	/**
 	 * Whether or not this timer data contains time metrics.
-	 * 
+	 *
 	 * @return Whether or not this timer data contains time metrics.
 	 */
+	@JsonIgnore
 	public boolean isTimeDataAvailable() {
 		return min != -1;
 	}
 
 	/**
 	 * Aggregates the values given in the supplied timer data parameter to the objects data.
-	 * 
+	 *
 	 * @param timerData
 	 *            Data to be aggregated into current object.
 	 */
