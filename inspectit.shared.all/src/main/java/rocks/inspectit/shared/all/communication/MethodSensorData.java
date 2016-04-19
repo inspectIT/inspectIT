@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
@@ -125,6 +127,7 @@ public abstract class MethodSensorData extends DefaultData {
 	 *
 	 * @return {@link #parameterContentData}
 	 */
+	@JsonIgnore
 	public Set<ParameterContentData> getParameterContentData() {
 		return parameterContentData;
 	}

@@ -15,6 +15,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 /**
  * Class that connects the {@link MethodIdent} and {@link MethodSensorTypeIdent} and provides
  * additional information on the relationship.
@@ -57,6 +59,7 @@ public class MethodIdentToSensorType implements Serializable {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "methodIdent")
+	@JsonBackReference
 	private MethodIdent methodIdent;
 
 	/**
@@ -65,6 +68,7 @@ public class MethodIdentToSensorType implements Serializable {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "methodSensorTypeIdent")
+	@JsonBackReference
 	private MethodSensorTypeIdent methodSensorTypeIdent;
 
 	/**

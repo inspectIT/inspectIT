@@ -238,6 +238,7 @@ public class RegistrationService implements IRegistrationService {
 
 			methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
 			platformIdentDao.saveOrUpdate(platformIdent);
+
 		}
 
 		return methodSensorTypeIdent.getId();

@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 
@@ -18,6 +23,7 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
  * @author Patrice Bouillet
  * @see InvocationSequenceDataHelper
  */
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class InvocationSequenceData extends MethodSensorData {
 
 	/**
@@ -28,36 +34,43 @@ public class InvocationSequenceData extends MethodSensorData {
 	/**
 	 * The nested invocation traces are stored in this list.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 	private List<InvocationSequenceData> nestedSequences = new ArrayList<InvocationSequenceData>(0);
 
 	/**
 	 * The parent sequence of this sequence if there is any.
 	 */
+	@JsonIgnore
 	private InvocationSequenceData parentSequence;
 
 	/**
 	 * The associated timer data object. Can be <code>null</code>.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 	private TimerData timerData;
 
 	/**
 	 * The associated sql statement data object. Can be <code>null</code>.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 	private SqlStatementData sqlStatementData;
 
 	/**
 	 * The associated exception sensor data object. Can be <code>null</code>.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 	private List<ExceptionSensorData> exceptionSensorDataObjects;
 
 	/**
 	 * The associated logging data. Can be <code>null</code>.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 	private LoggingData loggingData;
 
 	/**
 	 * The position if parent sequence is not <code>null</code>.
 	 */
+	@JsonIgnore
 	private long position;
 
 	/**
@@ -68,11 +81,13 @@ public class InvocationSequenceData extends MethodSensorData {
 	/**
 	 * The start time of this invocation sequence.
 	 */
+	@JsonIgnore
 	private double start;
 
 	/**
 	 * The end time of this invocation sequence.
 	 */
+	@JsonIgnore
 	private double end;
 
 	/**
@@ -83,11 +98,13 @@ public class InvocationSequenceData extends MethodSensorData {
 	/**
 	 * If the {@link SqlStatementData} is available in this or one of the nested invocations.
 	 */
+	@JsonIgnore
 	private Boolean nestedSqlStatements;
 
 	/**
 	 * If the {@link ExceptionSensorData} is available in this or one of the nested invocations.
 	 */
+	@JsonIgnore
 	private Boolean nestedExceptions;
 
 	/**

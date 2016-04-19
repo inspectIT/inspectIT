@@ -132,6 +132,8 @@ END OF TERMS AND CONDITIONS
       <plugin id="info.novatec.spring-web"/>
       <plugin id="info.novatec.swtgraphics2d"/>
       <plugin id="info.novatec.sysout-over-slf4j"/>
+      <plugin id="jackson-core-asl"/>
+      <plugin id="jackson-mapper-asl"/>
       <plugin id="javax.servlet"/>
       <plugin id="javax.validation.api"/>
       <plugin id="jcl.over.slf4j"/>
