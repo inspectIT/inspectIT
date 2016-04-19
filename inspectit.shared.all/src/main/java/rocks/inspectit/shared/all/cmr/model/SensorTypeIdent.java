@@ -1,6 +1,7 @@
 package rocks.inspectit.shared.all.cmr.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -15,6 +16,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * The Sensor Type Ident class is the abstract base class for the {@link MethodSensorTypeIdent} and
@@ -47,6 +51,7 @@ public abstract class SensorTypeIdent implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "platformIdent", nullable = false)
+	@JsonIgnore
 	private PlatformIdent platformIdent;
 
 	/**
@@ -54,6 +59,32 @@ public abstract class SensorTypeIdent implements Serializable {
 	 */
 	@NotNull
 	private String fullyQualifiedClassName;
+
+	/**
+	 * The timestamp of initialization.
+	 */
+	@NotNull
+	@JsonIgnore
+	private Timestamp timestamp;
+
+	/**
+	 * Gets {@link #timestamp}.
+	 *
+	 * @return {@link #timestamp}
+	 */
+	public Timestamp getTimeStamp() {
+		return timestamp;
+	}
+
+	/**
+	 * Sets {@link #timestamp}.
+	 *
+	 * @param timestamp
+	 *            New value for {@link #timestamp}
+	 */
+	public void setTimeStamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
+	}
 
 	/**
 	 * Gets {@link #id}.
@@ -110,6 +141,17 @@ public abstract class SensorTypeIdent implements Serializable {
 	 */
 	public void setFullyQualifiedClassName(String fullyQualifiedClassName) {
 		this.fullyQualifiedClassName = fullyQualifiedClassName;
+	}
+
+	/**
+	 * Returns if the {@link SensorTypeIdent} is active, meaning if the latest sensor registration
+	 * included this instrumentation.
+	 *
+	 * @return True if the latest sensor registration included the {@link SensorTypeIdent}
+	 */
+	@JsonProperty("active")
+	public boolean isActive() {
+		return timestamp.after(getPlatformIdent().getTimeStamp());
 	}
 
 	/**

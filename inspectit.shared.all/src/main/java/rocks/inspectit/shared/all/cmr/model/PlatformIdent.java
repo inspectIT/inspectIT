@@ -20,14 +20,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.jpa.ListStringConverter;
 
 /**
  * The Platform Ident class is used to store the unique information of an Agent, so every Agent in
  * different JVMs on the same target server receives a different one.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = PlatformIdent.FIND_ALL, query = "SELECT p FROM PlatformIdent p"),
@@ -67,17 +69,20 @@ public class PlatformIdent implements Serializable {
 	 * The many-to-many association to the {@link SensorTypeIdent} objects.
 	 */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@JsonIgnore
 	private Set<SensorTypeIdent> sensorTypeIdents = new HashSet<SensorTypeIdent>(0);
 
 	/**
 	 * The one-to-many association to the {@link MethodIdent} objects.
 	 */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@JsonIgnore
 	private Set<MethodIdent> methodIdents = new HashSet<MethodIdent>(0);
 
 	/**
 	 * The one-to-many association to the {@link JmxDefinitionDataIdent} objects.
 	 */
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	private Set<JmxDefinitionDataIdent> jmxDefinitionDataIdents = new HashSet<JmxDefinitionDataIdent>(0);
 
@@ -102,7 +107,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public Long getId() {
@@ -111,7 +116,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -121,7 +126,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #timeStamp}.
-	 * 
+	 *
 	 * @return {@link #timeStamp}
 	 */
 	public Timestamp getTimeStamp() {
@@ -130,7 +135,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #timeStamp}.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            New value for {@link #timeStamp}
 	 */
@@ -140,7 +145,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #sensorTypeIdents}.
-	 * 
+	 *
 	 * @return {@link #sensorTypeIdents}
 	 */
 	public Set<SensorTypeIdent> getSensorTypeIdents() {
@@ -149,7 +154,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #sensorTypeIdents}.
-	 * 
+	 *
 	 * @param sensorTypeIdents
 	 *            New value for {@link #sensorTypeIdents}
 	 */
@@ -159,7 +164,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #methodIdents}.
-	 * 
+	 *
 	 * @return {@link #methodIdents}
 	 */
 	public Set<MethodIdent> getMethodIdents() {
@@ -168,7 +173,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #methodIdents}.
-	 * 
+	 *
 	 * @param methodIdents
 	 *            New value for {@link #methodIdents}
 	 */
@@ -178,7 +183,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #definedIPs}.
-	 * 
+	 *
 	 * @return {@link #definedIPs}
 	 */
 	public List<String> getDefinedIPs() {
@@ -187,7 +192,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #definedIPs}.
-	 * 
+	 *
 	 * @param definedIPs
 	 *            New value for {@link #definedIPs}
 	 */
@@ -197,7 +202,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #agentName}.
-	 * 
+	 *
 	 * @return {@link #agentName}
 	 */
 	public String getAgentName() {
@@ -206,7 +211,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #agentName}.
-	 * 
+	 *
 	 * @param agentName
 	 *            New value for {@link #agentName}
 	 */
@@ -216,7 +221,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #version}.
-	 * 
+	 *
 	 * @return {@link #version}
 	 */
 	public String getVersion() {
@@ -225,7 +230,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #version}.
-	 * 
+	 *
 	 * @param version
 	 *            New value for {@link #version}
 	 */
@@ -235,7 +240,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Gets {@link #jmxDefinitionDataIdents}.
-	 * 
+	 *
 	 * @return {@link #jmxDefinitionDataIdents}
 	 */
 	public Set<JmxDefinitionDataIdent> getJmxDefinitionDataIdents() {
@@ -244,7 +249,7 @@ public class PlatformIdent implements Serializable {
 
 	/**
 	 * Sets {@link #jmxDefinitionDataIdents}.
-	 * 
+	 *
 	 * @param jmxDefinitionDataIdents
 	 *            New value for {@link #jmxDefinitionDataIdents}
 	 */
