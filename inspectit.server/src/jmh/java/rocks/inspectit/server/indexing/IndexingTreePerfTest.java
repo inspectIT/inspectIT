@@ -113,25 +113,25 @@ public class IndexingTreePerfTest {
 	 */
 	private IndexQuery invocationOverviewQuery;
 
-	
+
 	/**
 	 * ForkJoinPool
 	 */
 	private ForkJoinPool forkJoinPool;
-	
+
 	/**
 	 * Number of processors used by the forkJoinPool
 	 */
 	@Param({"4", "8"})
 	private int numberOfProcessors;
-	
+
 	/**
 	 * Set up, prepare indexing tree.
 	 */
 	@Setup(Level.Trial)
 	public void initIndexingTree() throws Exception {
 		forkJoinPool = new ForkJoinPool(numberOfProcessors);
-		
+
 		RootBranchFactory rootBranchFactory = new RootBranchFactory();
 		indexingTree = rootBranchFactory.getObject();
 
@@ -192,7 +192,7 @@ public class IndexingTreePerfTest {
 		InvocationSequenceDataQueryFactory<IndexQuery> invocationSequenceDataQueryFactory = new InvocationSequenceDataQueryFactory<IndexQuery>();
 		invocationSequenceDataQueryFactory.setIndexQueryProvider(indexQueryProvider);
 
-		invocationOverviewQuery = invocationSequenceDataQueryFactory.getInvocationSequenceOverview(platformIdent, 0, 0, null, null);
+		invocationOverviewQuery = invocationSequenceDataQueryFactory.getInvocationSequenceOverview(platformIdent, 0, null, null);
 	}
 
 	// Query fork&join benchmarks
@@ -215,7 +215,7 @@ public class IndexingTreePerfTest {
 	public List<DefaultData> queryInvocationOverviewForkJoin() {
 		return indexingTree.query(invocationOverviewQuery, forkJoinPool);
 	}
-	
+
 	// Query benchmarks without fork&join
 	@Benchmark
 	public List<DefaultData> queryTimerData() {
@@ -252,7 +252,7 @@ public class IndexingTreePerfTest {
 		List<InvocationSequenceData> children = new ArrayList<InvocationSequenceData>();
 		for (int i = 0; i < childCount;) {
 			int childCountForChild = childCount / 10;
-			if (childCountForChild + i + 1 > childCount) {
+			if ((childCountForChild + i + 1) > childCount) {
 				childCountForChild = childCount - i - 1;
 			}
 			InvocationSequenceData child = getInvocationSequenceDataInstance(childCountForChild);

@@ -16,6 +16,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * The Sensor Type Ident class is the abstract base class for the {@link MethodSensorTypeIdent} and
  * {@link PlatformSensorTypeIdent} and {@link JmxSensorTypeIdent} classes.
@@ -27,6 +31,7 @@ import javax.validation.constraints.NotNull;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length = 4, name = "DISCRIMINATOR")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "platformIdent", "fullyQualifiedClassName" }))
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE)
 public abstract class SensorTypeIdent implements Serializable {
 
 	/**
@@ -47,6 +52,7 @@ public abstract class SensorTypeIdent implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "platformIdent", nullable = false)
+	@JsonIgnore
 	private PlatformIdent platformIdent;
 
 	/**
@@ -119,8 +125,8 @@ public abstract class SensorTypeIdent implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fullyQualifiedClassName == null) ? 0 : fullyQualifiedClassName.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = (prime * result) + ((fullyQualifiedClassName == null) ? 0 : fullyQualifiedClassName.hashCode());
+		result = (prime * result) + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
