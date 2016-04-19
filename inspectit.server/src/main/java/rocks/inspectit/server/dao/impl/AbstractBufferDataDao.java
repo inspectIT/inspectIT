@@ -79,7 +79,7 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
-	protected List<E> executeQuery(IIndexQuery indexQuery, Comparator<E> comparator, boolean useForkJoin) {
+	protected List<E> executeQuery(IIndexQuery indexQuery, Comparator<? super E> comparator, boolean useForkJoin) {
 		return this.executeQuery(indexQuery, null, comparator, -1, useForkJoin);
 	}
 
@@ -204,5 +204,4 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	protected IBufferTreeComponent<E> getIndexingTree() {
 		return indexingTree;
 	}
-
 }

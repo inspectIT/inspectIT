@@ -22,6 +22,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import rocks.inspectit.shared.all.jpa.ListStringConverter;
 
 /**
@@ -77,12 +80,14 @@ public class MethodIdent implements Serializable {
 	 * The one-to-many association to the {@link MethodIdentToSensorType}.
 	 */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "methodIdent", orphanRemoval = true)
+	@JsonIgnore
 	private Set<MethodIdentToSensorType> methodIdentToSensorTypes = new HashSet<MethodIdentToSensorType>(0);
 
 	/**
 	 * The many-to-one association to the {@link PlatformIdent} object.
 	 */
 	@ManyToOne
+	@JsonIgnore
 	private PlatformIdent platformIdent;
 
 	/**
@@ -127,6 +132,7 @@ public class MethodIdent implements Serializable {
 	 * @return Returns true if any of the {@link MethodIdentToSensorType} objects in the
 	 *         {@link #methodIdentToSensorTypes} is marked as active. Returns false otherwise.
 	 */
+	@JsonProperty("active")
 	public boolean hasActiveSensorTypes() {
 		for (MethodIdentToSensorType methodIdentToSensorType : methodIdentToSensorTypes) {
 			if (methodIdentToSensorType.isActive()) {
@@ -332,6 +338,7 @@ public class MethodIdent implements Serializable {
 	 *
 	 * @return Fully qualified name (FQN) string.
 	 */
+	@JsonIgnore
 	public String getFQN() {
 		return packageName + '.' + className;
 	}
