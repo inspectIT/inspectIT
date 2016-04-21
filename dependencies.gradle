@@ -38,6 +38,7 @@ configurations {
 		extendsFrom configurations.sharedAllProd
 		extendsFrom configurations.sharedCsProd
 	}
+	serverDiagnosisProd
 	uiRcpProd {
 		extendsFrom configurations.sharedAllProd
 		extendsFrom configurations.sharedCsProd
@@ -58,6 +59,11 @@ configurations {
 	serverTest {
 		extendsFrom configurations.testbase
 		extendsFrom configurations.classmexer
+	}
+	serverDiagnosisTest {
+		extendsFrom configurations.testbase
+		extendsFrom configurations.classmexer
+		extendsFrom configurations.serverDiagnosisProd
 	}
 	uiRcpTest {
 		extendsFrom configurations.testbase
@@ -80,6 +86,7 @@ configurations.sharedAllProd.transitive = false
 configurations.sharedCsProd.transitive = false
 configurations.agentJavaProd.transitive = false
 configurations.serverProd.transitive = false
+configurations.serverDiagnosisProd.transitive = false
 configurations.uiRcpProd.transitive = false
 configurations.testbase.transitive = false
 configurations.classmexer.transitive = false
@@ -87,6 +94,7 @@ configurations.sharedAllTest.transitive = false
 configurations.sharedCsTest.transitive = false
 configurations.agentJavaTest.transitive = false
 configurations.serverTest.transitive = false
+configurations.serverDiagnosisTest.transitive = false
 configurations.uiRcpTest.transitive = false
 configurations.jmhbase.transitive = false
 
@@ -208,8 +216,25 @@ dependencies {
 		'org.springframework:spring-test:3.2.4.RELEASE',
 		'com.bitmechanic:dumbster:1.9.0.2'
 	)
-
-	/** inspectit.ui */
+	
+	/** inspectit.server.diagnosis */
+	serverDiagnosisProd (
+		'org.slf4j:slf4j-api:1.7.21',
+		
+		'commons-lang:commons-lang:2.5',
+		'commons-collections:commons-collections:3.2.1',
+		'commons-pool:commons-pool:1.6',
+		
+		'com.google.guava:guava:18.0'
+	)
+	
+	serverDiagnosisTest (
+		'org.springframework:spring-test:3.2.4.RELEASE',
+		'nl.jqno.equalsverifier:equalsverifier:1.0.2',
+		'cglib:cglib-nodep:2.2'
+	)
+	
+	/** inspectit.server */
 	uiRcpProd (
 		'org.slf4j:jcl-over-slf4j:1.7.21',
 		'org.slf4j:log4j-over-slf4j:1.7.21',
