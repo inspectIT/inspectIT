@@ -38,6 +38,10 @@ configurations {
 		extendsFrom configurations.sharedAllProd
 		extendsFrom configurations.sharedCsProd
 	}
+	serverDiagnosisProd {
+		extendsFrom configurations.sharedAllProd
+		extendsFrom configurations.sharedCsProd
+	}
 	uiRcpProd {
 		extendsFrom configurations.sharedAllProd
 		extendsFrom configurations.sharedCsProd
@@ -63,6 +67,11 @@ configurations {
 		extendsFrom configurations.classmexer
 		extendsFrom configurations.serverProd
 	}
+	serverDiagnosisTest {
+		extendsFrom configurations.testbase
+		extendsFrom configurations.classmexer
+		extendsFrom configurations.serverDiagnosisProd
+	}
 	uiRcpTest {
 		extendsFrom configurations.testbase
 		extendsFrom configurations.uiRcpProd
@@ -84,6 +93,7 @@ configurations.sharedAllProd.transitive = false
 configurations.sharedCsProd.transitive = false
 configurations.agentJavaProd.transitive = false
 configurations.serverProd.transitive = false
+configurations.serverDiagnosisProd.transitive = false
 configurations.uiRcpProd.transitive = false
 configurations.testbase.transitive = false
 configurations.classmexer.transitive = false
@@ -91,6 +101,7 @@ configurations.sharedAllTest.transitive = false
 configurations.sharedCsTest.transitive = false
 configurations.agentJavaTest.transitive = false
 configurations.serverTest.transitive = false
+configurations.serverDiagnosisTest.transitive = false
 configurations.uiRcpTest.transitive = false
 configurations.jmhbase.transitive = false
 
@@ -191,7 +202,15 @@ dependencies {
 	serverTest (
 		'org.springframework:spring-test:3.2.4.RELEASE',
 	)
-
+	
+	/** inspectit.server.diagnosis */
+	serverDiagnosisProd (
+	)
+	
+	serverDiagnosisTest (
+		'org.springframework:spring-test:3.2.4.RELEASE',
+	)
+	
 	/** inspectit.server */
 	uiRcpProd (
 		'org.slf4j:jcl-over-slf4j:1.7.21',
