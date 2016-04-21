@@ -207,6 +207,32 @@ public final class InvocationSequenceDataHelper {
 	}
 
 	/**
+	 * Calculates the exclusive time of this invocation sequence data element.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return the exclusive time of this invocation sequence data element.
+	 */
+	public static double calculateExclusiveTime(InvocationSequenceData data) {
+		TimerData timerData;
+		if (InvocationSequenceDataHelper.hasTimerData(data)) {
+			timerData = data.getTimerData();
+		} else if (InvocationSequenceDataHelper.hasSQLData(data)) {
+			timerData = data.getSqlStatementData();
+		} else if (InvocationSequenceDataHelper.isRootElementInSequence(data)) {
+			return data.getDuration() - computeNestedDuration(data);
+		} else {
+			return 0.0;
+		}
+
+		if (timerData.isExclusiveTimeDataAvailable()) {
+			return timerData.getExclusiveDuration();
+		} else {
+			return timerData.getDuration() - computeNestedDuration(data);
+		}
+	}
+
+	/**
 	 * Computes the duration of the nested invocation elements.
 	 *
 	 * @param data
