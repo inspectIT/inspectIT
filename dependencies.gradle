@@ -40,7 +40,10 @@ configurations {
 		extendsFrom configurations.sharedAllProd
 		extendsFrom configurations.sharedCsProd
 	}
-	serverDiagnosisProd
+	serverDiagnosisProd {
+		extendsFrom configurations.sharedAllProd
+		extendsFrom configurations.sharedCsProd
+	}
 	uiRcpProd {
 		extendsFrom configurations.sharedAllProd
 		extendsFrom configurations.sharedCsProd
@@ -68,7 +71,6 @@ configurations {
 	serverDiagnosisTest {
 		extendsFrom configurations.testbase
 		extendsFrom configurations.classmexer
-		extendsFrom configurations.serverDiagnosisProd
 	}
 	uiRcpTest {
 		extendsFrom configurations.testbase
@@ -229,23 +231,6 @@ dependencies {
 	serverTest (
 		'org.springframework:spring-test:3.2.4.RELEASE',
 		'com.bitmechanic:dumbster:1.9.0.2'
-	)
-	
-	/** inspectit.server.diagnosis */
-	serverDiagnosisProd (
-		'org.slf4j:slf4j-api:1.7.21',
-		
-		'commons-lang:commons-lang:2.5',
-		'commons-collections:commons-collections:3.2.1',
-		'commons-pool:commons-pool:1.6',
-		
-		'com.google.guava:guava:18.0'
-	)
-	
-	serverDiagnosisTest (
-		'org.springframework:spring-test:3.2.4.RELEASE',
-		'nl.jqno.equalsverifier:equalsverifier:1.0.2',
-		'cglib:cglib-nodep:2.2'
 	)
 	
 	/** inspectit.server */
