@@ -11,6 +11,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 
@@ -255,6 +256,30 @@ public final class InvocationSequenceDataHelper {
 			return span.getDuration();
 		}
 		return duration;
+	}
+
+	/**
+	 * Calculates the exclusive time of this invocation sequence data element.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return the exclusive time of this invocation sequence data element.
+	 */
+	public static double getExclusiveDuration(InvocationSequenceData data) {
+		TimerData timerData;
+		if (InvocationSequenceDataHelper.hasTimerData(data)) {
+			timerData = data.getTimerData();
+		} else if (InvocationSequenceDataHelper.hasSQLData(data)) {
+			timerData = data.getSqlStatementData();
+		} else {
+			return 0.0;
+		}
+
+		if (timerData.isExclusiveTimeDataAvailable()) {
+			return timerData.getExclusiveDuration();
+		} else {
+			return 0.0;
+		}
 	}
 
 	/**
