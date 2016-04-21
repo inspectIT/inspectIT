@@ -234,6 +234,11 @@ dependencies {
 	/** inspectit.server.diagnosis */
 	serverDiagnosisProd (
 		'org.slf4j:slf4j-api:1.7.21',
+		'org.springframework:spring-beans:3.2.16.RELEASE',
+		'org.springframework:spring-context:3.2.16.RELEASE',
+		'org.springframework:spring-core:3.2.16.RELEASE',
+		'org.codehaus.jackson:jackson-core-asl:1.9.13',
+		'org.codehaus.jackson:jackson-mapper-asl:1.9.13',
 		
 		'commons-lang:commons-lang:2.5',
 		'commons-collections:commons-collections:3.2.1',
