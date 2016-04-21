@@ -1,0 +1,71 @@
+/**
+ * Gradle build file for the inspectit.server.diagnosis project.
+ * 
+ * @author Alexander Wert
+ */
+evaluationDependsOn(':inspectit.shared.all')
+evaluationDependsOn(':inspectit.shared.cs')
+evaluationDependsOn(':inspectit.server')
+defaultTasks 'releaseAndAnalyze'
+
+/** used by the eclipse buildship plugin */
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+/** Artifact names */
+ext {
+	distJarName = 'inspectit-server-diagnosis'
+	pluginName = 'rocks.inspectit.server.diagnosis'
+}
+
+/** Setting compile configuration as plugin in Eclipse needs it */
+configurations {
+	compile {
+		extendsFrom configurations.serverDiagnosisProd
+	}
+	testCompile {
+		extendsFrom configurations.serverDiagnosisTest
+	}
+}
+
+/** Depend on inspectit.shared.all and cs, testCompile must depend on shared all test sources because of TestBase class */
+dependencies {
+	compile project(':inspectit.shared.all')
+	compile project(':inspectit.shared.cs')
+	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
+}
+
+/** Compile compatibility to 1.7 for all compile tasks */
+tasks.withType(JavaCompile) { 
+	sourceCompatibility = '1.7'
+	targetCompatibility = '1.7'
+}
+
+/** Include shared.all also for the coverage */
+cobertura {
+	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
+}
+
+/**
+ * Creates the jar. If needed update the version in the MANIFEST.MF.
+ */
+jar {
+	archivesBaseName = distJarName
+
+	manifest {
+		from ("${mainResources}/META-INF/MANIFEST.MF") {
+			eachEntry { details ->
+				if (details.key == 'Bundle-Version' && project.hasProperty('versionInfo')) {
+					details.value =  versionInfo
+				}
+			}
+		}
+	}
+}
+
+task releaseAndAnalyze {
+	description = "Runs all unit tests, all checks and assembles a jar archive."
+	group = 'Release'
+
+	dependsOn(analyze, jar)
+}
