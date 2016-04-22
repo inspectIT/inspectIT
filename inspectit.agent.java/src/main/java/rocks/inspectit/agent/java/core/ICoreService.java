@@ -10,11 +10,11 @@ import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 /**
  * Interface definition for the core service. The core service is the central point of the Agent
  * where all data is collected, triggered etc.
- * 
+ *
  * @author Patrice Bouillet
  * @author Eduard Tudenhoefner
  * @author Alfred Krauss
- * 
+ *
  */
 public interface ICoreService {
 
@@ -30,13 +30,13 @@ public interface ICoreService {
 
 	/**
 	 * Adds a new data object from the jmx sensor to the value storage.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type.
 	 * @param objectName
 	 *            The name of the mBean
 	 * @param attributeName
-	 * 			  The attributeName of the Attribute.
+	 *            The attributeName of the Attribute.
 	 * @param jmxSensorValueData
 	 *            Part of the jmx sensor data.
 	 */
@@ -44,7 +44,7 @@ public interface ICoreService {
 
 	/**
 	 * Adds a new measurement from a method sensor to the value storage.
-	 * 
+	 *
 	 * @param sensorTypeId
 	 *            The id of the sensor type.
 	 * @param methodId
@@ -58,7 +58,7 @@ public interface ICoreService {
 
 	/**
 	 * Adds a new data object from the platform sensor to the value storage.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type.
 	 * @param systemSensorData
@@ -68,7 +68,7 @@ public interface ICoreService {
 
 	/**
 	 * Adds a new data object from the exception sensor to the value storage.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type.
 	 * @param throwableIdentityHashCode
@@ -81,7 +81,7 @@ public interface ICoreService {
 	/**
 	 * Adds a new object storage to the value storage. An object storage contains an instance of
 	 * {@link IObjectStorage} which serves as a wrapper around a value object.
-	 * 
+	 *
 	 * @param sensorTypeId
 	 *            The id of the sensor type.
 	 * @param methodId
@@ -100,7 +100,7 @@ public interface ICoreService {
 
 	/**
 	 * Returns a saved measurement ({@link MethodSensorData}) for further processing.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type to retrieve the measurement.
 	 * @param methodIdent
@@ -113,7 +113,7 @@ public interface ICoreService {
 
 	/**
 	 * Returns a saved data object for further processing.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type to retrieve the data object.
 	 * @return Returns a {@link SystemSensorData}
@@ -122,7 +122,7 @@ public interface ICoreService {
 
 	/**
 	 * Returns a saved data object for further processing.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type to retrieve the data object.
 	 * @param throwableIdentityHashCode
@@ -133,7 +133,7 @@ public interface ICoreService {
 
 	/**
 	 * Returns a saved object storage for further processing.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type to retrieve the measurement.
 	 * @param methodIdent
@@ -146,7 +146,7 @@ public interface ICoreService {
 
 	/**
 	 * Adds a new list listener.
-	 * 
+	 *
 	 * @param listener
 	 *            The listener to add.
 	 */
@@ -154,7 +154,7 @@ public interface ICoreService {
 
 	/**
 	 * Removes a list listener.
-	 * 
+	 *
 	 * @param listener
 	 *            The listener to remove.
 	 */
@@ -162,7 +162,7 @@ public interface ICoreService {
 
 	/**
 	 * Returns the scheduled executor-service.
-	 * 
+	 *
 	 * @return a {@link ScheduledExecutorService}
 	 */
 	ScheduledExecutorService getExecutorService();

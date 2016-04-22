@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Input for environment editor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EnvironmentEditorInput implements IEditorInput, IEnvironmentProvider {
 
@@ -109,16 +109,17 @@ public class EnvironmentEditorInput implements IEditorInput, IEnvironmentProvide
 
 	/**
 	 * Gets {@link #environment}.
-	 * 
+	 *
 	 * @return {@link #environment}
 	 */
+	@Override
 	public Environment getEnvironment() {
 		return environment;
 	}
 
 	/**
 	 * Gets {@link #profiles}.
-	 * 
+	 *
 	 * @return {@link #profiles}
 	 */
 	public Collection<Profile> getProfiles() {
@@ -127,9 +128,10 @@ public class EnvironmentEditorInput implements IEditorInput, IEnvironmentProvide
 
 	/**
 	 * Gets {@link #cmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @return {@link #cmrRepositoryDefinition}
 	 */
+	@Override
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
 		return cmrRepositoryDefinition;
 	}
@@ -142,8 +144,8 @@ public class EnvironmentEditorInput implements IEditorInput, IEnvironmentProvide
 		// hash code only for CMR and environments, as we want editor per environment and CMR
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cmrRepositoryDefinition == null) ? 0 : cmrRepositoryDefinition.hashCode());
-		result = prime * result + ((environment == null) ? 0 : environment.hashCode());
+		result = (prime * result) + ((cmrRepositoryDefinition == null) ? 0 : cmrRepositoryDefinition.hashCode());
+		result = (prime * result) + ((environment == null) ? 0 : environment.hashCode());
 		return result;
 	}
 

@@ -11,9 +11,9 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 /**
  * Bean for caching the {@link PlatformIdent} objects, so that they don't have to be loaded from the
  * database all the time.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class PlatformIdentCache {
@@ -21,16 +21,16 @@ public class PlatformIdentCache {
 	/**
 	 * Clean set.
 	 */
-	private Map<Long, PlatformIdent> cleanPlatformIdents = new ConcurrentHashMap<Long, PlatformIdent>();
+	private Map<Long, PlatformIdent> cleanPlatformIdents = new ConcurrentHashMap<>();
 
 	/**
 	 * Dirty set.
 	 */
-	private Map<Long, PlatformIdent> dirtyPlatformIdents = new ConcurrentHashMap<Long, PlatformIdent>();
+	private Map<Long, PlatformIdent> dirtyPlatformIdents = new ConcurrentHashMap<>();
 
 	/**
 	 * Marks platform ident dirty.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            {@link PlatformIdent}.
 	 */
@@ -41,7 +41,7 @@ public class PlatformIdentCache {
 	/**
 	 * Marks platform ident clean. If the marker with this {@link PlatformIdent} already exists, its
 	 * {@link PlatformIdent} object will be changed with the supplied clean one.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            {@link PlatformIdent}.
 	 */
@@ -51,7 +51,7 @@ public class PlatformIdentCache {
 
 	/**
 	 * Remove {@link PlatformIdent} from cache.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            {@link PlatformIdent}.
 	 */
@@ -62,7 +62,7 @@ public class PlatformIdentCache {
 
 	/**
 	 * Returns clean {@link PlatformIdent}s. This one can be transfered to the UI directly.
-	 * 
+	 *
 	 * @return Returns clean {@link PlatformIdent}s.
 	 */
 	public Collection<PlatformIdent> getCleanPlatformIdents() {
@@ -71,7 +71,7 @@ public class PlatformIdentCache {
 
 	/**
 	 * Returns dirty {@link PlatformIdent}s. This one can not be transfered to the UI.
-	 * 
+	 *
 	 * @return Returns dirty {@link PlatformIdent}s.
 	 */
 	public Collection<PlatformIdent> getDirtyPlatformIdents() {
@@ -87,7 +87,7 @@ public class PlatformIdentCache {
 
 	/**
 	 * Provides the list of clean or dirty {@link PlatformIdent}s.
-	 * 
+	 *
 	 * @param dirty
 	 *            Should idents be dirty or not.
 	 * @return List of {@link PlatformIdent}s.
@@ -102,7 +102,7 @@ public class PlatformIdentCache {
 
 	/**
 	 * Marks a {@link PlatformIdent} dirty or clean.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            {@link PlatformIdent} to mark.
 	 * @param dirty

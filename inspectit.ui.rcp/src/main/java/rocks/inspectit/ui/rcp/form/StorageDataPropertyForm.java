@@ -38,6 +38,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -70,9 +71,9 @@ import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
 
 /**
  * Form for displaying the {@link StorageData} properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageDataPropertyForm implements ISelectionChangedListener {
 
@@ -158,7 +159,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent where form will be created.
 	 */
@@ -168,7 +169,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 
 	/**
 	 * Secondary constructor. Set the displayed storage leaf.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent where form will be created.
 	 * @param storageDataProvider
@@ -187,7 +188,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 
 	/**
 	 * Third constructor. Lets set everything.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent where form will be created.
 	 * @param storageDataProvider
@@ -216,7 +217,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		mainComposite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
 		// START - General section
-		Section generalSection = toolkit.createSection(mainComposite, Section.TITLE_BAR);
+		Section generalSection = toolkit.createSection(mainComposite, ExpandableComposite.TITLE_BAR);
 		generalSection.setText("General information");
 
 		Composite generalComposite = toolkit.createComposite(generalSection, SWT.NONE);
@@ -254,7 +255,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		// END - General section
 
 		// START - Label section
-		Section labelSection = toolkit.createSection(mainComposite, Section.TITLE_BAR);
+		Section labelSection = toolkit.createSection(mainComposite, ExpandableComposite.TITLE_BAR);
 		labelSection.setText("Labels");
 
 		Composite labelComposite = toolkit.createComposite(labelSection, SWT.NONE);
@@ -304,7 +305,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 
 			@Override
 			protected Image getColumnImage(Object element, int index) {
-				if (index == 0 && element instanceof AbstractStorageLabel) {
+				if ((index == 0) && (element instanceof AbstractStorageLabel)) {
 					return ImageFormatter.getImageForLabel(((AbstractStorageLabel<?>) element).getStorageLabelType());
 				}
 				return null;
@@ -313,7 +314,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		labelsTableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof AbstractStorageLabel && e2 instanceof AbstractStorageLabel) {
+				if ((e1 instanceof AbstractStorageLabel) && (e2 instanceof AbstractStorageLabel)) {
 					return ((AbstractStorageLabel<?>) e1).compareTo((AbstractStorageLabel<?>) e2);
 				}
 				return super.compare(viewer, e1, e2);
@@ -357,7 +358,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!labelsTableViewer.getSelection().isEmpty()) {
-					List<AbstractStorageLabel<?>> inputList = new ArrayList<AbstractStorageLabel<?>>();
+					List<AbstractStorageLabel<?>> inputList = new ArrayList<>();
 					for (Object object : ((StructuredSelection) labelsTableViewer.getSelection()).toArray()) {
 						if (object instanceof AbstractStorageLabel) {
 							inputList.add((AbstractStorageLabel<?>) object);
@@ -390,7 +391,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 
 	/**
 	 * Sets layout data for the form.
-	 * 
+	 *
 	 * @param layoutData
 	 *            LayoutData.
 	 */
@@ -457,7 +458,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 				}
 			}
 		}
-		if (null != storageDataProvider || null != storageData) {
+		if ((null != storageDataProvider) || (null != storageData)) {
 			storageDataProvider = null; // NOPMD
 			storageData = null; // NOPMD
 			valueViewerColumn.setEditingSupport(null);
@@ -563,7 +564,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	/**
 	 * Refreshes the {@link StorageManagerView}, but only reloads the storages from given
 	 * repository.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 */

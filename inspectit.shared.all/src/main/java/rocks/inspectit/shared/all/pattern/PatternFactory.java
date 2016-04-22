@@ -2,9 +2,9 @@ package rocks.inspectit.shared.all.pattern;
 
 /**
  * Pattern factory that can be used to retrieve correct {@link IMatchPattern}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class PatternFactory {
 
@@ -16,7 +16,7 @@ public final class PatternFactory {
 
 	/**
 	 * Returns the correct {@link IMatchPattern} for the given text.
-	 * 
+	 *
 	 * @param txt
 	 *            Text
 	 * @return Correct {@link IMatchPattern} based on the given text.

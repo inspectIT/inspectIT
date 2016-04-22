@@ -45,7 +45,6 @@ public class ClassAnalyzer extends ClassVisitor {
 	 */
 	private final String hash;
 
-
 	/**
 	 * Default constructor. ClassVisitor will be set to <code>null</code>.
 	 *

@@ -121,13 +121,13 @@ public class JavaAgent implements ClassFileTransformer {
 	 */
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
 		try {
-			if (null != classLoader && InspectItClassLoader.class.getCanonicalName().equals(classLoader.getClass().getCanonicalName())) {
+			if ((null != classLoader) && InspectItClassLoader.class.getCanonicalName().equals(classLoader.getClass().getCanonicalName())) {
 				// return if the classloader to load the class is our own, we don't want to
 				// instrument these classes.
 				return data;
 			}
 			// early return if some conditions fail
-			if (null == data || data.length == 0 || null == className || "".equals(className)) {
+			if ((null == data) || (data.length == 0) || (null == className) || "".equals(className)) {
 				// - no data = we cannot construct the class and analyze it
 				// - no class name = we don't know how the name of the class is and so the whole
 				// analysis will fail
@@ -135,7 +135,7 @@ public class JavaAgent implements ClassFileTransformer {
 			}
 
 			// skip analyzing if we cannot instrument core classes.
-			if (!instrumentCoreClasses & null == classLoader) {
+			if (!instrumentCoreClasses & (null == classLoader)) {
 				return data;
 			}
 
@@ -197,8 +197,8 @@ public class JavaAgent implements ClassFileTransformer {
 				if (instrumentCoreClasses) {
 					for (Class<?> loadedClass : instrumentation.getAllLoadedClasses()) {
 						String clazzName = loadedClass.getCanonicalName();
-						if (null != clazzName && !selfFirstClasses.contains(clazzName)) {
-							if (null == loadedClass.getClassLoader() || !InspectItClassLoader.class.getCanonicalName().equals(loadedClass.getClassLoader().getClass().getCanonicalName())) {
+						if ((null != clazzName) && !selfFirstClasses.contains(clazzName)) {
+							if ((null == loadedClass.getClassLoader()) || !InspectItClassLoader.class.getCanonicalName().equals(loadedClass.getClassLoader().getClass().getCanonicalName())) {
 								try {
 									clazzName = getClassNameForJavassist(loadedClass);
 									byte[] modified = Agent.agent.inspectByteCode(null, clazzName, loadedClass.getClassLoader());
@@ -377,7 +377,7 @@ public class JavaAgent implements ClassFileTransformer {
 		 * @return <b>true</b> if the file name denotes a jar file, <b>false</b> otherwise.
 		 */
 		private boolean isJar(String fileName) {
-			return fileName != null && fileName.toLowerCase().endsWith(".jar");
+			return (fileName != null) && fileName.toLowerCase().endsWith(".jar");
 		}
 
 		/**

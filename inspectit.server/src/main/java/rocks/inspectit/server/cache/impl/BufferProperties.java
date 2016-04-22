@@ -18,9 +18,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Set of properties for one buffer.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class BufferProperties {
@@ -133,7 +133,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns buffer eviction occupancy percentage.
-	 * 
+	 *
 	 * @return Buffer eviction occupancy percentage as float.
 	 */
 	public float getEvictionOccupancyPercentage() {
@@ -142,7 +142,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns maximum security object expansion rate in percentages.
-	 * 
+	 *
 	 * @return Maximum security object expansion rate in percentages as float.
 	 */
 	public float getMaxObjectExpansionRate() {
@@ -151,7 +151,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns minimum security object expansion rate in percentages.
-	 * 
+	 *
 	 * @return Minimum security object expansion rate in percentages as float.
 	 */
 	public float getMinObjectExpansionRate() {
@@ -160,7 +160,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns buffer size till which maximum object expansion rate is active.
-	 * 
+	 *
 	 * @return Buffer size in bytes.
 	 */
 	public long getMaxObjectExpansionRateActiveTillBufferSize() {
@@ -169,7 +169,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns buffer size from which minimum object expansion rate is active.
-	 * 
+	 *
 	 * @return Buffer size in bytes.
 	 */
 	public long getMinObjectExpansionRateActiveFromBufferSize() {
@@ -178,7 +178,7 @@ public class BufferProperties {
 
 	/**
 	 * Gets {@link #minObjectExpansionRateActiveTillOccupancy}.
-	 * 
+	 *
 	 * @return {@link #minObjectExpansionRateActiveTillOccupancy}
 	 */
 	public float getMinObjectExpansionRateActiveTillOccupancy() {
@@ -187,7 +187,7 @@ public class BufferProperties {
 
 	/**
 	 * Gets {@link #maxObjectExpansionRateActiveFromOccupancy}.
-	 * 
+	 *
 	 * @return {@link #maxObjectExpansionRateActiveFromOccupancy}
 	 */
 	public float getMaxObjectExpansionRateActiveFromOccupancy() {
@@ -196,7 +196,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns size of the eviction fragment in percentages, in relation to the max buffer size.
-	 * 
+	 *
 	 * @return Eviction fragment in percentages as float.
 	 */
 	public float getEvictionFragmentSizePercentage() {
@@ -206,7 +206,7 @@ public class BufferProperties {
 	/**
 	 * Number of bytes that need to be added or removed for the buffer so that update and clean of
 	 * the indexing tree is performed.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            Size of the buffer.
 	 * @return Number of bytes that need to be added or removed for the buffer so that update and
@@ -267,7 +267,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns the initial buffer size based on the property set.
-	 * 
+	 *
 	 * @return Size in bytes.
 	 */
 	public long getInitialBufferSize() {
@@ -300,7 +300,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns memory in bytes for the given argument.
-	 * 
+	 *
 	 * @param argument
 	 *            Complete argument value.
 	 * @param memoryToken
@@ -333,7 +333,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns object security expansion rate based on the property set and given buffer size.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            Buffer's size that expansion rate has to be calculated for.
 	 * @return Expansion rate in percentages.
@@ -345,7 +345,7 @@ public class BufferProperties {
 
 	/**
 	 * Returns object security expansion rate based on the property set and given buffer size.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            Buffer's size that expansion rate has to be calculated for.
 	 * @return Expansion rate in percentages.
@@ -368,7 +368,7 @@ public class BufferProperties {
 	/**
 	 * Returns object security expansion rate based on the property set and given buffer size / old
 	 * generation size.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            Buffer's size that expansion rate has to be calculated for.
 	 * @param oldGenMax
@@ -394,7 +394,7 @@ public class BufferProperties {
 
 	/**
 	 * Tries to find out the old space generation size.
-	 * 
+	 *
 	 * @return Returns the size of the old generation space in bytes. This method will return
 	 *         <code>0</code> if the calculation fails.
 	 */
@@ -405,7 +405,7 @@ public class BufferProperties {
 		try {
 			List<MemoryPoolMXBean> memBeans = ManagementFactory.getMemoryPoolMXBeans();
 			for (MemoryPoolMXBean memBean : memBeans) {
-				if (memBean.getName().indexOf(OLD_GEN_POOL_NAME) != -1 || memBean.getName().indexOf(TENURED_GEN_POOL_NAME) != -1) {
+				if ((memBean.getName().indexOf(OLD_GEN_POOL_NAME) != -1) || (memBean.getName().indexOf(TENURED_GEN_POOL_NAME) != -1)) {
 					MemoryUsage memUsage = memBean.getUsage();
 					oldGenMax = memUsage.getMax();
 					break;
@@ -433,7 +433,7 @@ public class BufferProperties {
 						}
 					}
 				}
-				if (maxHeap != 0 && newGen != 0 && maxHeap > newGen) {
+				if ((maxHeap != 0) && (newGen != 0) && (maxHeap > newGen)) {
 					oldGenMax = maxHeap - newGen;
 				}
 			}
@@ -446,7 +446,7 @@ public class BufferProperties {
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */
@@ -472,45 +472,41 @@ public class BufferProperties {
 		}
 
 		// eviction
-		if (this.evictionOccupancyPercentage < 0 || this.evictionOccupancyPercentage > 1) {
-			throw new BeanInitializationException("Buffer properties initialization error: Eviction occupancy must be a percentage value between 0 and 1. Initialization value is: "
-					+ evictionOccupancyPercentage);
+		if ((this.evictionOccupancyPercentage < 0) || (this.evictionOccupancyPercentage > 1)) {
+			throw new BeanInitializationException(
+					"Buffer properties initialization error: Eviction occupancy must be a percentage value between 0 and 1. Initialization value is: " + evictionOccupancyPercentage);
 		}
-		if (this.evictionFragmentSizePercentage < 0.01 || this.evictionFragmentSizePercentage > 0.5) {
-			throw new BeanInitializationException("Buffer properties initialization error: Eviction fragment size must be a percentage value between 0.01 and 0.5. Initialization value is: "
-					+ evictionFragmentSizePercentage);
+		if ((this.evictionFragmentSizePercentage < 0.01) || (this.evictionFragmentSizePercentage > 0.5)) {
+			throw new BeanInitializationException(
+					"Buffer properties initialization error: Eviction fragment size must be a percentage value between 0.01 and 0.5. Initialization value is: " + evictionFragmentSizePercentage);
 		}
 
 		// expansion rate
 		if (this.minObjectExpansionRateActiveFromBufferSize < this.maxObjectExpansionRateActiveTillBufferSize) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: Buffer size from which minimum object expansion rate is active can not be lower than buffer size till which maximum object expansion rate is active. Initialization values are: "
-							+ minObjectExpansionRateActiveFromBufferSize
-							+ " (buffer size for min object expansion rate) and "
-							+ maxObjectExpansionRateActiveTillBufferSize
+							+ minObjectExpansionRateActiveFromBufferSize + " (buffer size for min object expansion rate) and " + maxObjectExpansionRateActiveTillBufferSize
 							+ " (buffer size for max object expansion rate)");
 		}
 		if (this.minObjectExpansionRateActiveTillOccupancy > this.maxObjectExpansionRateActiveFromOccupancy) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: Buffer occupancy till which minimum object expansion rate is active can not be higher than buffer occupancy from which maximum object expansion rate is active. Initialization values are: "
-							+ minObjectExpansionRateActiveTillOccupancy
-							+ " (buffer occupancy for min object expansion rate) and "
-							+ maxObjectExpansionRateActiveFromOccupancy
+							+ minObjectExpansionRateActiveTillOccupancy + " (buffer occupancy for min object expansion rate) and " + maxObjectExpansionRateActiveFromOccupancy
 							+ " (buffer occupnacy for max object expansion rate)");
 		}
-		if (this.minObjectExpansionRateActiveTillOccupancy <= 0 || this.minObjectExpansionRateActiveTillOccupancy > 1) {
+		if ((this.minObjectExpansionRateActiveTillOccupancy <= 0) || (this.minObjectExpansionRateActiveTillOccupancy > 1)) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: The min object expansion rate till buffer old space gen occupancy can not be less or equal than zero, nor greater that one. Initialization value is: "
 							+ this.minObjectExpansionRateActiveTillOccupancy);
 		}
-		if (this.maxObjectExpansionRateActiveFromOccupancy <= 0 || this.maxObjectExpansionRateActiveFromOccupancy > 1) {
+		if ((this.maxObjectExpansionRateActiveFromOccupancy <= 0) || (this.maxObjectExpansionRateActiveFromOccupancy > 1)) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: The max object expansion rate from buffer old space gen occupancy can not be less or equal than zero, nor greater that one. Initialization value is: "
 							+ this.maxObjectExpansionRateActiveFromOccupancy);
 		}
 
 		// indexing tree
-		if (this.getBytesMaintenancePercentage() <= 0 && this.getBytesMaintenancePercentage() > this.getEvictionOccupancyPercentage()) {
+		if ((this.getBytesMaintenancePercentage() <= 0) && (this.getBytesMaintenancePercentage() > this.getEvictionOccupancyPercentage())) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: The buffer bytes maintenance percentage that activate the clean and update of the indexing tree can not be less or equal than zero nor bigger that eviction occupancy percentage. Initialization value is: "
 							+ this.getBytesMaintenancePercentage());
@@ -520,8 +516,8 @@ public class BufferProperties {
 					+ this.getIndexingTreeCleaningThreads());
 		}
 		if (this.indexingWaitTime <= 0) {
-			throw new BeanInitializationException("Buffer properties initialization error: The indexing wait time can not be less or equal than zero. Initialization value is: "
-					+ this.indexingWaitTime);
+			throw new BeanInitializationException(
+					"Buffer properties initialization error: The indexing wait time can not be less or equal than zero. Initialization value is: " + this.indexingWaitTime);
 		}
 
 		// old space settings
@@ -540,12 +536,12 @@ public class BufferProperties {
 					"Buffer properties initialization error: The min buffer occupancy percentage of the old generation heap space can not be higer than max buffer occupancy percentage of the old generation. Initialization values are: "
 							+ this.minOldSpaceOccupancy + "(min), " + this.maxOldSpaceOccupancy + "(max)");
 		}
-		if (this.minOldSpaceOccupancy <= 0 || this.minOldSpaceOccupancy > 1) {
+		if ((this.minOldSpaceOccupancy <= 0) || (this.minOldSpaceOccupancy > 1)) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: The min buffer occupancy percentage of the old generation heap space can not be less or equal than zero, nor greater that one. Initialization value is: "
 							+ this.minOldSpaceOccupancy);
 		}
-		if (this.maxOldSpaceOccupancy <= 0 || this.maxOldSpaceOccupancy > 1) {
+		if ((this.maxOldSpaceOccupancy <= 0) || (this.maxOldSpaceOccupancy > 1)) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: The max buffer occupancy percentage of the old generation heap space can not be less or equal than zero, nor greater that one. Initialization value is: "
 							+ this.maxOldSpaceOccupancy);

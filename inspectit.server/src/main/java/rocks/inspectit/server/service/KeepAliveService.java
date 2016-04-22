@@ -12,7 +12,7 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Service to keep track of the online-status of registered agents.
- * 
+ *
  * @author Marius Oehler
  *
  */

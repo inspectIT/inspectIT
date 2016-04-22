@@ -2,9 +2,9 @@ package rocks.inspectit.shared.cs.indexing.impl;
 
 /**
  * Indexing exception class. Used for signaling problems with indexing elements.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class IndexingException extends Exception {
 
@@ -15,7 +15,7 @@ public class IndexingException extends Exception {
 
 	/**
 	 * Same as {@link Exception#Exception(String)}.
-	 * 
+	 *
 	 * @param message
 	 *            the exception message.
 	 */
@@ -25,7 +25,7 @@ public class IndexingException extends Exception {
 
 	/**
 	 * Same as {@link Exception#Exception(String, Throwable)}.
-	 * 
+	 *
 	 * @param message
 	 *            the exception message.
 	 * @param throwable

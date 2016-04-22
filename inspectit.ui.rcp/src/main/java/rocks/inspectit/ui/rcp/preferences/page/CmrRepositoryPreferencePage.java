@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -16,6 +15,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -48,9 +48,9 @@ import rocks.inspectit.ui.rcp.wizard.ManageLabelWizard;
  * <p>
  * <b>This class is not used at the moment. It's not confirmed that quality of the class in with the
  * standards, however, it can serve as an entry to future work regarding preferences.</b>
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CmrRepositoryPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, CmrRepositoryChangeListener {
 
@@ -97,7 +97,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 
 	/**
 	 * Sec. constructor.
-	 * 
+	 *
 	 * @param title
 	 *            Title of preference page.
 	 */
@@ -107,7 +107,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 
 	/**
 	 * Third constructor.
-	 * 
+	 *
 	 * @param title
 	 *            Title of preference page.
 	 * @param image
@@ -124,7 +124,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 	public void init(IWorkbench workbench) {
 		cmrRepositoryManager = InspectIT.getDefault().getCmrRepositoryManager();
 		cmrRepositoryManager.addCmrRepositoryChangeListener(this);
-		inputList = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
+		inputList = new ConcurrentHashMap<>();
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositoryManager.getCmrRepositoryDefinitions()) {
 			inputList.put(cmrRepositoryDefinition, cmrRepositoryDefinition.getOnlineStatus());
 		}
@@ -180,7 +180,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 			public void widgetSelected(SelectionEvent e) {
 				AddCmrRepositoryDefinitionDialog dialog = new AddCmrRepositoryDefinitionDialog(getShell());
 				dialog.open();
-				if (dialog.getReturnCode() == Dialog.OK && null != dialog.getCmrRepositoryDefinition()) {
+				if ((dialog.getReturnCode() == Window.OK) && (null != dialog.getCmrRepositoryDefinition())) {
 					inputList.put(dialog.getCmrRepositoryDefinition(), OnlineStatus.OFFLINE);
 					cmrRepositoryManager.forceCmrRepositoryOnlineStatusUpdate(dialog.getCmrRepositoryDefinition());
 					tableViewer.refresh();
@@ -276,7 +276,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 	 */
 	@Override
 	public void repositoryOnlineStatusUpdated(final CmrRepositoryDefinition repositoryDefinition, OnlineStatus oldStatus, OnlineStatus newStatus) {
-		if (newStatus != OnlineStatus.CHECKING && inputList.containsKey(repositoryDefinition)) {
+		if ((newStatus != OnlineStatus.CHECKING) && inputList.containsKey(repositoryDefinition)) {
 			OnlineStatus oldRegisteredStatus = inputList.get(repositoryDefinition);
 			if (!oldRegisteredStatus.equals(newStatus)) {
 				SafeExecutor.asyncExec(new Runnable() {
@@ -322,7 +322,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 			manageLabelsButton.setEnabled(false);
 		} else {
 			removeButton.setEnabled(true);
-			if (structuredSelection.size() == 1 && ((CmrRepositoryDefinition) structuredSelection.getFirstElement()).getOnlineStatus() == OnlineStatus.ONLINE) {
+			if ((structuredSelection.size() == 1) && (((CmrRepositoryDefinition) structuredSelection.getFirstElement()).getOnlineStatus() == OnlineStatus.ONLINE)) {
 				manageLabelsButton.setEnabled(true);
 			} else {
 				manageLabelsButton.setEnabled(false);
@@ -347,7 +347,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 		}
 
 		// remove all deleted
-		List<CmrRepositoryDefinition> removeList = new ArrayList<CmrRepositoryDefinition>();
+		List<CmrRepositoryDefinition> removeList = new ArrayList<>();
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositoryManager.getCmrRepositoryDefinitions()) {
 			if (!inputList.keySet().contains(cmrRepositoryDefinition)) {
 				removeList.add(cmrRepositoryDefinition);
@@ -365,7 +365,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 
 	/**
 	 * Where there changes performed by user.
-	 * 
+	 *
 	 * @return Where there changes performed by user.
 	 */
 	private boolean isDirty() {

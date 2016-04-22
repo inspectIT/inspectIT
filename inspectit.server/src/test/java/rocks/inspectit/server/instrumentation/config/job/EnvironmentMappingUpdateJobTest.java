@@ -19,7 +19,6 @@ import rocks.inspectit.server.instrumentation.classcache.ClassCacheInstrumentati
 import rocks.inspectit.server.instrumentation.config.AgentCacheEntry;
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
-import rocks.inspectit.server.instrumentation.config.job.EnvironmentMappingUpdateJob;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.cs.ci.Environment;
 

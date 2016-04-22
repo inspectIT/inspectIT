@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.perspective.AnalyzePerspective;
 /**
  * Our extension to the {@link WorkbenchAdvisor} where we define the workbench related things like
  * default perspective, unchecked exceptions handling, etc.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
@@ -51,6 +51,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getInitialWindowPerspectiveId() {
 		return AnalyzePerspective.PERSPECTIVE_ID;
 	}

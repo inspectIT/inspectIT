@@ -4,9 +4,9 @@ import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
 
 /**
  * Small class to keep track of ranges that need to be downloaded by HTTP requests.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RangeDescriptor {
 
@@ -29,7 +29,7 @@ public class RangeDescriptor {
 
 	/**
 	 * Constructor that initializes the start and end values to given values.
-	 * 
+	 *
 	 * @param start
 	 *            Values of start.
 	 * @param end
@@ -42,13 +42,13 @@ public class RangeDescriptor {
 
 	/**
 	 * Constructor that uses the {@link IStorageDescriptor} to initiate the initial values.
-	 * 
+	 *
 	 * @param storageDescriptor
 	 *            Storage descriptor that will be used to denote the range.
 	 */
 	public RangeDescriptor(IStorageDescriptor storageDescriptor) {
 		start = storageDescriptor.getPosition();
-		end = storageDescriptor.getPosition() + storageDescriptor.getSize() - 1;
+		end = (storageDescriptor.getPosition() + storageDescriptor.getSize()) - 1;
 	}
 
 	/**

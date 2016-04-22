@@ -21,16 +21,16 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * This class only initializes the sub-tree if it is requested. Furthermore, the creation of the
  * objects is done piece after piece, so that an immediate visualization can be seen (important for
  * sub-trees which are very large).
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DeferredPackageComposite extends DeferredComposite {
 
 	/**
 	 * All the classes which are being displayed in the sub-tree.
 	 */
-	private List<MethodIdent> classes = new CopyOnWriteArrayList<MethodIdent>();
+	private List<MethodIdent> classes = new CopyOnWriteArrayList<>();
 
 	/**
 	 * The repository definition.
@@ -50,7 +50,7 @@ public class DeferredPackageComposite extends DeferredComposite {
 		try {
 			Composite packageComposite = (Composite) object;
 			monitor.beginTask("Loading of Class Elements...", IProgressMonitor.UNKNOWN);
-			Map<String, DeferredClassComposite> classNames = new HashMap<String, DeferredClassComposite>(classes.size());
+			Map<String, DeferredClassComposite> classNames = new HashMap<>(classes.size());
 
 			for (MethodIdent clazz : classes) {
 				if (select(clazz)) {
@@ -105,7 +105,7 @@ public class DeferredPackageComposite extends DeferredComposite {
 
 	/**
 	 * Should this method ident pass the selection process.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            {@link MethodIdent}.
 	 * @return Should this method ident pass the selection process.
@@ -116,7 +116,7 @@ public class DeferredPackageComposite extends DeferredComposite {
 
 	/**
 	 * Adds a class which will be displayed in this sub-tree.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            The class to be displayed.
 	 */
@@ -150,7 +150,7 @@ public class DeferredPackageComposite extends DeferredComposite {
 
 	/**
 	 * Gets {@link #hideInactiveInstrumentations}.
-	 * 
+	 *
 	 * @return {@link #hideInactiveInstrumentations}
 	 */
 	public boolean isHideInactiveInstrumentations() {
@@ -159,7 +159,7 @@ public class DeferredPackageComposite extends DeferredComposite {
 
 	/**
 	 * Sets {@link #hideInactiveInstrumentations}.
-	 * 
+	 *
 	 * @param hideInactiveInstrumentations
 	 *            New value for {@link #hideInactiveInstrumentations}
 	 */

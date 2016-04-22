@@ -7,9 +7,9 @@ import rocks.inspectit.agent.java.sending.AbstractSendingStrategy;
 /**
  * Implements a strategy to wait a specific (user-defined) time and then executes the sending of the
  * data.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TimeStrategy extends AbstractSendingStrategy {
 
@@ -36,6 +36,7 @@ public class TimeStrategy extends AbstractSendingStrategy {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void startStrategy() {
 		trigger = new Trigger();
 		trigger.start();
@@ -44,6 +45,7 @@ public class TimeStrategy extends AbstractSendingStrategy {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop() {
 		// Interrupt the thread to stop it
 		Thread temp = trigger;
@@ -56,9 +58,9 @@ public class TimeStrategy extends AbstractSendingStrategy {
 	/**
 	 * The Trigger class is basically a {@link Thread} which starts the sending process once the
 	 * specified time is passed by.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private class Trigger extends Thread {
 
@@ -73,6 +75,7 @@ public class TimeStrategy extends AbstractSendingStrategy {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void run() {
 			Thread thisThread = Thread.currentThread();
 			while (trigger == thisThread) { // NOPMD

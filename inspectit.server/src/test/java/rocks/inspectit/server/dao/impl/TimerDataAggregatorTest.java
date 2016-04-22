@@ -30,7 +30,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.dao.impl.TimerDataAggregator;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.communication.data.DatabaseAggregatedTimerData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
@@ -38,9 +37,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Test of {@link TimerDataAggregator}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class TimerDataAggregatorTest extends AbstractTestNGLogSupport {
@@ -178,11 +177,11 @@ public class TimerDataAggregatorTest extends AbstractTestNGLogSupport {
 
 		final int elements = 1000;
 
-		for (int i = 0; i < elements / 2; i++) {
+		for (int i = 0; i < (elements / 2); i++) {
 			aggregator.processTimerData(timerData);
 		}
 
-		for (int i = 0; i < elements / 2; i++) {
+		for (int i = 0; i < (elements / 2); i++) {
 			aggregator.processTimerData(timerData2);
 		}
 

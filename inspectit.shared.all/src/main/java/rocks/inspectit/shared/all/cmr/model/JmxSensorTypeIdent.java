@@ -8,9 +8,9 @@ import javax.persistence.NamedQuery;
 /**
  * The Jmx Sensor Type Ident class is used to store the sensortypes which are collecting data of the
  * target VM/System/etc.
- * 
+ *
  * @author Alfred Krauss
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("JSTI")
@@ -18,7 +18,7 @@ import javax.persistence.NamedQuery;
 public class JmxSensorTypeIdent extends SensorTypeIdent {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6608523838770959163L;
 

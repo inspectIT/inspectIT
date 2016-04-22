@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Generator that displays the duration info from the {@link TimerData} and it's subclasses.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DurationDetailsGenerator implements IDetailsGenerator {
 
@@ -28,7 +28,7 @@ public class DurationDetailsGenerator implements IDetailsGenerator {
 	 */
 	@Override
 	public boolean canGenerateFor(DefaultData defaultData) {
-		return defaultData instanceof TimerData && !(defaultData instanceof IAggregatedData);
+		return (defaultData instanceof TimerData) && !(defaultData instanceof IAggregatedData);
 	}
 
 	/**

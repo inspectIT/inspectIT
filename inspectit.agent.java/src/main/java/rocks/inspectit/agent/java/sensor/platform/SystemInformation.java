@@ -1,7 +1,7 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
 
@@ -262,7 +262,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 		long sensorTypeIdent = getSensorTypeConfig().getId();
 		try {
 			long platformId = platformManager.getPlatformId();
-			Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
+			Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
 			SystemInformationData systemData = new SystemInformationData(timestamp, platformId, sensorTypeIdent);
 
@@ -337,7 +337,7 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 	 * @return A cropped string which length is smaller than the MAX_LENGTH.
 	 */
 	private String crop(String value) {
-		if (null != value && value.length() > MAX_LENGTH) {
+		if ((null != value) && (value.length() > MAX_LENGTH)) {
 			return value.substring(0, MAX_LENGTH);
 		}
 		return value;

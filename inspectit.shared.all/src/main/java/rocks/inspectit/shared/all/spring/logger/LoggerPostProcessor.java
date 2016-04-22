@@ -11,9 +11,9 @@ import org.springframework.util.ReflectionUtils.FieldCallback;
 
 /**
  * Component to inject the {@link Log} to each bean that has a {@link Log} annotation.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Component
 public class LoggerPostProcessor implements BeanPostProcessor {

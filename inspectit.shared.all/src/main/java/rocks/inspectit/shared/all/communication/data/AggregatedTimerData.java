@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.IIdsAwareAggregatedData;
 
 /**
  * Aggregated {@link TimerData} object.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AggregatedTimerData extends TimerData implements IIdsAwareAggregatedData<TimerData> {
 
@@ -46,7 +46,7 @@ public class AggregatedTimerData extends TimerData implements IIdsAwareAggregate
 	}
 
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
 	public Collection<Long> getAggregatedIds() {
@@ -71,6 +71,7 @@ public class AggregatedTimerData extends TimerData implements IIdsAwareAggregate
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
@@ -92,7 +93,7 @@ public class AggregatedTimerData extends TimerData implements IIdsAwareAggregate
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((aggregatedIds == null) ? 0 : aggregatedIds.hashCode());
+		result = (prime * result) + ((aggregatedIds == null) ? 0 : aggregatedIds.hashCode());
 		return result;
 	}
 

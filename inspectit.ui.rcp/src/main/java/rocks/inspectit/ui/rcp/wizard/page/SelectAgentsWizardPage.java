@@ -37,9 +37,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Wizard page for selecting the agents.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SelectAgentsWizardPage extends WizardPage {
 
@@ -92,7 +92,7 @@ public class SelectAgentsWizardPage extends WizardPage {
 
 	/**
 	 * This constructor sets the wizard page message.
-	 * 
+	 *
 	 * @param message
 	 *            Wizard page message.
 	 */
@@ -103,7 +103,7 @@ public class SelectAgentsWizardPage extends WizardPage {
 	/**
 	 * This constructor sets the wizard page message and provides possibility to specify the agents
 	 * that will be preselected if they are available on the repository.
-	 * 
+	 *
 	 * @param message
 	 *            Wizard page message.
 	 * @param autoSelectedAgents
@@ -130,11 +130,11 @@ public class SelectAgentsWizardPage extends WizardPage {
 	 */
 	@Override
 	public boolean isPageComplete() {
-		if (null != allAgents && !allAgents.isDisposed() && allAgents.getSelection()) {
+		if ((null != allAgents) && !allAgents.isDisposed() && allAgents.getSelection()) {
 			return true;
 		} else {
 			boolean agentSelected = false;
-			if (null != agentSelection && !agentSelection.isDisposed()) {
+			if ((null != agentSelection) && !agentSelection.isDisposed()) {
 				for (TableItem tableItem : agentSelection.getItems()) {
 					if (tableItem.getChecked()) {
 						agentSelected = true;
@@ -151,7 +151,7 @@ public class SelectAgentsWizardPage extends WizardPage {
 
 	/**
 	 * Returns if all agents should be used.
-	 * 
+	 *
 	 * @return Returns if all agents should be used.
 	 */
 	public boolean isAllAgents() {
@@ -163,14 +163,14 @@ public class SelectAgentsWizardPage extends WizardPage {
 	 */
 	public List<Long> getSelectedAgents() {
 		if (allAgents.getSelection()) {
-			List<Long> returnList = new ArrayList<Long>();
+			List<Long> returnList = new ArrayList<>();
 			for (PlatformIdent agent : agentList) {
 				returnList.add(agent.getId());
 			}
 			return returnList;
 		} else {
 			int index = 0;
-			List<Long> returnList = new ArrayList<Long>();
+			List<Long> returnList = new ArrayList<>();
 			for (TableItem tableItem : agentSelection.getItems()) {
 				if (tableItem.getChecked()) {
 					returnList.add(agentList.get(index).getId());
@@ -183,7 +183,7 @@ public class SelectAgentsWizardPage extends WizardPage {
 
 	/**
 	 * Sets the repository. Needed to be called before the page is displayed to the user.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 */
@@ -199,7 +199,7 @@ public class SelectAgentsWizardPage extends WizardPage {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						final Map<PlatformIdent, AgentStatusData> agentMap = cmrRepositoryDefinition.getGlobalDataAccessService().getAgentsOverview();
-						agentList = new ArrayList<PlatformIdent>(agentMap.keySet());
+						agentList = new ArrayList<>(agentMap.keySet());
 						Collections.sort(agentList, new Comparator<PlatformIdent>() {
 							@Override
 							public int compare(PlatformIdent a1, PlatformIdent a2) {

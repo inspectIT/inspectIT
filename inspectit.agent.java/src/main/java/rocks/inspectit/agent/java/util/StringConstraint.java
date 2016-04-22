@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This class provides methods for string manipulation purposes as cropping a string to a specified
  * length.
- * 
+ *
  * @author Patrick Eschenbach
  */
 public class StringConstraint {
@@ -37,7 +37,7 @@ public class StringConstraint {
 
 	/**
 	 * The default constructor which needs one parameter for initialization.
-	 * 
+	 *
 	 * @param parameter
 	 *            Parameter map to extract the constrain information.
 	 */
@@ -50,7 +50,7 @@ public class StringConstraint {
 				int configStringLength = Integer.parseInt(value);
 
 				// only use the given length if smaller than the max length and not smaller than 0
-				if (configStringLength < MAX_STRING_LENGTH && configStringLength >= 0) {
+				if ((configStringLength < MAX_STRING_LENGTH) && (configStringLength >= 0)) {
 					effectiveStringLength = configStringLength;
 				}
 			} catch (NumberFormatException e) {
@@ -64,13 +64,13 @@ public class StringConstraint {
 	/**
 	 * Crops the given string based on this instance's configuration. If the string is shorter than
 	 * the specified string length the given string is not altered.
-	 * 
+	 *
 	 * @param string
 	 *            The string to crop.
 	 * @return The cropped string.
 	 */
 	public String crop(String string) {
-		if (null == string || string.length() <= effectiveStringLength) {
+		if ((null == string) || (string.length() <= effectiveStringLength)) {
 			return string;
 		}
 
@@ -89,7 +89,7 @@ public class StringConstraint {
 	 * Analyzes the given map and tries to re-use the values in String arrays and the string arrays
 	 * themself to converse memory. A new String array for values is only created if one entry in
 	 * the values needed cropping to ensure that the original map is not changed.
-	 * 
+	 *
 	 * @param original
 	 *            the Map<String, String[]> that potentially needs cropping
 	 * @return a new Map<String, String[]> that contains cropped Strings that potentially re-use the
@@ -119,7 +119,7 @@ public class StringConstraint {
 					String croppingResult = crop(curValue);
 
 					// Identity comparison is on purpose
-					if (curValue != croppingResult & !croppingWasNeeded) { // NOPMD
+					if ((curValue != croppingResult) & !croppingWasNeeded) { // NOPMD
 						// The string reference was changed and thus cropped
 						croppingWasNeeded = true;
 
@@ -152,7 +152,7 @@ public class StringConstraint {
 	/**
 	 * Crops the given string and adds the given final character to the string's end. If the string
 	 * is shorter than the specified string length the given string is not altered.
-	 * 
+	 *
 	 * @param string
 	 *            The string to crop.
 	 * @param finalChar
@@ -162,7 +162,7 @@ public class StringConstraint {
 	public String cropKeepFinalCharacter(String string, char finalChar) {
 		String cropped = crop(string);
 
-		if (null == string || string.equals(cropped)) {
+		if ((null == string) || string.equals(cropped)) {
 			return string;
 		}
 
@@ -174,7 +174,7 @@ public class StringConstraint {
 
 	/**
 	 * Appends three dots to the given string to indicate that the string was cropped.
-	 * 
+	 *
 	 * @param string
 	 *            The string to append the dots to.
 	 * @return A new string equal to the given one + three dots.

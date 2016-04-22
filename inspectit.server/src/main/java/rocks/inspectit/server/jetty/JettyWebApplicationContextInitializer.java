@@ -14,16 +14,16 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 /**
  * This class binds an empty Spring {@link GenericWebApplicationContext} to the
  * <code>ServletContext</code> of a given {@link Context}.
- * 
+ *
  * The newly created web application context is required, so that servlets managed via Jetty can
  * attach to it. While the context itself is usually empty, it is bound to the parent context
  * provided through {@link ApplicationContextAware#setApplicationContext(ApplicationContext)}. Thus,
  * all Jetty managed servlets may obtain the web application context through the configured
  * {@link #setContextAttribute(String) context attribute}.
- * 
+ *
  * The configured {@link #setJettyContext(Context) Jetty context} is automatically started upon
  * {@link #initialize() initialization}.
- * 
+ *
  * @author NovaProvisioning
  */
 public class JettyWebApplicationContextInitializer implements ApplicationContextAware {
@@ -50,7 +50,7 @@ public class JettyWebApplicationContextInitializer implements ApplicationContext
 	/**
 	 * Initializes the context attribute used to bind the web application context to the
 	 * <code>ServletContext</code>.
-	 * 
+	 *
 	 * @param contextAttribute
 	 *            identifier to be used for binding
 	 */
@@ -60,7 +60,7 @@ public class JettyWebApplicationContextInitializer implements ApplicationContext
 
 	/**
 	 * Injects the Jetty context object to be initialized.
-	 * 
+	 *
 	 * @param jettyContext
 	 *            the context
 	 */
@@ -75,7 +75,7 @@ public class JettyWebApplicationContextInitializer implements ApplicationContext
 
 	/**
 	 * Performs initialization of the web context binding it to Jetty.
-	 * 
+	 *
 	 * @throws Exception
 	 *             in case of an error while starting the Jetty context
 	 */

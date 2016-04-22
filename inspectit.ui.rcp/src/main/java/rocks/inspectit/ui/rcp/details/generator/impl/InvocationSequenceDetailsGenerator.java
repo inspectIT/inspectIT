@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Details of the {@link InvocationSequenceData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationSequenceDetailsGenerator implements IDetailsGenerator {
 
@@ -27,7 +27,7 @@ public class InvocationSequenceDetailsGenerator implements IDetailsGenerator {
 	 */
 	@Override
 	public boolean canGenerateFor(DefaultData defaultData) {
-		return defaultData instanceof InvocationSequenceData && ((InvocationSequenceData) defaultData).getParentSequence() == null;
+		return (defaultData instanceof InvocationSequenceData) && (((InvocationSequenceData) defaultData).getParentSequence() == null);
 	}
 
 	/**

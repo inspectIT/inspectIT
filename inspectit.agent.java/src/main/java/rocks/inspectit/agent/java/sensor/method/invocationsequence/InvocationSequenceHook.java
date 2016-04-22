@@ -206,7 +206,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				long count = invocationStartIdCount.get().longValue();
 				invocationStartIdCount.set(Long.valueOf(count - 1));
 
-				if (0 == count - 1) {
+				if (0 == (count - 1)) {
 					timeStack.push(new Double(timer.getCurrentTime()));
 				}
 			}
@@ -234,7 +234,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				}
 			}
 
-			if (methodId == invocationStartId.get().longValue() && 0 == invocationStartIdCount.get().longValue()) {
+			if ((methodId == invocationStartId.get().longValue()) && (0 == invocationStartIdCount.get().longValue())) {
 				double endTime = timeStack.pop().doubleValue();
 				double startTime = timeStack.pop().doubleValue();
 				double duration = endTime - startTime;
@@ -327,11 +327,11 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 */
 	private boolean removeDueToWrappedSqls(RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData) {
 		List<IMethodSensor> sensors = rsc.getMethodSensors();
-		if (1 == sensors.size() || (2 == sensors.size() && enhancedExceptionSensor)) {
+		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
 			for (IMethodSensor methodSensor : sensors) {
 				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
 				if (PreparedStatementSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
-					if (null == invocationSequenceData.getSqlStatementData() || 0 == invocationSequenceData.getSqlStatementData().getCount()) {
+					if ((null == invocationSequenceData.getSqlStatementData()) || (0 == invocationSequenceData.getSqlStatementData().getCount())) {
 						return true;
 					}
 				}
@@ -354,7 +354,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 */
 	private boolean removeDueToNotCapturedLogging(RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData) {
 		List<IMethodSensor> sensors = rsc.getMethodSensors();
-		if (1 == sensors.size() || (2 == sensors.size() && enhancedExceptionSensor)) {
+		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
 			for (IMethodSensor methodSensor : sensors) {
 				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
 				if (Log4JLoggingSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
@@ -385,7 +385,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 */
 	private boolean skip(RegisteredSensorConfig rsc) {
 		List<IMethodSensor> sensors = rsc.getMethodSensors();
-		if (1 == sensors.size() || (2 == sensors.size() && enhancedExceptionSensor)) {
+		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
 			for (IMethodSensor methodSensor : sensors) {
 				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
 				if (PreparedStatementParameterSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
@@ -474,7 +474,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 
 		if (dataObject.getClass().equals(HttpTimerData.class)) {
 			// don't overwrite ourself but overwrite timers
-			if (null == invocationSequenceData.getTimerData() || invocationSequenceData.getTimerData().getClass().equals(TimerData.class)) {
+			if ((null == invocationSequenceData.getTimerData()) || invocationSequenceData.getTimerData().getClass().equals(TimerData.class)) {
 				invocationSequenceData.setTimerData((HttpTimerData) dataObject);
 			}
 		}

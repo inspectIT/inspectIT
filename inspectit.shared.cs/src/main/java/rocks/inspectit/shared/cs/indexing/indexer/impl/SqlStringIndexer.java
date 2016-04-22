@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 /**
  * Indexer that indexes SQLs based on the query string. All other objects types are indexed with
  * same key.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class SqlStringIndexer<E extends DefaultData> extends AbstractSharedInstanceBranchIndexer<E> implements IBranchIndexer<E> {
@@ -34,7 +34,7 @@ public class SqlStringIndexer<E extends DefaultData> extends AbstractSharedInsta
 	 * Additional constructor. Sets the amount of maximum keys that will be created. If unlimited
 	 * keys should be used, construct object with no-arg constructor or pass the non-positive
 	 * number.
-	 * 
+	 *
 	 * @param maxKeys
 	 *            Max keys that can be created by this indexer.
 	 */
@@ -45,6 +45,7 @@ public class SqlStringIndexer<E extends DefaultData> extends AbstractSharedInsta
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		if (element instanceof SqlStatementData) {
 			SqlStatementData sqlStatementData = (SqlStatementData) element;
@@ -58,6 +59,7 @@ public class SqlStringIndexer<E extends DefaultData> extends AbstractSharedInsta
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		if (query instanceof StorageIndexQuery) {
 			if (null != ((StorageIndexQuery) query).getSql()) {
@@ -71,7 +73,7 @@ public class SqlStringIndexer<E extends DefaultData> extends AbstractSharedInsta
 
 	/**
 	 * Internal hash function depending on the {@link #maxKeys}.
-	 * 
+	 *
 	 * @param hashCode
 	 *            Hash code to transform.
 	 * @return Key that can be used.

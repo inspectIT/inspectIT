@@ -6,11 +6,11 @@ import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
 import rocks.inspectit.shared.cs.indexing.restriction.AbstractIndexQueryRestriction;
 
 /**
- * 
+ *
  * Factory that provide different types of index query restrictions.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class IndexQueryRestrictionFactory {
 
@@ -23,7 +23,7 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * Returns equals restriction. This restriction will check if the object supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is equal to the restriction value.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -38,7 +38,7 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * Returns not equals restriction. This restriction will check if the object supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is not equal to the restriction value.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -53,7 +53,7 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * Returns greater than restriction. This restriction will check if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is greater than the restriction value.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -69,7 +69,7 @@ public final class IndexQueryRestrictionFactory {
 	 * Returns greater equals restriction. This restriction will check if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is greater or equal than the restriction
 	 * value.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -84,7 +84,7 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * Returns less than restriction. This restriction will check if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is less than the restriction value.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -100,7 +100,7 @@ public final class IndexQueryRestrictionFactory {
 	 * Returns less equals restriction. This restriction will check if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is less or equal than the restriction
 	 * value.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -115,7 +115,7 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * Returns is null restriction. This restriction will check if the object supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is null.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @return index query restriction
@@ -128,7 +128,7 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * Returns is not null restriction. This restriction will check if the object supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is not null.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @return index query restriction
@@ -141,7 +141,7 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * Returns is in collection restriction. This restriction will check if the object supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is in the supplied collection.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param collection
@@ -158,7 +158,7 @@ public final class IndexQueryRestrictionFactory {
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is a collection, and all it members are
 	 * also contained in the collection provided with object construction. Note that this
 	 * restriction has to be bounded to a {@link Collection} field.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param collection
@@ -177,15 +177,15 @@ public final class IndexQueryRestrictionFactory {
 	 * this method will not returned true if the restriction value is 1 for example, and it is
 	 * checked against field that is of a long primitive type, because Java will create an Integer
 	 * object from literal 1.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class EqualsIndexingRestriction extends ObjectIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param restrictionValue
@@ -201,11 +201,12 @@ public final class IndexQueryRestrictionFactory {
 		 * Checks if the restriction value and supplied object are equal, by terms of
 		 * {@link Object#equals(Object)} method. If restriction value is null, method will then
 		 * return true if given object is also null.
-		 * 
+		 *
 		 * @param object
 		 * @returns
 		 * @see Object#equals(Object)
 		 */
+		@Override
 		public boolean isFulfilled(Object object) {
 			if (null == getRestrictionValue()) {
 				return null == object;
@@ -218,15 +219,15 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * This restriction checks if the restriction value and object supplied via
 	 * {@link #isFulfilled(Object)} are not equal, by terms of {@link Object#equals(Object)} method.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class NotEqualsIndexingRestriction extends ObjectIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param restrictionValue
@@ -242,11 +243,12 @@ public final class IndexQueryRestrictionFactory {
 		 * Checks if the restriction value and supplied object are not equal, by terms of
 		 * {@link Object#equals(Object)} method. If restriction value is null, method will then
 		 * return true if given object is not null.
-		 * 
+		 *
 		 * @param object
 		 * @returns
 		 * @see Object#equals(Object)
 		 */
+		@Override
 		public boolean isFulfilled(Object object) {
 			if (null == getRestrictionValue()) {
 				return null != object;
@@ -260,15 +262,15 @@ public final class IndexQueryRestrictionFactory {
 	 * This restriction checks if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is greater than the restriction value, by
 	 * terms of {@link Comparable#compareTo(Object)} method.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class GreaterThanIndexingRestriction extends ComparableIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param restrictionValue
@@ -284,11 +286,12 @@ public final class IndexQueryRestrictionFactory {
 		 * Checks if the supplied object is greater than the restriction value, by terms of
 		 * {@link Comparable#compareTo(Object)} method. If restriction value is null, method will
 		 * return false.
-		 * 
+		 *
 		 * @param object
 		 * @returns
 		 * @see Comparable#compareTo(Object)
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean isFulfilled(Object object) {
 			if (null == getRestrictionValue()) {
@@ -303,15 +306,15 @@ public final class IndexQueryRestrictionFactory {
 	 * This restriction checks if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is greater or equal than the restriction
 	 * value, by terms of {@link Comparable#compareTo(Object)} method.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class GreaterEqualsIndexingRestriction extends ComparableIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param restrictionValue
@@ -327,11 +330,12 @@ public final class IndexQueryRestrictionFactory {
 		 * Checks if the supplied object is greater or equal than the restriction value, by terms of
 		 * {@link Comparable#compareTo(Object)} method. If restriction value is null, method will
 		 * return false.
-		 * 
+		 *
 		 * @param object
 		 * @returns
 		 * @see Comparable#compareTo(Object)
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean isFulfilled(Object object) {
 			if (null == getRestrictionValue()) {
@@ -346,15 +350,15 @@ public final class IndexQueryRestrictionFactory {
 	 * This restriction checks if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is less than the restriction value, by
 	 * terms of {@link Comparable#compareTo(Object)} method.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class LessThanIndexingRestriction extends ComparableIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param restrictionValue
@@ -370,11 +374,12 @@ public final class IndexQueryRestrictionFactory {
 		 * Checks if the supplied object is less than the restriction value, by terms of
 		 * {@link Comparable#compareTo(Object)} method. If restriction value is null, method will
 		 * return false.
-		 * 
+		 *
 		 * @param object
 		 * @returns
 		 * @see Comparable#compareTo(Object)
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean isFulfilled(Object object) {
 			if (null == getRestrictionValue()) {
@@ -389,15 +394,15 @@ public final class IndexQueryRestrictionFactory {
 	 * This restriction checks if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is less or equal than the restriction
 	 * value, by terms of {@link Comparable#compareTo(Object)} method.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class LessEqualsIndexingRestriction extends ComparableIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param restrictionValue
@@ -413,11 +418,12 @@ public final class IndexQueryRestrictionFactory {
 		 * Checks if the supplied object is less or equal than the restriction value, by terms of
 		 * {@link Comparable#compareTo(Object)} method. If restriction value is null, method will
 		 * return false.
-		 * 
+		 *
 		 * @param object
 		 * @returns
 		 * @see Comparable#compareTo(Object)
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean isFulfilled(Object object) {
 			if (null == getRestrictionValue()) {
@@ -431,15 +437,15 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * This restriction checks if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is null.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class IsNullIndexingRestriction extends AbstractIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 */
@@ -451,10 +457,11 @@ public final class IndexQueryRestrictionFactory {
 		 * {@inheritDoc}
 		 * <p>
 		 * Checks if the supplied object is null.
-		 * 
+		 *
 		 * @param object
 		 * @returns True if object is null, otherwise false.
 		 */
+		@Override
 		public boolean isFulfilled(Object object) {
 			return object == null;
 		}
@@ -464,15 +471,15 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * This restriction checks if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is not null.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class IsNotNullIndexingRestriction extends AbstractIndexQueryRestriction {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 */
@@ -484,10 +491,11 @@ public final class IndexQueryRestrictionFactory {
 		 * {@inheritDoc}
 		 * <p>
 		 * Checks if the supplied object is not null.
-		 * 
+		 *
 		 * @param object
 		 * @returns True if object is not null, otherwise false.
 		 */
+		@Override
 		public boolean isFulfilled(Object object) {
 			return object != null;
 		}
@@ -497,9 +505,9 @@ public final class IndexQueryRestrictionFactory {
 	/**
 	 * This restriction checks if the value supplied via
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is in a collection.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class IsInCollection extends AbstractIndexQueryRestriction {
 
@@ -510,7 +518,7 @@ public final class IndexQueryRestrictionFactory {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param collection
@@ -524,8 +532,9 @@ public final class IndexQueryRestrictionFactory {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean isFulfilled(Object fieldValue) {
-			return collection != null && collection.contains(fieldValue);
+			return (collection != null) && collection.contains(fieldValue);
 		}
 
 		/**
@@ -535,7 +544,7 @@ public final class IndexQueryRestrictionFactory {
 		public int hashCode() {
 			final int prime = 31;
 			int result = super.hashCode();
-			result = prime * result + ((collection == null) ? 0 : collection.hashCode());
+			result = (prime * result) + ((collection == null) ? 0 : collection.hashCode());
 			return result;
 		}
 
@@ -571,9 +580,9 @@ public final class IndexQueryRestrictionFactory {
 	 * {@link IIndexQueryRestriction#isFulfilled(Object)} is a collection, and all it members are
 	 * also contained in the collection provided with object construction. Note that this
 	 * restriction has to be bounded to a {@link Collection} field.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class AreAllInCollection extends AbstractIndexQueryRestriction {
 
@@ -584,7 +593,7 @@ public final class IndexQueryRestrictionFactory {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param fieldName
 		 *            Name of the field that is restriction bounded to.
 		 * @param collection
@@ -598,6 +607,7 @@ public final class IndexQueryRestrictionFactory {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean isFulfilled(Object fieldValue) {
 			if (fieldValue instanceof Collection<?>) {
 				return collection.containsAll((Collection<?>) fieldValue);
@@ -612,7 +622,7 @@ public final class IndexQueryRestrictionFactory {
 		public int hashCode() {
 			final int prime = 31;
 			int result = super.hashCode();
-			result = prime * result + ((collection == null) ? 0 : collection.hashCode());
+			result = (prime * result) + ((collection == null) ? 0 : collection.hashCode());
 			return result;
 		}
 

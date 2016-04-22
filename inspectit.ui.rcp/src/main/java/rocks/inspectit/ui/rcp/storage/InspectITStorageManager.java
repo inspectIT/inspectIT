@@ -47,18 +47,18 @@ import rocks.inspectit.shared.cs.storage.label.type.impl.ExploredByLabelType;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinitionProvider;
-import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
 import rocks.inspectit.ui.rcp.storage.util.DataRetriever;
 import rocks.inspectit.ui.rcp.storage.util.DataUploader;
 
 /**
  * {@link StorageManager} for GUI.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InspectITStorageManager extends StorageManager implements CmrRepositoryChangeListener { // NOPMD
 
@@ -74,17 +74,17 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Map of mounted and online not available storages.
 	 */
-	private Map<LocalStorageData, CmrRepositoryDefinition> mountedAvailableStorages = new ConcurrentHashMap<LocalStorageData, CmrRepositoryDefinition>(16, 0.75f, 2);
+	private Map<LocalStorageData, CmrRepositoryDefinition> mountedAvailableStorages = new ConcurrentHashMap<>(16, 0.75f, 2);
 
 	/**
 	 * Cashed statuses of CMR repository definitions.
 	 */
-	private ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedRepositoriesStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>(16, 0.75f, 2);
+	private ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedRepositoriesStatus = new ConcurrentHashMap<>(16, 0.75f, 2);
 
 	/**
 	 * List of {@link StorageChangeListener}s.
 	 */
-	private List<StorageChangeListener> storageChangeListeners = new ArrayList<StorageChangeListener>();
+	private List<StorageChangeListener> storageChangeListeners = new ArrayList<>();
 
 	/**
 	 * {@link DataRetriever}.
@@ -102,9 +102,9 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	private StorageRepositoryDefinitionProvider storageRepositoryDefinitionProvider;
 
 	/**
-	 * Mounts a new storage locally. Same as calling
-	 * {@link #mountStorage(StorageData, CmrRepositoryDefinition, false, false)}.
-	 * 
+	 * Mounts a new storage locally. Same as calling {@link #mountStorage(StorageData,
+	 * CmrRepositoryDefinition, false, false)}.
+	 *
 	 * @param storageData
 	 *            Storage to mount.
 	 * @param cmrRepositoryDefinition
@@ -125,7 +125,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Mounts a new storage locally. Provides option to specify if the complete download should be
 	 * performed.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to mount.
 	 * @param cmrRepositoryDefinition
@@ -143,10 +143,10 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *             If {@link IOException} occurs.
 	 * @throws SerializationException
 	 *             If {@link SerializationException} occurs.
-	 * 
+	 *
 	 */
-	private void mountStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean fullyDownload, boolean compressBefore, SubMonitor subMonitor) throws BusinessException,
-			IOException, SerializationException {
+	private void mountStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean fullyDownload, boolean compressBefore, SubMonitor subMonitor)
+			throws BusinessException, IOException, SerializationException {
 		LocalStorageData localStorageData = new LocalStorageData(storageData);
 
 		Path directory = getStoragePath(localStorageData);
@@ -196,7 +196,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Returns if the storage data is already downloaded.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}.
 	 * @return Returns if the storage data is already downloaded.
@@ -213,7 +213,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Fully downloads selected storage.
-	 * 
+	 *
 	 * @param storageData
 	 *            StorageData.
 	 * @param cmrRepositoryDefinition
@@ -229,8 +229,8 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * @throws BusinessException
 	 *             If storage is already fully downloaded.
 	 */
-	public void fullyDownloadStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean compressBefore, SubMonitor subMonitor) throws BusinessException, IOException,
-			SerializationException {
+	public void fullyDownloadStorage(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, boolean compressBefore, SubMonitor subMonitor)
+			throws BusinessException, IOException, SerializationException {
 		LocalStorageData localStorageData = null;
 		for (LocalStorageData lsd : mountedAvailableStorages.keySet()) {
 			if (ObjectUtils.equals(lsd.getId(), storageData.getId())) {
@@ -259,7 +259,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Deletes all local data saved for given {@link LocalStorageData}, unmount storage.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            {@link LocalStorageData}.
 	 * @throws IOException
@@ -273,7 +273,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Deletes all local data saved for given {@link LocalStorageData}, unmount storage.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            {@link LocalStorageData}.
 	 * @param informListeners
@@ -305,7 +305,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Informs the {@link InspectITStorageManager} that a {@link StorageData} has been remotely
 	 * deleted.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}.
 	 * @throws SerializationException
@@ -321,7 +321,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 				break;
 			}
 		}
-		if (null != localStorageData && !localStorageData.isFullyDownloaded()) {
+		if ((null != localStorageData) && !localStorageData.isFullyDownloaded()) {
 			deleteLocalStorageData(localStorageData, false);
 		} else {
 			for (LocalStorageData notAvailable : mountedNotAvailableStorages) {
@@ -330,7 +330,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 					break;
 				}
 			}
-			if (null != localStorageData && !localStorageData.isFullyDownloaded()) {
+			if ((null != localStorageData) && !localStorageData.isFullyDownloaded()) {
 				deleteLocalStorageData(localStorageData, false);
 			}
 		}
@@ -345,7 +345,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Informs the Storage Manager that the {@link StorageData} has been remotely updated, so that
 	 * existing local clone of the data can be updated.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} that was updated.
 	 * @throws IOException
@@ -368,7 +368,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Returns mounted and available storages, thus the ones that can be read from.
-	 * 
+	 *
 	 * @return List of {@link LocalStorageData}.
 	 */
 	public Collection<LocalStorageData> getMountedAvailableStorages() {
@@ -378,7 +378,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Returns mounted but not available storages, thus the ones that can not be read from because
 	 * there is no CMR that can handle them.
-	 * 
+	 *
 	 * @return List of {@link LocalStorageData}.
 	 */
 	public Collection<LocalStorageData> getMountedUnavailableStorages() {
@@ -387,7 +387,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Returns collection of fully downloaded storages.
-	 * 
+	 *
 	 * @return List of {@link LocalStorageData}.
 	 */
 	public Collection<LocalStorageData> getDownloadedStorages() {
@@ -396,12 +396,13 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Returns storage {@link Path}.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage.
 	 * @return Returns storage {@link Path}.
 	 * @see Paths#get(String, String...)
 	 */
+	@Override
 	public Path getStoragePath(IStorageData storageData) {
 		return getDefaultStorageDirPath().resolve(storageData.getStorageFolder());
 	}
@@ -459,7 +460,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * quite big, since it will hold the complete indexing tree. Thus, it is important that the
 	 * caller of this method take responsibility to make earlier created definitions ready for
 	 * garbage collection as soon as they are not needed anymore.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            {@link LocalStorageData} to create the definition for.
 	 * @return {@link StorageRepositoryDefinition}.
@@ -469,7 +470,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *             If {@link SerializationException} occurs.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
-	 * 
+	 *
 	 */
 	public StorageRepositoryDefinition getStorageRepositoryDefinition(LocalStorageData localStorageData) throws BusinessException, SerializationException, IOException {
 		// check if it is available
@@ -490,7 +491,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 		// get indexing tree
 		IStorageTreeComponent<? extends DefaultData> indexingTree = getIndexingTree(localStorageData);
 		if (null == indexingTree) {
-			indexingTree = new ArrayBasedStorageLeaf<DefaultData>();
+			indexingTree = new ArrayBasedStorageLeaf<>();
 		}
 
 		// create new storage repository definition
@@ -505,7 +506,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Checks if the storage is locally mounted.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage data to check.
 	 * @return True if storage is mounted, false otherwise.
@@ -516,7 +517,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Returns the local data for storage if the storage is mounted or downloaded.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage data to check.
 	 * @return {@link LocalStorageData}.
@@ -542,7 +543,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Registers a {@link StorageChangeListener} if the same listener does not already exist.
-	 * 
+	 *
 	 * @param storageChangeListener
 	 *            {@link StorageChangeListener} to add.
 	 */
@@ -556,7 +557,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Removes a {@link StorageChangeListener}.
-	 * 
+	 *
 	 * @param storageChangeListener
 	 *            {@link StorageChangeListener} to remove.
 	 */
@@ -568,7 +569,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Uploads a file to the {@link CmrRepositoryDefinition} storage uploads.
-	 * 
+	 *
 	 * @param fileName
 	 *            Name of file.
 	 * @param cmrRepositoryDefinition
@@ -590,7 +591,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Uploads a complete storage to the {@link CmrRepositoryDefinition} upload folder. All files
 	 * belonging to the local storage data will be uploaded to the temporary directory.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            Storage to upload.
 	 * @param cmrRepositoryDefinition
@@ -609,7 +610,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 		String tmpDir = "tmp" + UUID.randomUUID().hashCode();
 		Path storageDir = getStoragePath(localStorageData);
-		final List<Path> toUpload = new ArrayList<Path>();
+		final List<Path> toUpload = new ArrayList<>();
 		Files.walkFileTree(storageDir, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -624,7 +625,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Compresses the content of the local storage data folder to the file. File name is provided
 	 * via given path. If the file already exists, it will be deleted first.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            {@link LocalStorageData} to zip.
 	 * @param zipFileName
@@ -655,7 +656,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Zips the remote storage files to the file. File name is provided via given path. If the file
 	 * already exists, it will be deleted first.
-	 * 
+	 *
 	 * @param storageData
 	 *            Remote storage to zip.
 	 * @param cmrRepositoryDefinition
@@ -673,8 +674,8 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * @throws SerializationException
 	 *             If {@link SerializationException} occurs.
 	 */
-	public void zipStorageData(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, String zipFileName, boolean compressBefore, SubMonitor subMonitor) throws BusinessException,
-			IOException, SerializationException {
+	public void zipStorageData(StorageData storageData, CmrRepositoryDefinition cmrRepositoryDefinition, String zipFileName, boolean compressBefore, SubMonitor subMonitor)
+			throws BusinessException, IOException, SerializationException {
 		Path zipPath = Paths.get(zipFileName);
 		if (Files.exists(zipPath)) {
 			Files.delete(zipPath);
@@ -702,7 +703,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Returns the {@link StorageData} object that exists in the compressed storage file.
-	 * 
+	 *
 	 * @param zipFileName
 	 *            Compressed storage file name.
 	 * @return {@link IStorageData} object or <code>null</code> if the given file is not of correct
@@ -719,7 +720,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * <p>
 	 * The method will also check if the imported storage is available online, and if it is will
 	 * update the local data saved.
-	 * 
+	 *
 	 * @param fileName
 	 *            File to unzip.
 	 * @throws BusinessException
@@ -728,7 +729,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *             If {@link IOException} occurs.
 	 * @throws SerializationException
 	 *             If serialization exception occurs if data needs to be updated.
-	 * 
+	 *
 	 */
 	public void unzipStorageData(String fileName) throws BusinessException, IOException, SerializationException {
 		Path zipPath = Paths.get(fileName);
@@ -753,6 +754,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryAdded(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		this.addMountedStorages(cmrRepositoryDefinition);
 	}
@@ -760,6 +762,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryRemoved(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		this.removeMountedStorages(cmrRepositoryDefinition);
 	}
@@ -767,18 +770,21 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryDataUpdated(CmrRepositoryDefinition cmrRepositoryDefinition) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryAgentDeleted(CmrRepositoryDefinition cmrRepositoryDefinition, PlatformIdent agent) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryOnlineStatusUpdated(CmrRepositoryDefinition cmrRepositoryDefinition, OnlineStatus oldStatus, OnlineStatus newStatus) {
 		if (newStatus != OnlineStatus.CHECKING) {
 			OnlineStatus cachedStatus = cachedRepositoriesStatus.get(cmrRepositoryDefinition);
@@ -796,7 +802,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Updates the information of the local storage data saved on the client machine with the data
 	 * provided in the storage data available online.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            Local storage data to update.
 	 * @param storageData
@@ -814,14 +820,14 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Adds mounted storages that are bounded to the given {@link CmrRepositoryDefinition} to
 	 * "available" map.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 */
 	private void addMountedStorages(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
 			List<StorageData> closedStorages = cmrRepositoryDefinition.getStorageService().getReadableStorages();
-			List<LocalStorageData> newAvailableStoarges = new ArrayList<LocalStorageData>();
+			List<LocalStorageData> newAvailableStoarges = new ArrayList<>();
 			for (LocalStorageData localStorageData : mountedNotAvailableStorages) {
 				for (StorageData storageData : closedStorages) {
 					if (ObjectUtils.equals(localStorageData.getId(), storageData.getId())) {
@@ -852,12 +858,12 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Removes mounted storages that are bounded to the given {@link CmrRepositoryDefinition} to
 	 * "available" map.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 */
 	private void removeMountedStorages(CmrRepositoryDefinition cmrRepositoryDefinition) {
-		List<LocalStorageData> removeList = new ArrayList<LocalStorageData>();
+		List<LocalStorageData> removeList = new ArrayList<>();
 		for (Map.Entry<LocalStorageData, CmrRepositoryDefinition> entry : mountedAvailableStorages.entrySet()) {
 			if (!entry.getKey().isFullyDownloaded()) {
 				if (ObjectUtils.equals(entry.getValue(), cmrRepositoryDefinition)) {
@@ -873,7 +879,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Loads {@link PlatformIdent}s from a disk for a storage.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData}
 	 * @return List of {@link PlatformIdent}s involved in the storage data or null if no file
@@ -895,7 +901,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Loads indexing tree from a disk for a storage.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData}
 	 * @return Indexing tree or null if it can not be found.
@@ -911,7 +917,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 			if (indexingTrees.size() == 1) {
 				return indexingTrees.get(0);
 			} else {
-				CombinedStorageBranch<DefaultData> combinedStorageBranch = new CombinedStorageBranch<DefaultData>(indexingTrees);
+				CombinedStorageBranch<DefaultData> combinedStorageBranch = new CombinedStorageBranch<>(indexingTrees);
 				return combinedStorageBranch;
 			}
 		} else {
@@ -921,7 +927,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Returns all storages that have been mounted locally.
-	 * 
+	 *
 	 * @return Returns all storages that have been mounted locally as a list of
 	 *         {@link LocalStorageData}.
 	 * @throws IOException
@@ -937,7 +943,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * Reads the objects from files that are in a given path or sub-paths. Note that generic can be
 	 * used to specify the wanted class. How ever, if the object loaded from a file is not of a
 	 * wanted class, {@link ClassCastException} will be thrown as usual.
-	 * 
+	 *
 	 * @param <E>
 	 *            Wanted type. Use object if it is uncertain what types object will be.
 	 * @param path
@@ -949,7 +955,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *             If {@link IOException} occurs.
 	 * @throws SerializationException
 	 *             If data can not be deserialized.
-	 * 
+	 *
 	 */
 	private <E> List<E> getObjectsByFileTreeWalk(Path path, final String fileSufix) throws IOException, SerializationException {
 		if (!Files.isDirectory(path)) {
@@ -958,7 +964,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 		final ISerializer serializer = getSerializationManagerProvider().createSerializer();
 		final MutableObject mutableException = new MutableObject();
-		final List<E> returnList = new ArrayList<E>();
+		final List<E> returnList = new ArrayList<>();
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 
 			@SuppressWarnings("unchecked")
@@ -997,12 +1003,12 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * Returns map of online available storages with their {@link CmrRepositoryDefinition} as a
 	 * value.
-	 * 
+	 *
 	 * @return Map of online available storages with their {@link CmrRepositoryDefinition} as a
 	 *         value.
 	 */
 	private Map<StorageData, CmrRepositoryDefinition> getOnlineStorages() {
-		Map<StorageData, CmrRepositoryDefinition> storageMap = new HashMap<StorageData, CmrRepositoryDefinition>();
+		Map<StorageData, CmrRepositoryDefinition> storageMap = new HashMap<>();
 		List<CmrRepositoryDefinition> allRepositories = InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions();
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : allRepositories) {
 			if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
@@ -1020,12 +1026,13 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Path getDefaultStorageDirPath() {
 		return InspectIT.getDefault().getRuntimeDir().resolve(getStorageDefaultFolder()).toAbsolutePath();
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Returns the system username.
 	 */
 	private String getSystemUsername() {
@@ -1042,7 +1049,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Sets {@link #dataUploader}.
-	 * 
+	 *
 	 * @param dataUploader
 	 *            New value for {@link #dataUploader}
 	 */
@@ -1052,7 +1059,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 
 	/**
 	 * Sets {@link #storageRepositoryDefinitionProvider}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinitionProvider
 	 *            New value for {@link #storageRepositoryDefinitionProvider}
 	 */

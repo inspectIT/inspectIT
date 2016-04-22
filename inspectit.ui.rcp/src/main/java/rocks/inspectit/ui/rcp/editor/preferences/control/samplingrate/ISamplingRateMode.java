@@ -8,16 +8,16 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * The interface for the sampling rate modes.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public interface ISamplingRateMode {
 
 	/**
 	 * Adjusts the sampling rate with the given sampling rate mode and returns a {@link List} with
 	 * the aggregated {@link DefaultData} objects.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of element.
 	 * @param defaultDataList

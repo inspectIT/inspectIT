@@ -15,8 +15,6 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.all.jpa.ListStringConverter;
-
 @SuppressWarnings("unchecked")
 public class ListStringConverterTest {
 

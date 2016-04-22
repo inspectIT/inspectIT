@@ -23,9 +23,9 @@ import org.springframework.beans.factory.InitializingBean;
  * This servlet can be used for uploading any number files in one request. The file has to be
  * uploaded with the name that represents the relative path to the upload folder where file will be
  * saved.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class FileUploadServlet extends HttpServlet implements InitializingBean {
 
@@ -48,6 +48,7 @@ public class FileUploadServlet extends HttpServlet implements InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<?> files = (List<?>) req.getAttribute(MULTI_PART_FILTER_FILES);
 
@@ -72,7 +73,7 @@ public class FileUploadServlet extends HttpServlet implements InitializingBean {
 					throw new IOException("Upload file already exists. Aborting the upload.");
 				}
 				File outputDir = outputFile.getParentFile();
-				if (null != outputDir && !outputDir.exists()) {
+				if ((null != outputDir) && !outputDir.exists()) {
 					if (!outputDir.mkdirs()) {
 						throw new IOException("Needed directory " + outputDir + " can not be created.");
 					}
@@ -87,13 +88,14 @@ public class FileUploadServlet extends HttpServlet implements InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
 	/**
 	 * Sets {@link #directoryToStore}.
-	 * 
+	 *
 	 * @param directoryToStore
 	 *            New value for {@link #directoryToStore}
 	 */

@@ -22,8 +22,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.CombinedInvocationsInputDefinitionExtra;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
@@ -32,9 +32,9 @@ import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationsCombineDataHandler extends AbstractHandler implements IHandler {
 
@@ -49,7 +49,7 @@ public class InvocationsCombineDataHandler extends AbstractHandler implements IH
 		InputDefinition inputDefinition = null;
 
 		long platformIdent = 0;
-		List<InvocationSequenceData> invocationsList = new ArrayList<InvocationSequenceData>();
+		List<InvocationSequenceData> invocationsList = new ArrayList<>();
 		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 			Object nextObject = it.next();
 			if (nextObject instanceof InvocationSequenceData) {

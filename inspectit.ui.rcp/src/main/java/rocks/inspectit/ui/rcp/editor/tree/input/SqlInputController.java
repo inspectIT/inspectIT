@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -45,8 +46,8 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.SqlStatementInputDefinitionExtra;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.text.input.SqlStatementTextInputController.SqlHolderHelper;
@@ -62,9 +63,9 @@ import rocks.inspectit.ui.rcp.util.data.DatabaseInfoHelper;
 
 /**
  * This input controller displays the contents of {@link SqlStatementData} objects.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class SqlInputController extends AbstractTreeInputController {
 
@@ -82,9 +83,9 @@ public class SqlInputController extends AbstractTreeInputController {
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private static enum Column {
 
@@ -118,7 +119,7 @@ public class SqlInputController extends AbstractTreeInputController {
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -137,13 +138,13 @@ public class SqlInputController extends AbstractTreeInputController {
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -214,6 +215,7 @@ public class SqlInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TreeViewer treeViewer) {
 		for (Column column : Column.values()) {
 			TreeViewerColumn viewerColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
@@ -239,6 +241,7 @@ public class SqlInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new SqlContentProvider();
 	}
@@ -246,6 +249,7 @@ public class SqlInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new SqlLabelProvider();
 	}
@@ -253,11 +257,12 @@ public class SqlInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ViewerComparator getComparator() {
 		TreeViewerComparator<SqlStatementData> sqlViewerComparator = new DatabaseSqlTreeComparator();
 		for (Column column : Column.values()) {
 			if (null != column.dataComparator) {
-				ResultComparator<SqlStatementData> resultComparator = new ResultComparator<SqlStatementData>(column.dataComparator, cachedDataService);
+				ResultComparator<SqlStatementData> resultComparator = new ResultComparator<>(column.dataComparator, cachedDataService);
 				sqlViewerComparator.addColumn(getMappedTreeViewerColumn(column).getColumn(), resultComparator);
 			}
 		}
@@ -344,6 +349,7 @@ public class SqlInputController extends AbstractTreeInputController {
 		}
 
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (null != rootEditor) {
 					rootEditor.setDataInput(Collections.<DefaultData> emptyList());
@@ -355,7 +361,7 @@ public class SqlInputController extends AbstractTreeInputController {
 
 	/**
 	 * Create input map from list of {@link SqlStatementData}s.
-	 * 
+	 *
 	 * @param sqlStatementDatas
 	 *            {@link SqlStatementData}s
 	 * @return Input map
@@ -376,15 +382,15 @@ public class SqlInputController extends AbstractTreeInputController {
 
 	/**
 	 * The sql label provider used by this view.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class SqlLabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -418,9 +424,9 @@ public class SqlInputController extends AbstractTreeInputController {
 
 	/**
 	 * The sql content provider used by this view.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class SqlContentProvider extends ArrayContentProvider implements ITreeContentProvider {
 
@@ -462,9 +468,10 @@ public class SqlInputController extends AbstractTreeInputController {
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		final StructuredSelection selection = (StructuredSelection) event.getSelection();
-		if (!selection.isEmpty() && selection.getFirstElement() instanceof SqlStatementData) {
+		if (!selection.isEmpty() && (selection.getFirstElement() instanceof SqlStatementData)) {
 			try {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+					@Override
 					public void run(final IProgressMonitor monitor) {
 						monitor.beginTask("Retrieving Parameter Aggregated SQLs", IProgressMonitor.UNKNOWN);
 						SqlStatementData data = (SqlStatementData) selection.getFirstElement();
@@ -475,7 +482,7 @@ public class SqlInputController extends AbstractTreeInputController {
 
 							// if we have only one statement and it has no parameters, we won't load
 							// the bottom part with empty parameters
-							if (dataList.size() == 1 && CollectionUtils.isEmpty(dataList.get(0).getParameterValues())) {
+							if ((dataList.size() == 1) && CollectionUtils.isEmpty(dataList.get(0).getParameterValues())) {
 								hasNoParameters = true;
 							}
 						}
@@ -484,6 +491,7 @@ public class SqlInputController extends AbstractTreeInputController {
 							final SqlHolderHelper inputForParametersTable = new SqlHolderHelper(Collections.<SqlStatementData> emptyList(), true);
 							final SqlHolderHelper inputForTextOnly = new SqlHolderHelper(Collections.singletonList(data), false);
 							Display.getDefault().asyncExec(new Runnable() {
+								@Override
 								public void run() {
 									IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 									IWorkbenchPage page = window.getActivePage();
@@ -498,6 +506,7 @@ public class SqlInputController extends AbstractTreeInputController {
 						} else {
 							final SqlHolderHelper inputForParametersTable = new SqlHolderHelper(dataList, true);
 							Display.getDefault().asyncExec(new Runnable() {
+								@Override
 								public void run() {
 									IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 									IWorkbenchPage page = window.getActivePage();
@@ -524,12 +533,12 @@ public class SqlInputController extends AbstractTreeInputController {
 	 */
 	@Override
 	public int getExpandLevel() {
-		return TreeViewer.ALL_LEVELS;
+		return AbstractTreeViewer.ALL_LEVELS;
 	}
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param enumId
@@ -571,7 +580,7 @@ public class SqlInputController extends AbstractTreeInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            {@link DatabaseInfoHelper}.
 	 * @param enumId
@@ -590,6 +599,7 @@ public class SqlInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof SqlStatementData) {
 			SqlStatementData data = (SqlStatementData) object;
@@ -618,14 +628,14 @@ public class SqlInputController extends AbstractTreeInputController {
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof SqlStatementData) {
 			SqlStatementData data = (SqlStatementData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getSqlStyledTextForColumn(data, column).toString());
 			}
 			return values;
 		} else if (object instanceof DatabaseInfoHelper) {
 			DatabaseInfoHelper data = (DatabaseInfoHelper) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getDatabaseStyledTextForColumn(data, column).toString());
 			}

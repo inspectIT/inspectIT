@@ -22,10 +22,10 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Aggregator for the {@link TimerData} objects that need to be persisted to the DB.
- * 
+ *
  * @author Ivan Senic
  * @see https://inspectit-performance.atlassian.net/wiki/display/DEV/TimerData+Aggregator
- * 
+ *
  */
 @Repository
 public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
@@ -86,7 +86,7 @@ public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param transactionManager
 	 *            {@link PlatformTransactionManager}. Autowired by Spring.
 	 */
@@ -94,9 +94,9 @@ public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 	public TimerDataAggregator(PlatformTransactionManager transactionManager) {
 		super(TimerData.class);
 		elementCount = new AtomicInteger(0);
-		map = new HashMap<Integer, TimerData>();
-		queue = new ConcurrentLinkedQueue<TimerData>();
-		persistList = new ConcurrentLinkedQueue<TimerData>();
+		map = new HashMap<>();
+		queue = new ConcurrentLinkedQueue<>();
+		persistList = new ConcurrentLinkedQueue<>();
 		persistAllLock = new ReentrantLock();
 
 		this.tt = new TransactionTemplate(transactionManager);
@@ -105,7 +105,7 @@ public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 	/**
 	 * Aggregates the {@link TimerData} object and updates the cache. Note that the given object
 	 * will not be modified by this method.
-	 * 
+	 *
 	 * @param timerData
 	 *            {@link TimerData} that holds values to be aggregated.
 	 */
@@ -192,7 +192,7 @@ public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 
 	/**
 	 * Returns the cache hash code.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            Platform ident.
 	 * @param methodIdent
@@ -204,22 +204,22 @@ public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 	private int getCacheHash(long platformIdent, long methodIdent, long timestampValue) {
 		final int prime = 31;
 		int result = 0;
-		result = prime * result + (int) (platformIdent ^ (platformIdent >>> 32));
-		result = prime * result + (int) (methodIdent ^ (methodIdent >>> 32));
-		result = prime * result + (int) (timestampValue ^ (timestampValue >>> 32));
+		result = (prime * result) + (int) (platformIdent ^ (platformIdent >>> 32));
+		result = (prime * result) + (int) (methodIdent ^ (methodIdent >>> 32));
+		result = (prime * result) + (int) (timestampValue ^ (timestampValue >>> 32));
 		return result;
 	}
 
 	/**
 	 * Returns the value of the time stamp based on a aggregation period.
-	 * 
+	 *
 	 * @param timerData
 	 *            {@link TimerData} to get aggregation time stamp.
 	 * @return Aggregation time stamp.
 	 */
 	private long getAlteredTimestamp(TimerData timerData) {
 		long timestampValue = timerData.getTimeStamp().getTime();
-		long newTimestampValue = timestampValue - timestampValue % aggregationPeriod;
+		long newTimestampValue = timestampValue - (timestampValue % aggregationPeriod);
 		return newTimestampValue;
 	}
 
@@ -255,7 +255,7 @@ public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 
 	/**
 	 * Gets {@link #elementCount}.
-	 * 
+	 *
 	 * @return {@link #elementCount}
 	 */
 	public int getElementCount() {

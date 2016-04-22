@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Abstract data processor that passes data to chained processors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractChainedCmrDataProcessor extends AbstractCmrDataProcessor {
 
@@ -24,12 +24,12 @@ public abstract class AbstractChainedCmrDataProcessor extends AbstractCmrDataPro
 	 * Default constructor.
 	 */
 	public AbstractChainedCmrDataProcessor() {
-		dataProcessors = new ArrayList<AbstractCmrDataProcessor>();
+		dataProcessors = new ArrayList<>();
 	}
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param dataProcessors
 	 *            List of chained processors.
 	 */
@@ -39,7 +39,7 @@ public abstract class AbstractChainedCmrDataProcessor extends AbstractCmrDataPro
 
 	/**
 	 * Should the data be passed to the chained processors.
-	 * 
+	 *
 	 * @param defaultData
 	 *            {@link DefaultData}.
 	 * @return True if it should be passed, false otherwise.
@@ -58,7 +58,7 @@ public abstract class AbstractChainedCmrDataProcessor extends AbstractCmrDataPro
 
 	/**
 	 * Passed the default data to all chained processors.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Data to pass.
 	 * @param entityManager

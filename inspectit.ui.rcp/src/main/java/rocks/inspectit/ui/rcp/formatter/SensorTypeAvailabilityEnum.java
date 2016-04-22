@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp.formatter;
 
 /**
  * This enumeration contains strings/tooltips for the availability of different sensor-types.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public enum SensorTypeAvailabilityEnum {
 
@@ -52,7 +52,7 @@ public enum SensorTypeAvailabilityEnum {
 	 * Tooltip when no exception sensor is available.
 	 */
 	EXCEPTION_SENSOR_NA("This item is not available. You have to activate the exception sensor in 'inspectit-agent.cfg' for viewing this information."),
-	
+
 	/**
 	 * Tooltip when no JMX sensor is available.
 	 */
@@ -64,7 +64,7 @@ public enum SensorTypeAvailabilityEnum {
 	private String message;
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 *            The error message.
 	 */
@@ -74,7 +74,7 @@ public enum SensorTypeAvailabilityEnum {
 
 	/**
 	 * Returns the message string.
-	 * 
+	 *
 	 * @return The message string.
 	 */
 	public String getMessage() {

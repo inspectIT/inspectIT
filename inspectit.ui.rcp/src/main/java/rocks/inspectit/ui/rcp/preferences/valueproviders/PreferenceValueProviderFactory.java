@@ -8,9 +8,9 @@ import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 
 /**
  * Factory for providing the preference strings for objects and vice verse.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class PreferenceValueProviderFactory {
 
@@ -26,7 +26,7 @@ public final class PreferenceValueProviderFactory {
 	private static Map<String, PreferenceValueProvider<?>> preferenceValueProviders;
 
 	static {
-		preferenceValueProviders = new HashMap<String, PreferenceValueProvider<?>>();
+		preferenceValueProviders = new HashMap<>();
 		preferenceValueProviders.put(PreferencesConstants.CMR_REPOSITORY_DEFINITIONS, new CmrRepositoryPreferenceValueProvider());
 		preferenceValueProviders.put(PreferencesConstants.TABLE_COLUMN_SIZE_CACHE, new MapPreferenceValueProvider());
 		preferenceValueProviders.put(PreferencesConstants.HIDDEN_TABLE_COLUMN_CACHE, new CollectionPreferenceValueProvider());
@@ -40,7 +40,7 @@ public final class PreferenceValueProviderFactory {
 	 * Returns a String preference value for a given preference key and object. Note that key
 	 * provided has to match with the {@link PreferenceValueProvider} key that works with the same
 	 * object types as provided E type.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of object.
 	 * @param preferenceKey
@@ -69,7 +69,7 @@ public final class PreferenceValueProviderFactory {
 	 * Returns a object from a string preference value for a given preference key. Note that key
 	 * provided has to match with the {@link PreferenceValueProvider} key that works with the same
 	 * object types as provided E type.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of object.
 	 * @param preferenceKey
@@ -92,9 +92,9 @@ public final class PreferenceValueProviderFactory {
 
 	/**
 	 * Abstract class for preference value providers.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 * @param <E>
 	 *            Type that is provider working with.
 	 */
@@ -109,7 +109,7 @@ public final class PreferenceValueProviderFactory {
 
 		/**
 		 * Returns a String for the object.
-		 * 
+		 *
 		 * @param object
 		 *            Object.
 		 * @return String to save.
@@ -120,7 +120,7 @@ public final class PreferenceValueProviderFactory {
 
 		/**
 		 * Returns a object from String.
-		 * 
+		 *
 		 * @param value
 		 *            Previously saved string.
 		 * @return Object of type

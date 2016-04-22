@@ -13,7 +13,7 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolve
 
 /**
  * This class is used to plot boolean data.
- * 
+ *
  * @author Marius Oehler
  *
  */

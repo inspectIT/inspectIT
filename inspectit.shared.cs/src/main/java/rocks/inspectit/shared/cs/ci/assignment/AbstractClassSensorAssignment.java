@@ -16,7 +16,8 @@ import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
  *
  * @author Ivan Senic
  *
- * @param <T>Type of the sensor config that relates to the assignment.
+ * @param <T>
+ *            Type of the sensor config that relates to the assignment.
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -145,10 +146,10 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((annotation == null) ? 0 : annotation.hashCode());
-		result = prime * result + ((className == null) ? 0 : className.hashCode());
-		result = prime * result + (interf ? 1231 : 1237);
-		result = prime * result + (superclass ? 1231 : 1237);
+		result = (prime * result) + ((annotation == null) ? 0 : annotation.hashCode());
+		result = (prime * result) + ((className == null) ? 0 : className.hashCode());
+		result = (prime * result) + (interf ? 1231 : 1237);
+		result = (prime * result) + (superclass ? 1231 : 1237);
 		return result;
 	}
 

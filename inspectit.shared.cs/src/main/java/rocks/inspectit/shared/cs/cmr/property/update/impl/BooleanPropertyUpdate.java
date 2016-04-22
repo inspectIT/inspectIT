@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
 
 /**
  * {@link AbstractPropertyUpdate} for boolean property.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "boolean-property-update")
@@ -32,7 +32,7 @@ public class BooleanPropertyUpdate extends AbstractPropertyUpdate<Boolean> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property update is related to.
 	 * @param updateValue
@@ -44,19 +44,21 @@ public class BooleanPropertyUpdate extends AbstractPropertyUpdate<Boolean> {
 
 	/**
 	 * Gets {@link #updateValue}.
-	 * 
+	 *
 	 * @return {@link #updateValue}
 	 */
+	@Override
 	public Boolean getUpdateValue() {
 		return updateValue;
 	}
 
 	/**
 	 * Sets {@link #updateValue}.
-	 * 
+	 *
 	 * @param updateValue
 	 *            New value for {@link #updateValue}
 	 */
+	@Override
 	protected void setUpdateValue(Boolean updateValue) {
 		this.updateValue = updateValue;
 	}

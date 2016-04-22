@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp.view;
 
 /**
  * Interface for all view that are refreshable.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IRefreshableView {
 
@@ -15,7 +15,7 @@ public interface IRefreshableView {
 
 	/**
 	 * Defines if the view can be refreshed.
-	 * 
+	 *
 	 * @return True if the view can be refreshed at the given point of call.
 	 */
 	boolean canRefresh();

@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
-
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
 
@@ -66,8 +65,8 @@ public class CpuUsageCalculatorTest extends AbstractLogSupport {
 		// CPU usage can only be deduced after the second call
 		long process = (processCpuTime2 - processCpuTime1);
 		long upAsNano = ((uptime2 - uptime1) * 1000 * 1000);
-		float expectedUsage = (float) process / upAsNano * 100;
-		assertThat((double) cpuUsage2, is(closeTo((double) expectedUsage, 0.01d)));
+		float expectedUsage = ((float) process / upAsNano) * 100;
+		assertThat((double) cpuUsage2, is(closeTo(expectedUsage, 0.01d)));
 	}
 
 }

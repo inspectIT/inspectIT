@@ -84,8 +84,7 @@ public interface IConfigurationStorage {
 	StrategyConfig getBufferStrategyConfig() throws StorageException;
 
 	/**
-	 * Returns a {@link StrategyConfig} instance containing the sending strategy
-	 * information.
+	 * Returns a {@link StrategyConfig} instance containing the sending strategy information.
 	 *
 	 * @return Used {@link StrategyConfig} instances.
 	 * @throws StorageException
@@ -174,13 +173,13 @@ public interface IConfigurationStorage {
 	boolean isClassCacheExistsOnCmr() throws StorageException;
 
 	/**
-	 * Set of known {@link InstrumentationDefinition} for the agent that can be used by the Agent right
-	 * away. Each {@link InstrumentationDefinition} is mapped to the collection of the class hashes it
-	 * relates to.
+	 * Set of known {@link InstrumentationDefinition} for the agent that can be used by the Agent
+	 * right away. Each {@link InstrumentationDefinition} is mapped to the collection of the class
+	 * hashes it relates to.
 	 *
 	 * @return Set of known {@link InstrumentationDefinition} for the agent that can be used by the
-	 *         Agent right away. Each {@link InstrumentationDefinition} is mapped to the collection of
-	 *         the class hashes it relates to.
+	 *         Agent right away. Each {@link InstrumentationDefinition} is mapped to the collection
+	 *         of the class hashes it relates to.
 	 * @throws StorageException
 	 *             If agent configuration is not set.
 	 */

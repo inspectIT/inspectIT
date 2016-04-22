@@ -11,15 +11,15 @@ import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 /**
  * All implementing classes of this interface are storing and retrieving the default data objects,
  * for example in the database.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface DefaultDataDao {
 
 	/**
 	 * Persists or updates all items in the collection.
-	 * 
+	 *
 	 * @param defaultDataCollection
 	 *            The collection with {@link DefaultData} objects to persist or update.
 	 */
@@ -28,7 +28,7 @@ public interface DefaultDataDao {
 	/**
 	 * Returns a list of stored {@link DefaultData} objects in the given interval, starting minus
 	 * the passed timeInterval parameter to the current time.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to look for.
 	 * @param timeInterval
@@ -40,7 +40,7 @@ public interface DefaultDataDao {
 
 	/**
 	 * Search for data objects which have an ID greater than in the passed template object.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to look for with the ID used as the marker.
 	 * @return Returns a list of data objects which fulfill the criteria.
@@ -50,7 +50,7 @@ public interface DefaultDataDao {
 	/**
 	 * Search for data objects which have an ID greater than in the passed template object. The
 	 * Method Ident is always ignored.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to look for with the ID used as the marker.
 	 * @return Returns a list of data objects which fulfill the criteria.
@@ -59,7 +59,7 @@ public interface DefaultDataDao {
 
 	/**
 	 * Search for data objects which are between the from and to {@link Date} object.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to look for.
 	 * @param fromDate
@@ -72,7 +72,7 @@ public interface DefaultDataDao {
 
 	/**
 	 * Searches for the last saved data object.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to look for.
 	 * @return Returns the last saved data object.
@@ -82,7 +82,7 @@ public interface DefaultDataDao {
 	/**
 	 * Returns the {@link HttpTimerData} list that can be used as the input for the plotting. From
 	 * the template list the platfrom ident will be used as well as all URI and tagged values.
-	 * 
+	 *
 	 * @param templates
 	 *            Templates.
 	 * @param fromDate
@@ -112,7 +112,7 @@ public interface DefaultDataDao {
 
 	/**
 	 * Deletes all default data objects in the database with the given platform ID.
-	 * 
+	 *
 	 * @param platformId
 	 *            PLatform id of objects to be deleted.
 	 */

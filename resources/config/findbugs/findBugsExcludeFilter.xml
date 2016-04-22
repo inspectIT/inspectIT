@@ -84,6 +84,11 @@
 		<Class name="rocks.inspectit.server.ci.event.ProfileUpdateEvent" />
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
+	<Match>
+		<Class name="rocks.inspectit.shared.cs.jaxb.JAXBTransformator" />
+		<Method name="marshall" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+	</Match>
 	<!-- CMR ignores END -->
 	
 	<!-- Commons ignores START -->

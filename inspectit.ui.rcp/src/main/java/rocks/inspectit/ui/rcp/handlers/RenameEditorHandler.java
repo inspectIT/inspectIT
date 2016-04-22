@@ -5,9 +5,9 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.editor.root.FormRootEditor;
 
 /**
  * Handler for changing the name of the editor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RenameEditorHandler extends AbstractHandler implements IHandler {
 
@@ -39,7 +39,7 @@ public class RenameEditorHandler extends AbstractHandler implements IHandler {
 		};
 		InputDialog inputDialog = new InputDialog(shell, "Rename View", "Please enter new name for the active view", editor.getPartName(), inputValidator);
 		inputDialog.open();
-		if (inputDialog.getReturnCode() == Dialog.OK) {
+		if (inputDialog.getReturnCode() == Window.OK) {
 			String name = inputDialog.getValue();
 			editor.updateEditorName(name);
 		}

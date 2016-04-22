@@ -4,9 +4,9 @@ import rocks.inspectit.agent.java.connection.impl.FailFastRetryStrategy;
 
 /**
  * Helper class for the fail fast remote method calls.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <R>
  *            type of remote object
  * @param <T>
@@ -16,7 +16,7 @@ public abstract class FailFastRemoteMethodCall<R, T> extends AbstractRemoteMetho
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param remoteObject
 	 *            Object to make call on.
 	 */

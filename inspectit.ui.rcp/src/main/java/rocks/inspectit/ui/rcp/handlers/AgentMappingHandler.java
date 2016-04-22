@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler that opens {@link AgentMappingEditor}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentMappingHandler extends AbstractHandler implements IHandler {
 

@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 
 /**
  * Refresh view handler that refresh the current active sub-view.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RefreshEditorHandler extends AbstractHandler {
 

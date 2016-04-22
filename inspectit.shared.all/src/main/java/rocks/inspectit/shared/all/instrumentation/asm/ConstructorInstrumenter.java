@@ -124,7 +124,8 @@ public class ConstructorInstrumenter extends AbstractMethodInstrumenter {
 		// then parameters
 		loadArgArray();
 
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorBeforeBody", IInstrumenterConstant.DISPATCH_CONSTRUCTOR_BEFORE_BODY_DESCRIPTOR, true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorBeforeBody",
+				IInstrumenterConstant.DISPATCH_CONSTRUCTOR_BEFORE_BODY_DESCRIPTOR, true);
 	}
 
 	/**
@@ -152,7 +153,8 @@ public class ConstructorInstrumenter extends AbstractMethodInstrumenter {
 		loadArgArray();
 
 		// execute after body
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorAfterBody", IInstrumenterConstant.DISPATCH_CONSTRUCTOR_AFTER_BODY_DESCRIPTOR, true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorAfterBody",
+				IInstrumenterConstant.DISPATCH_CONSTRUCTOR_AFTER_BODY_DESCRIPTOR, true);
 	}
 
 	/**
@@ -176,7 +178,8 @@ public class ConstructorInstrumenter extends AbstractMethodInstrumenter {
 		// l-l2-r :)
 
 		// execute before catch
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorBeforeCatch", IInstrumenterConstant.DISPATCH_CONSTRUCTOR_BEFORE_CATCH_DESCRIPTOR, true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorBeforeCatch",
+				IInstrumenterConstant.DISPATCH_CONSTRUCTOR_BEFORE_CATCH_DESCRIPTOR, true);
 	}
 
 	/**
@@ -212,7 +215,8 @@ public class ConstructorInstrumenter extends AbstractMethodInstrumenter {
 		swap();
 
 		// execute after body
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorOnThrowInBody", IInstrumenterConstant.DISPATCH_CONSTRUCTOR_ON_THROW_BODY_DESCRIPTOR, true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchConstructorOnThrowInBody",
+				IInstrumenterConstant.DISPATCH_CONSTRUCTOR_ON_THROW_BODY_DESCRIPTOR, true);
 	}
 
 }

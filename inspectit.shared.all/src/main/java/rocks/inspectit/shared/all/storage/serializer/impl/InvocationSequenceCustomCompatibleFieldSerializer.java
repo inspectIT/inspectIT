@@ -9,22 +9,22 @@ import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
 /**
  * {@link CustomCompatibleFieldSerializer} for the {@link InvocationSequenceData} that in the
  * de-serialization process, connects the parents with the nested sequences.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationSequenceCustomCompatibleFieldSerializer extends CustomCompatibleFieldSerializer<InvocationSequenceData> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param kryo
 	 *            Kryo object.
 	 * @param type
 	 *            Type of class.
 	 * @param schemaManager
 	 *            Schema manager holding the schema for the given type.
-	 * 
+	 *
 	 * @see CustomCompatibleFieldSerializer#CustomCompatibleFieldSerializer(Kryo, Class,
 	 *      ClassSchemaManager)
 	 */
@@ -44,7 +44,7 @@ public class InvocationSequenceCustomCompatibleFieldSerializer extends CustomCom
 
 	/**
 	 * Sets the parent to all nested sequences of the invocation to the correct one.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent to start from.
 	 */

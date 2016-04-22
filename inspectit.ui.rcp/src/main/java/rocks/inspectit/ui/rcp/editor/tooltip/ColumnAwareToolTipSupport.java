@@ -14,9 +14,9 @@ import org.eclipse.swt.widgets.Event;
  * Small extension of the {@link ColumnAwareToolTipSupport}. This one will check if the label
  * provider of the cell is {@link IColumnToolTipProvider} and if so if will pull the tip and image
  * from that interface and not directly from the label provider.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ColumnAwareToolTipSupport extends ColumnViewerToolTipSupport {
 
@@ -45,7 +45,7 @@ public class ColumnAwareToolTipSupport extends ColumnViewerToolTipSupport {
 	 *            the viewer the support is attached to
 	 * @param style
 	 *            style passed to control tool tip behavior
-	 * 
+	 *
 	 * @param manualActivation
 	 *            <code>true</code> if the activation is done manually using {@link #show(Point)}
 	 * @See {@link ColumnAwareToolTipSupport#ColumnAwareToolTipSupport(ColumnViewer, int, boolean)}
@@ -58,7 +58,7 @@ public class ColumnAwareToolTipSupport extends ColumnViewerToolTipSupport {
 	/**
 	 * Enable ToolTip support for the viewer by creating an instance from this class. To get all
 	 * necessary informations this support class consults the {@link CellLabelProvider}.
-	 * 
+	 *
 	 * @param viewer
 	 *            the viewer the support is attached to
 	 */
@@ -69,12 +69,12 @@ public class ColumnAwareToolTipSupport extends ColumnViewerToolTipSupport {
 	/**
 	 * Enable ToolTip support for the viewer by creating an instance from this class. To get all
 	 * necessary informations this support class consults the {@link CellLabelProvider}.
-	 * 
+	 *
 	 * @param viewer
 	 *            the viewer the support is attached to
 	 * @param style
 	 *            style passed to control tool tip behavior
-	 * 
+	 *
 	 * @see ToolTip#RECREATE
 	 * @see ToolTip#NO_RECREATE
 	 */
@@ -100,7 +100,7 @@ public class ColumnAwareToolTipSupport extends ColumnViewerToolTipSupport {
 			String text = columnToolTipProvider.getToolTipText(element, cell.getColumnIndex());
 			Image image = columnToolTipProvider.getToolTipImage(element, cell.getColumnIndex());
 
-			if (null == text && null == image) {
+			if ((null == text) && (null == image)) {
 				return false;
 			}
 

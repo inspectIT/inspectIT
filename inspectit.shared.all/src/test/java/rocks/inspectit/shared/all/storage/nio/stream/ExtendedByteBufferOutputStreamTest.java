@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -20,9 +21,9 @@ import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
 
 /**
  * Tests the {@link ExtendedByteBufferOutputStream}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class ExtendedByteBufferOutputStreamTest {
@@ -62,7 +63,7 @@ public class ExtendedByteBufferOutputStreamTest {
 
 	/**
 	 * Test the write of the write can fit into one buffer.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
@@ -88,12 +89,12 @@ public class ExtendedByteBufferOutputStreamTest {
 		assertThat(actual, is(equalTo(array)));
 
 		extendedByteBufferOutputStream.close();
-		Mockito.verify(byteBufferProvider, Mockito.times(1)).releaseByteBuffer((ByteBuffer) Mockito.any());
+		Mockito.verify(byteBufferProvider, Mockito.times(1)).releaseByteBuffer((ByteBuffer) Matchers.any());
 	}
 
 	/**
 	 * Test the write of the write can fit into one buffer.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
@@ -104,7 +105,7 @@ public class ExtendedByteBufferOutputStreamTest {
 		byte[] array = new byte[writeCount];
 		random.nextBytes(array);
 		int buffersUsed = writeCount / bufferSize;
-		if (writeCount % bufferSize > 0) {
+		if ((writeCount % bufferSize) > 0) {
 			buffersUsed++;
 		}
 
@@ -126,7 +127,7 @@ public class ExtendedByteBufferOutputStreamTest {
 		assertThat(actual, is(equalTo(array)));
 
 		extendedByteBufferOutputStream.close();
-		Mockito.verify(byteBufferProvider, Mockito.times(buffersUsed)).releaseByteBuffer((ByteBuffer) Mockito.any());
+		Mockito.verify(byteBufferProvider, Mockito.times(buffersUsed)).releaseByteBuffer((ByteBuffer) Matchers.any());
 	}
 
 }

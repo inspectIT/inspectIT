@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler for activating and deactivating profile.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ActivateProfileHandler extends AbstractHandler implements IHandler {
 

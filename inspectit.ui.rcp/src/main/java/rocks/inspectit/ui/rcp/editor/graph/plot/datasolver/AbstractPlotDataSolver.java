@@ -8,7 +8,7 @@ import rocks.inspectit.ui.rcp.InspectIT;
 /**
  * The implementation of this interface define how specific data will be plotted by providing a
  * specific Y-axis and the data transformation.
- * 
+ *
  * @author Marius Oehler
  *
  */
@@ -16,7 +16,7 @@ public abstract class AbstractPlotDataSolver {
 
 	/**
 	 * Specifies the Y-axis which is used in the plot.
-	 * 
+	 *
 	 * @return Y-axis
 	 */
 	public abstract NumberAxis getAxis();
@@ -24,7 +24,7 @@ public abstract class AbstractPlotDataSolver {
 	/**
 	 * Specifies a data transformation. The given {@link Double} value will be transformed into
 	 * another value that is used in the plot.
-	 * 
+	 *
 	 * @param value
 	 *            original value
 	 * @return transformed value
@@ -36,7 +36,7 @@ public abstract class AbstractPlotDataSolver {
 	/**
 	 * Converts the value into a formatted human readable string. This implementation is wrapped by
 	 * the {@link #valueToHumanReadable(String)} method.
-	 * 
+	 *
 	 * @param value
 	 *            value to convert
 	 * @return formatted string or <code>NULL</code> if the given value is invalid for this data
@@ -47,7 +47,7 @@ public abstract class AbstractPlotDataSolver {
 	/**
 	 * Converts the value into a formatted human readable string. The input value has to be a valid
 	 * value which is based on a value returned by the {@link #valueConvert(String)} method.
-	 * 
+	 *
 	 * @param value
 	 *            value to convert
 	 * @return formatted string
@@ -65,7 +65,7 @@ public abstract class AbstractPlotDataSolver {
 	/**
 	 * Returns <code>true</code> if the values of this data solver can be aggregated in a reasonable
 	 * way.
-	 * 
+	 *
 	 * @return <code>true</code> if the values can be aggregated
 	 */
 	public abstract boolean isAggregatable();

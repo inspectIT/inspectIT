@@ -8,9 +8,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * {@link ClassSchema} is simple class that defines the field of the class that will be serialized.
  * Each field has a field marker integer value that goes to serialization to define the field.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ClassSchema {
 
@@ -43,7 +43,7 @@ public class ClassSchema {
 	/**
 	 * Creates the schema out of the key value string pairs. The map should hold the key
 	 * {@value #CLAZZ} with class name and the pairs field names as values and its markers as keys.
-	 * 
+	 *
 	 * @param initMap
 	 *            Initialization map.
 	 */
@@ -63,7 +63,7 @@ public class ClassSchema {
 			} catch (NumberFormatException exception) {
 				throw new IllegalArgumentException("Schema initial map contains wrong data.", exception);
 			}
-			if (fieldMarker > 0 && null != entry.getValue()) {
+			if ((fieldMarker > 0) && (null != entry.getValue())) {
 				if (null == fieldMap) {
 					fieldMap = new HashMap<Integer, String>();
 				}
@@ -91,7 +91,7 @@ public class ClassSchema {
 
 	/**
 	 * Returns the name of the class field that marker is defined for.
-	 * 
+	 *
 	 * @param fieldMarker
 	 *            Integer marker.
 	 * @return The name of the class field that marker is defined for. <code>Null</code> if no
@@ -103,7 +103,7 @@ public class ClassSchema {
 
 	/**
 	 * Returns if the field is defined for supplied marker.
-	 * 
+	 *
 	 * @param fieldMarker
 	 *            Integer marker.
 	 * @return If the field is defined for supplied marker.
@@ -116,7 +116,7 @@ public class ClassSchema {
 	 * Returns the {@link Integer} object that holds the int value for the marker of the supplied
 	 * field name. If the marker for this field name is not defined, <code>null</code> will be
 	 * returned.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Field name of a class.
 	 * @return The {@link Integer} object that holds the int value for the marker of the supplied

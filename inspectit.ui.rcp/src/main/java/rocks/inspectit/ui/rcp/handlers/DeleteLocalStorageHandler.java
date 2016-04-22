@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
 
 /**
  * Handler for deleting the local storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DeleteLocalStorageHandler extends AbstractHandler implements IHandler {
 
@@ -33,7 +33,7 @@ public class DeleteLocalStorageHandler extends AbstractHandler implements IHandl
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		StructuredSelection structuredSelection = (StructuredSelection) HandlerUtil.getCurrentSelection(event);
-		List<LocalStorageData> localStoragesToDelete = new ArrayList<LocalStorageData>();
+		List<LocalStorageData> localStoragesToDelete = new ArrayList<>();
 		for (Iterator<?> it = structuredSelection.iterator(); it.hasNext();) {
 			LocalStorageData localStorageData = ((ILocalStorageDataProvider) it.next()).getLocalStorageData();
 			if (localStorageData.isFullyDownloaded()) {

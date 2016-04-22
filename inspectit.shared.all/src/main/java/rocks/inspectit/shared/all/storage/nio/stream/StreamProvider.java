@@ -6,9 +6,9 @@ import java.nio.channels.SocketChannel;
 /**
  * Class that is used for providing the correct instance of {@link ExtendedByteBufferOutputStream}
  * via Spring framework.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class StreamProvider {
 
@@ -33,7 +33,7 @@ public abstract class StreamProvider {
 	 * Returns the {@link SocketExtendedByteBufferInputStream} initialized by Spring and prepared.
 	 * Caller must first call {@link SocketExtendedByteBufferInputStream#reset(int)} before reading
 	 * any data.
-	 * 
+	 *
 	 * @param socketChannel
 	 *            Underlying {@link SocketChannel} for the stream.
 	 * @return {@link SocketExtendedByteBufferInputStream}.
@@ -50,7 +50,7 @@ public abstract class StreamProvider {
 	/**
 	 * Returns the {@link SocketExtendedByteBufferInputStream} initialized by Spring and prepared.
 	 * Caller can immediately use this stream to read data from.
-	 * 
+	 *
 	 * @param socketChannel
 	 *            Underlying {@link SocketChannel} for the stream.
 	 * @param totalSize

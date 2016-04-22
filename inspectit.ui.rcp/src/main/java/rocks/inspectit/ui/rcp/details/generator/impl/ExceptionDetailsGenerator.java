@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Generator for the exception details.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExceptionDetailsGenerator implements IDetailsGenerator {
 

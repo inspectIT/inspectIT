@@ -30,9 +30,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Delete the profile handler.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DeleteProfileHandler extends AbstractHandler implements IHandler {
 

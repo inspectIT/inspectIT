@@ -7,9 +7,9 @@ import java.io.InputStream;
 /**
  * Special input stream that reports the bytes received to the {@link TransferDataMonitor}. Since it
  * is extending the FilterInputStream all operations are forwarded to the wrapped stream.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TransferRateInputStream extends FilterInputStream {
 
@@ -20,7 +20,7 @@ public class TransferRateInputStream extends FilterInputStream {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param inputStream
 	 *            Stream.
 	 * @param transferDataMonitor
@@ -57,7 +57,7 @@ public class TransferRateInputStream extends FilterInputStream {
 
 	/**
 	 * Marks a received amount of bytes.
-	 * 
+	 *
 	 * @param byteCount
 	 *            Byte count.
 	 */

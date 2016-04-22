@@ -11,9 +11,9 @@ import rocks.inspectit.shared.all.util.IHibernateUtil;
  * This serializer is unproxing the Hibernate proxies and passes the correctly initialized entity to
  * the delegate serializer. Note that delegate serializer must be correct for the underlying entity
  * class, otherwise the write will fail.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HibernateProxySerializer extends Serializer<Object> {
 
@@ -29,7 +29,7 @@ public class HibernateProxySerializer extends Serializer<Object> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param hibernateUtil
 	 *            Hibernate util. Must not be <code>null</code>.
 	 * @param delegateSerializer

@@ -73,7 +73,7 @@ public class ChannelManagersTest {
 	 */
 	@Test(invocationCount = 10)
 	public void writeReadFixedSize() throws IOException, InterruptedException {
-		final LinkedBlockingQueue<ByteBuffer> bufferQueue = new LinkedBlockingQueue<ByteBuffer>();
+		final LinkedBlockingQueue<ByteBuffer> bufferQueue = new LinkedBlockingQueue<>();
 
 		byte[] bytes = getRandomByteArray();
 		final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(bytes.length);
@@ -115,7 +115,7 @@ public class ChannelManagersTest {
 	 */
 	@Test(invocationCount = 10)
 	public void writeReadUnknownSize() throws IOException, InterruptedException {
-		final LinkedBlockingQueue<ByteBuffer> bufferQueue = new LinkedBlockingQueue<ByteBuffer>();
+		final LinkedBlockingQueue<ByteBuffer> bufferQueue = new LinkedBlockingQueue<>();
 
 		byte[] bytes = getRandomByteArray();
 		final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(bytes.length);
@@ -161,8 +161,8 @@ public class ChannelManagersTest {
 	public void writeWithExtendedByteBufferOutputStream() throws IOException, InterruptedException {
 		final byte[] bytes = getRandomByteArray();
 		int bufferSize = 1024 * 1024;
-		List<ByteBuffer> buffers = new ArrayList<ByteBuffer>();
-		for (int position = 0; position < bytes.length - 1;) {
+		List<ByteBuffer> buffers = new ArrayList<>();
+		for (int position = 0; position < (bytes.length - 1);) {
 			int size = Math.min(bufferSize, bytes.length - position);
 			ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);
 			buffer.put(bytes, position, size);

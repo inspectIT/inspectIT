@@ -11,7 +11,7 @@ import rocks.inspectit.ui.rcp.model.Component;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TreeLabelProvider extends ColumnLabelProvider {
 

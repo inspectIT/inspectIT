@@ -7,9 +7,9 @@ import rocks.inspectit.agent.java.hooking.IMethodHook;
 /**
  * This hook records the creation of statements so that they can be later retrieved by other hooks
  * to create valid data objects with query statements.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class ConnectionHook implements IMethodHook {
 
@@ -20,7 +20,7 @@ public class ConnectionHook implements IMethodHook {
 
 	/**
 	 * Default constructor which needs a reference to the statement storage.
-	 * 
+	 *
 	 * @param statementStorage
 	 *            The statement storage.
 	 */

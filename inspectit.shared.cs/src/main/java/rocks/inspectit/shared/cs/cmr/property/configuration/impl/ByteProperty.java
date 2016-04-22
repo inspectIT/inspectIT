@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.BytePropertyUpdate;
 /**
  * Property holding byte count values. This property parses {@link String} values that represent the
  * byte count and vice versa.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "byte-property")
@@ -41,7 +41,7 @@ public class ByteProperty extends SingleProperty<Long> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            Display name of the property. Can not be <code>null</code>.
 	 * @param description
@@ -131,7 +131,7 @@ public class ByteProperty extends SingleProperty<Long> {
 
 	/**
 	 * Returns the bytes number from human readable string.
-	 * 
+	 *
 	 * @param str
 	 *            Human readable string.
 	 * @return Bytes number.
@@ -171,7 +171,7 @@ public class ByteProperty extends SingleProperty<Long> {
 
 	/**
 	 * Returns the human readable bytes number.
-	 * 
+	 *
 	 * @param bytes
 	 *            Bytes to transform.
 	 * @return Human readable string.

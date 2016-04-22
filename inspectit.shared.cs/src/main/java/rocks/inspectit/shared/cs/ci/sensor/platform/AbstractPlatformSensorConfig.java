@@ -18,9 +18,9 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
 
 /**
  * Abstract class for all platform sensor configurations.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ ClassLoadingSensorConfig.class, CompilationSensorConfig.class, CpuSensorConfig.class, MemorySensorConfig.class, RuntimeSensorConfig.class, SystemSensorConfig.class,
@@ -45,7 +45,7 @@ public abstract class AbstractPlatformSensorConfig implements IPlatformSensorCon
 
 	/**
 	 * Gets {@link #active}.
-	 * 
+	 *
 	 * @return {@link #active}
 	 */
 	@Override
@@ -55,7 +55,7 @@ public abstract class AbstractPlatformSensorConfig implements IPlatformSensorCon
 
 	/**
 	 * Sets {@link #active}.
-	 * 
+	 *
 	 * @param active
 	 *            New value for {@link #active}
 	 */
@@ -70,7 +70,7 @@ public abstract class AbstractPlatformSensorConfig implements IPlatformSensorCon
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (active ? 1231 : 1237);
+		result = (prime * result) + (active ? 1231 : 1237);
 		return result;
 	}
 

@@ -16,15 +16,13 @@ import org.testng.annotations.Test;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.cmr.service.IStorageService;
 import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
-import rocks.inspectit.shared.cs.storage.label.management.impl.AddLabelManagementAction;
-import rocks.inspectit.shared.cs.storage.label.management.impl.RemoveLabelManagementAction;
 import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Test the label management actions.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class LabelManagementActionsTest {

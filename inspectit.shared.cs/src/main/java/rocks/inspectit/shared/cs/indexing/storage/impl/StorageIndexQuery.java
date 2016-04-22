@@ -13,9 +13,9 @@ import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Extended index query that fits better when querying the {@link IStorageTreeComponent}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -89,7 +89,7 @@ public class StorageIndexQuery extends IndexQuery {
 
 	/**
 	 * Gets {@link #sql}.
-	 * 
+	 *
 	 * @return {@link #sql}
 	 */
 	public String getSql() {
@@ -98,7 +98,7 @@ public class StorageIndexQuery extends IndexQuery {
 
 	/**
 	 * Sets {@link #sql}.
-	 * 
+	 *
 	 * @param sql
 	 *            New value for {@link #sql}
 	 */
@@ -113,10 +113,10 @@ public class StorageIndexQuery extends IndexQuery {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((excludeIds == null) ? 0 : excludeIds.hashCode());
-		result = prime * result + ((includeIds == null) ? 0 : includeIds.hashCode());
-		result = prime * result + (onlyInvocationsWithoutChildren ? 1231 : 1237);
-		result = prime * result + ((sql == null) ? 0 : sql.hashCode());
+		result = (prime * result) + ((excludeIds == null) ? 0 : excludeIds.hashCode());
+		result = (prime * result) + ((includeIds == null) ? 0 : includeIds.hashCode());
+		result = (prime * result) + (onlyInvocationsWithoutChildren ? 1231 : 1237);
+		result = (prime * result) + ((sql == null) ? 0 : sql.hashCode());
 		return result;
 	}
 

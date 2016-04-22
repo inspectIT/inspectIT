@@ -4,7 +4,7 @@ import org.jfree.chart.axis.NumberAxis;
 
 /**
  * This class is used to plot data as percentage data between 0 and 100 percent.
- * 
+ *
  * @author Marius Oehler
  *
  */
@@ -19,7 +19,7 @@ public class ClampedPercentageDataSolver extends PercentageDataSolver {
 	}
 
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
 	@Override

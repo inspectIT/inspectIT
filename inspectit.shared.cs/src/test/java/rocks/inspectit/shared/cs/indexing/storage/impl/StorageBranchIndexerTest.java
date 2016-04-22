@@ -20,16 +20,12 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
-import rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf;
-import rocks.inspectit.shared.cs.indexing.storage.impl.LeafWithNoDescriptors;
-import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranch;
-import rocks.inspectit.shared.cs.indexing.storage.impl.StorageBranchIndexer;
 
 /**
  * Tests the {@link StorageBranchIndexer} class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class StorageBranchIndexerTest {
@@ -51,7 +47,7 @@ public class StorageBranchIndexerTest {
 	@BeforeMethod
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		storageBranchIndexer = new StorageBranchIndexer<DefaultData>(delegateIndexer, childIndexer, 1, true);
+		storageBranchIndexer = new StorageBranchIndexer<>(delegateIndexer, childIndexer, 1, true);
 	}
 
 	/**
@@ -61,7 +57,7 @@ public class StorageBranchIndexerTest {
 	@Test
 	public void nextComponentIsBranch() {
 		int id = 1;
-		storageBranchIndexer = new StorageBranchIndexer<DefaultData>(delegateIndexer, childIndexer, id, true);
+		storageBranchIndexer = new StorageBranchIndexer<>(delegateIndexer, childIndexer, id, true);
 		DefaultData defaultData = mock(DefaultData.class);
 
 		// first with pass id and not shared child indexer
@@ -75,7 +71,7 @@ public class StorageBranchIndexerTest {
 		verify(branch.getStorageBranchIndexer()).setId(id);
 
 		// then with not pass id
-		storageBranchIndexer = new StorageBranchIndexer<DefaultData>(delegateIndexer, childIndexer, id, false);
+		storageBranchIndexer = new StorageBranchIndexer<>(delegateIndexer, childIndexer, id, false);
 
 		// first with not shared child indexer
 		when(childIndexer.isPassId()).thenReturn(true);
@@ -102,7 +98,7 @@ public class StorageBranchIndexerTest {
 	@Test
 	public void nextComponentIsLeaf() {
 		int id = 1;
-		storageBranchIndexer = new StorageBranchIndexer<DefaultData>(delegateIndexer, null, id, true);
+		storageBranchIndexer = new StorageBranchIndexer<>(delegateIndexer, null, id, true);
 		DefaultData defaultData = mock(DefaultData.class);
 		InvocationSequenceData invocationSequenceData = mock(InvocationSequenceData.class);
 
@@ -117,7 +113,7 @@ public class StorageBranchIndexerTest {
 		ArrayBasedStorageLeaf<DefaultData> arrayLeaf = (ArrayBasedStorageLeaf<DefaultData>) component;
 		assertThat(arrayLeaf.getId(), is(id));
 
-		storageBranchIndexer = new StorageBranchIndexer<DefaultData>(delegateIndexer, null, id, false);
+		storageBranchIndexer = new StorageBranchIndexer<>(delegateIndexer, null, id, false);
 
 		// then don't pass id
 		component = storageBranchIndexer.getNextTreeComponent(defaultData);

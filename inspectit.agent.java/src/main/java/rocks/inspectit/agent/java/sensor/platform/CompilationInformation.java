@@ -1,7 +1,7 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +79,7 @@ public class CompilationInformation extends AbstractPlatformSensor implements IP
 		if (compilationData == null) {
 			try {
 				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
+				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
 				compilationData = new CompilationInformationData(timestamp, platformId, sensorTypeIdent);
 				compilationData.incrementCount();

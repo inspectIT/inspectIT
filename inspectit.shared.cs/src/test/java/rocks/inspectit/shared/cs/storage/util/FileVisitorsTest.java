@@ -13,15 +13,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.cs.storage.StorageFileType;
-import rocks.inspectit.shared.cs.storage.util.CopyMoveFileVisitor;
-import rocks.inspectit.shared.cs.storage.util.DeleteFileVisitor;
-import rocks.inspectit.shared.cs.storage.util.StorageDeleteFileVisitor;
 
 /**
  * Tests for the file visitors we have implemented.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class FileVisitorsTest {

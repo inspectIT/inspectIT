@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.BooleanPropertyUpdate;
 
 /**
  * Property holding boolean values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "boolean-property")
@@ -38,7 +38,7 @@ public class BooleanProperty extends SingleProperty<Boolean> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            Display name of the property. Can not be <code>null</code>.
 	 * @param description
@@ -69,38 +69,42 @@ public class BooleanProperty extends SingleProperty<Boolean> {
 
 	/**
 	 * Gets {@link #usedValue}.
-	 * 
+	 *
 	 * @return {@link #usedValue}
 	 */
+	@Override
 	protected Boolean getUsedValue() {
 		return usedValue;
 	}
 
 	/**
 	 * Sets {@link #usedValue}.
-	 * 
+	 *
 	 * @param usedValue
 	 *            New value for {@link #usedValue}
 	 */
+	@Override
 	protected void setUsedValue(Boolean usedValue) {
 		this.usedValue = usedValue;
 	}
 
 	/**
 	 * Gets {@link #defaultValue}.
-	 * 
+	 *
 	 * @return {@link #defaultValue}
 	 */
+	@Override
 	public Boolean getDefaultValue() {
 		return defaultValue;
 	}
 
 	/**
 	 * Sets {@link #defaultValue}.
-	 * 
+	 *
 	 * @param defaultValue
 	 *            New value for {@link #defaultValue}
 	 */
+	@Override
 	protected void setDefaultValue(Boolean defaultValue) {
 		this.defaultValue = defaultValue;
 	}
@@ -108,6 +112,7 @@ public class BooleanProperty extends SingleProperty<Boolean> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Boolean parseLiteral(String literal) {
 		return Boolean.parseBoolean(literal);
 	}

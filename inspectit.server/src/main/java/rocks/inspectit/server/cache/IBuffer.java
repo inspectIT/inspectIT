@@ -2,9 +2,9 @@ package rocks.inspectit.server.cache;
 
 /**
  * Interface for Buffer functionality.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of objects in buffer.
  */
@@ -12,7 +12,7 @@ public interface IBuffer<E> {
 
 	/**
 	 * Puts one {@link IBufferElement} in the buffer.
-	 * 
+	 *
 	 * @param element
 	 *            Element to be put into the buffer.
 	 */
@@ -21,7 +21,7 @@ public interface IBuffer<E> {
 	/**
 	 * Performs the eviction from the buffer. The element or elements that needs to be evicted
 	 * depends on buffer implementation.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 *             {@link InterruptedException}
 	 */
@@ -30,7 +30,7 @@ public interface IBuffer<E> {
 	/**
 	 * Performs the size analysis of one {@link IBufferElement} in the buffer, that is next in the
 	 * line for analysis. The size of the object is added to the current size of the buffer.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 *             {@link InterruptedException}
 	 */
@@ -39,7 +39,7 @@ public interface IBuffer<E> {
 	/**
 	 * Performs the indexing of one {@link IBufferElement} in the buffer, that is next in the line
 	 * for indexing.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 *             {@link InterruptedException}
 	 */
@@ -52,14 +52,14 @@ public interface IBuffer<E> {
 
 	/**
 	 * Returns max size of the buffer.
-	 * 
+	 *
 	 * @return Buffer maximum size in bytes.
 	 */
 	long getMaxSize();
 
 	/**
 	 * Sets max size of the buffer.
-	 * 
+	 *
 	 * @param maxSize
 	 *            Maximum size for buffer in bytes.
 	 */
@@ -67,7 +67,7 @@ public interface IBuffer<E> {
 
 	/**
 	 * Returns current size of the buffer.
-	 * 
+	 *
 	 * @return Current buffer size in bytes.
 	 */
 	long getCurrentSize();
@@ -75,7 +75,7 @@ public interface IBuffer<E> {
 	/**
 	 * Returns the eviction occupancy percentage, which defines the occupancy percentage of the
 	 * buffer when eviction of the elements should start.
-	 * 
+	 *
 	 * @return Eviction occupancy percentage presented as a float ranging from 0 to 1.
 	 */
 	float getEvictionOccupancyPercentage();
@@ -83,7 +83,7 @@ public interface IBuffer<E> {
 	/**
 	 * Sets the eviction occupancy percentage, which defines the occupancy percentage of the buffer
 	 * when eviction of the elements should start.
-	 * 
+	 *
 	 * @param evictionOccupancyPercentage
 	 *            Eviction occupancy percentage presented as a float ranging from 0 to 1.
 	 */
@@ -91,19 +91,19 @@ public interface IBuffer<E> {
 
 	/**
 	 * Returns current occupancy percentage of the buffer.
-	 * 
+	 *
 	 * @return Current buffer occupancy percentage presented as a float ranging from 0 to 1.
 	 */
 	float getOccupancyPercentage();
 
 	/**
-	 * 
+	 *
 	 * @return Returns the oldest element in the buffer.
 	 */
 	E getOldestElement();
 
 	/**
-	 * 
+	 *
 	 * @return Returns the newest element in the buffer.
 	 */
 	E getNewestElement();

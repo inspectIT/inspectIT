@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.storage.http.TransferRateInputStream;
 
 /**
  * Wrapping entity to support download speed monitoring.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DownloadHttpEntityWrapper extends HttpEntityWrapper {
 
@@ -24,7 +24,7 @@ public class DownloadHttpEntityWrapper extends HttpEntityWrapper {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param wrapped
 	 *            Entity to be wrapped.
 	 * @param transferDataMonitor

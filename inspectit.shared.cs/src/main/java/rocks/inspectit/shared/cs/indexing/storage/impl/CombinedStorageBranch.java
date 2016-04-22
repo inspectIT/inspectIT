@@ -21,9 +21,9 @@ import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
  * {@link #put(DefaultData)} and {@link #getAndRemove(DefaultData)} will throw and
  * {@link UnsupportedOperationException} because simply the class does not know where in which
  * branch the object belongs.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class CombinedStorageBranch<E extends DefaultData> implements IStorageTreeComponent<E> {
@@ -37,12 +37,12 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	 * Default no-args constructor.
 	 */
 	public CombinedStorageBranch() {
-		branches = new ArrayList<IStorageTreeComponent<E>>();
+		branches = new ArrayList<>();
 	}
 
 	/**
 	 * Constructor thats sets branches.
-	 * 
+	 *
 	 * @param branches
 	 *            Branches that are joined in one.
 	 */
@@ -67,7 +67,7 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 
 	/**
 	 * Adds a branch to the combined branches list.
-	 * 
+	 *
 	 * @param branch
 	 *            {@link IStorageTreeComponent} to add.
 	 */
@@ -81,6 +81,7 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	 * Call to this method throws the {@link UnsupportedOperationException} cause combined branch
 	 * should only be used for read operations.
 	 */
+	@Override
 	public IStorageDescriptor put(E element) throws IndexingException {
 		throw new UnsupportedOperationException("Combined storage branch provides only read-only operations.");
 	}
@@ -88,6 +89,7 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageDescriptor get(E element) {
 		for (IStorageTreeComponent<E> branch : branches) {
 			IStorageDescriptor descriptor = branch.get(element);
@@ -104,10 +106,10 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	 * Method returns combined results from all branches that are combined.
 	 */
 	public List<IStorageDescriptor> query(StorageIndexQuery query) {
-		List<IStorageDescriptor> combinedResult = new ArrayList<IStorageDescriptor>();
+		List<IStorageDescriptor> combinedResult = new ArrayList<>();
 		for (IStorageTreeComponent<E> branch : branches) {
 			List<IStorageDescriptor> branchResult = branch.query(query);
-			if (branchResult != null && !branchResult.isEmpty()) {
+			if ((branchResult != null) && !branchResult.isEmpty()) {
 				combinedResult.addAll(branchResult);
 			}
 		}
@@ -117,6 +119,7 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preWriteFinalization() {
 		for (IStorageTreeComponent<E> branch : branches) {
 			branch.preWriteFinalization();
@@ -128,19 +131,22 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	 * <p>
 	 * Method returns combined results from all branches that are combined.
 	 */
+	@Override
 	public List<IStorageDescriptor> query(IIndexQuery query) {
-		List<IStorageDescriptor> combinedResult = new ArrayList<IStorageDescriptor>();
+		List<IStorageDescriptor> combinedResult = new ArrayList<>();
 		for (IStorageTreeComponent<E> branch : branches) {
 			List<IStorageDescriptor> branchResult = branch.query(query);
-			if (branchResult != null && !branchResult.isEmpty()) {
+			if ((branchResult != null) && !branchResult.isEmpty()) {
 				combinedResult.addAll(branchResult);
 			}
 		}
 		return combinedResult;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
 		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
@@ -151,6 +157,7 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	 * Call to this method throws the {@link UnsupportedOperationException} cause combined branch
 	 * should only be used for read operations.
 	 */
+	@Override
 	public IStorageDescriptor getAndRemove(E element) {
 		throw new UnsupportedOperationException("Combined storage branch provides only read-only operations.");
 	}
@@ -158,6 +165,7 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getComponentSize(IObjectSizes objectSizes) {
 		long size = objectSizes.getSizeOfObjectHeader() + objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
 		size += objectSizes.getSizeOf(branches);
@@ -176,24 +184,25 @@ public class CombinedStorageBranch<E extends DefaultData> implements IStorageTre
 		toStringBuilder.append("branches", branches);
 		return toStringBuilder.toString();
 	}
-	
+
 	/**
 	 * Returns the branches to Query.
-	 * 
+	 *
 	 * @param <R>
-	 * 
+	 *
 	 * @param query
-	 *             query
+	 *            query
 	 * @return the list of branches
 	 */
-	public List<IStorageTreeComponent<E>> getBranchesToQuery(IIndexQuery query) {		
+	public List<IStorageTreeComponent<E>> getBranchesToQuery(IIndexQuery query) {
 		return getBranches();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RecursiveTask<List<IStorageDescriptor>> getTaskForForkJoinQuery(IIndexQuery query) {
-		return new QueryTask<IStorageDescriptor, E>(branches, query);
+		return new QueryTask<>(branches, query);
 	}
 }

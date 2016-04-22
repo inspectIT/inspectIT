@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePro
 
 /**
  * Is FQN validator.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlRootElement(name = "isFullyQualifiedClassName")
 public class FullyQualifiedClassNameValidator extends AbstractSinglePropertyValidator<String> implements ISinglePropertyValidator<String> {
@@ -20,6 +20,7 @@ public class FullyQualifiedClassNameValidator extends AbstractSinglePropertyVali
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected boolean prove(String value) {
 		return StringUtils.isNotEmpty(value) && value.matches("([a-zA-Z_$][a-zA-Z\\d_$]*\\.)*[a-zA-Z_$][a-zA-Z\\d_$]*");
 	}

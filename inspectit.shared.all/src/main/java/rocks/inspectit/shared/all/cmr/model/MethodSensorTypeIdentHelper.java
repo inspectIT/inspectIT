@@ -4,9 +4,9 @@ import org.apache.commons.collections.MapUtils;
 
 /**
  * Helper methods for the {@link MethodSensorTypeIdent}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class MethodSensorTypeIdentHelper {
 
@@ -29,7 +29,7 @@ public final class MethodSensorTypeIdentHelper {
 	/**
 	 * Returns the regular expression definition from the {@link MethodSensorTypeIdent} if one is
 	 * set.
-	 * 
+	 *
 	 * @param methodSensorTypeIdent
 	 *            {@link MethodSensorTypeIdent}.
 	 * @return Regular expression or <code>null</code> if it's not set.
@@ -49,7 +49,7 @@ public final class MethodSensorTypeIdentHelper {
 	/**
 	 * Returns the regular expression definition from the {@link MethodSensorTypeIdent} if one is
 	 * set.
-	 * 
+	 *
 	 * @param methodSensorTypeIdent
 	 *            {@link MethodSensorTypeIdent}.
 	 * @return Regular expression or <code>null</code> if it's not set.

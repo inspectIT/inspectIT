@@ -14,9 +14,9 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  * <p>
  * This class implements the {@link IAggregatedData} interface but does not provide the IDs of the
  * aggregated instances since they are not related to any data and are useless.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @Entity
 public class CpuInformationData extends SystemSensorData implements IAggregatedData<CpuInformationData> {
@@ -59,7 +59,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * The constructor which needs three parameters.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The Timestamp.
 	 * @param platformIdent
@@ -73,7 +73,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Gets {@link #count}.
-	 * 
+	 *
 	 * @return {@link #count}
 	 */
 	public int getCount() {
@@ -82,7 +82,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Sets {@link #count}.
-	 * 
+	 *
 	 * @param count
 	 *            New value for {@link #count}
 	 */
@@ -99,7 +99,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * sets the process cpu time if it is higher than the current cpu time.
-	 * 
+	 *
 	 * @param actualProcessCpuTime
 	 *            the data to set.
 	 */
@@ -111,7 +111,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Gets {@link #processCpuTime}.
-	 * 
+	 *
 	 * @return {@link #processCpuTime}
 	 */
 	public long getProcessCpuTime() {
@@ -120,7 +120,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Sets {@link #processCpuTime}.
-	 * 
+	 *
 	 * @param processCpuTime
 	 *            New value for {@link #processCpuTime}
 	 */
@@ -130,7 +130,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * adds the given value to the cpu usage.
-	 * 
+	 *
 	 * @param cpuUsage
 	 *            the value to add.
 	 */
@@ -140,7 +140,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Gets {@link #minCpuUsage}.
-	 * 
+	 *
 	 * @return {@link #minCpuUsage}
 	 */
 	public float getMinCpuUsage() {
@@ -149,7 +149,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Sets {@link #minCpuUsage}.
-	 * 
+	 *
 	 * @param minCpuUsage
 	 *            New value for {@link #minCpuUsage}
 	 */
@@ -159,7 +159,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Gets {@link #maxCpuUsage}.
-	 * 
+	 *
 	 * @return {@link #maxCpuUsage}
 	 */
 	public float getMaxCpuUsage() {
@@ -168,7 +168,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Sets {@link #maxCpuUsage}.
-	 * 
+	 *
 	 * @param maxCpuUsage
 	 *            New value for {@link #maxCpuUsage}
 	 */
@@ -178,7 +178,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Gets {@link #totalCpuUsage}.
-	 * 
+	 *
 	 * @return {@link #totalCpuUsage}
 	 */
 	public float getTotalCpuUsage() {
@@ -187,7 +187,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 
 	/**
 	 * Sets {@link #totalCpuUsage}.
-	 * 
+	 *
 	 * @param totalCpuUsage
 	 *            New value for {@link #totalCpuUsage}
 	 */
@@ -216,20 +216,22 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + count;
-		result = prime * result + Float.floatToIntBits(maxCpuUsage);
-		result = prime * result + Float.floatToIntBits(minCpuUsage);
-		result = prime * result + (int) (processCpuTime ^ (processCpuTime >>> 32));
-		result = prime * result + Float.floatToIntBits(totalCpuUsage);
+		result = (prime * result) + count;
+		result = (prime * result) + Float.floatToIntBits(maxCpuUsage);
+		result = (prime * result) + Float.floatToIntBits(minCpuUsage);
+		result = (prime * result) + (int) (processCpuTime ^ (processCpuTime >>> 32));
+		result = (prime * result) + Float.floatToIntBits(totalCpuUsage);
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -262,6 +264,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(0, 0, 1, 3, 1, 0);

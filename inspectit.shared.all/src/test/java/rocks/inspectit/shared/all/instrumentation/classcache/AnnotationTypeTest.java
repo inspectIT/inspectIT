@@ -9,8 +9,6 @@ import static org.hamcrest.Matchers.is;
 import org.testng.annotations.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import rocks.inspectit.shared.all.instrumentation.classcache.AnnotationType;
-import rocks.inspectit.shared.all.instrumentation.classcache.TypeWithAnnotations;
 
 @SuppressWarnings("PMD")
 public class AnnotationTypeTest {

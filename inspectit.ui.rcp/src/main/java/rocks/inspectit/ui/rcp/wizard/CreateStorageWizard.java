@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.wizard.page.DefineNewStorageWizzardPage;
 
 /**
  * Wizard for creating and opening the storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CreateStorageWizard extends Wizard implements INewWizard {
 
@@ -47,7 +47,7 @@ public class CreateStorageWizard extends Wizard implements INewWizard {
 	 * This constructor will set provided {@link CmrRepositoryDefinition} as the initially selected
 	 * repository to create storage to. Force open, means that the option if the storage will be
 	 * opened or not, will not be available for the user.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} to create storage on.
 	 */

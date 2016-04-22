@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Provides information about the System and JVM.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://commons.apache.org/proper/commons-lang/">Apache Commons Lang</a>
- * {@link org.apache.commons.lang.SystemUtils} class. License info can be found <a
- * href="http://www.apache.org/licenses/">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://commons.apache.org/proper/commons-lang/">Apache Commons Lang</a>
+ * {@link org.apache.commons.lang.SystemUtils} class. License info can be found
+ * <a href="http://www.apache.org/licenses/">here</a>.
+ *
  */
 public final class UnderlyingSystemInfo {
 
@@ -22,9 +22,9 @@ public final class UnderlyingSystemInfo {
 
 	/**
 	 * Enumeration for Java version.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum JavaVersion {
 
@@ -71,9 +71,9 @@ public final class UnderlyingSystemInfo {
 
 	/**
 	 * Enumeration for Java provider.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum JvmProvider {
 
@@ -127,7 +127,7 @@ public final class UnderlyingSystemInfo {
 	 * <p>
 	 * Is <code>true</code> if the Java is 64bit. Works only if VM is IBM or Sun.
 	 * </p>
-	 * 
+	 *
 	 */
 	public static final boolean IS_64BIT = is64Bit();
 
@@ -136,7 +136,7 @@ public final class UnderlyingSystemInfo {
 	 * Is <code>true</code> if the Java is 64bit and compressed oops are used. Works only if VM is
 	 * IBM or Sun.
 	 * </p>
-	 * 
+	 *
 	 */
 	public static final boolean IS_COMPRESSED_OOPS = isCompressedOops();
 
@@ -148,7 +148,7 @@ public final class UnderlyingSystemInfo {
 
 	/**
 	 * Returns the JVM provider.
-	 * 
+	 *
 	 * @return Returns the JVM provider.
 	 */
 	private static JvmProvider getJvmProvider() {
@@ -165,7 +165,7 @@ public final class UnderlyingSystemInfo {
 
 	/**
 	 * Returns the Java version.
-	 * 
+	 *
 	 * @return Returns the Java version.
 	 */
 	private static JavaVersion getJavaVersion() {
@@ -190,7 +190,7 @@ public final class UnderlyingSystemInfo {
 
 	/**
 	 * Matches the vendor name provided with the vendor of the JVM.
-	 * 
+	 *
 	 * @param vendor
 	 *            Vendor to check.
 	 * @return True if the {@link #JAVA_VENDOR} is not <code>null</code> and vendor name matches.
@@ -205,7 +205,7 @@ public final class UnderlyingSystemInfo {
 	/**
 	 * Returns if the JVM is a 64bit. Note that this method returns <code>false</code> if the JVM is
 	 * not from Sun or IBM.
-	 * 
+	 *
 	 * @return Returns if the JVM is a 64bit. Note that this method returns <code>false</code> if
 	 *         the JVM is not from Sun or IBM.
 	 */
@@ -237,7 +237,7 @@ public final class UnderlyingSystemInfo {
 	 * -XX:+UseCompressedOops This enables compressed references in 64-bit JVMs. It is identical to
 	 * specifying the -Xcompressedrefs option. -XX:-UseCompressedOops This prevents use of
 	 * compressed references in 64-bit JVMs.
-	 * 
+	 *
 	 * @return True only if JVM is 64bit and compressed oops are used.
 	 */
 	private static boolean isCompressedOops() {
@@ -246,7 +246,7 @@ public final class UnderlyingSystemInfo {
 			if (null != runtimeMXBean) {
 				List<String> arguments = runtimeMXBean.getInputArguments();
 				for (String argument : arguments) {
-					if (argument.indexOf("+UseCompressedOops") != -1 || argument.indexOf("compressedrefs") != -1) {
+					if ((argument.indexOf("+UseCompressedOops") != -1) || (argument.indexOf("compressedrefs") != -1)) {
 						return true;
 					} else if (argument.indexOf("-UseCompressedOops") != -1) {
 						return false;
@@ -259,7 +259,7 @@ public final class UnderlyingSystemInfo {
 			case ORACLE:
 				if (getJavaVersion() == JavaVersion.JAVA_1_7) {
 					long max = Runtime.getRuntime().maxMemory();
-					return max == Long.MAX_VALUE || max < MAX_COMPRESSED_OOPS_JAVA7_MEMORY;
+					return (max == Long.MAX_VALUE) || (max < MAX_COMPRESSED_OOPS_JAVA7_MEMORY);
 				} else if (getJavaVersion() == JavaVersion.JAVA_1_6) {
 					try {
 						int subversionIndexStart = JAVA_VERSION_TRIMMED.indexOf('_');
@@ -282,7 +282,7 @@ public final class UnderlyingSystemInfo {
 	 * <p>
 	 * Decides if the Java version matches.
 	 * </p>
-	 * 
+	 *
 	 * @param versionPrefix
 	 *            the prefix for the java version
 	 * @return true if matches, or false if not or can't determine
@@ -298,7 +298,7 @@ public final class UnderlyingSystemInfo {
 	 * <p>
 	 * This method is package private instead of private to support unit test invocation.
 	 * </p>
-	 * 
+	 *
 	 * @param version
 	 *            the actual Java version
 	 * @param versionPrefix
@@ -314,14 +314,14 @@ public final class UnderlyingSystemInfo {
 
 	/**
 	 * Trims the text of the java version to start with numbers.
-	 * 
+	 *
 	 * @return the trimmed java version
 	 */
 	private static String getJavaVersionTrimmed() {
 		if (JAVA_VERSION_FULL != null) {
 			for (int i = 0; i < JAVA_VERSION_FULL.length(); i++) {
 				char ch = JAVA_VERSION_FULL.charAt(i);
-				if (ch >= '0' && ch <= '9') {
+				if ((ch >= '0') && (ch <= '9')) {
 					return JAVA_VERSION_FULL.substring(i);
 				}
 			}
@@ -333,12 +333,12 @@ public final class UnderlyingSystemInfo {
 	 * <p>
 	 * Gets a System property, defaulting to <code>null</code> if the property cannot be read.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * If a <code>SecurityException</code> is caught, the return value is <code>null</code> and a
 	 * message is written to <code>System.err</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param property
 	 *            the system property name
 	 * @return the system property value or <code>null</code> if a security problem occurs

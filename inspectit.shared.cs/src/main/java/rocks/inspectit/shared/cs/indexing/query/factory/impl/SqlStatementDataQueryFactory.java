@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestriction
 
 /**
  * Factory for all queries for the {@link SqlStatementData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 @Component
@@ -25,7 +25,7 @@ public class SqlStatementDataQueryFactory<E extends IIndexQuery> extends Abstrac
 	/**
 	 * Returns the query for aggregating the {@link SqlStatementData}. If the template holds the SQL
 	 * query string, only objects with this query string will be returned.
-	 * 
+	 *
 	 * @param sqlStatementData
 	 *            The template containing the platform id.
 	 * @param fromDate
@@ -37,7 +37,7 @@ public class SqlStatementDataQueryFactory<E extends IIndexQuery> extends Abstrac
 	public E getAggregatedSqlStatementsQuery(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		E query = getIndexQueryProvider().getIndexQuery();
 		query.setPlatformIdent(sqlStatementData.getPlatformIdent());
-		ArrayList<Class<?>> searchedClasses = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> searchedClasses = new ArrayList<>();
 		searchedClasses.add(SqlStatementData.class);
 		searchedClasses.add(AggregatedSqlStatementData.class);
 		query.setObjectClasses(searchedClasses);

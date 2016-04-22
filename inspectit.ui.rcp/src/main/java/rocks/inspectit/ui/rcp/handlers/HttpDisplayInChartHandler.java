@@ -23,8 +23,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.HttpChartingInputDefinitionExtra;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
@@ -36,9 +36,9 @@ import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
 
 /**
  * Handler for displaying the {@link HttpTimerData} in charts.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HttpDisplayInChartHandler extends AbstractHandler implements IHandler {
 
@@ -77,14 +77,14 @@ public class HttpDisplayInChartHandler extends AbstractHandler implements IHandl
 			editorPropertiesData.setSensorImage(SensorTypeEnum.CHARTING_HTTP_TIMER_SENSOR.getImage());
 			editorPropertiesData.setSensorName("Chart");
 			editorPropertiesData.setPartNameFlag(PartType.SENSOR);
-			if (templates.size() == 1 && !regExTransformation) {
+			if ((templates.size() == 1) && !regExTransformation) {
 				HttpTimerData template = templates.get(0);
 				if (plotByTagValue) {
 					editorPropertiesData.setViewName("Tag: " + template.getHttpInfo().getInspectItTaggingHeaderValue() + " [" + template.getHttpInfo().getRequestMethod() + "]");
 				} else {
 					editorPropertiesData.setViewName("URI: " + template.getHttpInfo().getUri() + " [" + template.getHttpInfo().getRequestMethod() + "]");
 				}
-			} else if (regExTemplates.size() == 1 && regExTransformation) {
+			} else if ((regExTemplates.size() == 1) && regExTransformation) {
 				RegExAggregatedHttpTimerData regExTemplate = regExTemplates.get(0);
 				editorPropertiesData.setViewName("Transformed URI: " + regExTemplate.getTransformedUri() + " [" + regExTemplate.getHttpInfo().getRequestMethod() + "]");
 			} else {

@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
 
 /**
  * This class provide dynamic informations about the compilation system of the virtual machine.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @Entity
 public class CompilationInformationData extends SystemSensorData {
@@ -49,7 +49,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * The constructor which needs three parameters.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The Timestamp.
 	 * @param platformIdent
@@ -63,7 +63,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #count}.
-	 * 
+	 *
 	 * @return {@link #count}
 	 */
 	public int getCount() {
@@ -72,7 +72,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #count}.
-	 * 
+	 *
 	 * @param count
 	 *            New value for {@link #count}
 	 */
@@ -89,7 +89,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * adds the value to the total compilation time.
-	 * 
+	 *
 	 * @param totalCompilationTime
 	 *            the value to add.
 	 */
@@ -99,7 +99,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #minTotalCompilationTime}.
-	 * 
+	 *
 	 * @return {@link #minTotalCompilationTime}
 	 */
 	public long getMinTotalCompilationTime() {
@@ -108,7 +108,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #minTotalCompilationTime}.
-	 * 
+	 *
 	 * @param minTotalCompilationTime
 	 *            New value for {@link #minTotalCompilationTime}
 	 */
@@ -118,7 +118,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #maxTotalCompilationTime}.
-	 * 
+	 *
 	 * @return {@link #maxTotalCompilationTime}
 	 */
 	public long getMaxTotalCompilationTime() {
@@ -127,7 +127,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #maxTotalCompilationTime}.
-	 * 
+	 *
 	 * @param maxTotalCompilationTime
 	 *            New value for {@link #maxTotalCompilationTime}
 	 */
@@ -137,7 +137,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #totalTotalCompilationTime}.
-	 * 
+	 *
 	 * @return {@link #totalTotalCompilationTime}
 	 */
 	public long getTotalTotalCompilationTime() {
@@ -146,7 +146,7 @@ public class CompilationInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #totalTotalCompilationTime}.
-	 * 
+	 *
 	 * @param totalTotalCompilationTime
 	 *            New value for {@link #totalTotalCompilationTime}
 	 */
@@ -157,19 +157,21 @@ public class CompilationInformationData extends SystemSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + count;
-		result = prime * result + (int) (maxTotalCompilationTime ^ (maxTotalCompilationTime >>> 32));
-		result = prime * result + (int) (minTotalCompilationTime ^ (minTotalCompilationTime >>> 32));
-		result = prime * result + (int) (totalTotalCompilationTime ^ (totalTotalCompilationTime >>> 32));
+		result = (prime * result) + count;
+		result = (prime * result) + (int) (maxTotalCompilationTime ^ (maxTotalCompilationTime >>> 32));
+		result = (prime * result) + (int) (minTotalCompilationTime ^ (minTotalCompilationTime >>> 32));
+		result = (prime * result) + (int) (totalTotalCompilationTime ^ (totalTotalCompilationTime >>> 32));
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -199,6 +201,7 @@ public class CompilationInformationData extends SystemSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(0, 0, 1, 0, 3, 0);

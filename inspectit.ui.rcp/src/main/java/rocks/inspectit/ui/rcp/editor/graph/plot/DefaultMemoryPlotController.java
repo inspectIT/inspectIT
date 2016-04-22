@@ -35,10 +35,10 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * This class creates a {@link XYPlot} containing the {@link MemoryInformationData} informations.
- * 
+ *
  * @author Eduard Tudenhoefner
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DefaultMemoryPlotController extends AbstractPlotController {
 
@@ -80,7 +80,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * The map containing the weight of the {@link XYPlot}s.
 	 */
-	private Map<XYPlot, Integer> weights = new HashMap<XYPlot, Integer>();
+	private Map<XYPlot, Integer> weights = new HashMap<>();
 
 	/**
 	 * The {@link YIntervalSeriesImproved} for heap memory.
@@ -146,11 +146,12 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<XYPlot> getPlots() {
 		upperPlot = initializeUpperPlot();
 		lowerPlot = initializeLowerPlot();
 
-		List<XYPlot> plots = new ArrayList<XYPlot>(2);
+		List<XYPlot> plots = new ArrayList<>(2);
 		plots.add(upperPlot);
 		plots.add(lowerPlot);
 		weights.put(upperPlot, WEIGHT_UPPER_PLOT);
@@ -161,7 +162,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 
 	/**
 	 * Initializes the upper plot.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}
 	 */
 	private XYPlot initializeUpperPlot() {
@@ -192,7 +193,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 			if (systemData.getMaxHeapMemorySize() != -1) {
 				maxHeapUpperRange = systemData.getMaxHeapMemorySize() / 1024.0d;
 			} else if (systemData.getInitHeapMemorySize() != -1) {
-				maxHeapUpperRange = systemData.getInitHeapMemorySize() * 2 / 1024.0d;
+				maxHeapUpperRange = (systemData.getInitHeapMemorySize() * 2) / 1024.0d;
 			} else {
 				maxHeapUpperRange = 728 * 1024 * 1024;
 			}
@@ -210,7 +211,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 
 	/**
 	 * Updates the upper plot with the given input data.
-	 * 
+	 *
 	 * @param memoryData
 	 *            the input data.
 	 */
@@ -225,7 +226,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * Removes all data from the upper plot and sets the {@link MemoryInformationData} objects on
 	 * the plot.
-	 * 
+	 *
 	 * @param memoryData
 	 *            The data to set on the plot.
 	 */
@@ -236,7 +237,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 
 	/**
 	 * Initializes the lower plot.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}
 	 */
 	private XYPlot initializeLowerPlot() {
@@ -265,7 +266,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 			if (systemData.getMaxNonHeapMemorySize() != -1) {
 				maxNonHeapUpperRange = systemData.getMaxNonHeapMemorySize() / 1024.0d;
 			} else if (systemData.getInitNonHeapMemorySize() != -1) {
-				maxNonHeapUpperRange = systemData.getInitNonHeapMemorySize() * 2 / 1024.0d;
+				maxNonHeapUpperRange = (systemData.getInitNonHeapMemorySize() * 2) / 1024.0d;
 			} else {
 				maxNonHeapUpperRange = 128 * 1024 * 1024;
 			}
@@ -286,7 +287,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 
 	/**
 	 * Updates the lower plot with the given input data.
-	 * 
+	 *
 	 * @param memoryData
 	 *            the input data.
 	 */
@@ -302,7 +303,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * Removes all data from the lower plot and sets the {@link MemoryInformationData} objects on
 	 * the plot.
-	 * 
+	 *
 	 * @param memoryData
 	 *            The data to set on the plot.
 	 */
@@ -314,6 +315,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void update(final Date from, final Date to) {
 		Date dataNewestDate = new Date(0);
@@ -415,6 +417,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getWeight(XYPlot subPlot) {
 		return weights.get(subPlot);
 	}
@@ -422,6 +425,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		Set<PreferenceId> preferenceIds = EnumSet.noneOf(PreferenceId.class);
 		if (getInputDefinition().getRepositoryDefinition() instanceof CmrRepositoryDefinition) {

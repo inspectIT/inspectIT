@@ -2,9 +2,9 @@ package rocks.inspectit.agent.java.connection;
 
 /**
  * The registration exception which is thrown whenever a problem occurs in the registration process.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class RegistrationException extends Exception {
 
@@ -16,7 +16,7 @@ public class RegistrationException extends Exception {
 	/**
 	 * Constructs a new exception with the specified detail message. The cause is not initialized,
 	 * and may subsequently be initialized by a call to {@link #initCause}.
-	 * 
+	 *
 	 * @param message
 	 *            The detail message. The detail message is saved for later retrieval by the
 	 *            {@link #getMessage()} method.
@@ -30,7 +30,7 @@ public class RegistrationException extends Exception {
 	 * <p>
 	 * Note that the detail message associated with <code>cause</code> is <i>not</i> automatically
 	 * incorporated in this exception's detail message.
-	 * 
+	 *
 	 * @param message
 	 *            the detail message (which is saved for later retrieval by the
 	 *            {@link #getMessage()} method).

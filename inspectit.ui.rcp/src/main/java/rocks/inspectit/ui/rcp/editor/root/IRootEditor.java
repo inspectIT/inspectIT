@@ -9,9 +9,9 @@ import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
 
 /**
  * Interface for all root editors.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface IRootEditor {
 
@@ -22,14 +22,14 @@ public interface IRootEditor {
 
 	/**
 	 * Returns the sub view registered for this root editor.
-	 * 
+	 *
 	 * @return the sub view.
 	 */
 	ISubView getSubView();
 
 	/**
 	 * Sets the current active sub view.
-	 * 
+	 *
 	 * @param subView
 	 *            The sub view.
 	 */
@@ -40,14 +40,14 @@ public interface IRootEditor {
 	 * child can act as a composite with other sub views contained in it. So this method returns the
 	 * sub view which is currently active somewhere in one of the composite sub-view child elements
 	 * (if there are any).
-	 * 
+	 *
 	 * @return The active sub view.
 	 */
 	ISubView getActiveSubView();
 
 	/**
 	 * Returns the input definition for this view.
-	 * 
+	 *
 	 * @return The input definition.
 	 */
 	InputDefinition getInputDefinition();
@@ -55,7 +55,7 @@ public interface IRootEditor {
 	/**
 	 * This will set the data input of the view. Every view can initialize itself with some data
 	 * (like live data from the server). This is only needed if some specific needs to be displayed.
-	 * 
+	 *
 	 * @param data
 	 *            The list of {@link DefaultData} objects.
 	 */
@@ -63,7 +63,7 @@ public interface IRootEditor {
 
 	/**
 	 * Returns the preference panel.
-	 * 
+	 *
 	 * @return The preference panel.
 	 */
 	IPreferencePanel getPreferencePanel();

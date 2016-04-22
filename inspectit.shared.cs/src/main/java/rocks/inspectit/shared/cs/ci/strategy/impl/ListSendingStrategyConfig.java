@@ -75,7 +75,7 @@ public class ListSendingStrategyConfig implements IStrategyConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + listSize;
+		result = (prime * result) + listSize;
 		return result;
 	}
 

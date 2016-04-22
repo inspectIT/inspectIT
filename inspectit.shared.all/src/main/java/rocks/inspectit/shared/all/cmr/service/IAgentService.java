@@ -18,8 +18,8 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 public interface IAgentService {
 
 	/**
-	 * Registers the agent with the CMR. The CMR will answer with the {@link AgentConfig}
-	 * containing all necessary information for the agent initialization.
+	 * Registers the agent with the CMR. The CMR will answer with the {@link AgentConfig} containing
+	 * all necessary information for the agent initialization.
 	 *
 	 * @param definedIPs
 	 *            The list of all network interfaces.
@@ -54,8 +54,8 @@ public interface IAgentService {
 	 *            Class hash code.
 	 * @param type
 	 *            Parsed {@link Type} representing class being loaded on the agent.
-	 * @return Instrumentation definition containing method instrumentation configs or <code>null</code>
-	 *         if nothing should be instrumented.
+	 * @return Instrumentation definition containing method instrumentation configs or
+	 *         <code>null</code> if nothing should be instrumented.
 	 * @throws BusinessException
 	 *             If agent with specified id does not exist.
 	 */

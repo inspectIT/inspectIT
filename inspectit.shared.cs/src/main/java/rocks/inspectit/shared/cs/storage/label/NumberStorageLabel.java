@@ -9,9 +9,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Label that has a {@link Number} as a value.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 public class NumberStorageLabel extends AbstractStorageLabel<Number> {
@@ -35,7 +35,7 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param numberValue
 	 *            Label value.
 	 * @param storageLabelType
@@ -59,7 +59,7 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 	 */
 	@Override
 	public void setValue(Number value) {
-		numberValue = (Number) value;
+		numberValue = value;
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 
 	/**
 	 * Gets {@link #numberValue}.
-	 * 
+	 *
 	 * @return {@link #numberValue}
 	 */
 	public Number getNumberValue() {
@@ -81,7 +81,7 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 
 	/**
 	 * Sets {@link #numberValue}.
-	 * 
+	 *
 	 * @param numberValue
 	 *            New value for {@link #numberValue}
 	 */
@@ -96,7 +96,7 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((numberValue == null) ? 0 : numberValue.hashCode());
+		result = (prime * result) + ((numberValue == null) ? 0 : numberValue.hashCode());
 		return result;
 	}
 
@@ -128,6 +128,7 @@ public class NumberStorageLabel extends AbstractStorageLabel<Number> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(AbstractStorageLabel<?> other) {
 		int typeCompare = storageLabelType.compareTo(other.getStorageLabelType());
 		if (0 != typeCompare) {

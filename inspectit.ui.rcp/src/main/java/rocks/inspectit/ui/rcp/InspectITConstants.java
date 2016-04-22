@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp;
 
 /**
  * Defines all the constants for the InspectIT UI.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface InspectITConstants {
 

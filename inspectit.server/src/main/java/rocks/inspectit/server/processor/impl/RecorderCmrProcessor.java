@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 /**
  * Simple {@link AbstractCmrDataProcessor} that passes data to be recorded if recording is "ON" on
  * the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RecorderCmrProcessor extends AbstractCmrDataProcessor {
 

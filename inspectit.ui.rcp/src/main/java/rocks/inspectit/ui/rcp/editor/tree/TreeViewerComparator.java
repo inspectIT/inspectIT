@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.editor.viewers.AbstractViewerComparator;
 
 /**
  * Local table viewer comparator uses provided comparators to sort specific columns.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type for which comparator is created.
  */
@@ -21,10 +21,9 @@ public class TreeViewerComparator<T extends DefaultData> extends AbstractViewerC
 
 	/**
 	 * Adds a column to this comparator so it can be used to sort by.
-	 * 
+	 *
 	 * @param column
-	 *            The {@link TreeColumn} implementation. comparatorProvider The id of the
-	 *            {@link TableColumn} (user-defined).
+	 *            The {@link TreeColumn} implementation.
 	 * @param comparator
 	 *            Comparator that will be used for the given column.
 	 */

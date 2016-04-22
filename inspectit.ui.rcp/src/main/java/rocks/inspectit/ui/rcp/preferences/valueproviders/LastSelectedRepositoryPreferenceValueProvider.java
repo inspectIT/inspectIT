@@ -13,9 +13,9 @@ import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 
 /**
  * Preference value provider that tries to save and load the last selected repository.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class LastSelectedRepositoryPreferenceValueProvider extends PreferenceValueProvider<RepositoryDefinition> {
 

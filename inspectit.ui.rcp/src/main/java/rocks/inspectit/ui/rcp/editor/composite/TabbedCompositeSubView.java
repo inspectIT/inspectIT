@@ -26,9 +26,9 @@ import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.Prefere
 /**
  * This implementation of a composite view lays out its children in its own tabs. Every tab can be
  * given a name.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TabbedCompositeSubView extends AbstractCompositeSubView {
 
@@ -40,16 +40,17 @@ public class TabbedCompositeSubView extends AbstractCompositeSubView {
 	/**
 	 * The names of the tabs.
 	 */
-	private Map<ISubView, String> tabNames = new HashMap<ISubView, String>();
+	private Map<ISubView, String> tabNames = new HashMap<>();
 
 	/**
 	 * The images of the tabs.
 	 */
-	private Map<ISubView, Image> tabImageMap = new HashMap<ISubView, Image>();
+	private Map<ISubView, Image> tabImageMap = new HashMap<>();
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		tabFolder = new CTabFolder(parent, SWT.BOTTOM | SWT.FLAT | SWT.H_SCROLL | SWT.V_SCROLL);
 		tabFolder.setBorderVisible(true);
@@ -91,11 +92,11 @@ public class TabbedCompositeSubView extends AbstractCompositeSubView {
 
 	/**
 	 * Returns the number of pages.
-	 * 
+	 *
 	 * @return the number of pages
 	 */
 	private int getPageCount() {
-		if (null != tabFolder && !tabFolder.isDisposed()) {
+		if ((null != tabFolder) && !tabFolder.isDisposed()) {
 			return tabFolder.getItemCount();
 		}
 		return 0;
@@ -103,7 +104,7 @@ public class TabbedCompositeSubView extends AbstractCompositeSubView {
 
 	/**
 	 * Adds a sub-view to this tabbed view.
-	 * 
+	 *
 	 * @param subView
 	 *            The sub-view to add.
 	 * @param tabName
@@ -130,6 +131,7 @@ public class TabbedCompositeSubView extends AbstractCompositeSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Control getControl() {
 		return tabFolder;
 	}
@@ -156,7 +158,7 @@ public class TabbedCompositeSubView extends AbstractCompositeSubView {
 			}
 		}
 
-		if (index > -1 && index < tabFolder.getItemCount()) {
+		if ((index > -1) && (index < tabFolder.getItemCount())) {
 			tabFolder.setSelection(index);
 		} else {
 			super.select(subView);

@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Editor for the {@link AgentMapping}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentMappingEditor extends AbstractConfigurationInterfaceFormEditor implements IAgentMappingsChangeListener {
 

@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler for making profiles default or not.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SetDefaultProfileHandler extends AbstractHandler implements IHandler {
 

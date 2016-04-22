@@ -62,7 +62,6 @@ public class ClassInstrumenter extends ClassVisitor {
 		this.loaderAwareClassWriter = loaderAwareClassWriter;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */

@@ -10,9 +10,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 /**
  * A simple implementation which checks the size of the list of the current value objects. If the
  * size of the list is greater than the defined one, {@link #sendNow()} is called.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class ListSizeStrategy extends AbstractSendingStrategy implements ListListener<List<DefaultData>> {
 
@@ -29,6 +29,7 @@ public class ListSizeStrategy extends AbstractSendingStrategy implements ListLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void startStrategy() {
 		getCoreService().addListListener(this);
 	}
@@ -36,6 +37,7 @@ public class ListSizeStrategy extends AbstractSendingStrategy implements ListLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop() {
 		getCoreService().removeListListener(this);
 	}
@@ -53,7 +55,7 @@ public class ListSizeStrategy extends AbstractSendingStrategy implements ListLis
 	 * {@inheritDoc}
 	 */
 	public void init(Map<String, String> settings) {
-		this.size = Long.parseLong((String) settings.get("size"));
+		this.size = Long.parseLong(settings.get("size"));
 	}
 
 }

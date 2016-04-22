@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Comparators for {@link ExceptionSensorData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum ExceptionSensorDataComparatorEnum implements IDataComparator<ExceptionSensorData>, Comparator<ExceptionSensorData> {
 

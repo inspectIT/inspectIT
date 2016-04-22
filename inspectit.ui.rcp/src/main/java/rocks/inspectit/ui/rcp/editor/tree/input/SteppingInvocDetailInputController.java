@@ -23,9 +23,9 @@ import rocks.inspectit.ui.rcp.util.OccurrenceFinderFactory;
 /**
  * Extension of the {@link InvocDetailInputController} adapted to serve as an input for a
  * {@link rocks.inspectit.ui.rcp.editor.tree.SteppingTreeSubView}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SteppingInvocDetailInputController extends InvocDetailInputController implements SteppingTreeInputController {
 
@@ -51,7 +51,7 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 
 	/**
 	 * Constructor that defines if the stepping control is visible or not.
-	 * 
+	 *
 	 * @param initVisible
 	 *            Should stepping control be initially visible.
 	 */
@@ -65,7 +65,7 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
-		steppingObjectsList = new ArrayList<Object>();
+		steppingObjectsList = new ArrayList<>();
 
 		if (inputDefinition.hasInputDefinitionExtra(InputDefinitionExtrasMarkerFactory.NAVIGATION_STEPPING_EXTRAS_MARKER)) {
 			List<DefaultData> steppingObj = inputDefinition.getInputDefinitionExtra(InputDefinitionExtrasMarkerFactory.NAVIGATION_STEPPING_EXTRAS_MARKER).getSteppingTemplateList();
@@ -122,7 +122,7 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	@Override
 	public ElementOccurrenceCount countOccurrences(Object element, ViewerFilter[] filters) {
 		List<Object> input = (List<Object>) getTreeInput();
-		if (input != null && !input.isEmpty()) {
+		if ((input != null) && !input.isEmpty()) {
 			InvocationSequenceData invocation = (InvocationSequenceData) input.get(0);
 			return OccurrenceFinderFactory.getOccurrenceCount(invocation, element, filters);
 		}
@@ -148,7 +148,7 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	@Override
 	public Object getElement(Object template, int occurance, ViewerFilter[] filters) {
 		List<Object> input = (List<Object>) getTreeInput();
-		if (input != null && !input.isEmpty()) {
+		if ((input != null) && !input.isEmpty()) {
 			InvocationSequenceData invocation = (InvocationSequenceData) input.get(0);
 			return OccurrenceFinderFactory.getOccurrence(invocation, template, occurance, filters);
 		}

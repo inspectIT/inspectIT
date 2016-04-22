@@ -4,9 +4,9 @@ import rocks.inspectit.shared.cs.indexing.restriction.AbstractIndexQueryRestrict
 
 /**
  * Abstract class for all restrictions that use comparable as restriction values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class ComparableIndexQueryRestriction extends AbstractIndexQueryRestriction {
 
@@ -18,7 +18,7 @@ public abstract class ComparableIndexQueryRestriction extends AbstractIndexQuery
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -31,7 +31,7 @@ public abstract class ComparableIndexQueryRestriction extends AbstractIndexQuery
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Restriction value.
 	 */
 	@SuppressWarnings("rawtypes")

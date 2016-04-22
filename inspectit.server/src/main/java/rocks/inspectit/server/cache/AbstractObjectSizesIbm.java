@@ -3,9 +3,9 @@ package rocks.inspectit.server.cache;
 /**
  * This class has some changes in the calculations for the memory size of the objects when IBM JVM
  * is run.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractObjectSizesIbm extends AbstractObjectSizes {
 
@@ -85,7 +85,7 @@ public abstract class AbstractObjectSizesIbm extends AbstractObjectSizes {
 	/**
 	 * This method is same as the HashMap implementation of IBM JVM calculates the capacity of
 	 * HashMap with given specified capacity from constructors.
-	 * 
+	 *
 	 * @param specifiedCapacity
 	 *            Capacity specified in map constructor.
 	 * @return Real starting capacity.
@@ -115,6 +115,7 @@ public abstract class AbstractObjectSizesIbm extends AbstractObjectSizes {
 	 * <p>
 	 * I can not figure out what I am missing, but seams that I am missing one reference size here.
 	 */
+	@Override
 	protected long getSizeOfConcurrentSeqment(int seqmentCapacity) {
 		long size = super.getSizeOfConcurrentSeqment(seqmentCapacity);
 
@@ -126,18 +127,19 @@ public abstract class AbstractObjectSizesIbm extends AbstractObjectSizes {
 
 	/**
 	 * Returns the concurrent hash map segment capacity from its size and initial capacity.
-	 * 
+	 *
 	 * @param seqmentSize
 	 *            Number of elements in the segment.
 	 * @param initialCapacity
 	 *            Initial capacity.
 	 * @return Size in bytes.
 	 */
+	@Override
 	protected int getSegmentCapacityFromSize(int seqmentSize, int initialCapacity) {
 		int capacity = initialCapacity;
 		float loadFactor = 0.75f;
 		int threshold = (int) (capacity * loadFactor);
-		while (threshold + 1 < seqmentSize) {
+		while ((threshold + 1) < seqmentSize) {
 			capacity <<= 1;
 			threshold = (int) (capacity * loadFactor);
 		}

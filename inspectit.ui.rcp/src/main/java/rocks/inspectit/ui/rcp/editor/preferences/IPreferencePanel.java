@@ -10,16 +10,16 @@ import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.Prefere
 
 /**
  * The interface for all preference panels.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public interface IPreferencePanel {
 
 	/**
 	 * Returns the ID of this preference panel. Each preference panel has a unique ID that can be
 	 * used for a later reference.
-	 * 
+	 *
 	 * @return Returns the ID of this preference panel. Each preference panel has a unique ID that
 	 *         can be used for a later reference.
 	 */
@@ -27,7 +27,7 @@ public interface IPreferencePanel {
 
 	/**
 	 * Creates the part control of this view.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param preferenceSet
@@ -37,13 +37,13 @@ public interface IPreferencePanel {
 	 * @param toolBarManager
 	 *            The toolbar manager is needed if buttons are going to be displayed. Otherwise it
 	 *            can be <code>null</code>.
-	 * 
+	 *
 	 */
 	void createPartControl(Composite parent, Set<PreferenceId> preferenceSet, InputDefinition inputDefinition, IToolBarManager toolBarManager);
 
 	/**
 	 * Registers a callback at this preference panel.
-	 * 
+	 *
 	 * @param callback
 	 *            The callback to register.
 	 */
@@ -51,7 +51,7 @@ public interface IPreferencePanel {
 
 	/**
 	 * Removes a callback from the preference panel.
-	 * 
+	 *
 	 * @param callback
 	 *            The callback to remove.
 	 */
@@ -59,7 +59,7 @@ public interface IPreferencePanel {
 
 	/**
 	 * Fires the event for all registered callbacks.
-	 * 
+	 *
 	 * @param event
 	 *            The event to fire.
 	 */
@@ -67,7 +67,7 @@ public interface IPreferencePanel {
 
 	/**
 	 * Sets the visibility of the preference panel to show/hide.
-	 * 
+	 *
 	 * @param visible
 	 *            The visibility state.
 	 */
@@ -92,7 +92,7 @@ public interface IPreferencePanel {
 
 	/**
 	 * Checking the switch stepping control button on preference panel if stepping button exists.
-	 * 
+	 *
 	 * @param checked
 	 *            True to be checked, false for not checked.
 	 */

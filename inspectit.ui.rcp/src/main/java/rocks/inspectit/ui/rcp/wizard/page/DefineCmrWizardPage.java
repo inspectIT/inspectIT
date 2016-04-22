@@ -85,7 +85,7 @@ public class DefineCmrWizardPage extends WizardPage {
 		this.setTitle(title);
 		this.setMessage(DEFAULT_MESSAGE);
 		this.cmrRepositoryDefinition = cmrRepositoryDefinition;
-		this.existingRepositories = new ArrayList<CmrRepositoryDefinition>(InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions());
+		this.existingRepositories = new ArrayList<>(InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions());
 		if (null != cmrRepositoryDefinition) {
 			this.existingRepositories.remove(cmrRepositoryDefinition);
 		}
@@ -189,7 +189,7 @@ public class DefineCmrWizardPage extends WizardPage {
 		String ip = ipBox.getText().trim();
 		int port = Integer.parseInt(portBox.getText().trim());
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : existingRepositories) {
-			if (Objects.equals(ip, cmrRepositoryDefinition.getIp()) && port == cmrRepositoryDefinition.getPort()) {
+			if (Objects.equals(ip, cmrRepositoryDefinition.getIp()) && (port == cmrRepositoryDefinition.getPort())) {
 				return false;
 			}
 		}
@@ -236,7 +236,7 @@ public class DefineCmrWizardPage extends WizardPage {
 		String ip = ipBox.getText().trim();
 		int port = Integer.parseInt(portBox.getText().trim());
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : existingRepositories) {
-			if (Objects.equals(ip, cmrRepositoryDefinition.getIp()) && port == cmrRepositoryDefinition.getPort()) {
+			if (Objects.equals(ip, cmrRepositoryDefinition.getIp()) && (port == cmrRepositoryDefinition.getPort())) {
 				setMessage("The repository with given IP address and port already exists", ERROR);
 				return;
 			}

@@ -26,9 +26,9 @@ import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 /**
  * The default implementation of the {@link IAgentStorageService} interface. Uses an implementation
  * of the {@link DefaultDataDao} interface to save and retrieve the data objects from the database.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Service
 public class AgentStorageService implements IAgentStorageService {
@@ -68,7 +68,7 @@ public class AgentStorageService implements IAgentStorageService {
 	/**
 	 * Queue to store and remove list of data that has to be processed.
 	 */
-	private ArrayBlockingQueue<SoftReference<List<? extends DefaultData>>> dataObjectsBlockingQueue = new ArrayBlockingQueue<SoftReference<List<? extends DefaultData>>>(QUEUE_CAPACITY);
+	private ArrayBlockingQueue<SoftReference<List<? extends DefaultData>>> dataObjectsBlockingQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
 
 	/**
 	 * Count of thread to process data.
@@ -89,7 +89,7 @@ public class AgentStorageService implements IAgentStorageService {
 
 	/**
 	 * Constructor that can be used in testing for suppling the queue.
-	 * 
+	 *
 	 * @param dataObjectsBlockingQueue
 	 *            Queue.
 	 */
@@ -100,6 +100,7 @@ public class AgentStorageService implements IAgentStorageService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public void addDataObjects(final List<? extends DefaultData> dataObjects) {
 		SoftReference<List<? extends DefaultData>> softReference = new SoftReference<List<? extends DefaultData>>(dataObjects);
@@ -135,7 +136,7 @@ public class AgentStorageService implements IAgentStorageService {
 		int threadListSize = threadList.size();
 		if (threadCount < threadListSize) {
 			// remove threads
-			for (int i = 0; i < threadListSize - threadCount; i++) {
+			for (int i = 0; i < (threadListSize - threadCount); i++) {
 				Thread thread = threadList.remove(i);
 				thread.interrupt();
 				try {
@@ -157,7 +158,7 @@ public class AgentStorageService implements IAgentStorageService {
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */
@@ -174,15 +175,15 @@ public class AgentStorageService implements IAgentStorageService {
 	/**
 	 * Thread class that is processing the data coming to the Agent service and invoking the
 	 * {@link DefaultDataDao}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class ProcessDataThread extends Thread {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param threadId
 		 *            Id of the thread that will be added to the thread name.
 		 */

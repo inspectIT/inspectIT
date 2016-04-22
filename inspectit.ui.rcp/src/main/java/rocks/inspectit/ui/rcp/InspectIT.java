@@ -95,7 +95,7 @@ public class InspectIT extends AbstractUIPlugin {
 	 * Currently the property change mechanism of Eclipse RCP is not used in inspectIT. However, it
 	 * might be used in future.
 	 */
-	private List<IPropertyChangeListener> propertyChangeListeners = new ArrayList<IPropertyChangeListener>();
+	private List<IPropertyChangeListener> propertyChangeListeners = new ArrayList<>();
 
 	/**
 	 * Runtime directory of plug-in depending if we are in development or not.
@@ -109,10 +109,10 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * This method is called upon plug-in activation.
-	 * 
+	 *
 	 * @param context
 	 *            the Context.
-	 * 
+	 *
 	 * @throws Exception
 	 *             in case of error.
 	 */
@@ -140,7 +140,7 @@ public class InspectIT extends AbstractUIPlugin {
 		} catch (IOException e) { // NOPMD //NOCHK
 		}
 
-		if (null != bundleFile && bundleFile.isDirectory()) {
+		if ((null != bundleFile) && bundleFile.isDirectory()) {
 			runtimeDir = Paths.get(bundleFile.getAbsolutePath());
 			// in development bundle file is in src/main/resources
 			if (runtimeDir.toString().endsWith(ResourcesPathResolver.RESOURCES)) {
@@ -203,10 +203,10 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * This method is called when the plug-in is stopped.
-	 * 
+	 *
 	 * @param context
 	 *            the Context.
-	 * 
+	 *
 	 * @throws Exception
 	 *             in case of error.
 	 */
@@ -226,7 +226,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance.
-	 * 
+	 *
 	 * @return Returns the shared instance.
 	 */
 	public static InspectIT getDefault() {
@@ -236,7 +236,7 @@ public class InspectIT extends AbstractUIPlugin {
 	/**
 	 * Registers the {@link IPropertyChangeListener} with the plug-in. Has no effect if the listener
 	 * is already registered.
-	 * 
+	 *
 	 * @param propertyChangeListener
 	 *            {@link IPropertyChangeListener} to add.
 	 */
@@ -248,7 +248,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Unregisters the {@link IPropertyChangeListener} from the plug-in.
-	 * 
+	 *
 	 * @param propertyChangeListener
 	 *            {@link IPropertyChangeListener} to remove.
 	 */
@@ -258,7 +258,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Delegates the {@link PropertyChangeEvent} to all listeners.
-	 * 
+	 *
 	 * @param event
 	 *            Event to delegate.
 	 */
@@ -282,25 +282,26 @@ public class InspectIT extends AbstractUIPlugin {
 				try {
 					String key = (String) field.get(null);
 					URL url = getBundle().getEntry(key);
-					
+
 					if (null != reg.get(key)) {
 						// if we already have an icon with the same key continue
 						// can happen if two fields are pointing to same image
 						continue;
 					}
-					
+
 					if (null != url) {
 						reg.put(key, ImageDescriptor.createFromURL(url));
-						
-						// try to get the image in order to be certain given URL is representing an image file
+
+						// try to get the image in order to be certain given URL is representing an
+						// image file
 						reg.get(key);
 					} else {
 						// if image does not exists (url is null) show and log error
-						Status status = new Status(Status.ERROR, ID, "Image with the key '" + field.getName() + "' does not exist on the disk. ");
+						Status status = new Status(IStatus.ERROR, ID, "Image with the key '" + field.getName() + "' does not exist on the disk. ");
 						StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
 					}
 				} catch (Exception e) {
-					Status status = new Status(Status.ERROR, ID, "Error loading image with the key'" + field.getName() + "'. ");
+					Status status = new Status(IStatus.ERROR, ID, "Error loading image with the key'" + field.getName() + "'. ");
 					StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
 					continue;
 				}
@@ -313,7 +314,7 @@ public class InspectIT extends AbstractUIPlugin {
 	 * <p>
 	 * <b>Images retrieved by this method should not be disposed, because they are shared resources
 	 * in the plugin and will be disposed with the disposal of the display.</b>
-	 * 
+	 *
 	 * @param imageKey
 	 *            The key of the image to look for in the registry.
 	 * @return The generated image.
@@ -328,7 +329,7 @@ public class InspectIT extends AbstractUIPlugin {
 	 * <p>
 	 * <b>Every new image created with the given {@link ImageDescriptor} should be disposed by the
 	 * caller.</b>
-	 * 
+	 *
 	 * @param imageKey
 	 *            The image key.
 	 * @return The image descriptor for the given image key.
@@ -339,7 +340,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Returns a service, if one is registered with the bundle context.
-	 * 
+	 *
 	 * @param clazz
 	 *            Class of service.
 	 * @param <E>
@@ -357,6 +358,7 @@ public class InspectIT extends AbstractUIPlugin {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ScopedPreferenceStore getPreferenceStore() {
 		if (null == preferenceStore) {
 			synchronized (this) {
@@ -383,7 +385,7 @@ public class InspectIT extends AbstractUIPlugin {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Returns the {@link InspectITStorageManager}.
 	 */
 	public InspectITStorageManager getInspectITStorageManager() {
@@ -399,7 +401,7 @@ public class InspectIT extends AbstractUIPlugin {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Returns the {@link InspectITConfigurationInterfaceManager}.
 	 */
 	public InspectITConfigurationInterfaceManager getInspectITConfigurationInterfaceManager() {
@@ -415,7 +417,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Gets {@link #runtimeDir}.
-	 * 
+	 *
 	 * @return {@link #runtimeDir}
 	 */
 	public Path getRuntimeDir() {
@@ -424,7 +426,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Sets {@link #runtimeDir}.
-	 * 
+	 *
 	 * @param runtimeDir
 	 *            New value for {@link #runtimeDir}
 	 */
@@ -434,7 +436,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Creates a simple error dialog.
-	 * 
+	 *
 	 * @param message
 	 *            The message of the dialog.
 	 * @param throwable
@@ -449,7 +451,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Creates a simple error dialog without exception.
-	 * 
+	 *
 	 * @param message
 	 *            The message of the dialog.
 	 * @param code
@@ -463,7 +465,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Creates a simple info dialog.
-	 * 
+	 *
 	 * @param message
 	 *            The message of the dialog.
 	 * @param code
@@ -477,7 +479,7 @@ public class InspectIT extends AbstractUIPlugin {
 	 * Logs the message with given severity. Logging only means no dialog will be displayed to the
 	 * user. Severity can be {@link IStatus#INFO}, {@link IStatus#WARN} or {@link IStatus#ERROR}
 	 * which will define log level for the logger.
-	 * 
+	 *
 	 * @param severity
 	 *            {@link IStatus#INFO}, {@link IStatus#WARN} or {@link IStatus#ERROR}
 	 * @param message
@@ -491,7 +493,7 @@ public class InspectIT extends AbstractUIPlugin {
 	 * Logs the message and throwbale with given severity. Logging only means no dialog will be
 	 * displayed to the user. Severity can be {@link IStatus#INFO}, {@link IStatus#WARN} or
 	 * {@link IStatus#ERROR} which will define log level for the logger.
-	 * 
+	 *
 	 * @param severity
 	 *            {@link IStatus#INFO}, {@link IStatus#WARN} or {@link IStatus#ERROR}
 	 * @param message

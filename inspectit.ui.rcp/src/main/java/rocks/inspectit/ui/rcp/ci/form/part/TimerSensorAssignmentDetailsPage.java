@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -14,6 +13,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -172,7 +172,7 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 			@Override
 			public void handleEvent(Event event) {
 				CaptureContextDialog dialog = new CaptureContextDialog(managedForm.getForm().getShell());
-				if (dialog.open() == Dialog.OK) {
+				if (dialog.open() == Window.OK) {
 					AbstractContextCapture contextCapture = dialog.getContextCapture();
 					contextCaptures.add(contextCapture);
 					captureContextTableViewer.refresh();
@@ -202,7 +202,7 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 				if (!selection.isEmpty()) {
 					AbstractContextCapture selected = (AbstractContextCapture) selection.getFirstElement();
 					CaptureContextDialog dialog = new CaptureContextDialog(managedForm.getForm().getShell(), selected);
-					if (dialog.open() == Dialog.OK) {
+					if (dialog.open() == Window.OK) {
 						AbstractContextCapture contextCapture = dialog.getContextCapture();
 						int index = contextCaptures.indexOf(selected);
 						contextCaptures.remove(index);

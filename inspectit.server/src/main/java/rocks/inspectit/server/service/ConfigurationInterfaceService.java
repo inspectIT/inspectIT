@@ -24,9 +24,9 @@ import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 
 /**
  * Implementation of the {@link ICmrManagementService}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Service
 public class ConfigurationInterfaceService implements IConfigurationInterfaceService {
@@ -179,7 +179,7 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

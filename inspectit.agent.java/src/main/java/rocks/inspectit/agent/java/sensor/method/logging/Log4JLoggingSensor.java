@@ -8,9 +8,6 @@ import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
-import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelper;
-import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory;
-import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory.Framework;
 
 /**
  * Logging sensor to capture log4j loggings.

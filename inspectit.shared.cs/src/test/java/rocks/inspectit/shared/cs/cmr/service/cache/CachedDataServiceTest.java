@@ -23,13 +23,12 @@ import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
-import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 
 /**
  * Testing the caching abilities of {@link CachedDataService}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class CachedDataServiceTest {

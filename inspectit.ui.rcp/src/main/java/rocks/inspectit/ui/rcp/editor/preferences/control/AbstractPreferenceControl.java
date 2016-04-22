@@ -4,9 +4,9 @@ import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
 
 /**
  * Abstract class for all preference controls.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractPreferenceControl implements IPreferenceControl {
 
@@ -17,7 +17,7 @@ public abstract class AbstractPreferenceControl implements IPreferenceControl {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param preferencePanel
 	 *            Preference panel.
 	 */
@@ -27,7 +27,7 @@ public abstract class AbstractPreferenceControl implements IPreferenceControl {
 
 	/**
 	 * Gets {@link #preferencePanel}.
-	 * 
+	 *
 	 * @return {@link #preferencePanel}
 	 */
 	protected IPreferencePanel getPreferencePanel() {

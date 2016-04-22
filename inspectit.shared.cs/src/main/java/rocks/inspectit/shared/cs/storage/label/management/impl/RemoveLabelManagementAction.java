@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Action for the removing of data related to labels and label types.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RemoveLabelManagementAction extends AbstractLabelManagementAction {
 
@@ -37,7 +37,7 @@ public class RemoveLabelManagementAction extends AbstractLabelManagementAction {
 
 	/**
 	 * Constructor when action is for a label type.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label types.
 	 * @param removeFromStorageAlso
@@ -50,7 +50,7 @@ public class RemoveLabelManagementAction extends AbstractLabelManagementAction {
 
 	/**
 	 * Constructor when action is for a label(s).
-	 * 
+	 *
 	 * @param labelList
 	 *            Collection of labels.
 	 * @param removeFromStorageAlso
@@ -63,7 +63,7 @@ public class RemoveLabelManagementAction extends AbstractLabelManagementAction {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -81,7 +81,7 @@ public class RemoveLabelManagementAction extends AbstractLabelManagementAction {
 
 	/**
 	 * Gets {@link #removeFromStorageAlso}.
-	 * 
+	 *
 	 * @return {@link #removeFromStorageAlso}
 	 */
 	public boolean isRemoveFromStorageAlso() {
@@ -90,7 +90,7 @@ public class RemoveLabelManagementAction extends AbstractLabelManagementAction {
 
 	/**
 	 * Sets {@link #removeFromStorageAlso}.
-	 * 
+	 *
 	 * @param removeFromStorageAlso
 	 *            New value for {@link #removeFromStorageAlso}
 	 */

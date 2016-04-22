@@ -4,9 +4,9 @@ import rocks.inspectit.shared.cs.indexing.ITreeComponent;
 
 /**
  * Special tree component for purposes of indexing for storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of elements to be stored.
  */

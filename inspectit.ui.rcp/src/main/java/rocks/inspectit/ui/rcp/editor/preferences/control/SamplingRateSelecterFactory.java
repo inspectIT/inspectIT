@@ -5,9 +5,9 @@ import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRa
 
 /**
  * The factory for sampling rate mode selection.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public final class SamplingRateSelecterFactory {
 
@@ -19,7 +19,7 @@ public final class SamplingRateSelecterFactory {
 
 	/**
 	 * Returns the {@link SamplingRateMode}.
-	 * 
+	 *
 	 * @param samplingRateIdEnum
 	 *            The {@link SamplingRate}.
 	 * @return The {@link SamplingRateMode}.

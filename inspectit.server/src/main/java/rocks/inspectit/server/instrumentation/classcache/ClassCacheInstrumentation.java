@@ -29,8 +29,8 @@ import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 /**
  * Instrumentation service for the {@link ClassCache}. This class is responsible for adding, getting
  * or removing the instrumentation points to/from class types. Also provides the
- * {@link #addAndGetInstrumentationResult(ImmutableClassType, AgentConfig, Collection)} method for easy add/get
- * instrumentation points for a single type.
+ * {@link #addAndGetInstrumentationResult(ImmutableClassType, AgentConfig, Collection)} method for
+ * easy add/get instrumentation points for a single type.
  *
  * @author Ivan Senic
  *
@@ -356,8 +356,8 @@ public class ClassCacheInstrumentation {
 	 *
 	 * @param classType
 	 *            {@link ImmutableClassType} to create {@link InstrumentationDefinition} for.
-	 * @return {@link InstrumentationDefinition} for this class type or <code>null</code> if class has
-	 *         no instrumentation points.
+	 * @return {@link InstrumentationDefinition} for this class type or <code>null</code> if class
+	 *         has no instrumentation points.
 	 */
 	private InstrumentationDefinition createInstrumentationResult(ImmutableClassType classType) {
 		// if there are no instrumentation points return null

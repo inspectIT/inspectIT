@@ -9,16 +9,16 @@ import rocks.inspectit.server.cache.IBuffer;
 
 /**
  * Thread that invokes the {@link IBuffer#indexNext()} method constantly.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class BufferIndexer extends BufferWorker {
 
 	/**
 	 * Default constructor. Just calls super class constructor.
-	 * 
+	 *
 	 * @param buffer
 	 *            Buffer to work on.
 	 */

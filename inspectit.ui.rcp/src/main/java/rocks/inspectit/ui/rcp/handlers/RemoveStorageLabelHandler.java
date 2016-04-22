@@ -26,9 +26,9 @@ import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
 
 /**
  * Handler for removing a list of labels from storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RemoveStorageLabelHandler extends AbstractHandler implements IHandler {
 
@@ -62,7 +62,7 @@ public class RemoveStorageLabelHandler extends AbstractHandler implements IHandl
 			}
 		}
 
-		if (null != storageProvider && null != inputList) {
+		if ((null != storageProvider) && (null != inputList)) {
 			CmrRepositoryDefinition cmrRepositoryDefinition = storageProvider.getCmrRepositoryDefinition();
 			if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 				try {

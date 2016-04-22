@@ -16,8 +16,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
-import rocks.inspectit.agent.java.instrumentation.asm.ClassAnalyzer;
-
 /**
  * Performance test for the {@link ClassAnalyzer} class using JMH framework.
  *

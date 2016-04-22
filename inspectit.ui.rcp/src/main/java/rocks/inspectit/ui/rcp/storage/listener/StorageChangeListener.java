@@ -6,15 +6,15 @@ import rocks.inspectit.shared.cs.storage.IStorageData;
 
 /**
  * Storage change listener.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface StorageChangeListener extends EventListener {
 
 	/**
 	 * Informs the listener that the storage data like name or description have been updated.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData}.
 	 */
@@ -22,7 +22,7 @@ public interface StorageChangeListener extends EventListener {
 
 	/**
 	 * Informs the listener that the repository was deleted on the CMR.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData}.
 	 */
@@ -30,7 +30,7 @@ public interface StorageChangeListener extends EventListener {
 
 	/**
 	 * Informs the listener that the repository was deleted locally.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData}.
 	 */

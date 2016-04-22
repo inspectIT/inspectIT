@@ -71,7 +71,7 @@ public class SpecialMethodSensorAssignment extends MethodSensorAssignment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((instrumentationType == null) ? 0 : instrumentationType.hashCode());
+		result = (prime * result) + ((instrumentationType == null) ? 0 : instrumentationType.hashCode());
 		return result;
 	}
 

@@ -13,9 +13,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Special {@link PropertyPreferencePage} that can handle the {@link GroupedProperty}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class GroupedPropertyPreferencePage extends PropertyPreferencePage {
 
@@ -31,7 +31,7 @@ public class GroupedPropertyPreferencePage extends PropertyPreferencePage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param groupedProperty
 	 *            {@link GroupedProperty} to display.
 	 * @see PropertyPreferencePage#PropertyPreferencePage(String, java.util.Collection)

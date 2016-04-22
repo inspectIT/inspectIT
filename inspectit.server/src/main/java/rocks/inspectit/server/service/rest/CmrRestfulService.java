@@ -17,9 +17,9 @@ import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 
 /**
  * Restful service provider for CMR information.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Controller
 @RequestMapping(value = "/cmr")
@@ -39,7 +39,7 @@ public class CmrRestfulService {
 
 	/**
 	 * Handling of all the exceptions happening in this controller.
-	 * 
+	 *
 	 * @param exception
 	 *            Exception being thrown
 	 * @return {@link ModelAndView}
@@ -53,7 +53,7 @@ public class CmrRestfulService {
 	 * Returns CMR version.
 	 * <p>
 	 * <i> Example URL: /cmr/version</i>
-	 * 
+	 *
 	 * @return Returns CMR version.
 	 * @throws IOException
 	 *             If version information is not available.
@@ -68,7 +68,7 @@ public class CmrRestfulService {
 	 * Returns CMR status information.
 	 * <p>
 	 * <i> Example URL: /cmr/status-data</i>
-	 * 
+	 *
 	 * @return Returns CMR status information.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "status-data")

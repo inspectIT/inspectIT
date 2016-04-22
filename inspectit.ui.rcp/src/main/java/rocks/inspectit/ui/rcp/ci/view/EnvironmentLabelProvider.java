@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.provider.IEnvironmentProvider;
 
 /**
  * Environment label provider.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 class EnvironmentLabelProvider extends StyledCellIndexLabelProvider {
 

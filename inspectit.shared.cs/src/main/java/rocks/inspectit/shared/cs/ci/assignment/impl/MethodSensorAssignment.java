@@ -244,14 +244,14 @@ public class MethodSensorAssignment extends AbstractClassSensorAssignment<IMetho
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (constructor ? 1231 : 1237);
-		result = prime * result + (defaultModifier ? 1231 : 1237);
-		result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
-		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
-		result = prime * result + (privateModifier ? 1231 : 1237);
-		result = prime * result + (protectedModifier ? 1231 : 1237);
-		result = prime * result + (publicModifier ? 1231 : 1237);
-		result = prime * result + ((sensorConfig == null) ? 0 : sensorConfig.getName().hashCode());
+		result = (prime * result) + (constructor ? 1231 : 1237);
+		result = (prime * result) + (defaultModifier ? 1231 : 1237);
+		result = (prime * result) + ((methodName == null) ? 0 : methodName.hashCode());
+		result = (prime * result) + ((parameters == null) ? 0 : parameters.hashCode());
+		result = (prime * result) + (privateModifier ? 1231 : 1237);
+		result = (prime * result) + (protectedModifier ? 1231 : 1237);
+		result = (prime * result) + (publicModifier ? 1231 : 1237);
+		result = (prime * result) + ((sensorConfig == null) ? 0 : sensorConfig.getName().hashCode());
 		return result;
 	}
 

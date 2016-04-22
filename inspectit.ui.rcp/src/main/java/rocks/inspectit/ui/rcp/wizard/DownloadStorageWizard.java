@@ -36,9 +36,9 @@ import rocks.inspectit.ui.rcp.wizard.page.StorageCompressionWizardPage;
 
 /**
  * Wizard for downloading storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DownloadStorageWizard extends Wizard implements INewWizard {
 
@@ -54,7 +54,7 @@ public class DownloadStorageWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageDataProviders
 	 *            List of storages to be downloaded provided by {@link IStorageDataProvider}s.
 	 */
@@ -118,9 +118,9 @@ public class DownloadStorageWizard extends Wizard implements INewWizard {
 	 * A job for downloading a one or more storages. If an exception is caught in the Job, the Job
 	 * will exit with Warnings status and provide a Throwable as the reason for not succeeding.
 	 * Remaining storages will still be downloaded.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class DownloadStorageJob extends Job {
 
@@ -136,7 +136,7 @@ public class DownloadStorageWizard extends Wizard implements INewWizard {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param storageDataProviders
 		 *            Collection of storages to download.
 		 * @param compress
@@ -175,8 +175,8 @@ public class DownloadStorageWizard extends Wizard implements INewWizard {
 				}
 
 				try {
-					InspectIT.getDefault().getInspectITStorageManager()
-							.fullyDownloadStorage(storageData, cmrRepositoryDefinition, compress, subMonitor.newChild((int) (storageData.getDiskSize() / 1000)));
+					InspectIT.getDefault().getInspectITStorageManager().fullyDownloadStorage(storageData, cmrRepositoryDefinition, compress,
+							subMonitor.newChild((int) (storageData.getDiskSize() / 1000)));
 				} catch (BusinessException | SerializationException | IOException e) {
 					connectedStatuses.add(new Status(IStatus.ERROR, InspectIT.ID, "Storage '" + storageData.getName() + "'was not downloaded due to the exception", e));
 					continue;

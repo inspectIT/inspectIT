@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 
 /**
  * Extended input definition data to support the navigation and stepping.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NavigationSteppingInputDefinitionExtra implements IInputDefinitionExtra {
 
@@ -27,7 +27,7 @@ public class NavigationSteppingInputDefinitionExtra implements IInputDefinitionE
 
 	/**
 	 * Gets {@link #invocationAwareDataList}.
-	 * 
+	 *
 	 * @return {@link #invocationAwareDataList}
 	 */
 	public List<InvocationAwareData> getInvocationAwareDataList() {
@@ -36,7 +36,7 @@ public class NavigationSteppingInputDefinitionExtra implements IInputDefinitionE
 
 	/**
 	 * Sets {@link #invocationAwareDataList}.
-	 * 
+	 *
 	 * @param invocationAwareDataList
 	 *            New value for {@link #invocationAwareDataList}
 	 */
@@ -46,7 +46,7 @@ public class NavigationSteppingInputDefinitionExtra implements IInputDefinitionE
 
 	/**
 	 * Gets {@link #steppingTemplateList}.
-	 * 
+	 *
 	 * @return {@link #steppingTemplateList}
 	 */
 	public List<DefaultData> getSteppingTemplateList() {
@@ -55,7 +55,7 @@ public class NavigationSteppingInputDefinitionExtra implements IInputDefinitionE
 
 	/**
 	 * Sets {@link #steppingTemplateList}.
-	 * 
+	 *
 	 * @param steppingTemplateList
 	 *            New value for {@link #steppingTemplateList}
 	 */

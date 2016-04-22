@@ -26,9 +26,9 @@ import rocks.inspectit.ui.rcp.editor.ISubView;
  * horizontal. The behavior can be set by passing the style {@link SWT#HORIZONTAL} or
  * {@link SWT#VERTICAL} to the constructor. The default is {@link SWT#VERTICAL} + {@link SWT#SMOOTH}
  * ;
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class SashCompositeSubView extends AbstractCompositeSubView {
 
@@ -45,7 +45,7 @@ public class SashCompositeSubView extends AbstractCompositeSubView {
 	/**
 	 * The weight mapping.
 	 */
-	private Map<ISubView, Integer> weightMapping = new HashMap<ISubView, Integer>();
+	private Map<ISubView, Integer> weightMapping = new HashMap<>();
 
 	/**
 	 * Default constructor which takes no arguments.
@@ -60,7 +60,7 @@ public class SashCompositeSubView extends AbstractCompositeSubView {
 	 * <b>Styles:</b> HORIZONTAL, VERTICAL, SMOOTH
 	 * </dl>
 	 * </p>
-	 * 
+	 *
 	 * @param style
 	 *            The style of sash form to construct.
 	 */
@@ -71,6 +71,7 @@ public class SashCompositeSubView extends AbstractCompositeSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		sashForm = new SashForm(parent, sashFormStyle);
 		sashForm.setLayout(new GridLayout(1, false));
@@ -128,6 +129,7 @@ public class SashCompositeSubView extends AbstractCompositeSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Control getControl() {
 		return sashForm;
 	}

@@ -3,8 +3,8 @@ package rocks.inspectit.agent.java.config.impl;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 
 /**
- * Container for the values which describe the monitored JMX MBean. It stores all the values defined in a config
- * file for later access.
+ * Container for the values which describe the monitored JMX MBean. It stores all the values defined
+ * in a config file for later access.
  *
  * @author Alfred Krauss
  */
@@ -267,16 +267,16 @@ public class JmxSensorConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((attributeName == null) ? 0 : attributeName.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((jmxSensorTypeConfig == null) ? 0 : jmxSensorTypeConfig.hashCode());
-		result = prime * result + ((mBeanAttributeDescription == null) ? 0 : mBeanAttributeDescription.hashCode());
-		result = prime * result + (int) (mBeanAttributeId ^ (mBeanAttributeId >>> 32));
-		result = prime * result + (mBeanAttributeIsIs ? 1231 : 1237);
-		result = prime * result + (mBeanAttributeIsReadable ? 1231 : 1237);
-		result = prime * result + (mBeanAttributeIsWritable ? 1231 : 1237);
-		result = prime * result + ((mBeanAttributeType == null) ? 0 : mBeanAttributeType.hashCode());
-		result = prime * result + ((mBeanObjectName == null) ? 0 : mBeanObjectName.hashCode());
+		result = (prime * result) + ((attributeName == null) ? 0 : attributeName.hashCode());
+		result = (prime * result) + (int) (id ^ (id >>> 32));
+		result = (prime * result) + ((jmxSensorTypeConfig == null) ? 0 : jmxSensorTypeConfig.hashCode());
+		result = (prime * result) + ((mBeanAttributeDescription == null) ? 0 : mBeanAttributeDescription.hashCode());
+		result = (prime * result) + (int) (mBeanAttributeId ^ (mBeanAttributeId >>> 32));
+		result = (prime * result) + (mBeanAttributeIsIs ? 1231 : 1237);
+		result = (prime * result) + (mBeanAttributeIsReadable ? 1231 : 1237);
+		result = (prime * result) + (mBeanAttributeIsWritable ? 1231 : 1237);
+		result = (prime * result) + ((mBeanAttributeType == null) ? 0 : mBeanAttributeType.hashCode());
+		result = (prime * result) + ((mBeanObjectName == null) ? 0 : mBeanObjectName.hashCode());
 		return result;
 	}
 

@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.ci.form.part.SensorAssignmentMasterBlock;
 
 /**
  * Page for method sensor definitions.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MethodSensorDefinitionsPage extends FormPage {
 
@@ -35,7 +35,7 @@ public class MethodSensorDefinitionsPage extends FormPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param editor
 	 *            {@link FormEditor} page belongs to.
 	 */

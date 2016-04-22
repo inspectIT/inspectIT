@@ -29,9 +29,9 @@ import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
 
 /**
  * Tries to close the list of storages given through the storage leaf.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CloseStorageHandler extends AbstractHandler implements IHandler {
 
@@ -49,8 +49,8 @@ public class CloseStorageHandler extends AbstractHandler implements IHandler {
 
 				MessageBox confirmFinalization = new MessageBox(HandlerUtil.getActiveShell(event), SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
 				confirmFinalization.setText("Confirm Finalization");
-				confirmFinalization
-						.setMessage("Are you sure you want to finalize the selected storage? Writing will not be possible after finalization. Note that finalization process will wait for all ongoing writing tasks to be finished.");
+				confirmFinalization.setMessage(
+						"Are you sure you want to finalize the selected storage? Writing will not be possible after finalization. Note that finalization process will wait for all ongoing writing tasks to be finished.");
 
 				if (SWT.OK == confirmFinalization.open()) {
 					FinalizeStorageJob finalizeStorageJob = new FinalizeStorageJob(storageData, cmrRepositoryDefinition);
@@ -64,9 +64,9 @@ public class CloseStorageHandler extends AbstractHandler implements IHandler {
 	/**
 	 * Finalize storage job class. Starts the finalization and provides information about the amount
 	 * of tasks left before finalization can be done.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	protected static class FinalizeStorageJob extends Job {
 
@@ -86,7 +86,7 @@ public class CloseStorageHandler extends AbstractHandler implements IHandler {
 		private CmrRepositoryDefinition cmrRepositoryDefinition;
 
 		/**
-		 * 
+		 *
 		 * @param storageData
 		 *            Storage to finalize.
 		 * @param cmrRepositoryDefinition

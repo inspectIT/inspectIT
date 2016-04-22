@@ -6,9 +6,9 @@ import java.util.Map;
 
 /**
  * Enumeration of all storage files that exist.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum StorageFileType {
 
@@ -51,7 +51,7 @@ public enum StorageFileType {
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full
 	 * qualified name.
 	 */
-	private static final Map<String, StorageFileType> LOOKUP = new HashMap<String, StorageFileType>();
+	private static final Map<String, StorageFileType> LOOKUP = new HashMap<>();
 
 	static {
 		for (StorageFileType fileType : EnumSet.allOf(StorageFileType.class)) {
@@ -66,7 +66,7 @@ public enum StorageFileType {
 
 	/**
 	 * Private constructor.
-	 * 
+	 *
 	 * @param extension
 	 *            Extension of file type.
 	 */
@@ -76,7 +76,7 @@ public enum StorageFileType {
 
 	/**
 	 * Gets {@link #extension}.
-	 * 
+	 *
 	 * @return {@link #extension}
 	 */
 	public String getExtension() {
@@ -85,7 +85,7 @@ public enum StorageFileType {
 
 	/**
 	 * Returns the {@link StorageFileType} from the given extension, if extension is valid.
-	 * 
+	 *
 	 * @param extension
 	 *            Extension.
 	 * @return {@link StorageFileType} for corresponding extension or <code>null</code> if extension

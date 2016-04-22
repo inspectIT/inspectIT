@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
  * This processor serves as a time frame restriction processor. It will check if the time stamp of
  * the {@link DefaultData} to be processed is in the given time frame and if it is, processor will
  * pass the data to the other processor that are defined under.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimeFrameDataProcessor extends AbstractChainedDataProcessor {
 
@@ -42,7 +42,7 @@ public class TimeFrameDataProcessor extends AbstractChainedDataProcessor {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param fromDate
 	 *            From date.
 	 * @param toDate
@@ -53,7 +53,7 @@ public class TimeFrameDataProcessor extends AbstractChainedDataProcessor {
 	 */
 	public TimeFrameDataProcessor(Date fromDate, Date toDate, List<AbstractDataProcessor> dataProcessors) {
 		super(dataProcessors);
-		if (null != fromDate && null != toDate && fromDate.after(toDate)) {
+		if ((null != fromDate) && (null != toDate) && fromDate.after(toDate)) {
 			throw new IllegalArgumentException("Time frame not specified correctly. From date (" + fromDate + ") is after to date (" + toDate + ") value.");
 		}
 		this.fromDate = fromDate;
@@ -78,7 +78,7 @@ public class TimeFrameDataProcessor extends AbstractChainedDataProcessor {
 
 	/**
 	 * Gets {@link #fromDate}.
-	 * 
+	 *
 	 * @return {@link #fromDate}
 	 */
 	public Date getFromDate() {
@@ -87,7 +87,7 @@ public class TimeFrameDataProcessor extends AbstractChainedDataProcessor {
 
 	/**
 	 * Gets {@link #toDate}.
-	 * 
+	 *
 	 * @return {@link #toDate}
 	 */
 	public Date getToDate() {
@@ -96,7 +96,7 @@ public class TimeFrameDataProcessor extends AbstractChainedDataProcessor {
 
 	/**
 	 * Is the default data's time stamp in the time frame of this processor.
-	 * 
+	 *
 	 * @param defaultData
 	 *            {@link DefaultData} to check.
 	 * @return true if it is in the time frame.

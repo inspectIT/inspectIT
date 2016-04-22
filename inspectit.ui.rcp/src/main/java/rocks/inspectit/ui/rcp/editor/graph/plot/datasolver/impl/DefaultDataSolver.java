@@ -8,7 +8,7 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolve
 /**
  * Default implementation of the {@link AbstractPlotDataSolver}. This implementation will be used by
  * default.
- * 
+ *
  * @author Marius Oehler
  *
  */

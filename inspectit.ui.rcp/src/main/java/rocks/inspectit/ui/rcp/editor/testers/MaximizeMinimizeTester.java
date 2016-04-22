@@ -6,9 +6,9 @@ import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 
 /**
  * Tester that checks if the active sub-view can be maximized/minimized.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MaximizeMinimizeTester extends PropertyTester {
 

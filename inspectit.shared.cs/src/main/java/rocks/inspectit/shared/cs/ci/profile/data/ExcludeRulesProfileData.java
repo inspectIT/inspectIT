@@ -73,7 +73,7 @@ public class ExcludeRulesProfileData extends AbstractProfileData<List<ExcludeRul
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((excludeRules == null) ? 0 : excludeRules.hashCode());
+		result = (prime * result) + ((excludeRules == null) ? 0 : excludeRules.hashCode());
 		return result;
 	}
 

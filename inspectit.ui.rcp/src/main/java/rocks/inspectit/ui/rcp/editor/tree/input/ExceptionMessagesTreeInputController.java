@@ -27,9 +27,9 @@ import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ExceptionMessagesTreeInputController extends AbstractTreeInputController {
 
@@ -67,9 +67,9 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The error message column. */
@@ -92,7 +92,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -108,13 +108,13 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -134,6 +134,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TreeViewer treeViewer) {
 		for (Column column : Column.values()) {
 			TreeViewerColumn viewerColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
@@ -150,6 +151,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getExpandLevel() {
 		return 0;
 	}
@@ -157,6 +159,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new ExceptionMessagesTreeContentProvider();
 	}
@@ -164,6 +167,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new ExceptionMessagesTreeLabelProvider();
 	}
@@ -171,6 +175,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean canOpenInput(List<? extends DefaultData> data) {
 		if (null == data) {
 			return false;
@@ -189,15 +194,16 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 
 	/**
 	 * The label provider for this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private final class ExceptionMessagesTreeLabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		protected StyledString getStyledText(Object element, int index) {
 			ExceptionSensorData data = (ExceptionSensorData) element;
 			Column enumId = Column.fromOrd(index);
@@ -208,15 +214,16 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 
 	/**
 	 * The content provider for this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private final class ExceptionMessagesTreeContentProvider implements ITreeContentProvider {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<AggregatedExceptionSensorData> exceptionSensorData = (List<AggregatedExceptionSensorData>) inputElement;
@@ -226,21 +233,22 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			List<AggregatedExceptionSensorData> input = (List<AggregatedExceptionSensorData>) newInput;
-			if (input != null && !input.isEmpty()) {
+			if ((input != null) && !input.isEmpty()) {
 				// we can get any one because all the ones in the list have the same throwable
 				// type
 				ExceptionSensorData template = input.get(0);
 				List<ExceptionSensorData> exceptionStackTraceObjects = dataAccessService.getStackTraceMessagesForThrowableType(template);
-				parentChildrenMap = new HashMap<AggregatedExceptionSensorData, List<ExceptionSensorData>>();
+				parentChildrenMap = new HashMap<>();
 				int i = 1;
 				for (AggregatedExceptionSensorData aggExceptionSensorData : input) {
 					// id has to be set because if the hash value of the object in the map
 					// otherwise there is a chance of the same hash values
 					aggExceptionSensorData.setId(i++);
-					List<ExceptionSensorData> children = new ArrayList<ExceptionSensorData>();
+					List<ExceptionSensorData> children = new ArrayList<>();
 					for (ExceptionSensorData exData : exceptionStackTraceObjects) {
 						if (ObjectUtils.equals(exData.getErrorMessage(), aggExceptionSensorData.getErrorMessage())) {
 							children.add(exData);
@@ -254,6 +262,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object[] getChildren(Object parent) {
 			if (parent instanceof AggregatedExceptionSensorData) {
 				if (parentChildrenMap.containsKey(parent)) {
@@ -267,6 +276,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getParent(Object element) {
 			return null;
 		}
@@ -274,6 +284,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean hasChildren(Object parent) {
 			if (parent instanceof AggregatedExceptionSensorData) {
 				if (parentChildrenMap.containsKey(parent)) {
@@ -287,13 +298,14 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 	}
 
 	/**
 	 * Returns styled string for {@link AggregatedExceptionSensorData}.
-	 * 
+	 *
 	 * @param data
 	 *            Data.
 	 * @param enumId
@@ -306,7 +318,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 			StyledString styledString;
 			if (parentChildrenMap.containsKey(data)) {
 				String errorMessage = data.getErrorMessage();
-				if (null != errorMessage && !"".equals(errorMessage)) {
+				if ((null != errorMessage) && !"".equals(errorMessage)) {
 					// if error message is provided then it's a first level element
 					// of the tree
 					styledString = new StyledString(TextFormatter.crop(TextFormatter.clearLineBreaks(errorMessage), MAX_ERROR_MSG_SIZE));
@@ -363,6 +375,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof AggregatedExceptionSensorData) {
 			AggregatedExceptionSensorData data = (AggregatedExceptionSensorData) object;
@@ -383,7 +396,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof AggregatedExceptionSensorData) {
 			AggregatedExceptionSensorData data = (AggregatedExceptionSensorData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, column).toString());
 			}
@@ -398,7 +411,7 @@ public class ExceptionMessagesTreeInputController extends AbstractTreeInputContr
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getObjectsToSearch(Object treeInput) {
-		List<Object> allObjects = new ArrayList<Object>();
+		List<Object> allObjects = new ArrayList<>();
 		List<AggregatedExceptionSensorData> exceptionSensorDataList = (List<AggregatedExceptionSensorData>) treeInput;
 		for (AggregatedExceptionSensorData exData : exceptionSensorDataList) {
 			allObjects.add(exData);

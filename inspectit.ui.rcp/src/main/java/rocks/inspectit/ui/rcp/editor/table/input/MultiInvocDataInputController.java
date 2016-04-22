@@ -24,12 +24,12 @@ import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
- * This view only displays the {@link rocks.inspectit.shared.cs.communication.data.TimerData} that are
- * in the invocations provided by the invocationIdsList to this view via the
+ * This view only displays the {@link rocks.inspectit.shared.cs.communication.data.TimerData} that
+ * are in the invocations provided by the invocationIdsList to this view via the
  * {@link InputDefinition#getAdditionalOption(Object)}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MultiInvocDataInputController extends InvocOverviewInputController {
 
@@ -97,9 +97,9 @@ public class MultiInvocDataInputController extends InvocOverviewInputController 
 	 */
 	@Override
 	public ViewerComparator getComparator() {
-		TableViewerComparator<InvocationSequenceData> invocationDataViewerComparator = new TableViewerComparator<InvocationSequenceData>();
+		TableViewerComparator<InvocationSequenceData> invocationDataViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
-			ResultComparator<InvocationSequenceData> resultComparator = new ResultComparator<InvocationSequenceData>(column.dataComparator, getCachedDataService());
+			ResultComparator<InvocationSequenceData> resultComparator = new ResultComparator<>(column.dataComparator, getCachedDataService());
 			invocationDataViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
 
@@ -113,7 +113,7 @@ public class MultiInvocDataInputController extends InvocOverviewInputController 
 	public void doRefresh(IProgressMonitor monitor, IRootEditor rootEditor) {
 		monitor.beginTask("Updating Invocation Overview", invocationList.size());
 		monitor.subTask("Retrieving the Invocation Overview from the CMR");
-		loadedInvocations = new ArrayList<InvocationSequenceData>();
+		loadedInvocations = new ArrayList<>();
 		for (InvocationSequenceData template : invocationList) {
 			loadedInvocations.add(getDataAccessService().getInvocationSequenceDetail(template));
 			monitor.worked(1);
@@ -123,7 +123,7 @@ public class MultiInvocDataInputController extends InvocOverviewInputController 
 			monitor.subTask("Displaying the Invocation Overview");
 			getInvocationSequenceData().addAll(loadedInvocations);
 		}
-		selectedList = new ArrayList<InvocationSequenceData>(loadedInvocations);
+		selectedList = new ArrayList<>(loadedInvocations);
 		passSelectedList();
 		monitor.done();
 	}
@@ -177,6 +177,7 @@ public class MultiInvocDataInputController extends InvocOverviewInputController 
 	 */
 	private void passSelectedList() {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				IWorkbenchPage page = window.getActivePage();

@@ -8,9 +8,9 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Utility class for Clipboard operations.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class ClipboardUtil {
 
@@ -22,7 +22,7 @@ public final class ClipboardUtil {
 
 	/**
 	 * Sets the given text to the Clipboard so it can be used by other application.
-	 * 
+	 *
 	 * @param display
 	 *            {@link Display} to use.
 	 * @param text

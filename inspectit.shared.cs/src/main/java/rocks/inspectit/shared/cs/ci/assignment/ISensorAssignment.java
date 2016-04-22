@@ -7,7 +7,8 @@ import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
  *
  * @author Ivan Senic
  *
- * @param <T>Type of the sensor config that relates to the assignment.
+ * @param <T>
+ *            Type of the sensor config that relates to the assignment.
  */
 public interface ISensorAssignment<T extends ISensorConfig> {
 

@@ -4,9 +4,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Cache cleaner, or thread that is constantly checking if there is something to be persisted.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 class TimerDataAggregatorCacheCleaner extends Thread {
 
@@ -28,7 +28,7 @@ class TimerDataAggregatorCacheCleaner extends Thread {
 
 	/**
 	 * Constructor. Set thread as daemon and gives it minimum priority.
-	 * 
+	 *
 	 * @param timerDataAggregator
 	 *            {@link TimerDataAggregator} to work on.
 	 */
@@ -63,7 +63,7 @@ class TimerDataAggregatorCacheCleaner extends Thread {
 
 	/**
 	 * Sets {@link #mostRecentlyAdded}.
-	 * 
+	 *
 	 * @param mostRecentlyAdded
 	 *            New value for {@link #mostRecentlyAdded}
 	 */

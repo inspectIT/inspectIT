@@ -9,9 +9,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * Class for {@link ExceptionSensorData} aggregation.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>, Serializable {
 
@@ -22,9 +22,9 @@ public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>
 
 	/**
 	 * Definition of aggregation type.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum ExceptionAggregationType {
 		/**
@@ -56,7 +56,7 @@ public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param exceptionAggregationType
 	 *            Exception aggregation type.
 	 */
@@ -67,6 +67,7 @@ public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<ExceptionSensorData> aggregatedObject, ExceptionSensorData objectToAdd) {
 		aggregatedObject.aggregate(objectToAdd);
 		if (null != objectToAdd.getChild()) {
@@ -77,12 +78,13 @@ public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IAggregatedData<ExceptionSensorData> getClone(ExceptionSensorData exceptionData) {
 		AggregatedExceptionSensorData clone = new AggregatedExceptionSensorData();
 		clone.setPlatformIdent(exceptionData.getPlatformIdent());
 		clone.setSensorTypeIdent(exceptionData.getSensorTypeIdent());
 		clone.setThrowableType(exceptionData.getThrowableType());
-		if (exceptionAggregationType == ExceptionAggregationType.GROUP_EXCEPTION_OVERVIEW || exceptionAggregationType == ExceptionAggregationType.DISTINCT_STACK_TRACES) {
+		if ((exceptionAggregationType == ExceptionAggregationType.GROUP_EXCEPTION_OVERVIEW) || (exceptionAggregationType == ExceptionAggregationType.DISTINCT_STACK_TRACES)) {
 			clone.setErrorMessage(exceptionData.getErrorMessage());
 		}
 		if (exceptionAggregationType == ExceptionAggregationType.DISTINCT_STACK_TRACES) {
@@ -94,21 +96,22 @@ public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(ExceptionSensorData exceptionSensorData) {
 		final int prime = 31;
 		if (exceptionAggregationType == ExceptionAggregationType.THROWABLE_TYPE) {
 			int result = 0;
-			result = prime * result + ((exceptionSensorData.getThrowableType() == null) ? 0 : exceptionSensorData.getThrowableType().hashCode());
+			result = (prime * result) + ((exceptionSensorData.getThrowableType() == null) ? 0 : exceptionSensorData.getThrowableType().hashCode());
 			return result;
 		} else if (exceptionAggregationType == ExceptionAggregationType.GROUP_EXCEPTION_OVERVIEW) {
 			int result = 0;
-			result = prime * result + ((exceptionSensorData.getThrowableType() == null) ? 0 : exceptionSensorData.getThrowableType().hashCode());
-			result = prime * result + ((exceptionSensorData.getErrorMessage() == null) ? 0 : exceptionSensorData.getErrorMessage().hashCode());
+			result = (prime * result) + ((exceptionSensorData.getThrowableType() == null) ? 0 : exceptionSensorData.getThrowableType().hashCode());
+			result = (prime * result) + ((exceptionSensorData.getErrorMessage() == null) ? 0 : exceptionSensorData.getErrorMessage().hashCode());
 			return result;
 		} else if (exceptionAggregationType == ExceptionAggregationType.DISTINCT_STACK_TRACES) {
 			int result = 0;
-			result = prime * result + ((exceptionSensorData.getErrorMessage() == null) ? 0 : exceptionSensorData.getErrorMessage().hashCode());
-			result = prime * result + ((exceptionSensorData.getStackTrace() == null) ? 0 : getCorrectStackTrace(exceptionSensorData.getStackTrace()).hashCode());
+			result = (prime * result) + ((exceptionSensorData.getErrorMessage() == null) ? 0 : exceptionSensorData.getErrorMessage().hashCode());
+			result = (prime * result) + ((exceptionSensorData.getStackTrace() == null) ? 0 : getCorrectStackTrace(exceptionSensorData.getStackTrace()).hashCode());
 			return result;
 		}
 		return 0;
@@ -116,7 +119,7 @@ public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>
 
 	/**
 	 * Returns the stack trace starting at the first line where the method trace starts.
-	 * 
+	 *
 	 * @param stackTrace
 	 *            Original stack trace.
 	 * @return Modified stack trace.
@@ -141,7 +144,7 @@ public class ExceptionDataAggregator implements IAggregator<ExceptionSensorData>
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((exceptionAggregationType == null) ? 0 : exceptionAggregationType.hashCode());
+		result = (prime * result) + ((exceptionAggregationType == null) ? 0 : exceptionAggregationType.hashCode());
 		return result;
 	}
 

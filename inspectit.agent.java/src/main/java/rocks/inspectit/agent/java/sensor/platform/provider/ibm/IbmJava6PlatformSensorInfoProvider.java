@@ -11,9 +11,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultThreadInfo
 
 /**
  * {@link PlatformSensorInfoProvider} for IBM Java virtual machine. Only for Java version 1.6+.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class IbmJava6PlatformSensorInfoProvider implements PlatformSensorInfoProvider {
 
@@ -39,7 +39,7 @@ public class IbmJava6PlatformSensorInfoProvider implements PlatformSensorInfoPro
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @throws Exception
 	 *             If the SystemInformationProvider could not be created.
 	 */
@@ -51,7 +51,7 @@ public class IbmJava6PlatformSensorInfoProvider implements PlatformSensorInfoPro
 
 	/**
 	 * Creates the OperatingSystemInfoProvider for IBM Java6.
-	 * 
+	 *
 	 * @throws Exception
 	 *             on error.
 	 */

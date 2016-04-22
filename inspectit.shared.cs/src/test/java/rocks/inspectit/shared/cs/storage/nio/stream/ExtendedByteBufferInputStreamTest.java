@@ -20,8 +20,8 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -35,13 +35,12 @@ import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.shared.cs.storage.StorageManager;
 import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 import rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager;
-import rocks.inspectit.shared.cs.storage.nio.stream.ExtendedByteBufferInputStream;
 
 /**
  * Testing of the {@link ExtendedByteBufferInputStream} class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class ExtendedByteBufferInputStreamTest {
@@ -81,12 +80,12 @@ public class ExtendedByteBufferInputStreamTest {
 		inputStream.setReadingChannelManager(readingChannelManager);
 		inputStream.setStorageManager(storageManager);
 		inputStream.setExecutorService(executorService);
-		when(storageManager.getChannelPath(eq(storageData), Mockito.<IStorageDescriptor> anyObject())).thenReturn(Paths.get("/"));
+		when(storageManager.getChannelPath(eq(storageData), Matchers.<IStorageDescriptor> anyObject())).thenReturn(Paths.get("/"));
 	}
 
 	/**
 	 * Tests reading of random size.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test(invocationCount = 50)
@@ -124,7 +123,7 @@ public class ExtendedByteBufferInputStreamTest {
 
 				return null;
 			}
-		}).when(readingChannelManager).read(Mockito.<ByteBuffer> anyObject(), anyLong(), anyLong(), Mockito.<Path> anyObject(), Mockito.<WriteReadCompletionRunnable> anyObject());
+		}).when(readingChannelManager).read(Matchers.<ByteBuffer> anyObject(), anyLong(), anyLong(), Matchers.<Path> anyObject(), Matchers.<WriteReadCompletionRunnable> anyObject());
 
 		inputStream.setDescriptors(Collections.singletonList(storageDescriptor));
 		inputStream.prepare();
@@ -139,6 +138,6 @@ public class ExtendedByteBufferInputStreamTest {
 			e.printStackTrace();
 		}
 
-		verify(byteBufferProvider, times(NUMBER_OF_BUFFERS)).releaseByteBuffer(Mockito.<ByteBuffer> anyObject());
+		verify(byteBufferProvider, times(NUMBER_OF_BUFFERS)).releaseByteBuffer(Matchers.<ByteBuffer> anyObject());
 	}
 }

@@ -7,7 +7,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 
 /**
  * Provides Services to access <code>HttpTimerData</code> information.
- * 
+ *
  * @author Stefan Siegl
  */
 public interface HttpTimerDataDao {
@@ -15,7 +15,7 @@ public interface HttpTimerDataDao {
 	/**
 	 * Returns a list of the aggregated timer data for a given template. In this template, only the
 	 * platform id is extracted.
-	 * 
+	 *
 	 * @param httpData
 	 *            The template containing the platform id.
 	 * @param includeRequestMethod
@@ -27,7 +27,7 @@ public interface HttpTimerDataDao {
 	/**
 	 * Returns a list of the aggregated timer data for a given template. In this template, only the
 	 * platform id is extracted.
-	 * 
+	 *
 	 * @param httpData
 	 *            The template containing the platform id.
 	 * @param includeRequestMethod
@@ -43,7 +43,7 @@ public interface HttpTimerDataDao {
 	/**
 	 * Returns a list of the tagged timer data (aggregated by the value of the inspectit header) for
 	 * a given template. In this template, only the platform id is extracted.
-	 * 
+	 *
 	 * @param httpData
 	 *            The template containing the platform id.
 	 * @param includeRequestMethod
@@ -55,7 +55,7 @@ public interface HttpTimerDataDao {
 	/**
 	 * Returns a list of the tagged timer data (aggregated by the value of the inspectit header) for
 	 * a given template. In this template, only the platform id is extracted.
-	 * 
+	 *
 	 * @param httpData
 	 *            The template containing the platform id.
 	 * @param includeRequestMethod

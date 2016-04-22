@@ -4,9 +4,9 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * POJO that holds the information about a search.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SearchCriteria {
 
@@ -27,7 +27,7 @@ public class SearchCriteria {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param searchString
 	 *            String to search.
 	 */
@@ -37,7 +37,7 @@ public class SearchCriteria {
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param searchString
 	 *            String to search.
 	 * @param caseSensitive
@@ -99,9 +99,9 @@ public class SearchCriteria {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (caseSensitive ? 1231 : 1237);
-		result = prime * result + ((searchString == null) ? 0 : searchString.hashCode());
-		result = prime * result + ((searchStringUpperCase == null) ? 0 : searchStringUpperCase.hashCode());
+		result = (prime * result) + (caseSensitive ? 1231 : 1237);
+		result = (prime * result) + ((searchString == null) ? 0 : searchString.hashCode());
+		result = (prime * result) + ((searchStringUpperCase == null) ? 0 : searchStringUpperCase.hashCode());
 		return result;
 	}
 

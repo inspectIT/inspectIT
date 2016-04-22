@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 /**
  * Factory currently used for the overlay icons which can be placed on arbitrary images being
  * passed.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class ExceptionImageFactory {
 
@@ -43,7 +43,7 @@ public final class ExceptionImageFactory {
 
 	/**
 	 * Returns the image descriptor for the given modifiers.
-	 * 
+	 *
 	 * @param data
 	 *            The {@link ExceptionSensorData} data object where to check for the exception event
 	 *            type.
@@ -70,7 +70,7 @@ public final class ExceptionImageFactory {
 	/**
 	 * The passed image will be decorated with an overlay which is defined on the event type of the
 	 * exception transparently.
-	 * 
+	 *
 	 * @param image
 	 *            the image that will be decorated with the overlay.
 	 * @param data

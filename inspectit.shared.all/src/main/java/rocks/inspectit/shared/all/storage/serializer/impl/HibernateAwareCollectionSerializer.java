@@ -11,9 +11,9 @@ import rocks.inspectit.shared.all.util.IHibernateUtil;
 /**
  * Collections serializer that check if the collection is of hibernate type and if it is not
  * initialized just writes the empty collection.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HibernateAwareCollectionSerializer extends CollectionSerializer {
 
@@ -24,7 +24,7 @@ public class HibernateAwareCollectionSerializer extends CollectionSerializer {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param hibernateUtil
 	 *            {@link IHibernateUtil} to use. If <code>null</code> is provided this serializer
 	 *            will behave as {@link CollectionSerializer}.

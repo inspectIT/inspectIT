@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
  * steppable objects list. NOte that empty
  * {@link rocks.inspectit.shared.cs.communication.data.InvocationSequenceData} and
  * {@link HttpTimerData} can not be added.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AddToSteppingObjectsTester extends PropertyTester {
 

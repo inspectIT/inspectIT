@@ -87,7 +87,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 * {@inheritDoc}
 	 */
 	public final void setRepository(String host, int port) throws StorageException {
-		if (null == host || "".equals(host)) {
+		if ((null == host) || "".equals(host)) {
 			throw new StorageException("Repository host name cannot be null or empty!");
 		}
 
@@ -116,7 +116,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 * {@inheritDoc}
 	 */
 	public final void setAgentName(String name) throws StorageException {
-		if (null == name || "".equals(name)) {
+		if ((null == name) || "".equals(name)) {
 			throw new StorageException("Agent name cannot be null or empty!");
 		}
 
@@ -372,7 +372,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 */
 	public void afterPropertiesSet() throws Exception {
 		loadConfigurationFromJvmParameters();
-		if (null == repository || StringUtils.isEmpty(agentName)) {
+		if ((null == repository) || StringUtils.isEmpty(agentName)) {
 			throw new BeanInitializationException("inspectIT agent must be initialized with IP and port of the CMR via JVM parameters.");
 		}
 	}

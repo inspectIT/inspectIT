@@ -4,9 +4,9 @@ import rocks.inspectit.server.cache.AbstractObjectSizesIbm;
 
 /**
  * The object size class for 32bit IBM JVM. Works only with Java 7.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ObjectSizes32BitsIbm extends AbstractObjectSizesIbm {
 

@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Environment leaf for displaying in the tree.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EnvironmentLeaf extends Leaf implements IEnvironmentProvider {
 
@@ -29,7 +29,7 @@ public class EnvironmentLeaf extends Leaf implements IEnvironmentProvider {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}
 	 * @param cmrRepositoryDefinition
@@ -48,6 +48,7 @@ public class EnvironmentLeaf extends Leaf implements IEnvironmentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Environment getEnvironment() {
 		return environment;
 	}
@@ -55,6 +56,7 @@ public class EnvironmentLeaf extends Leaf implements IEnvironmentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
 		return cmrRepositoryDefinition;
 	}

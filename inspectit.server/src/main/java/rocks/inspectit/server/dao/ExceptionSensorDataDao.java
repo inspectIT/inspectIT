@@ -9,16 +9,16 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 /**
  * This layer is used to access the exception sensor information.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public interface ExceptionSensorDataDao {
 
 	/**
 	 * Returns a list of {@link ExceptionSensorData} objects. This list can be used to get an
 	 * overview over recorded Exceptions in a target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param limit
@@ -35,7 +35,7 @@ public interface ExceptionSensorDataDao {
 	 * Returns a list of {@link ExceptionSensorData} objects which are between the from and to
 	 * {@link Date} objects. This list can be used to get an overview over recorded Exceptions in a
 	 * target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param limit
@@ -55,7 +55,7 @@ public interface ExceptionSensorDataDao {
 	/**
 	 * Returns a list of {@link ExceptionSensorData} objects. This list can be used to get an
 	 * overview over recorded Exceptions in a target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param comparator
@@ -70,7 +70,7 @@ public interface ExceptionSensorDataDao {
 	 * Returns a list of {@link ExceptionSensorData} objects which are between the from and to
 	 * {@link Date} objects. This list can be used to get an overview over recorded Exceptions in a
 	 * target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param fromDate
@@ -88,7 +88,7 @@ public interface ExceptionSensorDataDao {
 	/**
 	 * Returns a list of {@link ExceptionSensorData} objects containing all details of a specific
 	 * Exception class.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @return List of {@link ExceptionSensorData} objects containing all details of a specific
@@ -99,7 +99,7 @@ public interface ExceptionSensorDataDao {
 	/**
 	 * Returns a list of {@link AggregatedExceptionSensorData} objects that is used to show an
 	 * overview over Exceptions with specific information about the number of caused event types.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to be used for the query.
 	 * @return A list of {@link AggregatedExceptionSensorData} objects with additional information
@@ -111,7 +111,7 @@ public interface ExceptionSensorDataDao {
 	 * Returns a list of {@link AggregatedExceptionSensorData} objects that is used to show an
 	 * overview over Exceptions with specific information about the number of caused event types.
 	 * The returned list contains object that are between the from and to {@link Date} objects.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to be used for the query.
 	 * @param fromDate
@@ -126,7 +126,7 @@ public interface ExceptionSensorDataDao {
 	/**
 	 * Returns the exception sensor data list for all error and stack message combinations for the
 	 * throwable type defined in the template.
-	 * 
+	 *
 	 * @param template
 	 *            template with throwable type set
 	 * @return {@link ExceptionSensorData} list.

@@ -8,9 +8,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * {@link IAggregator} for the {@link ClassLoadingInformationData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ClassLoadingInformationDataAggregator implements IAggregator<ClassLoadingInformationData>, Serializable {
 
@@ -22,6 +22,7 @@ public class ClassLoadingInformationDataAggregator implements IAggregator<ClassL
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<ClassLoadingInformationData> aggregatedObject, ClassLoadingInformationData objectToAdd) {
 		aggregatedObject.aggregate(objectToAdd);
 	}
@@ -29,6 +30,7 @@ public class ClassLoadingInformationDataAggregator implements IAggregator<ClassL
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ClassLoadingInformationData getClone(ClassLoadingInformationData classLoadingInformationData) {
 		ClassLoadingInformationData clone = new ClassLoadingInformationData();
 		clone.setPlatformIdent(classLoadingInformationData.getPlatformIdent());
@@ -46,6 +48,7 @@ public class ClassLoadingInformationDataAggregator implements IAggregator<ClassL
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(ClassLoadingInformationData object) {
 		return object.getPlatformIdent();
 	}
@@ -58,7 +61,7 @@ public class ClassLoadingInformationDataAggregator implements IAggregator<ClassL
 		final int prime = 31;
 		int result = 1;
 		// we must make constant hashCode because of the caching
-		result = prime * result + this.getClass().getName().hashCode();
+		result = (prime * result) + this.getClass().getName().hashCode();
 		return result;
 	}
 

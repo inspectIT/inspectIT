@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Wizard for creating new environment.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CreateEnvironmentWizard extends Wizard implements INewWizard {
 

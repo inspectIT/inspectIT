@@ -29,8 +29,8 @@ import java.util.Set;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
@@ -105,14 +105,14 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 				return Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentPath()))
 						.resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentFilePath((Environment) invocation.getArguments()[0])));
 			}
-		}).when(pathResolver).getEnvironmentFilePath(Mockito.<Environment> any());
+		}).when(pathResolver).getEnvironmentFilePath(Matchers.<Environment> any());
 		doAnswer(new Answer<Path>() {
 			@Override
 			public Path answer(InvocationOnMock invocation) throws Throwable {
 				return Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getEnvironmentPath()))
 						.resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getProfileFilePath((Profile) invocation.getArguments()[0])));
 			}
-		}).when(pathResolver).getProfileFilePath(Mockito.<Profile> any());
+		}).when(pathResolver).getProfileFilePath(Matchers.<Profile> any());
 
 		manager.init();
 	}

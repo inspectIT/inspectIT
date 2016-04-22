@@ -22,9 +22,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 /**
  * HTTP details generator. Displays information like URI, request method, parameters, attributes,
  * etc.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HttpDetailsGenerator implements IDetailsGenerator {
 

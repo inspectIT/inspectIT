@@ -5,9 +5,9 @@ package rocks.inspectit.shared.cs.indexing.storage;
  * provides information where in the file the data is located ({@link #getPosition()}), what is the
  * data size ({@link #getSize()} and what is the channel ID where the data is saved (
  * {@link #getChannelId()}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IStorageDescriptor extends Comparable<IStorageDescriptor> {
 
@@ -34,10 +34,10 @@ public interface IStorageDescriptor extends Comparable<IStorageDescriptor> {
 
 	/**
 	 * Sets the position and size in the file for this descriptor.
-	 * 
+	 *
 	 * @param position
 	 *            the position to set
-	 * 
+	 *
 	 * @param size
 	 *            the size to set
 	 */

@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;
 
 /**
  * Leaf used for displaying the local storages in the storage tree.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class LocalStorageLeaf extends Leaf implements ILocalStorageDataProvider {
 
@@ -25,7 +25,7 @@ public class LocalStorageLeaf extends Leaf implements ILocalStorageDataProvider 
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            {@link LocalStorageData} leaf to hold.
 	 */
@@ -40,16 +40,17 @@ public class LocalStorageLeaf extends Leaf implements ILocalStorageDataProvider 
 
 	/**
 	 * Gets {@link #localStorageData}.
-	 * 
+	 *
 	 * @return {@link #localStorageData}
 	 */
+	@Override
 	public LocalStorageData getLocalStorageData() {
 		return localStorageData;
 	}
 
 	/**
 	 * Sets {@link #localStorageData}.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            New value for {@link #localStorageData}
 	 */

@@ -79,9 +79,9 @@ public class UnregisteredJmxConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((jmxSensorTypeConfig == null) ? 0 : jmxSensorTypeConfig.hashCode());
-		result = prime * result + ((passedAttributeNameExpression == null) ? 0 : passedAttributeNameExpression.hashCode());
-		result = prime * result + ((passedObjectNameExpression == null) ? 0 : passedObjectNameExpression.hashCode());
+		result = (prime * result) + ((jmxSensorTypeConfig == null) ? 0 : jmxSensorTypeConfig.hashCode());
+		result = (prime * result) + ((passedAttributeNameExpression == null) ? 0 : passedAttributeNameExpression.hashCode());
+		result = (prime * result) + ((passedObjectNameExpression == null) ? 0 : passedObjectNameExpression.hashCode());
 		return result;
 	}
 

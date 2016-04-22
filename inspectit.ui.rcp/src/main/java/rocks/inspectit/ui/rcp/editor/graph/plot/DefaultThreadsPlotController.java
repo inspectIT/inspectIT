@@ -34,10 +34,10 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * This class creates a {@link XYPlot} containing the {@link ThreadInformationData} informations.
- * 
+ *
  * @author Eduard Tudenhoefner
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DefaultThreadsPlotController extends AbstractPlotController {
 
@@ -74,7 +74,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 	/**
 	 * The map containing the weight of the {@link XYPlot}s.
 	 */
-	private Map<XYPlot, Integer> weights = new HashMap<XYPlot, Integer>();
+	private Map<XYPlot, Integer> weights = new HashMap<>();
 
 	/**
 	 * The {@link YIntervalSeriesImproved} for live threads.
@@ -141,11 +141,12 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<XYPlot> getPlots() {
 		upperPlot = initializeUpperPlot();
 		lowerPlot = initializeLowerPlot();
 
-		List<XYPlot> plots = new ArrayList<XYPlot>(2);
+		List<XYPlot> plots = new ArrayList<>(2);
 		plots.add(upperPlot);
 		plots.add(lowerPlot);
 		weights.put(upperPlot, WEIGHT_UPPER_PLOT);
@@ -156,7 +157,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 
 	/**
 	 * Initializes the upper plot with the given input data.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}
 	 */
 	private XYPlot initializeUpperPlot() {
@@ -190,7 +191,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 
 	/**
 	 * Updates the upper plot with the given input data.
-	 * 
+	 *
 	 * @param threadData
 	 *            the input data.
 	 */
@@ -208,7 +209,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 	/**
 	 * Removes all data from the upper plot and sets the {@link ThreadInformationData} objects on
 	 * the plot.
-	 * 
+	 *
 	 * @param threadData
 	 *            The data to set on the plot.
 	 */
@@ -220,7 +221,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 
 	/**
 	 * Initializes the lower plot with the given input data.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}.
 	 */
 	private XYPlot initializeLowerPlot() {
@@ -251,7 +252,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 
 	/**
 	 * Updates the lower plot with the given input data.
-	 * 
+	 *
 	 * @param threadData
 	 *            the input data.
 	 */
@@ -266,7 +267,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 	/**
 	 * Removes all data from the lower plot and sets the {@link ThreadInformationData} objects on
 	 * the plot.
-	 * 
+	 *
 	 * @param threadData
 	 *            The data to set on the plot.
 	 */
@@ -278,6 +279,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void update(Date from, Date to) {
 		Date dataNewestDate = new Date(0);
@@ -379,6 +381,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		Set<PreferenceId> preferenceList = EnumSet.noneOf(PreferenceId.class);
 		if (getInputDefinition().getRepositoryDefinition() instanceof CmrRepositoryDefinition) {
@@ -393,6 +396,7 @@ public class DefaultThreadsPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getWeight(XYPlot subPlot) {
 		return weights.get(subPlot);
 	}

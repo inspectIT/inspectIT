@@ -71,7 +71,7 @@ public class DocumentationService {
 			String[] words = StringUtils.split(searchString);
 			for (int i = 0; i < words.length; i++) {
 				stringBuilder.append(words[i]);
-				if (i < words.length - 1) {
+				if (i < (words.length - 1)) {
 					stringBuilder.append('+');
 				}
 			}

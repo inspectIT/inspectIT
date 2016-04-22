@@ -24,9 +24,9 @@ import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * This input controller displays an aggregated summary of the timer data objects in a table.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class AggregatedTimerSummaryInputController extends AbstractTableInputController {
 
@@ -34,9 +34,9 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The count column. */
@@ -65,7 +65,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -82,13 +82,13 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -98,6 +98,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TableViewer tableViewer) {
 		for (Column column : Column.values()) {
 			TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -114,6 +115,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ViewerComparator getComparator() {
 		// no sorting
 		return null;
@@ -122,15 +124,16 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new ContentProvider();
 	}
 
 	/**
 	 * The content provider.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private static final class ContentProvider implements IStructuredContentProvider {
 
@@ -142,6 +145,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<TimerData> timerData = (List<TimerData>) inputElement;
@@ -153,12 +157,14 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -167,21 +173,22 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new LabelProvider();
 	}
 
 	/**
 	 * The label provider.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class LabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -203,7 +210,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	 */
 	@Override
 	public boolean canOpenInput(List<? extends DefaultData> data) {
-		if (null == data || data.isEmpty()) {
+		if ((null == data) || data.isEmpty()) {
 			return true;
 		}
 
@@ -216,7 +223,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param enumId
@@ -261,6 +268,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof TimerData) {
 			TimerData data = (TimerData) object;
@@ -281,7 +289,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof TimerData) {
 			TimerData data = (TimerData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, column).toString());
 			}

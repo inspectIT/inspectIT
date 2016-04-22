@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * Creates the appropriate method visibility image for the int value.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class ModifiersImageFactory {
 
@@ -46,7 +46,7 @@ public final class ModifiersImageFactory {
 
 	/**
 	 * Returns the image for the given modifiers. This image should not be disposed.
-	 * 
+	 *
 	 * @param modifiers
 	 *            The modifiers.
 	 * @return The image.

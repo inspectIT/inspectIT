@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.dialog.ThrowableDialog;
 
 /**
  * Custom status manager for displaying statuses and exceptions correctly.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class CustomStatusHandler extends WorkbenchErrorHandler {
@@ -30,12 +30,12 @@ public class CustomStatusHandler extends WorkbenchErrorHandler {
 	public void handle(final StatusAdapter statusAdapter, int style) {
 		// if style is only log and we have an error
 		// then we want to show it as well to the user
-		if (StatusManager.LOG == style && statusAdapter.getStatus().getSeverity() == IStatus.ERROR) {
+		if ((StatusManager.LOG == style) && (statusAdapter.getStatus().getSeverity() == IStatus.ERROR)) {
 			style |= StatusManager.SHOW;
 		}
 
 		// here we only show new type if it's error or warning with exception in
-		if (statusAdapter.getStatus().getException() != null && (statusAdapter.getStatus().getSeverity() == IStatus.WARNING || statusAdapter.getStatus().getSeverity() == IStatus.ERROR)) {
+		if ((statusAdapter.getStatus().getException() != null) && ((statusAdapter.getStatus().getSeverity() == IStatus.WARNING) || (statusAdapter.getStatus().getSeverity() == IStatus.ERROR))) {
 
 			if (((style & StatusManager.SHOW) == StatusManager.SHOW) || ((style & StatusManager.BLOCK) == StatusManager.BLOCK)) {
 
@@ -43,6 +43,7 @@ public class CustomStatusHandler extends WorkbenchErrorHandler {
 					showErrorDialog(statusAdapter);
 				} else {
 					Display.getDefault().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							showErrorDialog(statusAdapter);
 						}
@@ -64,7 +65,7 @@ public class CustomStatusHandler extends WorkbenchErrorHandler {
 
 	/**
 	 * Shows new style of error dialogs.
-	 * 
+	 *
 	 * @param statusAdapter
 	 *            {@link StatusAdapter}
 	 */

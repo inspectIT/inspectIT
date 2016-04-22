@@ -62,7 +62,7 @@ public final class SafeExecutor {
 	 *            Widgets to check for disposal.
 	 */
 	public static void asyncExec(Runnable runnable, Display display, Widget... widgets) {
-		if (null == display || display.isDisposed()) {
+		if ((null == display) || display.isDisposed()) {
 			return;
 		}
 		display.asyncExec(new GuardedRunnable(runnable, widgets));
@@ -102,7 +102,7 @@ public final class SafeExecutor {
 	 *            Widgets to check for disposal.
 	 */
 	public static void syncExec(Runnable runnable, Display display, Widget... widgets) {
-		if (null == display || display.isDisposed()) {
+		if ((null == display) || display.isDisposed()) {
 			return;
 		}
 		display.syncExec(new GuardedRunnable(runnable, widgets));

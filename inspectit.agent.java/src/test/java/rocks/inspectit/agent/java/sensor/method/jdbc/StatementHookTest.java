@@ -12,15 +12,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -30,9 +29,6 @@ import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IObjectStorage;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.core.impl.PlatformManager;
-import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
-import rocks.inspectit.agent.java.sensor.method.jdbc.StatementHook;
-import rocks.inspectit.agent.java.sensor.method.jdbc.StatementReflectionCache;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
@@ -101,12 +97,12 @@ public class StatementHookTest extends AbstractLogSupport {
 		statementHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
 		verify(platformManager).getPlatformId();
 
-		Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		SqlStatementData bsqld = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
 		bsqld.setSql((String) parameters[0]);
 
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Mockito.anyObject(), (MethodSensorData) Mockito.anyObject());
-		verify(coreService).getMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Mockito.anyObject());
+		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject(), (MethodSensorData) Matchers.anyObject());
+		verify(coreService).getMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject());
 		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 	}
 
@@ -143,12 +139,12 @@ public class StatementHookTest extends AbstractLogSupport {
 
 		verify(platformManager, times(2)).getPlatformId();
 
-		Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		SqlStatementData bsqld = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
 		bsqld.setSql((String) parameters[0]);
 
-		verify(coreService, times(2)).addMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Mockito.anyObject(), (MethodSensorData) Mockito.anyObject());
-		verify(coreService, times(2)).getMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Mockito.anyObject());
+		verify(coreService, times(2)).addMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject(), (MethodSensorData) Matchers.anyObject());
+		verify(coreService, times(2)).getMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject());
 		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
 	}
 

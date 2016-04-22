@@ -11,9 +11,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 /**
  * Simple {@link AbstractCmrDataProcessor} that can assign the ID for the {@link DefaultData} using
  * {@link CacheIdGenerator}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CacheIdGeneratorCmrProcessor extends AbstractCmrDataProcessor {
 
@@ -41,7 +41,7 @@ public class CacheIdGeneratorCmrProcessor extends AbstractCmrDataProcessor {
 
 	/**
 	 * Sets {@link #cacheIdGenerator}.
-	 * 
+	 *
 	 * @param cacheIdGenerator
 	 *            New value for {@link #cacheIdGenerator}
 	 */

@@ -23,7 +23,8 @@ import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 public class ClassSensorAssignmentFilter {
 
 	/**
-	 * Tests if the given {@link ImmutableClassType} matches the class sensor assignment. Same as calling {@link #matches(AbstractClassSensorAssignment, ImmutableClassType, true)}.
+	 * Tests if the given {@link ImmutableClassType} matches the class sensor assignment. Same as
+	 * calling {@link #matches(AbstractClassSensorAssignment, ImmutableClassType, true)}.
 	 *
 	 * @param classSensorAssignment
 	 *            assignment.

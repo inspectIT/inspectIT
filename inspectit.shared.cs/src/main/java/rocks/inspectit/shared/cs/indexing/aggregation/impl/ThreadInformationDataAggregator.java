@@ -8,9 +8,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * {@link IAggregator} for the {@link ThreadInformationData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ThreadInformationDataAggregator implements IAggregator<ThreadInformationData>, Serializable {
 
@@ -22,6 +22,7 @@ public class ThreadInformationDataAggregator implements IAggregator<ThreadInform
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<ThreadInformationData> aggregatedObject, ThreadInformationData objectToAdd) {
 		aggregatedObject.aggregate(objectToAdd);
 	}
@@ -29,6 +30,7 @@ public class ThreadInformationDataAggregator implements IAggregator<ThreadInform
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ThreadInformationData getClone(ThreadInformationData threadInformationData) {
 		ThreadInformationData clone = new ThreadInformationData();
 		clone.setPlatformIdent(threadInformationData.getPlatformIdent());
@@ -46,6 +48,7 @@ public class ThreadInformationDataAggregator implements IAggregator<ThreadInform
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(ThreadInformationData object) {
 		return object.getPlatformIdent();
 	}
@@ -58,7 +61,7 @@ public class ThreadInformationDataAggregator implements IAggregator<ThreadInform
 		final int prime = 31;
 		int result = 1;
 		// we must make constant hashCode because of the caching
-		result = prime * result + this.getClass().getName().hashCode();
+		result = (prime * result) + this.getClass().getName().hashCode();
 		return result;
 	}
 

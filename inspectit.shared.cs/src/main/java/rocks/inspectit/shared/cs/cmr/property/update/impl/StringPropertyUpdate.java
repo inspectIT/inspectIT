@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
 
 /**
  * {@link AbstractPropertyUpdate} for string property.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "string-property-update")
@@ -32,7 +32,7 @@ public class StringPropertyUpdate extends AbstractPropertyUpdate<String> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property update is related to.
 	 * @param updateValue
@@ -44,19 +44,21 @@ public class StringPropertyUpdate extends AbstractPropertyUpdate<String> {
 
 	/**
 	 * Gets {@link #updateValue}.
-	 * 
+	 *
 	 * @return {@link #updateValue}
 	 */
+	@Override
 	public String getUpdateValue() {
 		return updateValue;
 	}
 
 	/**
 	 * Sets {@link #updateValue}.
-	 * 
+	 *
 	 * @param updateValue
 	 *            New value for {@link #updateValue}
 	 */
+	@Override
 	protected void setUpdateValue(String updateValue) {
 		this.updateValue = updateValue;
 	}

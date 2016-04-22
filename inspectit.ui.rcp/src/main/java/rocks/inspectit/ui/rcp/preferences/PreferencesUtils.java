@@ -13,9 +13,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Utility for using preferences stores.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class PreferencesUtils {
 
@@ -32,7 +32,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Saves a boolean value to the preference store.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param value
@@ -58,7 +58,7 @@ public final class PreferencesUtils {
 	/**
 	 * Returns boolean value from the preferences. Same as calling
 	 * {@link #getBooleanValue(PreferenceKey, false)}.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @return Boolean value.
@@ -69,7 +69,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Returns boolean value from the preferences.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param isDefault
@@ -88,7 +88,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Saves a double value to the preference store.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param value
@@ -114,7 +114,7 @@ public final class PreferencesUtils {
 	/**
 	 * Returns double value from the preferences. Same as calling
 	 * {@link #getDoubleValue(PreferenceKey, false)}.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @return Double value.
@@ -125,7 +125,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Returns double value from the preferences.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param isDefault
@@ -144,7 +144,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Saves a long value to the preference store.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param value
@@ -168,9 +168,9 @@ public final class PreferencesUtils {
 	}
 
 	/**
-	 * Returns long value from the preferences. Same as calling
-	 * {@link #getLongValue(PreferenceKey, false)}.
-	 * 
+	 * Returns long value from the preferences. Same as calling {@link #getLongValue(PreferenceKey,
+	 * false)}.
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @return Long value.
@@ -181,7 +181,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Returns long value from the preferences.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param isDefault
@@ -200,7 +200,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Saves a int value to the preference store.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param value
@@ -224,9 +224,9 @@ public final class PreferencesUtils {
 	}
 
 	/**
-	 * Returns int value from the preferences. Same as calling
-	 * {@link #getIntValue(PreferenceKey, false)}.
-	 * 
+	 * Returns int value from the preferences. Same as calling {@link #getIntValue(PreferenceKey,
+	 * false)}.
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @return Int value.
@@ -237,7 +237,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Returns int value from the preferences.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param isDefault
@@ -256,7 +256,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Saves a string value to the preference store.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param value
@@ -282,7 +282,7 @@ public final class PreferencesUtils {
 	/**
 	 * Returns string value from the preferences. Same as calling
 	 * {@link #getStringValue(PreferenceKey, false)}.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @return String value.
@@ -293,7 +293,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Returns string value from the preferences.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the preference.
 	 * @param isDefault
@@ -314,7 +314,7 @@ public final class PreferencesUtils {
 	 * General method for saving an object to the preference store. Note that the preference key has
 	 * to be mapped in the {@link PreferenceValueProviderFactory} to the provider that can handle
 	 * the type of object passed.
-	 * 
+	 *
 	 * @param preferenceKey
 	 *            Preference key.
 	 * @param object
@@ -331,7 +331,7 @@ public final class PreferencesUtils {
 			}
 
 			String value = PreferenceValueProviderFactory.getValueForObject(preferenceKey, object);
-			if (value != null && !"".equals(value)) {
+			if ((value != null) && !"".equals(value)) {
 				saveStringValue(preferenceKey, value, isDefault);
 			}
 		} catch (PreferenceException e) {
@@ -343,7 +343,7 @@ public final class PreferencesUtils {
 	 * General method for loading an object from the preference store. Note that the preference key
 	 * has to be mapped in the {@link PreferenceValueProviderFactory} to the provider that can
 	 * handle the type of type E passed.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of object.
 	 * @param preferenceKey
@@ -353,7 +353,7 @@ public final class PreferencesUtils {
 	public static <E> E getObject(String preferenceKey) {
 		try {
 			String value = preferenceStore.getString(preferenceKey);
-			if (value == null || "".equals(value)) {
+			if ((value == null) || "".equals(value)) {
 				return null;
 			}
 			return PreferenceValueProviderFactory.getObjectFromValue(preferenceKey, value);
@@ -368,7 +368,7 @@ public final class PreferencesUtils {
 	 * has to be mapped to the
 	 * {@link rocks.inspectit.ui.rcp.preferences.valueproviders.CollectionPreferenceValueProvider}
 	 * in the {@link PreferenceValueProviderFactory}.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of objects in the collection.
 	 * @param preferenceKey
@@ -380,7 +380,7 @@ public final class PreferencesUtils {
 	 */
 	public static <E> void loadPrimitiveCollection(String preferenceKey, Collection<E> collection, Class<E> wantedClass) {
 		String value = preferenceStore.getString(preferenceKey);
-		if (value == null || "".equals(value)) {
+		if ((value == null) || "".equals(value)) {
 			return;
 		}
 		try {
@@ -394,9 +394,9 @@ public final class PreferencesUtils {
 	/**
 	 * Loads the primitive keys and values map from a preference store. Note that the preference key
 	 * provided has to be mapped to the
-	 * {@link rocks.inspectit.ui.rcp.preferences.valueproviders.MapPreferenceValueProvider} in
-	 * the {@link PreferenceValueProviderFactory}.
-	 * 
+	 * {@link rocks.inspectit.ui.rcp.preferences.valueproviders.MapPreferenceValueProvider} in the
+	 * {@link PreferenceValueProviderFactory}.
+	 *
 	 * @param <K>
 	 *            Type of key.
 	 * @param <V>
@@ -412,7 +412,7 @@ public final class PreferencesUtils {
 	 */
 	public static <K, V> void loadPrimitiveMap(String preferenceKey, Map<K, V> map, Class<K> keyClass, Class<V> valueClass) {
 		String value = preferenceStore.getString(preferenceKey);
-		if (value == null || "".equals(value)) {
+		if ((value == null) || "".equals(value)) {
 			return;
 		}
 		try {
@@ -425,7 +425,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Save given repository definitions to the preference store.
-	 * 
+	 *
 	 * @param repositoryDefinitions
 	 *            {@link CmrRepositoryDefinition} to save.
 	 * @param isDefault
@@ -437,7 +437,7 @@ public final class PreferencesUtils {
 
 	/**
 	 * Returns the list of {@link CmrRepositoryDefinition} that exists in the preference store.
-	 * 
+	 *
 	 * @return he list of {@link CmrRepositoryDefinition} that exists in the preference store.
 	 */
 	public static List<CmrRepositoryDefinition> getCmrRepositoryDefinitions() {

@@ -6,13 +6,13 @@ import rocks.inspectit.agent.java.core.ICoreService;
 /**
  * Classes which add a hook into a method before and after it is called, have to implement this
  * interface.
- * 
+ *
  */
 public interface IMethodHook extends IHook {
 
 	/**
 	 * This method is executed before something else in the original method body will be executed.
-	 * 
+	 *
 	 * @param methodId
 	 *            The unique method id.
 	 * @param sensorTypeId
@@ -34,7 +34,7 @@ public interface IMethodHook extends IHook {
 	 * storage has to be added to the
 	 * {@link #secondAfterBody(ICoreService, int, String, Object, Object[], Object, RegisteredSensorConfig)}
 	 * implementation.
-	 * 
+	 *
 	 * @param methodId
 	 *            The unique method id.
 	 * @param sensorTypeId
@@ -54,7 +54,7 @@ public interface IMethodHook extends IHook {
 	/**
 	 * This method will be called before the original method will return. It is the second of two
 	 * after body calls. This method can be used to save or compute some values.
-	 * 
+	 *
 	 * @param coreService
 	 *            The reference to the core service which holds the data objects etc.
 	 * @param methodId

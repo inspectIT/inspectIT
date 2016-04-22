@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.storage.label.type.impl.CreationDateLabelType;
 
 /**
  * Class that defines the storage information.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageData extends AbstractStorageData {
 
@@ -25,7 +25,7 @@ public class StorageData extends AbstractStorageData {
 	/**
 	 * List of labels.
 	 */
-	private List<AbstractStorageLabel<?>> labelList = new ArrayList<AbstractStorageLabel<?>>();
+	private List<AbstractStorageLabel<?>> labelList = new ArrayList<>();
 
 	/**
 	 * {@link StorageState} that defines what operations can be done on storage.
@@ -45,7 +45,7 @@ public class StorageData extends AbstractStorageData {
 
 	/**
 	 * Secondary constructor. Copies data from the given {@link StorageData}.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} to copy information.
 	 */
@@ -55,7 +55,7 @@ public class StorageData extends AbstractStorageData {
 		setDescription(storageData.getDescription());
 		setDiskSize(storageData.getDiskSize());
 		setCmrVersion(storageData.getCmrVersion());
-		labelList = new ArrayList<AbstractStorageLabel<?>>(storageData.getLabelList());
+		labelList = new ArrayList<>(storageData.getLabelList());
 		if (storageData instanceof StorageData) {
 			state = ((StorageData) storageData).getState(); // NOPMD
 		} else {
@@ -65,9 +65,10 @@ public class StorageData extends AbstractStorageData {
 
 	/**
 	 * Returns all labels of this {@link StorageData}.
-	 * 
+	 *
 	 * @return Returns all labels of this {@link StorageData}.
 	 */
+	@Override
 	public List<AbstractStorageLabel<?>> getLabelList() {
 		return labelList;
 	}
@@ -80,7 +81,7 @@ public class StorageData extends AbstractStorageData {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return If the storage is opened, and thus available for writing.
 	 */
 	public boolean isStorageOpened() {
@@ -95,7 +96,7 @@ public class StorageData extends AbstractStorageData {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return If the storage is closed.
 	 */
 	public boolean isStorageClosed() {
@@ -110,7 +111,7 @@ public class StorageData extends AbstractStorageData {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return If the storage is closed.
 	 */
 	public boolean isStorageRecording() {
@@ -128,7 +129,7 @@ public class StorageData extends AbstractStorageData {
 	 * Adds a label to the label list of the storage data. The labels that are one per storage will
 	 * be inserted only if the label of that type does not exists, or the overwrite flag is set to
 	 * true.
-	 * 
+	 *
 	 * @param label
 	 *            Label to insert.
 	 * @param doOverwrite
@@ -158,7 +159,7 @@ public class StorageData extends AbstractStorageData {
 
 	/**
 	 * Removes label from the label list.
-	 * 
+	 *
 	 * @param label
 	 *            Label to remove.
 	 * @return True if the label was removed.
@@ -170,7 +171,7 @@ public class StorageData extends AbstractStorageData {
 
 	/**
 	 * Return if the label of provided type is present in the label list.
-	 * 
+	 *
 	 * @param labelType
 	 *            Type to search for.
 	 * @return True if one of more labels of desired type is present, false otherwise.
@@ -186,7 +187,7 @@ public class StorageData extends AbstractStorageData {
 
 	/**
 	 * Return all labels of these storage that are of a given type.
-	 * 
+	 *
 	 * @param <T>
 	 *            Type
 	 * @param labelType
@@ -195,7 +196,7 @@ public class StorageData extends AbstractStorageData {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<AbstractStorageLabel<T>> getLabels(AbstractStorageLabelType<T> labelType) {
-		List<AbstractStorageLabel<T>> labels = new ArrayList<AbstractStorageLabel<T>>();
+		List<AbstractStorageLabel<T>> labels = new ArrayList<>();
 		for (AbstractStorageLabel<?> label : labelList) {
 			if (label.getStorageLabelType().equals(labelType)) {
 				labels.add((AbstractStorageLabel<T>) label);
@@ -206,9 +207,9 @@ public class StorageData extends AbstractStorageData {
 
 	/**
 	 * Enum that defines the storage state.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum StorageState {
 

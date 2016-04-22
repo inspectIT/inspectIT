@@ -7,14 +7,14 @@ import org.eclipse.jface.viewers.TextCellEditor;
 
 /**
  * Abstract class for editing support in the table.
- * 
+ *
  * @param <E>
  *            Element being edited.
  * @param <T>
  *            Type of the value expected from editing.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractTableEditingSupport<E, T> extends EditingSupport {
 
@@ -25,7 +25,7 @@ public abstract class AbstractTableEditingSupport<E, T> extends EditingSupport {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param viewer
 	 *            Table viewer to edit.
 	 */
@@ -36,7 +36,7 @@ public abstract class AbstractTableEditingSupport<E, T> extends EditingSupport {
 
 	/**
 	 * Get the value to set to the editor.
-	 * 
+	 *
 	 * @param element
 	 *            Element
 	 * @return Value to set to the editor
@@ -45,7 +45,7 @@ public abstract class AbstractTableEditingSupport<E, T> extends EditingSupport {
 
 	/**
 	 * Sets the new value on the given element.
-	 * 
+	 *
 	 * @param element
 	 *            Element
 	 * @param value

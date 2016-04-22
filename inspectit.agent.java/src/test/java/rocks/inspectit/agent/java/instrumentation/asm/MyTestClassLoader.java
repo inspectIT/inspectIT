@@ -5,7 +5,7 @@ import java.net.URL;
 /**
  * Dummy class loader to test the class loading delegation instrumentation in the
  * {@link rocks.inspectit.agent.java.instrumentation.asm.ClassInstrumenterTest}.
- * 
+ *
  * @author Ivan Senic
  *
  */

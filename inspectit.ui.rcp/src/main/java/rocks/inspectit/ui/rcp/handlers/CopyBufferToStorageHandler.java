@@ -23,9 +23,9 @@ import rocks.inspectit.ui.rcp.wizard.CopyBufferToStorageWizard;
 
 /**
  * Copy buffer to storage handler.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CopyBufferToStorageHandler extends AbstractHandler implements IHandler {
 

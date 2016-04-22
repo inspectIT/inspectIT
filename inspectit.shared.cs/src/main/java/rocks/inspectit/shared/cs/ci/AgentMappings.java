@@ -11,9 +11,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Utility class that combines all {@link AgentMappings} for easier marshalling.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "agent-mappings")
@@ -47,7 +47,7 @@ public class AgentMappings {
 
 	/**
 	 * Gets {@link #mappings}.
-	 * 
+	 *
 	 * @return {@link #mappings}
 	 */
 	public Collection<AgentMapping> getMappings() {
@@ -56,7 +56,7 @@ public class AgentMappings {
 
 	/**
 	 * Sets {@link #mappings}.
-	 * 
+	 *
 	 * @param mappings
 	 *            New value for {@link #mappings}
 	 */
@@ -66,7 +66,7 @@ public class AgentMappings {
 
 	/**
 	 * Gets {@link #revision}.
-	 * 
+	 *
 	 * @return {@link #revision}
 	 */
 	public int getRevision() {
@@ -75,7 +75,7 @@ public class AgentMappings {
 
 	/**
 	 * Sets {@link #revision}.
-	 * 
+	 *
 	 * @param revision
 	 *            New value for {@link #revision}
 	 */
@@ -90,8 +90,8 @@ public class AgentMappings {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((mappings == null) ? 0 : mappings.hashCode());
-		result = prime * result + revision;
+		result = (prime * result) + ((mappings == null) ? 0 : mappings.hashCode());
+		result = (prime * result) + revision;
 		return result;
 	}
 

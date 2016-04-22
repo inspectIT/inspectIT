@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the {@link ILogListener} to correctly hook into the internal logging mechanism.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class LogListener implements ILogListener {
 

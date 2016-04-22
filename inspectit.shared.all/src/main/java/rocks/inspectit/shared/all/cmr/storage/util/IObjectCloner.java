@@ -2,15 +2,15 @@ package rocks.inspectit.shared.all.cmr.storage.util;
 
 /**
  * Interface for the object cloning utility.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IObjectCloner {
 
 	/**
 	 * Clones the the given object and removes the persistent Hibernate collections.
-	 * 
+	 *
 	 * @param object
 	 *            Object to clone.
 	 * @param <E>

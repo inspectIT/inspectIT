@@ -14,14 +14,14 @@ import org.eclipse.swt.widgets.ToolItem;
  * icon it self was not showing the drop down menu, but only if you select the arrow on the right.
  * Now this is fixed and clicking on the icon itself with show the menu.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken from <a
- * href="https://www.eclipse.org/forums/index.php/t/488692/">Eclipse forums</a>. Original author is
- * Mario Marinato. License info can be found <a
- * href="https://eclipse.org/legal/termsofuse.php">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken from
+ * <a href="https://www.eclipse.org/forums/index.php/t/488692/">Eclipse forums</a>. Original author
+ * is Mario Marinato. License info can be found
+ * <a href="https://eclipse.org/legal/termsofuse.php">here</a>.
+ *
  * @author Ivan Senic
  * @author Mario Marinato
- * 
+ *
  */
 public class ShowPullDownMenuHandler extends AbstractHandler implements IHandler {
 

@@ -15,9 +15,9 @@ import org.eclipse.ui.forms.editor.IFormPage;
 
 /**
  * Abstract {@link FormEditor} for the configuration interface editors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractConfigurationInterfaceFormEditor extends FormEditor {
 
@@ -34,7 +34,7 @@ public abstract class AbstractConfigurationInterfaceFormEditor extends FormEdito
 	@Override
 	protected void createPages() {
 		super.createPages();
-		if (getPageCount() == 1 && getContainer() instanceof CTabFolder) {
+		if ((getPageCount() == 1) && (getContainer() instanceof CTabFolder)) {
 			((CTabFolder) getContainer()).setTabHeight(0);
 		}
 	}
@@ -44,7 +44,7 @@ public abstract class AbstractConfigurationInterfaceFormEditor extends FormEdito
 	 * <p>
 	 * Sub-classes should call this method prior to saving and abort saving if this method returns
 	 * <code>false</code>
-	 * 
+	 *
 	 * @return <code>false</code> if editor contains any page with any invalid part
 	 */
 	protected boolean checkValid() {
@@ -64,19 +64,19 @@ public abstract class AbstractConfigurationInterfaceFormEditor extends FormEdito
 
 	/**
 	 * Returns the pages that contain at least one part that is not valid.
-	 * 
+	 *
 	 * @return Returns the pages that contain at least one part that is not valid.
 	 */
 	private Collection<IManagedForm> getInvalidForms() {
 		if (pages != null) {
-			List<IManagedForm> invalidForms = new ArrayList<IManagedForm>();
+			List<IManagedForm> invalidForms = new ArrayList<>();
 			for (int i = 0; i < pages.size(); i++) {
 				Object page = pages.get(i);
 				if (page instanceof IFormPage) {
 					IFormPage formPage = (IFormPage) page;
 					IManagedForm managedForm = formPage.getManagedForm();
 
-					if (null != managedForm && managedForm.getForm().getMessageType() == IMessageProvider.ERROR) {
+					if ((null != managedForm) && (managedForm.getForm().getMessageType() == IMessageProvider.ERROR)) {
 						invalidForms.add(managedForm);
 					}
 				}
@@ -119,7 +119,7 @@ public abstract class AbstractConfigurationInterfaceFormEditor extends FormEdito
 
 	/**
 	 * Sets {@link #exceptionOnSave}.
-	 * 
+	 *
 	 * @param exceptionOnSave
 	 *            New value for {@link #exceptionOnSave}
 	 */

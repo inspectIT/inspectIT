@@ -1,7 +1,6 @@
 package rocks.inspectit.shared.cs.cmr.service.cache;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -25,10 +24,10 @@ import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
  * <p>
  * The implementing classes should realize the {@link #shouldRefreshIdents()} method to properly
  * instruct clearing of cache when needed.
- * 
+ *
  * @author Patrice Bouillet
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class CachedDataService implements InitializingBean, ICachedDataService {
@@ -49,26 +48,26 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	 * This map is needed to store the mapping between the ID's and the {@link PlatformIdent}
 	 * objects. Some views / editors need this information because they can only access the ID.
 	 */
-	private Map<Long, PlatformIdent> platformMap = new ConcurrentHashMap<Long, PlatformIdent>();
+	private Map<Long, PlatformIdent> platformMap = new ConcurrentHashMap<>();
 
 	/**
 	 * This map is needed to store the mapping between the ID's and the {@link SensorTypeIdent}
 	 * objects. Some views / editors need this information because they can only access the ID.
 	 */
-	private Map<Long, SensorTypeIdent> sensorTypeMap = new ConcurrentHashMap<Long, SensorTypeIdent>();
+	private Map<Long, SensorTypeIdent> sensorTypeMap = new ConcurrentHashMap<>();
 
 	/**
 	 * This map is needed to store the mapping between the ID's and the {@link MethodIdent} objects.
 	 * Some views / editors need this information because they can only access the ID.
 	 */
-	private Map<Long, MethodIdent> methodMap = new ConcurrentHashMap<Long, MethodIdent>();
+	private Map<Long, MethodIdent> methodMap = new ConcurrentHashMap<>();
 
 	/**
 	 * This map is needed to store the mapping between the ID's and the
 	 * {@link JmxDefinitionDataIdent} objects. Some views / editors need this information because
 	 * they can only access the ID.
 	 */
-	private Map<Long, JmxDefinitionDataIdent> jmxDefinitionDataMap = new ConcurrentHashMap<Long, JmxDefinitionDataIdent>();
+	private Map<Long, JmxDefinitionDataIdent> jmxDefinitionDataMap = new ConcurrentHashMap<>();
 
 	/**
 	 * No-args constructor.
@@ -104,7 +103,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * Updates the data in the cache for the one agent. This method should be called with care,
 	 * since it removes and inserts all the sensor data.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            Agento to refresh.
 	 */
@@ -112,17 +111,17 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 		platformMap.remove(platformIdent.getId());
 		platformMap.put(platformIdent.getId(), platformIdent);
 
-		for (MethodIdent methodIdent : (Set<MethodIdent>) platformIdent.getMethodIdents()) {
+		for (MethodIdent methodIdent : platformIdent.getMethodIdents()) {
 			methodMap.remove(methodIdent.getId());
 			methodMap.put(methodIdent.getId(), methodIdent);
 		}
 
-		for (SensorTypeIdent sensorTypeIdent : (Set<SensorTypeIdent>) platformIdent.getSensorTypeIdents()) {
+		for (SensorTypeIdent sensorTypeIdent : platformIdent.getSensorTypeIdents()) {
 			sensorTypeMap.remove(sensorTypeIdent.getId());
 			sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
 		}
 
-		for (JmxDefinitionDataIdent jmxDefinitionDataIdent : (Set<JmxDefinitionDataIdent>) platformIdent.getJmxDefinitionDataIdents()) {
+		for (JmxDefinitionDataIdent jmxDefinitionDataIdent : platformIdent.getJmxDefinitionDataIdents()) {
 			jmxDefinitionDataMap.remove(jmxDefinitionDataIdent.getId());
 			jmxDefinitionDataMap.put(jmxDefinitionDataIdent.getId(), jmxDefinitionDataIdent);
 		}
@@ -132,10 +131,11 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public PlatformIdent getPlatformIdentForId(long platformId) {
 		Long id = Long.valueOf(platformId);
 		// load only if the id is not 0
-		if (0 != id.longValue() && !platformMap.containsKey(id)) {
+		if ((0 != id.longValue()) && !platformMap.containsKey(id)) {
 			refreshIdents();
 		}
 
@@ -145,10 +145,11 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SensorTypeIdent getSensorTypeIdentForId(long sensorTypeId) {
 		Long id = Long.valueOf(sensorTypeId);
 		// load only if the id is not 0
-		if (0 != id.longValue() && !sensorTypeMap.containsKey(id)) {
+		if ((0 != id.longValue()) && !sensorTypeMap.containsKey(id)) {
 			refreshIdents();
 		}
 
@@ -158,10 +159,11 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MethodIdent getMethodIdentForId(long methodId) {
 		Long id = Long.valueOf(methodId);
 		// load only if the id is not 0
-		if (0 != id.longValue() && !methodMap.containsKey(id)) {
+		if ((0 != id.longValue()) && !methodMap.containsKey(id)) {
 			refreshIdents();
 		}
 
@@ -171,10 +173,11 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public JmxDefinitionDataIdent getJmxDefinitionDataIdentForId(long jmxDefinitionDataId) {
 		Long id = Long.valueOf(jmxDefinitionDataId);
 		// load only if the id is not 0
-		if (0 != id.longValue() && !jmxDefinitionDataMap.containsKey(id)) {
+		if ((0 != id.longValue()) && !jmxDefinitionDataMap.containsKey(id)) {
 			refreshIdents();
 		}
 
@@ -201,11 +204,11 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 			}
 			platformMap.put(platformIdent.getId(), platformIdent);
 
-			for (MethodIdent methodIdent : (Set<MethodIdent>) platformIdent.getMethodIdents()) {
+			for (MethodIdent methodIdent : platformIdent.getMethodIdents()) {
 				methodMap.put(methodIdent.getId(), methodIdent);
 			}
 
-			for (SensorTypeIdent sensorTypeIdent : (Set<SensorTypeIdent>) platformIdent.getSensorTypeIdents()) {
+			for (SensorTypeIdent sensorTypeIdent : platformIdent.getSensorTypeIdents()) {
 				sensorTypeMap.put(sensorTypeIdent.getId(), sensorTypeIdent);
 			}
 
@@ -218,6 +221,7 @@ public class CachedDataService implements InitializingBean, ICachedDataService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		refreshIdents();
 	}

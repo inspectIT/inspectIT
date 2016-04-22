@@ -20,9 +20,9 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 
 /**
  * Definition of Storage service provided by CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface IStorageService {
@@ -30,7 +30,7 @@ public interface IStorageService {
 	/**
 	 * Creates the new storage on the CMR with information given in {@link StorageData} object and
 	 * opens it immediately, so that writing can start.
-	 * 
+	 *
 	 * @param storageData
 	 *            Information about new storage.
 	 * @throws BusinessException
@@ -44,7 +44,7 @@ public interface IStorageService {
 	 * Closes an already open storage. Writing after calling this method will not be possible on the
 	 * storage. When provided storage is not open, this method will just return, without throwing an
 	 * exception.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to close.
 	 * @throws BusinessException
@@ -54,7 +54,7 @@ public interface IStorageService {
 
 	/**
 	 * Deletes a storage. Storage can be deleted only if it is not used for recording.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to delete.
 	 * @throws BusinessException
@@ -64,7 +64,7 @@ public interface IStorageService {
 
 	/**
 	 * Returns if the storage is opened, and thus if the write to the storage can be executed.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to check.
 	 * @return True if storage is opened, otherwise false.
@@ -73,7 +73,7 @@ public interface IStorageService {
 
 	/**
 	 * Returns the list of all opened storages.
-	 * 
+	 *
 	 * @return Returns the list of all opened storages. If no storage is opened, the empty list will
 	 *         be returned.
 	 */
@@ -81,7 +81,7 @@ public interface IStorageService {
 
 	/**
 	 * Returns the list of all existing storages.
-	 * 
+	 *
 	 * @return Returns the list of all existing storages. If no storage is existing, the empty list
 	 *         will be returned.
 	 */
@@ -89,14 +89,14 @@ public interface IStorageService {
 
 	/**
 	 * Returns the list of storages that can be read from.
-	 * 
+	 *
 	 * @return Returns the list of storages that can be read from.
 	 */
 	List<StorageData> getReadableStorages();
 
 	/**
 	 * Returns the recording state.
-	 * 
+	 *
 	 * @return Returns the recording state.
 	 * @see RecordingState
 	 */
@@ -114,7 +114,7 @@ public interface IStorageService {
 	 * will be created and opened.
 	 * <p>
 	 * Note that exception is thrown if the recording is currently active when calling this method.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to start recording on.
 	 * @param recordingProperties
@@ -130,7 +130,7 @@ public interface IStorageService {
 
 	/**
 	 * Stops recording. The storage that is currently used for recording will be closed.
-	 * 
+	 *
 	 * @throws BusinessException
 	 *             If stopping the recording fails.
 	 */
@@ -138,7 +138,7 @@ public interface IStorageService {
 
 	/**
 	 * Returns the {@link RecordingData} if the recording is on. Otherwise <code>null</code>.
-	 * 
+	 *
 	 * @return Returns the {@link RecordingData} if the recording is on. Otherwise <code>null</code>
 	 *         .
 	 */
@@ -148,7 +148,7 @@ public interface IStorageService {
 	 * Writes collections of {@link DefaultData} objects to the given storage. The storage has to be
 	 * opened before write can be executed. If the provided storage is currently used for recording,
 	 * the exception will be thrown.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to write to.
 	 * @param defaultDataCollection
@@ -167,7 +167,7 @@ public interface IStorageService {
 	 * Copies the complete content of the buffer to the provided storage. The storage does not have
 	 * to be opened before action can be executed (storage will be created/opened first in this
 	 * case). If the provided storage is currently used for recording, the exception will be thrown.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to copy data to.
 	 * @param platformIdents
@@ -188,7 +188,7 @@ public interface IStorageService {
 	 * first. The storage does not have to be opened before action can be executed (storage will be
 	 * created/opened first in this case). If the provided storage is currently used for recording,
 	 * the exception will be thrown.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} to copy to.
 	 * @param elementIds
@@ -216,7 +216,7 @@ public interface IStorageService {
 	 * <p>
 	 * For example, if the CMR has the ip localhost and port 8080, the address for the file would
 	 * be: http://localhost:8080/directory/file.extension
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the index files
@@ -233,7 +233,7 @@ public interface IStorageService {
 	 * <p>
 	 * For example, if the CMR has the ip localhost and port 8080, the address for the file would
 	 * be: http://localhost:8080/directory/file.extension
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the data files
@@ -250,7 +250,7 @@ public interface IStorageService {
 	 * <p>
 	 * For example, if the CMR has the ip localhost and port 8080, the address for the file would
 	 * be: http://localhost:8080/directory/file.extension
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the cached data
@@ -267,7 +267,7 @@ public interface IStorageService {
 	 * <p>
 	 * For example, if the CMR has the ip localhost and port 8080, the address for the file would
 	 * be: http://localhost:8080/directory/file.extension
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to get index files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the agent files
@@ -280,7 +280,7 @@ public interface IStorageService {
 	/**
 	 * Adds one label to the {@link StorageData}. Note that if overwrite is true, the label of the
 	 * same type will be overwritten if the type is only one per storage data.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} object.
 	 * @param storageLabel
@@ -296,7 +296,7 @@ public interface IStorageService {
 	/**
 	 * Adds collection of labels to the {@link StorageData}. Note that if overwrite is true, the
 	 * label of the same type will be overwritten if the type is only one per storage data.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} object.
 	 * @param storageLabels
@@ -311,7 +311,7 @@ public interface IStorageService {
 
 	/**
 	 * Removes the label from the {@link StorageData}.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}
 	 * @param storageLabel
@@ -324,7 +324,7 @@ public interface IStorageService {
 
 	/**
 	 * Removes the label list from the {@link StorageData}.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}
 	 * @param storageLabelList
@@ -343,7 +343,7 @@ public interface IStorageService {
 	 * <i>Note that the return collection is different from the {@link #getAllLabels()} method
 	 * result. Some of the labels existing in the storages might not be available in the CMR, and
 	 * vice versa.</i>
-	 * 
+	 *
 	 * @return Returns all labels that are at the moment existing in all storages.
 	 */
 	Collection<AbstractStorageLabel<?>> getAllLabelsInStorages();
@@ -351,14 +351,14 @@ public interface IStorageService {
 	/**
 	 * Returns all labels registered on the CMR. The labels returned are only the one that are saved
 	 * on the CMR database for purpose of label suggestions.
-	 * 
+	 *
 	 * @return Returns all labels registered on the CMR.
 	 */
 	List<AbstractStorageLabel<?>> getAllLabels();
 
 	/**
 	 * Gives the label suggestions for a specified label type.
-	 * 
+	 *
 	 * @param <E>
 	 *            Value type.
 	 * @param labelType
@@ -369,7 +369,7 @@ public interface IStorageService {
 
 	/**
 	 * Saves a persistent {@link AbstractStorageLabel} to a CMR database.
-	 * 
+	 *
 	 * @param storageLabel
 	 *            Label to save.
 	 */
@@ -377,7 +377,7 @@ public interface IStorageService {
 
 	/**
 	 * Saves a collection of persistent {@link AbstractStorageLabel}s to a CMR database.
-	 * 
+	 *
 	 * @param storageLabels
 	 *            Collection of labels to save.
 	 */
@@ -385,7 +385,7 @@ public interface IStorageService {
 
 	/**
 	 * Removes a persisted label from a CMR database.
-	 * 
+	 *
 	 * @param storageLabel
 	 *            Label to remove.
 	 * @param removeFromStoragesAlso
@@ -398,7 +398,7 @@ public interface IStorageService {
 
 	/**
 	 * Removes a collection of persisted label from a CMR database.
-	 * 
+	 *
 	 * @param storageLabels
 	 *            Label to remove.
 	 * @param removeFromStoragesAlso
@@ -413,7 +413,7 @@ public interface IStorageService {
 	 * Saves the {@link AbstractStorageLabelType} to the database. The label will be saved only if
 	 * the {@link AbstractStorageLabelType#isMultiType()} is true or no instances of the label type
 	 * are already saved.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type to save.
 	 */
@@ -421,7 +421,7 @@ public interface IStorageService {
 
 	/**
 	 * Removes label type from database.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type to remove.
 	 * @throws BusinessException
@@ -431,7 +431,7 @@ public interface IStorageService {
 
 	/**
 	 * Returns all instances of desired label type.
-	 * 
+	 *
 	 * @param <E>
 	 *            Label value type.
 	 * @param labelTypeClass
@@ -442,14 +442,14 @@ public interface IStorageService {
 
 	/**
 	 * Returns all label types.
-	 * 
+	 *
 	 * @return Returns all label types.
 	 */
 	List<AbstractStorageLabelType<?>> getAllLabelTypes();
 
 	/**
 	 * Executes the collection of {@link AbstractLabelManagementAction} in order they are given.
-	 * 
+	 *
 	 * @param managementActions
 	 *            Collection of management actions that can remove different label/label type
 	 *            add/removal.
@@ -460,7 +460,7 @@ public interface IStorageService {
 
 	/**
 	 * Updates the data like name and description for a storage.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage data object with new values.
 	 * @throws BusinessException
@@ -471,7 +471,7 @@ public interface IStorageService {
 	/**
 	 * Returns the amount of writing tasks storage still has to process. Note that this is an
 	 * approximate number.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage data to get information for.
 	 * @return Returns number of queued tasks. Note that if the storage is not in writable mode
@@ -483,10 +483,10 @@ public interface IStorageService {
 	 * Informs the CMR that the given storage data should be unpacked. The CMR will perform a search
 	 * of a proper file in the upload folder that contains the given storage data info. If file is
 	 * found it will be unpacked and storage will be prepared for usage.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage data that is packed in the file that needs to be unpacked.
-	 * 
+	 *
 	 * @throws BusinessException
 	 *             If exception occurs during the check.
 	 */
@@ -495,12 +495,12 @@ public interface IStorageService {
 	/**
 	 * Creates a storage form the uploaded local storage directory. The CMR will perform a search of
 	 * a proper local file in the upload folder.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            Local storage information.
 	 * @throws BusinessException
 	 *             If exception occurs during the check.
-	 * 
+	 *
 	 */
 	void createStorageFromUploadedDir(final IStorageData localStorageData) throws BusinessException;
 
@@ -510,7 +510,7 @@ public interface IStorageService {
 	 * the same hash is used.
 	 * <p>
 	 * Note that if the data is already cached with the same hash, no action will be performed.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to hash data for.
 	 * @param data
@@ -531,7 +531,7 @@ public interface IStorageService {
 	 * <p>
 	 * For example, if the CMR has the ip localhost and port 8080, the address for the file would
 	 * be: http://localhost:8080/directory/file.extension
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage
 	 * @param hash

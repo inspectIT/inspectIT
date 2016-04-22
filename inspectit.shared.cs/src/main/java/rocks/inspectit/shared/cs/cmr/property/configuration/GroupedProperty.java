@@ -27,9 +27,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Property that is consisted out of several {@link SingleProperty}ies.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "group-property")
@@ -40,7 +40,7 @@ public class GroupedProperty extends AbstractProperty {
 	 */
 	@XmlElementWrapper(name = "properties", required = true)
 	@XmlElementRef
-	private Set<SingleProperty<?>> singleProperties = new LinkedHashSet<SingleProperty<?>>();
+	private Set<SingleProperty<?>> singleProperties = new LinkedHashSet<>();
 
 	/**
 	 * Validators for relations in the group.
@@ -58,7 +58,7 @@ public class GroupedProperty extends AbstractProperty {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param name
 	 *            Display name of the property. Can not be <code>null</code>.
 	 * @param description
@@ -124,7 +124,7 @@ public class GroupedProperty extends AbstractProperty {
 	/**
 	 * Validates with the group validators this property, based on the changes of the single
 	 * properties reported by update list.
-	 * 
+	 *
 	 * @param propertyUpdates
 	 *            Information about updates.
 	 * @throws PropertyValidationException
@@ -171,7 +171,7 @@ public class GroupedProperty extends AbstractProperty {
 
 	/**
 	 * Gets {@link #singleProperties}.
-	 * 
+	 *
 	 * @return {@link #singleProperties}
 	 */
 	public Set<SingleProperty<?>> getSingleProperties() {
@@ -180,7 +180,7 @@ public class GroupedProperty extends AbstractProperty {
 
 	/**
 	 * Adds {@link SingleProperty} to this group.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty} to add.
 	 */
@@ -190,13 +190,13 @@ public class GroupedProperty extends AbstractProperty {
 
 	/**
 	 * Adds {@link IGroupedProperyValidator} to be used for validating this group.
-	 * 
+	 *
 	 * @param validator
 	 *            Validator.
 	 */
 	public void addValidator(IGroupedProperyValidator validator) {
 		if (null == validators) {
-			validators = new ArrayList<IGroupedProperyValidator>();
+			validators = new ArrayList<>();
 		}
 		validators.add(validator);
 	}
@@ -208,7 +208,7 @@ public class GroupedProperty extends AbstractProperty {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((singleProperties == null) ? 0 : singleProperties.hashCode());
+		result = (prime * result) + ((singleProperties == null) ? 0 : singleProperties.hashCode());
 		return result;
 	}
 

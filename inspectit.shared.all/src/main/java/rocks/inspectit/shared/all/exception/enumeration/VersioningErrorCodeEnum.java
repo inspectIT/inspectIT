@@ -6,23 +6,20 @@ import rocks.inspectit.shared.all.exception.IErrorCode;
 
 /**
  * Error code enumeration for the versioning component.
- * 
+ *
  * @author Stefan Siegl
- * 
+ *
  */
 public enum VersioningErrorCodeEnum implements IErrorCode {
 
 	/** File cannot be found. */
-	VERSION_FILE_IO("The version file version.log cannot be found or read.", "The version file might be deleted.",
-			"Ensure that you did not delete the version file. Re-Install the solution. If this problem arises again, please file a bug with inspectIT."),
+	VERSION_FILE_IO("The version file version.log cannot be found or read.", "The version file might be deleted.", "Ensure that you did not delete the version file. Re-Install the solution. If this problem arises again, please file a bug with inspectIT."),
 
 	/** No version in file. */
-	VERSION_NOT_IN_FILE("The version file version.log does not contain a version.", null,
-			"Ensure that you did not change the version file by hand. Re-Install the solution. If this problem arises again, please file a bug with inspectIT."),
+	VERSION_NOT_IN_FILE("The version file version.log does not contain a version.", null, "Ensure that you did not change the version file by hand. Re-Install the solution. If this problem arises again, please file a bug with inspectIT."),
 
 	/** Invalid version. */
-	VERSION_INVALID("The version of inspectIT has an invalid format.", null,
-			"Ensure that you did not change the version file by hand. Re-Install the solution. If this problem arises again, please file a bug with inspectIT.");
+	VERSION_INVALID("The version of inspectIT has an invalid format.", null, "Ensure that you did not change the version file by hand. Re-Install the solution. If this problem arises again, please file a bug with inspectIT.");
 
 	/**
 	 * Name of the component.
@@ -46,7 +43,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param description
 	 *            Description of the error code.
 	 * @param possibleCause
@@ -79,7 +76,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
 	public String getDescription() {
@@ -88,7 +85,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleCause}.
-	 * 
+	 *
 	 * @return {@link #possibleCause}
 	 */
 	public String getPossibleCause() {
@@ -97,7 +94,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleSolution}.
-	 * 
+	 *
 	 * @return {@link #possibleSolution}
 	 */
 	public String getPossibleSolution() {

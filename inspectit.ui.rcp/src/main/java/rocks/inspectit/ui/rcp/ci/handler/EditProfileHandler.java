@@ -5,8 +5,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler for editing profile.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EditProfileHandler extends AbstractHandler implements IHandler {
 
@@ -42,7 +42,7 @@ public class EditProfileHandler extends AbstractHandler implements IHandler {
 
 			EditNameDescriptionDialog dialog = new EditNameDescriptionDialog(HandlerUtil.getActiveShell(event), profile.getName(), profile.getDescription(), "Edit Profile",
 					"Enter new profile name and/or description");
-			if (Dialog.OK == dialog.open()) {
+			if (Window.OK == dialog.open()) {
 				profile.setName(dialog.getName());
 				if (StringUtils.isNotBlank(dialog.getDescription())) {
 					profile.setDescription(dialog.getDescription());

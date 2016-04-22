@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * {@link IBranchIndexer} that indexes on the platform idents of {@link DefaultData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class PlatformIdentIndexer<E extends DefaultData> extends AbstractSharedInstanceBranchIndexer<E> implements IBranchIndexer<E> {
@@ -17,6 +17,7 @@ public class PlatformIdentIndexer<E extends DefaultData> extends AbstractSharedI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		if (0 == element.getPlatformIdent()) {
 			return null;
@@ -27,6 +28,7 @@ public class PlatformIdentIndexer<E extends DefaultData> extends AbstractSharedI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		if (0 == query.getPlatformIdent()) {
 			return new Object[0];

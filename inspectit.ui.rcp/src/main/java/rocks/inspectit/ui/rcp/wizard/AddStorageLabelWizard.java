@@ -20,9 +20,9 @@ import rocks.inspectit.ui.rcp.wizard.page.AddStorageLabelWizardPage;
 
 /**
  * Wizard for adding label to storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AddStorageLabelWizard extends Wizard implements INewWizard {
 
@@ -43,7 +43,7 @@ public class AddStorageLabelWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageDataProvider
 	 *            Selected provider.
 	 */

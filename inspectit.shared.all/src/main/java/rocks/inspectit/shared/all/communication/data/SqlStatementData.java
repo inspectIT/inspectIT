@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
  * {@link SqlStatementData} holds the information about the executed SQL. The executed SQL statement
  * is stored in the {@link #sql} field, while {@link #parameterValues} hold the values that
  * statement was executed with.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlStatementData extends TimerData {
 
@@ -65,7 +65,7 @@ public class SqlStatementData extends TimerData {
 	/**
 	 * Secondary constructor. Sets the main information about the data object. Same as calling
 	 * {@link #SqlStatementData(Timestamp, long, long, long, null)}.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            Time-stamp holding the information when the SQL execution started.
 	 * @param platformIdent
@@ -81,7 +81,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Additional constructor. Sets the main information about the data object and SQL query string.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            Time-stamp holding the information when the SQL execution started.
 	 * @param platformIdent
@@ -101,7 +101,7 @@ public class SqlStatementData extends TimerData {
 	/**
 	 * Additional constructor. Sets the main information about the data object and SQL query string
 	 * and the connection information.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            Time-stamp holding the information when the SQL execution started.
 	 * @param platformIdent
@@ -129,7 +129,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Gets {@link #sql}.
-	 * 
+	 *
 	 * @return {@link #sql}
 	 */
 	public String getSql() {
@@ -138,7 +138,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Sets {@link #sql}.
-	 * 
+	 *
 	 * @param sql
 	 *            New value for {@link #sql}
 	 */
@@ -148,7 +148,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Gets {@link #preparedStatement}.
-	 * 
+	 *
 	 * @return {@link #preparedStatement}
 	 */
 	public boolean isPreparedStatement() {
@@ -157,7 +157,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Sets {@link #preparedStatement}.
-	 * 
+	 *
 	 * @param preparedStatement
 	 *            New value for {@link #preparedStatement}
 	 */
@@ -167,7 +167,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Gets {@link #parameterValues}.
-	 * 
+	 *
 	 * @return {@link #parameterValues}
 	 */
 	public List<String> getParameterValues() {
@@ -176,7 +176,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Sets {@link #parameterValues}.
-	 * 
+	 *
 	 * @param parameterValues
 	 *            New value for {@link #parameterValues}
 	 */
@@ -189,7 +189,7 @@ public class SqlStatementData extends TimerData {
 	 *         values in the {@link #parameterValues} list. Calculated only on first request.
 	 */
 	public String getSqlWithParameterValues() {
-		if (null == parameterValues || parameterValues.isEmpty()) {
+		if ((null == parameterValues) || parameterValues.isEmpty()) {
 			return sql;
 		} else {
 			if (null == sqlWithParameterValues) {
@@ -199,7 +199,7 @@ public class SqlStatementData extends TimerData {
 					char c = sql.charAt(i);
 					if ('?' == c) {
 						String parameter = parameterValues.get(index);
-						if (null == parameter || "".equals(parameter.trim())) {
+						if ((null == parameter) || "".equals(parameter.trim())) {
 							stringBuilder.append(c);
 						} else {
 							stringBuilder.append(parameter);
@@ -217,7 +217,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Gets {@link #databaseUrl}.
-	 * 
+	 *
 	 * @return {@link #databaseUrl}
 	 */
 	public String getDatabaseUrl() {
@@ -226,7 +226,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Sets {@link #databaseUrl}.
-	 * 
+	 *
 	 * @param databaseUrl
 	 *            New value for {@link #databaseUrl}
 	 */
@@ -236,7 +236,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Gets {@link #databaseProductName}.
-	 * 
+	 *
 	 * @return {@link #databaseProductName}
 	 */
 	public String getDatabaseProductName() {
@@ -245,7 +245,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Sets {@link #databaseProductName}.
-	 * 
+	 *
 	 * @param databaseProductName
 	 *            New value for {@link #databaseProductName}
 	 */
@@ -255,7 +255,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Gets {@link #databaseProductVersion}.
-	 * 
+	 *
 	 * @return {@link #databaseProductVersion}
 	 */
 	public String getDatabaseProductVersion() {
@@ -264,7 +264,7 @@ public class SqlStatementData extends TimerData {
 
 	/**
 	 * Sets {@link #databaseProductVersion}.
-	 * 
+	 *
 	 * @param databaseProductVersion
 	 *            New value for {@link #databaseProductVersion}
 	 */
@@ -279,10 +279,10 @@ public class SqlStatementData extends TimerData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((parameterValues == null) ? 0 : parameterValues.hashCode());
-		result = prime * result + (preparedStatement ? 1231 : 1237);
-		result = prime * result + ((sql == null) ? 0 : sql.hashCode());
-		result = prime * result + ((databaseUrl == null) ? 0 : databaseUrl.hashCode());
+		result = (prime * result) + ((parameterValues == null) ? 0 : parameterValues.hashCode());
+		result = (prime * result) + (preparedStatement ? 1231 : 1237);
+		result = (prime * result) + ((sql == null) ? 0 : sql.hashCode());
+		result = (prime * result) + ((databaseUrl == null) ? 0 : databaseUrl.hashCode());
 		return result;
 	}
 
@@ -331,6 +331,7 @@ public class SqlStatementData extends TimerData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(6, 1, 0, 0, 0, 0);

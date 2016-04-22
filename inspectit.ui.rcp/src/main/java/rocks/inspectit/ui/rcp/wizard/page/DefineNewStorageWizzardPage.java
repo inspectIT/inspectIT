@@ -23,9 +23,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Define storage page.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DefineNewStorageWizzardPage extends WizardPage {
 
@@ -76,14 +76,14 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 		super("Define New Storage");
 		setTitle("Define New Storage");
 		setDescription(DEFAULT_MESSAGE);
-		cmrRepositories = new ArrayList<CmrRepositoryDefinition>();
+		cmrRepositories = new ArrayList<>();
 		cmrRepositories.addAll(InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions());
 	}
 
 	/**
 	 * This constructor will set provided {@link CmrRepositoryDefinition} as the initially selected
 	 * repository to create storage to.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} to create storage on.
 	 */
@@ -94,7 +94,7 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 	/**
 	 * This constructor will set provided {@link CmrRepositoryDefinition} as the initially selected
 	 * repository to create storage to.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} to create storage on.
 	 * @param autoFinalizeSecelected
@@ -155,9 +155,9 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 			@Override
 			public void handleEvent(Event event) {
 				setPageComplete(isPageComplete());
-				if (event.widget.equals(cmrRepositoryCombo) && cmrRepositoryCombo.getSelectionIndex() == -1) {
+				if (event.widget.equals(cmrRepositoryCombo) && (cmrRepositoryCombo.getSelectionIndex() == -1)) {
 					setMessage("Repository must be selected", IMessageProvider.ERROR);
-				} else if (event.widget.equals(cmrRepositoryCombo) && getSelectedRepository().getOnlineStatus() == OnlineStatus.OFFLINE) {
+				} else if (event.widget.equals(cmrRepositoryCombo) && (getSelectedRepository().getOnlineStatus() == OnlineStatus.OFFLINE)) {
 					setMessage("Selected repository is currently unavailable", IMessageProvider.ERROR);
 				} else if (event.widget.equals(nameBox) && nameBox.getText().isEmpty()) {
 					setMessage("Storage name can not be empty", IMessageProvider.ERROR);
@@ -211,7 +211,7 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 
 	/**
 	 * Returns if auto-finalize options is selected.
-	 * 
+	 *
 	 * @return Returns if auto-finalize options is selected.
 	 */
 	public boolean isAutoFinalize() {

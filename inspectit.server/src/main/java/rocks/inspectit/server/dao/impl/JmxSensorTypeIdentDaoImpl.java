@@ -13,12 +13,12 @@ import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
- * The default implementation of the {@link JmxSensorTypeIdentDao}  interface by using Entity
+ * The default implementation of the {@link JmxSensorTypeIdentDao} interface by using Entity
  * manager.
- * 
+ *
  * @author Alfred Krauss
  * @author Marius Oehler
- * 
+ *
  */
 @Repository
 public class JmxSensorTypeIdentDaoImpl extends AbstractJpaDao<JmxSensorTypeIdent> implements JmxSensorTypeIdentDao {
@@ -39,6 +39,7 @@ public class JmxSensorTypeIdentDaoImpl extends AbstractJpaDao<JmxSensorTypeIdent
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<JmxSensorTypeIdent> findByExample(long platformId, JmxSensorTypeIdent jmxSensorTypeIdent) {
 		TypedQuery<JmxSensorTypeIdent> query = getEntityManager().createNamedQuery(JmxSensorTypeIdent.FIND_BY_PLATFORM, JmxSensorTypeIdent.class);
 		query.setParameter("platformIdentId", platformId);
@@ -49,6 +50,7 @@ public class JmxSensorTypeIdentDaoImpl extends AbstractJpaDao<JmxSensorTypeIdent
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public JmxSensorTypeIdent load(Long id) {
 		return getEntityManager().find(JmxSensorTypeIdent.class, id);
 	}
@@ -56,6 +58,7 @@ public class JmxSensorTypeIdentDaoImpl extends AbstractJpaDao<JmxSensorTypeIdent
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void saveOrUpdate(JmxSensorTypeIdent jmxSensorTypeIdent) {
 		// we save if id is not set, otherwise merge
 		if (null == jmxSensorTypeIdent.getId()) {

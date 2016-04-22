@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Type of the label to denote the Rating.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("RTLT")

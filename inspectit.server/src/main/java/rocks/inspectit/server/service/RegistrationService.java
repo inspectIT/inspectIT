@@ -2,8 +2,8 @@ package rocks.inspectit.server.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -138,7 +138,7 @@ public class RegistrationService implements IRegistrationService {
 		}
 
 		// always update the time stamp and ips, no matter if this is an old or new record.
-		platformIdent.setTimeStamp(new Timestamp(GregorianCalendar.getInstance().getTimeInMillis()));
+		platformIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		platformIdent.setDefinedIPs(definedIPs);
 
 		// also always update the version information of the agent
@@ -203,7 +203,7 @@ public class RegistrationService implements IRegistrationService {
 
 		// always update the time stamp, no matter if this is an old or new
 		// record.
-		methodIdent.setTimeStamp(new Timestamp(GregorianCalendar.getInstance().getTimeInMillis()));
+		methodIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 		methodIdentDao.saveOrUpdate(methodIdent);
 
@@ -257,7 +257,7 @@ public class RegistrationService implements IRegistrationService {
 		}
 
 		// always update the timestamp
-		methodIdentToSensorType.setTimestamp(new Timestamp(GregorianCalendar.getInstance().getTimeInMillis()));
+		methodIdentToSensorType.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 		methodIdentToSensorTypeDao.saveOrUpdate(methodIdentToSensorType);
 	}
@@ -341,7 +341,7 @@ public class RegistrationService implements IRegistrationService {
 			jmxDefinitionDataIdent.setPlatformIdent(platformIdent);
 		}
 
-		jmxDefinitionDataIdent.setTimeStamp(new Timestamp(GregorianCalendar.getInstance().getTimeInMillis()));
+		jmxDefinitionDataIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 		jmxDefinitionDataIdentDao.saveOrUpdate(jmxDefinitionDataIdent);
 		return jmxDefinitionDataIdent.getId();
@@ -359,7 +359,7 @@ public class RegistrationService implements IRegistrationService {
 	 *            List of IPv4 and IPv6 IPs.
 	 */
 	private void printOutDefinedIPs(List<String> definedIPs) {
-		List<String> ipList = new ArrayList<String>();
+		List<String> ipList = new ArrayList<>();
 		for (String ip : definedIPs) {
 			if (ip.indexOf(':') != -1) {
 				ipList.add("|- IPv6: " + ip);

@@ -75,7 +75,7 @@ public class TimeSendingStrategyConfig implements IStrategyConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (time ^ (time >>> 32));
+		result = (prime * result) + (int) (time ^ (time >>> 32));
 		return result;
 	}
 

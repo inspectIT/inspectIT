@@ -56,9 +56,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Sub-view which is used to create a tree.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 
@@ -84,7 +84,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 
 	/**
 	 * Default constructor which needs a tree input controller to create all the content etc.
-	 * 
+	 *
 	 * @param treeInputController
 	 *            The tree input controller.
 	 */
@@ -168,7 +168,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 			public void handleEvent(Event event) {
 				Point pt = Display.getDefault().map(null, tree, new Point(event.x, event.y));
 				Rectangle clientArea = tree.getClientArea();
-				boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + tree.getHeaderHeight());
+				boolean header = (clientArea.y <= pt.y) && (pt.y < (clientArea.y + tree.getHeaderHeight()));
 				if (header) {
 					tree.setMenu(headerMenu);
 				} else {
@@ -217,7 +217,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 				Integer rememberedWidth = ShowHideColumnsHandler.getRememberedColumnWidth(treeInputController.getClass(), column.getText());
 				boolean isColumnHidden = ShowHideColumnsHandler.isColumnHidden(treeInputController.getClass(), column.getText());
 
-				if (rememberedWidth != null && !isColumnHidden) {
+				if ((rememberedWidth != null) && !isColumnHidden) {
 					column.setWidth(rememberedWidth.intValue());
 					column.setResizable(true);
 				} else if (isColumnHidden) {
@@ -232,7 +232,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 		// update the order of columns if the order was defined for the class, and no new columns
 		// were added
 		int[] columnOrder = ShowHideColumnsHandler.getColumnOrder(treeInputController.getClass());
-		if (null != columnOrder && columnOrder.length == tree.getColumns().length) {
+		if ((null != columnOrder) && (columnOrder.length == tree.getColumns().length)) {
 			tree.setColumnOrder(columnOrder);
 		} else if (null != columnOrder) {
 			// if the order exists, but length is not same, then update with the default order
@@ -374,7 +374,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 
 	/**
 	 * Returns the tree viewer.
-	 * 
+	 *
 	 * @return The tree viewer.
 	 */
 	public TreeViewer getTreeViewer() {
@@ -383,7 +383,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 
 	/**
 	 * Returns the tree input controller.
-	 * 
+	 *
 	 * @return The tree input controller.
 	 */
 	public TreeInputController getTreeInputController() {
@@ -394,11 +394,11 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	 * Return the names of all columns in the tree. Not visible columns names will also be included.
 	 * The order of the names will be same to the initial tree column order, thus not reflecting the
 	 * current state of the table if the columns were moved.
-	 * 
+	 *
 	 * @return List of column names.
 	 */
 	public List<String> getColumnNames() {
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		for (TreeColumn column : treeViewer.getTree().getColumns()) {
 			names.add(column.getText());
 		}
@@ -406,14 +406,14 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The list of integers representing the column order in the tree. Note that only
 	 *         columns that are currently visible will be included in the list.
 	 * @see org.eclipse.swt.widgets.Table#getColumnOrder()
 	 */
 	public List<Integer> getColumnOrder() {
 		int[] order = treeViewer.getTree().getColumnOrder();
-		List<Integer> orderWithoutHidden = new ArrayList<Integer>();
+		List<Integer> orderWithoutHidden = new ArrayList<>();
 		for (int index : order) {
 			if (treeViewer.getTree().getColumns()[index].getWidth() > 0) {
 				orderWithoutHidden.add(index);
@@ -467,7 +467,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 
 	/**
 	 * Returns true if the tree in the sub-view is disposed. False otherwise.
-	 * 
+	 *
 	 * @return Returns true if the tree in the sub-view is disposed. False otherwise.
 	 */
 	private boolean checkDisposed() {

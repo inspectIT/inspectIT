@@ -8,9 +8,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * {@link IAggregator} for {@link MemoryInformationData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MemoryInformationDataAggregator implements IAggregator<MemoryInformationData>, Serializable {
 
@@ -22,6 +22,7 @@ public class MemoryInformationDataAggregator implements IAggregator<MemoryInform
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<MemoryInformationData> aggregatedObject, MemoryInformationData objectToAdd) {
 		aggregatedObject.aggregate(objectToAdd);
 	}
@@ -29,6 +30,7 @@ public class MemoryInformationDataAggregator implements IAggregator<MemoryInform
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MemoryInformationData getClone(MemoryInformationData memoryInformationData) {
 		MemoryInformationData clone = new MemoryInformationData();
 		clone.setPlatformIdent(memoryInformationData.getPlatformIdent());
@@ -46,6 +48,7 @@ public class MemoryInformationDataAggregator implements IAggregator<MemoryInform
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(MemoryInformationData object) {
 		return object.getPlatformIdent();
 	}
@@ -58,7 +61,7 @@ public class MemoryInformationDataAggregator implements IAggregator<MemoryInform
 		final int prime = 31;
 		int result = 1;
 		// we must make constant hashCode because of the caching
-		result = prime * result + this.getClass().getName().hashCode();
+		result = (prime * result) + this.getClass().getName().hashCode();
 		return result;
 	}
 

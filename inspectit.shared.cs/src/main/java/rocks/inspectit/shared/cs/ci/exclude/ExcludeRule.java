@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Defines a class name or pattern to exclude from instrumentation.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "exclude-rule")
@@ -23,7 +23,7 @@ public class ExcludeRule {
 
 	/**
 	 * Creates new {@link ExcludeRule}.
-	 * 
+	 *
 	 * @param className
 	 *            Name of the class or pattern.
 	 */
@@ -39,7 +39,7 @@ public class ExcludeRule {
 
 	/**
 	 * Gets {@link #className}.
-	 * 
+	 *
 	 * @return {@link #className}
 	 */
 	public String getClassName() {
@@ -48,7 +48,7 @@ public class ExcludeRule {
 
 	/**
 	 * Sets {@link #className}.
-	 * 
+	 *
 	 * @param className
 	 *            New value for {@link #className}
 	 */
@@ -63,7 +63,7 @@ public class ExcludeRule {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((className == null) ? 0 : className.hashCode());
+		result = (prime * result) + ((className == null) ? 0 : className.hashCode());
 		return result;
 	}
 

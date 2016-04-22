@@ -21,9 +21,9 @@ import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
  * {@link #read(byte[])} and {@link #read(byte[], int, int)}, as well as {@link #close()} and
  * {@link #prepare()}. Thus, sub-classes don't have to care about implementing this, as long as they
  * provide the data in the full buffers queue.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferInputStream {
 
@@ -81,7 +81,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Constructor that defines number of bytes to use.
-	 * 
+	 *
 	 * @param numberOfBuffers
 	 *            Number of buffers.
 	 */
@@ -94,7 +94,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	 * <p>
 	 * Implementing classes must extend this method in way that full buffers queue is filled with
 	 * data that will be available for the reader of input stream.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if preparation fails due to inability to obtain defined number of byte buffers
 	 */
@@ -114,7 +114,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Returns if the stream has more bytes remaining to stream.
-	 * 
+	 *
 	 * @return True if stream can provide more bytes.
 	 */
 	public boolean hasRemaining() {
@@ -135,12 +135,12 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	@Override
 	public int read() throws IOException {
 		// if we are empty, return -1 by the input stream contract
-		if (0 == totalSize || !hasRemaining()) {
+		if ((0 == totalSize) || !hasRemaining()) {
 			return -1;
 		}
 
 		// change the buffer if necessary
-		if (hasRemaining() || null == super.getByteBuffer()) {
+		if (hasRemaining() || (null == super.getByteBuffer())) {
 			bufferChange();
 		}
 
@@ -167,7 +167,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
 		// if we are empty, return -1 by the input stream contract
-		if (0 == totalSize || !hasRemaining()) {
+		if ((0 == totalSize) || !hasRemaining()) {
 			return -1;
 		}
 
@@ -177,7 +177,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 		}
 
 		// change the buffer if necessary
-		if (hasRemaining() && null == super.getByteBuffer()) {
+		if (hasRemaining() && (null == super.getByteBuffer())) {
 			bufferChange();
 		}
 
@@ -226,7 +226,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Return number of bytes left for read.
-	 * 
+	 *
 	 * @return Number of bytes left.
 	 */
 	private long bytesLeft() {
@@ -269,7 +269,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Gets {@link #totalSize}.
-	 * 
+	 *
 	 * @return {@link #totalSize}
 	 */
 	public long getTotalSize() {
@@ -278,7 +278,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Sets {@link #totalSize}.
-	 * 
+	 *
 	 * @param totalSize
 	 *            New value for {@link #totalSize}
 	 */
@@ -288,7 +288,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Gets {@link #emptyBuffers}.
-	 * 
+	 *
 	 * @return {@link #emptyBuffers}
 	 */
 	public LinkedBlockingQueue<ByteBuffer> getEmptyBuffers() {
@@ -297,7 +297,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Gets {@link #fullBuffers}.
-	 * 
+	 *
 	 * @return {@link #fullBuffers}
 	 */
 	public LinkedBlockingQueue<ByteBuffer> getFullBuffers() {
@@ -306,7 +306,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Gets {@link #closed}.
-	 * 
+	 *
 	 * @return {@link #closed}
 	 */
 	public boolean isClosed() {
@@ -315,7 +315,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Sets {@link #byteBufferProvider}.
-	 * 
+	 *
 	 * @param byteBufferProvider
 	 *            New value for {@link #byteBufferProvider}
 	 */
@@ -325,7 +325,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 
 	/**
 	 * Sets {@link #position}.
-	 * 
+	 *
 	 * @param position
 	 *            New value for {@link #position}
 	 */

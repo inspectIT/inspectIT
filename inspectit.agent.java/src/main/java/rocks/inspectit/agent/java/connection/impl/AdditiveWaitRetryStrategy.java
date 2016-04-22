@@ -5,17 +5,17 @@ import rocks.inspectit.agent.java.connection.RetryStrategy;
 /**
  * The most commonly used retry strategy; it extends the waiting period by a constant amount with
  * each retry.
- * 
+ *
  * Note that the default version of this (e.g. the one with a zero argument constructor) will make 3
  * calls and wind up waiting approximately 11 seconds (zero wait for the first call, 3 seconds for
  * the second call, and 8 seconds for the third call). These wait times are pretty small, and are
  * usually dwarfed by socket timeouts when network difficulties occur anyway.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken from <a
- * href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>. Original
- * author is William Grosso. License info can be found <a
- * href="http://www.oreilly.com/terms/">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken from
+ * <a href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>.
+ * Original author is William Grosso. License info can be found
+ * <a href="http://www.oreilly.com/terms/">here</a>.
+ *
  * @author William Grosso
  */
 public class AdditiveWaitRetryStrategy extends RetryStrategy {
@@ -51,7 +51,7 @@ public class AdditiveWaitRetryStrategy extends RetryStrategy {
 	 * This constructor takes three arguments, the first is the actual number of retries till we
 	 * completely fail. The second one is the first wait time when an error occurs, and the third
 	 * one is the additional wait time every time when an error occurs.
-	 * 
+	 *
 	 * @param numberOfRetries
 	 *            The number of retries till it completely fails.
 	 * @param startingWaitTime
@@ -69,6 +69,7 @@ public class AdditiveWaitRetryStrategy extends RetryStrategy {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected long getTimeToWait() {
 		long returnValue = currentTimeToWait;
 

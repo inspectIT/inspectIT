@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Available comparators for all {@link DefaultData} objects.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, Comparator<DefaultData> {
 

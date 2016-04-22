@@ -18,9 +18,9 @@ import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 
 /**
  * Channel manager for writing the data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class WritingChannelManager extends AbstractChannelManager {
@@ -40,7 +40,7 @@ public class WritingChannelManager extends AbstractChannelManager {
 	/**
 	 * Writes the content of the {@link ByteBuffer} to the channel that has the supplied path.
 	 * Channel will be open if necessary.
-	 * 
+	 *
 	 * @param byteBuffer
 	 *            {@link ByteBuffer} that holds the data to be written. Note that the caller of this
 	 *            method is responsible for maintaining the buffer's position and limit.
@@ -86,7 +86,7 @@ public class WritingChannelManager extends AbstractChannelManager {
 	 * Writes the content in the {@link ExtendedByteBufferOutputStream} to the given channel path.
 	 * This write will actually be a series of asynchronous writes, each for a single buffer
 	 * provided by the {@link ExtendedByteBufferOutputStream}.
-	 * 
+	 *
 	 * @param extendedByteBufferOutputStream
 	 * @param channelPath
 	 *            Path to the channel's file.

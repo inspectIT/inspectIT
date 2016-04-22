@@ -24,8 +24,8 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
@@ -92,7 +92,7 @@ public class ClassCacheModificationTest extends TestBase {
 		@DataProvider
 		public Object[][] differentTypes() {
 			return new Object[][] { { ClassType.class, AnnotationType.class }, { ClassType.class, InterfaceType.class }, { AnnotationType.class, ClassType.class },
-				{ AnnotationType.class, InterfaceType.class }, { InterfaceType.class, ClassType.class }, { InterfaceType.class, AnnotationType.class } };
+					{ AnnotationType.class, InterfaceType.class }, { InterfaceType.class, ClassType.class }, { InterfaceType.class, AnnotationType.class } };
 		}
 
 		@BeforeMethod
@@ -104,8 +104,8 @@ public class ClassCacheModificationTest extends TestBase {
 					return callable.call();
 				}
 			};
-			doAnswer(locksAnswer).when(cache).executeWithReadLock(Mockito.<Callable<?>> any());
-			doAnswer(locksAnswer).when(cache).executeWithWriteLock(Mockito.<Callable<?>> any());
+			doAnswer(locksAnswer).when(cache).executeWithReadLock(Matchers.<Callable<?>> any());
+			doAnswer(locksAnswer).when(cache).executeWithWriteLock(Matchers.<Callable<?>> any());
 			doReturn(lookup).when(cache).getLookupService();
 
 			service.init(cache);
@@ -138,6 +138,7 @@ public class ClassCacheModificationTest extends TestBase {
 				@Override
 				public void cleanUpBackReferences() {
 				}
+
 				@Override
 				public void removeReferences() {
 				}

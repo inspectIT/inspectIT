@@ -17,7 +17,7 @@ import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 @Service
 public class SqlDataAccessService implements ISqlDataAccessService {
@@ -35,6 +35,7 @@ public class SqlDataAccessService implements ISqlDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<SqlStatementData> getAggregatedSqlStatements(SqlStatementData sqlStatementData) {
 		List<SqlStatementData> result = sqlDataDao.getAggregatedSqlStatements(sqlStatementData);
@@ -44,6 +45,7 @@ public class SqlDataAccessService implements ISqlDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<SqlStatementData> getAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		List<SqlStatementData> result = sqlDataDao.getAggregatedSqlStatements(sqlStatementData, fromDate, toDate);
@@ -53,6 +55,7 @@ public class SqlDataAccessService implements ISqlDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<SqlStatementData> getParameterAggregatedSqlStatements(SqlStatementData sqlStatementData) {
 		List<SqlStatementData> result = sqlDataDao.getParameterAggregatedSqlStatements(sqlStatementData);
@@ -62,6 +65,7 @@ public class SqlDataAccessService implements ISqlDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<SqlStatementData> getParameterAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		List<SqlStatementData> result = sqlDataDao.getParameterAggregatedSqlStatements(sqlStatementData, fromDate, toDate);
@@ -70,7 +74,7 @@ public class SqlDataAccessService implements ISqlDataAccessService {
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

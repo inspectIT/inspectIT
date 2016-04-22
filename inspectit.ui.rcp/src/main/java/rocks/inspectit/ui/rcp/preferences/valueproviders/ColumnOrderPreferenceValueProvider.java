@@ -10,9 +10,9 @@ import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProvider
 
 /**
  * Custom {@link PreferenceValueProvider} for the map of column orders in the tables.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ColumnOrderPreferenceValueProvider extends PreferenceValueProvider<Map<Integer, int[]>> {
 
@@ -47,7 +47,7 @@ public class ColumnOrderPreferenceValueProvider extends PreferenceValueProvider<
 	 */
 	@Override
 	public Map<Integer, int[]> getObjectFromValue(String value) throws PreferenceException {
-		Map<Integer, int[]> map = new HashMap<Integer, int[]>();
+		Map<Integer, int[]> map = new HashMap<>();
 		StringTokenizer tokenizer = new StringTokenizer(value, PreferencesConstants.PREF_OBJECT_SEPARATION_TOKEN);
 		while (tokenizer.hasMoreElements()) {
 			String nextEntry = tokenizer.nextToken();

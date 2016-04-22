@@ -7,9 +7,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
@@ -72,23 +72,25 @@ public class EnvironmentSettingsPage extends FormPage {
 		gl.verticalSpacing = 20;
 		right.setLayout(gl);
 
-		ProfileSelectionPart profileSelectionPart = new ProfileSelectionPart(this, left, toolkit, Section.TITLE_BAR | Section.EXPANDED);
+		ProfileSelectionPart profileSelectionPart = new ProfileSelectionPart(this, left, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		profileSelectionPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		managedForm.addPart(profileSelectionPart);
 
-		EnvironmentSettingsPart environmentSettingsPart = new EnvironmentSettingsPart(this, right, toolkit, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+		EnvironmentSettingsPart environmentSettingsPart = new EnvironmentSettingsPart(this, right, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		environmentSettingsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(environmentSettingsPart);
 
-		PlatformSensorSelectionPart platformSensorSelectionPart = new PlatformSensorSelectionPart(this, right, toolkit, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+		PlatformSensorSelectionPart platformSensorSelectionPart = new PlatformSensorSelectionPart(this, right, toolkit,
+				ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		platformSensorSelectionPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(platformSensorSelectionPart);
 
-		SensorOptionsPart sensorOptionsPart = new SensorOptionsPart(this, right, toolkit, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+		SensorOptionsPart sensorOptionsPart = new SensorOptionsPart(this, right, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sensorOptionsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(sensorOptionsPart);
 
-		LoggingSensorOptionsPart loggingSensorOptionsPart = new LoggingSensorOptionsPart(this, right, toolkit, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+		LoggingSensorOptionsPart loggingSensorOptionsPart = new LoggingSensorOptionsPart(this, right, toolkit,
+				ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		loggingSensorOptionsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(loggingSensorOptionsPart);
 	}

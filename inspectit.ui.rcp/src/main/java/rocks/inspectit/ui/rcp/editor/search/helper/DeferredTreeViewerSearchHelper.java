@@ -9,10 +9,10 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Search helper for {@link DeferredTreeViewer}.
- * 
+ *
  * @author Ivan Senic
  * @see AbstractSearchHelper
- * 
+ *
  */
 public class DeferredTreeViewerSearchHelper extends AbstractSearchHelper {
 
@@ -28,7 +28,7 @@ public class DeferredTreeViewerSearchHelper extends AbstractSearchHelper {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param treeViewer
 	 *            {@link DeferredTreeViewer}.
 	 * @param treeInputController

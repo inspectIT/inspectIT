@@ -9,22 +9,22 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 
 /**
  * Interface used by all sub-views which are creating the final view.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface ISubView {
 
 	/**
 	 * Sets the root editor for this sub view. This is needed for event handling purposes or the
 	 * access to the preference area.
-	 * 
+	 *
 	 * @param rootEditor
 	 *            The root editor.
 	 */
@@ -32,7 +32,7 @@ public interface ISubView {
 
 	/**
 	 * Returns the root editor.
-	 * 
+	 *
 	 * @return The root editor.
 	 */
 	AbstractRootEditor getRootEditor();
@@ -46,7 +46,7 @@ public interface ISubView {
 
 	/**
 	 * Creates the part control of this view.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param toolkit
@@ -58,7 +58,7 @@ public interface ISubView {
 	/**
 	 * A sub-view should return all preference IDs itself is in need of and the ones of the children
 	 * (it is a sub-view containing other views).
-	 * 
+	 *
 	 * @return A {@link Set} containing all {@link PreferenceId}. Returning <code>null</code> is not
 	 *         permitted here. At least a {@link java.util.Collections#EMPTY_SET} should be
 	 *         returned.
@@ -75,7 +75,7 @@ public interface ISubView {
 
 	/**
 	 * This method is called whenever something is changed in one of the preferences.
-	 * 
+	 *
 	 * @param preferenceEvent
 	 *            The event object containing the changed objects.
 	 */
@@ -84,7 +84,7 @@ public interface ISubView {
 	/**
 	 * This will set the data input of the view. Every view can initialize itself with some data
 	 * (like live data from the server). This is only needed if some specific needs to be displayed.
-	 * 
+	 *
 	 * @param data
 	 *            The list of {@link DefaultData} objects.
 	 */
@@ -92,14 +92,14 @@ public interface ISubView {
 
 	/**
 	 * Returns the control class of this view controller.
-	 * 
+	 *
 	 * @return The {@link Control} class.
 	 */
 	Control getControl();
 
 	/**
 	 * Returns the selection provider for this view.
-	 * 
+	 *
 	 * @return The selection provider.
 	 */
 	ISelectionProvider getSelectionProvider();
@@ -108,7 +108,7 @@ public interface ISubView {
 	 * Selects the given {@link ISubView} if it exists. The composite sub views should check if the
 	 * given {@link ISubView} is one of the containing views and select it. Non-composite sub views
 	 * should not do anything.
-	 * 
+	 *
 	 * @param subView
 	 *            {@link ISubView} to select.
 	 */
@@ -118,7 +118,7 @@ public interface ISubView {
 	 * Returns the sub view of specific class. The composite sub views should check if the given
 	 * {@link ISubView} is one of the given class and return it. Non-composite sub views should
 	 * check if they are of the given class and return them self if so.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of sub view.
 	 * @param clazz
@@ -131,7 +131,7 @@ public interface ISubView {
 	 * Returns the sub view that has given input controller class if exists. The composite sub views
 	 * should check if the given {@link ISubView} is one of the given contained and return it.
 	 * Non-composite sub views should check if they have the controller and return them self if so.
-	 * 
+	 *
 	 * @param inputControllerClass
 	 *            Class of the input controller that sub view to search for has.
 	 * @return {@link ISubView} of or <code>null</code> if view can not be found.

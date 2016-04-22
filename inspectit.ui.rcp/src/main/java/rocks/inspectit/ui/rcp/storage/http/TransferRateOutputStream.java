@@ -7,9 +7,9 @@ import java.io.OutputStream;
 /**
  * Special output stream that reports the bytes sent to the {@link TransferDataMonitor}. Since it is
  * extending the FilterOutputStream all operations are forwarded to the wrapped stream.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TransferRateOutputStream extends FilterOutputStream {
 
@@ -20,7 +20,7 @@ public class TransferRateOutputStream extends FilterOutputStream {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param outputStream
 	 *            Stream.
 	 * @param transferDataMonitor
@@ -42,7 +42,7 @@ public class TransferRateOutputStream extends FilterOutputStream {
 
 	/**
 	 * Marks a sent amount of bytes.
-	 * 
+	 *
 	 * @param byteCount
 	 *            Byte count.
 	 */

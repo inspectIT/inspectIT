@@ -7,9 +7,9 @@ import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorDa
 
 /**
  * Comparators for {@link AggregatedExceptionSensorData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum AggregatedExceptionSensorDataComparatorEnum implements IDataComparator<AggregatedExceptionSensorData>, Comparator<AggregatedExceptionSensorData> {
 

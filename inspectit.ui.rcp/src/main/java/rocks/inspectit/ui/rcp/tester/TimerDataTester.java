@@ -6,9 +6,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Tester for charting possibilities of {@link TimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimerDataTester extends PropertyTester {
 

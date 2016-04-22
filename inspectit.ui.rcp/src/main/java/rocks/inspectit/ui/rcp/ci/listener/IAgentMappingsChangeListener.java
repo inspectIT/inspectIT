@@ -7,15 +7,15 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Interface for the listeners on the {@link AgentMappings} changes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IAgentMappingsChangeListener extends EventListener {
 
 	/**
 	 * {@link AgentMappings} is edited.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings}
 	 * @param repositoryDefinition

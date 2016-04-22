@@ -71,7 +71,7 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 			dup();
 			dup();
 		} else {
-			if (opcode == LRETURN || opcode == DRETURN) {
+			if ((opcode == LRETURN) || (opcode == DRETURN)) {
 				// if we have either long or double return, we need to duplicate the last two stacks
 				dup2();
 			} else {

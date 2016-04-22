@@ -64,7 +64,7 @@ public class PropertiesXmlTransformationTest {
 		groupedProperty.addSingleProperty(property3);
 		SingleProperty<Long> property4 = new LongProperty("Min rotation", "Define min rotation", "properties.rotation.min", 0L, false, false);
 		groupedProperty.addSingleProperty(property4);
-		LessValidator<Long> lessValidator = new LessValidator<Long>();
+		LessValidator<Long> lessValidator = new LessValidator<>();
 		lessValidator.setProperty("properties.rotation.min");
 		lessValidator.setThan("properties.rotation.max");
 		groupedProperty.addValidator(lessValidator);
@@ -235,7 +235,7 @@ public class PropertiesXmlTransformationTest {
 
 	@Test
 	public void bytePropertyXmlSaveLoad() throws JAXBException {
-		long bytes = 10 * 1024 * 1024 + 2; // 10MBs + 2 bytes
+		long bytes = (10 * 1024 * 1024) + 2; // 10MBs + 2 bytes
 		ByteProperty byteProperty = new ByteProperty("name", "description", "logical-name", Long.valueOf(bytes), false, false);
 
 		JAXBContext context = JAXBContext.newInstance(ByteProperty.class);
@@ -253,7 +253,7 @@ public class PropertiesXmlTransformationTest {
 
 	@Test
 	public void bytePropertyUpdateXmlSaveLoad() throws PropertyValidationException, JAXBException {
-		long bytes = 10 * 1024 * 1024 + 2; // 10MBs + 2 bytes
+		long bytes = (10 * 1024 * 1024) + 2; // 10MBs + 2 bytes
 		ByteProperty byteProperty = new ByteProperty("name", "description", "logical-name", Long.valueOf(1), false, false);
 		AbstractPropertyUpdate<Long> bytePropertyUpdate = byteProperty.createAndValidatePropertyUpdate(Long.valueOf(bytes));
 

@@ -24,12 +24,12 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * This class aggregates data and writes only aggregated objects to the writer.
- * 
+ *
  * @param <E>
  *            Type of data to aggregate.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataProcessor {
 
@@ -61,12 +61,12 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 	/**
 	 * Map for caching.
 	 */
-	private ConcurrentHashMap<Integer, IAggregatedData<E>> map = new ConcurrentHashMap<Integer, IAggregatedData<E>>(64, 0.75f, 4);
+	private ConcurrentHashMap<Integer, IAggregatedData<E>> map = new ConcurrentHashMap<>(64, 0.75f, 4);
 
 	/**
 	 * Queue for knowing the order.
 	 */
-	private ConcurrentLinkedQueue<IAggregatedData<E>> queue = new ConcurrentLinkedQueue<IAggregatedData<E>>();
+	private ConcurrentLinkedQueue<IAggregatedData<E>> queue = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * List of classes that should be aggregated by this processor. Only instances of
@@ -92,7 +92,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 
 	/**
 	 * Default constructor. Sets max elements to {@value #DEFAULT_MAX_ELEMENTS}.
-	 * 
+	 *
 	 * @param clazz
 	 *            List of classes to be saved to storage by this {@link AbstractDataProcessor}.
 	 * @param aggregationPeriod
@@ -108,7 +108,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param clazz
 	 *            List of classes to be saved to storage by this {@link AbstractDataProcessor}.
 	 * @param aggregationPeriod
@@ -144,6 +144,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected Collection<Future<Void>> processData(DefaultData defaultData) {
 		E timerData = (E) defaultData;
@@ -172,6 +173,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
 		if (null != defaultData) {
 			return clazz.equals(defaultData.getClass());
@@ -196,7 +198,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 	 */
 	@Override
 	public Collection<Future<Void>> flush() {
-		Collection<Future<Void>> futures = new ArrayList<Future<Void>>();
+		Collection<Future<Void>> futures = new ArrayList<>();
 		IAggregatedData<E> oldest = queue.poll();
 		while (null != oldest) {
 			E data = oldest.getData();
@@ -213,7 +215,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 
 	/**
 	 * Passes data to StorageWriter to be written.
-	 * 
+	 *
 	 * @param data
 	 *            Data to be written.
 	 * @return {@link Future} received from Storage writer.
@@ -227,7 +229,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 		// if I am writing the InvocationAwareData and invocations are not saved
 		// make sure we don't save the invocation affiliation
 		if (!writeInvocationAffiliation) {
-			Map<String, Boolean> kryoPreferences = new HashMap<String, Boolean>(1);
+			Map<String, Boolean> kryoPreferences = new HashMap<>(1);
 			kryoPreferences.put(KryoSerializationPreferences.WRITE_INVOCATION_AFFILIATION_DATA, Boolean.FALSE);
 			return getStorageWriter().write(data, kryoPreferences);
 		} else {
@@ -237,7 +239,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 
 	/**
 	 * Returns the cache hash code.
-	 * 
+	 *
 	 * @param timerData
 	 *            Object to calculate cache hash for.
 	 * @param timestampValue
@@ -248,26 +250,26 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 		final int prime = 31;
 		Object key = dataAggregator.getAggregationKey(timerData);
 		int result = key.hashCode();
-		result = prime * result + (int) (timestampValue ^ (timestampValue >>> 32));
+		result = (prime * result) + (int) (timestampValue ^ (timestampValue >>> 32));
 		return result;
 	}
 
 	/**
 	 * Returns the value of the time stamp based on a aggregation period.
-	 * 
+	 *
 	 * @param timerData
 	 *            {@link TimerData} to get aggregation time stamp.
 	 * @return Aggregation time stamp.
 	 */
 	private long getAlteredTimestamp(TimerData timerData) {
 		long timestampValue = timerData.getTimeStamp().getTime();
-		long newTimestampValue = timestampValue - timestampValue % aggregationPeriod;
+		long newTimestampValue = timestampValue - (timestampValue % aggregationPeriod);
 		return newTimestampValue;
 	}
 
 	/**
 	 * Creates new {@link TimerData} object for aggregation purposes.
-	 * 
+	 *
 	 * @param timerData
 	 *            {@link TimerData} to clone.
 	 * @param alteredTimestamp

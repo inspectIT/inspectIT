@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.model.DeferredComposite;
  * This comparator is used to sort the elements in the server view. Only the ones in the
  * instrumentation browser are affected by the sorting. Additionally, the
  * {@link PendingUpdateAdapter} will always be displayed as the last element.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TreeViewerComparator extends TreePathViewerSorter {
 

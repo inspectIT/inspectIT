@@ -10,10 +10,10 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Search helper for {@link TableViewer}.
- * 
+ *
  * @author Ivan Senic
  * @see AbstractSearchHelper
- * 
+ *
  */
 public class TableViewerSearchHelper extends AbstractSearchHelper {
 

@@ -10,8 +10,6 @@ import static org.hamcrest.Matchers.nullValue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.util.WeakList;
-
 @SuppressWarnings("PMD")
 public class WeakListTest {
 

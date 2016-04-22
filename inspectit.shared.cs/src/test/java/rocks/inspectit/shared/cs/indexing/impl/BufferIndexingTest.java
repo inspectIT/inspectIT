@@ -29,8 +29,6 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
 import rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexer;
-import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
-import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
@@ -40,9 +38,9 @@ import rocks.inspectit.shared.cs.indexing.restriction.IIndexQueryRestrictionProc
 
 /**
  * Test class for testing functionality of {@link IBufferTreeComponent}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class BufferIndexingTest {
@@ -56,7 +54,7 @@ public class BufferIndexingTest {
 	 * The mocked processor.
 	 */
 	private IIndexQueryRestrictionProcessor processor;
-	
+
 	/**
 	 * The forkJoinPool which starts the forks
 	 */
@@ -83,13 +81,13 @@ public class BufferIndexingTest {
 
 	/**
 	 * Test tree with empty query. All elements should be returned.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void emptyQueryTest() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new ObjectTypeIndexer<>()));
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -110,13 +108,13 @@ public class BufferIndexingTest {
 
 	/**
 	 * Test put and retrieval of one element.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void putAndGetElement() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new ObjectTypeIndexer<>()));
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -127,13 +125,13 @@ public class BufferIndexingTest {
 
 	/**
 	 * Test tree with query that holds only platform ident.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithPlatformIdent() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new PlatformIdentIndexer<>()));
 
 		DefaultData defaultData1 = mock(DefaultData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -164,13 +162,13 @@ public class BufferIndexingTest {
 
 	/**
 	 * Test tree with query that holds only method ident.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithMethodIdent() throws IndexingException {
-		IBufferTreeComponent<MethodSensorData> rootBranch = new Branch<MethodSensorData>(new BufferBranchIndexer<MethodSensorData>(new MethodIdentIndexer<MethodSensorData>()));
+		IBufferTreeComponent<MethodSensorData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new MethodIdentIndexer<MethodSensorData>()));
 
 		MethodSensorData defaultData1 = mock(MethodSensorData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -201,13 +199,13 @@ public class BufferIndexingTest {
 
 	/**
 	 * Test tree with query that holds only object type.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithObjectType() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new ObjectTypeIndexer<>()));
 
 		TimerData defaultData1 = mock(TimerData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -219,7 +217,7 @@ public class BufferIndexingTest {
 		when(defaultData2.isQueryComplied(indexQuery)).thenReturn(true);
 		rootBranch.put(defaultData2);
 
-		List<Class<?>> searchedClasses = new ArrayList<Class<?>>();
+		List<Class<?>> searchedClasses = new ArrayList<>();
 		searchedClasses.add(defaultData1.getClass());
 		indexQuery.setObjectClasses(searchedClasses);
 
@@ -238,16 +236,16 @@ public class BufferIndexingTest {
 
 	/**
 	 * Test tree with query that holds only time interval.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithTimestampInterval() throws IndexingException {
-		Timestamp minusHour = new Timestamp(new Date().getTime() + 20 * 60 * 1000);
-		Timestamp plusHour = new Timestamp(new Date().getTime() + 25 * 60 * 1000);
+		Timestamp minusHour = new Timestamp(new Date().getTime() + (20 * 60 * 1000));
+		Timestamp plusHour = new Timestamp(new Date().getTime() + (25 * 60 * 1000));
 
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new TimestampIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new TimestampIndexer<>()));
 
 		DefaultData defaultData1 = mock(DefaultData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -282,16 +280,16 @@ public class BufferIndexingTest {
 
 	/**
 	 * Test tree with query that holds platform ident and sensor ident in different levels.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryDifferentLevels() throws IndexingException {
-		BufferBranchIndexer<DefaultData> sensorTypeIndexer = new BufferBranchIndexer<DefaultData>(new SensorTypeIdentIndexer<DefaultData>());
-		BufferBranchIndexer<DefaultData> objectTypeIndexer = new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), sensorTypeIndexer);
-		BufferBranchIndexer<DefaultData> platformTypeIndexer = new BufferBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), objectTypeIndexer);
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(platformTypeIndexer);
+		BufferBranchIndexer<DefaultData> sensorTypeIndexer = new BufferBranchIndexer<>(new SensorTypeIdentIndexer<>());
+		BufferBranchIndexer<DefaultData> objectTypeIndexer = new BufferBranchIndexer<>(new ObjectTypeIndexer<>(), sensorTypeIndexer);
+		BufferBranchIndexer<DefaultData> platformTypeIndexer = new BufferBranchIndexer<>(new PlatformIdentIndexer<>(), objectTypeIndexer);
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(platformTypeIndexer);
 
 		TimerData defaultData1 = mock(TimerData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -325,16 +323,18 @@ public class BufferIndexingTest {
 			assertThat(result.getSensorTypeIdent(), is(equalTo(10L)));
 		}
 	}
+
 	@Test
 	/**
 	 * Same Test as queryDifferentLevels() except with ForkJoin
+	 *
 	 * @throws IndexingException
 	 */
 	public void queryDifferentLevelsForkJoin() throws IndexingException {
-		BufferBranchIndexer<DefaultData> sensorTypeIndexer = new BufferBranchIndexer<DefaultData>(new SensorTypeIdentIndexer<DefaultData>());
-		BufferBranchIndexer<DefaultData> objectTypeIndexer = new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), sensorTypeIndexer);
-		BufferBranchIndexer<DefaultData> platformTypeIndexer = new BufferBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), objectTypeIndexer);
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(platformTypeIndexer);
+		BufferBranchIndexer<DefaultData> sensorTypeIndexer = new BufferBranchIndexer<>(new SensorTypeIdentIndexer<>());
+		BufferBranchIndexer<DefaultData> objectTypeIndexer = new BufferBranchIndexer<>(new ObjectTypeIndexer<>(), sensorTypeIndexer);
+		BufferBranchIndexer<DefaultData> platformTypeIndexer = new BufferBranchIndexer<>(new PlatformIdentIndexer<>(), objectTypeIndexer);
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(platformTypeIndexer);
 
 		TimerData defaultData1 = mock(TimerData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -368,15 +368,16 @@ public class BufferIndexingTest {
 			assertThat(result.getSensorTypeIdent(), is(equalTo(10L)));
 		}
 	}
+
 	/**
 	 * Test a removal of one element from the indexing tree.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void removeElement() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>())));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new BufferBranchIndexer<>(new ObjectTypeIndexer<>())));
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -388,13 +389,13 @@ public class BufferIndexingTest {
 
 	/**
 	 * Clear all test.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void clearBranch() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new ObjectTypeIndexer<>()));
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -406,12 +407,12 @@ public class BufferIndexingTest {
 
 	/**
 	 * Confirm {@link IndexingException} will be reaised when key can not be generated for element.
-	 * 
+	 *
 	 * @throws IndexingException
 	 */
 	@Test(expectedExceptions = { IndexingException.class })
 	public void putWithNoKey() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new TimestampIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new TimestampIndexer<>()));
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -421,12 +422,12 @@ public class BufferIndexingTest {
 	/**
 	 * Test that get will work even when branch can not generate key for the element if ID is
 	 * correctly set.
-	 * 
+	 *
 	 * @throws IndexingException
 	 */
 	@Test
 	public void getWithNoKey() throws IndexingException {
-		IBufferTreeComponent<DefaultData> rootBranch = new Branch<DefaultData>(new BufferBranchIndexer<DefaultData>(new TimestampIndexer<DefaultData>()));
+		IBufferTreeComponent<DefaultData> rootBranch = new Branch<>(new BufferBranchIndexer<>(new TimestampIndexer<>()));
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);

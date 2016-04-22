@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -83,8 +83,8 @@ public class MethodSensorInstrumentationApplierTest extends TestBase {
 		// filters to true by default
 		when(filterProvider.getClassSensorAssignmentFilter()).thenReturn(classFilter);
 		when(filterProvider.getMethodSensorAssignmentFilter()).thenReturn(methodFilter);
-		when(methodFilter.matches(Mockito.<MethodSensorAssignment> any(), Mockito.<MethodType> any())).thenReturn(true);
-		when(classFilter.matches(Mockito.<AbstractClassSensorAssignment<?>> any(), Mockito.<ClassType> any(), Mockito.eq(false))).thenReturn(true);
+		when(methodFilter.matches(Matchers.<MethodSensorAssignment> any(), Matchers.<MethodType> any())).thenReturn(true);
+		when(classFilter.matches(Matchers.<AbstractClassSensorAssignment<?>> any(), Matchers.<ClassType> any(), Matchers.eq(false))).thenReturn(true);
 
 		// class to return one method
 		when(classType.getMethods()).thenReturn(Collections.singleton(methodType));
@@ -98,7 +98,7 @@ public class MethodSensorInstrumentationApplierTest extends TestBase {
 			long sensorId = 15L;
 			long methodId = 17L;
 			String sensorClassName = "sensorClassName";
-			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Mockito.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
+			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Matchers.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
 
 			MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
 			when(methodSensorTypeConfig.getId()).thenReturn(sensorId);
@@ -113,7 +113,7 @@ public class MethodSensorInstrumentationApplierTest extends TestBase {
 
 			IMethodSensorConfig methodSensorConfig = mock(IMethodSensorConfig.class);
 			when(methodSensorConfig.getClassName()).thenReturn(sensorClassName);
-			when(environment.getMethodSensorTypeConfig(Mockito.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
+			when(environment.getMethodSensorTypeConfig(Matchers.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
 
 			String packageName = "my.favorite.package";
 			String className = "ClassName";
@@ -174,7 +174,7 @@ public class MethodSensorInstrumentationApplierTest extends TestBase {
 
 			IMethodSensorConfig methodSensorConfig = mock(IMethodSensorConfig.class);
 			when(methodSensorConfig.getClassName()).thenReturn(sensorClassName);
-			when(environment.getMethodSensorTypeConfig(Mockito.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
+			when(environment.getMethodSensorTypeConfig(Matchers.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
 
 			SensorInstrumentationPoint rsc = mock(SensorInstrumentationPoint.class);
 			when(rsc.getSensorIds()).thenReturn(new long[] { sensorId });
@@ -189,8 +189,8 @@ public class MethodSensorInstrumentationApplierTest extends TestBase {
 
 			// verify no interaction
 			verifyZeroInteractions(registrationService);
-			verify(instrumentationConfig, times(0)).setSensorInstrumentationPoint(Mockito.<SensorInstrumentationPoint> any());
-			verify(methodType, times(0)).setMethodInstrumentationConfig(Mockito.<MethodInstrumentationConfig> any());
+			verify(instrumentationConfig, times(0)).setSensorInstrumentationPoint(Matchers.<SensorInstrumentationPoint> any());
+			verify(methodType, times(0)).setMethodInstrumentationConfig(Matchers.<MethodInstrumentationConfig> any());
 		}
 
 		@Test

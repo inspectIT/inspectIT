@@ -20,15 +20,15 @@ import org.xml.sax.SAXException;
 
 /**
  * Simple component for marshall and unmarshall operation on JAXB.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class JAXBTransformator {
 
 	/**
 	 * Marshals the object to the given path that must represent a path to the file.
-	 * 
+	 *
 	 * @param path
 	 *            Path to file
 	 * @param object
@@ -62,7 +62,7 @@ public class JAXBTransformator {
 
 	/**
 	 * Unmarshalls the given file. The root class of the XML must be given.
-	 * 
+	 *
 	 * @param <T>
 	 *            Type of root object.
 	 * @param path
@@ -89,7 +89,7 @@ public class JAXBTransformator {
 		JAXBContext context = JAXBContext.newInstance(rootClass);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 
-		if (null != schemaPath && Files.exists(schemaPath)) {
+		if ((null != schemaPath) && Files.exists(schemaPath)) {
 			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			try (InputStream inputStream = Files.newInputStream(schemaPath, StandardOpenOption.READ)) {
 				Schema schema = sf.newSchema(new StreamSource(inputStream));

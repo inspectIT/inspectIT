@@ -12,8 +12,8 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -21,7 +21,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
-import rocks.inspectit.shared.all.storage.nio.stream.SocketExtendedByteBufferInputStream;
 
 public class SocketExtendedByteBufferInputStreamTest {
 
@@ -55,7 +54,7 @@ public class SocketExtendedByteBufferInputStreamTest {
 
 	/**
 	 * Tests reading of random size.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test(invocationCount = 50)
@@ -72,7 +71,7 @@ public class SocketExtendedByteBufferInputStreamTest {
 			}
 		});
 
-		when(socketChannel.read(Mockito.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
+		when(socketChannel.read(Matchers.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
 			int readPosition = 0;
 
 			public Integer answer(InvocationOnMock invocation) throws Throwable {
@@ -81,7 +80,7 @@ public class SocketExtendedByteBufferInputStreamTest {
 
 				int remaining = byteBuffer.remaining();
 
-				int toRead = remaining > array.length - readPosition ? array.length - readPosition : remaining;
+				int toRead = remaining > (array.length - readPosition) ? array.length - readPosition : remaining;
 				byteBuffer.put(array, readPosition, toRead);
 				int newRemaning = byteBuffer.remaining();
 

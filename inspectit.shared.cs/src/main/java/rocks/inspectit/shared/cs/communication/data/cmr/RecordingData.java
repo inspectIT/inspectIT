@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.storage.StorageData;
 
 /**
  * This POJO joins several recording information data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RecordingData implements Serializable {
 
@@ -68,7 +68,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Gets {@link #recordingWritingStatus}.
-	 * 
+	 *
 	 * @return {@link #recordingWritingStatus}
 	 */
 	public WritingStatus getRecordingWritingStatus() {
@@ -77,7 +77,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Sets {@link #recordingWritingStatus}.
-	 * 
+	 *
 	 * @param recordingWritingStatus
 	 *            New value for {@link #recordingWritingStatus}
 	 */
@@ -87,7 +87,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Gets {@link #recordingStorage}.
-	 * 
+	 *
 	 * @return {@link #recordingStorage}
 	 */
 	public StorageData getRecordingStorage() {
@@ -96,7 +96,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Sets {@link #recordingStorage}.
-	 * 
+	 *
 	 * @param recordingStorage
 	 *            New value for {@link #recordingStorage}
 	 */
@@ -106,7 +106,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Gets {@link #recordStartDate}.
-	 * 
+	 *
 	 * @return {@link #recordStartDate}
 	 */
 	public Date getRecordStartDate() {
@@ -115,7 +115,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Sets {@link #recordStartDate}.
-	 * 
+	 *
 	 * @param recordStartDate
 	 *            New value for {@link #recordStartDate}
 	 */
@@ -125,7 +125,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Gets {@link #recordEndDate}.
-	 * 
+	 *
 	 * @return {@link #recordEndDate}
 	 */
 	public Date getRecordEndDate() {
@@ -134,7 +134,7 @@ public class RecordingData implements Serializable {
 
 	/**
 	 * Sets {@link #recordEndDate}.
-	 * 
+	 *
 	 * @param recordEndDate
 	 *            New value for {@link #recordEndDate}
 	 */

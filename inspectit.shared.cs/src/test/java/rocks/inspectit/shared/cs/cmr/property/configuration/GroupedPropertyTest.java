@@ -11,16 +11,14 @@ import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
-import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.IGroupedProperyValidator;
@@ -71,13 +69,14 @@ public class GroupedPropertyTest {
 
 		doAnswer(new Answer<Object>() {
 
+			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Object[] args = invocation.getArguments();
 				PropertyValidation propertyValidation = (PropertyValidation) args[0];
 				propertyValidation.addValidationError(new ValidationError());
 				return null;
 			}
-		}).when(singleProperty1).validate(Mockito.<PropertyValidation> anyObject());
+		}).when(singleProperty1).validate(Matchers.<PropertyValidation> anyObject());
 
 		PropertyValidation propertyValidation = groupedProperty.validate();
 		assertThat(propertyValidation.hasErrors(), is(true));
@@ -100,23 +99,25 @@ public class GroupedPropertyTest {
 
 		doAnswer(new Answer<Object>() {
 
+			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Object[] args = invocation.getArguments();
 				PropertyValidation propertyValidation = (PropertyValidation) args[0];
 				propertyValidation.addValidationError(new ValidationError());
 				return null;
 			}
-		}).when(singleProperty1).validate(Mockito.<PropertyValidation> anyObject());
+		}).when(singleProperty1).validate(Matchers.<PropertyValidation> anyObject());
 
 		doAnswer(new Answer<Object>() {
 
+			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Object[] args = invocation.getArguments();
 				PropertyValidation propertyValidation = (PropertyValidation) args[1];
 				propertyValidation.addValidationError(new ValidationError());
 				return null;
 			}
-		}).when(validator1).validate(eq(groupedProperty), Mockito.<PropertyValidation> anyObject());
+		}).when(validator1).validate(eq(groupedProperty), Matchers.<PropertyValidation> anyObject());
 
 		PropertyValidation propertyValidation = groupedProperty.validate();
 		assertThat(propertyValidation.hasErrors(), is(true));

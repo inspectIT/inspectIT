@@ -20,15 +20,15 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 
 /**
  * The abstract class of the {@link TreeInputController} interface to provide some standard methods.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public abstract class AbstractTreeInputController implements TreeInputController {
 
@@ -36,7 +36,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * Map of the enumeration keys and {@link TreeViewerColumn}s. Subclasses can use utility methods
 	 * to bound columns for later use.
 	 */
-	private Map<Enum<?>, TreeViewerColumn> treeViewerColumnMap = new HashMap<Enum<?>, TreeViewerColumn>();
+	private Map<Enum<?>, TreeViewerColumn> treeViewerColumnMap = new HashMap<>();
 
 	/**
 	 * The input definition.
@@ -46,6 +46,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		Assert.isNotNull(inputDefinition);
 
@@ -54,7 +55,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 
 	/**
 	 * Returns the input definition.
-	 * 
+	 *
 	 * @return The input definition.
 	 */
 	protected InputDefinition getInputDefinition() {
@@ -68,6 +69,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public boolean canOpenInput(List<? extends DefaultData> data) {
 		return false;
 	}
@@ -77,6 +79,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void createColumns(TreeViewer treeViewer) {
 	}
 
@@ -85,6 +88,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void doRefresh(IProgressMonitor monitor, IRootEditor rootEditor) {
 	}
 
@@ -93,6 +97,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 	}
 
@@ -101,6 +106,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public ViewerComparator getComparator() {
 		return null;
 	}
@@ -110,6 +116,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return null;
 	}
@@ -119,6 +126,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public ViewerFilter[] getFilters() {
 		return new ViewerFilter[0];
 	}
@@ -128,6 +136,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return null;
 	}
@@ -137,6 +146,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return an empty set by default, sub-classes may override.
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		return Collections.emptySet();
 	}
@@ -146,6 +156,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		return null;
 	}
@@ -155,6 +166,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public Object getTreeInput() {
 		return null;
 	}
@@ -164,6 +176,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 	}
 
@@ -172,6 +185,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Return <b>2</b> by default, sub-classes may override.
 	 */
+	@Override
 	public int getExpandLevel() {
 		return 2;
 	}
@@ -195,6 +209,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void dispose() {
 	}
 
@@ -222,7 +237,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * Maps a column with the enumeration key. The implementing classes should map each column they
 	 * create to the enum that represents that column. Later on the column can be retrieved with the
 	 * enum key if needed.
-	 * 
+	 *
 	 * @param key
 	 *            Enumeration that represents the column.
 	 * @param column
@@ -235,7 +250,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	/**
 	 * Returns the column that has been mapped with the given enum key. Enum should represent the
 	 * wanted column.
-	 * 
+	 *
 	 * @param key
 	 *            Enumeration that represents the column.
 	 * @return Returns the column that has been mapped with the given enum key or <code>null</code>

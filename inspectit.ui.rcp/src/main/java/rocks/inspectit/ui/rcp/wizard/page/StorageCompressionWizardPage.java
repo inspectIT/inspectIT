@@ -9,9 +9,9 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * Page for the selecting if storage should be compressed before downloading/exporting etc..
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageCompressionWizardPage extends WizardPage {
 
@@ -22,7 +22,7 @@ public class StorageCompressionWizardPage extends WizardPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param title
 	 *            the title.
 	 * @param message

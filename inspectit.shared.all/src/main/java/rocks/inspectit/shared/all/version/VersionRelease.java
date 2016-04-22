@@ -3,9 +3,9 @@ package rocks.inspectit.shared.all.version;
 /**
  * Holds information about an released version. Beside {@link #version} information, this class
  * holds additional information about a release.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class VersionRelease implements Comparable<VersionRelease> {
 
@@ -26,7 +26,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param version
 	 *            {@link Version} information.
 	 */
@@ -36,7 +36,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param version
 	 *            Version information.
 	 * @param preRelease
@@ -52,7 +52,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 
 	/**
 	 * Gets {@link #preRelease}.
-	 * 
+	 *
 	 * @return {@link #preRelease}
 	 */
 	public boolean isPreRelease() {
@@ -61,7 +61,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 
 	/**
 	 * Sets {@link #preRelease}.
-	 * 
+	 *
 	 * @param preRelease
 	 *            New value for {@link #preRelease}
 	 */
@@ -71,7 +71,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 
 	/**
 	 * Gets {@link #link}.
-	 * 
+	 *
 	 * @return {@link #link}
 	 */
 	public String getLink() {
@@ -80,7 +80,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 
 	/**
 	 * Sets {@link #link}.
-	 * 
+	 *
 	 * @param link
 	 *            New value for {@link #link}
 	 */
@@ -90,7 +90,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 
 	/**
 	 * Gets {@link #version}.
-	 * 
+	 *
 	 * @return {@link #version}
 	 */
 	public Version getVersion() {
@@ -111,9 +111,9 @@ public class VersionRelease implements Comparable<VersionRelease> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((link == null) ? 0 : link.hashCode());
-		result = prime * result + (preRelease ? 1231 : 1237);
-		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		result = (prime * result) + ((link == null) ? 0 : link.hashCode());
+		result = (prime * result) + (preRelease ? 1231 : 1237);
+		result = (prime * result) + ((version == null) ? 0 : version.hashCode());
 		return result;
 	}
 

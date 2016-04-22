@@ -45,9 +45,9 @@ import rocks.inspectit.shared.cs.storage.util.StorageDeleteFileVisitor;
 
 /**
  * Abstract class that defines basic storage functionality and properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class StorageManager {
 
@@ -121,7 +121,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Returns the {@link Path} for given {@link IStorageIdProvider}.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData} object.
 	 * @return {@link Path} that can be used in IO operations.
@@ -130,7 +130,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Returns the default storage directory as the absolute path.
-	 * 
+	 *
 	 * @return Returns the default storage directory as the absolute path.
 	 */
 	protected abstract Path getDefaultStorageDirPath();
@@ -138,7 +138,7 @@ public abstract class StorageManager {
 	/**
 	 * Returns the {@link Path} of the channel for given {@link StorageData} and
 	 * {@link StorageDescriptor}.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData} object.
 	 * @param descriptor
@@ -151,7 +151,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Returns the {@link Path} of the channel for given {@link StorageData} and ID of the channel.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link IStorageData} object.
 	 * @param channelId
@@ -164,7 +164,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Returns path for the cached storage data file.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}
 	 * @param hash
@@ -181,7 +181,7 @@ public abstract class StorageManager {
 	 * without ip and port information.
 	 * <p>
 	 * Example locations is: /storageId/descriptorId.itdata
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}
 	 * @param descriptor
@@ -197,7 +197,7 @@ public abstract class StorageManager {
 	 * without ip and port information.
 	 * <p>
 	 * Example locations is: /storageId/descriptorId.itdata
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}
 	 * @param channelId
@@ -217,7 +217,7 @@ public abstract class StorageManager {
 	/**
 	 * Writes the storage data file to disk (in the default storage directory). If the file already
 	 * exists, it will be deleted.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage data.
 	 * @throws IOException
@@ -232,7 +232,7 @@ public abstract class StorageManager {
 	/**
 	 * Writes the storage data file to disk (in the default storage directory). If the file already
 	 * exists, it will be deleted.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            Local Storage data.
 	 * @throws IOException
@@ -247,7 +247,7 @@ public abstract class StorageManager {
 	/**
 	 * Writes the storage data file to disk (to the given directory). If the file already exists, it
 	 * will be deleted.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage data.
 	 * @param dir
@@ -264,7 +264,7 @@ public abstract class StorageManager {
 	/**
 	 * Writes the storage data file to disk (to the given directory). If the file already exists, it
 	 * will be deleted.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            Local Storage data.
 	 * @param dir
@@ -281,7 +281,7 @@ public abstract class StorageManager {
 	/**
 	 * Writes the storage data file to disk (to the given directory). If the file already exists, it
 	 * will be deleted.
-	 * 
+	 *
 	 * @param storageData
 	 *            Object that can provide ID of storage.
 	 * @param extenstion
@@ -306,7 +306,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Serializes given data to the {@link OutputStream}.
-	 * 
+	 *
 	 * @param data
 	 *            Data to serialize.
 	 * @param outputStream
@@ -336,7 +336,7 @@ public abstract class StorageManager {
 	/**
 	 * Deletes all files associated with given {@link StorageData}, thus completely removes storage
 	 * from disk.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to delete data for.
 	 * @throws IOException
@@ -357,7 +357,7 @@ public abstract class StorageManager {
 	/**
 	 * Deletes all files associated with given {@link StorageData}, but only of a types supplied
 	 * with a fileTypes parameter.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to delete data for.
 	 * @param fileTypes
@@ -393,7 +393,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Updates the space left on the hard drive.
-	 * 
+	 *
 	 * @throws IOException
 	 *             IF {@link IOException} occurs.
 	 */
@@ -409,7 +409,7 @@ public abstract class StorageManager {
 		hardDriveSize = fileStore.getTotalSpace();
 		long bytesAvailable = fileStore.getUsableSpace();
 
-		if (Files.exists(defaultDirectory) && maxHardDriveOccupancy > 0 && bytesAvailable > maxHardDriveOccupancy) {
+		if (Files.exists(defaultDirectory) && (maxHardDriveOccupancy > 0) && (bytesAvailable > maxHardDriveOccupancy)) {
 			final MutableLong totalSizeInBytes = new MutableLong();
 			Files.walkFileTree(defaultDirectory, new SimpleFileVisitor<Path>() {
 				@Override
@@ -432,7 +432,7 @@ public abstract class StorageManager {
 	/**
 	 * Compresses the content of the storage data folder to the file. File name is provided via
 	 * given path. If the file already exists, it will be deleted first.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} to zip.
 	 * @param zipPath
@@ -447,7 +447,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Zips all files in the given directory to the provided zipPath.
-	 * 
+	 *
 	 * @param directory
 	 *            Directory where files to be zipped are placed.
 	 * @param zipPath
@@ -486,7 +486,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Returns the {@link StorageData} object that exists in the compressed storage file.
-	 * 
+	 *
 	 * @param zipFilePath
 	 *            Compressed storage file.
 	 * @return StorageData object or <code>null</code> if the given path is not of correct type.
@@ -532,7 +532,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Unzips the content of the zip file provided to the default storage folder.
-	 * 
+	 *
 	 * @param zipFilePath
 	 *            Path to the zip file.
 	 * @param destinationPath
@@ -541,7 +541,7 @@ public abstract class StorageManager {
 	 *             If zipFilePath does not exist or destination path does exist.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
-	 * 
+	 *
 	 */
 	protected void unzipStorageData(final Path zipFilePath, final Path destinationPath) throws BusinessException, IOException {
 		if (Files.notExists(zipFilePath)) {
@@ -592,7 +592,7 @@ public abstract class StorageManager {
 	/**
 	 * Returns true if the data stored in the input stream is in a GZIP format. The input stream
 	 * will be closed at the end.
-	 * 
+	 *
 	 * @param is
 	 *            File to check.
 	 * @return True if the data is in GZIP format, false otherwise.
@@ -601,13 +601,13 @@ public abstract class StorageManager {
 	 */
 	private boolean isGzipCompressedData(InputStream is) throws IOException {
 		try {
-			byte[] firsTwoBytes = new byte[2];
+			byte[] firstTwoBytes = new byte[2];
 			int read = 0;
 			// safety from reading one byte only
 			while (read < 2) {
-				read += is.read(firsTwoBytes, read, 2 - read);
+				read += is.read(firstTwoBytes, read, 2 - read);
 			}
-			int head = ((int) firsTwoBytes[0] & 0xff) | ((firsTwoBytes[1] << 8) & 0xff00);
+			int head = (firstTwoBytes[0] & 0xff) | ((firstTwoBytes[1] << 8) & 0xff00);
 			return GZIPInputStream.GZIP_MAGIC == head;
 		} finally {
 			if (null != is) {
@@ -622,7 +622,7 @@ public abstract class StorageManager {
 	 * the same hash is used.
 	 * <p>
 	 * Note that if the data is already cached with the same hash, no action will be performed.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to hash data for.
 	 * @param data
@@ -650,7 +650,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Returns if the results of this query/aggregator combination can be used for caching.
-	 * 
+	 *
 	 * @param indexQuery
 	 *            {@link IIndexQuery}
 	 * @param aggregator
@@ -677,7 +677,7 @@ public abstract class StorageManager {
 	 * <p>
 	 * <B>WARNING:</b> There is small possibility that we get the hash collision. We are aware of
 	 * this, but we are taking our chances.
-	 * 
+	 *
 	 * @param indexQuery
 	 *            {@link IIndexQuery}, must not be <code>null</code>
 	 * @param aggregator
@@ -691,14 +691,14 @@ public abstract class StorageManager {
 
 		final int prime = 31;
 		int result = 0;
-		result = prime * result + indexQuery.hashCode();
-		result = prime * result + ((aggregator == null) ? 0 : aggregator.hashCode());
+		result = (prime * result) + indexQuery.hashCode();
+		result = (prime * result) + ((aggregator == null) ? 0 : aggregator.hashCode());
 		return result;
 	}
 
 	/**
 	 * Gets {@link #serializationManagerProvider}.
-	 * 
+	 *
 	 * @return {@link #serializationManagerProvider}
 	 */
 	public SerializationManagerProvider getSerializationManagerProvider() {
@@ -707,7 +707,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Sets {@link #serializationManagerProvider}.
-	 * 
+	 *
 	 * @param serializationManagerProvider
 	 *            New value for {@link #serializationManagerProvider}
 	 */
@@ -717,7 +717,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Gets {@link #storageUploadsFolder}.
-	 * 
+	 *
 	 * @return {@link #storageUploadsFolder}
 	 */
 	public String getStorageUploadsFolder() {
@@ -733,7 +733,7 @@ public abstract class StorageManager {
 
 	/**
 	 * <i>This setter can be removed when the Spring3.0 on the GUI side is working properly.</i>
-	 * 
+	 *
 	 * @param storageDefaultFolder
 	 *            the storageDefaultFolder to set
 	 */
@@ -743,7 +743,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Gets {@link #bytesHardDriveOccupancyLeft}.
-	 * 
+	 *
 	 * @return {@link #bytesHardDriveOccupancyLeft}
 	 */
 	public long getBytesHardDriveOccupancyLeft() {
@@ -752,7 +752,7 @@ public abstract class StorageManager {
 
 	/**
 	 * Gets {@link #maxHardDriveOccupancy}.
-	 * 
+	 *
 	 * @return {@link #maxHardDriveOccupancy}
 	 */
 	public long getMaxBytesHardDriveOccupancy() {

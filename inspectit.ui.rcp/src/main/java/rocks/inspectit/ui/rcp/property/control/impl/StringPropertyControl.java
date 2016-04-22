@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * {@link AbstractPropertyControl} for the string property.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StringPropertyControl extends AbstractPropertyControl<StringProperty, String> {
 
@@ -28,7 +28,7 @@ public class StringPropertyControl extends AbstractPropertyControl<StringPropert
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property.
 	 * @param propertyUpdateListener

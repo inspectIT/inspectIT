@@ -18,9 +18,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.util.CpuUsageCalculat
  * Note that the methods {@link #getFreePhysicalMemorySize()} and {@link #getTotalSwapSpaceSize()}
  * will not be able to provide different values than the default ones, because the IBM does not
  * provide the information about the OS swap size.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemInfoProvider {
 
@@ -71,7 +71,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @throws Exception
 	 *             If the initialization fails.
 	 */
@@ -82,7 +82,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 	/**
 	 * Initializes the class and checks if every method needed to be accessed with reflection is
 	 * available and is returning the correct value.
-	 * 
+	 *
 	 * @throws Exception
 	 *             If any exception occurs during the initialization.
 	 */
@@ -133,6 +133,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getCommittedVirtualMemorySize() {
 		Number result = getValueFromMethodInvocation(ibmOperatingSystemMxBeanInstance, committedVirtualMemorySizeMethod);
 		return result.longValue();
@@ -141,6 +142,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getFreePhysicalMemorySize() {
 		Number result = getValueFromMethodInvocation(ibmOperatingSystemMxBeanInstance, freePhysicalMemorySizeMethod);
 		return result.longValue();
@@ -149,6 +151,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getProcessCpuTime() {
 		Number result = getValueFromMethodInvocation(ibmOperatingSystemMxBeanInstance, processCpuTimeMethod);
 		// by IBM Documentation the process cpu time is in 100 ns units
@@ -160,6 +163,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getTotalPhysicalMemorySize() {
 		Number result = getValueFromMethodInvocation(ibmOperatingSystemMxBeanInstance, totalPhysicalMemorySizeMethod);
 		return result.longValue();
@@ -169,6 +173,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float retrieveCpuUsage() {
 		cpuCalculator.setUptime(runtimeBean.getUptime());
 		cpuCalculator.setProcessCpuTime(this.getProcessCpuTime());
@@ -180,7 +185,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 
 	/**
 	 * Loads the wanted method from the class and makes it accessible.
-	 * 
+	 *
 	 * @param clazz
 	 *            Class
 	 * @param methodName
@@ -200,7 +205,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 
 	/**
 	 * Invokes the given method on the given instance.
-	 * 
+	 *
 	 * @param instance
 	 *            instance to perform invocation on
 	 * @param method

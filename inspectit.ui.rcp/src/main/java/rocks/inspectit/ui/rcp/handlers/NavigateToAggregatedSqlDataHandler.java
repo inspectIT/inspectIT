@@ -19,8 +19,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.SqlStatementInputDefinitionExtra;
@@ -30,9 +30,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler for navigation to the aggregated SQL data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NavigateToAggregatedSqlDataHandler extends AbstractHandler implements IHandler {
 

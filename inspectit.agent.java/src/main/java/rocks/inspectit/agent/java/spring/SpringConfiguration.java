@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
@@ -174,7 +175,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		Class<?> clazz = Class.forName(className);
 		GenericBeanDefinition definition = new GenericBeanDefinition();
 		definition.setBeanClass(clazz);
-		definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);
+		definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		definition.setAutowireCandidate(true);
 		registry.registerBeanDefinition(beanName, definition);
 		beanFactory.getBean(beanName, clazz);

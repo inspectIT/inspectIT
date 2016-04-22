@@ -32,8 +32,8 @@ import rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpTimerDataAggregat
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
@@ -43,7 +43,7 @@ import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
 
 /**
  * InputController for <code>HttpTimerData</code> view.
- * 
+ *
  * @author Stefan Siegl
  */
 public class HttpTimerDataInputController extends AbstractHttpInputController {
@@ -57,9 +57,9 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Stefan Siegl
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The time column. */
@@ -108,7 +108,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -127,13 +127,13 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -175,9 +175,8 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 					Pattern.compile(regEx);
 					regExEnabledInSensor = true;
 				} catch (PatternSyntaxException e) {
-					InspectIT.getDefault().createInfoDialog(
-							"The HTTP sensor defines the Regular expression " + regEx
-									+ " for URI transformation that can not be compiled. The transformation option will not be available.\n\n Reason: " + e.getMessage(), -1);
+					InspectIT.getDefault().createInfoDialog("The HTTP sensor defines the Regular expression " + regEx
+							+ " for URI transformation that can not be compiled. The transformation option will not be available.\n\n Reason: " + e.getMessage(), -1);
 				}
 			}
 		}
@@ -227,7 +226,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 		}
 
 		if (regExActive && CollectionUtils.isNotEmpty(aggregatedHttpData)) {
-			AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<HttpTimerData>(new RegExHttpAggregator(httpSensorTypeIdent, httpCatorizationOnRequestMethodActive));
+			AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<>(new RegExHttpAggregator(httpSensorTypeIdent, httpCatorizationOnRequestMethodActive));
 			aggregationPerformer.processCollection(aggregatedHttpData);
 			aggregatedHttpData = aggregationPerformer.getResultList();
 		}
@@ -281,7 +280,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 
 			/**
 			 * Decides if the warn sign should be added for the specific column.
-			 * 
+			 *
 			 * @param data
 			 *            TimerData
 			 * @param column
@@ -295,14 +294,14 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 				case EXCLUSIVEMIN:
 				case EXCLUSIVESUM:
 					int affPercentage = (int) (data.getInvocationAffiliationPercentage() * 100);
-					return data.isExclusiveTimeDataAvailable() && affPercentage < 100;
+					return data.isExclusiveTimeDataAvailable() && (affPercentage < 100);
 				default:
 					return false;
 				}
 			}
 
 			/**
-			 * 
+			 *
 			 * {@inheritDoc}
 			 */
 			@Override
@@ -347,13 +346,13 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 	@Override
 	public ViewerComparator getComparator() {
 		ICachedDataService cachedDataService = getInputDefinition().getRepositoryDefinition().getCachedDataService();
-		TableViewerComparator<HttpTimerData> httpTimerDataViewerComparator = new TableViewerComparator<HttpTimerData>();
+		TableViewerComparator<HttpTimerData> httpTimerDataViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
 			ResultComparator<HttpTimerData> resultComparator;
 			if (Column.URI.equals(column)) {
-				resultComparator = new ResultComparator<HttpTimerData>(new UriOrRegExComparator(column.dataComparator), cachedDataService);
+				resultComparator = new ResultComparator<>(new UriOrRegExComparator(column.dataComparator), cachedDataService);
 			} else {
-				resultComparator = new ResultComparator<HttpTimerData>(column.dataComparator, cachedDataService);
+				resultComparator = new ResultComparator<>(column.dataComparator, cachedDataService);
 			}
 			httpTimerDataViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
@@ -386,7 +385,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof HttpTimerData) {
 			HttpTimerData data = (HttpTimerData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, column).toString());
 			}
@@ -397,7 +396,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param enumId
@@ -504,13 +503,17 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 
 	/**
 	 * The RegEx aggregator.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	@SuppressWarnings("serial")
 	private static final class RegExHttpAggregator extends HttpTimerDataAggregator {
 
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 4613696140758499143L;
 		/**
 		 * HTTP sensor type ident.
 		 */
@@ -518,7 +521,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param httpSensorTypeIdent
 		 *            HTTP sensor type ident.
 		 * @param includeRequestMethod
@@ -561,10 +564,10 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 			final int prime = 31;
 			int result = 0;
 			String transformed = RegExAggregatedHttpTimerData.getTransformedUri(httpData, httpSensorTypeIdent);
-			result = prime * result + ((transformed == null) ? 0 : transformed.hashCode());
+			result = (prime * result) + ((transformed == null) ? 0 : transformed.hashCode());
 
 			if (includeRequestMethod) {
-				result = prime * result + ((httpData.getHttpInfo().getRequestMethod() == null) ? 0 : httpData.getHttpInfo().getRequestMethod().hashCode());
+				result = (prime * result) + ((httpData.getHttpInfo().getRequestMethod() == null) ? 0 : httpData.getHttpInfo().getRequestMethod().hashCode());
 			}
 			return result;
 		}
@@ -574,7 +577,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 	/**
 	 * Comparator that is needed for the column where URI or regular expression transformation can
 	 * be displayed.
-	 * 
+	 *
 	 * @author Ivan Senic
 	 */
 	private static final class UriOrRegExComparator implements IDataComparator<HttpTimerData> {
@@ -597,7 +600,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 		 */
 		@Override
 		public int compare(HttpTimerData o1, HttpTimerData o2, ICachedDataService cachedDataService) {
-			if (o1 instanceof RegExAggregatedHttpTimerData && o2 instanceof RegExAggregatedHttpTimerData) {
+			if ((o1 instanceof RegExAggregatedHttpTimerData) && (o2 instanceof RegExAggregatedHttpTimerData)) {
 				return ((RegExAggregatedHttpTimerData) o1).getTransformedUri().compareToIgnoreCase(((RegExAggregatedHttpTimerData) o2).getTransformedUri());
 			} else {
 				return comparator.compare(o1, o2, cachedDataService);

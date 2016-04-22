@@ -7,9 +7,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Class that hold all information about a CMR status.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CmrStatusData implements Serializable {
 
@@ -75,7 +75,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #currentBufferSize}.
-	 * 
+	 *
 	 * @return {@link #currentBufferSize}
 	 */
 	public long getCurrentBufferSize() {
@@ -84,7 +84,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #currentBufferSize}.
-	 * 
+	 *
 	 * @param currentBufferSize
 	 *            New value for {@link #currentBufferSize}
 	 */
@@ -94,7 +94,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #maxBufferSize}.
-	 * 
+	 *
 	 * @return {@link #maxBufferSize}
 	 */
 	public long getMaxBufferSize() {
@@ -103,7 +103,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #maxBufferSize}.
-	 * 
+	 *
 	 * @param maxBufferSize
 	 *            New value for {@link #maxBufferSize}
 	 */
@@ -113,7 +113,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #bufferOldestElement}.
-	 * 
+	 *
 	 * @return {@link #bufferOldestElement}
 	 */
 	public DefaultData getBufferOldestElement() {
@@ -122,7 +122,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #bufferOldestElement}.
-	 * 
+	 *
 	 * @param bufferOldestElement
 	 *            New value for {@link #bufferOldestElement}
 	 */
@@ -132,7 +132,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #bufferNewestElement}.
-	 * 
+	 *
 	 * @return {@link #bufferNewestElement}
 	 */
 	public DefaultData getBufferNewestElement() {
@@ -141,7 +141,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #bufferNewestElement}.
-	 * 
+	 *
 	 * @param bufferNewestElement
 	 *            New value for {@link #bufferNewestElement}
 	 */
@@ -151,7 +151,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #storageDataSpaceLeft}.
-	 * 
+	 *
 	 * @return {@link #storageDataSpaceLeft}
 	 */
 	public long getStorageDataSpaceLeft() {
@@ -160,7 +160,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #storageDataSpaceLeft}.
-	 * 
+	 *
 	 * @param storageDataSpaceLeft
 	 *            New value for {@link #storageDataSpaceLeft}
 	 */
@@ -170,7 +170,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #storageMaxDataSpace}.
-	 * 
+	 *
 	 * @return {@link #storageMaxDataSpace}
 	 */
 	public long getStorageMaxDataSpace() {
@@ -179,7 +179,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #storageMaxDataSpace}.
-	 * 
+	 *
 	 * @param storageMaxDataSpace
 	 *            New value for {@link #storageMaxDataSpace}
 	 */
@@ -189,7 +189,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #warnSpaceLeftActive}.
-	 * 
+	 *
 	 * @return {@link #warnSpaceLeftActive}
 	 */
 	public boolean isWarnSpaceLeftActive() {
@@ -198,7 +198,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #warnSpaceLeftActive}.
-	 * 
+	 *
 	 * @param warnSpaceLeftActive
 	 *            New value for {@link #warnSpaceLeftActive}
 	 */
@@ -208,7 +208,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #canWriteMore}.
-	 * 
+	 *
 	 * @return {@link #canWriteMore}
 	 */
 	public boolean isCanWriteMore() {
@@ -217,7 +217,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #canWriteMore}.
-	 * 
+	 *
 	 * @param canWriteMore
 	 *            New value for {@link #canWriteMore}
 	 */
@@ -227,7 +227,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #upTime}.
-	 * 
+	 *
 	 * @return {@link #upTime}
 	 */
 	public long getUpTime() {
@@ -236,7 +236,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #upTime}.
-	 * 
+	 *
 	 * @param upTime
 	 *            New value for {@link #upTime}
 	 */
@@ -246,7 +246,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #dateStarted}.
-	 * 
+	 *
 	 * @return {@link #dateStarted}
 	 */
 	public Date getDateStarted() {
@@ -255,7 +255,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #dateStarted}.
-	 * 
+	 *
 	 * @param dateStarted
 	 *            New value for {@link #dateStarted}
 	 */
@@ -265,7 +265,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #databaseSize}.
-	 * 
+	 *
 	 * @return {@link #databaseSize}
 	 */
 	public Long getDatabaseSize() {
@@ -274,7 +274,7 @@ public class CmrStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #databaseSize}.
-	 * 
+	 *
 	 * @param databaseSize
 	 *            New value for {@link #databaseSize}
 	 */
@@ -289,17 +289,17 @@ public class CmrStatusData implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((bufferNewestElement == null) ? 0 : bufferNewestElement.hashCode());
-		result = prime * result + ((bufferOldestElement == null) ? 0 : bufferOldestElement.hashCode());
-		result = prime * result + (canWriteMore ? 1231 : 1237);
-		result = prime * result + (int) (currentBufferSize ^ (currentBufferSize >>> 32));
-		result = prime * result + ((databaseSize == null) ? 0 : databaseSize.hashCode());
-		result = prime * result + ((dateStarted == null) ? 0 : dateStarted.hashCode());
-		result = prime * result + (int) (maxBufferSize ^ (maxBufferSize >>> 32));
-		result = prime * result + (int) (storageDataSpaceLeft ^ (storageDataSpaceLeft >>> 32));
-		result = prime * result + (int) (storageMaxDataSpace ^ (storageMaxDataSpace >>> 32));
-		result = prime * result + (int) (upTime ^ (upTime >>> 32));
-		result = prime * result + (warnSpaceLeftActive ? 1231 : 1237);
+		result = (prime * result) + ((bufferNewestElement == null) ? 0 : bufferNewestElement.hashCode());
+		result = (prime * result) + ((bufferOldestElement == null) ? 0 : bufferOldestElement.hashCode());
+		result = (prime * result) + (canWriteMore ? 1231 : 1237);
+		result = (prime * result) + (int) (currentBufferSize ^ (currentBufferSize >>> 32));
+		result = (prime * result) + ((databaseSize == null) ? 0 : databaseSize.hashCode());
+		result = (prime * result) + ((dateStarted == null) ? 0 : dateStarted.hashCode());
+		result = (prime * result) + (int) (maxBufferSize ^ (maxBufferSize >>> 32));
+		result = (prime * result) + (int) (storageDataSpaceLeft ^ (storageDataSpaceLeft >>> 32));
+		result = (prime * result) + (int) (storageMaxDataSpace ^ (storageMaxDataSpace >>> 32));
+		result = (prime * result) + (int) (upTime ^ (upTime >>> 32));
+		result = (prime * result) + (warnSpaceLeftActive ? 1231 : 1237);
 		return result;
 	}
 

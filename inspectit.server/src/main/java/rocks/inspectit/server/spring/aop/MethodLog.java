@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Marker for methods that will be logged and/or profiled, By placing this annotation on a method
  * spring will proxy the service and call the interceptor that provides advice to the real method
  * call.
- * 
+ *
  * @author Patrice Bouillet
  */
 @Target(ElementType.METHOD)
@@ -21,9 +21,9 @@ public @interface MethodLog {
 	/**
 	 * The log level which can be used. The level from logback cannot be used directly as it is not
 	 * allowed as a return type.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public enum Level {
 		OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL; // NOCHK

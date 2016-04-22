@@ -11,6 +11,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -31,9 +32,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 /**
  * This class represents the textual view of all platform-sensor-types. The shown informations are
  * static and dynamic
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class VmSummaryInputController extends AbstractTextInputController {
 
@@ -125,7 +126,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	/**
 	 * The {@link HashMap} containing the minimized sections.
 	 */
-	private final Map<String, Composite> minimizedSections = new HashMap<String, Composite>();
+	private final Map<String, Composite> minimizedSections = new HashMap<>();
 
 	/**
 	 * The label for loaded classes.
@@ -260,12 +261,12 @@ public class VmSummaryInputController extends AbstractTextInputController {
 
 	/**
 	 * Returns the new composite with initialized input and sections with text labels.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param toolkit
 	 *            The form toolkit.
-	 * 
+	 *
 	 */
 	private void initializeInput(Composite parent, FormToolkit toolkit) {
 		int labelStyle = SWT.LEFT;
@@ -362,7 +363,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 
 	/**
 	 * Adds some static text informations to the parent component.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param toolkit
@@ -384,7 +385,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 			// split vm name
 			String vmFullName = data.getVmName();
 			String[] vmNames = vmFullName.split("@");
-			if (vmNames != null && vmNames.length > 1) {
+			if ((vmNames != null) && (vmNames.length > 1)) {
 				processId = vmNames[0];
 				pcName = vmNames[1];
 			}
@@ -464,7 +465,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 			}
 
 			// sorting vm arguments
-			TreeSet<VmArgumentData> treeSet = new TreeSet<VmArgumentData>(new Comparator<VmArgumentData>() {
+			TreeSet<VmArgumentData> treeSet = new TreeSet<>(new Comparator<VmArgumentData>() {
 				@Override
 				public int compare(VmArgumentData one, VmArgumentData two) {
 					return one.getVmName().compareTo(two.getVmName());
@@ -515,7 +516,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 
 	/**
 	 * Adds minimized section to bundle some content.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param toolkit
@@ -526,7 +527,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	 *            The number of columns to span.
 	 */
 	private void addMinimizedSection(Composite parent, FormToolkit toolkit, String sectionTitle, int numColums) {
-		Section section = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText(sectionTitle);
 		section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
@@ -544,7 +545,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 
 	/**
 	 * Adds a section which is not available due to not activated platform sensor types.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param toolkit
@@ -555,7 +556,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 	 *            the number of columns to span.
 	 */
 	private void addMinimizedSectionNotAvailable(Composite parent, FormToolkit toolkit, String sectionTitle, int numColums) {
-		Section section = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText(sectionTitle);
 		section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
@@ -574,7 +575,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 
 	/**
 	 * Adds an item to the specified section.
-	 * 
+	 *
 	 * @param toolkit
 	 *            The form toolkit.
 	 * @param sectionTitle
@@ -606,7 +607,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 
 	/**
 	 * Updates the labels with the dynamic informations.
-	 * 
+	 *
 	 * @param classLoadingData
 	 *            The {@link ClassLoadingInformationData} object.
 	 * @param cpuData

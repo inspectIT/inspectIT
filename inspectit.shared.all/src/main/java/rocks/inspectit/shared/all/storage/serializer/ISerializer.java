@@ -8,9 +8,9 @@ import com.esotericsoftware.kryo.io.Output;
 /**
  * Generic interface for serializer to be used in inspectIT. The interface defines only two methods,
  * one for serialization and one from the serialization.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface ISerializer {
 
@@ -18,7 +18,7 @@ public interface ISerializer {
 	 * Serialize the object into bytes and puts the bytes in the supplied {@link Output}. All
 	 * operations for preparing the output have to be performed before calling this method. The
 	 * {@link Output#flush()} will be called after the serialization.
-	 * 
+	 *
 	 * @param object
 	 *            Object to serialize.
 	 * @param output
@@ -35,7 +35,7 @@ public interface ISerializer {
 	 * <p>
 	 * This method allows the caller to pass the map which will be added to the kryo graph context,
 	 * so that any preference can be passed to the serializer expecting them.
-	 * 
+	 *
 	 * @param object
 	 *            Object to serialize.
 	 * @param output
@@ -50,7 +50,7 @@ public interface ISerializer {
 	/**
 	 * De-serialize the bytes provided by the {@link Input}. It is responsibility of the caller to
 	 * set up the input correctly. The way bytes are read, is defined in the implementing classes.
-	 * 
+	 *
 	 * @param input
 	 *            {@link Input} that provides the bytes.
 	 * @return Returns the de-serialized object.
@@ -61,7 +61,7 @@ public interface ISerializer {
 
 	/**
 	 * Returns result of the Kryo copy operation. Effectively clones the object.
-	 * 
+	 *
 	 * @param <T>
 	 *            type of the object
 	 * @param object

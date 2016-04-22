@@ -7,15 +7,15 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Interface for the listeners on the {@link Environment} changes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IEnvironmentChangeListener extends EventListener {
 
 	/**
 	 * Environment created.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}
 	 * @param repositoryDefinition
@@ -25,7 +25,7 @@ public interface IEnvironmentChangeListener extends EventListener {
 
 	/**
 	 * Environment updated.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}
 	 * @param repositoryDefinition
@@ -35,7 +35,7 @@ public interface IEnvironmentChangeListener extends EventListener {
 
 	/**
 	 * Environment deleted.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}
 	 * @param repositoryDefinition

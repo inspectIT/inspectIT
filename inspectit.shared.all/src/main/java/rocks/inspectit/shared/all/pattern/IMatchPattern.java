@@ -1,6 +1,5 @@
 package rocks.inspectit.shared.all.pattern;
 
-
 /**
  * The interface is used to try to match a given pattern to a string via {@link #match(String)}. The
  * {@link #getPattern()} just returns the used pattern.

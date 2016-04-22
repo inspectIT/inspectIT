@@ -16,7 +16,7 @@ import rocks.inspectit.ui.rcp.editor.root.RootEditorInput;
 /**
  * The open view handler which takes care of opening a view by retrieving the
  * {@link InputDefinition}.
- * 
+ *
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
@@ -35,6 +35,7 @@ public class OpenViewHandler extends AbstractHandler {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// Get the view
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);

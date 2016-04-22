@@ -44,13 +44,13 @@ public class TimeframeDividerTest {
 
 	/**
 	 * Creates countOfObjects data objects.
-	 * 
+	 *
 	 * @param countOfObjects
 	 *            The count of objects to create.
 	 * @return The list with data objects.
 	 */
 	public List<ClassLoadingInformationData> createDataObjects(int countOfObjects) {
-		List<ClassLoadingInformationData> tempObjects = new ArrayList<ClassLoadingInformationData>();
+		List<ClassLoadingInformationData> tempObjects = new ArrayList<>();
 
 		// the time of the first data object is Mon Sep 15 11:00:00 CEST 2008
 		long currentTime = 1221469200000L;
@@ -107,7 +107,7 @@ public class TimeframeDividerTest {
 	 */
 	@Test()
 	public void nineValuesInOneTimeframe() {
-		List<ClassLoadingInformationData> tempList = new ArrayList<ClassLoadingInformationData>();
+		List<ClassLoadingInformationData> tempList = new ArrayList<>();
 		List<? extends DefaultData> resultList = null;
 		Sensitivity sensitivity = SamplingRateControl.Sensitivity.VERY_COARSE;
 

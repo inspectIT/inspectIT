@@ -16,16 +16,16 @@ import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
 
 /**
  * Utility class for Network registrations when using kryonet.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public final class KryoNetNetwork {
 
 	/**
 	 * Registers needed classes for network communication.
-	 * 
+	 *
 	 * @param kryo
 	 *            Kryo instance.
 	 */

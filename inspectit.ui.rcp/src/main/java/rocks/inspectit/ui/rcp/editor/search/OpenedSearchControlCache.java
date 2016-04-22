@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Caches the information about the {@link ISearchExecutor}s that already have {@link SearchControl}
  * opened.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class OpenedSearchControlCache {
 
@@ -21,11 +21,11 @@ public final class OpenedSearchControlCache {
 	/**
 	 * Map for caching.
 	 */
-	private static Map<ISearchExecutor, SearchControl> openedSearchControlMap = new ConcurrentHashMap<ISearchExecutor, SearchControl>();
+	private static Map<ISearchExecutor, SearchControl> openedSearchControlMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Returns if the {@link ISearchExecutor} already has a {@link SearchControl} registered.
-	 * 
+	 *
 	 * @param searchExecutor
 	 *            {@link ISearchExecutor} to check.
 	 * @return True if the {@link SearchControl} is already registered for a {@link ISearchExecutor}
@@ -37,7 +37,7 @@ public final class OpenedSearchControlCache {
 
 	/**
 	 * Registers the search control with search executor.
-	 * 
+	 *
 	 * @param searchExecutor
 	 *            {@link ISearchExecutor}
 	 * @param searchControl
@@ -51,7 +51,7 @@ public final class OpenedSearchControlCache {
 
 	/**
 	 * Registers the search executor.
-	 * 
+	 *
 	 * @param searchExecutor
 	 *            {@link ISearchExecutor}
 	 */
@@ -61,7 +61,7 @@ public final class OpenedSearchControlCache {
 
 	/**
 	 * Returns the search control.
-	 * 
+	 *
 	 * @param searchExecutor
 	 *            Search executor control is bounded to.
 	 * @return {@link SearchControl}.

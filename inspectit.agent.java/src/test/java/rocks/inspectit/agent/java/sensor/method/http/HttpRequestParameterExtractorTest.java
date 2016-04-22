@@ -24,7 +24,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.sensor.method.http.HttpRequestParameterExtractor;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 

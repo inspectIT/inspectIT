@@ -1,11 +1,11 @@
 package rocks.inspectit.agent.java.connection;
 
 /**
- * <b>IMPORTANT:</b> The class code is copied/taken from <a
- * href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>. Original
- * author is William Grosso. License info can be found <a
- * href="http://www.oreilly.com/terms/">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken from
+ * <a href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>.
+ * Original author is William Grosso. License info can be found
+ * <a href="http://www.oreilly.com/terms/">here</a>.
+ *
  * @author William Grosso
  */
 public class ServerUnavailableException extends Exception {
@@ -29,7 +29,7 @@ public class ServerUnavailableException extends Exception {
 
 	/**
 	 * Constructor to set timeout state.
-	 * 
+	 *
 	 * @param serverTimeout
 	 *            if timeout occurred during server call.
 	 */
@@ -39,7 +39,7 @@ public class ServerUnavailableException extends Exception {
 
 	/**
 	 * Gets {@link #serverTimeout}.
-	 * 
+	 *
 	 * @return {@link #serverTimeout}
 	 */
 	public boolean isServerTimeout() {

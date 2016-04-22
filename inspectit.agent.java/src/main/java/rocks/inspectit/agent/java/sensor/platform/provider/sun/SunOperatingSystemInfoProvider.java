@@ -11,11 +11,11 @@ import rocks.inspectit.agent.java.sensor.platform.provider.util.CpuUsageCalculat
 /**
  * This class retrieves all the data as {@link OperatingSystemInfoProvider} from
  * {@link OperatingSystemMXBean} from Sun.
- * 
+ *
  * @see com.sun.management.OperatingSystemMXBean
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvider {
 

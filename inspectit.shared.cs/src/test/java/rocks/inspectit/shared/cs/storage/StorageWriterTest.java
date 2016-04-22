@@ -27,8 +27,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterTest;
@@ -44,11 +44,6 @@ import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
 import rocks.inspectit.shared.all.storage.serializer.ISerializer;
 import rocks.inspectit.shared.all.storage.serializer.SerializationException;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
-import rocks.inspectit.shared.cs.storage.IStorageData;
-import rocks.inspectit.shared.cs.storage.StorageData;
-import rocks.inspectit.shared.cs.storage.StorageIndexingTreeHandler;
-import rocks.inspectit.shared.cs.storage.StorageManager;
-import rocks.inspectit.shared.cs.storage.StorageWriter;
 import rocks.inspectit.shared.cs.storage.StorageWriter.WriteTask;
 import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 import rocks.inspectit.shared.cs.storage.nio.write.WritingChannelManager;
@@ -100,11 +95,11 @@ public class StorageWriterTest {
 		MockitoAnnotations.initMocks(this);
 		storageWriter = new StorageWriter();
 		when(streamProvider.getExtendedByteBufferOutputStream()).thenReturn(extendedByteBufferOutputStream);
-		when(storageIndexingTreeHandler.startWrite(Mockito.<WriteTask> anyObject())).thenReturn(1);
+		when(storageIndexingTreeHandler.startWrite(Matchers.<WriteTask> anyObject())).thenReturn(1);
 		when(storageManager.canWriteMore()).thenReturn(true);
-		when(storageManager.getChannelPath(Mockito.<IStorageData> anyObject(), anyInt())).thenReturn(Paths.get("test"));
+		when(storageManager.getChannelPath(Matchers.<IStorageData> anyObject(), anyInt())).thenReturn(Paths.get("test"));
 		when(serializerQueue.take()).thenReturn(serializer);
-		when(scheduledExecutorService.scheduleWithFixedDelay(Mockito.<Runnable> anyObject(), anyLong(), anyLong(), Mockito.<TimeUnit> anyObject())).thenReturn(future);
+		when(scheduledExecutorService.scheduleWithFixedDelay(Matchers.<Runnable> anyObject(), anyLong(), anyLong(), Matchers.<TimeUnit> anyObject())).thenReturn(future);
 		storageWriter.indexingTreeHandler = storageIndexingTreeHandler;
 		storageWriter.storageManager = storageManager;
 		storageWriter.writingChannelManager = writingChannelManager;
@@ -213,7 +208,7 @@ public class StorageWriterTest {
 	public void writeTaskFailedSerialization() throws SerializationException {
 		TimerData timerData = new TimerData();
 		WriteTask writeTask = storageWriter.new WriteTask(timerData, Collections.emptyMap());
-		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Mockito.<Output> anyObject(), Mockito.<Map<?, ?>> anyObject());
+		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Matchers.<Output> anyObject(), Matchers.<Map<?, ?>> anyObject());
 
 		writeTask.run();
 
@@ -227,8 +222,8 @@ public class StorageWriterTest {
 	public void writeTaskExceptionDuringWrite() throws IOException {
 		TimerData timerData = new TimerData();
 		WriteTask writeTask = storageWriter.new WriteTask(timerData, Collections.emptyMap());
-		doThrow(IOException.class).when(writingChannelManager).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), Mockito.<Path> anyObject(),
-				Mockito.<WriteReadCompletionRunnable> anyObject());
+		doThrow(IOException.class).when(writingChannelManager).write(Matchers.<ExtendedByteBufferOutputStream> anyObject(), Matchers.<Path> anyObject(),
+				Matchers.<WriteReadCompletionRunnable> anyObject());
 
 		writeTask.run();
 
@@ -241,7 +236,8 @@ public class StorageWriterTest {
 	public void writeTaskThrowableDuringWrite() throws IOException {
 		TimerData timerData = new TimerData();
 		WriteTask writeTask = storageWriter.new WriteTask(timerData, Collections.emptyMap());
-		doThrow(Throwable.class).when(writingChannelManager).write(Mockito.<ExtendedByteBufferOutputStream> anyObject(), Mockito.<Path> anyObject(), Mockito.<WriteReadCompletionRunnable> anyObject());
+		doThrow(Throwable.class).when(writingChannelManager).write(Matchers.<ExtendedByteBufferOutputStream> anyObject(), Matchers.<Path> anyObject(),
+				Matchers.<WriteReadCompletionRunnable> anyObject());
 
 		writeTask.run();
 
@@ -272,8 +268,8 @@ public class StorageWriterTest {
 		when(storageManager.getStoragePath(storageData)).thenReturn(testPath);
 		storageWriter.prepareForWrite(storageData);
 
-		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Mockito.<Output> anyObject(), Mockito.<Map<?, ?>> anyObject());
-		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Mockito.<Output> anyObject());
+		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Matchers.<Output> anyObject(), Matchers.<Map<?, ?>> anyObject());
+		doThrow(SerializationException.class).when(serializer).serialize(anyObject(), Matchers.<Output> anyObject());
 		storageWriter.writeNonDefaultDataObject(new Object(), "myFile");
 
 		verify(serializerQueue, times(1)).add(serializer);

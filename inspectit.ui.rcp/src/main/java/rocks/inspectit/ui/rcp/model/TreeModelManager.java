@@ -17,15 +17,15 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.formatter.SensorTypeAvailabilityEnum;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * The manager is used to create a tree model currently used by the {@link ServerView}.
- * 
+ *
  * @author Patrice Bouillet
  * @author Eduard Tudenh�fner
  * @author Stefan Siegl
@@ -51,7 +51,7 @@ public class TreeModelManager {
 	/**
 	 * Every tree model manager needs a reference to a {@link RepositoryDefinition} which reflects a
 	 * CMR.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            The definition of the repository / CMR.
 	 * @param platformIdent
@@ -69,11 +69,11 @@ public class TreeModelManager {
 
 	/**
 	 * Returns the root elements of this model.
-	 * 
+	 *
 	 * @return The root elements.
 	 */
 	public Object[] getRootElements() {
-		List<Component> components = new ArrayList<Component>();
+		List<Component> components = new ArrayList<>();
 		if (null != platformIdent) {
 			// Add all sub-trees to this Agent
 			components.add(getInstrumentedMethodsTree(platformIdent, repositoryDefinition));
@@ -90,7 +90,7 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the deferred sub-tree for the JMX data.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ID used to create the sub-tree.
 	 * @param definition
@@ -153,7 +153,7 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the deferred sub-tree for instrumented methods.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ID used to create the sub-tree.
 	 * @param definition
@@ -176,7 +176,7 @@ public class TreeModelManager {
 
 	/**
 	 * Returns the invocation sequence tree.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident used to create the tree.
 	 * @param definition
@@ -226,9 +226,9 @@ public class TreeModelManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * Returns the SQL tree.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident used to create the tree.
 	 * @param definition
@@ -269,7 +269,7 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the sub-tree for the platform sensors.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident.
 	 * @param definition
@@ -282,7 +282,7 @@ public class TreeModelManager {
 		systemOverview.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SYSTEM_OVERVIEW));
 
 		Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
-		List<PlatformSensorTypeIdent> platformSensorTypeIdentList = new ArrayList<PlatformSensorTypeIdent>();
+		List<PlatformSensorTypeIdent> platformSensorTypeIdentList = new ArrayList<>();
 
 		// get all platform sensor types
 		for (SensorTypeIdent sensorTypeIdent : sensorTypeIdents) {
@@ -294,6 +294,7 @@ public class TreeModelManager {
 
 		// sort the platform sensor types
 		Collections.sort(platformSensorTypeIdentList, new Comparator<PlatformSensorTypeIdent>() {
+			@Override
 			public int compare(PlatformSensorTypeIdent one, PlatformSensorTypeIdent two) {
 				return one.getFullyQualifiedClassName().compareTo(two.getFullyQualifiedClassName());
 			}
@@ -308,6 +309,7 @@ public class TreeModelManager {
 
 		// sort the tree elements
 		Collections.sort(systemOverview.getChildren(), new Comparator<Component>() {
+			@Override
 			public int compare(Component componentOne, Component componentTwo) {
 				return componentOne.getName().compareTo(componentTwo.getName());
 			}
@@ -318,10 +320,10 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the cpu leaf.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident object.
-	 * 
+	 *
 	 * @param platformSensorTypeIdents
 	 *            The list of {@link PlatformSensorTypeIdent}.
 	 * @param definition
@@ -370,10 +372,10 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the platform sensor classes leaf.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident object.
-	 * 
+	 *
 	 * @param platformSensorTypeIdents
 	 *            The list of {@link PlatformSensorTypeIdent}.
 	 * @param definition
@@ -422,10 +424,10 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the platform sensor memory leaf.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident object.
-	 * 
+	 *
 	 * @param platformSensorTypeIdents
 	 *            The list of {@link PlatformSensorTypeIdent}.
 	 * @param definition
@@ -441,7 +443,7 @@ public class TreeModelManager {
 		for (PlatformSensorTypeIdent platformSensorTypeIdent : platformSensorTypeIdents) {
 			if (platformSensorTypeIdent.getFullyQualifiedClassName().equalsIgnoreCase(SensorTypeEnum.MEMORY_INFORMATION.getFqn())) {
 				sensorTypeAvailable = true;
-				List<PlatformSensorTypeIdent> platformSensorTypeIdentList = new ArrayList<PlatformSensorTypeIdent>();
+				List<PlatformSensorTypeIdent> platformSensorTypeIdentList = new ArrayList<>();
 				// add sensor types to local list
 				platformSensorTypeIdentList.add(platformSensorTypeIdent);
 				for (PlatformSensorTypeIdent platformSensorTypeIdent2 : platformSensorTypeIdents) {
@@ -482,10 +484,10 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the platform sensor thread leaf.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident object.
-	 * 
+	 *
 	 * @param platformSensorTypeIdents
 	 *            The list of {@link PlatformSensorTypeIdent}.
 	 * @param definition
@@ -534,10 +536,10 @@ public class TreeModelManager {
 
 	/**
 	 * Creates the platform sensor VM Summary leaf.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident object.
-	 * 
+	 *
 	 * @param platformSensorTypeIdents
 	 *            The list of {@link PlatformSensorTypeIdent}.
 	 * @param definition
@@ -582,7 +584,7 @@ public class TreeModelManager {
 
 	/**
 	 * Returns the exception sensor tree.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The {@link PlatformIdent} object used to create the tree.
 	 * @param definition
@@ -603,7 +605,7 @@ public class TreeModelManager {
 
 	/**
 	 * Returns the ungrouped Exception Overview.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The {@link PlatformIdent} object.
 	 * @param definition
@@ -637,7 +639,7 @@ public class TreeModelManager {
 
 	/**
 	 * Returns the grouped Exception Overview.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The {@link PlatformIdent} object.
 	 * @param definition
@@ -670,7 +672,7 @@ public class TreeModelManager {
 
 	/**
 	 * Returns the Timer data tree.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident used to create the tree.
 	 * @param definition
@@ -719,7 +721,7 @@ public class TreeModelManager {
 
 	/**
 	 * Returns the Http Timer data tree.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The platform ident used to create the tree.
 	 * @param definition
@@ -764,8 +766,8 @@ public class TreeModelManager {
 		Component taggedView = new Leaf();
 		taggedView.setName("Use Case Aggregation");
 		taggedView.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP_TAGGED));
-		taggedView.setTooltip("Aggregates all http request that are currently in the buffer based on a the concrete value of the inspectIT Tag Header (called \""
-				+ HttpTimerData.INSPECTIT_TAGGING_HEADER + "\")");
+		taggedView.setTooltip(
+				"Aggregates all http request that are currently in the buffer based on a the concrete value of the inspectIT Tag Header (called \"" + HttpTimerData.INSPECTIT_TAGGING_HEADER + "\")");
 
 		inputDefinition = new InputDefinition();
 		inputDefinition.setRepositoryDefinition(definition);

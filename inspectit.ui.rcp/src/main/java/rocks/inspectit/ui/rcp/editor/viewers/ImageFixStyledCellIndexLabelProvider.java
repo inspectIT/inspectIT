@@ -20,9 +20,9 @@ import rocks.inspectit.ui.rcp.InspectIT;
  * Extension of the {@link StyledCellLabelProvider} that fixes the Eclipse bug with the image sizes
  * in the columns must be same width. Does this by custom painting. Note is not applicable for
  * viewers using PendingAdapterUpdates.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ImageFixStyledCellIndexLabelProvider extends StyledCellIndexLabelProvider {
 
@@ -109,7 +109,7 @@ public class ImageFixStyledCellIndexLabelProvider extends StyledCellIndexLabelPr
 
 	/**
 	 * Using reflection to call {@link #getSharedTextLayout(Display)} in the super class.
-	 * 
+	 *
 	 * @param display
 	 *            {@link Display}
 	 * @return {@link TextLayout} given by mentioned method or <code>null</code> if not available.

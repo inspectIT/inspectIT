@@ -222,7 +222,7 @@ public abstract class ValidationControlDecoration<T extends Control> {
 			}
 		}
 
-		if (informListenerAlways || tmp != valid) {
+		if (informListenerAlways || (tmp != valid)) {
 			for (IControlValidationListener listener : validationListeners) {
 				listener.validationStateChanged(valid, ValidationControlDecoration.this);
 			}

@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
- * 
+ *
  * @author Alfred Krauss
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface IJmxDataAccessService {
@@ -18,7 +18,7 @@ public interface IJmxDataAccessService {
 	/**
 	 * Returns a list of captured jmx data for a given template. In the template, only the platform
 	 * id is extracted.
-	 * 
+	 *
 	 * @param jmxSensorValueData
 	 *            The template containing the platform id.
 	 * @return The list of jmx value data.
@@ -28,7 +28,7 @@ public interface IJmxDataAccessService {
 	/**
 	 * Returns a list of captured jmx data for a given template in a time frame. In the template,
 	 * only the platform id is extracted. Only the latest data of a sensor will be returned.
-	 * 
+	 *
 	 * @param jmxSensorValueData
 	 *            The template containing the platform id.
 	 * @param fromDate

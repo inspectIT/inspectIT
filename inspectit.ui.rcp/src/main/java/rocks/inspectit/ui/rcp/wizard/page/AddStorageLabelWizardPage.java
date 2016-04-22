@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -59,9 +60,9 @@ import rocks.inspectit.ui.rcp.wizard.ManageLabelWizard;
 
 /**
  * Page for adding storage labels.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AddStorageLabelWizardPage extends WizardPage {
 
@@ -100,7 +101,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 	/**
 	 * List of labels to add.
 	 */
-	private final List<AbstractStorageLabel<?>> labelsToAdd = new ArrayList<AbstractStorageLabel<?>>();
+	private final List<AbstractStorageLabel<?>> labelsToAdd = new ArrayList<>();
 
 	/**
 	 * Widgets.
@@ -142,7 +143,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 	 * Default constructor. Use this constructor when storage data is known. Note that using the
 	 * page this way, {@link #optional} value is set to true, thus wizard page would not allow to
 	 * finish until label is correctly created.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}
 	 * @param cmrRepositoryDefinition
@@ -162,7 +163,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 	/**
 	 * The constructor for usage when storage to label is not known in advance. Note that using this
 	 * constructor will set {@link #optional} to true.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}
 	 */
@@ -257,7 +258,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 				ManageLabelWizard manageLabelWizard = new ManageLabelWizard(cmrRepositoryDefinition);
 				WizardDialog wizardDialog = new WizardDialog(getShell(), manageLabelWizard);
 				wizardDialog.open();
-				if (wizardDialog.getReturnCode() == WizardDialog.OK) {
+				if (wizardDialog.getReturnCode() == Window.OK) {
 					updateLabelTypes();
 				}
 			}
@@ -311,7 +312,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Updates the labels types available on the server.
-	 * 
+	 *
 	 */
 	private void updateLabelTypes() {
 		Job updateLabelsTypes = new Job("Loading Label Types") {
@@ -353,7 +354,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Creates the table for the labels.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 */
@@ -410,7 +411,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 
 			@Override
 			protected Image getColumnImage(Object element, int index) {
-				if (index == 0 && element instanceof AbstractStorageLabel) {
+				if ((index == 0) && (element instanceof AbstractStorageLabel)) {
 					return ImageFormatter.getImageForLabel(((AbstractStorageLabel<?>) element).getStorageLabelType());
 				}
 				return null;
@@ -423,7 +424,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Returns if the label type is present in the storage or in the list of labels to add.
-	 * 
+	 *
 	 * @param selectedLabelType
 	 *            Selected {@link AbstractStorageLabelType}.
 	 * @return True if label type already exists.
@@ -460,7 +461,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Gets {@link #labelsToAdd}.
-	 * 
+	 *
 	 * @return {@link #labelsToAdd}
 	 */
 	public List<AbstractStorageLabel<?>> getLabelsToAdd() {
@@ -476,7 +477,7 @@ public class AddStorageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Sets {@link #storageData}.
-	 * 
+	 *
 	 * @param storageData
 	 *            New value for {@link #storageData}
 	 */

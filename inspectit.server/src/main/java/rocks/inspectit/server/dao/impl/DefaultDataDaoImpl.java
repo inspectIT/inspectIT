@@ -36,7 +36,7 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * The default implementation of the {@link DefaultDataDao} interface by using the Entity manager.
- * 
+ *
  * @author Patrice Bouillet
  * @author Eduard Tudenhoefner
  * @author Ivan Senic
@@ -68,6 +68,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 	 * <p>
 	 * We must mark this as transactional cause it's running outside our services.
 	 */
+	@Override
 	@Transactional
 	public void saveAll(List<? extends DefaultData> defaultDataCollection) {
 		try {
@@ -82,6 +83,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<DefaultData> findByExampleWithLastInterval(DefaultData template, long timeInterval) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DefaultData> criteria = builder.createQuery(DefaultData.class);
@@ -110,6 +112,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<DefaultData> findByExampleSinceId(DefaultData template) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DefaultData> criteria = builder.createQuery(DefaultData.class);
@@ -138,6 +141,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<DefaultData> findByExampleSinceIdIgnoreMethodId(DefaultData template) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DefaultData> criteria = builder.createQuery(DefaultData.class);
@@ -155,6 +159,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<DefaultData> findByExampleFromToDate(DefaultData template, Date fromDate, Date toDate) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DefaultData> criteria = builder.createQuery(DefaultData.class);
@@ -183,6 +188,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DefaultData findByExampleLastData(DefaultData template) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DefaultData> criteria = builder.createQuery(DefaultData.class);
@@ -228,7 +234,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 			Predicate condition = null;
 
 			if (!retrieveByTag) {
-				Set<String> uris = new HashSet<String>();
+				Set<String> uris = new HashSet<>();
 				for (HttpTimerData httpTimerData : templates) {
 					if (!HttpInfo.UNDEFINED.equals(httpTimerData.getHttpInfo().getUri())) {
 						uris.add(httpTimerData.getHttpInfo().getUri());
@@ -236,7 +242,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 				}
 				condition = root.join("httpInfo").get("uri").in(uris);
 			} else {
-				Set<String> tags = new HashSet<String>();
+				Set<String> tags = new HashSet<>();
 
 				for (HttpTimerData httpTimerData : templates) {
 					if (httpTimerData.getHttpInfo().hasInspectItTaggingHeader()) {
@@ -257,6 +263,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void deleteAll(Long platformId) {
 		// we need to delete each instance of the SystemInformationData, so that all VmArgumentData
 		// orphans are also deleted, cause it can not be done with H2
@@ -295,14 +302,14 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 			predicate = cb.and(predicate, cb.equal(sqRoot.get("jmxSensorDefinitionDataIdentId"), template.getJmxSensorDefinitionDataIdentId()));
 		}
 
-		if (fromDate != null && toDate != null) {
+		if ((fromDate != null) && (toDate != null)) {
 			predicate = cb.and(predicate, cb.between(sqRoot.get("timeStamp").as(Date.class), fromDate, toDate));
 		}
 
 		sq.select(cb.max(sqRoot.get("id").as(Long.class))).where(predicate).groupBy(sqRoot.get("jmxSensorDefinitionDataIdentId"));
 
 		c.select(root).where(cb.in(root.get("id")).value(sq));
-		
+
 		return entityManager.createQuery(c).getResultList();
 	}
 }

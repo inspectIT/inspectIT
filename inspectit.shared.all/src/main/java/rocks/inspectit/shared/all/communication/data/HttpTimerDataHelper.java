@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Helper class for {@link HttpTimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class HttpTimerDataHelper {
 
@@ -24,7 +24,7 @@ public final class HttpTimerDataHelper {
 	 * Transforms the URI from the {@link HttpTimerData} with the given regular expression. If
 	 * template is provided all found groups will be replaced in template, if template specifies
 	 * them.
-	 * 
+	 *
 	 * @param httpTimerData
 	 *            {@link HttpTimerData}
 	 * @param regEx

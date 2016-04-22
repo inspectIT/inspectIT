@@ -3,9 +3,9 @@ package rocks.inspectit.agent.java.config.impl;
 /**
  * Class used by the {@link ConfigurationStorage} implementation to store the information of a
  * repository.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class RepositoryConfig {
 
@@ -21,7 +21,7 @@ public class RepositoryConfig {
 
 	/**
 	 * Default constructor accepting two parameters.
-	 * 
+	 *
 	 * @param host
 	 *            The host name / ip.
 	 * @param port
@@ -34,7 +34,7 @@ public class RepositoryConfig {
 
 	/**
 	 * Returns the name / ip of the host.
-	 * 
+	 *
 	 * @return The name / ip of the host.
 	 */
 	public String getHost() {
@@ -43,7 +43,7 @@ public class RepositoryConfig {
 
 	/**
 	 * Returns the port of the host.
-	 * 
+	 *
 	 * @return The port of the host.
 	 */
 	public int getPort() {

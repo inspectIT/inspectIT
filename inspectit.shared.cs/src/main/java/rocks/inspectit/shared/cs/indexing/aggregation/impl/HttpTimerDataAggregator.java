@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * Aggregation for {@link HttpTimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Serializable {
 
@@ -39,7 +39,7 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 
 	/**
 	 * Default constructor that defines aggregation parameters.
-	 * 
+	 *
 	 * @param uriBased
 	 *            Is aggregation URi based.
 	 * @param includeRequestMethod
@@ -53,6 +53,7 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<HttpTimerData> aggregatedObject, HttpTimerData objectToAdd) {
 		if (!uriBased) {
 			if (!objectToAdd.getHttpInfo().hasInspectItTaggingHeader()) {
@@ -76,6 +77,7 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IAggregatedData<HttpTimerData> getClone(HttpTimerData httpData) {
 		AggregatedHttpTimerData clone = new AggregatedHttpTimerData();
 		clone.setPlatformIdent(httpData.getPlatformIdent());
@@ -97,17 +99,18 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(HttpTimerData httpData) {
 		final int prime = 31;
 		int result = 0;
 		if (uriBased) {
-			result = prime * result + ((httpData.getHttpInfo().getUri() == null) ? 0 : httpData.getHttpInfo().getUri().hashCode());
+			result = (prime * result) + ((httpData.getHttpInfo().getUri() == null) ? 0 : httpData.getHttpInfo().getUri().hashCode());
 		} else {
-			result = prime * result + ((httpData.getHttpInfo().getInspectItTaggingHeaderValue() == null) ? 0 : httpData.getHttpInfo().getInspectItTaggingHeaderValue().hashCode());
+			result = (prime * result) + ((httpData.getHttpInfo().getInspectItTaggingHeaderValue() == null) ? 0 : httpData.getHttpInfo().getInspectItTaggingHeaderValue().hashCode());
 		}
 
 		if (includeRequestMethod) {
-			result = prime * result + ((httpData.getHttpInfo().getRequestMethod() == null) ? 0 : httpData.getHttpInfo().getRequestMethod().hashCode());
+			result = (prime * result) + ((httpData.getHttpInfo().getRequestMethod() == null) ? 0 : httpData.getHttpInfo().getRequestMethod().hashCode());
 		}
 		return result;
 	}
@@ -119,8 +122,8 @@ public class HttpTimerDataAggregator implements IAggregator<HttpTimerData>, Seri
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (includeRequestMethod ? 1231 : 1237);
-		result = prime * result + (uriBased ? 1231 : 1237);
+		result = (prime * result) + (includeRequestMethod ? 1231 : 1237);
+		result = (prime * result) + (uriBased ? 1231 : 1237);
 		return result;
 	}
 

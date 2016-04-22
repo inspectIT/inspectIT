@@ -14,9 +14,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * This value object is used to store the raw time measurements from the executed methods.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TimerRawVO extends MethodSensorData {
 
@@ -43,7 +43,7 @@ public class TimerRawVO extends MethodSensorData {
 
 	/**
 	 * The constructor creates the TimerRawVO object.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The timestamp.
 	 * @param platformIdent
@@ -67,7 +67,7 @@ public class TimerRawVO extends MethodSensorData {
 
 	/**
 	 * Adds a new time value to the current data container.
-	 * 
+	 *
 	 * @param time
 	 *            The time value.
 	 */
@@ -78,7 +78,7 @@ public class TimerRawVO extends MethodSensorData {
 
 	/**
 	 * Adds a new time and cpu time value to the current data container.
-	 * 
+	 *
 	 * @param time
 	 *            The time value.
 	 * @param cpuTime
@@ -101,7 +101,7 @@ public class TimerRawVO extends MethodSensorData {
 
 	/**
 	 * Returns the list with {@link TimerRawContainer} objects.
-	 * 
+	 *
 	 * @return The list with {@link TimerRawContainer} objects.
 	 */
 	public List<TimerRawContainer> getData() {
@@ -111,6 +111,7 @@ public class TimerRawVO extends MethodSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DefaultData finalizeData() {
 		TimerData timerData = new TimerData(getTimeStamp(), getPlatformIdent(), getSensorTypeIdent(), getMethodIdent());
 		timerData.setParameterContentData(getParameterContentData());
@@ -175,9 +176,9 @@ public class TimerRawVO extends MethodSensorData {
 
 	/**
 	 * Container to store the raw data.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public static class TimerRawContainer implements Serializable {
 
@@ -209,7 +210,7 @@ public class TimerRawVO extends MethodSensorData {
 
 		/**
 		 * Adds a new time value to the current data container.
-		 * 
+		 *
 		 * @param time
 		 *            The time value.
 		 */
@@ -224,7 +225,7 @@ public class TimerRawVO extends MethodSensorData {
 
 		/**
 		 * Adds the given time and cpu time to this timer.
-		 * 
+		 *
 		 * @param time
 		 *            the elapsed time.
 		 * @param cpuTime
@@ -238,16 +239,16 @@ public class TimerRawVO extends MethodSensorData {
 
 		/**
 		 * Returns if this container is full.
-		 * 
+		 *
 		 * @return If this container is full.
 		 */
 		public boolean isFull() {
-			return count == MAX_SIZE - 1;
+			return count == (MAX_SIZE - 1);
 		}
 
 		/**
 		 * Returns the current count.
-		 * 
+		 *
 		 * @return The current count.
 		 */
 		public int getCount() {
@@ -256,7 +257,7 @@ public class TimerRawVO extends MethodSensorData {
 
 		/**
 		 * Return the double data array containing the measurements.
-		 * 
+		 *
 		 * @return The double data array.
 		 */
 		public double[] getData() {
@@ -265,7 +266,7 @@ public class TimerRawVO extends MethodSensorData {
 
 		/**
 		 * Return the double cpu data array containing the measurements.
-		 * 
+		 *
 		 * @return The double cpu data array.
 		 */
 		public double[] getCpuData() {
@@ -274,7 +275,7 @@ public class TimerRawVO extends MethodSensorData {
 
 		/**
 		 * Returns a hash code value for the array.
-		 * 
+		 *
 		 * @param array
 		 *            the array to create a hash code value for
 		 * @return a hash code value for the array
@@ -285,9 +286,9 @@ public class TimerRawVO extends MethodSensorData {
 				return 0;
 			}
 			int result = 1;
-			for (int index = 0; index < array.length; index++) {
-				long temp = Double.doubleToLongBits(array[index]);
-				result = prime * result + (int) (temp ^ (temp >>> 32));
+			for (double element : array) {
+				long temp = Double.doubleToLongBits(element);
+				result = (prime * result) + (int) (temp ^ (temp >>> 32));
 			}
 			return result;
 		}
@@ -295,18 +296,20 @@ public class TimerRawVO extends MethodSensorData {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + count;
-			result = prime * result + TimerRawContainer.hashCode(cpuData);
-			result = prime * result + TimerRawContainer.hashCode(data);
+			result = (prime * result) + count;
+			result = (prime * result) + TimerRawContainer.hashCode(cpuData);
+			result = (prime * result) + TimerRawContainer.hashCode(data);
 			return result;
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
@@ -335,16 +338,18 @@ public class TimerRawVO extends MethodSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = (prime * result) + ((data == null) ? 0 : data.hashCode());
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

@@ -15,8 +15,6 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.all.jpa.MapStringConverter;
-
 @SuppressWarnings("unchecked")
 public class MapStringConverterTest {
 

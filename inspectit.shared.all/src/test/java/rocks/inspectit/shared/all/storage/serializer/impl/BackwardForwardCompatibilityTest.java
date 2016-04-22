@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Random;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -18,7 +19,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import rocks.inspectit.shared.all.storage.serializer.impl.CustomCompatibleFieldSerializer;
 import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchema;
 import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
 
@@ -39,7 +39,7 @@ public class BackwardForwardCompatibilityTest {
 	@BeforeClass
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		Mockito.when(classSchemaManager.getSchema(Mockito.anyString())).thenReturn(classSchema);
+		Mockito.when(classSchemaManager.getSchema(Matchers.anyString())).thenReturn(classSchema);
 	}
 
 	@Test

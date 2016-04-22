@@ -21,13 +21,12 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.ITreeComponent;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
 
 /**
  * Testing of the buffer branch class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class BranchTest {
@@ -49,7 +48,7 @@ public class BranchTest {
 	@BeforeMethod
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		branch = Mockito.spy(new Branch<DefaultData>(bufferBranchIndexer));
+		branch = Mockito.spy(new Branch<>(bufferBranchIndexer));
 	}
 
 	/**
@@ -64,8 +63,8 @@ public class BranchTest {
 		IBufferTreeComponent<DefaultData> component2 = Mockito.mock(IBufferTreeComponent.class);
 		when(component2.clean()).thenReturn(false);
 
-		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(), new Object[] { "c1", component1, "c2",
-				component2 });
+		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(),
+				new Object[] { "c1", component1, "c2", component2 });
 		when(branch.getComponentMap()).thenReturn(componentMap);
 
 		boolean isClean = branch.clean();
@@ -94,8 +93,8 @@ public class BranchTest {
 		IBufferTreeComponent<DefaultData> component2 = Mockito.mock(IBufferTreeComponent.class);
 		when(component2.clearEmptyComponents()).thenReturn(false);
 
-		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(), new Object[] { "c1", component1, "c2",
-				component2 });
+		Map<Object, ITreeComponent<DefaultData, DefaultData>> componentMap = MapUtils.putAll(new HashMap<Object, IBufferTreeComponent<DefaultData>>(),
+				new Object[] { "c1", component1, "c2", component2 });
 		when(branch.getComponentMap()).thenReturn(componentMap);
 
 		boolean isClear = branch.clearEmptyComponents();

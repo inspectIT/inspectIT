@@ -5,7 +5,7 @@ import rocks.inspectit.agent.java.sensor.method.http.StartEndMarker.MutableInteg
 /**
  * Provides a thread local means to store the information if we returned to the end of a given
  * method an invocation.
- * 
+ *
  * @author Stefan Siegl
  */
 public class StartEndMarker extends ThreadLocal<MutableInteger> {
@@ -26,7 +26,7 @@ public class StartEndMarker extends ThreadLocal<MutableInteger> {
 
 	/**
 	 * checks if we already returned to the method that marked the first call.
-	 * 
+	 *
 	 * @return checks if we already returned to the method that marked the first call.
 	 */
 	public boolean matchesFirst() {
@@ -35,7 +35,7 @@ public class StartEndMarker extends ThreadLocal<MutableInteger> {
 
 	/**
 	 * Checks if we already marked a call.
-	 * 
+	 *
 	 * @return Checks if we already marked a call
 	 */
 	public boolean isMarkerSet() {
@@ -53,7 +53,7 @@ public class StartEndMarker extends ThreadLocal<MutableInteger> {
 	/**
 	 * Simple realization of a mutable integer object. We cannot use the one of the commons project
 	 * here as we will have a new dependency.
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	static class MutableInteger {
@@ -76,7 +76,7 @@ public class StartEndMarker extends ThreadLocal<MutableInteger> {
 
 		/**
 		 * Returns the value.
-		 * 
+		 *
 		 * @return the value.
 		 */
 		public int getValue() {

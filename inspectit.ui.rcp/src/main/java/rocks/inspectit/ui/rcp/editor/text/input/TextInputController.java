@@ -10,15 +10,15 @@ import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
  * The controller for all text inputs.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface TextInputController {
 
 	/**
 	 * Sets the input definition of this controller.
-	 * 
+	 *
 	 * @param inputDefinition
 	 *            The input definition.
 	 */
@@ -26,7 +26,7 @@ public interface TextInputController {
 
 	/**
 	 * Returns an object containing the composite with the whole input.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param toolkit
@@ -52,7 +52,7 @@ public interface TextInputController {
 	/**
 	 * This method is called when the input of the
 	 * {@link rocks.inspectit.ui.rcp.editor.text.TextSubView} has been changed.
-	 * 
+	 *
 	 * @param data
 	 *            New input.
 	 */

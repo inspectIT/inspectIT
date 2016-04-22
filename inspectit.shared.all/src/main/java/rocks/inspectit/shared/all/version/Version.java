@@ -86,7 +86,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Gets {@link #major}.
-	 * 
+	 *
 	 * @return {@link #major}
 	 */
 	public int getMajor() {
@@ -95,7 +95,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Sets {@link #major}.
-	 * 
+	 *
 	 * @param major
 	 *            New value for {@link #major}
 	 */
@@ -105,7 +105,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Gets {@link #minor}.
-	 * 
+	 *
 	 * @return {@link #minor}
 	 */
 	public int getMinor() {
@@ -114,7 +114,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Sets {@link #minor}.
-	 * 
+	 *
 	 * @param minor
 	 *            New value for {@link #minor}
 	 */
@@ -124,7 +124,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Gets {@link #micro}.
-	 * 
+	 *
 	 * @return {@link #micro}
 	 */
 	public int getMicro() {
@@ -133,7 +133,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Sets {@link #micro}.
-	 * 
+	 *
 	 * @param micro
 	 *            New value for {@link #micro}
 	 */
@@ -143,7 +143,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Gets {@link #buildno}.
-	 * 
+	 *
 	 * @return {@link #buildno}
 	 */
 	public int getBuildno() {
@@ -152,7 +152,7 @@ public final class Version implements Comparable<Version> {
 
 	/**
 	 * Sets {@link #buildno}.
-	 * 
+	 *
 	 * @param buildno
 	 *            New value for {@link #buildno}
 	 */
@@ -204,10 +204,10 @@ public final class Version implements Comparable<Version> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + buildno;
-		result = prime * result + major;
-		result = prime * result + micro;
-		result = prime * result + minor;
+		result = (prime * result) + buildno;
+		result = (prime * result) + major;
+		result = (prime * result) + micro;
+		result = (prime * result) + minor;
 		return result;
 	}
 

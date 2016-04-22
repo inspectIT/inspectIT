@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Branch indexer for the {@link IStorageTreeComponent}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of the elements indexed.
  */
@@ -18,7 +18,7 @@ public interface IBufferTreeComponent<E> extends ITreeComponent<E, E> {
 	/**
 	 * Cleans the indexing tree by submitting the {@link Runnable} to the provided
 	 * {@link ExecutorService}.
-	 * 
+	 *
 	 * @param executorService
 	 *            Executor service that will run the {@link Runnable}.
 	 */
@@ -26,7 +26,7 @@ public interface IBufferTreeComponent<E> extends ITreeComponent<E, E> {
 
 	/**
 	 * Deletes all tree child tree components that have no indexing object any more.
-	 * 
+	 *
 	 * @return True if this tree component has no indexed objects any more (thus it is available for
 	 *         deletion) or false otherwise.
 	 */
@@ -41,7 +41,7 @@ public interface IBufferTreeComponent<E> extends ITreeComponent<E, E> {
 	/**
 	 * Cleans the tree component and its "children" from any weak references whose referenced
 	 * objects has been garbage collected.
-	 * 
+	 *
 	 * @return True if this tree component has no indexed objects any more (thus it is available for
 	 *         deletion) or false otherwise.
 	 */
@@ -49,7 +49,7 @@ public interface IBufferTreeComponent<E> extends ITreeComponent<E, E> {
 
 	/**
 	 * Returns number of elements that are indexed in this tree component.
-	 * 
+	 *
 	 * @return Number of indexed elements.
 	 */
 	long getNumberOfElements();

@@ -21,9 +21,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
  * Processor performing necessary calculation and fixes. This is special type of chained processor
  * that does not pass the incoming object to the chained processors, but might do so with some other
  * objects.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProcessor {
 
@@ -38,7 +38,7 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param dataProcessors
 	 *            Chained processors.
 	 */
@@ -49,6 +49,7 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void processData(DefaultData defaultData, EntityManager entityManager) {
 		InvocationSequenceData invocation = (InvocationSequenceData) defaultData;
 		extractDataFromInvocation(entityManager, invocation, invocation);
@@ -73,19 +74,19 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	/**
 	 * Extract data from the invocation in the way that timer data is saved to the Db, while SQL
 	 * statements and Exceptions are indexed into the root branch.
-	 * 
+	 *
 	 * @param entityManager
 	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData
 	 *            Invocation data to be extracted.
 	 * @param topInvocationParent
 	 *            Top invocation object.
-	 * 
+	 *
 	 */
 	private void extractDataFromInvocation(EntityManager entityManager, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
 		double exclusiveDurationDelta = 0d;
 
-		for (InvocationSequenceData child : (List<InvocationSequenceData>) invData.getNestedSequences()) {
+		for (InvocationSequenceData child : invData.getNestedSequences()) {
 			// pass child to chained processors
 			passToChainedProcessors(child, entityManager);
 
@@ -114,7 +115,7 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	/**
 	 * Process SQL statement if one exists in the invData object and passes it to the chained
 	 * processors.
-	 * 
+	 *
 	 * @param entityManager
 	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData
@@ -134,7 +135,7 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	/**
 	 * Process timer data if one exists in the invData object and passes it to the chained
 	 * processors.
-	 * 
+	 *
 	 * @param entityManager
 	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData
@@ -158,11 +159,12 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 	}
 
 	/**
-	 * Process all the exceptions in the invData and passes exceptions to the chained processors.<br>
+	 * Process all the exceptions in the invData and passes exceptions to the chained processors.
+	 * <br>
 	 * <br>
 	 * Note also that only exception data with CREATED event are processed, since the PASSED and
 	 * HANDLED should be connected as children to the CREATED one.
-	 * 
+	 *
 	 * @param entityManager
 	 *            {@link EntityManager} needed for DB persistence.
 	 * @param invData

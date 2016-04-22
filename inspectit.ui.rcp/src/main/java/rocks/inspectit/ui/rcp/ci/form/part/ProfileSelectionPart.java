@@ -160,7 +160,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 		tableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof Profile && e2 instanceof Profile) {
+				if ((e1 instanceof Profile) && (e2 instanceof Profile)) {
 					int res = Boolean.compare(((Profile) e1).isCommonProfile(), ((Profile) e2).isCommonProfile());
 					if (0 != res) {
 						return res;
@@ -183,14 +183,14 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 		tableViewer.getTable().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (e.detail == SWT.CHECK && !isDirty()) {
+				if ((e.detail == SWT.CHECK) && !isDirty()) {
 					markDirty();
 				}
 
 				// warning for the exclude-classes un-checking
 				TableItem item = (TableItem) e.item;
 				Profile profile = (Profile) item.getData();
-				if (e.detail == SWT.CHECK && !item.getChecked() && EXCLUDE_CLASSES_PROFILE_ID.equals(profile.getId())) {
+				if ((e.detail == SWT.CHECK) && !item.getChecked() && EXCLUDE_CLASSES_PROFILE_ID.equals(profile.getId())) {
 					WarningUtils.inform("Exlude Classes Profile Removal", "Please note that removing default exclude classes profile from the environment can result in non-operative agent.",
 							PreferencesConstants.EXCLUDE_CLASSES_PROFILE_WARNING);
 				}
