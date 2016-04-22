@@ -19,8 +19,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -91,7 +91,7 @@ public class ClassHashHelperTest extends TestBase {
 			helper.afterPropertiesSet();
 
 			verify(prototypesProvider, times(1)).createSerializer();
-			verify(executorService, times(1)).scheduleAtFixedRate(Mockito.<Runnable> any(), anyLong(), anyLong(), Mockito.<TimeUnit> any());
+			verify(executorService, times(1)).scheduleAtFixedRate(Matchers.<Runnable> any(), anyLong(), anyLong(), Matchers.<TimeUnit> any());
 			verifyZeroInteractions(serializationManager);
 			assertThat(helper.isEmpty(), is(true));
 		}
@@ -101,13 +101,13 @@ public class ClassHashHelperTest extends TestBase {
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
 			new File(TEST_CACHE_FILE).createNewFile();
 			Object hashes = Collections.singletonMap("fqn", Collections.singleton("hash"));
-			when(serializationManager.deserialize(Mockito.<Input> any())).thenReturn(hashes);
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(hashes);
 
 			helper.afterPropertiesSet();
 
 			verify(prototypesProvider, times(1)).createSerializer();
-			verify(serializationManager, times(1)).deserialize(Mockito.<Input> any());
-			verify(executorService, times(1)).scheduleAtFixedRate(Mockito.<Runnable> any(), anyLong(), anyLong(), Mockito.<TimeUnit> any());
+			verify(serializationManager, times(1)).deserialize(Matchers.<Input> any());
+			verify(executorService, times(1)).scheduleAtFixedRate(Matchers.<Runnable> any(), anyLong(), anyLong(), Matchers.<TimeUnit> any());
 			assertThat(helper.isEmpty(), is(false));
 		}
 
@@ -115,12 +115,12 @@ public class ClassHashHelperTest extends TestBase {
 		public void cacheFileExistsException() throws Exception {
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
 			new File(TEST_CACHE_FILE).createNewFile();
-			when(serializationManager.deserialize(Mockito.<Input> any())).thenThrow(new SerializationException());
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenThrow(new SerializationException());
 
 			helper.afterPropertiesSet();
 
 			verify(prototypesProvider, times(1)).createSerializer();
-			verify(executorService, times(1)).scheduleAtFixedRate(Mockito.<Runnable> any(), anyLong(), anyLong(), Mockito.<TimeUnit> any());
+			verify(executorService, times(1)).scheduleAtFixedRate(Matchers.<Runnable> any(), anyLong(), anyLong(), Matchers.<TimeUnit> any());
 			assertThat(helper.isEmpty(), is(true));
 		}
 
@@ -129,11 +129,11 @@ public class ClassHashHelperTest extends TestBase {
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(false);
 			new File(TEST_CACHE_FILE).createNewFile();
 			Object hashes = Collections.singleton("hash");
-			when(serializationManager.deserialize(Mockito.<Input> any())).thenReturn(hashes);
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(hashes);
 
 			helper.afterPropertiesSet();
 
-			verify(executorService, times(1)).scheduleAtFixedRate(Mockito.<Runnable> any(), anyLong(), anyLong(), Mockito.<TimeUnit> any());
+			verify(executorService, times(1)).scheduleAtFixedRate(Matchers.<Runnable> any(), anyLong(), anyLong(), Matchers.<TimeUnit> any());
 			assertThat(helper.isEmpty(), is(true));
 			assertThat(new File(TEST_CACHE_FILE).exists(), is(false));
 			verifyZeroInteractions(serializationManager);
@@ -199,9 +199,8 @@ public class ClassHashHelperTest extends TestBase {
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
 			new File(TEST_CACHE_FILE).createNewFile();
 			Object hashes = Collections.singletonMap(fqn, Collections.emptyList());
-			when(serializationManager.deserialize(Mockito.<Input> any())).thenReturn(hashes);
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(hashes);
 			helper.afterPropertiesSet();
-
 
 			boolean analyzed = helper.isAnalyzed(fqn);
 
@@ -287,7 +286,7 @@ public class ClassHashHelperTest extends TestBase {
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
 			new File(TEST_CACHE_FILE).createNewFile();
 			Object hashes = Collections.singletonMap(fqn, Collections.singleton(hash));
-			when(serializationManager.deserialize(Mockito.<Input> any())).thenReturn(hashes);
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(hashes);
 			helper.afterPropertiesSet();
 
 			boolean sent = helper.isSent(fqn, hash);

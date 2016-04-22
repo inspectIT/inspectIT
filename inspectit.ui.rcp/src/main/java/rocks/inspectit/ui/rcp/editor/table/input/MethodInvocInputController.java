@@ -36,8 +36,8 @@ import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
@@ -47,9 +47,9 @@ import rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler;
 
 /**
  * This input controller displays details of all methods involved in an invocation sequence.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class MethodInvocInputController extends AbstractTableInputController {
 
@@ -57,9 +57,9 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The timestamp column. */
@@ -112,7 +112,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -125,7 +125,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 		 *            If the column should be shown in raw mode.
 		 * @param dataComparator
 		 *            Comparator for the column.
-		 * 
+		 *
 		 */
 		private Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super TimerData> dataComparator) {
 			this.name = name;
@@ -138,13 +138,13 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -184,6 +184,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TableViewer tableViewer) {
 		for (Column column : Column.values()) {
 			TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -232,7 +233,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		if (PreferenceId.INVOCATION_SUBVIEW_MODE.equals(preferenceEvent.getPreferenceId())) {
 			Map<IPreferenceGroup, Object> preferenceMap = preferenceEvent.getPreferenceMap();
-			if (null != preferenceMap && preferenceMap.containsKey(PreferenceId.InvocationSubviewMode.RAW)) {
+			if ((null != preferenceMap) && preferenceMap.containsKey(PreferenceId.InvocationSubviewMode.RAW)) {
 				Boolean isRawMode = (Boolean) preferenceMap.get(PreferenceId.InvocationSubviewMode.RAW);
 
 				// first show/hide columns and then change the rawMode value
@@ -244,7 +245,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 	/**
 	 * Handles the raw and aggregated columns hiding/showing.
-	 * 
+	 *
 	 * @param rawMode
 	 *            Is raw mode active.
 	 */
@@ -271,6 +272,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new MethodInvocContentProvider();
 	}
@@ -278,8 +280,9 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ViewerComparator getComparator() {
-		TableViewerComparator<TimerData> methodInputViewerComparator = new TableViewerComparator<TimerData>();
+		TableViewerComparator<TimerData> methodInputViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
 			RawAggregatedResultComparator<TimerData> comparator = new RawAggregatedResultComparator<TimerData>(column.dataComparator, cachedDataService, column.showInRawMode,
 					column.showInAggregatedMode) {
@@ -297,6 +300,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new MethodInvocLabelProvider();
 	}
@@ -323,21 +327,22 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 	/**
 	 * The content provider for this view.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class MethodInvocContentProvider implements IStructuredContentProvider {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<InvocationSequenceData> invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
 			timerDataList = getRawInputList(invocationSequenceDataList, new ArrayList<TimerData>());
 			if (!rawMode) {
-				AggregationPerformer<TimerData> aggregationPerformer = new AggregationPerformer<TimerData>(new TimerDataAggregator());
+				AggregationPerformer<TimerData> aggregationPerformer = new AggregationPerformer<>(new TimerDataAggregator());
 				aggregationPerformer.processCollection(timerDataList);
 				timerDataList = aggregationPerformer.getResultList();
 			} else {
@@ -353,7 +358,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 		/**
 		 * Creates the raw input list of timers from a list of invocations.
-		 * 
+		 *
 		 * @param invocationSequenceDataList
 		 *            List of invocations to check.
 		 * @param resultList
@@ -376,7 +381,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 		/**
 		 * Returns the extracted timer data from the invocation.
-		 * 
+		 *
 		 * @param invocationData
 		 *            {@link InvocationSequenceData}.
 		 * @return Timer data or null if it can not be created.
@@ -395,7 +400,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 		/**
 		 * Creates the timer data from a root invocation object.
-		 * 
+		 *
 		 * @param invocationData
 		 *            Root invocation object.
 		 * @return Timer data with set duration from the invocation and calculated exclusive
@@ -421,7 +426,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 		/**
 		 * Computes the duration of the nested invocation elements.
-		 * 
+		 *
 		 * @param data
 		 *            The data objects which is inspected for its nested elements.
 		 * @return The duration of all nested sequences (with their nested sequences as well).
@@ -433,14 +438,14 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 			double nestedDuration = 0d;
 			boolean added = false;
-			for (InvocationSequenceData nestedData : (List<InvocationSequenceData>) data.getNestedSequences()) {
+			for (InvocationSequenceData nestedData : data.getNestedSequences()) {
 				if (null == nestedData.getParentSequence()) {
 					nestedDuration = nestedDuration + nestedData.getDuration();
 					added = true;
 				} else if (null != nestedData.getTimerData()) {
 					nestedDuration = nestedDuration + nestedData.getTimerData().getDuration();
 					added = true;
-				} else if (null != nestedData.getSqlStatementData() && 1 == nestedData.getSqlStatementData().getCount()) {
+				} else if ((null != nestedData.getSqlStatementData()) && (1 == nestedData.getSqlStatementData().getCount())) {
 					nestedDuration = nestedDuration + nestedData.getSqlStatementData().getDuration();
 					added = true;
 				}
@@ -458,12 +463,14 @@ public class MethodInvocInputController extends AbstractTableInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -471,15 +478,15 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 	/**
 	 * The sql label provider used by this view.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class MethodInvocLabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -498,7 +505,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param methodIdent
@@ -516,7 +523,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 				return emptyStyledString;
 			}
 		case PACKAGE:
-			if (methodIdent.getPackageName() != null && !methodIdent.getPackageName().equals("")) {
+			if ((methodIdent.getPackageName() != null) && !methodIdent.getPackageName().equals("")) {
 				return new StyledString(methodIdent.getPackageName());
 			} else {
 				return new StyledString("(default)");
@@ -609,6 +616,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof TimerData) {
 			TimerData data = (TimerData) object;
@@ -631,7 +639,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 		if (object instanceof TimerData) {
 			TimerData data = (TimerData) object;
 			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, methodIdent, column).toString());
 			}

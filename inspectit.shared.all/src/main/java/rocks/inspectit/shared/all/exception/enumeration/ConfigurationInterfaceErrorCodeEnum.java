@@ -30,8 +30,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	/**
 	 * Revision failed.
 	 */
-	REVISION_CHECK_FAILED("Revision check of the resource failed as the revision number is lower than one existing on the server.", "Profile/environment/mappings has a newer version.",
-			"Reload resource and try again."),
+	REVISION_CHECK_FAILED("Revision check of the resource failed as the revision number is lower than one existing on the server.", "Profile/environment/mappings has a newer version.", "Reload resource and try again."),
 
 	/**
 	 * Environment not existing on the CMR.
@@ -51,14 +50,12 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	/**
 	 * Environment not found when registering the agent.
 	 */
-	ENVIRONMENT_FOR_AGENT_NOT_FOUND("Locating an environment for the agent to use failed.", "No  matching environment found for the specified agent name and IP address(es).",
-			"Check the agent mapping settings in the Configuration Interface."),
+	ENVIRONMENT_FOR_AGENT_NOT_FOUND("Locating an environment for the agent to use failed.", "No  matching environment found for the specified agent name and IP address(es).", "Check the agent mapping settings in the Configuration Interface."),
 
 	/**
 	 * More than one environment found.
 	 */
-	MORE_THAN_ONE_ENVIRONMENT_FOR_AGENT_FOUND("Locating an environment for the agent to use failed.", "More than one environment found for the specified agent name and IP address(es).",
-			"Check the agent mapping settings in the Configuration Interface.");
+	MORE_THAN_ONE_ENVIRONMENT_FOR_AGENT_FOUND("Locating an environment for the agent to use failed.", "More than one environment found for the specified agent name and IP address(es).", "Check the agent mapping settings in the Configuration Interface.");
 
 	/**
 	 * Name of the component.

@@ -8,7 +8,7 @@ import rocks.inspectit.agent.java.util.ReflectionCache;
 
 /**
  * Provides the connection for a given statement.
- * 
+ *
  * @author Stefan Siegl
  */
 @Component
@@ -19,7 +19,7 @@ public class StatementReflectionCache extends ReflectionCache {
 
 	/**
 	 * Retrieves the connection.
-	 * 
+	 *
 	 * @param statementClass
 	 *            the class of the statement instance.
 	 * @param statementInstance

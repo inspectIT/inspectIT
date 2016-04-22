@@ -34,9 +34,9 @@ import rocks.inspectit.ui.rcp.property.control.impl.StringPropertyControl;
 
 /**
  * Abstract class for all property controls.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of the property control can handle.
  * @param <V>
@@ -81,7 +81,7 @@ public abstract class AbstractPropertyControl<E extends SingleProperty<V>, V> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property.
 	 * @param propertyUpdateListener
@@ -94,7 +94,7 @@ public abstract class AbstractPropertyControl<E extends SingleProperty<V>, V> {
 
 	/**
 	 * Create control that will be displayed for the property.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 * @return Created control.
@@ -108,7 +108,7 @@ public abstract class AbstractPropertyControl<E extends SingleProperty<V>, V> {
 
 	/**
 	 * Shows or hides all controls for this property if property is advanced.
-	 * 
+	 *
 	 * @param visible
 	 *            <code>true</code> if control should be visible, <code>false</code> otherwise.
 	 */
@@ -138,7 +138,7 @@ public abstract class AbstractPropertyControl<E extends SingleProperty<V>, V> {
 	 * Displays validation errors in the decoration box if any of the passed {@link ValidationError}
 	 * s is involving the property displayed in this control. Otherwise the decoration box is
 	 * hidden.
-	 * 
+	 *
 	 * @param errors
 	 *            Validation errors to check.
 	 */
@@ -166,7 +166,7 @@ public abstract class AbstractPropertyControl<E extends SingleProperty<V>, V> {
 	 * Creates set of controls that will be displayed for the property.
 	 * <p>
 	 * It is expected that the parent composite has a grid layout with four columns.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 */
@@ -209,7 +209,7 @@ public abstract class AbstractPropertyControl<E extends SingleProperty<V>, V> {
 
 	/**
 	 * Sends property update event.
-	 * 
+	 *
 	 * @param newValue
 	 *            New value.
 	 */
@@ -242,7 +242,7 @@ public abstract class AbstractPropertyControl<E extends SingleProperty<V>, V> {
 
 	/**
 	 * Utility method for creating the {@link AbstractPropertyControl}.
-	 * 
+	 *
 	 * @param property
 	 *            Property to get the control for.
 	 * @param propertyUpdateListener

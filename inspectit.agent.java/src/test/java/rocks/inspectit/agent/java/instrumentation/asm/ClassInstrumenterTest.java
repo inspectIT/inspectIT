@@ -31,8 +31,8 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.asm.Type;
@@ -157,7 +157,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -185,7 +185,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -213,7 +213,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -239,7 +239,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -265,7 +265,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -291,7 +291,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -317,7 +317,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -343,7 +343,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -369,7 +369,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -395,7 +395,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -421,7 +421,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -447,7 +447,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -474,7 +474,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -499,10 +499,9 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			Object[] parameters = { "java.lang.String" };
 			long methodId = 9L;
 
-
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -529,7 +528,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class, Object.class);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -556,7 +555,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, int.class, boolean.class);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -582,7 +581,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -608,7 +607,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -636,7 +635,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -666,7 +665,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, Object.class);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -695,7 +694,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -722,7 +721,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockConstructor(config, InstrumentationTestClass.class, true);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -745,7 +744,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockConstructor(config, InstrumentationTestClass.class, false);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -769,7 +768,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockConstructor(config, InstrumentationTestClass.class, false, String.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -796,12 +795,12 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockConstructor(config, InstrumentationTestClass.class, false, boolean.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			when(sip2.getId()).thenReturn(nestedMethodId);
 			prepareConfigurationMockConstructor(config2, InstrumentationTestClass.class, false, String.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config2.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip2));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -831,7 +830,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockConstructor(config, InstrumentationTestClass.class, false, int.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -863,7 +862,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockConstructor(config, InstrumentationTestClass.class, false, Object.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -896,7 +895,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockConstructor(config, InstrumentationTestClass.class, false, long.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
@@ -923,7 +922,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationExceptionTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(EXCEPTION_TEST_CLASS_FQN);
@@ -953,7 +952,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(constructorId);
 			prepareConfigurationMockConstructor(config, InstrumentationExceptionTestClass.class, false, String.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			ClassReader cr = new ClassReader(EXCEPTION_TEST_CLASS_FQN);
@@ -984,12 +983,12 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationExceptionTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			when(sip2.getId()).thenReturn(innerMethodId);
 			prepareConfigurationMockMethod(config2, InstrumentationExceptionTestClass.class, innerMethodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config2.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip2));
 
 			ClassReader cr = new ClassReader(EXCEPTION_TEST_CLASS_FQN);
@@ -1030,12 +1029,12 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationExceptionTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			when(sip2.getId()).thenReturn(innerMethodId);
 			prepareConfigurationMockMethod(config2, InstrumentationExceptionTestClass.class, innerMethodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config2.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip2));
 
 			ClassReader cr = new ClassReader(EXCEPTION_TEST_CLASS_FQN);
@@ -1076,12 +1075,12 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(constructorId);
 			prepareConfigurationMockConstructor(config, InstrumentationExceptionTestClass.class, false, int.class);
-			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(CONSTRUCTOR_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			when(sip2.getId()).thenReturn(innerMethodId);
 			prepareConfigurationMockMethod(config2, InstrumentationExceptionTestClass.class, innerMethodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config2.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip2));
 
 			ClassReader cr = new ClassReader(EXCEPTION_TEST_CLASS_FQN);
@@ -1127,12 +1126,12 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			when(sip.getId()).thenReturn(methodId);
 			prepareConfigurationMockMethod(config, InstrumentationExceptionTestClass.class, methodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
 
 			when(sip2.getId()).thenReturn(innerMethodId);
 			prepareConfigurationMockMethod(config2, InstrumentationExceptionTestClass.class, innerMethodName);
-			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			doAnswer(METHOD_INSTRUMENTER_ANSWER).when(sip2).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
 			when(config2.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip2));
 
 			ClassReader cr = new ClassReader(EXCEPTION_TEST_CLASS_FQN);
@@ -1176,7 +1175,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			prepareConfigurationMockMethod(config, MyTestClassLoader.class, methodName, String.class);
 			SpecialInstrumentationPoint functionalInstrumentationPoint = mock(SpecialInstrumentationPoint.class);
-			doAnswer(CLASS_LOADING_DELEGATION_INSTRUMENTER_ANSWER).when(functionalInstrumentationPoint).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(),
+			doAnswer(CLASS_LOADING_DELEGATION_INSTRUMENTER_ANSWER).when(functionalInstrumentationPoint).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(),
 					anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(functionalInstrumentationPoint));
 
@@ -1207,7 +1206,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			prepareConfigurationMockMethod(config, MyTestClassLoader.class, methodName, String.class);
 			SpecialInstrumentationPoint functionalInstrumentationPoint = mock(SpecialInstrumentationPoint.class);
-			doAnswer(CLASS_LOADING_DELEGATION_INSTRUMENTER_ANSWER).when(functionalInstrumentationPoint).getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(),
+			doAnswer(CLASS_LOADING_DELEGATION_INSTRUMENTER_ANSWER).when(functionalInstrumentationPoint).getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(),
 					anyBoolean());
 			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(functionalInstrumentationPoint));
 

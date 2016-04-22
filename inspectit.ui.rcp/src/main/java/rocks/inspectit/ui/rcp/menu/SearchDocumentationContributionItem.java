@@ -28,9 +28,9 @@ import rocks.inspectit.ui.rcp.handlers.OpenUrlHandler.SearchDocumentationHandler
 
 /**
  * The documentation search contribution item displayed in the main toolbar.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SearchDocumentationContributionItem extends WorkbenchWindowControlContribution {
 
@@ -52,7 +52,7 @@ public class SearchDocumentationContributionItem extends WorkbenchWindowControlC
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param id
 	 *            Id of contribution item
 	 */
@@ -131,7 +131,7 @@ public class SearchDocumentationContributionItem extends WorkbenchWindowControlC
 			IEvaluationService evaluationService = (IEvaluationService) PlatformUI.getWorkbench().getService(IEvaluationService.class);
 			try {
 				Command searchCommand = commandService.getCommand("rocks.inspectit.ui.rcp.commands.searchDocumentation");
-				Map<String, String> params = new HashMap<String, String>();
+				Map<String, String> params = new HashMap<>();
 				params.put(SearchDocumentationHandler.SEARCH_DOCUMENTATION_PARAMETER, searchString);
 				searchCommand.executeWithChecks(new ExecutionEvent(searchCommand, params, searchText, evaluationService.getCurrentState()));
 			} catch (Exception e) {

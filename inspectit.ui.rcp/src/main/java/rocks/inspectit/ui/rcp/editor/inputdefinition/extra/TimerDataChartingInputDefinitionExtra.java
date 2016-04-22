@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Input definition extra for displaying many timer data templates on the chart.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimerDataChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
@@ -21,7 +21,7 @@ public class TimerDataChartingInputDefinitionExtra implements IInputDefinitionEx
 
 	/**
 	 * Gets {@link #templates}.
-	 * 
+	 *
 	 * @return {@link #templates}
 	 */
 	public List<TimerData> getTemplates() {
@@ -30,7 +30,7 @@ public class TimerDataChartingInputDefinitionExtra implements IInputDefinitionEx
 
 	/**
 	 * Sets {@link #templates}.
-	 * 
+	 *
 	 * @param templates
 	 *            New value for {@link #templates}
 	 */

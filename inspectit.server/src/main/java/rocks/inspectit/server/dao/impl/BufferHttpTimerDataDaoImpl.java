@@ -13,11 +13,11 @@ import rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpTimerDataAggregat
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.HttpTimerDataQueryFactory;
 
 /**
- * Provides <code>HttpTimerData</code> information from the CMR internal in memory buffer.
- * 
+ * Provides <code>HttpTimerData</code> information from the CMR internal in memory buffer. Fork&join
+ * isn't used, because only one HTTP data per invocation is expected.
+ *
  * @author Stefan Siegl
- * 
- * fork&join isn't used, because only one HTTP -data per invocation is expected.
+ *
  */
 @Repository
 public class BufferHttpTimerDataDaoImpl extends AbstractBufferDataDao<HttpTimerData> implements HttpTimerDataDao {

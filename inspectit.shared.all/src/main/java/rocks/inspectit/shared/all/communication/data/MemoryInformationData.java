@@ -14,9 +14,9 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  * <p>
  * This class implements the {@link IAggregatedData} interface but does not provide the IDs of the
  * aggregated instances since they are not related to any data and are useless.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @Entity
 public class MemoryInformationData extends SystemSensorData implements IAggregatedData<MemoryInformationData> {
@@ -152,7 +152,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * The constructor which needs three parameters.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The Timestamp.
 	 * @param platformIdent
@@ -166,7 +166,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #count}.
-	 * 
+	 *
 	 * @return {@link #count}
 	 */
 	public int getCount() {
@@ -175,7 +175,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #count}.
-	 * 
+	 *
 	 * @param count
 	 *            New value for {@link #count}
 	 */
@@ -192,7 +192,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given value to the free physical memory.
-	 * 
+	 *
 	 * @param freePhysMemory
 	 *            the value to add.
 	 */
@@ -202,7 +202,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minFreePhysMemory}.
-	 * 
+	 *
 	 * @return {@link #minFreePhysMemory}
 	 */
 	public long getMinFreePhysMemory() {
@@ -211,7 +211,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minFreePhysMemory}.
-	 * 
+	 *
 	 * @param minFreePhysMemory
 	 *            New value for {@link #minFreePhysMemory}
 	 */
@@ -221,7 +221,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxFreePhysMemory}.
-	 * 
+	 *
 	 * @return {@link #maxFreePhysMemory}
 	 */
 	public long getMaxFreePhysMemory() {
@@ -230,7 +230,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxFreePhysMemory}.
-	 * 
+	 *
 	 * @param maxFreePhysMemory
 	 *            New value for {@link #maxFreePhysMemory}
 	 */
@@ -240,7 +240,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalFreePhysMemory}.
-	 * 
+	 *
 	 * @return {@link #totalFreePhysMemory}
 	 */
 	public long getTotalFreePhysMemory() {
@@ -249,7 +249,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalFreePhysMemory}.
-	 * 
+	 *
 	 * @param totalFreePhysMemory
 	 *            New value for {@link #totalFreePhysMemory}
 	 */
@@ -259,7 +259,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given value to the free swap space.
-	 * 
+	 *
 	 * @param freeSwapSpace
 	 *            the value to add.
 	 */
@@ -269,7 +269,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minFreeSwapSpace}.
-	 * 
+	 *
 	 * @return {@link #minFreeSwapSpace}
 	 */
 	public long getMinFreeSwapSpace() {
@@ -278,7 +278,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minFreeSwapSpace}.
-	 * 
+	 *
 	 * @param minFreeSwapSpace
 	 *            New value for {@link #minFreeSwapSpace}
 	 */
@@ -288,7 +288,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxFreeSwapSpace}.
-	 * 
+	 *
 	 * @return {@link #maxFreeSwapSpace}
 	 */
 	public long getMaxFreeSwapSpace() {
@@ -297,7 +297,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxFreeSwapSpace}.
-	 * 
+	 *
 	 * @param maxFreeSwapSpace
 	 *            New value for {@link #maxFreeSwapSpace}
 	 */
@@ -307,7 +307,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalFreeSwapSpace}.
-	 * 
+	 *
 	 * @return {@link #totalFreeSwapSpace}
 	 */
 	public long getTotalFreeSwapSpace() {
@@ -316,7 +316,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalFreeSwapSpace}.
-	 * 
+	 *
 	 * @param totalFreeSwapSpace
 	 *            New value for {@link #totalFreeSwapSpace}
 	 */
@@ -326,7 +326,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given value to the comittedVirtualMemSize.
-	 * 
+	 *
 	 * @param comittedVirtualMemSize
 	 *            the value to add.
 	 */
@@ -336,7 +336,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minComittedVirtualMemSize}.
-	 * 
+	 *
 	 * @return {@link #minComittedVirtualMemSize}
 	 */
 	public long getMinComittedVirtualMemSize() {
@@ -345,7 +345,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minComittedVirtualMemSize}.
-	 * 
+	 *
 	 * @param minComittedVirtualMemSize
 	 *            New value for {@link #minComittedVirtualMemSize}
 	 */
@@ -355,7 +355,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxComittedVirtualMemSize}.
-	 * 
+	 *
 	 * @return {@link #maxComittedVirtualMemSize}
 	 */
 	public long getMaxComittedVirtualMemSize() {
@@ -364,7 +364,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxComittedVirtualMemSize}.
-	 * 
+	 *
 	 * @param maxComittedVirtualMemSize
 	 *            New value for {@link #maxComittedVirtualMemSize}
 	 */
@@ -374,7 +374,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalComittedVirtualMemSize}.
-	 * 
+	 *
 	 * @return {@link #totalComittedVirtualMemSize}
 	 */
 	public long getTotalComittedVirtualMemSize() {
@@ -383,7 +383,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalComittedVirtualMemSize}.
-	 * 
+	 *
 	 * @param totalComittedVirtualMemSize
 	 *            New value for {@link #totalComittedVirtualMemSize}
 	 */
@@ -393,7 +393,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given value to the usedHeapMemorySize.
-	 * 
+	 *
 	 * @param usedHeapMemorySize
 	 *            the value to add.
 	 */
@@ -403,7 +403,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minUsedHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #minUsedHeapMemorySize}
 	 */
 	public long getMinUsedHeapMemorySize() {
@@ -412,7 +412,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minUsedHeapMemorySize}.
-	 * 
+	 *
 	 * @param minUsedHeapMemorySize
 	 *            New value for {@link #minUsedHeapMemorySize}
 	 */
@@ -422,7 +422,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxUsedHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #maxUsedHeapMemorySize}
 	 */
 	public long getMaxUsedHeapMemorySize() {
@@ -431,7 +431,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxUsedHeapMemorySize}.
-	 * 
+	 *
 	 * @param maxUsedHeapMemorySize
 	 *            New value for {@link #maxUsedHeapMemorySize}
 	 */
@@ -441,7 +441,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalUsedHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #totalUsedHeapMemorySize}
 	 */
 	public long getTotalUsedHeapMemorySize() {
@@ -450,7 +450,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalUsedHeapMemorySize}.
-	 * 
+	 *
 	 * @param totalUsedHeapMemorySize
 	 *            New value for {@link #totalUsedHeapMemorySize}
 	 */
@@ -460,7 +460,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given value to the comittedHeapMemorySize.
-	 * 
+	 *
 	 * @param comittedHeapMemorySize
 	 *            the value to add.
 	 */
@@ -470,7 +470,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minComittedHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #minComittedHeapMemorySize}
 	 */
 	public long getMinComittedHeapMemorySize() {
@@ -479,7 +479,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minComittedHeapMemorySize}.
-	 * 
+	 *
 	 * @param minComittedHeapMemorySize
 	 *            New value for {@link #minComittedHeapMemorySize}
 	 */
@@ -489,7 +489,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxComittedHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #maxComittedHeapMemorySize}
 	 */
 	public long getMaxComittedHeapMemorySize() {
@@ -498,7 +498,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxComittedHeapMemorySize}.
-	 * 
+	 *
 	 * @param maxComittedHeapMemorySize
 	 *            New value for {@link #maxComittedHeapMemorySize}
 	 */
@@ -508,7 +508,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalComittedHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #totalComittedHeapMemorySize}
 	 */
 	public long getTotalComittedHeapMemorySize() {
@@ -517,7 +517,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalComittedHeapMemorySize}.
-	 * 
+	 *
 	 * @param totalComittedHeapMemorySize
 	 *            New value for {@link #totalComittedHeapMemorySize}
 	 */
@@ -527,7 +527,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given value to the usedNonHeapMemorySize.
-	 * 
+	 *
 	 * @param usedNonHeapMemorySize
 	 *            the value to add.
 	 */
@@ -537,7 +537,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minUsedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #minUsedNonHeapMemorySize}
 	 */
 	public long getMinUsedNonHeapMemorySize() {
@@ -546,7 +546,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minUsedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param minUsedNonHeapMemorySize
 	 *            New value for {@link #minUsedNonHeapMemorySize}
 	 */
@@ -556,7 +556,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxUsedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #maxUsedNonHeapMemorySize}
 	 */
 	public long getMaxUsedNonHeapMemorySize() {
@@ -565,7 +565,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxUsedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param maxUsedNonHeapMemorySize
 	 *            New value for {@link #maxUsedNonHeapMemorySize}
 	 */
@@ -575,7 +575,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalUsedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #totalUsedNonHeapMemorySize}
 	 */
 	public long getTotalUsedNonHeapMemorySize() {
@@ -584,7 +584,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalUsedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param totalUsedNonHeapMemorySize
 	 *            New value for {@link #totalUsedNonHeapMemorySize}
 	 */
@@ -594,7 +594,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given value to the comittedNonHeapMemorySize.
-	 * 
+	 *
 	 * @param comittedNonHeapMemorySize
 	 *            the value to add.
 	 */
@@ -604,7 +604,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minComittedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #minComittedNonHeapMemorySize}
 	 */
 	public long getMinComittedNonHeapMemorySize() {
@@ -613,7 +613,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minComittedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param minComittedNonHeapMemorySize
 	 *            New value for {@link #minComittedNonHeapMemorySize}
 	 */
@@ -623,7 +623,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxComittedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #maxComittedNonHeapMemorySize}
 	 */
 	public long getMaxComittedNonHeapMemorySize() {
@@ -632,7 +632,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxComittedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param maxComittedNonHeapMemorySize
 	 *            New value for {@link #maxComittedNonHeapMemorySize}
 	 */
@@ -642,7 +642,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalComittedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #totalComittedNonHeapMemorySize}
 	 */
 	public long getTotalComittedNonHeapMemorySize() {
@@ -651,7 +651,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalComittedNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param totalComittedNonHeapMemorySize
 	 *            New value for {@link #totalComittedNonHeapMemorySize}
 	 */
@@ -704,37 +704,39 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + count;
-		result = prime * result + (int) (maxComittedHeapMemorySize ^ (maxComittedHeapMemorySize >>> 32));
-		result = prime * result + (int) (maxComittedNonHeapMemorySize ^ (maxComittedNonHeapMemorySize >>> 32));
-		result = prime * result + (int) (maxComittedVirtualMemSize ^ (maxComittedVirtualMemSize >>> 32));
-		result = prime * result + (int) (maxFreePhysMemory ^ (maxFreePhysMemory >>> 32));
-		result = prime * result + (int) (maxFreeSwapSpace ^ (maxFreeSwapSpace >>> 32));
-		result = prime * result + (int) (maxUsedHeapMemorySize ^ (maxUsedHeapMemorySize >>> 32));
-		result = prime * result + (int) (maxUsedNonHeapMemorySize ^ (maxUsedNonHeapMemorySize >>> 32));
-		result = prime * result + (int) (minComittedHeapMemorySize ^ (minComittedHeapMemorySize >>> 32));
-		result = prime * result + (int) (minComittedNonHeapMemorySize ^ (minComittedNonHeapMemorySize >>> 32));
-		result = prime * result + (int) (minComittedVirtualMemSize ^ (minComittedVirtualMemSize >>> 32));
-		result = prime * result + (int) (minFreePhysMemory ^ (minFreePhysMemory >>> 32));
-		result = prime * result + (int) (minFreeSwapSpace ^ (minFreeSwapSpace >>> 32));
-		result = prime * result + (int) (minUsedHeapMemorySize ^ (minUsedHeapMemorySize >>> 32));
-		result = prime * result + (int) (minUsedNonHeapMemorySize ^ (minUsedNonHeapMemorySize >>> 32));
-		result = prime * result + (int) (totalComittedHeapMemorySize ^ (totalComittedHeapMemorySize >>> 32));
-		result = prime * result + (int) (totalComittedNonHeapMemorySize ^ (totalComittedNonHeapMemorySize >>> 32));
-		result = prime * result + (int) (totalComittedVirtualMemSize ^ (totalComittedVirtualMemSize >>> 32));
-		result = prime * result + (int) (totalFreePhysMemory ^ (totalFreePhysMemory >>> 32));
-		result = prime * result + (int) (totalFreeSwapSpace ^ (totalFreeSwapSpace >>> 32));
-		result = prime * result + (int) (totalUsedHeapMemorySize ^ (totalUsedHeapMemorySize >>> 32));
-		result = prime * result + (int) (totalUsedNonHeapMemorySize ^ (totalUsedNonHeapMemorySize >>> 32));
+		result = (prime * result) + count;
+		result = (prime * result) + (int) (maxComittedHeapMemorySize ^ (maxComittedHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (maxComittedNonHeapMemorySize ^ (maxComittedNonHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (maxComittedVirtualMemSize ^ (maxComittedVirtualMemSize >>> 32));
+		result = (prime * result) + (int) (maxFreePhysMemory ^ (maxFreePhysMemory >>> 32));
+		result = (prime * result) + (int) (maxFreeSwapSpace ^ (maxFreeSwapSpace >>> 32));
+		result = (prime * result) + (int) (maxUsedHeapMemorySize ^ (maxUsedHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (maxUsedNonHeapMemorySize ^ (maxUsedNonHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (minComittedHeapMemorySize ^ (minComittedHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (minComittedNonHeapMemorySize ^ (minComittedNonHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (minComittedVirtualMemSize ^ (minComittedVirtualMemSize >>> 32));
+		result = (prime * result) + (int) (minFreePhysMemory ^ (minFreePhysMemory >>> 32));
+		result = (prime * result) + (int) (minFreeSwapSpace ^ (minFreeSwapSpace >>> 32));
+		result = (prime * result) + (int) (minUsedHeapMemorySize ^ (minUsedHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (minUsedNonHeapMemorySize ^ (minUsedNonHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (totalComittedHeapMemorySize ^ (totalComittedHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (totalComittedNonHeapMemorySize ^ (totalComittedNonHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (totalComittedVirtualMemSize ^ (totalComittedVirtualMemSize >>> 32));
+		result = (prime * result) + (int) (totalFreePhysMemory ^ (totalFreePhysMemory >>> 32));
+		result = (prime * result) + (int) (totalFreeSwapSpace ^ (totalFreeSwapSpace >>> 32));
+		result = (prime * result) + (int) (totalUsedHeapMemorySize ^ (totalUsedHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (totalUsedNonHeapMemorySize ^ (totalUsedNonHeapMemorySize >>> 32));
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -818,6 +820,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(0, 0, 1, 0, 21, 0);

@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * {@link IBranchIndexer} that indexes on the sensor type idents of {@link DefaultData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class SensorTypeIdentIndexer<E extends DefaultData> extends AbstractSharedInstanceBranchIndexer<E> implements IBranchIndexer<E> {
@@ -17,6 +17,7 @@ public class SensorTypeIdentIndexer<E extends DefaultData> extends AbstractShare
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		if (0 == element.getSensorTypeIdent()) {
 			return null;
@@ -27,6 +28,7 @@ public class SensorTypeIdentIndexer<E extends DefaultData> extends AbstractShare
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		if (0 == query.getSensorTypeIdent()) {
 			return new Object[0];

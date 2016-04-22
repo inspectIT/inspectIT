@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Mapping to define which agent should be connected to which {@link Environment}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "agent-mapping")
@@ -54,7 +54,7 @@ public class AgentMapping {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param agentName
 	 *            Agent name or pattern.
 	 * @param ipAddress
@@ -67,7 +67,7 @@ public class AgentMapping {
 
 	/**
 	 * Gets {@link #active}.
-	 * 
+	 *
 	 * @return {@link #active}
 	 */
 	public boolean isActive() {
@@ -76,7 +76,7 @@ public class AgentMapping {
 
 	/**
 	 * Sets {@link #active}.
-	 * 
+	 *
 	 * @param active
 	 *            New value for {@link #active}
 	 */
@@ -86,7 +86,7 @@ public class AgentMapping {
 
 	/**
 	 * Gets {@link #agentName}.
-	 * 
+	 *
 	 * @return {@link #agentName}
 	 */
 	public String getAgentName() {
@@ -95,7 +95,7 @@ public class AgentMapping {
 
 	/**
 	 * Sets {@link #agentName}.
-	 * 
+	 *
 	 * @param agentName
 	 *            New value for {@link #agentName}
 	 */
@@ -105,7 +105,7 @@ public class AgentMapping {
 
 	/**
 	 * Gets {@link #ipAddress}.
-	 * 
+	 *
 	 * @return {@link #ipAddress}
 	 */
 	public String getIpAddress() {
@@ -114,7 +114,7 @@ public class AgentMapping {
 
 	/**
 	 * Sets {@link #ipAddress}.
-	 * 
+	 *
 	 * @param ipAddress
 	 *            New value for {@link #ipAddress}
 	 */
@@ -124,7 +124,7 @@ public class AgentMapping {
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
 	public String getDescription() {
@@ -133,7 +133,7 @@ public class AgentMapping {
 
 	/**
 	 * Sets {@link #description}.
-	 * 
+	 *
 	 * @param description
 	 *            New value for {@link #description}
 	 */
@@ -143,7 +143,7 @@ public class AgentMapping {
 
 	/**
 	 * Gets {@link #environmentId}.
-	 * 
+	 *
 	 * @return {@link #environmentId}
 	 */
 	public String getEnvironmentId() {
@@ -152,7 +152,7 @@ public class AgentMapping {
 
 	/**
 	 * Sets {@link #environmentId}.
-	 * 
+	 *
 	 * @param environmentId
 	 *            New value for {@link #environmentId}
 	 */
@@ -167,11 +167,11 @@ public class AgentMapping {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (active ? 1231 : 1237);
-		result = prime * result + ((agentName == null) ? 0 : agentName.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((environmentId == null) ? 0 : environmentId.hashCode());
-		result = prime * result + ((ipAddress == null) ? 0 : ipAddress.hashCode());
+		result = (prime * result) + (active ? 1231 : 1237);
+		result = (prime * result) + ((agentName == null) ? 0 : agentName.hashCode());
+		result = (prime * result) + ((description == null) ? 0 : description.hashCode());
+		result = (prime * result) + ((environmentId == null) ? 0 : environmentId.hashCode());
+		result = (prime * result) + ((ipAddress == null) ? 0 : ipAddress.hashCode());
 		return result;
 	}
 

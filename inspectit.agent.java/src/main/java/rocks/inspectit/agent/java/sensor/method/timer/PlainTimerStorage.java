@@ -10,9 +10,9 @@ import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO;
 /**
  * Class which stores the data as they arrive without further processing. This will increase memory
  * usage by a high amount but should reduces CPU usage.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class PlainTimerStorage implements ITimerStorage {
 
@@ -23,7 +23,7 @@ public class PlainTimerStorage implements ITimerStorage {
 
 	/**
 	 * Default constructor which initializes a {@link TimerRawVO} object.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The time stamp.
 	 * @param platformIdent

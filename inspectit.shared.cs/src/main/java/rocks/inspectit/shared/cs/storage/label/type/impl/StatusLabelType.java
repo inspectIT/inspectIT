@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Type of the label to denote the Status.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("STLT")

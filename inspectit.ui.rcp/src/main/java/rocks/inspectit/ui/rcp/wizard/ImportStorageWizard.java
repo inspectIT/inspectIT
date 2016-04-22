@@ -32,9 +32,9 @@ import rocks.inspectit.ui.rcp.wizard.page.ImportStorageSelectPage;
 
 /**
  * Wizard for importing the storages.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ImportStorageWizard extends Wizard implements INewWizard {
 
@@ -145,7 +145,7 @@ public class ImportStorageWizard extends Wizard implements INewWizard {
 							}
 						});
 					} catch (BusinessException | SerializationException | IOException e) {
-						return new Status(Status.ERROR, InspectIT.ID, "Exception occurred trying to import the storage via file.", e);
+						return new Status(IStatus.ERROR, InspectIT.ID, "Exception occurred trying to import the storage via file.", e);
 					}
 					monitor.done();
 					return Status.OK_STATUS;
@@ -164,7 +164,7 @@ public class ImportStorageWizard extends Wizard implements INewWizard {
 					try {
 						storageManager.uploadZippedStorage(fileName, cmrRepositoryDefinition, subMonitor.newChild(9));
 					} catch (final Exception e) {
-						return new Status(Status.ERROR, InspectIT.ID, "Storage data was not successfully uploaded to the CMR. Import failed.", e);
+						return new Status(IStatus.ERROR, InspectIT.ID, "Storage data was not successfully uploaded to the CMR. Import failed.", e);
 					}
 
 					IProgressMonitor unpackMonitor = subMonitor.newChild(1);
@@ -173,7 +173,7 @@ public class ImportStorageWizard extends Wizard implements INewWizard {
 						IStorageData storageData = storageManager.getStorageDataFromZip(fileName);
 						cmrRepositoryDefinition.getStorageService().unpackUploadedStorage(storageData);
 					} catch (final BusinessException e) {
-						return new Status(Status.ERROR, InspectIT.ID, "Storage data was not successfully unpacked on the CMR. Import failed.", e);
+						return new Status(IStatus.ERROR, InspectIT.ID, "Storage data was not successfully unpacked on the CMR. Import failed.", e);
 					}
 					unpackMonitor.done();
 

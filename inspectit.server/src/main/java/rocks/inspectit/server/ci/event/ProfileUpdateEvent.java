@@ -52,7 +52,7 @@ public class ProfileUpdateEvent extends ApplicationEvent {
 		super(source);
 
 		// check null
-		if (null == before || null == after) {
+		if ((null == before) || (null == after)) {
 			throw new IllegalArgumentException("Profile references must not be null.");
 		}
 

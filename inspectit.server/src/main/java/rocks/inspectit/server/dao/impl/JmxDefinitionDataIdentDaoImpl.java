@@ -15,10 +15,10 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 /**
  * The default implementation of the {@link JmxDefinitionDataIdentDao} interface by using Entity
  * manager.
- * 
+ *
  * @author Alfred Krauss
  * @author Marius Oehler
- * 
+ *
  */
 @Repository
 public class JmxDefinitionDataIdentDaoImpl extends AbstractJpaDao<JmxDefinitionDataIdent> implements JmxDefinitionDataIdentDao {
@@ -39,6 +39,7 @@ public class JmxDefinitionDataIdentDaoImpl extends AbstractJpaDao<JmxDefinitionD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public JmxDefinitionDataIdent load(Long id) {
 		return getEntityManager().find(JmxDefinitionDataIdent.class, id);
 	}
@@ -46,6 +47,7 @@ public class JmxDefinitionDataIdentDaoImpl extends AbstractJpaDao<JmxDefinitionD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void saveOrUpdate(JmxDefinitionDataIdent jmxDefinitionDataIdent) {
 		// we save if id is not set, otherwise merge
 		if (0L == jmxDefinitionDataIdent.getId()) {
@@ -59,6 +61,7 @@ public class JmxDefinitionDataIdentDaoImpl extends AbstractJpaDao<JmxDefinitionD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<JmxDefinitionDataIdent> findForPlatformIdent(long platformId, JmxDefinitionDataIdent jmxDefinitionDataIdentExample) {
 		TypedQuery<JmxDefinitionDataIdent> query = getEntityManager().createNamedQuery(JmxDefinitionDataIdent.FIND_BY_PLATFORM_AND_EXAMPLE, JmxDefinitionDataIdent.class);
 		query.setParameter("platformIdentId", platformId);

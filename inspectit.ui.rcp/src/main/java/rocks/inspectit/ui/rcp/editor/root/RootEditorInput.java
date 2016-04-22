@@ -10,9 +10,9 @@ import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 /**
  * This editor input is used for all views and can only be set in the composite view controller as
  * this is the only one which can be set with an input.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class RootEditorInput implements IEditorInput {
 
@@ -23,7 +23,7 @@ public class RootEditorInput implements IEditorInput {
 
 	/**
 	 * Only constructor which needs an input definition.
-	 * 
+	 *
 	 * @param inputDefinition
 	 *            The input definition.
 	 */
@@ -36,6 +36,7 @@ public class RootEditorInput implements IEditorInput {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean exists() {
 		return false;
 	}
@@ -43,6 +44,7 @@ public class RootEditorInput implements IEditorInput {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return ImageDescriptor.getMissingImageDescriptor();
 	}
@@ -50,6 +52,7 @@ public class RootEditorInput implements IEditorInput {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return inputDefinition.toString();
 	}
@@ -57,6 +60,7 @@ public class RootEditorInput implements IEditorInput {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IPersistableElement getPersistable() {
 		return null;
 	}
@@ -64,6 +68,7 @@ public class RootEditorInput implements IEditorInput {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getToolTipText() {
 		return inputDefinition.getEditorPropertiesData().getPartTooltip();
 	}
@@ -71,6 +76,7 @@ public class RootEditorInput implements IEditorInput {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		if (InputDefinition.class == adapter) {
@@ -87,7 +93,7 @@ public class RootEditorInput implements IEditorInput {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((inputDefinition == null) ? 0 : inputDefinition.hashCode());
+		result = (prime * result) + ((inputDefinition == null) ? 0 : inputDefinition.hashCode());
 		return result;
 	}
 

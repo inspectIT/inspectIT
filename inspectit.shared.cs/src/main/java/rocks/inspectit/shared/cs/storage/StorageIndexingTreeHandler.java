@@ -46,9 +46,9 @@ import rocks.inspectit.shared.cs.storage.util.StorageIndexTreeProvider;
  * write there is a put and remove from a {@link HashMap} as an overhead, but since the size of the
  * map is constant (data currently in write can not be greater than the number of threads writing
  * the data, there should not be any serious performance problems.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -110,7 +110,7 @@ public class StorageIndexingTreeHandler {
 	/**
 	 * Write tasks currently in process.
 	 */
-	private Map<WriteTask, TreeDescriptorPair> writeTasksInProcess = new ConcurrentHashMap<WriteTask, TreeDescriptorPair>(16, 0.75f, 2);
+	private Map<WriteTask, TreeDescriptorPair> writeTasksInProcess = new ConcurrentHashMap<>(16, 0.75f, 2);
 
 	/**
 	 * Object size for indexing tree size calculation.
@@ -134,7 +134,7 @@ public class StorageIndexingTreeHandler {
 	 * asking for the position of the data to be written to.
 	 */
 	public void prepare() {
-		storageIndexingTreeReference = new AtomicReference<IStorageTreeComponent<DefaultData>>(getNewStorageIndexingTree());
+		storageIndexingTreeReference = new AtomicReference<>(getNewStorageIndexingTree());
 		indexingTreeSavingFuture = executorService.scheduleWithFixedDelay(new IndexingTreeSavingTask(), TREE_CHECK_DELAY, TREE_CHECK_DELAY, TREE_CHECK_DELAY_TIME_UNIT);
 	}
 
@@ -143,7 +143,7 @@ public class StorageIndexingTreeHandler {
 	 * <p>
 	 * Internally this method saves the {@link TreeDescriptorPair} for the given task, so when the
 	 * write is done the descriptor can be updated with correct write information.
-	 * 
+	 *
 	 * @param writeTask
 	 *            Write task that starts the write.
 	 * @return Returns the channel ID where the data should be written.
@@ -181,7 +181,7 @@ public class StorageIndexingTreeHandler {
 	 * Internally this method will update the {@link IStorageDescriptor} for the given
 	 * {@link DefaultData} object in the write task, and remove the task from the set of tasks being
 	 * currently processed.
-	 * 
+	 *
 	 * @param writeTask
 	 *            Write task that succeeded.
 	 * @param position
@@ -209,7 +209,7 @@ public class StorageIndexingTreeHandler {
 	 * Internally this method will update the {@link IStorageTreeComponent} by removing the given
 	 * {@link DefaultData} object in the write task, and remove the task from the set of tasks being
 	 * currently processed.
-	 * 
+	 *
 	 * @param writeTask
 	 *            Write task that failed.
 	 */
@@ -280,7 +280,7 @@ public class StorageIndexingTreeHandler {
 
 	/**
 	 * Returns amount of write tasks in progress.
-	 * 
+	 *
 	 * @return Returns amount of write tasks in progress.
 	 */
 	int getWriteTaskInProgressCount() {
@@ -289,9 +289,9 @@ public class StorageIndexingTreeHandler {
 
 	/**
 	 * Returns random file name.
-	 * 
+	 *
 	 * @return Returns random file name.
-	 * 
+	 *
 	 */
 	private String getRandomFileName() {
 		return UUID.randomUUID().toString();
@@ -301,9 +301,9 @@ public class StorageIndexingTreeHandler {
 	 * This task periodically checks if the size of the indexing tree is bigger that the
 	 * {@link #maximumIndexingTreeSize}, and if it is provides new indexing tree for the other
 	 * tasks, and safely saves the old tree.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	class IndexingTreeSavingTask implements Runnable {
 
@@ -325,7 +325,7 @@ public class StorageIndexingTreeHandler {
 							// put new fresh tree to the Atomic reference
 							if (storageIndexingTreeReference.compareAndSet(currentIndexingTree, newIndexingTree)) {
 								// collect the information about tasks currently in write
-								final Collection<WriteTask> writeTasksToWait = new HashSet<StorageWriter.WriteTask>(writeTasksInProcess.keySet());
+								final Collection<WriteTask> writeTasksToWait = new HashSet<>(writeTasksInProcess.keySet());
 								// here we are safe to know that when all of the tasks in the
 								// collection is gone from the tasks in process map, we can save the
 								// tree
@@ -361,7 +361,7 @@ public class StorageIndexingTreeHandler {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Returns new empty storage indexing tree.
 	 */
 	private IStorageTreeComponent<DefaultData> getNewStorageIndexingTree() {
@@ -370,7 +370,7 @@ public class StorageIndexingTreeHandler {
 
 	/**
 	 * Registers the {@link StorageWriter} to work with.
-	 * 
+	 *
 	 * @param storageWriter
 	 *            {@link StorageWriter}.
 	 */
@@ -381,9 +381,9 @@ public class StorageIndexingTreeHandler {
 	/**
 	 * Utility class that holds a pair of {@link IStorageDescriptor} and
 	 * {@link IStorageTreeComponent}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static final class TreeDescriptorPair {
 

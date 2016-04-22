@@ -7,9 +7,9 @@ import rocks.inspectit.ui.rcp.model.AgentLeaf;
 
 /**
  * Tester for {@link AgentLeaf}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentTester extends PropertyTester {
 
@@ -22,7 +22,7 @@ public class AgentTester extends PropertyTester {
 			AgentLeaf agentLeaf = (AgentLeaf) receiver;
 
 			if ("canDelete".equals(property)) {
-				return null == agentLeaf.getAgentStatusData() || agentLeaf.getAgentStatusData().getAgentConnection() != AgentConnection.CONNECTED;
+				return (null == agentLeaf.getAgentStatusData()) || (agentLeaf.getAgentStatusData().getAgentConnection() != AgentConnection.CONNECTED);
 			}
 		}
 		return false;

@@ -22,9 +22,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link IHttpTimerDataAccessService} for storage purposes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageHttpTimerDataAccessService extends AbstractStorageService<HttpTimerData> implements IHttpTimerDataAccessService {
 
@@ -53,6 +53,7 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<HttpTimerData> getAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod) {
 		StorageIndexQuery query = httpDataQueryFactory.getFindAllHttpTimersQuery(httpData, null, null);
 		return super.executeQuery(query, new HttpTimerDataAggregator(true, includeRequestMethod));
@@ -61,6 +62,7 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<HttpTimerData> getAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod, Date fromDate, Date toDate) {
 		StorageIndexQuery query = httpDataQueryFactory.getFindAllHttpTimersQuery(httpData, fromDate, toDate);
 		return super.executeQuery(query, new HttpTimerDataAggregator(true, includeRequestMethod));
@@ -69,6 +71,7 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<HttpTimerData> getTaggedAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod) {
 		StorageIndexQuery query = httpDataQueryFactory.getFindAllTaggedHttpTimersQuery(httpData, null, null);
 		return super.executeQuery(query, new HttpTimerDataAggregator(false, includeRequestMethod));
@@ -77,6 +80,7 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<HttpTimerData> getTaggedAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod, Date fromDate, Date toDate) {
 		StorageIndexQuery query = httpDataQueryFactory.getFindAllTaggedHttpTimersQuery(httpData, fromDate, toDate);
 		return super.executeQuery(query, new HttpTimerDataAggregator(false, includeRequestMethod));
@@ -85,12 +89,13 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<HttpTimerData> getChartingHttpTimerDataFromDateToDate(Collection<HttpTimerData> templates, Date fromDate, Date toDate, boolean retrieveByTag) {
 		if (CollectionUtils.isNotEmpty(templates)) {
 			StorageIndexQuery query = httpDataQueryFactory.getFindAllHttpTimersQuery(templates.iterator().next(), fromDate, toDate);
 
 			if (!retrieveByTag) {
-				Set<String> uris = new HashSet<String>();
+				Set<String> uris = new HashSet<>();
 				for (HttpTimerData httpTimerData : templates) {
 					if (!HttpInfo.UNDEFINED.equals(httpTimerData.getHttpInfo().getUri())) {
 						uris.add(httpTimerData.getHttpInfo().getUri());
@@ -98,7 +103,7 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 				}
 				query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("uri", uris));
 			} else {
-				Set<String> tags = new HashSet<String>();
+				Set<String> tags = new HashSet<>();
 
 				for (HttpTimerData httpTimerData : templates) {
 					if (httpTimerData.getHttpInfo().hasInspectItTaggingHeader()) {
@@ -117,6 +122,7 @@ public class StorageHttpTimerDataAccessService extends AbstractStorageService<Ht
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected IStorageTreeComponent<HttpTimerData> getIndexingTree() {
 		return indexingTree;
 	}

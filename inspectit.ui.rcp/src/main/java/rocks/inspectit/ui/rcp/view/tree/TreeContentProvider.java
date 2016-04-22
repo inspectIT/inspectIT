@@ -1,7 +1,5 @@
 package rocks.inspectit.ui.rcp.view.tree;
 
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -14,9 +12,9 @@ import rocks.inspectit.ui.rcp.util.ListenerList;
 
 /**
  * The content provider for the tree viewer used for every single available CMR.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TreeContentProvider implements ITreeContentProvider {
 
@@ -33,6 +31,7 @@ public class TreeContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (manager.isDeferredAdapter(parentElement)) {
 			Object[] children = manager.getChildren(parentElement);
@@ -49,6 +48,7 @@ public class TreeContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof Composite) {
 			Composite composite = (Composite) element;
@@ -61,6 +61,7 @@ public class TreeContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean hasChildren(Object element) {
 		if (null == element) {
 			return false;
@@ -81,6 +82,7 @@ public class TreeContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getElements(Object inputElement) {
 		TreeModelManager treeModelManager = (TreeModelManager) inputElement;
 		return treeModelManager.getRootElements();
@@ -89,11 +91,12 @@ public class TreeContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		manager = new DeferredTreeContentManager((AbstractTreeViewer) viewer);
 		if (null != updateCompleteListenerList) {
-			for (Iterator<IJobChangeListener> it = updateCompleteListenerList.iterator(); it.hasNext();) {
-				manager.addUpdateCompleteListener(it.next());
+			for (IJobChangeListener iJobChangeListener : updateCompleteListenerList) {
+				manager.addUpdateCompleteListener(iJobChangeListener);
 			}
 		}
 	}
@@ -102,13 +105,13 @@ public class TreeContentProvider implements ITreeContentProvider {
 	 * Adds the listener to the update job that updates the elements. The listener will be added to
 	 * the {@link DeferredTreeContentManager} if one is initialized. In any case the listener will
 	 * be added when the new manager is initialized in the future.
-	 * 
+	 *
 	 * @param listener
 	 *            {@link IJobChangeListener}
 	 */
 	public void addUpdateCompleteListener(IJobChangeListener listener) {
 		if (null == updateCompleteListenerList) {
-			updateCompleteListenerList = new ListenerList<IJobChangeListener>();
+			updateCompleteListenerList = new ListenerList<>();
 		}
 		updateCompleteListenerList.add(listener);
 		if (null != manager) {
@@ -119,7 +122,7 @@ public class TreeContentProvider implements ITreeContentProvider {
 	/**
 	 * Adds the listener to the update job that updates the elements. The listener will be removed
 	 * from the {@link DeferredTreeContentManager} if one is initialized.
-	 * 
+	 *
 	 * @param listener
 	 *            {@link IJobChangeListener}
 	 */
@@ -135,6 +138,7 @@ public class TreeContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 

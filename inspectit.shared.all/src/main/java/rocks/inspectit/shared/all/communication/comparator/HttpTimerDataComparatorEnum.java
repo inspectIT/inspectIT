@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Comparators for {@link HttpTimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum HttpTimerDataComparatorEnum implements IDataComparator<HttpTimerData>, Comparator<HttpTimerData> {
 

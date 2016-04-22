@@ -25,9 +25,9 @@ import rocks.inspectit.ui.rcp.wizard.page.UploadStorageWizardPage;
 
 /**
  * Wizard for uploading a storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class UploadStorageWizard extends Wizard implements INewWizard {
 
@@ -43,7 +43,7 @@ public class UploadStorageWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param localStorageDataProvider
 	 *            {@link ILocalStorageDataProvider} pointing to the storage to upload.
 	 */
@@ -85,7 +85,7 @@ public class UploadStorageWizard extends Wizard implements INewWizard {
 					storageManager.uploadCompleteStorage(localStorageData, cmrRepositoryDefinition, subMonitor);
 					cmrRepositoryDefinition.getStorageService().createStorageFromUploadedDir(localStorageData);
 				} catch (final Exception e) {
-					return new Status(Status.ERROR, InspectIT.ID, "Exception occurred during storage upload", e);
+					return new Status(IStatus.ERROR, InspectIT.ID, "Exception occurred during storage upload", e);
 				}
 
 				Display.getDefault().asyncExec(new Runnable() {

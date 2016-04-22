@@ -19,9 +19,9 @@ import rocks.inspectit.server.util.Converter;
 /**
  * The logging interceptor which will be active for each method being annotated with @
  * {@link MethodLog}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Aspect
 @Component
@@ -71,7 +71,7 @@ public class MethodLogInterceptor {
 	 * This map holds the mapping between the log levels defined in the aop log and the logback log
 	 * level. Please look at class {@link MethodLog} for the reason for this.
 	 */
-	private static final Map<MethodLog.Level, Level> LEVELS = new HashMap<MethodLog.Level, Level>(8, 1.0f);
+	private static final Map<MethodLog.Level, Level> LEVELS = new HashMap<>(8, 1.0f);
 
 	static {
 		// initialize all the available levels
@@ -87,7 +87,7 @@ public class MethodLogInterceptor {
 	/**
 	 * Advice around the method that are annotated with {@link MethodLog} that processes wanted
 	 * logging if needed.
-	 * 
+	 *
 	 * @param joinPoint
 	 *            {@link ProceedingJoinPoint}.
 	 * @param methodLog
@@ -125,7 +125,7 @@ public class MethodLogInterceptor {
 			logger.log(null, signature.getDeclaringType().getName(), LocationAwareLogger.WARN_INT, formatString, new Object[] { methodName, duration }, null);
 		}
 
-		if (-1 != methodLog.durationLimit() && duration > methodLog.durationLimit()) {
+		if ((-1 != methodLog.durationLimit()) && (duration > methodLog.durationLimit())) {
 			if (null == methodName) {
 				methodName = convertMethodName(signature.getName());
 			}
@@ -150,7 +150,7 @@ public class MethodLogInterceptor {
 	 * Converts the method name into something more 'readable'.<br>
 	 * getMyName: 'Get My Name'<br>
 	 * loadAllPersons: 'Load All Persons'
-	 * 
+	 *
 	 * @param name
 	 *            The original method name.
 	 * @return The converted readable name string.

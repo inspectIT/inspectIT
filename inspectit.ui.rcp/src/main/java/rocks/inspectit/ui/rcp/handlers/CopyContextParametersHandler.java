@@ -20,9 +20,9 @@ import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * Handler for copying context parameters.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CopyContextParametersHandler extends AbstractHandler implements IHandler {
 

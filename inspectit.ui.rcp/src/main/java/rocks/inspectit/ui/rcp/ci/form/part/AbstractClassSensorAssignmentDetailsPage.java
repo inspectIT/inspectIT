@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -106,7 +107,7 @@ public abstract class AbstractClassSensorAssignmentDetailsPage<E extends Abstrac
 		FormToolkit toolkit = managedForm.getToolkit();
 
 		// section
-		Section section = toolkit.createSection(parent, Section.TITLE_BAR | Section.EXPANDED);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText("Class definition");
 		section.marginWidth = 10;
 		section.marginHeight = 5;
@@ -169,9 +170,7 @@ public abstract class AbstractClassSensorAssignmentDetailsPage<E extends Abstrac
 		classSearchButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SEARCH));
 		classSearchButton.setToolTipText("Search for class");
 		classSearchButton.setEnabled(false);
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"The class/interface that should be monitored including the package name using the standard Java notation (e.g. rocks.inspectit.shared.cs.MyTestClass). The wildcard * can be used to match any length of characters.");
 
 		// class validation
@@ -187,9 +186,7 @@ public abstract class AbstractClassSensorAssignmentDetailsPage<E extends Abstrac
 		annotationSearchButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SEARCH));
 		annotationSearchButton.setToolTipText("Search for annotation class");
 		annotationSearchButton.setEnabled(false);
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"Sensor assignment can include the special additional option, where an annotation can be specified and used as additional instrumentation filter. If the annotation is added to the additional options part, the agent will instrument the methods/constructors based on the annotation target:\n\n1. If the annotation target is Class, then all methods from the classes that have the specified annotation will be instrumented.\n2. If the annotation target is Method, then only methods that have the specified annotation will be instrumented.");
 
 		// annotation validation

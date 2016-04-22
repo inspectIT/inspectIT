@@ -9,9 +9,9 @@ import rocks.inspectit.shared.cs.storage.IStorageData;
 /**
  * Class that is used for providing the correct instance of {@link ExtendedByteBufferInputStream}
  * via Spring framework.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class InputStreamProvider {
 
@@ -20,7 +20,7 @@ public abstract class InputStreamProvider {
 	 *            {@link IStorageData} to get the data for.
 	 * @param descriptors
 	 *            List of descriptors that point to the data.
-	 * 
+	 *
 	 * @return Returns the newly initialized instance of the {@link ExtendedByteBufferInputStream}.
 	 * @throws IOException
 	 *             if input stream can not be obtained

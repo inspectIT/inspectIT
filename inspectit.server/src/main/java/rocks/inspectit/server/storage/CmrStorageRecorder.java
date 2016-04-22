@@ -30,9 +30,9 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 /**
  * CMR storage recorder that uses the {@link StorageWriter} to provide recording functionality..
  * Handles the scheduling, starting and stopping of the recording.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class CmrStorageRecorder {
@@ -75,7 +75,7 @@ public class CmrStorageRecorder {
 	/**
 	 * Set of involved Agents, used after recording to store proper Agent information.
 	 */
-	private Set<Long> involvedAgentsSet = new HashSet<Long>();
+	private Set<Long> involvedAgentsSet = new HashSet<>();
 
 	/**
 	 * Storage writer to use for writing.
@@ -98,7 +98,7 @@ public class CmrStorageRecorder {
 	 * {@link StorageWriter}. Processor define which data will be stored, when and in which format.
 	 * <p>
 	 * If the processors are not set, then the normal write will be executed.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Object to be processed.
 	 */
@@ -118,7 +118,7 @@ public class CmrStorageRecorder {
 	/**
 	 * Starts or schedules the recording. If the recording properties define the start date that is
 	 * after current time, recording will be scheduled. Otherwise it is started right away.
-	 * 
+	 *
 	 * @param stWriter
 	 *            Writer for executing writing tasks.
 	 * @param recProperties
@@ -163,7 +163,7 @@ public class CmrStorageRecorder {
 	/**
 	 * Prepares the writer for recording by passing the data processors that will be used when
 	 * {@link #record(DefaultData)} is called.
-	 * 
+	 *
 	 * @param stWriter
 	 *            Writer for executing writing tasks.
 	 * @param recProperties
@@ -261,7 +261,7 @@ public class CmrStorageRecorder {
 	/**
 	 * Is recording active. The recording is active only when the {@link #storageWriter}
 	 * {@link #recordingProperties} are set.
-	 * 
+	 *
 	 * @return True if the recording is active.
 	 */
 	public boolean isRecordingOn() {
@@ -270,7 +270,7 @@ public class CmrStorageRecorder {
 
 	/**
 	 * Is recording scheduled.
-	 * 
+	 *
 	 * @return True if the recording is scheduled.
 	 */
 	public boolean isRecordingScheduled() {
@@ -279,7 +279,7 @@ public class CmrStorageRecorder {
 
 	/**
 	 * Returns the {@link StorageData} that is used for recording.
-	 * 
+	 *
 	 * @return Returns the {@link StorageData} that is used for recording.
 	 */
 	protected StorageData getStorageData() {
@@ -288,7 +288,7 @@ public class CmrStorageRecorder {
 
 	/**
 	 * Gets {@link #recordingState}.
-	 * 
+	 *
 	 * @return {@link #recordingState}
 	 */
 	public RecordingState getRecordingState() {

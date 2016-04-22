@@ -14,14 +14,14 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
-import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * This composite holds Agents of one CMR as the deferred children.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DeferredAgentsComposite extends DeferredComposite implements ICmrRepositoryProvider {
 
@@ -38,7 +38,7 @@ public class DeferredAgentsComposite extends DeferredComposite implements ICmrRe
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            Repository.
 	 * @param showOldAgents
@@ -60,12 +60,12 @@ public class DeferredAgentsComposite extends DeferredComposite implements ICmrRe
 			if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
 				Map<PlatformIdent, AgentStatusData> agents = cmrRepositoryDefinition.getGlobalDataAccessService().getAgentsOverview();
 				if (null != agents) {
-					Map<PlatformIdent, AgentStatusData> filteredMap = new HashMap<PlatformIdent, AgentStatusData>(agents.size());
+					Map<PlatformIdent, AgentStatusData> filteredMap = new HashMap<>(agents.size());
 					for (Entry<PlatformIdent, AgentStatusData> entry : agents.entrySet()) {
 						PlatformIdent platformIdent = entry.getKey();
 						AgentStatusData agentStatusData = entry.getValue();
 						// the agentstatusdata is null if the agent wasn't connected before
-						if (showOldAgents || (!showOldAgents && agentStatusData != null)) {
+						if (showOldAgents || (!showOldAgents && (agentStatusData != null))) {
 							filteredMap.put(platformIdent, agentStatusData);
 						}
 

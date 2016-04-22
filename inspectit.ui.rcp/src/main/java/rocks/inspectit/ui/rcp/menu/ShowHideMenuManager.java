@@ -31,9 +31,9 @@ import rocks.inspectit.ui.rcp.handlers.ShowHideColumnsHandler;
 
 /**
  * Menu manager for displaying the show/hide columns group.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ShowHideMenuManager extends MenuManager implements IMenuListener {
 
@@ -49,7 +49,7 @@ public class ShowHideMenuManager extends MenuManager implements IMenuListener {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param columnViewer
 	 *            Viewer to display menu for.
 	 * @param inputControllerClass
@@ -81,11 +81,11 @@ public class ShowHideMenuManager extends MenuManager implements IMenuListener {
 
 	/**
 	 * Returns all contribution items.
-	 * 
+	 *
 	 * @return Returns all contribution items.
 	 */
 	private IAction[] getActionItems() {
-		List<IAction> items = new ArrayList<IAction>();
+		List<IAction> items = new ArrayList<>();
 		if (columnViewer instanceof TableViewer) {
 			TableColumn[] columns = ((TableViewer) columnViewer).getTable().getColumns();
 			for (TableColumn column : columns) {
@@ -102,9 +102,9 @@ public class ShowHideMenuManager extends MenuManager implements IMenuListener {
 
 	/**
 	 * Action for showing ot hiding one column.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class ShowHideColumnAction extends Action {
 
@@ -120,7 +120,7 @@ public class ShowHideMenuManager extends MenuManager implements IMenuListener {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param column
 		 *            Column for the action.
 		 */

@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
  * definition of the properties names that when changed should execute the annotated method.
  * <p>
  * Methods annotated with this annotation should have no arguments.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 @Target({ METHOD })
@@ -20,8 +20,8 @@ public @interface PropertyUpdate {
 
 	/**
 	 * List of all property names that when change will fire up annotated method.
-	 * 
+	 *
 	 * @return
 	 */
-	String[] properties() default { };
+	String[] properties() default {};
 }

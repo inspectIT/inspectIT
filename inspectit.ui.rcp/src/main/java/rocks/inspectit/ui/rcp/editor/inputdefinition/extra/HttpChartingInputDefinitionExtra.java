@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
 
 /**
  * Input definition extra for the HTTP charting editors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HttpChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
@@ -30,14 +30,14 @@ public class HttpChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Defines if plotting should be based on the {@link InspectIT} tag value.
-	 * 
+	 *
 	 * @see HttpTimerData#hasInspectItTaggingHeader()
 	 */
 	boolean plotByTagValue;
 
 	/**
 	 * Gets {@link #templates}.
-	 * 
+	 *
 	 * @return {@link #templates}
 	 */
 	public List<HttpTimerData> getTemplates() {
@@ -46,7 +46,7 @@ public class HttpChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Sets {@link #templates}.
-	 * 
+	 *
 	 * @param templates
 	 *            New value for {@link #templates}
 	 */
@@ -56,7 +56,7 @@ public class HttpChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Gets {@link #regExTemplates}.
-	 * 
+	 *
 	 * @return {@link #regExTemplates}
 	 */
 	public List<RegExAggregatedHttpTimerData> getRegExTemplates() {
@@ -65,7 +65,7 @@ public class HttpChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Sets {@link #regExTemplates}.
-	 * 
+	 *
 	 * @param regExTemplates
 	 *            New value for {@link #regExTemplates}
 	 */
@@ -75,7 +75,7 @@ public class HttpChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Gets {@link #plotByTagValue}.
-	 * 
+	 *
 	 * @return {@link #plotByTagValue}
 	 */
 	public boolean isPlotByTagValue() {
@@ -84,7 +84,7 @@ public class HttpChartingInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Sets {@link #plotByTagValue}.
-	 * 
+	 *
 	 * @param plotByTagValue
 	 *            New value for {@link #plotByTagValue}
 	 */

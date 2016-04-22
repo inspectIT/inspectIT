@@ -90,7 +90,7 @@ public class ParameterContextCapture extends AbstractContextCapture {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + index;
+		result = (prime * result) + index;
 		return result;
 	}
 

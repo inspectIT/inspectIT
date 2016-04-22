@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 
 /**
  * Storage branch type that implements the {@link IStorageTreeComponent}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class StorageBranch<E extends DefaultData> extends AbstractBranch<IStorageDescriptor, E> implements IStorageTreeComponent<E> {
@@ -31,7 +31,7 @@ public class StorageBranch<E extends DefaultData> extends AbstractBranch<IStorag
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageBranchIndexer
 	 *            Indexer to be used in the branch.
 	 */
@@ -43,6 +43,7 @@ public class StorageBranch<E extends DefaultData> extends AbstractBranch<IStorag
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected ITreeComponent<IStorageDescriptor, E> getNextTreeComponent(E element) {
 		return storageBranchIndexer.getNextTreeComponent(element);
 	}
@@ -50,6 +51,7 @@ public class StorageBranch<E extends DefaultData> extends AbstractBranch<IStorag
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preWriteFinalization() {
 		for (ITreeComponent<IStorageDescriptor, E> storageTreeComponent : getComponentMap().values()) {
 			if (storageTreeComponent instanceof IStorageTreeComponent) {
@@ -70,7 +72,7 @@ public class StorageBranch<E extends DefaultData> extends AbstractBranch<IStorag
 
 	/**
 	 * Gets {@link #storageBranchIndexer}.
-	 * 
+	 *
 	 * @return {@link #storageBranchIndexer}
 	 */
 	IStorageBranchIndexer<E> getStorageBranchIndexer() {
@@ -84,7 +86,7 @@ public class StorageBranch<E extends DefaultData> extends AbstractBranch<IStorag
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((storageBranchIndexer == null) ? 0 : storageBranchIndexer.hashCode());
+		result = (prime * result) + ((storageBranchIndexer == null) ? 0 : storageBranchIndexer.hashCode());
 		return result;
 	}
 

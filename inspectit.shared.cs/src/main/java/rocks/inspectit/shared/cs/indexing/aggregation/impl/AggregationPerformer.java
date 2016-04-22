@@ -13,9 +13,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 /**
  * This class encapsulates the aggregation process. When ever aggregation is needed, it this class
  * should be used with combination of available {@link IAggregator}s.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type to be aggregated.
  */
@@ -33,7 +33,7 @@ public class AggregationPerformer<E extends DefaultData> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param aggregator
 	 *            {@link IAggregator} to use. Must not be <code>null</code>.
 	 */
@@ -42,12 +42,12 @@ public class AggregationPerformer<E extends DefaultData> {
 			throw new IllegalArgumentException("Aggregator can not be null.");
 		}
 		this.aggregator = aggregator;
-		this.aggregationMap = new HashMap<Object, IAggregatedData<E>>();
+		this.aggregationMap = new HashMap<>();
 	}
 
 	/**
 	 * Process one element.
-	 * 
+	 *
 	 * @param element
 	 *            Element to process.
 	 */
@@ -65,7 +65,7 @@ public class AggregationPerformer<E extends DefaultData> {
 
 	/**
 	 * Process the collection of elements.
-	 * 
+	 *
 	 * @param collection
 	 *            Collection that should be aggregated.
 	 */
@@ -77,7 +77,7 @@ public class AggregationPerformer<E extends DefaultData> {
 
 	/**
 	 * Process the list of elements starting from the fromIndex (inclusive) to toIndex (exclusive).
-	 * 
+	 *
 	 * @param list
 	 *            List of elements.
 	 * @param fromIndex
@@ -87,11 +87,11 @@ public class AggregationPerformer<E extends DefaultData> {
 	 */
 	public void processList(List<E> list, int fromIndex, int toIndex) {
 		int size = list.size();
-		if (fromIndex < 0 || fromIndex >= size) {
+		if ((fromIndex < 0) || (fromIndex >= size)) {
 			throw new IllegalArgumentException("Starting index " + fromIndex + " is not valid for given list of size " + size);
 		}
 
-		if (toIndex < fromIndex || toIndex > size) {
+		if ((toIndex < fromIndex) || (toIndex > size)) {
 			throw new IllegalArgumentException("Ending index " + toIndex + " is not valid for given list of size " + size + " and starting index " + fromIndex);
 		}
 
@@ -104,11 +104,11 @@ public class AggregationPerformer<E extends DefaultData> {
 
 	/**
 	 * Returns aggregation results.
-	 * 
+	 *
 	 * @return Returns aggregation results.
 	 */
 	public List<E> getResultList() {
-		List<E> returnList = new ArrayList<E>();
+		List<E> returnList = new ArrayList<>();
 		for (IAggregatedData<E> aggregatedData : aggregationMap.values()) {
 			returnList.add(aggregatedData.getData());
 		}

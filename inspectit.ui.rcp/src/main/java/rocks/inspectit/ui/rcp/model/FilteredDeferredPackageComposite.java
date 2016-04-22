@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 /**
  * Filtered package composite delegates the children creation to the
  * {@link FilteredDeferredClassComposite}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class FilteredDeferredPackageComposite extends DeferredPackageComposite {
 

@@ -17,9 +17,9 @@ import rocks.inspectit.ui.rcp.editor.viewers.AbstractViewerComparator;
  * Abstract class for all table views that need remote sorting. Implementing classes should
  * implement method {@link #sortRemotely(ResultComparator)} which will be called when the sorting
  * column is selected. In this method implementing classes should refresh the result.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type to compare on.
  */
@@ -27,7 +27,7 @@ public abstract class RemoteTableViewerComparator<T extends DefaultData> extends
 
 	/**
 	 * Adds a column to this comparator so it can be used to sort by.
-	 * 
+	 *
 	 * @param column
 	 *            The {@link TableColumn} implementation. comparatorProvider The id of the
 	 *            {@link TableColumn} (user-defined).
@@ -66,7 +66,7 @@ public abstract class RemoteTableViewerComparator<T extends DefaultData> extends
 	/**
 	 * Implementing classes should call the remote service and refresh the input of the table by
 	 * using the given {@link ResultComparator}. Progress can be reported to given monitor.
-	 * 
+	 *
 	 * @param resultComparator
 	 *            Result comparator that should be used in the remote call. <code>null</code> can
 	 *            also be passed, meaning that no sorting or default sorting should be used.

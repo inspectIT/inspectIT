@@ -9,9 +9,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
 /**
  * Uses the {@link java.lang.management.MemoryMXBean} in order to retrieve all information that are
  * provided here.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class DefaultMemoryInfoProvider implements MemoryInfoProvider {
 

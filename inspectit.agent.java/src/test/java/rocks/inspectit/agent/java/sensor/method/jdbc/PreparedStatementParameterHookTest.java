@@ -11,14 +11,12 @@ import org.testng.annotations.Test;
 import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterHook;
-import rocks.inspectit.agent.java.sensor.method.jdbc.StatementStorage;
 
 /**
  * Tests the {@link PreparedStatementParameterHook}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class PreparedStatementParameterHookTest extends AbstractLogSupport {
@@ -169,7 +167,7 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 	/**
 	 * Tests that the methods with big data structures will not set the complete structure, but a
 	 * simple marker instead.
-	 * 
+	 *
 	 * @param methodName
 	 *            Method name that holds big structure.
 	 */

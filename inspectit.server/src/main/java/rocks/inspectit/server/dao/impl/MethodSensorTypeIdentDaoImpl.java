@@ -12,9 +12,9 @@ import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
 /**
  * The default implementation of the {@link MethodSensorTypeIdentDao} interface by using the Entity
  * manager.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Repository
 public class MethodSensorTypeIdentDaoImpl extends AbstractJpaDao<MethodSensorTypeIdent> implements MethodSensorTypeIdentDao {
@@ -29,6 +29,7 @@ public class MethodSensorTypeIdentDaoImpl extends AbstractJpaDao<MethodSensorTyp
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void saveOrUpdate(MethodSensorTypeIdent methodSensorTypeIdent) {
 		// we save if id is not set, otherwise merge
 		if (null == methodSensorTypeIdent.getId()) {

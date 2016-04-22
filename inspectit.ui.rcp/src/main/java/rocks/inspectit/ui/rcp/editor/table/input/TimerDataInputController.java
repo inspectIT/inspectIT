@@ -32,8 +32,8 @@ import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
@@ -46,9 +46,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Table input controller for the aggregated Timer data view.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimerDataInputController extends AbstractTableInputController {
 
@@ -61,10 +61,10 @@ public class TimerDataInputController extends AbstractTableInputController {
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Patrice Bouillet
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The time column. */
@@ -115,7 +115,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -134,13 +134,13 @@ public class TimerDataInputController extends AbstractTableInputController {
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -161,7 +161,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 	/**
 	 * List of Timer data to be displayed.
 	 */
-	private List<TimerData> timerDataList = new ArrayList<TimerData>();
+	private List<TimerData> timerDataList = new ArrayList<>();
 
 	/**
 	 * Template object used for querying.
@@ -222,8 +222,8 @@ public class TimerDataInputController extends AbstractTableInputController {
 			if (Column.EXCLUSIVEAVERAGE.equals(column) || Column.EXCLUSIVESUM.equals(column) || Column.EXCLUSIVEMIN.equals(column) || Column.EXCLUSIVEMAX.equals(column)) {
 				// TODO: Remove this tooltip and add it to the cell as soon as the image bug is
 				// fixed in Eclipse.
-				viewerColumn.getColumn().setToolTipText(
-						"Exclusive times can only be calculated correctly if the timer is within an invocation sequence. "
+				viewerColumn.getColumn()
+						.setToolTipText("Exclusive times can only be calculated correctly if the timer is within an invocation sequence. "
 								+ "A warning marker is provided if not all timers are run within an invocation sequence. Please be aware that "
 								+ "avg, sum, min and max calculations are reflecting only the timers inside an invocation sequence.");
 			}
@@ -341,9 +341,9 @@ public class TimerDataInputController extends AbstractTableInputController {
 	 */
 	@Override
 	public ViewerComparator getComparator() {
-		TableViewerComparator<TimerData> timerDataViewerComparator = new TableViewerComparator<TimerData>();
+		TableViewerComparator<TimerData> timerDataViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
-			ResultComparator<TimerData> resultComparator = new ResultComparator<TimerData>(column.dataComparator, cachedDataService);
+			ResultComparator<TimerData> resultComparator = new ResultComparator<>(column.dataComparator, cachedDataService);
 			timerDataViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
 
@@ -376,7 +376,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 		if (object instanceof TimerData) {
 			TimerData data = (TimerData) object;
 			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, methodIdent, column).toString());
 			}
@@ -387,9 +387,9 @@ public class TimerDataInputController extends AbstractTableInputController {
 
 	/**
 	 * Content provider for the view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static final class TimerDataContentProvider implements IStructuredContentProvider {
 
@@ -420,9 +420,9 @@ public class TimerDataInputController extends AbstractTableInputController {
 
 	/**
 	 * Label provider for the view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private final class TimerDataLabelProvider extends StyledCellIndexLabelProvider {
 
@@ -444,7 +444,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 
 		/**
 		 * Decides if the warn sign should be added for the specific column.
-		 * 
+		 *
 		 * @param data
 		 *            TimerData
 		 * @param column
@@ -458,14 +458,14 @@ public class TimerDataInputController extends AbstractTableInputController {
 			case EXCLUSIVEMIN:
 			case EXCLUSIVESUM:
 				int affPercentage = (int) (data.getInvocationAffiliationPercentage() * 100);
-				return data.isExclusiveTimeDataAvailable() && affPercentage < 100;
+				return data.isExclusiveTimeDataAvailable() && (affPercentage < 100);
 			default:
 				return false;
 			}
 		}
 
 		/**
-		 * 
+		 *
 		 * {@inheritDoc}
 		 */
 		@Override
@@ -505,7 +505,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param methodIdent
@@ -519,7 +519,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 		case CHARTING:
 			return emptyStyledString;
 		case PACKAGE:
-			if (methodIdent.getPackageName() != null && !methodIdent.getPackageName().equals("")) {
+			if ((methodIdent.getPackageName() != null) && !methodIdent.getPackageName().equals("")) {
 				return new StyledString(methodIdent.getPackageName());
 			} else {
 				return new StyledString("(default)");

@@ -13,8 +13,6 @@ import java.util.NoSuchElementException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.util.ThreadLocalStack;
-
 @SuppressWarnings("PMD")
 public class ThreadLocalStackTest {
 

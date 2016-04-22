@@ -6,15 +6,15 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * This DAO is used to handle all {@link PlatformIdent} objects.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface PlatformIdentDao {
 
 	/**
 	 * Load a specific {@link PlatformIdent} from the underlying storage by passing the id.
-	 * 
+	 *
 	 * @param id
 	 *            The id of the object.
 	 * @return The found {@link PlatformIdent} object.
@@ -23,7 +23,7 @@ public interface PlatformIdentDao {
 
 	/**
 	 * Saves or updates this {@link PlatformIdent} in the underlying storage.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The {@link PlatformIdent} object to save or update.
 	 */
@@ -31,7 +31,7 @@ public interface PlatformIdentDao {
 
 	/**
 	 * Deletes this specific {@link PlatformIdent} object.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The {@link PlatformIdent} object to delete.
 	 */
@@ -39,7 +39,7 @@ public interface PlatformIdentDao {
 
 	/**
 	 * Deletes all {@link PlatformIdent} objects which are stored in the passed list.
-	 * 
+	 *
 	 * @param platformIdents
 	 *            The list containing the {@link PlatformIdent} objects to delete.
 	 */
@@ -49,7 +49,7 @@ public interface PlatformIdentDao {
 	 * Returns all {@link PlatformIdent} objects which are saved in the underlying storage.
 	 * <p>
 	 * Object will be sorted by agent name.
-	 * 
+	 *
 	 * @return Returns all stored {@link PlatformIdent} objects.
 	 */
 	List<PlatformIdent> findAll();
@@ -57,10 +57,10 @@ public interface PlatformIdentDao {
 	/**
 	 * Executes the same query as {@link #findAll()} but initialized the lazy collections
 	 * afterwards. Only for one agent.
-	 * 
+	 *
 	 * @param id
 	 *            Id of wanted agent.
-	 * 
+	 *
 	 * @return Returns one {@link PlatformIdent} object and initializes the collections.
 	 */
 	PlatformIdent findInitialized(long id);
@@ -68,7 +68,7 @@ public interface PlatformIdentDao {
 	/**
 	 * Finds agent(s) that are registered with given agent name. Same as calling
 	 * {@link #findByNameAndIps(String, null)}.
-	 * 
+	 *
 	 * @param agentName
 	 *            Name of the agent to search for.
 	 * @return The list of {@link PlatformIdent} objects.
@@ -78,7 +78,7 @@ public interface PlatformIdentDao {
 	/**
 	 * Finds agent(s) that are registered with given agent name and IP addresses. If passed
 	 * addresses are <code>null</code>, they will not be taken into consideration.
-	 * 
+	 *
 	 * @param agentName
 	 *            Name of the agent to search for.
 	 * @param definedIps

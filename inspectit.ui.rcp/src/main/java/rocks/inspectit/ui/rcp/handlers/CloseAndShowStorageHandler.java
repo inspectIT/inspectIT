@@ -25,8 +25,8 @@ import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
-import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
 import rocks.inspectit.ui.rcp.view.impl.DataExplorerView;
 import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
@@ -34,9 +34,9 @@ import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
 /**
  * This handler starts the storage finalization job, and when it is done opens the finalized storage
  * in the {@link DataExplorerView}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CloseAndShowStorageHandler extends CloseStorageHandler implements IHandler {
 

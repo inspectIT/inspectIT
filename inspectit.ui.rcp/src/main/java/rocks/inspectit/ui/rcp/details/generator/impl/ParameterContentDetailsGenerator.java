@@ -25,9 +25,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Details generator for the parameter content data in the {@link MethodSensorData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ParameterContentDetailsGenerator implements IDetailsGenerator {
 
@@ -36,7 +36,7 @@ public class ParameterContentDetailsGenerator implements IDetailsGenerator {
 	 */
 	@Override
 	public boolean canGenerateFor(DefaultData defaultData) {
-		return defaultData instanceof MethodSensorData && CollectionUtils.isNotEmpty(((MethodSensorData) defaultData).getParameterContentData());
+		return (defaultData instanceof MethodSensorData) && CollectionUtils.isNotEmpty(((MethodSensorData) defaultData).getParameterContentData());
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ParameterContentDetailsGenerator implements IDetailsGenerator {
 
 	/**
 	 * Returns map of the {@link ParameterContentData} divided by the {@link ParameterContentType}s.
-	 * 
+	 *
 	 * @param parameterContentDatas
 	 *            Data to divide in groups.
 	 * @return Map<ParameterContentType, Collection<ParameterContentData>>
@@ -72,7 +72,7 @@ public class ParameterContentDetailsGenerator implements IDetailsGenerator {
 			return Collections.emptyMap();
 		}
 
-		Map<ParameterContentType, List<ParameterContentData>> map = new HashMap<ParameterContentType, List<ParameterContentData>>();
+		Map<ParameterContentType, List<ParameterContentData>> map = new HashMap<>();
 		for (ParameterContentData data : parameterContentDatas) {
 			List<ParameterContentData> collection = map.get(data.getContentType());
 			if (null == collection) {
@@ -91,7 +91,7 @@ public class ParameterContentDetailsGenerator implements IDetailsGenerator {
 
 	/**
 	 * Returns icon for {@link ParameterContentType}.
-	 * 
+	 *
 	 * @param parameterContentType
 	 *            {@link ParameterContentType}.
 	 * @return Returns icon for {@link ParameterContentType}.

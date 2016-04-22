@@ -15,6 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
@@ -27,9 +28,9 @@ import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 /**
  * The time line control for the views that has set of links for fast setting of the time-frame, as
  * well as two date boxes for setting the time-frame directly.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimeLineControl extends AbstractPreferenceControl implements IPreferenceControl, PreferenceEventCallback {
 
@@ -60,7 +61,7 @@ public class TimeLineControl extends AbstractPreferenceControl implements IPrefe
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param preferencePanel
 	 *            Preference panel.
 	 */
@@ -81,7 +82,7 @@ public class TimeLineControl extends AbstractPreferenceControl implements IPrefe
 	 */
 	@Override
 	public Composite createControls(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText("Time Range");
 		section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		mainComposite = toolkit.createComposite(section);
@@ -145,15 +146,15 @@ public class TimeLineControl extends AbstractPreferenceControl implements IPrefe
 	 */
 	@Override
 	public Map<IPreferenceGroup, Object> eventFired() {
-		Map<IPreferenceGroup, Object> preferenceControlMap = new HashMap<IPreferenceGroup, Object>();
+		Map<IPreferenceGroup, Object> preferenceControlMap = new HashMap<>();
 		Date toDate = toDateTime.getSelection();
 		Date fromDate = fromDateTime.getSelection();
 
-		if (null == oldToDate || oldToDate.getTime() != toDate.getTime()) {
+		if ((null == oldToDate) || (oldToDate.getTime() != toDate.getTime())) {
 			preferenceControlMap.put(PreferenceId.TimeLine.TO_DATE_ID, toDate);
 			oldToDate = new Date(toDate.getTime());
 		}
-		if (null == oldFromDate || oldFromDate.getTime() != fromDate.getTime()) {
+		if ((null == oldFromDate) || (oldFromDate.getTime() != fromDate.getTime())) {
 			preferenceControlMap.put(PreferenceId.TimeLine.FROM_DATE_ID, fromDate);
 			oldFromDate = new Date(fromDate.getTime());
 		}
@@ -172,7 +173,7 @@ public class TimeLineControl extends AbstractPreferenceControl implements IPrefe
 	/**
 	 * Creates {@link Hyperlink} that when clicked sets the last specified time to the timeframe
 	 * control.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 * @param toolkit
@@ -200,7 +201,7 @@ public class TimeLineControl extends AbstractPreferenceControl implements IPrefe
 
 	/**
 	 * Sets control enabled or not.
-	 * 
+	 *
 	 * @param enabled
 	 *            If control is enabled or not.
 	 */
@@ -218,7 +219,7 @@ public class TimeLineControl extends AbstractPreferenceControl implements IPrefe
 	public void eventFired(PreferenceEvent preferenceEvent) {
 		if (PreferenceId.LIVEMODE.equals(preferenceEvent.getPreferenceId())) {
 			Boolean liveOn = (Boolean) preferenceEvent.getPreferenceMap().get(PreferenceId.LiveMode.BUTTON_LIVE_ID);
-			if (null != liveOn && liveOn.booleanValue()) {
+			if ((null != liveOn) && liveOn.booleanValue()) {
 				setEnabled(false);
 			} else {
 				setEnabled(true);

@@ -11,9 +11,9 @@ import rocks.inspectit.shared.all.util.IHibernateUtil;
 /**
  * Map serializer that check if the map is of hibernate type and if it is not initialized just
  * writes the empty map.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HibernateAwareMapSerializer extends MapSerializer {
 
@@ -24,7 +24,7 @@ public class HibernateAwareMapSerializer extends MapSerializer {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param hibernateUtil
 	 *            {@link IHibernateUtil} to use. If <code>null</code> is provided this serializer
 	 *            will behave as {@link MapSerializer}.

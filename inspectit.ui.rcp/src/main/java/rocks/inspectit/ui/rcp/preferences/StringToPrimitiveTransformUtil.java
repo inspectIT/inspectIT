@@ -7,9 +7,9 @@ import java.util.Map;
 /**
  * Utilities to transform string or string collections and maps to the same with primitive wrapper
  * types.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class StringToPrimitiveTransformUtil {
 
@@ -22,7 +22,7 @@ public final class StringToPrimitiveTransformUtil {
 	/**
 	 * Transforms all the strings in the original collection to the given class objects and adds
 	 * them to the given resulting collection.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of collection.
 	 * @param original
@@ -49,15 +49,15 @@ public final class StringToPrimitiveTransformUtil {
 				}
 			}
 		} else {
-			throw new PreferenceException("Error transforming Collection<java.lang.String> to Collection<" + elementClass.getName() + ">. Parsing method can not be found in class "
-					+ elementClass.getName() + ".");
+			throw new PreferenceException(
+					"Error transforming Collection<java.lang.String> to Collection<" + elementClass.getName() + ">. Parsing method can not be found in class " + elementClass.getName() + ".");
 		}
 	}
 
 	/**
 	 * Transforms all the strings key/value pairs in the original map to the given class key/value
 	 * pairs and adds them to the given resulting map.
-	 * 
+	 *
 	 * @param <K>
 	 *            Type of key.
 	 * @param <V>
@@ -77,7 +77,7 @@ public final class StringToPrimitiveTransformUtil {
 	public static <K, V> void transformStringMap(Map<String, String> original, Map<K, V> map, Class<K> keyClass, Class<V> valueClass) throws PreferenceException {
 		Method parseKeyMethod = findParseMethod(keyClass);
 		Method parseValueMethod = findParseMethod(valueClass);
-		if (null != parseKeyMethod && null != parseValueMethod) {
+		if ((null != parseKeyMethod) && (null != parseValueMethod)) {
 			for (Map.Entry<String, String> toTransformEntry : original.entrySet()) {
 				try {
 					Object transformedKey = parseKeyMethod.invoke(null, toTransformEntry.getKey());
@@ -100,7 +100,7 @@ public final class StringToPrimitiveTransformUtil {
 
 	/**
 	 * Finds the parseXXX(String) method in given class if it exists.
-	 * 
+	 *
 	 * @param clazz
 	 *            Class to examine.
 	 * @return Method or null if method can no be found.
@@ -110,7 +110,7 @@ public final class StringToPrimitiveTransformUtil {
 		for (Method method : methods) {
 			if (method.getName().startsWith("parse")) {
 				Class<?>[] params = method.getParameterTypes();
-				if (params.length == 1 && params[0].equals(String.class)) {
+				if ((params.length == 1) && params[0].equals(String.class)) {
 					return method;
 				}
 			}

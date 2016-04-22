@@ -173,8 +173,9 @@ public class SystemInformationTest extends TestBase {
 		}
 
 		/**
-		 * This testcase combines different testcases that simulate the absense of static information.
-		 * Realizing each case separately would require many code with almost no additional value.
+		 * This testcase combines different testcases that simulate the absense of static
+		 * information. Realizing each case separately would require many code with almost no
+		 * additional value.
 		 *
 		 * Maybe this test is obsolete because we don't expect an exception to be thrown directly in
 		 * {@link SystemInformation} but only in the getter methods of {@link DefaultRuntimeMXBean}

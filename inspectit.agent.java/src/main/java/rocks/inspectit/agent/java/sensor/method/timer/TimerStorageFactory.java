@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 /**
  * Factory for creating storage objects for the Timer sensor according to the definition in the
  * configuration.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class TimerStorageFactory {
 
@@ -48,7 +48,7 @@ public final class TimerStorageFactory {
 
 	/**
 	 * Multiple instances of a factory aren't needed, so return a singleton of this class.
-	 * 
+	 *
 	 * @return The singleton.
 	 */
 	public static TimerStorageFactory getFactory() {
@@ -70,7 +70,7 @@ public final class TimerStorageFactory {
 	/**
 	 * If given {@link Map} contains a key named <b>mode</b>, it is checked against the keywords
 	 * <b>raw</b>, <b>aggregate</b> and <b>optimized</b>.
-	 * 
+	 *
 	 * @param parameters
 	 *            The parameters.
 	 */
@@ -93,7 +93,7 @@ public final class TimerStorageFactory {
 	 * <b>RAW_DATA_TRANSMISSION</b> <br>
 	 * <b>AGGREGATE_BEFORE_SEND</b> <br>
 	 * <b>OPTIMIZED</b>
-	 * 
+	 *
 	 * @param mode
 	 *            The mode to set.
 	 */
@@ -104,7 +104,7 @@ public final class TimerStorageFactory {
 	/**
 	 * Returns a new implementation of the {@link ITimerStorage} interface. Depends on the current
 	 * mode which is set through {@link #setMode(int)}.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The time stamp.
 	 * @param platformIdent

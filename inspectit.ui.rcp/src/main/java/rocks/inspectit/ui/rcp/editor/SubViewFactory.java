@@ -44,10 +44,10 @@ import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 
 /**
  * The factory for the creation of a {@link ISubView}.
- * 
+ *
  * @author Patrice Bouillet
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public final class SubViewFactory {
 
@@ -59,7 +59,7 @@ public final class SubViewFactory {
 
 	/**
 	 * Creates a default {@link ISubView} object based on the passed {@link SensorTypeEnum}.
-	 * 
+	 *
 	 * @param sensorTypeEnum
 	 *            The sensor type on which the default view controller is based on.
 	 * @return An instance of a {@link ISubView}.
@@ -206,7 +206,7 @@ public final class SubViewFactory {
 			return jmxSashSubView;
 		case CHARTING_JMX_SENSOR_DATA:
 			GraphSubView jmxGraphSubView = new GraphSubView(SensorTypeEnum.CHARTING_JMX_SENSOR_DATA);
-			
+
 			JmxInfoTextInputController jmxInputController = new JmxInfoTextInputController();
 			TextSubView jmxTextSubView = new TextSubView(jmxInputController);
 
@@ -221,7 +221,7 @@ public final class SubViewFactory {
 
 	/**
 	 * Returns an instance of {@link ISubView}.
-	 * 
+	 *
 	 * @param fqn
 	 *            the fully-qualified name.
 	 * @return An instance of {@link ISubView}.

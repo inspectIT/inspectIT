@@ -11,15 +11,15 @@ import rocks.inspectit.ui.rcp.util.OccurrenceFinderFactory;
 /**
  * Handler that know how the template objects are created. All handler that need to create template
  * objects should extend this handler.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractTemplateHandler extends AbstractHandler {
 
 	/**
 	 * Returns template for {@link SqlStatementData}.
-	 * 
+	 *
 	 * @param sqlStatementData
 	 *            Source object.
 	 * @param id
@@ -32,13 +32,13 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 	 */
 	protected SqlStatementData getTemplate(SqlStatementData sqlStatementData, boolean id, boolean sql, boolean parameters) {
 		SqlStatementData template = OccurrenceFinderFactory.getEmptyTemplate(sqlStatementData);
-		if (id && 0 != sqlStatementData.getId()) {
+		if (id && (0 != sqlStatementData.getId())) {
 			template.setId(sqlStatementData.getId());
 		}
-		if (sql && null != sqlStatementData.getSql()) {
+		if (sql && (null != sqlStatementData.getSql())) {
 			template.setSql(sqlStatementData.getSql());
 		}
-		if (parameters && null != sqlStatementData.getParameterValues()) {
+		if (parameters && (null != sqlStatementData.getParameterValues())) {
 			template.setParameterValues(sqlStatementData.getParameterValues());
 		}
 		return template;
@@ -46,7 +46,7 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 
 	/**
 	 * Returns template for {@link ExceptionSensorData}.
-	 * 
+	 *
 	 * @param exceptionSensorData
 	 *            Source object.
 	 * @param id
@@ -63,19 +63,19 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 	 */
 	protected ExceptionSensorData getTemplate(ExceptionSensorData exceptionSensorData, boolean id, boolean throwableType, boolean exceptionEvent, boolean errorMessage, boolean stackTrace) {
 		ExceptionSensorData template = OccurrenceFinderFactory.getEmptyTemplate(exceptionSensorData);
-		if (id && 0 != exceptionSensorData.getId()) {
+		if (id && (0 != exceptionSensorData.getId())) {
 			template.setId(exceptionSensorData.getId());
 		}
-		if (throwableType && null != exceptionSensorData.getThrowableType()) {
+		if (throwableType && (null != exceptionSensorData.getThrowableType())) {
 			template.setThrowableType(exceptionSensorData.getThrowableType());
 		}
-		if (exceptionEvent && null != exceptionSensorData.getExceptionEvent()) {
+		if (exceptionEvent && (null != exceptionSensorData.getExceptionEvent())) {
 			template.setExceptionEvent(exceptionSensorData.getExceptionEvent());
 		}
-		if (errorMessage && null != exceptionSensorData.getErrorMessage()) {
+		if (errorMessage && (null != exceptionSensorData.getErrorMessage())) {
 			template.setErrorMessage(exceptionSensorData.getErrorMessage());
 		}
-		if (stackTrace && null != exceptionSensorData.getStackTrace()) {
+		if (stackTrace && (null != exceptionSensorData.getStackTrace())) {
 			template.setStackTrace(exceptionSensorData.getStackTrace());
 		}
 		return template;
@@ -83,7 +83,7 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 
 	/**
 	 * Returns template for {@link TimerData}.
-	 * 
+	 *
 	 * @param timerData
 	 *            Source object.
 	 * @param id
@@ -94,10 +94,10 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 	 */
 	protected TimerData getTemplate(TimerData timerData, boolean id, boolean methodIdent) {
 		TimerData template = OccurrenceFinderFactory.getEmptyTemplate(timerData);
-		if (id && 0 != timerData.getId()) {
+		if (id && (0 != timerData.getId())) {
 			template.setId(timerData.getId());
 		}
-		if (methodIdent && 0 != timerData.getMethodIdent()) {
+		if (methodIdent && (0 != timerData.getMethodIdent())) {
 			template.setMethodIdent(timerData.getMethodIdent());
 		}
 		return template;
@@ -105,7 +105,7 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 
 	/**
 	 * Returns template for {@link InvocationSequenceData}.
-	 * 
+	 *
 	 * @param invocationSequenceData
 	 *            Source object.
 	 * @param id
@@ -116,10 +116,10 @@ public abstract class AbstractTemplateHandler extends AbstractHandler {
 	 */
 	protected InvocationSequenceData getTemplate(InvocationSequenceData invocationSequenceData, boolean id, boolean methodIdent) {
 		InvocationSequenceData template = OccurrenceFinderFactory.getEmptyTemplate(invocationSequenceData);
-		if (id && 0 != invocationSequenceData.getId()) {
+		if (id && (0 != invocationSequenceData.getId())) {
 			template.setId(invocationSequenceData.getId());
 		}
-		if (methodIdent && 0 != invocationSequenceData.getMethodIdent()) {
+		if (methodIdent && (0 != invocationSequenceData.getMethodIdent())) {
 			template.setMethodIdent(invocationSequenceData.getMethodIdent());
 		}
 		return template;

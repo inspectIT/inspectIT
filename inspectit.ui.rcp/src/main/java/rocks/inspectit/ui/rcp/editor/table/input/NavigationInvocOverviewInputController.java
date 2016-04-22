@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 /**
  * A extension of the {@link InvocOverviewInputController} that displays the invocations that are
  * statically transfered to the view via invocation aware data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NavigationInvocOverviewInputController extends InvocOverviewInputController {
 
@@ -67,9 +67,9 @@ public class NavigationInvocOverviewInputController extends InvocOverviewInputCo
 	 */
 	@Override
 	public ViewerComparator getComparator() {
-		TableViewerComparator<InvocationSequenceData> invocationDataViewerComparator = new TableViewerComparator<InvocationSequenceData>();
+		TableViewerComparator<InvocationSequenceData> invocationDataViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
-			ResultComparator<InvocationSequenceData> resultComparator = new ResultComparator<InvocationSequenceData>(column.dataComparator, getCachedDataService());
+			ResultComparator<InvocationSequenceData> resultComparator = new ResultComparator<>(column.dataComparator, getCachedDataService());
 			invocationDataViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
 
@@ -84,7 +84,7 @@ public class NavigationInvocOverviewInputController extends InvocOverviewInputCo
 		monitor.beginTask("Updating Invocation Overview", IProgressMonitor.UNKNOWN);
 		monitor.subTask("Retrieving the Invocation Overview from the CMR");
 		List<InvocationSequenceData> invocData;
-		Set<Long> invocationIdsSet = new HashSet<Long>();
+		Set<Long> invocationIdsSet = new HashSet<>();
 		for (InvocationAwareData invocationAwareData : invocationAwareDataList) {
 			if (null != invocationAwareData.getInvocationParentsIdSet()) {
 				invocationIdsSet.addAll(invocationAwareData.getInvocationParentsIdSet());

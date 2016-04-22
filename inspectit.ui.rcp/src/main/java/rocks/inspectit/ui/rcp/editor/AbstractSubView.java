@@ -9,9 +9,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Common abstract class for all sub-views.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class AbstractSubView implements ISubView {
 
@@ -23,6 +23,7 @@ public abstract class AbstractSubView implements ISubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setRootEditor(AbstractRootEditor rootEditor) {
 		Assert.isNotNull(rootEditor);
 
@@ -32,6 +33,7 @@ public abstract class AbstractSubView implements ISubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public AbstractRootEditor getRootEditor() {
 		Assert.isNotNull(rootEditor);
 
@@ -43,6 +45,7 @@ public abstract class AbstractSubView implements ISubView {
 	 * <p>
 	 * Default implementation does nothing.
 	 */
+	@Override
 	public void select(ISubView subView) {
 	}
 
@@ -79,6 +82,7 @@ public abstract class AbstractSubView implements ISubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 

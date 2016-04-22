@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Factory for creating the input data representing the agents in the tree folder structure.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class AgentFolderFactory {
 
@@ -35,7 +35,7 @@ public final class AgentFolderFactory {
 	/**
 	 * Returns the list of components representing the input tree structure of agents divided if
 	 * needed to folders.
-	 * 
+	 *
 	 * @param platformIdentMap
 	 *            {@link Map} of {@link PlatformIdent}s and their statuses.
 	 * @param cmrRepositoryDefinition
@@ -57,7 +57,7 @@ public final class AgentFolderFactory {
 	 * Adds the platform to the folder on the given level. This method is recursive. If agent name
 	 * is not fitting the level, it will be added to the given composite. If it fitting for the
 	 * level, proper search will be done for sub-composite to insert the platform.
-	 * 
+	 *
 	 * @param folder
 	 *            Top composite.
 	 * @param level
@@ -79,7 +79,7 @@ public final class AgentFolderFactory {
 			boolean folderExisting = false;
 			String agentLevelName = getFolderNameFromAgent(platformIdent.getAgentName(), level);
 			for (Component child : folder.getChildren()) {
-				if (child instanceof Composite && ObjectUtils.equals(child.getName(), agentLevelName)) {
+				if ((child instanceof Composite) && ObjectUtils.equals(child.getName(), agentLevelName)) {
 					addToFolder((Composite) child, level + 1, platformIdent, agentStatusData, cmrRepositoryDefinition);
 					folderExisting = true;
 				}
@@ -96,7 +96,7 @@ public final class AgentFolderFactory {
 
 	/**
 	 * Creates new folder with given name.
-	 * 
+	 *
 	 * @param levelName
 	 *            Name.
 	 * @return {@link Composite}.
@@ -110,7 +110,7 @@ public final class AgentFolderFactory {
 
 	/**
 	 * Does agent name applies that agent should be put in the folder.
-	 * 
+	 *
 	 * @param agentName
 	 *            Name of the agent
 	 * @return True if name of the agent has correctly specified folder structure at least for the 0
@@ -122,7 +122,7 @@ public final class AgentFolderFactory {
 
 	/**
 	 * Returns what should be the name of the agent if the agent is located in a folder.
-	 * 
+	 *
 	 * @param agentName
 	 *            Name of the agent
 	 * @return Display name. Result is the string between last found {@value #FOLDER_SPLIT_REGEX}
@@ -135,7 +135,7 @@ public final class AgentFolderFactory {
 
 	/**
 	 * Checks if the name of the agent is accessible for the given level of folder.
-	 * 
+	 *
 	 * @param agentName
 	 *            Name of the agent
 	 * @param level
@@ -144,7 +144,7 @@ public final class AgentFolderFactory {
 	 */
 	private static boolean accessibleForLevel(String agentName, int level) {
 		String[] splitted = getSplittedAgentName(agentName);
-		if (splitted.length > level + 1) {
+		if (splitted.length > (level + 1)) {
 			for (String string : splitted) {
 				if (StringUtils.isEmpty(string)) {
 					return false;
@@ -158,7 +158,7 @@ public final class AgentFolderFactory {
 
 	/**
 	 * Returns folder name by extracting it from the agent name.
-	 * 
+	 *
 	 * @param agentName
 	 *            Name of the agent
 	 * @param level

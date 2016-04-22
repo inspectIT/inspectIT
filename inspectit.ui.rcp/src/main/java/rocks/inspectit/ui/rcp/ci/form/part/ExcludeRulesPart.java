@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -15,6 +14,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -220,7 +220,7 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 	 */
 	private ExcludeRule addRequested() {
 		InputDialog inputDialog = new InputDialog(getManagedForm().getForm().getShell(), "New Exclude Rule", "Enter class name or pattern:", "", new FqnWildcardValidator(false, false));
-		if (inputDialog.open() == Dialog.OK) {
+		if (inputDialog.open() == Window.OK) {
 			ExcludeRule excludeRule = new ExcludeRule();
 			excludeRule.setClassName(inputDialog.getValue());
 			return excludeRule;

@@ -7,9 +7,9 @@ import rocks.inspectit.ui.rcp.provider.IProfileProvider;
 
 /**
  * Tester for the {@link Profile} properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ProfileTester extends PropertyTester {
 

@@ -28,9 +28,9 @@ import org.eclipse.ui.progress.UIJob;
  * <p>
  * The subclasses should implement two methods, one for executing the filter and one for canceling
  * the filtering.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class FilterComposite extends Composite {
 
@@ -63,7 +63,7 @@ public abstract class FilterComposite extends Composite {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            A widget which will be the parent of the new instance (cannot be null).
 	 * @param style
@@ -95,7 +95,7 @@ public abstract class FilterComposite extends Composite {
 	/**
 	 * This method is called when filtering should occur. Subclasses should implement proper
 	 * actions.
-	 * 
+	 *
 	 * @param filterString
 	 *            String that was entered as a criteria in the filter text box.
 	 */
@@ -159,7 +159,7 @@ public abstract class FilterComposite extends Composite {
 		filterText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (Character.isLetterOrDigit(e.character) || e.keyCode == SWT.BS || e.keyCode == SWT.DEL) {
+				if (Character.isLetterOrDigit(e.character) || (e.keyCode == SWT.BS) || (e.keyCode == SWT.DEL)) {
 					filterJob.cancel();
 					filterJob.schedule(FILTER_KEYRELEASED_DELAY);
 				}

@@ -43,7 +43,7 @@ public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestric
 	 * Default constructor. Sets {@link #markerMethod} to refer to {@link Object#toString()}.
 	 */
 	public CachingIndexQueryRestrictionProcessor() {
-		cacheMap = new ConcurrentHashMap<Integer, Method>();
+		cacheMap = new ConcurrentHashMap<>();
 		try {
 			// setting marker method to point to Object.toString()
 			markerMethod = Object.class.getMethod("toString", new Class[0]);
@@ -143,8 +143,8 @@ public class CachingIndexQueryRestrictionProcessor implements IIndexQueryRestric
 	private int getMethodCacheKey(Class<?> clazz, String methodName) {
 		final int prime = 31;
 		int result = 0;
-		result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
-		result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
+		result = (prime * result) + ((clazz == null) ? 0 : clazz.hashCode());
+		result = (prime * result) + ((methodName == null) ? 0 : methodName.hashCode());
 		return result;
 	}
 

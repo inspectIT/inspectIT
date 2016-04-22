@@ -142,7 +142,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 		long currentTime = System.currentTimeMillis();
 
 		// Check if the registerMBeans method should be invoked
-		if (currentTime - lastRegisterBeanTimestamp > REGISTER_BEAN_INTERVAL) {
+		if ((currentTime - lastRegisterBeanTimestamp) > REGISTER_BEAN_INTERVAL) {
 			// set the invocation timestamp
 			lastRegisterBeanTimestamp = System.currentTimeMillis();
 
@@ -151,7 +151,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean {
 		}
 
 		// Check if the collectData method should be invoked
-		if (currentTime - lastDataCollectionTimestamp > DATA_COLLECT_INTERVAL) {
+		if ((currentTime - lastDataCollectionTimestamp) > DATA_COLLECT_INTERVAL) {
 			// store the invocation timestamp
 			lastDataCollectionTimestamp = System.currentTimeMillis();
 

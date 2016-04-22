@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 /**
  * Processor that sets the correct exclusive time for {@link SqlStatementData} because it's always
  * known.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlExclusiveTimeCmrProcessor extends AbstractCmrDataProcessor {
 

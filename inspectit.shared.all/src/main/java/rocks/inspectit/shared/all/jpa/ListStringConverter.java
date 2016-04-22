@@ -13,9 +13,9 @@ import org.apache.commons.lang.StringUtils;
 /**
  * {@link AttributeConverter} that can convert List to a String value so it can be saved in a single
  * column in DB.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ListStringConverter implements AttributeConverter<List<?>, String> {
 

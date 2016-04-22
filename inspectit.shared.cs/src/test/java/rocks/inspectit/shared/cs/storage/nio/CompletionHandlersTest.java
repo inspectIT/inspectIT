@@ -17,8 +17,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.cs.storage.nio.WriteReadAttachment;
-import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 import rocks.inspectit.shared.cs.storage.nio.read.ReadingCompletionHandler;
 import rocks.inspectit.shared.cs.storage.nio.write.WritingCompletionHandler;
 

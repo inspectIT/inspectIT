@@ -24,9 +24,9 @@ import rocks.inspectit.ui.rcp.wizard.CopyDataToStorageWizard;
 
 /**
  * Handler for copying data to storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CopyDataToStorageHandler extends AbstractHandler implements IHandler {
 
@@ -39,7 +39,7 @@ public class CopyDataToStorageHandler extends AbstractHandler implements IHandle
 		RepositoryDefinition repositoryDefinition = rootEditor.getInputDefinition().getRepositoryDefinition();
 		StructuredSelection selection = (StructuredSelection) HandlerUtil.getCurrentSelection(event);
 
-		Set<DefaultData> copyDataSet = new HashSet<DefaultData>(selection.size());
+		Set<DefaultData> copyDataSet = new HashSet<>(selection.size());
 		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 			Object nextObject = it.next();
 
@@ -54,7 +54,7 @@ public class CopyDataToStorageHandler extends AbstractHandler implements IHandle
 			}
 		}
 
-		if (!copyDataSet.isEmpty() && repositoryDefinition instanceof CmrRepositoryDefinition) {
+		if (!copyDataSet.isEmpty() && (repositoryDefinition instanceof CmrRepositoryDefinition)) {
 			CmrRepositoryDefinition cmrRepositoryDefinition = (CmrRepositoryDefinition) repositoryDefinition;
 
 			// check if the writing state is OK
@@ -62,8 +62,8 @@ public class CopyDataToStorageHandler extends AbstractHandler implements IHandle
 				CmrStatusData cmrStatusData = cmrRepositoryDefinition.getCmrManagementService().getCmrStatusData();
 				if (cmrStatusData.isWarnSpaceLeftActive()) {
 					String leftSpace = NumberFormatter.humanReadableByteCount(cmrStatusData.getStorageDataSpaceLeft());
-					if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(event), "Confirm", "For selected CMR there is an active warning about insufficient storage space left. Only "
-							+ leftSpace + " are left on the target server, are you sure you want to continue?")) {
+					if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(event), "Confirm", "For selected CMR there is an active warning about insufficient storage space left. Only " + leftSpace
+							+ " are left on the target server, are you sure you want to continue?")) {
 						return null;
 					}
 				}

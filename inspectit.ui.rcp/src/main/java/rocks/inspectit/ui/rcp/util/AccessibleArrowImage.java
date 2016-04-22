@@ -18,8 +18,8 @@ import org.eclipse.ui.forms.FormColors;
  * <p>
  * <b>IMPORTANT:</b> The class is licensed under the Eclipse Public License v1.0 as it contains the
  * code from the {@link org.eclipse.jdt.internal.ui.javaeditor.breadcrumb.BreadcrumbItem} class
- * belonging to the Eclipse Rich Client Platform. EPL v1.0 license can be found <a
- * href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
+ * belonging to the Eclipse Rich Client Platform. EPL v1.0 license can be found
+ * <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
  * <p>
  * Please relate to the LICENSEEXCEPTIONS.txt file for more information about license exceptions
  * that apply regarding to InspectIT and Eclipse RCP and/or EPL Components.
@@ -38,7 +38,7 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param ltr
 	 *            Left to right arrow.
 	 */
@@ -52,13 +52,14 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 	 * Subclasses must implement this framework method to paint images within the given bounds using
 	 * one or more calls to the <code>drawImage</code> framework method.
 	 * </p>
-	 * 
+	 *
 	 * @param width
 	 *            the width
 	 * @param height
 	 *            the height
 	 * @see org.eclipse.jface.resource.CompositeImageDescriptor#drawCompositeImage(int, int)
 	 */
+	@Override
 	protected void drawCompositeImage(int width, int height) {
 		Display display = Display.getDefault();
 
@@ -78,7 +79,7 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 
 		gc.setForeground(aliasing);
 		gc.drawLine(mirror(0), 1, mirror(ARROW_SIZE - 1), ARROW_SIZE);
-		gc.drawLine(mirror(ARROW_SIZE - 1), ARROW_SIZE, mirror(0), ARROW_SIZE * 2 - 1);
+		gc.drawLine(mirror(ARROW_SIZE - 1), ARROW_SIZE, mirror(0), (ARROW_SIZE * 2) - 1);
 
 		gc.dispose();
 		triangle.dispose();
@@ -92,7 +93,7 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 		}
 		for (int y = 0; y < ARROW_SIZE; y++) {
 			for (int x = 0; x <= y; x++) {
-				imageData.setAlpha(mirror(x), ARROW_SIZE * 2 - y - 1, 255);
+				imageData.setAlpha(mirror(x), (ARROW_SIZE * 2) - y - 1, 255);
 			}
 		}
 
@@ -100,7 +101,7 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 		if (!fLTR) {
 			offset = -1;
 		}
-		drawImage(imageData, width / 2 - ARROW_SIZE / 2 + offset, height / 2 - ARROW_SIZE - 1);
+		drawImage(imageData, ((width / 2) - (ARROW_SIZE / 2)) + offset, (height / 2) - ARROW_SIZE - 1);
 
 		image.dispose();
 	}
@@ -109,7 +110,7 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 	 * Returns correct number of pixels depending on the arrow orientation. If arrow is set to be
 	 * from left to right original parameter values i returned. if not then the mirrored value is
 	 * returned.
-	 * 
+	 *
 	 * @param x
 	 *            Pixels.
 	 * @return Returns correct number of pixels depending on the arrow orientation. If arrow is set
@@ -129,9 +130,10 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 	 * <p>
 	 * Subclasses must implement this framework method.
 	 * </p>
-	 * 
+	 *
 	 * @return the x and y size of the image expressed as a point object
 	 */
+	@Override
 	protected Point getSize() {
 		return new Point(10, 16);
 	}
@@ -139,7 +141,7 @@ public class AccessibleArrowImage extends CompositeImageDescriptor {
 	/**
 	 * Blends two colors with the given ration. The colors are represented by int values as colors
 	 * as defined in the {@link SWT} class.
-	 * 
+	 *
 	 * @param color1
 	 *            First color.
 	 * @param color2

@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.PercentagePropertyUpda
 /**
  * Property holding float values. This property writes and reads the values from 0-100%, but reports
  * them in decimal format (0-1).
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "percentage-property")
@@ -39,7 +39,7 @@ public class PercentageProperty extends SingleProperty<Float> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            Display name of the property. Can not be <code>null</code>.
 	 * @param description
@@ -70,9 +70,10 @@ public class PercentageProperty extends SingleProperty<Float> {
 
 	/**
 	 * Gets {@link #usedValue}.
-	 * 
+	 *
 	 * @return {@link #usedValue}
 	 */
+	@Override
 	protected Float getUsedValue() {
 		if (null != usedValue) {
 			return Float.valueOf(usedValue.floatValue() / 100f);
@@ -82,10 +83,11 @@ public class PercentageProperty extends SingleProperty<Float> {
 
 	/**
 	 * Sets {@link #usedValue}.
-	 * 
+	 *
 	 * @param usedValue
 	 *            New value for {@link #usedValue}
 	 */
+	@Override
 	protected void setUsedValue(Float usedValue) {
 		if (null != usedValue) {
 			this.usedValue = Float.valueOf(usedValue.floatValue() * 100f);
@@ -96,19 +98,21 @@ public class PercentageProperty extends SingleProperty<Float> {
 
 	/**
 	 * Gets {@link #defaultValue}.
-	 * 
+	 *
 	 * @return {@link #defaultValue}
 	 */
+	@Override
 	public Float getDefaultValue() {
 		return Float.valueOf(defaultValue.floatValue() / 100f);
 	}
 
 	/**
 	 * Sets {@link #defaultValue}.
-	 * 
+	 *
 	 * @param defaultValue
 	 *            New value for {@link #defaultValue}
 	 */
+	@Override
 	protected void setDefaultValue(Float defaultValue) {
 		this.defaultValue = Float.valueOf(defaultValue.floatValue() * 100f);
 	}
@@ -116,6 +120,7 @@ public class PercentageProperty extends SingleProperty<Float> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Float parseLiteral(String literal) {
 		try {
 			return Float.parseFloat(literal);

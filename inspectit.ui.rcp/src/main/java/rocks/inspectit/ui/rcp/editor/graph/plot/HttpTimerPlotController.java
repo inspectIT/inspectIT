@@ -24,9 +24,9 @@ import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
 
 /**
  * {@link PlotController} for displaying many Http requests in the graph.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HttpTimerPlotController extends AbstractTimerDataPlotController<HttpTimerData> {
 
@@ -152,7 +152,7 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 			latestDataDate = new Date(displayedData.get(displayedData.size() - 1).getTimeStamp().getTime());
 		}
 
-		Map<Object, List<HttpTimerData>> map = new HashMap<Object, List<HttpTimerData>>();
+		Map<Object, List<HttpTimerData>> map = new HashMap<>();
 		for (HttpTimerData data : displayedData) {
 			HttpTimerData template = findTemplateForData(data);
 			if (null == template) {
@@ -161,7 +161,7 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 			Object seriesKey = getSeriesKey(template);
 			List<HttpTimerData> list = map.get(seriesKey);
 			if (null == list) {
-				list = new ArrayList<HttpTimerData>();
+				list = new ArrayList<>();
 				map.put(seriesKey, list);
 			}
 			list.add(data);
@@ -187,7 +187,7 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 	/**
 	 * Finds matching template for the given {@link HttpTimerData} based on if regular expression
 	 * transformation is active or not.
-	 * 
+	 *
 	 * @param httpTimerData
 	 *            Data to find matching template.
 	 * @return Matching template of <code>null</code> if one can not be found.
@@ -212,7 +212,7 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 
 	/**
 	 * Finds matching template for the given {@link HttpTimerData} by uri.
-	 * 
+	 *
 	 * @param httpTimerData
 	 *            Data to find matching template.
 	 * @param templates
@@ -236,7 +236,7 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 
 	/**
 	 * Finds matching template for the given {@link HttpTimerData} by tag value.
-	 * 
+	 *
 	 * @param httpTimerData
 	 *            Data to find matching template.
 	 * @param templates
@@ -257,14 +257,15 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 
 	/**
 	 * Returns the series key for the {@link HttpTimerData} object.
-	 * 
+	 *
 	 * @param httpTimerData
 	 *            {@link HttpTimerData}.
 	 * @return Key used to initialize the series and later on compare which series data should be
 	 *         added to.
 	 */
+	@Override
 	protected Comparable<?> getSeriesKey(HttpTimerData httpTimerData) {
-		if (regExTransformation && httpTimerData instanceof RegExAggregatedHttpTimerData) {
+		if (regExTransformation && (httpTimerData instanceof RegExAggregatedHttpTimerData)) {
 			return "Transformed URI: " + ((RegExAggregatedHttpTimerData) httpTimerData).getTransformedUri() + " [" + httpTimerData.getHttpInfo().getRequestMethod() + "]";
 		} else {
 			if (plotByTagValue) {
@@ -290,9 +291,9 @@ public class HttpTimerPlotController extends AbstractTimerDataPlotController<Htt
 	/**
 	 * Simple {@link IAggregator} to use for {@link HttpTimerData} aggregation, since we separate
 	 * the data correctly before aggregation.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class SimpleHttpAggregator implements IAggregator<HttpTimerData> {
 

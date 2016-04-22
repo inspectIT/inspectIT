@@ -22,16 +22,16 @@ import rocks.inspectit.ui.rcp.editor.ISubView;
 /**
  * This implementation of a composite sub view uses the {@link GridLayout} to layout the associated
  * children.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class GridCompositeSubView extends AbstractCompositeSubView {
 
 	/**
 	 * The map contains the layout data objects.
 	 */
-	private Map<ISubView, Object> layoutDataMap = new HashMap<ISubView, Object>();
+	private Map<ISubView, Object> layoutDataMap = new HashMap<>();
 
 	/**
 	 * The composite of this sub-view.
@@ -54,7 +54,7 @@ public class GridCompositeSubView extends AbstractCompositeSubView {
 
 	/**
 	 * Constructor which constructs the {@link GridLayout} object with the passed values.
-	 * 
+	 *
 	 * @param numColumns
 	 *            The number of columns.
 	 * @param makeColumnsEqualWidth
@@ -67,7 +67,7 @@ public class GridCompositeSubView extends AbstractCompositeSubView {
 
 	/**
 	 * Adds a new sub-view with the specified layout data to this composite view.
-	 * 
+	 *
 	 * @param subView
 	 *            The {@link ISubView} which will be added.
 	 * @param layoutData
@@ -81,6 +81,7 @@ public class GridCompositeSubView extends AbstractCompositeSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		composite = toolkit.createComposite(parent);
 		composite.setLayout(gridLayout);
@@ -120,6 +121,7 @@ public class GridCompositeSubView extends AbstractCompositeSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Control getControl() {
 		return composite;
 	}

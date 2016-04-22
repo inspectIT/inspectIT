@@ -19,7 +19,6 @@ import java.lang.annotation.Retention;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.instrumentation.asm.ClassAnalyzer;
 import rocks.inspectit.shared.all.instrumentation.classcache.AnnotationType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableType;

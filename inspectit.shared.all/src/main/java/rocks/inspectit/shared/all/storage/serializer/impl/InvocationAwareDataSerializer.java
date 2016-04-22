@@ -16,18 +16,18 @@ import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPrefe
  * Special serializer that can dismiss writing of the
  * {@link InvocationAwareData#invocationsParentsIdMap} if the kryo context is holding the
  * {@link KryoSerializationPreferences#WRITE_INVOCATION_AFFILIATION_DATA} key and false as a value.
- * 
+ *
  * @param <T>
  *            Type of class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationAwareDataSerializer<T extends InvocationAwareData> extends CustomCompatibleFieldSerializer<T> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param kryo
 	 *            Kryo instance
 	 * @param type
@@ -41,7 +41,7 @@ public class InvocationAwareDataSerializer<T extends InvocationAwareData> extend
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param kryo
 	 *            Kryo instance
 	 * @param type

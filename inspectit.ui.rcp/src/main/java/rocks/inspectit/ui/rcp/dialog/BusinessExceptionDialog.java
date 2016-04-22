@@ -24,9 +24,9 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * Dialog for displaying {@link BusinessException}s.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class BusinessExceptionDialog extends TitleAreaDialog {
 
@@ -42,7 +42,7 @@ public class BusinessExceptionDialog extends TitleAreaDialog {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Parent shell.
 	 * @param exception

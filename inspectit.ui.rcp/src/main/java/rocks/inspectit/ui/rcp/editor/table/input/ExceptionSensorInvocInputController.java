@@ -42,8 +42,8 @@ import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
@@ -56,9 +56,9 @@ import rocks.inspectit.ui.rcp.model.ModifiersImageFactory;
 /**
  * This input controller displays the contents of {@link ExceptionSensorData} objects in an
  * invocation sequence.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ExceptionSensorInvocInputController extends AbstractTableInputController {
 
@@ -76,9 +76,9 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The timestamp column. */
@@ -111,7 +111,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -124,7 +124,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 		 *            If the column should be shown in raw mode.
 		 * @param dataComparator
 		 *            Comparator for the column.
-		 * 
+		 *
 		 */
 		private Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super AggregatedExceptionSensorData> dataComparator) {
 			this.name = name;
@@ -137,13 +137,13 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -184,6 +184,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TableViewer tableViewer) {
 		for (Column column : Column.values()) {
 			TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -232,7 +233,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		if (PreferenceId.INVOCATION_SUBVIEW_MODE.equals(preferenceEvent.getPreferenceId())) {
 			Map<IPreferenceGroup, Object> preferenceMap = preferenceEvent.getPreferenceMap();
-			if (null != preferenceMap && preferenceMap.containsKey(PreferenceId.InvocationSubviewMode.RAW)) {
+			if ((null != preferenceMap) && preferenceMap.containsKey(PreferenceId.InvocationSubviewMode.RAW)) {
 				Boolean isRawMode = (Boolean) preferenceMap.get(PreferenceId.InvocationSubviewMode.RAW);
 
 				// first show/hide columns and then change the rawMode value
@@ -244,7 +245,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 	/**
 	 * Handles the raw and aggregated columns hiding/showing.
-	 * 
+	 *
 	 * @param rawMode
 	 *            Is raw mode active.
 	 */
@@ -271,6 +272,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new ExceptionSensorInvocContentProvider();
 	}
@@ -278,8 +280,9 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ViewerComparator getComparator() {
-		TableViewerComparator<AggregatedExceptionSensorData> exceptionSensorInputViewerComparator = new TableViewerComparator<AggregatedExceptionSensorData>();
+		TableViewerComparator<AggregatedExceptionSensorData> exceptionSensorInputViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
 			RawAggregatedResultComparator<AggregatedExceptionSensorData> comparator = new RawAggregatedResultComparator<AggregatedExceptionSensorData>(column.dataComparator, cachedDataService,
 					column.showInRawMode, column.showInAggregatedMode) {
@@ -297,6 +300,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new ExceptionSensorInvocLabelProvider();
 	}
@@ -336,21 +340,22 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 	/**
 	 * The content provider for this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private final class ExceptionSensorInvocContentProvider implements IStructuredContentProvider {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<InvocationSequenceData> invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
 			exceptionSensorDataList = getRawExceptionSensorDataList(invocationSequenceDataList, new ArrayList<ExceptionSensorData>());
 			if (!rawMode) {
-				AggregationPerformer<ExceptionSensorData> aggregationPerformer = new AggregationPerformer<ExceptionSensorData>(new ExceptionDataAggregator(ExceptionAggregationType.THROWABLE_TYPE));
+				AggregationPerformer<ExceptionSensorData> aggregationPerformer = new AggregationPerformer<>(new ExceptionDataAggregator(ExceptionAggregationType.THROWABLE_TYPE));
 				aggregationPerformer.processCollection(exceptionSensorDataList);
 				exceptionSensorDataList = aggregationPerformer.getResultList();
 			}
@@ -359,7 +364,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 		/**
 		 * Returns raw list of exceptions.
-		 * 
+		 *
 		 * @param invocationSequenceDataList
 		 *            Invocations.
 		 * @param exceptionSensorDataList
@@ -368,14 +373,14 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 		 */
 		private List<ExceptionSensorData> getRawExceptionSensorDataList(List<InvocationSequenceData> invocationSequenceDataList, List<ExceptionSensorData> exceptionSensorDataList) {
 			for (InvocationSequenceData invocationSequenceData : invocationSequenceDataList) {
-				if (null != invocationSequenceData.getExceptionSensorDataObjects() && !invocationSequenceData.getExceptionSensorDataObjects().isEmpty()) {
+				if ((null != invocationSequenceData.getExceptionSensorDataObjects()) && !invocationSequenceData.getExceptionSensorDataObjects().isEmpty()) {
 					for (ExceptionSensorData object : invocationSequenceData.getExceptionSensorDataObjects()) {
 						if (ObjectUtils.equals(object.getExceptionEvent(), ExceptionEvent.CREATED)) {
-							exceptionSensorDataList.add((ExceptionSensorData) object);
+							exceptionSensorDataList.add(object);
 						}
 					}
 				}
-				if (null != invocationSequenceData.getNestedSequences() && !invocationSequenceData.getNestedSequences().isEmpty()) {
+				if ((null != invocationSequenceData.getNestedSequences()) && !invocationSequenceData.getNestedSequences().isEmpty()) {
 					getRawExceptionSensorDataList(invocationSequenceData.getNestedSequences(), exceptionSensorDataList);
 				}
 			}
@@ -386,12 +391,14 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -399,15 +406,15 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 	/**
 	 * The exception sensor label provider used by this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private final class ExceptionSensorInvocLabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -428,7 +435,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 		/**
 		 * Returns the column image for the given element at the given index.
-		 * 
+		 *
 		 * @param element
 		 *            The element.
 		 * @param index
@@ -457,7 +464,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param methodIdent
@@ -478,7 +485,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 			case FQN:
 				return new StyledString(data.getThrowableType());
 			case CREATED:
-				if (!rawMode && data instanceof AggregatedExceptionSensorData) {
+				if (!rawMode && (data instanceof AggregatedExceptionSensorData)) {
 					return new StyledString(NumberFormatter.formatLong(((AggregatedExceptionSensorData) data).getCreated()));
 				} else if (ExceptionEvent.CREATED.equals(data.getExceptionEvent())) {
 					return new StyledString("Yes");
@@ -486,7 +493,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 					return emptyStyledString;
 				}
 			case RETHROWN:
-				if (!rawMode && data instanceof AggregatedExceptionSensorData) {
+				if (!rawMode && (data instanceof AggregatedExceptionSensorData)) {
 					return new StyledString(NumberFormatter.formatLong(((AggregatedExceptionSensorData) data).getPassed()));
 				} else if (ExceptionEvent.PASSED.equals(data.getExceptionEvent())) {
 					return new StyledString("Yes");
@@ -494,7 +501,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 					return emptyStyledString;
 				}
 			case HANDLED:
-				if (!rawMode && data instanceof AggregatedExceptionSensorData) {
+				if (!rawMode && (data instanceof AggregatedExceptionSensorData)) {
 					return new StyledString(NumberFormatter.formatLong(((AggregatedExceptionSensorData) data).getHandled()));
 				} else if (ExceptionEvent.HANDLED.equals(data.getExceptionEvent())) {
 					return new StyledString("Yes");
@@ -527,6 +534,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof ExceptionSensorData) {
 			ExceptionSensorData data = (ExceptionSensorData) object;
@@ -549,7 +557,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 		if (object instanceof ExceptionSensorData) {
 			ExceptionSensorData data = (ExceptionSensorData) object;
 			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, methodIdent, column).toString());
 			}

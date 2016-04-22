@@ -52,7 +52,7 @@ public class EqualsMatchPattern implements IMatchPattern {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((template == null) ? 0 : template.hashCode());
+		result = (prime * result) + ((template == null) ? 0 : template.hashCode());
 		return result;
 	}
 

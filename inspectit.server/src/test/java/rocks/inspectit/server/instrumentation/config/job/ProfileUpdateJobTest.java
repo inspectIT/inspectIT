@@ -17,8 +17,8 @@ import java.util.Collections;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -114,7 +114,7 @@ public class ProfileUpdateJobTest extends TestBase {
 
 			doReturn(instrumentationApplier).when(configurationResolver).getInstrumentationApplier(sensorAssignment, environment);
 			doReturn(types).when(classCacheSearchNarrower).narrowByClassSensorAssignment(classCache, sensorAssignment);
-			doReturn(types).when(instrumentationService).addInstrumentationPoints(eq(types), eq(agentConfiguration), Mockito.<Collection<IInstrumentationApplier>> any());
+			doReturn(types).when(instrumentationService).addInstrumentationPoints(eq(types), eq(agentConfiguration), Matchers.<Collection<IInstrumentationApplier>> any());
 			doReturn(Collections.singleton(sensorAssignment)).when(event).getAddedSensorAssignments();
 			job.setProfileUpdateEvent(event);
 
@@ -136,7 +136,7 @@ public class ProfileUpdateJobTest extends TestBase {
 
 			doReturn(instrumentationApplier).when(configurationResolver).getInstrumentationApplier(sensorAssignment, environment);
 			doReturn(types).when(classCacheSearchNarrower).narrowByClassSensorAssignment(classCache, sensorAssignment);
-			doReturn(types).when(instrumentationService).removeInstrumentationPoints(eq(types), Mockito.<Collection<IInstrumentationApplier>> any());
+			doReturn(types).when(instrumentationService).removeInstrumentationPoints(eq(types), Matchers.<Collection<IInstrumentationApplier>> any());
 			doReturn(Collections.singleton(sensorAssignment)).when(event).getRemovedSensorAssignments();
 			job.setProfileUpdateEvent(event);
 
@@ -163,7 +163,7 @@ public class ProfileUpdateJobTest extends TestBase {
 
 			doReturn(instrumentationApplier).when(configurationResolver).getInstrumentationApplier(sensorAssignment, environment);
 			doReturn(types).when(classCacheSearchNarrower).narrowByClassSensorAssignment(classCache, sensorAssignment);
-			doReturn(Collections.emptyList()).when(instrumentationService).removeInstrumentationPoints(eq(types), Mockito.<Collection<IInstrumentationApplier>> any());
+			doReturn(Collections.emptyList()).when(instrumentationService).removeInstrumentationPoints(eq(types), Matchers.<Collection<IInstrumentationApplier>> any());
 			doReturn(Collections.singleton(sensorAssignment)).when(event).getRemovedSensorAssignments();
 			job.setProfileUpdateEvent(event);
 

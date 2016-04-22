@@ -6,15 +6,15 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 /**
  * This {@link DetailsCellContent} sub-class displays Yes/No image with tool-tip based the boolean
  * value.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class YesNoDetailsCellContent extends DetailsCellContent {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param value
 	 *            Boolean value to display.
 	 */

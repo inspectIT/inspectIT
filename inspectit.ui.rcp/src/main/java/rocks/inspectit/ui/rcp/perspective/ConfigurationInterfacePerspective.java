@@ -8,9 +8,9 @@ import rocks.inspectit.ui.rcp.ci.view.ConfigurationInterfaceManagerView;
 
 /**
  * The perspective for the Configuration Interface.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ConfigurationInterfacePerspective implements IPerspectiveFactory {
 
@@ -35,6 +35,5 @@ public class ConfigurationInterfacePerspective implements IPerspectiveFactory {
 		layout.getViewLayout(ConfigurationInterfaceManagerView.VIEW_ID).setCloseable(true);
 		layout.getViewLayout(ConfigurationInterfaceManagerView.VIEW_ID).setMoveable(true);
 	}
-
 
 }

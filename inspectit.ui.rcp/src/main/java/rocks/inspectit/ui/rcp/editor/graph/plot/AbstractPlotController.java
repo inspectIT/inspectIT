@@ -10,20 +10,20 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.SamplingRate;
 import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl;
-import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateSelecterFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
+import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateSelecterFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 
 /**
  * The abstract class of the {@link PlotController} interface to provide some standard methods.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public abstract class AbstractPlotController implements PlotController {
 
@@ -50,6 +50,7 @@ public abstract class AbstractPlotController implements PlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		Assert.isNotNull(inputDefinition);
 
@@ -58,7 +59,7 @@ public abstract class AbstractPlotController implements PlotController {
 
 	/**
 	 * Returns the input definition.
-	 * 
+	 *
 	 * @return The input definition.
 	 */
 	protected InputDefinition getInputDefinition() {
@@ -70,6 +71,7 @@ public abstract class AbstractPlotController implements PlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setRootEditor(IRootEditor rootEditor) {
 		Assert.isNotNull(rootEditor);
 
@@ -87,7 +89,7 @@ public abstract class AbstractPlotController implements PlotController {
 
 	/**
 	 * Adjusts the sampling rate.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of element.
 	 * @param from
@@ -107,6 +109,7 @@ public abstract class AbstractPlotController implements PlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setSamplingRate(SamplingRateMode mode, Sensitivity sensitivity) {
 		this.samplingRateMode = mode;
 		this.sensitivity = sensitivity;
@@ -114,7 +117,7 @@ public abstract class AbstractPlotController implements PlotController {
 
 	/**
 	 * Returns the sampling rate mode.
-	 * 
+	 *
 	 * @return The sampling rate mode.
 	 */
 	protected SamplingRateMode getSamplingRateMode() {
@@ -123,7 +126,7 @@ public abstract class AbstractPlotController implements PlotController {
 
 	/**
 	 * Returns the sensitivity of the sampling rate mode.
-	 * 
+	 *
 	 * @return The sensitivity.
 	 */
 	protected Sensitivity getSensitivity() {
@@ -133,6 +136,7 @@ public abstract class AbstractPlotController implements PlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		if (PreferenceId.SAMPLINGRATE.equals(preferenceEvent.getPreferenceId())) {
 			Map<IPreferenceGroup, Object> preferenceMap = preferenceEvent.getPreferenceMap();
@@ -155,6 +159,7 @@ public abstract class AbstractPlotController implements PlotController {
 	 * <p>
 	 * By default legend is not shown.
 	 */
+	@Override
 	public boolean showLegend() {
 		return false;
 	}
@@ -162,6 +167,7 @@ public abstract class AbstractPlotController implements PlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 

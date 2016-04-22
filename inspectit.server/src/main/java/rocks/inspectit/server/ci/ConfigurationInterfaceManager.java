@@ -284,7 +284,7 @@ public class ConfigurationInterfaceManager {
 		if (null == local) {
 			existingEnvironments.remove(id);
 			throw new BusinessException("Update of the environment '" + environment.getName() + ".", ConfigurationInterfaceErrorCodeEnum.ENVIRONMENT_DOES_NOT_EXIST);
-		} else if (local != environment && local.getRevision() + 1 != environment.getRevision()) { // NOPMD
+		} else if ((local != environment) && ((local.getRevision() + 1) != environment.getRevision())) { // NOPMD
 			// == check here if same object is used
 			existingEnvironments.replace(id, local);
 			BusinessException e = new BusinessException("Update of the environment '" + environment.getName() + ".", ConfigurationInterfaceErrorCodeEnum.REVISION_CHECK_FAILED);
@@ -396,7 +396,7 @@ public class ConfigurationInterfaceManager {
 		if (null == local) {
 			existingProfiles.remove(id);
 			throw new BusinessException("Update of the profile '" + profile.getName() + ".", ConfigurationInterfaceErrorCodeEnum.PROFILE_DOES_NOT_EXIST);
-		} else if (local != profile && local.getRevision() + 1 != profile.getRevision()) { // NOPMD
+		} else if ((local != profile) && ((local.getRevision() + 1) != profile.getRevision())) { // NOPMD
 			// == check here if same object is used
 			existingProfiles.replace(id, local);
 			BusinessException e = new BusinessException("Update of the profile '" + profile.getName() + ".", ConfigurationInterfaceErrorCodeEnum.REVISION_CHECK_FAILED);

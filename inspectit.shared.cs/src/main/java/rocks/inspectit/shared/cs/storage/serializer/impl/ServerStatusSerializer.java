@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
 /**
  * Special type of {@link EnumSerializer} for the {@link ServerStatus} enumeration so that key of
  * server status can also be transmitted.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ServerStatusSerializer extends EnumSerializer {
 

@@ -26,9 +26,9 @@ import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManag
 
 /**
  * COnfiguration of the {@link Server} that will be used for communication with the agent.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Configuration
 public class KryoNetServerCreator {
@@ -67,7 +67,7 @@ public class KryoNetServerCreator {
 
 	/**
 	 * Start the kryonet server and binds it to the specified port.
-	 * 
+	 *
 	 * @return Start the kryonet server and binds it to the specified port.
 	 */
 	@Bean(name = "kryonet-server", destroyMethod = "stop")
@@ -89,7 +89,7 @@ public class KryoNetServerCreator {
 
 	/**
 	 * Creates the {@link ObjectSpace}, registers kryo classes and connect the space to the server.
-	 * 
+	 *
 	 * @param server
 	 *            KryoNet {@link Server}.
 	 * @return Created {@link ObjectSpace}.

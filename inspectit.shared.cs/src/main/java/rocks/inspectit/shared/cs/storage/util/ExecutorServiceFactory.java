@@ -12,9 +12,9 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 /**
  * Bean factory for providing the executor service.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExecutorServiceFactory implements FactoryBean<ExecutorService> {
 
@@ -46,6 +46,7 @@ public class ExecutorServiceFactory implements FactoryBean<ExecutorService> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ExecutorService getObject() throws Exception {
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat(threadNamePrefix + "-thread-%d").setDaemon(daemon).build();
 
@@ -63,6 +64,7 @@ public class ExecutorServiceFactory implements FactoryBean<ExecutorService> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Class<?> getObjectType() {
 		if (!isScheduledExecutor) {
 			return ExecutorService.class;
@@ -74,13 +76,14 @@ public class ExecutorServiceFactory implements FactoryBean<ExecutorService> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isSingleton() {
 		return isBeanSingleton;
 	}
 
 	/**
 	 * Sets {@link #threadNamePrefix}.
-	 * 
+	 *
 	 * @param threadNamePrefix
 	 *            New value for {@link #threadNamePrefix}
 	 */
@@ -90,7 +93,7 @@ public class ExecutorServiceFactory implements FactoryBean<ExecutorService> {
 
 	/**
 	 * Sets {@link #daemon}.
-	 * 
+	 *
 	 * @param daemon
 	 *            New value for {@link #daemon}
 	 */

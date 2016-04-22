@@ -12,9 +12,9 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 /**
  * Service interface which defines the methods to retrieve data objects based on the exception
  * sensor recordings.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface IExceptionDataAccessService {
@@ -22,7 +22,7 @@ public interface IExceptionDataAccessService {
 	/**
 	 * Returns a list of {@link ExceptionSensorData} objects. This list can be used to get an
 	 * ungrouped overview over recorded Exceptions in a target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param limit
@@ -39,7 +39,7 @@ public interface IExceptionDataAccessService {
 	 * Returns a list of {@link ExceptionSensorData} objects which are between the from and to
 	 * {@link Date} objects. This list can be used to get an overview over recorded Exceptions in a
 	 * target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param limit
@@ -59,7 +59,7 @@ public interface IExceptionDataAccessService {
 	/**
 	 * Returns a list of {@link ExceptionSensorData} objects. This list can be used to get an
 	 * ungrouped overview over recorded Exceptions in a target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param resultComparator
@@ -74,7 +74,7 @@ public interface IExceptionDataAccessService {
 	 * Returns a list of {@link ExceptionSensorData} objects which are between the from and to
 	 * {@link Date} objects. This list can be used to get an overview over recorded Exceptions in a
 	 * target application.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param fromDate
@@ -92,7 +92,7 @@ public interface IExceptionDataAccessService {
 	/**
 	 * Returns a list of {@link ExceptionSensorData} objects containing all details of a specific
 	 * Exception class.
-	 * 
+	 *
 	 * @param template
 	 *            The template object.
 	 * @return List of {@link ExceptionSensorData} objects containing all details of a specific
@@ -103,7 +103,7 @@ public interface IExceptionDataAccessService {
 	/**
 	 * Returns a list of {@link AggregatedExceptionSensorData} objects that is used to show an
 	 * overview over Exceptions with specific information about the number of caused event types.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to be used for the query.
 	 * @return A list of {@link AggregatedExceptionSensorData} objects with additional information
@@ -115,7 +115,7 @@ public interface IExceptionDataAccessService {
 	 * Returns a list of {@link AggregatedExceptionSensorData} objects that is used to show an
 	 * overview over Exceptions with specific information about the number of caused event types.
 	 * The returned list contains object that are between the from and to {@link Date} objects.
-	 * 
+	 *
 	 * @param template
 	 *            The template object to be used for the query.
 	 * @param fromDate
@@ -130,7 +130,7 @@ public interface IExceptionDataAccessService {
 	/**
 	 * Returns the exception sensor data list for all error and stack message combinations for the
 	 * throwable type defined in the template.
-	 * 
+	 *
 	 * @param template
 	 *            template with throwable type set
 	 * @return {@link ExceptionSensorData} list.

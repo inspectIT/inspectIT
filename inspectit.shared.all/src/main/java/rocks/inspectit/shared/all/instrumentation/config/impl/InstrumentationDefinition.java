@@ -8,9 +8,9 @@ import org.apache.commons.collections.CollectionUtils;
 /**
  * This simple data class is returned as the result from a server side instrumentation of a single
  * class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InstrumentationDefinition {
 
@@ -40,7 +40,7 @@ public class InstrumentationDefinition {
 
 	/**
 	 * Gets {@link #className}.
-	 * 
+	 *
 	 * @return {@link #className}
 	 */
 	public String getClassName() {
@@ -49,7 +49,7 @@ public class InstrumentationDefinition {
 
 	/**
 	 * Gets {@link #methodInstrumentationConfigs}.
-	 * 
+	 *
 	 * @return {@link #methodInstrumentationConfigs}
 	 */
 	public Collection<MethodInstrumentationConfig> getMethodInstrumentationConfigs() {
@@ -58,7 +58,7 @@ public class InstrumentationDefinition {
 
 	/**
 	 * Sets {@link #methodInstrumentationConfigs}.
-	 * 
+	 *
 	 * @param methodInstrumentationConfigs
 	 *            New value for {@link #methodInstrumentationConfigs}
 	 */
@@ -69,7 +69,7 @@ public class InstrumentationDefinition {
 	/**
 	 * Defines if instrumentation result is empty in terms that no instrumentation have to be
 	 * performed with this instrumentation result.
-	 * 
+	 *
 	 * @return If no instrumentation is needed with this result
 	 */
 	public boolean isEmpty() {

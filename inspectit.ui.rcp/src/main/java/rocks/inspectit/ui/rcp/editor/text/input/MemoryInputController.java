@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * This class represents the textual view of the {@link MemoryInformation} sensor-type.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class MemoryInputController extends AbstractTextInputController {
 

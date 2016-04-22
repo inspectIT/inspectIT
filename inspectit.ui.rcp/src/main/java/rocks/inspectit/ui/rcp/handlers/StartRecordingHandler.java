@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -36,9 +37,9 @@ import rocks.inspectit.ui.rcp.wizard.StartRecordingWizard;
 
 /**
  * Starts recording.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StartRecordingHandler extends AbstractHandler implements IHandler {
 
@@ -67,8 +68,8 @@ public class StartRecordingHandler extends AbstractHandler implements IHandler {
 				CmrStatusData cmrStatusData = cmrRepositoryDefinition.getCmrManagementService().getCmrStatusData();
 				if (cmrStatusData.isWarnSpaceLeftActive()) {
 					String leftSpace = NumberFormatter.humanReadableByteCount(cmrStatusData.getStorageDataSpaceLeft());
-					if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(event), "Confirm", "For selected CMR there is an active warning about insufficient storage space left. Only "
-							+ leftSpace + " are left on the target server, are you sure you want to continue?")) {
+					if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(event), "Confirm", "For selected CMR there is an active warning about insufficient storage space left. Only " + leftSpace
+							+ " are left on the target server, are you sure you want to continue?")) {
 						return null;
 					}
 				}
@@ -83,7 +84,7 @@ public class StartRecordingHandler extends AbstractHandler implements IHandler {
 		wizardDialog.open();
 
 		// if recording has been started refresh the repository and storage manager view
-		if (wizardDialog.getReturnCode() == WizardDialog.OK) {
+		if (wizardDialog.getReturnCode() == Window.OK) {
 			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IViewPart repositoryManagerView = activePage.findView(RepositoryManagerView.VIEW_ID);
 			if (repositoryManagerView instanceof RepositoryManagerView) {
@@ -100,7 +101,7 @@ public class StartRecordingHandler extends AbstractHandler implements IHandler {
 
 			// auto-refresh on recording stop if there is recording duration specified
 			RecordingProperties recordingProperties = startRecordingWizard.getRecordingProperties();
-			if (null != recordingProperties && recordingProperties.getRecordDuration() > 0) {
+			if ((null != recordingProperties) && (recordingProperties.getRecordDuration() > 0)) {
 				Job refreshStorageManagerJob = new Job("Recording Auto-Stop Updates") {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {

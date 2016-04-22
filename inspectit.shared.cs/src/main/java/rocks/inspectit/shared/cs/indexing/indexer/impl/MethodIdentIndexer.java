@@ -8,9 +8,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * {@link IBranchIndexer} that indexes on the method idents of {@link MethodSensorData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class MethodIdentIndexer<E extends DefaultData> extends AbstractSharedInstanceBranchIndexer<E> implements IBranchIndexer<E> {
@@ -18,6 +18,7 @@ public class MethodIdentIndexer<E extends DefaultData> extends AbstractSharedIns
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		if (element instanceof MethodSensorData) {
 			return ((MethodSensorData) element).getMethodIdent();
@@ -30,6 +31,7 @@ public class MethodIdentIndexer<E extends DefaultData> extends AbstractSharedIns
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		if (0 == query.getMethodIdent()) {
 			return new Object[0];

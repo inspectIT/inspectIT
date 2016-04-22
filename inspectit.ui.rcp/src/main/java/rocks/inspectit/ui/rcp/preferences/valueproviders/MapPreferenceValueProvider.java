@@ -17,9 +17,9 @@ import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProvider
  * warper types to preference value. Later on this preference value will be transformed to a map
  * that has both string as key and value, and thus needs transformation to initial classes of keys
  * and values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MapPreferenceValueProvider extends PreferenceValueProvider<Map<?, ?>> {
 
@@ -31,6 +31,7 @@ public class MapPreferenceValueProvider extends PreferenceValueProvider<Map<?, ?
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isObjectValid(Object object) {
 		return object instanceof Map;
 	}
@@ -38,6 +39,7 @@ public class MapPreferenceValueProvider extends PreferenceValueProvider<Map<?, ?
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getValueForObject(Map<?, ?> map) throws PreferenceException {
 		if (MapUtils.isEmpty(map)) {
 			return EMPTY_MAP;
@@ -56,11 +58,12 @@ public class MapPreferenceValueProvider extends PreferenceValueProvider<Map<?, ?
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Map<?, ?> getObjectFromValue(String value) throws PreferenceException {
 		if (EMPTY_MAP.equals(value)) {
 			return Collections.emptyMap();
 		} else {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new HashMap<>();
 			StringTokenizer tokenizer = new StringTokenizer(value, PreferencesConstants.PREF_OBJECT_SEPARATION_TOKEN);
 			while (tokenizer.hasMoreElements()) {
 				String nextEntry = tokenizer.nextToken();
@@ -68,8 +71,8 @@ public class MapPreferenceValueProvider extends PreferenceValueProvider<Map<?, ?
 				if (splitted.length == 2) {
 					map.put(splitted[0], splitted[1]);
 				} else {
-					throw new PreferenceException("Error loading map entry for the map saved in the preference store are not correct.  Entry key and value received values via the string '"
-							+ nextEntry + "' are " + Arrays.asList(splitted) + ". Definition will be skipped.");
+					throw new PreferenceException("Error loading map entry for the map saved in the preference store are not correct.  Entry key and value received values via the string '" + nextEntry
+							+ "' are " + Arrays.asList(splitted) + ". Definition will be skipped.");
 				}
 			}
 			return map;

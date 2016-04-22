@@ -29,9 +29,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 /**
  * The page that displays the data about storage to be loaded after the file for import has been
  * selected.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ImportStorageInfoPage extends WizardPage {
 
@@ -120,7 +120,7 @@ public class ImportStorageInfoPage extends WizardPage {
 		Job updateImportStoragePage = new Job("Update Import Storage Info Page") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				boolean callServices = !importLocally && cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE;
+				boolean callServices = !importLocally && (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE);
 				final List<StorageData> existingStorages = callServices ? cmrRepositoryDefinition.getStorageService().getExistingStorages() : Collections.<StorageData> emptyList();
 				final long spaceLeftOnCmr = callServices ? cmrRepositoryDefinition.getCmrManagementService().getCmrStatusData().getStorageDataSpaceLeft() : 0;
 
@@ -223,7 +223,7 @@ public class ImportStorageInfoPage extends WizardPage {
 
 	/**
 	 * Sets {@link #importLocally}.
-	 * 
+	 *
 	 * @param importLocally
 	 *            New value for {@link #importLocally}
 	 */
@@ -233,7 +233,7 @@ public class ImportStorageInfoPage extends WizardPage {
 
 	/**
 	 * Sets {@link #fileName}.
-	 * 
+	 *
 	 * @param fileName
 	 *            New value for {@link #fileName}
 	 */
@@ -243,7 +243,7 @@ public class ImportStorageInfoPage extends WizardPage {
 
 	/**
 	 * Sets {@link #cmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            New value for {@link #cmrRepositoryDefinition}
 	 */

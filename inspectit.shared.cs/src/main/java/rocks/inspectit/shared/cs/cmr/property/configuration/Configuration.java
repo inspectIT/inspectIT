@@ -17,9 +17,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyV
 
 /**
  * Root element of the XML configuration. Holding list of sections that define the configuration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "cmr-configuration")
@@ -29,16 +29,16 @@ public class Configuration {
 	 * Sections that are pare of configuration.
 	 */
 	@XmlElementRef(type = PropertySection.class)
-	private Set<PropertySection> sections = new HashSet<PropertySection>();
+	private Set<PropertySection> sections = new HashSet<>();
 
 	/**
 	 * Validates all properties in this configuration returning the map of containing the properties
 	 * that have validation errors.
-	 * 
+	 *
 	 * @return Map of properties with {@link PropertyValidation} containing errors.
 	 */
 	public Map<AbstractProperty, PropertyValidation> validate() {
-		Map<AbstractProperty, PropertyValidation> validationMap = new HashMap<AbstractProperty, PropertyValidation>();
+		Map<AbstractProperty, PropertyValidation> validationMap = new HashMap<>();
 		for (AbstractProperty property : getAllProperties()) {
 			PropertyValidation propertyValidation = property.validate();
 			if (propertyValidation.hasErrors()) {
@@ -51,10 +51,10 @@ public class Configuration {
 	/**
 	 * Returns the {@link SingleProperty} with the given logical name in the configuration or
 	 * <code>null</code> if such does not exist.
-	 * 
+	 *
 	 * @param <T>
 	 *            Type of property value.
-	 * 
+	 *
 	 * @param propertyLogicalName
 	 *            Property logical name to search for.
 	 * @return {@link SingleProperty} or <code>null</code>
@@ -72,11 +72,11 @@ public class Configuration {
 
 	/**
 	 * Returns all properties in all sections.
-	 * 
+	 *
 	 * @return Returns all properties in all sections.
 	 */
 	public Collection<AbstractProperty> getAllProperties() {
-		Set<AbstractProperty> properties = new HashSet<AbstractProperty>();
+		Set<AbstractProperty> properties = new HashSet<>();
 		if (CollectionUtils.isNotEmpty(sections)) {
 			for (PropertySection section : sections) {
 				properties.addAll(section.getProperties());
@@ -87,7 +87,7 @@ public class Configuration {
 
 	/**
 	 * Adds a sections to the section list.
-	 * 
+	 *
 	 * @param section
 	 *            {@link PropertySection} to add.
 	 */
@@ -97,7 +97,7 @@ public class Configuration {
 
 	/**
 	 * Gets {@link #sections}.
-	 * 
+	 *
 	 * @return {@link #sections}
 	 */
 	public Set<PropertySection> getSections() {
@@ -106,7 +106,7 @@ public class Configuration {
 
 	/**
 	 * Sets {@link #sections}.
-	 * 
+	 *
 	 * @param sections
 	 *            New value for {@link #sections}
 	 */
@@ -121,7 +121,7 @@ public class Configuration {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((sections == null) ? 0 : sections.hashCode());
+		result = (prime * result) + ((sections == null) ? 0 : sections.hashCode());
 		return result;
 	}
 

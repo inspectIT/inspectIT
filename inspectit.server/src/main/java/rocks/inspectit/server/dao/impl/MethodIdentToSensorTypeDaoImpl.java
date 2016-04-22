@@ -12,9 +12,9 @@ import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
 /**
  * The default implementation of the {@link MethodIdentToSensorTypeDao} interface by using Entity
  * manager.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Repository
 public class MethodIdentToSensorTypeDaoImpl extends AbstractJpaDao<MethodIdentToSensorType> implements MethodIdentToSensorTypeDao {
@@ -29,6 +29,7 @@ public class MethodIdentToSensorTypeDaoImpl extends AbstractJpaDao<MethodIdentTo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void saveOrUpdate(MethodIdentToSensorType methodIdentToSensorType) {
 		// we save if id is not set, otherwise merge
 		if (null == methodIdentToSensorType.getId()) {
@@ -41,6 +42,7 @@ public class MethodIdentToSensorTypeDaoImpl extends AbstractJpaDao<MethodIdentTo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MethodIdentToSensorType find(long methodIdentId, long methodSensorTypeIdentId) {
 		TypedQuery<MethodIdentToSensorType> query = getEntityManager().createNamedQuery(MethodIdentToSensorType.FIND_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, MethodIdentToSensorType.class);
 		query.setParameter("methodIdentId", methodIdentId);

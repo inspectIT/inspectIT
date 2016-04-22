@@ -5,9 +5,9 @@ import rocks.inspectit.server.cache.IBuffer;
 /**
  * Abstract class for all threads that work on the buffer. The work each worker performs is defined
  * in abstract method {@link #work()}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class BufferWorker extends Thread {
 
@@ -18,7 +18,7 @@ public abstract class BufferWorker extends Thread {
 
 	/**
 	 * Default constructor. Thread is set to be a daemon, to have highest priority and started.
-	 * 
+	 *
 	 * @param buffer
 	 *            Buffer to work on.
 	 * @param threadName
@@ -33,7 +33,7 @@ public abstract class BufferWorker extends Thread {
 
 	/**
 	 * Defines the work to be done on the buffer.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 *             {@link InterruptedException}
 	 */
@@ -41,7 +41,7 @@ public abstract class BufferWorker extends Thread {
 
 	/**
 	 * Returns buffer that worker is working on.
-	 * 
+	 *
 	 * @return Buffer.
 	 */
 	protected IBuffer<?> getBuffer() {

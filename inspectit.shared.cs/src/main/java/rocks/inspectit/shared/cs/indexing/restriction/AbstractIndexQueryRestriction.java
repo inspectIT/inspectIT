@@ -10,9 +10,9 @@ import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
 
 /**
  * Abstract class for all index query restriction classes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractIndexQueryRestriction implements IIndexQueryRestriction {
 
@@ -24,7 +24,7 @@ public abstract class AbstractIndexQueryRestriction implements IIndexQueryRestri
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to. If you need navigation use the
 	 *            '.' to separate fields. For example person.age will navigate to the age field to
@@ -36,23 +36,24 @@ public abstract class AbstractIndexQueryRestriction implements IIndexQueryRestri
 		}
 
 		String[] split = StringUtils.splitPreserveAllTokens(fieldName, '.');
-		methodNames = new ArrayList<String>(split.length);
+		methodNames = new ArrayList<>(split.length);
 
-		for (int i = 0, size = split.length; i < size; i++) {
-			methodNames.add(getMethodName(split[i]));
+		for (String element : split) {
+			methodNames.add(getMethodName(element));
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<String> getQualifiedMethodNames() {
 		return Collections.unmodifiableList(methodNames);
 	}
 
 	/**
 	 * Returns getter method name based on the field name.
-	 * 
+	 *
 	 * @param fieldName
 	 *            name of the field
 	 * @return getter method name
@@ -68,7 +69,7 @@ public abstract class AbstractIndexQueryRestriction implements IIndexQueryRestri
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((methodNames == null) ? 0 : methodNames.hashCode());
+		result = (prime * result) + ((methodNames == null) ? 0 : methodNames.hashCode());
 		return result;
 	}
 

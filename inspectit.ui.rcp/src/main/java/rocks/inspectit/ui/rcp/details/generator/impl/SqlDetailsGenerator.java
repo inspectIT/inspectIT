@@ -13,9 +13,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * SQL information details generator.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlDetailsGenerator implements IDetailsGenerator {
 

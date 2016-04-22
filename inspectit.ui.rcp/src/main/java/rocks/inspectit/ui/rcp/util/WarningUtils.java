@@ -46,8 +46,7 @@ public final class WarningUtils {
 
 				// note that the MessageDialogWithToggle could also access the property store
 				// directly, but it will not write back the changed value.
-				MessageDialogWithToggle toggle = MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(), title, details, "Do not show this warning again",
-						false, null, null);
+				MessageDialogWithToggle toggle = MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(), title, details, "Do not show this warning again", false, null, null);
 				boolean state = toggle.getToggleState();
 				PreferencesUtils.saveBooleanValue(propertyKey, state, false);
 			}

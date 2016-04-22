@@ -9,7 +9,7 @@ import com.esotericsoftware.kryo.io.Output;
 
 /**
  * Serializes instances of {@link java.sql.Timestamp}.
- * 
+ *
  * @author Ivan Senic
  */
 public class TimestampSerializer extends Serializer<Timestamp> {

@@ -24,9 +24,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Wizard page for selection of the storage to import.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ImportStorageSelectPage extends WizardPage {
 

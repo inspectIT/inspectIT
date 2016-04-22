@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
 
 /**
  * {@link AbstractPropertyUpdate} for long property.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "long-property-update")
@@ -32,7 +32,7 @@ public class LongPropertyUpdate extends AbstractPropertyUpdate<Long> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property update is related to.
 	 * @param updateValue
@@ -44,19 +44,21 @@ public class LongPropertyUpdate extends AbstractPropertyUpdate<Long> {
 
 	/**
 	 * Gets {@link #updateValue}.
-	 * 
+	 *
 	 * @return {@link #updateValue}
 	 */
+	@Override
 	public Long getUpdateValue() {
 		return updateValue;
 	}
 
 	/**
 	 * Sets {@link #updateValue}.
-	 * 
+	 *
 	 * @param updateValue
 	 *            New value for {@link #updateValue}
 	 */
+	@Override
 	protected void setUpdateValue(Long updateValue) {
 		this.updateValue = updateValue;
 	}

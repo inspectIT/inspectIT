@@ -17,8 +17,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -28,8 +28,6 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
-import rocks.inspectit.shared.cs.storage.StorageIndexingTreeHandler;
-import rocks.inspectit.shared.cs.storage.StorageWriter;
 import rocks.inspectit.shared.cs.storage.StorageWriter.WriteTask;
 import rocks.inspectit.shared.cs.storage.util.StorageIndexTreeProvider;
 
@@ -67,7 +65,7 @@ public class StorageIndexingTreeHandlerTest {
 		indexingTreeHandler.objectSizes = objectSizes;
 		indexingTreeHandler.storageIndexTreeProvider = storageIndexTreeProvider;
 		when(storageIndexTreeProvider.getStorageIndexingTree()).thenReturn(indexingTree);
-		when(executorService.scheduleWithFixedDelay(Mockito.<Runnable> anyObject(), anyLong(), anyLong(), Mockito.<TimeUnit> anyObject())).thenReturn(future);
+		when(executorService.scheduleWithFixedDelay(Matchers.<Runnable> anyObject(), anyLong(), anyLong(), Matchers.<TimeUnit> anyObject())).thenReturn(future);
 		indexingTreeHandler.prepare();
 	}
 

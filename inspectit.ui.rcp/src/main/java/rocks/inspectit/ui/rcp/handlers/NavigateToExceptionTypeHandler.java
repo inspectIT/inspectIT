@@ -21,8 +21,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.ExceptionTypeInputDefinitionExtra;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
@@ -32,9 +32,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler that opens the only concrete exception type view.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class NavigateToExceptionTypeHandler extends AbstractHandler implements IHandler {
 
@@ -53,7 +53,7 @@ public abstract class NavigateToExceptionTypeHandler extends AbstractHandler imp
 			dataToNavigateTo = (ExceptionSensorData) selectedObject;
 		} else if (selectedObject instanceof InvocationSequenceData) {
 			List<ExceptionSensorData> exceptions = ((InvocationSequenceData) selectedObject).getExceptionSensorDataObjects();
-			if (null != exceptions && !exceptions.isEmpty()) {
+			if ((null != exceptions) && !exceptions.isEmpty()) {
 				for (ExceptionSensorData exSensorData : exceptions) {
 					if (0 != exSensorData.getMethodIdent()) {
 						dataToNavigateTo = exSensorData;
@@ -93,7 +93,7 @@ public abstract class NavigateToExceptionTypeHandler extends AbstractHandler imp
 
 	/**
 	 * Returns input definition. Sub-classes should only implement this method.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            {@link RepositoryDefinition}
 	 * @param exceptionSensorData
@@ -104,9 +104,9 @@ public abstract class NavigateToExceptionTypeHandler extends AbstractHandler imp
 
 	/**
 	 * Handler for navigating to single exception view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static final class NavigateToSingleExceptionTypeHandler extends NavigateToExceptionTypeHandler {
 
@@ -141,9 +141,9 @@ public abstract class NavigateToExceptionTypeHandler extends AbstractHandler imp
 
 	/**
 	 * Handler for navigating to grouped exception view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static final class NavigateToGroupedExceptionTypeHandler extends NavigateToExceptionTypeHandler {
 

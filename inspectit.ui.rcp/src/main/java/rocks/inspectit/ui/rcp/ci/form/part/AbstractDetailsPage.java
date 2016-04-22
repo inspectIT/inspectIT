@@ -70,7 +70,7 @@ public abstract class AbstractDetailsPage<E> implements IDetailsPage, IControlVa
 				commitToInput();
 
 				E input = getInput();
-				if (null != detailsModifiedListener && null != input) {
+				if ((null != detailsModifiedListener) && (null != input)) {
 					detailsModifiedListener.contentModified(input);
 				}
 			}

@@ -7,8 +7,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.editor.tree.TreeSubView;
 
 /**
  * Collapse handler for trees.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TreeCollapseHandler extends AbstractHandler implements IHandler {
 
@@ -43,7 +43,7 @@ public class TreeCollapseHandler extends AbstractHandler implements IHandler {
 				IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 				for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 					Object object = iterator.next();
-					treeSubView.getTreeViewer().collapseToLevel(object, TreeViewer.ALL_LEVELS);
+					treeSubView.getTreeViewer().collapseToLevel(object, AbstractTreeViewer.ALL_LEVELS);
 				}
 			}
 		}

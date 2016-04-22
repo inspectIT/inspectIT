@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Comparators for {@link InvocationSequenceData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum InvocationSequenceDataComparatorEnum implements IDataComparator<InvocationSequenceData> {
 

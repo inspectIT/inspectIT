@@ -8,15 +8,16 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 /**
  * Adapter Factory which is used to create the {@link DeferredInvoc} objects if the adaptable object
  * is of type {@link InvocationSequenceData}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DeferredInvocAdapterFactory implements IAdapterFactory {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (IDeferredWorkbenchAdapter.class == adapterType) {
@@ -30,6 +31,7 @@ public class DeferredInvocAdapterFactory implements IAdapterFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return new Class[] { IDeferredWorkbenchAdapter.class };

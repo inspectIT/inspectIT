@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.service.AgentStorageService;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.communication.DefaultData;
@@ -21,9 +20,9 @@ import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 
 /**
  * Tests the agent storage service.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class AgentStorageServiceTest extends AbstractTestNGLogSupport {
@@ -60,7 +59,7 @@ public class AgentStorageServiceTest extends AbstractTestNGLogSupport {
 	 */
 	@Test
 	public void dropDataAfterTimeout() {
-		List<DefaultData> dataList = new ArrayList<DefaultData>();
+		List<DefaultData> dataList = new ArrayList<>();
 		TimerData timerData = new TimerData();
 		timerData.setPlatformIdent(1L);
 		dataList.add(timerData);
@@ -77,7 +76,7 @@ public class AgentStorageServiceTest extends AbstractTestNGLogSupport {
 	 */
 	@Test
 	public void acceptData() {
-		List<DefaultData> dataList = new ArrayList<DefaultData>();
+		List<DefaultData> dataList = new ArrayList<>();
 		TimerData timerData = new TimerData();
 		timerData.setPlatformIdent(1L);
 		dataList.add(timerData);

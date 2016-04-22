@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
-import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**

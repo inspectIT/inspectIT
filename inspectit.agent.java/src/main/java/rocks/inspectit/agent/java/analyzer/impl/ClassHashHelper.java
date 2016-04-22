@@ -153,13 +153,12 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 	 */
 	public void registerInstrumentationDefinition(String fqn, InstrumentationDefinition instrumentationResult) {
 		ClassEntry entry = getOrCreateEntry(fqn);
-		if (null != instrumentationResult && !instrumentationResult.isEmpty()) {
+		if ((null != instrumentationResult) && !instrumentationResult.isEmpty()) {
 			entry.setInstrumentationResult(instrumentationResult);
 		} else {
 			entry.setInstrumentationResult(null); // NOPMD
 		}
 	}
-
 
 	/**
 	 * Returns the {@link InstrumentationDefinition} for the class with given FQN if the one was

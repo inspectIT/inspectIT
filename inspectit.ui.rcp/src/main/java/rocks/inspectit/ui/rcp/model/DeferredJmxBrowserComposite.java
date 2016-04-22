@@ -19,9 +19,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * This class only initializes the sub-tree if it is requested. Furthermore, the creation of the
  * objects is done piece after piece, so that an immediate visualization can be seen (important for
  * sub-trees which are very large).
- * 
+ *
  * @author Marius Oehler
- * 
+ *
  */
 public class DeferredJmxBrowserComposite extends DeferredComposite {
 
@@ -37,7 +37,7 @@ public class DeferredJmxBrowserComposite extends DeferredComposite {
 
 	/**
 	 * Sets {@link #sensorTypeIdent}.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            New value for {@link #sensorTypeIdent}
 	 */
@@ -47,7 +47,7 @@ public class DeferredJmxBrowserComposite extends DeferredComposite {
 
 	/**
 	 * The platform ident used to retrieve the monitored MBeans.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            the platformIdent to set
 	 */
@@ -67,7 +67,7 @@ public class DeferredJmxBrowserComposite extends DeferredComposite {
 			Set<JmxDefinitionDataIdent> jmxIdents = platformIdent.getJmxDefinitionDataIdents();
 			monitor.beginTask("Loading monitored JMX-Packages...", IProgressMonitor.UNKNOWN);
 
-			Map<String, DeferredJmxPackageComposite> packageNames = new HashMap<String, DeferredJmxPackageComposite>(jmxIdents.size());
+			Map<String, DeferredJmxPackageComposite> packageNames = new HashMap<>(jmxIdents.size());
 
 			for (JmxDefinitionDataIdent jmxIdent : jmxIdents) {
 				String packageName = jmxIdent.getDerivedDomainName();

@@ -8,16 +8,16 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validation.Validatio
 
 /**
  * Abstract class for property validation.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  */
 public abstract class AbstractSinglePropertyValidator<T> {
 
 	/**
 	 * Proves that the given value is valid.
-	 * 
+	 *
 	 * @param value
 	 *            Value to check.
 	 * @return True if value is valid to the validator, false otherwise.
@@ -26,7 +26,7 @@ public abstract class AbstractSinglePropertyValidator<T> {
 
 	/**
 	 * Returns error message to put to the {@link ValidationError} when creating one.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty} validation failed for.
 	 * @return Returns error message.
@@ -54,7 +54,7 @@ public abstract class AbstractSinglePropertyValidator<T> {
 
 	/**
 	 * Adds {@link ValidationError} to the {@link PropertyValidation}.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty} being validated.
 	 * @param propertyValidation

@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link ITimerDataAccessService} for storage purposes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageTimerDataAccessService extends AbstractStorageService<TimerData> implements ITimerDataAccessService {
 
@@ -31,6 +31,7 @@ public class StorageTimerDataAccessService extends AbstractStorageService<TimerD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<TimerData> getAggregatedTimerData(TimerData timerData) {
 		return this.getAggregatedTimerData(timerData, null, null);
 	}
@@ -38,6 +39,7 @@ public class StorageTimerDataAccessService extends AbstractStorageService<TimerD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<TimerData> getAggregatedTimerData(TimerData timerData, Date fromDate, Date toDate) {
 		StorageIndexQuery query = timerDataQueryFactory.getAggregatedTimerDataQuery(timerData, fromDate, toDate);
 		return super.executeQuery(query, Aggregators.TIMER_DATA_AGGREGATOR);
@@ -46,6 +48,7 @@ public class StorageTimerDataAccessService extends AbstractStorageService<TimerD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected IStorageTreeComponent<TimerData> getIndexingTree() {
 		return indexingTree;
 	}

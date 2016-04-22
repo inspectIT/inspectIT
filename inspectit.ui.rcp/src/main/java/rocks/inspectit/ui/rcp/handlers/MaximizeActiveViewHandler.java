@@ -22,9 +22,9 @@ import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
  * Handler for the maximize/minimize the active sub-view. At the same time this Handler implements
  * the {@link IElementUpdater} interface so that we can manually update the checked state of the UI
  * elements that are bounded to the {@value #COMMAND_ID} command.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MaximizeActiveViewHandler extends AbstractHandler implements IHandler, IElementUpdater {
 
@@ -56,7 +56,7 @@ public class MaximizeActiveViewHandler extends AbstractHandler implements IHandl
 		// after the maximized/minimized is executed we need to refresh the UI elements bounded to
 		// the command, so that checked state of that elements is updated
 		ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event).getService(ICommandService.class);
-		Map<Object, Object> filter = new HashMap<Object, Object>();
+		Map<Object, Object> filter = new HashMap<>();
 		filter.put(IServiceScopes.WINDOW_SCOPE, HandlerUtil.getActiveWorkbenchWindow(event));
 		commandService.refreshElements(event.getCommand().getId(), filter);
 		return null;
@@ -72,7 +72,7 @@ public class MaximizeActiveViewHandler extends AbstractHandler implements IHandl
 		// sub-view
 		IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) parameters.get("org.eclipse.ui.IWorkbenchWindow");
 		String preferencePanelId = (String) parameters.get(PREFERENCE_PANEL_ID_PARAMETER);
-		if (null != workbenchWindow && null != preferencePanelId) {
+		if ((null != workbenchWindow) && (null != preferencePanelId)) {
 			IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
 			if (editorPart instanceof AbstractRootEditor) {
 				AbstractRootEditor abstractRootEditor = (AbstractRootEditor) editorPart;

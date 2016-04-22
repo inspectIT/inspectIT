@@ -18,9 +18,9 @@ import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
  * (de-)serializing the object during the communication. The idea is not to (de-)serialize from/to
  * buffer, but to use the streams which would give us opportunity to transfer objects of unlimited
  * size.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("all")
 public class ExtendedSerializationImpl implements IExtendedSerialization {
@@ -44,7 +44,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 * One argument constructor. Same as calling
 	 * {@link #ExtendedSerializationImpl(ISerializerProvider, int)} with init serializers value of
 	 * {@value #INIT_CREATED_SERIALIZERS}.
-	 * 
+	 *
 	 * @param serializerProvider
 	 *            {@link ISerializerProvider} needed for creation of the {@link IKryoProvider}
 	 *            instances.
@@ -55,7 +55,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param serializerProvider
 	 *            {@link ISerializerProvider} needed for creation of the {@link IKryoProvider}
 	 *            instances.
@@ -137,7 +137,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	}
 
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
@@ -163,7 +163,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 * Creates new {@link IKryoProvider}.
 	 * <p>
 	 * Sub-classes can override.
-	 * 
+	 *
 	 * @return Creates new {@link IKryoProvider}.
 	 */
 	protected IKryoProvider createKryoProvider() {

@@ -59,9 +59,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Sub-view which is used to create a table.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TableSubView extends AbstractSubView implements ISearchExecutor {
 
@@ -87,7 +87,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 
 	/**
 	 * Default constructor which needs a tree input controller to create all the content etc.
-	 * 
+	 *
 	 * @param tableInputController
 	 *            The table input controller.
 	 */
@@ -136,7 +136,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 		tableViewer.setUseHashlookup(true);
 		tableViewer.setContentProvider(tableInputController.getContentProvider());
 		IBaseLabelProvider labelProvider = tableInputController.getLabelProvider();
-		if (tableInputController.isCheckStyle() && labelProvider instanceof StyledCellIndexLabelProvider) {
+		if (tableInputController.isCheckStyle() && (labelProvider instanceof StyledCellIndexLabelProvider)) {
 			labelProvider = new CheckedDelegatingIndexLabelProvider((StyledCellIndexLabelProvider) labelProvider);
 		}
 		tableViewer.setLabelProvider(labelProvider);
@@ -179,7 +179,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 			public void handleEvent(Event event) {
 				Point pt = Display.getDefault().map(null, table, new Point(event.x, event.y));
 				Rectangle clientArea = table.getClientArea();
-				boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + table.getHeaderHeight());
+				boolean header = (clientArea.y <= pt.y) && (pt.y < (clientArea.y + table.getHeaderHeight()));
 				if (header) {
 					table.setMenu(headerMenu);
 				} else {
@@ -228,7 +228,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 				Integer rememberedWidth = ShowHideColumnsHandler.getRememberedColumnWidth(tableInputController.getClass(), column.getText());
 				boolean isColumnHidden = ShowHideColumnsHandler.isColumnHidden(tableInputController.getClass(), column.getText());
 
-				if (rememberedWidth != null && !isColumnHidden) {
+				if ((rememberedWidth != null) && !isColumnHidden) {
 					column.setWidth(rememberedWidth.intValue());
 					column.setResizable(true);
 				} else if (isColumnHidden) {
@@ -243,7 +243,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 		// update the order of columns if the order was defined for the class, and no new columns
 		// were added
 		int[] columnOrder = ShowHideColumnsHandler.getColumnOrder(tableInputController.getClass());
-		if (null != columnOrder && columnOrder.length == table.getColumns().length) {
+		if ((null != columnOrder) && (columnOrder.length == table.getColumns().length)) {
 			table.setColumnOrder(columnOrder);
 		} else if (null != columnOrder) {
 			// if the order exists, but length is not same, then update with the default order
@@ -402,7 +402,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 
 	/**
 	 * Returns the table input controller.
-	 * 
+	 *
 	 * @return The table input controller.
 	 */
 	public TableInputController getTableInputController() {
@@ -413,11 +413,11 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 	 * Return the names of all columns in the table. Not visible columns names will also be
 	 * included. The order of the names will be same to the initial table column order, thus not
 	 * reflecting the current state of the table if the columns were moved.
-	 * 
+	 *
 	 * @return List of column names.
 	 */
 	public List<String> getColumnNames() {
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		for (TableColumn column : tableViewer.getTable().getColumns()) {
 			names.add(column.getText());
 		}
@@ -425,14 +425,14 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The list of integers representing the column order in the table. Note that only
 	 *         columns that are currently visible will be included in the list.
 	 * @see Table#getColumnOrder()
 	 */
 	public List<Integer> getColumnOrder() {
 		int[] order = tableViewer.getTable().getColumnOrder();
-		List<Integer> orderWithoutHidden = new ArrayList<Integer>();
+		List<Integer> orderWithoutHidden = new ArrayList<>();
 		for (int index : order) {
 			if (tableViewer.getTable().getColumns()[index].getWidth() > 0) {
 				orderWithoutHidden.add(index);
@@ -486,7 +486,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 
 	/**
 	 * Returns true if the table in the sub-view is disposed. False otherwise.
-	 * 
+	 *
 	 * @return Returns true if the table in the sub-view is disposed. False otherwise.
 	 */
 	private boolean checkDisposed() {

@@ -17,13 +17,12 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
 
 /**
  * Here are the static informations of a system. These informations don't change at runtime.
- * 
+ *
  * @author Eduard Tudenhöfner
- * 
+ *
  */
 @Entity
-@NamedQueries({
-		@NamedQuery(name = SystemInformationData.FIND_ALL_FOR_PLATFORM_ID, query = "SELECT s FROM SystemInformationData s WHERE s.platformIdent=:platformIdent"),
+@NamedQueries({ @NamedQuery(name = SystemInformationData.FIND_ALL_FOR_PLATFORM_ID, query = "SELECT s FROM SystemInformationData s WHERE s.platformIdent=:platformIdent"),
 		@NamedQuery(name = SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS, query = "SELECT s FROM SystemInformationData s WHERE s.id IN (SELECT MAX(sd.id) FROM SystemInformationData sd WHERE sd.platformIdent IN (:platformIdents) GROUP BY sd.platformIdent)") })
 public class SystemInformationData extends SystemSensorData {
 
@@ -31,7 +30,7 @@ public class SystemInformationData extends SystemSensorData {
 	 * The serial version uid for this class.
 	 */
 	private static final long serialVersionUID = -8294531858844656994L;
-	
+
 	/**
 	 * Constant for findLatestForPlatformId query.
 	 */
@@ -151,7 +150,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * The constructor which needs three parameters.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The Timestamp.
 	 * @param platformIdent
@@ -165,7 +164,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #vmSet}.
-	 * 
+	 *
 	 * @return {@link #vmSet}
 	 */
 	public Set<VmArgumentData> getVmSet() {
@@ -174,7 +173,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #vmSet}.
-	 * 
+	 *
 	 * @param vmSet
 	 *            New value for {@link #vmSet}
 	 */
@@ -184,7 +183,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #totalPhysMemory}.
-	 * 
+	 *
 	 * @return {@link #totalPhysMemory}
 	 */
 	public long getTotalPhysMemory() {
@@ -193,7 +192,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #totalPhysMemory}.
-	 * 
+	 *
 	 * @param totalPhysMemory
 	 *            New value for {@link #totalPhysMemory}
 	 */
@@ -203,7 +202,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #totalSwapSpace}.
-	 * 
+	 *
 	 * @return {@link #totalSwapSpace}
 	 */
 	public long getTotalSwapSpace() {
@@ -212,7 +211,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #totalSwapSpace}.
-	 * 
+	 *
 	 * @param totalSwapSpace
 	 *            New value for {@link #totalSwapSpace}
 	 */
@@ -222,7 +221,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #jitCompilerName}.
-	 * 
+	 *
 	 * @return {@link #jitCompilerName}
 	 */
 	public String getJitCompilerName() {
@@ -231,7 +230,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #jitCompilerName}.
-	 * 
+	 *
 	 * @param jitCompilerName
 	 *            New value for {@link #jitCompilerName}
 	 */
@@ -241,7 +240,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #availableProcessors}.
-	 * 
+	 *
 	 * @return {@link #availableProcessors}
 	 */
 	public int getAvailableProcessors() {
@@ -250,7 +249,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #availableProcessors}.
-	 * 
+	 *
 	 * @param availableProcessors
 	 *            New value for {@link #availableProcessors}
 	 */
@@ -260,7 +259,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #architecture}.
-	 * 
+	 *
 	 * @return {@link #architecture}
 	 */
 	public String getArchitecture() {
@@ -269,7 +268,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #architecture}.
-	 * 
+	 *
 	 * @param architecture
 	 *            New value for {@link #architecture}
 	 */
@@ -279,7 +278,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #osName}.
-	 * 
+	 *
 	 * @return {@link #osName}
 	 */
 	public String getOsName() {
@@ -288,7 +287,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #osName}.
-	 * 
+	 *
 	 * @param osName
 	 *            New value for {@link #osName}
 	 */
@@ -298,7 +297,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #osVersion}.
-	 * 
+	 *
 	 * @return {@link #osVersion}
 	 */
 	public String getOsVersion() {
@@ -307,7 +306,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #osVersion}.
-	 * 
+	 *
 	 * @param osVersion
 	 *            New value for {@link #osVersion}
 	 */
@@ -317,7 +316,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #classPath}.
-	 * 
+	 *
 	 * @return {@link #classPath}
 	 */
 	public String getClassPath() {
@@ -326,7 +325,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #classPath}.
-	 * 
+	 *
 	 * @param classPath
 	 *            New value for {@link #classPath}
 	 */
@@ -336,7 +335,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #bootClassPath}.
-	 * 
+	 *
 	 * @return {@link #bootClassPath}
 	 */
 	public String getBootClassPath() {
@@ -345,7 +344,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #bootClassPath}.
-	 * 
+	 *
 	 * @param bootClassPath
 	 *            New value for {@link #bootClassPath}
 	 */
@@ -355,7 +354,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #libraryPath}.
-	 * 
+	 *
 	 * @return {@link #libraryPath}
 	 */
 	public String getLibraryPath() {
@@ -364,7 +363,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #libraryPath}.
-	 * 
+	 *
 	 * @param libraryPath
 	 *            New value for {@link #libraryPath}
 	 */
@@ -374,7 +373,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #vmVendor}.
-	 * 
+	 *
 	 * @return {@link #vmVendor}
 	 */
 	public String getVmVendor() {
@@ -383,7 +382,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #vmVendor}.
-	 * 
+	 *
 	 * @param vmVendor
 	 *            New value for {@link #vmVendor}
 	 */
@@ -393,7 +392,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #vmName}.
-	 * 
+	 *
 	 * @return {@link #vmName}
 	 */
 	public String getVmName() {
@@ -402,7 +401,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #vmName}.
-	 * 
+	 *
 	 * @param vmName
 	 *            New value for {@link #vmName}
 	 */
@@ -412,7 +411,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #vmSpecName}.
-	 * 
+	 *
 	 * @return {@link #vmSpecName}
 	 */
 	public String getVmSpecName() {
@@ -421,7 +420,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #vmSpecName}.
-	 * 
+	 *
 	 * @param vmSpecName
 	 *            New value for {@link #vmSpecName}
 	 */
@@ -431,7 +430,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #vmVersion}.
-	 * 
+	 *
 	 * @return {@link #vmVersion}
 	 */
 	public String getVmVersion() {
@@ -440,7 +439,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #vmVersion}.
-	 * 
+	 *
 	 * @param vmVersion
 	 *            New value for {@link #vmVersion}
 	 */
@@ -450,7 +449,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #initHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #initHeapMemorySize}
 	 */
 	public long getInitHeapMemorySize() {
@@ -459,7 +458,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #initHeapMemorySize}.
-	 * 
+	 *
 	 * @param initHeapMemorySize
 	 *            New value for {@link #initHeapMemorySize}
 	 */
@@ -469,7 +468,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #maxHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #maxHeapMemorySize}
 	 */
 	public long getMaxHeapMemorySize() {
@@ -478,7 +477,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #maxHeapMemorySize}.
-	 * 
+	 *
 	 * @param maxHeapMemorySize
 	 *            New value for {@link #maxHeapMemorySize}
 	 */
@@ -488,7 +487,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #initNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #initNonHeapMemorySize}
 	 */
 	public long getInitNonHeapMemorySize() {
@@ -497,7 +496,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #initNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param initNonHeapMemorySize
 	 *            New value for {@link #initNonHeapMemorySize}
 	 */
@@ -507,7 +506,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Gets {@link #maxNonHeapMemorySize}.
-	 * 
+	 *
 	 * @return {@link #maxNonHeapMemorySize}
 	 */
 	public long getMaxNonHeapMemorySize() {
@@ -516,7 +515,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * Sets {@link #maxNonHeapMemorySize}.
-	 * 
+	 *
 	 * @param maxNonHeapMemorySize
 	 *            New value for {@link #maxNonHeapMemorySize}
 	 */
@@ -526,7 +525,7 @@ public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * adds the given vm argument.
-	 * 
+	 *
 	 * @param vmArgumentName
 	 *            the name of the vm argument.
 	 * @param vmArgumentValue
@@ -540,34 +539,36 @@ public class SystemInformationData extends SystemSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((architecture == null) ? 0 : architecture.hashCode());
-		result = prime * result + availableProcessors;
-		result = prime * result + ((bootClassPath == null) ? 0 : bootClassPath.hashCode());
-		result = prime * result + ((classPath == null) ? 0 : classPath.hashCode());
-		result = prime * result + (int) (initHeapMemorySize ^ (initHeapMemorySize >>> 32));
-		result = prime * result + (int) (initNonHeapMemorySize ^ (initNonHeapMemorySize >>> 32));
-		result = prime * result + ((jitCompilerName == null) ? 0 : jitCompilerName.hashCode());
-		result = prime * result + ((libraryPath == null) ? 0 : libraryPath.hashCode());
-		result = prime * result + (int) (maxHeapMemorySize ^ (maxHeapMemorySize >>> 32));
-		result = prime * result + (int) (maxNonHeapMemorySize ^ (maxNonHeapMemorySize >>> 32));
-		result = prime * result + ((osName == null) ? 0 : osName.hashCode());
-		result = prime * result + ((osVersion == null) ? 0 : osVersion.hashCode());
-		result = prime * result + (int) (totalPhysMemory ^ (totalPhysMemory >>> 32));
-		result = prime * result + (int) (totalSwapSpace ^ (totalSwapSpace >>> 32));
-		result = prime * result + ((vmName == null) ? 0 : vmName.hashCode());
-		result = prime * result + ((vmSet == null) ? 0 : vmSet.hashCode());
-		result = prime * result + ((vmSpecName == null) ? 0 : vmSpecName.hashCode());
-		result = prime * result + ((vmVendor == null) ? 0 : vmVendor.hashCode());
-		result = prime * result + ((vmVersion == null) ? 0 : vmVersion.hashCode());
+		result = (prime * result) + ((architecture == null) ? 0 : architecture.hashCode());
+		result = (prime * result) + availableProcessors;
+		result = (prime * result) + ((bootClassPath == null) ? 0 : bootClassPath.hashCode());
+		result = (prime * result) + ((classPath == null) ? 0 : classPath.hashCode());
+		result = (prime * result) + (int) (initHeapMemorySize ^ (initHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (initNonHeapMemorySize ^ (initNonHeapMemorySize >>> 32));
+		result = (prime * result) + ((jitCompilerName == null) ? 0 : jitCompilerName.hashCode());
+		result = (prime * result) + ((libraryPath == null) ? 0 : libraryPath.hashCode());
+		result = (prime * result) + (int) (maxHeapMemorySize ^ (maxHeapMemorySize >>> 32));
+		result = (prime * result) + (int) (maxNonHeapMemorySize ^ (maxNonHeapMemorySize >>> 32));
+		result = (prime * result) + ((osName == null) ? 0 : osName.hashCode());
+		result = (prime * result) + ((osVersion == null) ? 0 : osVersion.hashCode());
+		result = (prime * result) + (int) (totalPhysMemory ^ (totalPhysMemory >>> 32));
+		result = (prime * result) + (int) (totalSwapSpace ^ (totalSwapSpace >>> 32));
+		result = (prime * result) + ((vmName == null) ? 0 : vmName.hashCode());
+		result = (prime * result) + ((vmSet == null) ? 0 : vmSet.hashCode());
+		result = (prime * result) + ((vmSpecName == null) ? 0 : vmSpecName.hashCode());
+		result = (prime * result) + ((vmVendor == null) ? 0 : vmVendor.hashCode());
+		result = (prime * result) + ((vmVersion == null) ? 0 : vmVersion.hashCode());
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -690,6 +691,7 @@ public class SystemInformationData extends SystemSensorData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(12, 0, 1, 0, 6, 0);

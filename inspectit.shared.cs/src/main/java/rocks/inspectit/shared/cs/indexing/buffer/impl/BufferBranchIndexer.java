@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 /**
  * Implementation of branch indexer for the {@link IBufferTreeComponent}. This indexer is delegating
  * generation of the indexing keys to the {@link IBranchIndexer}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of the elements indexed.
  */
@@ -31,7 +31,7 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param delegateIndexer
 	 *            Delegate indexer that should generate keys.
 	 */
@@ -41,7 +41,7 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param delegateIndexer
 	 *            Type of the delegate indexer that will actually generate keys for objects.
 	 * @param childBufferIndexer
@@ -55,6 +55,7 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		return delegateIndexer.getKey(element);
 	}
@@ -62,6 +63,7 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		return delegateIndexer.getKeys(query);
 	}
@@ -69,6 +71,7 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBufferBranchIndexer<E> getChildIndexer() {
 		return childBufferIndexer;
 	}
@@ -76,6 +79,7 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean sharedInstance() {
 		return delegateIndexer.sharedInstance();
 	}
@@ -83,9 +87,10 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBufferBranchIndexer<E> getNewInstance() {
 		if (!sharedInstance()) {
-			BufferBranchIndexer<E> bufferBranchIndexer = new BufferBranchIndexer<E>(delegateIndexer.getNewInstance(), childBufferIndexer);
+			BufferBranchIndexer<E> bufferBranchIndexer = new BufferBranchIndexer<>(delegateIndexer.getNewInstance(), childBufferIndexer);
 			return bufferBranchIndexer;
 		} else {
 			throw new UnsupportedOperationException("Method getNewInstance() called on the Indexer that has a shared instance.");
@@ -95,21 +100,22 @@ public class BufferBranchIndexer<E extends DefaultData> implements IBufferBranch
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBufferTreeComponent<E> getNextTreeComponent() {
 		if (null != childBufferIndexer) {
 			if (childBufferIndexer.sharedInstance()) {
-				return new Branch<E>(childBufferIndexer);
+				return new Branch<>(childBufferIndexer);
 			} else {
-				return new Branch<E>(childBufferIndexer.getNewInstance());
+				return new Branch<>(childBufferIndexer.getNewInstance());
 			}
 		} else {
-			return new Leaf<E>();
+			return new Leaf<>();
 		}
 	}
 
 	/**
 	 * Gets {@link #delegateIndexer}.
-	 * 
+	 *
 	 * @return {@link #delegateIndexer}
 	 */
 	IBranchIndexer<E> getDelegateIndexer() {

@@ -17,7 +17,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-
 import java.util.Map;
 
 import org.mockito.ArgumentMatcher;
@@ -31,7 +30,6 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
-import rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerHook;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
@@ -208,7 +206,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		assertThat(timerData.getMethodIdent(), is(equalTo(methodId)));
 		assertThat(timerData.getSensorTypeIdent(), is(equalTo(sensorTypeId)));
 		assertThat(timerData.getCount(), is(equalTo(2L)));
-		assertThat(timerData.getDuration(), is(equalTo(fourthTimerValue - thirdTimerValue + secondTimerValue - firstTimerValue)));
+		assertThat(timerData.getDuration(), is(equalTo(((fourthTimerValue - thirdTimerValue) + secondTimerValue) - firstTimerValue)));
 		assertThat(timerData.getMax(), is(equalTo(fourthTimerValue - thirdTimerValue)));
 		assertThat(timerData.getMin(), is(equalTo(secondTimerValue - firstTimerValue)));
 
@@ -272,7 +270,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		assertThat(timerData.getMethodIdent(), is(equalTo(methodId)));
 		assertThat(timerData.getSensorTypeIdent(), is(equalTo(sensorTypeId)));
 		assertThat(timerData.getCount(), is(equalTo(2L)));
-		assertThat(timerData.getDuration(), is(equalTo(fourthTimerValue - thirdTimerValue + secondTimerValue - firstTimerValue)));
+		assertThat(timerData.getDuration(), is(equalTo(((fourthTimerValue - thirdTimerValue) + secondTimerValue) - firstTimerValue)));
 		assertThat(timerData.getMax(), is(equalTo(secondTimerValue - firstTimerValue)));
 		assertThat(timerData.getMin(), is(equalTo(fourthTimerValue - thirdTimerValue)));
 

@@ -25,9 +25,9 @@ import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * Property control for {@link ByteProperty}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class BytePropertyControl extends AbstractPropertyControl<ByteProperty, Long> {
 
@@ -48,7 +48,7 @@ public class BytePropertyControl extends AbstractPropertyControl<ByteProperty, L
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property.
 	 * @param propertyUpdateListener
@@ -96,7 +96,7 @@ public class BytePropertyControl extends AbstractPropertyControl<ByteProperty, L
 			public void modifyText(ModifyEvent e) {
 				if (!modifyMarker) {
 					String text = valueText.getText();
-					if (!text.isEmpty() && (text.charAt(0) != '-' || text.length() > 1)) {
+					if (!text.isEmpty() && ((text.charAt(0) != '-') || (text.length() > 1))) {
 						long currentSize = getCurrentSize();
 						sendPropertyUpdateEvent(currentSize);
 					}
@@ -123,6 +123,7 @@ public class BytePropertyControl extends AbstractPropertyControl<ByteProperty, L
 		unitCombo.setLayoutData(unitGd);
 		unitCombo.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				long currentSize = getLastCorrectValue();
 				int exp = unitCombo.getSelectionIndex();
@@ -152,7 +153,7 @@ public class BytePropertyControl extends AbstractPropertyControl<ByteProperty, L
 
 	/**
 	 * Displays value in text based on default unit .
-	 * 
+	 *
 	 * @param bytes
 	 *            Amount of bytes.
 	 */
@@ -164,7 +165,7 @@ public class BytePropertyControl extends AbstractPropertyControl<ByteProperty, L
 
 	/**
 	 * Displays value in text based on given exp.
-	 * 
+	 *
 	 * @param bytes
 	 *            Amount of bytes.
 	 * @param exp
@@ -172,14 +173,14 @@ public class BytePropertyControl extends AbstractPropertyControl<ByteProperty, L
 	 */
 	private void displayValue(long bytes, int exp) {
 		int unit = 1024;
-		double value = (double) bytes / Math.pow(unit, exp);
+		double value = bytes / Math.pow(unit, exp);
 		modifyMarker = true;
 		valueText.setText(String.format(Locale.ENGLISH, "%.2f", value));
 	}
 
 	/**
 	 * Unit we want to display for required amount of bytes.
-	 * 
+	 *
 	 * @param bytes
 	 *            Amount of bytes.
 	 * @return {@link #BYTES}, {@link #KILO_BYTES} or {@link #MEGA_BYTES}

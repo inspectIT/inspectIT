@@ -8,7 +8,7 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * Aggregator for {@link JmxSensorValueData}.
- * 
+ *
  * @author Marius Oehler
  *
  */
@@ -51,7 +51,7 @@ public class JmxSensorValueDataAggregator implements IAggregator<JmxSensorValueD
 		final int prime = 31;
 		int result = 1;
 		// we must make constant hashCode because of the caching
-		result = prime * result + this.getClass().getName().hashCode();
+		result = (prime * result) + this.getClass().getName().hashCode();
 		return result;
 	}
 

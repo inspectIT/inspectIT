@@ -27,7 +27,7 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * This class represents the textual view of the {@link JmxSensorValueData} sensor-type.
- * 
+ *
  * @author Marius Oehler
  *
  */
@@ -215,7 +215,7 @@ public class JmxInfoTextInputController extends AbstractTextInputController {
 	 */
 	@Override
 	public void doRefresh() {
-		if (currentData != null && !currentData.isEmpty()) {
+		if ((currentData != null) && !currentData.isEmpty()) {
 			final JmxSensorValueData jmxData = currentData.get(currentData.size() - 1);
 
 			if (jmxIdent == null) {
@@ -257,11 +257,11 @@ public class JmxInfoTextInputController extends AbstractTextInputController {
 	 * Aggregates the {@link #currentData} list and returns the result as an array of nicely
 	 * formatted strings. The first array element represents the average value, the second element
 	 * the minimum value and the third value is the maximum value of the data list.
-	 * 
+	 *
 	 * @param dataSolver
 	 *            the used {@link AbstractPlotDataSolver} to convert the values into a human
 	 *            readable string
-	 * 
+	 *
 	 * @return an array containing aggregated data as human readable strings
 	 */
 	private String[] getAggregatedData(AbstractPlotDataSolver dataSolver) {
@@ -300,7 +300,7 @@ public class JmxInfoTextInputController extends AbstractTextInputController {
 	 */
 	@Override
 	public void setDataInput(List<? extends DefaultData> dataInput) {
-		currentData = new ArrayList<JmxSensorValueData>();
+		currentData = new ArrayList<>();
 		for (DefaultData data : dataInput) {
 			if (data instanceof JmxSensorValueData) {
 				currentData.add((JmxSensorValueData) data);

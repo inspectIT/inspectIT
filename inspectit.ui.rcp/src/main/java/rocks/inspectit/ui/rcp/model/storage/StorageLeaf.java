@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Leaf used for displaying the storages in the storage tree.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageLeaf extends Leaf implements IStorageDataProvider {
 
@@ -30,7 +30,7 @@ public class StorageLeaf extends Leaf implements IStorageDataProvider {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}
 	 * @param cmrRepositoryDefinition
@@ -50,6 +50,7 @@ public class StorageLeaf extends Leaf implements IStorageDataProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public StorageData getStorageData() {
 		return storageData;
 	}
@@ -57,6 +58,7 @@ public class StorageLeaf extends Leaf implements IStorageDataProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
 		return cmrRepositoryDefinition;
 	}

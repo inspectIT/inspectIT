@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp.preferences;
 
 /**
  * Exception that is thrown with regard to preference saving and loading.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class PreferenceException extends Exception {
 

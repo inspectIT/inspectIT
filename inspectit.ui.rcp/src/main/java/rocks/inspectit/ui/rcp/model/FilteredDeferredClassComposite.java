@@ -19,9 +19,9 @@ import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 /**
  * This composite shows only one sensor for each method of the class that has a
  * {@link SensorTypeEnum} type.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class FilteredDeferredClassComposite extends DeferredClassComposite {
 

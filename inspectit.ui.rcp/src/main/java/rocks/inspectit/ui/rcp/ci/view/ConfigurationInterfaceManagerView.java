@@ -114,7 +114,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	/**
 	 * Cached statuses of CMR repository definitions.
 	 */
-	private final Map<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
+	private final Map<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<>();
 
 	/**
 	 * Input list of profiles.
@@ -243,10 +243,10 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 				int width = mainComposite.getBounds().width;
 				int height = mainComposite.getBounds().height;
 
-				if (width > height && verticaLayout) {
+				if ((width > height) && verticaLayout) {
 					verticaLayout = false;
 					mainComposite.setOrientation(SWT.HORIZONTAL);
-				} else if (width < height && !verticaLayout) {
+				} else if ((width < height) && !verticaLayout) {
 					verticaLayout = true;
 					mainComposite.setOrientation(SWT.VERTICAL);
 				}
@@ -264,7 +264,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
-				if (ss.getFirstElement() instanceof IProfileProvider || ss.getFirstElement() instanceof IEnvironmentProvider) {
+				if ((ss.getFirstElement() instanceof IProfileProvider) || (ss.getFirstElement() instanceof IEnvironmentProvider)) {
 					selectionProviderAdapter.setSelection(ss);
 				} else {
 					// setting selection to the CMR so that we can perform all the necessary
@@ -363,7 +363,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 			viewerColumn.getColumn().setText("Active");
 			viewerColumn.getColumn().setWidth(40);
 			viewerColumn.getColumn()
-			.setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
+					.setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
 
 			viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 			viewerColumn.getColumn().setMoveable(true);
@@ -450,7 +450,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof Comparable && e2 instanceof Comparable) {
+				if ((e1 instanceof Comparable) && (e2 instanceof Comparable)) {
 					return ((Comparable) e1).compareTo(e2);
 				}
 				return 0;
@@ -536,12 +536,12 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		if (Objects.equals(displayedCmrRepositoryDefinition, repositoryDefinition)) {
 			OnlineStatus cachedStatus = cachedOnlineStatus.get(repositoryDefinition);
 			if (newStatus == OnlineStatus.ONLINE) {
-				if (null == cachedStatus || OnlineStatus.OFFLINE.equals(cachedStatus) || OnlineStatus.UNKNOWN.equals(cachedStatus)) {
+				if ((null == cachedStatus) || OnlineStatus.OFFLINE.equals(cachedStatus) || OnlineStatus.UNKNOWN.equals(cachedStatus)) {
 					performUpdate(true);
 				}
 				cachedOnlineStatus.put(repositoryDefinition, newStatus);
 			} else if (newStatus == OnlineStatus.OFFLINE) {
-				if (null == cachedStatus || OnlineStatus.ONLINE.equals(cachedStatus)) {
+				if ((null == cachedStatus) || OnlineStatus.ONLINE.equals(cachedStatus)) {
 					performUpdate(true);
 				}
 				cachedOnlineStatus.put(repositoryDefinition, newStatus);
@@ -721,7 +721,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	 * Clears the look of the forms body.
 	 */
 	protected void clearFormBody() {
-		if (messageComposite != null && !messageComposite.isDisposed()) {
+		if ((messageComposite != null) && !messageComposite.isDisposed()) {
 			messageComposite.dispose();
 		}
 		tableViewer.setInput(Collections.emptyList());
@@ -744,7 +744,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	 */
 	protected void displayMessage(String text, Image image) {
 		clearFormBody();
-		if (null == messageComposite || messageComposite.isDisposed()) {
+		if ((null == messageComposite) || messageComposite.isDisposed()) {
 			messageComposite = toolkit.createComposite(mainForm.getBody());
 		} else {
 			for (Control c : messageComposite.getChildren()) {
@@ -936,7 +936,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	public void refresh() {
 		// check the status of CMR, if it's online do update, if it's offline just fire update CMR
 		// online status job
-		if (null != displayedCmrRepositoryDefinition && OnlineStatus.OFFLINE != displayedCmrRepositoryDefinition.getOnlineStatus()) {
+		if ((null != displayedCmrRepositoryDefinition) && (OnlineStatus.OFFLINE != displayedCmrRepositoryDefinition.getOnlineStatus())) {
 			performUpdate(true);
 		} else if (null != displayedCmrRepositoryDefinition) {
 			InspectIT.getDefault().getCmrRepositoryManager().forceCmrRepositoryOnlineStatusUpdate(displayedCmrRepositoryDefinition);

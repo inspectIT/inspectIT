@@ -17,9 +17,9 @@ import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 
 /**
  * Service class for retrieving {@link JmxSensorValueData} objects from the CMR.
- * 
+ *
  * @author Alfred Krauss
- * 
+ *
  */
 @Service
 public class JmxDataAccessService implements IJmxDataAccessService {
@@ -37,6 +37,7 @@ public class JmxDataAccessService implements IJmxDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<JmxSensorValueData> getJmxDataOverview(JmxSensorValueData jmxSensorValueData) {
 		List<JmxSensorValueData> result = defaultDataDao.getJmxDataOverview(jmxSensorValueData, null, null);
@@ -46,6 +47,7 @@ public class JmxDataAccessService implements IJmxDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<JmxSensorValueData> getJmxDataOverview(JmxSensorValueData jmxSensorValueData, Date fromDate, Date toDate) {
 		List<JmxSensorValueData> result = defaultDataDao.getJmxDataOverview(jmxSensorValueData, fromDate, toDate);
@@ -54,7 +56,7 @@ public class JmxDataAccessService implements IJmxDataAccessService {
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

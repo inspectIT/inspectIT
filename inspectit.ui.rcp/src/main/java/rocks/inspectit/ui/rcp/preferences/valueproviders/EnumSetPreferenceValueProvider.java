@@ -10,9 +10,9 @@ import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProvider
 
 /**
  * Provider that can save and retrieve set of enum values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class EnumSetPreferenceValueProvider<E extends Enum<E>> extends PreferenceValueProvider<Set<E>> {
@@ -64,7 +64,7 @@ public class EnumSetPreferenceValueProvider<E extends Enum<E>> extends Preferenc
 	 */
 	@Override
 	public Set<E> getObjectFromValue(String value) throws PreferenceException {
-		Set<E> results = new HashSet<E>();
+		Set<E> results = new HashSet<>();
 		StringTokenizer tokenizer = new StringTokenizer(value, PreferencesConstants.PREF_OBJECT_SEPARATION_TOKEN);
 		while (tokenizer.hasMoreElements()) {
 			results.add(Enum.valueOf(enumClass, tokenizer.nextToken()));

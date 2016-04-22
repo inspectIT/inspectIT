@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * This processor writes an cloned invocation without children to the {@link StorageWriter}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationClonerDataProcessor extends AbstractDataProcessor {
 
@@ -25,6 +25,7 @@ public class InvocationClonerDataProcessor extends AbstractDataProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Collection<Future<Void>> processData(DefaultData defaultData) {
 		if (defaultData instanceof InvocationSequenceData) {
 			InvocationSequenceData invocation = (InvocationSequenceData) defaultData;
@@ -40,6 +41,7 @@ public class InvocationClonerDataProcessor extends AbstractDataProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
 		return defaultData instanceof InvocationSequenceData;
 	}

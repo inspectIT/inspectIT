@@ -15,9 +15,9 @@ import org.apache.commons.collections.CollectionUtils;
 
 /**
  * Class denoting one section of properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "section")
@@ -35,7 +35,7 @@ public class PropertySection {
 	 */
 	@XmlElementWrapper(name = "properties")
 	@XmlElementRef
-	private Set<AbstractProperty> properties = new LinkedHashSet<AbstractProperty>();
+	private Set<AbstractProperty> properties = new LinkedHashSet<>();
 
 	/**
 	 * No-arg constructor.
@@ -45,7 +45,7 @@ public class PropertySection {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the section.
 	 */
@@ -56,7 +56,7 @@ public class PropertySection {
 	/**
 	 * Returns <code>true</code> if at least one property in this section is marked as advanced,
 	 * <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return Returns <code>true</code> if at least one property in this section is marked as
 	 *         advanced, <code>false</code> otherwise.
 	 */
@@ -73,7 +73,7 @@ public class PropertySection {
 
 	/**
 	 * Gets {@link #name}.
-	 * 
+	 *
 	 * @return {@link #name}
 	 */
 	public String getName() {
@@ -82,7 +82,7 @@ public class PropertySection {
 
 	/**
 	 * Gets {@link #properties}.
-	 * 
+	 *
 	 * @return {@link #properties}
 	 */
 	public Set<AbstractProperty> getProperties() {
@@ -91,7 +91,7 @@ public class PropertySection {
 
 	/**
 	 * Add {@link AbstractProperty} to section.
-	 * 
+	 *
 	 * @param property
 	 *            {@link AbstractProperty}.
 	 */
@@ -106,8 +106,8 @@ public class PropertySection {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + ((properties == null) ? 0 : properties.hashCode());
 		return result;
 	}
 

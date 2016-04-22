@@ -12,9 +12,9 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Wizard page for defining name and description. Can be used in multiple wizards.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DefineNameAndDescriptionWizardPage extends WizardPage {
 
@@ -35,7 +35,7 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param title
 	 *            Title of the page.
 	 * @param defaultMessage
@@ -101,6 +101,7 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	/**
 	 * @return Returns defined name.
 	 */
+	@Override
 	public String getName() {
 		return nameBox.getText();
 	}
@@ -108,6 +109,7 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	/**
 	 * @return Returns defined description.
 	 */
+	@Override
 	public String getDescription() {
 		return descriptionBox.getText();
 	}

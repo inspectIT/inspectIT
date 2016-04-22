@@ -94,7 +94,7 @@ public enum SensorTypeEnum {
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full
 	 * qualified name.
 	 */
-	private static final Map<String, SensorTypeEnum> LOOKUP = new HashMap<String, SensorTypeEnum>();
+	private static final Map<String, SensorTypeEnum> LOOKUP = new HashMap<>();
 
 	static {
 		for (SensorTypeEnum s : EnumSet.allOf(SensorTypeEnum.class)) {

@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Type of the label to denote the User that have explored the Storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("EBLT")

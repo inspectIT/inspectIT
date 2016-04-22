@@ -5,9 +5,9 @@ import java.util.HashSet;
 
 /**
  * Extension of the {@link CollectionPreferenceValueProvider} that can save classes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ClassCollectionPreferenceValueProvider extends CollectionPreferenceValueProvider {
 

@@ -28,9 +28,9 @@ import rocks.inspectit.shared.cs.storage.label.type.impl.DataTimeFrameLabelType;
 
 /**
  * {@link StorageWriter} implementation for the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component("cmrStorageWriter")
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -46,7 +46,7 @@ public class CmrStorageWriter extends StorageWriter {
 	/**
 	 * Set of involved Agents, used after recording to store proper Agent information.
 	 */
-	private Set<Long> involvedAgentsSet = new HashSet<Long>();
+	private Set<Long> involvedAgentsSet = new HashSet<>();
 
 	/**
 	 * {@link AtomicLong} holding the time-stamp value of the oldest data written in the storage.
@@ -86,7 +86,7 @@ public class CmrStorageWriter extends StorageWriter {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	protected void writeAgentData() throws IOException {
@@ -108,21 +108,21 @@ public class CmrStorageWriter extends StorageWriter {
 		}
 		super.finalizeWrite();
 
-		if (newestDataTimestamp.get() > 0 && oldestDataTimestamp.get() < Long.MAX_VALUE) {
+		if ((newestDataTimestamp.get() > 0) && (oldestDataTimestamp.get() < Long.MAX_VALUE)) {
 			TimeFrame timeFrame = new TimeFrame(new Date(oldestDataTimestamp.get()), new Date(newestDataTimestamp.get()));
-			ObjectStorageLabel<TimeFrame> timeframeLabel = new ObjectStorageLabel<TimeFrame>(timeFrame, new DataTimeFrameLabelType());
+			ObjectStorageLabel<TimeFrame> timeframeLabel = new ObjectStorageLabel<>(timeFrame, new DataTimeFrameLabelType());
 			getStorageData().addLabel(timeframeLabel, true);
 		}
 	}
 
 	/**
 	 * Executes post write operations:
-	 * 
+	 *
 	 * <ul>
 	 * <li>Remembers the platform id of the written data
 	 * <li>Updates the {@link #newestDataTimestamp} and the {@link #oldestDataTimestamp} if needed.
 	 * </ul>
-	 * 
+	 *
 	 * @param defaultData
 	 *            {@link DefaultData} that has been written.
 	 */

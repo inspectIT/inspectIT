@@ -12,8 +12,8 @@ import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
 import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
@@ -22,9 +22,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * This class only initializes the sub-tree if it is requested. Furthermore, the creation of the
  * objects is done piece after piece, so that an immediate visualization can be seen (important for
  * sub-trees which are very large).
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DeferredMethodComposite extends DeferredComposite {
 
@@ -142,7 +142,7 @@ public class DeferredMethodComposite extends DeferredComposite {
 
 	/**
 	 * Sets {@link #hideInactiveInstrumentations}.
-	 * 
+	 *
 	 * @param hideInactiveInstrumentations
 	 *            New value for {@link #hideInactiveInstrumentations}
 	 */

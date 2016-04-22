@@ -26,8 +26,8 @@ import javax.management.ReflectionException;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -101,8 +101,8 @@ public class JmxSensorTest extends TestBase {
 		jmxSensor.setUnregisteredJmxConfigs(Collections.singletonList(unregisteredJmxConfig));
 
 		ObjectName objectName = new ObjectName(testObjectName);
-		when(mBeanServer.queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName));
-		when(mBeanServer.getMBeanInfo(Mockito.<ObjectName> any())).thenReturn(mBeanInfo);
+		when(mBeanServer.queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName));
+		when(mBeanServer.getMBeanInfo(Matchers.<ObjectName> any())).thenReturn(mBeanInfo);
 		when(mBeanInfo.getAttributes()).thenReturn(mBeanAttributeInfos);
 
 		when(platformManager.getPlatformId()).thenReturn(platformIdent);
@@ -111,7 +111,7 @@ public class JmxSensorTest extends TestBase {
 
 		jmxSensor.update(coreService);
 
-		verify(mBeanServer, times(1)).queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null));
+		verify(mBeanServer, times(1)).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 
 		ArgumentCaptor<JmxSensorConfig> captor = ArgumentCaptor.forClass(JmxSensorConfig.class);
 		// verify(platformManager, times(1)).registerJmxSensorConfig(captor.capture());
@@ -156,8 +156,8 @@ public class JmxSensorTest extends TestBase {
 		jmxSensor.setUnregisteredJmxConfigs(Collections.singletonList(unregisteredJmxConfig));
 
 		ObjectName objectName = new ObjectName(testObjectName);
-		when(mBeanServer.queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName));
-		when(mBeanServer.getMBeanInfo(Mockito.<ObjectName> any())).thenReturn(mBeanInfo);
+		when(mBeanServer.queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName));
+		when(mBeanServer.getMBeanInfo(Matchers.<ObjectName> any())).thenReturn(mBeanInfo);
 		when(mBeanInfo.getAttributes()).thenReturn(mBeanAttributeInfos);
 
 		when(platformManager.getPlatformId()).thenReturn(platformIdent);
@@ -170,7 +170,7 @@ public class JmxSensorTest extends TestBase {
 		jmxSensor.lastRegisterBeanTimestamp = 0;
 		jmxSensor.update(coreService);
 
-		verify(mBeanServer, times(2)).queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null));
+		verify(mBeanServer, times(2)).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 
 		ArgumentCaptor<JmxSensorConfig> captor = ArgumentCaptor.forClass(JmxSensorConfig.class);
 		// verify(platformManager, times(1)).registerJmxSensorConfig(captor.capture());
@@ -215,12 +215,12 @@ public class JmxSensorTest extends TestBase {
 		jmxSensor.setUnregisteredJmxConfigs(Collections.singletonList(unregisteredJmxConfig));
 
 		ObjectName objectName = new ObjectName(testObjectName);
-		when(mBeanServer.queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName)).thenReturn(Collections.<ObjectName> emptySet());
-		when(mBeanServer.getMBeanInfo(Mockito.<ObjectName> any())).thenReturn(mBeanInfo);
+		when(mBeanServer.queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName)).thenReturn(Collections.<ObjectName> emptySet());
+		when(mBeanServer.getMBeanInfo(Matchers.<ObjectName> any())).thenReturn(mBeanInfo);
 		when(mBeanInfo.getAttributes()).thenReturn(mBeanAttributeInfos);
 
 		when(platformManager.getPlatformId()).thenReturn(platformIdent);
-		//when(platformManager.getRegisteredSensorTypeId(anyLong())).thenReturn(sensorType);
+		// when(platformManager.getRegisteredSensorTypeId(anyLong())).thenReturn(sensorType);
 		when(mBeanServer.getAttribute(objectName, testAttributeName)).thenThrow(throwable);
 
 		// two updates but reset time stamps
@@ -229,10 +229,10 @@ public class JmxSensorTest extends TestBase {
 		jmxSensor.lastRegisterBeanTimestamp = 0;
 		jmxSensor.update(coreService);
 
-		verify(mBeanServer, times(2)).queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null));
+		verify(mBeanServer, times(2)).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 
 		ArgumentCaptor<JmxSensorConfig> captor = ArgumentCaptor.forClass(JmxSensorConfig.class);
-		//verify(platformManager, times(1)).registerJmxSensorConfig(captor.capture());
+		// verify(platformManager, times(1)).registerJmxSensorConfig(captor.capture());
 		JmxSensorConfig sensorConfig = captor.getValue();
 		assertThat(sensorConfig.getJmxSensorTypeConfig(), is(equalTo(sensorTypeConfig)));
 		assertThat(sensorConfig.getmBeanObjectName(), is(equalTo(testObjectName)));
@@ -260,7 +260,7 @@ public class JmxSensorTest extends TestBase {
 		list.add(unregisteredJmxConfig);
 		jmxSensor.setUnregisteredJmxConfigs(list);
 
-		when(mBeanServer.queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null))).thenThrow(MalformedObjectNameException.class);
+		when(mBeanServer.queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null))).thenThrow(MalformedObjectNameException.class);
 
 		// two updates to confirm the removal
 		jmxSensor.update(coreService);
@@ -268,7 +268,7 @@ public class JmxSensorTest extends TestBase {
 		jmxSensor.lastRegisterBeanTimestamp = 0;
 		jmxSensor.update(coreService);
 
-		verify(mBeanServer, times(1)).queryNames(Mockito.<ObjectName> any(), (QueryExp) eq(null));
+		verify(mBeanServer, times(1)).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 		verifyZeroInteractions(coreService, platformManager);
 	}
 

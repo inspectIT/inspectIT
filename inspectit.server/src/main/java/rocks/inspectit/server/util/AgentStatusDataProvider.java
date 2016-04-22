@@ -44,7 +44,7 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 				}
 
 				// Skip recently connected agents
-				if (currentTime - entry.getValue().getConnectionTimestamp() < IKeepAliveService.KA_TIMEOUT) {
+				if ((currentTime - entry.getValue().getConnectionTimestamp()) < IKeepAliveService.KA_TIMEOUT) {
 					continue;
 				}
 
@@ -77,7 +77,7 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 	/**
 	 * Map that holds IDs of the platform idents and {@link AgentStatusData} objects.
 	 */
-	private final ConcurrentHashMap<Long, AgentStatusData> agentStatusDataMap = new ConcurrentHashMap<Long, AgentStatusData>(8, 0.75f, 1);
+	private final ConcurrentHashMap<Long, AgentStatusData> agentStatusDataMap = new ConcurrentHashMap<>(8, 0.75f, 1);
 
 	/**
 	 * {@inheritDoc}
@@ -172,7 +172,7 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 	 */
 	public Map<Long, AgentStatusData> getAgentStatusDataMap() {
 		long currentTime = System.currentTimeMillis();
-		Map<Long, AgentStatusData> map = new HashMap<Long, AgentStatusData>();
+		Map<Long, AgentStatusData> map = new HashMap<>();
 		for (Entry<Long, AgentStatusData> entry : agentStatusDataMap.entrySet()) {
 			entry.getValue().setServerTimestamp(currentTime);
 			map.put(entry.getKey(), entry.getValue());

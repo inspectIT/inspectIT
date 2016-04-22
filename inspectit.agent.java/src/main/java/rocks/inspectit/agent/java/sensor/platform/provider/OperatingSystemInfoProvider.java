@@ -3,9 +3,9 @@ package rocks.inspectit.agent.java.sensor.platform.provider;
 /**
  * The management interface for the underlying operating system on which the Java virtual machine is
  * executed.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public interface OperatingSystemInfoProvider {
 

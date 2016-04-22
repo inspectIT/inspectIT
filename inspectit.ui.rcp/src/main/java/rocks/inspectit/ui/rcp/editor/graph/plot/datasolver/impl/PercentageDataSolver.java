@@ -14,7 +14,7 @@ import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * This class is used to plot data as percentage data.
- * 
+ *
  * @author Marius Oehler
  *
  */

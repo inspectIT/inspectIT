@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Properties;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -22,8 +23,6 @@ import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
-import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePropertyValidator;
@@ -78,13 +77,14 @@ public class SinglePropertyTest {
 		final String validationMsg = "My validation error message";
 
 		doAnswer(new Answer<Object>() {
+			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Object[] args = invocation.getArguments();
 				PropertyValidation propertyValidation = (PropertyValidation) args[1];
 				propertyValidation.addValidationError(new ValidationError(Collections.<SingleProperty<?>> singletonList(singleProperty), validationMsg));
 				return null;
 			}
-		}).when(validator1).validate(eq(singleProperty), Mockito.<PropertyValidation> anyObject());
+		}).when(validator1).validate(eq(singleProperty), Matchers.<PropertyValidation> anyObject());
 
 		singleProperty.addValidator(validator1);
 		singleProperty.addValidator(validator2);

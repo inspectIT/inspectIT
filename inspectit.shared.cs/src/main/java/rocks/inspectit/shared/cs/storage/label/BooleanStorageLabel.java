@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Label that has a {@link Boolean} as a value.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
@@ -33,7 +33,7 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param booleanValue
 	 *            Label value.
 	 * @param storageLabelType
@@ -70,7 +70,7 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 
 	/**
 	 * Gets {@link #booleanValue}.
-	 * 
+	 *
 	 * @return {@link #booleanValue}
 	 */
 	public Boolean getBooleanValue() {
@@ -79,7 +79,7 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 
 	/**
 	 * Sets {@link #booleanValue}.
-	 * 
+	 *
 	 * @param booleanValue
 	 *            New value for {@link #booleanValue}
 	 */
@@ -94,7 +94,7 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((booleanValue == null) ? 0 : booleanValue.hashCode());
+		result = (prime * result) + ((booleanValue == null) ? 0 : booleanValue.hashCode());
 		return result;
 	}
 
@@ -126,6 +126,7 @@ public class BooleanStorageLabel extends AbstractStorageLabel<Boolean> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(AbstractStorageLabel<?> other) {
 		int typeCompare = storageLabelType.compareTo(other.getStorageLabelType());
 		if (0 != typeCompare) {

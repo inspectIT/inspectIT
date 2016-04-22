@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
  * {@link IObjectSizes} objects that support IBM JVM object memory footprint. Further more the
  * factory will provide different instances for a 32bit and 64bit JVMs, and even check if the
  * compressed OOPs are used with 64bit, and also provide a support for them.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class ObjectSizesFactory implements FactoryBean<IObjectSizes> {

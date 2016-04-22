@@ -20,20 +20,20 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 /**
  * Our own HTML-like table to use for displaying one part of the details for an element.
- * 
+ *
  * @see #DetailsTable(Composite, FormToolkit, String, int)
  * @see #addContentRow(String, Image, DetailsCellContent[])
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DetailsTable extends SectionPart {
 
@@ -80,7 +80,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * {@link GC} used to calculate the text size in pixels.
-	 * 
+	 *
 	 * @see GC#textExtent(String)
 	 */
 	private GC gc;
@@ -88,11 +88,11 @@ public class DetailsTable extends SectionPart {
 	/**
 	 * List of controls that should be resized according to the table main composite resizing.
 	 */
-	List<Text> textControls = new ArrayList<Text>();
+	List<Text> textControls = new ArrayList<>();
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            Composite to create on.
 	 * @param toolkit
@@ -104,7 +104,7 @@ public class DetailsTable extends SectionPart {
 	 *            include the column used for row title.
 	 */
 	public DetailsTable(Composite parent, FormToolkit toolkit, String heading, int columns) {
-		super(parent, toolkit, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+		super(parent, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		this.columns = columns;
 		this.toolkit = toolkit;
 
@@ -122,7 +122,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * Adds one row to the table..
-	 * 
+	 *
 	 * @param title
 	 *            Row title.
 	 * @param image
@@ -190,7 +190,7 @@ public class DetailsTable extends SectionPart {
 				toolkit.createLabel(contentComposite, "");
 			}
 
-			if (i < columns - 1) {
+			if (i < (columns - 1)) {
 				copyStringBuilder.append('\t');
 			}
 		}
@@ -199,7 +199,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * Adds one row to the table by inserting SWT table as content.
-	 * 
+	 *
 	 * @param title
 	 *            Row title.
 	 * @param image
@@ -240,7 +240,7 @@ public class DetailsTable extends SectionPart {
 			copyStringBuilder.append('\t');
 			for (int i = 0; i < row.length; i++) {
 				copyStringBuilder.append(row[i]);
-				if (i < row.length - 1) {
+				if (i < (row.length - 1)) {
 					copyStringBuilder.append('\t');
 				}
 			}
@@ -267,7 +267,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * Fills {@link FormText} with content based on the {@link DetailsCellContent}.
-	 * 
+	 *
 	 * @param formText
 	 *            {@link FormText} to fill.
 	 * @param cellContent
@@ -297,7 +297,7 @@ public class DetailsTable extends SectionPart {
 	/**
 	 * Calculates if the given text can fit into specified max width. Uses {@link #gc} to make these
 	 * calculations.
-	 * 
+	 *
 	 * @param text
 	 *            Text to check.
 	 * @param maxWidth
@@ -313,7 +313,7 @@ public class DetailsTable extends SectionPart {
 	/**
 	 * Returns the height hint for the text that should fit into specified maximum width. If the
 	 * calculated height hint is higher than the given max height, then max height is returned.
-	 * 
+	 *
 	 * @param text
 	 *            Text to check
 	 * @param maxWidth
@@ -325,7 +325,7 @@ public class DetailsTable extends SectionPart {
 	private int heightHint(String text, int maxWidth, int maxHeight) {
 		Point fontPoint = gc.textExtent(text);
 		// -50 to ensure word splitting to another row does not kill us
-		int rows = fontPoint.x / (maxWidth - 50) + 1;
+		int rows = (fontPoint.x / (maxWidth - 50)) + 1;
 		return Math.min(rows * fontPoint.y, maxHeight);
 	}
 
@@ -365,7 +365,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * Creates header.
-	 * 
+	 *
 	 * @param heading
 	 *            Heading to use.
 	 */
@@ -375,7 +375,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * Creates row heading.
-	 * 
+	 *
 	 * @param title
 	 *            Title to use.
 	 * @param image
@@ -409,7 +409,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * Creates {@link GridData} with fixed width.
-	 * 
+	 *
 	 * @param width
 	 *            wanted width.
 	 * @return {@link GridData}
@@ -423,7 +423,7 @@ public class DetailsTable extends SectionPart {
 
 	/**
 	 * Returns String of table content for copying purposes.
-	 * 
+	 *
 	 * @return Returns String of table content for copying purposes.
 	 */
 	public String getCopyString() {

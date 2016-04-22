@@ -4,9 +4,9 @@ import java.util.UUID;
 
 /**
  * General storage utility class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class StorageUtil {
 
@@ -18,7 +18,7 @@ public final class StorageUtil {
 
 	/**
 	 * Returns the random int by invoking the hash code of the random {@link UUID} object.
-	 * 
+	 *
 	 * @return Returns the random int by invoking the hash code of the random {@link UUID} object.
 	 * @see UUID
 	 */

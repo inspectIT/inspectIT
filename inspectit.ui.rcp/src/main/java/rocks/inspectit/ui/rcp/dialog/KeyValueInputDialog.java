@@ -214,12 +214,11 @@ public class KeyValueInputDialog extends Dialog {
 			key = keyBox.getText();
 			value = valueBox.getText();
 		} else {
-			key = null; //NOPMD
-			value = null; //NOPMD
+			key = null; // NOPMD
+			value = null; // NOPMD
 		}
 		super.buttonPressed(buttonId);
 	}
-
 
 	/**
 	 * Is input in textual boxes valid.
@@ -247,7 +246,6 @@ public class KeyValueInputDialog extends Dialog {
 		return true;
 	}
 
-
 	/**
 	 * Sets or clears the error message. If not <code>null</code>, the OK button is disabled.
 	 * <P>
@@ -258,13 +256,13 @@ public class KeyValueInputDialog extends Dialog {
 	 */
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-		if (errorMessageText != null && !errorMessageText.isDisposed()) {
+		if ((errorMessageText != null) && !errorMessageText.isDisposed()) {
 			errorMessageText.setText(errorMessage == null ? " \n " : errorMessage); //$NON-NLS-1$
 			// Disable the error message text control if there is no error, or
 			// no error text (empty or whitespace only). Hide it also to avoid
 			// color change.
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=130281
-			boolean hasError = errorMessage != null && (StringConverter.removeWhiteSpaces(errorMessage)).length() > 0;
+			boolean hasError = (errorMessage != null) && ((StringConverter.removeWhiteSpaces(errorMessage)).length() > 0);
 			errorMessageText.setEnabled(hasError);
 			errorMessageText.setVisible(hasError);
 			errorMessageText.getParent().update();

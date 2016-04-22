@@ -19,16 +19,16 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * This class only initializes the sub-tree if it is requested. Furthermore, the creation of the
  * objects is done piece after piece, so that an immediate visualization can be seen (important for
  * sub-trees which are very large).
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DeferredClassComposite extends DeferredComposite {
 
 	/**
 	 * All the methods which are displayed in the tree.
 	 */
-	private List<MethodIdent> methods = new CopyOnWriteArrayList<MethodIdent>();
+	private List<MethodIdent> methods = new CopyOnWriteArrayList<>();
 
 	/**
 	 * The format string of the output.
@@ -109,7 +109,7 @@ public class DeferredClassComposite extends DeferredComposite {
 
 	/**
 	 * Adds a method to be displayed later in this sub-tree.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            The method to be displayed.
 	 */
@@ -150,7 +150,7 @@ public class DeferredClassComposite extends DeferredComposite {
 
 	/**
 	 * Gets {@link #hideInactiveInstrumentations}.
-	 * 
+	 *
 	 * @return {@link #hideInactiveInstrumentations}
 	 */
 	public boolean isHideInactiveInstrumentations() {
@@ -159,7 +159,7 @@ public class DeferredClassComposite extends DeferredComposite {
 
 	/**
 	 * Sets {@link #hideInactiveInstrumentations}.
-	 * 
+	 *
 	 * @param hideInactiveInstrumentations
 	 *            New value for {@link #hideInactiveInstrumentations}
 	 */

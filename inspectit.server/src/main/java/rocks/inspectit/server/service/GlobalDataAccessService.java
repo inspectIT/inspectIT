@@ -75,7 +75,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 		List<PlatformIdent> agents = platformIdentDao.findAll();
 		Map<Long, AgentStatusData> agentStatusMap = agentStatusProvider.getAgentStatusDataMap();
 
-		Map<PlatformIdent, AgentStatusData> resultMap = new HashMap<PlatformIdent, AgentStatusData>();
+		Map<PlatformIdent, AgentStatusData> resultMap = new HashMap<>();
 		for (PlatformIdent platformIdent : agents) {
 			resultMap.put(platformIdent, agentStatusMap.get(platformIdent.getId()));
 		}
@@ -108,7 +108,7 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 			AgentStatusData agentStatusData = agentStatusProvider.getAgentStatusDataMap().get(platformIdent.getId());
 
 			// delete is allowed only if agent is disconnected or was never connected
-			if (null != agentStatusData && agentStatusData.getAgentConnection() == AgentConnection.CONNECTED) {
+			if ((null != agentStatusData) && (agentStatusData.getAgentConnection() == AgentConnection.CONNECTED)) {
 				throw new BusinessException("Delete the agent '" + platformIdent.getAgentName() + "'.", AgentManagementErrorCodeEnum.AGENT_CAN_NOT_BE_DELETED);
 			}
 

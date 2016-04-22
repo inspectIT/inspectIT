@@ -15,9 +15,9 @@ import rocks.inspectit.shared.cs.storage.IWriter;
  * This is a processor that has additional processors connected to it. Thus, this kind of processors
  * will based on the implementation of {@link #shouldBePassedToChainedProcessors(DefaultData)} only
  * pass (or not) the data to other processors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractChainedDataProcessor extends AbstractDataProcessor {
 
@@ -35,12 +35,12 @@ public abstract class AbstractChainedDataProcessor extends AbstractDataProcessor
 	 * Default constructor.
 	 */
 	public AbstractChainedDataProcessor() {
-		dataProcessors = new ArrayList<AbstractDataProcessor>();
+		dataProcessors = new ArrayList<>();
 	}
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param dataProcessors
 	 *            List of chained processors.
 	 */
@@ -61,7 +61,7 @@ public abstract class AbstractChainedDataProcessor extends AbstractDataProcessor
 
 	/**
 	 * Passed the default data to all chained processors.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Data to pass.
 	 * @return Returns list of {@link Future}s if the data processed by chained processors submitted
@@ -69,7 +69,7 @@ public abstract class AbstractChainedDataProcessor extends AbstractDataProcessor
 	 */
 	protected Collection<Future<Void>> passToChainedProcessors(DefaultData defaultData) {
 		if (null != dataProcessors) {
-			Collection<Future<Void>> futures = new ArrayList<Future<Void>>();
+			Collection<Future<Void>> futures = new ArrayList<>();
 			for (AbstractDataProcessor dataProcessor : dataProcessors) {
 				futures.addAll(dataProcessor.process(defaultData));
 			}
@@ -87,7 +87,7 @@ public abstract class AbstractChainedDataProcessor extends AbstractDataProcessor
 	 */
 	@Override
 	public Collection<Future<Void>> flush() {
-		Collection<Future<Void>> futures = new ArrayList<Future<Void>>();
+		Collection<Future<Void>> futures = new ArrayList<>();
 		for (AbstractDataProcessor abstractDataProcessor : dataProcessors) {
 			futures.addAll(abstractDataProcessor.flush());
 		}
@@ -96,7 +96,7 @@ public abstract class AbstractChainedDataProcessor extends AbstractDataProcessor
 
 	/**
 	 * Should the data be passed to the chained processors.
-	 * 
+	 *
 	 * @param defaultData
 	 *            {@link DefaultData}.
 	 * @return True if it should be passed, false otherwise.

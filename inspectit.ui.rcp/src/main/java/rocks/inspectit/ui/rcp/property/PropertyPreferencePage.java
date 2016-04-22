@@ -32,9 +32,9 @@ import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * Preference page for displaying the CMR properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class PropertyPreferencePage extends PreferencePage implements IPropertyUpdateListener {
 
@@ -77,7 +77,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 	/**
 	 * Map of the current validation problems on this page.
 	 */
-	private Map<SingleProperty<?>, PropertyValidation> validationMap = new HashMap<SingleProperty<?>, PropertyValidation>();
+	private Map<SingleProperty<?>, PropertyValidation> validationMap = new HashMap<>();
 
 	/**
 	 * If the page contains all advanced properties.
@@ -106,7 +106,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the page.
 	 * @param properties
@@ -171,7 +171,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 	/**
 	 * Returns all valid property updates on this page. Note that this method will return empty
 	 * collection if the page is not valid.
-	 * 
+	 *
 	 * @return Returns all valid property updates on this page.
 	 */
 	public Collection<IPropertyUpdate<?>> getPropertyUpdates() {
@@ -184,7 +184,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 
 	/**
 	 * If updates made on this page require the server restart.
-	 * 
+	 *
 	 * @return True if any correct update on this page requires the server restart
 	 */
 	public boolean isServerRestartRequired() {
@@ -212,7 +212,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 	/**
 	 * Returns current count of validation errors. Sub-class can override this method to provide
 	 * additional errors in the count.
-	 * 
+	 *
 	 * @return Returns current count of validation errors on this page.
 	 */
 	public int getValidationErrorsCount() {
@@ -230,7 +230,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 	/**
 	 * Returns all validation errors. Sub-class can override this method to provide additional
 	 * errors.
-	 * 
+	 *
 	 * @return Returns current validation errors on this page.
 	 */
 	public Collection<ValidationError> getValidationErrors() {
@@ -247,7 +247,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 
 	/**
 	 * Shows/hides advanced properties and it's controls.
-	 * 
+	 *
 	 * @param advanced
 	 *            True if advanced should be shown, false otherwise.
 	 */
@@ -317,6 +317,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 		restoreDefaults = new Button(parent, SWT.PUSH);
 		restoreDefaults.setText("Restore Defaults");
 		restoreDefaults.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				performDefaults();
 			}
@@ -354,7 +355,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 
 	/**
 	 * Creates one line of widgets in the page for displaying a single property.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty} to create content for.
 	 * @param parent
@@ -368,7 +369,7 @@ public class PropertyPreferencePage extends PreferencePage implements IPropertyU
 
 	/**
 	 * Gets {@link #allAdvancedProperties}.
-	 * 
+	 *
 	 * @return {@link #allAdvancedProperties}
 	 */
 	public boolean isAllAdvancedProperties() {

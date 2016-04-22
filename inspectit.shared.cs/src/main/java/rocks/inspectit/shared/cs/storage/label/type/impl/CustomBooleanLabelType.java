@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractCustomStorageLabelTy
 
 /**
  * Custom label type that holds {@link Boolean} values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("CBLT")

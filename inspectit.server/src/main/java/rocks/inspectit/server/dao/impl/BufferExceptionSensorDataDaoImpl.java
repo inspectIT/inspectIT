@@ -19,13 +19,15 @@ import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.ExceptionSensorDataQueryFactory;
 
 /**
- * {@link ExceptionSensorDataDao} that works with the data from the buffer.
- * <br> The query-Method of {@link AbstractBranch} which uses fork&join is executed, because much exception-data is expected and 
- * querying with fork&join will be faster<br>
- * <br> in getExceptionTree(ExceptionSensorData template) the query-Method without fork&join is used, because only one exception tree per invocation will be queried. <br>
- * 
+ * {@link ExceptionSensorDataDao} that works with the data from the buffer. <br>
+ * The query-Method of {@link AbstractBranch} which uses fork&join is executed, because much
+ * exception-data is expected and querying with fork&join will be faster<br>
+ * <br>
+ * in getExceptionTree(ExceptionSensorData template) the query-Method without fork&join is used,
+ * because only one exception tree per invocation will be queried. <br>
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Repository
 public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<ExceptionSensorData> implements ExceptionSensorDataDao {
@@ -39,6 +41,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, int limit, Comparator<? super ExceptionSensorData> comparator) {
 		return this.getUngroupedExceptionOverview(template, limit, null, null, comparator);
 	}
@@ -46,6 +49,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, int limit, Date fromDate, Date toDate, Comparator<? super ExceptionSensorData> comparator) {
 		IIndexQuery query = exceptionSensorDataQueryFactory.getUngroupedExceptionOverviewQuery(template, limit, fromDate, toDate);
 		if (null != comparator) {
@@ -58,6 +62,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, Comparator<? super ExceptionSensorData> comparator) {
 		return this.getUngroupedExceptionOverview(template, -1, null, null, comparator);
 	}
@@ -65,6 +70,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, Date fromDate, Date toDate, Comparator<? super ExceptionSensorData> comparator) {
 		return this.getUngroupedExceptionOverview(template, -1, fromDate, toDate, comparator);
 	}
@@ -72,6 +78,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getExceptionTree(ExceptionSensorData template) {
 		IIndexQuery query = exceptionSensorDataQueryFactory.getExceptionTreeQuery(template);
 		List<ExceptionSensorData> results = super.executeQuery(query, false);
@@ -82,6 +89,7 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<AggregatedExceptionSensorData> getDataForGroupedExceptionOverview(ExceptionSensorData template) {
 		return this.getDataForGroupedExceptionOverview(template, null, null);
 	}
@@ -89,10 +97,11 @@ public class BufferExceptionSensorDataDaoImpl extends AbstractBufferDataDao<Exce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<AggregatedExceptionSensorData> getDataForGroupedExceptionOverview(ExceptionSensorData template, Date fromDate, Date toDate) {
 		IIndexQuery query = exceptionSensorDataQueryFactory.getDataForGroupedExceptionOverviewQuery(template, fromDate, toDate);
 		List<ExceptionSensorData> results = super.executeQuery(query, Aggregators.GROUP_EXCEPTION_OVERVIEW_AGGREGATOR, true);
-		List<AggregatedExceptionSensorData> aggResults = new ArrayList<AggregatedExceptionSensorData>();
+		List<AggregatedExceptionSensorData> aggResults = new ArrayList<>();
 		for (ExceptionSensorData exData : results) {
 			if (exData instanceof AggregatedExceptionSensorData) {
 				aggResults.add((AggregatedExceptionSensorData) exData);

@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Comparators for {@link SqlStatementData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum SqlStatementDataComparatorEnum implements IDataComparator<SqlStatementData>, Comparator<SqlStatementData> {
 

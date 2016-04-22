@@ -26,9 +26,9 @@ import rocks.inspectit.ui.rcp.storage.util.DataRetriever;
 
 /**
  * Abstract class for all storage services.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of data provided by the service.
  */
@@ -61,17 +61,17 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Returns the indexing tree that can be used for querying.
-	 * 
+	 *
 	 * @return Returns the indexing tree that can be used for querying.
 	 */
 	protected abstract IStorageTreeComponent<E> getIndexingTree();
 
 	/**
 	 * Executes the query on the indexing tree.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Index query to execute.
-	 * 
+	 *
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(StorageIndexQuery storageIndexQuery) {
@@ -81,7 +81,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	/**
 	 * Executes the query on the indexing tree. If the {@link IAggregator} is not <code>null</code>
 	 * then the results will be aggregated based on the given {@link IAggregator}.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Index query to execute.
 	 * @param aggregator
@@ -94,7 +94,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Executes the query on the indexing tree. Results can be sorted by comparator.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Index query to execute.
 	 * @param comparator
@@ -107,7 +107,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Executes the query on the indexing tree. Furthermore the result list can be limited.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Index query to execute.
 	 * @param limit
@@ -121,7 +121,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	/**
 	 * Executes the query on the indexing tree. If the {@link IAggregator} is not <code>null</code>
 	 * then the results will be aggregated based on the given {@link IAggregator}.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Index query to execute.
 	 * @param aggregator
@@ -138,7 +138,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	 * Executes the query on the indexing tree. If the {@link IAggregator} is not <code>null</code>
 	 * then the results will be aggregated based on the given {@link IAggregator}. Furthermore the
 	 * result list can be limited.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Index query to execute.
 	 * @param aggregator
@@ -154,10 +154,10 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	/**
 	 * Executes the query on the indexing tree. Results can be sorted by comparator. Furthermore the
 	 * result list can be limited.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Index query to execute.
-	 * 
+	 *
 	 * @param comparator
 	 *            If supplied the final result list will be sorted by this comparator.
 	 * @param limit
@@ -178,7 +178,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	 * <P>
 	 * This method should be used by all subclasses, because it guards against massive data loading
 	 * that can make out of memory exceptions on the UI.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Query.
 	 * @param aggregator
@@ -199,7 +199,8 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 				StorageData storageData = new StorageData(localStorageData);
 				try {
 					returnList = dataRetriever.getCachedDataViaHttp(getCmrRepositoryDefinition(), storageData, hash);
-				} catch (BusinessException | IOException | SerializationException e) { // NOPMD // NOCHK
+				} catch (BusinessException | IOException | SerializationException e) { // NOPMD //
+																						// NOCHK
 					// ignore cause we can still load results in other way
 				}
 
@@ -239,7 +240,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 		}
 
 		// limit the size if needed
-		if (limit > -1 && returnList.size() > limit) {
+		if ((limit > -1) && (returnList.size() > limit)) {
 			returnList = returnList.subList(0, limit);
 		}
 
@@ -248,7 +249,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Caches result set on the CMR for the given storage under given hash.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} to cache results on.
 	 * @param storageData
@@ -268,7 +269,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Caches result locally for the given storage under given hash.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            {@link LocalStorageData}
 	 * @param results
@@ -292,7 +293,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	 * <P>
 	 * This method should be used by all subclasses, because it guards against massive data loading
 	 * that can make out of memory exceptions on the UI.
-	 * 
+	 *
 	 * @param storageIndexQuery
 	 *            Query.
 	 * @param aggregator
@@ -316,13 +317,13 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 		AggregationPerformer<E> aggregationPerformer = null;
 		if (null != aggregator) {
-			aggregationPerformer = new AggregationPerformer<E>(aggregator);
+			aggregationPerformer = new AggregationPerformer<>(aggregator);
 		}
-		List<E> returnList = new ArrayList<E>();
+		List<E> returnList = new ArrayList<>();
 
 		int size = 0;
 		int count = 0;
-		List<IStorageDescriptor> limitedDescriptors = new ArrayList<IStorageDescriptor>();
+		List<IStorageDescriptor> limitedDescriptors = new ArrayList<>();
 		for (IStorageDescriptor storageDescriptor : descriptors) {
 			// increase count, add descriptor size and update current list
 			count++;
@@ -330,7 +331,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 			limitedDescriptors.add(storageDescriptor);
 
 			// if the size is already to big, or we reached end do query
-			if (size > MAX_QUERY_SIZE || count == descriptors.size()) {
+			if ((size > MAX_QUERY_SIZE) || (count == descriptors.size())) {
 				// load data and filter with restrictions
 				List<E> allData;
 				if (localStorageData.isFullyDownloaded()) {
@@ -384,7 +385,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	/**
 	 * This utility method is used to create a list of elements that pass all the restrictions in
 	 * the {@link StorageIndexQuery}.
-	 * 
+	 *
 	 * @param notPassedList
 	 *            List of all elements.
 	 * @param storageIndexQuery
@@ -392,9 +393,9 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 	 * @return New list only with elements that are passing all restrictions.
 	 */
 	private List<E> getRestrictionsPassedList(List<E> notPassedList, StorageIndexQuery storageIndexQuery) {
-		List<E> passedList = new ArrayList<E>();
+		List<E> passedList = new ArrayList<>();
 		for (E element : notPassedList) {
-			if (null != element && element.isQueryComplied(storageIndexQuery)) {
+			if ((null != element) && element.isQueryComplied(storageIndexQuery)) {
 				passedList.add(element);
 			}
 		}
@@ -403,7 +404,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Gets {@link #storageRepositoryDefinition}.
-	 * 
+	 *
 	 * @return {@link #storageRepositoryDefinition}
 	 */
 	public StorageRepositoryDefinition getStorageRepositoryDefinition() {
@@ -412,7 +413,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Sets {@link #storageRepositoryDefinition}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            New value for {@link #storageRepositoryDefinition}
 	 */
@@ -429,7 +430,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Gets {@link #localStorageData}.
-	 * 
+	 *
 	 * @return {@link #localStorageData}
 	 */
 	public LocalStorageData getLocalStorageData() {
@@ -438,7 +439,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Sets {@link #localStorageData}.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            New value for {@link #localStorageData}
 	 */
@@ -456,7 +457,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 
 	/**
 	 * Sets {@link #storageManager}.
-	 * 
+	 *
 	 * @param storageManager
 	 *            New value for {@link #storageManager}
 	 */

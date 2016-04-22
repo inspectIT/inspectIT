@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 /**
  * This class is used to create the UI elements of tree-based views only if the parent element is
  * said to be opened.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 
@@ -27,6 +27,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
 		InvocationSequenceData parentData = (InvocationSequenceData) object;
 		List<InvocationSequenceData> nestedSequences = parentData.getNestedSequences();
@@ -34,7 +35,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 
 		for (int i = 0; i < nestedSequences.size(); i = i + ITEMS_PER_LOOP) {
 			List<InvocationSequenceData> subList;
-			if (i + ITEMS_PER_LOOP > nestedSequences.size()) {
+			if ((i + ITEMS_PER_LOOP) > nestedSequences.size()) {
 				subList = nestedSequences.subList(i, nestedSequences.size());
 			} else {
 				subList = nestedSequences.subList(i, i + ITEMS_PER_LOOP);
@@ -54,6 +55,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISchedulingRule getRule(Object object) {
 		return null;
 	}
@@ -61,6 +63,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isContainer() {
 		return true;
 	}
@@ -68,6 +71,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getChildren(Object o) {
 		InvocationSequenceData invocationSequenceData = (InvocationSequenceData) o;
 		List<InvocationSequenceData> nestedSequences = invocationSequenceData.getNestedSequences();
@@ -78,6 +82,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImageDescriptor getImageDescriptor(Object object) {
 		return null;
 	}
@@ -85,6 +90,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getLabel(Object o) {
 		return null;
 	}
@@ -92,6 +98,7 @@ public class DeferredInvoc implements IDeferredWorkbenchAdapter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getParent(Object o) {
 		InvocationSequenceData invocationSequenceData = (InvocationSequenceData) o;
 		return invocationSequenceData.getParentSequence();

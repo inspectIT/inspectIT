@@ -18,12 +18,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.instrumentation.config.applier.AbstractSensorInstrumentationApplier;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType.Character;
@@ -95,14 +94,14 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			long agentId = 13L;
 			long methodId = 17L;
 			String sensorClassName = "sensorClassName";
-			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Mockito.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
+			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Matchers.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
 
 			AgentConfig agentConfiguration = mock(AgentConfig.class);
 			when(agentConfiguration.getPlatformId()).thenReturn(agentId);
 
 			IMethodSensorConfig methodSensorConfig = mock(IMethodSensorConfig.class);
 			when(methodSensorConfig.getClassName()).thenReturn(sensorClassName);
-			when(environment.getMethodSensorTypeConfig(Mockito.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
+			when(environment.getMethodSensorTypeConfig(Matchers.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
 
 			String packageName = "";
 			String className = "ClassName";
@@ -148,7 +147,7 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			long agentId = 13L;
 			long methodId = 17L;
 			String sensorClassName = "sensorClassName";
-			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Mockito.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
+			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Matchers.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
 
 			ExceptionSensorTypeConfig exceptionSensorTypeConfig = mock(ExceptionSensorTypeConfig.class);
 
@@ -158,7 +157,7 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 
 			IMethodSensorConfig methodSensorConfig = mock(IMethodSensorConfig.class);
 			when(methodSensorConfig.getClassName()).thenReturn(sensorClassName);
-			when(environment.getMethodSensorTypeConfig(Mockito.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
+			when(environment.getMethodSensorTypeConfig(Matchers.<Class<? extends IMethodSensorConfig>> any())).thenReturn(methodSensorConfig);
 
 			String packageName = "my.favorite.package";
 			String className = "ClassName";

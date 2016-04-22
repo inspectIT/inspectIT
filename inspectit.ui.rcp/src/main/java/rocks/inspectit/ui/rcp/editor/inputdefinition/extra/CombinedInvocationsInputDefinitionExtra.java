@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 /**
  * Additional input definition data used for the combined invocations view.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CombinedInvocationsInputDefinitionExtra implements IInputDefinitionExtra {
 
@@ -21,7 +21,7 @@ public class CombinedInvocationsInputDefinitionExtra implements IInputDefinition
 
 	/**
 	 * Gets {@link #templates}.
-	 * 
+	 *
 	 * @return {@link #templates}
 	 */
 	public List<InvocationSequenceData> getTemplates() {
@@ -30,7 +30,7 @@ public class CombinedInvocationsInputDefinitionExtra implements IInputDefinition
 
 	/**
 	 * Sets {@link #templates}.
-	 * 
+	 *
 	 * @param templates
 	 *            New value for {@link #templates}
 	 */

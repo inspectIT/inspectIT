@@ -95,7 +95,7 @@ public class SensorAssignmentSelectionDialog extends ListDialog {
 	 * @return Input for dialog.
 	 */
 	private static Object getInput(boolean showAdvanced) {
-		List<IMethodSensorConfig> input = new ArrayList<IMethodSensorConfig>();
+		List<IMethodSensorConfig> input = new ArrayList<>();
 		for (IMethodSensorConfig sensorConfig : ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs()) {
 			if (sensorConfig instanceof InvocationSequenceSensorConfig) {
 				// skip invocation sensor, as we don't want to allow direct configuration on the UI

@@ -1,6 +1,7 @@
 package rocks.inspectit.ui.rcp.action;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
@@ -9,9 +10,9 @@ import org.eclipse.swt.widgets.Menu;
 
 /**
  * Action to add a menu to the preference view.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class MenuAction extends Action implements IMenuCreator {
 
@@ -24,14 +25,14 @@ public final class MenuAction extends Action implements IMenuCreator {
 	 * Creates a new menu.
 	 */
 	public MenuAction() {
-		super("", Action.AS_DROP_DOWN_MENU);
+		super("", IAction.AS_DROP_DOWN_MENU);
 		menuManager = new MenuManager();
 		setMenuCreator(this);
 	}
 
 	/**
 	 * Adds a contribution item to this manager, like a sub-menu ...
-	 * 
+	 *
 	 * @param contributionItem
 	 *            THe contribution item to add.
 	 */
@@ -50,6 +51,7 @@ public final class MenuAction extends Action implements IMenuCreator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Menu getMenu(Control parent) {
 		return menuManager.createContextMenu(parent);
 	}
@@ -57,6 +59,7 @@ public final class MenuAction extends Action implements IMenuCreator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Menu getMenu(Menu parent) {
 		return null;
 	}
@@ -64,6 +67,7 @@ public final class MenuAction extends Action implements IMenuCreator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 		menuManager.dispose();
 	}

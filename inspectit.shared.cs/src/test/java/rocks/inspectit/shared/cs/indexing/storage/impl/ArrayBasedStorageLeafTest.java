@@ -19,14 +19,12 @@ import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
-import rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf;
-import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * Test for {@link ArrayBasedStorageLeaf}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class ArrayBasedStorageLeafTest {
@@ -46,7 +44,7 @@ public class ArrayBasedStorageLeafTest {
 	 */
 	@BeforeMethod
 	public void init() {
-		arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<DefaultData>(LEAF_ID);
+		arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<>(LEAF_ID);
 	}
 
 	/**
@@ -62,7 +60,7 @@ public class ArrayBasedStorageLeafTest {
 
 	/**
 	 * Indexing same element twice should raise an exception.
-	 * 
+	 *
 	 * @throws IndexingException
 	 */
 	@Test(expectedExceptions = { IndexingException.class })
@@ -75,7 +73,7 @@ public class ArrayBasedStorageLeafTest {
 
 	/**
 	 * With minIds we can limit the number of elements returned.
-	 * 
+	 *
 	 * @throws IndexingException
 	 */
 	@Test
@@ -93,7 +91,7 @@ public class ArrayBasedStorageLeafTest {
 
 	/**
 	 * Exclude/include ID also can be define in query.
-	 * 
+	 *
 	 * @throws IndexingException
 	 */
 	@Test
@@ -101,8 +99,8 @@ public class ArrayBasedStorageLeafTest {
 		addElements(arrayBasedStorageLeaf, 100);
 
 		StorageIndexQuery indexQuery = mock(StorageIndexQuery.class);
-		List<Long> includeIds = new ArrayList<Long>();
-		List<Long> excludeIds = new ArrayList<Long>();
+		List<Long> includeIds = new ArrayList<>();
+		List<Long> excludeIds = new ArrayList<>();
 		when(indexQuery.getIncludeIds()).thenReturn(includeIds);
 		when(indexQuery.getExcludeIds()).thenReturn(excludeIds);
 
@@ -125,7 +123,7 @@ public class ArrayBasedStorageLeafTest {
 
 	/**
 	 * Adds wanted amount of elements to the leaf.
-	 * 
+	 *
 	 * @param treeComponent
 	 *            {@link IStorageTreeComponent}.
 	 * @param amount

@@ -5,9 +5,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyV
 
 /**
  * Validator interface working on the {@link SingleProperty}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type of the value validator can validate on.
  */
@@ -16,7 +16,7 @@ public interface ISinglePropertyValidator<T> {
 	/**
 	 * Performs validation of the property and adds any found error to the
 	 * {@link PropertyValidation}.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty} to validate.
 	 * @param propertyValidation
@@ -27,7 +27,7 @@ public interface ISinglePropertyValidator<T> {
 	/**
 	 * Performs the validation of the property but takes the given value as the value to validate
 	 * against.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty} to validate.
 	 * @param propertyValidation

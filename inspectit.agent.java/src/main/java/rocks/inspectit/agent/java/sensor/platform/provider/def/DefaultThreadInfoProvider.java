@@ -7,9 +7,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
 
 /**
  * Uses the {@link java.lang.management.ThreadMXBean} in order to retrieve all needed information.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class DefaultThreadInfoProvider implements ThreadInfoProvider {
 	/**

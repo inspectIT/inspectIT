@@ -17,9 +17,9 @@ import rocks.inspectit.ui.rcp.view.impl.DataExplorerView;
 
 /**
  * Opens the {@link RepositoryDefinition} in the {@link DataExplorerView}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ShowRepositoryHandler extends AbstractHandler implements IHandler {
 

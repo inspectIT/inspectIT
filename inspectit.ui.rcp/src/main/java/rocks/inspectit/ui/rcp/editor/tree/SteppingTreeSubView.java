@@ -21,16 +21,16 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.tree.input.SteppingTreeInputController;
 import rocks.inspectit.ui.rcp.util.ElementOccurrenceCount;
 
 /**
  * View that enables locating the element in the tree via {@link SteppingControl}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SteppingTreeSubView extends TreeSubView {
 
@@ -52,7 +52,7 @@ public class SteppingTreeSubView extends TreeSubView {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param treeInputController
 	 *            Stepping tree input controller.
 	 * @see TreeSubView#TreeSubView(rocks.inspectit.ui.rcp.editor.tree.input.TreeInputController)
@@ -85,7 +85,8 @@ public class SteppingTreeSubView extends TreeSubView {
 			steppingControl = new SteppingControl(subComposite, toolkit, steppingTreeInputController.getSteppingObjectList());
 		}
 
-		if (steppingTreeInputController.initSteppingControlVisible() && null != steppingTreeInputController.getSteppingObjectList() && !steppingTreeInputController.getSteppingObjectList().isEmpty()) {
+		if (steppingTreeInputController.initSteppingControlVisible() && (null != steppingTreeInputController.getSteppingObjectList())
+				&& !steppingTreeInputController.getSteppingObjectList().isEmpty()) {
 			steppingControl.showControl();
 		}
 
@@ -149,7 +150,7 @@ public class SteppingTreeSubView extends TreeSubView {
 	/**
 	 * Adds new element to the stepping control. This method will also register the new object with
 	 * the {@link SteppingTreeInputController}.
-	 * 
+	 *
 	 * @param element
 	 *            Object to be added.
 	 */
@@ -165,7 +166,7 @@ public class SteppingTreeSubView extends TreeSubView {
 
 	/**
 	 * Alters the state of the stepping control button on preference panel.
-	 * 
+	 *
 	 * @param checked
 	 *            Should button be checked or not.
 	 */
@@ -177,7 +178,7 @@ public class SteppingTreeSubView extends TreeSubView {
 	 * Tries to expand the tree viewer to the wanted occurrence of wanted element. If the wanted
 	 * occurrence is not reachable, nothing is done. Otherwise the tree is expanded and element
 	 * selected.
-	 * 
+	 *
 	 * @param template
 	 *            Element to reach.
 	 * @param occurrence
@@ -194,7 +195,7 @@ public class SteppingTreeSubView extends TreeSubView {
 	 * Counts total occurrences found for given element. This method is just delegating the call to
 	 * the {@link SteppingTreeInputController}. Result depends on the filters that are currently
 	 * active for the tree.
-	 * 
+	 *
 	 * @param element
 	 *            Element to count occurrences.
 	 * @return Total number of elements found.
@@ -205,13 +206,13 @@ public class SteppingTreeSubView extends TreeSubView {
 
 	/**
 	 * Is input set for this sub view.
-	 * 
+	 *
 	 * @return True is input is not null or if it is not empty. Otherwise false.
 	 */
 	@SuppressWarnings("unchecked")
 	private boolean isInputSet() {
 		List<Object> input = (List<Object>) getTreeViewer().getInput();
-		if (input == null || input.isEmpty()) {
+		if ((input == null) || input.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -219,9 +220,9 @@ public class SteppingTreeSubView extends TreeSubView {
 
 	/**
 	 * Stepping control class.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class SteppingControl {
 
@@ -302,7 +303,7 @@ public class SteppingTreeSubView extends TreeSubView {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param parent
 		 *            Composite where stepping control will be created.
 		 * @param toolkit
@@ -319,7 +320,7 @@ public class SteppingTreeSubView extends TreeSubView {
 
 		/**
 		 * Creates stepping control.
-		 * 
+		 *
 		 * @param parent
 		 *            Composite where stepping control will be created.
 		 * @param toolkit
@@ -451,8 +452,8 @@ public class SteppingTreeSubView extends TreeSubView {
 		}
 
 		/**
-		 * 
-		 * 
+		 *
+		 *
 		 * @param object
 		 *            One of the objects that are to be located in the tree.
 		 * @return Returns the string to be inserted into the combo box for supplied object.
@@ -470,7 +471,7 @@ public class SteppingTreeSubView extends TreeSubView {
 		/**
 		 * Selects the given object in the stepping control, if the object is currently in the
 		 * combo-box.
-		 * 
+		 *
 		 * @param element
 		 *            Element to select.
 		 */
@@ -522,7 +523,7 @@ public class SteppingTreeSubView extends TreeSubView {
 							objectSelection.add(getTextualString(object));
 						}
 						objectSelection.pack(true);
-						if (null != selectedObject && objectsInCombo.contains(selectedObject)) {
+						if ((null != selectedObject) && objectsInCombo.contains(selectedObject)) {
 							objectSelection.select(objectsInCombo.indexOf(selectedObject));
 						} else {
 							objectSelection.select(0);
@@ -549,8 +550,8 @@ public class SteppingTreeSubView extends TreeSubView {
 		private void updateInfoBox() {
 			if (controlShown) {
 				String msg = "";
-				if (isInputSet() && objectSelection.getSelectionIndex() != -1) {
-					if (occurrence == 0 && visibleOccurrences != 0) {
+				if (isInputSet() && (objectSelection.getSelectionIndex() != -1)) {
+					if ((occurrence == 0) && (visibleOccurrences != 0)) {
 						msg = "Found " + visibleOccurrences + " occurrence";
 						if (visibleOccurrences > 1) {
 							msg += "s";

@@ -31,7 +31,7 @@ import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
  * Input controller for the tagged http view.
- * 
+ *
  * @author Stefan Siegl
  */
 public class TaggedHttpTimerDataInputController extends AbstractHttpInputController {
@@ -45,9 +45,9 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Stefan Siegl
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The time column. */
@@ -96,7 +96,7 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -115,13 +115,13 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -188,7 +188,7 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 
 			/**
 			 * Decides if the warn sign should be added for the specific column.
-			 * 
+			 *
 			 * @param data
 			 *            TimerData
 			 * @param column
@@ -202,14 +202,14 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 				case EXCLUSIVEMIN:
 				case EXCLUSIVESUM:
 					int affPercentage = (int) (data.getInvocationAffiliationPercentage() * 100);
-					return data.isExclusiveTimeDataAvailable() && affPercentage < 100;
+					return data.isExclusiveTimeDataAvailable() && (affPercentage < 100);
 				default:
 					return false;
 				}
 			}
 
 			/**
-			 * 
+			 *
 			 * {@inheritDoc}
 			 */
 			@Override
@@ -254,9 +254,9 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 	@Override
 	public ViewerComparator getComparator() {
 		ICachedDataService cachedDataService = getInputDefinition().getRepositoryDefinition().getCachedDataService();
-		TableViewerComparator<HttpTimerData> httpTimerDataViewerComparator = new TableViewerComparator<HttpTimerData>();
+		TableViewerComparator<HttpTimerData> httpTimerDataViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
-			ResultComparator<HttpTimerData> resultComparator = new ResultComparator<HttpTimerData>(column.dataComparator, cachedDataService);
+			ResultComparator<HttpTimerData> resultComparator = new ResultComparator<>(column.dataComparator, cachedDataService);
 			httpTimerDataViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
 
@@ -287,7 +287,7 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof HttpTimerData) {
 			HttpTimerData data = (HttpTimerData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, column).toString());
 			}
@@ -298,7 +298,7 @@ public class TaggedHttpTimerDataInputController extends AbstractHttpInputControl
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param enumId

@@ -5,16 +5,16 @@ import java.io.OutputStream;
 
 /**
  * Extended {@link Serialization} to support additional methods for object (de-)serialization.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("all")
 public interface IExtendedSerialization extends Serialization {
 
 	/**
 	 * Writes object to the given {@link OutputStream}.
-	 * 
+	 *
 	 * @param connection
 	 *            Connection to be added to kryo context.
 	 * @param outputStream
@@ -26,7 +26,7 @@ public interface IExtendedSerialization extends Serialization {
 
 	/**
 	 * Reads object from the given {@link InputStream}.
-	 * 
+	 *
 	 * @param connection
 	 *            Connection to be added to kryo context.
 	 * @param inputStream

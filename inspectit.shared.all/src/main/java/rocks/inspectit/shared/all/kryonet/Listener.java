@@ -17,11 +17,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Used to be notified about connection events.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
- * */
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan
+ * Sweet. License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
+ */
 @SuppressWarnings({ "all", "unchecked" })
 // NOCHKALL
 public class Listener {
@@ -65,21 +65,25 @@ public class Listener {
 	static public class ReflectionListener extends Listener {
 		private final HashMap<Class, Method> classToMethod = new HashMap();
 
+		@Override
 		public void received(Connection connection, Object object) {
 			Class type = object.getClass();
 			Method method = classToMethod.get(type);
 			if (method == null) {
-				if (classToMethod.containsKey(type))
+				if (classToMethod.containsKey(type)) {
 					return; // Only fail on the first attempt to find the method.
+				}
 				try {
 					method = getClass().getMethod("received", new Class[] { Connection.class, type });
 				} catch (SecurityException ex) {
-					if (ERROR)
+					if (ERROR) {
 						error("kryonet", "Unable to access method: received(Connection, " + type.getName() + ")", ex);
+					}
 					return;
 				} catch (NoSuchMethodException ex) {
-					if (DEBUG)
+					if (DEBUG) {
 						debug("kryonet", "Unable to find listener method: " + getClass().getName() + "#received(Connection, " + type.getName() + ")");
+					}
 					return;
 				} finally {
 					classToMethod.put(type, method);
@@ -88,10 +92,12 @@ public class Listener {
 			try {
 				method.invoke(this, connection, object);
 			} catch (Throwable ex) {
-				if (ex instanceof InvocationTargetException && ex.getCause() != null)
+				if ((ex instanceof InvocationTargetException) && (ex.getCause() != null)) {
 					ex = ex.getCause();
-				if (ex instanceof RuntimeException)
+				}
+				if (ex instanceof RuntimeException) {
 					throw (RuntimeException) ex;
+				}
 				throw new RuntimeException("Error invoking method: " + getClass().getName() + "#received(Connection, " + type.getName() + ")", ex);
 			}
 		}
@@ -106,11 +112,13 @@ public class Listener {
 		final Listener listener;
 
 		public QueuedListener(Listener listener) {
-			if (listener == null)
+			if (listener == null) {
 				throw new IllegalArgumentException("listener cannot be null.");
+			}
 			this.listener = listener;
 		}
 
+		@Override
 		public void connected(final Connection connection) {
 			queue(new Runnable() {
 				public void run() {
@@ -119,6 +127,7 @@ public class Listener {
 			});
 		}
 
+		@Override
 		public void disconnected(final Connection connection) {
 			queue(new Runnable() {
 				public void run() {
@@ -127,6 +136,7 @@ public class Listener {
 			});
 		}
 
+		@Override
 		public void received(final Connection connection, final Object object) {
 			queue(new Runnable() {
 				public void run() {
@@ -135,6 +145,7 @@ public class Listener {
 			});
 		}
 
+		@Override
 		public void idle(final Connection connection) {
 			queue(new Runnable() {
 				public void run() {
@@ -158,11 +169,13 @@ public class Listener {
 		/** Uses the specified threadPool to process notification events. */
 		public ThreadedListener(Listener listener, ExecutorService threadPool) {
 			super(listener);
-			if (threadPool == null)
+			if (threadPool == null) {
 				throw new IllegalArgumentException("threadPool cannot be null.");
+			}
 			this.threadPool = threadPool;
 		}
 
+		@Override
 		public void queue(Runnable runnable) {
 			threadPool.execute(runnable);
 		}
@@ -186,6 +199,7 @@ public class Listener {
 			threadPool = Executors.newScheduledThreadPool(1);
 		}
 
+		@Override
 		public void queue(Runnable runnable) {
 			synchronized (runnables) {
 				runnables.addFirst(runnable);

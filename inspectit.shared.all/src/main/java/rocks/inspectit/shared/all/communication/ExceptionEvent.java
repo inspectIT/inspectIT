@@ -4,9 +4,9 @@ import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 
 /**
  * Enumeration for the exception events.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public enum ExceptionEvent implements Sizeable {
 
@@ -15,13 +15,13 @@ public enum ExceptionEvent implements Sizeable {
 	/**
 	 * Utility method to convert an ordinal value into the respective enumeration. Used e.g. for
 	 * hibernate.
-	 * 
+	 *
 	 * @param i
 	 *            the ordinal value.
 	 * @return the exception event
 	 */
 	public static ExceptionEvent fromOrd(int i) {
-		if (i < 0 || i >= ExceptionEvent.values().length) {
+		if ((i < 0) || (i >= ExceptionEvent.values().length)) {
 			throw new IndexOutOfBoundsException("Invalid ordinal");
 		}
 		return ExceptionEvent.values()[i];

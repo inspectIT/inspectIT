@@ -29,8 +29,8 @@ import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
@@ -40,10 +40,10 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * This input controller displays the acquired jmx sensor data in a table.
- * 
+ *
  * @author Alfred Krauss
  * @author Marius Oehler
- * 
+ *
  */
 public class JmxSensorDataInputController extends AbstractTableInputController {
 
@@ -51,10 +51,10 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Alfred Krauss
 	 * @author Marius Oehler
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** Icon whether data can be charted. */
@@ -94,7 +94,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -114,13 +114,13 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -186,6 +186,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TableViewer tableViewer) {
 		for (Column column : Column.values()) {
 			TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -255,10 +256,10 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 		monitor.subTask("Retrieving the JMX Overview");
 
 		List<JmxSensorValueData> data;
-		if (autoUpdate || fromDate == null || toDate == null) {
-			data = (List<JmxSensorValueData>) jmxDataAccessService.getJmxDataOverview(template);
+		if (autoUpdate || (fromDate == null) || (toDate == null)) {
+			data = jmxDataAccessService.getJmxDataOverview(template);
 		} else {
-			data = (List<JmxSensorValueData>) jmxDataAccessService.getJmxDataOverview(template, fromDate, toDate);
+			data = jmxDataAccessService.getJmxDataOverview(template, fromDate, toDate);
 		}
 
 		jmxDataList.clear();
@@ -272,10 +273,11 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ViewerComparator getComparator() {
-		TableViewerComparator<JmxSensorValueData> timerDataViewerComparator = new TableViewerComparator<JmxSensorValueData>();
+		TableViewerComparator<JmxSensorValueData> timerDataViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
-			ResultComparator<JmxSensorValueData> resultComparator = new ResultComparator<JmxSensorValueData>(column.dataComparator, cachedDataService);
+			ResultComparator<JmxSensorValueData> resultComparator = new ResultComparator<>(column.dataComparator, cachedDataService);
 			timerDataViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
 
@@ -285,6 +287,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new ArrayContentProvider();
 	}
@@ -292,21 +295,22 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new LabelProvider();
 	}
 
 	/**
 	 * The label provider.
-	 * 
+	 *
 	 * @author Alfred Krauss
-	 * 
+	 *
 	 */
 	private final class LabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -355,7 +359,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param jmxDefinitionDataIdent
 	 *            The object to extract the information from.
 	 * @param data
@@ -389,6 +393,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof JmxSensorValueData) {
 			JmxSensorValueData data = (JmxSensorValueData) object;
@@ -412,11 +417,10 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof JmxSensorValueData) {
 			JmxSensorValueData data = (JmxSensorValueData) object;
-			
-			
+
 			JmxDefinitionDataIdent jmxDefinitionDataIdent = cachedDataService.getJmxDefinitionDataIdentForId(data.getJmxSensorDefinitionDataIdentId());
 
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(jmxDefinitionDataIdent, data, column).toString());
 			}

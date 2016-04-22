@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  * <p>
  * This class implements the {@link IAggregatedData} interface but does not provide the IDs of the
  * aggregated instances since they are not related to any data and are useless.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @Entity
 public class ClassLoadingInformationData extends SystemSensorData implements IAggregatedData<ClassLoadingInformationData> {
@@ -83,7 +83,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * The constructor which needs three parameters.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The Timestamp.
 	 * @param platformIdent
@@ -97,7 +97,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #count}.
-	 * 
+	 *
 	 * @return {@link #count}
 	 */
 	public int getCount() {
@@ -106,7 +106,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #count}.
-	 * 
+	 *
 	 * @param count
 	 *            New value for {@link #count}
 	 */
@@ -123,7 +123,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * adds the given value to the total number of loaded classes.
-	 * 
+	 *
 	 * @param loadedClassCount
 	 *            the value to add.
 	 */
@@ -133,7 +133,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #minLoadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #minLoadedClassCount}
 	 */
 	public int getMinLoadedClassCount() {
@@ -142,7 +142,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #minLoadedClassCount}.
-	 * 
+	 *
 	 * @param minLoadedClassCount
 	 *            New value for {@link #minLoadedClassCount}
 	 */
@@ -152,7 +152,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #maxLoadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #maxLoadedClassCount}
 	 */
 	public int getMaxLoadedClassCount() {
@@ -161,7 +161,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #maxLoadedClassCount}.
-	 * 
+	 *
 	 * @param maxLoadedClassCount
 	 *            New value for {@link #maxLoadedClassCount}
 	 */
@@ -171,7 +171,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #totalLoadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #totalLoadedClassCount}
 	 */
 	public int getTotalLoadedClassCount() {
@@ -180,7 +180,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #totalLoadedClassCount}.
-	 * 
+	 *
 	 * @param totalLoadedClassCount
 	 *            New value for {@link #totalLoadedClassCount}
 	 */
@@ -190,7 +190,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * adds the given value to the total number of loaded classes.
-	 * 
+	 *
 	 * @param totalLoadedClassCount
 	 *            the value to add.
 	 */
@@ -200,7 +200,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #minTotalLoadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #minTotalLoadedClassCount}
 	 */
 	public long getMinTotalLoadedClassCount() {
@@ -209,7 +209,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #minTotalLoadedClassCount}.
-	 * 
+	 *
 	 * @param minTotalLoadedClassCount
 	 *            New value for {@link #minTotalLoadedClassCount}
 	 */
@@ -219,7 +219,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #maxTotalLoadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #maxTotalLoadedClassCount}
 	 */
 	public long getMaxTotalLoadedClassCount() {
@@ -228,7 +228,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #maxTotalLoadedClassCount}.
-	 * 
+	 *
 	 * @param maxTotalLoadedClassCount
 	 *            New value for {@link #maxTotalLoadedClassCount}
 	 */
@@ -238,7 +238,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #totalTotalLoadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #totalTotalLoadedClassCount}
 	 */
 	public long getTotalTotalLoadedClassCount() {
@@ -247,7 +247,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #totalTotalLoadedClassCount}.
-	 * 
+	 *
 	 * @param totalTotalLoadedClassCount
 	 *            New value for {@link #totalTotalLoadedClassCount}
 	 */
@@ -257,7 +257,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * adds the given value to the number of unloaded classes.
-	 * 
+	 *
 	 * @param unloadedClassCount
 	 *            the value to add.
 	 */
@@ -267,7 +267,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #minUnloadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #minUnloadedClassCount}
 	 */
 	public long getMinUnloadedClassCount() {
@@ -276,7 +276,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #minUnloadedClassCount}.
-	 * 
+	 *
 	 * @param minUnloadedClassCount
 	 *            New value for {@link #minUnloadedClassCount}
 	 */
@@ -286,7 +286,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #maxUnloadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #maxUnloadedClassCount}
 	 */
 	public long getMaxUnloadedClassCount() {
@@ -295,7 +295,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #maxUnloadedClassCount}.
-	 * 
+	 *
 	 * @param maxUnloadedClassCount
 	 *            New value for {@link #maxUnloadedClassCount}
 	 */
@@ -305,7 +305,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Gets {@link #totalUnloadedClassCount}.
-	 * 
+	 *
 	 * @return {@link #totalUnloadedClassCount}
 	 */
 	public long getTotalUnloadedClassCount() {
@@ -314,7 +314,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Sets {@link #totalUnloadedClassCount}.
-	 * 
+	 *
 	 * @param totalUnloadedClassCount
 	 *            New value for {@link #totalUnloadedClassCount}
 	 */
@@ -324,7 +324,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 
 	/**
 	 * Aggregates other class loading object info this object.
-	 * 
+	 *
 	 * @param other
 	 *            Object to aggregate data from.
 	 */
@@ -354,25 +354,27 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + count;
-		result = prime * result + maxLoadedClassCount;
-		result = prime * result + (int) (maxTotalLoadedClassCount ^ (maxTotalLoadedClassCount >>> 32));
-		result = prime * result + (int) (maxUnloadedClassCount ^ (maxUnloadedClassCount >>> 32));
-		result = prime * result + minLoadedClassCount;
-		result = prime * result + (int) (minTotalLoadedClassCount ^ (minTotalLoadedClassCount >>> 32));
-		result = prime * result + (int) (minUnloadedClassCount ^ (minUnloadedClassCount >>> 32));
-		result = prime * result + totalLoadedClassCount;
-		result = prime * result + (int) (totalTotalLoadedClassCount ^ (totalTotalLoadedClassCount >>> 32));
-		result = prime * result + (int) (totalUnloadedClassCount ^ (totalUnloadedClassCount >>> 32));
+		result = (prime * result) + count;
+		result = (prime * result) + maxLoadedClassCount;
+		result = (prime * result) + (int) (maxTotalLoadedClassCount ^ (maxTotalLoadedClassCount >>> 32));
+		result = (prime * result) + (int) (maxUnloadedClassCount ^ (maxUnloadedClassCount >>> 32));
+		result = (prime * result) + minLoadedClassCount;
+		result = (prime * result) + (int) (minTotalLoadedClassCount ^ (minTotalLoadedClassCount >>> 32));
+		result = (prime * result) + (int) (minUnloadedClassCount ^ (minUnloadedClassCount >>> 32));
+		result = (prime * result) + totalLoadedClassCount;
+		result = (prime * result) + (int) (totalTotalLoadedClassCount ^ (totalTotalLoadedClassCount >>> 32));
+		result = (prime * result) + (int) (totalUnloadedClassCount ^ (totalUnloadedClassCount >>> 32));
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -420,6 +422,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(0, 0, 4, 0, 6, 0);

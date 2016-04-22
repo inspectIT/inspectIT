@@ -16,9 +16,9 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 /**
  * {@link DataSaverProcessor} enables definition of classes which objects need to be saved to the
  * storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DataSaverProcessor extends AbstractDataProcessor {
 
@@ -45,7 +45,7 @@ public class DataSaverProcessor extends AbstractDataProcessor {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param classes
 	 *            List of classes to be saved to storage by this {@link AbstractDataProcessor}.
 	 * @param writeInvocationAffiliation
@@ -55,7 +55,7 @@ public class DataSaverProcessor extends AbstractDataProcessor {
 	public DataSaverProcessor(List<Class<? extends DefaultData>> classes, boolean writeInvocationAffiliation) {
 		this.classes = classes;
 		if (null == this.classes) {
-			this.classes = new ArrayList<Class<? extends DefaultData>>();
+			this.classes = new ArrayList<>();
 		}
 		this.writeInvocationAffiliation = writeInvocationAffiliation;
 	}
@@ -63,11 +63,12 @@ public class DataSaverProcessor extends AbstractDataProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Collection<Future<Void>> processData(DefaultData defaultData) {
 		// if I am writing the InvocationAwareData and invocations are not saved
 		// make sure we don't save the invocation affiliation
-		if (defaultData instanceof InvocationAwareData && !writeInvocationAffiliation) {
-			Map<String, Boolean> kryoPreferences = new HashMap<String, Boolean>(1);
+		if ((defaultData instanceof InvocationAwareData) && !writeInvocationAffiliation) {
+			Map<String, Boolean> kryoPreferences = new HashMap<>(1);
 			kryoPreferences.put(KryoSerializationPreferences.WRITE_INVOCATION_AFFILIATION_DATA, Boolean.FALSE);
 			Future<Void> future = getStorageWriter().write(defaultData, kryoPreferences);
 			if (null != future) {
@@ -85,6 +86,7 @@ public class DataSaverProcessor extends AbstractDataProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
 		if (null != defaultData) {
 			return classes.contains(defaultData.getClass());

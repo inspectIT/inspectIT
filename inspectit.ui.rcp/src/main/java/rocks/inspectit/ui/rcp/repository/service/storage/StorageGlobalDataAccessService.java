@@ -30,9 +30,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 /**
  * {@link IGlobalDataAccessService} for storage purposes. This class indirectly uses the
  * {@link AbstractCachedGlobalDataAccessService} to cache the data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageGlobalDataAccessService extends AbstractStorageService<DefaultData> implements IGlobalDataAccessService {
 
@@ -54,8 +54,9 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Map<PlatformIdent, AgentStatusData> getAgentsOverview() {
-		Map<PlatformIdent, AgentStatusData> result = new HashMap<PlatformIdent, AgentStatusData>();
+		Map<PlatformIdent, AgentStatusData> result = new HashMap<>();
 		for (PlatformIdent platformIdent : agents) {
 			result.put(platformIdent, null);
 		}
@@ -65,6 +66,7 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public PlatformIdent getCompleteAgent(long id) throws BusinessException {
 		for (PlatformIdent platformIdent : agents) {
 			if (platformIdent.getId().longValue() == id) {
@@ -79,12 +81,14 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	 * <p>
 	 * Agents can not be deleted on the Storage.
 	 */
+	@Override
 	public void deleteAgent(long platformId) throws BusinessException {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<DefaultData> getLastDataObjects(DefaultData template, long timeInterval) {
 		Timestamp toDate = new Timestamp(new Date().getTime());
 		Timestamp fromDate = new Timestamp(toDate.getTime() - timeInterval);
@@ -94,10 +98,11 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DefaultData getLastDataObject(DefaultData template) {
 		StorageIndexQuery query = storageIndexQueryProvider.createNewStorageIndexQuery();
 		query.setMinId(template.getId());
-		ArrayList<Class<?>> searchClasses = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> searchClasses = new ArrayList<>();
 		searchClasses.add(template.getClass());
 		query.setObjectClasses(searchClasses);
 		query.setPlatformIdent(template.getPlatformIdent());
@@ -122,10 +127,11 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<DefaultData> getDataObjectsSinceId(DefaultData template) {
 		StorageIndexQuery query = storageIndexQueryProvider.createNewStorageIndexQuery();
 		query.setMinId(template.getId());
-		ArrayList<Class<?>> searchClasses = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> searchClasses = new ArrayList<>();
 		searchClasses.add(template.getClass());
 		query.setObjectClasses(searchClasses);
 		query.setPlatformIdent(template.getPlatformIdent());
@@ -143,10 +149,11 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<DefaultData> getDataObjectsSinceIdIgnoreMethodId(DefaultData template) {
 		StorageIndexQuery query = storageIndexQueryProvider.createNewStorageIndexQuery();
 		query.setMinId(template.getId());
-		ArrayList<Class<?>> searchClasses = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> searchClasses = new ArrayList<>();
 		searchClasses.add(template.getClass());
 		query.setObjectClasses(searchClasses);
 		query.setPlatformIdent(template.getPlatformIdent());
@@ -157,6 +164,7 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<? extends DefaultData> getDataObjectsFromToDate(DefaultData template, Date fromDate, Date toDate) {
 		if (fromDate.after(toDate)) {
 			return Collections.emptyList();
@@ -183,7 +191,7 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 
 	/**
 	 * Returns data objects in wanted interval based on the wanted template.
-	 * 
+	 *
 	 * @param template
 	 *            Template to base search on.
 	 * @param fromDate
@@ -194,7 +202,7 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	 */
 	private List<DefaultData> getDataObjectsInInterval(DefaultData template, Timestamp fromDate, Timestamp toDate) {
 		StorageIndexQuery query = storageIndexQueryProvider.createNewStorageIndexQuery();
-		ArrayList<Class<?>> searchClasses = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> searchClasses = new ArrayList<>();
 		searchClasses.add(template.getClass());
 		query.setObjectClasses(searchClasses);
 		query.setPlatformIdent(template.getPlatformIdent());
@@ -234,6 +242,7 @@ public class StorageGlobalDataAccessService extends AbstractStorageService<Defau
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected IStorageTreeComponent<DefaultData> getIndexingTree() {
 		return indexingTree;
 	}

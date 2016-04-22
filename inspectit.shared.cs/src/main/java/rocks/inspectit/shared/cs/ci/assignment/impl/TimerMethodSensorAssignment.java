@@ -138,9 +138,9 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((contextCaptures == null) ? 0 : contextCaptures.hashCode());
-		result = prime * result + (int) (minInvocationDuration ^ (minInvocationDuration >>> 32));
-		result = prime * result + (startsInvocation ? 1231 : 1237);
+		result = (prime * result) + ((contextCaptures == null) ? 0 : contextCaptures.hashCode());
+		result = (prime * result) + (int) (minInvocationDuration ^ (minInvocationDuration >>> 32));
+		result = (prime * result) + (startsInvocation ? 1231 : 1237);
 		return result;
 	}
 

@@ -6,6 +6,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -17,9 +18,9 @@ import rocks.inspectit.ui.rcp.wizard.AddStorageLabelWizard;
 
 /**
  * Handler for adding a label to storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AddStorageLabelHandler extends AbstractHandler implements IHandler {
 
@@ -47,7 +48,7 @@ public class AddStorageLabelHandler extends AbstractHandler implements IHandler 
 			AddStorageLabelWizard addStorageLabelWizard = new AddStorageLabelWizard(storageProvider);
 			WizardDialog wizardDialog = new WizardDialog(HandlerUtil.getActiveShell(event), addStorageLabelWizard);
 			wizardDialog.open();
-			if (wizardDialog.getReturnCode() == WizardDialog.OK) {
+			if (wizardDialog.getReturnCode() == Window.OK) {
 				IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(StorageManagerView.VIEW_ID);
 				if (viewPart instanceof StorageManagerView) {
 					((StorageManagerView) viewPart).refresh(storageProvider.getCmrRepositoryDefinition());

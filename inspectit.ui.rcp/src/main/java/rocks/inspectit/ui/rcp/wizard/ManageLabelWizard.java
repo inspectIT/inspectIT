@@ -17,9 +17,9 @@ import rocks.inspectit.ui.rcp.wizard.page.ManageLabelWizardPage;
 
 /**
  * Manage Labels wizard.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ManageLabelWizard extends Wizard implements INewWizard {
 
@@ -35,7 +35,7 @@ public class ManageLabelWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            Repository to manage labels for.
 	 */
@@ -83,7 +83,7 @@ public class ManageLabelWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Gets {@link #shouldRefreshStorages}.
-	 * 
+	 *
 	 * @return {@link #shouldRefreshStorages}
 	 */
 	public boolean isShouldRefreshStorages() {

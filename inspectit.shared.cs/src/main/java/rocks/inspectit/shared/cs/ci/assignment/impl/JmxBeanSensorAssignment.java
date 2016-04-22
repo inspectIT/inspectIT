@@ -112,9 +112,9 @@ public class JmxBeanSensorAssignment implements ISensorAssignment<JmxSensorConfi
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
-		result = prime * result + ((domain == null) ? 0 : domain.hashCode());
-		result = prime * result + ((objectNameParameters == null) ? 0 : objectNameParameters.hashCode());
+		result = (prime * result) + ((attributes == null) ? 0 : attributes.hashCode());
+		result = (prime * result) + ((domain == null) ? 0 : domain.hashCode());
+		result = (prime * result) + ((objectNameParameters == null) ? 0 : objectNameParameters.hashCode());
 		return result;
 	}
 

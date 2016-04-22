@@ -5,9 +5,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Interface for all our comparators.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            For what type comparator made for.
  */
@@ -15,7 +15,7 @@ public interface IDataComparator<T extends DefaultData> {
 
 	/**
 	 * Compares two {@link DefaultData} elements.
-	 * 
+	 *
 	 * @param o1
 	 *            First object.
 	 * @param o2

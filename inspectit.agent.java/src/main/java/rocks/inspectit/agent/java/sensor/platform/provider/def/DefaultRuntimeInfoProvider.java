@@ -11,9 +11,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
  * Uses the {@link java.lang.management.CompilationMXBean},
  * {@link java.lang.management.ClassLoadingMXBean}, and {@link java.lang.management.RuntimeMXBean}
  * in order to retrieve all of the provided information.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 

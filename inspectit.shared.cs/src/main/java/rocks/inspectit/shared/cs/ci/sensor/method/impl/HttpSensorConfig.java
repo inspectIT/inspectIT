@@ -34,7 +34,6 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	@XmlAttribute(name = "sessionCapture")
 	private boolean sessionCapture;
 
-
 	/**
 	 * No-args constructor.
 	 */

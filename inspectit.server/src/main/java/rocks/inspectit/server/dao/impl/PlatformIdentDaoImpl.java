@@ -23,9 +23,9 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * The default implementation of the {@link PlatformIdentDao} interface by using the Entity manager.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Repository
 public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implements PlatformIdentDao {
@@ -103,15 +103,16 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void saveOrUpdate(PlatformIdent platformIdent) {
 		final int maxDefIPsSize = 1024;
 
 		if (null != platformIdent.getDefinedIPs()) {
 			int charNum = 0;
-			List<String> newDefinedIPs = new ArrayList<String>();
+			List<String> newDefinedIPs = new ArrayList<>();
 			for (String item : platformIdent.getDefinedIPs()) {
 				// if it is too long, we stop adding
-				if (charNum + item.length() <= maxDefIPsSize) {
+				if ((charNum + item.length()) <= maxDefIPsSize) {
 					newDefinedIPs.add(item);
 					// we add 1 also for the white space
 					charNum += item.length() + 1;
@@ -138,6 +139,7 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public PlatformIdent findInitialized(long id) {
 		for (PlatformIdent platformIdent : platformIdentCache.getCleanPlatformIdents()) {
 			if (platformIdent.getId().longValue() == id) {
@@ -159,7 +161,7 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 
 	/**
 	 * Find all initialized agents that have a id in a given set.
-	 * 
+	 *
 	 * @param wantedAgentsIds
 	 *            Agents Ids.
 	 * @return List of {@link PlatformIdent}.
@@ -169,8 +171,8 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 			return Collections.emptyList();
 		}
 
-		List<PlatformIdent> initializedPlatformIdents = new ArrayList<PlatformIdent>();
-		List<Long> cleanIdents = new ArrayList<Long>();
+		List<PlatformIdent> initializedPlatformIdents = new ArrayList<>();
+		List<Long> cleanIdents = new ArrayList<>();
 		for (PlatformIdent platformIdent : platformIdentCache.getCleanPlatformIdents()) {
 			cleanIdents.add(platformIdent.getId());
 			if (wantedAgentsIds.contains(platformIdent.getId())) {
@@ -208,14 +210,14 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 	/**
 	 * Loads agents from database, excluding the agents which IDs is supplied in the exclude
 	 * collection.
-	 * 
+	 *
 	 * @param excludeIdents
 	 *            IDs of the agents that should not be loaded. If empty or <code>null</code> it
 	 *            won't be taken into consideration.
 	 * @param includeIdents
 	 *            IDs of the agents that should be loaded. If empty or <code>null</code> it won't be
 	 *            taken into consideration.
-	 * 
+	 *
 	 * @return List of {@link PlatformIdent}.
 	 */
 	@SuppressWarnings("unchecked")

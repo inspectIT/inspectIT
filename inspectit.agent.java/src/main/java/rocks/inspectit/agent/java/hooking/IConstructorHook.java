@@ -5,7 +5,7 @@ import rocks.inspectit.agent.java.core.ICoreService;
 
 /**
  * Classes which add a hook into a constructor have to implement this interface.
- * 
+ *
  */
 public interface IConstructorHook extends IHook {
 
@@ -15,7 +15,7 @@ public interface IConstructorHook extends IHook {
 	 * Java Virtual Machine Specification (2nd ed). For example, it cannot access instance fields or
 	 * methods although it may assign a value to an instance field directly declared in this class.
 	 * Accessing static fields and methods is allowed.
-	 * 
+	 *
 	 * @param methodId
 	 *            The unique method id.
 	 * @param sensorTypeId
@@ -30,7 +30,7 @@ public interface IConstructorHook extends IHook {
 
 	/**
 	 * The bytecode is inserted after the constructor calls.
-	 * 
+	 *
 	 * @param coreService
 	 *            The core service.
 	 * @param methodId

@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 /**
  * Class that holds agent status data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentStatusData implements Serializable {
 
@@ -17,9 +17,9 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Enumeration that defines the connection status.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum AgentConnection {
 
@@ -37,7 +37,7 @@ public class AgentStatusData implements Serializable {
 		 * Agent is not sending keep-alive messages.
 		 */
 		NO_KEEP_ALIVE,
-		
+
 		/**
 		 * Agent is disconnected.
 		 */
@@ -64,7 +64,7 @@ public class AgentStatusData implements Serializable {
 	 * Time in milliseconds when the agent was connecting.
 	 */
 	private long connectionTimestamp;
-	
+
 	/**
 	 * Current CMR time.
 	 */
@@ -79,7 +79,7 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param agentConnection
 	 *            {@link AgentConnection}.
 	 */
@@ -93,11 +93,11 @@ public class AgentStatusData implements Serializable {
 	 * <p>
 	 * This information can be obtained only if valid information is stored in
 	 * {@link #lastDataSendTimestamp} and {@link #serverTimestamp}.
-	 * 
+	 *
 	 * @return Milliseconds or <code>null</code>.
 	 */
 	public Long getMillisSinceLastData() {
-		if (0 < lastDataSendTimestamp && lastDataSendTimestamp <= serverTimestamp) {
+		if ((0 < lastDataSendTimestamp) && (lastDataSendTimestamp <= serverTimestamp)) {
 			return serverTimestamp - lastDataSendTimestamp;
 		} else {
 			return null;
@@ -106,7 +106,7 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #agentConnection}.
-	 * 
+	 *
 	 * @return {@link #agentConnection}
 	 */
 	public AgentConnection getAgentConnection() {
@@ -115,7 +115,7 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #agentConnection}.
-	 * 
+	 *
 	 * @param agentConnection
 	 *            New value for {@link #agentConnection}
 	 */
@@ -125,7 +125,7 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #lastDataSendTimestamp}.
-	 * 
+	 *
 	 * @param lastDataSendTimestamp
 	 *            New value for {@link #lastDataSendTimestamp}
 	 */
@@ -135,7 +135,7 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #serverTimestamp}.
-	 * 
+	 *
 	 * @param serverTimestamp
 	 *            New value for {@link #serverTimestamp}
 	 */
@@ -145,7 +145,7 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Gets {@link #lastKeepAliveTimestamp}.
-	 * 
+	 *
 	 * @return {@link #lastKeepAliveTimestamp}
 	 */
 	public long getLastKeepAliveTimestamp() {
@@ -154,28 +154,28 @@ public class AgentStatusData implements Serializable {
 
 	/**
 	 * Sets {@link #lastKeepAliveTimestamp}.
-	 * 
+	 *
 	 * @param lastKeepAliveTimestamp
 	 *            New value for {@link #lastKeepAliveTimestamp}
 	 */
 	public void setLastKeepAliveTimestamp(long lastKeepAliveTimestamp) {
 		this.lastKeepAliveTimestamp = lastKeepAliveTimestamp;
 	}
-	
+
 	/**
 	 * Gets {@link #connectionTimestamp}.
-	 *   
-	 * @return {@link #connectionTimestamp}  
+	 *
+	 * @return {@link #connectionTimestamp}
 	 */
 	public long getConnectionTimestamp() {
 		return connectionTimestamp;
 	}
 
-	/**  
-	 * Sets {@link #connectionTimestamp}.  
-	 *   
-	 * @param connectionTimestamp  
-	 *            New value for {@link #connectionTimestamp}  
+	/**
+	 * Sets {@link #connectionTimestamp}.
+	 *
+	 * @param connectionTimestamp
+	 *            New value for {@link #connectionTimestamp}
 	 */
 	public void setConnectionTimestamp(long connectionTimestamp) {
 		this.connectionTimestamp = connectionTimestamp;
@@ -188,11 +188,11 @@ public class AgentStatusData implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((agentConnection == null) ? 0 : agentConnection.hashCode());
-		result = prime * result + (int) (lastDataSendTimestamp ^ (lastDataSendTimestamp >>> 32));
-		result = prime * result + (int) (serverTimestamp ^ (serverTimestamp >>> 32));
-		result = prime * result + (int) (lastKeepAliveTimestamp ^ (lastKeepAliveTimestamp >>> 32));
-		result = prime * result + (int) (connectionTimestamp ^ (connectionTimestamp >>> 32));
+		result = (prime * result) + ((agentConnection == null) ? 0 : agentConnection.hashCode());
+		result = (prime * result) + (int) (lastDataSendTimestamp ^ (lastDataSendTimestamp >>> 32));
+		result = (prime * result) + (int) (serverTimestamp ^ (serverTimestamp >>> 32));
+		result = (prime * result) + (int) (lastKeepAliveTimestamp ^ (lastKeepAliveTimestamp >>> 32));
+		result = (prime * result) + (int) (connectionTimestamp ^ (connectionTimestamp >>> 32));
 		return result;
 	}
 

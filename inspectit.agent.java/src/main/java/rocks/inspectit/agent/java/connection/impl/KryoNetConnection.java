@@ -242,7 +242,6 @@ public class KryoNetConnection implements IConnection {
 			throw new ServerUnavailableException();
 		}
 
-
 		// make call
 		FailFastRemoteMethodCall<IAgentService, Void> call = new FailFastRemoteMethodCall<IAgentService, Void>(agentService) {
 			@Override
@@ -275,7 +274,7 @@ public class KryoNetConnection implements IConnection {
 			throw new ServerUnavailableException();
 		}
 
-		if (null != measurements && !measurements.isEmpty()) {
+		if ((null != measurements) && !measurements.isEmpty()) {
 			try {
 				AddDataObjects remote = new AddDataObjects(agentStorageService, measurements);
 				remote.makeCall();
@@ -369,7 +368,7 @@ public class KryoNetConnection implements IConnection {
 	 * {@inheritDoc}
 	 */
 	public boolean isConnected() {
-		return null != client && client.isConnected();
+		return (null != client) && client.isConnected();
 	}
 
 }

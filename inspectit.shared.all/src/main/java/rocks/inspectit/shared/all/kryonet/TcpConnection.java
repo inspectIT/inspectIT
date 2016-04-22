@@ -23,11 +23,11 @@ import rocks.inspectit.shared.all.storage.nio.stream.SocketExtendedByteBufferInp
 import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
 
 /**
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan
+ * Sweet. License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
+ *
  * @author Nathan Sweet <misc@n4te.com>
  */
 @SuppressWarnings("all")
@@ -146,8 +146,9 @@ class TcpConnection {
 
 	public Object readObject(Connection connection) throws IOException {
 		SocketChannel socketChannel = this.socketChannel;
-		if (socketChannel == null)
+		if (socketChannel == null) {
 			throw new SocketException("Connection is closed.");
+		}
 
 		// Change by ISE from here to end of method
 
@@ -209,8 +210,9 @@ class TcpConnection {
 
 	private boolean writeToSocket() throws IOException {
 		SocketChannel socketChannel = this.socketChannel;
-		if (socketChannel == null)
+		if (socketChannel == null) {
 			throw new SocketException("Connection is closed.");
+		}
 
 		// Change by ISE from here to end of method
 
@@ -249,8 +251,9 @@ class TcpConnection {
 	/** This method is thread safe. */
 	public int send(Connection connection, Object object) throws IOException {
 		SocketChannel socketChannel = this.socketChannel;
-		if (socketChannel == null)
+		if (socketChannel == null) {
 			throw new SocketException("Connection is closed.");
+		}
 
 		// Change by ISE from here to end of method
 
@@ -310,8 +313,9 @@ class TcpConnection {
 			if (socketChannel != null) {
 				socketChannel.close();
 				socketChannel = null;
-				if (selectionKey != null)
+				if (selectionKey != null) {
 					selectionKey.selector().wakeup();
+				}
 			}
 
 			// Added by ISE Start
@@ -331,22 +335,23 @@ class TcpConnection {
 
 			// Added by ISE End
 		} catch (IOException ex) {
-			if (DEBUG)
+			if (DEBUG) {
 				debug("kryonet", "Unable to close TCP connection.", ex);
+			}
 		}
 	}
 
 	public boolean needsKeepAlive(long time) {
-		return socketChannel != null && keepAliveMillis > 0 && time - lastWriteTime > keepAliveMillis;
+		return (socketChannel != null) && (keepAliveMillis > 0) && ((time - lastWriteTime) > keepAliveMillis);
 	}
 
 	public boolean isTimedOut(long time) {
-		return socketChannel != null && timeoutMillis > 0 && time - lastReadTime > timeoutMillis;
+		return (socketChannel != null) && (timeoutMillis > 0) && ((time - lastReadTime) > timeoutMillis);
 	}
 
 	/**
 	 * Returns current size to be written.
-	 * 
+	 *
 	 * @return Current size to be written.
 	 */
 	// Added by ISE

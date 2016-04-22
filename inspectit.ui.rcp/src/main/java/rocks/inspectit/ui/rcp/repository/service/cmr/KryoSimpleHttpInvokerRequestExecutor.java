@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.InspectIT;
 
 /**
  * This class extends the simple http one by using Kryo for (de-)serializing.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class KryoSimpleHttpInvokerRequestExecutor extends SimpleHttpInvokerRequestExecutor {
 
@@ -59,7 +59,7 @@ public class KryoSimpleHttpInvokerRequestExecutor extends SimpleHttpInvokerReque
 
 	/**
 	 * Gets {@link #serializationManagerProvider}.
-	 * 
+	 *
 	 * @return {@link #serializationManagerProvider}
 	 */
 	public SerializationManagerProvider getSerializationManagerProvider() {
@@ -68,7 +68,7 @@ public class KryoSimpleHttpInvokerRequestExecutor extends SimpleHttpInvokerReque
 
 	/**
 	 * Sets {@link #serializationManagerProvider}.
-	 * 
+	 *
 	 * @param serializationManagerProvider
 	 *            New value for {@link #serializationManagerProvider}
 	 */

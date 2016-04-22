@@ -15,9 +15,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validator.AbstractCo
 
 /**
  * Is greater than validator.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type of values to compare.
  */
@@ -30,11 +30,11 @@ public class GreaterValidator<T extends Number> extends AbstractComparingValidat
 	@Override
 	protected void compare(SingleProperty<? extends T> property, SingleProperty<? extends T> againstProperty, T value, T against, PropertyValidation propertyValidation) {
 		if (!matches(value, against)) {
-			List<SingleProperty<?>> properties = new ArrayList<SingleProperty<?>>(2);
+			List<SingleProperty<?>> properties = new ArrayList<>(2);
 			properties.add(property);
 			properties.add(againstProperty);
-			ValidationError validationError = new ValidationError(properties, "Value of property '" + property.getName() + "' must be greater than value of property '" + againstProperty.getName()
-					+ "'");
+			ValidationError validationError = new ValidationError(properties,
+					"Value of property '" + property.getName() + "' must be greater than value of property '" + againstProperty.getName() + "'");
 			propertyValidation.addValidationError(validationError);
 		}
 	}
@@ -45,15 +45,15 @@ public class GreaterValidator<T extends Number> extends AbstractComparingValidat
 	@Override
 	protected void compare(SingleProperty<? extends T> property, T value, T against, PropertyValidation propertyValidation) {
 		if (!matches(value, against)) {
-			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property), "Value of property '" + property.getName() + "' must be greater than "
-					+ against);
+			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property),
+					"Value of property '" + property.getName() + "' must be greater than " + against);
 			propertyValidation.addValidationError(validationError);
 		}
 	}
 
 	/**
 	 * Executes compare.
-	 * 
+	 *
 	 * @param value
 	 *            Value.
 	 * @param against

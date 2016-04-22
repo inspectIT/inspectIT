@@ -37,10 +37,10 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * This class creates a {@link XYPlot} containing the {@link CpuInformationData} informations.
- * 
+ *
  * @author Eduard Tudenhoefner
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DefaultCpuPlotController extends AbstractPlotController {
 
@@ -67,7 +67,7 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 	/**
 	 * The map containing the weights of the {@link XYPlot}s.
 	 */
-	private Map<XYPlot, Integer> weights = new HashMap<XYPlot, Integer>();
+	private Map<XYPlot, Integer> weights = new HashMap<>();
 
 	/**
 	 * The {@link YIntervalSeriesImproved}.
@@ -124,10 +124,11 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<XYPlot> getPlots() {
 		upperPlot = initializeUpperPlot();
 
-		List<XYPlot> plots = new ArrayList<XYPlot>(1);
+		List<XYPlot> plots = new ArrayList<>(1);
 		plots.add(upperPlot);
 		weights.put(upperPlot, WEIGHT_UPPER_PLOT);
 
@@ -136,7 +137,7 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 
 	/**
 	 * Initializes the upper plot.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}.
 	 */
 	private XYPlot initializeUpperPlot() {
@@ -169,7 +170,7 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 
 	/**
 	 * Updates the upper plot with the given input data.
-	 * 
+	 *
 	 * @param cpuData
 	 *            The input data.
 	 */
@@ -184,7 +185,7 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 	/**
 	 * Removes all data from the upper plot and sets the {@link CpuInformationData} objects on the
 	 * plot.
-	 * 
+	 *
 	 * @param cpuInformationData
 	 *            The data to set on the plot.
 	 */
@@ -196,6 +197,7 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void update(Date from, Date to) {
 		Date dataNewestDate = new Date(0);
@@ -295,6 +297,7 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getWeight(XYPlot subPlot) {
 		return weights.get(subPlot);
 	}
@@ -302,6 +305,7 @@ public class DefaultCpuPlotController extends AbstractPlotController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		Set<PreferenceId> preferenceList = EnumSet.noneOf(PreferenceId.class);
 		if (getInputDefinition().getRepositoryDefinition() instanceof CmrRepositoryDefinition) {

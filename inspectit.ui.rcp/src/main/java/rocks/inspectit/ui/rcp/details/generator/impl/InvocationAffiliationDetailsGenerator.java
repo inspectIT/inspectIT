@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Details about invocation affiliation read from the {@link InvocationAwareData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationAffiliationDetailsGenerator implements IDetailsGenerator {
 
@@ -28,7 +28,7 @@ public class InvocationAffiliationDetailsGenerator implements IDetailsGenerator 
 	 */
 	@Override
 	public boolean canGenerateFor(DefaultData defaultData) {
-		return defaultData instanceof InvocationAwareData && defaultData instanceof IAggregatedData;
+		return (defaultData instanceof InvocationAwareData) && (defaultData instanceof IAggregatedData);
 	}
 
 	/**

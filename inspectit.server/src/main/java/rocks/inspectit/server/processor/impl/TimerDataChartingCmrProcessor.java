@@ -27,9 +27,9 @@ import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManag
 /**
  * Processor that saves {@link TimerData} or {@link HttpTimerData} to database correctly if the
  * charting is on.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 
@@ -81,13 +81,13 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 	 */
 	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
-		return defaultData instanceof TimerData && ((TimerData) defaultData).isCharting();
+		return (defaultData instanceof TimerData) && ((TimerData) defaultData).isCharting();
 	}
 
 	/**
 	 * Creates the cloned {@link HttpTimerData} by using the kryo and {@link #serializationManager}.
 	 * Sets id of the clone to zero.
-	 * 
+	 *
 	 * @param original
 	 *            Data to be cloned.
 	 * @return Cloned {@link HttpTimerData} with id zero.
@@ -102,7 +102,7 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 
 	/**
 	 * Find {@link HttpInfo} to attach to {@link HttpTimerData} when saving.
-	 * 
+	 *
 	 * @param httpTimerData
 	 *            {@link HttpTimerData} to find info for.
 	 * @param entityManager

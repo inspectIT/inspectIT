@@ -12,15 +12,15 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Storage data dao interface.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface StorageDataDao {
 
 	/**
 	 * Saves a label to the database if the same label does not exists.
-	 * 
+	 *
 	 * @param label
 	 *            Label to save.
 	 * @return True if label was saved, false otherwise.
@@ -29,7 +29,7 @@ public interface StorageDataDao {
 
 	/**
 	 * Removes a label.
-	 * 
+	 *
 	 * @param label
 	 *            Label to remove.
 	 */
@@ -37,7 +37,7 @@ public interface StorageDataDao {
 
 	/**
 	 * Removes a collection of labels.
-	 * 
+	 *
 	 * @param labels
 	 *            Labels.
 	 */
@@ -45,14 +45,14 @@ public interface StorageDataDao {
 
 	/**
 	 * Returns all labels registered on the CMR.
-	 * 
+	 *
 	 * @return Returns all labels registered on the CMR.
 	 */
 	List<AbstractStorageLabel<?>> getAllLabels();
 
 	/**
 	 * Returns all labels of specified type registered on the CMR.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of label.
 	 * @param labelType
@@ -65,7 +65,7 @@ public interface StorageDataDao {
 	 * Saves the {@link AbstractStorageLabelType} to the database. The label will be saved only if
 	 * the {@link AbstractStorageLabelType#isMultiType()} is true or no instances of the label type
 	 * are already saved.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type to save.
 	 */
@@ -73,7 +73,7 @@ public interface StorageDataDao {
 
 	/**
 	 * Removes label type from database.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type to remove.
 	 * @throws BusinessException
@@ -83,7 +83,7 @@ public interface StorageDataDao {
 
 	/**
 	 * Returns all instances of desired label type.
-	 * 
+	 *
 	 * @param <E>
 	 *            Label value type.
 	 * @param labelTypeClass
@@ -94,7 +94,7 @@ public interface StorageDataDao {
 
 	/**
 	 * Returns all label types.
-	 * 
+	 *
 	 * @return Returns all label types.
 	 */
 	List<AbstractStorageLabelType<?>> getAllLabelTypes();
@@ -103,7 +103,7 @@ public interface StorageDataDao {
 	 * Returns all the data that is indexed in the indexing tree for a specific platform ident. Not
 	 * that is possible that some data is contained two times in the return list, ones as a object
 	 * in the list, ones as a part of invocation that is in the list.
-	 * 
+	 *
 	 * @param platformId
 	 *            Id of agent.
 	 * @param fromDate
@@ -116,7 +116,7 @@ public interface StorageDataDao {
 
 	/**
 	 * Returns the fresh data from the buffer which IDs correspond to the given IDs.
-	 * 
+	 *
 	 * @param elementIds
 	 *            Id to search for.
 	 * @param platformIdent
@@ -128,7 +128,7 @@ public interface StorageDataDao {
 
 	/**
 	 * Returns the last {@link SystemInformationData} for every agent provided in the list.
-	 * 
+	 *
 	 * @param agentIds
 	 *            Collection of agent IDs.
 	 * @return List of {@link SystemInformationData}.

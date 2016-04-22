@@ -18,8 +18,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
@@ -29,9 +29,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler for showing only invocations sequences for a specific method ID.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NavigateToStartMethodInvocationHandler extends AbstractHandler {
 

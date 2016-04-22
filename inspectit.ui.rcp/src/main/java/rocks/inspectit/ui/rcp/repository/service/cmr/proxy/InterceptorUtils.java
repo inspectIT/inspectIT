@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService;
 
 /**
  * Utilities that will be used in interceptors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class InterceptorUtils {
 
@@ -29,7 +29,7 @@ public final class InterceptorUtils {
 
 	/**
 	 * Is service method.
-	 * 
+	 *
 	 * @param methodInvocation
 	 *            Method invocation.
 	 * @return Return if it is service method.
@@ -41,19 +41,19 @@ public final class InterceptorUtils {
 	/**
 	 * Checks if the method being executed is executed on the proxy containing {@link ICmrService}
 	 * and service defines the default value on error value.
-	 * 
+	 *
 	 * @param methodInvocation
 	 *            Method invocation.
 	 * @return <code>true</code> if {@link ICmrService} objects defines return default on error
 	 */
 	public static boolean isReturnDefaultReturnValue(MethodInvocation methodInvocation) {
 		ICmrService cmrService = getCmrService(methodInvocation);
-		return null != cmrService && cmrService.isDefaultValueOnError();
+		return (null != cmrService) && cmrService.isDefaultValueOnError();
 	}
 
 	/**
 	 * Tries to get the {@link CmrRepositoryDefinition} from the proxied {@link ICmrService} object.
-	 * 
+	 *
 	 * @param methodInvocation
 	 *            {@link MethodInvocation}.
 	 * @return CMR invoked or null.
@@ -70,7 +70,7 @@ public final class InterceptorUtils {
 	/**
 	 * Returns {@link ICmrService} object if one is bounded to the proxy being invoked in the given
 	 * {@link MethodInvocation} or <code>null</code> if one can not be obtained.
-	 * 
+	 *
 	 * @param methodInvocation
 	 *            {@link MethodInvocation}.
 	 * @return {@link ICmrService} bounded on proxy or <code>null</code>
@@ -90,7 +90,7 @@ public final class InterceptorUtils {
 	 * Checks if the return type of the {@link java.lang.reflect.Method} invoked by
 	 * {@link MethodInvocation} is one of tree major collection types (List, Map, Set) and if it is
 	 * returns the empty collection of correct type. Otherwise it returns null.
-	 * 
+	 *
 	 * @param paramMethodInvocation
 	 *            {@link MethodInvocation}
 	 * @return If the method invoked by {@link MethodInvocation} is one of tree major collection

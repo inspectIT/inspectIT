@@ -13,6 +13,7 @@ public class Application implements IApplication {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		Display display = PlatformUI.createDisplay();
 		try {
@@ -29,6 +30,7 @@ public class Application implements IApplication {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop() {
 		// Signal application to exit
 	}

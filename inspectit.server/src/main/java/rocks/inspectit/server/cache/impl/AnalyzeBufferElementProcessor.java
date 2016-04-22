@@ -10,18 +10,18 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Analyze processor. Performs analyzing of element sizes in the buffer.
- * 
+ *
  * @param <E>
  *            Type of data to process.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 class AnalyzeBufferElementProcessor<E extends DefaultData> extends AbstractBufferElementProcessor<E> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param atomicBuffer
 	 *            {@link AtomicBuffer} to work on.
 	 * @param lastProcessed

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -30,9 +31,9 @@ import rocks.inspectit.ui.rcp.model.ModifiersImageFactory;
 
 /**
  * This input controller displays the detail contents of {@link ExceptionSensorData} objects.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ExceptionTreeInputController extends AbstractTreeInputController {
 
@@ -44,7 +45,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * The list of {@link ExceptionSensorData} objects which is displayed.
 	 */
-	private List<ExceptionSensorData> exceptionSensorData = new ArrayList<ExceptionSensorData>();
+	private List<ExceptionSensorData> exceptionSensorData = new ArrayList<>();
 
 	/**
 	 * The resource manager is used for the images etc.
@@ -55,9 +56,9 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The event type column. */
@@ -78,7 +79,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -94,13 +95,13 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -115,6 +116,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
 		cachedDataService = inputDefinition.getRepositoryDefinition().getCachedDataService();
@@ -123,13 +125,15 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getExpandLevel() {
-		return TreeViewer.ALL_LEVELS;
+		return AbstractTreeViewer.ALL_LEVELS;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TreeViewer treeViewer) {
 		for (Column column : Column.values()) {
 			TreeViewerColumn viewerColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
@@ -146,6 +150,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getTreeInput() {
 		return exceptionSensorData;
 	}
@@ -153,6 +158,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new ExceptionTreeContentProvider();
 	}
@@ -160,6 +166,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new ExceptionTreeLabelProvider();
 	}
@@ -167,6 +174,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean canOpenInput(List<? extends DefaultData> data) {
 		if (null == data) {
 			return false;
@@ -185,15 +193,15 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 
 	/**
 	 * The exception tree details label provider for this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private final class ExceptionTreeLabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -211,7 +219,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 
 		/**
 		 * Returns the column image for the given element at the given index.
-		 * 
+		 *
 		 * @param element
 		 *            The element.
 		 * @param index
@@ -251,7 +259,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param methodIdent
@@ -287,18 +295,19 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 
 	/**
 	 * The exception tree details content provider for this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private static final class ExceptionTreeContentProvider implements ITreeContentProvider {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object[] getChildren(Object parent) {
 			ExceptionSensorData exceptionSensorData = (ExceptionSensorData) parent;
-			List<ExceptionSensorData> exceptionSensorDataList = new ArrayList<ExceptionSensorData>();
+			List<ExceptionSensorData> exceptionSensorDataList = new ArrayList<>();
 			exceptionSensorDataList.add(exceptionSensorData.getChild());
 
 			return exceptionSensorDataList.toArray();
@@ -307,6 +316,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getParent(Object child) {
 			return null;
 		}
@@ -314,6 +324,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean hasChildren(Object parent) {
 			if (parent == null) {
 				return false;
@@ -332,6 +343,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<ExceptionSensorData> exceptionSensorData = (List<ExceptionSensorData>) inputElement;
@@ -341,12 +353,14 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 	}
@@ -354,6 +368,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof ExceptionSensorData) {
 			ExceptionSensorData data = (ExceptionSensorData) object;
@@ -376,7 +391,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 		if (object instanceof ExceptionSensorData) {
 			ExceptionSensorData data = (ExceptionSensorData) object;
 			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, methodIdent, column).toString());
 			}
@@ -391,7 +406,7 @@ public class ExceptionTreeInputController extends AbstractTreeInputController {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getObjectsToSearch(Object treeInput) {
-		List<ExceptionSensorData> allObjects = new ArrayList<ExceptionSensorData>();
+		List<ExceptionSensorData> allObjects = new ArrayList<>();
 		List<ExceptionSensorData> exceptionSensorDataList = (List<ExceptionSensorData>) treeInput;
 		for (ExceptionSensorData exData : exceptionSensorDataList) {
 			ExceptionSensorData objectToAdd = exData;

@@ -13,21 +13,13 @@ import org.testng.annotations.Test;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.IAggregatedData;
 import rocks.inspectit.shared.all.communication.IIdsAwareAggregatedData;
-import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
-import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
-import rocks.inspectit.shared.all.communication.data.AggregatedSqlStatementData;
-import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
-import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
-import rocks.inspectit.shared.all.communication.data.HttpTimerData;
-import rocks.inspectit.shared.all.communication.data.SqlStatementData;
-import rocks.inspectit.shared.all.communication.data.TimerData;
 
 @SuppressWarnings("PMD")
 public class AggregatedDataTest {
 
 	/**
 	 * Tests the ID aggregation with in {@link IAggregatedData}.
-	 * 
+	 *
 	 * @param aggregated
 	 *            {@link IAggregatedData}
 	 * @param data

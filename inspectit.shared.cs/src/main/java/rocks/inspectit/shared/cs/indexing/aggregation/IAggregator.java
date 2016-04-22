@@ -6,9 +6,9 @@ import rocks.inspectit.shared.all.communication.IAggregatedData;
 /**
  * Interface that defines the operations needed to do a aggregation on the objects. This interface
  * can be used with queries to provide simpler aggregation possibilities.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of data that is aggregated.
  */
@@ -17,7 +17,7 @@ public interface IAggregator<E extends DefaultData> {
 	/**
 	 * Performs the aggregation. The aggregation should be done in the aggregatedObject, and
 	 * objectToAdd should not be changed.
-	 * 
+	 *
 	 * @param aggregatedObject
 	 *            Object to hold aggregated values.
 	 * @param objectToAdd
@@ -27,7 +27,7 @@ public interface IAggregator<E extends DefaultData> {
 
 	/**
 	 * Provides cloned object if the {@link #isCloning()} returns true.
-	 * 
+	 *
 	 * @param object
 	 *            Object to be cloned.
 	 * @return Provides cloned object if the {@link #isCloning()} returns true.
@@ -36,7 +36,7 @@ public interface IAggregator<E extends DefaultData> {
 
 	/**
 	 * Returns aggregation key.
-	 * 
+	 *
 	 * @param object
 	 *            Object to get key for.
 	 * @return Aggregation key.

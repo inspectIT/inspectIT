@@ -1,7 +1,5 @@
 package rocks.inspectit.ui.rcp.handlers;
 
-import static org.hamcrest.Matchers.instanceOf;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -15,9 +13,9 @@ import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * Handler that copies the SQL Query string to the clipboard.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CopySqlQueryHandler extends AbstractHandler implements IHandler {
 

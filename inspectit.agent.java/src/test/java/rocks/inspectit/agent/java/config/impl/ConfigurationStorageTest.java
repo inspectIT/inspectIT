@@ -55,7 +55,7 @@ public class ConfigurationStorageTest extends TestBase {
 			String agentName = "agentName";
 			Properties properties = System.getProperties();
 			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
-			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY,  agentName);
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, agentName);
 
 			configurationStorage.afterPropertiesSet();
 

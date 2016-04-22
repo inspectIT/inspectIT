@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -123,7 +123,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(2)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -170,7 +170,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -224,7 +224,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -285,7 +285,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Mockito.<String> anyObject(), Mockito.<InvocationSequenceData> anyObject());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), Matchers.<InvocationSequenceData> anyObject());
 	}
 
 	/**
@@ -355,7 +355,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(5)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -411,7 +411,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -464,7 +464,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -521,7 +521,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -575,7 +575,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -632,7 +632,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -685,7 +685,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Mockito.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));

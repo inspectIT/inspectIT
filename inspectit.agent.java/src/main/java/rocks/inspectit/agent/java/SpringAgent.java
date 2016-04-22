@@ -198,7 +198,7 @@ public class SpringAgent implements IAgent {
 	 */
 	public Class<?> loadClass(Object[] params) {
 		try {
-			if (null != params && params.length == 1) {
+			if ((null != params) && (params.length == 1)) {
 				Object p = params[0];
 				if (p instanceof String) {
 					return loadClass((String) p);

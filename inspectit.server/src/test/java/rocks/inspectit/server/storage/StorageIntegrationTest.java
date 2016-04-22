@@ -34,7 +34,6 @@ import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryo.io.Input;
 
-import rocks.inspectit.server.storage.CmrStorageManager;
 import rocks.inspectit.server.test.AbstractTransactionalTestNGLogSupport;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
@@ -57,9 +56,9 @@ import rocks.inspectit.shared.cs.storage.processor.impl.DataSaverProcessor;
 
 /**
  * Tests the complete CMR storage functionality.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @ContextConfiguration(locations = { "classpath:spring/spring-context-global.xml", "classpath:spring/spring-context-database.xml", "classpath:spring/spring-context-beans.xml",
 		"classpath:spring/spring-context-processors.xml", "classpath:spring/spring-context-storage-test.xml" })
@@ -110,8 +109,8 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	@BeforeClass
 	public void createStorageData() {
 		storageData = getStorageData();
-		createdInvocations = new ArrayList<InvocationSequenceData>();
-		List<Class<? extends DefaultData>> saverClasses = new ArrayList<Class<? extends DefaultData>>();
+		createdInvocations = new ArrayList<>();
+		List<Class<? extends DefaultData>> saverClasses = new ArrayList<>();
 		saverClasses.add(InvocationSequenceData.class);
 		dataSaverProcessor = new DataSaverProcessor(saverClasses, true);
 	}
@@ -126,7 +125,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Tests creation of storage.
-	 * 
+	 *
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
@@ -177,7 +176,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Test write to storage.
-	 * 
+	 *
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 * @throws SerializationException
@@ -189,7 +188,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	public void testWrite() throws BusinessException, IOException, SerializationException {
 		Random random = new Random();
 		int repeat = random.nextInt(100);
-		List<AbstractDataProcessor> processors = new ArrayList<AbstractDataProcessor>();
+		List<AbstractDataProcessor> processors = new ArrayList<>();
 		processors.add(dataSaverProcessor);
 		for (int i = 0; i < repeat; i++) {
 			InvocationSequenceData invoc = getInvocationSequenceDataInstance(1 + random.nextInt(1000));
@@ -213,7 +212,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Test storage finalization.
-	 * 
+	 *
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
@@ -286,7 +285,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Tests reading of data from created storage.
-	 * 
+	 *
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
@@ -299,7 +298,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 		}
 
 		StorageIndexQuery query = new StorageIndexQuery();
-		List<Class<?>> searchedClasses = new ArrayList<Class<?>>();
+		List<Class<?>> searchedClasses = new ArrayList<>();
 		searchedClasses.add(InvocationSequenceData.class);
 		query.setObjectClasses(searchedClasses);
 
@@ -332,7 +331,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Test adding/removing of labels to a {@link StorageData} and sucessful saving to the disk.
-	 * 
+	 *
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
@@ -412,7 +411,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Returns storage folder.
-	 * 
+	 *
 	 * @return Returns storage folder.
 	 */
 	private File getStorageFolder() {
@@ -429,7 +428,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	}
 
 	/**
-	 * 
+	 *
 	 * @return One {@link SqlStatementData} with random values.
 	 */
 	private static SqlStatementData getSqlStatementInstance() {
@@ -452,7 +451,7 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 
 	/**
 	 * Returns the random {@link InvocationSequenceData} instance.
-	 * 
+	 *
 	 * @param childCount
 	 *            Desired child count.
 	 * @return {@link InvocationSequenceData} instance.
@@ -468,10 +467,10 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 			return invData;
 		}
 
-		List<InvocationSequenceData> children = new ArrayList<InvocationSequenceData>();
+		List<InvocationSequenceData> children = new ArrayList<>();
 		for (int i = 0; i < childCount;) {
 			int childCountForChild = childCount / 10;
-			if (childCountForChild + i + 1 > childCount) {
+			if ((childCountForChild + i + 1) > childCount) {
 				childCountForChild = childCount - i - 1;
 			}
 			InvocationSequenceData child = getInvocationSequenceDataInstance(childCountForChild);

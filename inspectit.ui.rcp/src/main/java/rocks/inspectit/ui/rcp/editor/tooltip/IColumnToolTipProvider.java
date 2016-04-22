@@ -4,15 +4,15 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Special interface for simple tooltip providing based on the table/tree column.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IColumnToolTipProvider {
 
 	/**
 	 * Returns tool-tip text.
-	 * 
+	 *
 	 * @param element
 	 *            Element to return the tool-tip for.
 	 * @param index
@@ -23,7 +23,7 @@ public interface IColumnToolTipProvider {
 
 	/**
 	 * Returns tool-tip image.
-	 * 
+	 *
 	 * @param element
 	 *            Element to return the tool-tip for.
 	 * @param index

@@ -8,9 +8,9 @@ import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 
 /**
  * Class for displaying exceptions in RESTful services with the {@link ModelAndView}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class JsonError {
 
@@ -21,7 +21,7 @@ public class JsonError {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param exception
 	 *            Cause of the error.
 	 */

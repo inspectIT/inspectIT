@@ -21,9 +21,9 @@ import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 
 /**
  * Leaf class is the one that holds the weak references to objects, thus last in tree structure.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Element type that the leaf can index (and hold).
  */
@@ -43,6 +43,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	 * Clear runnable for this Leaf.
 	 */
 	private Runnable clearRunnable = new Runnable() {
+		@Override
 		public void run() {
 			Leaf.this.clean();
 		}
@@ -58,14 +59,15 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	 */
 	public Leaf() {
 		map = new NonBlockingHashMapLong<>();
-		referenceQueue = new ReferenceQueue<E>();
+		referenceQueue = new ReferenceQueue<>();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public E put(E element) {
-		CustomWeakReference<E> weakReference = new CustomWeakReference<E>(element, referenceQueue);
+		CustomWeakReference<E> weakReference = new CustomWeakReference<>(element, referenceQueue);
 		map.put(element.getId(), weakReference);
 		return element;
 	}
@@ -73,6 +75,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public E get(E template) {
 		long id = template.getId();
 		WeakReference<E> weakReference = map.get(id);
@@ -90,6 +93,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public E getAndRemove(E template) {
 		long id = template.getId();
 		WeakReference<E> weakReference = map.get(id);
@@ -110,23 +114,26 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<E> query(IIndexQuery query) {
-		List<E> results = new ArrayList<E>();
+		List<E> results = new ArrayList<>();
 		Iterator<CustomWeakReference<E>> iterator = map.values().iterator();
 		while (iterator.hasNext()) {
 			WeakReference<E> weakReference = iterator.next();
 			if (null != weakReference) {
 				E element = weakReference.get();
-				if (null != element && element.isQueryComplied(query)) {
+				if ((null != element) && element.isQueryComplied(query)) {
 					results.add(weakReference.get());
 				}
 			}
 		}
 		return results;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<E> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
 		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
@@ -134,6 +141,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getComponentSize(IObjectSizes objectSizes) {
 		int mapSize = map.size();
 		long size = objectSizes.getSizeOfObjectHeader();
@@ -154,9 +162,10 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean clean() {
-		List<Long> toClean = new ArrayList<Long>();
+		List<Long> toClean = new ArrayList<>();
 		CustomWeakReference<E> customWeakReference = (CustomWeakReference<E>) referenceQueue.poll();
 		while (customWeakReference != null) {
 			toClean.add(customWeakReference.getReferentId());
@@ -174,6 +183,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getNumberOfElements() {
 		return map.size();
 	}
@@ -181,6 +191,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clearAll() {
 		map.clear();
 	}
@@ -188,8 +199,9 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void cleanWithRunnable(ExecutorService executorService) {
-		if (clearFuture == null || clearFuture.isDone()) {
+		if ((clearFuture == null) || clearFuture.isDone()) {
 			clearFuture = executorService.submit(clearRunnable);
 		}
 	}
@@ -197,6 +209,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean clearEmptyComponents() {
 		return map.isEmpty();
 	}
@@ -204,9 +217,9 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * Custom extension of {@link WeakReference} that will additionally hold the id of the referent
 	 * {@link DefaultData} object.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 * @param <E>
 	 */
 	private static class CustomWeakReference<T extends DefaultData> extends WeakReference<T> {
@@ -218,7 +231,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param referent
 		 *            Object to refer to.
 		 * @param q
@@ -252,6 +265,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RecursiveTask<List<E>> getTaskForForkJoinQuery(IIndexQuery query) {
 		return new LeafTask<>(this, query);
 	}

@@ -16,7 +16,7 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * JMX information details generator.
- * 
+ *
  * @author Marius Oehler
  *
  */

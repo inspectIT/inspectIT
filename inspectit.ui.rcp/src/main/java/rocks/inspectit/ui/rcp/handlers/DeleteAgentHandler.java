@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Handler for deleting the agent from the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DeleteAgentHandler extends AbstractHandler implements IHandler {
 
@@ -34,7 +34,7 @@ public class DeleteAgentHandler extends AbstractHandler implements IHandler {
 				"Are you sure you want to permanently delete the selected Agent(s)? Note that all monitoring data related to the Agent(s) will be deleted from the repository database.");
 		if (confirmed) {
 			for (Iterator<?> it = selection.iterator(); it.hasNext();) {
-				Object selected = (Object) it.next();
+				Object selected = it.next();
 				if (selected instanceof AgentLeaf) {
 					AgentLeaf agentLeaf = (AgentLeaf) selected;
 					PlatformIdent platformIdent = agentLeaf.getPlatformIdent();

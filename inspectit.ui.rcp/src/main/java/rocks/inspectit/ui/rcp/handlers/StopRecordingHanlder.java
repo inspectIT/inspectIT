@@ -30,9 +30,9 @@ import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
 
 /**
  * Stops recording.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StopRecordingHanlder extends AbstractHandler implements IHandler {
 

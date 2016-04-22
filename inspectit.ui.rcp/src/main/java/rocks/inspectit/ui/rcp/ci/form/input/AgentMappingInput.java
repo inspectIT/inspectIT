@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Input for the agent mapping editor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentMappingInput implements IEditorInput {
 
@@ -96,7 +96,7 @@ public class AgentMappingInput implements IEditorInput {
 
 	/**
 	 * Gets {@link #cmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @return {@link #cmrRepositoryDefinition}
 	 */
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
@@ -105,7 +105,7 @@ public class AgentMappingInput implements IEditorInput {
 
 	/**
 	 * Gets {@link #agentMappings}.
-	 * 
+	 *
 	 * @return {@link #agentMappings}
 	 */
 	public AgentMappings getAgentMappings() {
@@ -114,7 +114,7 @@ public class AgentMappingInput implements IEditorInput {
 
 	/**
 	 * Gets {@link #environments}.
-	 * 
+	 *
 	 * @return {@link #environments}
 	 */
 	public Collection<Environment> getEnvironments() {
@@ -141,7 +141,7 @@ public class AgentMappingInput implements IEditorInput {
 		// use only CMR in the hash code equals to only open one editor per CMR
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cmrRepositoryDefinition == null) ? 0 : cmrRepositoryDefinition.hashCode());
+		result = (prime * result) + ((cmrRepositoryDefinition == null) ? 0 : cmrRepositoryDefinition.hashCode());
 		return result;
 	}
 

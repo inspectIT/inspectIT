@@ -12,13 +12,13 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -44,6 +44,7 @@ import org.eclipse.ui.forms.MasterDetailsBlock;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -225,7 +226,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		FormToolkit toolkit = managedForm.getToolkit();
 
 		// section
-		Section section = toolkit.createSection(parent, Section.NO_TITLE | Section.EXPANDED);
+		Section section = toolkit.createSection(parent, ExpandableComposite.NO_TITLE | ExpandableComposite.EXPANDED);
 		section.marginWidth = 10;
 		section.marginHeight = 5;
 
@@ -410,7 +411,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	 */
 	private TableViewer getActiveTableViewer() {
 		int index = tabFolder.getSelectionIndex();
-		if (index != -1 && CollectionUtils.isNotEmpty(tableViewers)) {
+		if ((index != -1) && CollectionUtils.isNotEmpty(tableViewers)) {
 			return tableViewers.get(index);
 		}
 
@@ -427,7 +428,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	 */
 	private void createNewTabItem(Class<? extends ISensorConfig> sensorClass, List<AbstractClassSensorAssignment<?>> assignments) {
 		// remove empty hint composite if it's still there
-		if (null != emptyHintComposite && !emptyHintComposite.isDisposed()) {
+		if ((null != emptyHintComposite) && !emptyHintComposite.isDisposed()) {
 			tabFolder.getItem(0).dispose();
 			emptyHintComposite.dispose();
 		}
@@ -521,7 +522,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 	 */
 	private AbstractClassSensorAssignment<?> addRequested() {
 		SensorAssignmentSelectionDialog dialog = new SensorAssignmentSelectionDialog(managedForm.getForm().getShell());
-		if (dialog.open() == Dialog.OK) {
+		if (dialog.open() == Window.OK) {
 			return dialog.getSensorAssignment();
 		}
 		return null;

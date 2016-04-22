@@ -8,9 +8,9 @@ import rocks.inspectit.agent.java.hooking.IConstructorHook;
  * Classes which add additional instructions to the constructor of type {@link Throwable}, to the
  * <code>throw</code> statement and to the <code>catch</code> block catching type {@link Throwable}
  * have to implement this interface.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public interface IExceptionSensorHook extends IConstructorHook {
 
@@ -19,7 +19,7 @@ public interface IExceptionSensorHook extends IConstructorHook {
 	 * with the <code>throw</code> statement. This method is wrapping the thrower method with a
 	 * try-catch block and gets the needed information. After that the {@link Throwable} object is
 	 * thrown from that method to propagate along the normal exceptional path.
-	 * 
+	 *
 	 * @param coreService
 	 *            The core service.
 	 * @param id
@@ -41,7 +41,7 @@ public interface IExceptionSensorHook extends IConstructorHook {
 	/**
 	 * This method is executed just before a handler (appropriate catch block) for the thrown
 	 * {@link Throwable} object is executed.
-	 * 
+	 *
 	 * @param coreService
 	 *            The core service.
 	 * @param id

@@ -89,7 +89,7 @@ public class FieldContextCapture extends AbstractContextCapture {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = (prime * result) + ((fieldName == null) ? 0 : fieldName.hashCode());
 		return result;
 	}
 

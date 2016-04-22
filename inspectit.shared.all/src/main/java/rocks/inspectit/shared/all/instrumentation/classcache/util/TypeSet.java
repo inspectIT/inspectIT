@@ -6,9 +6,9 @@ import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 
 /**
  * Set for the different {@link Type}s that inserts element in set based on their FQN.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type
  */

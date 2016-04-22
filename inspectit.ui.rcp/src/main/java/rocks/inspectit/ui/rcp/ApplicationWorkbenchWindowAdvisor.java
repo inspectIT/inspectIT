@@ -6,15 +6,15 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 /**
  * Here we configure our workbench window.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param configurer
 	 *            {@link IWorkbenchWindowConfigurer}
 	 * @see WorkbenchWindowAdvisor#WorkbenchWindowAdvisor(IWorkbenchWindowConfigurer)

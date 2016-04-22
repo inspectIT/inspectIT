@@ -17,9 +17,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link IExceptionDataAccessService} for storage purposes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageExceptionDataAccessService extends AbstractStorageService<ExceptionSensorData> implements IExceptionDataAccessService {
 
@@ -36,6 +36,7 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, int limit, ResultComparator<ExceptionSensorData> resultComparator) {
 		return this.getUngroupedExceptionOverview(template, limit, null, null, resultComparator);
 	}
@@ -43,6 +44,7 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, int limit, Date fromDate, Date toDate, ResultComparator<ExceptionSensorData> resultComparator) {
 		StorageIndexQuery query = exceptionSensorDataQueryFactory.getUngroupedExceptionOverviewQuery(template, limit, fromDate, toDate);
 		if (null != resultComparator) {
@@ -56,6 +58,7 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, ResultComparator<ExceptionSensorData> resultComparator) {
 		return this.getUngroupedExceptionOverview(template, -1, null, null, resultComparator);
 	}
@@ -63,6 +66,7 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getUngroupedExceptionOverview(ExceptionSensorData template, Date fromDate, Date toDate, ResultComparator<ExceptionSensorData> resultComparator) {
 		return this.getUngroupedExceptionOverview(template, -1, fromDate, toDate, resultComparator);
 	}
@@ -70,6 +74,7 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ExceptionSensorData> getExceptionTree(ExceptionSensorData template) {
 		// here we have a problem because we have to de-serialize every exception to find the right
 		// one, we need to check if we can change this method
@@ -82,6 +87,7 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<AggregatedExceptionSensorData> getDataForGroupedExceptionOverview(ExceptionSensorData template) {
 		return this.getDataForGroupedExceptionOverview(template, null, null);
 	}
@@ -89,10 +95,11 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<AggregatedExceptionSensorData> getDataForGroupedExceptionOverview(ExceptionSensorData template, Date fromDate, Date toDate) {
 		StorageIndexQuery query = exceptionSensorDataQueryFactory.getDataForGroupedExceptionOverviewQuery(template, fromDate, toDate);
 		List<ExceptionSensorData> resultList = super.executeQuery(query, Aggregators.GROUP_EXCEPTION_OVERVIEW_AGGREGATOR);
-		List<AggregatedExceptionSensorData> filterList = new ArrayList<AggregatedExceptionSensorData>(resultList.size());
+		List<AggregatedExceptionSensorData> filterList = new ArrayList<>(resultList.size());
 		for (ExceptionSensorData data : resultList) {
 			if (data instanceof AggregatedExceptionSensorData) {
 				filterList.add((AggregatedExceptionSensorData) data);
@@ -114,6 +121,7 @@ public class StorageExceptionDataAccessService extends AbstractStorageService<Ex
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected IStorageTreeComponent<ExceptionSensorData> getIndexingTree() {
 		return indexingTree;
 	}

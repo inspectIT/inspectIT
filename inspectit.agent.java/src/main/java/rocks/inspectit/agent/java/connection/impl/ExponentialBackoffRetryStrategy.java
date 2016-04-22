@@ -9,11 +9,11 @@ import rocks.inspectit.agent.java.connection.RetryStrategy;
  * You probably don't want to use an ExponentialBackoffRetryStrategy in a thread which needs to be
  * responsive (e.g. in the Swing event handling thread).
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken from <a
- * href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>. Original
- * author is William Grosso. License info can be found <a
- * href="http://www.oreilly.com/terms/">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken from
+ * <a href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>.
+ * Original author is William Grosso. License info can be found
+ * <a href="http://www.oreilly.com/terms/">here</a>.
+ *
  * @author William Grosso
  */
 
@@ -39,7 +39,7 @@ public class ExponentialBackoffRetryStrategy extends RetryStrategy {
 	/**
 	 * Additional constructor with two parameters. The first one defines the number of retries till
 	 * it completely fails. The second specifies the starting wait time.
-	 * 
+	 *
 	 * @param numberOfRetries
 	 *            The number of retries.
 	 * @param startingWaitTime
@@ -53,6 +53,7 @@ public class ExponentialBackoffRetryStrategy extends RetryStrategy {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected long getTimeToWait() {
 		long returnValue = currentTimeToWait;
 		currentTimeToWait *= 2;

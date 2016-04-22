@@ -24,20 +24,13 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
 import rocks.inspectit.shared.cs.indexing.impl.IndexQuery;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.InvocationChildrenIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.SensorTypeIdentIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.SqlStringIndexer;
-import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
 import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * Tests all available branch indexer classes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class BranchIndexersTest {
@@ -55,7 +48,7 @@ public class BranchIndexersTest {
 		InvocationSequenceData data2 = mock(InvocationSequenceData.class);
 		when(data2.getNestedSequences()).thenReturn(Collections.singletonList(data1));
 
-		InvocationChildrenIndexer<DefaultData> indexer = new InvocationChildrenIndexer<DefaultData>();
+		InvocationChildrenIndexer<DefaultData> indexer = new InvocationChildrenIndexer<>();
 
 		Object key1 = indexer.getKey(data1);
 		Object key2 = indexer.getKey(data2);
@@ -80,7 +73,7 @@ public class BranchIndexersTest {
 		MethodSensorData data = mock(MethodSensorData.class);
 		when(data.getMethodIdent()).thenReturn(10L).thenReturn(20L);
 
-		MethodIdentIndexer<DefaultData> indexer = new MethodIdentIndexer<DefaultData>();
+		MethodIdentIndexer<DefaultData> indexer = new MethodIdentIndexer<>();
 
 		Object key1 = indexer.getKey(data);
 		Object key2 = indexer.getKey(data);
@@ -109,7 +102,7 @@ public class BranchIndexersTest {
 		// different keys if platform idents differ
 		DefaultData data = mock(DefaultData.class);
 
-		PlatformIdentIndexer<DefaultData> indexer = new PlatformIdentIndexer<DefaultData>();
+		PlatformIdentIndexer<DefaultData> indexer = new PlatformIdentIndexer<>();
 
 		when(data.getPlatformIdent()).thenReturn(10L);
 		Object key1 = indexer.getKey(data);
@@ -140,7 +133,7 @@ public class BranchIndexersTest {
 		// different keys if sensor type idents differ
 		DefaultData data = mock(DefaultData.class);
 
-		SensorTypeIdentIndexer<DefaultData> indexer = new SensorTypeIdentIndexer<DefaultData>();
+		SensorTypeIdentIndexer<DefaultData> indexer = new SensorTypeIdentIndexer<>();
 
 		when(data.getSensorTypeIdent()).thenReturn(10L);
 		Object key1 = indexer.getKey(data);
@@ -170,7 +163,7 @@ public class BranchIndexersTest {
 		DefaultData data1 = mock(InvocationSequenceData.class);
 		DefaultData data2 = mock(SqlStatementData.class);
 
-		ObjectTypeIndexer<DefaultData> indexer = new ObjectTypeIndexer<DefaultData>();
+		ObjectTypeIndexer<DefaultData> indexer = new ObjectTypeIndexer<>();
 
 		Object key1 = indexer.getKey(data1);
 		Object key2 = indexer.getKey(data2);
@@ -181,7 +174,7 @@ public class BranchIndexersTest {
 		when(query.getObjectClasses()).thenReturn(null);
 		assertThat(indexer.getKeys(query), is(emptyArray()));
 
-		List<Class<?>> classes = new ArrayList<Class<?>>();
+		List<Class<?>> classes = new ArrayList<>();
 		CollectionUtils.addAll(classes, new Object[] { InvocationSequenceData.class, SqlStatementData.class });
 		when(query.getObjectClasses()).thenReturn(classes);
 
@@ -197,7 +190,7 @@ public class BranchIndexersTest {
 	public void sqlStringIndexer() {
 		SqlStatementData data = mock(SqlStatementData.class);
 
-		SqlStringIndexer<DefaultData> indexer = new SqlStringIndexer<DefaultData>();
+		SqlStringIndexer<DefaultData> indexer = new SqlStringIndexer<>();
 
 		when(data.getSql()).thenReturn(RandomStringUtils.random(100));
 		Object key1 = indexer.getKey(data);
@@ -207,7 +200,7 @@ public class BranchIndexersTest {
 		assertThat(key1, is(not(key2)));
 
 		// assert that if max keys is set it will work
-		indexer = new SqlStringIndexer<DefaultData>(1);
+		indexer = new SqlStringIndexer<>(1);
 
 		when(data.getSql()).thenReturn(RandomStringUtils.random(100));
 		key1 = indexer.getKey(data);
@@ -232,11 +225,11 @@ public class BranchIndexersTest {
 	public void timestampIndexer() {
 		DefaultData data = mock(DefaultData.class);
 
-		TimestampIndexer<DefaultData> indexer = new TimestampIndexer<DefaultData>();
+		TimestampIndexer<DefaultData> indexer = new TimestampIndexer<>();
 
 		when(data.getTimeStamp()).thenReturn(new Timestamp(System.currentTimeMillis()));
 		Object key1 = indexer.getKey(data);
-		when(data.getTimeStamp()).thenReturn(new Timestamp(System.currentTimeMillis() + 20 * 60 * 1000)); // 20
+		when(data.getTimeStamp()).thenReturn(new Timestamp(System.currentTimeMillis() + (20 * 60 * 1000))); // 20
 		Object key2 = indexer.getKey(data);
 
 		assertThat(key1, is(not(key2)));
@@ -246,18 +239,18 @@ public class BranchIndexersTest {
 		when(query.isIntervalSet()).thenReturn(true);
 
 		// not index period should also return empty array
-		when(query.getFromDate()).thenReturn(new Timestamp(System.currentTimeMillis() - 30 * 60 * 1000));
-		when(query.getToDate()).thenReturn(new Timestamp(System.currentTimeMillis() - 20 * 60 * 1000));
+		when(query.getFromDate()).thenReturn(new Timestamp(System.currentTimeMillis() - (30 * 60 * 1000)));
+		when(query.getToDate()).thenReturn(new Timestamp(System.currentTimeMillis() - (20 * 60 * 1000)));
 		assertThat(indexer.getKeys(query), is(emptyArray()));
 
 		// when only one indexed time stamp is in interval return only one key
-		when(query.getFromDate()).thenReturn(new Timestamp(System.currentTimeMillis() - 20 * 60 * 1000));
-		when(query.getToDate()).thenReturn(new Timestamp(System.currentTimeMillis() + 3 * 60 * 1000));
+		when(query.getFromDate()).thenReturn(new Timestamp(System.currentTimeMillis() - (20 * 60 * 1000)));
+		when(query.getToDate()).thenReturn(new Timestamp(System.currentTimeMillis() + (3 * 60 * 1000)));
 		assertThat(indexer.getKeys(query), is(arrayWithSize(1)));
 
 		// when both indexed time stamps are in interval return two keys
-		when(query.getFromDate()).thenReturn(new Timestamp(System.currentTimeMillis() - 10 * 60 * 1000));
-		when(query.getToDate()).thenReturn(new Timestamp(System.currentTimeMillis() + 30 * 60 * 1000));
+		when(query.getFromDate()).thenReturn(new Timestamp(System.currentTimeMillis() - (10 * 60 * 1000)));
+		when(query.getToDate()).thenReturn(new Timestamp(System.currentTimeMillis() + (30 * 60 * 1000)));
 		assertThat(indexer.getKeys(query), is(arrayWithSize(2)));
 	}
 }

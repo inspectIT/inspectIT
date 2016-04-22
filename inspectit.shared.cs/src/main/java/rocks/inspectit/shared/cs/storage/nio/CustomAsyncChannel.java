@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class that defines special need operation with {@link AsynchronousFileChannel}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CustomAsyncChannel {
 
@@ -67,7 +67,7 @@ public class CustomAsyncChannel {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param path
 	 *            Path to the channel's file.
 	 */
@@ -92,7 +92,7 @@ public class CustomAsyncChannel {
 	/**
 	 * Opens the channel creating the file in the given path to the directory. The
 	 * {@link AsynchronousFileChannel} will work with default {@link ExecutorService}.
-	 * 
+	 *
 	 * @throws IOException
 	 *             When {@link IOException} occurs during opening.
 	 */
@@ -103,7 +103,7 @@ public class CustomAsyncChannel {
 	/**
 	 * Opens the channel creating the file in the given path to the directory. The
 	 * {@link AsynchronousFileChannel} will work with provided {@link ExecutorService}.
-	 * 
+	 *
 	 * @param executorService
 	 *            Executor service that has threads that will work on
 	 *            {@link AsynchronousFileChannel}.
@@ -116,7 +116,7 @@ public class CustomAsyncChannel {
 		openCloseLock.lock();
 		try {
 			if (!this.isOpened()) {
-				Set<OpenOption> optionsSet = new HashSet<OpenOption>();
+				Set<OpenOption> optionsSet = new HashSet<>();
 				optionsSet.add(StandardOpenOption.CREATE);
 				optionsSet.add(StandardOpenOption.WRITE);
 				optionsSet.add(StandardOpenOption.READ);
@@ -141,9 +141,9 @@ public class CustomAsyncChannel {
 
 	/**
 	 * Closes the channel. Note that no write will be possible after calling this method.
-	 * 
+	 *
 	 * @return True if channel was closed, false if the channel was already closed.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If {@link IOException} happens during closing.
 	 */
@@ -172,17 +172,17 @@ public class CustomAsyncChannel {
 
 	/**
 	 * Returns if channel is open.
-	 * 
+	 *
 	 * @return Returns if channel is open.
 	 */
 	public boolean isOpened() {
-		return fileChannel != null && fileChannel.isOpen();
+		return (fileChannel != null) && fileChannel.isOpen();
 	}
 
 	/**
 	 * Writes to the file channel if the channel is open. If the channel is closed, the write will
 	 * not be done, and false will be returned.
-	 * 
+	 *
 	 * @param <A>
 	 *            Type of attachment.
 	 * @param src
@@ -212,7 +212,7 @@ public class CustomAsyncChannel {
 	/**
 	 * Reads to the file channel if the channel is open. If the channel is closed, the read will not
 	 * be done, and false will be returned.
-	 * 
+	 *
 	 * @param <A>
 	 *            Type of attachment.
 	 * @param dst
@@ -242,7 +242,7 @@ public class CustomAsyncChannel {
 	/**
 	 * Reserves the writing position in this channel with the given size. This method is thread
 	 * safe.
-	 * 
+	 *
 	 * @param writeSize
 	 *            Size of writing that has to be done.
 	 * @return Returns the position where file should be written.

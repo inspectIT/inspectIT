@@ -25,7 +25,6 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
-import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.MethodIdentIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.ObjectTypeIndexer;
 import rocks.inspectit.shared.cs.indexing.indexer.impl.PlatformIdentIndexer;
@@ -43,9 +42,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * Test for checking the {@link IStorageTreeComponent}s.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings({ "PMD", "all" })
 public class StorageIndexingTest {
@@ -70,13 +69,13 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test tree with empty query. All elements should be returned.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void emptyQueryTest() throws IndexingException {
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(new StorageBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), false));
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new ObjectTypeIndexer<>(), false));
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -98,13 +97,13 @@ public class StorageIndexingTest {
 	/**
 	 * Test that putting one element will return the same {@link IStorageDescriptor} as when get is
 	 * executed..
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void putAndGetInvocation() throws IndexingException {
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(new StorageBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), false));
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new ObjectTypeIndexer<>(), false));
 
 		InvocationSequenceData invocationSequenceData = new InvocationSequenceData();
 		invocationSequenceData.setId(1L);
@@ -115,13 +114,13 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test that the get on the {@link LeafWithNoDescriptors} will throw an exception if invoked.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test(expectedExceptions = { UnsupportedOperationException.class })
 	public void putAndGetElement() throws IndexingException {
-		IStorageTreeComponent<DefaultData> rootBranch = new LeafWithNoDescriptors<DefaultData>();
+		IStorageTreeComponent<DefaultData> rootBranch = new LeafWithNoDescriptors<>();
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -131,13 +130,13 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test tree with query that holds only platform ident.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithPlatformIdent() throws IndexingException {
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(new StorageBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), false));
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new PlatformIdentIndexer<>(), false));
 
 		DefaultData defaultData1 = mock(DefaultData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -168,13 +167,13 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test tree with query that holds only method ident.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithMethodIdent() throws IndexingException {
-		IStorageTreeComponent<MethodSensorData> rootBranch = new StorageBranch<MethodSensorData>(new StorageBranchIndexer<MethodSensorData>(new MethodIdentIndexer<MethodSensorData>(), false));
+		IStorageTreeComponent<MethodSensorData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new MethodIdentIndexer<MethodSensorData>(), false));
 
 		MethodSensorData defaultData1 = mock(MethodSensorData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -205,13 +204,13 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test tree with query that holds only object type.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithObjectType() throws IndexingException {
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(new StorageBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), false));
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new ObjectTypeIndexer<>(), false));
 
 		TimerData defaultData1 = mock(TimerData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -223,7 +222,7 @@ public class StorageIndexingTest {
 		IStorageDescriptor storageDescriptor2 = rootBranch.put(defaultData2);
 		storageDescriptor2.setPositionAndSize(0L, 200L);
 
-		List<Class<?>> searchedClasses = new ArrayList<Class<?>>();
+		List<Class<?>> searchedClasses = new ArrayList<>();
 		searchedClasses.add(defaultData1.getClass());
 		storageIndexQuery.setObjectClasses(searchedClasses);
 
@@ -242,16 +241,16 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test tree with query that holds only time interval.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryBranchWithTimestampInterval() throws IndexingException {
-		Timestamp minusHour = new Timestamp(new Date().getTime() + 20 * 60 * 1000);
-		Timestamp plusHour = new Timestamp(new Date().getTime() + 25 * 60 * 1000);
+		Timestamp minusHour = new Timestamp(new Date().getTime() + (20 * 60 * 1000));
+		Timestamp plusHour = new Timestamp(new Date().getTime() + (25 * 60 * 1000));
 
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(new StorageBranchIndexer<DefaultData>(new TimestampIndexer<DefaultData>(), false));
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new TimestampIndexer<>(), false));
 
 		DefaultData defaultData1 = mock(DefaultData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -283,16 +282,16 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test tree with query that holds platform ident and sensor ident in different levels.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             If {@link IndexingException} occurs.
 	 */
 	@Test
 	public void queryDifferentLevels() throws IndexingException {
-		StorageBranchIndexer<DefaultData> sensorTypeIndexer = new StorageBranchIndexer<DefaultData>(new SensorTypeIdentIndexer<DefaultData>(), false);
-		StorageBranchIndexer<DefaultData> objectTypeIndexer = new StorageBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), sensorTypeIndexer, false);
-		StorageBranchIndexer<DefaultData> platformTypeIndexer = new StorageBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), objectTypeIndexer, false);
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(platformTypeIndexer);
+		StorageBranchIndexer<DefaultData> sensorTypeIndexer = new StorageBranchIndexer<>(new SensorTypeIdentIndexer<>(), false);
+		StorageBranchIndexer<DefaultData> objectTypeIndexer = new StorageBranchIndexer<>(new ObjectTypeIndexer<>(), sensorTypeIndexer, false);
+		StorageBranchIndexer<DefaultData> platformTypeIndexer = new StorageBranchIndexer<>(new PlatformIdentIndexer<>(), objectTypeIndexer, false);
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(platformTypeIndexer);
 
 		TimerData defaultData1 = mock(TimerData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -327,16 +326,18 @@ public class StorageIndexingTest {
 			assertThat(result.getSize(), is(equalTo(100L)));
 		}
 	}
+
 	/**
 	 * Same Test as queryDifferentLevels() except with ForkJoin
+	 *
 	 * @throws IndexingException
 	 */
 	@Test
 	public void queryDifferentLevelsForkJoin() throws IndexingException {
-		StorageBranchIndexer<DefaultData> sensorTypeIndexer = new StorageBranchIndexer<DefaultData>(new SensorTypeIdentIndexer<DefaultData>(), false);
-		StorageBranchIndexer<DefaultData> objectTypeIndexer = new StorageBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), sensorTypeIndexer, false);
-		StorageBranchIndexer<DefaultData> platformTypeIndexer = new StorageBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), objectTypeIndexer, false);
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(platformTypeIndexer);
+		StorageBranchIndexer<DefaultData> sensorTypeIndexer = new StorageBranchIndexer<>(new SensorTypeIdentIndexer<>(), false);
+		StorageBranchIndexer<DefaultData> objectTypeIndexer = new StorageBranchIndexer<>(new ObjectTypeIndexer<>(), sensorTypeIndexer, false);
+		StorageBranchIndexer<DefaultData> platformTypeIndexer = new StorageBranchIndexer<>(new PlatformIdentIndexer<>(), objectTypeIndexer, false);
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(platformTypeIndexer);
 
 		TimerData defaultData1 = mock(TimerData.class);
 		when(defaultData1.getId()).thenReturn(1L);
@@ -375,13 +376,13 @@ public class StorageIndexingTest {
 	/**
 	 * Tests that the indexing the same element in the {@link ArrayBasedStorageLeaf} will thrown a
 	 * exception.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             {@link IndexingException}
 	 */
 	@Test(expectedExceptions = { IndexingException.class })
 	public void indexSameElement() throws IndexingException {
-		ArrayBasedStorageLeaf<DefaultData> arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<DefaultData>();
+		ArrayBasedStorageLeaf<DefaultData> arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<>();
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -391,13 +392,13 @@ public class StorageIndexingTest {
 
 	/**
 	 * Test the removing of the element in the {@link ArrayBasedStorageLeaf}.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             {@link IndexingException}
 	 */
 	@Test
 	public void removeElement() throws IndexingException {
-		ArrayBasedStorageLeaf<DefaultData> arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<DefaultData>();
+		ArrayBasedStorageLeaf<DefaultData> arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<>();
 
 		DefaultData defaultData = mock(DefaultData.class);
 		when(defaultData.getId()).thenReturn(1L);
@@ -414,13 +415,13 @@ public class StorageIndexingTest {
 	/**
 	 * Test the removing of the element in the {@link ArrayBasedStorageLeaf} when the leaf is full
 	 * of elements.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             {@link IndexingException}
 	 */
 	@Test
 	public void removeElementFromFullLeaf() throws IndexingException {
-		ArrayBasedStorageLeaf<DefaultData> arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<DefaultData>();
+		ArrayBasedStorageLeaf<DefaultData> arrayBasedStorageLeaf = new ArrayBasedStorageLeaf<>();
 
 		DefaultData defaultData = mock(DefaultData.class);
 		long i = 1L;
@@ -456,13 +457,13 @@ public class StorageIndexingTest {
 	/**
 	 * Tests that the total returned size of the leaf with no descriptors will be the same as the
 	 * amount given.
-	 * 
+	 *
 	 * @throws IndexingException
 	 *             {@link IndexingException}
 	 */
 	@Test
 	public void totalSizeOfBoundedDescriptor() throws IndexingException {
-		LeafWithNoDescriptors<DefaultData> leafWithNoDescriptors = new LeafWithNoDescriptors<DefaultData>();
+		LeafWithNoDescriptors<DefaultData> leafWithNoDescriptors = new LeafWithNoDescriptors<>();
 
 		DefaultData defaultData = mock(DefaultData.class);
 		long i = 1L;
@@ -495,12 +496,12 @@ public class StorageIndexingTest {
 
 	/**
 	 * Confirm {@link IndexingException} will be reaised when key can not be generated for element.
-	 * 
+	 *
 	 * @throws IndexingException
 	 */
 	@Test(expectedExceptions = { IndexingException.class })
 	public void putWithNoKey() throws IndexingException {
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(new StorageBranchIndexer<DefaultData>(new TimestampIndexer<DefaultData>(), false));
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new TimestampIndexer<>(), false));
 
 		InvocationSequenceData invocation = mock(InvocationSequenceData.class);
 		when(invocation.getId()).thenReturn(1L);
@@ -510,12 +511,12 @@ public class StorageIndexingTest {
 	/**
 	 * Test that get will work even when branch can not generate key for the element if ID is
 	 * correctly set.
-	 * 
+	 *
 	 * @throws IndexingException
 	 */
 	@Test
 	public void getWithNoKey() throws IndexingException {
-		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<DefaultData>(new StorageBranchIndexer<DefaultData>(new TimestampIndexer<DefaultData>(), false));
+		IStorageTreeComponent<DefaultData> rootBranch = new StorageBranch<>(new StorageBranchIndexer<>(new TimestampIndexer<>(), false));
 
 		InvocationSequenceData invocation = mock(InvocationSequenceData.class);
 		when(invocation.getId()).thenReturn(1L);
@@ -530,29 +531,29 @@ public class StorageIndexingTest {
 		// confirm it is removed
 		assertThat(rootBranch.get(invocation), is(nullValue()));
 	}
-	
+
 	/**
 	 * Test that tests the functionality of {@link CombinedStorageQueryTask}
 	 */
 	@Test
-	public void queryCombinedStorageBranch(){		
-		List<IStorageDescriptor> testResultList = new ArrayList<IStorageDescriptor>();
-		
+	public void queryCombinedStorageBranch() {
+		List<IStorageDescriptor> testResultList = new ArrayList<>();
+
 		testResultList.add(new StorageDescriptor());
 		testResultList.add(new StorageDescriptor());
 		CombinedStorageQueryTestTask<DefaultData> testTask = new CombinedStorageQueryTestTask<>(testResultList);
-		
+
 		StorageBranch<DefaultData> mockedBranch1 = mock(StorageBranch.class);
 		when(mockedBranch1.getTaskForForkJoinQuery(storageIndexQuery)).thenReturn(testTask);
-		
+
 		StorageBranch<DefaultData> mockedBranch2 = mock(StorageBranch.class);
 		when(mockedBranch2.getTaskForForkJoinQuery(storageIndexQuery)).thenReturn(testTask);
-		
-		ArrayList<IStorageTreeComponent<DefaultData>> branches = new ArrayList<IStorageTreeComponent<DefaultData>>();
+
+		ArrayList<IStorageTreeComponent<DefaultData>> branches = new ArrayList<>();
 		branches.add(mockedBranch1);
 		branches.add(mockedBranch2);
-		
-		IStorageTreeComponent<DefaultData> rootCombinedStoreBranch = new CombinedStorageBranch<DefaultData>(branches);
+
+		IStorageTreeComponent<DefaultData> rootCombinedStoreBranch = new CombinedStorageBranch<>(branches);
 		List<IStorageDescriptor> results = rootCombinedStoreBranch.query(storageIndexQuery, forkJoinPool);
 		assertThat(results.size(), is(equalTo(4)));
 	}

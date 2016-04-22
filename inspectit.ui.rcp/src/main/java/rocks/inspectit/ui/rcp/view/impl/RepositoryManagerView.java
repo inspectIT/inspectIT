@@ -87,9 +87,9 @@ import rocks.inspectit.ui.rcp.view.tree.TreeContentProvider;
 /**
  * Repository manager view where user can work with repositories, check agents, and give input for
  * the data explorer view.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RepositoryManagerView extends ViewPart implements IRefreshableView, CmrRepositoryChangeListener {
 
@@ -111,12 +111,12 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	/**
 	 * Input list.
 	 */
-	private final List<DeferredAgentsComposite> inputList = new ArrayList<DeferredAgentsComposite>();
+	private final List<DeferredAgentsComposite> inputList = new ArrayList<>();
 
 	/**
 	 * Online statuses map.
 	 */
-	private final Map<CmrRepositoryDefinition, OnlineStatus> cachedStatusMap = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
+	private final Map<CmrRepositoryDefinition, OnlineStatus> cachedStatusMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Toolkit.
@@ -233,11 +233,11 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		treeViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof rocks.inspectit.ui.rcp.model.Composite && !(e2 instanceof rocks.inspectit.ui.rcp.model.Composite)) {
+				if ((e1 instanceof rocks.inspectit.ui.rcp.model.Composite) && !(e2 instanceof rocks.inspectit.ui.rcp.model.Composite)) {
 					return -1;
-				} else if (!(e1 instanceof rocks.inspectit.ui.rcp.model.Composite) && e2 instanceof rocks.inspectit.ui.rcp.model.Composite) {
+				} else if (!(e1 instanceof rocks.inspectit.ui.rcp.model.Composite) && (e2 instanceof rocks.inspectit.ui.rcp.model.Composite)) {
 					return 1;
-				} else if (e1 instanceof Component && e2 instanceof Component) {
+				} else if ((e1 instanceof Component) && (e2 instanceof Component)) {
 					return ((Component) e1).getName().compareToIgnoreCase(((Component) e2).getName());
 				} else if (e1 instanceof Component) {
 					return 1;
@@ -279,10 +279,10 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 				int width = mainComposite.getBounds().width;
 				int height = mainComposite.getBounds().height;
 
-				if (width > height && verticaLayout) {
+				if ((width > height) && verticaLayout) {
 					verticaLayout = false;
 					mainComposite.setOrientation(SWT.HORIZONTAL);
-				} else if (width < height && !verticaLayout) {
+				} else if ((width < height) && !verticaLayout) {
 					verticaLayout = true;
 					mainComposite.setOrientation(SWT.VERTICAL);
 				}
@@ -318,7 +318,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : repositories) {
 			inputList.add(new DeferredAgentsComposite(cmrRepositoryDefinition, showOldAgents));
 			OnlineStatus onlineStatus = cmrRepositoryDefinition.getOnlineStatus();
-			if (onlineStatus == OnlineStatus.ONLINE || onlineStatus == OnlineStatus.OFFLINE) {
+			if ((onlineStatus == OnlineStatus.ONLINE) || (onlineStatus == OnlineStatus.OFFLINE)) {
 				cachedStatusMap.put(cmrRepositoryDefinition, onlineStatus);
 			}
 		}
@@ -334,7 +334,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 			treeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			treeViewer.setInput(inputList);
 			treeViewer.expandAll();
-			if (null != lastSelectedRepository && inputList.contains(lastSelectedRepository)) {
+			if ((null != lastSelectedRepository) && inputList.contains(lastSelectedRepository)) {
 				StructuredSelection ss = new StructuredSelection(lastSelectedRepository);
 				treeViewer.setSelection(ss, true);
 			}
@@ -348,7 +348,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	 * Clears the look of the forms body.
 	 */
 	private void clearFormBody() {
-		if (messageComposite != null && !messageComposite.isDisposed()) {
+		if ((messageComposite != null) && !messageComposite.isDisposed()) {
 			messageComposite.dispose();
 		}
 		treeViewer.setInput(Collections.emptyList());
@@ -358,14 +358,14 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 	/**
 	 * Displays the message on the provided composite.
-	 * 
+	 *
 	 * @param text
 	 *            Text of message.
 	 * @param image
 	 *            Image to show.
 	 */
 	private void displayMessage(String text, Image image) {
-		if (null == messageComposite || messageComposite.isDisposed()) {
+		if ((null == messageComposite) || messageComposite.isDisposed()) {
 			messageComposite = toolkit.createComposite(mainForm.getBody());
 		} else {
 			for (Control c : messageComposite.getChildren()) {
@@ -411,7 +411,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 									treeViewer.refresh(composite, true);
 									treeViewer.expandAll();
 									if (ObjectUtils.equals(composite, lastSelectedRepository)) {
-										if (null != lastSelectedRepository && inputList.contains(lastSelectedRepository)) {
+										if ((null != lastSelectedRepository) && inputList.contains(lastSelectedRepository)) {
 											treeViewer.setSelection(StructuredSelection.EMPTY);
 											StructuredSelection ss = new StructuredSelection(lastSelectedRepository);
 											treeViewer.setSelection(ss, true);
@@ -464,7 +464,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 				mainForm.setBusy(true);
 				if (inputList.size() > 1) {
 					treeViewer.refresh();
-					if (null != lastSelectedRepository && inputList.contains(lastSelectedRepository)) {
+					if ((null != lastSelectedRepository) && inputList.contains(lastSelectedRepository)) {
 						StructuredSelection ss = new StructuredSelection(lastSelectedRepository);
 						treeViewer.setSelection(ss, true);
 					}
@@ -532,7 +532,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 						treeViewer.setSelection(StructuredSelection.EMPTY);
 						StructuredSelection ss = new StructuredSelection(finalToUpdate);
 						treeViewer.setSelection(ss, true);
-						if (null != cmrPropertyForm && !cmrPropertyForm.isDisposed()) {
+						if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
 							cmrPropertyForm.refresh();
 						}
 					}
@@ -550,7 +550,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	public synchronized void refresh() {
 		// preserve what elements need to be expanded after refresh
 		Object[] expandedElements = treeViewer.getExpandedElements();
-		Set<Object> parents = new HashSet<Object>();
+		Set<Object> parents = new HashSet<>();
 		for (Object expanded : expandedElements) {
 			Object parent = ((ITreeContentProvider) treeViewer.getContentProvider()).getParent(expanded);
 			while (parent != null) {
@@ -558,7 +558,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 				parent = ((ITreeContentProvider) treeViewer.getContentProvider()).getParent(parent);
 			}
 		}
-		expandedList = new ArrayList<Object>(Arrays.asList(expandedElements));
+		expandedList = new ArrayList<>(Arrays.asList(expandedElements));
 		expandedList.removeAll(parents);
 
 		// execute refresh
@@ -582,7 +582,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 							public void run() {
 								treeViewer.refresh(finalToUpdate, true);
 								if (ObjectUtils.equals(finalToUpdate, lastSelectedRepository)) {
-									if (null != cmrPropertyForm && !cmrPropertyForm.isDisposed()) {
+									if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
 										cmrPropertyForm.refresh();
 									}
 								}
@@ -605,7 +605,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 	/**
 	 * Show or hides properties.
-	 * 
+	 *
 	 * @param show
 	 *            Should properties be shown.
 	 */
@@ -625,7 +625,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 			mainComposite.setWeights(new int[] { 2, 3 });
 			mainComposite.layout();
 		} else {
-			if (null != cmrPropertyForm && !cmrPropertyForm.isDisposed()) {
+			if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
 				treeViewer.removeSelectionChangedListener(cmrPropertyForm);
 				cmrPropertyForm.dispose();
 				cmrPropertyForm = null; // NOPMD
@@ -647,9 +647,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 	/**
 	 * Action for show hide properties.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class ShowPropertiesAction extends Action {
 
@@ -680,9 +680,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 	/**
 	 * Action for show hide agents which have not sent any data.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private class ShowAgentsAction extends Action {
 
@@ -721,9 +721,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 	/**
 	 * Double click listener for the view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class RepositoryManagerDoubleClickListener implements IDoubleClickListener {
 
@@ -746,7 +746,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 		/**
 		 * Processes the double-click.
-		 * 
+		 *
 		 */
 		private void process() {
 			RepositoryDefinition repositoryDefinition = null;
@@ -797,9 +797,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 	/**
 	 * Label provider for the tree.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class RepositoryTreeLabelProvider extends StyledCellIndexLabelProvider {
 
@@ -867,9 +867,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 
 	/**
 	 * Job for auto-update of view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private final class AgentStatusUpdateJob extends Job {
 
@@ -902,15 +902,15 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		 * Updates the agent status for each CMR and updates the displayed CMR repository.
 		 */
 		private void updateAgentsAndCmrStatus() {
-			if (null != cmrPropertyForm && !cmrPropertyForm.isDisposed()) {
+			if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
 				cmrPropertyForm.refresh();
 			}
 			if (null != inputList) {
-				final List<Object> toUpdate = new ArrayList<Object>();
+				final List<Object> toUpdate = new ArrayList<>();
 				for (DeferredAgentsComposite agentsComposite : inputList) {
 					CmrRepositoryDefinition cmrRepositoryDefinition = agentsComposite.getCmrRepositoryDefinition();
 					List<?> leafs = agentsComposite.getChildren();
-					if (CollectionUtils.isNotEmpty(leafs) && cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
+					if (CollectionUtils.isNotEmpty(leafs) && (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE)) {
 						Map<PlatformIdent, AgentStatusData> statusMap = cmrRepositoryDefinition.getGlobalDataAccessService().getAgentsOverview();
 						for (Object child : leafs) {
 							if (child instanceof AgentLeaf) {
@@ -940,9 +940,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	 * Listener that is added to the {@link TreeContentProvider} and is invoked when job of updating
 	 * the tree elements is done. At this point this listener will re-expand all the before expanded
 	 * elements.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class ExpandFoldersUpdateCompleteListener extends JobChangeAdapter {
 

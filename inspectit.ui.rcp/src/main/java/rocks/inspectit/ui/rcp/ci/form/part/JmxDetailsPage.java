@@ -10,7 +10,6 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -37,6 +36,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -72,7 +72,7 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 	/**
 	 * Map to store object name parameters.
 	 */
-	private final Map<String, String> parametersMap = new HashMap<String, String>();
+	private final Map<String, String> parametersMap = new HashMap<>();
 
 	/**
 	 * List of attributes to monitor.
@@ -161,7 +161,7 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 		title.setLayoutData(twd);
 
 		// object name section
-		Section objectNameSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.EXPANDED);
+		Section objectNameSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		objectNameSection.setText("MBean Object Name");
 		objectNameSection.marginWidth = 10;
 		objectNameSection.marginHeight = 5;
@@ -228,7 +228,7 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 				KeyValueInputDialog inputDialog = new KeyValueInputDialog(managedForm.getForm().getShell(), "Object Name Properties", "Define object name property.", "", propertyValidator, "",
 						propertyValidator);
 				inputDialog.open();
-				if (Dialog.OK == inputDialog.getReturnCode()) {
+				if (Window.OK == inputDialog.getReturnCode()) {
 					parametersMap.put(inputDialog.getKey(), inputDialog.getValue());
 					propertiesTableViewer.refresh();
 					markDirtyListener.handleEvent(event);
@@ -260,7 +260,7 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 					KeyValueInputDialog inputDialog = new KeyValueInputDialog(managedForm.getForm().getShell(), "Object Name Properties", "Edit object name property.", selected.getKey(),
 							propertyValidator, selected.getValue(), propertyValidator);
 					inputDialog.open();
-					if (Dialog.OK == inputDialog.getReturnCode()) {
+					if (Window.OK == inputDialog.getReturnCode()) {
 						parametersMap.remove(selected.getKey());
 						parametersMap.put(inputDialog.getKey(), inputDialog.getValue());
 						propertiesTableViewer.refresh();
@@ -275,7 +275,7 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 		infoLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 
 		// attributes section
-		Section attributesSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.EXPANDED);
+		Section attributesSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		attributesSection.setText("Attributes");
 		attributesSection.marginWidth = 10;
 		attributesSection.marginHeight = 5;
@@ -352,7 +352,7 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 			@Override
 			public void handleEvent(Event event) {
 				InputDialog inputDialog = new InputDialog(managedForm.getForm().getShell(), "Add Attribute", "Specify attribute name:", "", attributeNameValidatior);
-				if (inputDialog.open() == Window.OK && StringUtils.isNotBlank(inputDialog.getValue())) {
+				if ((inputDialog.open() == Window.OK) && StringUtils.isNotBlank(inputDialog.getValue())) {
 					attributesSet.add(inputDialog.getValue());
 					attributesTableViewer.refresh();
 					nonEmptyAttributesDecoration.executeValidation();
@@ -381,7 +381,7 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 				if (!selection.isEmpty()) {
 					String selected = (String) selection.getFirstElement();
 					InputDialog inputDialog = new InputDialog(managedForm.getForm().getShell(), "Edit Attribute", "Specify attribute name:", selected, attributeNameValidatior);
-					if (inputDialog.open() == Window.OK && StringUtils.isNotBlank(inputDialog.getValue())) {
+					if ((inputDialog.open() == Window.OK) && StringUtils.isNotBlank(inputDialog.getValue())) {
 						String value = inputDialog.getValue();
 						attributesSet.remove(selected);
 						attributesSet.add(value);

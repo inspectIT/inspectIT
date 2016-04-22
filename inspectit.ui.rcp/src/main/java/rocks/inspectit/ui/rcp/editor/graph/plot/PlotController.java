@@ -7,23 +7,23 @@ import java.util.Set;
 import org.jfree.chart.plot.XYPlot;
 
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl.Sensitivity;
 import rocks.inspectit.ui.rcp.editor.preferences.control.samplingrate.SamplingRateMode;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 
 /**
  * The interface for all plot controller.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface PlotController {
 
 	/**
 	 * Sets the input definition of this controller.
-	 * 
+	 *
 	 * @param inputDefinition
 	 *            The input definition.
 	 */
@@ -31,7 +31,7 @@ public interface PlotController {
 
 	/**
 	 * Sets the root editor.
-	 * 
+	 *
 	 * @param rootEditor
 	 *            The rootEditor to set.
 	 */
@@ -40,7 +40,7 @@ public interface PlotController {
 	/**
 	 * This method is used to retrieve the plots which are used in the whole chart. No data has to
 	 * be requested from the server here, this is done in the {@link #update()} method.
-	 * 
+	 *
 	 * @return A list containing {@link XYPlot} classes which are used by JFreeChart to initialize
 	 *         the chart.
 	 */
@@ -48,7 +48,7 @@ public interface PlotController {
 
 	/**
 	 * Returns the weight of a specific plot.
-	 * 
+	 *
 	 * @param subPlot
 	 *            The plot to calculate the weight.
 	 * @return Returns the weight of the plot.
@@ -64,7 +64,7 @@ public interface PlotController {
 	 * <b>Note that this method is not called in the UI thread because it is expected that this can
 	 * be long running operation. Any access to the widgets in this method must be run in UI thread
 	 * to ensure no InvalidThreadException occurs.</b>
-	 * 
+	 *
 	 * @param from
 	 *            the timeframe's start date.
 	 * @param to
@@ -74,7 +74,7 @@ public interface PlotController {
 
 	/**
 	 * Sets the sampling rate.
-	 * 
+	 *
 	 * @param mode
 	 *            The mode.
 	 * @param sensitivity
@@ -84,7 +84,7 @@ public interface PlotController {
 
 	/**
 	 * Returns all needed preference IDs.
-	 * 
+	 *
 	 * @return A {@link Set} containing all {@link PreferenceId}. Returning <code>null</code> is not
 	 *         permitted here. At least a {@link java.util.Collections#EMPTY_SET} should be
 	 *         returned.
@@ -93,7 +93,7 @@ public interface PlotController {
 
 	/**
 	 * This method is called whenever something is changed in one of the preferences.
-	 * 
+	 *
 	 * @param preferenceEvent
 	 *            The event object containing the changed objects.
 	 */
@@ -101,7 +101,7 @@ public interface PlotController {
 
 	/**
 	 * If the legend in the chart should be shown.
-	 * 
+	 *
 	 * @return True if legend should be shown, otherwise false.
 	 */
 	boolean showLegend();

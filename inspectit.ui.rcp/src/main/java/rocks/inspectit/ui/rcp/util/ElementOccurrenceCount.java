@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp.util;
 
 /**
  * Simple POJO for occurrence counting in the invocation sequence data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ElementOccurrenceCount {
 
@@ -77,7 +77,7 @@ public class ElementOccurrenceCount {
 
 	/**
 	 * Total amount of occurrences.
-	 * 
+	 *
 	 * @return Total amount of occurrences.
 	 */
 	public int getTotalOccurrences() {
@@ -86,7 +86,7 @@ public class ElementOccurrenceCount {
 
 	/**
 	 * Returns the empty element. The returned element content can not be changed.
-	 * 
+	 *
 	 * @return Returns the empty element.
 	 */
 	public static ElementOccurrenceCount emptyElement() {

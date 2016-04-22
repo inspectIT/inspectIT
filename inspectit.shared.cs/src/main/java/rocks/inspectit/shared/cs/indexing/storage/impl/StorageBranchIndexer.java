@@ -13,9 +13,9 @@ import rocks.inspectit.shared.cs.storage.util.StorageUtil;
 /**
  * Implementation of the indexer for the {@link IStorageTreeComponent}. This indexer delegate the
  * key creation to the {@link IBranchIndexer}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of element indexed by indexer.
  */
@@ -50,7 +50,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 
 	/**
 	 * This constructor will generate unique ID and will not set child indexer.
-	 * 
+	 *
 	 * @param delegateIndexer
 	 *            Provides delegate indexer with a constructor.
 	 * @param passId
@@ -63,7 +63,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 
 	/**
 	 * This constructor allows setting of all properties except ID that will be uniquely generated.
-	 * 
+	 *
 	 * @param delegateIndexer
 	 *            Provides delegate indexer with a constructor.
 	 * @param childIndexer
@@ -78,7 +78,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 
 	/**
 	 * This constructor allows setting of all properties.
-	 * 
+	 *
 	 * @param delegateIndexer
 	 *            Provides delegate indexer with a constructor.
 	 * @param childIndexer
@@ -99,6 +99,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		return delegateIndexer.getKey(element);
 	}
@@ -106,6 +107,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		return delegateIndexer.getKeys(query);
 	}
@@ -113,6 +115,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean sharedInstance() {
 		return delegateIndexer.sharedInstance();
 	}
@@ -120,6 +123,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageBranchIndexer<E> getNewInstance() {
 		IBranchIndexer<E> branchIndexer = null;
 		if (sharedInstance()) {
@@ -128,13 +132,14 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 			branchIndexer = delegateIndexer.getNewInstance();
 		}
 
-		StorageBranchIndexer<E> storageBranchIndexer = new StorageBranchIndexer<E>(branchIndexer, childIndexer, passId);
+		StorageBranchIndexer<E> storageBranchIndexer = new StorageBranchIndexer<>(branchIndexer, childIndexer, passId);
 		return storageBranchIndexer;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageTreeComponent<E> getNextTreeComponent(E object) {
 		if (null != childIndexer) {
 			// if there is child indexer we need to create a branch
@@ -142,30 +147,30 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 			if (!childIndexer.isPassId() && !passId) {
 				// if child is not shared and we don't need to pass id
 				// just create new branch with child indexer
-				return new StorageBranch<E>(childIndexer);
+				return new StorageBranch<>(childIndexer);
 			} else {
 				// create new instance of child indexer and pass id if necessary
 				IStorageBranchIndexer<E> indexer = childIndexer.getNewInstance();
 				if (passId) {
 					indexer.setId(id);
 				}
-				return new StorageBranch<E>(indexer);
+				return new StorageBranch<>(indexer);
 			}
 		} else {
 			// if not we need to create Leaf, and pass id is necessary
 			if (object instanceof InvocationSequenceData) {
 				// for invocations ArrayBasedStorageLeaf
 				if (passId) {
-					return new ArrayBasedStorageLeaf<E>(id);
+					return new ArrayBasedStorageLeaf<>(id);
 				} else {
-					return new ArrayBasedStorageLeaf<E>();
+					return new ArrayBasedStorageLeaf<>();
 				}
 			} else {
 				// for everything else LeafWithNoDescriptors
 				if (passId) {
-					return new LeafWithNoDescriptors<E>(id);
+					return new LeafWithNoDescriptors<>(id);
 				} else {
-					return new LeafWithNoDescriptors<E>();
+					return new LeafWithNoDescriptors<>();
 				}
 			}
 		}
@@ -173,7 +178,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public int getId() {
@@ -182,17 +187,18 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
+	@Override
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
 	 * Gets {@link #passId}.
-	 * 
+	 *
 	 * @return {@link #passId}
 	 */
 	public boolean isPassId() {
@@ -201,7 +207,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 
 	/**
 	 * Sets {@link #passId}.
-	 * 
+	 *
 	 * @param sharedId
 	 *            New value for {@link #passId}
 	 */
@@ -211,7 +217,7 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 
 	/**
 	 * Gets {@link #delegateIndexer}.
-	 * 
+	 *
 	 * @return {@link #delegateIndexer}
 	 */
 	IBranchIndexer<E> getDelegateIndexer() {
@@ -225,8 +231,8 @@ public class StorageBranchIndexer<E extends DefaultData> implements IStorageBran
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((childIndexer == null) ? 0 : childIndexer.hashCode());
-		result = prime * result + ((delegateIndexer == null) ? 0 : delegateIndexer.hashCode());
+		result = (prime * result) + ((childIndexer == null) ? 0 : childIndexer.hashCode());
+		result = (prime * result) + ((delegateIndexer == null) ? 0 : delegateIndexer.hashCode());
 		return result;
 	}
 

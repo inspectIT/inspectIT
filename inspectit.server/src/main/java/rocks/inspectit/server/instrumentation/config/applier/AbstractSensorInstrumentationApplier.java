@@ -60,8 +60,8 @@ public abstract class AbstractSensorInstrumentationApplier extends AbstractInstr
 	}
 
 	/**
-	 * Checks if the {@link SensorInstrumentationPoint} exists in the {@link MethodType}. If not new one
-	 * is created, registered with registration service and saved in the {@link MethodType}.
+	 * Checks if the {@link SensorInstrumentationPoint} exists in the {@link MethodType}. If not new
+	 * one is created, registered with registration service and saved in the {@link MethodType}.
 	 *
 	 * @param agentConfiguration
 	 *            {@link AgentConfig} to read platform id.

@@ -7,15 +7,15 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * This DAO is used to handle all {@link MethodIdent} objects.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface MethodIdentDao {
 
 	/**
 	 * Load a specific {@link MethodIdent} from the underlying storage by passing the id.
-	 * 
+	 *
 	 * @param id
 	 *            The id of the object.
 	 * @return The found {@link MethodIdent} object.
@@ -24,7 +24,7 @@ public interface MethodIdentDao {
 
 	/**
 	 * Saves or updates this {@link MethodIdent} in the underlying storage.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            The {@link MethodIdent} object to save or update.
 	 */
@@ -32,7 +32,7 @@ public interface MethodIdentDao {
 
 	/**
 	 * Deletes this specific {@link MethodIdent} object.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            The {@link MethodIdent} object to delete.
 	 */
@@ -40,7 +40,7 @@ public interface MethodIdentDao {
 
 	/**
 	 * Deletes all {@link MethodIdent} objects which are stored in the passed list.
-	 * 
+	 *
 	 * @param methodIdents
 	 *            The list containing the {@link MethodIdent} objects to delete.
 	 */
@@ -49,7 +49,7 @@ public interface MethodIdentDao {
 	/**
 	 * This method returns a list containing {@link MethodIdent} objects which have an association
 	 * to the given {@link PlatformIdent} object.
-	 * 
+	 *
 	 * @param platformId
 	 *            The id of the platform.
 	 * @param methodIdentExample
@@ -62,7 +62,7 @@ public interface MethodIdentDao {
 
 	/**
 	 * Returns all {@link MethodIdent} objects which are saved in the underlying storage.
-	 * 
+	 *
 	 * @return Returns all stored {@link MethodIdent} objects.
 	 */
 	List<MethodIdent> findAll();

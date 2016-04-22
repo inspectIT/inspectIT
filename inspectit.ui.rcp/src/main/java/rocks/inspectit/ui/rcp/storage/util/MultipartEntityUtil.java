@@ -7,9 +7,9 @@ import org.apache.http.HttpEntity;
 
 /**
  * {@link MultipartEntityUtil} provides simple methods for multipart entities.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class MultipartEntityUtil {
 
@@ -26,7 +26,7 @@ public final class MultipartEntityUtil {
 
 	/**
 	 * Checks if the {@link HttpEntity} holds the multipart/byterange HTTP response.
-	 * 
+	 *
 	 * @param httpEntity
 	 *            {@link HttpEntity} that holds a response.
 	 * @return True if it has the "multipart" marker in the response Content-Type header.
@@ -38,7 +38,7 @@ public final class MultipartEntityUtil {
 	/**
 	 * Extracts the string that denotes the boundary of the multipart response from Content-Type
 	 * header.
-	 * 
+	 *
 	 * @param httpEntity
 	 *            {@link HttpEntity} that holds a response.
 	 * @return Boundary word, or null if the Content-Type header does not define it.

@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.storage.nio.write.WritingCompletionHandler;
 
 /**
  * Completion runnable that know if the IO operation was successful.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class WriteReadCompletionRunnable implements Runnable {
 
@@ -48,7 +48,7 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 
 	/**
 	 * Constructor that sets the number of {@link #completeMarks}.
-	 * 
+	 *
 	 * @param completeMarks
 	 *            How much times a {@link #markSuccess()} and {@link #markFailed()} has to be called
 	 *            so that this runnable will be run.
@@ -74,11 +74,11 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	/**
 	 * Denotes if the number of reported succeeded and failed operations is same as the number of
 	 * expected marks.
-	 * 
+	 *
 	 * @return True if the {@link #run()} can be executed.
 	 */
 	public boolean isFinished() {
-		return successMarks.get() + failedMarks.get() == completeMarks;
+		return (successMarks.get() + failedMarks.get()) == completeMarks;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	 * Note that this will always be correctly set before {@link #run()} is executed on the
 	 * {@link WritingCompletionHandler} or {@link ReadingCompletionHandler}, thus it can be used in
 	 * run to determine if the IO operation failed.
-	 * 
+	 *
 	 * @return If the write/read operation was completed successfully.
 	 */
 	public boolean isCompleted() {
@@ -100,7 +100,7 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	 * Note that this will always be correctly set before {@link #run()} is executed on the
 	 * {@link WritingCompletionHandler} or {@link ReadingCompletionHandler}, thus it can be used in
 	 * run to determine if the IO operation failed.
-	 * 
+	 *
 	 * @return If the write/read operation failed.
 	 */
 	public boolean isFailed() {
@@ -109,7 +109,7 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 
 	/**
 	 * Gets {@link #attemptedWriteReadSize}.
-	 * 
+	 *
 	 * @return {@link #attemptedWriteReadSize}
 	 */
 	public long getAttemptedWriteReadSize() {
@@ -118,7 +118,7 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 
 	/**
 	 * Sets {@link #attemptedWriteReadSize}.
-	 * 
+	 *
 	 * @param attemptedWriteReadSize
 	 *            New value for {@link #attemptedWriteReadSize}
 	 */
@@ -128,7 +128,7 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 
 	/**
 	 * Gets {@link #attemptedWriteReadPosition}.
-	 * 
+	 *
 	 * @return {@link #attemptedWriteReadPosition}
 	 */
 	public long getAttemptedWriteReadPosition() {
@@ -137,7 +137,7 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 
 	/**
 	 * Sets {@link #attemptedWriteReadPosition}.
-	 * 
+	 *
 	 * @param attemptedWriteReadPosition
 	 *            New value for {@link #attemptedWriteReadPosition}
 	 */

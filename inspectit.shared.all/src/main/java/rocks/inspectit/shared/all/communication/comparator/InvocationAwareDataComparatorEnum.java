@@ -7,9 +7,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 
 /**
  * Comparators for the {@link InvocationAwareData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum InvocationAwareDataComparatorEnum implements IDataComparator<InvocationAwareData>, Comparator<InvocationAwareData> {
 

@@ -10,9 +10,9 @@ import rocks.inspectit.ui.rcp.editor.tree.TreeSubView;
 /**
  * Tester for testing the sub view classification. The tester can test if the view is master or
  * slave.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SubViewClassificationTester extends PropertyTester {
 

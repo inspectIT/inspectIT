@@ -9,12 +9,12 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Abstract class for indexing and analyzing processing.
- * 
+ *
  * @param <E>
  *            Type of data to process.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 abstract class AbstractBufferElementProcessor<E extends DefaultData> {
 
@@ -40,7 +40,7 @@ abstract class AbstractBufferElementProcessor<E extends DefaultData> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param atomicBuffer
 	 *            {@link AtomicBuffer} to work on.
 	 * @param lastProcessed
@@ -61,7 +61,7 @@ abstract class AbstractBufferElementProcessor<E extends DefaultData> {
 	 * Processes next element to be processed. Note that this method passes the element to the
 	 * {@link #process(IBufferElement, IBufferElement)} method so that sub-classes can execute the
 	 * real processing. This method handles waiting of element to be available for processing.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 *             If {@link InterruptedException} occurs.
 	 */
@@ -73,14 +73,14 @@ abstract class AbstractBufferElementProcessor<E extends DefaultData> {
 		// one
 		while (true) {
 			IBufferElement<E> lastProcessedElement = lastProcessed.get();
-			if (this.atomicBuffer.emptyBufferElement == this.atomicBuffer.last.get()
-					|| (this.atomicBuffer.emptyBufferElement != lastProcessedElement && this.atomicBuffer.emptyBufferElement == lastProcessedElement.getNextElement())) { // NOPMD
+			if ((this.atomicBuffer.emptyBufferElement == this.atomicBuffer.last.get())
+					|| ((this.atomicBuffer.emptyBufferElement != lastProcessedElement) && (this.atomicBuffer.emptyBufferElement == lastProcessedElement.getNextElement()))) { // NOPMD
 				lock.lock();
 				try {
 					// check again with lock
 					lastProcessedElement = this.atomicBuffer.lastAnalyzed.get();
-					if (this.atomicBuffer.emptyBufferElement == this.atomicBuffer.last.get()
-							|| (this.atomicBuffer.emptyBufferElement != lastProcessedElement && this.atomicBuffer.emptyBufferElement == lastProcessedElement.getNextElement())) { // NOPMD
+					if ((this.atomicBuffer.emptyBufferElement == this.atomicBuffer.last.get())
+							|| ((this.atomicBuffer.emptyBufferElement != lastProcessedElement) && (this.atomicBuffer.emptyBufferElement == lastProcessedElement.getNextElement()))) { // NOPMD
 						condition.await();
 					} else {
 						break;
@@ -121,7 +121,7 @@ abstract class AbstractBufferElementProcessor<E extends DefaultData> {
 
 	/**
 	 * Sub-classes should implement this method with the real processing.
-	 * 
+	 *
 	 * @param elementToProcess
 	 *            Element to be processed.
 	 * @param lastProcessedElement

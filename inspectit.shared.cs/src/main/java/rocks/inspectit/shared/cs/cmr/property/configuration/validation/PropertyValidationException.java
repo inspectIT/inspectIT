@@ -4,9 +4,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Property validation exception.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlTransient
 public class PropertyValidationException extends Exception {
@@ -30,7 +30,7 @@ public class PropertyValidationException extends Exception {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param propertyValidation
 	 *            {@link PropertyValidation} object that contains validation errors that caused
 	 *            exception to be raised.
@@ -50,7 +50,7 @@ public class PropertyValidationException extends Exception {
 
 	/**
 	 * Gets {@link #propertyValidation}.
-	 * 
+	 *
 	 * @return {@link #propertyValidation}
 	 */
 	public PropertyValidation getPropertyValidation() {

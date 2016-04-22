@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 
 /**
  * Processor that connects error messages in the {@link ExceptionSensorData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExceptionMessageCmrProcessor extends AbstractCmrDataProcessor {
 
@@ -32,7 +32,7 @@ public class ExceptionMessageCmrProcessor extends AbstractCmrDataProcessor {
 
 	/**
 	 * Connects exception message between linked exception data.
-	 * 
+	 *
 	 * @param exceptionSensorData
 	 *            Parent exception data, thus the one that has exception event CREATED.
 	 */

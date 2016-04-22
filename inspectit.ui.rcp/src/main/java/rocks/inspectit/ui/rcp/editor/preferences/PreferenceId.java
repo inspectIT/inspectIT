@@ -3,9 +3,9 @@ package rocks.inspectit.ui.rcp.editor.preferences;
 /**
  * The enumeration set for the unique preference group ids. By adding new enumerations you should
  * also create an inner public enumeration class which contains the associated control ids.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public enum PreferenceId {
 
@@ -16,9 +16,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for TIMELINE.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	public enum TimeLine implements IPreferenceGroup {
 		/**
@@ -35,9 +35,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for SAMPLINGRATE.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	public enum SamplingRate implements IPreferenceGroup {
 		/**
@@ -49,9 +49,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for LIVEMODE.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	public enum LiveMode implements IPreferenceGroup {
 		/**
@@ -67,9 +67,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for ITEMCOUNT.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public enum ItemCount implements IPreferenceGroup {
 		/**
@@ -80,9 +80,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for the FILTERDATATYPE.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum DataTypeSelection implements IPreferenceGroup {
 		/**
@@ -93,9 +93,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for the INVOCEXCLUSIVETIMESELECTION.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public enum InvocExclusiveTimeSelection implements IPreferenceGroup {
 		/**
@@ -106,9 +106,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for the INVOCTOTALTIMESELECTION.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public enum InvocTotalTimeSelection implements IPreferenceGroup {
 		/**
@@ -119,9 +119,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for STEPPABLE_CONTROL.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum SteppableControl implements IPreferenceGroup {
 		/**
@@ -132,9 +132,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for TIME_RESOLUTION.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum TimeResolution implements IPreferenceGroup {
 		/**
@@ -145,7 +145,7 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for HTTP_AGGREGATION_REQUESTMETHOD.
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	public enum HttpAggregationRequestMethod implements IPreferenceGroup {
@@ -157,9 +157,9 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for HTTP_URI_TRANSFORMING.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum HttpUriTransformation implements IPreferenceGroup {
 
@@ -176,7 +176,7 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for INVOCATION_SUBVIEW_MODE.
-	 * 
+	 *
 	 * @author Ivan Senic
 	 */
 	public enum InvocationSubviewMode implements IPreferenceGroup {
@@ -188,7 +188,7 @@ public enum PreferenceId {
 
 	/**
 	 * Inner enumeration for JMX_PLOT_DATASOLVER.
-	 * 
+	 *
 	 * @author Marius Oehler
 	 *
 	 */

@@ -42,8 +42,8 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.DateAxisZoomNotify;
 import rocks.inspectit.ui.rcp.editor.graph.plot.PlotController;
 import rocks.inspectit.ui.rcp.editor.graph.plot.ZoomListener;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
 import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
@@ -52,9 +52,9 @@ import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 /**
  * This sub-view can create charts which can contain themselves some plots. The plots are defined by
  * {@link PlotController}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class GraphSubView extends AbstractSubView {
 
@@ -100,7 +100,7 @@ public class GraphSubView extends AbstractSubView {
 
 	/**
 	 * The constructor taking one parameter and creating a {@link PlotController}.
-	 * 
+	 *
 	 * @param fqn
 	 *            The fully-qualified-name of the corresponding sensor type.
 	 */
@@ -110,7 +110,7 @@ public class GraphSubView extends AbstractSubView {
 
 	/**
 	 * The constructor taking one parameter and creating a {@link PlotController}.
-	 * 
+	 *
 	 * @param sensorTypeEnum
 	 *            The sensor type enumeration of the corresponding sensor type.
 	 */
@@ -129,6 +129,7 @@ public class GraphSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		// set the input definition
 		plotController.setRootEditor(getRootEditor());
@@ -164,7 +165,7 @@ public class GraphSubView extends AbstractSubView {
 
 	/**
 	 * Creates and returns a {@link JFreeChart} chart.
-	 * 
+	 *
 	 * @return The {@link JFreeChart} chart.
 	 */
 	private JFreeChart createChart() {
@@ -223,13 +224,14 @@ public class GraphSubView extends AbstractSubView {
 
 	/**
 	 * Adds the zoom listener to the domain axis.
-	 * 
+	 *
 	 * @param domainAxis
 	 *            The domain axis.
 	 */
 	private void addZoomListener(DateAxisZoomNotify domainAxis) {
 		if (null == zoomListener) {
 			zoomListener = new ZoomListener() {
+				@Override
 				public void zoomOccured() {
 					if (autoUpdate) {
 						autoUpdate = false;
@@ -244,7 +246,7 @@ public class GraphSubView extends AbstractSubView {
 
 	/**
 	 * Returns initial data time frame if one is defined.
-	 * 
+	 *
 	 * @return Returns initial data time frame if one is defined.
 	 */
 	private TimeFrame getInitialDataTimeFrame() {
@@ -262,6 +264,7 @@ public class GraphSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Control getControl() {
 		return composite;
 	}
@@ -269,6 +272,7 @@ public class GraphSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return null;
 	}
@@ -276,6 +280,7 @@ public class GraphSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDataInput(List<? extends DefaultData> data) {
 		// nothing to do here
 	}
@@ -283,6 +288,7 @@ public class GraphSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		return plotController.getPreferenceIds();
 	}
@@ -290,6 +296,7 @@ public class GraphSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		if (PreferenceId.TIMELINE.equals(preferenceEvent.getPreferenceId())) {
 			XYPlot plot = (XYPlot) chart.getPlot();
@@ -324,6 +331,7 @@ public class GraphSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		if (checkDisposed()) {
 			return;
@@ -369,7 +377,7 @@ public class GraphSubView extends AbstractSubView {
 
 	/**
 	 * Returns true if the composite holding the chart in the sub-view is disposed. False otherwise.
-	 * 
+	 *
 	 * @return Returns true if the composite holding the chart in the sub-view is disposed. False
 	 *         otherwise.
 	 */

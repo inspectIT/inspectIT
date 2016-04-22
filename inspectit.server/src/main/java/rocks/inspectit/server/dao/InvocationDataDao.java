@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 /**
  * This layer is used to access the stored invocations.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface InvocationDataDao {
 
@@ -19,7 +19,7 @@ public interface InvocationDataDao {
 	 * Returns a list of {@link InvocationSequenceData} objects which contain no associations to
 	 * other objects. Thus this list can be used to get an overview of the available invocation
 	 * sequences. The limit defines the size of the list.
-	 * 
+	 *
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param methodId
@@ -29,7 +29,7 @@ public interface InvocationDataDao {
 	 * @param comparator
 	 *            Comparator to compare results with. If <code>null</code> is passed default
 	 *            comparator will be used (in this case Timestamp comparator).
-	 * 
+	 *
 	 * @return Returns the list of invocation sequences.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Comparator<? super InvocationSequenceData> comparator);
@@ -41,7 +41,7 @@ public interface InvocationDataDao {
 	 * <p>
 	 * Compared to the above method, this service method returns all invocations for a specific
 	 * agent, not only the invocations for specific methods.
-	 * 
+	 *
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param limit
@@ -49,7 +49,7 @@ public interface InvocationDataDao {
 	 * @param comparator
 	 *            Comparator to compare results with. If <code>null</code> is passed default
 	 *            comparator will be used (in this case Timestamp comparator).
-	 * 
+	 *
 	 * @return Returns the list of invocation sequences.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, int limit, Comparator<? super InvocationSequenceData> comparator);
@@ -58,7 +58,7 @@ public interface InvocationDataDao {
 	 * Returns a list of {@link InvocationSequenceData} objects which contain no associations to
 	 * other objects in given time frame. Thus this list can be used to get an overview of the
 	 * available invocation sequences. The limit defines the size of the list.
-	 * 
+	 *
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param methodId
@@ -72,7 +72,7 @@ public interface InvocationDataDao {
 	 * @param comparator
 	 *            Comparator to compare results with. If <code>null</code> is passed default
 	 *            comparator will be used (in this case Timestamp comparator).
-	 * 
+	 *
 	 * @return Returns the list of invocation sequences.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, long methodId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator);
@@ -84,7 +84,7 @@ public interface InvocationDataDao {
 	 * <p>
 	 * Compared to the above method, this service method returns all invocations for a specific
 	 * agent, not only the invocations for specific methods.
-	 * 
+	 *
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param limit
@@ -96,7 +96,7 @@ public interface InvocationDataDao {
 	 * @param comparator
 	 *            Comparator to compare results with. If <code>null</code> is passed default
 	 *            comparator will be used (in this case Timestamp comparator).
-	 * 
+	 *
 	 * @return Returns the list of invocation sequences.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator);
@@ -108,7 +108,7 @@ public interface InvocationDataDao {
 	 * <p>
 	 * Compared with the method above, this service method returns only the invocations which ID is
 	 * in invocation ID collection supplied.
-	 * 
+	 *
 	 * @param platformId
 	 *            Platform ID where to look for the objects. If the zero value is passed, looking
 	 *            for the object will be done in all platforms.
@@ -125,7 +125,7 @@ public interface InvocationDataDao {
 
 	/**
 	 * This service method is used to get all the details of a specific invocation sequence.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @return The detailed invocation sequence object.

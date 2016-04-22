@@ -2,9 +2,9 @@ package rocks.inspectit.shared.all.exception;
 
 /**
  * General interface for the error code.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IErrorCode {
 

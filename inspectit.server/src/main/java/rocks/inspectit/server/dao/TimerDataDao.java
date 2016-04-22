@@ -7,16 +7,16 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * The DAO for timer data objects.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface TimerDataDao {
 
 	/**
 	 * Returns a list of the aggregated timer data for a given template. In this template, only the
 	 * platform id is extracted.
-	 * 
+	 *
 	 * @param timerData
 	 *            The template containing the platform id.
 	 * @return The list of the aggregated timer data object.
@@ -26,7 +26,7 @@ public interface TimerDataDao {
 	/**
 	 * Returns a list of the timer data for a given template for a time frame. In this template,
 	 * only the platform id is extracted.
-	 * 
+	 *
 	 * @param timerData
 	 *            The template containing the platform id.
 	 * @param fromDate

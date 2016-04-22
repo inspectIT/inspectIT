@@ -15,20 +15,21 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
  * Our service method interceptor that will catch {@link InspectITCommunicationException} and if the
  * problem was {@link RemoteConnectFailureException}, it will update the online status of the CMR.
  * This interceptor will also show a error message.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ServiceMethodInterceptor implements MethodInterceptor {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object invoke(MethodInvocation paramMethodInvocation) throws Throwable {
 		try {
 			Object rval = paramMethodInvocation.proceed();
 			CmrRepositoryDefinition cmrRepositoryDefinition = InterceptorUtils.getRepositoryDefinition(paramMethodInvocation);
-			if (null != cmrRepositoryDefinition && InterceptorUtils.isServiceMethod(paramMethodInvocation)) {
+			if ((null != cmrRepositoryDefinition) && InterceptorUtils.isServiceMethod(paramMethodInvocation)) {
 				if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.OFFLINE) {
 					InspectIT.getDefault().getCmrRepositoryManager().forceCmrRepositoryOnlineStatusUpdate(cmrRepositoryDefinition);
 				}
@@ -48,7 +49,7 @@ public class ServiceMethodInterceptor implements MethodInterceptor {
 
 	/**
 	 * Handles the connection failure.
-	 * 
+	 *
 	 * @param paramMethodInvocation
 	 *            {@link MethodInvocation}.
 	 * @param t

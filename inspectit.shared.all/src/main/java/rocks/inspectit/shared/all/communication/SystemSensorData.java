@@ -7,9 +7,9 @@ import javax.persistence.Entity;
 /**
  * The {@link SystemSensorData} class is extended by all value & data objects which are used to
  * gather system/platform information.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Entity
 public abstract class SystemSensorData extends DefaultData {
@@ -27,7 +27,7 @@ public abstract class SystemSensorData extends DefaultData {
 
 	/**
 	 * Constructor which accepts three parameters to initialize itself.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The timestamp.
 	 * @param platformIdent

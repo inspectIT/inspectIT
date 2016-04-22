@@ -9,13 +9,6 @@ import static org.hamcrest.Matchers.is;
 import org.testng.annotations.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import rocks.inspectit.shared.all.instrumentation.classcache.AbstractInterfaceType;
-import rocks.inspectit.shared.all.instrumentation.classcache.AnnotationType;
-import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
-import rocks.inspectit.shared.all.instrumentation.classcache.InterfaceType;
-import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
-import rocks.inspectit.shared.all.instrumentation.classcache.TypeWithAnnotations;
-import rocks.inspectit.shared.all.instrumentation.classcache.TypeWithMethods;
 
 @SuppressWarnings("PMD")
 public class InterfaceTypeTest {

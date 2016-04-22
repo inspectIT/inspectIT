@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Generates information about the method from the {@link MethodSensorData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MethodInfoDetailsGenerator implements IDetailsGenerator {
 
@@ -29,7 +29,7 @@ public class MethodInfoDetailsGenerator implements IDetailsGenerator {
 	 */
 	@Override
 	public boolean canGenerateFor(DefaultData defaultData) {
-		return defaultData instanceof MethodSensorData && ((MethodSensorData) defaultData).getMethodIdent() != 0;
+		return (defaultData instanceof MethodSensorData) && (((MethodSensorData) defaultData).getMethodIdent() != 0);
 	}
 
 	/**

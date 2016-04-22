@@ -92,7 +92,8 @@ public abstract class AbstractMethodInstrumenter extends AdviceAdapter {
 		// thus we are saving labels that denote start of handler blocks
 		// note we are skipping the finally blocks
 		// and skipping one handler that denotes our catch block
-		if (enhancedExceptionSensor && handler != catchHandler && null != type) { // NOPMD comp refs
+		if (enhancedExceptionSensor && (handler != catchHandler) && (null != type)) { // NOPMD comp
+																						// refs
 			handlers.add(handler);
 		}
 	}

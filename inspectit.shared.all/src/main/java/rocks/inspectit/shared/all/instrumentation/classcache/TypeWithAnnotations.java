@@ -1,6 +1,5 @@
 package rocks.inspectit.shared.all.instrumentation.classcache;
 
-
 import java.util.Set;
 
 /**

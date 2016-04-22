@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -26,14 +27,14 @@ import org.eclipse.ui.progress.PendingUpdateAdapter;
  * <p>
  * <b>IMPORTANT:</b> The class is licensed under the Eclipse Public License v1.0 as it includes the
  * code from the {@link org.eclipse.jface.viewers.TreeViewer} class belonging to the Eclipse Rich
- * Client Platform. EPL v1.0 license can be found <a
- * href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
+ * Client Platform. EPL v1.0 license can be found
+ * <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
  * <p>
  * Please relate to the LICENSEEXCEPTIONS.txt file for more information about license exceptions
  * that apply regarding to InspectIT and Eclipse RCP and/or EPL Components.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DeferredTreeViewer extends TreeViewer {
 
@@ -45,19 +46,19 @@ public class DeferredTreeViewer extends TreeViewer {
 	/**
 	 * List of the elements that need to be expanded.
 	 */
-	private Set<Object> objectsToBeExpanded = Collections.synchronizedSet(new HashSet<Object>());
+	private Set<Object> objectsToBeExpanded = Collections.synchronizedSet(new HashSet<>());
 
 	/**
 	 * Object to be selected.
 	 */
-	private AtomicReference<Object> objectToSelect = new AtomicReference<Object>();
+	private AtomicReference<Object> objectToSelect = new AtomicReference<>();
 
 	/**
 	 * Creates a tree viewer on a newly-created tree control under the given parent. The tree
 	 * control is created using the SWT style bits <code>MULTI, H_SCROLL, V_SCROLL,</code> and
 	 * <code>BORDER</code>. The viewer has no input, no content provider, a default label provider,
 	 * no sorter, and no filters.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 */
@@ -68,7 +69,7 @@ public class DeferredTreeViewer extends TreeViewer {
 	/**
 	 * Creates a tree viewer on the given tree control. The viewer has no input, no content
 	 * provider, a default label provider, no sorter, and no filters.
-	 * 
+	 *
 	 * @param tree
 	 *            the tree control
 	 */
@@ -80,7 +81,7 @@ public class DeferredTreeViewer extends TreeViewer {
 	 * Creates a tree viewer on a newly-created tree control under the given parent. The tree
 	 * control is created using the given SWT style bits. The viewer has no input, no content
 	 * provider, a default label provider, no sorter, and no filters.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 * @param style
@@ -99,8 +100,7 @@ public class DeferredTreeViewer extends TreeViewer {
 		// implementation which has got two different paths of applying filters
 		// ...
 		ViewerFilter[] filters = getFilters();
-		for (int i = 0; i < filters.length; i++) {
-			ViewerFilter filter = filters[i];
+		for (ViewerFilter filter : filters) {
 			childElements = filter.filter(this, parentElement, childElements);
 		}
 
@@ -115,8 +115,8 @@ public class DeferredTreeViewer extends TreeViewer {
 				if (super.isExpandable(object)) {
 					// get the level
 					Integer level = parentWidgets.get(widget);
-					if (level == TreeViewer.ALL_LEVELS) {
-						super.expandToLevel(object, TreeViewer.ALL_LEVELS);
+					if (level == AbstractTreeViewer.ALL_LEVELS) {
+						super.expandToLevel(object, AbstractTreeViewer.ALL_LEVELS);
 					} else {
 						super.expandToLevel(object, level - 1);
 					}
@@ -124,7 +124,7 @@ public class DeferredTreeViewer extends TreeViewer {
 			}
 		}
 
-		if (objectsToBeExpanded != null && !objectsToBeExpanded.isEmpty()) {
+		if ((objectsToBeExpanded != null) && !objectsToBeExpanded.isEmpty()) {
 			// iterate over all child elements
 			for (Object object : childElements) {
 				// is object in List of objects that need to be expanded?
@@ -140,8 +140,8 @@ public class DeferredTreeViewer extends TreeViewer {
 		// if there is object to be selected, we will selected if its parent is expanded
 		while (true) {
 			Object objToSelect = objectToSelect.get();
-			if (objToSelect != null && (!isRootElement(objToSelect) || getExpandedState(getParentElement(objToSelect)))) {
-				List<Object> selectionList = new ArrayList<Object>();
+			if ((objToSelect != null) && (!isRootElement(objToSelect) || getExpandedState(getParentElement(objToSelect)))) {
+				List<Object> selectionList = new ArrayList<>();
 				Widget w = internalGetWidgetToSelect(objToSelect);
 				if (w != null) {
 					if (objectToSelect.compareAndSet(objToSelect, null)) {
@@ -164,7 +164,7 @@ public class DeferredTreeViewer extends TreeViewer {
 	 */
 	@Override
 	protected void internalExpandToLevel(Widget widget, int level) {
-		if (level > 1 || TreeViewer.ALL_LEVELS == level) {
+		if ((level > 1) || (AbstractTreeViewer.ALL_LEVELS == level)) {
 			// we want to open more than one level, have to take care of that.
 			Object data = widget.getData();
 			if (!(data instanceof PendingUpdateAdapter)) {
@@ -177,7 +177,7 @@ public class DeferredTreeViewer extends TreeViewer {
 		// that
 		// needs to be expanded, if the data of the widget is found in the list
 		Object data = widget.getData();
-		if (data != null && objectsToBeExpanded.contains(data)) {
+		if ((data != null) && objectsToBeExpanded.contains(data)) {
 			objectsToBeExpanded.remove(data);
 		}
 
@@ -195,7 +195,7 @@ public class DeferredTreeViewer extends TreeViewer {
 			Object object = elementsOrPaths[0];
 			if (object instanceof PendingUpdateAdapter) {
 				Widget[] widgets = findItems(object);
-				if (null != widgets && widgets.length > 0) {
+				if ((null != widgets) && (widgets.length > 0)) {
 					Widget widget = widgets[0];
 					Widget parentWidget = getParentItem((Item) widget);
 					if (parentWidgets.containsKey(parentWidget)) {
@@ -212,7 +212,7 @@ public class DeferredTreeViewer extends TreeViewer {
 	 * Expands all ancestors of the given element or tree path so that the given element becomes
 	 * visible in this viewer's tree control, and then expands the subtree rooted at the given
 	 * element to the given level. The element will be then selected.
-	 * 
+	 *
 	 * @param elementOrTreePath
 	 *            the element
 	 * @param level
@@ -224,12 +224,12 @@ public class DeferredTreeViewer extends TreeViewer {
 		}
 		Object parent = getParentElement(elementOrTreePath);
 		// check if the element is already visible, or if it is root
-		if (parent != null && getExpandedState(parent) || isRootElement(elementOrTreePath)) {
+		if (((parent != null) && getExpandedState(parent)) || isRootElement(elementOrTreePath)) {
 			// then only set selection
 			Widget w = internalGetWidgetToSelect(elementOrTreePath);
 			if (null != w) {
 				// if widget is already available selected it
-				List<Object> selectionList = new ArrayList<Object>();
+				List<Object> selectionList = new ArrayList<>();
 				selectionList.add(w);
 				setSelection(selectionList);
 				// and overwrite any earlier set selection object
@@ -241,7 +241,7 @@ public class DeferredTreeViewer extends TreeViewer {
 		} else {
 			// get all the objects that need to be expanded so that object is visible
 			objectToSelect.set(elementOrTreePath);
-			List<Object> objectsToExpand = createObjectList(parent, new ArrayList<Object>());
+			List<Object> objectsToExpand = createObjectList(parent, new ArrayList<>());
 			if (!objectsToExpand.isEmpty()) {
 				objectsToBeExpanded.addAll(objectsToExpand);
 				Widget w = internalExpand(elementOrTreePath, true);
@@ -254,7 +254,7 @@ public class DeferredTreeViewer extends TreeViewer {
 				Widget w = internalGetWidgetToSelect(elementOrTreePath);
 				if (null != w) {
 					// if widget is here available
-					List<Object> selectionList = new ArrayList<Object>();
+					List<Object> selectionList = new ArrayList<>();
 					selectionList.add(w);
 					setSelection(selectionList);
 					// and overwrite any earlier set selection object
@@ -268,7 +268,7 @@ public class DeferredTreeViewer extends TreeViewer {
 	 * Expands all ancestors of the given element or tree path so that the given element becomes
 	 * visible in this viewer's tree control and additionally expands the element if it has
 	 * children.
-	 * 
+	 *
 	 * @param elementOrTreePath
 	 *            the element
 	 * @param level
@@ -280,9 +280,9 @@ public class DeferredTreeViewer extends TreeViewer {
 		}
 		Object parent = getParentElement(elementOrTreePath);
 		// check if the element is already visible, or if it is root
-		if (!((parent != null && getExpandedState(parent)) || isRootElement(elementOrTreePath))) {
+		if (!(((parent != null) && getExpandedState(parent)) || isRootElement(elementOrTreePath))) {
 			// get all the objects that need to be expanded so that object is visible
-			List<Object> objectsToExpand = createObjectList(parent, new ArrayList<Object>());
+			List<Object> objectsToExpand = createObjectList(parent, new ArrayList<>());
 			if (!objectsToExpand.isEmpty()) {
 				objectsToBeExpanded.addAll(objectsToExpand);
 			}
@@ -297,7 +297,7 @@ public class DeferredTreeViewer extends TreeViewer {
 	/**
 	 * Constructs the list of elements that need to be expanded, so that object supplied can be
 	 * visible.
-	 * 
+	 *
 	 * @param object
 	 *            Object that expansion should reach.
 	 * @param objectList
@@ -311,7 +311,7 @@ public class DeferredTreeViewer extends TreeViewer {
 				expandToLevel(object, 1);
 			} else {
 				if (objectList == null) {
-					objectList = new ArrayList<Object>();
+					objectList = new ArrayList<>();
 				}
 				objectList.add(object);
 			}
@@ -325,7 +325,7 @@ public class DeferredTreeViewer extends TreeViewer {
 
 	/**
 	 * Returns if all the filters are passed for the specific object.
-	 * 
+	 *
 	 * @param object
 	 *            Object to test.
 	 * @return True if all the filters are passed, and thus object is visible in the tree. False
@@ -345,7 +345,7 @@ public class DeferredTreeViewer extends TreeViewer {
 
 	/**
 	 * Tests if the children of the tree item have been loaded.
-	 * 
+	 *
 	 * @param object
 	 *            Object to test.
 	 * @return True if the children have been fetched.
@@ -365,7 +365,7 @@ public class DeferredTreeViewer extends TreeViewer {
 
 	/**
 	 * Checks if the given element is one of the root object in the input list of the tree viewer.
-	 * 
+	 *
 	 * @param element
 	 *            Element to check.
 	 * @return True if the element is one of the root objects.

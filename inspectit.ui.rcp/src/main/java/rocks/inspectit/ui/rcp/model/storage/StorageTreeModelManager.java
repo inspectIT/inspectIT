@@ -20,9 +20,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Tree model manager for storage manager view.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageTreeModelManager {
 
@@ -52,12 +52,12 @@ public class StorageTreeModelManager {
 	/**
 	 * Returns objects divided either by the provided label class, or by
 	 * {@link CmrRepositoryDefinition} they are located to.
-	 * 
+	 *
 	 * @return Returns objects divided either by the provided label class, or by
 	 *         {@link CmrRepositoryDefinition} they are located to.
 	 */
 	public Object[] getRootObjects() {
-		if (null == storageRepositoryMap || storageRepositoryMap.isEmpty()) {
+		if ((null == storageRepositoryMap) || storageRepositoryMap.isEmpty()) {
 			return new Object[0];
 		}
 
@@ -66,7 +66,7 @@ public class StorageTreeModelManager {
 			unknown.setName("Unknown");
 			unknown.setImage(ImageFormatter.getImageForLabel(storageLabelType));
 			boolean addUnknown = false;
-			Map<Object, Composite> map = new HashMap<Object, Composite>();
+			Map<Object, Composite> map = new HashMap<>();
 			for (Map.Entry<StorageData, CmrRepositoryDefinition> entry : storageRepositoryMap.entrySet()) {
 				List<? extends AbstractStorageLabel<?>> labelList = entry.getKey().getLabels(storageLabelType);
 				if (CollectionUtils.isNotEmpty(labelList)) {
@@ -87,14 +87,14 @@ public class StorageTreeModelManager {
 					addUnknown = true;
 				}
 			}
-			ArrayList<Composite> returnList = new ArrayList<Composite>();
+			ArrayList<Composite> returnList = new ArrayList<>();
 			returnList.addAll(map.values());
 			if (addUnknown) {
 				returnList.add(unknown);
 			}
 			return returnList.toArray(new Composite[returnList.size()]);
 		} else {
-			Map<CmrRepositoryDefinition, Composite> map = new HashMap<CmrRepositoryDefinition, Composite>();
+			Map<CmrRepositoryDefinition, Composite> map = new HashMap<>();
 			for (Map.Entry<StorageData, CmrRepositoryDefinition> entry : storageRepositoryMap.entrySet()) {
 				CmrRepositoryDefinition cmrRepositoryDefinition = entry.getValue();
 				Composite c = map.get(cmrRepositoryDefinition);

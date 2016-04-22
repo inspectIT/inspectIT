@@ -20,15 +20,14 @@ import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.spring.aop.ExceptionInterceptor;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.RemoteException;
 
 /**
  * Tests for the {@link ExceptionInterceptor}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExceptionInterceptorTest {
 

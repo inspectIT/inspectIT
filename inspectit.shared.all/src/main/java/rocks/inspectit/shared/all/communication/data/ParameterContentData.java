@@ -16,9 +16,9 @@ import rocks.inspectit.shared.all.util.ObjectUtils;
 
 /**
  * Stores the content and meta-data of a method parameter or of a field of a class.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Entity
 public class ParameterContentData implements Serializable, Sizeable, Comparable<ParameterContentData> {
@@ -61,7 +61,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public long getId() {
@@ -70,7 +70,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -80,7 +80,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Gets {@link #name}.
-	 * 
+	 *
 	 * @return {@link #name}
 	 */
 	public String getName() {
@@ -89,7 +89,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Sets {@link #name}.
-	 * 
+	 *
 	 * @param name
 	 *            New value for {@link #name}
 	 */
@@ -99,7 +99,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Gets {@link #content}.
-	 * 
+	 *
 	 * @return {@link #content}
 	 */
 	public String getContent() {
@@ -108,7 +108,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Sets {@link #content}.
-	 * 
+	 *
 	 * @param content
 	 *            New value for {@link #content}
 	 */
@@ -118,7 +118,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Gets {@link #contentType}.
-	 * 
+	 *
 	 * @return {@link #contentType}
 	 */
 	public ParameterContentType getContentType() {
@@ -127,7 +127,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Sets {@link #contentType}.
-	 * 
+	 *
 	 * @param contentType
 	 *            New value for {@link #contentType}
 	 */
@@ -137,7 +137,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Gets {@link #signaturePosition}.
-	 * 
+	 *
 	 * @return {@link #signaturePosition}
 	 */
 	public int getSignaturePosition() {
@@ -146,7 +146,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 
 	/**
 	 * Sets {@link #signaturePosition}.
-	 * 
+	 *
 	 * @param signaturePosition
 	 *            New value for {@link #signaturePosition}
 	 */
@@ -192,16 +192,17 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((content == null) ? 0 : content.hashCode());
-		result = prime * result + ((contentType == null) ? 0 : contentType.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + signaturePosition;
+		result = (prime * result) + ((content == null) ? 0 : content.hashCode());
+		result = (prime * result) + ((contentType == null) ? 0 : contentType.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + signaturePosition;
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -243,6 +244,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return content;
 	}

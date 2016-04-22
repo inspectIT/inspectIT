@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * The wizard page that displays the CMR info and checks for the connection status.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class PreviewCmrDataWizardPage extends WizardPage {
@@ -117,7 +117,7 @@ public class PreviewCmrDataWizardPage extends WizardPage {
 
 	/**
 	 * Updates the representation with a given {@link CmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 */
@@ -146,9 +146,9 @@ public class PreviewCmrDataWizardPage extends WizardPage {
 
 	/**
 	 * Checking of the CRM job.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class CheckCmrJob extends Job {
 
@@ -164,7 +164,7 @@ public class PreviewCmrDataWizardPage extends WizardPage {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param cmrRepositoryDefinition
 		 *            CMR to check.
 		 */

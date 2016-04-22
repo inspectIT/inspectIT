@@ -13,22 +13,22 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.root.SubViewClassificationController;
 
 /**
  * The interface for all table input controller.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * Sets the input definition of this controller.
-	 * 
+	 *
 	 * @param inputDefinition
 	 *            The input definition.
 	 */
@@ -36,21 +36,21 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * Creates the columns in the given table viewer.
-	 * 
+	 *
 	 * @param tableViewer
 	 *            The table viewer.
 	 */
 	void createColumns(TableViewer tableViewer);
 
 	/**
-	 * The {@link rocks.inspectit.ui.rcp.editor.table.TableSubView} might need to alter the
-	 * column width/visibility if the column has the remembered size. With this method the
-	 * controller gives or denies the {@link rocks.inspectit.ui.rcp.editor.table.TableSubView}
-	 * to alter the column width.
-	 * 
+	 * The {@link rocks.inspectit.ui.rcp.editor.table.TableSubView} might need to alter the column
+	 * width/visibility if the column has the remembered size. With this method the controller gives
+	 * or denies the {@link rocks.inspectit.ui.rcp.editor.table.TableSubView} to alter the column
+	 * width.
+	 *
 	 * @param tableColumn
 	 *            {@link TableColumn}
-	 * 
+	 *
 	 * @return Returns true if the {@link TableColumn} can be altered.
 	 */
 	boolean canAlterColumnWidth(TableColumn tableColumn);
@@ -61,14 +61,14 @@ public interface TableInputController extends SubViewClassificationController {
 	 * For some {@link DefaultData} objects, the method {@link #canOpenInput(List)} should return
 	 * true so that the input object is set by the
 	 * {@link rocks.inspectit.ui.rcp.editor.table.TableSubView}.
-	 * 
+	 *
 	 * @return The table input or <code>null</code> if nothing to display for default.
 	 */
 	Object getTableInput();
 
 	/**
 	 * Returns the content provider for the {@link TableViewer}.
-	 * 
+	 *
 	 * @return The content provider.
 	 * @see IContentProvider
 	 */
@@ -76,7 +76,7 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns the label provider for the {@link TableViewer}.
-	 * 
+	 *
 	 * @return The label provider
 	 * @see IBaseLabelProvider
 	 */
@@ -85,14 +85,14 @@ public interface TableInputController extends SubViewClassificationController {
 	/**
 	 * Returns the comparator for the {@link TableViewer}. Can be <code>null</code> to indicate that
 	 * no sorting of the elements should be done.
-	 * 
+	 *
 	 * @return The table viewer comparator.
 	 */
 	ViewerComparator getComparator();
 
 	/**
 	 * Sets the limit of the displayed elements in the table.
-	 * 
+	 *
 	 * @param limit
 	 *            The limit value.
 	 */
@@ -100,7 +100,7 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * Refreshes the current data and updates the table input if new items are available.
-	 * 
+	 *
 	 * @param monitor
 	 *            The progress monitor.
 	 * @param rootEditor
@@ -110,7 +110,7 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * This method will be called when a double click event is executed.
-	 * 
+	 *
 	 * @param event
 	 *            The event object.
 	 */
@@ -119,7 +119,7 @@ public interface TableInputController extends SubViewClassificationController {
 	/**
 	 * Returns <code>true</code> if the controller can open the input which consists of one or
 	 * several {@link DefaultData} objects.
-	 * 
+	 *
 	 * @param data
 	 *            The data which is checked if the controller can open it.
 	 * @return Returns <code>true</code> if the controller can open the input.
@@ -128,7 +128,7 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns all needed preference IDs.
-	 * 
+	 *
 	 * @return A {@link Set} containing all {@link PreferenceId}. Returning <code>null</code> is not
 	 *         permitted here. At least a {@link java.util.Collections#EMPTY_SET} should be
 	 *         returned.
@@ -137,7 +137,7 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * This method is called whenever something is changed in one of the preferences.
-	 * 
+	 *
 	 * @param preferenceEvent
 	 *            The event object containing the changed objects.
 	 */
@@ -146,7 +146,7 @@ public interface TableInputController extends SubViewClassificationController {
 	/**
 	 * This method creates a human readable string out of the given object (which is object from the
 	 * table model).
-	 * 
+	 *
 	 * @param object
 	 *            The object to create the string from.
 	 * @return The created human readable string.
@@ -157,7 +157,7 @@ public interface TableInputController extends SubViewClassificationController {
 	 * Return the values of all columns in the table for the given object. Not visible columns
 	 * values will also be included. The order of the values will be same to the initial table
 	 * column order, thus not reflecting the current state of the table if the columns were moved.
-	 * 
+	 *
 	 * @param object
 	 *            Object to get values for.
 	 * @return List of string representing the values.
@@ -166,7 +166,7 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns the list of the objects that should be searched.
-	 * 
+	 *
 	 * @param tableInput
 	 *            Current input of the table. The {@link TableInputController} is responsible to
 	 *            modify the input if necessary.
@@ -182,7 +182,7 @@ public interface TableInputController extends SubViewClassificationController {
 	/**
 	 * Signals that the object has been check so that input controller can perform necessary
 	 * actions.
-	 * 
+	 *
 	 * @param object
 	 *            Object that has be checked.
 	 * @param checked

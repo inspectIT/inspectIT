@@ -236,7 +236,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 	 */
 	private byte[] performInstrumentation(byte[] byteCode, ClassLoader classLoader, InstrumentationDefinition instrumentationResult) throws StorageException {
 		// if no instrumentation result or empty return null
-		if (null == instrumentationResult || instrumentationResult.isEmpty()) {
+		if ((null == instrumentationResult) || instrumentationResult.isEmpty()) {
 			return null;
 		}
 

@@ -7,9 +7,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 /**
  * This type of chained processor does not pass the data to process to the chained processors, but
  * it will maybe pass other types of data to the processors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractExtractorDataProcessor extends AbstractChainedDataProcessor {
 

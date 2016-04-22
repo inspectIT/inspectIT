@@ -7,10 +7,10 @@ import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
 
 /**
  * Storage descriptor. POJO that keeps information about where element is stored on disk.
- * 
+ *
  * @see IStorageDescriptor
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageDescriptor extends AbstractStorageDescriptor {
 
@@ -34,7 +34,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 
 	/**
 	 * Instantiates new {@link SimpleStorageDescriptor} and assigns the channel ID.
-	 * 
+	 *
 	 * @param channelId
 	 *            Channel id to hold.
 	 */
@@ -45,7 +45,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 
 	/**
 	 * Assigns the channel ID and {@link SimpleStorageDescriptor}.
-	 * 
+	 *
 	 * @param channelId
 	 *            Channel id to hold.
 	 * @param simpleStorageDescriptor
@@ -58,7 +58,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 
 	/**
 	 * Assigns the channel ID, position in file and size.
-	 * 
+	 *
 	 * @param channelId
 	 *            Channel id to hold.
 	 * @param position
@@ -78,7 +78,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	 * next to each other. There is no difference if the other descriptor is pointing to the data
 	 * after or before this descriptor. After successful join the joined data descriptor will be
 	 * represented by this descriptor.
-	 * 
+	 *
 	 * @param other
 	 *            Descriptor information to join.
 	 * @return This method will return true if the join was successfully done, and false if no join
@@ -97,7 +97,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	 * was successfully done, and false if no join was done. The join is possible only if the given
 	 * position and size is pointing to the data that is next to the data currently described in
 	 * {@link StorageDescriptor}.
-	 * 
+	 *
 	 * @param otherPosition
 	 *            Position
 	 * @param otherSize
@@ -112,6 +112,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getChannelId() {
 		return channelId;
 	}
@@ -119,6 +120,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setChannelId(int channelId) {
 		this.channelId = channelId;
 	}
@@ -141,6 +143,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getPosition() {
 		return simpleStorageDescriptor.getPosition();
 	}
@@ -148,6 +151,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSize() {
 		return simpleStorageDescriptor.getSize();
 	}
@@ -155,6 +159,7 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setPositionAndSize(long position, long size) {
 		simpleStorageDescriptor.setPosition(position);
 		simpleStorageDescriptor.setSize((int) size);
@@ -167,8 +172,8 @@ public class StorageDescriptor extends AbstractStorageDescriptor {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + channelId;
-		result = prime * result + ((simpleStorageDescriptor == null) ? 0 : simpleStorageDescriptor.hashCode());
+		result = (prime * result) + channelId;
+		result = (prime * result) + ((simpleStorageDescriptor == null) ? 0 : simpleStorageDescriptor.hashCode());
 		return result;
 	}
 

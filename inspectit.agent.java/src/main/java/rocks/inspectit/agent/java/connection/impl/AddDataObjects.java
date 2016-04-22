@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Class which encapsulates the request to the remote object {@link IAgentStorageService}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class AddDataObjects extends AbstractRemoteMethodCall<IAgentStorageService, Void> {
 
@@ -23,7 +23,7 @@ public class AddDataObjects extends AbstractRemoteMethodCall<IAgentStorageServic
 	 * The only constructor for this class accepts 2 attributes. The first one is the remote object,
 	 * which will be used to send the data. The second one, a {@link List} of measurements, is the
 	 * actual data.
-	 * 
+	 *
 	 * @param repository
 	 *            The remote object.
 	 * @param dataObjects
@@ -37,6 +37,7 @@ public class AddDataObjects extends AbstractRemoteMethodCall<IAgentStorageServic
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Void performRemoteCall(IAgentStorageService remoteObject) {
 		remoteObject.addDataObjects(dataObjects);
 		return null;

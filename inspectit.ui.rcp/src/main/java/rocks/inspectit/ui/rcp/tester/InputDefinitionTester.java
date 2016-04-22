@@ -9,9 +9,9 @@ import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 
 /**
  * Tests the input definition for different properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InputDefinitionTester extends PropertyTester {
 

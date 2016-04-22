@@ -25,7 +25,6 @@ public class InvocationSequenceSensorConfig extends StringConstraintSensorConfig
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

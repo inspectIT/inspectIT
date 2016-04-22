@@ -23,25 +23,25 @@ import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 
 /**
  * Provides automatic remote export of services found inside a Spring context.
- * 
+ *
  * <p>
  * When a bean is annotated with {@link Service} <em>and</em> implements an interface annotated with
  * {@link ServiceInterface}, the bean will be exported as a service with this interface. This is
  * done <em>after</em> the Spring context is refreshed or started so that we are sure that any
  * {@link BeanPostProcessor}s and AOP advise is applied.
- * 
+ *
  * <p>
  * This exporter bean is registered in the spring context so that all lifecycles are passed and this
  * bean can be used as a reference candidate for other spring beans. The name is either being
  * specified statically in the annotation or dynamically via the name of the service bean +
  * "Exporter" at the end.
- * 
+ *
  * <p>
- * 
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
+ *
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
  * authors are James Douglas and Henno Vermeulen.
- * 
+ *
  * @author James Douglas
  * @author Henno Vermeulen
  * @author Patrice Bouillet
@@ -66,7 +66,7 @@ public class RemotingExporter implements BeanFactoryPostProcessor {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * We look for the service annotation on the bean class found in the {@link BeanDefinition}
 	 * before any {@link BeanPostProcessor}s or AOP advice is applied.
 	 */
@@ -153,7 +153,7 @@ public class RemotingExporter implements BeanFactoryPostProcessor {
 
 	/**
 	 * Checks for if an annotation property is set by overriding the default value.
-	 * 
+	 *
 	 * @param annotation
 	 *            the annotation to check for.
 	 * @param attributeName
@@ -168,7 +168,7 @@ public class RemotingExporter implements BeanFactoryPostProcessor {
 
 	/**
 	 * Creates the name of the exporter bean under which it will be exposed in the spring container.
-	 * 
+	 *
 	 * @param beanName
 	 *            the original service bean name.
 	 * @param annotation
@@ -177,7 +177,7 @@ public class RemotingExporter implements BeanFactoryPostProcessor {
 	 */
 	private String getNameForExporterBean(String beanName, Annotation annotation) {
 		String name = (String) AnnotationUtils.getValue(annotation, "name");
-		if (null != name && !"".equals(name.trim())) {
+		if ((null != name) && !"".equals(name.trim())) {
 			return name;
 		} else {
 			return beanName + "Exporter";
@@ -186,7 +186,7 @@ public class RemotingExporter implements BeanFactoryPostProcessor {
 
 	/**
 	 * Searches for a service interface on the passed class.
-	 * 
+	 *
 	 * @param serviceClass
 	 *            the class to look for a service interface.
 	 * @return returns the service interface.

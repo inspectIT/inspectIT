@@ -1,19 +1,20 @@
 package rocks.inspectit.shared.cs.indexing.indexer;
 
 /**
- * 
+ *
  * Abstract branch indexer for all indexers that work as shared instance.
- * 
+ *
  * @param <E>
  *            Element type that indexer can return keys for.
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractSharedInstanceBranchIndexer<E> implements IBranchIndexer<E> {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean sharedInstance() {
 		return true;
 	}
@@ -21,6 +22,7 @@ public abstract class AbstractSharedInstanceBranchIndexer<E> implements IBranchI
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBranchIndexer<E> getNewInstance() {
 		throw new UnsupportedOperationException("Branch indexer can not return new instance because it uses the shared one.");
 	}
@@ -32,7 +34,7 @@ public abstract class AbstractSharedInstanceBranchIndexer<E> implements IBranchI
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + this.getClass().hashCode();
+		result = (prime * result) + this.getClass().hashCode();
 		return result;
 	}
 

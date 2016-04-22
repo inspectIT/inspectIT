@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 /**
  * Special indexer, that indexes invocations without children in one branch and every other object,
  * including invocations with children, in second one.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class InvocationChildrenIndexer<E extends DefaultData> extends AbstractSharedInstanceBranchIndexer<E> implements IBranchIndexer<E> {
@@ -20,10 +20,11 @@ public class InvocationChildrenIndexer<E extends DefaultData> extends AbstractSh
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		if (element instanceof InvocationSequenceData) {
 			InvocationSequenceData invoc = (InvocationSequenceData) element;
-			if (invoc.getNestedSequences() == null || invoc.getNestedSequences().isEmpty()) {
+			if ((invoc.getNestedSequences() == null) || invoc.getNestedSequences().isEmpty()) {
 				return Boolean.TRUE;
 			}
 		}
@@ -33,6 +34,7 @@ public class InvocationChildrenIndexer<E extends DefaultData> extends AbstractSh
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		Object[] keys = new Object[1];
 		if (query instanceof StorageIndexQuery) {

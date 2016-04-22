@@ -7,13 +7,11 @@ import static org.hamcrest.Matchers.is;
 
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
-
 /**
  * Tests that functionality in the {@link InvocationAwareData} is correct.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class InvocationAwareDataTest {
@@ -112,7 +110,7 @@ public class InvocationAwareDataTest {
 
 	/**
 	 * Gets the instance of the abstract class {@link InvocationAwareData}.
-	 * 
+	 *
 	 * @return Gets the instance of the abstract class {@link InvocationAwareData}.
 	 */
 	private InvocationAwareData getInvocationAwareData() {

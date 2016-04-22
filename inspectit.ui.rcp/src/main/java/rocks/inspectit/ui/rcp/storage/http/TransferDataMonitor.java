@@ -13,9 +13,9 @@ import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 /**
  * Transfer monitor class that collects {@link DataSample}s during the transfer and provides
  * informations about the average transfer rate, total bytes transfered, etc.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TransferDataMonitor {
 
@@ -93,7 +93,7 @@ public class TransferDataMonitor {
 	/**
 	 * Default constructor. Same as calling
 	 * {@link TransferDataMonitor#TransferDataMonitor(SubMonitor, Map, false)}.
-	 * 
+	 *
 	 * @param subMonitor
 	 *            Monitor to report to.
 	 * @param files
@@ -128,7 +128,7 @@ public class TransferDataMonitor {
 
 	/**
 	 * Marks the start of the file download.
-	 * 
+	 *
 	 * @param fileName
 	 *            Name of the file that is downloaded.
 	 */
@@ -144,7 +144,7 @@ public class TransferDataMonitor {
 
 	/**
 	 * Informs that the download of the file has ended.
-	 * 
+	 *
 	 * @param fileName
 	 *            Name of the file that has been downloaded.
 	 */
@@ -171,7 +171,7 @@ public class TransferDataMonitor {
 
 	/**
 	 * Adds the sample.
-	 * 
+	 *
 	 * @param byteCount
 	 *            Bytes transfered.
 	 */
@@ -225,18 +225,18 @@ public class TransferDataMonitor {
 
 	/**
 	 * Returns the average transfer rate.
-	 * 
+	 *
 	 * @return Returns the average transfer rate.
 	 */
 	private double getAverageTransferRate() {
-		return (double) totalBytesTransfered / ((double) (System.currentTimeMillis() - downloadStartTime) / 1000.0d);
+		return totalBytesTransfered / ((System.currentTimeMillis() - downloadStartTime) / 1000.0d);
 	}
 
 	/**
 	 * Returns time left for the given amounts of bytes to be downloaded. Note that this is not
 	 * related to the current transfer rate, but to the time since the download started. Thus this
 	 * can be used as the information when it is gonna be completely over.
-	 * 
+	 *
 	 * @param bytesMore
 	 *            Bytes left to be downloaded.
 	 * @return Estimated time left in milliseconds.
@@ -247,13 +247,13 @@ public class TransferDataMonitor {
 
 	/**
 	 * Returns the size of the file based on if the current download is compressed or not.
-	 * 
+	 *
 	 * @param originalFileSize
 	 *            Original file size.
 	 * @return Returns file size to use.
 	 */
 	private long getFileSize(long originalFileSize) {
-		if (gzipCompression && originalFileSize > MIN_GZIP_FILE_SIZE) {
+		if (gzipCompression && (originalFileSize > MIN_GZIP_FILE_SIZE)) {
 			return (long) (originalFileSize * GZIP_FILE_SIZE_RATIO);
 		} else {
 			return originalFileSize;
@@ -262,9 +262,9 @@ public class TransferDataMonitor {
 
 	/**
 	 * Job that will display the message.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class DisplayMessageJob extends UIJob {
 

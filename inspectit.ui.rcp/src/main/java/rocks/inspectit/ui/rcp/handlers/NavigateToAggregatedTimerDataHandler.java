@@ -20,8 +20,8 @@ import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
@@ -31,9 +31,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler for navigation to the aggregated Timer data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NavigateToAggregatedTimerDataHandler extends AbstractHandler implements IHandler {
 

@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * The general info information. Currently only displaying the time-stamp.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class GeneralInfoDetailsGenerator implements IDetailsGenerator {
 

@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.StringPropertyUpdate;
 
 /**
  * Property holding string values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "string-property")
@@ -38,7 +38,7 @@ public class StringProperty extends SingleProperty<String> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            Display name of the property. Can not be <code>null</code>.
 	 * @param description
@@ -69,38 +69,42 @@ public class StringProperty extends SingleProperty<String> {
 
 	/**
 	 * Gets {@link #usedValue}.
-	 * 
+	 *
 	 * @return {@link #usedValue}
 	 */
+	@Override
 	protected String getUsedValue() {
 		return usedValue;
 	}
 
 	/**
 	 * Sets {@link #usedValue}.
-	 * 
+	 *
 	 * @param usedValue
 	 *            New value for {@link #usedValue}
 	 */
+	@Override
 	protected void setUsedValue(String usedValue) {
 		this.usedValue = usedValue;
 	}
 
 	/**
 	 * Gets {@link #defaultValue}.
-	 * 
+	 *
 	 * @return {@link #defaultValue}
 	 */
+	@Override
 	public String getDefaultValue() {
 		return defaultValue;
 	}
 
 	/**
 	 * Sets {@link #defaultValue}.
-	 * 
+	 *
 	 * @param defaultValue
 	 *            New value for {@link #defaultValue}
 	 */
+	@Override
 	protected void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}
@@ -108,6 +112,7 @@ public class StringProperty extends SingleProperty<String> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String parseLiteral(String literal) {
 		return literal;
 	}

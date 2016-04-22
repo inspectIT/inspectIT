@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Tester for all navigations.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NavigationTester extends PropertyTester {
 
@@ -62,7 +62,7 @@ public class NavigationTester extends PropertyTester {
 			Object selectedObject = selection.getFirstElement();
 			if (selectedObject instanceof InvocationSequenceData) {
 				List<ExceptionSensorData> exceptions = ((InvocationSequenceData) selectedObject).getExceptionSensorDataObjects();
-				if (null != exceptions && !exceptions.isEmpty()) {
+				if ((null != exceptions) && !exceptions.isEmpty()) {
 					for (ExceptionSensorData exceptionSensorData : exceptions) {
 						if (null != exceptionSensorData.getThrowableType()) {
 							return true;
@@ -102,14 +102,14 @@ public class NavigationTester extends PropertyTester {
 	/**
 	 * Checks if the given timer data has a sensor type that equals {@link SensorTypeEnum#TIMER} or
 	 * {@link SensorTypeEnum#AVERAGE_TIMER}, so that a special navigation types are possible or not.
-	 * 
+	 *
 	 * @param timerData
 	 *            {@link TimerData} to check.
 	 * @return True if given object is of a TimerData class and mentioned sensor types are
 	 *         registered. False otherwise.
 	 */
 	private boolean isTimerSensorBounded(TimerData timerData) {
-		if (null == timerData || (!timerData.getClass().equals(TimerData.class) && !timerData.getClass().equals(AggregatedTimerData.class))) {
+		if ((null == timerData) || (!timerData.getClass().equals(TimerData.class) && !timerData.getClass().equals(AggregatedTimerData.class))) {
 			return false;
 		}
 
@@ -119,7 +119,7 @@ public class NavigationTester extends PropertyTester {
 			SensorTypeIdent sensorTypeIdent = repositoryDefinition.getCachedDataService().getSensorTypeIdentForId(timerData.getSensorTypeIdent());
 			if (null != sensorTypeIdent) {
 				SensorTypeEnum sensorTypeEnum = SensorTypeEnum.get(sensorTypeIdent.getFullyQualifiedClassName());
-				return sensorTypeEnum == SensorTypeEnum.TIMER || sensorTypeEnum == SensorTypeEnum.AVERAGE_TIMER;
+				return (sensorTypeEnum == SensorTypeEnum.TIMER) || (sensorTypeEnum == SensorTypeEnum.AVERAGE_TIMER);
 			}
 		}
 

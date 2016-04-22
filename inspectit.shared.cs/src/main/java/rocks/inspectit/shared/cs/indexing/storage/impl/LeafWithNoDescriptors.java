@@ -30,10 +30,10 @@ import rocks.inspectit.shared.cs.storage.util.StorageUtil;
  * Changing this class can cause the break of the backward/forward compatibility of the storage in
  * the way that we will not be able to read any data from the storage. Thus, please be careful with
  * performing any changes until there is a proper mechanism to protect against this problem.
- * 
- * 
+ *
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of data that can be indexed.
  */
@@ -60,7 +60,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	/**
 	 * This is a not thread-safe list of the descriptors that need to be synchronized on our own.
 	 */
-	private List<SimpleStorageDescriptor> descriptors = new ArrayList<SimpleStorageDescriptor>();
+	private List<SimpleStorageDescriptor> descriptors = new ArrayList<>();
 
 	/**
 	 * Default constructor. Generates leaf ID.
@@ -71,7 +71,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 
 	/**
 	 * Secondary constructor. Assigns the leaf with the ID.
-	 * 
+	 *
 	 * @param id
 	 *            ID to be assigned to the leaf.
 	 */
@@ -82,6 +82,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageDescriptor put(E element) throws IndexingException {
 		return boundedDecriptor;
 	}
@@ -92,6 +93,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	 * Calling this method with this implementation of the storage leaf is highly discouraged,
 	 * because we simply can not find one element, and have to return descriptor for all elements.
 	 */
+	@Override
 	public IStorageDescriptor get(E element) {
 		throw new UnsupportedOperationException("LeafWithNoDescriptors can not answer on the single element query.");
 	}
@@ -99,16 +101,19 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<IStorageDescriptor> query(IIndexQuery query) {
-		List<IStorageDescriptor> list = new ArrayList<IStorageDescriptor>();
+		List<IStorageDescriptor> list = new ArrayList<>();
 		for (SimpleStorageDescriptor simpleStorageDescriptor : descriptors) {
 			list.add(new StorageDescriptor(id, simpleStorageDescriptor));
 		}
 		return list;
 	}
+
 	/**
-	 *{@inheritDoc}
+	 * {@inheritDoc}
 	 */
+	@Override
 	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
 		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
@@ -116,6 +121,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageDescriptor getAndRemove(E template) {
 		// FIXME Not good, when write fails, we need to remove somehow the peace that is missing..
 		return null;
@@ -124,6 +130,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public synchronized void preWriteFinalization() {
 		optimiseDescriptors(descriptors);
 	}
@@ -131,6 +138,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getComponentSize(IObjectSizes objectSizes) {
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(2, 0, 1, 0, 0, 0);
@@ -143,7 +151,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 
 	/**
 	 * Adds the written position and size by updating the existing {@link #descriptors} list.
-	 * 
+	 *
 	 * @param position
 	 *            Position that was written.
 	 * @param size
@@ -151,7 +159,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	 */
 	private synchronized void addPositionAndSize(long position, long size) {
 		for (SimpleStorageDescriptor storageDescriptor : descriptors) {
-			if (storageDescriptor.getSize() + size < MAX_RANGE_SIZE && storageDescriptor.join(position, size)) {
+			if (((storageDescriptor.getSize() + size) < MAX_RANGE_SIZE) && storageDescriptor.join(position, size)) {
 				return;
 			}
 		}
@@ -163,16 +171,16 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	 * Optimizes the list of the descriptors so that necessary joining is done. This method will
 	 * also assure that no descriptor has bigger size than {@value #MAX_RANGE_SIZE} bytes, as
 	 * defined in {@link #MAX_RANGE_SIZE}.
-	 * 
+	 *
 	 * @param descriptorList
 	 *            List of {@link StorageDescriptor}s to optimize.
 	 */
 	private void optimiseDescriptors(List<SimpleStorageDescriptor> descriptorList) {
-		for (int i = 0; i < descriptorList.size() - 1; i++) {
+		for (int i = 0; i < (descriptorList.size() - 1); i++) {
 			for (int j = i + 1; j < descriptorList.size(); j++) {
 				SimpleStorageDescriptor descriptor = descriptors.get(i);
 				SimpleStorageDescriptor other = descriptors.get(j);
-				if (descriptor.getSize() + other.getSize() < MAX_RANGE_SIZE && descriptor.join(other)) {
+				if (((descriptor.getSize() + other.getSize()) < MAX_RANGE_SIZE) && descriptor.join(other)) {
 					descriptorList.remove(j);
 					j--;
 				}
@@ -182,7 +190,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	int getId() {
@@ -193,15 +201,16 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	 * This is the private implementation of {@link IStorageDescriptor} that reflects operations
 	 * directly to the leaf. The usage of descriptor outside of this class should not be changed,
 	 * but calling some methods won't create any actions.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class BoundedDecriptor extends AbstractStorageDescriptor {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int getChannelId() {
 			return id;
 		}
@@ -209,12 +218,14 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void setChannelId(int channelId) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public long getPosition() {
 			return 0;
 		}
@@ -222,6 +233,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public long getSize() {
 			return 0;
 		}
@@ -229,6 +241,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void setPositionAndSize(long position, long size) {
 			addPositionAndSize(position, size);
 		}
@@ -248,6 +261,7 @@ public class LeafWithNoDescriptors<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RecursiveTask<List<IStorageDescriptor>> getTaskForForkJoinQuery(IIndexQuery query) {
 		return new LeafTask<>(this, query);
 	}

@@ -9,9 +9,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * File visitor that can copy or move directories.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CopyMoveFileVisitor extends DeleteFileVisitor {
 
@@ -32,7 +32,7 @@ public class CopyMoveFileVisitor extends DeleteFileVisitor {
 
 	/**
 	 * Default constructor. Only performs the copy.
-	 * 
+	 *
 	 * @param fromPath
 	 *            Source path.
 	 * @param toPath
@@ -45,7 +45,7 @@ public class CopyMoveFileVisitor extends DeleteFileVisitor {
 	/**
 	 * Secondary constructor. Allow user to set if the source of the copy will be deleted after
 	 * copying producing the move operation.
-	 * 
+	 *
 	 * @param fromPath
 	 *            Source path.
 	 * @param toPath

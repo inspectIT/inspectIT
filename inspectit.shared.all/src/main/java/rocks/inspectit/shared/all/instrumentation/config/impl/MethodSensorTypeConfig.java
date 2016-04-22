@@ -7,7 +7,7 @@ import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 /**
  * Container for the values of a sensor type configuration. stores all the values defined in a
  * config file for later access.
- * 
+ *
  * @author Patrice Bouillet
  */
 public class MethodSensorTypeConfig extends AbstractSensorTypeConfig {
@@ -24,7 +24,7 @@ public class MethodSensorTypeConfig extends AbstractSensorTypeConfig {
 
 	/**
 	 * Returns the unique name of the sensor type.
-	 * 
+	 *
 	 * @return The name of the sensor type.
 	 */
 	public String getName() {
@@ -33,7 +33,7 @@ public class MethodSensorTypeConfig extends AbstractSensorTypeConfig {
 
 	/**
 	 * Sets the unique name of the sensor type.
-	 * 
+	 *
 	 * @param name
 	 *            The sensor name.
 	 */
@@ -49,7 +49,7 @@ public class MethodSensorTypeConfig extends AbstractSensorTypeConfig {
 	 * {@link PriorityEnum#NORMAL}<br>
 	 * {@link PriorityEnum#LOW}<br>
 	 * {@link PriorityEnum#MIN}<br>
-	 * 
+	 *
 	 * @return The priority of the sensor type.
 	 */
 	public PriorityEnum getPriority() {
@@ -58,7 +58,7 @@ public class MethodSensorTypeConfig extends AbstractSensorTypeConfig {
 
 	/**
 	 * Sets the priority of this sensor type.
-	 * 
+	 *
 	 * @param priority
 	 *            The priority.
 	 */
@@ -69,13 +69,14 @@ public class MethodSensorTypeConfig extends AbstractSensorTypeConfig {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return getId() + " :: name: " + name + " (" + priority + ")";
 	}
 
 	/**
 	 * Returns if jRebel property is activated on the sensor.
-	 * 
+	 *
 	 * @return Returns if jRebel property is activated on the sensor.
 	 */
 	public boolean isJRebelActive() {

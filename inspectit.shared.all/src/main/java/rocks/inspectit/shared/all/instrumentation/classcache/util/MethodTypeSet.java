@@ -77,5 +77,4 @@ public class MethodTypeSet extends SortedArraySet<MethodType> {
 		super(METHOD_COMPARATOR);
 	}
 
-
 }

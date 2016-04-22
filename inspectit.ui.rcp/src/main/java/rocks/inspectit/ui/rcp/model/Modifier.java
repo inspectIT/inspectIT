@@ -7,10 +7,10 @@ package rocks.inspectit.ui.rcp.model;
  * All the methods/constants in this class are compatible with ones in
  * <code>java.lang.reflect.Modifier</code>.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://jboss-javassist.github.io/javassist/">javassist</a>. Original author is Shigeru
- * Chiba. License info can be found <a
- * href="https://github.com/jboss-javassist/javassist/blob/master/License.html">here</a>.
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://jboss-javassist.github.io/javassist/">javassist</a>. Original author is Shigeru
+ * Chiba. License info can be found
+ * <a href="https://github.com/jboss-javassist/javassist/blob/master/License.html">here</a>.
  */
 public final class Modifier {
 	public static final int PUBLIC = AccessFlag.PUBLIC; // NOCHK
@@ -36,7 +36,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>public</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>public</tt> modifier.
@@ -47,7 +47,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>private</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>private</tt> modifier.
@@ -58,7 +58,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>protected</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>protected</tt> modifier.
@@ -70,7 +70,7 @@ public final class Modifier {
 	/**
 	 * Returns true if the modifiers do not include either <tt>public</tt>, <tt>protected</tt>, or
 	 * <tt>private</tt>.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers do not include either <tt>public</tt>, <tt>protected</tt>, or
@@ -82,7 +82,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>static</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>static</tt> modifier.
@@ -93,7 +93,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>final</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>final</tt> modifier.
@@ -104,7 +104,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>synchronized</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>synchronized</tt> modifier.
@@ -115,7 +115,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>volatile</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>volatile</tt> modifier.
@@ -126,7 +126,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>transient</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>transient</tt> modifier.
@@ -137,7 +137,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>native</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>native</tt> modifier.
@@ -148,7 +148,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>interface</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>interface</tt> modifier.
@@ -159,7 +159,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>annotation</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>annotation</tt> modifier.
@@ -170,7 +170,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>enum</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>enum</tt> modifier.
@@ -181,7 +181,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>abstract</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>abstract</tt> modifier.
@@ -192,7 +192,7 @@ public final class Modifier {
 
 	/**
 	 * Returns true if the modifiers include the <tt>strictfp</tt> modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return true if the modifiers include the <tt>strictfp</tt> modifier.
@@ -203,7 +203,7 @@ public final class Modifier {
 
 	/**
 	 * Return a string describing the access modifier flags in the specified modifier.
-	 * 
+	 *
 	 * @param mod
 	 *            modifier flags.
 	 * @return a string describing the access modifier flags in the specified modifier.

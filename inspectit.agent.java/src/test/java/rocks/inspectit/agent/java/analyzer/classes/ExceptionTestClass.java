@@ -2,9 +2,9 @@ package rocks.inspectit.agent.java.analyzer.classes;
 
 /**
  * DO NOT MODIFY THIS CLASS UNLESS YOU KNOW WHAT YOU'RE DOING.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class ExceptionTestClass {

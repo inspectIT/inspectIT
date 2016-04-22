@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Value provider for list of {@link CmrRepositoryDefinition}s.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 class CmrRepositoryPreferenceValueProvider extends PreferenceValueProvider<List<CmrRepositoryDefinition>> {
 
@@ -29,6 +29,7 @@ class CmrRepositoryPreferenceValueProvider extends PreferenceValueProvider<List<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isObjectValid(Object object) {
 		if (object instanceof List) {
 			List<?> list = (List<?>) object;
@@ -45,6 +46,7 @@ class CmrRepositoryPreferenceValueProvider extends PreferenceValueProvider<List<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getValueForObject(List<CmrRepositoryDefinition> repositoryDefinitions) {
 		if (CollectionUtils.isEmpty(repositoryDefinitions)) {
 			return EMPTY_LIST;
@@ -65,11 +67,12 @@ class CmrRepositoryPreferenceValueProvider extends PreferenceValueProvider<List<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<CmrRepositoryDefinition> getObjectFromValue(String value) throws PreferenceException {
 		if (EMPTY_LIST.equals(value)) {
 			return Collections.emptyList();
 		} else {
-			List<CmrRepositoryDefinition> returnList = new ArrayList<CmrRepositoryDefinition>();
+			List<CmrRepositoryDefinition> returnList = new ArrayList<>();
 			StringTokenizer tokenizer = new StringTokenizer(value, PreferencesConstants.PREF_OBJECT_SEPARATION_TOKEN);
 			while (tokenizer.hasMoreTokens()) {
 				String nextValue = tokenizer.nextToken();
@@ -92,7 +95,7 @@ class CmrRepositoryPreferenceValueProvider extends PreferenceValueProvider<List<
 							+ Arrays.asList(splitted) + ". Definition will be skipped.");
 				}
 
-				if (null != cmrRepositoryDefinition && splitted.length > 3) {
+				if ((null != cmrRepositoryDefinition) && (splitted.length > 3)) {
 					cmrRepositoryDefinition.setDescription(splitted[3]);
 				}
 				returnList.add(cmrRepositoryDefinition);

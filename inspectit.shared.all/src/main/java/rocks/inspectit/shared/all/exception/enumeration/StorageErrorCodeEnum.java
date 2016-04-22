@@ -6,9 +6,9 @@ import rocks.inspectit.shared.all.exception.IErrorCode;
 
 /**
  * Error code enumeration for the storage component.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum StorageErrorCodeEnum implements IErrorCode {
 
@@ -114,7 +114,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param description
 	 *            Description of the error code.
 	 * @param possibleCause
@@ -147,7 +147,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
 	public String getDescription() {
@@ -156,7 +156,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleCause}.
-	 * 
+	 *
 	 * @return {@link #possibleCause}
 	 */
 	public String getPossibleCause() {
@@ -165,7 +165,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleSolution}.
-	 * 
+	 *
 	 * @return {@link #possibleSolution}
 	 */
 	public String getPossibleSolution() {

@@ -23,8 +23,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.dao.StorageDataDao;
-import rocks.inspectit.server.storage.CmrStorageManager;
-import rocks.inspectit.server.storage.CmrStorageRecorder;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
@@ -36,9 +34,9 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
 
 /**
  * Test for the {@link CmrStorageRecorder}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class CmrStorageRecorderTest extends AbstractTestNGLogSupport {

@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Factory for generation of the details composites. This class is initialized by Spring.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class DetailsGenerationFactory {
 
@@ -28,7 +28,7 @@ public final class DetailsGenerationFactory {
 	/**
 	 * Creates list of detail composites displaying different types of the information for the given
 	 * default data.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Data to generate details for.
 	 * @param repositoryDefinition
@@ -62,7 +62,7 @@ public final class DetailsGenerationFactory {
 		for (IDetailsGenerator generator : generators) {
 			if (generator.canGenerateFor(defaultData)) {
 				result.add(generator.generate(defaultData, repositoryDefinition, parent, toolkit));
-			} else if (null != secondary && generator.canGenerateFor(secondary)) {
+			} else if ((null != secondary) && generator.canGenerateFor(secondary)) {
 				result.add(generator.generate(secondary, repositoryDefinition, parent, toolkit));
 			}
 		}
@@ -71,7 +71,7 @@ public final class DetailsGenerationFactory {
 
 	/**
 	 * Sets {@link #generators}.
-	 * 
+	 *
 	 * @param generators
 	 *            New value for {@link #generators}
 	 */

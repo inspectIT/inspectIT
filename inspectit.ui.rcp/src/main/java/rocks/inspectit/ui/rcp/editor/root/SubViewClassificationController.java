@@ -3,17 +3,17 @@ package rocks.inspectit.ui.rcp.editor.root;
 /**
  * Interface for defining the classification of sub views, so that different actions can be
  * performed with differently classified views.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface SubViewClassificationController {
 
 	/**
 	 * Defines different classification options for the view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum SubViewClassification {
 
@@ -29,7 +29,7 @@ public interface SubViewClassificationController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Returns the sub view classification.
 	 * @see SubViewClassification
 	 */

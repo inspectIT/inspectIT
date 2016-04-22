@@ -11,9 +11,9 @@ import org.eclipse.swt.graphics.Point;
 /**
  * Combined icon image descriptor capable of combining several images in one on the vertical or
  * horizontal level.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CombinedIcon extends CompositeImageDescriptor {
 
@@ -34,7 +34,7 @@ public class CombinedIcon extends CompositeImageDescriptor {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param descriptors
 	 *            {@link ImageDescriptor}s that will be included in the combined icon.
 	 * @param orientation
@@ -46,7 +46,7 @@ public class CombinedIcon extends CompositeImageDescriptor {
 
 	/**
 	 * Secondary constructor allows specification of the minimum width and height of the new icon.
-	 * 
+	 *
 	 * @param descriptors
 	 *            {@link ImageDescriptor}s that will be included in the combined icon.
 	 * @param orientation

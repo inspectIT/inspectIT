@@ -9,16 +9,16 @@ import rocks.inspectit.server.cache.IBuffer;
 
 /**
  * Thread that invokes the {@link IBuffer#evict()} method constantly.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class BufferEvictor extends BufferWorker {
 
 	/**
 	 * Default constructor. Just calls super class constructor.
-	 * 
+	 *
 	 * @param buffer
 	 *            Buffer to work on.
 	 */

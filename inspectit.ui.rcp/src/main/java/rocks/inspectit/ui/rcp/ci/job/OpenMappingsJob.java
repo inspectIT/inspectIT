@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Job for loading of the {@link AgentMapping}s from the CMR and opening the editor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class OpenMappingsJob extends Job {
 

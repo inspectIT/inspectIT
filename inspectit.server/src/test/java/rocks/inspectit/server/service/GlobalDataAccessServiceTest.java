@@ -21,7 +21,6 @@ import org.testng.annotations.Test;
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.event.AgentDeletedEvent;
-import rocks.inspectit.server.service.GlobalDataAccessService;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
@@ -85,7 +84,7 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 		platformIdent.setId(platformId);
 		when(platformIdentDao.load(Long.valueOf(platformId))).thenReturn(platformIdent);
 
-		Map<Long, AgentStatusData> map = new HashMap<Long, AgentStatusData>(1);
+		Map<Long, AgentStatusData> map = new HashMap<>(1);
 		AgentStatusData agentStatusData = new AgentStatusData(AgentConnection.CONNECTED);
 		map.put(platformId, agentStatusData);
 		when(agentStatusProvider.getAgentStatusDataMap()).thenReturn(map);
@@ -103,7 +102,7 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 		platformIdent.setId(platformId);
 		when(platformIdentDao.load(Long.valueOf(platformId))).thenReturn(platformIdent);
 
-		Map<Long, AgentStatusData> map = new HashMap<Long, AgentStatusData>(1);
+		Map<Long, AgentStatusData> map = new HashMap<>(1);
 		AgentStatusData agentStatusData = new AgentStatusData(AgentConnection.DISCONNECTED);
 		map.put(platformId, agentStatusData);
 		when(agentStatusProvider.getAgentStatusDataMap()).thenReturn(map);

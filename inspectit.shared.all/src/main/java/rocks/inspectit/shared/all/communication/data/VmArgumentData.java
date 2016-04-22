@@ -10,16 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 
+import org.apache.commons.lang.StringUtils;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.Sizeable;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * This class provide informations about system properties of the virtual machine.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @Entity
 public class VmArgumentData implements Serializable, Sizeable {
@@ -62,7 +62,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
 	 * Creates a new instance with the given parameters.
-	 * 
+	 *
 	 * @param vmName
 	 *            the name of the VM.
 	 * @param vmValue
@@ -75,7 +75,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public long getId() {
@@ -84,7 +84,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -94,7 +94,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
 	 * Gets {@link #vmName}.
-	 * 
+	 *
 	 * @return {@link #vmName}
 	 */
 	public String getVmName() {
@@ -103,7 +103,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
 	 * Sets {@link #vmName}.
-	 * 
+	 *
 	 * @param vmName
 	 *            New value for {@link #vmName}
 	 */
@@ -113,7 +113,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
 	 * Gets {@link #vmValue}.
-	 * 
+	 *
 	 * @return {@link #vmValue}
 	 */
 	public String getVmValue() {
@@ -122,7 +122,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 
 	/**
 	 * Sets {@link #vmValue}.
-	 * 
+	 *
 	 * @param vmValue
 	 *            New value for {@link #vmValue}
 	 */
@@ -135,10 +135,10 @@ public class VmArgumentData implements Serializable, Sizeable {
 	 */
 	@PrePersist
 	protected void checkLengths() {
-		if (StringUtils.isNotEmpty(vmName) && vmName.length() > MAX_LENGTH) {
+		if (StringUtils.isNotEmpty(vmName) && (vmName.length() > MAX_LENGTH)) {
 			vmName = vmName.substring(0, MAX_LENGTH);
 		}
-		if (StringUtils.isNotEmpty(vmValue) && vmValue.length() > MAX_LENGTH) {
+		if (StringUtils.isNotEmpty(vmValue) && (vmValue.length() > MAX_LENGTH)) {
 			vmValue = vmValue.substring(0, MAX_LENGTH);
 		}
 	}
@@ -146,17 +146,19 @@ public class VmArgumentData implements Serializable, Sizeable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((vmName == null) ? 0 : vmName.hashCode());
-		result = prime * result + ((vmValue == null) ? 0 : vmValue.hashCode());
+		result = (prime * result) + ((vmName == null) ? 0 : vmName.hashCode());
+		result = (prime * result) + ((vmValue == null) ? 0 : vmValue.hashCode());
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

@@ -20,9 +20,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * This class only initializes the sub-tree if it is requested. Furthermore, the creation of the
  * objects is done piece after piece, so that an immediate visualization can be seen (important for
  * sub-trees which are very large).
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DeferredBrowserComposite extends DeferredComposite {
 
@@ -50,7 +50,7 @@ public class DeferredBrowserComposite extends DeferredComposite {
 			Composite browserComposite = (Composite) object;
 			Set<MethodIdent> methodIdents = platformIdent.getMethodIdents();
 			monitor.beginTask("Loading of Package Elements...", IProgressMonitor.UNKNOWN);
-			Map<String, DeferredPackageComposite> packageNames = new HashMap<String, DeferredPackageComposite>(methodIdents.size());
+			Map<String, DeferredPackageComposite> packageNames = new HashMap<>(methodIdents.size());
 
 			for (MethodIdent methodIdent : methodIdents) {
 				if (select(methodIdent)) {
@@ -100,7 +100,7 @@ public class DeferredBrowserComposite extends DeferredComposite {
 
 	/**
 	 * Should this method ident pass the selection process.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            {@link MethodIdent}.
 	 * @return Should this method ident pass the selection process.
@@ -111,7 +111,7 @@ public class DeferredBrowserComposite extends DeferredComposite {
 
 	/**
 	 * The platform ident used to retrieve these packages.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            the platformIdent to set
 	 */
@@ -149,7 +149,7 @@ public class DeferredBrowserComposite extends DeferredComposite {
 
 	/**
 	 * Gets {@link #hideInactiveInstrumentations}.
-	 * 
+	 *
 	 * @return {@link #hideInactiveInstrumentations}
 	 */
 	public boolean isHideInactiveInstrumentations() {
@@ -158,7 +158,7 @@ public class DeferredBrowserComposite extends DeferredComposite {
 
 	/**
 	 * Sets {@link #hideInactiveInstrumentations}.
-	 * 
+	 *
 	 * @param hideInactiveInstrumentations
 	 *            New value for {@link #hideInactiveInstrumentations}
 	 */

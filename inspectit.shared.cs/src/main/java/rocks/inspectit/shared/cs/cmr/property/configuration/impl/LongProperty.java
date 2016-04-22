@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.LongPropertyUpdate;
 
 /**
  * Property holding long values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "long-property")
@@ -38,7 +38,7 @@ public class LongProperty extends SingleProperty<Long> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            Display name of the property. Can not be <code>null</code>.
 	 * @param description
@@ -66,38 +66,42 @@ public class LongProperty extends SingleProperty<Long> {
 
 	/**
 	 * Gets {@link #usedValue}.
-	 * 
+	 *
 	 * @return {@link #usedValue}
 	 */
+	@Override
 	protected Long getUsedValue() {
 		return usedValue;
 	}
 
 	/**
 	 * Sets {@link #usedValue}.
-	 * 
+	 *
 	 * @param usedValue
 	 *            New value for {@link #usedValue}
 	 */
+	@Override
 	protected void setUsedValue(Long usedValue) {
 		this.usedValue = usedValue;
 	}
 
 	/**
 	 * Gets {@link #defaultValue}.
-	 * 
+	 *
 	 * @return {@link #defaultValue}
 	 */
+	@Override
 	public Long getDefaultValue() {
 		return defaultValue;
 	}
 
 	/**
 	 * Sets {@link #defaultValue}.
-	 * 
+	 *
 	 * @param defaultValue
 	 *            New value for {@link #defaultValue}
 	 */
+	@Override
 	protected void setDefaultValue(Long defaultValue) {
 		this.defaultValue = defaultValue;
 	}
@@ -105,6 +109,7 @@ public class LongProperty extends SingleProperty<Long> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Long parseLiteral(String literal) {
 		try {
 			return Long.parseLong(literal);

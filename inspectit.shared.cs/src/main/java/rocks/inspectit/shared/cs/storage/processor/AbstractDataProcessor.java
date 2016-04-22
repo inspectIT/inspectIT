@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.storage.IWriter;
 
 /**
  * Abstract class for all storage data processors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractDataProcessor implements Serializable {
 
@@ -32,7 +32,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	 * Processes one {@link DefaultData} object. This method will check is
 	 * {@link #canBeProcessed(DefaultData)} is true, and then delegate the processing to the
 	 * {@link #processData(DefaultData)} method.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @return Returns list of {@link Future}s if the data processing submitted one or more writing
@@ -47,7 +47,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 
 	/**
 	 * Concrete method for processing. IMplemented by sub-classeS.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @return Returns list of {@link Future}s if the data processing submitted one or more writing
@@ -58,7 +58,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	/**
 	 * Returns if the {@link DefaultData} object can be processed by this
 	 * {@link AbstractDataProcessor}.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @return True if data can be processed, false otherwise.
@@ -72,7 +72,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	 * <p>
 	 * Default implementation of this method does not do anything, subclasses should override it if
 	 * any specific action is needed.
-	 * 
+	 *
 	 * @return Returns list of {@link Future}s if the data flushing submitted one or more writing
 	 *         tasks. Empty collection means no writing tasks were submitted.
 	 */
@@ -81,7 +81,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the storageWriter
 	 */
 	protected IWriter getStorageWriter() {
@@ -89,7 +89,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param storageWriter
 	 *            the storage writer
 	 */

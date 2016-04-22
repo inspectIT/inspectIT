@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 /**
  * Exporter that starts the {@link Server}, binds it to the given TCP port and register the object
  * to be used remotely.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class KryoNetRmiServiceExporter {
 
@@ -61,7 +61,7 @@ public class KryoNetRmiServiceExporter {
 
 	/**
 	 * Sets {@link #service}.
-	 * 
+	 *
 	 * @param service
 	 *            New value for {@link #service}
 	 */
@@ -71,7 +71,7 @@ public class KryoNetRmiServiceExporter {
 
 	/**
 	 * Sets {@link #serviceInterface}.
-	 * 
+	 *
 	 * @param serviceInterface
 	 *            New value for {@link #serviceInterface}
 	 */
@@ -81,7 +81,7 @@ public class KryoNetRmiServiceExporter {
 
 	/**
 	 * Sets {@link #serviceId}.
-	 * 
+	 *
 	 * @param serviceId
 	 *            New value for {@link #serviceId}
 	 */

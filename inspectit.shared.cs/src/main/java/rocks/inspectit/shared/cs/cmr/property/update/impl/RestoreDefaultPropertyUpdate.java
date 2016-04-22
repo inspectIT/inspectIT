@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Special type of property update that basically says restore defaults.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <V>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,7 +39,7 @@ public class RestoreDefaultPropertyUpdate<V> implements IPropertyUpdate<V> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty} to create update for.
 	 */
@@ -54,6 +54,7 @@ public class RestoreDefaultPropertyUpdate<V> implements IPropertyUpdate<V> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isRestoreDefault() {
 		return true;
 	}
@@ -61,6 +62,7 @@ public class RestoreDefaultPropertyUpdate<V> implements IPropertyUpdate<V> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public V getUpdateValue() {
 		return defaultValue;
 	}
@@ -68,6 +70,7 @@ public class RestoreDefaultPropertyUpdate<V> implements IPropertyUpdate<V> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getPropertyLogicalName() {
 		return propertyLogicalName;
 	}
@@ -79,7 +82,7 @@ public class RestoreDefaultPropertyUpdate<V> implements IPropertyUpdate<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((propertyLogicalName == null) ? 0 : propertyLogicalName.hashCode());
+		result = (prime * result) + ((propertyLogicalName == null) ? 0 : propertyLogicalName.hashCode());
 		return result;
 	}
 

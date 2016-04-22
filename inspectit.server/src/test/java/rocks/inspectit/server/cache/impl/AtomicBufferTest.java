@@ -13,19 +13,14 @@ import static org.mockito.Mockito.when;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.cache.IBufferElement;
-import rocks.inspectit.server.cache.impl.AtomicBuffer;
-import rocks.inspectit.server.cache.impl.BufferAnalyzer;
-import rocks.inspectit.server.cache.impl.BufferElement;
-import rocks.inspectit.server.cache.impl.BufferIndexer;
-import rocks.inspectit.server.cache.impl.BufferProperties;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.DefaultData;
@@ -33,9 +28,9 @@ import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 
 /**
  * Testing of the functionality of the {@link AtomicBuffer}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class AtomicBufferTest extends AbstractTestNGLogSupport {
@@ -56,7 +51,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Init.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@BeforeMethod
@@ -77,8 +72,8 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 	@Test
 	public void insertElements() {
 		DefaultData defaultData = mock(DefaultData.class);
-		IBufferElement<DefaultData> element1 = new BufferElement<DefaultData>(defaultData);
-		IBufferElement<DefaultData> element2 = new BufferElement<DefaultData>(defaultData);
+		IBufferElement<DefaultData> element1 = new BufferElement<>(defaultData);
+		IBufferElement<DefaultData> element2 = new BufferElement<>(defaultData);
 
 		buffer.put(element1);
 		buffer.put(element2);
@@ -89,7 +84,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests that eviction will remove right amount of elements.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(invocationCount = 5)
@@ -116,7 +111,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		}
 
 		for (int i = 0; i < elements; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			buffer.put(bufferElement);
 		}
 
@@ -138,7 +133,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests that size of the elements is correctly analyzed and added to the buffer size.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(invocationCount = 5)
@@ -168,7 +163,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		IBufferElement<DefaultData> first = null;
 		long firstRunElements = (long) (elements * 0.99f) - 1;
 		for (int i = 0; i < firstRunElements; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			if (0 == i) {
 				first = bufferElement;
 			}
@@ -185,8 +180,8 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		assertThat(buffer.shouldEvict(), is(false));
 
 		// add rest for activating eviction
-		for (int i = 0; i < elements - firstRunElements; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+		for (int i = 0; i < (elements - firstRunElements); i++) {
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			buffer.put(bufferElement);
 		}
 
@@ -213,7 +208,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests that expansion rate will be used on elements size.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(invocationCount = 5)
@@ -240,7 +235,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		}
 
 		for (int i = 0; i < elements; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			buffer.put(bufferElement);
 		}
 
@@ -259,7 +254,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test that elements are correctly indexed.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(invocationCount = 5)
@@ -289,7 +284,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		IBufferElement<DefaultData> first = null;
 
 		for (int i = 0; i < elements; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			if (0 == i) {
 				first = bufferElement;
 			}
@@ -297,7 +292,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		}
 
 		// wait for the elements to be analyzed and indexed
-		while (buffer.getAnalyzedElements() < elements || buffer.getIndexedElements() < elements) {
+		while ((buffer.getAnalyzedElements() < elements) || (buffer.getIndexedElements() < elements)) {
 			Thread.sleep(50);
 		}
 
@@ -318,7 +313,7 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests that the tree size calculations and maintenance is done.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(invocationCount = 5)
@@ -347,12 +342,12 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		bufferIndexer.start();
 
 		for (int i = 0; i < elements; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			buffer.put(bufferElement);
 		}
 
 		// wait for the elements to be analyzed and indexed
-		while (buffer.getAnalyzedElements() < elements || buffer.getIndexedElements() < elements) {
+		while ((buffer.getAnalyzedElements() < elements) || (buffer.getIndexedElements() < elements)) {
 			Thread.sleep(50);
 		}
 
@@ -372,11 +367,11 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		// now add two more element to active the cleaning of the indexing tree
 		// the cleaning should be done after adding the first one, so we can execute the verify
 		// afterwards
-		buffer.put(new BufferElement<DefaultData>(defaultData));
-		buffer.put(new BufferElement<DefaultData>(defaultData));
+		buffer.put(new BufferElement<>(defaultData));
+		buffer.put(new BufferElement<>(defaultData));
 
 		// wait for the element to be analyzed and indexed
-		while (buffer.getAnalyzedElements() < elements + 2 || buffer.getIndexedElements() < elements + 2) {
+		while ((buffer.getAnalyzedElements() < (elements + 2)) || (buffer.getIndexedElements() < (elements + 2))) {
 			Thread.sleep(50);
 		}
 
@@ -385,15 +380,15 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 
 		// only if we evicted enough we can expect the clean
 		if (evicted > flagsSetOnBytes) {
-			verify(indexingTree, times(1)).cleanWithRunnable(Mockito.<ExecutorService> anyObject());
+			verify(indexingTree, times(1)).cleanWithRunnable(Matchers.<ExecutorService> anyObject());
 		} else {
-			verify(indexingTree, times(0)).cleanWithRunnable(Mockito.<ExecutorService> anyObject());
+			verify(indexingTree, times(0)).cleanWithRunnable(Matchers.<ExecutorService> anyObject());
 		}
 	}
 
 	/**
 	 * Tests that the clean works properly.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(invocationCount = 5)
@@ -413,8 +408,8 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		BufferIndexer bufferIndexer = new BufferIndexer(buffer);
 		bufferIndexer.start();
 
-		for (int i = 0; i < elements / 2; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+		for (int i = 0; i < (elements / 2); i++) {
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			buffer.put(bufferElement);
 			buffer.put(bufferElement);
 
@@ -423,12 +418,12 @@ public class AtomicBufferTest extends AbstractTestNGLogSupport {
 		}
 
 		for (int i = 0; i < elements; i++) {
-			IBufferElement<DefaultData> bufferElement = new BufferElement<DefaultData>(defaultData);
+			IBufferElement<DefaultData> bufferElement = new BufferElement<>(defaultData);
 			buffer.put(bufferElement);
 		}
 
 		// wait for the elements to be analyzed and indexed
-		while (buffer.getAnalyzedElements() < elements || buffer.getIndexedElements() < elements) {
+		while ((buffer.getAnalyzedElements() < elements) || (buffer.getIndexedElements() < elements)) {
 			Thread.sleep(500);
 		}
 

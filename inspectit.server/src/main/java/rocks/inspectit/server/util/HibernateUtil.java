@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.util.IHibernateUtil;
 
 /**
  * Our own Hibernate utility class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class HibernateUtil implements IHibernateUtil {
@@ -23,6 +23,7 @@ public class HibernateUtil implements IHibernateUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isInitialized(Object proxy) {
 		return Hibernate.isInitialized(proxy);
 	}
@@ -30,6 +31,7 @@ public class HibernateUtil implements IHibernateUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isPersistentCollection(Class<?> collectionClass) {
 		return PersistentCollection.class.isAssignableFrom(collectionClass);
 	}
@@ -37,6 +39,7 @@ public class HibernateUtil implements IHibernateUtil {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isPersistentMap(Class<?> collectionClass) {
 		return PersistentMap.class.isAssignableFrom(collectionClass);
 	}

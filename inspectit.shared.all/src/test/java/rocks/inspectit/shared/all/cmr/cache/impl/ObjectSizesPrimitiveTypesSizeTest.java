@@ -44,9 +44,9 @@ import rocks.inspectit.shared.all.communication.data.VmArgumentData;
  * This tests checks all the {@link DefaultData} classes for the proper use of the
  * {@link IObjectSizes#getPrimitiveTypesSize(int, int, int, int, int, int)} method in the
  * {@link DefaultData#getObjectSize(IObjectSizes)} call.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("all")
 public class ObjectSizesPrimitiveTypesSizeTest {
@@ -73,7 +73,7 @@ public class ObjectSizesPrimitiveTypesSizeTest {
 	/**
 	 * Tests the class that extends the {@link DefaultData} class via reflection. Note that tested
 	 * class can not be abstract.
-	 * 
+	 *
 	 * @param sizableClass
 	 *            Class to test.
 	 * @throws InstantiationException
@@ -154,7 +154,7 @@ public class ObjectSizesPrimitiveTypesSizeTest {
 
 	/**
 	 * Provides classes to be tested.
-	 * 
+	 *
 	 * @return Provides classes to be tested.
 	 */
 	@DataProvider(name = "classProvider")
@@ -169,9 +169,9 @@ public class ObjectSizesPrimitiveTypesSizeTest {
 
 	/**
 	 * Simple class for counting purposes.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class PrimitiveCount {
 		int referenceCount = 0;
@@ -182,20 +182,20 @@ public class ObjectSizesPrimitiveTypesSizeTest {
 		int doubleCount = 0;
 
 		public boolean shouldBeCounted() {
-			return !(referenceCount == 0 && booleanCount == 0 && intCount == 0 && floatCount == 0 && longCount == 0 && doubleCount == 0);
+			return !((referenceCount == 0) && (booleanCount == 0) && (intCount == 0) && (floatCount == 0) && (longCount == 0) && (doubleCount == 0));
 		}
 
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + booleanCount;
-			result = prime * result + doubleCount;
-			result = prime * result + floatCount;
-			result = prime * result + intCount;
-			result = prime * result + longCount;
-			result = prime * result + referenceCount;
+			result = (prime * result) + getOuterType().hashCode();
+			result = (prime * result) + booleanCount;
+			result = (prime * result) + doubleCount;
+			result = (prime * result) + floatCount;
+			result = (prime * result) + intCount;
+			result = (prime * result) + longCount;
+			result = (prime * result) + referenceCount;
 			return result;
 		}
 
@@ -243,14 +243,29 @@ public class ObjectSizesPrimitiveTypesSizeTest {
 
 	@SuppressWarnings("serial")
 	public static class TestDefaultData extends DefaultData {
+
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = -8907800333606213369L;
 	};
 
 	@SuppressWarnings("serial")
 	public static class TestMethodSensorData extends MethodSensorData {
+
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 3859181039818602878L;
 	};
 
 	@SuppressWarnings("serial")
 	public static class TestInvocationAwareData extends InvocationAwareData {
+
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 3283986124498709204L;
 
 		@Override
 		public double getInvocationAffiliationPercentage() {

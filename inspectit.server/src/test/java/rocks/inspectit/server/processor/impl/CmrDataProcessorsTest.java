@@ -24,8 +24,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
@@ -329,7 +329,7 @@ public class CmrDataProcessorsTest {
 		HttpTimerData httpTimerData = mock(HttpTimerData.class);
 		when(httpTimerData.getHttpInfo()).thenReturn(originalInfo);
 		HttpTimerData clone = mock(HttpTimerData.class);
-		when(serializationManager.copy(Mockito.<HttpTimerData> any())).thenReturn(clone);
+		when(serializationManager.copy(Matchers.<HttpTimerData> any())).thenReturn(clone);
 		HttpInfo httpInfo = mock(HttpInfo.class);
 		when(query.getResultList()).thenReturn(Collections.singletonList(httpInfo));
 

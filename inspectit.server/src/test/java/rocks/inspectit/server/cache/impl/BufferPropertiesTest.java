@@ -14,14 +14,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.cache.impl.BufferProperties;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 
 /**
  * Testing the calculations inside of {@link BufferProperties} class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class BufferPropertiesTest extends AbstractTestNGLogSupport {
@@ -33,7 +32,7 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Initialization of the buffer properties.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an exception is thrown while executing the post construct method in the buffer
 	 *             properties.
@@ -63,7 +62,7 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 	/**
 	 * General Parameterized test to assure that no matter how big buffer size is, expansion rate
 	 * will be between min and max related.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            Buffer size.
 	 */
@@ -81,7 +80,7 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 	/**
 	 * Parameterized test to assure that no matter how big buffer size is, expansion rate will be
 	 * between min and max related to buffers size.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            Buffer size.
 	 */
@@ -91,7 +90,7 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 		assertThat(expansionRate, is(lessThanOrEqualTo(bufferProperties.getMaxObjectExpansionRate())));
 		assertThat(expansionRate, is(greaterThanOrEqualTo(bufferProperties.getMinObjectExpansionRate())));
 
-		if (bufferSize > bufferProperties.getMaxObjectExpansionRateActiveTillBufferSize() && bufferSize < bufferProperties.getMinObjectExpansionRateActiveFromBufferSize()) {
+		if ((bufferSize > bufferProperties.getMaxObjectExpansionRateActiveTillBufferSize()) && (bufferSize < bufferProperties.getMinObjectExpansionRateActiveFromBufferSize())) {
 			assertThat(expansionRate, is(lessThan(bufferProperties.getMaxObjectExpansionRate())));
 			assertThat(expansionRate, is(greaterThan(bufferProperties.getMinObjectExpansionRate())));
 		}
@@ -100,7 +99,7 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 	/**
 	 * Parameterized test to assure that no matter how big buffer size is, expansion rate will be
 	 * between min and max related to buffer occupancy.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            Buffer size.
 	 */
@@ -113,7 +112,7 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 		long maxOldGen = bufferProperties.getOldGenMax();
 		float occupancy = bufferSize / maxOldGen;
 
-		if (occupancy > bufferProperties.getMinObjectExpansionRateActiveTillOccupancy() && occupancy < bufferProperties.getMaxObjectExpansionRateActiveFromOccupancy()) {
+		if ((occupancy > bufferProperties.getMinObjectExpansionRateActiveTillOccupancy()) && (occupancy < bufferProperties.getMaxObjectExpansionRateActiveFromOccupancy())) {
 			assertThat(expansionRate, is(lessThan(bufferProperties.getMaxObjectExpansionRate())));
 			assertThat(expansionRate, is(greaterThan(bufferProperties.getMinObjectExpansionRate())));
 		}
@@ -125,9 +124,9 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 	@Test
 	public void singleExpansionRateTestBufferSize() {
 		long bufferSize = bufferProperties.getMaxObjectExpansionRateActiveTillBufferSize()
-				+ (bufferProperties.getMinObjectExpansionRateActiveFromBufferSize() - bufferProperties.getMaxObjectExpansionRateActiveTillBufferSize()) / 2;
+				+ ((bufferProperties.getMinObjectExpansionRateActiveFromBufferSize() - bufferProperties.getMaxObjectExpansionRateActiveTillBufferSize()) / 2);
 		float expansionRate = bufferProperties.getObjectSecurityExpansionRateBufferSize(bufferSize);
-		float expectedRate = bufferProperties.getMinObjectExpansionRate() + (bufferProperties.getMaxObjectExpansionRate() - bufferProperties.getMinObjectExpansionRate()) / 2;
+		float expectedRate = bufferProperties.getMinObjectExpansionRate() + ((bufferProperties.getMaxObjectExpansionRate() - bufferProperties.getMinObjectExpansionRate()) / 2);
 		assertThat(expansionRate, is(equalTo(expectedRate)));
 	}
 
@@ -137,17 +136,17 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 	@Test
 	public void singleExpansionRateTestBufferOccupancy() {
 		long oldGenMax = 100;
-		long bufferSize = (long) (oldGenMax * (bufferProperties.maxObjectExpansionRateActiveFromOccupancy - (bufferProperties.getMaxObjectExpansionRateActiveFromOccupancy() - bufferProperties
-				.getMinObjectExpansionRateActiveTillOccupancy()) / 2));
+		long bufferSize = (long) (oldGenMax * (bufferProperties.maxObjectExpansionRateActiveFromOccupancy
+				- ((bufferProperties.getMaxObjectExpansionRateActiveFromOccupancy() - bufferProperties.getMinObjectExpansionRateActiveTillOccupancy()) / 2)));
 
 		float expansionRate = bufferProperties.getObjectSecurityExpansionRateBufferOccupancy(bufferSize, oldGenMax);
-		float expectedRate = bufferProperties.getMinObjectExpansionRate() + (bufferProperties.getMaxObjectExpansionRate() - bufferProperties.getMinObjectExpansionRate()) / 2;
+		float expectedRate = bufferProperties.getMinObjectExpansionRate() + ((bufferProperties.getMaxObjectExpansionRate() - bufferProperties.getMinObjectExpansionRate()) / 2);
 		assertThat(expansionRate, is(equalTo(expectedRate)));
 	}
 
 	/**
 	 * Parameters generation for {@link #parametrizedExpansionRateTest(long)}.
-	 * 
+	 *
 	 * @return Buffer size.
 	 */
 	@DataProvider(name = "Buffer-Size-Provider")
@@ -162,14 +161,14 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Returns random positive long number smaller than given max value.
-	 * 
+	 *
 	 * @param max
 	 *            Max value.
 	 * @return Long.
 	 */
 	private long getRandomLong(long max) {
 		long value = (long) (Math.random() * max);
-		return value - value % 10 + 10;
+		return (value - (value % 10)) + 10;
 	}
 
 }

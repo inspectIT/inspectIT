@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp.editor.search.criteria;
 
 /**
  * Class holding the search result.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SearchResult {
 
@@ -30,7 +30,7 @@ public class SearchResult {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param currentOccurence
 	 *            Current occurrence displayed.
 	 * @param totalOccurrences
@@ -50,7 +50,7 @@ public class SearchResult {
 
 	/**
 	 * Gets {@link #totalOccurrences}.
-	 * 
+	 *
 	 * @return {@link #totalOccurrences}
 	 */
 	public int getTotalOccurrences() {
@@ -59,7 +59,7 @@ public class SearchResult {
 
 	/**
 	 * Sets {@link #totalOccurrences}.
-	 * 
+	 *
 	 * @param totalOccurrences
 	 *            New value for {@link #totalOccurrences}
 	 */
@@ -69,7 +69,7 @@ public class SearchResult {
 
 	/**
 	 * Gets {@link #currentOccurence}.
-	 * 
+	 *
 	 * @return {@link #currentOccurence}
 	 */
 	public int getCurrentOccurence() {
@@ -78,7 +78,7 @@ public class SearchResult {
 
 	/**
 	 * Sets {@link #currentOccurence}.
-	 * 
+	 *
 	 * @param currentOccurence
 	 *            New value for {@link #currentOccurence}
 	 */
@@ -88,7 +88,7 @@ public class SearchResult {
 
 	/**
 	 * Gets {@link #canShowNext}.
-	 * 
+	 *
 	 * @return {@link #canShowNext}
 	 */
 	public boolean isCanShowNext() {
@@ -97,7 +97,7 @@ public class SearchResult {
 
 	/**
 	 * Sets {@link #canShowNext}.
-	 * 
+	 *
 	 * @param canShowNext
 	 *            New value for {@link #canShowNext}
 	 */
@@ -107,7 +107,7 @@ public class SearchResult {
 
 	/**
 	 * Gets {@link #canShowPrevious}.
-	 * 
+	 *
 	 * @return {@link #canShowPrevious}
 	 */
 	public boolean isCanShowPrevious() {
@@ -116,7 +116,7 @@ public class SearchResult {
 
 	/**
 	 * Sets {@link #canShowPrevious}.
-	 * 
+	 *
 	 * @param canShowPrevious
 	 *            New value for {@link #canShowPrevious}
 	 */
@@ -131,10 +131,10 @@ public class SearchResult {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (canShowNext ? 1231 : 1237);
-		result = prime * result + (canShowPrevious ? 1231 : 1237);
-		result = prime * result + currentOccurence;
-		result = prime * result + totalOccurrences;
+		result = (prime * result) + (canShowNext ? 1231 : 1237);
+		result = (prime * result) + (canShowPrevious ? 1231 : 1237);
+		result = (prime * result) + currentOccurence;
+		result = (prime * result) + totalOccurrences;
 		return result;
 	}
 

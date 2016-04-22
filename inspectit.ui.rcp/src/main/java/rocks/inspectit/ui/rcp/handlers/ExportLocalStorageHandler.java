@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.wizard.ExportStorageWizard;
 
 /**
  * Handler for exporting the local storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExportLocalStorageHandler extends AbstractHandler implements IHandler {
 

@@ -15,9 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.instrumentation.config.ConfigurationCreator;
-import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
-import rocks.inspectit.server.instrumentation.config.ConfigurationResolver;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;

@@ -19,9 +19,9 @@ import rocks.inspectit.ui.rcp.wizard.DownloadStorageWizard;
 
 /**
  * Handler for downloading the complete storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DownloadStorageHandler extends AbstractHandler implements IHandler {
 

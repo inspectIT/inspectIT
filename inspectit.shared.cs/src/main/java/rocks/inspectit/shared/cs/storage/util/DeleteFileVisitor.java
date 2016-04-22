@@ -9,9 +9,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * File visitor for deleting directories.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DeleteFileVisitor extends SimpleFileVisitor<Path> {
 

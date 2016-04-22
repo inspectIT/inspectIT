@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Action for the adding of data related to labels and label types.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AddLabelManagementAction extends AbstractLabelManagementAction {
 
@@ -30,7 +30,7 @@ public class AddLabelManagementAction extends AbstractLabelManagementAction {
 
 	/**
 	 * Constructor when action is for a label type.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label types.
 	 */
@@ -40,7 +40,7 @@ public class AddLabelManagementAction extends AbstractLabelManagementAction {
 
 	/**
 	 * Constructor when action is for a label(s).
-	 * 
+	 *
 	 * @param labelList
 	 *            Collection of labels.
 	 */

@@ -20,9 +20,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.impl.TimestampIndexer;
 /**
  * Factory that creates the root branch for indexing tree. This root branch will be injected in
  * Spring as a bean.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class RootBranchFactory implements FactoryBean<RootBranch<DefaultData>> {
@@ -32,10 +32,10 @@ public class RootBranchFactory implements FactoryBean<RootBranch<DefaultData>> {
 	 */
 	@Override
 	public RootBranch<DefaultData> getObject() throws Exception {
-		BufferBranchIndexer<DefaultData> timestampIndexer = new BufferBranchIndexer<DefaultData>(new TimestampIndexer<DefaultData>());
-		BufferBranchIndexer<DefaultData> objectTypeIndexer = new BufferBranchIndexer<DefaultData>(new ObjectTypeIndexer<DefaultData>(), timestampIndexer);
-		BufferBranchIndexer<DefaultData> platformIndexer = new BufferBranchIndexer<DefaultData>(new PlatformIdentIndexer<DefaultData>(), objectTypeIndexer);
-		return new RootBranch<DefaultData>(platformIndexer);
+		BufferBranchIndexer<DefaultData> timestampIndexer = new BufferBranchIndexer<>(new TimestampIndexer<>());
+		BufferBranchIndexer<DefaultData> objectTypeIndexer = new BufferBranchIndexer<>(new ObjectTypeIndexer<>(), timestampIndexer);
+		BufferBranchIndexer<DefaultData> platformIndexer = new BufferBranchIndexer<>(new PlatformIdentIndexer<>(), objectTypeIndexer);
+		return new RootBranch<>(platformIndexer);
 	}
 
 	/**
@@ -57,9 +57,9 @@ public class RootBranchFactory implements FactoryBean<RootBranch<DefaultData>> {
 	/**
 	 * Root branch. It has additional functionality of generating IDs for the elements that need to
 	 * be put into the indexing tree.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static class RootBranch<E extends DefaultData> extends Branch<E> {
 
@@ -81,7 +81,7 @@ public class RootBranchFactory implements FactoryBean<RootBranch<DefaultData>> {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param branchIndexer
 		 *            Branch indexer for root branch.
 		 */
@@ -108,7 +108,7 @@ public class RootBranchFactory implements FactoryBean<RootBranch<DefaultData>> {
 		@Override
 		public void cleanWithRunnable(ExecutorService executorService) {
 			super.cleanWithRunnable(executorService);
-			if (clearEmptyComponentsFuture == null || clearEmptyComponentsFuture.isDone()) {
+			if ((clearEmptyComponentsFuture == null) || clearEmptyComponentsFuture.isDone()) {
 				// Submit runnable only if the future is signaling that the last one was done.
 				clearEmptyComponentsFuture = executorService.submit(clearEmptyComponentsRunnable);
 			}

@@ -19,9 +19,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Initializes the default preferences.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class InspectITPreferenceInitializer extends AbstractPreferenceInitializer {
 
@@ -31,7 +31,7 @@ public class InspectITPreferenceInitializer extends AbstractPreferenceInitialize
 	@Override
 	public void initializeDefaultPreferences() {
 		// CMR list
-		List<CmrRepositoryDefinition> defaultCmrList = new ArrayList<CmrRepositoryDefinition>(1);
+		List<CmrRepositoryDefinition> defaultCmrList = new ArrayList<>(1);
 		CmrRepositoryDefinition defaultCmr = new CmrRepositoryDefinition(CmrRepositoryDefinition.DEFAULT_IP, CmrRepositoryDefinition.DEFAULT_PORT, CmrRepositoryDefinition.DEFAULT_NAME);
 		defaultCmr.setDescription(CmrRepositoryDefinition.DEFAULT_DESCRIPTION);
 		defaultCmrList.add(defaultCmr);

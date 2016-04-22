@@ -23,9 +23,9 @@ import rocks.inspectit.ui.rcp.composite.StorageInfoComposite;
 
 /**
  * Page for exporting storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExportStorageWizardPage extends WizardPage {
 
@@ -46,7 +46,7 @@ public class ExportStorageWizardPage extends WizardPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to export.
 	 */
@@ -104,7 +104,7 @@ public class ExportStorageWizardPage extends WizardPage {
 		} else if (storageData instanceof StorageData) {
 			localStorageData = InspectIT.getDefault().getInspectITStorageManager().getLocalDataForStorage((StorageData) storageData);
 		}
-		boolean notDownloaded = (null == localStorageData || !localStorageData.isFullyDownloaded());
+		boolean notDownloaded = ((null == localStorageData) || !localStorageData.isFullyDownloaded());
 		if (notDownloaded) {
 			Composite infoComposite = new Composite(main, SWT.NONE);
 			infoComposite.setLayout(new GridLayout(2, false));

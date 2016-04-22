@@ -10,7 +10,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 
 /**
  * Service to access the HttpTimerData.
- * 
+ *
  * @author Stefan Siegl
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
@@ -19,7 +19,7 @@ public interface IHttpTimerDataAccessService {
 	/**
 	 * Returns a list of the http timer data for a given template. In this template, only the
 	 * platform id is extracted.
-	 * 
+	 *
 	 * @param timerData
 	 *            The template containing the platform id.
 	 * @param includeRequestMethod
@@ -31,7 +31,7 @@ public interface IHttpTimerDataAccessService {
 	/**
 	 * Returns a list of the http timer data for a given template. In this template, only the
 	 * platform id is extracted.
-	 * 
+	 *
 	 * @param timerData
 	 *            The template containing the platform id.
 	 * @param includeRequestMethod
@@ -48,12 +48,12 @@ public interface IHttpTimerDataAccessService {
 	 * Returns a list of http timer data that is aggregated the value of the given http request
 	 * parameter. For this purpose the <code>uri</code> field of the http timer data is re-used to
 	 * store this value.
-	 * 
+	 *
 	 * @param timerData
 	 *            the template containing the platform id.
 	 * @param includeRequestMethod
 	 *            whether or not the request method should be include in the categorization.
-	 * 
+	 *
 	 * @return The list of the timer data objects that are aggregated by the tagged value.
 	 */
 	List<HttpTimerData> getTaggedAggregatedTimerData(HttpTimerData timerData, boolean includeRequestMethod);
@@ -62,7 +62,7 @@ public interface IHttpTimerDataAccessService {
 	 * Returns a list of http timer data that is aggregated the value of the given http request
 	 * parameter. For this purpose the <code>uri</code> field of the http timer data is re-used to
 	 * store this value.
-	 * 
+	 *
 	 * @param timerData
 	 *            the template containing the platform id.
 	 * @param includeRequestMethod
@@ -71,7 +71,7 @@ public interface IHttpTimerDataAccessService {
 	 *            Date to include data from.
 	 * @param toDate
 	 *            Date to include data to.
-	 * 
+	 *
 	 * @return The list of the timer data objects that are aggregated by the tagged value.
 	 */
 	List<HttpTimerData> getTaggedAggregatedTimerData(HttpTimerData timerData, boolean includeRequestMethod, Date fromDate, Date toDate);
@@ -79,7 +79,7 @@ public interface IHttpTimerDataAccessService {
 	/**
 	 * Returns the {@link HttpTimerData} list that can be used as the input for the plotting. From
 	 * the template list the platform ident will be used as well as all URI and tagged values.
-	 * 
+	 *
 	 * @param templates
 	 *            Templates.
 	 * @param fromDate

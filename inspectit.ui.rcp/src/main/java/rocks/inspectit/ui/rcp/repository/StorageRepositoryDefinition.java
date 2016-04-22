@@ -27,9 +27,9 @@ import rocks.inspectit.ui.rcp.repository.service.storage.StorageServiceProvider;
 /**
  * Storage repository definition. This {@link RepositoryDefinition} has a direct usage of a
  * {@link CmrRepositoryDefinition} where storage is located.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageRepositoryDefinition implements RepositoryDefinition {
 
@@ -101,6 +101,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getIp() {
 		return cmrRepositoryDefinition.getIp();
 	}
@@ -108,6 +109,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getPort() {
 		return cmrRepositoryDefinition.getPort();
 	}
@@ -115,6 +117,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return localStorageData.getName();
 	}
@@ -122,6 +125,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IInvocationDataAccessService getInvocationDataAccessService() {
 		return invocationDataAccessService;
 	}
@@ -129,6 +133,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISqlDataAccessService getSqlDataAccessService() {
 		return sqlDataAccessService;
 	}
@@ -136,6 +141,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IExceptionDataAccessService getExceptionDataAccessService() {
 		return exceptionDataAccessService;
 	}
@@ -167,6 +173,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ITimerDataAccessService getTimerDataAccessService() {
 		return timerDataAccessService;
 	}
@@ -174,6 +181,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHttpTimerDataAccessService getHttpTimerDataAccessService() {
 		return httpTimerDataAccessService;
 	}

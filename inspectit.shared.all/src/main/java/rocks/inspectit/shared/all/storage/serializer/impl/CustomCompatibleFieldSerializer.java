@@ -38,14 +38,14 @@ import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
  * decrease the amount of binary data. This is because we are writing integers that are less than
  * 128 and occupy only 1 byte and not complete field names.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryo">kryo</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryo/blob/master/license.txt">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryo">kryo</a>. Original author is Nathan Sweet.
+ * License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryo/blob/master/license.txt">here</a>.
+ *
  * @author Nathan Sweet <misc@n4te.com>
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -63,7 +63,7 @@ public class CustomCompatibleFieldSerializer<T> extends FieldSerializer<T> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param kryo
 	 *            Kryo instance
 	 * @param type
@@ -77,7 +77,7 @@ public class CustomCompatibleFieldSerializer<T> extends FieldSerializer<T> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param kryo
 	 *            Kryo instance
 	 * @param type
@@ -90,7 +90,7 @@ public class CustomCompatibleFieldSerializer<T> extends FieldSerializer<T> {
 	public CustomCompatibleFieldSerializer(Kryo kryo, Class<?> type, ClassSchemaManager schemaManager, boolean useSuperclassSchema) {
 		super(kryo, type);
 		schema = schemaManager.getSchema(type.getName());
-		if (useSuperclassSchema && null == schema) {
+		if (useSuperclassSchema && (null == schema)) {
 			Class<?> superclass = type.getSuperclass();
 			while (null != superclass) {
 				schema = schemaManager.getSchema(superclass.getName());
@@ -116,8 +116,8 @@ public class CustomCompatibleFieldSerializer<T> extends FieldSerializer<T> {
 			CachedField<?>[] fields = getFields();
 
 			// Remove unwanted fields
-			for (int i = 0, n = fields.length; i < n; i++) {
-				Field field = fields[i].getField();
+			for (com.esotericsoftware.kryo.serializers.FieldSerializer.CachedField<?> field2 : fields) {
+				Field field = field2.getField();
 				if (null == schema.getFieldMarker(field.getName())) {
 					super.removeField(field.getName());
 				}
@@ -152,8 +152,8 @@ public class CustomCompatibleFieldSerializer<T> extends FieldSerializer<T> {
 		}
 
 		OutputChunked outputChunked = new OutputChunked(output, 1024);
-		for (int i = 0, n = fields.length; i < n; i++) {
-			fields[i].write(outputChunked, object);
+		for (com.esotericsoftware.kryo.serializers.FieldSerializer.CachedField field : fields) {
+			field.write(outputChunked, object);
 			outputChunked.endChunks();
 		}
 	}
@@ -196,8 +196,7 @@ public class CustomCompatibleFieldSerializer<T> extends FieldSerializer<T> {
 		}
 
 		InputChunked inputChunked = new InputChunked(input, 1024);
-		for (int i = 0, n = fields.length; i < n; i++) {
-			CachedField cachedField = fields[i];
+		for (com.esotericsoftware.kryo.serializers.FieldSerializer.CachedField cachedField : fields) {
 			if (cachedField == null) {
 				if (TRACE) {
 					trace("kryo", "Skip obsolete field.");

@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.concurrent.Future;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -44,18 +45,12 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
 import rocks.inspectit.shared.cs.storage.IWriter;
 import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.AgentFilterDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.DataAggregatorProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.DataSaverProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.InvocationClonerDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.InvocationExtractorDataProcessor;
-import rocks.inspectit.shared.cs.storage.processor.impl.TimeFrameDataProcessor;
 
 /**
  * Tests all {@link AbstractDataProcessor}s for the correct functionality.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class StorageDataProcessorsTest {
@@ -70,14 +65,15 @@ public class StorageDataProcessorsTest {
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 		Answer<Future<Void>> answer = new Answer<Future<Void>>() {
+			@Override
 			@SuppressWarnings("unchecked")
 			public Future<Void> answer(InvocationOnMock invocation) throws Throwable {
 				return mock(Future.class);
 			}
 		};
 
-		when(storageWriter.write(Mockito.<DefaultData> anyObject())).thenAnswer(answer);
-		when(storageWriter.write(Mockito.<DefaultData> anyObject(), Mockito.<Map<?, ?>> anyObject())).thenAnswer(answer);
+		when(storageWriter.write(Matchers.<DefaultData> anyObject())).thenAnswer(answer);
+		when(storageWriter.write(Matchers.<DefaultData> anyObject(), Matchers.<Map<?, ?>> anyObject())).thenAnswer(answer);
 	}
 
 	/**
@@ -86,7 +82,7 @@ public class StorageDataProcessorsTest {
 	 */
 	@Test
 	public void testSimpleSaverExclusive() {
-		List<Class<? extends DefaultData>> includedClasses = new ArrayList<Class<? extends DefaultData>>();
+		List<Class<? extends DefaultData>> includedClasses = new ArrayList<>();
 		includedClasses.add(InvocationSequenceData.class);
 		DataSaverProcessor dataSaverProcessor = new DataSaverProcessor(includedClasses, true);
 		dataSaverProcessor.setStorageWriter(storageWriter);
@@ -105,7 +101,7 @@ public class StorageDataProcessorsTest {
 	 */
 	@Test
 	public void testSimpleSaverInclusive() {
-		List<Class<? extends DefaultData>> includedClasses = new ArrayList<Class<? extends DefaultData>>();
+		List<Class<? extends DefaultData>> includedClasses = new ArrayList<>();
 		includedClasses.add(InvocationSequenceData.class);
 		DataSaverProcessor dataSaverProcessor = new DataSaverProcessor(includedClasses, true);
 		dataSaverProcessor.setStorageWriter(storageWriter);
@@ -170,14 +166,14 @@ public class StorageDataProcessorsTest {
 	@Test
 	public void testInvocationExtractor() {
 		AbstractDataProcessor chainedProcessor = mock(AbstractDataProcessor.class);
-		List<AbstractDataProcessor> chainedList = new ArrayList<AbstractDataProcessor>();
+		List<AbstractDataProcessor> chainedList = new ArrayList<>();
 		chainedList.add(chainedProcessor);
 
 		InvocationExtractorDataProcessor invocationExtractorDataProcessor = new InvocationExtractorDataProcessor(chainedList);
 		invocationExtractorDataProcessor.setStorageWriter(storageWriter);
 
 		InvocationSequenceData invocationSequenceData = new InvocationSequenceData();
-		List<InvocationSequenceData> children = new ArrayList<InvocationSequenceData>();
+		List<InvocationSequenceData> children = new ArrayList<>();
 		InvocationSequenceData child1 = new InvocationSequenceData(new Timestamp(new Date().getTime()), 10, 10, 10);
 		TimerData timerData = new TimerData();
 		child1.setTimerData(timerData);
@@ -210,7 +206,7 @@ public class StorageDataProcessorsTest {
 		long future = time + 1000;
 
 		AbstractDataProcessor dataProcessor = mock(AbstractDataProcessor.class);
-		List<AbstractDataProcessor> chainedProcessors = new ArrayList<AbstractDataProcessor>();
+		List<AbstractDataProcessor> chainedProcessors = new ArrayList<>();
 		chainedProcessors.add(dataProcessor);
 
 		TimeFrameDataProcessor timeFrameDataProcessor = new TimeFrameDataProcessor(new Date(past), new Date(future), chainedProcessors);
@@ -243,7 +239,7 @@ public class StorageDataProcessorsTest {
 	@Test
 	public void dataAggregatorProcessorAggregation() {
 		int aggregationPeriod = 100;
-		DataAggregatorProcessor<TimerData> dataAggregatorProcessor = new DataAggregatorProcessor<TimerData>(TimerData.class, aggregationPeriod, new TimerDataAggregator(), true);
+		DataAggregatorProcessor<TimerData> dataAggregatorProcessor = new DataAggregatorProcessor<>(TimerData.class, aggregationPeriod, new TimerDataAggregator(), true);
 		dataAggregatorProcessor.setStorageWriter(storageWriter);
 
 		long timestampValue = new Date().getTime();
@@ -256,13 +252,13 @@ public class StorageDataProcessorsTest {
 		assertThat(dataAggregatorProcessor.canBeProcessed(timerData), is(true));
 
 		final int elements = 1000;
-		for (int i = 0; i < elements / 2; i++) {
+		for (int i = 0; i < (elements / 2); i++) {
 			dataAggregatorProcessor.process(timerData);
 		}
 
 		Collection<Future<Void>> futures = dataAggregatorProcessor.flush();
 		assertThat(futures, hasSize(1));
-		verify(storageWriter, times(1)).write(Mockito.<TimerData> anyObject());
+		verify(storageWriter, times(1)).write(Matchers.<TimerData> anyObject());
 	}
 
 	/**
@@ -272,22 +268,22 @@ public class StorageDataProcessorsTest {
 	@Test
 	public void dataAggregationProcessorWritting() {
 		IAggregator<TimerData> aggregator = mock(IAggregator.class);
-		when(aggregator.getAggregationKey(Mockito.<TimerData> anyObject())).thenReturn(1L);
+		when(aggregator.getAggregationKey(Matchers.<TimerData> anyObject())).thenReturn(1L);
 		// setting max elements to 1, aggreation to 1000
-		DataAggregatorProcessor<TimerData> dataProcessor = new DataAggregatorProcessor<TimerData>(TimerData.class, 1000, 1, aggregator, false);
+		DataAggregatorProcessor<TimerData> dataProcessor = new DataAggregatorProcessor<>(TimerData.class, 1000, 1, aggregator, false);
 		IWriter writer = mock(IWriter.class);
 		dataProcessor.setStorageWriter(writer);
 
 		TimerData timerData1 = new TimerData();
 		timerData1.setId(1L);
 		timerData1.setTimeStamp(new Timestamp(new Date().getTime()));
-		when(aggregator.getClone(Mockito.<TimerData> anyObject())).thenReturn(new AggregatedTimerData());
+		when(aggregator.getClone(Matchers.<TimerData> anyObject())).thenReturn(new AggregatedTimerData());
 
 		dataProcessor.process(timerData1);
 		dataProcessor.process(timerData1);
 
 		// no interaction with the writer at this point
-		verify(aggregator, times(2)).aggregate(Mockito.<IAggregatedData<TimerData>> anyObject(), eq(timerData1));
+		verify(aggregator, times(2)).aggregate(Matchers.<IAggregatedData<TimerData>> anyObject(), eq(timerData1));
 		verifyNoMoreInteractions(writer);
 
 		// now process same element with the too diff time stamp

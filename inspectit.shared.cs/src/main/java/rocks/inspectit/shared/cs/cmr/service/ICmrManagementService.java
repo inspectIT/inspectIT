@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.configuration.Configuration
 
 /**
  * Service that provides general management of the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface ICmrManagementService {
@@ -34,14 +34,14 @@ public interface ICmrManagementService {
 
 	/**
 	 * Returns the current buffer status via {@link CmrStatusData}.
-	 * 
+	 *
 	 * @return {@link CmrStatusData}.
 	 */
 	CmrStatusData getCmrStatusData();
 
 	/**
 	 * Reports that an amount of data has been dropped.
-	 * 
+	 *
 	 * @param count
 	 *            Dropped amount.
 	 */
@@ -50,7 +50,7 @@ public interface ICmrManagementService {
 	/**
 	 * Returns the number of data objects that have been dropped on the CMR, due to the high
 	 * incoming load.
-	 * 
+	 *
 	 * @return Returns the number of data objects that have been dropped on the CMR, due to the high
 	 *         incoming load.
 	 */
@@ -58,14 +58,14 @@ public interface ICmrManagementService {
 
 	/**
 	 * Returns the currently existing {@link PropertySection} in the CMR configuration.
-	 * 
+	 *
 	 * @return Returns the currently existing {@link PropertySection} in the CMR configuration.
 	 */
 	Collection<PropertySection> getConfigurationPropertySections();
 
 	/**
 	 * Updates the current CMR configuration.
-	 * 
+	 *
 	 * @param configurationUpdate
 	 *            {@link ConfigurationUpdate}
 	 * @param executeRestart

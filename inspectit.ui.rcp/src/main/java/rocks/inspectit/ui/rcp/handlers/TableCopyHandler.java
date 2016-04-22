@@ -15,15 +15,16 @@ import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * The handler to execute a copy command on our table sub views.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TableCopyHandler extends AbstractHandler {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		AbstractRootEditor rootEditor = (AbstractRootEditor) HandlerUtil.getActiveEditor(event);

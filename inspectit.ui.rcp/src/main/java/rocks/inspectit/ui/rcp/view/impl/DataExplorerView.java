@@ -74,9 +74,9 @@ import rocks.inspectit.ui.rcp.view.tree.TreeViewerComparator;
 /**
  * Data explorer view show one Agent from a given {@link RepositoryDefinition}. Other agents can be
  * selected via view menu.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DataExplorerView extends ViewPart implements CmrRepositoryChangeListener, StorageChangeListener, IRefreshableView {
 
@@ -113,7 +113,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * Cashed statuses of CMR repository definitions.
 	 */
-	private final ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus>();
+	private final ConcurrentHashMap<CmrRepositoryDefinition, OnlineStatus> cachedOnlineStatus = new ConcurrentHashMap<>();
 
 	/**
 	 * Listener for tree double clicks.
@@ -165,7 +165,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 * for this map is the combined hash code that can be obtained by calling method
 	 * {@link #getHashCodeForAgentRepository(PlatformIdent, RepositoryDefinition)}.
 	 */
-	private final Map<Integer, List<Object>> expandedElementsPerAgent = new ConcurrentHashMap<Integer, List<Object>>();
+	private final Map<Integer, List<Object>> expandedElementsPerAgent = new ConcurrentHashMap<>();
 
 	/**
 	 * If the inactive instrumentations should be hidden.
@@ -229,7 +229,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * Show the given repository on the view. If the selected agent is not provided, the arbitrary
 	 * agent will be shown.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            Repository definition to display.
 	 * @param agent
@@ -240,7 +240,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 			@Override
 			public void run() {
 				mainForm.setBusy(true);
-				if (null != displayedAgent && null != displayedRepositoryDefinition) {
+				if ((null != displayedAgent) && (null != displayedRepositoryDefinition)) {
 					cacheExpandedObjects(displayedAgent, displayedRepositoryDefinition);
 				}
 				updateFormTitle();
@@ -274,7 +274,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	/**
 	 * Selects the provided agent for display, if it is in the {@link #availableAgents} list. If
 	 * not, a arbitrary agent will be selected if any is available.
-	 * 
+	 *
 	 * @param agent
 	 *            Hint for agent selection.
 	 */
@@ -287,7 +287,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 			}
 		}, mainForm);
 		try {
-			if (null != agent && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(agent)) {
+			if ((null != agent) && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(agent)) {
 				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
 				PreferencesUtils.saveLongValue(PreferencesConstants.LAST_SELECTED_AGENT, agent.getId().longValue(), false);
 			} else if (CollectionUtils.isNotEmpty(availableAgents)) {
@@ -313,7 +313,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 * ident/repository combination. Note that this method will filter out the elements given by
 	 * {@link org.eclipse.jface.viewers.TreeViewer#getExpandedElements()}, so that only the last
 	 * expanded element in the tree is saved.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            {@link PlatformIdent} to cache elements for.
 	 * @param repositoryDefinition
@@ -322,7 +322,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	private void cacheExpandedObjects(PlatformIdent platformIdent, RepositoryDefinition repositoryDefinition) {
 		Object[] allExpanded = treeViewer.getExpandedElements();
 		if (allExpanded.length > 0) {
-			Set<Object> parents = new HashSet<Object>();
+			Set<Object> parents = new HashSet<>();
 			for (Object expanded : allExpanded) {
 				Object parent = ((ITreeContentProvider) treeViewer.getContentProvider()).getParent(expanded);
 				while (parent != null) {
@@ -330,7 +330,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 					parent = ((ITreeContentProvider) treeViewer.getContentProvider()).getParent(parent);
 				}
 			}
-			List<Object> expandedList = new ArrayList<Object>(Arrays.asList(allExpanded));
+			List<Object> expandedList = new ArrayList<>(Arrays.asList(allExpanded));
 			expandedList.removeAll(parents);
 			expandedElementsPerAgent.put(getHashCodeForAgentRepository(platformIdent, repositoryDefinition), expandedList);
 		} else {
@@ -340,7 +340,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Returns the hash code combination for {@link PlatformIdent} and {@link RepositoryDefinition}.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            {@link PlatformIdent}
 	 * @param repositoryDefinition
@@ -353,7 +353,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Updates the list of available agents.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            {@link RepositoryDefinition}.
 	 * @param jobListener
@@ -366,14 +366,14 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 				if (repositoryDefinition instanceof CmrRepositoryDefinition) {
 					CmrRepositoryDefinition cmrRepositoryDefinition = (CmrRepositoryDefinition) repositoryDefinition;
 					if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
-						availableAgents = new ArrayList<PlatformIdent>(cmrRepositoryDefinition.getGlobalDataAccessService().getAgentsOverview().keySet());
+						availableAgents = new ArrayList<>(cmrRepositoryDefinition.getGlobalDataAccessService().getAgentsOverview().keySet());
 					} else {
 						availableAgents = null; // NOPMD
 					}
 				} else if (repositoryDefinition instanceof StorageRepositoryDefinition) {
 					StorageRepositoryDefinition storageRepositoryDefinition = (StorageRepositoryDefinition) repositoryDefinition;
-					if (storageRepositoryDefinition.getLocalStorageData().isFullyDownloaded() || storageRepositoryDefinition.getCmrRepositoryDefinition().getOnlineStatus() != OnlineStatus.OFFLINE) {
-						availableAgents = new ArrayList<PlatformIdent>(storageRepositoryDefinition.getGlobalDataAccessService().getAgentsOverview().keySet());
+					if (storageRepositoryDefinition.getLocalStorageData().isFullyDownloaded() || (storageRepositoryDefinition.getCmrRepositoryDefinition().getOnlineStatus() != OnlineStatus.OFFLINE)) {
+						availableAgents = new ArrayList<>(storageRepositoryDefinition.getGlobalDataAccessService().getAgentsOverview().keySet());
 					} else {
 						availableAgents = null; // NOPMD
 					}
@@ -432,7 +432,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 				if (selected < availableAgents.size()) {
 					PlatformIdent platformIdent = availableAgents.get(selected);
 					if (!ObjectUtils.equals(displayedAgent, platformIdent)) {
-						if (null != displayedAgent && null != displayedRepositoryDefinition) {
+						if ((null != displayedAgent) && (null != displayedRepositoryDefinition)) {
 							cacheExpandedObjects(displayedAgent, displayedRepositoryDefinition);
 						}
 						selectAgentForDisplay(platformIdent);
@@ -450,7 +450,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 */
 	private void updateAgentsCombo() {
 		agentsCombo.removeAll();
-		if (null != availableAgents && !availableAgents.isEmpty()) {
+		if ((null != availableAgents) && !availableAgents.isEmpty()) {
 			agentsCombo.setEnabled(true);
 			int i = 0;
 			int selectedIndex = -1;
@@ -501,17 +501,17 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	private void updateFormBody() {
 		clearFormBody();
-		if (null != displayedRepositoryDefinition && null != displayedAgent) {
+		if ((null != displayedRepositoryDefinition) && (null != displayedAgent)) {
 			TreeModelManager treeModelManager = null;
 			treeModelManager = new TreeModelManager(displayedRepositoryDefinition, displayedAgent, hideInactiveInstrumentations);
-			if (null != treeModelManager && null != displayedAgent) {
+			if ((null != treeModelManager) && (null != displayedAgent)) {
 				treeViewer.setInput(treeModelManager);
 				treeViewer.getTree().setVisible(true);
 				treeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			} else {
 				displayMessage("Repository is currently unavailable.", Display.getDefault().getSystemImage(SWT.ICON_ERROR));
 			}
-		} else if (null != displayedRepositoryDefinition && null == displayedAgent) {
+		} else if ((null != displayedRepositoryDefinition) && (null == displayedAgent)) {
 			if (null == availableAgents) {
 				displayMessage("No agent could be loaded on selected repository.", Display.getDefault().getSystemImage(SWT.ICON_WARNING));
 			} else {
@@ -529,7 +529,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 		collapseAction.updateEnabledState();
 		toolBarManager.find(REFRESH_CONTRIBUTION_ITEM).setVisible(displayedRepositoryDefinition instanceof CmrRepositoryDefinition);
 		toolBarManager.find(CLEAR_BUFFER_CONTRIBUTION_ITEM).setVisible(
-				displayedRepositoryDefinition instanceof CmrRepositoryDefinition && !OnlineStatus.OFFLINE.equals(((CmrRepositoryDefinition) displayedRepositoryDefinition).getOnlineStatus()));
+				(displayedRepositoryDefinition instanceof CmrRepositoryDefinition) && !OnlineStatus.OFFLINE.equals(((CmrRepositoryDefinition) displayedRepositoryDefinition).getOnlineStatus()));
 		toolBarManager.update(true);
 	}
 
@@ -537,7 +537,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 * Clears the look of the form.
 	 */
 	private void clearFormBody() {
-		if (messageComposite != null && !messageComposite.isDisposed()) {
+		if ((messageComposite != null) && !messageComposite.isDisposed()) {
 			messageComposite.dispose();
 		}
 		treeViewer.setInput(null);
@@ -598,7 +598,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 					updateAvailableAgents(displayedRepositoryDefinition, new JobChangeAdapter() {
 						@Override
 						public void done(IJobChangeEvent event) {
-							if (null != availableAgents && !availableAgents.isEmpty() && null != displayedAgent) {
+							if ((null != availableAgents) && !availableAgents.isEmpty() && (null != displayedAgent)) {
 								boolean found = false;
 								for (PlatformIdent platformIdent : availableAgents) {
 									if (platformIdent.getId().longValue() == displayedAgent.getId()) {
@@ -610,7 +610,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 								if (!found) {
 									selectAgentForDisplay(availableAgents.get(0));
 								}
-							} else if (null != availableAgents && !availableAgents.isEmpty() && null == displayedAgent) {
+							} else if ((null != availableAgents) && !availableAgents.isEmpty() && (null == displayedAgent)) {
 								selectAgentForDisplay(availableAgents.get(0));
 							} else {
 								selectAgentForDisplay(null);
@@ -644,7 +644,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 			}
 			if (shouldUpdate) {
 				OnlineStatus cachedStatus = cachedOnlineStatus.get(repositoryDefinition);
-				if (cachedStatus == OnlineStatus.OFFLINE && newStatus == OnlineStatus.ONLINE) {
+				if ((cachedStatus == OnlineStatus.OFFLINE) && (newStatus == OnlineStatus.ONLINE)) {
 					updateAvailableAgents(displayedRepositoryDefinition, new JobChangeAdapter() {
 						@Override
 						public void done(IJobChangeEvent event) {
@@ -661,7 +661,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 							}, mainForm, agentsCombo);
 						}
 					});
-				} else if (cachedStatus == OnlineStatus.ONLINE && newStatus == OnlineStatus.OFFLINE) {
+				} else if ((cachedStatus == OnlineStatus.ONLINE) && (newStatus == OnlineStatus.OFFLINE)) {
 					SafeExecutor.asyncExec(new Runnable() {
 						@Override
 						public void run() {
@@ -817,7 +817,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Displays the message on the provided composite.
-	 * 
+	 *
 	 * @param text
 	 *            Text of message.
 	 * @param image
@@ -825,7 +825,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	 */
 	private void displayMessage(String text, Image image) {
 		clearFormBody();
-		if (null == messageComposite || messageComposite.isDisposed()) {
+		if ((null == messageComposite) || messageComposite.isDisposed()) {
 			messageComposite = toolkit.createComposite(mainForm.getBody());
 		} else {
 			for (Control c : messageComposite.getChildren()) {
@@ -843,7 +843,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Returns storage description for title box.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}
 	 * @return Description for title box.
@@ -859,9 +859,9 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Action that collapses all agents.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class CollapseAction extends Action {
 
@@ -879,7 +879,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 		 * {@link CmrRepositoryDefinition}.
 		 */
 		public final void updateEnabledState() {
-			if (null != treeViewer && treeViewer.getInput() != null) {
+			if ((null != treeViewer) && (treeViewer.getInput() != null)) {
 				setEnabled(true);
 			} else {
 				setEnabled(false);
@@ -899,9 +899,9 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Class for handling the showing / hiding of the inactive instrumentations.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class ShowHideInactiveInstrumentationsAction extends Action {
 
@@ -923,7 +923,7 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 			hideInactiveInstrumentations = !isChecked(); // NOPMD
 			// Bug in PMD reporting inverting of boolean
 			updateToolTipText();
-			if (null != displayedAgent && null != displayedRepositoryDefinition) {
+			if ((null != displayedAgent) && (null != displayedRepositoryDefinition)) {
 				cacheExpandedObjects(displayedAgent, displayedRepositoryDefinition);
 			}
 			performUpdate();

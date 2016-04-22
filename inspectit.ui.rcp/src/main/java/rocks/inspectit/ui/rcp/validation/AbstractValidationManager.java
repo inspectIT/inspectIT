@@ -47,7 +47,7 @@ public abstract class AbstractValidationManager<K> {
 			}
 		} else {
 			if (null == states) {
-				states = new HashSet<ValidationState>();
+				states = new HashSet<>();
 				validationErrorStates.put(key, states);
 			}
 			// replace state instance

@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Abstract class for all label management actions.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractLabelManagementAction implements Serializable {
 
@@ -34,7 +34,7 @@ public abstract class AbstractLabelManagementAction implements Serializable {
 
 	/**
 	 * Constructor when action is for a label type.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label types.
 	 */
@@ -45,7 +45,7 @@ public abstract class AbstractLabelManagementAction implements Serializable {
 
 	/**
 	 * Constructor when action is for a label(s).
-	 * 
+	 *
 	 * @param labelList
 	 *            Collection of labels.
 	 */
@@ -56,7 +56,7 @@ public abstract class AbstractLabelManagementAction implements Serializable {
 
 	/**
 	 * Executes the action.
-	 * 
+	 *
 	 * @param storageService
 	 *            Storage service that can be used for action purposes.
 	 * @throws BusinessException
@@ -75,12 +75,12 @@ public abstract class AbstractLabelManagementAction implements Serializable {
 	 * @return Returns if this action is related to label(s).
 	 */
 	public boolean isLabelBasedAction() {
-		return null != labelList && !labelList.isEmpty();
+		return (null != labelList) && !labelList.isEmpty();
 	}
 
 	/**
 	 * Gets {@link #labelType}.
-	 * 
+	 *
 	 * @return {@link #labelType}
 	 */
 	public AbstractStorageLabelType<?> getLabelType() {
@@ -89,7 +89,7 @@ public abstract class AbstractLabelManagementAction implements Serializable {
 
 	/**
 	 * Gets {@link #labelList}.
-	 * 
+	 *
 	 * @return {@link #labelList}
 	 */
 	public Collection<AbstractStorageLabel<?>> getLabelList() {

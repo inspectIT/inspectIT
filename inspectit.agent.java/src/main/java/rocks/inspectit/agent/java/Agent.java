@@ -6,9 +6,9 @@ package rocks.inspectit.agent.java;
  * etc.). Thus we need another class to be loaded in the bootstrap classloader. And as there is no
  * possibility in getting the bootstrap classloader, we need another class not defined nearly
  * anywhere in the JavaAgent class and loaded after the initialization is complete. Tada.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class Agent {
 

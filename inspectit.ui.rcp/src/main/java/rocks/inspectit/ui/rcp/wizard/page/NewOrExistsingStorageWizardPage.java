@@ -8,9 +8,9 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * Should a new or existing storage should be used.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NewOrExistsingStorageWizardPage extends WizardPage {
 
@@ -47,7 +47,7 @@ public class NewOrExistsingStorageWizardPage extends WizardPage {
 
 	/**
 	 * Should new storage be used.
-	 * 
+	 *
 	 * @return Should new storage be used.
 	 */
 	public boolean useNewStorage() {

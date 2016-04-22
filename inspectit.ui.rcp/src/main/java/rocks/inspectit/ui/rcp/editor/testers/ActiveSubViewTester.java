@@ -13,13 +13,14 @@ import rocks.inspectit.ui.rcp.editor.tree.TreeSubView;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public class ActiveSubViewTester extends PropertyTester {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof AbstractRootEditor) {
 			AbstractRootEditor rootEditor = (AbstractRootEditor) receiver;
@@ -50,7 +51,7 @@ public class ActiveSubViewTester extends PropertyTester {
 	/**
 	 * Returns if the given sub view is a instance of given sub-view class or if there is a sub-view
 	 * of this class in case composite sub-view is provided. This is a recursive method.
-	 * 
+	 *
 	 * @param subView
 	 *            Sub-view to check.
 	 * @param subViewClass
