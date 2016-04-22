@@ -327,8 +327,10 @@ public class StorageIndexingTest {
 			assertThat(result.getSize(), is(equalTo(100L)));
 		}
 	}
+
 	/**
 	 * Same Test as queryDifferentLevels() except with ForkJoin
+	 * 
 	 * @throws IndexingException
 	 */
 	@Test
@@ -530,28 +532,28 @@ public class StorageIndexingTest {
 		// confirm it is removed
 		assertThat(rootBranch.get(invocation), is(nullValue()));
 	}
-	
+
 	/**
 	 * Test that tests the functionality of {@link CombinedStorageQueryTask}
 	 */
 	@Test
-	public void queryCombinedStorageBranch(){		
+	public void queryCombinedStorageBranch() {
 		List<IStorageDescriptor> testResultList = new ArrayList<IStorageDescriptor>();
-		
+
 		testResultList.add(new StorageDescriptor());
 		testResultList.add(new StorageDescriptor());
 		CombinedStorageQueryTestTask<DefaultData> testTask = new CombinedStorageQueryTestTask<>(testResultList);
-		
+
 		StorageBranch<DefaultData> mockedBranch1 = mock(StorageBranch.class);
 		when(mockedBranch1.getTaskForForkJoinQuery(storageIndexQuery)).thenReturn(testTask);
-		
+
 		StorageBranch<DefaultData> mockedBranch2 = mock(StorageBranch.class);
 		when(mockedBranch2.getTaskForForkJoinQuery(storageIndexQuery)).thenReturn(testTask);
-		
+
 		ArrayList<IStorageTreeComponent<DefaultData>> branches = new ArrayList<IStorageTreeComponent<DefaultData>>();
 		branches.add(mockedBranch1);
 		branches.add(mockedBranch2);
-		
+
 		IStorageTreeComponent<DefaultData> rootCombinedStoreBranch = new CombinedStorageBranch<DefaultData>(branches);
 		List<IStorageDescriptor> results = rootCombinedStoreBranch.query(storageIndexQuery, forkJoinPool);
 		assertThat(results.size(), is(equalTo(4)));

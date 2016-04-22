@@ -25,8 +25,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	/**
 	 * Revision failed.
 	 */
-	REVISION_CHECK_FAILED("Revision check of the resource failed as the revision number is lower than one existing on the server.", "Profile/environment/mappings has a newer version.",
-			"Reload resource and try again."),
+	REVISION_CHECK_FAILED("Revision check of the resource failed as the revision number is lower than one existing on the server.", "Profile/environment/mappings has a newer version.", "Reload resource and try again."),
 
 	/**
 	 * Environment not existing on the CMR.

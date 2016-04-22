@@ -170,8 +170,8 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 	 * Returns if the cache has any knowledge of the column's width.
 	 * 
 	 * @param controllerClass
-	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
-	 *            where this column is defined.
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class where
+	 *            this column is defined.
 	 * @param columnName
 	 *            Column name.
 	 * @return Size of columns width or <code>null</code> if it is unknown.
@@ -185,8 +185,8 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 	 * Returns if the cache has any knowledge if the column is hidden.
 	 * 
 	 * @param controllerClass
-	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
-	 *            where this column is defined.
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class where
+	 *            this column is defined.
 	 * @param columnName
 	 *            Column name.
 	 * @return True if column should be hidden.
@@ -227,8 +227,8 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 	 * saved.
 	 * 
 	 * @param controllerClass
-	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
-	 *            where this column is defined.
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class where
+	 *            this column is defined.
 	 * @param columnName
 	 *            Column name.
 	 * @param width
@@ -244,12 +244,11 @@ public class ShowHideColumnsHandler extends AbstractHandler {
 
 	/**
 	 * Creates hash code for column by its name and the
-	 * {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class it is
-	 * located.
+	 * {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class it is located.
 	 * 
 	 * @param controllerClass
-	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class
-	 *            where this column is defined.
+	 *            {@link rocks.inspectit.ui.rcp.editor.table.input.TableInputController} class where
+	 *            this column is defined.
 	 * @param columnName
 	 *            Column name.
 	 * @return Hash code for caching.

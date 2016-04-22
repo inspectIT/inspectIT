@@ -14,8 +14,7 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @DiscriminatorValue("PSTI")
-@NamedQueries({
-		@NamedQuery(name = PlatformSensorTypeIdent.FIND_ALL, query = "SELECT ps FROM PlatformSensorTypeIdent ps"),
+@NamedQueries({ @NamedQuery(name = PlatformSensorTypeIdent.FIND_ALL, query = "SELECT ps FROM PlatformSensorTypeIdent ps"),
 		@NamedQuery(name = PlatformSensorTypeIdent.FIND_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ps FROM PlatformSensorTypeIdent ps JOIN ps.platformIdent p WHERE p.id=:platformIdent AND ps.fullyQualifiedClassName=:fullyQualifiedClassName") })
 public class PlatformSensorTypeIdent extends SensorTypeIdent {
 

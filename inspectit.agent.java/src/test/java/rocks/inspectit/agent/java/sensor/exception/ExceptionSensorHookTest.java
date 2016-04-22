@@ -16,7 +16,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.HashMap;

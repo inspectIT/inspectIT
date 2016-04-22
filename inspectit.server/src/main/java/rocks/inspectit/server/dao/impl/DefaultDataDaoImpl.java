@@ -302,7 +302,7 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 		sq.select(cb.max(sqRoot.get("id").as(Long.class))).where(predicate).groupBy(sqRoot.get("jmxSensorDefinitionDataIdentId"));
 
 		c.select(root).where(cb.in(root.get("id")).value(sq));
-		
+
 		return entityManager.createQuery(c).getResultList();
 	}
 }

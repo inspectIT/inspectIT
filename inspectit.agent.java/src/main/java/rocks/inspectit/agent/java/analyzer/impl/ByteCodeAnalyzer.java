@@ -379,8 +379,8 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 	 * Checks whether the property accessor is meaningful. Please note that during the creation of
 	 * the property accessor certain checks are already in place. For example it is checked that no
 	 * return value capturing is set on a constructor. Please ensure that checks that could be done
-	 * at creation time are already performed at this time ({@link
-	 * rocks.inspectit.agent.java.config.impl.ConfigurationStorage.addSensor()}).
+	 * at creation time are already performed at this time
+	 * ({@link rocks.inspectit.agent.java.config.impl.ConfigurationStorage.addSensor()}).
 	 * 
 	 * Certain checks cannot be done on creation time. One example is the return value capturing on
 	 * method defining a void return type. At creation time the information that the method the

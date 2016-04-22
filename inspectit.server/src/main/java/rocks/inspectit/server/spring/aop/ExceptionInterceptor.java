@@ -39,7 +39,7 @@ public class ExceptionInterceptor {
 	/**
 	 * Field that identifies the cause field in a {@link Throwable} used for modifying it via
 	 * reflection.
-	 * */
+	 */
 	private static Field throwableCauseField;
 
 	// get the #throwableCauseField via reflection
@@ -74,9 +74,8 @@ public class ExceptionInterceptor {
 
 			throw e;
 		} catch (RemoteException e) {
-			log.warn(
-					"Exception thrown in the service method " + jp.getSignature() + " executed with following parameters: " + Arrays.toString(jp.getArgs()) + ". Original exception class is: "
-							+ e.getOriginalExceptionClass(), e);
+			log.warn("Exception thrown in the service method " + jp.getSignature() + " executed with following parameters: " + Arrays.toString(jp.getArgs()) + ". Original exception class is: "
+					+ e.getOriginalExceptionClass(), e);
 
 			// if we already have remote one service signature and just re-throw it
 			e.setServiceMethodSignature(jp.getSignature().toString());

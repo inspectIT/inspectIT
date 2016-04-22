@@ -11,10 +11,10 @@ import rocks.inspectit.agent.java.connection.RetryStrategy;
  * the second call, and 8 seconds for the third call). These wait times are pretty small, and are
  * usually dwarfed by socket timeouts when network difficulties occur anyway.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken from <a
- * href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>. Original
- * author is William Grosso. License info can be found <a
- * href="http://www.oreilly.com/terms/">here</a>.
+ * <b>IMPORTANT:</b> The class code is copied/taken from
+ * <a href="http://www.onjava.com/pub/a/onjava/2001/10/17/rmi.html.">O'REILLY onJava.com</a>.
+ * Original author is William Grosso. License info can be found
+ * <a href="http://www.oreilly.com/terms/">here</a>.
  * 
  * @author William Grosso
  */

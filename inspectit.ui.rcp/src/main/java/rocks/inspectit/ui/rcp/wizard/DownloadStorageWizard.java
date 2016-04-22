@@ -175,8 +175,8 @@ public class DownloadStorageWizard extends Wizard implements INewWizard {
 				}
 
 				try {
-					InspectIT.getDefault().getInspectITStorageManager()
-							.fullyDownloadStorage(storageData, cmrRepositoryDefinition, compress, subMonitor.newChild((int) (storageData.getDiskSize() / 1000)));
+					InspectIT.getDefault().getInspectITStorageManager().fullyDownloadStorage(storageData, cmrRepositoryDefinition, compress,
+							subMonitor.newChild((int) (storageData.getDiskSize() / 1000)));
 				} catch (BusinessException | SerializationException | IOException e) {
 					connectedStatuses.add(new Status(IStatus.ERROR, InspectIT.ID, "Storage '" + storageData.getName() + "'was not downloaded due to the exception", e));
 					continue;

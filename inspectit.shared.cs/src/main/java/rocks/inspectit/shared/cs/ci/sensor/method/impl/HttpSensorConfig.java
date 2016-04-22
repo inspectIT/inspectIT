@@ -25,7 +25,6 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.http.HttpSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

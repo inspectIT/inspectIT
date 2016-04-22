@@ -484,8 +484,8 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 			switch (enumId) {
 			case NESTED_DATA:
 				if (InvocationSequenceDataHelper.hasNestedSqlStatements(data) && InvocationSequenceDataHelper.hasNestedExceptions(data)) {
-					return ImageFormatter.getCombinedImage(resourceManager, SWT.HORIZONTAL, InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_DATABASE), InspectIT.getDefault()
-							.getImageDescriptor(InspectITImages.IMG_EXCEPTION_SENSOR));
+					return ImageFormatter.getCombinedImage(resourceManager, SWT.HORIZONTAL, InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_DATABASE),
+							InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_EXCEPTION_SENSOR));
 				} else if (InvocationSequenceDataHelper.hasNestedSqlStatements(data)) {
 					return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
 				} else if (InvocationSequenceDataHelper.hasNestedExceptions(data)) {

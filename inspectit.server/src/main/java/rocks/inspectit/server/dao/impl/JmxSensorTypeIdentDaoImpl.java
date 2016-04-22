@@ -13,7 +13,7 @@ import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
- * The default implementation of the {@link JmxSensorTypeIdentDao}  interface by using Entity
+ * The default implementation of the {@link JmxSensorTypeIdentDao} interface by using Entity
  * manager.
  * 
  * @author Alfred Krauss

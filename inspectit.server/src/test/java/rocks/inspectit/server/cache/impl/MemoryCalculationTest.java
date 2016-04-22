@@ -520,8 +520,8 @@ public class MemoryCalculationTest extends AbstractTestNGLogSupport {
 	 * <p>
 	 * <b>Important:</b> The {@link SqlStatementData} class has a problem with calculation when Sun
 	 * JVM is used. The 8 bytes are calculated more than needed. Thus, we need to have the "closeTo"
-	 * assertion until this problem is fixed. This problem is now part of the <a
-	 * href="https://jira.novatec-gmbh.de/browse/INSPECTIT-705">INSPECTIT-705</a> ticket.
+	 * assertion until this problem is fixed. This problem is now part of the
+	 * <a href="https://jira.novatec-gmbh.de/browse/INSPECTIT-705">INSPECTIT-705</a> ticket.
 	 * 
 	 * @param defaultDataClass
 	 *            Class to test.

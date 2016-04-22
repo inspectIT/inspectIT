@@ -24,8 +24,8 @@ import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
- * This view only displays the {@link rocks.inspectit.shared.cs.communication.data.TimerData} that are
- * in the invocations provided by the invocationIdsList to this view via the
+ * This view only displays the {@link rocks.inspectit.shared.cs.communication.data.TimerData} that
+ * are in the invocations provided by the invocationIdsList to this view via the
  * {@link InputDefinition#getAdditionalOption(Object)}.
  * 
  * @author Ivan Senic

@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.TimerDataQueryFactory;
 
 /**
- * Implementation of {@link TimerData} that searches for timer data in buffer.
- * <br>The query-Method of {@link AbstractBranch} without fork&join is executed, because much timer-data is expected and 
- * querying with fork&join will be faster.<br>
+ * Implementation of {@link TimerData} that searches for timer data in buffer. <br>
+ * The query-Method of {@link AbstractBranch} without fork&join is executed, because much timer-data
+ * is expected and querying with fork&join will be faster.<br>
  * 
  * @author Ivan Senic
  * 

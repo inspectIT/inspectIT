@@ -473,29 +473,25 @@ public class BufferProperties {
 
 		// eviction
 		if (this.evictionOccupancyPercentage < 0 || this.evictionOccupancyPercentage > 1) {
-			throw new BeanInitializationException("Buffer properties initialization error: Eviction occupancy must be a percentage value between 0 and 1. Initialization value is: "
-					+ evictionOccupancyPercentage);
+			throw new BeanInitializationException(
+					"Buffer properties initialization error: Eviction occupancy must be a percentage value between 0 and 1. Initialization value is: " + evictionOccupancyPercentage);
 		}
 		if (this.evictionFragmentSizePercentage < 0.01 || this.evictionFragmentSizePercentage > 0.5) {
-			throw new BeanInitializationException("Buffer properties initialization error: Eviction fragment size must be a percentage value between 0.01 and 0.5. Initialization value is: "
-					+ evictionFragmentSizePercentage);
+			throw new BeanInitializationException(
+					"Buffer properties initialization error: Eviction fragment size must be a percentage value between 0.01 and 0.5. Initialization value is: " + evictionFragmentSizePercentage);
 		}
 
 		// expansion rate
 		if (this.minObjectExpansionRateActiveFromBufferSize < this.maxObjectExpansionRateActiveTillBufferSize) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: Buffer size from which minimum object expansion rate is active can not be lower than buffer size till which maximum object expansion rate is active. Initialization values are: "
-							+ minObjectExpansionRateActiveFromBufferSize
-							+ " (buffer size for min object expansion rate) and "
-							+ maxObjectExpansionRateActiveTillBufferSize
+							+ minObjectExpansionRateActiveFromBufferSize + " (buffer size for min object expansion rate) and " + maxObjectExpansionRateActiveTillBufferSize
 							+ " (buffer size for max object expansion rate)");
 		}
 		if (this.minObjectExpansionRateActiveTillOccupancy > this.maxObjectExpansionRateActiveFromOccupancy) {
 			throw new BeanInitializationException(
 					"Buffer properties initialization error: Buffer occupancy till which minimum object expansion rate is active can not be higher than buffer occupancy from which maximum object expansion rate is active. Initialization values are: "
-							+ minObjectExpansionRateActiveTillOccupancy
-							+ " (buffer occupancy for min object expansion rate) and "
-							+ maxObjectExpansionRateActiveFromOccupancy
+							+ minObjectExpansionRateActiveTillOccupancy + " (buffer occupancy for min object expansion rate) and " + maxObjectExpansionRateActiveFromOccupancy
 							+ " (buffer occupnacy for max object expansion rate)");
 		}
 		if (this.minObjectExpansionRateActiveTillOccupancy <= 0 || this.minObjectExpansionRateActiveTillOccupancy > 1) {
@@ -520,8 +516,8 @@ public class BufferProperties {
 					+ this.getIndexingTreeCleaningThreads());
 		}
 		if (this.indexingWaitTime <= 0) {
-			throw new BeanInitializationException("Buffer properties initialization error: The indexing wait time can not be less or equal than zero. Initialization value is: "
-					+ this.indexingWaitTime);
+			throw new BeanInitializationException(
+					"Buffer properties initialization error: The indexing wait time can not be less or equal than zero. Initialization value is: " + this.indexingWaitTime);
 		}
 
 		// old space settings

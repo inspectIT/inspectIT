@@ -222,8 +222,8 @@ public class TimerDataInputController extends AbstractTableInputController {
 			if (Column.EXCLUSIVEAVERAGE.equals(column) || Column.EXCLUSIVESUM.equals(column) || Column.EXCLUSIVEMIN.equals(column) || Column.EXCLUSIVEMAX.equals(column)) {
 				// TODO: Remove this tooltip and add it to the cell as soon as the image bug is
 				// fixed in Eclipse.
-				viewerColumn.getColumn().setToolTipText(
-						"Exclusive times can only be calculated correctly if the timer is within an invocation sequence. "
+				viewerColumn.getColumn()
+						.setToolTipText("Exclusive times can only be calculated correctly if the timer is within an invocation sequence. "
 								+ "A warning marker is provided if not all timers are run within an invocation sequence. Please be aware that "
 								+ "avg, sum, min and max calculations are reflecting only the timers inside an invocation sequence.");
 			}

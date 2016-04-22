@@ -102,8 +102,8 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 	}
 
 	/**
-	 * Default constructor. Sets number of buffers to 3. Same as calling {@link
-	 * #ExtendedByteBufferInputStream(StorageData, List, 3)}.
+	 * Default constructor. Sets number of buffers to 3. Same as calling
+	 * {@link #ExtendedByteBufferInputStream(StorageData, List, 3)}.
 	 * 
 	 * @param storageData
 	 *            {@link StorageData} to read information for.

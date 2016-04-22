@@ -24,7 +24,8 @@ import javax.validation.constraints.NotNull;
  * 
  */
 @Entity
-@NamedQueries({ @NamedQuery(name = JmxDefinitionDataIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName") })
+@NamedQueries({
+		@NamedQuery(name = JmxDefinitionDataIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName") })
 public class JmxDefinitionDataIdent implements Serializable {
 
 	/**

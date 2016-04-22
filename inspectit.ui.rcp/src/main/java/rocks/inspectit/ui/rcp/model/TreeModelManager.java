@@ -764,8 +764,8 @@ public class TreeModelManager {
 		Component taggedView = new Leaf();
 		taggedView.setName("Use Case Aggregation");
 		taggedView.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP_TAGGED));
-		taggedView.setTooltip("Aggregates all http request that are currently in the buffer based on a the concrete value of the inspectIT Tag Header (called \""
-				+ HttpTimerData.INSPECTIT_TAGGING_HEADER + "\")");
+		taggedView.setTooltip(
+				"Aggregates all http request that are currently in the buffer based on a the concrete value of the inspectIT Tag Header (called \"" + HttpTimerData.INSPECTIT_TAGGING_HEADER + "\")");
 
 		inputDefinition = new InputDefinition();
 		inputDefinition.setRepositoryDefinition(definition);

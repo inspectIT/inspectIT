@@ -14,7 +14,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -223,7 +222,6 @@ public class ConfigurationStorageTest extends AbstractLogSupport {
 		JmxSensorTypeConfig jmxSensorTypeConfig = jmxSensorTypeConfigs.get(0);
 		assertThat(jmxSensorTypeConfig.getName(), is(equalTo("jmx_test")));
 		assertThat(jmxSensorTypeConfig.getClassName(), is(equalTo("rocks.inspectit.agent.java.sensor.jmx.JmxSensor")));
-		
 
 		List<UnregisteredJmxConfig> jmxConfigs = configurationStorage.getUnregisteredJmxConfigs();
 		assertThat(jmxConfigs, is(notNullValue()));

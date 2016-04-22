@@ -2,7 +2,6 @@ package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-
 import java.util.HashMap;
 import java.util.Map;
 

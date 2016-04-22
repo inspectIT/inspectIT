@@ -250,9 +250,7 @@ public class MethodSensorAssignmentDetailsPage extends AbstractClassSensorAssign
 		parametersButton = toolkit.createButton(mainComposite, "Only method/constructor with selected parameters", SWT.CHECK);
 		parametersButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1));
 		toolkit.createLabel(mainComposite, "");
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"Restriction of the method or constructor. Only the method/constructor with specified fully qualified parameter names is monitored. For primitive type parameters use primitive names like boolean, int, long, etc. Use wildcard * to match any parameter.");
 		// second row
 		toolkit.createLabel(mainComposite, "");
@@ -347,9 +345,7 @@ public class MethodSensorAssignmentDetailsPage extends AbstractClassSensorAssign
 		privateButton = toolkit.createButton(mainComposite, "private", SWT.CHECK);
 		privateButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		toolkit.createLabel(mainComposite, "");
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"The additional options of the sensor assignment can include the definition of the method/constructor visibility modifier(s) that should be instrumented. Thus, the methods can be additionally filtered by the visibility modifier that can be: public, protected, private or default");
 
 		ValidationControlDecoration<Button> modifiersControlDecoration = new ValidationControlDecoration<Button>(publicButton, null, this) {

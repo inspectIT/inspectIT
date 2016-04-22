@@ -25,7 +25,6 @@ public class StatementSensorConfig extends StringConstraintSensorConfig implemen
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.jdbc.StatementSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

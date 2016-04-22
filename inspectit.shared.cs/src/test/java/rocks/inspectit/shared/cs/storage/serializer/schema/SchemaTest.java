@@ -39,6 +39,7 @@ public class SchemaTest {
 	 * Schema manager.
 	 */
 	private ClassSchemaManager schemaManager;
+
 	/**
 	 * Initializes the {@link ClassSchemaManager}.
 	 *

@@ -81,7 +81,7 @@ public abstract class CmrServiceProvider {
 	 * @return Returns Spring created {@link GlobalDataAccessService}.
 	 */
 	protected abstract IGlobalDataAccessService getGlobalDataAccessService();
-	
+
 	/**
 	 * Returns properly initialized {@link JmxDataAccessService}.
 	 * 

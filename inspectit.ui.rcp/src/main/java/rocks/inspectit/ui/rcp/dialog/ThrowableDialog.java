@@ -184,7 +184,8 @@ public class ThrowableDialog extends TitleAreaDialog {
 		}
 
 		// error report
-		sb.append("<br/><br/><span color=\"header\" font=\"header\">Send Error Report</span><br/>Please send us the error report to help fix the problem and improve this software.<br/><br/><a href=\"errorReport\">What data does the error report contain?</a></p></form>");
+		sb.append(
+				"<br/><br/><span color=\"header\" font=\"header\">Send Error Report</span><br/>Please send us the error report to help fix the problem and improve this software.<br/><br/><a href=\"errorReport\">What data does the error report contain?</a></p></form>");
 
 		mainFormText.setText(sb.toString(), true, false);
 		mainFormText.setColor("info", toolkit.getColors().getColor(IFormColors.TITLE));
@@ -343,7 +344,8 @@ public class ThrowableDialog extends TitleAreaDialog {
 				gd.horizontalIndent = 3;
 				gd.verticalIndent = 3;
 				text.setLayoutData(gd);
-				text.setText("The error report to send to the inspectIT Team contains the following information:\n\n - inspectIT version you are using\n - Your operating system information and used Java version\n - Exception type, message and stack trace\n\nThe sending of the error report is only available via Send-To mail option. After clicking to the 'Send Error Report' button your e-mail client will open with new predefined e-mail message to send to support.inspectit@novatec-gmbh.de. The e-mail used to send the error report will be kept private.\n\nWe thank you in advance for helping us to fix this problem and improve our software.");
+				text.setText(
+						"The error report to send to the inspectIT Team contains the following information:\n\n - inspectIT version you are using\n - Your operating system information and used Java version\n - Exception type, message and stack trace\n\nThe sending of the error report is only available via Send-To mail option. After clicking to the 'Send Error Report' button your e-mail client will open with new predefined e-mail message to send to support.inspectit@novatec-gmbh.de. The e-mail used to send the error report will be kept private.\n\nWe thank you in advance for helping us to fix this problem and improve our software.");
 				return composite;
 			}
 

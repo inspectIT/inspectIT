@@ -15,9 +15,9 @@ import rocks.inspectit.shared.cs.indexing.query.factory.impl.SqlStatementDataQue
 
 /**
  * Implementation of the {@link SqlDataDao} that searches for the SQL statements in the indexing
- * tree.
- * <br>The query-Method of {@link AbstractBranch} which uses fork&join is executed, because much SQL- data is expected and 
- * querying with fork&join will be faster.<br>
+ * tree. <br>
+ * The query-Method of {@link AbstractBranch} which uses fork&join is executed, because much SQL-
+ * data is expected and querying with fork&join will be faster.<br>
  * 
  * @author Ivan Senic
  * 

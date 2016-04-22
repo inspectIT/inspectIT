@@ -164,7 +164,8 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 *            IdManager.
 	 */
 	@Autowired
-	public CoreService(IConfigurationStorage configurationStorage, IConnection connection, IBufferStrategy<DefaultData> bufferStrategy, List<ISendingStrategy> sendingStrategies, IIdManager idManager) {
+	public CoreService(IConfigurationStorage configurationStorage, IConnection connection, IBufferStrategy<DefaultData> bufferStrategy, List<ISendingStrategy> sendingStrategies,
+			IIdManager idManager) {
 		if (null == configurationStorage) {
 			throw new IllegalArgumentException("Configuration Storage cannot be null!");
 		}

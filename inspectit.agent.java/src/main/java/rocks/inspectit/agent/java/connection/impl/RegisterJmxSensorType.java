@@ -40,7 +40,7 @@ public class RegisterJmxSensorType extends AbstractRemoteMethodCall<IRegistratio
 		this.jmxSensorTypeConfig = jmxSensorTypeConfig;
 		this.platformId = platformId;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

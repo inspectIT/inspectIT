@@ -3,7 +3,6 @@ package rocks.inspectit.agent.java.util;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import org.mockito.InjectMocks;
 import org.testng.annotations.Test;
 

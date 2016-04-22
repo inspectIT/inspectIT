@@ -17,8 +17,8 @@ import java.util.NoSuchElementException;
  * <p>
  * <b>IMPORTANT:</b> The class is licensed under the Eclipse Public License v1.0 as it includes the
  * code from the {@link org.eclipse.core.runtime.ListenerList} class belonging to the Eclipse Rich
- * Client Platform. EPL v1.0 license can be found <a
- * href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
+ * Client Platform. EPL v1.0 license can be found
+ * <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
  * <p>
  * Please relate to the LICENSEEXCEPTIONS.txt file for more information about license exceptions
  * that apply regarding to InspectIT and Eclipse RCP and/or EPL Components.
@@ -42,14 +42,14 @@ public class ListenerList<E> implements Iterable<E> {
 	 */
 	public enum Mode {
 		/**
-		 * Mode constant (value 0) indicating that listeners should be considered the <a
-		 * href="#same">same</a> if they are equal.
+		 * Mode constant (value 0) indicating that listeners should be considered the
+		 * <a href="#same">same</a> if they are equal.
 		 */
 		EQUALITY,
 
 		/**
-		 * Mode constant (value 1) indicating that listeners should be considered the <a
-		 * href="#same">same</a> if they are identical.
+		 * Mode constant (value 1) indicating that listeners should be considered the
+		 * <a href="#same">same</a> if they are identical.
 		 */
 		IDENTITY;
 	}

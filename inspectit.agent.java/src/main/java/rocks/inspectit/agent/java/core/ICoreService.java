@@ -36,7 +36,7 @@ public interface ICoreService {
 	 * @param objectName
 	 *            The name of the mBean
 	 * @param attributeName
-	 * 			  The attributeName of the Attribute.
+	 *            The attributeName of the Attribute.
 	 * @param jmxSensorValueData
 	 *            Part of the jmx sensor data.
 	 */

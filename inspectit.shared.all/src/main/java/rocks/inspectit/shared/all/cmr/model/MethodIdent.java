@@ -32,8 +32,7 @@ import rocks.inspectit.shared.all.jpa.ListStringConverter;
  * 
  */
 @Entity
-@NamedQueries({
-		@NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
+@NamedQueries({ @NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
 		@NamedQuery(name = MethodIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m from MethodIdent m JOIN m.platformIdent p WHERE p.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType ") })
 public class MethodIdent implements Serializable {
 

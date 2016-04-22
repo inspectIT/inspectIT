@@ -40,7 +40,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	 * Branch indexer.
 	 */
 	private IBranchIndexer<E> branchIndexer;
-	
+
 	/**
 	 * Map for holding references.
 	 */
@@ -195,14 +195,13 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 			return results;
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<R> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
 		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
-	
 
 	/**
 	 * Queries the single {@link ITreeComponent} that is mapped with key. If passed key is null, or
@@ -333,7 +332,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 		toStringBuilder.append("branchMap", map);
 		return toStringBuilder.toString();
 	}
-	
+
 	/**
 	 * Returns the branches to Query.
 	 * 
@@ -344,7 +343,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	public Collection<ITreeComponent<R, E>> getBranchesToQuery(IIndexQuery query) {
 		// The given keys which fit to the query
 		Object[] keys = this.getBranchIndexer().getKeys(query);
-		
+
 		// The map, which holds all branches of the next level
 		if (ArrayUtils.isEmpty(keys)) {
 			return map.values();

@@ -168,8 +168,8 @@ public final class PreferencesUtils {
 	}
 
 	/**
-	 * Returns long value from the preferences. Same as calling
-	 * {@link #getLongValue(PreferenceKey, false)}.
+	 * Returns long value from the preferences. Same as calling {@link #getLongValue(PreferenceKey,
+	 * false)}.
 	 * 
 	 * @param name
 	 *            Name of the preference.
@@ -224,8 +224,8 @@ public final class PreferencesUtils {
 	}
 
 	/**
-	 * Returns int value from the preferences. Same as calling
-	 * {@link #getIntValue(PreferenceKey, false)}.
+	 * Returns int value from the preferences. Same as calling {@link #getIntValue(PreferenceKey,
+	 * false)}.
 	 * 
 	 * @param name
 	 *            Name of the preference.
@@ -394,8 +394,8 @@ public final class PreferencesUtils {
 	/**
 	 * Loads the primitive keys and values map from a preference store. Note that the preference key
 	 * provided has to be mapped to the
-	 * {@link rocks.inspectit.ui.rcp.preferences.valueproviders.MapPreferenceValueProvider} in
-	 * the {@link PreferenceValueProviderFactory}.
+	 * {@link rocks.inspectit.ui.rcp.preferences.valueproviders.MapPreferenceValueProvider} in the
+	 * {@link PreferenceValueProviderFactory}.
 	 * 
 	 * @param <K>
 	 *            Type of key.

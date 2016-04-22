@@ -139,8 +139,8 @@ public class CopyBufferToStorageWizard extends Wizard implements INewWizard {
 		addPage(selectAgentsPage);
 		defineProcessorsPage = new DefineDataProcessorsWizardPage(DefineDataProcessorsWizardPage.BUFFER_DATA | DefineDataProcessorsWizardPage.SYSTEM_DATA);
 		addPage(defineProcessorsPage);
-		timelineWizardPage = new DefineTimelineWizardPage("Limit Data", "Optionally select set of data to be copied by defining time frame", DefineTimelineWizardPage.PAST
-				| DefineTimelineWizardPage.BOTH_DATES);
+		timelineWizardPage = new DefineTimelineWizardPage("Limit Data", "Optionally select set of data to be copied by defining time frame",
+				DefineTimelineWizardPage.PAST | DefineTimelineWizardPage.BOTH_DATES);
 		addPage(timelineWizardPage);
 		addLabelWizardPage = new AddStorageLabelWizardPage(cmrRepositoryDefinition);
 		addPage(addLabelWizardPage);

@@ -37,7 +37,7 @@ public class AgentStatusData implements Serializable {
 		 * Agent is not sending keep-alive messages.
 		 */
 		NO_KEEP_ALIVE,
-		
+
 		/**
 		 * Agent is disconnected.
 		 */
@@ -64,7 +64,7 @@ public class AgentStatusData implements Serializable {
 	 * Time in milliseconds when the agent was connecting.
 	 */
 	private long connectionTimestamp;
-	
+
 	/**
 	 * Current CMR time.
 	 */
@@ -161,21 +161,21 @@ public class AgentStatusData implements Serializable {
 	public void setLastKeepAliveTimestamp(long lastKeepAliveTimestamp) {
 		this.lastKeepAliveTimestamp = lastKeepAliveTimestamp;
 	}
-	
+
 	/**
 	 * Gets {@link #connectionTimestamp}.
-	 *   
-	 * @return {@link #connectionTimestamp}  
+	 * 
+	 * @return {@link #connectionTimestamp}
 	 */
 	public long getConnectionTimestamp() {
 		return connectionTimestamp;
 	}
 
-	/**  
-	 * Sets {@link #connectionTimestamp}.  
-	 *   
-	 * @param connectionTimestamp  
-	 *            New value for {@link #connectionTimestamp}  
+	/**
+	 * Sets {@link #connectionTimestamp}.
+	 * 
+	 * @param connectionTimestamp
+	 *            New value for {@link #connectionTimestamp}
 	 */
 	public void setConnectionTimestamp(long connectionTimestamp) {
 		this.connectionTimestamp = connectionTimestamp;

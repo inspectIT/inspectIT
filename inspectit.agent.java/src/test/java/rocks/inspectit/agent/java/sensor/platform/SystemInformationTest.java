@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 import java.lang.management.MemoryUsage;
 import java.lang.reflect.Field;
 import java.util.logging.Level;

@@ -137,8 +137,8 @@ public class BufferPropertiesTest extends AbstractTestNGLogSupport {
 	@Test
 	public void singleExpansionRateTestBufferOccupancy() {
 		long oldGenMax = 100;
-		long bufferSize = (long) (oldGenMax * (bufferProperties.maxObjectExpansionRateActiveFromOccupancy - (bufferProperties.getMaxObjectExpansionRateActiveFromOccupancy() - bufferProperties
-				.getMinObjectExpansionRateActiveTillOccupancy()) / 2));
+		long bufferSize = (long) (oldGenMax * (bufferProperties.maxObjectExpansionRateActiveFromOccupancy
+				- (bufferProperties.getMaxObjectExpansionRateActiveFromOccupancy() - bufferProperties.getMinObjectExpansionRateActiveTillOccupancy()) / 2));
 
 		float expansionRate = bufferProperties.getObjectSecurityExpansionRateBufferOccupancy(bufferSize, oldGenMax);
 		float expectedRate = bufferProperties.getMinObjectExpansionRate() + (bufferProperties.getMaxObjectExpansionRate() - bufferProperties.getMinObjectExpansionRate()) / 2;

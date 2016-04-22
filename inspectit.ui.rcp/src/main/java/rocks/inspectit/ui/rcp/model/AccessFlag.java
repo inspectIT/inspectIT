@@ -4,10 +4,10 @@ package rocks.inspectit.ui.rcp.model;
  * A support class providing static methods and constants for access modifiers such as public,
  * private, ...
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://jboss-javassist.github.io/javassist/">javassist</a>. Original author is Shigeru
- * Chiba. License info can be found <a
- * href="https://github.com/jboss-javassist/javassist/blob/master/License.html">here</a>.
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://jboss-javassist.github.io/javassist/">javassist</a>. Original author is Shigeru
+ * Chiba. License info can be found
+ * <a href="https://github.com/jboss-javassist/javassist/blob/master/License.html">here</a>.
  * 
  */
 public final class AccessFlag {

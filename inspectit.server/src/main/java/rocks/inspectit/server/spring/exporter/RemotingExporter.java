@@ -38,8 +38,8 @@ import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
  * 
  * <p>
  * 
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
  * authors are James Douglas and Henno Vermeulen.
  * 
  * @author James Douglas

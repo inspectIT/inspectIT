@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
-
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
 

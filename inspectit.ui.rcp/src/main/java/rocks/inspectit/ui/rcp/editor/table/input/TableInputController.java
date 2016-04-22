@@ -43,10 +43,10 @@ public interface TableInputController extends SubViewClassificationController {
 	void createColumns(TableViewer tableViewer);
 
 	/**
-	 * The {@link rocks.inspectit.ui.rcp.editor.table.TableSubView} might need to alter the
-	 * column width/visibility if the column has the remembered size. With this method the
-	 * controller gives or denies the {@link rocks.inspectit.ui.rcp.editor.table.TableSubView}
-	 * to alter the column width.
+	 * The {@link rocks.inspectit.ui.rcp.editor.table.TableSubView} might need to alter the column
+	 * width/visibility if the column has the remembered size. With this method the controller gives
+	 * or denies the {@link rocks.inspectit.ui.rcp.editor.table.TableSubView} to alter the column
+	 * width.
 	 * 
 	 * @param tableColumn
 	 *            {@link TableColumn}

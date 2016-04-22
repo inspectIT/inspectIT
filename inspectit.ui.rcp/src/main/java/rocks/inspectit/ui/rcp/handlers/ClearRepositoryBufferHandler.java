@@ -70,9 +70,8 @@ public class ClearRepositoryBufferHandler extends AbstractHandler implements IHa
 
 		final CmrRepositoryDefinition cmrRepositoryDefinition = availableCmr;
 		if (null != cmrRepositoryDefinition && cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
-			boolean isSure = MessageDialog.openConfirm(null, "Empty buffer",
-					"Are you sure that you want to completely delete all the data in the buffer on repository " + cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":"
-							+ cmrRepositoryDefinition.getPort() + ")?");
+			boolean isSure = MessageDialog.openConfirm(null, "Empty buffer", "Are you sure that you want to completely delete all the data in the buffer on repository "
+					+ cmrRepositoryDefinition.getName() + " (" + cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort() + ")?");
 			if (isSure) {
 				Job clearBufferJob = new Job("Clear Respoitory Buffer") {
 					@Override

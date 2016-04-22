@@ -31,21 +31,21 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 */
 	@Autowired
 	private IBufferTreeComponent<E> indexingTree;
-	
+
 	/**
 	 * ForkJoinPool to manage the forks.
 	 */
 	@Autowired
 	@Qualifier("indexingTreeForkJoinPool")
 	private ForkJoinPool forkJoinPool;
-	
+
 	/**
 	 * Executes the query on the indexing tree.
 	 * 
 	 * @param indexQuery
 	 *            Index query to execute.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, boolean useForkJoin) {
@@ -61,7 +61,7 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 * @param aggregator
 	 *            {@link IAggregator}. Pass <code>null</code> if no aggregation is needed.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, IAggregator<E> aggregator, boolean useForkJoin) {
@@ -76,7 +76,7 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 * @param comparator
 	 *            If supplied the final result list will be sorted by this comparator.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, Comparator<E> comparator, boolean useForkJoin) {
@@ -91,7 +91,7 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 * @param limit
 	 *            Limit the number of results by given number. Value <code>-1</code> means no limit.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, int limit, boolean useForkJoin) {
@@ -109,7 +109,7 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 * @param comparator
 	 *            If supplied the final result list will be sorted by this comparator.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, IAggregator<E> aggregator, Comparator<? super E> comparator, boolean useForkJoin) {
@@ -128,7 +128,7 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 * @param limit
 	 *            Limit the number of results by given number. Value <code>-1</code> means no limit.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, IAggregator<E> aggregator, int limit, boolean useForkJoin) {
@@ -147,7 +147,7 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 * @param limit
 	 *            Limit the number of results by given number. Value <code>-1</code> means no limit.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, Comparator<? super E> comparator, int limit, boolean useForkJoin) {
@@ -168,12 +168,12 @@ public abstract class AbstractBufferDataDao<E extends DefaultData> {
 	 * @param limit
 	 *            Limit the number of results by given number. Value <code>-1</code> means no limit.
 	 * @param useForkJoin
-	 * 			  true, if forkJoinPool should be used
+	 *            true, if forkJoinPool should be used
 	 * @return Result list.
 	 */
 	protected List<E> executeQuery(IIndexQuery indexQuery, IAggregator<E> aggregator, Comparator<? super E> comparator, int limit, boolean useForkJoin) {
 		List<E> data;
-		
+
 		if (useForkJoin) {
 			data = indexingTree.query(indexQuery, forkJoinPool);
 		} else {

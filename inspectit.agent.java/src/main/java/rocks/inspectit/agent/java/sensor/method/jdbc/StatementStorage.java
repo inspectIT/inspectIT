@@ -196,10 +196,10 @@ public class StatementStorage {
 	/**
 	 * Value container to store the SQL query and its parameters within the cache of prepared
 	 * statements. The JDBC sensor in inspectIT allows for two modes. The SQL query can be enhanced
-	 * with the values of the bind parameters. This happens if and only if
-	 * "SQL Prepared Statement Parameter Replacement" is set. Thus this container ensures that this
-	 * calculation is only done if this is needed, that is when the parameters are first accessed.
-	 * Thus ensure that you only access the parameters if you really want to fill them!
+	 * with the values of the bind parameters. This happens if and only if "SQL Prepared Statement
+	 * Parameter Replacement" is set. Thus this container ensures that this calculation is only done
+	 * if this is needed, that is when the parameters are first accessed. Thus ensure that you only
+	 * access the parameters if you really want to fill them!
 	 * 
 	 * <p>
 	 * To access the parameters during the "filling stage", prefer the

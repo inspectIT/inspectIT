@@ -62,19 +62,20 @@ public interface ITreeComponent<R, E> {
 	 * @return List of elements, or empty list if nothing is found.
 	 */
 	List<R> query(IIndexQuery query);
-	
+
 	/**
 	 * Returns the list of elements that satisfies the query. The query object should define as
-	 * large as possible information set, because then the search is performed faster. Uses Join&Fork and creates a new
-	 * task for each child.
+	 * large as possible information set, because then the search is performed faster. Uses
+	 * Join&Fork and creates a new task for each child.
+	 * 
 	 * @param query
 	 *            Query.
 	 * @param forkJoinPool
-	 * 			  The Pool which starts and manages the forks
+	 *            The Pool which starts and manages the forks
 	 * @return List of elements, or empty list if nothing is found.
 	 */
 	List<R> query(IIndexQuery query, ForkJoinPool forkJoinPool);
-	
+
 	/**
 	 * Computes the size of the {@link ITreeComponent} with underlined {@link ITreeComponent} sizes
 	 * also, but without referenced elements.
@@ -84,14 +85,14 @@ public interface ITreeComponent<R, E> {
 	 * @return Size of tree component in bytes.
 	 */
 	long getComponentSize(IObjectSizes objectSizes);
-	
+
 	/**
 	 * Creates a fitting task.
+	 * 
 	 * @param query
-	 * 			Query.
-	 * @return
-	 * 			Task.
-	 */		
+	 *            Query.
+	 * @return Task.
+	 */
 	RecursiveTask<List<R>> getTaskForForkJoinQuery(IIndexQuery query);
 
 }

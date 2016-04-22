@@ -263,7 +263,7 @@ public class PropertyManager {
 				for (IPropertyUpdate<?> propertyUpdate : notValidList) {
 					configurationUpdate.removePropertyUpdate(propertyUpdate);
 					LOG.info("|-Update of the property " + propertyUpdate.getPropertyLogicalName()
-					+ " can not be performed either because property does not exist in the default configuration or the update value is not valid");
+							+ " can not be performed either because property does not exist in the default configuration or the update value is not valid");
 				}
 				try {
 					transformator.marshall(getConfigurationUpdatePath(), configurationUpdate, getBaseConfigDir().relativize(getConfigurationUpdateSchemaPath()).toString());
@@ -310,7 +310,7 @@ public class PropertyManager {
 	protected PropertyManager getPropertyManager() {
 		return this;
 	}
-	
+
 	/**
 	 * Initializes {@link #configDirFile}.
 	 */

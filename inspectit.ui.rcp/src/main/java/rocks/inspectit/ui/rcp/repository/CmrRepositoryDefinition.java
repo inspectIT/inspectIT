@@ -187,7 +187,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * The {@link IGlobalDataAccessService}.
 	 */
 	private IGlobalDataAccessService globalDataAccessService;
-	
+
 	/**
 	 * The {@link IJmxDataAccessService}.
 	 */

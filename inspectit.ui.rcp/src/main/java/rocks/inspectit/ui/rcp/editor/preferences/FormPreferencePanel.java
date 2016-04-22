@@ -265,8 +265,8 @@ public class FormPreferencePanel implements IPreferencePanel {
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		Map<Object, Object> params = new HashMap<Object, Object>();
 		params.put(MaximizeActiveViewHandler.PREFERENCE_PANEL_ID_PARAMETER, id);
-		CommandContributionItemParameter contributionParameters = new CommandContributionItemParameter(workbenchWindow, null, MaximizeActiveViewHandler.COMMAND_ID, params, InspectIT.getDefault()
-				.getImageDescriptor(InspectITImages.IMG_WINDOW), null, null, null, null, getTooltipTextForMaximizeContributionItem(), SWT.CHECK, null, true);
+		CommandContributionItemParameter contributionParameters = new CommandContributionItemParameter(workbenchWindow, null, MaximizeActiveViewHandler.COMMAND_ID, params,
+				InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_WINDOW), null, null, null, null, getTooltipTextForMaximizeContributionItem(), SWT.CHECK, null, true);
 		CommandContributionItem maximizeCommandContribution = new CommandContributionItem(contributionParameters);
 		toolBarManager.add(maximizeCommandContribution);
 
@@ -820,7 +820,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 		/**
 		 * The number of decimal places.
-		 * */
+		 */
 		private int decimalPlaces;
 
 		/**

@@ -206,7 +206,7 @@ public final class SubViewFactory {
 			return jmxSashSubView;
 		case CHARTING_JMX_SENSOR_DATA:
 			GraphSubView jmxGraphSubView = new GraphSubView(SensorTypeEnum.CHARTING_JMX_SENSOR_DATA);
-			
+
 			JmxInfoTextInputController jmxInputController = new JmxInfoTextInputController();
 			TextSubView jmxTextSubView = new TextSubView(jmxInputController);
 

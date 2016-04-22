@@ -61,7 +61,8 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 	public abstract List<DefaultData> getTemplates(StructuredSelection structuredSelection);
 
 	/**
-	 * {@link LocateHandler} for {@link rocks.inspectit.shared.cs.communication.data.SqlStatementData}.
+	 * {@link LocateHandler} for
+	 * {@link rocks.inspectit.shared.cs.communication.data.SqlStatementData}.
 	 * 
 	 * @author Ivan Senic
 	 * 

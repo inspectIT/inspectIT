@@ -25,7 +25,6 @@ public class TimerSensorConfig extends StringConstraintSensorConfig implements I
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.timer.TimerSensor";
 
-
 	/**
 	 * No-args constructor.
 	 */

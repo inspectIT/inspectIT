@@ -234,8 +234,8 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 					+ ") is greater than bufferPoolMaxDirectMemoryOccupancy (" + bufferPoolMinDirectMemoryOccupancy + ")");
 		}
 		if (poolMinCapacity > poolMaxCapacity) {
-			throw new BeanInitializationException("Settings for the byte buffer pool are not correct. poolMinCapacity (" + poolMinCapacity + ") is greater than poolMaxCapacity (" + poolMaxCapacity
-					+ ")");
+			throw new BeanInitializationException(
+					"Settings for the byte buffer pool are not correct. poolMinCapacity (" + poolMinCapacity + ") is greater than poolMaxCapacity (" + poolMaxCapacity + ")");
 		}
 
 		updatePoolProperties();

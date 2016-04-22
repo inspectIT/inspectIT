@@ -151,8 +151,8 @@ public final class OccurrenceFinderFactory {
 		} else if (InvocationSequenceData.class.isAssignableFrom(element.getClass())) {
 			return invocationOccurenceFinder;
 		}
-		RuntimeException exception = new RuntimeException("Occurrence finder factory was not able to supply the correct occurrence finder for the object of class " + element.getClass().getName()
-				+ ".");
+		RuntimeException exception = new RuntimeException(
+				"Occurrence finder factory was not able to supply the correct occurrence finder for the object of class " + element.getClass().getName() + ".");
 		InspectIT.getDefault().createErrorDialog("Exception thrown during locating of stepping object.", exception, -1);
 		throw exception;
 	}

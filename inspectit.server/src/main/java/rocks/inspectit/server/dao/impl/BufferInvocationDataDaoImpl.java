@@ -18,8 +18,9 @@ import rocks.inspectit.shared.cs.indexing.query.factory.impl.InvocationSequenceD
 
 /**
  * Implementation of {@link InvocationDataDao} that works with the data from the buffer indexing
- * tree.
- * <br>The query-Method of {@link AbstractBranch} without fork&join is executed, because there isn't much data expected.<br>
+ * tree. <br>
+ * The query-Method of {@link AbstractBranch} without fork&join is executed, because there isn't
+ * much data expected.<br>
  * 
  * @author Ivan Senic
  * 

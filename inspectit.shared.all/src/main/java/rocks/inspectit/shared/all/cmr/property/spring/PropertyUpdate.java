@@ -23,5 +23,5 @@ public @interface PropertyUpdate {
 	 * 
 	 * @return
 	 */
-	String[] properties() default { };
+	String[] properties() default {};
 }

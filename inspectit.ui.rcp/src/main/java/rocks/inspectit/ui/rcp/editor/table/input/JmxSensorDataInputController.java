@@ -412,8 +412,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof JmxSensorValueData) {
 			JmxSensorValueData data = (JmxSensorValueData) object;
-			
-			
+
 			JmxDefinitionDataIdent jmxDefinitionDataIdent = cachedDataService.getJmxDefinitionDataIdentForId(data.getJmxSensorDefinitionDataIdentId());
 
 			List<String> values = new ArrayList<String>();

@@ -54,8 +54,7 @@ public class JmxSensorTest extends TestBase {
 	@Mock
 	private IIdManager idManager;
 
-	private @Mock
-	MBeanServer mBeanServer;
+	private @Mock MBeanServer mBeanServer;
 
 	@Mock
 	private ICoreService coreService;

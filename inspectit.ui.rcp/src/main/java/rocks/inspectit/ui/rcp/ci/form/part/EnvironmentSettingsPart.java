@@ -158,9 +158,7 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, false, false);
 		gd.widthHint = 50;
 		sendingValue.setLayoutData(gd);
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"The time strategy will cause the Agent to send its measurements after a specified interval in milliseconds.\nThe list size strategy will cause the Agent to send its measurements after a specified size of value objects is reached.");
 
 		toolkit.createLabel(mainComposite, "Buffer strategy:").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
@@ -172,9 +170,7 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 		gd = new GridData(SWT.FILL, SWT.FILL, false, false);
 		gd.widthHint = 50;
 		bufferValue.setLayoutData(gd);
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"The simple version of a buffer is apparently no buffer at all. It contains exactly one element. This is useful if old data isn't necessary or maybe the memory of the application is very limited.\nThe Size buffer strategy needs specification of the size of this buffer. This buffer works as a FILO stack, so last added elements will be sent first (as they are more important), and old ones are thrown away if this buffer is full");
 
 		// fill the boxes and values
@@ -256,9 +252,7 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 		classDelegationButton = toolkit.createButton(mainComposite, "Active", SWT.CHECK);
 		classDelegationButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		classDelegationButton.setSelection(environment.isClassLoadingDelegation());
-		createInfoLabel(
-				mainComposite,
-				toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"If activated all sub-classes of java.lang.ClassLoader will be instrumented so that loading of the inspectIT classes is delegated to the inspectIT class loader. Should only be changed to false in rare cases and is expert user level option.");
 
 		// dirty listener

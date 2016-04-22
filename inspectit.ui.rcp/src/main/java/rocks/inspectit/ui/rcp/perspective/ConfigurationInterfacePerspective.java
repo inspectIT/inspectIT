@@ -36,5 +36,4 @@ public class ConfigurationInterfacePerspective implements IPerspectiveFactory {
 		layout.getViewLayout(ConfigurationInterfaceManagerView.VIEW_ID).setMoveable(true);
 	}
 
-
 }

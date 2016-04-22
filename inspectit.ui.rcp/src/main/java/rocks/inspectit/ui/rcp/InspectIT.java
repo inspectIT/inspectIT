@@ -282,17 +282,18 @@ public class InspectIT extends AbstractUIPlugin {
 				try {
 					String key = (String) field.get(null);
 					URL url = getBundle().getEntry(key);
-					
+
 					if (null != reg.get(key)) {
 						// if we already have an icon with the same key continue
 						// can happen if two fields are pointing to same image
 						continue;
 					}
-					
+
 					if (null != url) {
 						reg.put(key, ImageDescriptor.createFromURL(url));
-						
-						// try to get the image in order to be certain given URL is representing an image file
+
+						// try to get the image in order to be certain given URL is representing an
+						// image file
 						reg.get(key);
 					} else {
 						// if image does not exists (url is null) show and log error

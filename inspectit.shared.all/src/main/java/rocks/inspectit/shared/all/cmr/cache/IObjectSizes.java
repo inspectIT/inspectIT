@@ -146,7 +146,7 @@ public interface IObjectSizes {
 	 * @return Size of {@link HashMap} object in bytes.
 	 */
 	long getSizeOfHashMap(int hashMapSize, int initialCapacity);
-	
+
 	/**
 	 * Returns size of HashMap's inner Key or Entry set classes.
 	 * 
@@ -286,7 +286,7 @@ public interface IObjectSizes {
 	 * @return Size in bytes.
 	 */
 	long getSizeOfCustomWeakReference();
-	
+
 	/**
 	 * Calculates the size of the primitive array with the primitives in the array.
 	 * 

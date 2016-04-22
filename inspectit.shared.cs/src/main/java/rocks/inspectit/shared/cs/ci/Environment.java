@@ -96,8 +96,8 @@ public class Environment {
 	 */
 	@XmlElementWrapper(name = "platform-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ClassLoadingSensorConfig.class), @XmlElementRef(type = CompilationSensorConfig.class), @XmlElementRef(type = CpuSensorConfig.class),
-		@XmlElementRef(type = MemorySensorConfig.class), @XmlElementRef(type = RuntimeSensorConfig.class), @XmlElementRef(type = SystemSensorConfig.class),
-		@XmlElementRef(type = ThreadSensorConfig.class) })
+			@XmlElementRef(type = MemorySensorConfig.class), @XmlElementRef(type = RuntimeSensorConfig.class), @XmlElementRef(type = SystemSensorConfig.class),
+			@XmlElementRef(type = ThreadSensorConfig.class) })
 	private final List<IPlatformSensorConfig> platformSensorConfigs = ConfigurationDefaultsFactory.getAvailablePlatformSensorConfigs();
 
 	/**
@@ -105,9 +105,9 @@ public class Environment {
 	 */
 	@XmlElementWrapper(name = "method-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ConnectionMetaDataSensorConfig.class), @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class),
-		@XmlElementRef(type = InvocationSequenceSensorConfig.class), @XmlElementRef(type = PreparedStatementParameterSensorConfig.class),
-		@XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class), @XmlElementRef(type = TimerSensorConfig.class),
-		@XmlElementRef(type = Log4jLoggingSensorConfig.class) })
+			@XmlElementRef(type = InvocationSequenceSensorConfig.class), @XmlElementRef(type = PreparedStatementParameterSensorConfig.class),
+			@XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class), @XmlElementRef(type = TimerSensorConfig.class),
+			@XmlElementRef(type = Log4jLoggingSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**

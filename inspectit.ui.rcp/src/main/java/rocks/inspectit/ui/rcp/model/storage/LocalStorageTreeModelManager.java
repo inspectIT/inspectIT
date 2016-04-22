@@ -53,8 +53,8 @@ public class LocalStorageTreeModelManager {
 	 * {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are located to.
 	 * 
 	 * @return Returns objects divided either by the provided label class, or by
-	 *         {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are
-	 *         located to.
+	 *         {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are located
+	 *         to.
 	 */
 	public Object[] getRootObjects() {
 		if (CollectionUtils.isEmpty(localStorageDataCollection)) {

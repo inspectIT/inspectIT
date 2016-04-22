@@ -3,7 +3,6 @@ package rocks.inspectit.agent.java.config.impl;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -116,7 +115,7 @@ public class FileConfigurationReaderTest extends AbstractLogSupport {
 
 		verify(configurationStorage, times(1)).addUnregisteredJmxConfig(sensorTypeName, mBeanName, attributeName);
 	}
-	
+
 	@Test
 	public void loadAndVerifyJmxSensorConfigWithSpaces() throws ParserException, StorageException {
 		String sensorTypeName = "jmx_test";

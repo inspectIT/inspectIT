@@ -1,8 +1,8 @@
 package rocks.inspectit.agent.java.config.impl;
 
 /**
- * Container for the values which describe the monitored JMX MBean. It stores all the values defined in a config
- * file for later access.
+ * Container for the values which describe the monitored JMX MBean. It stores all the values defined
+ * in a config file for later access.
  * 
  * @author Alfred Krauss
  */

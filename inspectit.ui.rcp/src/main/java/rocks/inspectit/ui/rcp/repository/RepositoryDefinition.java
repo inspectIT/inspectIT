@@ -86,9 +86,9 @@ public interface RepositoryDefinition {
 	 * @return Returns the {@link IGlobalDataAccessService}.
 	 */
 	IGlobalDataAccessService getGlobalDataAccessService();
-	
+
 	/**
-	 * Returns the {@link IJmxDataAccessService}. 
+	 * Returns the {@link IJmxDataAccessService}.
 	 * 
 	 * @return Returns the {@link IJmxDataAccessService}.
 	 */
