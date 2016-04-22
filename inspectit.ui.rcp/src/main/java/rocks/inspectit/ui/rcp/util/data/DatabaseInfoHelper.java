@@ -6,9 +6,9 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 /**
  * Helper class for displaying the database info.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DatabaseInfoHelper {
 
@@ -29,7 +29,7 @@ public class DatabaseInfoHelper {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param sqlStatementData
 	 *            {@link SqlStatementData} to copy the database information from.
 	 */
@@ -41,7 +41,7 @@ public class DatabaseInfoHelper {
 
 	/**
 	 * Gets {@link #databaseUrl}.
-	 * 
+	 *
 	 * @return {@link #databaseUrl}
 	 */
 	public String getDatabaseUrl() {
@@ -81,9 +81,9 @@ public class DatabaseInfoHelper {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((databaseProductName == null) ? 0 : databaseProductName.hashCode());
-		result = prime * result + ((databaseProductVersion == null) ? 0 : databaseProductVersion.hashCode());
-		result = prime * result + ((databaseUrl == null) ? 0 : databaseUrl.hashCode());
+		result = (prime * result) + ((databaseProductName == null) ? 0 : databaseProductName.hashCode());
+		result = (prime * result) + ((databaseProductVersion == null) ? 0 : databaseProductVersion.hashCode());
+		result = (prime * result) + ((databaseUrl == null) ? 0 : databaseUrl.hashCode());
 		return result;
 	}
 

@@ -6,9 +6,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Simple implementation of the {@link IBufferElement} interface.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
@@ -35,7 +35,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param object
 	 *            Object to hold.
 	 */
@@ -48,6 +48,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public E getObject() {
 		return object;
 	}
@@ -55,6 +56,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getBufferElementSize() {
 		return bufferElementSize;
 	}
@@ -62,6 +64,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setBufferElementSize(long size) {
 		this.bufferElementSize = size;
 	}
@@ -69,6 +72,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBufferElement<E> getNextElement() {
 		return nextElement;
 	}
@@ -76,6 +80,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setNextElement(IBufferElement<E> element) {
 		this.nextElement = element;
 	}
@@ -83,6 +88,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void calculateAndSetBufferElementSize(IObjectSizes objectSizes) {
 		long size = objectSizes.getSizeOfObjectHeader() + objectSizes.getPrimitiveTypesSize(2, 0, 0, 0, 1, 0);
 		if (null != object) {
@@ -95,6 +101,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isAnalyzed() {
 		return bufferElementState.compareTo(BufferElementState.ANALYZED) >= 0;
 	}
@@ -102,6 +109,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isEvicted() {
 		return bufferElementState.compareTo(BufferElementState.EVICTED) >= 0;
 	}
@@ -109,6 +117,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isIndexed() {
 		return bufferElementState.compareTo(BufferElementState.INDEXED) >= 0;
 	}
@@ -116,6 +125,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public BufferElementState getBufferElementState() {
 		return bufferElementState;
 	}
@@ -123,6 +133,7 @@ public class BufferElement<E extends DefaultData> implements IBufferElement<E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setBufferElementState(BufferElementState bufferElementState) {
 		this.bufferElementState = bufferElementState;
 	}

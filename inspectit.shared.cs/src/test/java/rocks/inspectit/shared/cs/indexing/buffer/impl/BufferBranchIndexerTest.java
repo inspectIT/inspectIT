@@ -17,16 +17,13 @@ import org.testng.annotations.Test;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferBranchIndexer;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.Branch;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.BufferBranchIndexer;
-import rocks.inspectit.shared.cs.indexing.buffer.impl.Leaf;
 import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * Test for the {@link BufferBranchIndexer} class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class BufferBranchIndexerTest {
@@ -48,7 +45,7 @@ public class BufferBranchIndexerTest {
 	@BeforeMethod
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		bufferBranchIndexer = new BufferBranchIndexer<DefaultData>(delegateIndexer, childBufferIndexer);
+		bufferBranchIndexer = new BufferBranchIndexer<>(delegateIndexer, childBufferIndexer);
 	}
 
 	/**
@@ -58,7 +55,7 @@ public class BufferBranchIndexerTest {
 	@Test
 	public void nextTreeComponent() {
 		// when there is child indexer create branch
-		bufferBranchIndexer = new BufferBranchIndexer<DefaultData>(delegateIndexer, childBufferIndexer);
+		bufferBranchIndexer = new BufferBranchIndexer<>(delegateIndexer, childBufferIndexer);
 
 		when(childBufferIndexer.sharedInstance()).thenReturn(true);
 		IBufferTreeComponent<DefaultData> component = bufferBranchIndexer.getNextTreeComponent();
@@ -73,7 +70,7 @@ public class BufferBranchIndexerTest {
 		assertThat(((Branch<DefaultData>) component).getBufferBranchIndexer(), is(createdChildInstance));
 
 		// when there is not child indexer create leaf
-		bufferBranchIndexer = new BufferBranchIndexer<DefaultData>(delegateIndexer, null);
+		bufferBranchIndexer = new BufferBranchIndexer<>(delegateIndexer, null);
 		component = bufferBranchIndexer.getNextTreeComponent();
 		assertThat(component, is(instanceOf(Leaf.class)));
 	}

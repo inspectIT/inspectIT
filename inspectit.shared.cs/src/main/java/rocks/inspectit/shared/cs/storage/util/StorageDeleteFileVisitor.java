@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.storage.StorageFileType;
 
 /**
  * Delete file visitor that can delete storage files based on the type.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageDeleteFileVisitor extends DeleteFileVisitor {
 
@@ -29,7 +29,7 @@ public class StorageDeleteFileVisitor extends DeleteFileVisitor {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageFileTypes
 	 *            File types to delete.
 	 * @param deleteDirs

@@ -4,9 +4,9 @@ import com.google.common.base.Objects;
 
 /**
  * {@link IInputDefinitionExtra} that holds the SQL statement string.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlStatementInputDefinitionExtra implements IInputDefinitionExtra {
 
@@ -17,7 +17,7 @@ public class SqlStatementInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Gets {@link #sql}.
-	 * 
+	 *
 	 * @return {@link #sql}
 	 */
 	public String getSql() {
@@ -26,7 +26,7 @@ public class SqlStatementInputDefinitionExtra implements IInputDefinitionExtra {
 
 	/**
 	 * Sets {@link #sql}.
-	 * 
+	 *
 	 * @param sql
 	 *            New value for {@link #sql}
 	 */

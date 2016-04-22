@@ -7,9 +7,9 @@ import com.esotericsoftware.minlog.Log.Logger;
 
 /**
  * A bridge to log the minlog message to the slf4j.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class MinlogToSLF4JLogger extends Logger {
 
@@ -69,7 +69,7 @@ public class MinlogToSLF4JLogger extends Logger {
 
 	/**
 	 * Constructs message for the given category/message.
-	 * 
+	 *
 	 * @param category
 	 *            Category description.
 	 * @param message
@@ -77,7 +77,7 @@ public class MinlogToSLF4JLogger extends Logger {
 	 * @return combinedMessage
 	 */
 	private String getMessage(String category, String message) {
-		int size = (category != null) ? category.length() + 2 : 0 + message != null ? message.length() : 0;
+		int size = (category != null) ? category.length() + 2 : (0 + message) != null ? message.length() : 0;
 		StringBuilder stringBuilder = new StringBuilder(size);
 		if (null != category) {
 			stringBuilder.append(category);

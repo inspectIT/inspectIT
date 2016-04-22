@@ -6,9 +6,9 @@ import org.jfree.chart.axis.DateAxis;
 /**
  * This class extends the date axis from JFreeChart and adds the possibility to be notified if a
  * zooming event occurs.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class DateAxisZoomNotify extends DateAxis {
 
@@ -24,7 +24,7 @@ public class DateAxisZoomNotify extends DateAxis {
 
 	/**
 	 * Adds a zoom listener.
-	 * 
+	 *
 	 * @param zoomListener
 	 *            The zoom listener to add.
 	 */
@@ -34,7 +34,7 @@ public class DateAxisZoomNotify extends DateAxis {
 
 	/**
 	 * Removes a zoom listener.
-	 * 
+	 *
 	 * @param zoomListener
 	 *            The zoom listener to remove.
 	 */
@@ -47,8 +47,8 @@ public class DateAxisZoomNotify extends DateAxis {
 	 */
 	public void notifyZoomListeners() {
 		Object[] listeners = zoomListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((ZoomListener) listeners[i]).zoomOccured();
+		for (Object listener : listeners) {
+			((ZoomListener) listener).zoomOccured();
 		}
 	}
 

@@ -19,9 +19,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Handler for displaying new details window.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DetailsHandler extends AbstractHandler implements IHandler {
 
@@ -42,7 +42,7 @@ public class DetailsHandler extends AbstractHandler implements IHandler {
 			repositoryDefinition = inputDefinitionProvider.getInputDefinition().getRepositoryDefinition();
 		}
 
-		if (selected instanceof DefaultData && null != repositoryDefinition) {
+		if ((selected instanceof DefaultData) && (null != repositoryDefinition)) {
 			DetailsDialog detailsDialog = new DetailsDialog(shell, (DefaultData) selected, repositoryDefinition);
 			detailsDialog.open();
 

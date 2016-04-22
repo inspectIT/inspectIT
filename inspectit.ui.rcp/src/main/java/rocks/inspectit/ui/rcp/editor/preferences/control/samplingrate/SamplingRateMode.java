@@ -13,9 +13,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 
 /**
  * The enumeration for sampling rate modes.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public enum SamplingRateMode implements ISamplingRateMode {
 	/**
@@ -29,13 +29,13 @@ public enum SamplingRateMode implements ISamplingRateMode {
 		public <E extends DefaultData> List<E> adjustSamplingRate(List<E> defaultDataList, Date from, Date to, int samplingRate, IAggregator<E> aggregator) {
 			long timeframe = 0;
 
-			if (samplingRate > 0 && defaultDataList != null) {
+			if ((samplingRate > 0) && (defaultDataList != null)) {
 				timeframe = (to.getTime() - from.getTime()) / samplingRate;
 			} else {
 				return defaultDataList;
 			}
 
-			List<E> resultList = new ArrayList<E>();
+			List<E> resultList = new ArrayList<>();
 
 			// define the start and end position of the first time frame
 			long timeframeStartTime = Long.MAX_VALUE;
@@ -48,15 +48,15 @@ public enum SamplingRateMode implements ISamplingRateMode {
 				Date dataDate = defaultDataList.get(i).getTimeStamp();
 
 				// find first data object which lies in the specified time range
-				if ((dataDate.getTime() == from.getTime() || dataDate.after(from)) && dataDate.before(to)) {
+				if (((dataDate.getTime() == from.getTime()) || dataDate.after(from)) && dataDate.before(to)) {
 					fromIndex = i;
-					timeframeStartTime = dataDate.getTime() - timeframe / 2;
-					timeframeEndTime = dataDate.getTime() + timeframe / 2;
+					timeframeStartTime = dataDate.getTime() - (timeframe / 2);
+					timeframeEndTime = dataDate.getTime() + (timeframe / 2);
 
-					if (i - 1 >= 0) {
+					if ((i - 1) >= 0) {
 						// we add a data object so that the drawn graph does not start with the
 						// first drawn object, but the line will go out of the graph.
-						if (i - 1 > 0) {
+						if ((i - 1) > 0) {
 							// this data object is not the first of the list, thus we add the very
 							// first data object to the result list because of the auto range of
 							// jfreechart. Otherwise the graph would not scale correctly.
@@ -69,9 +69,9 @@ public enum SamplingRateMode implements ISamplingRateMode {
 				}
 			}
 
-			AggregationPerformer<E> aggregationPerformer = new AggregationPerformer<E>(aggregator);
+			AggregationPerformer<E> aggregationPerformer = new AggregationPerformer<>(aggregator);
 			// iterate over time frames
-			while (timeframeStartTime < to.getTime() + timeframe) {
+			while (timeframeStartTime < (to.getTime() + timeframe)) {
 				long averageTime = (timeframeStartTime + timeframeEndTime) / 2;
 
 				for (int i = fromIndex; i < defaultDataList.size(); i++) {
@@ -82,14 +82,14 @@ public enum SamplingRateMode implements ISamplingRateMode {
 						// the last data object was
 						toIndex = i - 1;
 						break;
-					} else if (i + 1 == defaultDataList.size()) {
+					} else if ((i + 1) == defaultDataList.size()) {
 						// if end of list is reached then toIndex is the end of the list
 						toIndex = i;
 					}
 				}
 
 				// aggregate data objects only when toIndex changed
-				if (toIndex >= 0 && fromIndex <= toIndex) {
+				if ((toIndex >= 0) && (fromIndex <= toIndex)) {
 					// aggregate data and set the average time stamp
 					aggregationPerformer.reset();
 					// aggregation performer does not include toIndex to the aggregation
@@ -118,7 +118,7 @@ public enum SamplingRateMode implements ISamplingRateMode {
 				if (defaultDataList.size() > fromIndex) {
 					resultList.add(defaultDataList.get(fromIndex));
 				}
-				if (defaultDataList.size() > fromIndex + 1) {
+				if (defaultDataList.size() > (fromIndex + 1)) {
 					// there are some objects untouched, thus we need to add the very last data
 					// object to the result list for the auto scaling of jfreechart to work.
 					resultList.add(defaultDataList.get(defaultDataList.size() - 1));

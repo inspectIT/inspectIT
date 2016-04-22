@@ -41,9 +41,9 @@ import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * The small summary below the SQL invocation overview.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlInvocSummaryTextInputController extends AbstractTextInputController {
 
@@ -236,7 +236,7 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 
 	/**
 	 * Updates the representation of the text form.
-	 * 
+	 *
 	 * @param invocations
 	 *            Invocations to display.
 	 */
@@ -246,13 +246,13 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 		resetDisplayed = false;
 
 		MutableDouble duration = new MutableDouble(0d);
-		List<SqlStatementData> sqlList = new ArrayList<SqlStatementData>();
+		List<SqlStatementData> sqlList = new ArrayList<>();
 		InvocationSequenceDataHelper.collectSqlsInInvocations(invocations, sqlList, duration);
 		double totalInvocationsDuration = 0d;
 		for (InvocationSequenceData inv : invocations) {
 			totalInvocationsDuration += inv.getDuration();
 		}
-		double percentage = duration.toDouble() / totalInvocationsDuration * 100;
+		double percentage = (duration.toDouble() / totalInvocationsDuration) * 100;
 
 		slowest80List.clear();
 		int slowest80 = getSlowestSqlCount(duration.toDouble(), sqlList, 0.8d, slowest80List);
@@ -274,7 +274,7 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 		String slowest80String = getCountAndPercentage(slowest80, sqlList.size());
 		String slowest20String = getCountAndPercentage(slowest20, sqlList.size());
 		if (CollectionUtils.isNotEmpty(sqlList)) {
-			double slowest80Percentage = (double) slowest80 / sqlList.size() * 100;
+			double slowest80Percentage = ((double) slowest80 / sqlList.size()) * 100;
 			if (Double.isNaN(slowest80Percentage)) {
 				slowest80Percentage = 0;
 			}
@@ -306,7 +306,7 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 
 	/**
 	 * Returns the {@link HyperlinkAdapter} to handle the Hyperlink clicks.
-	 * 
+	 *
 	 * @return Returns the {@link HyperlinkAdapter} to handle the Hyperlink clicks.
 	 */
 	private HyperlinkAdapter getHyperlinkAdapter() {
@@ -314,6 +314,7 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 			@Override
 			public void linkActivated(final HyperlinkEvent e) {
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						IWorkbenchPage page = window.getActivePage();
@@ -336,7 +337,7 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 
 	/**
 	 * Define if reset button should be displayed in the 80/20 test.
-	 * 
+	 *
 	 * @param show
 	 *            If <code>true</code> reset link will be show, otherwise hidden.
 	 */
@@ -363,7 +364,7 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 
 	/**
 	 * Returns string representation of count and percentage.
-	 * 
+	 *
 	 * @param count
 	 *            Count.
 	 * @param totalCount
@@ -374,12 +375,12 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 		if (0 == totalCount) {
 			return "0(0%)";
 		}
-		return count + "(" + NumberFormatter.formatDouble((double) count / totalCount * 100, 0) + "%)";
+		return count + "(" + NumberFormatter.formatDouble(((double) count / totalCount) * 100, 0) + "%)";
 	}
 
 	/**
 	 * Calculates how much slowest SQL can fit into the given percentage of total duration.
-	 * 
+	 *
 	 * @param totalDuration
 	 *            Total duration of all SQLs.
 	 * @param sqlStatementDataList
@@ -402,7 +403,7 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 		int result = 0;
 		double currentDurationSum = 0;
 		for (SqlStatementData sqlStatementData : sqlStatementDataList) {
-			if (currentDurationSum / totalDuration < percentage) {
+			if ((currentDurationSum / totalDuration) < percentage) {
 				result++;
 				resultList.add(sqlStatementData);
 			} else {

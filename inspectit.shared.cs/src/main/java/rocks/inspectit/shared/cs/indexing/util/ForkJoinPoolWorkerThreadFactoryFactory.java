@@ -8,7 +8,7 @@ import org.springframework.beans.factory.FactoryBean;
 
 /**
  * Bean Factory for the ForkJoinWorkerThreadFactory.
- * 
+ *
  * @author Tobias Angerstein
  *
  */
@@ -22,6 +22,7 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ForkJoinWorkerThreadFactory getObject() throws Exception {
 		return new WorkerThreadFactory(threadNamePrefix);
 	}
@@ -35,12 +36,11 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 	public boolean isSingleton() {
 		return false;
 	}
-	
+
 	/**
 	 * Getter of threadNamePrefix.
-	 * 
-	 * @return
-	 * 		threadNamePrefix
+	 *
+	 * @return threadNamePrefix
 	 */
 	public String getThreadNamePrefix() {
 		return threadNamePrefix;
@@ -48,9 +48,9 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 
 	/**
 	 * Setter of threadNamePrefix.
-	 * 
+	 *
 	 * @param threadNamePrefix
-	 * 			threadNamePrefix
+	 *            threadNamePrefix
 	 */
 	public void setThreadNamePrefix(String threadNamePrefix) {
 		this.threadNamePrefix = threadNamePrefix;
@@ -58,14 +58,14 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 
 	/**
 	 * Inherited Class of WorkerThread.
-	 * 
+	 *
 	 * @author Tobias Angerstein
 	 */
 	static class WorkerThread extends ForkJoinWorkerThread {
 
 		/**
 		 * User constructor of superclass.
-		 * 
+		 *
 		 * @param pool
 		 *            the forkJoinPool
 		 */
@@ -76,36 +76,38 @@ public class ForkJoinPoolWorkerThreadFactoryFactory implements FactoryBean<ForkJ
 
 	/**
 	 * WorkerThreadFactory which uses the defined name for the WorkerThread.
-	 * 
+	 *
 	 * @author Tobias Angerstein
 	 */
 	static class WorkerThreadFactory implements ForkJoinWorkerThreadFactory {
-		
+
 		/**
-		 * ThreadName. 
+		 * ThreadName.
 		 */
 		private String threadNamePrefix;
-		
+
 		/**
 		 * Number of current threads.
 		 */
 		private int threadCounter;
-		
+
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param threadNamePrefix
-		 * 					threadName;
+		 *            threadName;
 		 */
 		public WorkerThreadFactory(String threadNamePrefix) {
 			this.threadNamePrefix = threadNamePrefix;
 			this.threadCounter = 0;
 		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Returns new Thread with set name. 
+		 * Returns new Thread with set name.
 		 */
+		@Override
 		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
 			ForkJoinWorkerThread workerThread = new WorkerThread(pool);
 			workerThread.setName(threadNamePrefix + "-" + ++threadCounter);

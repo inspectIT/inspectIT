@@ -2,9 +2,9 @@ package rocks.inspectit.shared.all.instrumentation.config.impl;
 
 /**
  * Special {@link MethodSensorTypeConfig} for the exception sensor type.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExceptionSensorTypeConfig extends MethodSensorTypeConfig {
 
@@ -15,7 +15,7 @@ public class ExceptionSensorTypeConfig extends MethodSensorTypeConfig {
 
 	/**
 	 * Gets {@link #enhanced}.
-	 * 
+	 *
 	 * @return {@link #enhanced}
 	 */
 	public boolean isEnhanced() {
@@ -24,7 +24,7 @@ public class ExceptionSensorTypeConfig extends MethodSensorTypeConfig {
 
 	/**
 	 * Sets {@link #enhanced}.
-	 * 
+	 *
 	 * @param enhanced
 	 *            New value for {@link #enhanced}
 	 */

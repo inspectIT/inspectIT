@@ -11,20 +11,21 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 /**
  * Abstract class of a deferred composite type where the sub tree is only initialized if it is
  * requested.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class DeferredComposite extends Composite implements IDeferredWorkbenchAdapter {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public abstract void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor);
 
 	/**
 	 * Sets the repository definition.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            the repository definition.
 	 */
@@ -32,7 +33,7 @@ public abstract class DeferredComposite extends Composite implements IDeferredWo
 
 	/**
 	 * Returns the repository definition.
-	 * 
+	 *
 	 * @return the repository definition.
 	 */
 	public abstract RepositoryDefinition getRepositoryDefinition();
@@ -40,6 +41,7 @@ public abstract class DeferredComposite extends Composite implements IDeferredWo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isContainer() {
 		return true;
 	}
@@ -47,6 +49,7 @@ public abstract class DeferredComposite extends Composite implements IDeferredWo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getChildren(Object object) {
 		return super.getChildren().toArray();
 	}
@@ -54,6 +57,7 @@ public abstract class DeferredComposite extends Composite implements IDeferredWo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getParent(Object object) {
 		return super.getParent();
 	}
@@ -61,6 +65,7 @@ public abstract class DeferredComposite extends Composite implements IDeferredWo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImageDescriptor getImageDescriptor(Object object) {
 		return null;
 	}
@@ -68,6 +73,7 @@ public abstract class DeferredComposite extends Composite implements IDeferredWo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getLabel(Object object) {
 		return super.getName();
 	}
@@ -75,6 +81,7 @@ public abstract class DeferredComposite extends Composite implements IDeferredWo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISchedulingRule getRule(Object object) {
 		return null;
 	}

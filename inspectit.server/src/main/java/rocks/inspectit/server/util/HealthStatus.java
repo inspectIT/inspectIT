@@ -28,9 +28,9 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 /**
  * This service is used to check the health of the CMR in terms of cpu, memory, some overall
  * statistics etc.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Component
 public class HealthStatus {
@@ -159,12 +159,12 @@ public class HealthStatus {
 
 	/**
 	 * Log a graphical version of the load average.
-	 * 
+	 *
 	 * @param loadAvg
 	 *            The current load average over the last 60 seconds.
 	 * @param availCpus
 	 *            The available cpus.
-	 * 
+	 *
 	 * @see OperatingSystemMXBean#getSystemLoadAverage()
 	 */
 	private void logGraphicalLoadAverage(double loadAvg, int availCpus) {
@@ -255,12 +255,12 @@ public class HealthStatus {
 
 	/**
 	 * Log a graphical version of the memory usage object..
-	 * 
+	 *
 	 * @param memoryUsage
 	 *            The memory usage object to log.
 	 * @param title
 	 *            Title of graphical box.
-	 * 
+	 *
 	 * @see MemoryUsage
 	 */
 	private void logGraphicalMemoryUsage(MemoryUsage memoryUsage, String title) {
@@ -321,13 +321,13 @@ public class HealthStatus {
 
 	/**
 	 * Checks if the values in {@link MemoryUsage} are OK for the graphical memory logging.
-	 * 
+	 *
 	 * @param memoryUsage
 	 *            {@link MemoryUsage}
 	 * @return True if values are OK.
 	 */
 	private boolean areMemoryUsageValuesCorrect(MemoryUsage memoryUsage) {
-		if (memoryUsage.getCommitted() < 0 || memoryUsage.getUsed() < 0 || memoryUsage.getMax() < 0) {
+		if ((memoryUsage.getCommitted() < 0) || (memoryUsage.getUsed() < 0) || (memoryUsage.getMax() < 0)) {
 			return false;
 		}
 		if (memoryUsage.getUsed() > memoryUsage.getMax()) {
@@ -370,7 +370,7 @@ public class HealthStatus {
 
 	/**
 	 * Log a graphical version of buffer occupancy.
-	 * 
+	 *
 	 * @param bufferOccupancy
 	 *            Current buffer occupancy in percentages.
 	 */

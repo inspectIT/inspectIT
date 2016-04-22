@@ -24,9 +24,9 @@ import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * Composite that show the storage info.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageInfoComposite extends Composite {
 
@@ -63,7 +63,7 @@ public class StorageInfoComposite extends Composite {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            a widget which will be the parent of the new instance (cannot be null)
 	 * @param style
@@ -80,7 +80,7 @@ public class StorageInfoComposite extends Composite {
 
 	/**
 	 * Secondary constructor. Displays the information from the storage data.
-	 * 
+	 *
 	 * @param parent
 	 *            a widget which will be the parent of the new instance (cannot be null)
 	 * @param style
@@ -156,7 +156,7 @@ public class StorageInfoComposite extends Composite {
 
 	/**
 	 * Displays the storage data.
-	 * 
+	 *
 	 * @param storageData
 	 *            Data to display information for.
 	 */
@@ -184,7 +184,7 @@ public class StorageInfoComposite extends Composite {
 				} else if (storageData instanceof StorageData) {
 					localStorageData = InspectIT.getDefault().getInspectITStorageManager().getLocalDataForStorage((StorageData) storageData);
 				}
-				boolean notDownloaded = (null == localStorageData || !localStorageData.isFullyDownloaded());
+				boolean notDownloaded = ((null == localStorageData) || !localStorageData.isFullyDownloaded());
 
 				if (notDownloaded) {
 					downloaded.setText("No");

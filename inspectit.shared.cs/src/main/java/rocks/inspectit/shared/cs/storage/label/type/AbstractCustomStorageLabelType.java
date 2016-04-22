@@ -7,9 +7,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Abstract class for all custom storage label types.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <V>
  *            Type of value label is holding.
  */
@@ -55,7 +55,7 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 
 	/**
 	 * Gets {@link #onePerStorage}.
-	 * 
+	 *
 	 * @return {@link #onePerStorage}
 	 */
 	@Override
@@ -65,7 +65,7 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 
 	/**
 	 * Sets {@link #onePerStorage}.
-	 * 
+	 *
 	 * @param onePerStorage
 	 *            New value for {@link #onePerStorage}
 	 */
@@ -75,7 +75,7 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 
 	/**
 	 * Gets {@link #name}.
-	 * 
+	 *
 	 * @return {@link #name}
 	 */
 	public String getName() {
@@ -84,7 +84,7 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 
 	/**
 	 * Sets {@link #name}.
-	 * 
+	 *
 	 * @param name
 	 *            New value for {@link #name}
 	 */
@@ -94,7 +94,7 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 
 	/**
 	 * Gets {@link #imageKey}.
-	 * 
+	 *
 	 * @return {@link #imageKey}
 	 */
 	public String getImageKey() {
@@ -103,7 +103,7 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 
 	/**
 	 * Sets {@link #imageKey}.
-	 * 
+	 *
 	 * @param imageKey
 	 *            New value for {@link #imageKey}
 	 */
@@ -118,9 +118,9 @@ public abstract class AbstractCustomStorageLabelType<V> extends AbstractStorageL
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((imageKey == null) ? 0 : imageKey.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + (onePerStorage ? 1231 : 1237);
+		result = (prime * result) + ((imageKey == null) ? 0 : imageKey.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + (onePerStorage ? 1231 : 1237);
 		return result;
 	}
 

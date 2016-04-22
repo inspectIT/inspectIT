@@ -20,18 +20,18 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * This class is used as the input definition for all editors in the application. Nearly all
  * parameters are optional in here. The actual processing is done in the respective editor which
  * accesses these fields.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class InputDefinition {
 
 	/**
 	 * This class holds the definition for the IDs used to identify the correct data objects on the
 	 * CMR.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public static final class IdDefinition {
 
@@ -63,7 +63,7 @@ public class InputDefinition {
 
 		/**
 		 * Gets {@link #platformId}.
-		 * 
+		 *
 		 * @return {@link #platformId}
 		 */
 		public long getPlatformId() {
@@ -72,7 +72,7 @@ public class InputDefinition {
 
 		/**
 		 * Sets {@link #platformId}.
-		 * 
+		 *
 		 * @param platformId
 		 *            New value for {@link #platformId}
 		 */
@@ -82,7 +82,7 @@ public class InputDefinition {
 
 		/**
 		 * Gets {@link #sensorTypeId}.
-		 * 
+		 *
 		 * @return {@link #sensorTypeId}
 		 */
 		public long getSensorTypeId() {
@@ -91,7 +91,7 @@ public class InputDefinition {
 
 		/**
 		 * Sets {@link #sensorTypeId}.
-		 * 
+		 *
 		 * @param sensorTypeId
 		 *            New value for {@link #sensorTypeId}
 		 */
@@ -101,7 +101,7 @@ public class InputDefinition {
 
 		/**
 		 * Gets {@link #methodId}.
-		 * 
+		 *
 		 * @return {@link #methodId}
 		 */
 		public long getMethodId() {
@@ -110,7 +110,7 @@ public class InputDefinition {
 
 		/**
 		 * Sets {@link #methodId}.
-		 * 
+		 *
 		 * @param methodId
 		 *            New value for {@link #methodId}
 		 */
@@ -120,7 +120,7 @@ public class InputDefinition {
 
 		/**
 		 * Gets {@link #jmxDefinitionId}.
-		 * 
+		 *
 		 * @return {@link #jmxDefinitionId}
 		 */
 		public long getJmxDefinitionId() {
@@ -129,7 +129,7 @@ public class InputDefinition {
 
 		/**
 		 * Sets {@link #jmxDefinitionId}.
-		 * 
+		 *
 		 * @param jmxDefinitionId
 		 *            New value for {@link #jmxDefinitionId}
 		 */
@@ -200,7 +200,7 @@ public class InputDefinition {
 	 * {@link IdDefinition} object. The key of the map is one of the IDs defined in the controller
 	 * classes.
 	 */
-	private Map<String, List<IdDefinition>> idMappings = new HashMap<String, List<IdDefinition>>();
+	private Map<String, List<IdDefinition>> idMappings = new HashMap<>();
 
 	/**
 	 * The ID of the view.
@@ -215,11 +215,11 @@ public class InputDefinition {
 	/**
 	 * Map for holding the input definition extras.
 	 */
-	private Map<InputDefinitionExtraMarker<? extends IInputDefinitionExtra>, IInputDefinitionExtra> inputDefintionExtras = new HashMap<InputDefinitionExtraMarker<? extends IInputDefinitionExtra>, IInputDefinitionExtra>();
+	private Map<InputDefinitionExtraMarker<? extends IInputDefinitionExtra>, IInputDefinitionExtra> inputDefintionExtras = new HashMap<>();
 
 	/**
 	 * Gets {@link #repositoryDefinition}.
-	 * 
+	 *
 	 * @return {@link #repositoryDefinition}
 	 */
 	public RepositoryDefinition getRepositoryDefinition() {
@@ -228,7 +228,7 @@ public class InputDefinition {
 
 	/**
 	 * Sets {@link #repositoryDefinition}.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            New value for {@link #repositoryDefinition}
 	 */
@@ -240,7 +240,7 @@ public class InputDefinition {
 
 	/**
 	 * Gets {@link #updateRate}.
-	 * 
+	 *
 	 * @return {@link #updateRate}
 	 */
 	public long getUpdateRate() {
@@ -249,7 +249,7 @@ public class InputDefinition {
 
 	/**
 	 * Sets {@link #updateRate}.
-	 * 
+	 *
 	 * @param updateRate
 	 *            New value for {@link #updateRate}
 	 */
@@ -259,7 +259,7 @@ public class InputDefinition {
 
 	/**
 	 * Gets {@link #automaticUpdate}.
-	 * 
+	 *
 	 * @return {@link #automaticUpdate}
 	 */
 	public boolean isAutomaticUpdate() {
@@ -268,7 +268,7 @@ public class InputDefinition {
 
 	/**
 	 * Sets {@link #automaticUpdate}.
-	 * 
+	 *
 	 * @param automaticUpdate
 	 *            New value for {@link #automaticUpdate}
 	 */
@@ -278,7 +278,7 @@ public class InputDefinition {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public SensorTypeEnum getId() {
@@ -287,7 +287,7 @@ public class InputDefinition {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -297,7 +297,7 @@ public class InputDefinition {
 
 	/**
 	 * Gets {@link #editorPropertiesData}.
-	 * 
+	 *
 	 * @return {@link #editorPropertiesData}
 	 */
 	public EditorPropertiesData getEditorPropertiesData() {
@@ -306,7 +306,7 @@ public class InputDefinition {
 
 	/**
 	 * Sets {@link #editorPropertiesData}.
-	 * 
+	 *
 	 * @param editorPropertiesData
 	 *            New value for {@link #editorPropertiesData}
 	 */
@@ -317,7 +317,7 @@ public class InputDefinition {
 	/**
 	 * This is a convenience method to just define one {@link IdDefinition} object for this input
 	 * definition. If one is already defined, a {@link RuntimeException} is thrown.
-	 * 
+	 *
 	 * @param idDefinition
 	 *            The ID definition to set.
 	 */
@@ -333,7 +333,7 @@ public class InputDefinition {
 	/**
 	 * This is the counterpart method to {@link #setIdDefinition(IdDefinition)}. This method can be
 	 * called as often as needed in contrary to {@link #getAndRemoveIdDefinition(String)}.
-	 * 
+	 *
 	 * @return The single ID definition.
 	 */
 	public IdDefinition getIdDefinition() {
@@ -346,7 +346,7 @@ public class InputDefinition {
 
 	/**
 	 * Appends the {@link IdDefinition} to the end of the list for the given ID.
-	 * 
+	 *
 	 * @param id
 	 *            The ID of this {@link IdDefinition} object.
 	 * @param idDefinition
@@ -367,7 +367,7 @@ public class InputDefinition {
 	 * <p>
 	 * The order of the adding and retrieving of the subviews is important to visualize the correct
 	 * graphs/tables etc.
-	 * 
+	 *
 	 * @param id
 	 *            The ID.
 	 * @return The {@link IdDefinition} object.
@@ -385,7 +385,7 @@ public class InputDefinition {
 
 	/**
 	 * Adds the input definition extra.
-	 * 
+	 *
 	 * @param extraMarker
 	 *            {@link InputDefinitionExtraMarker}.
 	 * @param extra
@@ -399,7 +399,7 @@ public class InputDefinition {
 
 	/**
 	 * Returns the input definition extra.
-	 * 
+	 *
 	 * @param extraMarker
 	 *            Marker that defines the type of extra.
 	 * @param <E>
@@ -413,7 +413,7 @@ public class InputDefinition {
 
 	/**
 	 * Returns if the {@link InputDefinition} contains the extra defined by the marker.
-	 * 
+	 *
 	 * @param extraMarker
 	 *            Marker.
 	 * @return True if input definition has the extra marker.

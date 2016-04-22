@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Input for profile editor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ProfileEditorInput implements IEditorInput, IProfileProvider {
 
@@ -97,18 +97,20 @@ public class ProfileEditorInput implements IEditorInput, IProfileProvider {
 
 	/**
 	 * Gets {@link #profile}.
-	 * 
+	 *
 	 * @return {@link #profile}
 	 */
+	@Override
 	public Profile getProfile() {
 		return profile;
 	}
 
 	/**
 	 * Gets {@link #cmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @return {@link #cmrRepositoryDefinition}
 	 */
+	@Override
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
 		return cmrRepositoryDefinition;
 	}
@@ -120,8 +122,8 @@ public class ProfileEditorInput implements IEditorInput, IProfileProvider {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cmrRepositoryDefinition == null) ? 0 : cmrRepositoryDefinition.hashCode());
-		result = prime * result + ((profile == null) ? 0 : profile.hashCode());
+		result = (prime * result) + ((cmrRepositoryDefinition == null) ? 0 : cmrRepositoryDefinition.hashCode());
+		result = (prime * result) + ((profile == null) ? 0 : profile.hashCode());
 		return result;
 	}
 

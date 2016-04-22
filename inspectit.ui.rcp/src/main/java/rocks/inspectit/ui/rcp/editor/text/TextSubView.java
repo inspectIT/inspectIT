@@ -19,16 +19,16 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.AbstractSubView;
 import rocks.inspectit.ui.rcp.editor.ISubView;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.text.input.TextInputController;
 
 /**
  * This class is for text views.
- * 
+ *
  * @author Eduard Tudenhoefner
  * @author Patrice Bouillet
- * 
+ *
  */
 public class TextSubView extends AbstractSubView {
 
@@ -49,7 +49,7 @@ public class TextSubView extends AbstractSubView {
 
 	/**
 	 * The constructor accepting one parameter.
-	 * 
+	 *
 	 * @param textInputController
 	 *            An instance of the {@link TextInputController}.
 	 */
@@ -70,6 +70,7 @@ public class TextSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createPartControl(Composite parent, FormToolkit toolkit) {
 		composite = toolkit.createComposite(parent);
 		composite.setLayout(new GridLayout(1, false));
@@ -79,6 +80,7 @@ public class TextSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		if (checkDisposed()) {
 			return;
@@ -107,6 +109,7 @@ public class TextSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Control getControl() {
 		return composite;
 	}
@@ -114,13 +117,14 @@ public class TextSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return null;
 	}
 
 	/**
 	 * Returns an instance of a {@link TextInputController}.
-	 * 
+	 *
 	 * @return An instance of a {@link TextInputController}.
 	 */
 	public TextInputController getTextInputController() {
@@ -130,6 +134,7 @@ public class TextSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDataInput(List<? extends DefaultData> data) {
 		if (checkDisposed()) {
 			return;
@@ -141,12 +146,14 @@ public class TextSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		return Collections.emptySet();
 	}
@@ -164,7 +171,7 @@ public class TextSubView extends AbstractSubView {
 
 	/**
 	 * Returns true if the composite in the sub-view is disposed. False otherwise.
-	 * 
+	 *
 	 * @return Returns true if the composite in the sub-view is disposed. False otherwise.
 	 */
 	private boolean checkDisposed() {

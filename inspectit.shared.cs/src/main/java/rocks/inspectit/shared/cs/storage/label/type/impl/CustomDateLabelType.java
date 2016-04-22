@@ -9,9 +9,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractCustomStorageLabelTy
 
 /**
  * Custom label type that holds {@link Date} values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("CDLT")

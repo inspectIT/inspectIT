@@ -334,7 +334,6 @@ public class HookDispatcherTest extends TestBase {
 			when(registeredSensorConfig.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
 			when(registeredSensorConfig.getMethodSensorsReverse()).thenReturn(Collections.singletonList(methodSensor));
 
-
 			int methodId = 3;
 			Object object = mock(Object.class);
 			Object[] parameters = new Object[0];
@@ -440,7 +439,6 @@ public class HookDispatcherTest extends TestBase {
 			RegisteredSensorConfig registeredSensorConfigTwo = mock(RegisteredSensorConfig.class);
 			when(registeredSensorConfigTwo.getMethodSensors()).thenReturn(Collections.<IMethodSensor> singletonList(methodSensor));
 			when(registeredSensorConfigTwo.getMethodSensorsReverse()).thenReturn(Collections.<IMethodSensor> singletonList(methodSensor));
-
 
 			long methodId = 3L;
 			long methodIdTwo = 15L;
@@ -609,7 +607,6 @@ public class HookDispatcherTest extends TestBase {
 			when(methodSensorTwo.getSensorTypeConfig()).thenReturn(methodSensorConfigTwo);
 			when(methodSensorThree.getSensorTypeConfig()).thenReturn(methodSensorConfigThree);
 
-
 			long exceptionSensorTypeId = 10L;
 			// the exception sensor type config
 			MethodSensorTypeConfig exceptionSensorTypeConfig = mock(MethodSensorTypeConfig.class);
@@ -688,7 +685,6 @@ public class HookDispatcherTest extends TestBase {
 
 		@Test
 		public void dispatchExceptionSensorWithOneMethodHookWithInvocationTrace() throws Exception {
-
 
 			long methodSensorTypeId = 23L;
 			long exceptionSensorTypeId = 10L;

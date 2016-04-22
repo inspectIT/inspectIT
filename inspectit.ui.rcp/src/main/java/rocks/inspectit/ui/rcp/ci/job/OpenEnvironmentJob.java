@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Job for loading of the environment from the CMR and opening the environment editor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class OpenEnvironmentJob extends Job {
 

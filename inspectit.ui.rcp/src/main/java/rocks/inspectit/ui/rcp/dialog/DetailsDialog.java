@@ -21,6 +21,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -44,9 +45,9 @@ import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * The dialog that displays details of the element.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DetailsDialog extends Dialog {
 
@@ -111,7 +112,7 @@ public class DetailsDialog extends Dialog {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            {@link Shell} to create dialog on.
 	 * @param defaultData
@@ -199,7 +200,7 @@ public class DetailsDialog extends Dialog {
 		navigation.setLayout(new GridLayout(1, false));
 
 		// navigate stuff
-		Section navigateSection = toolkit.createSection(navigation, Section.TITLE_BAR);
+		Section navigateSection = toolkit.createSection(navigation, ExpandableComposite.TITLE_BAR);
 		navigateSection.setText("Navigate To");
 		navigateSection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		Composite navigateComposite = toolkit.createComposite(navigateSection);
@@ -209,7 +210,7 @@ public class DetailsDialog extends Dialog {
 		createLinks(navigateComposite, toolkit, NAVIGATE_COMMANDS_IDS);
 
 		// actions stuff
-		Section actionsSection = toolkit.createSection(navigation, Section.TITLE_BAR);
+		Section actionsSection = toolkit.createSection(navigation, ExpandableComposite.TITLE_BAR);
 		actionsSection.setText("Actions");
 		actionsSection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		Composite actionsComposite = toolkit.createComposite(actionsSection);
@@ -229,7 +230,7 @@ public class DetailsDialog extends Dialog {
 
 	/**
 	 * Creates links for given commands on the parent composite.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 * @param toolkit
@@ -240,7 +241,7 @@ public class DetailsDialog extends Dialog {
 	private void createLinks(Composite parent, FormToolkit toolkit, Map<String, String> commandMap) {
 		for (Map.Entry<String, String> entry : commandMap.entrySet()) {
 			Command command = commandService.getCommand(entry.getKey());
-			if (command.isDefined() && null != command.getHandler() && command.getHandler().isEnabled()) {
+			if (command.isDefined() && (null != command.getHandler()) && command.getHandler().isEnabled()) {
 				toolkit.createLabel(parent, "", SWT.NONE).setImage(arrow);
 
 				Hyperlink link = toolkit.createHyperlink(parent, entry.getValue(), SWT.WRAP);
@@ -286,7 +287,7 @@ public class DetailsDialog extends Dialog {
 
 	/**
 	 * Gets {@link #commandOnClose}.
-	 * 
+	 *
 	 * @return {@link #commandOnClose}
 	 */
 	public Command getCommandOnClose() {
@@ -296,9 +297,9 @@ public class DetailsDialog extends Dialog {
 	/**
 	 * {@link HyperlinkAdapter} for setting the correct {@link DetailsDialog#commandOnClose} when
 	 * clicked.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class CommandHyperlinkListener extends HyperlinkAdapter {
 
@@ -309,7 +310,7 @@ public class DetailsDialog extends Dialog {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param command
 		 *            Command.
 		 */
@@ -329,9 +330,9 @@ public class DetailsDialog extends Dialog {
 
 	/**
 	 * Hyperlink listener for the copy operation.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class CopyHyperlinkListener extends HyperlinkAdapter {
 

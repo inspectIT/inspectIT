@@ -14,9 +14,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 /**
  * The simplest version of a buffer strategy contains just the reference to one measurement list.
  * Every time a new one is added, the old one is thrown away.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class SimpleBufferStrategy extends AbstractBufferStrategy<MethodSensorData> implements IBufferStrategy<MethodSensorData> {
 

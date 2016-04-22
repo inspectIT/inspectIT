@@ -17,12 +17,10 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
-import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
-import rocks.inspectit.shared.cs.indexing.aggregation.impl.HttpTimerDataAggregator;
 
 /**
  * Tests the buffer aggregation of <code>HttpTimerData</code> elements.
- * 
+ *
  * @author Stefan Siegl
  */
 @SuppressWarnings("PMD")
@@ -31,23 +29,23 @@ public class HttpDataAggregatorTest {
 	@Test
 	public void aggregationWithInspectITHeaderTwoDifferent() {
 		final HttpTimerData data = new HttpTimerData();
-		Map<String, String> map1 = new HashMap<String, String>();
+		Map<String, String> map1 = new HashMap<>();
 		MapUtils.putAll(map1, new String[][] { { "inspectit", "tag1" } });
 		data.setHeaders(map1);
 		data.getHttpInfo().setUri("URI");
 		data.getHttpInfo().setRequestMethod("GET");
 
 		final HttpTimerData data2 = new HttpTimerData();
-		Map<String, String> map2 = new HashMap<String, String>();
+		Map<String, String> map2 = new HashMap<>();
 		MapUtils.putAll(map2, new String[][] { { "inspectit", "tag2" } });
 		data2.setHeaders(map2);
 		data2.getHttpInfo().setUri("URI");
 		data2.getHttpInfo().setRequestMethod("GET");
 
-		final List<HttpTimerData> input = new ArrayList<HttpTimerData>();
+		final List<HttpTimerData> input = new ArrayList<>();
 		Collections.addAll(input, data, data2);
 
-		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<HttpTimerData>(new HttpTimerDataAggregator(false, false));
+		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<>(new HttpTimerDataAggregator(false, false));
 		aggregationPerformer.processCollection(input);
 		final List<HttpTimerData> output = aggregationPerformer.getResultList();
 		assertThat(output, is(notNullValue()));
@@ -57,7 +55,7 @@ public class HttpDataAggregatorTest {
 	@Test
 	public void aggregationWithInspectITHeader() {
 		final HttpTimerData data = new HttpTimerData();
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		MapUtils.putAll(map, new String[][] { { "inspectit", "tag1" } });
 		data.setHeaders(map);
 
@@ -84,10 +82,10 @@ public class HttpDataAggregatorTest {
 		data2.calculateCpuMax(20d);
 		data2.setCpuDuration(20d);
 
-		final List<HttpTimerData> input = new ArrayList<HttpTimerData>();
+		final List<HttpTimerData> input = new ArrayList<>();
 		Collections.addAll(input, data, data2);
 
-		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<HttpTimerData>(new HttpTimerDataAggregator(false, false));
+		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<>(new HttpTimerDataAggregator(false, false));
 		aggregationPerformer.processCollection(input);
 		final List<HttpTimerData> output = aggregationPerformer.getResultList();
 
@@ -122,10 +120,10 @@ public class HttpDataAggregatorTest {
 		data2.calculateCpuMax(20d);
 		data2.setCpuDuration(20d);
 
-		final List<HttpTimerData> input = new ArrayList<HttpTimerData>();
+		final List<HttpTimerData> input = new ArrayList<>();
 		Collections.addAll(input, data, data2);
 
-		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<HttpTimerData>(new HttpTimerDataAggregator(true, false));
+		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<>(new HttpTimerDataAggregator(true, false));
 		aggregationPerformer.processCollection(input);
 		final List<HttpTimerData> output = aggregationPerformer.getResultList();
 
@@ -157,9 +155,9 @@ public class HttpDataAggregatorTest {
 		data2.calculateCpuMax(20d);
 		data2.setCpuDuration(20d);
 
-		final List<HttpTimerData> input = new ArrayList<HttpTimerData>();
+		final List<HttpTimerData> input = new ArrayList<>();
 		Collections.addAll(input, data, data2);
-		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<HttpTimerData>(new HttpTimerDataAggregator(true, true));
+		AggregationPerformer<HttpTimerData> aggregationPerformer = new AggregationPerformer<>(new HttpTimerDataAggregator(true, true));
 		aggregationPerformer.processCollection(input);
 		final List<HttpTimerData> output = aggregationPerformer.getResultList();
 

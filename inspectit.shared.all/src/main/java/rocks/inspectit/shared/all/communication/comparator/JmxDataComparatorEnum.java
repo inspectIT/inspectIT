@@ -8,7 +8,7 @@ import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
  * Comparators for the {@link JmxSensorValueData}.
- * 
+ *
  * @author Marius Oehler
  *
  */

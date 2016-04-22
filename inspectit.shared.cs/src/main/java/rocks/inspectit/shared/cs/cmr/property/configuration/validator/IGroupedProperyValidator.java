@@ -8,15 +8,15 @@ import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Validator interface for validating {@link GroupedProperty}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IGroupedProperyValidator {
 
 	/**
 	 * Validates {@link GroupedProperty}.
-	 * 
+	 *
 	 * @param groupProperty
 	 *            Property to be validated.
 	 * @param propertyValidation
@@ -26,7 +26,7 @@ public interface IGroupedProperyValidator {
 
 	/**
 	 * Validates {@link GroupedProperty} for given property updates.
-	 * 
+	 *
 	 * @param groupProperty
 	 *            Property to be validated.
 	 * @param propertyUpdates

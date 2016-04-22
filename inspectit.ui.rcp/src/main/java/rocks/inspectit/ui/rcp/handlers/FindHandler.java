@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.editor.search.SearchControl;
 
 /**
  * The handler for activating the search box.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class FindHandler extends AbstractHandler implements IHandler {
 
@@ -41,7 +41,7 @@ public class FindHandler extends AbstractHandler implements IHandler {
 				searchExecutor = (ISearchExecutor) searchSubView;
 			}
 
-			if (null != searchExecutor && null != searchSubView) {
+			if ((null != searchExecutor) && (null != searchSubView)) {
 				ensureNoSearchOpened(abstractRootEditor.getSubView());
 				new SearchControl(searchExecutor, HandlerUtil.getActiveShellChecked(event), searchSubView.getControl(), activeEditor);
 			}
@@ -52,7 +52,7 @@ public class FindHandler extends AbstractHandler implements IHandler {
 	/**
 	 * Ensures that no search control is opened for the given {@link ISubView}. If the view is
 	 * composite, than it ensures than no child sub-view has control opened.
-	 * 
+	 *
 	 * @param subView
 	 *            SubView to check.
 	 */
@@ -72,7 +72,7 @@ public class FindHandler extends AbstractHandler implements IHandler {
 
 	/**
 	 * Tries to find a {@link ISubView} that implement {@link ISearchExecutor} interface.
-	 * 
+	 *
 	 * @param subView
 	 *            {@link ISubView} to check.
 	 * @return Sub-view.

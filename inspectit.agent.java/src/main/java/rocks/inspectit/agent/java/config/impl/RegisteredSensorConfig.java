@@ -86,7 +86,6 @@ public class RegisteredSensorConfig {
 		this.id = id;
 	}
 
-
 	/**
 	 * Gets {@link #targetClassFqn}.
 	 *

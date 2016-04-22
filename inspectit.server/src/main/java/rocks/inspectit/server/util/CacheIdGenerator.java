@@ -10,9 +10,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
  * Class that generates the ID for the objects that reside in cache. The ID can be generated either
  * for the objects that are going to the indexing structure, or to the elements that go to the
  * buffer.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class CacheIdGenerator {
@@ -24,7 +24,7 @@ public class CacheIdGenerator {
 
 	/**
 	 * Assigns the {@link DefaultData} object a unique ID.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Object to assign the ID for.
 	 */

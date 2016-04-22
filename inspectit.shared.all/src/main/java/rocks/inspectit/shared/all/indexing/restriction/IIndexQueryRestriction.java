@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.indexing.IIndexQuery;
  * the indexing tree. Restrictions are part of the {@link IIndexQuery} and allow additional
  * specification of search properties, than the ones that are defined directly in the
  * {@link IIndexQuery} don not provide.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IIndexQueryRestriction {
 
@@ -22,7 +22,7 @@ public interface IIndexQueryRestriction {
 	 * <p>
 	 * The method names are complied with Java Bean naming standard, meaning that if the field name
 	 * is foo, the name of the getter method is getFoo.
-	 * 
+	 *
 	 * @return Getter methods that needs to be invoked in order to get the object to check the
 	 *         restriction on
 	 */
@@ -30,10 +30,10 @@ public interface IIndexQueryRestriction {
 
 	/**
 	 * Checks if the restriction is fulfilled with given object value.
-	 * 
+	 *
 	 * @param fieldValue
 	 *            The field value of checked object defined with {@link #getFieldName()}
-	 * 
+	 *
 	 * @return True if restriction is fulfilled, false otherwise.
 	 */
 	boolean isFulfilled(Object fieldValue);

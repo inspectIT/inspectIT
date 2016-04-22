@@ -7,15 +7,15 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Interface for the listeners on the {@link Profile} changes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IProfileChangeListener extends EventListener {
 
 	/**
 	 * Profile is created.
-	 * 
+	 *
 	 * @param profile
 	 *            {@link Profile}
 	 * @param repositoryDefinition
@@ -25,7 +25,7 @@ public interface IProfileChangeListener extends EventListener {
 
 	/**
 	 * Profile is updated.
-	 * 
+	 *
 	 * @param profile
 	 *            {@link Profile}
 	 * @param repositoryDefinition
@@ -38,7 +38,7 @@ public interface IProfileChangeListener extends EventListener {
 
 	/**
 	 * Profile is deleted.
-	 * 
+	 *
 	 * @param profile
 	 *            {@link Profile}
 	 * @param repositoryDefinition

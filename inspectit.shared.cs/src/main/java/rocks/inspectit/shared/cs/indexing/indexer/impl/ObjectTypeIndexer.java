@@ -9,9 +9,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 /**
  * {@link IBranchIndexer} that makes indexes based on a object class. Thus all same object types
  * will be in one {@link ITreeComponent}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class ObjectTypeIndexer<E extends DefaultData> extends AbstractSharedInstanceBranchIndexer<E> implements IBranchIndexer<E> {
@@ -19,6 +19,7 @@ public class ObjectTypeIndexer<E extends DefaultData> extends AbstractSharedInst
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		return element.getClass();
 	}
@@ -27,6 +28,7 @@ public class ObjectTypeIndexer<E extends DefaultData> extends AbstractSharedInst
 	 * {@inheritDoc}
 	 */
 
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		if (null == query.getObjectClasses()) {
 			return new Object[0];
@@ -42,6 +44,7 @@ public class ObjectTypeIndexer<E extends DefaultData> extends AbstractSharedInst
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean sharedInstance() {
 		return true;
 	}

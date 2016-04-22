@@ -18,13 +18,14 @@ import javax.validation.constraints.NotNull;
 /**
  * The Jmx Definition Data Ident class is used to store the different definition data which are
  * collecting data of the target attributes of the specified MBeans.
- * 
+ *
  * @author Alfred Krauss
  * @author Marius Oehler
- * 
+ *
  */
 @Entity
-@NamedQueries({ @NamedQuery(name = JmxDefinitionDataIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName") })
+@NamedQueries({
+		@NamedQuery(name = JmxDefinitionDataIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName") })
 public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
@@ -108,7 +109,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Returns the domain name which is derived from {@link #mBeanObjectName}.
-	 * 
+	 *
 	 * @return the package name
 	 */
 	public String getDerivedDomainName() {
@@ -128,7 +129,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Returns the type name which is derived from {@link #mBeanObjectName}.
-	 * 
+	 *
 	 * @return the type name
 	 */
 	public String getDerivedTypeName() {
@@ -138,7 +139,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Returns a combination of domain, type and attribute-name.
-	 * 
+	 *
 	 * @return a derived full name
 	 */
 	public String getDerivedFullName() {
@@ -147,7 +148,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public long getId() {
@@ -156,7 +157,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -166,7 +167,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #mBeanObjectName}.
-	 * 
+	 *
 	 * @return {@link #mBeanObjectName}
 	 */
 	public String getmBeanObjectName() {
@@ -175,7 +176,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #mBeanObjectName}.
-	 * 
+	 *
 	 * @param mBeanObjectName
 	 *            New value for {@link #mBeanObjectName}
 	 */
@@ -185,7 +186,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #timeStamp}.
-	 * 
+	 *
 	 * @return {@link #timeStamp}
 	 */
 	public Timestamp getTimeStamp() {
@@ -194,7 +195,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #timeStamp}.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            New value for {@link #timeStamp}
 	 */
@@ -204,7 +205,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #platformIdent}.
-	 * 
+	 *
 	 * @return {@link #platformIdent}
 	 */
 	public PlatformIdent getPlatformIdent() {
@@ -213,7 +214,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #platformIdent}.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            New value for {@link #platformIdent}
 	 */
@@ -223,7 +224,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #mBeanAttributeName}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeName}
 	 */
 	public String getmBeanAttributeName() {
@@ -232,7 +233,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #mBeanAttributeName}.
-	 * 
+	 *
 	 * @param mBeanAttributeName
 	 *            New value for {@link #mBeanAttributeName}
 	 */
@@ -242,7 +243,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #mBeanAttributeDescription}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeDescription}
 	 */
 	public String getmBeanAttributeDescription() {
@@ -251,7 +252,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #mBeanAttributeDescription}.
-	 * 
+	 *
 	 * @param mBeanAttributeDescription
 	 *            New value for {@link #mBeanAttributeDescription}
 	 */
@@ -261,7 +262,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #mBeanAttributeType}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeType}
 	 */
 	public String getmBeanAttributeType() {
@@ -270,7 +271,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #mBeanAttributeType}.
-	 * 
+	 *
 	 * @param mBeanAttributeType
 	 *            New value for {@link #mBeanAttributeType}
 	 */
@@ -280,7 +281,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #mBeanAttributeIsIs}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeIsIs}
 	 */
 	public Boolean getmBeanAttributeIsIs() {
@@ -289,7 +290,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #mBeanAttributeIsIs}.
-	 * 
+	 *
 	 * @param mBeanAttributeIsIs
 	 *            New value for {@link #mBeanAttributeIsIs}
 	 */
@@ -299,7 +300,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #mBeanAttributeIsReadable}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeIsReadable}
 	 */
 	public Boolean getmBeanAttributeIsReadable() {
@@ -308,7 +309,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #mBeanAttributeIsReadable}.
-	 * 
+	 *
 	 * @param mBeanAttributeIsReadable
 	 *            New value for {@link #mBeanAttributeIsReadable}
 	 */
@@ -318,7 +319,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Gets {@link #mBeanAttributeIsWritable}.
-	 * 
+	 *
 	 * @return {@link #mBeanAttributeIsWritable}
 	 */
 	public Boolean getmBeanAttributeIsWritable() {
@@ -327,7 +328,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
 	 * Sets {@link #mBeanAttributeIsWritable}.
-	 * 
+	 *
 	 * @param mBeanAttributeIsWritable
 	 *            New value for {@link #mBeanAttributeIsWritable}
 	 */
@@ -342,15 +343,15 @@ public class JmxDefinitionDataIdent implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((mBeanAttributeDescription == null) ? 0 : mBeanAttributeDescription.hashCode());
-		result = prime * result + ((mBeanAttributeIsIs == null) ? 0 : mBeanAttributeIsIs.hashCode());
-		result = prime * result + ((mBeanAttributeIsReadable == null) ? 0 : mBeanAttributeIsReadable.hashCode());
-		result = prime * result + ((mBeanAttributeIsWritable == null) ? 0 : mBeanAttributeIsWritable.hashCode());
-		result = prime * result + ((mBeanAttributeName == null) ? 0 : mBeanAttributeName.hashCode());
-		result = prime * result + ((mBeanAttributeType == null) ? 0 : mBeanAttributeType.hashCode());
-		result = prime * result + ((mBeanObjectName == null) ? 0 : mBeanObjectName.hashCode());
-		result = prime * result + ((timeStamp == null) ? 0 : timeStamp.hashCode());
+		result = (prime * result) + (int) (id ^ (id >>> 32));
+		result = (prime * result) + ((mBeanAttributeDescription == null) ? 0 : mBeanAttributeDescription.hashCode());
+		result = (prime * result) + ((mBeanAttributeIsIs == null) ? 0 : mBeanAttributeIsIs.hashCode());
+		result = (prime * result) + ((mBeanAttributeIsReadable == null) ? 0 : mBeanAttributeIsReadable.hashCode());
+		result = (prime * result) + ((mBeanAttributeIsWritable == null) ? 0 : mBeanAttributeIsWritable.hashCode());
+		result = (prime * result) + ((mBeanAttributeName == null) ? 0 : mBeanAttributeName.hashCode());
+		result = (prime * result) + ((mBeanAttributeType == null) ? 0 : mBeanAttributeType.hashCode());
+		result = (prime * result) + ((mBeanObjectName == null) ? 0 : mBeanObjectName.hashCode());
+		result = (prime * result) + ((timeStamp == null) ? 0 : timeStamp.hashCode());
 		return result;
 	}
 

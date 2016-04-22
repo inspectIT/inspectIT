@@ -5,9 +5,9 @@ import java.util.Collection;
 /**
  * Extension of the {@link IAggregatedData} interface for classes that keep information on object
  * IDs that were aggregated.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of data.
  */
@@ -15,7 +15,7 @@ public interface IIdsAwareAggregatedData<E extends DefaultData> extends IAggrega
 
 	/**
 	 * Returns the collection that contains the IDs of the originally aggregated data.
-	 * 
+	 *
 	 * @return Returns the collection that contains the IDs of the originally aggregated data.
 	 */
 	Collection<Long> getAggregatedIds();

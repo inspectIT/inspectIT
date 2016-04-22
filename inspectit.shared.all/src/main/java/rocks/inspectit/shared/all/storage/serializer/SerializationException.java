@@ -2,9 +2,9 @@ package rocks.inspectit.shared.all.storage.serializer;
 
 /**
  * Serialization exception class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SerializationException extends Exception {
 
@@ -21,7 +21,7 @@ public class SerializationException extends Exception {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param message
 	 *            Exception message.
 	 * @see Exception#Exception(String)
@@ -32,7 +32,7 @@ public class SerializationException extends Exception {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param throwable
 	 *            Throwable.
 	 * @see Exception#Exception(Throwable)
@@ -43,7 +43,7 @@ public class SerializationException extends Exception {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param message
 	 *            Exception message.
 	 * @param throwable

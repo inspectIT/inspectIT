@@ -12,12 +12,12 @@ import java.util.List;
  * get rid of the garbage collected elements. {@link #getHardReferences()} returns an
  * {@link ArrayList} suppressing all the references in this list which are already removed by the
  * garbage collector.
- * 
+ *
  * @param <T>
  *            The class contained in the list.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class WeakList<T> extends AbstractList<T> {
 
@@ -28,7 +28,7 @@ public class WeakList<T> extends AbstractList<T> {
 
 	/**
 	 * Returns the hard reference.
-	 * 
+	 *
 	 * @param o
 	 *            The object.
 	 * @return The reference to the object.
@@ -44,6 +44,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public T get(int index) {
 		return getHardReference(refs.get(index));
 	}
@@ -51,6 +52,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean add(T o) {
 		return refs.add(new SoftReference<T>(o));
 	}
@@ -58,6 +60,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void add(int index, T o) {
 		refs.add(index, new SoftReference<T>(o));
 	}
@@ -65,6 +68,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clear() {
 		refs.clear();
 	}
@@ -72,6 +76,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public T remove(int index) {
 		return getHardReference(refs.remove(index));
 	}
@@ -79,6 +84,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public T set(int index, T element) {
 		return getHardReference(refs.set(index, new SoftReference<T>(element)));
 	}
@@ -86,6 +92,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean contains(Object o) {
 		for (int i = 0; i < size(); i++) {
 			if (o == get(i)) {
@@ -98,6 +105,7 @@ public class WeakList<T> extends AbstractList<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int size() {
 		return refs.size();
 	}
@@ -106,7 +114,7 @@ public class WeakList<T> extends AbstractList<T> {
 	 * Returns a list of hard references. Skips all weak references but doesn't delete them if there
 	 * are any. The list returned (especially the indices) aren't the same as the ones from this
 	 * list.
-	 * 
+	 *
 	 * @return An {@link ArrayList} containing all the hard references of this weak list.
 	 */
 	public List<T> getHardReferences() {

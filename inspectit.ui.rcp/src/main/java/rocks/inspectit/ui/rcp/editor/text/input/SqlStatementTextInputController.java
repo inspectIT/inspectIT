@@ -25,9 +25,9 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 /**
  * Simple {@link TextInputController} that display the text of the SQL query with the '?' characters
  * bold.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlStatementTextInputController extends AbstractTextInputController {
 
@@ -88,7 +88,7 @@ public class SqlStatementTextInputController extends AbstractTextInputController
 	 */
 	@Override
 	public void setDataInput(List<? extends DefaultData> data) {
-		if (null != data && !data.isEmpty()) {
+		if ((null != data) && !data.isEmpty()) {
 			DefaultData defaultData = data.get(0);
 			if (defaultData instanceof SqlHolderHelper) {
 				SqlHolderHelper sqlHolderHelper = (SqlHolderHelper) defaultData;
@@ -103,7 +103,7 @@ public class SqlStatementTextInputController extends AbstractTextInputController
 
 	/**
 	 * Updates the representation of the text form.
-	 * 
+	 *
 	 * @param dataToDisplay
 	 *            Sql to display.
 	 */
@@ -117,7 +117,7 @@ public class SqlStatementTextInputController extends AbstractTextInputController
 					char c = boldSql.charAt(i);
 					if ('?' == c) {
 						String parameter = dataToDisplay.getParameterValues().get(index);
-						if (null == parameter || "".equals(parameter.trim())) {
+						if ((null == parameter) || "".equals(parameter.trim())) {
 							stringBuilder.append(c);
 						} else {
 							stringBuilder.append(parameter);
@@ -147,9 +147,9 @@ public class SqlStatementTextInputController extends AbstractTextInputController
 
 	/**
 	 * Helper class for passing the SQL data to the right sub-view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static class SqlHolderHelper extends DefaultData {
 
@@ -182,7 +182,7 @@ public class SqlStatementTextInputController extends AbstractTextInputController
 
 		/**
 		 * Gets {@link #sqlStatementData}.
-		 * 
+		 *
 		 * @return {@link #sqlStatementData}
 		 */
 		public List<SqlStatementData> getSqlStatementDataList() {
@@ -191,7 +191,7 @@ public class SqlStatementTextInputController extends AbstractTextInputController
 
 		/**
 		 * Gets {@link #master}.
-		 * 
+		 *
 		 * @return {@link #master}
 		 */
 		public boolean isMaster() {

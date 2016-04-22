@@ -7,7 +7,7 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface SqlDataDao {
 
@@ -15,7 +15,7 @@ public interface SqlDataDao {
 	 * Returns a list of the SQL statements for a given template. In the template, only the platform
 	 * id is extracted. If the template holds the SQL query string, only objects with this query
 	 * string will be returned.
-	 * 
+	 *
 	 * @param sqlStatementData
 	 *            The template containing the platform id.
 	 * @return The list of the SQL statements.
@@ -26,7 +26,7 @@ public interface SqlDataDao {
 	 * Returns a list of the SQL statements for a given template in a time frame. In the template,
 	 * only the platform id is extracted. If the template holds the SQL query string, only objects
 	 * with this query string will be returned.
-	 * 
+	 *
 	 * @param sqlStatementData
 	 *            The template containing the platform id.
 	 * @param fromDate
@@ -41,7 +41,7 @@ public interface SqlDataDao {
 	 * Returns a list of the SQL statements for a given template aggregated by the parameters. In
 	 * the template, only the platform id is extracted. If the template holds the SQL query string,
 	 * only objects with this query string will be returned.
-	 * 
+	 *
 	 * @param sqlStatementData
 	 *            The template containing the platform id.
 	 * @return The list of the SQL statements.
@@ -52,7 +52,7 @@ public interface SqlDataDao {
 	 * Returns a list of the SQL statements for a given template in a time frame aggregated by the
 	 * parameters. In the template, only the platform id is extracted. If the template holds the SQL
 	 * query string, only objects with this query string will be returned.
-	 * 
+	 *
 	 * @param sqlStatementData
 	 *            The template containing the platform id.
 	 * @param fromDate

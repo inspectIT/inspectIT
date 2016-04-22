@@ -10,9 +10,9 @@ import rocks.inspectit.ui.rcp.job.CheckNewVersionJob;
 
 /**
  * Handler for checking the new version. Just start the new {@link CheckNewVersionJob}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CheckNewVersionHandler extends AbstractHandler implements IHandler {
 

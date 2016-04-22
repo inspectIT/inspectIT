@@ -7,9 +7,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Comparators for the {@link TimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum TimerDataComparatorEnum implements IDataComparator<TimerData>, Comparator<TimerData> {
 

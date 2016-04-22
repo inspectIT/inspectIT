@@ -11,27 +11,30 @@ import rocks.inspectit.ui.rcp.model.storage.StorageTreeModelManager;
 
 /**
  * Content provider for the storage tree.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageManagerTreeContentProvider extends ArrayContentProvider implements ITreeContentProvider {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof StorageTreeModelManager) {
 			return ((StorageTreeModelManager) inputElement).getRootObjects();
@@ -45,6 +48,7 @@ public class StorageManagerTreeContentProvider extends ArrayContentProvider impl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Composite) {
 			return ((Composite) parentElement).getChildren().toArray();
@@ -55,6 +59,7 @@ public class StorageManagerTreeContentProvider extends ArrayContentProvider impl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof Component) {
 			return ((Component) element).getParent();
@@ -65,6 +70,7 @@ public class StorageManagerTreeContentProvider extends ArrayContentProvider impl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof Composite) {
 			return !((Composite) element).getChildren().isEmpty();

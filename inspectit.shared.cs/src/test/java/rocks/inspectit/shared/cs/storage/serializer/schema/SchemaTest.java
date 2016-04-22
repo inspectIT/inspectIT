@@ -39,6 +39,7 @@ public class SchemaTest {
 	 * Schema manager.
 	 */
 	private ClassSchemaManager schemaManager;
+
 	/**
 	 * Initializes the {@link ClassSchemaManager}.
 	 *
@@ -70,7 +71,7 @@ public class SchemaTest {
 		assertThat(schemaManager.getSchema(className), is(equalTo(schema)));
 
 		Class<?> clazz = Class.forName(className);
-		Set<Integer> markerSet = new HashSet<Integer>();
+		Set<Integer> markerSet = new HashSet<>();
 		while (!clazz.equals(Object.class)) {
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
@@ -95,7 +96,7 @@ public class SchemaTest {
 		Object[][] data = new Object[schemasMap.size()][3];
 		int i = 0;
 		for (Map.Entry<String, ClassSchema> entry : schemasMap.entrySet()) {
-			List<String> excludedFields = new ArrayList<String>();
+			List<String> excludedFields = new ArrayList<>();
 			if (entry.getKey().equals(InvocationSequenceData.class.getName())) {
 				excludedFields.add("parentSequence");
 			}

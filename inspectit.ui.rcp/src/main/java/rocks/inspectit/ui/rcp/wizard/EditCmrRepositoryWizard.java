@@ -17,9 +17,9 @@ import rocks.inspectit.ui.rcp.wizard.page.PreviewCmrDataWizardPage;
 
 /**
  * Wizard for editing the {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EditCmrRepositoryWizard extends Wizard implements INewWizard {
 
@@ -40,7 +40,7 @@ public class EditCmrRepositoryWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            Repository to edit
 	 */
@@ -97,7 +97,7 @@ public class EditCmrRepositoryWizard extends Wizard implements INewWizard {
 			InspectIT.getDefault().getCmrRepositoryManager().removeCmrRepositoryDefinition(cmrRepositoryDefinition);
 			InspectIT.getDefault().getCmrRepositoryManager().addCmrRepositoryDefinition(editedRepository);
 		}
-		
+
 		return true;
 	}
 

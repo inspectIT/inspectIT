@@ -4,7 +4,7 @@ package rocks.inspectit.agent.java.instrumentation.asm;
  * Dummy exception to throw in
  * {@link rocks.inspectit.agent.java.instrumentation.asm.InstrumentationExceptionTestClass} during
  * the instrumentation tests.
- * 
+ *
  * @author Ivan Senic
  *
  */

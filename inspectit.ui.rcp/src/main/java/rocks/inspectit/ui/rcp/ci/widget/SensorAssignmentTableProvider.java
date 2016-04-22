@@ -167,12 +167,12 @@ public class SensorAssignmentTableProvider {
 			 */
 			@Override
 			protected StyledString getStyledText(Object element, int index) {
-				if (0 == index && element instanceof AbstractClassSensorAssignment<?>) {
+				if ((0 == index) && (element instanceof AbstractClassSensorAssignment<?>)) {
 					AbstractClassSensorAssignment<?> assignment = (AbstractClassSensorAssignment<?>) element;
 					if (null != assignment.getClassName()) {
 						return new StyledString(assignment.getClassName());
 					}
-				} else if (1 == index && element instanceof MethodSensorAssignment) {
+				} else if ((1 == index) && (element instanceof MethodSensorAssignment)) {
 					MethodSensorAssignment assignment = (MethodSensorAssignment) element;
 					return new StyledString(TextFormatter.getMethodWithParameters(assignment));
 				}
@@ -186,7 +186,7 @@ public class SensorAssignmentTableProvider {
 			@Override
 			protected Image getColumnImage(Object element, int index) {
 				// first column have images only
-				if (0 == index && element instanceof AbstractClassSensorAssignment) {
+				if ((0 == index) && (element instanceof AbstractClassSensorAssignment)) {
 					AbstractClassSensorAssignment<?> assignment = (AbstractClassSensorAssignment<?>) element;
 					if (assignment.isSuperclass()) {
 						return InspectIT.getDefault().getImage(InspectITImages.IMG_SUPERCLASS);
@@ -195,10 +195,10 @@ public class SensorAssignmentTableProvider {
 					} else {
 						return InspectIT.getDefault().getImage(InspectITImages.IMG_CLASS);
 					}
-				} else if (1 == index && element instanceof MethodSensorAssignment) {
+				} else if ((1 == index) && (element instanceof MethodSensorAssignment)) {
 					MethodSensorAssignment assignment = (MethodSensorAssignment) element;
 					return ImageFormatter.getMethodVisibilityImage(resourceManager, assignment);
-				} else if (2 == index && element instanceof AbstractClassSensorAssignment) {
+				} else if ((2 == index) && (element instanceof AbstractClassSensorAssignment)) {
 					AbstractClassSensorAssignment<?> assignment = (AbstractClassSensorAssignment<?>) element;
 					return ImageFormatter.getSensorAssignmentOptionsImage(resourceManager, assignment);
 				}
@@ -210,14 +210,14 @@ public class SensorAssignmentTableProvider {
 			 */
 			@Override
 			public String getToolTipText(Object element, int index) {
-				if (0 == index && element instanceof AbstractClassSensorAssignment) {
+				if ((0 == index) && (element instanceof AbstractClassSensorAssignment)) {
 					AbstractClassSensorAssignment<?> assignment = (AbstractClassSensorAssignment<?>) element;
 					if (assignment.isSuperclass()) {
 						return "Superclass instrumentation";
 					} else if (assignment.isInterf()) {
 						return "Interface instrumentation";
 					}
-				} else if (1 == index && element instanceof MethodSensorAssignment) {
+				} else if ((1 == index) && (element instanceof MethodSensorAssignment)) {
 					MethodSensorAssignment assignment = (MethodSensorAssignment) element;
 					StringBuilder stringBuilder = new StringBuilder("Method visibility:");
 					if (assignment.isPublicModifier()) {

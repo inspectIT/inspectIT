@@ -4,9 +4,9 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Defines content of one cell in the details table.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DetailsCellContent {
 
@@ -43,7 +43,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Constructor defining only text.
-	 * 
+	 *
 	 * @param text
 	 *            Text to display.
 	 */
@@ -53,7 +53,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Constructor defining only image.
-	 * 
+	 *
 	 * @param image
 	 *            Image to display.
 	 * @param imageToolTip
@@ -66,7 +66,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Constructor defining text and image.
-	 * 
+	 *
 	 * @param text
 	 *            Text to display.
 	 * @param image
@@ -82,7 +82,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Gets {@link #text}.
-	 * 
+	 *
 	 * @return {@link #text}
 	 */
 	public String getText() {
@@ -91,7 +91,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Sets {@link #text}.
-	 * 
+	 *
 	 * @param text
 	 *            New value for {@link #text}
 	 */
@@ -101,7 +101,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Gets {@link #image}.
-	 * 
+	 *
 	 * @return {@link #image}
 	 */
 	public Image getImage() {
@@ -110,7 +110,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Sets {@link #image}.
-	 * 
+	 *
 	 * @param image
 	 *            New value for {@link #image}
 	 */
@@ -120,7 +120,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Gets {@link #imageToolTip}.
-	 * 
+	 *
 	 * @return {@link #imageToolTip}
 	 */
 	public String getImageToolTip() {
@@ -129,7 +129,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Sets {@link #imageToolTip}.
-	 * 
+	 *
 	 * @param imageToolTip
 	 *            New value for {@link #imageToolTip}
 	 */
@@ -139,7 +139,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Gets {@link #colspan}.
-	 * 
+	 *
 	 * @return {@link #colspan}
 	 */
 	public int getColspan() {
@@ -148,7 +148,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Sets {@link #colspan}.
-	 * 
+	 *
 	 * @param colspan
 	 *            New value for {@link #colspan}
 	 */
@@ -158,7 +158,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Gets {@link #grab}.
-	 * 
+	 *
 	 * @return {@link #grab}
 	 */
 	public boolean isGrab() {
@@ -167,7 +167,7 @@ public class DetailsCellContent {
 
 	/**
 	 * Sets {@link #grab}.
-	 * 
+	 *
 	 * @param grab
 	 *            New value for {@link #grab}
 	 */

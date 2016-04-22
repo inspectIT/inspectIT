@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 
 /**
  * Processor that index elements directly to the indexing tree.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class IndexerCmrProcessor extends AbstractCmrDataProcessor {
 
@@ -52,14 +52,14 @@ public class IndexerCmrProcessor extends AbstractCmrDataProcessor {
 	public boolean canBeProcessed(DefaultData defaultData) {
 		if (null != defaultData) {
 			// only directly index the invocation aware data that is in invocation
-			return defaultData instanceof InvocationAwareData && ((InvocationAwareData) defaultData).isOnlyFoundInInvocations();
+			return (defaultData instanceof InvocationAwareData) && ((InvocationAwareData) defaultData).isOnlyFoundInInvocations();
 		}
 		return false;
 	}
 
 	/**
 	 * Sets {@link #indexingTree}.
-	 * 
+	 *
 	 * @param indexingTree
 	 *            New value for {@link #indexingTree}
 	 */

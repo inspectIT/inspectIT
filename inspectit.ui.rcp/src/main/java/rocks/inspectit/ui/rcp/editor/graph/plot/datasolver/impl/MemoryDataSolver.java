@@ -8,7 +8,7 @@ import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 
 /**
  * This class is used to plot data as memory data.
- * 
+ *
  * @author Marius Oehler
  *
  */

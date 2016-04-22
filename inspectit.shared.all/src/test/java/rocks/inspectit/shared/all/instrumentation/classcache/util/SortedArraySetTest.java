@@ -13,8 +13,6 @@ import java.util.Comparator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.all.instrumentation.classcache.util.SortedArraySet;
-
 /**
  * @author Ivan Senic
  *

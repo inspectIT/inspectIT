@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 /**
  * {@link IBranchIndexer} that indexes on the timestamp of the {@link DefaultData}. The index is
  * calculated in the way that a key in made for each {@link #indexingPeriod/1000} seconds of time.2
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E> {
@@ -35,7 +35,7 @@ public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E
 	 * not use set because there is not concurrent set. The java.util.Collections$SetFromMap is not
 	 * being able to be serialized because it has no no-arg constructor.
 	 */
-	private ConcurrentHashMap<Long, Boolean> createdKeysMap = new ConcurrentHashMap<Long, Boolean>(8, 0.75f, 1);
+	private ConcurrentHashMap<Long, Boolean> createdKeysMap = new ConcurrentHashMap<>(8, 0.75f, 1);
 
 	/**
 	 * Min created key. Used for providing keys for queries.
@@ -50,6 +50,7 @@ public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getKey(E element) {
 		if (null == element.getTimeStamp()) {
 			return null;
@@ -69,6 +70,7 @@ public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E
 	 * {@inheritDoc}
 	 */
 
+	@Override
 	public Object[] getKeys(IIndexQuery query) {
 		if (!query.isIntervalSet()) {
 			return EMPTY_KEYS; // NOPMD
@@ -90,10 +92,10 @@ public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E
 			endKey = maxCreatedKey;
 		}
 
-		int size = (int) ((endKey - startKey) / INDEXING_PERIOD + 1);
-		ArrayList<Object> keysList = new ArrayList<Object>();
+		int size = (int) (((endKey - startKey) / INDEXING_PERIOD) + 1);
+		ArrayList<Object> keysList = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
-			long key = startKey + i * INDEXING_PERIOD;
+			long key = startKey + (i * INDEXING_PERIOD);
 			if (createdKeysMap.containsKey(key)) {
 				keysList.add(key);
 			}
@@ -103,18 +105,19 @@ public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E
 
 	/**
 	 * Returns proper key for given timestamp.
-	 * 
+	 *
 	 * @param timestamp
 	 *            Timestamp to map.
 	 * @return Mapping key.
 	 */
 	private long getKey(Timestamp timestamp) {
-		return timestamp.getTime() - timestamp.getTime() % INDEXING_PERIOD;
+		return timestamp.getTime() - (timestamp.getTime() % INDEXING_PERIOD);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean sharedInstance() {
 		return false;
 	}
@@ -122,8 +125,9 @@ public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBranchIndexer<E> getNewInstance() {
-		return new TimestampIndexer<E>();
+		return new TimestampIndexer<>();
 	}
 
 	/**
@@ -133,9 +137,9 @@ public class TimestampIndexer<E extends DefaultData> implements IBranchIndexer<E
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((createdKeysMap == null) ? 0 : createdKeysMap.hashCode());
-		result = prime * result + (int) (maxCreatedKey ^ (maxCreatedKey >>> 32));
-		result = prime * result + (int) (minCreatedKey ^ (minCreatedKey >>> 32));
+		result = (prime * result) + ((createdKeysMap == null) ? 0 : createdKeysMap.hashCode());
+		result = (prime * result) + (int) (maxCreatedKey ^ (maxCreatedKey >>> 32));
+		result = (prime * result) + (int) (minCreatedKey ^ (minCreatedKey >>> 32));
 		return result;
 	}
 

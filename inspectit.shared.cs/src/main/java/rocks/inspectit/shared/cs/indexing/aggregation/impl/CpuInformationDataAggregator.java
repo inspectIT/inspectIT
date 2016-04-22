@@ -8,9 +8,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * {@link IAggregator} for the {@link CpuInformationData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CpuInformationDataAggregator implements IAggregator<CpuInformationData>, Serializable {
 
@@ -22,6 +22,7 @@ public class CpuInformationDataAggregator implements IAggregator<CpuInformationD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<CpuInformationData> aggregatedObject, CpuInformationData objectToAdd) {
 		aggregatedObject.aggregate(objectToAdd);
 	}
@@ -29,6 +30,7 @@ public class CpuInformationDataAggregator implements IAggregator<CpuInformationD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CpuInformationData getClone(CpuInformationData cpuInformationData) {
 		CpuInformationData clone = new CpuInformationData();
 		clone.setPlatformIdent(cpuInformationData.getPlatformIdent());
@@ -46,6 +48,7 @@ public class CpuInformationDataAggregator implements IAggregator<CpuInformationD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(CpuInformationData object) {
 		return object.getPlatformIdent();
 	}
@@ -58,7 +61,7 @@ public class CpuInformationDataAggregator implements IAggregator<CpuInformationD
 		final int prime = 31;
 		int result = 1;
 		// we must make constant hashCode because of the caching
-		result = prime * result + this.getClass().getName().hashCode();
+		result = (prime * result) + this.getClass().getName().hashCode();
 		return result;
 	}
 

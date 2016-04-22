@@ -31,9 +31,9 @@ import rocks.inspectit.shared.cs.storage.StorageManager;
 
 /**
  * Implementation of the {@link ICmrManagementService}. Provides general management of the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Service
 public class CmrManagementService implements ICmrManagementService {
@@ -105,6 +105,7 @@ public class CmrManagementService implements ICmrManagementService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public void clearBuffer() {
 		buffer.clearAll();
@@ -113,6 +114,7 @@ public class CmrManagementService implements ICmrManagementService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public CmrStatusData getCmrStatusData() {
 		// cmr status data should always report in bytes!
@@ -133,10 +135,11 @@ public class CmrManagementService implements ICmrManagementService {
 
 	/**
 	 * Reports that an amount of data has been dropped.
-	 * 
+	 *
 	 * @param count
 	 *            Dropped amount.
 	 */
+	@Override
 	public void addDroppedDataCount(int count) {
 		droppedDataCount += count;
 	}
@@ -144,6 +147,7 @@ public class CmrManagementService implements ICmrManagementService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getDroppedDataCount() {
 		return droppedDataCount;
 	}
@@ -151,6 +155,7 @@ public class CmrManagementService implements ICmrManagementService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<PropertySection> getConfigurationPropertySections() {
 		return propertyManager.getConfigurationPropertySections();
 	}
@@ -166,7 +171,7 @@ public class CmrManagementService implements ICmrManagementService {
 	/**
 	 * Returns the {@link Long} holding the size of the database folder or <code>null</code> if
 	 * database folder does not exists or calculation of size fails.
-	 * 
+	 *
 	 * @return Returns the {@link Long} holding the size of the database folder or <code>null</code>
 	 *         if database folder does not exists or calculation of size fails.
 	 */
@@ -192,7 +197,7 @@ public class CmrManagementService implements ICmrManagementService {
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

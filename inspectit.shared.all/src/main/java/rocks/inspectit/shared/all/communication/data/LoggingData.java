@@ -27,7 +27,7 @@ public class LoggingData extends InvocationAwareData {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param level
 	 *            the logging level/severity.
 	 * @param message

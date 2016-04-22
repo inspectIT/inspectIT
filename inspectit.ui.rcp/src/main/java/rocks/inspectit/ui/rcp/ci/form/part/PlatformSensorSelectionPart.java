@@ -31,9 +31,9 @@ import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
  * Part responsible for selection of platform sensors.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class PlatformSensorSelectionPart extends SectionPart implements IPropertyListener {
 
@@ -54,7 +54,7 @@ public class PlatformSensorSelectionPart extends SectionPart implements IPropert
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param formPage
 	 *            {@link FormPage} section belongs to.
 	 * @param parent
@@ -83,7 +83,7 @@ public class PlatformSensorSelectionPart extends SectionPart implements IPropert
 
 	/**
 	 * Creates complete client.
-	 * 
+	 *
 	 * @param section
 	 *            {@link Section}
 	 * @param toolkit

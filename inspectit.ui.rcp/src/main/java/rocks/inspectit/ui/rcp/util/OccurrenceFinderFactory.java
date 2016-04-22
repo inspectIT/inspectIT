@@ -23,9 +23,9 @@ import rocks.inspectit.ui.rcp.InspectIT;
 /**
  * Factory for finding the occurrence of elements in the {@link InvocationSequenceData} based on the
  * element type.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class OccurrenceFinderFactory {
 
@@ -39,19 +39,19 @@ public final class OccurrenceFinderFactory {
 	 * in use, but in future it might be needed.
 	 */
 	@SuppressWarnings("unused")
-	private static final Map<Object, Object> TEMPLATE_MAP = new HashMap<Object, Object>(0);
+	private static final Map<Object, Object> TEMPLATE_MAP = new HashMap<>(0);
 
 	/**
 	 * List used buy templates to denote a List that will not be checked when matching.
 	 */
-	private static final List<String> TEMPLATE_LIST = new ArrayList<String>(0);
+	private static final List<String> TEMPLATE_LIST = new ArrayList<>(0);
 
 	/**
 	 * Set used buy templates to denote a Set that will not be checked when matching. Currently not
 	 * in use, but in future it might be needed.
 	 */
 	@SuppressWarnings("unused")
-	private static final Set<Object> TEMPLATE_SET = new HashSet<Object>(0);
+	private static final Set<Object> TEMPLATE_SET = new HashSet<>(0);
 
 	/**
 	 * Private constructor because of the factory.
@@ -81,7 +81,7 @@ public final class OccurrenceFinderFactory {
 
 	/**
 	 * Counts number of occurrences of the element in the given invocation.
-	 * 
+	 *
 	 * @param invocation
 	 *            Invocation to search in.
 	 * @param element
@@ -99,7 +99,7 @@ public final class OccurrenceFinderFactory {
 	/**
 	 * Returns the {@link InvocationSequenceData} that holds the proper occurrence of the wanted
 	 * element if it exists.
-	 * 
+	 *
 	 * @param invocation
 	 *            Invocation to search in.
 	 * @param element
@@ -119,7 +119,7 @@ public final class OccurrenceFinderFactory {
 
 	/**
 	 * Returns empty template.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of template.
 	 * @param element
@@ -134,7 +134,7 @@ public final class OccurrenceFinderFactory {
 
 	/**
 	 * Returns the proper {@link OccurrenceFinder} for the given element, based on elements class.
-	 * 
+	 *
 	 * @param element
 	 *            Element.
 	 * @return {@link OccurrenceFinder} or null if the finder does not exists for the given object
@@ -151,17 +151,17 @@ public final class OccurrenceFinderFactory {
 		} else if (InvocationSequenceData.class.isAssignableFrom(element.getClass())) {
 			return invocationOccurenceFinder;
 		}
-		RuntimeException exception = new RuntimeException("Occurrence finder factory was not able to supply the correct occurrence finder for the object of class " + element.getClass().getName()
-				+ ".");
+		RuntimeException exception = new RuntimeException(
+				"Occurrence finder factory was not able to supply the correct occurrence finder for the object of class " + element.getClass().getName() + ".");
 		InspectIT.getDefault().createErrorDialog("Exception thrown during locating of stepping object.", exception, -1);
 		throw exception;
 	}
 
 	/**
 	 * Abstract class that holds the shared functionality of all occurrence finders.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of the element finder can locate.
 	 */
@@ -171,7 +171,7 @@ public final class OccurrenceFinderFactory {
 		 * Returns the number of children objects in invocation sequence that have the wanted
 		 * template object defined. This method is recursive, and traverse the whole invocation
 		 * tree.
-		 * 
+		 *
 		 * @param invocationData
 		 *            Top parent invocation sequence.
 		 * @param template
@@ -201,7 +201,7 @@ public final class OccurrenceFinderFactory {
 			}
 
 			if (null != invocationData.getNestedSequences()) {
-				for (InvocationSequenceData child : (List<InvocationSequenceData>) invocationData.getNestedSequences()) {
+				for (InvocationSequenceData child : invocationData.getNestedSequences()) {
 					getOccurrenceCount(child, template, filters, occurrenceCount);
 				}
 			}
@@ -210,7 +210,7 @@ public final class OccurrenceFinderFactory {
 
 		/**
 		 * Get empty template.
-		 * 
+		 *
 		 * @return Empty template.
 		 */
 		public abstract E getEmptyTemplate();
@@ -220,7 +220,7 @@ public final class OccurrenceFinderFactory {
 		 * object defined. The wanted occurrence of E object is defined via {@link #occurrencesLeft}
 		 * , before this method is called. This method is recursive, and stops traversing the
 		 * invocation sequence tree as soon the wanted element is found.
-		 * 
+		 *
 		 * @param invocationData
 		 *            Top parent invocation sequence.
 		 * @param template
@@ -243,7 +243,7 @@ public final class OccurrenceFinderFactory {
 				}
 			}
 			if (null != invocationData.getNestedSequences()) {
-				for (InvocationSequenceData child : (List<InvocationSequenceData>) invocationData.getNestedSequences()) {
+				for (InvocationSequenceData child : invocationData.getNestedSequences()) {
 					InvocationSequenceData foundData = getOccurrence(child, template, occurrencesLeft, filters);
 					if (null != foundData) {
 						return foundData;
@@ -255,7 +255,7 @@ public final class OccurrenceFinderFactory {
 
 		/**
 		 * Returns if the template objects is found in the invocation data.
-		 * 
+		 *
 		 * @param invocationData
 		 *            Invocation data to look in.
 		 * @param template
@@ -266,7 +266,7 @@ public final class OccurrenceFinderFactory {
 
 		/**
 		 * Compares if the template equals the element from the view of the finder.
-		 * 
+		 *
 		 * @param template
 		 *            Template.
 		 * @param element
@@ -277,14 +277,14 @@ public final class OccurrenceFinderFactory {
 
 		/**
 		 * Returns the concrete class that finder is working with.
-		 * 
+		 *
 		 * @return Returns the concrete class that finder is working with.
 		 */
 		public abstract Class<? extends E> getConcreteClass();
 
 		/**
 		 * Returns if the invocation data object is passing all given filters.
-		 * 
+		 *
 		 * @param invocationData
 		 *            Invocation data.
 		 * @param filters
@@ -308,9 +308,9 @@ public final class OccurrenceFinderFactory {
 
 	/**
 	 * Occurrence finder for {@link ExceptionSensorData}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class ExceptionOccurrenceFinder extends OccurrenceFinder<ExceptionSensorData> {
 
@@ -320,7 +320,7 @@ public final class OccurrenceFinderFactory {
 		@Override
 		public boolean occurrenceFound(InvocationSequenceData invocationData, ExceptionSensorData template) {
 			if (invocationData.getExceptionSensorDataObjects() != null) {
-				for (ExceptionSensorData exData : (List<ExceptionSensorData>) invocationData.getExceptionSensorDataObjects()) {
+				for (ExceptionSensorData exData : invocationData.getExceptionSensorDataObjects()) {
 					return doesTemplateEqualsElement(template, exData);
 				}
 			}
@@ -398,9 +398,9 @@ public final class OccurrenceFinderFactory {
 
 	/**
 	 * Occurrence finder for {@link SqlStatementData}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class SqlOccurrenceFinder extends OccurrenceFinder<SqlStatementData> {
 
@@ -467,9 +467,9 @@ public final class OccurrenceFinderFactory {
 
 	/**
 	 * Occurrence finder for {@link TimerData}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class TimerOccurrenceFinder extends OccurrenceFinder<MethodSensorData> {
 
@@ -525,9 +525,9 @@ public final class OccurrenceFinderFactory {
 
 	/**
 	 * Occurrence finder for {@link InvocationSequenceData}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class InvocationOccurenceFinder extends OccurrenceFinder<InvocationSequenceData> {
 

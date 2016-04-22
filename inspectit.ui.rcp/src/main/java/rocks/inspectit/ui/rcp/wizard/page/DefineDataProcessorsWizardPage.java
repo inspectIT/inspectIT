@@ -53,9 +53,9 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * Wizard page where data that will be saved in the storage is saved.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DefineDataProcessorsWizardPage extends WizardPage {
 
@@ -107,7 +107,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 	/**
 	 * Input list for table containing all the classes.
 	 */
-	private Set<Class<?>> inputList = new HashSet<Class<?>>();
+	private Set<Class<?>> inputList = new HashSet<>();
 
 	/**
 	 * Style for providing different selection possibilities.
@@ -136,7 +136,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param selectionStyle
 	 *            Combination of styles for this page in the SWT way.
 	 * @see #BUFFER_DATA
@@ -185,6 +185,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		final Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(new GridLayout(4, false));
@@ -254,7 +255,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 		Label info = new Label(main, SWT.WRAP);
 		info.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
-		info.setToolTipText("All Timer and SQL Statement Data objects need to be aggregated before saved to the storage, because the amount of objects to be saved is in most cases too high and can impose performance problems while writing to disk. Thus, please select the aggregation period for these two data types.");
+		info.setToolTipText(
+				"All Timer and SQL Statement Data objects need to be aggregated before saved to the storage, because the amount of objects to be saved is in most cases too high and can impose performance problems while writing to disk. Thus, please select the aggregation period for these two data types.");
 
 		new Label(main, SWT.NONE).setText("Aggregation period for Timer and SQL Statement Data:");
 		aggregationPeriodSpiner = new Spinner(main, SWT.BORDER);
@@ -316,7 +318,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 	 * @return Processor list for the storage opening.
 	 */
 	public List<AbstractDataProcessor> getProcessorList() {
-		List<AbstractDataProcessor> normalProcessors = new ArrayList<AbstractDataProcessor>();
+		List<AbstractDataProcessor> normalProcessors = new ArrayList<>();
 
 		/**
 		 * Normal saving processor.
@@ -335,14 +337,14 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		int aggregationPeriod = aggregationPeriodSpiner.getSelection() * 1000;
 		if (saveClassesList.contains(TimerData.class)) {
 			saveClassesList.remove(TimerData.class);
-			DataAggregatorProcessor<TimerData> dataAggregatorProcessor = new DataAggregatorProcessor<TimerData>(TimerData.class, aggregationPeriod, new TimerDataAggregator(),
+			DataAggregatorProcessor<TimerData> dataAggregatorProcessor = new DataAggregatorProcessor<>(TimerData.class, aggregationPeriod, new TimerDataAggregator(),
 					writeInvocationAffiliation);
 			normalProcessors.add(dataAggregatorProcessor);
 		}
 
 		if (saveClassesList.contains(SqlStatementData.class)) {
 			saveClassesList.remove(SqlStatementData.class);
-			DataAggregatorProcessor<SqlStatementData> dataAggregatorProcessor = new DataAggregatorProcessor<SqlStatementData>(SqlStatementData.class, aggregationPeriod,
+			DataAggregatorProcessor<SqlStatementData> dataAggregatorProcessor = new DataAggregatorProcessor<>(SqlStatementData.class, aggregationPeriod,
 					new SqlStatementDataAggregator(true), writeInvocationAffiliation);
 			normalProcessors.add(dataAggregatorProcessor);
 		}
@@ -353,7 +355,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		if (saveClassesList.contains(InvocationSequenceData.class)) {
 			// we only include the extractor of invocations if the style is specified
 			if (isStyleApplied(EXTRACT_INVOCATIONS)) {
-				List<AbstractDataProcessor> chainedProcessorsForExtractor = new ArrayList<AbstractDataProcessor>();
+				List<AbstractDataProcessor> chainedProcessorsForExtractor = new ArrayList<>();
 				chainedProcessorsForExtractor.addAll(normalProcessors);
 				InvocationExtractorDataProcessor invocationExtractorDataProcessor = new InvocationExtractorDataProcessor(chainedProcessorsForExtractor);
 				normalProcessors.add(invocationExtractorDataProcessor);
@@ -366,7 +368,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 	/**
 	 * Tests if specific style is applied.
-	 * 
+	 *
 	 * @param style
 	 *            Style to test.
 	 * @return True if style is part of style with which view was instantiated.
@@ -377,7 +379,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 	/**
 	 * Returns if at least one item in the table is selected.
-	 * 
+	 *
 	 * @return Returns if at least one item in the table is selected.
 	 */
 	private boolean atLeastOneTypeSelected() {
@@ -391,12 +393,12 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 	/**
 	 * Returns list of selected classes in table.
-	 * 
+	 *
 	 * @return Returns list of selected classes in table.
 	 */
 	@SuppressWarnings("unchecked")
 	private List<Class<? extends DefaultData>> getSelectedClassesFromTable() {
-		List<Class<? extends DefaultData>> classList = new ArrayList<Class<? extends DefaultData>>();
+		List<Class<? extends DefaultData>> classList = new ArrayList<>();
 		for (TableItem tableItem : table.getItems()) {
 			if (tableItem.getChecked()) {
 				classList.add((Class<? extends DefaultData>) tableItem.getData());
@@ -407,7 +409,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 	/**
 	 * Returns if the class is selected in the table.
-	 * 
+	 *
 	 * @param clazz
 	 *            Class to check.
 	 * @return True if class is selected, otherwise false.
@@ -423,9 +425,9 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 
 	/**
 	 * Label provider for only column in the table.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class DataColumnLabelProvider extends ColumnLabelProvider {
 

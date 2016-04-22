@@ -9,10 +9,10 @@ import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 
 /**
  * Viewer comparator uses provided comparators to sort specific columns.
- * 
+ *
  * @author Patrice Boulliet
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type for which comparator is created.
  */
@@ -20,9 +20,9 @@ public abstract class AbstractViewerComparator<T extends DefaultData> extends Vi
 
 	/**
 	 * The available sort states.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	protected enum SortState {
 		/** State that won't sort. */
@@ -39,7 +39,7 @@ public abstract class AbstractViewerComparator<T extends DefaultData> extends Vi
 
 		/**
 		 * Constructor to accept the swt direction.
-		 * 
+		 *
 		 * @param swtDirection
 		 *            The swt direction.
 		 */
@@ -49,7 +49,7 @@ public abstract class AbstractViewerComparator<T extends DefaultData> extends Vi
 
 		/**
 		 * Gets {@link #swtDirection}.
-		 * 
+		 *
 		 * @return {@link #swtDirection}
 		 */
 		public int getSwtDirection() {
@@ -70,7 +70,7 @@ public abstract class AbstractViewerComparator<T extends DefaultData> extends Vi
 
 	/**
 	 * Toggles the sorting of the column.
-	 * 
+	 *
 	 * @param id
 	 *            The comparator provider.
 	 */
@@ -121,7 +121,7 @@ public abstract class AbstractViewerComparator<T extends DefaultData> extends Vi
 
 	/**
 	 * Gets {@link #sortState}.
-	 * 
+	 *
 	 * @return {@link #sortState}
 	 */
 	protected SortState getSortState() {

@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.util.ListenerList;
 
 /**
  * Manager for the CI related UI actions. Listens and delegates the CI events.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InspectITConfigurationInterfaceManager implements IProfileChangeListener, IEnvironmentChangeListener, IAgentMappingsChangeListener {
 
@@ -35,6 +35,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void profileCreated(Profile profile, CmrRepositoryDefinition repositoryDefinition) {
 		for (IProfileChangeListener listener : profileChangeListeners) {
 			listener.profileCreated(profile, repositoryDefinition);
@@ -44,6 +45,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void profileUpdated(Profile profile, CmrRepositoryDefinition repositoryDefinition, boolean onlyProperties) {
 		for (IProfileChangeListener listener : profileChangeListeners) {
 			listener.profileUpdated(profile, repositoryDefinition, onlyProperties);
@@ -53,6 +55,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void profileDeleted(Profile profile, CmrRepositoryDefinition repositoryDefinition) {
 		for (IProfileChangeListener listener : profileChangeListeners) {
 			listener.profileDeleted(profile, repositoryDefinition);
@@ -62,6 +65,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void environmentCreated(Environment environment, CmrRepositoryDefinition repositoryDefinition) {
 		for (IEnvironmentChangeListener listener : environmentChangeListeners) {
 			listener.environmentCreated(environment, repositoryDefinition);
@@ -71,6 +75,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void environmentUpdated(Environment environment, CmrRepositoryDefinition repositoryDefinition) {
 		for (IEnvironmentChangeListener listener : environmentChangeListeners) {
 			listener.environmentUpdated(environment, repositoryDefinition);
@@ -80,6 +85,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void environmentDeleted(Environment environment, CmrRepositoryDefinition repositoryDefinition) {
 		for (IEnvironmentChangeListener listener : environmentChangeListeners) {
 			listener.environmentDeleted(environment, repositoryDefinition);
@@ -89,6 +95,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void agentMappingsUpdated(AgentMappings agentMappings, CmrRepositoryDefinition repositoryDefinition) {
 		for (IAgentMappingsChangeListener listener : agentMappingChangeListeners) {
 			listener.agentMappingsUpdated(agentMappings, repositoryDefinition);
@@ -97,7 +104,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 
 	/**
 	 * Registers a {@link IProfileChangeListener} if the same listener does not already exist.
-	 * 
+	 *
 	 * @param profileChangeListener
 	 *            {@link IProfileChangeListener} to add.
 	 */
@@ -107,7 +114,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 
 	/**
 	 * Removes a {@link IProfileChangeListener}.
-	 * 
+	 *
 	 * @param profileChangeListener
 	 *            {@link IProfileChangeListener} to remove.
 	 */
@@ -117,7 +124,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 
 	/**
 	 * Registers a {@link IEnvironmentChangeListener} if the same listener does not already exist.
-	 * 
+	 *
 	 * @param environmentChangeListener
 	 *            {@link IEnvironmentChangeListener} to add.
 	 */
@@ -127,7 +134,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 
 	/**
 	 * Removes a {@link IEnvironmentChangeListener}.
-	 * 
+	 *
 	 * @param environmentChangeListener
 	 *            {@link IEnvironmentChangeListener} to remove.
 	 */
@@ -137,7 +144,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 
 	/**
 	 * Registers a {@link IAgentMappingsChangeListener} if the same listener does not already exist.
-	 * 
+	 *
 	 * @param agentMappingsChangeListener
 	 *            {@link IAgentMappingsChangeListener} to add.
 	 */
@@ -147,7 +154,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 
 	/**
 	 * Removes a {@link IAgentMappingsChangeListener}.
-	 * 
+	 *
 	 * @param agentMappingsChangeListener
 	 *            {@link IAgentMappingsChangeListener} to remove.
 	 */

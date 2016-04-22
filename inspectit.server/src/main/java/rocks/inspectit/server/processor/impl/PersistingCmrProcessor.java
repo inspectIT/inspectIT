@@ -10,9 +10,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * Processor that saves objects to database via {@link EntityManager}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class PersistingCmrProcessor extends AbstractCmrDataProcessor {
 
@@ -23,7 +23,7 @@ public class PersistingCmrProcessor extends AbstractCmrDataProcessor {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param classes
 	 *            List of classes that should be saved by this simple saver.
 	 */

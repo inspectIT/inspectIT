@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Profile leaf for displaying the the tree.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ProfileLeaf extends Leaf implements IProfileProvider {
 
@@ -30,7 +30,7 @@ public class ProfileLeaf extends Leaf implements IProfileProvider {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param profile
 	 *            {@link Profile}
 	 * @param cmrRepositoryDefinition
@@ -49,6 +49,7 @@ public class ProfileLeaf extends Leaf implements IProfileProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Profile getProfile() {
 		return profile;
 	}
@@ -56,6 +57,7 @@ public class ProfileLeaf extends Leaf implements IProfileProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
 		return cmrRepositoryDefinition;
 	}

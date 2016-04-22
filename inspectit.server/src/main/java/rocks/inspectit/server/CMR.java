@@ -31,9 +31,9 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 /**
  * Main class of the Central Measurement Repository. The main method is used to start the
  * application.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class CMR {
 
@@ -118,18 +118,18 @@ public final class CMR {
 		Matcher matcher = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)[_-]u?(\\d+)").matcher(version);
 		boolean correctVersion = true;
 
-		if (matcher.find() && matcher.groupCount() >= 4) {
+		if (matcher.find() && (matcher.groupCount() >= 4)) {
 			try {
 				int majorFirst = Integer.parseInt(matcher.group(1));
 				int majorSecond = Integer.parseInt(matcher.group(2));
 				int minor = Integer.parseInt(matcher.group(3));
 				int update = Integer.parseInt(matcher.group(4));
 
-				if (majorFirst != 1 || majorSecond != 7 || minor != 0) {
+				if ((majorFirst != 1) || (majorSecond != 7) || (minor != 0)) {
 					correctVersion = false;
 				}
 
-				if (update < 51 || update > 80) {
+				if ((update < 51) || (update > 80)) {
 					correctVersion = false;
 				}
 			} catch (NumberFormatException e) {
@@ -148,7 +148,7 @@ public final class CMR {
 
 	/**
 	 * Start function. Needed by Procrun.
-	 * 
+	 *
 	 * @param args
 	 *            The arguments.
 	 */
@@ -159,7 +159,7 @@ public final class CMR {
 
 	/**
 	 * Stop function. Needed by Procrun.
-	 * 
+	 *
 	 * @param args
 	 *            The arguments.
 	 */
@@ -219,13 +219,13 @@ public final class CMR {
 
 	/**
 	 * Main method of class.
-	 * 
+	 *
 	 * @param args
 	 *            The arguments.
 	 */
 	public static void main(String[] args) {
 		// Start Apache Procrun only if it's a Windows operating system.
-		if (args.length == 1 && SystemUtils.IS_OS_WINDOWS) {
+		if ((args.length == 1) && SystemUtils.IS_OS_WINDOWS) {
 			switch (args[0]) {
 			case "start":
 				start(args);
@@ -243,7 +243,7 @@ public final class CMR {
 
 	/**
 	 * Returns the spring bean factory.
-	 * 
+	 *
 	 * @return The spring bean factory.
 	 */
 	public static BeanFactory getBeanFactory() {
@@ -252,7 +252,7 @@ public final class CMR {
 
 	/**
 	 * Getter method for property <code>startedAsService</code>.
-	 * 
+	 *
 	 * @return startedAsService.
 	 */
 	public static boolean isStartedAsService() {

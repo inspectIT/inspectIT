@@ -14,22 +14,22 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.root.SubViewClassificationController;
 
 /**
  * The interface for all tree input controller.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface TreeInputController extends SubViewClassificationController {
 
 	/**
 	 * Sets the input definition of this controller.
-	 * 
+	 *
 	 * @param inputDefinition
 	 *            The input definition.
 	 */
@@ -37,7 +37,7 @@ public interface TreeInputController extends SubViewClassificationController {
 
 	/**
 	 * Creates the columns in the given tree viewer.
-	 * 
+	 *
 	 * @param treeViewer
 	 *            The tree viewer.
 	 */
@@ -48,17 +48,17 @@ public interface TreeInputController extends SubViewClassificationController {
 	 * width/visibility if the column has the remembered size. With this method the controller gives
 	 * or denies the {@link rocks.inspectit.ui.rcp.editor.tree.TreeSubView} to alter the column
 	 * width.
-	 * 
+	 *
 	 * @param treeColumn
 	 *            {@link TreeColumn}
-	 * 
+	 *
 	 * @return Returns true if the {@link TreeColumn} can be altered.
 	 */
 	boolean canAlterColumnWidth(TreeColumn treeColumn);
 
 	/**
 	 * This method will be called when a double click event is executed.
-	 * 
+	 *
 	 * @param event
 	 *            The event object.
 	 */
@@ -70,14 +70,14 @@ public interface TreeInputController extends SubViewClassificationController {
 	 * For some {@link DefaultData} objects, the method {@link #canOpenInput(List)} should return
 	 * true so that the input object is set by the
 	 * {@link rocks.inspectit.ui.rcp.editor.tree.TreeSubView}.
-	 * 
+	 *
 	 * @return The tree input or <code>null</code> if nothing to display for default.
 	 */
 	Object getTreeInput();
 
 	/**
 	 * Returns the content provider for the {@link TreeViewer}.
-	 * 
+	 *
 	 * @return The content provider.
 	 * @see IContentProvider
 	 */
@@ -85,7 +85,7 @@ public interface TreeInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns the label provider for the {@link TreeViewer}.
-	 * 
+	 *
 	 * @return The label provider
 	 * @see IBaseLabelProvider
 	 */
@@ -94,14 +94,14 @@ public interface TreeInputController extends SubViewClassificationController {
 	/**
 	 * Returns the comparator for the {@link TreeViewer}. Can be <code>null</code> to indicate that
 	 * no sorting of the elements should be done.
-	 * 
+	 *
 	 * @return The tree viewer comparator.
 	 */
 	ViewerComparator getComparator();
 
 	/**
 	 * Refreshes the current data and updates the tree input if new items are available.
-	 * 
+	 *
 	 * @param monitor
 	 *            The progress monitor.
 	 * @param rootEditor
@@ -112,7 +112,7 @@ public interface TreeInputController extends SubViewClassificationController {
 	/**
 	 * Returns <code>true</code> if the controller can open the input which consists of one or
 	 * several {@link DefaultData} objects.
-	 * 
+	 *
 	 * @param data
 	 *            The data which is checked if the controller can open it.
 	 * @return Returns <code>true</code> if the controller can open the input.
@@ -121,7 +121,7 @@ public interface TreeInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns all needed preference IDs.
-	 * 
+	 *
 	 * @return A {@link Set} containing all {@link PreferenceId}. Returning <code>null</code> is not
 	 *         permitted here. At least a {@link java.util.Collections#EMPTY_SET} should be
 	 *         returned.
@@ -130,7 +130,7 @@ public interface TreeInputController extends SubViewClassificationController {
 
 	/**
 	 * This method is called whenever something is changed in one of the preferences.
-	 * 
+	 *
 	 * @param preferenceEvent
 	 *            The event object containing the changed objects.
 	 */
@@ -139,7 +139,7 @@ public interface TreeInputController extends SubViewClassificationController {
 	/**
 	 * This method creates a human readable string out of the given object (which is object from the
 	 * tree model).
-	 * 
+	 *
 	 * @param object
 	 *            The object to create the string from.
 	 * @return The created human readable string.
@@ -150,7 +150,7 @@ public interface TreeInputController extends SubViewClassificationController {
 	 * Return the values of all columns in the tree for the given object. Not visible columns values
 	 * will also be included. The order of the values will be same to the initial tree column order,
 	 * thus not reflecting the current state of the tree if the columns were moved.
-	 * 
+	 *
 	 * @param object
 	 *            Object to get values for.
 	 * @return List of string representing the values.
@@ -159,21 +159,21 @@ public interface TreeInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns an optional filter for this tree.
-	 * 
+	 *
 	 * @return the filter array.
 	 */
 	ViewerFilter[] getFilters();
 
 	/**
 	 * Returns the level to which the viewer's tree should be expanded.
-	 * 
+	 *
 	 * @return The level to which the viewer's tree should be expanded.
 	 */
 	int getExpandLevel();
 
 	/**
 	 * Returns the list of the objects that should be searched.
-	 * 
+	 *
 	 * @param treeInput
 	 *            Current input of the table. The {@link TreeInputController} is responsible to
 	 *            modify the input if necessary.

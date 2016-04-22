@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePro
 
 /**
  * Is positive validator.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  */
 @XmlRootElement(name = "isPositive")
@@ -21,6 +21,7 @@ public class PositiveValidator<T extends Number> extends AbstractSinglePropertyV
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected boolean prove(T value) {
 		return Matchers.greaterThan(0d).matches(value.doubleValue());
 	}

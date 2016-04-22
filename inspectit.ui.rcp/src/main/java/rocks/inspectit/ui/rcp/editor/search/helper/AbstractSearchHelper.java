@@ -20,9 +20,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 /**
  * Abstract search helper. Joins the search logics and delegates specific actions to the
  * sub-classes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractSearchHelper implements ISearchExecutor {
 
@@ -66,6 +66,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 	 * The selection adapter that will clear the search on the new sorting of columns.
 	 */
 	private SelectionAdapter columnSortingListener = new SelectionAdapter() {
+		@Override
 		public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 			clearSearch();
 		};
@@ -89,7 +90,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 	/**
 	 * Performs the selection of the element. The sub-classes need to implement this method, so that
 	 * the correct selection by viewer type is performed.
-	 * 
+	 *
 	 * @param element
 	 *            Element to select.
 	 */
@@ -97,7 +98,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 
 	/**
 	 * Returns all objects that should be searched.
-	 * 
+	 *
 	 * @return Returns all objects that should be searched.
 	 */
 	public abstract Object[] getAllObjects();
@@ -105,7 +106,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 	/**
 	 * Returns the viewer the search is performed on. This is necessary for input change checking
 	 * and filtering.
-	 * 
+	 *
 	 * @return Returns the viewer the search is performed on. This is necessary for input change
 	 *         checking and filtering.
 	 */
@@ -210,7 +211,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Returns the search result by examining the state of the {@link #currentOccurrence}
 	 *         and {@link #totalOccurrences} values.
 	 */
@@ -225,7 +226,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 	/**
 	 * Checks if the input of the viewer changed since the last search. If so, the {@link #input}
 	 * variable will be updated.
-	 * 
+	 *
 	 * @return True if the input did not change, false otherwise.
 	 */
 	private boolean checkInput() {
@@ -249,12 +250,12 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 	/**
 	 * Updates the {@link #foundObjects} with given {@link SearchCriteria} against
 	 * {@link #allObjects}. This method also checks if the filters of the viewer are satisfied.
-	 * 
+	 *
 	 * @param searchCriteria
 	 *            {@link SearchCriteria}.
 	 */
 	private void updateFoundObjects(SearchCriteria searchCriteria) {
-		foundObjects = new ArrayList<Object>();
+		foundObjects = new ArrayList<>();
 		for (Object object : allObjects) {
 			if (SearchFactory.isSearchCompatible(object, searchCriteria, repositoryDefinition) && areFiltersPassed(object, getViewer().getFilters())) {
 				foundObjects.add(object);
@@ -266,7 +267,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 
 	/**
 	 * Sorts the list of objects as they appear in the table.
-	 * 
+	 *
 	 * @param objects
 	 *            List of objects.
 	 */
@@ -283,7 +284,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 
 	/**
 	 * Are all filers passed.
-	 * 
+	 *
 	 * @param object
 	 *            Object to check.
 	 * @param filters
@@ -303,12 +304,12 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 
 	/**
 	 * Displays the wanted occurrence.
-	 * 
+	 *
 	 * @param occurrence
 	 *            Occurrence to display.
 	 */
 	private void displayOccurence(int occurrence) {
-		if (totalOccurrences >= occurrence && foundObjects.size() >= occurrence) {
+		if ((totalOccurrences >= occurrence) && (foundObjects.size() >= occurrence)) {
 			// select this element
 			Object selected = foundObjects.get(occurrence - 1);
 			this.selectElement(selected);
@@ -317,7 +318,7 @@ public abstract class AbstractSearchHelper implements ISearchExecutor {
 
 	/**
 	 * Gets {@link #columnSortingListener}.
-	 * 
+	 *
 	 * @return {@link #columnSortingListener}
 	 */
 	protected SelectionAdapter getColumnSortingListener() {

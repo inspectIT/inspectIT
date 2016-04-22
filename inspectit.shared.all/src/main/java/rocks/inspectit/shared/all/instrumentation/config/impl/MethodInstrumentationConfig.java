@@ -42,8 +42,8 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	private List<String> parameterTypes;
 
 	/**
-	 * {@link SensorInstrumentationPoint} for this {@link MethodInstrumentationConfig}. Can be only one
-	 * per method.
+	 * {@link SensorInstrumentationPoint} for this {@link MethodInstrumentationConfig}. Can be only
+	 * one per method.
 	 */
 	private SensorInstrumentationPoint sensorInstrumentationPoint;
 
@@ -79,7 +79,7 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	 * {@inheritDoc}
 	 */
 	public boolean hasInstrumentationPoints() {
-		return sensorInstrumentationPoint != null || CollectionUtils.isNotEmpty(functionalInstrumentations);
+		return (sensorInstrumentationPoint != null) || CollectionUtils.isNotEmpty(functionalInstrumentations);
 	}
 
 	/**
@@ -225,12 +225,12 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((functionalInstrumentations == null) ? 0 : functionalInstrumentations.hashCode());
-		result = prime * result + ((parameterTypes == null) ? 0 : parameterTypes.hashCode());
-		result = prime * result + ((sensorInstrumentationPoint == null) ? 0 : sensorInstrumentationPoint.hashCode());
-		result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
-		result = prime * result + ((targetClassFqn == null) ? 0 : targetClassFqn.hashCode());
-		result = prime * result + ((targetMethodName == null) ? 0 : targetMethodName.hashCode());
+		result = (prime * result) + ((functionalInstrumentations == null) ? 0 : functionalInstrumentations.hashCode());
+		result = (prime * result) + ((parameterTypes == null) ? 0 : parameterTypes.hashCode());
+		result = (prime * result) + ((sensorInstrumentationPoint == null) ? 0 : sensorInstrumentationPoint.hashCode());
+		result = (prime * result) + ((returnType == null) ? 0 : returnType.hashCode());
+		result = (prime * result) + ((targetClassFqn == null) ? 0 : targetClassFqn.hashCode());
+		result = (prime * result) + ((targetMethodName == null) ? 0 : targetMethodName.hashCode());
 		return result;
 	}
 

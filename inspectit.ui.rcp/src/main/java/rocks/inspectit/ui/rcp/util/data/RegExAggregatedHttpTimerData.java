@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 
 /**
  * Simple extension of {@link AggregatedHttpTimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 
@@ -42,7 +42,7 @@ public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param transformedUri
 	 *            Transformed URI.
 	 */
@@ -52,7 +52,7 @@ public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 
 	/**
 	 * Returns transformed URI.
-	 * 
+	 *
 	 * @param object
 	 *            {@link HttpTimerData}
 	 * @param httpSensorTypeIdent
@@ -61,7 +61,7 @@ public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 	 */
 	public static String getTransformedUri(HttpTimerData object, MethodSensorTypeIdent httpSensorTypeIdent) {
 		try {
-			if (null != httpSensorTypeIdent && null != MethodSensorTypeIdentHelper.getRegEx(httpSensorTypeIdent)) {
+			if ((null != httpSensorTypeIdent) && (null != MethodSensorTypeIdentHelper.getRegEx(httpSensorTypeIdent))) {
 				return HttpTimerDataHelper.getTransformedUri(object, MethodSensorTypeIdentHelper.getRegEx(httpSensorTypeIdent), MethodSensorTypeIdentHelper.getRegExTemplate(httpSensorTypeIdent));
 			} else {
 				return object.getHttpInfo().getUri();
@@ -73,7 +73,7 @@ public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 
 	/**
 	 * Gets {@link #transformedUri}.
-	 * 
+	 *
 	 * @return {@link #transformedUri}
 	 */
 	public String getTransformedUri() {
@@ -82,7 +82,7 @@ public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 
 	/**
 	 * Sets {@link #transformedUri}.
-	 * 
+	 *
 	 * @param transformedUri
 	 *            New value for {@link #transformedUri}
 	 */
@@ -92,7 +92,7 @@ public class RegExAggregatedHttpTimerData extends AggregatedHttpTimerData {
 
 	/**
 	 * Gets {@link #aggregatedDataList}.
-	 * 
+	 *
 	 * @return {@link #aggregatedDataList}
 	 */
 	public List<HttpTimerData> getAggregatedDataList() {

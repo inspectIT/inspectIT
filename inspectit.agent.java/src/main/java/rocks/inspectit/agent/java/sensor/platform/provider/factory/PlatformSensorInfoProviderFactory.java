@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
 
 /**
  * This class decides which {@link PlatformSensorInfoProvider} will be used.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class PlatformSensorInfoProviderFactory {
 
@@ -35,11 +35,12 @@ public final class PlatformSensorInfoProviderFactory {
 	 * in the static class initialization, and then simply always return the one we have created.
 	 */
 	static {
-		if (UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.SUN || UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.ORACLE) {
+		if ((UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.SUN) || (UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.ORACLE)) {
 			if (null == platformSensorInfoProvider) {
 				createSunPlatformSensorInfoProvider();
 			}
-		} else if (UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.IBM && (UnderlyingSystemInfo.JAVA_VERSION == JavaVersion.JAVA_1_6 || UnderlyingSystemInfo.JAVA_VERSION == JavaVersion.JAVA_1_7)) {
+		} else if ((UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.IBM)
+				&& ((UnderlyingSystemInfo.JAVA_VERSION == JavaVersion.JAVA_1_6) || (UnderlyingSystemInfo.JAVA_VERSION == JavaVersion.JAVA_1_7))) {
 			if (null == platformSensorInfoProvider) {
 				try {
 					createIbmJava6PlatformSensorInfoProvider();
@@ -63,7 +64,7 @@ public final class PlatformSensorInfoProviderFactory {
 
 	/**
 	 * Returns the correct {@link PlatformSensorInfoProvider} based on the JVM vendor.
-	 * 
+	 *
 	 * @return {@link PlatformSensorInfoProvider}
 	 * @see UnderlyingSystemInfo
 	 */
@@ -73,7 +74,7 @@ public final class PlatformSensorInfoProviderFactory {
 
 	/**
 	 * Creates the {@link IbmJava6PlatformSensorInfoProvider}.
-	 * 
+	 *
 	 * @throws Exception
 	 *             If the IBM platform sensor creation throws an exception.
 	 */

@@ -9,9 +9,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Agent leaf for the tree in the Repository Manager.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentLeaf extends Leaf implements ICmrRepositoryAndAgentProvider {
 
@@ -37,7 +37,7 @@ public class AgentLeaf extends Leaf implements ICmrRepositoryAndAgentProvider {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            Agent to display in leaf.
 	 * @param agentStatusData
@@ -56,16 +56,17 @@ public class AgentLeaf extends Leaf implements ICmrRepositoryAndAgentProvider {
 
 	/**
 	 * Gets {@link #platformIdent}.
-	 * 
+	 *
 	 * @return {@link #platformIdent}
 	 */
+	@Override
 	public PlatformIdent getPlatformIdent() {
 		return platformIdent;
 	}
 
 	/**
 	 * Sets {@link #platformIdent}.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            New value for {@link #platformIdent}
 	 */
@@ -75,7 +76,7 @@ public class AgentLeaf extends Leaf implements ICmrRepositoryAndAgentProvider {
 
 	/**
 	 * Gets {@link #agentStatusData}.
-	 * 
+	 *
 	 * @return {@link #agentStatusData}
 	 */
 	public AgentStatusData getAgentStatusData() {
@@ -84,7 +85,7 @@ public class AgentLeaf extends Leaf implements ICmrRepositoryAndAgentProvider {
 
 	/**
 	 * Sets {@link #agentStatusData}.
-	 * 
+	 *
 	 * @param agentStatusData
 	 *            New value for {@link #agentStatusData}
 	 */
@@ -102,7 +103,7 @@ public class AgentLeaf extends Leaf implements ICmrRepositoryAndAgentProvider {
 
 	/**
 	 * Gets {@link #inFolder}.
-	 * 
+	 *
 	 * @return {@link #inFolder}
 	 */
 	public boolean isInFolder() {
@@ -111,9 +112,10 @@ public class AgentLeaf extends Leaf implements ICmrRepositoryAndAgentProvider {
 
 	/**
 	 * Gets {@link #cmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @return {@link #cmrRepositoryDefinition}
 	 */
+	@Override
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
 		return cmrRepositoryDefinition;
 	}

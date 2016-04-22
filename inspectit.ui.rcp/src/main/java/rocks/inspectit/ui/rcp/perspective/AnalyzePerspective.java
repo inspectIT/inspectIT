@@ -10,9 +10,9 @@ import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
 
 /**
  * The default perspective and layout of the InspectIT UI.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class AnalyzePerspective implements IPerspectiveFactory {
 
@@ -24,6 +24,7 @@ public class AnalyzePerspective implements IPerspectiveFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);

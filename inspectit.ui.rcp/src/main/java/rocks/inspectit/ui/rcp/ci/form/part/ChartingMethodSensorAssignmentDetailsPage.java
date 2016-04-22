@@ -7,6 +7,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
@@ -84,7 +85,7 @@ public class ChartingMethodSensorAssignmentDetailsPage extends MethodSensorAssig
 
 		// special sensor definitions
 		// section
-		Section section = toolkit.createSection(parent, Section.TITLE_BAR | Section.EXPANDED);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		section.setText("Sensor specific options");
 		section.marginWidth = 10;
 		section.marginHeight = 5;

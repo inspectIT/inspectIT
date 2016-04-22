@@ -19,7 +19,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.util.StringConstraint;
 
 @SuppressWarnings("PMD")
 public class StringConstraintTest extends AbstractLogSupport {

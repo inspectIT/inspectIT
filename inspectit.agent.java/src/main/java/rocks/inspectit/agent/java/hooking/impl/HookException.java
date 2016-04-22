@@ -2,7 +2,7 @@ package rocks.inspectit.agent.java.hooking.impl;
 
 /**
  * This exception is thrown when a something bad happened at hooking a class/method.
- * 
+ *
  * @author Patrice Bouillet
  */
 public class HookException extends Exception {
@@ -14,7 +14,7 @@ public class HookException extends Exception {
 
 	/**
 	 * Default constructor which takes one argument used for a message of the exception.
-	 * 
+	 *
 	 * @param msg
 	 *            The message.
 	 */
@@ -24,7 +24,7 @@ public class HookException extends Exception {
 
 	/**
 	 * Additional constructor which can store the origin exception.
-	 * 
+	 *
 	 * @param msg
 	 *            The message.
 	 * @param throwable

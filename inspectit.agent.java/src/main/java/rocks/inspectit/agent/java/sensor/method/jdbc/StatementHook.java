@@ -85,7 +85,8 @@ public class StatementHook implements IMethodHook {
 	 * @param statementReflectionCache
 	 *            Caches the calls to getConnection()
 	 */
-	public StatementHook(Timer timer, IPlatformManager platformManager, ConnectionMetaDataStorage connectionMetaDataStorage, StatementReflectionCache statementReflectionCache, Map<String, Object> parameter) {
+	public StatementHook(Timer timer, IPlatformManager platformManager, ConnectionMetaDataStorage connectionMetaDataStorage, StatementReflectionCache statementReflectionCache,
+			Map<String, Object> parameter) {
 		this.timer = timer;
 		this.platformManager = platformManager;
 		this.connectionMetaDataStorage = connectionMetaDataStorage;

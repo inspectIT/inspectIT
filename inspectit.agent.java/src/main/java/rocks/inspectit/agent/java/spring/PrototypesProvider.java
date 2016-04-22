@@ -12,9 +12,9 @@ import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 
 /**
  * Provider for all needed prototypes since we don't have spring config files anymore.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class PrototypesProvider extends StreamProvider implements ISerializerProvider<SerializationManager> {
@@ -39,7 +39,7 @@ public class PrototypesProvider extends StreamProvider implements ISerializerPro
 
 	/**
 	 * Returns the new {@link SerializationManager} enhanced by Spring.
-	 * 
+	 *
 	 * @return Returns the new {@link SerializationManager} enhanced by Spring.
 	 */
 	public SerializationManager createSerializer() {

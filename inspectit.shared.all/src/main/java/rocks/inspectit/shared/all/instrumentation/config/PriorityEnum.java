@@ -1,6 +1,5 @@
 package rocks.inspectit.shared.all.instrumentation.config;
 
-
 /**
  * Enumeration used for the priority system of the sensor types.
  *
@@ -8,7 +7,6 @@ package rocks.inspectit.shared.all.instrumentation.config;
  *
  */
 public enum PriorityEnum {
-
 
 	/** The priority used by the invocation tracing system. */
 	INVOC,

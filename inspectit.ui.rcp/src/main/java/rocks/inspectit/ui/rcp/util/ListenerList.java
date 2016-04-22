@@ -17,12 +17,12 @@ import java.util.NoSuchElementException;
  * <p>
  * <b>IMPORTANT:</b> The class is licensed under the Eclipse Public License v1.0 as it includes the
  * code from the {@link org.eclipse.core.runtime.ListenerList} class belonging to the Eclipse Rich
- * Client Platform. EPL v1.0 license can be found <a
- * href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
+ * Client Platform. EPL v1.0 license can be found
+ * <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
  * <p>
  * Please relate to the LICENSEEXCEPTIONS.txt file for more information about license exceptions
  * that apply regarding to InspectIT and Eclipse RCP and/or EPL Components.
- * 
+ *
  * @param <E>
  *            Generic parameter that defines the type of this listener list.
  */
@@ -36,20 +36,20 @@ public class ListenerList<E> implements Iterable<E> {
 
 	/**
 	 * The available comparison modes.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public enum Mode {
 		/**
-		 * Mode constant (value 0) indicating that listeners should be considered the <a
-		 * href="#same">same</a> if they are equal.
+		 * Mode constant (value 0) indicating that listeners should be considered the
+		 * <a href="#same">same</a> if they are equal.
 		 */
 		EQUALITY,
 
 		/**
-		 * Mode constant (value 1) indicating that listeners should be considered the <a
-		 * href="#same">same</a> if they are identical.
+		 * Mode constant (value 1) indicating that listeners should be considered the
+		 * <a href="#same">same</a> if they are identical.
 		 */
 		IDENTITY;
 	}
@@ -74,7 +74,7 @@ public class ListenerList<E> implements Iterable<E> {
 
 	/**
 	 * Creates a listener list using the provided comparison mode.
-	 * 
+	 *
 	 * @param mode
 	 *            The mode used to determine if listeners are the <a href="#same">same</a>.
 	 */
@@ -85,7 +85,7 @@ public class ListenerList<E> implements Iterable<E> {
 	/**
 	 * Adds a listener to this list. This method has no effect if the <a href="#same">same</a>
 	 * listener is already registered.
-	 * 
+	 *
 	 * @param listener
 	 *            the non-<code>null</code> listener to add
 	 */
@@ -122,7 +122,7 @@ public class ListenerList<E> implements Iterable<E> {
 	 * list during the notification will have no effect on the notification itself.
 	 * <p>
 	 * Note: Callers of this method <b>must not</b> modify the returned array.
-	 * 
+	 *
 	 * @return the list of registered listeners
 	 */
 	public E[] getListeners() {
@@ -131,7 +131,7 @@ public class ListenerList<E> implements Iterable<E> {
 
 	/**
 	 * Returns whether this listener list is empty.
-	 * 
+	 *
 	 * @return <code>true</code> if there are no registered listeners, and <code>false</code>
 	 *         otherwise
 	 */
@@ -142,7 +142,7 @@ public class ListenerList<E> implements Iterable<E> {
 	/**
 	 * Removes a listener from this list. Has no effect if the <a href="#same">same</a> listener was
 	 * not already registered.
-	 * 
+	 *
 	 * @param listener
 	 *            the non-<code>null</code> listener to remove
 	 */
@@ -176,7 +176,7 @@ public class ListenerList<E> implements Iterable<E> {
 
 	/**
 	 * Returns the number of registered listeners.
-	 * 
+	 *
 	 * @return the number of registered listeners
 	 */
 	public int size() {
@@ -200,9 +200,9 @@ public class ListenerList<E> implements Iterable<E> {
 
 	/**
 	 * The iterator implementation for this listener list.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private class Itr implements Iterator<E> {
 
@@ -219,7 +219,7 @@ public class ListenerList<E> implements Iterable<E> {
 		/**
 		 * The reference to the generic listeners array is passed here because in the meantime,
 		 * while iterating over this list, some new objects could be added which is NOT reflected.
-		 * 
+		 *
 		 * @param listeners
 		 *            The listeners.
 		 */
@@ -230,6 +230,7 @@ public class ListenerList<E> implements Iterable<E> {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean hasNext() {
 			return cursor != listeners.length;
 		}
@@ -237,6 +238,7 @@ public class ListenerList<E> implements Iterable<E> {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public E next() {
 			try {
 				E next = listeners[cursor];
@@ -250,6 +252,7 @@ public class ListenerList<E> implements Iterable<E> {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}

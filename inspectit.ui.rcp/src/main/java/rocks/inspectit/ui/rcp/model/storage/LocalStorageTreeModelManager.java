@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.model.Leaf;
 
 /**
  * Tree model manager for storage manager view that displays the local storage data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class LocalStorageTreeModelManager {
 
@@ -36,7 +36,7 @@ public class LocalStorageTreeModelManager {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param localStorageDataCollection
 	 *            Collection of {@link LocalStorageData} to be displayed in tree.
 	 * @param storageLabelType
@@ -51,10 +51,10 @@ public class LocalStorageTreeModelManager {
 	/**
 	 * Returns objects divided either by the provided label class, or by
 	 * {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are located to.
-	 * 
+	 *
 	 * @return Returns objects divided either by the provided label class, or by
-	 *         {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are
-	 *         located to.
+	 *         {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition} they are located
+	 *         to.
 	 */
 	public Object[] getRootObjects() {
 		if (CollectionUtils.isEmpty(localStorageDataCollection)) {
@@ -66,7 +66,7 @@ public class LocalStorageTreeModelManager {
 			unknown.setName("Unknown");
 			unknown.setImage(ImageFormatter.getImageForLabel(storageLabelType));
 			boolean addUnknown = false;
-			Map<Object, Composite> map = new HashMap<Object, Composite>();
+			Map<Object, Composite> map = new HashMap<>();
 			for (LocalStorageData localStorageData : localStorageDataCollection) {
 				List<? extends AbstractStorageLabel<?>> labelList = localStorageData.getLabels(storageLabelType);
 				if (CollectionUtils.isNotEmpty(labelList)) {
@@ -87,14 +87,14 @@ public class LocalStorageTreeModelManager {
 					addUnknown = true;
 				}
 			}
-			ArrayList<Composite> returnList = new ArrayList<Composite>();
+			ArrayList<Composite> returnList = new ArrayList<>();
 			returnList.addAll(map.values());
 			if (addUnknown) {
 				returnList.add(unknown);
 			}
 			return returnList.toArray(new Composite[returnList.size()]);
 		} else {
-			List<Leaf> leafList = new ArrayList<Leaf>();
+			List<Leaf> leafList = new ArrayList<>();
 			for (LocalStorageData localStorageData : localStorageDataCollection) {
 				leafList.add(new LocalStorageLeaf(localStorageData));
 			}

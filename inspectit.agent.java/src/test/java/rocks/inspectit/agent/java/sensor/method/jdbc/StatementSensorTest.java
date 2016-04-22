@@ -2,7 +2,6 @@ package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,9 +12,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
-import rocks.inspectit.agent.java.sensor.method.jdbc.StatementReflectionCache;
-import rocks.inspectit.agent.java.sensor.method.jdbc.StatementSensor;
 import rocks.inspectit.agent.java.util.Timer;
 
 @SuppressWarnings("PMD")

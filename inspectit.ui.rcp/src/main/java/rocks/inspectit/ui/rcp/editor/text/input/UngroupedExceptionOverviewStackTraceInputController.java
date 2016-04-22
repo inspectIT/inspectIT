@@ -14,9 +14,9 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 /**
  * Textual input controller for displaying the stack trace of a single {@link ExceptionSensorData}
  * object.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class UngroupedExceptionOverviewStackTraceInputController extends AbstractTextInputController {
 
@@ -45,7 +45,7 @@ public class UngroupedExceptionOverviewStackTraceInputController extends Abstrac
 	 */
 	@Override
 	public void setDataInput(List<? extends DefaultData> data) {
-		if (data == null || data.isEmpty()) {
+		if ((data == null) || data.isEmpty()) {
 			stackTraceText.setText("");
 		} else {
 			Object input = data.get(0);

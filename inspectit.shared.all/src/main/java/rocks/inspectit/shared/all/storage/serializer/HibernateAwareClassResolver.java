@@ -25,9 +25,9 @@ import rocks.inspectit.shared.all.util.IHibernateUtil;
  * Also it intercepts the Hibernate proxies, writes the correct entity class and returns the alerted
  * registration that has a {@link HibernateProxySerializer} delegating to the correct serializer for
  * the entity.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class HibernateAwareClassResolver extends DefaultClassResolver {
 
@@ -43,7 +43,7 @@ public class HibernateAwareClassResolver extends DefaultClassResolver {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param hibernateUtil
 	 *            {@link IHibernateUtil} to use.
 	 */

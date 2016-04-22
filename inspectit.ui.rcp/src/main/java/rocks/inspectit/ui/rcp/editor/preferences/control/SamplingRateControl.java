@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -22,9 +23,9 @@ import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 /**
  * This class creates a control group with a sampling rate slider in the
  * {@link rocks.inspectit.ui.rcp.editor.preferences.FormPreferencePanel}.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class SamplingRateControl extends AbstractPreferenceControl implements IPreferenceControl {
 
@@ -45,9 +46,9 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 
 	/**
 	 * The available sensitivity modes.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public enum Sensitivity {
 		/** No sensitivity. */
@@ -70,7 +71,7 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 
 		/**
 		 * The constructor needing the specific value.
-		 * 
+		 *
 		 * @param value
 		 *            The value.
 		 */
@@ -80,7 +81,7 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 
 		/**
 		 * Returns the sensitivity value.
-		 * 
+		 *
 		 * @return The value.
 		 */
 		public int getValue() {
@@ -89,13 +90,13 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 
 		/**
 		 * Converts an ordinal into a {@link Sensitivity}.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Sensitivity fromOrd(int i) {
-			if (i < 0 || i >= Sensitivity.values().length) {
+			if ((i < 0) || (i >= Sensitivity.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Sensitivity.values()[i];
@@ -109,7 +110,7 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param preferencePanel
 	 *            Preference panel.
 	 */
@@ -120,8 +121,9 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Composite createControls(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText("Sampling Rate");
 		section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		Composite composite = toolkit.createComposite(section);
@@ -195,10 +197,11 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Map<IPreferenceGroup, Object> eventFired() {
 		Sensitivity sensitivity = Sensitivity.fromOrd(slider.getSelection());
 
-		Map<IPreferenceGroup, Object> preferenceControlMap = new HashMap<IPreferenceGroup, Object>();
+		Map<IPreferenceGroup, Object> preferenceControlMap = new HashMap<>();
 		preferenceControlMap.put(PreferenceId.SamplingRate.SLIDER_ID, sensitivity);
 
 		// get the actual selected divider mode button and set the specific id
@@ -212,6 +215,7 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public PreferenceId getControlGroupId() {
 		return CONTROL_GROUP_ID;
 	}
@@ -219,6 +223,7 @@ public class SamplingRateControl extends AbstractPreferenceControl implements IP
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 

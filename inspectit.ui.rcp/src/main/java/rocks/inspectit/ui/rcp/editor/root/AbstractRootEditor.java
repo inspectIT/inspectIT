@@ -40,9 +40,9 @@ import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
-import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
 
 /**
@@ -53,18 +53,18 @@ import rocks.inspectit.ui.rcp.storage.listener.StorageChangeListener;
  * <p>
  * If the same editor is already opened (thus the editorinput is the same as one that is already
  * opened), the view is switched to existing one.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class AbstractRootEditor extends EditorPart implements IRootEditor, IInputDefinitionProvider, CmrRepositoryChangeListener, StorageChangeListener {
 
 	/**
 	 * The inner class for the update timer which just calls the
 	 * {@link AbstractRootEditor#refresh()} method in the {@link Display} thread.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class UpdateTimerTask extends TimerTask {
 		/**
@@ -73,6 +73,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 		@Override
 		public void run() {
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						doRefresh();
@@ -132,15 +133,17 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		subView.doRefresh();
 	}
 
 	/**
 	 * Returns the input definition for this view.
-	 * 
+	 *
 	 * @return The input definition.
 	 */
+	@Override
 	public InputDefinition getInputDefinition() {
 		InputDefinition inputDefinition = (InputDefinition) getEditorInput().getAdapter(InputDefinition.class);
 		Assert.isNotNull(inputDefinition);
@@ -230,6 +233,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 				/**
 				 * {@inheritDoc}
 				 */
+				@Override
 				public void eventFired(PreferenceEvent preferenceEvent) {
 					if (PreferenceId.LIVEMODE.equals(preferenceEvent.getPreferenceId())) {
 						boolean isLiveMode = false;
@@ -263,7 +267,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Create the view in the subclasses.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent composite.
 	 */
@@ -272,7 +276,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * Sets the preference panel. Throws {@link NullPointerException} if
 	 * <code>preferencePanel</code> is set to <code>null</code>.
-	 * 
+	 *
 	 * @param preferencePanel
 	 *            The preference panel.
 	 */
@@ -285,6 +289,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IPreferencePanel getPreferencePanel() {
 		return preferencePanel;
 	}
@@ -312,9 +317,9 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	 */
 	@Override
 	public void setFocus() {
-		if (null != getActiveSubView() && null != getActiveSubView().getControl()) {
+		if ((null != getActiveSubView()) && (null != getActiveSubView().getControl())) {
 			getActiveSubView().getControl().setFocus();
-		} else if (null != subView && null != subView.getControl()) {
+		} else if ((null != subView) && (null != subView.getControl())) {
 			subView.getControl().setFocus();
 		}
 	}
@@ -322,6 +327,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISubView getSubView() {
 		return subView;
 	}
@@ -329,6 +335,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setActiveSubView(ISubView subView) {
 		Assert.isNotNull(subView);
 
@@ -366,6 +373,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISubView getActiveSubView() {
 		return activeSubView;
 	}
@@ -373,6 +381,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDataInput(List<? extends DefaultData> data) {
 		subView.setDataInput(data);
 	}
@@ -380,12 +389,13 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * Returns the selection changed listener which listens to the nested editor's selection
 	 * changes, and calls <code>handleSelectionChanged</code> .
-	 * 
+	 *
 	 * @return the selection changed listener
 	 */
 	public ISelectionChangedListener getSelectionChangedListener() {
 		if (selectionChangedListener == null) {
 			selectionChangedListener = new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					AbstractRootEditor.this.handleSelectionChanged(event);
 				}
@@ -397,12 +407,13 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * Returns the post selection change listener which listens to the nested editor's selection
 	 * changes.
-	 * 
+	 *
 	 * @return the post selection change listener.
 	 */
 	public ISelectionChangedListener getPostSelectionChangedListener() {
 		if (postSelectionChangedListener == null) {
 			postSelectionChangedListener = new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					AbstractRootEditor.this.handlePostSelectionChanged(event);
 				}
@@ -416,7 +427,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	 * the selection provider from the site, and calls <code>fireSelectionChanged</code> on it (only
 	 * if it is an instance of <code>MultiSubViewSelectionProvider</code>), passing a new event
 	 * object.
-	 * 
+	 *
 	 * @param event
 	 *            The event.
 	 */
@@ -432,7 +443,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Handles a post selection changed even from the active sub view.
-	 * 
+	 *
 	 * @param event
 	 *            The event
 	 */
@@ -448,7 +459,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Sets the current selection object.
-	 * 
+	 *
 	 * @param selection
 	 *            the selection object to set.
 	 */
@@ -464,7 +475,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	 * <p>
 	 * If {@link #activeSubView} is null, this method will still return true if all the conditions
 	 * above are fulfilled. Note that in this case, maximize action will maximize the first view.
-	 * 
+	 *
 	 * @return True if the maximize active sub-view action can be executed.
 	 */
 	public boolean canMaximizeActiveSubView() {
@@ -474,7 +485,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 			if (subView instanceof AbstractCompositeSubView) {
 				AbstractCompositeSubView compositeSubView = (AbstractCompositeSubView) subView;
 				List<ISubView> allViews = compositeSubView.getSubViews();
-				if (null != allViews && allViews.size() > 1) {
+				if ((null != allViews) && (allViews.size() > 1)) {
 					return true;
 				}
 			}
@@ -484,7 +495,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Returns if the active sub view is currently maximized and thus can be minimized.
-	 * 
+	 *
 	 * @return Returns if the active sub view is currently maximized and thus can be minimized.
 	 */
 	public boolean canMinimizeActiveSubView() {
@@ -505,7 +516,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Recursively maximizes all needed sub-views until the active one is maximized.
-	 * 
+	 *
 	 * @param compositeSubView
 	 *            {@link AbstractCompositeSubView} to start from.
 	 * @param view
@@ -549,7 +560,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Recursively restores the maximized mode.
-	 * 
+	 *
 	 * @param compositeSubView
 	 *            {@link AbstractCompositeSubView} to start from.
 	 */
@@ -564,7 +575,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Returns if the editor had the active sub-view maximized.
-	 * 
+	 *
 	 * @return Returns if the editor had the active sub-view maximized.
 	 */
 	public boolean isActiveViewMaximized() {
@@ -573,7 +584,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 
 	/**
 	 * Updates the name of the editor.
-	 * 
+	 *
 	 * @param name
 	 *            New name.
 	 */
@@ -586,18 +597,21 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryOnlineStatusUpdated(CmrRepositoryDefinition repositoryDefinition, OnlineStatus oldStatus, OnlineStatus newStatus) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryAdded(CmrRepositoryDefinition cmrRepositoryDefinition) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryRemoved(CmrRepositoryDefinition cmrRepositoryDefinition) {
 		if (ObjectUtils.equals(cmrRepositoryDefinition, getInputDefinition().getRepositoryDefinition())) {
 			close();
@@ -613,12 +627,14 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryDataUpdated(CmrRepositoryDefinition cmrRepositoryDefinition) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void repositoryAgentDeleted(CmrRepositoryDefinition cmrRepositoryDefinition, PlatformIdent agent) {
 		if (ObjectUtils.equals(cmrRepositoryDefinition, getInputDefinition().getRepositoryDefinition())) {
 			if (agent.getId() == getInputDefinition().getIdDefinition().getPlatformId()) {
@@ -630,12 +646,14 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void storageDataUpdated(IStorageData storageData) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void storageRemotelyDeleted(IStorageData storageData) {
 		RepositoryDefinition repositoryDefinition = getInputDefinition().getRepositoryDefinition();
 		if (repositoryDefinition instanceof StorageRepositoryDefinition) {
@@ -649,6 +667,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void storageLocallyDeleted(IStorageData storageData) {
 		RepositoryDefinition repositoryDefinition = getInputDefinition().getRepositoryDefinition();
 		if (repositoryDefinition instanceof StorageRepositoryDefinition) {

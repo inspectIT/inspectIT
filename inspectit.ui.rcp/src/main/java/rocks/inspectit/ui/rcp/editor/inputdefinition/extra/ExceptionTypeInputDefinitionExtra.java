@@ -4,9 +4,9 @@ import com.google.common.base.Objects;
 
 /**
  * Input definition extra for displaying the concrete exception type.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExceptionTypeInputDefinitionExtra implements IInputDefinitionExtra {
 
@@ -17,7 +17,7 @@ public class ExceptionTypeInputDefinitionExtra implements IInputDefinitionExtra 
 
 	/**
 	 * Gets {@link #throwableType}.
-	 * 
+	 *
 	 * @return {@link #throwableType}
 	 */
 	public String getThrowableType() {
@@ -26,7 +26,7 @@ public class ExceptionTypeInputDefinitionExtra implements IInputDefinitionExtra 
 
 	/**
 	 * Sets {@link #throwableType}.
-	 * 
+	 *
 	 * @param throwableType
 	 *            New value for {@link #throwableType}
 	 */

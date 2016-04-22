@@ -1,6 +1,5 @@
 package rocks.inspectit.shared.cs.indexing.impl;
 
-
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
@@ -13,28 +12,33 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.CombinedStorageBranch;
  * query(query, forkJoinPool) method in{@link CombinedStorageBranch}.
  * <p>
  * The class is used in {@link StorageIndexingTest}.queryCombinedStorageBranch().
- * 
+ *
  * @author Tobias Angerstein
  *
  * @param <E>
  */
 public class CombinedStorageQueryTestTask<E extends DefaultData> extends RecursiveTask<List<IStorageDescriptor>> {
-	
+
 	/**
-	 * the defined resultList 
+	 *
+	 */
+	private static final long serialVersionUID = -7475821184218881866L;
+	/**
+	 * the defined resultList
 	 */
 	List<IStorageDescriptor> resultList;
-	
-	
-	public CombinedStorageQueryTestTask(List<IStorageDescriptor> resultList){
+
+	public CombinedStorageQueryTestTask(List<IStorageDescriptor> resultList) {
 		this.resultList = resultList;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
 	 * Forks and queries all subbranches.
 	 */
-	protected List<IStorageDescriptor> compute() {	
+	@Override
+	protected List<IStorageDescriptor> compute() {
 		return resultList;
 	}
 }

@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.wizard.page.PreviewCmrDataWizardPage;
 
 /**
  * Wizard for adding the {@link rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AddCmrRepositoryWizard extends Wizard implements INewWizard {
 

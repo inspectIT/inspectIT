@@ -181,7 +181,7 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(StorageBranchIndexer.class, new CustomCompatibleFieldSerializer<StorageBranchIndexer<?>>(kryo, StorageBranchIndexer.class, schemaManager), nextRegistrationId++);
 		kryo.register(SimpleStorageDescriptor.class, new CustomCompatibleFieldSerializer<SimpleStorageDescriptor>(kryo, SimpleStorageDescriptor.class, schemaManager), nextRegistrationId++);
 		// we must not copy transient fields of leaf serializer (read/write locks)
-		CustomCompatibleFieldSerializer<ArrayBasedStorageLeaf<?>> leafSerializer = new CustomCompatibleFieldSerializer<ArrayBasedStorageLeaf<?>>(kryo, ArrayBasedStorageLeaf.class, schemaManager);
+		CustomCompatibleFieldSerializer<ArrayBasedStorageLeaf<?>> leafSerializer = new CustomCompatibleFieldSerializer<>(kryo, ArrayBasedStorageLeaf.class, schemaManager);
 		leafSerializer.setCopyTransient(false);
 		kryo.register(ArrayBasedStorageLeaf.class, leafSerializer, nextRegistrationId++);
 		kryo.register(LeafWithNoDescriptors.class, new CustomCompatibleFieldSerializer<LeafWithNoDescriptors<?>>(kryo, LeafWithNoDescriptors.class, schemaManager), nextRegistrationId++);
@@ -328,7 +328,7 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(SensorAssignmentProfileData.class, new FieldSerializer<SensorAssignmentProfileData>(kryo, SensorAssignmentProfileData.class), nextRegistrationId++);
 		kryo.register(ExcludeRulesProfileData.class, new FieldSerializer<ExcludeRulesProfileData>(kryo, ExcludeRulesProfileData.class), nextRegistrationId++);
 		kryo.register(JmxDefinitionProfileData.class, new FieldSerializer<JmxDefinitionProfileData>(kryo, JmxDefinitionProfileData.class), nextRegistrationId++);
-		
+
 		// INSPECTIT-2101
 		kryo.register(ChartingMethodSensorAssignment.class, new FieldSerializer<ChartingMethodSensorAssignment>(kryo, ChartingMethodSensorAssignment.class), nextRegistrationId++);
 	}

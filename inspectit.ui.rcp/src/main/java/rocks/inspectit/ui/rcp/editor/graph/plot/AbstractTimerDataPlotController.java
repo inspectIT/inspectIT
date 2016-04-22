@@ -38,9 +38,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * Abstract plot controller for all graphs concerning the timer data and it's sub-classes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of template
  */
@@ -55,7 +55,7 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 	/**
 	 * The map containing the weight of the {@link XYPlot}s.
 	 */
-	private Map<XYPlot, Integer> weights = new HashMap<XYPlot, Integer>();
+	private Map<XYPlot, Integer> weights = new HashMap<>();
 
 	/**
 	 * Plot used to display duration of the HTTP requests.
@@ -79,7 +79,7 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 
 	/**
 	 * Returns series key for given template.
-	 * 
+	 *
 	 * @param template
 	 *            Template
 	 * @return {@link Comparable} representing series key.
@@ -88,7 +88,7 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 
 	/**
 	 * Returns the template list. Each object in this list will represent one series.
-	 * 
+	 *
 	 * @return Returns the template list.
 	 */
 	protected abstract List<E> getTemplates();
@@ -119,7 +119,7 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 		weights.put(durationPlot, 2);
 		weights.put(countPlot, 1);
 
-		List<XYPlot> list = new ArrayList<XYPlot>();
+		List<XYPlot> list = new ArrayList<>();
 		Collections.addAll(list, durationPlot, countPlot);
 		return list;
 	}
@@ -134,7 +134,7 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 
 	/**
 	 * Removes all data from the upper plot and sets the {@link TimerData} objects on the plot.
-	 * 
+	 *
 	 * @param map
 	 *            The data to set on the plot.
 	 */
@@ -155,7 +155,7 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 
 	/**
 	 * Removes all data from the upper plot and sets the {@link TimerData} objects on the plot.
-	 * 
+	 *
 	 * @param map
 	 *            The data to set on the plot.
 	 */
@@ -178,12 +178,12 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 
 	/**
 	 * Initializes the duration plot.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}.
 	 */
 	private XYPlot initializeDurationPlot() {
 		Set<Comparable<?>> keys = new HashSet<>();
-		durationSeries = new ArrayList<YIntervalSeriesImproved>();
+		durationSeries = new ArrayList<>();
 		YIntervalSeriesCollection yintervalseriescollection = new YIntervalSeriesCollection();
 		for (E template : getTemplates()) {
 			Comparable<?> seriesKey = getSeriesKey(template);
@@ -222,12 +222,12 @@ public abstract class AbstractTimerDataPlotController<E extends TimerData> exten
 
 	/**
 	 * Initializes the lower plot.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}
 	 */
 	private XYPlot initializeCountPlot() {
 		Set<Comparable<?>> keys = new HashSet<>();
-		countSeries = new ArrayList<TimeSeries>();
+		countSeries = new ArrayList<>();
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		for (E template : getTemplates()) {
 			Comparable<?> seriesKey = getSeriesKey(template);

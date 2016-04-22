@@ -13,7 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +42,6 @@ import rocks.inspectit.server.dao.impl.MethodIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.MethodSensorTypeIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformSensorTypeIdentDaoImpl;
-import rocks.inspectit.server.service.RegistrationService;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
@@ -132,12 +130,12 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 */
 	@Test(expectedExceptions = { BusinessException.class })
 	public void noRegistrationTwoAgents() throws BusinessException {
-		List<String> definedIps = new ArrayList<String>();
+		List<String> definedIps = new ArrayList<>();
 		definedIps.add("ip");
 		String agentName = "agentName";
 		String version = "version";
 
-		List<PlatformIdent> dbResponseList = new ArrayList<PlatformIdent>();
+		List<PlatformIdent> dbResponseList = new ArrayList<>();
 		dbResponseList.add(new PlatformIdent());
 		dbResponseList.add(new PlatformIdent());
 		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(dbResponseList);
@@ -154,7 +152,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	@Test
 	public void registerNewPlatformIdent() throws BusinessException {
 		final long platformId = 10;
-		List<String> definedIps = new ArrayList<String>();
+		List<String> definedIps = new ArrayList<>();
 		definedIps.add("ip");
 		final String agentName = "agentName";
 		String version = "version";
@@ -193,7 +191,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	@Test
 	public void registerExistingPlatformIdent() throws BusinessException {
 		long platformId = 10;
-		List<String> definedIps = new ArrayList<String>();
+		List<String> definedIps = new ArrayList<>();
 		definedIps.add("ip");
 		String agentName = "agentName";
 		String version = "version";
@@ -205,7 +203,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		platformIdent.setDefinedIPs(definedIps);
 		platformIdent.setVersion("versionOld");
 		platformIdent.setTimeStamp(timestamp);
-		List<PlatformIdent> findByExampleList = new ArrayList<PlatformIdent>();
+		List<PlatformIdent> findByExampleList = new ArrayList<>();
 		findByExampleList.add(platformIdent);
 
 		when(platformIdentDao.findByNameAndIps(agentName, definedIps)).thenReturn(findByExampleList);
@@ -235,7 +233,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	@Test
 	public void registerNewPlatformIdentNoIpBased() throws BusinessException {
 		final long platformId = 10;
-		List<String> definedIps = new ArrayList<String>();
+		List<String> definedIps = new ArrayList<>();
 		definedIps.add("ip");
 		final String agentName = "agentName";
 		String version = "version";
@@ -276,7 +274,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	@Test
 	public void registerExistingPlatformIdentNoIpBased() throws BusinessException {
 		long platformId = 10;
-		List<String> definedIps = new ArrayList<String>();
+		List<String> definedIps = new ArrayList<>();
 		definedIps.add("ip");
 		String agentName = "agentName";
 		String version = "version";
@@ -288,7 +286,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		platformIdent.setDefinedIPs(Collections.<String> emptyList());
 		platformIdent.setVersion("versionOld");
 		platformIdent.setTimeStamp(timestamp);
-		List<PlatformIdent> findByExampleList = new ArrayList<PlatformIdent>();
+		List<PlatformIdent> findByExampleList = new ArrayList<>();
 		findByExampleList.add(platformIdent);
 
 		registrationService.ipBasedAgentRegistration = false;
@@ -315,7 +313,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	@Test
 	public void unregisterPlatformIdent() throws BusinessException {
 		long platformId = 10;
-		List<String> definedIps = new ArrayList<String>();
+		List<String> definedIps = new ArrayList<>();
 		definedIps.add("ip");
 		String agentName = "agentName";
 
@@ -352,7 +350,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		String packageName = "package";
 		String className = "class";
 		String methodName = "method";
-		List<String> parameterTypes = new ArrayList<String>();
+		List<String> parameterTypes = new ArrayList<>();
 		parameterTypes.add("parameter");
 		String returnType = "returnType";
 		int modifiers = 2;
@@ -395,7 +393,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		String packageName = "package";
 		String className = "class";
 		String methodName = "method";
-		List<String> parameterTypes = new ArrayList<String>();
+		List<String> parameterTypes = new ArrayList<>();
 		parameterTypes.add("parameter");
 		String returnType = "returnType";
 		int modifiers = 2;
@@ -411,7 +409,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		methodIdent.setModifiers(modifiers);
 		methodIdent.setTimeStamp(timestamp);
 
-		List<MethodIdent> findByExampleList = new ArrayList<MethodIdent>();
+		List<MethodIdent> findByExampleList = new ArrayList<>();
 		findByExampleList.add(methodIdent);
 
 		PlatformIdent platformIdent = new PlatformIdent();
@@ -540,9 +538,6 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Test the registration of the JMX sensor type ident.
-	 *
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
 	public void registerJmxSensorTypeIdent() {
@@ -575,9 +570,6 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 	/**
 	 * Tests the registration of a {@link JmxSensorTypeIdent}.
-	 *
-	 * @throws RemoteException
-	 *             If {@link RemoteException} occurs.
 	 */
 	@Test
 	public void registerJmxSensorDefinitionDataIdent() {

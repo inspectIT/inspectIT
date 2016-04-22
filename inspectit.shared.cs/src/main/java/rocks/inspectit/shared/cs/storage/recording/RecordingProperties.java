@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * Class for holding the recording properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RecordingProperties implements Serializable {
 
@@ -54,7 +54,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Gets {@link #recordStartDate}.
-	 * 
+	 *
 	 * @return {@link #recordStartDate}
 	 */
 	public Date getRecordStartDate() {
@@ -63,7 +63,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Sets {@link #recordStartDate}.
-	 * 
+	 *
 	 * @param recordStartDate
 	 *            New value for {@link #recordStartDate}
 	 */
@@ -73,7 +73,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Gets {@link #recordEndDate}.
-	 * 
+	 *
 	 * @return {@link #recordEndDate}
 	 */
 	public Date getRecordEndDate() {
@@ -82,7 +82,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Sets {@link #recordEndDate}.
-	 * 
+	 *
 	 * @param recordEndDate
 	 *            New value for {@link #recordEndDate}
 	 */
@@ -92,7 +92,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Gets {@link #recordingDataProcessors}.
-	 * 
+	 *
 	 * @return {@link #recordingDataProcessors}
 	 */
 	public Collection<AbstractDataProcessor> getRecordingDataProcessors() {
@@ -101,7 +101,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Sets {@link #recordingDataProcessors}.
-	 * 
+	 *
 	 * @param recordingDataProcessors
 	 *            New value for {@link #recordingDataProcessors}
 	 */
@@ -111,7 +111,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Gets {@link #startDelay}.
-	 * 
+	 *
 	 * @return {@link #startDelay}
 	 */
 	public long getStartDelay() {
@@ -120,7 +120,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Sets {@link #startDelay}.
-	 * 
+	 *
 	 * @param startDelay
 	 *            New value for {@link #startDelay}
 	 */
@@ -130,7 +130,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Gets {@link #recordDuration}.
-	 * 
+	 *
 	 * @return {@link #recordDuration}
 	 */
 	public long getRecordDuration() {
@@ -139,7 +139,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Sets {@link #recordDuration}.
-	 * 
+	 *
 	 * @param recordDuration
 	 *            New value for {@link #recordDuration}
 	 */
@@ -149,7 +149,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Gets {@link #autoFinalize}.
-	 * 
+	 *
 	 * @return {@link #autoFinalize}
 	 */
 	public boolean isAutoFinalize() {
@@ -158,7 +158,7 @@ public class RecordingProperties implements Serializable {
 
 	/**
 	 * Sets {@link #autoFinalize}.
-	 * 
+	 *
 	 * @param autoFinalize
 	 *            New value for {@link #autoFinalize}
 	 */

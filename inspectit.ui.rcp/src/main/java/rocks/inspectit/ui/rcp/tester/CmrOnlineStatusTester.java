@@ -8,14 +8,14 @@ import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
 import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
-import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
+import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Tester for CMR Online Status.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CmrOnlineStatusTester extends PropertyTester {
 

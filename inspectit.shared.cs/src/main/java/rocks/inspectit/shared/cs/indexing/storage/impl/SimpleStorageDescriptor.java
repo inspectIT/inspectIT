@@ -6,9 +6,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * Simple storage descriptor stores only position as long and size as int value, since this is
  * enough information to read a object if file is known. File specification will be done by
  * {@link StorageLeaf}s directly.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SimpleStorageDescriptor {
 
@@ -30,7 +30,7 @@ public class SimpleStorageDescriptor {
 
 	/**
 	 * Constructor to set the fields.
-	 * 
+	 *
 	 * @param position
 	 *            Position in file.
 	 * @param size
@@ -46,7 +46,7 @@ public class SimpleStorageDescriptor {
 	 * method will return true if the join was successfully done, and false if no join was done. The
 	 * join is possible only if the given position and size is pointing to the data that is next to
 	 * the data currently described in {@link SimpleStorageDescriptor}.
-	 * 
+	 *
 	 * @param other
 	 *            Descriptor to join
 	 * @return This method will return true if the join was successfully done, and false if no join
@@ -61,7 +61,7 @@ public class SimpleStorageDescriptor {
 	 * was successfully done, and false if no join was done. The join is possible only if the given
 	 * position and size is pointing to the data that is next to the data currently described in
 	 * {@link SimpleStorageDescriptor}.
-	 * 
+	 *
 	 * @param otherPosition
 	 *            Position
 	 * @param otherSize
@@ -70,10 +70,10 @@ public class SimpleStorageDescriptor {
 	 *         was done.
 	 */
 	public boolean join(long otherPosition, long otherSize) {
-		if (this.position + this.size == otherPosition) {
+		if ((this.position + this.size) == otherPosition) {
 			this.size += otherSize;
 			return true;
-		} else if (otherPosition + otherSize == this.position) {
+		} else if ((otherPosition + otherSize) == this.position) {
 			this.position = otherPosition;
 			this.size += otherSize;
 			return true;
@@ -118,8 +118,8 @@ public class SimpleStorageDescriptor {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (position ^ (position >>> 32));
-		result = prime * result + size;
+		result = (prime * result) + (int) (position ^ (position >>> 32));
+		result = (prime * result) + size;
 		return result;
 	}
 

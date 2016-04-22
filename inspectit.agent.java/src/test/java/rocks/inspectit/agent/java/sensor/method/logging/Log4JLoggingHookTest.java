@@ -5,23 +5,20 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 
-import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
-import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingHook;
-import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory;
-import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory.Framework;
-import rocks.inspectit.shared.all.communication.data.LoggingData;
-import rocks.inspectit.shared.all.util.ObjectUtils;
-
 import org.apache.log4j.Level;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import rocks.inspectit.agent.java.AbstractLogSupport;
+import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.core.ICoreService;
+import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.shared.all.communication.data.LoggingData;
+import rocks.inspectit.shared.all.util.ObjectUtils;
 
 @SuppressWarnings("PMD")
 public class Log4JLoggingHookTest extends AbstractLogSupport {

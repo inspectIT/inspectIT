@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.wizard.ManageLabelWizard;
 
 /**
  * Show labels manager handler.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ShowLabelsManagerHandler extends AbstractHandler implements IHandler {
 

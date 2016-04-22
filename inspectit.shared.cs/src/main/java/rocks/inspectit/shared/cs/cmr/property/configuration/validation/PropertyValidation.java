@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
 
 /**
  * Class containing result of {@link AbstractProperty} validation.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlTransient
 public class PropertyValidation {
@@ -27,7 +27,7 @@ public class PropertyValidation {
 	/**
 	 * All errors.
 	 */
-	private List<ValidationError> errors = new ArrayList<ValidationError>();
+	private List<ValidationError> errors = new ArrayList<>();
 
 	/**
 	 * No-arg constructor.
@@ -38,7 +38,7 @@ public class PropertyValidation {
 	/**
 	 * Default protected constructor. Clients should use {@link #createFor(AbstractProperty)} for
 	 * getting an instance.
-	 * 
+	 *
 	 * @param property
 	 *            {@link AbstractProperty} for validation.
 	 */
@@ -48,7 +48,7 @@ public class PropertyValidation {
 
 	/**
 	 * Creates new instance of {@link PropertyValidation} for given {@link AbstractProperty}.
-	 * 
+	 *
 	 * @param property
 	 *            {@link AbstractProperty} for validation.
 	 * @return New instance of {@link PropertyValidation}. Note that returned object will not
@@ -60,7 +60,7 @@ public class PropertyValidation {
 
 	/**
 	 * Gets {@link #property}.
-	 * 
+	 *
 	 * @return {@link #property}
 	 */
 	public AbstractProperty getProperty() {
@@ -69,7 +69,7 @@ public class PropertyValidation {
 
 	/**
 	 * Gets {@link #errors}.
-	 * 
+	 *
 	 * @return {@link #errors}
 	 */
 	public List<ValidationError> getErrors() {
@@ -78,7 +78,7 @@ public class PropertyValidation {
 
 	/**
 	 * Adds {@link ValidationError}.
-	 * 
+	 *
 	 * @param error
 	 *            {@link ValidationError} to add.
 	 */
@@ -88,7 +88,7 @@ public class PropertyValidation {
 
 	/**
 	 * Returns if the validation has any error.
-	 * 
+	 *
 	 * @return Returns <code>true</code> if at least one {@link ValidationError} is available.
 	 */
 	public boolean hasErrors() {
@@ -97,7 +97,7 @@ public class PropertyValidation {
 
 	/**
 	 * Returns number of error in validation.
-	 * 
+	 *
 	 * @return Number of error in validation.
 	 */
 	public int getErrorCount() {
@@ -110,7 +110,7 @@ public class PropertyValidation {
 
 	/**
 	 * Returns message for the {@link PropertyValidation}.
-	 * 
+	 *
 	 * @return Returns message for the {@link PropertyValidation}.
 	 */
 	public String getMessage() {
@@ -138,8 +138,8 @@ public class PropertyValidation {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((errors == null) ? 0 : errors.hashCode());
-		result = prime * result + ((property == null) ? 0 : property.hashCode());
+		result = (prime * result) + ((errors == null) ? 0 : errors.hashCode());
+		result = (prime * result) + ((property == null) ? 0 : property.hashCode());
 		return result;
 	}
 

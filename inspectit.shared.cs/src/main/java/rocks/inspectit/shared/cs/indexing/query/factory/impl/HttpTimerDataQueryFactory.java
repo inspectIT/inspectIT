@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestriction
 
 /**
  * Factory for all queries for the {@link HttpTimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 @Component
@@ -24,7 +24,7 @@ public class HttpTimerDataQueryFactory<E extends IIndexQuery> extends AbstractQu
 
 	/**
 	 * Return query for all <code>HttpTimerData</code> objects.
-	 * 
+	 *
 	 * @param httpData
 	 *            <code>HttpTimerData</code> object used to retrieve the platformId
 	 * @param fromDate
@@ -36,7 +36,7 @@ public class HttpTimerDataQueryFactory<E extends IIndexQuery> extends AbstractQu
 	public E getFindAllHttpTimersQuery(HttpTimerData httpData, Date fromDate, Date toDate) {
 		E query = getIndexQueryProvider().getIndexQuery();
 		query.setPlatformIdent(httpData.getPlatformIdent());
-		ArrayList<Class<?>> classesToSearch = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> classesToSearch = new ArrayList<>();
 		classesToSearch.add(HttpTimerData.class);
 		classesToSearch.add(AggregatedHttpTimerData.class);
 		query.setObjectClasses(classesToSearch);
@@ -52,7 +52,7 @@ public class HttpTimerDataQueryFactory<E extends IIndexQuery> extends AbstractQu
 	/**
 	 * Return query for all <code>HttpTimerData</code> objects that have a inspectIT tag header
 	 * value.
-	 * 
+	 *
 	 * @param httpData
 	 *            <code>HttpTimerData</code> object used to retrieve the platformId
 	 * @param fromDate
@@ -64,7 +64,7 @@ public class HttpTimerDataQueryFactory<E extends IIndexQuery> extends AbstractQu
 	public E getFindAllTaggedHttpTimersQuery(HttpTimerData httpData, Date fromDate, Date toDate) {
 		E query = getIndexQueryProvider().getIndexQuery();
 		query.setPlatformIdent(httpData.getPlatformIdent());
-		ArrayList<Class<?>> classesToSearch = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> classesToSearch = new ArrayList<>();
 		classesToSearch.add(HttpTimerData.class);
 		classesToSearch.add(AggregatedHttpTimerData.class);
 		query.setObjectClasses(classesToSearch);

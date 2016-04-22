@@ -11,9 +11,9 @@ import rocks.inspectit.shared.all.communication.IIdsAwareAggregatedData;
 /**
  * Aggregated exception sensor data. This objects are used for the purpose of grouping the
  * {@link ExceptionSensorData} objects that have same properties.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AggregatedExceptionSensorData extends ExceptionSensorData implements IIdsAwareAggregatedData<ExceptionSensorData> {
 
@@ -46,7 +46,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 
 	/**
 	 * Gets {@link #created}.
-	 * 
+	 *
 	 * @return {@link #created}
 	 */
 	public long getCreated() {
@@ -55,7 +55,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 
 	/**
 	 * Sets {@link #created}.
-	 * 
+	 *
 	 * @param created
 	 *            New value for {@link #created}
 	 */
@@ -65,7 +65,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 
 	/**
 	 * Gets {@link #passed}.
-	 * 
+	 *
 	 * @return {@link #passed}
 	 */
 	public long getPassed() {
@@ -74,7 +74,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 
 	/**
 	 * Sets {@link #passed}.
-	 * 
+	 *
 	 * @param passed
 	 *            New value for {@link #passed}
 	 */
@@ -84,7 +84,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 
 	/**
 	 * Gets {@link #handled}.
-	 * 
+	 *
 	 * @return {@link #handled}
 	 */
 	public long getHandled() {
@@ -93,7 +93,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 
 	/**
 	 * Sets {@link #handled}.
-	 * 
+	 *
 	 * @param handled
 	 *            New value for {@link #handled}
 	 */
@@ -104,13 +104,14 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public double getInvocationAffiliationPercentage() {
 		return (double) getObjectsInInvocationsCount() / created;
 	}
 
 	/**
 	 * aggregates the given exception data to this instance.
-	 * 
+	 *
 	 * @param exceptionData
 	 *            {@link ExceptionSensorData}
 	 */
@@ -134,7 +135,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 
 	/**
 	 * Aggregates the {@link AggregatedExceptionSensorData}.
-	 * 
+	 *
 	 * @param aggregatedExceptionData
 	 *            {@link AggregatedExceptionSensorData}
 	 */
@@ -187,6 +188,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, false);
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 3, 0);
@@ -208,10 +210,10 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((aggregatedIds == null) ? 0 : aggregatedIds.hashCode());
-		result = prime * result + (int) (created ^ (created >>> 32));
-		result = prime * result + (int) (handled ^ (handled >>> 32));
-		result = prime * result + (int) (passed ^ (passed >>> 32));
+		result = (prime * result) + ((aggregatedIds == null) ? 0 : aggregatedIds.hashCode());
+		result = (prime * result) + (int) (created ^ (created >>> 32));
+		result = (prime * result) + (int) (handled ^ (handled >>> 32));
+		result = (prime * result) + (int) (passed ^ (passed >>> 32));
 		return result;
 	}
 

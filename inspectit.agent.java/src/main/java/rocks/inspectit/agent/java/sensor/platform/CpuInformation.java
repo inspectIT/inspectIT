@@ -1,7 +1,7 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,7 @@ public class CpuInformation extends AbstractPlatformSensor implements IPlatformS
 		if (osData == null) {
 			try {
 				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
+				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
 				osData = new CpuInformationData(timestamp, platformId, sensorTypeIdent);
 				osData.incrementCount();

@@ -19,9 +19,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 
 /**
  * Abstract validator for all comparing validators.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,7 +45,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 * Compares property against another property. If comparing proves to be wrong the implementing
 	 * class is responsible of adding the correct {@link ValidationError} to the
 	 * {@link PropertyValidation}.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty}
 	 * @param againstProperty
@@ -62,7 +62,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	/**
 	 * Compares property against value. If comparing proves to be wrong the implementing class is
 	 * responsible of adding the correct {@link ValidationError} to the {@link PropertyValidation}.
-	 * 
+	 *
 	 * @param property
 	 *            {@link SingleProperty}
 	 * @param value
@@ -77,6 +77,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void validate(SingleProperty<? extends T> property, PropertyValidation propertyValidation) {
 		T against = getAgainstValue(property, propertyValidation);
 
@@ -88,6 +89,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void validateForValue(SingleProperty<? extends T> property, PropertyValidation propertyValidation, T value) {
 		T against = getAgainstValue(property, propertyValidation);
 		if (null != against) {
@@ -99,7 +101,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 * Retrieves against value from {@link #than} for given property. If parsing fails the
 	 * {@link PropertyValidation} will be filled with error and <code>null</code> will be returned
 	 * as value.
-	 * 
+	 *
 	 * @param property
 	 *            Property to get against value for.
 	 * @param propertyValidation
@@ -110,8 +112,8 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 		T against = property.parseLiteral(than);
 
 		if (null == against) {
-			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property), "Validation of  property " + property.getName()
-					+ " failed because literal (" + than + ") to compare against can not be parsed.");
+			ValidationError validationError = new ValidationError(Collections.<SingleProperty<?>> singletonList(property),
+					"Validation of  property " + property.getName() + " failed because literal (" + than + ") to compare against can not be parsed.");
 			propertyValidation.addValidationError(validationError);
 		}
 
@@ -121,20 +123,21 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void validate(GroupedProperty groupProperty, PropertyValidation propertyValidation) {
 		SingleProperty<?> compare = getProperty(groupProperty, propertyValidation);
 		SingleProperty<?> against = getAgainstProperty(groupProperty, propertyValidation);
 
-		if (null == compare || null == against) {
+		if ((null == compare) || (null == against)) {
 			return;
 		}
 
 		try {
 			compare((SingleProperty<T>) compare, (SingleProperty<T>) against, (T) compare.getValue(), (T) against.getValue(), propertyValidation);
 		} catch (Exception e) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because exception occurred during validation. Exception message: " + e.getMessage());
+			ValidationError validationError = new ValidationError(new ArrayList<>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because exception occurred during validation. Exception message: " + e.getMessage());
 			propertyValidation.addValidationError(validationError);
 		}
 	}
@@ -142,12 +145,13 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void validateForPropertyUpdates(GroupedProperty groupProperty, Collection<IPropertyUpdate<?>> propertyUpdates, PropertyValidation propertyValidation) {
 		SingleProperty<?> compareProperty = getProperty(groupProperty, propertyValidation);
 		SingleProperty<?> againstProperty = getAgainstProperty(groupProperty, propertyValidation);
 
-		if (null == compareProperty || null == againstProperty) {
+		if ((null == compareProperty) || (null == againstProperty)) {
 			return;
 		}
 
@@ -171,8 +175,8 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 		try {
 			compare((SingleProperty<T>) compareProperty, (SingleProperty<T>) againstProperty, value, against, propertyValidation);
 		} catch (Exception e) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because exception occurred during validation. Exception message: " + e.getMessage());
+			ValidationError validationError = new ValidationError(new ArrayList<>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because exception occurred during validation. Exception message: " + e.getMessage());
 			propertyValidation.addValidationError(validationError);
 		}
 	}
@@ -181,7 +185,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 * Returns property defined by {@link #property} from the grouped property. If for some reason
 	 * property can not be found, {@link PropertyValidation} will be filled with error(s) and
 	 * <code>null</code> returned.
-	 * 
+	 *
 	 * @param groupProperty
 	 *            {@link GroupedProperty} to search in.
 	 * @param propertyValidation
@@ -190,15 +194,15 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 */
 	private SingleProperty<?> getProperty(GroupedProperty groupProperty, PropertyValidation propertyValidation) {
 		if (StringUtils.isEmpty(property)) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because property logical name is not set.");
+			ValidationError validationError = new ValidationError(new ArrayList<>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because property logical name is not set.");
 			propertyValidation.addValidationError(validationError);
 			return null;
 		}
 		SingleProperty<?> p = groupProperty.forLogicalname(property);
 		if (null == p) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because property with logical name '" + property + "' does not exist.");
+			ValidationError validationError = new ValidationError(new ArrayList<>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because property with logical name '" + property + "' does not exist.");
 			propertyValidation.addValidationError(validationError);
 		}
 		return p;
@@ -208,7 +212,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 * Returns property defined by {@link #this} from the grouped property. If for some reason
 	 * property can not be found, {@link PropertyValidation} will be filled with error(s) and
 	 * <code>null</code> returned.
-	 * 
+	 *
 	 * @param groupProperty
 	 *            {@link GroupedProperty} to search in.
 	 * @param propertyValidation
@@ -217,15 +221,15 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 	 */
 	private SingleProperty<?> getAgainstProperty(GroupedProperty groupProperty, PropertyValidation propertyValidation) {
 		if (StringUtils.isEmpty(than)) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because logical name of the property to compare against is not set.");
+			ValidationError validationError = new ValidationError(new ArrayList<>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because logical name of the property to compare against is not set.");
 			propertyValidation.addValidationError(validationError);
 			return null;
 		}
 		SingleProperty<?> p = groupProperty.forLogicalname(than);
 		if (null == p) {
-			ValidationError validationError = new ValidationError(new ArrayList<SingleProperty<?>>(groupProperty.getSingleProperties()), "Validation of grouped property " + groupProperty.getName()
-					+ " failed because property with logical name '" + than + "' does not exist.");
+			ValidationError validationError = new ValidationError(new ArrayList<>(groupProperty.getSingleProperties()),
+					"Validation of grouped property " + groupProperty.getName() + " failed because property with logical name '" + than + "' does not exist.");
 			propertyValidation.addValidationError(validationError);
 		}
 		return p;
@@ -233,7 +237,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 
 	/**
 	 * Gets {@link #property}.
-	 * 
+	 *
 	 * @return {@link #property}
 	 */
 	public String getProperty() {
@@ -242,7 +246,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 
 	/**
 	 * Sets {@link #property}.
-	 * 
+	 *
 	 * @param property
 	 *            New value for {@link #property}
 	 */
@@ -252,7 +256,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 
 	/**
 	 * Gets {@link #than}.
-	 * 
+	 *
 	 * @return {@link #than}
 	 */
 	public String getThan() {
@@ -261,7 +265,7 @@ public abstract class AbstractComparingValidator<T> implements IGroupedProperyVa
 
 	/**
 	 * Sets {@link #than}.
-	 * 
+	 *
 	 * @param than
 	 *            New value for {@link #than}
 	 */

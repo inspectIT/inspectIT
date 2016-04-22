@@ -58,9 +58,9 @@ public class AgentConfig {
 	private Collection<IMatchPattern> excludeClassesPatterns;
 
 	/**
-	 * Set of known {@link InstrumentationDefinition} for the agent that can be used by the Agent right
-	 * away. Each {@link InstrumentationDefinition} is mapped to the collection of the class hashes it
-	 * relates to.
+	 * Set of known {@link InstrumentationDefinition} for the agent that can be used by the Agent
+	 * right away. Each {@link InstrumentationDefinition} is mapped to the collection of the class
+	 * hashes it relates to.
 	 */
 	private Map<Collection<String>, InstrumentationDefinition> initialInstrumentationResults;
 
@@ -287,16 +287,16 @@ public class AgentConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((bufferStrategyConfig == null) ? 0 : bufferStrategyConfig.hashCode());
-		result = prime * result + (classCacheExistsOnCmr ? 1231 : 1237);
-		result = prime * result + ((configurationInfo == null) ? 0 : configurationInfo.hashCode());
-		result = prime * result + ((exceptionSensorTypeConfig == null) ? 0 : exceptionSensorTypeConfig.hashCode());
-		result = prime * result + ((excludeClassesPatterns == null) ? 0 : excludeClassesPatterns.hashCode());
-		result = prime * result + ((initialInstrumentationResults == null) ? 0 : initialInstrumentationResults.hashCode());
-		result = prime * result + ((methodSensorTypeConfigs == null) ? 0 : methodSensorTypeConfigs.hashCode());
-		result = prime * result + (int) (platformId ^ (platformId >>> 32));
-		result = prime * result + ((platformSensorTypeConfigs == null) ? 0 : platformSensorTypeConfigs.hashCode());
-		result = prime * result + ((sendingStrategyConfig == null) ? 0 : sendingStrategyConfig.hashCode());
+		result = (prime * result) + ((bufferStrategyConfig == null) ? 0 : bufferStrategyConfig.hashCode());
+		result = (prime * result) + (classCacheExistsOnCmr ? 1231 : 1237);
+		result = (prime * result) + ((configurationInfo == null) ? 0 : configurationInfo.hashCode());
+		result = (prime * result) + ((exceptionSensorTypeConfig == null) ? 0 : exceptionSensorTypeConfig.hashCode());
+		result = (prime * result) + ((excludeClassesPatterns == null) ? 0 : excludeClassesPatterns.hashCode());
+		result = (prime * result) + ((initialInstrumentationResults == null) ? 0 : initialInstrumentationResults.hashCode());
+		result = (prime * result) + ((methodSensorTypeConfigs == null) ? 0 : methodSensorTypeConfigs.hashCode());
+		result = (prime * result) + (int) (platformId ^ (platformId >>> 32));
+		result = (prime * result) + ((platformSensorTypeConfigs == null) ? 0 : platformSensorTypeConfigs.hashCode());
+		result = (prime * result) + ((sendingStrategyConfig == null) ? 0 : sendingStrategyConfig.hashCode());
 		return result;
 	}
 

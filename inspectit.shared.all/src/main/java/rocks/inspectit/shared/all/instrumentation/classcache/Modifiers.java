@@ -117,7 +117,6 @@ public final class Modifiers {
 		return Modifier.isVolatile(mod);
 	}
 
-
 	/**
 	 * Returns if modifier is static. Note that in our case modifier can be mix (public and private
 	 * for example).

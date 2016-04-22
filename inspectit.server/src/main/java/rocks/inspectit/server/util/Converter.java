@@ -2,9 +2,9 @@ package rocks.inspectit.server.util;
 
 /**
  * Converter utility class.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class Converter {
 
@@ -21,7 +21,7 @@ public final class Converter {
 
 	/**
 	 * Converts the nano seconds into milliseconds.
-	 * 
+	 *
 	 * @param nanoTime
 	 *            The nano time.
 	 * @return Returns the milliseconds.

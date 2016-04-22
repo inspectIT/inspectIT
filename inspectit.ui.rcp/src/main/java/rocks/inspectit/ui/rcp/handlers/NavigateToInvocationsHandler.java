@@ -25,8 +25,8 @@ import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.NavigationSteppingInputDefinitionExtra;
@@ -38,9 +38,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 /**
  * Handler for navigating from table view that contains {@link IInvocationAwareData}, to the
  * invocation sequence view.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NavigateToInvocationsHandler extends AbstractTemplateHandler {
 
@@ -54,7 +54,7 @@ public class NavigateToInvocationsHandler extends AbstractTemplateHandler {
 		RepositoryDefinition repositoryDefinition = rootEditor.getInputDefinition().getRepositoryDefinition();
 		InputDefinition inputDefinition = null;
 
-		List<InvocationAwareData> invocationAwareDataList = new ArrayList<InvocationAwareData>();
+		List<InvocationAwareData> invocationAwareDataList = new ArrayList<>();
 		String textualDesc = null;
 		int selectionSize = selection.size();
 		int invocationsCount = 0;
@@ -119,17 +119,17 @@ public class NavigateToInvocationsHandler extends AbstractTemplateHandler {
 
 	/**
 	 * Creates a steppable template from a list of {@link InvocationAwareData}.
-	 * 
+	 *
 	 * @param invocationAwareDataList
 	 *            {@link InvocationAwareData} list.
 	 * @return Templates to be used as steppable objects.
 	 */
 	private List<DefaultData> getTemplates(List<InvocationAwareData> invocationAwareDataList) {
-		List<DefaultData> steppableTemplates = new ArrayList<DefaultData>();
+		List<DefaultData> steppableTemplates = new ArrayList<>();
 		for (InvocationAwareData invocationAwareData : invocationAwareDataList) {
 			if (invocationAwareData instanceof SqlStatementData) {
 				steppableTemplates.add(super.getTemplate((SqlStatementData) invocationAwareData, false, true, true));
-			} else if (invocationAwareData instanceof TimerData && !(invocationAwareData instanceof HttpTimerData)) {
+			} else if ((invocationAwareData instanceof TimerData) && !(invocationAwareData instanceof HttpTimerData)) {
 				steppableTemplates.add(super.getTemplate((TimerData) invocationAwareData, false, true));
 			} else if (invocationAwareData instanceof ExceptionSensorData) {
 				steppableTemplates.add(super.getTemplate((ExceptionSensorData) invocationAwareData, false, true, true, true, true));
@@ -140,7 +140,7 @@ public class NavigateToInvocationsHandler extends AbstractTemplateHandler {
 
 	/**
 	 * Returns the platform id for the object.
-	 * 
+	 *
 	 * @param firstElement
 	 *            Object.
 	 * @return If object is instance of {@link DefaultData} method returns its platform id,

@@ -15,9 +15,9 @@ import rocks.inspectit.ui.rcp.storage.label.composite.AbstractStorageLabelCompos
 
 /**
  * Composite for selecting the {@link NumberStorageLabel}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class NumberStorageLabelComposite extends AbstractStorageLabelComposite {
 
@@ -38,7 +38,7 @@ public class NumberStorageLabelComposite extends AbstractStorageLabelComposite {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent.
 	 * @param style
@@ -53,7 +53,7 @@ public class NumberStorageLabelComposite extends AbstractStorageLabelComposite {
 
 	/**
 	 * Secondary constructor. Defines if the label should be displayed in the composite.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent.
 	 * @param style

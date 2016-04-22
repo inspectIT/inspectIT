@@ -9,13 +9,12 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
-import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO;
 
 /**
  * Tests the functionality of {@link TimerRawVO}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class TimerRawVOTest {

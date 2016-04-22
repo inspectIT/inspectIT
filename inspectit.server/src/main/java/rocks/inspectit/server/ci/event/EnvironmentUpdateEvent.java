@@ -68,7 +68,7 @@ public class EnvironmentUpdateEvent extends ApplicationEvent {
 		super(source);
 
 		// check null
-		if (null == before || null == after) {
+		if ((null == before) || (null == after)) {
 			throw new IllegalArgumentException("Environment references must not be null.");
 		}
 
@@ -98,8 +98,7 @@ public class EnvironmentUpdateEvent extends ApplicationEvent {
 	 * might be removed as the result of changes in the environment.
 	 *
 	 * @param functionalAssignmentFactory
-	 *            SpecialMethodSensorAssignmentFactory for resolving functional assignment
-	 *            updates.
+	 *            SpecialMethodSensorAssignmentFactory for resolving functional assignment updates.
 	 *
 	 * @return Returns all {@link AbstractClassSensorAssignment} that are "removed".
 	 */
@@ -115,8 +114,7 @@ public class EnvironmentUpdateEvent extends ApplicationEvent {
 	 * might be added as the result of changes in the environment.
 	 *
 	 * @param functionalAssignmentFactory
-	 *            SpecialMethodSensorAssignmentFactory for resolving functional assignment
-	 *            updates.
+	 *            SpecialMethodSensorAssignmentFactory for resolving functional assignment updates.
 	 *
 	 * @return Returns all {@link AbstractClassSensorAssignment} that are "added".
 	 */

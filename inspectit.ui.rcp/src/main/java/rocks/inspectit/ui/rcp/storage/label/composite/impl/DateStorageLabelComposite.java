@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.storage.label.composite.AbstractStorageLabelCompos
 
 /**
  * Composite for selecting the {@link DateStorageLabel}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DateStorageLabelComposite extends AbstractStorageLabelComposite {
 
@@ -41,7 +41,7 @@ public class DateStorageLabelComposite extends AbstractStorageLabelComposite {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent.
 	 * @param style
@@ -56,7 +56,7 @@ public class DateStorageLabelComposite extends AbstractStorageLabelComposite {
 
 	/**
 	 * Secondary constructor. Defines if the label should be displayed in the composite.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent.
 	 * @param style

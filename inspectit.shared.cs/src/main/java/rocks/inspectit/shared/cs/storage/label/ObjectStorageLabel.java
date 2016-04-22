@@ -4,9 +4,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Type of the label that can hold arbitrary object as the value.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  */
 public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorageLabel<T> {
@@ -29,7 +29,7 @@ public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorage
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param value
 	 *            Value of the label.
 	 * @param storageLabelType
@@ -71,7 +71,7 @@ public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorage
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = (prime * result) + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
 
@@ -103,6 +103,7 @@ public class ObjectStorageLabel<T extends Comparable<T>> extends AbstractStorage
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public int compareTo(AbstractStorageLabel<?> other) {
 		int typeCompare = storageLabelType.compareTo(other.getStorageLabelType());

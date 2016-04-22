@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * {@link AbstractPropertyControl} for the percentage property.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class PercentagePropertyControl extends AbstractPropertyControl<PercentageProperty, Float> {
 
@@ -29,7 +29,7 @@ public class PercentagePropertyControl extends AbstractPropertyControl<Percentag
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property.
 	 * @param propertyUpdateListener

@@ -13,9 +13,9 @@ import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * {@link AbstractPropertyControl} for the boolean property.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class BooleanPropertyControl extends AbstractPropertyControl<BooleanProperty, Boolean> {
 
@@ -26,7 +26,7 @@ public class BooleanPropertyControl extends AbstractPropertyControl<BooleanPrope
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property.
 	 * @param propertyUpdateListener

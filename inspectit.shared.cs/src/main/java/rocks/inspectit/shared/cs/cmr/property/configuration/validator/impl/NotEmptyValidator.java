@@ -15,9 +15,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePro
 
 /**
  * Is not empty validator. Works on strings, collections and maps.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  */
 @XmlRootElement(name = "isNotEmpty")
@@ -26,6 +26,7 @@ public class NotEmptyValidator<T extends Object> extends AbstractSinglePropertyV
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected boolean prove(T value) {
 		if (value instanceof String) {
 			return StringUtils.isNotEmpty((String) value);

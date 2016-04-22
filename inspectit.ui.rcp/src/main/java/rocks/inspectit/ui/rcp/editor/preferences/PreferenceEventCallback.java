@@ -6,17 +6,17 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * The callback is used by the {@link IPreferencePanel} implementations to fire the events.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public interface PreferenceEventCallback {
 
 	/**
 	 * This interface holds all the relevant data for the event.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	class PreferenceEvent {
 
@@ -33,7 +33,7 @@ public interface PreferenceEventCallback {
 		/**
 		 * Constructor which needs an {@link PreferenceId}. Throws {@link NullPointerException} if
 		 * the <code>preferenceId</code> is <code>null</code>.
-		 * 
+		 *
 		 * @param preferenceId
 		 *            The preference ID.
 		 */
@@ -69,7 +69,7 @@ public interface PreferenceEventCallback {
 
 	/**
 	 * This method is called whenever the preferences are changed.
-	 * 
+	 *
 	 * @param preferenceEvent
 	 *            The event object containing the changed objects.
 	 */

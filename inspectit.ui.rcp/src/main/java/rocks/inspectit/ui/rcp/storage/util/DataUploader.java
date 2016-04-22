@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.storage.http.TransferDataMonitor;
 
 /**
  * Utility class for uploading data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DataUploader {
 
@@ -37,7 +37,7 @@ public class DataUploader {
 	 * <p>
 	 * File will be uploaded to the upload folder with the suggested path that is relative
 	 * relativizePath, with addition of tmpDir to the beginning of the path.
-	 * 
+	 *
 	 * @param fileToUpload
 	 *            File to upload.
 	 * @param relativizePath
@@ -60,7 +60,7 @@ public class DataUploader {
 	 * <p>
 	 * Every file will be uploaded with the suggested path that is relative relativizePath, with
 	 * addition of tmpDir to the beginning of the path.
-	 * 
+	 *
 	 * @param filesToUpload
 	 *            Files to upload as path list.
 	 * @param relativizePath
@@ -76,7 +76,7 @@ public class DataUploader {
 	 */
 	public void uploadFileToStorageUploads(List<Path> filesToUpload, Path relativizePath, String tmpDir, CmrRepositoryDefinition cmrRepositoryDefinition, SubMonitor subMonitor) throws IOException {
 		// calculate how much is there to upload
-		Map<String, Long> files = new HashMap<String, Long>();
+		Map<String, Long> files = new HashMap<>();
 		for (Path file : filesToUpload) {
 			if (Files.notExists(file)) {
 				throw new IOException("File to upload (" + file + ") does not exist.");
@@ -124,7 +124,7 @@ public class DataUploader {
 
 	/**
 	 * Returns the URI of the server in format 'http://ip:port'.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @return URI as string.

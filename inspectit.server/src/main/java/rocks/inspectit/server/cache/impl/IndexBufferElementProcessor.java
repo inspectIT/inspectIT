@@ -13,21 +13,21 @@ import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 /**
  * Index processor. Performs indexing of the elements, update of indexing tree size and cleaning the
  * indexing tree.
- * 
+ *
  * @param <E>
  *            Type of data to process.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 class IndexBufferElementProcessor<E extends DefaultData> extends AbstractBufferElementProcessor<E> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param atomicBuffer
 	 *            {@link AtomicBuffer} to work on.
-	 * 
+	 *
 	 * @param lastProcessed
 	 *            Reference to the last processed element.
 	 * @param lock
@@ -79,7 +79,7 @@ class IndexBufferElementProcessor<E extends DefaultData> extends AbstractBufferE
 	 * <p>
 	 * After successful indexing we check if update of indexing tree size is needed and if so update
 	 * it.
-	 * 
+	 *
 	 */
 	@Override
 	public boolean process(IBufferElement<E> elementToProcess, IBufferElement<E> lastProcessedElement) {

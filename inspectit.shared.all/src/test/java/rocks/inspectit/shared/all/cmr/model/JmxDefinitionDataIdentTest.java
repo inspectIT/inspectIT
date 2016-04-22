@@ -6,11 +6,9 @@ import static org.hamcrest.Matchers.is;
 
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
-
 /**
  * This tests checks the "getDerived..()" methods of the {@link JmxDefinitionDataIdent} class.
- * 
+ *
  * @author Marius Oehler
  *
  */

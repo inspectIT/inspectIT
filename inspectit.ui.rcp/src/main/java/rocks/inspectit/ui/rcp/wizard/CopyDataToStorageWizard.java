@@ -49,9 +49,9 @@ import rocks.inspectit.ui.rcp.wizard.page.SelectExistingStorageWizardPage;
 
 /**
  * Wizard for copying the selected data to one storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 
@@ -92,7 +92,7 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} to execute action on.
 	 * @param copyDataList
@@ -162,8 +162,8 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			// prepare for save
 			final Collection<AbstractDataProcessor> processors = defineDataProcessorsWizardPage.getProcessorList();
-			final Set<Long> idSet = new HashSet<Long>();
-			Set<Long> platformIdents = new HashSet<Long>();
+			final Set<Long> idSet = new HashSet<>();
+			Set<Long> platformIdents = new HashSet<>();
 			for (DefaultData template : copyDataList) {
 				if (template instanceof IIdsAwareAggregatedData<?>) {
 					// if we have aggregated data add all objects that were included in the
@@ -202,7 +202,7 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 							}
 						});
 					} catch (BusinessException e) {
-						return new Status(Status.ERROR, InspectIT.ID, "Copy data to buffer failed.", e);
+						return new Status(IStatus.ERROR, InspectIT.ID, "Copy data to buffer failed.", e);
 					}
 					return Status.OK_STATUS;
 				}

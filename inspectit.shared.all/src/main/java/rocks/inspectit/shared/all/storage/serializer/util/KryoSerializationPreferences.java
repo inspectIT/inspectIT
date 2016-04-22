@@ -2,9 +2,9 @@ package rocks.inspectit.shared.all.storage.serializer.util;
 
 /**
  * Class where all keys to the serialization preferences are listed.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class KryoSerializationPreferences {
 

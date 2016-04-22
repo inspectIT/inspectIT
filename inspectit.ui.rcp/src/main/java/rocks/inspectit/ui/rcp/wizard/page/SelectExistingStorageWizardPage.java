@@ -29,9 +29,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Selection of existing storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SelectExistingStorageWizardPage extends WizardPage {
 
@@ -53,7 +53,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 	/**
 	 * List of storages to be selected.
 	 */
-	private List<StorageData> storageList = new ArrayList<StorageData>();
+	private List<StorageData> storageList = new ArrayList<>();
 
 	/**
 	 * Repository combo.
@@ -82,13 +82,13 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 		super("Select Storage");
 		this.setTitle("Select Storage");
 		this.setMessage(DEFAULT_MESSAGE);
-		cmrRepositories = new ArrayList<CmrRepositoryDefinition>();
+		cmrRepositories = new ArrayList<>();
 		cmrRepositories.addAll(InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions());
 	}
 
 	/**
 	 * Additional constructor to specify the {@link #checkRecording} value.
-	 * 
+	 *
 	 * @param checkRecording
 	 *            If the recording check should be performed on the selected CMR.
 	 */
@@ -100,7 +100,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 	/**
 	 * With this constructor the passed {@link CmrRepositoryDefinition} will be initially selected
 	 * on the page.
-	 * 
+	 *
 	 * @param proposedCmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} that should be initially selected.
 	 * @param checkRecording
@@ -148,7 +148,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 					setMessage("Repository must be selected.", IMessageProvider.ERROR);
 				} else if (getSelectedRepository().getOnlineStatus() == OnlineStatus.OFFLINE) {
 					setMessage("Selected repository is currently offline.", IMessageProvider.ERROR);
-				} else if (checkRecording && getSelectedRepository().getStorageService().getRecordingState() != RecordingState.OFF) {
+				} else if (checkRecording && (getSelectedRepository().getStorageService().getRecordingState() != RecordingState.OFF)) {
 					setMessage("Recording is already active on selected repository.", IMessageProvider.ERROR);
 				} else if (getSelectedStorageData() == null) {
 					setMessage("Storage must be selected.", IMessageProvider.ERROR);
@@ -207,7 +207,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 
 	/**
 	 * Returns if auto-finalize options is selected.
-	 * 
+	 *
 	 * @return Returns if auto-finalize options is selected.
 	 */
 	public boolean isAutoFinalize() {
@@ -223,7 +223,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 			return false;
 		} else if (getSelectedRepository().getOnlineStatus() == OnlineStatus.OFFLINE) {
 			return false;
-		} else if (checkRecording && getSelectedRepository().getStorageService().getRecordingState() != RecordingState.OFF) {
+		} else if (checkRecording && (getSelectedRepository().getStorageService().getRecordingState() != RecordingState.OFF)) {
 			return false;
 		}
 		if (getSelectedStorageData() == null) {
@@ -240,7 +240,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 		Job updateStoragesJob = new Job("Updating Storages") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				if (null != cmrRepositoryDefinition && cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
+				if ((null != cmrRepositoryDefinition) && (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE)) {
 					storageList = cmrRepositoryDefinition.getStorageService().getOpenedStorages();
 				} else {
 					storageList = Collections.emptyList();
@@ -249,7 +249,7 @@ public class SelectExistingStorageWizardPage extends WizardPage {
 					@Override
 					public void run() {
 						storageSelection.removeAll();
-						if (null != cmrRepositoryDefinition && cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
+						if ((null != cmrRepositoryDefinition) && (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE)) {
 							if (storageList.isEmpty()) {
 								storageSelection.add("No open storage available for writing");
 								storageSelection.setEnabled(false);

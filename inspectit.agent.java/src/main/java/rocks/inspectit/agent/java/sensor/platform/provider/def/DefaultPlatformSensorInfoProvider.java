@@ -8,9 +8,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
 
 /**
  * Default {@link PlatformSensorInfoProvider}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DefaultPlatformSensorInfoProvider implements PlatformSensorInfoProvider {
 

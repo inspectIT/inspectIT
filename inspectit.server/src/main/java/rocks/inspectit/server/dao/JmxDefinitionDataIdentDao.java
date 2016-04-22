@@ -7,15 +7,15 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * This DAO is used to handle all {@link JmxDefinitionDataIdent} objects.
- * 
+ *
  * @author Alfred Krauss
- * 
+ *
  */
 public interface JmxDefinitionDataIdentDao {
 
 	/**
 	 * Load a specific {@link JmxDefinitionDataIdent} from the underlying storage by passing the id.
-	 * 
+	 *
 	 * @param id
 	 *            The id of the object.
 	 * @return The found {@link JmxDefinitionDataIdent} object.
@@ -24,7 +24,7 @@ public interface JmxDefinitionDataIdentDao {
 
 	/**
 	 * Saves or updates this {@link JmxDefinitionDataIdent} in the underlying storage.
-	 * 
+	 *
 	 * @param jmxDefinitionDataIdent
 	 *            The {@link JmxDefinitionDataIdent} object to save or update.
 	 */
@@ -33,7 +33,7 @@ public interface JmxDefinitionDataIdentDao {
 	/**
 	 * This method returns a list containing {@link JmxDefinitionDataIdent} objects which have an
 	 * association to the given {@link PlatformIdent} object.
-	 * 
+	 *
 	 * @param platformId
 	 *            The id of the platform.
 	 * @param jmxDefinitionDataIdentExample

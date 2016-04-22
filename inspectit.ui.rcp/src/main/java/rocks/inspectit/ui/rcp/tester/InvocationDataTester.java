@@ -6,9 +6,8 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 
 /**
- * Property Tester to check for specific criteria within an invocation sequence
- * element.
- * 
+ * Property Tester to check for specific criteria within an invocation sequence element.
+ *
  * @author Stefan Siegl
  */
 public class InvocationDataTester extends PropertyTester {
@@ -20,8 +19,7 @@ public class InvocationDataTester extends PropertyTester {
 
 			if ("hasLoggingData".equals(property)) {
 				if (expectedValue instanceof Boolean) {
-					return ((Boolean) expectedValue).booleanValue() == InvocationSequenceDataHelper
-							.hasLoggingData(data);
+					return ((Boolean) expectedValue).booleanValue() == InvocationSequenceDataHelper.hasLoggingData(data);
 				} else {
 					return false;
 				}

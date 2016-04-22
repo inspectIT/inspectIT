@@ -385,9 +385,9 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
-		result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + ((parameters == null) ? 0 : parameters.hashCode());
+		result = (prime * result) + ((returnType == null) ? 0 : returnType.hashCode());
 		return result;
 	}
 

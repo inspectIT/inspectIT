@@ -37,9 +37,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 /**
  * Handler for deleting a Storage. Handler will inform the user about the users who have mounted the
  * storage that is about to be deleted.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DeleteStorageHandler extends AbstractHandler implements IHandler {
 
@@ -51,8 +51,8 @@ public class DeleteStorageHandler extends AbstractHandler implements IHandler {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof StructuredSelection) {
 			Iterator<?> it = ((StructuredSelection) selection).iterator();
-			final List<IStorageDataProvider> storagesToDelete = new ArrayList<IStorageDataProvider>();
-			Set<AbstractStorageLabel<String>> exploredBySet = new HashSet<AbstractStorageLabel<String>>();
+			final List<IStorageDataProvider> storagesToDelete = new ArrayList<>();
+			Set<AbstractStorageLabel<String>> exploredBySet = new HashSet<>();
 			boolean confirmed = false;
 			while (it.hasNext()) {
 				Object nextObject = it.next();
@@ -95,7 +95,7 @@ public class DeleteStorageHandler extends AbstractHandler implements IHandler {
 						protected IStatus run(IProgressMonitor monitor) {
 							List<Status> statuses = new ArrayList<>();
 
-							final Set<CmrRepositoryDefinition> involvedCmrSet = new HashSet<CmrRepositoryDefinition>();
+							final Set<CmrRepositoryDefinition> involvedCmrSet = new HashSet<>();
 							for (final IStorageDataProvider storageDataProvider : storagesToDelete) {
 								if (storageDataProvider.getCmrRepositoryDefinition().getOnlineStatus() != OnlineStatus.OFFLINE) {
 									involvedCmrSet.add(storageDataProvider.getCmrRepositoryDefinition());

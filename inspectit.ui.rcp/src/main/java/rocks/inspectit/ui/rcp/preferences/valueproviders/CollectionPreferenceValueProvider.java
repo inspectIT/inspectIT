@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.preferences.valueproviders.PreferenceValueProvider
  * This {@link PreferenceValueProvider} converts any collection that members in primitive warper
  * types to preference value. Later on this preference value will be transformed to a collection of
  * strings, and thus needs transformation to initial class of collection members.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CollectionPreferenceValueProvider extends PreferenceValueProvider<Collection<?>> {
 
@@ -28,6 +28,7 @@ public class CollectionPreferenceValueProvider extends PreferenceValueProvider<C
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isObjectValid(Object object) {
 		return object instanceof Collection;
 	}
@@ -35,6 +36,7 @@ public class CollectionPreferenceValueProvider extends PreferenceValueProvider<C
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getValueForObject(Collection<?> collection) throws PreferenceException {
 		if (CollectionUtils.isEmpty(collection)) {
 			return EMPTY_COLLECTION;
@@ -50,6 +52,7 @@ public class CollectionPreferenceValueProvider extends PreferenceValueProvider<C
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<?> getObjectFromValue(String value) throws PreferenceException {
 		if (EMPTY_COLLECTION.equals(value)) {
 			return getCollectionForResults();
@@ -65,18 +68,18 @@ public class CollectionPreferenceValueProvider extends PreferenceValueProvider<C
 
 	/**
 	 * Returns Collection type to use when creating resulting collection from strings.
-	 * 
+	 *
 	 * @return Returns Collection type to use when creating resulting collection from strings.
 	 */
 	protected Collection<Object> getCollectionForResults() {
-		return new ArrayList<Object>();
+		return new ArrayList<>();
 	}
 
 	/**
 	 * Returns String value for collection member.
 	 * <p>
 	 * Sub-classes can override.
-	 * 
+	 *
 	 * @param object
 	 *            Member.
 	 * @return String value.
@@ -89,7 +92,7 @@ public class CollectionPreferenceValueProvider extends PreferenceValueProvider<C
 	 * Returns collection member for saved String value.
 	 * <p>
 	 * Sub-classes can override.
-	 * 
+	 *
 	 * @param value
 	 *            String value as object was saved..
 	 * @return Collection member..

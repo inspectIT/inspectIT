@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.view.IRefreshableView;
 
 /**
  * Handler for refreshing the {@link IRefreshableView}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RefreshViewHandler extends AbstractHandler implements IHandler {
 

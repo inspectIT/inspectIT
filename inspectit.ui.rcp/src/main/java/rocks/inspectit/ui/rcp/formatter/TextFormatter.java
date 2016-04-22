@@ -119,7 +119,7 @@ public final class TextFormatter {
 
 		styledString.append(getMethodWithParameters(methodIdent));
 		String decoration;
-		if (methodIdent.getPackageName() != null && !methodIdent.getPackageName().equals("")) {
+		if ((methodIdent.getPackageName() != null) && !methodIdent.getPackageName().equals("")) {
 			decoration = MessageFormat.format("- {0}.{1}", new Object[] { methodIdent.getPackageName(), methodIdent.getClassName() });
 		} else {
 			decoration = MessageFormat.format("- {0}", new Object[] { methodIdent.getClassName() });
@@ -141,7 +141,7 @@ public final class TextFormatter {
 		StringBuilder builder = new StringBuilder();
 		String parameterText = "";
 		if (null != methodIdent.getParameters()) {
-			List<String> parameterList = new ArrayList<String>();
+			List<String> parameterList = new ArrayList<>();
 			for (String parameter : methodIdent.getParameters()) {
 				String[] split = parameter.split("\\.");
 				parameterList.add(split[split.length - 1]);
@@ -168,7 +168,7 @@ public final class TextFormatter {
 	 */
 	public static String getMethodWithParameters(MethodSensorAssignment methodSensorAssignment) {
 		// can not create if we don't have name
-		if (null == methodSensorAssignment.getMethodName() && !methodSensorAssignment.isConstructor()) {
+		if ((null == methodSensorAssignment.getMethodName()) && !methodSensorAssignment.isConstructor()) {
 			return "";
 		}
 
@@ -583,7 +583,7 @@ public final class TextFormatter {
 	 * @return Formated string in form [param1, param2,.., paramN].
 	 */
 	public static String getSqlParametersText(List<String> parameterValues) {
-		if (null == parameterValues || parameterValues.isEmpty()) {
+		if ((null == parameterValues) || parameterValues.isEmpty()) {
 			return "[]";
 		} else {
 			Iterator<String> it = parameterValues.iterator();
@@ -622,7 +622,7 @@ public final class TextFormatter {
 
 		for (int i = 0; i < originalText.length(); i++) {
 			char c = originalText.charAt(i);
-			if (c == '\r' || c == '\n') {
+			if ((c == '\r') || (c == '\n')) {
 				if (!lastCharWhitespace) {
 					stringBuilder.append(' ');
 					lastCharWhitespace = true;

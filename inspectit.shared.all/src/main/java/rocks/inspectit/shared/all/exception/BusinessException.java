@@ -3,9 +3,9 @@ package rocks.inspectit.shared.all.exception;
 /**
  * This is base exception class for all the exception we throw, thus expected exceptions or business
  * exceptions in fact.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class BusinessException extends Exception {
 
@@ -38,7 +38,7 @@ public class BusinessException extends Exception {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param errorCode
 	 *            Error code describing the exception.
 	 */
@@ -48,7 +48,7 @@ public class BusinessException extends Exception {
 
 	/**
 	 * Constructor that allows definition of the action.
-	 * 
+	 *
 	 * @param actionPerformed
 	 *            Action being performed when exception occurred.
 	 * @param errorCode
@@ -62,7 +62,7 @@ public class BusinessException extends Exception {
 
 	/**
 	 * Creates a exception message based on the action performed and {@link IErrorCode}.
-	 * 
+	 *
 	 * @param actionPerformed
 	 *            Action being performed when exception occurred.
 	 * @param errorCode
@@ -83,7 +83,7 @@ public class BusinessException extends Exception {
 
 	/**
 	 * Gets {@link #actionPerformed}.
-	 * 
+	 *
 	 * @return {@link #actionPerformed}
 	 */
 	public String getActionPerformed() {
@@ -92,7 +92,7 @@ public class BusinessException extends Exception {
 
 	/**
 	 * Gets {@link #errorCode}.
-	 * 
+	 *
 	 * @return {@link #errorCode}
 	 */
 	public IErrorCode getErrorCode() {
@@ -101,7 +101,7 @@ public class BusinessException extends Exception {
 
 	/**
 	 * Gets {@link #serviceMethodSignature}.
-	 * 
+	 *
 	 * @return {@link #serviceMethodSignature}
 	 */
 	public String getServiceMethodSignature() {
@@ -110,7 +110,7 @@ public class BusinessException extends Exception {
 
 	/**
 	 * Sets {@link #serviceMethodSignature}.
-	 * 
+	 *
 	 * @param serviceMethodSignature
 	 *            New value for {@link #serviceMethodSignature}
 	 */

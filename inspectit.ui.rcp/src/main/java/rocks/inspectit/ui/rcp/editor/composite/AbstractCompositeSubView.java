@@ -11,27 +11,27 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.AbstractSubView;
 import rocks.inspectit.ui.rcp.editor.ISubView;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 
 /**
  * Some general methods for composite views are implemented in here.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class AbstractCompositeSubView extends AbstractSubView {
 
 	/**
 	 * The list containing all the sub-views which are painted in this composite sub-view.
 	 */
-	private List<ISubView> subViews = new ArrayList<ISubView>();
+	private List<ISubView> subViews = new ArrayList<>();
 
 	/**
 	 * Maximizes the given {@link ISubView}. The {@link ISubView} has to contained in this composite
 	 * sub-view.
-	 * 
+	 *
 	 * @param subView
 	 *            Sub-view to maximize.
 	 */
@@ -50,7 +50,7 @@ public abstract class AbstractCompositeSubView extends AbstractSubView {
 
 	/**
 	 * Adds a new sub-view to this composite view.
-	 * 
+	 *
 	 * @param subView
 	 *            The {@link ISubView} which will be added.
 	 */
@@ -114,6 +114,7 @@ public abstract class AbstractCompositeSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		Set<PreferenceId> preferenceIds = EnumSet.noneOf(PreferenceId.class);
 
@@ -127,6 +128,7 @@ public abstract class AbstractCompositeSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void doRefresh() {
 		// just delegate to all sub-views.
 		for (ISubView subView : subViews) {
@@ -137,6 +139,7 @@ public abstract class AbstractCompositeSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		// just delegate to all sub-views.
 		for (ISubView subView : subViews) {
@@ -147,6 +150,7 @@ public abstract class AbstractCompositeSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDataInput(List<? extends DefaultData> data) {
 		// just delegate to all sub-views.
 		for (ISubView subView : subViews) {
@@ -180,6 +184,7 @@ public abstract class AbstractCompositeSubView extends AbstractSubView {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return null;
 	}

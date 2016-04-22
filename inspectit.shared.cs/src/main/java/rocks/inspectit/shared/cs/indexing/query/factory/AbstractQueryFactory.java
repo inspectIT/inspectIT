@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.indexing.query.provider.IIndexQueryProvider;
 
 /**
  * Abstract query factory, has only the instance to the {@link IIndexQueryProvider}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public abstract class AbstractQueryFactory<E extends IIndexQuery> {

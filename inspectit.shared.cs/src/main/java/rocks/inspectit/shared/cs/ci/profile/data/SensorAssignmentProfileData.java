@@ -112,8 +112,8 @@ public class SensorAssignmentProfileData extends AbstractProfileData<List<? exte
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((exceptionSensorAssignments == null) ? 0 : exceptionSensorAssignments.hashCode());
-		result = prime * result + ((methodSensorAssignments == null) ? 0 : methodSensorAssignments.hashCode());
+		result = (prime * result) + ((exceptionSensorAssignments == null) ? 0 : exceptionSensorAssignments.hashCode());
+		result = (prime * result) + ((methodSensorAssignments == null) ? 0 : methodSensorAssignments.hashCode());
 		return result;
 	}
 

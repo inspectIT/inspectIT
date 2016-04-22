@@ -10,9 +10,9 @@ import com.esotericsoftware.kryo.io.Output;
 /**
  * Special serialzier that eliminates the difficultes of de-serializing the
  * {@link StackTraceElement}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StackTraceElementSerializer extends Serializer<StackTraceElement> {
 

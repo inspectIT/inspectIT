@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 
 /**
  * Abstract class for all sensor configs that can define string length.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ ExceptionSensorConfig.class })
@@ -36,7 +36,7 @@ public abstract class StringConstraintSensorConfig implements ISensorConfig {
 
 	/**
 	 * Only constructor.
-	 * 
+	 *
 	 * @param stringLength
 	 *            Default value of the string length of captured context.
 	 */
@@ -60,7 +60,7 @@ public abstract class StringConstraintSensorConfig implements ISensorConfig {
 
 	/**
 	 * Gets {@link #stringLength}.
-	 * 
+	 *
 	 * @return {@link #stringLength}
 	 */
 	public int getStringLength() {
@@ -69,7 +69,7 @@ public abstract class StringConstraintSensorConfig implements ISensorConfig {
 
 	/**
 	 * Sets {@link #stringLength}.
-	 * 
+	 *
 	 * @param stringLength
 	 *            New value for {@link #stringLength}
 	 */
@@ -84,7 +84,7 @@ public abstract class StringConstraintSensorConfig implements ISensorConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + stringLength;
+		result = (prime * result) + stringLength;
 		return result;
 	}
 

@@ -118,8 +118,8 @@ public abstract class AbstractContextCapture {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((displayName == null) ? 0 : displayName.hashCode());
-		result = prime * result + ((paths == null) ? 0 : paths.hashCode());
+		result = (prime * result) + ((displayName == null) ? 0 : displayName.hashCode());
+		result = (prime * result) + ((paths == null) ? 0 : paths.hashCode());
 		return result;
 	}
 

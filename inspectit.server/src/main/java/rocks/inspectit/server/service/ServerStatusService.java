@@ -16,9 +16,9 @@ import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
 /**
  * Implementation of the {@link IServerStatusService} interface to provide information about the
  * current status of the CMR.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Service
 public class ServerStatusService implements IServerStatusService {
@@ -58,7 +58,7 @@ public class ServerStatusService implements IServerStatusService {
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

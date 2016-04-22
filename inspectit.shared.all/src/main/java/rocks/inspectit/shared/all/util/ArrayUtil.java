@@ -4,16 +4,16 @@ package rocks.inspectit.shared.all.util;
  * This is a utility class that provides the {@link #binarySearch(long[], int, int, long)} method
  * that is not available in Java5.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://docs.oracle.com/javase/7/docs/technotes/guides/collections/index.html">Java
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/collections/index.html">Java
  * Collections Framework</a> {@link java.util.Arrays} class. Original authors are Josh Bloch, Neal
- * Gafter and John Rose. License info can be found <a
- * href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">here</a>.
- * 
+ * Gafter and John Rose. License info can be found
+ * <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">here</a>.
+ *
  * @author Josh Bloch
  * @author Neal Gafter
  * @author John Rose
- * 
+ *
  */
 public final class ArrayUtil {
 
@@ -29,7 +29,7 @@ public final class ArrayUtil {
 	 * prior to making this call. If it is not sorted, the results are undefined. If the range
 	 * contains multiple elements with the specified value, there is no guarantee which one will be
 	 * found.
-	 * 
+	 *
 	 * @param a
 	 *            the array to be searched
 	 * @param fromIndex
@@ -53,7 +53,7 @@ public final class ArrayUtil {
 	/**
 	 * Checks that {@code fromIndex} and {@code toIndex} are in the range and throws an appropriate
 	 * exception, if they aren't.
-	 * 
+	 *
 	 * @param length
 	 *            the length of the array.
 	 * @param fromIndex
@@ -75,7 +75,7 @@ public final class ArrayUtil {
 
 	/**
 	 * Like public version, but without range checks.
-	 * 
+	 *
 	 * @param a
 	 *            the array.
 	 * @param fromIndex

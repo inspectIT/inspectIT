@@ -34,8 +34,8 @@ import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEn
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.editor.text.input.SqlStatementTextInputController.SqlHolderHelper;
@@ -50,9 +50,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
  * Input controller for the table view that is displayed below the aggregated SQL table.
  * <p>
  * Shows one statement aggregated on parameter basis.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlParameterAggregationInputControler extends AbstractTableInputController {
 
@@ -63,7 +63,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 
 	/**
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The Parameters column. */
@@ -92,7 +92,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -111,13 +111,13 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -133,6 +133,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TableViewer tableViewer) {
 		for (Column column : Column.values()) {
 			TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -223,9 +224,9 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 	@Override
 	public ViewerComparator getComparator() {
 		ICachedDataService cachedDataService = getInputDefinition().getRepositoryDefinition().getCachedDataService();
-		TableViewerComparator<SqlStatementData> sqlViewerComparator = new TableViewerComparator<SqlStatementData>();
+		TableViewerComparator<SqlStatementData> sqlViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
-			ResultComparator<SqlStatementData> resultComparator = new ResultComparator<SqlStatementData>(column.dataComparator, cachedDataService);
+			ResultComparator<SqlStatementData> resultComparator = new ResultComparator<>(column.dataComparator, cachedDataService);
 			sqlViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
 
@@ -276,7 +277,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof SqlStatementData) {
 			SqlStatementData data = (SqlStatementData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, column).toString());
 			}
@@ -294,7 +295,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 		if (!selection.isEmpty()) {
 			Object selected = selection.getFirstElement();
 			if (selected instanceof SqlStatementData) {
-				List<SqlStatementData> sqlList = new ArrayList<SqlStatementData>();
+				List<SqlStatementData> sqlList = new ArrayList<>();
 				sqlList.add((SqlStatementData) selected);
 				passSqlWithParameters(sqlList);
 			}
@@ -303,7 +304,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 
 	/**
 	 * Returns styled string for the column.
-	 * 
+	 *
 	 * @param data
 	 *            Data to return string for.
 	 * @param enumId
@@ -338,13 +339,14 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 
 	/**
 	 * Passes the {@link SqlStatementData} to the bottom view that displays the SQL string.
-	 * 
+	 *
 	 * @param sqlStatementDataList
 	 *            List to pass.
 	 */
 	private void passSqlWithParameters(final List<SqlStatementData> sqlStatementDataList) {
 		final SqlHolderHelper sqlHolderHelper = new SqlHolderHelper(sqlStatementDataList, false);
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				IWorkbenchPage page = window.getActivePage();
@@ -358,15 +360,15 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 
 	/**
 	 * The sql label provider used by this view.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private final class SqlLabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -385,7 +387,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 
 	/**
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private final class SqlParameterContentProvider implements IStructuredContentProvider {
 
@@ -395,12 +397,12 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 		@SuppressWarnings("unchecked")
 		@Override
 		public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
-			if (null == newInput || Objects.equals(newInput, Collections.emptyList())) {
+			if ((null == newInput) || Objects.equals(newInput, Collections.emptyList())) {
 				viewer.getControl().setEnabled(false);
 			} else {
 				List<SqlHolderHelper> helperList = (List<SqlHolderHelper>) newInput;
 				final List<SqlStatementData> list = helperList.get(0).getSqlStatementDataList();
-				if (null == list || Objects.equals(list, Collections.emptyList())) {
+				if ((null == list) || Objects.equals(list, Collections.emptyList())) {
 					viewer.getControl().setEnabled(false);
 				} else {
 					viewer.getControl().setEnabled(true);
@@ -423,7 +425,7 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 		 */
 		@Override
 		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof List && !((List<?>) inputElement).isEmpty()) {
+			if ((inputElement instanceof List) && !((List<?>) inputElement).isEmpty()) {
 				Object first = ((List<?>) inputElement).get(0);
 				if (first instanceof SqlHolderHelper) {
 					return ((SqlHolderHelper) first).getSqlStatementDataList().toArray();

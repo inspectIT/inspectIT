@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,6 +25,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -79,9 +79,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Manage label page.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ManageLabelWizardPage extends WizardPage {
 
@@ -98,12 +98,12 @@ public class ManageLabelWizardPage extends WizardPage {
 	/**
 	 * Available remote label list.
 	 */
-	private final List<AbstractStorageLabel<?>> labelList = new ArrayList<AbstractStorageLabel<?>>();
+	private final List<AbstractStorageLabel<?>> labelList = new ArrayList<>();
 
 	/**
 	 * Available remote label type list.
 	 */
-	private final List<AbstractStorageLabelType<?>> labelTypeList = new ArrayList<AbstractStorageLabelType<?>>();
+	private final List<AbstractStorageLabelType<?>> labelTypeList = new ArrayList<>();
 
 	/**
 	 * Table viewer for labels.
@@ -138,12 +138,12 @@ public class ManageLabelWizardPage extends WizardPage {
 	/**
 	 * List of labels in storages.
 	 */
-	private final Set<AbstractStorageLabel<?>> labelsInStorages = new HashSet<AbstractStorageLabel<?>>();
+	private final Set<AbstractStorageLabel<?>> labelsInStorages = new HashSet<>();
 
 	/**
 	 * List of actions that need to be executed at the end of wizard.
 	 */
-	private final List<AbstractLabelManagementAction> managementActions = new LinkedList<AbstractLabelManagementAction>();
+	private final List<AbstractLabelManagementAction> managementActions = new LinkedList<>();
 
 	/**
 	 * {@link CmrRepositoryDefinition}.
@@ -152,7 +152,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            CMR to manage labels for.
 	 */
@@ -184,7 +184,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Creates the table for the label types.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 */
@@ -252,11 +252,11 @@ public class ManageLabelWizardPage extends WizardPage {
 
 			@Override
 			protected Image getColumnImage(Object element, int index) {
-				if (index == 0 && element instanceof AbstractStorageLabelType) {
+				if ((index == 0) && (element instanceof AbstractStorageLabelType)) {
 					if (isLabelTypeExistsInStorage((AbstractStorageLabelType<?>) element, labelsInStorages)) {
 						return InspectIT.getDefault().getImage(InspectITImages.IMG_STORAGE);
 					}
-				} else if (index == 1 && element instanceof AbstractStorageLabelType) {
+				} else if ((index == 1) && (element instanceof AbstractStorageLabelType)) {
 					return ImageFormatter.getImageForLabel((AbstractStorageLabelType<?>) element);
 				}
 				return null;
@@ -279,7 +279,7 @@ public class ManageLabelWizardPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				CreateLabelTypeDialog createDialog = new CreateLabelTypeDialog(getShell());
 				createDialog.open();
-				if (createDialog.getReturnCode() == Dialog.OK) {
+				if (createDialog.getReturnCode() == Window.OK) {
 					AbstractStorageLabelType<?> createdType = createDialog.getCreatedLabelType();
 					AddLabelManagementAction addLabelManagementAction = new AddLabelManagementAction(createdType);
 					managementActions.add(addLabelManagementAction);
@@ -342,7 +342,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Creates the table for the labels.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent composite.
 	 */
@@ -394,12 +394,12 @@ public class ManageLabelWizardPage extends WizardPage {
 
 			@Override
 			protected Image getColumnImage(Object element, int index) {
-				if (index == 0 && element instanceof AbstractStorageLabel) {
+				if ((index == 0) && (element instanceof AbstractStorageLabel)) {
 					if (isLabelExistsInStorage((AbstractStorageLabel<?>) element, labelsInStorages)) {
 						return InspectIT.getDefault().getImage(InspectITImages.IMG_STORAGE);
 					}
 				}
-				if (index == 1 && element instanceof AbstractStorageLabel) {
+				if ((index == 1) && (element instanceof AbstractStorageLabel)) {
 					return ImageFormatter.getImageForLabel(((AbstractStorageLabel<?>) element).getStorageLabelType());
 				}
 				return null;
@@ -408,7 +408,7 @@ public class ManageLabelWizardPage extends WizardPage {
 		labelsTableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof AbstractStorageLabel && e2 instanceof AbstractStorageLabel) {
+				if ((e1 instanceof AbstractStorageLabel) && (e2 instanceof AbstractStorageLabel)) {
 					return ((AbstractStorageLabel<?>) e1).compareTo((AbstractStorageLabel<?>) e2);
 				}
 				return super.compare(viewer, e1, e2);
@@ -436,9 +436,9 @@ public class ManageLabelWizardPage extends WizardPage {
 				AbstractStorageLabelType<?> suggestedLabelType = (AbstractStorageLabelType<?>) ((StructuredSelection) labelTypeTableViewer.getSelection()).getFirstElement();
 				CreateLabelDialog createLabelDialog = new CreateLabelDialog(getShell(), labelTypeList, suggestedLabelType);
 				createLabelDialog.open();
-				if (createLabelDialog.getReturnCode() == Dialog.OK) {
+				if (createLabelDialog.getReturnCode() == Window.OK) {
 					AbstractStorageLabel<?> createdLabel = createLabelDialog.getCreatedLabel();
-					List<AbstractStorageLabel<?>> createdList = new ArrayList<AbstractStorageLabel<?>>(1);
+					List<AbstractStorageLabel<?>> createdList = new ArrayList<>(1);
 					createdList.add(createdLabel);
 					AddLabelManagementAction addLabelManagementAction = new AddLabelManagementAction(createdList);
 					managementActions.add(addLabelManagementAction);
@@ -492,7 +492,7 @@ public class ManageLabelWizardPage extends WizardPage {
 	/**
 	 * Returns if any storage in collection of storages does contain at least one label that is of
 	 * the given label type.
-	 * 
+	 *
 	 * @param labelType
 	 *            Label type to search for.
 	 * @param labelsInStorages
@@ -510,7 +510,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Returns if any storage in collection of storages does contain given label.
-	 * 
+	 *
 	 * @param label
 	 *            Label to search for.
 	 * @param labelsInStorages
@@ -532,7 +532,7 @@ public class ManageLabelWizardPage extends WizardPage {
 	private void manageLabelTypeSlection() {
 		if (!labelTypeTableViewer.getSelection().isEmpty()) {
 			AbstractStorageLabelType<?> labelType = (AbstractStorageLabelType<?>) ((StructuredSelection) labelTypeTableViewer.getSelection()).getFirstElement();
-			List<AbstractStorageLabel<?>> inputForLabelTable = new ArrayList<AbstractStorageLabel<?>>();
+			List<AbstractStorageLabel<?>> inputForLabelTable = new ArrayList<>();
 			for (AbstractStorageLabel<?> label : labelList) {
 				if (ObjectUtils.equals(label.getStorageLabelType(), labelType)) {
 					inputForLabelTable.add(label);
@@ -559,7 +559,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Gets {@link #shouldRefreshStorages}.
-	 * 
+	 *
 	 * @return {@link #shouldRefreshStorages}
 	 */
 	public boolean isShouldRefreshStorages() {
@@ -568,7 +568,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Gets {@link #managementActions}.
-	 * 
+	 *
 	 * @return {@link #managementActions}
 	 */
 	public List<AbstractLabelManagementAction> getManagementActions() {
@@ -577,9 +577,9 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Create label type dialog.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class CreateLabelTypeDialog extends TitleAreaDialog {
 
@@ -621,7 +621,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param parentShell
 		 *            Shell
 		 */
@@ -788,14 +788,14 @@ public class ManageLabelWizardPage extends WizardPage {
 
 		/**
 		 * Ensures that the label type is correctly created.
-		 * 
+		 *
 		 * @return {@link AbstractStorageLabelType}
 		 */
 		private AbstractStorageLabelType<?> ensureLabelType() {
 			AbstractCustomStorageLabelType<?> labelType = availableTypes[valueTypeSelection.getSelectionIndex()];
 			labelType.setName(name.getText().trim());
 			labelType.setOnePerStorage(yesButton.getSelection());
-			if (selectedImageKeyIndex >= 0 && selectedImageKeyIndex < imageKeys.length) {
+			if ((selectedImageKeyIndex >= 0) && (selectedImageKeyIndex < imageKeys.length)) {
 				labelType.setImageKey(imageKeys[selectedImageKeyIndex]);
 			}
 			return labelType;
@@ -803,7 +803,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 		/**
 		 * Gets {@link #createdLabelType}.
-		 * 
+		 *
 		 * @return {@link #createdLabelType}
 		 */
 		public AbstractStorageLabelType<?> getCreatedLabelType() {
@@ -814,9 +814,9 @@ public class ManageLabelWizardPage extends WizardPage {
 
 	/**
 	 * Create label dialog.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class CreateLabelDialog extends TitleAreaDialog {
 
@@ -857,7 +857,7 @@ public class ManageLabelWizardPage extends WizardPage {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param parentShell
 		 *            Shell.
 		 * @param labelTypes
@@ -959,7 +959,7 @@ public class ManageLabelWizardPage extends WizardPage {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return Returns created label.
 		 */
 		public AbstractStorageLabel<?> getCreatedLabel() {
@@ -971,7 +971,7 @@ public class ManageLabelWizardPage extends WizardPage {
 		 */
 		@SuppressWarnings("unchecked")
 		private void updateStorageLabelComposite() {
-			if (null != storageLabelComposite && !storageLabelComposite.isDisposed()) {
+			if ((null != storageLabelComposite) && !storageLabelComposite.isDisposed()) {
 				storageLabelComposite.dispose();
 			}
 
@@ -998,14 +998,14 @@ public class ManageLabelWizardPage extends WizardPage {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return If dialog input is valid.
 		 */
 		private boolean isInputValid() {
 			if (typeSelection.getSelectionIndex() == -1) {
 				return false;
 			}
-			if (null == storageLabelComposite || !storageLabelComposite.isInputValid()) {
+			if ((null == storageLabelComposite) || !storageLabelComposite.isInputValid()) {
 				return false;
 			}
 			return true;

@@ -8,7 +8,6 @@ import static org.hamcrest.Matchers.is;
 import org.mockito.InjectMocks;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.all.instrumentation.classcache.util.ArraySet;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**

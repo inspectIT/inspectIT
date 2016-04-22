@@ -19,12 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.instrumentation.config.applier.ExceptionSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.filter.AssignmentFilterProvider;
 import rocks.inspectit.server.instrumentation.config.filter.ClassSensorAssignmentFilter;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
@@ -78,7 +77,7 @@ public class ExceptionSensorInstrumentationApplierTest extends TestBase {
 
 		// filters to true by default
 		when(filterProvider.getClassSensorAssignmentFilter()).thenReturn(classFilter);
-		when(classFilter.matches(Mockito.<AbstractClassSensorAssignment<?>> any(), Mockito.<ClassType> any())).thenReturn(true);
+		when(classFilter.matches(Matchers.<AbstractClassSensorAssignment<?>> any(), Matchers.<ClassType> any())).thenReturn(true);
 
 		// class to return one method
 		when(classType.getMethods()).thenReturn(Collections.singleton(methodType));
@@ -91,7 +90,7 @@ public class ExceptionSensorInstrumentationApplierTest extends TestBase {
 			long agentId = 13L;
 			long sensorId = 15L;
 			long methodId = 17L;
-			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Mockito.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
+			when(registrationService.registerMethodIdent(eq(agentId), anyString(), anyString(), anyString(), Matchers.<List<String>> any(), anyString(), anyInt())).thenReturn(methodId);
 
 			ExceptionSensorTypeConfig exceptionSensorTypeConfig = mock(ExceptionSensorTypeConfig.class);
 			when(exceptionSensorTypeConfig.getId()).thenReturn(sensorId);
@@ -221,7 +220,7 @@ public class ExceptionSensorInstrumentationApplierTest extends TestBase {
 
 			assertThat(removed, is(true));
 
-			verify(methodType, times(1)).setMethodInstrumentationConfig(Mockito.<MethodInstrumentationConfig> any());
+			verify(methodType, times(1)).setMethodInstrumentationConfig(Matchers.<MethodInstrumentationConfig> any());
 		}
 
 		@Test
@@ -236,7 +235,7 @@ public class ExceptionSensorInstrumentationApplierTest extends TestBase {
 
 			assertThat(removed, is(false));
 
-			verify(methodType, times(0)).setMethodInstrumentationConfig(Mockito.<MethodInstrumentationConfig> any());
+			verify(methodType, times(0)).setMethodInstrumentationConfig(Matchers.<MethodInstrumentationConfig> any());
 		}
 
 		@Test
@@ -251,7 +250,7 @@ public class ExceptionSensorInstrumentationApplierTest extends TestBase {
 
 			assertThat(removed, is(false));
 
-			verify(methodType, times(0)).setMethodInstrumentationConfig(Mockito.<MethodInstrumentationConfig> any());
+			verify(methodType, times(0)).setMethodInstrumentationConfig(Matchers.<MethodInstrumentationConfig> any());
 		}
 	}
 

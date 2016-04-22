@@ -7,8 +7,6 @@ import java.lang.reflect.Modifier;
 
 import org.testng.annotations.Test;
 
-import rocks.inspectit.shared.all.instrumentation.classcache.Modifiers;
-
 public class ModifiersTest {
 
 	public class IsPublic extends ModifiersTest {

@@ -27,9 +27,9 @@ import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 
 /**
  * {@link PlotController} for displaying many Http requests in the graph.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimerPlotController extends AbstractTimerDataPlotController<TimerData> {
 
@@ -152,11 +152,11 @@ public class TimerPlotController extends AbstractTimerDataPlotController<TimerDa
 			latestDataDate = new Date(displayedData.get(displayedData.size() - 1).getTimeStamp().getTime());
 		}
 
-		Map<Object, List<TimerData>> map = new HashMap<Object, List<TimerData>>();
+		Map<Object, List<TimerData>> map = new HashMap<>();
 		for (TimerData data : displayedData) {
 			List<TimerData> list = map.get(getSeriesKey(data));
 			if (null == list) {
-				list = new ArrayList<TimerData>();
+				list = new ArrayList<>();
 				map.put(getSeriesKey(data), list);
 			}
 			list.add(data);
@@ -169,6 +169,7 @@ public class TimerPlotController extends AbstractTimerDataPlotController<TimerDa
 		// update plots in UI thread
 		final Map<Object, List<TimerData>> finalMap = map;
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				setDurationPlotData(finalMap);
 				setCountPlotData(finalMap);

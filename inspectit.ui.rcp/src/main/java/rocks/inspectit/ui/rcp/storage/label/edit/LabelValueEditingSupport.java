@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -37,9 +38,9 @@ import rocks.inspectit.ui.rcp.storage.label.composite.impl.StringStorageLabelCom
 
 /**
  * Editing support for the values of the table.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class LabelValueEditingSupport extends EditingSupport {
 
@@ -71,7 +72,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 	/**
 	 * Suggestion label list.
 	 */
-	private List<AbstractStorageLabel<?>> suggestionLabelList = new ArrayList<AbstractStorageLabel<?>>();
+	private List<AbstractStorageLabel<?>> suggestionLabelList = new ArrayList<>();
 
 	/**
 	 * Label that is being edited.
@@ -81,11 +82,11 @@ public class LabelValueEditingSupport extends EditingSupport {
 	/**
 	 * List of listeners.
 	 */
-	private List<LabelEditListener> labelEditListeners = new ArrayList<LabelEditListener>();
+	private List<LabelEditListener> labelEditListeners = new ArrayList<>();
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param viewer
 	 *            Viewer.
 	 * @param storageData
@@ -116,14 +117,14 @@ public class LabelValueEditingSupport extends EditingSupport {
 		if (label instanceof BooleanStorageLabel) {
 			return booleanCellEditor;
 		} else {
-			List<String> items = new ArrayList<String>();
+			List<String> items = new ArrayList<>();
 			items.add("[create new value]");
 			if (!Objects.equals(label, editingLabel)) {
 				// if we still update the same label we don't need to reload everything
-				if (label.getStorageLabelType().isValueReusable() && cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
+				if (label.getStorageLabelType().isValueReusable() && (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE)) {
 					suggestionLabelList.clear();
 					suggestionLabelList.addAll(cmrRepositoryDefinition.getStorageService().getLabelSuggestions(label.getStorageLabelType()));
-					if (!suggestionLabelList.isEmpty() && null != storageData) {
+					if (!suggestionLabelList.isEmpty() && (null != storageData)) {
 						suggestionLabelList.removeAll(storageData.getLabelList());
 					}
 				}
@@ -195,7 +196,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 					// create new
 					CreateValueDialog createValueDialog = new CreateValueDialog(table.getShell(), label.getStorageLabelType());
 					createValueDialog.open();
-					if (createValueDialog.getReturnCode() == Dialog.OK) {
+					if (createValueDialog.getReturnCode() == Window.OK) {
 						AbstractStorageLabel<?> createdLabel = createValueDialog.getCreatedLabel();
 						changeValue(label, createdLabel.getValue());
 						if (!suggestionLabelList.contains(createdLabel)) {
@@ -216,7 +217,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 	/**
 	 * Reforms the value change and informs the listeners.
-	 * 
+	 *
 	 * @param label
 	 *            Label to have value changed.
 	 * @param newValue
@@ -242,7 +243,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 	/**
 	 * Adds a {@link LabelEditListener}.
-	 * 
+	 *
 	 * @param listener
 	 *            Listener to add.
 	 */
@@ -256,7 +257,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 	/**
 	 * Removes a {@link LabelEditListener}.
-	 * 
+	 *
 	 * @param listener
 	 *            Listener to remove.
 	 */
@@ -268,15 +269,15 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 	/**
 	 * Listener interface that will be called prior to and after label value editing.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public interface LabelEditListener {
 
 		/**
 		 * Called before the label is changed.
-		 * 
+		 *
 		 * @param label
 		 *            {@link AbstractStorageLabel}.
 		 */
@@ -284,7 +285,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 		/**
 		 * Called after the label is changed.
-		 * 
+		 *
 		 * @param label
 		 *            {@link AbstractStorageLabel}.
 		 */
@@ -294,9 +295,9 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 	/**
 	 * Dialog for creating new values.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class CreateValueDialog extends Dialog {
 
@@ -322,7 +323,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param parentShell
 		 *            Shell.
 		 * @param labelType
@@ -385,7 +386,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 		 */
 		@Override
 		protected void buttonPressed(int buttonId) {
-			if (Dialog.OK == buttonId) {
+			if (Window.OK == buttonId) {
 				label = storageLabelComposite.getStorageLabel();
 			}
 			super.buttonPressed(buttonId);
@@ -393,7 +394,7 @@ public class LabelValueEditingSupport extends EditingSupport {
 
 		/**
 		 * Gets {@link #label}.
-		 * 
+		 *
 		 * @return {@link #label}
 		 */
 		public AbstractStorageLabel<?> getCreatedLabel() {

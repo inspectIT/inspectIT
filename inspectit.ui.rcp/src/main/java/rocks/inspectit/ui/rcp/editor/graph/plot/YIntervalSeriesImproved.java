@@ -5,7 +5,7 @@ import org.jfree.data.xy.YIntervalSeries;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public class YIntervalSeriesImproved extends YIntervalSeries {
 
@@ -18,7 +18,7 @@ public class YIntervalSeriesImproved extends YIntervalSeries {
 	 * Creates a new empty series. By default, items added to the series will be sorted into
 	 * ascending order by x-value, and duplicate x-values will be allowed (these defaults can be
 	 * modified with another constructor.
-	 * 
+	 *
 	 * @param key
 	 *            the series key (<code>null</code> not permitted).
 	 */
@@ -29,7 +29,7 @@ public class YIntervalSeriesImproved extends YIntervalSeries {
 	/**
 	 * Constructs a new xy-series that contains no data. You can specify whether or not duplicate
 	 * x-values are allowed for the series.
-	 * 
+	 *
 	 * @param key
 	 *            the series key (<code>null</code> not permitted).
 	 * @param autoSort
@@ -43,7 +43,7 @@ public class YIntervalSeriesImproved extends YIntervalSeries {
 
 	/**
 	 * Adds a data item to the series.
-	 * 
+	 *
 	 * @param x
 	 *            the x-value.
 	 * @param y

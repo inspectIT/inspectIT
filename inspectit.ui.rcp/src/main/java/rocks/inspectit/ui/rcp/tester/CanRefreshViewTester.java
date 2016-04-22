@@ -6,9 +6,9 @@ import rocks.inspectit.ui.rcp.view.IRefreshableView;
 
 /**
  * Tester to check if {@link IRefreshableView} can be refreshed.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CanRefreshViewTester extends PropertyTester {
 
@@ -17,7 +17,7 @@ public class CanRefreshViewTester extends PropertyTester {
 	 */
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		return receiver instanceof IRefreshableView && ((IRefreshableView) receiver).canRefresh();
+		return (receiver instanceof IRefreshableView) && ((IRefreshableView) receiver).canRefresh();
 	}
 
 }

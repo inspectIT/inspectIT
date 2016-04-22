@@ -15,16 +15,16 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 
 /**
  * The abstract class of the {@link TableInputController} interface to provide some standard
  * methods.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class AbstractTableInputController implements TableInputController {
 
@@ -32,7 +32,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * Map of the enumeration keys and {@link TableViewerColumn}s. Subclasses can use utility
 	 * methods to bound columns for later use.
 	 */
-	private Map<Enum<?>, TableViewerColumn> tableViewerColumnMap = new HashMap<Enum<?>, TableViewerColumn>();
+	private Map<Enum<?>, TableViewerColumn> tableViewerColumnMap = new HashMap<>();
 
 	/**
 	 * The input definition.
@@ -42,6 +42,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		Assert.isNotNull(inputDefinition);
 
@@ -50,7 +51,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 
 	/**
 	 * Returns the input definition.
-	 * 
+	 *
 	 * @return The input definition.
 	 */
 	protected InputDefinition getInputDefinition() {
@@ -64,6 +65,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public Object getTableInput() {
 		return null;
 	}
@@ -73,6 +75,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * <p>
 	 * Return an empty set by default, sub-classes may override.
 	 */
+	@Override
 	public Set<PreferenceId> getPreferenceIds() {
 		return Collections.emptySet();
 	}
@@ -82,6 +85,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 	}
 
@@ -90,6 +94,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void doRefresh(IProgressMonitor monitor, IRootEditor rootEditor) {
 	}
 
@@ -98,6 +103,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 	}
 
@@ -106,6 +112,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * <p>
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
+	@Override
 	public boolean canOpenInput(List<? extends DefaultData> data) {
 		return false;
 	}
@@ -115,6 +122,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * <p>
 	 * Do nothing by default, sub-classes may override.
 	 */
+	@Override
 	public void setLimit(int limit) {
 	}
 
@@ -135,6 +143,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 	}
 
@@ -191,7 +200,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	 * Maps a column with the enumeration key. The implementing classes should map each column they
 	 * create to the enum that represents that column. Later on the column can be retrieved with the
 	 * enum key if needed.
-	 * 
+	 *
 	 * @param key
 	 *            Enumeration that represents the column.
 	 * @param column
@@ -204,7 +213,7 @@ public abstract class AbstractTableInputController implements TableInputControll
 	/**
 	 * Returns the column that has been mapped with the given enum key. Enum should represent the
 	 * wanted column.
-	 * 
+	 *
 	 * @param key
 	 *            Enumeration that represents the column.
 	 * @return Returns the column that has been mapped with the given enum key or <code>null</code>

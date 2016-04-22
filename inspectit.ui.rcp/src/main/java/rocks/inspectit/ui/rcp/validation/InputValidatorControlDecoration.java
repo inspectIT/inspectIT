@@ -9,9 +9,9 @@ import org.eclipse.ui.forms.IMessageManager;
 /**
  * {@link ValidationControlDecoration} that uses {@link InputValidatorControlDecoration} for
  * determining if input is valid and for setting the correct error message.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InputValidatorControlDecoration extends ValidationControlDecoration<Text> {
 
@@ -22,7 +22,7 @@ public class InputValidatorControlDecoration extends ValidationControlDecoration
 
 	/**
 	 * Default constructor. Uses message manager if supplied to handle messages.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param messageManager
@@ -38,7 +38,7 @@ public class InputValidatorControlDecoration extends ValidationControlDecoration
 	/**
 	 * Alternative constructor. Does not use message manager to report messages. Registers listener
 	 * to the list of validation listeners.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param listener
@@ -53,7 +53,7 @@ public class InputValidatorControlDecoration extends ValidationControlDecoration
 	/**
 	 * Constructor allowing to set all properties. Registers listener to the list of validation
 	 * listeners.
-	 * 
+	 *
 	 * @param control
 	 *            Control to decorate.
 	 * @param messageManager

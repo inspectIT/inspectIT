@@ -262,7 +262,7 @@ public class InterfaceType extends AbstractInterfaceType implements TypeWithMeth
 			subInterfaces.clear();
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

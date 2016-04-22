@@ -38,6 +38,7 @@ import org.eclipse.ui.forms.MasterDetailsBlock;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -160,7 +161,7 @@ public class JmxMasterDetailsBlock extends MasterDetailsBlock implements IFormPa
 		FormToolkit toolkit = managedForm.getToolkit();
 
 		// section
-		Section section = toolkit.createSection(parent, Section.NO_TITLE | Section.EXPANDED);
+		Section section = toolkit.createSection(parent, ExpandableComposite.NO_TITLE | ExpandableComposite.EXPANDED);
 		section.marginWidth = 10;
 		section.marginHeight = 5;
 

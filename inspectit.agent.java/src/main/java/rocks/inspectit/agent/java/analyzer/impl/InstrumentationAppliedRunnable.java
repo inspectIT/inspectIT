@@ -31,7 +31,6 @@ public class InstrumentationAppliedRunnable implements Runnable {
 	 */
 	private final Map<Long, long[]> methodToSensorMap;
 
-
 	/**
 	 * Default constructor.
 	 *

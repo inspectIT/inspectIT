@@ -12,8 +12,8 @@ import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData;
-import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartType;
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
@@ -22,16 +22,16 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * This class only initializes the sub-tree if it is requested. Furthermore, the creation of the
  * objects is done piece after piece, so that an immediate visualization can be seen (important for
  * sub-trees which are very large).
- * 
+ *
  * @author Marius Oehler
- * 
+ *
  */
 public class DeferredJmxObjectComposite extends DeferredComposite {
 
 	/**
 	 * All the classes which are being displayed in the sub-tree.
 	 */
-	private List<JmxDefinitionDataIdent> childJmxData = new CopyOnWriteArrayList<JmxDefinitionDataIdent>();
+	private List<JmxDefinitionDataIdent> childJmxData = new CopyOnWriteArrayList<>();
 
 	/**
 	 * The repository definition.
@@ -45,7 +45,7 @@ public class DeferredJmxObjectComposite extends DeferredComposite {
 
 	/**
 	 * Sets {@link #sensorTypeIdent}.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            New value for {@link #sensorTypeIdent}
 	 */
@@ -128,7 +128,7 @@ public class DeferredJmxObjectComposite extends DeferredComposite {
 
 	/**
 	 * Adds a {@link JmxDefinitionDataIdent} which will be displayed in this sub-tree.
-	 * 
+	 *
 	 * @param jmxIdent
 	 *            The {@link JmxDefinitionDataIdent} to be displayed.
 	 */

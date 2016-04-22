@@ -27,9 +27,9 @@ import rocks.inspectit.shared.cs.storage.processor.write.impl.QueryCachingDataPr
  * Configuration class for specifying the caching processors for the storage writer.
  * <p>
  * These will be autowired to each storage writer.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Configuration
 public class CachingWriteDataProcessorProvider {

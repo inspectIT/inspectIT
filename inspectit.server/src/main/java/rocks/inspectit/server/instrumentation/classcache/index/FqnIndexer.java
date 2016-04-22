@@ -97,8 +97,8 @@ public class FqnIndexer<E extends Type> extends TypeSet<E> implements INodeChang
 		}
 
 		int size = size();
-		List<E> results = new ArrayList<>(max - min + 1);
-		for (int i = min; i <= max && max < size; i++) {
+		List<E> results = new ArrayList<>((max - min) + 1);
+		for (int i = min; (i <= max) && (max < size); i++) {
 			results.add(getAt(i));
 		}
 		return results;

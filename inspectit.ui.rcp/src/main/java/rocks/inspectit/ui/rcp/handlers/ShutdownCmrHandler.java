@@ -24,9 +24,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager.UpdateRepositoryJo
 
 /**
  * Handler that performs shutdown and restart of the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ShutdownCmrHandler extends AbstractHandler implements IHandler {
 
@@ -42,7 +42,7 @@ public class ShutdownCmrHandler extends AbstractHandler implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		String param = event.getParameter(SHOULD_RESTART_PARAMETER);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if (StringUtils.isNotEmpty(param) && selection instanceof StructuredSelection) {
+		if (StringUtils.isNotEmpty(param) && (selection instanceof StructuredSelection)) {
 			final boolean shouldRestart = Boolean.parseBoolean(param);
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof ICmrRepositoryProvider) {

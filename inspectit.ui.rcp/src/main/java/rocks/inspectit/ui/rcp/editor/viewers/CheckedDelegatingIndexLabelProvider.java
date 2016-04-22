@@ -9,9 +9,9 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Special {@link StyledCellIndexLabelProvider} that can be used when checked style in table
  * sub-view is active. This provider delegates to original provide with the decreased index.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CheckedDelegatingIndexLabelProvider extends StyledCellIndexLabelProvider {
 

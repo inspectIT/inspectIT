@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -35,9 +35,9 @@ import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Dialog for creating new {@link AbstractContextCapture}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CaptureContextDialog extends TitleAreaDialog implements IControlValidationListener {
 
@@ -118,7 +118,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell.
 	 */
@@ -128,7 +128,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 
 	/**
 	 * Edit mode constructor. Data will be populated with the given {@link AbstractContextCapture}.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell.
 	 * @param contextCapture
@@ -213,7 +213,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 		returnButton = new Button(main, SWT.RADIO);
 		returnButton.setText("Return value");
 		returnButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RETURN));
-		returnButton.setSelection(null == contextCapture || contextCapture instanceof ReturnContextCapture);
+		returnButton.setSelection((null == contextCapture) || (contextCapture instanceof ReturnContextCapture));
 		returnButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1));
 		createInfoLabel(main, "Select for capturing the return value.");
 
@@ -331,7 +331,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog pathDialog = new InputDialog(getShell(), "Path to Follow", "Enter field name to navigate on the captured object:", "", null);
-				if (pathDialog.open() == Dialog.OK) {
+				if (pathDialog.open() == Window.OK) {
 					String path = pathDialog.getValue();
 					if (StringUtils.isNotBlank(path)) {
 						paths.add(path);
@@ -350,8 +350,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 				updateAccessorText();
 			}
 		});
-		createInfoLabel(
-				main,
+		createInfoLabel(main,
 				"Specify path to follow on the captured object. For example, if object of type Customer is captured, and this object has a field named 'id', then you can save the 'id' value by creating a path '-> id'. ");
 
 		validationControlDecorations.add(indexValidation);
@@ -389,7 +388,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 
 	/**
 	 * Gets {@link #contextCapture}.
-	 * 
+	 *
 	 * @return {@link #contextCapture}
 	 */
 	public AbstractContextCapture getContextCapture() {
@@ -416,7 +415,7 @@ public class CaptureContextDialog extends TitleAreaDialog implements IControlVal
 
 	/**
 	 * Creates info icon with given text as tool-tip.
-	 * 
+	 *
 	 * @param parent
 	 *            Composite to create on.
 	 * @param text

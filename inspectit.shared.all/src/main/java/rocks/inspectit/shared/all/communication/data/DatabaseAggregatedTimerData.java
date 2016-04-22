@@ -9,9 +9,9 @@ import javax.persistence.Table;
  * Sub-class of TimerData that has better performance when aggregating values from other TimerData
  * objects. This class is only meant to be used for purpose of aggregation of objects that will be
  * persisted in the database.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 @Table
@@ -31,7 +31,7 @@ public class DatabaseAggregatedTimerData extends TimerData {
 
 	/**
 	 * Creates a new instance.
-	 * 
+	 *
 	 * @param timestamp
 	 *            the timestamp.
 	 * @param platformIdent
@@ -51,6 +51,7 @@ public class DatabaseAggregatedTimerData extends TimerData {
 	 * This method does not aggregate the {@link InvocationAwareData} because it is not needed in
 	 * the database.
 	 */
+	@Override
 	public void aggregateTimerData(TimerData timerData) {
 		this.setCount(this.getCount() + timerData.getCount());
 		this.setDuration(this.getDuration() + timerData.getDuration());

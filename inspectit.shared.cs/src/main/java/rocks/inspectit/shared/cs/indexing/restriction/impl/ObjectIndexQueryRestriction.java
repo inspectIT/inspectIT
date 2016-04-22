@@ -4,9 +4,9 @@ import rocks.inspectit.shared.cs.indexing.restriction.AbstractIndexQueryRestrict
 
 /**
  * Abstract class for all restrictions that use object as restriction values.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class ObjectIndexQueryRestriction extends AbstractIndexQueryRestriction {
 
@@ -17,7 +17,7 @@ public abstract class ObjectIndexQueryRestriction extends AbstractIndexQueryRest
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param fieldName
 	 *            Name of the field that is restriction bounded to.
 	 * @param restrictionValue
@@ -29,7 +29,7 @@ public abstract class ObjectIndexQueryRestriction extends AbstractIndexQueryRest
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Restriction value.
 	 */
 	protected Object getRestrictionValue() {

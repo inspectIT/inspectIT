@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
@@ -34,7 +35,7 @@ public class ConnectionMetaDataExtractorTest {
 		extractor = new ConnectionMetaDataExtractor();
 		JDBCUrlExtractor jdbExtractor = mock(JDBCUrlExtractor.class);
 		when(jdbExtractor.extractURLfromJDBCURL(anyString())).thenReturn(URL);
-		extractor.urlExtractor = jdbExtractor;
+		ConnectionMetaDataExtractor.urlExtractor = jdbExtractor;
 	}
 
 	@Test
@@ -62,12 +63,12 @@ public class ConnectionMetaDataExtractorTest {
 	@Test
 	public void nullConnection() {
 		Logger mockedLogger = Mockito.mock(Logger.class);
-		extractor.logger = mockedLogger;
+		ConnectionMetaDataExtractor.logger = mockedLogger;
 
 		ConnectionMetaData data = extractor.parse(null);
 
 		assertThat(data, is(nullValue()));
-		Mockito.verify(mockedLogger).warn(Mockito.anyString());
+		Mockito.verify(mockedLogger).warn(Matchers.anyString());
 	}
 
 	@Test

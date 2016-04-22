@@ -14,7 +14,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.server.cache.impl.AtomicBuffer;
 import rocks.inspectit.server.cache.impl.BufferProperties;
-import rocks.inspectit.server.property.PropertyManager;
 import rocks.inspectit.server.test.AbstractTransactionalTestNGLogSupport;
 import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
 import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
@@ -24,9 +23,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.configuration.Configuration
  * Test that some of the properties updates are working fine in integration mode.
  * <p>
  * Only important properties changes are taken into account here.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @ContextConfiguration(locations = { "classpath:spring/spring-context-global.xml", "classpath:spring/spring-context-database.xml", "classpath:spring/spring-context-beans.xml",
 		"classpath:spring/spring-context-processors.xml", "classpath:spring/spring-context-storage-test.xml" })

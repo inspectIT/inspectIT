@@ -200,7 +200,7 @@ public class ClassSchemaManager implements InitializingBean {
 			Map<String, String> schemaInitMap = new HashMap<String, String>();
 			String line = reader.readLine();
 			while (line != null) {
-				if (line.length() > 0 && line.charAt(0) != '#') {
+				if ((line.length() > 0) && (line.charAt(0) != '#')) {
 					String[] tokens = line.split(":");
 					if (tokens.length == 2) {
 						schemaInitMap.put(tokens[0].trim(), tokens[1].trim());
@@ -240,7 +240,7 @@ public class ClassSchemaManager implements InitializingBean {
 
 	/**
 	 * Sets {@link #log}.
-	 * 
+	 *
 	 * @param log
 	 *            New value for {@link #log}
 	 */

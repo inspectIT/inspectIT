@@ -31,9 +31,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * Dialog for add repository definition action.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class AddCmrRepositoryDefinitionDialog extends TitleAreaDialog {
@@ -70,7 +70,7 @@ public class AddCmrRepositoryDefinitionDialog extends TitleAreaDialog {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell.
 	 */
@@ -260,7 +260,7 @@ public class AddCmrRepositoryDefinitionDialog extends TitleAreaDialog {
 
 	/**
 	 * Is input in textual boxes valid.
-	 * 
+	 *
 	 * @return Is input in textual boxes valid.
 	 */
 	private boolean isInputValid() {

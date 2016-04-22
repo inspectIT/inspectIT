@@ -13,9 +13,9 @@ import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 
 /**
  * Timer data service.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Service
 public class TimerDataAccessService implements ITimerDataAccessService {
@@ -29,6 +29,7 @@ public class TimerDataAccessService implements ITimerDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<TimerData> getAggregatedTimerData(TimerData timerData) {
 		List<TimerData> result = timerDataDao.getAggregatedTimerData(timerData);
@@ -38,6 +39,7 @@ public class TimerDataAccessService implements ITimerDataAccessService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<TimerData> getAggregatedTimerData(TimerData timerData, Date fromDate, Date toDate) {
 		List<TimerData> result = timerDataDao.getAggregatedTimerData(timerData, fromDate, toDate);

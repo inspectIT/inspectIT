@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.ci.form.part.ExcludeRulesPart;
 
 /**
  * Page for exclude rules settings.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExcludeRulesPage extends FormPage {
 

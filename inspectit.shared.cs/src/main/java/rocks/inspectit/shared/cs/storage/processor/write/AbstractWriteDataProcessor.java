@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 /**
  * Special type of processor that performs operations on the elements that have been written to
  * storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractWriteDataProcessor {
 
@@ -21,7 +21,7 @@ public abstract class AbstractWriteDataProcessor {
 	 * Processes one {@link DefaultData} object. This method will check is
 	 * {@link #canBeProcessed(DefaultData)} is true, and then delegate the processing to the
 	 * {@link #processData(DefaultData)} method.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @param kryoPreferences
@@ -36,7 +36,7 @@ public abstract class AbstractWriteDataProcessor {
 
 	/**
 	 * Concrete method for processing. IMplemented by sub-classeS.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @param kryoPreferences
@@ -48,7 +48,7 @@ public abstract class AbstractWriteDataProcessor {
 	/**
 	 * Returns if the {@link DefaultData} object can be processed by this
 	 * {@link AbstractDataProcessor}.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @return True if data can be processed, false otherwise.
@@ -59,7 +59,7 @@ public abstract class AbstractWriteDataProcessor {
 	 * Called on the preparation of the storage.
 	 * <p>
 	 * Subclasses may override.
-	 * 
+	 *
 	 * @param storageManager
 	 *            Storage manager to help in performing tasks.
 	 * @param storageWriter
@@ -76,7 +76,7 @@ public abstract class AbstractWriteDataProcessor {
 	 * Called on the finalization of the storage.
 	 * <p>
 	 * Subclasses may override.
-	 * 
+	 *
 	 * @param storageManager
 	 *            Storage manager to help in performing tasks.
 	 * @param storageWriter

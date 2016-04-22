@@ -16,19 +16,19 @@ import org.eclipse.jface.viewers.StructuredSelection;
  * <p>
  * <b>IMPORTANT:</b> The class is licensed under the Eclipse Public License v1.0 as it includes the
  * code from the {@link org.eclipse.ui.internal.part.SelectionProviderAdapter} class belonging to
- * the Eclipse Rich Client Platform. EPL v1.0 license can be found <a
- * href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
+ * the Eclipse Rich Client Platform. EPL v1.0 license can be found
+ * <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.
  * <p>
  * Please relate to the LICENSEEXCEPTIONS.txt file for more information about license exceptions
  * that apply regarding to InspectIT and Eclipse RCP and/or EPL Components.
- * 
+ *
  */
 public class SelectionProviderAdapter implements ISelectionProvider {
 
 	/**
 	 * List of listeners.
 	 */
-	private List<ISelectionChangedListener> listeners = new ArrayList<ISelectionChangedListener>();
+	private List<ISelectionChangedListener> listeners = new ArrayList<>();
 
 	/**
 	 * Current selection.
@@ -38,6 +38,7 @@ public class SelectionProviderAdapter implements ISelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.add(listener);
 	}
@@ -45,6 +46,7 @@ public class SelectionProviderAdapter implements ISelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISelection getSelection() {
 		return theSelection;
 	}
@@ -52,6 +54,7 @@ public class SelectionProviderAdapter implements ISelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.remove(listener);
 	}
@@ -59,11 +62,13 @@ public class SelectionProviderAdapter implements ISelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setSelection(ISelection selection) {
 		theSelection = selection;
 		final SelectionChangedEvent e = new SelectionChangedEvent(this, selection);
 		for (final ISelectionChangedListener listener : listeners) {
 			SafeRunner.run(new SafeRunnable() {
+				@Override
 				public void run() {
 					listener.selectionChanged(e);
 				}

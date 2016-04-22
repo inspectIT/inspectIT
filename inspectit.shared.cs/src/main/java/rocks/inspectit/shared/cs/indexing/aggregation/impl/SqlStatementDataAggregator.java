@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * {@link IAggregator} for {@link SqlStatementData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SqlStatementDataAggregator implements IAggregator<SqlStatementData>, Serializable {
 
@@ -34,7 +34,7 @@ public class SqlStatementDataAggregator implements IAggregator<SqlStatementData>
 
 	/**
 	 * Secondary constructor. Allows to define if parameters should be included in the aggregation.
-	 * 
+	 *
 	 * @param includeParameters
 	 *            Should the parameters be included in aggregation.
 	 */
@@ -45,6 +45,7 @@ public class SqlStatementDataAggregator implements IAggregator<SqlStatementData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<SqlStatementData> aggregatedObject, SqlStatementData objectToAdd) {
 		aggregatedObject.aggregate(objectToAdd);
 	}
@@ -52,6 +53,7 @@ public class SqlStatementDataAggregator implements IAggregator<SqlStatementData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IAggregatedData<SqlStatementData> getClone(SqlStatementData sqlStatementData) {
 		AggregatedSqlStatementData clone = new AggregatedSqlStatementData();
 		clone.setPlatformIdent(sqlStatementData.getPlatformIdent());
@@ -61,8 +63,8 @@ public class SqlStatementDataAggregator implements IAggregator<SqlStatementData>
 		clone.setDatabaseProductName(sqlStatementData.getDatabaseProductName());
 		clone.setDatabaseProductVersion(sqlStatementData.getDatabaseProductVersion());
 		clone.setDatabaseUrl(sqlStatementData.getDatabaseUrl());
-		if (includeParameters && null != sqlStatementData.getParameterValues()) {
-			clone.setParameterValues(new ArrayList<String>(sqlStatementData.getParameterValues()));
+		if (includeParameters && (null != sqlStatementData.getParameterValues())) {
+			clone.setParameterValues(new ArrayList<>(sqlStatementData.getParameterValues()));
 		}
 		return clone;
 	}
@@ -70,14 +72,15 @@ public class SqlStatementDataAggregator implements IAggregator<SqlStatementData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(SqlStatementData sqlStatementData) {
 		final int prime = 31;
 		int result = 0;
-		result = prime * result + (sqlStatementData.isPreparedStatement() ? 1231 : 1237);
-		result = prime * result + ((sqlStatementData.getSql() == null) ? 0 : sqlStatementData.getSql().hashCode());
-		result = prime * result + ((sqlStatementData.getDatabaseUrl() == null) ? 0 : sqlStatementData.getDatabaseUrl().hashCode());
+		result = (prime * result) + (sqlStatementData.isPreparedStatement() ? 1231 : 1237);
+		result = (prime * result) + ((sqlStatementData.getSql() == null) ? 0 : sqlStatementData.getSql().hashCode());
+		result = (prime * result) + ((sqlStatementData.getDatabaseUrl() == null) ? 0 : sqlStatementData.getDatabaseUrl().hashCode());
 		if (includeParameters) {
-			result = prime * result + ((sqlStatementData.getParameterValues() == null) ? 0 : sqlStatementData.getParameterValues().hashCode());
+			result = (prime * result) + ((sqlStatementData.getParameterValues() == null) ? 0 : sqlStatementData.getParameterValues().hashCode());
 		}
 		return result;
 	}
@@ -89,7 +92,7 @@ public class SqlStatementDataAggregator implements IAggregator<SqlStatementData>
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (includeParameters ? 1231 : 1237);
+		result = (prime * result) + (includeParameters ? 1231 : 1237);
 		return result;
 	}
 

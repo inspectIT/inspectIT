@@ -48,9 +48,9 @@ import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 
 /**
  * Job for checking if a new version of inspectIT exists on the GitHub.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CheckNewVersionJob extends Job {
 
@@ -68,7 +68,7 @@ public class CheckNewVersionJob extends Job {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param userTriggered
 	 *            If job has been triggered by the user. If so the job will be performed no matter
 	 *            what. Otherwise we would check first if preference for auto-check is set to
@@ -143,8 +143,8 @@ public class CheckNewVersionJob extends Job {
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Check for new Version", "There is no newer version of inspectIT available. Currently running version "
-							+ currentVersionFinal.toString() + " is the latest officially released version.");
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Check for new Version",
+							"There is no newer version of inspectIT available. Currently running version " + currentVersionFinal.toString() + " is the latest officially released version.");
 				}
 			});
 
@@ -155,7 +155,7 @@ public class CheckNewVersionJob extends Job {
 
 	/**
 	 * Returns the highest available version release from the github JsonArray.
-	 * 
+	 *
 	 * @param jsonArray
 	 *            JsonArray of releases.
 	 * @return Returns the highest available version release or 0.0.0 (empty release) if no release
@@ -190,9 +190,9 @@ public class CheckNewVersionJob extends Job {
 
 	/**
 	 * A bit changed {@link MessageDialogWithToggle} for displaying our message with link.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class NewVersionDialog extends MessageDialogWithToggle {
 
@@ -208,7 +208,7 @@ public class CheckNewVersionJob extends Job {
 		 *            the parent shell
 		 * @param toggleState
 		 *            the initial state for the toggle
-		 * 
+		 *
 		 */
 		public NewVersionDialog(VersionRelease versionRelease, Shell parentShell, boolean toggleState) {
 			super(parentShell, "Check for New Version", null, "", MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0, "Enable auto check for the new version on startup",

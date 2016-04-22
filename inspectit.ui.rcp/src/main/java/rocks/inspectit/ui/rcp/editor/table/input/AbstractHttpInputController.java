@@ -14,8 +14,8 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
 import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
@@ -25,7 +25,7 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
  * Reduce the redundancy in http controllers. Still as the de-facto standard of realizing
  * controllers is based on the enum to create the columns lots of code needs to be doubled. We can
  * address this in the future in a better way.
- * 
+ *
  * @author Stefan Siegl
  */
 public abstract class AbstractHttpInputController extends AbstractTableInputController {
@@ -38,7 +38,7 @@ public abstract class AbstractHttpInputController extends AbstractTableInputCont
 	/**
 	 * List of Timer data to be displayed.
 	 */
-	protected List<HttpTimerData> timerDataList = new ArrayList<HttpTimerData>();
+	protected List<HttpTimerData> timerDataList = new ArrayList<>();
 
 	/**
 	 * Template object used for querying.

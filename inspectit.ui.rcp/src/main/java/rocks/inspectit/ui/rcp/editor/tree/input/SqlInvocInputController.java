@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -39,8 +40,8 @@ import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.tree.TreeViewerComparator;
 import rocks.inspectit.ui.rcp.editor.tree.util.DatabaseSqlTreeComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
@@ -53,9 +54,9 @@ import rocks.inspectit.ui.rcp.util.data.DatabaseInfoHelper;
 /**
  * This input controller displays the contents of {@link SqlStatementData} objects in an invocation
  * sequence.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class SqlInvocInputController extends AbstractTreeInputController {
 
@@ -68,9 +69,9 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The timestamp column. */
@@ -107,7 +108,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -120,7 +121,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 		 *            If the column should be shown in raw mode.
 		 * @param dataComparator
 		 *            Comparator for the column.
-		 * 
+		 *
 		 */
 		private Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super SqlStatementData> dataComparator) {
 			this.name = name;
@@ -133,13 +134,13 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -184,6 +185,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TreeViewer treeViewer) {
 		for (Column column : Column.values()) {
 			TreeViewerColumn viewerColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
@@ -232,7 +234,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	public void preferenceEventFired(PreferenceEvent preferenceEvent) {
 		if (PreferenceId.INVOCATION_SUBVIEW_MODE.equals(preferenceEvent.getPreferenceId())) {
 			Map<IPreferenceGroup, Object> preferenceMap = preferenceEvent.getPreferenceMap();
-			if (null != preferenceMap && preferenceMap.containsKey(PreferenceId.InvocationSubviewMode.RAW)) {
+			if ((null != preferenceMap) && preferenceMap.containsKey(PreferenceId.InvocationSubviewMode.RAW)) {
 				Boolean isRawMode = (Boolean) preferenceMap.get(PreferenceId.InvocationSubviewMode.RAW);
 
 				// first show/hide columns and then change the rawMode value
@@ -244,7 +246,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 	/**
 	 * Handles the raw and aggregated columns hiding/showing.
-	 * 
+	 *
 	 * @param rawMode
 	 *            Is raw mode active.
 	 */
@@ -271,6 +273,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new SqlInvocContentProvider();
 	}
@@ -278,6 +281,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ViewerComparator getComparator() {
 		TreeViewerComparator<SqlStatementData> sqlInputViewerComparator = new DatabaseSqlTreeComparator();
 		for (Column column : Column.values()) {
@@ -297,6 +301,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new SqlInvocLabelProvider();
 	}
@@ -335,15 +340,16 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 	/**
 	 * The content provider for this view.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class SqlInvocContentProvider implements ITreeContentProvider {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<? extends DefaultData> input = (List<? extends DefaultData>) inputElement;
@@ -358,7 +364,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 				sqlStatementDataList = (List<SqlStatementData>) input;
 			}
 			if (!rawMode) {
-				AggregationPerformer<SqlStatementData> aggregationPerformer = new AggregationPerformer<SqlStatementData>(new SqlStatementDataAggregator());
+				AggregationPerformer<SqlStatementData> aggregationPerformer = new AggregationPerformer<>(new SqlStatementDataAggregator());
 				aggregationPerformer.processCollection(sqlStatementDataList);
 				sqlStatementDataList = aggregationPerformer.getResultList();
 				databaseSqlMap = createInputMap(sqlStatementDataList);
@@ -377,7 +383,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 		/**
 		 * Create input map from list of {@link SqlStatementData}s.
-		 * 
+		 *
 		 * @param sqlStatementDatas
 		 *            {@link SqlStatementData}s
 		 * @return Input map
@@ -398,7 +404,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 		/**
 		 * Returns the raw list, with no aggregation.
-		 * 
+		 *
 		 * @param invocationSequenceDataList
 		 *            Input as list of invocations
 		 * @param sqlStatementDataList
@@ -411,7 +417,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 				if (null != invocationSequenceData.getSqlStatementData()) {
 					sqlStatementDataList.add(invocationSequenceData.getSqlStatementData());
 				}
-				if (null != invocationSequenceData.getNestedSequences() && !invocationSequenceData.getNestedSequences().isEmpty()) {
+				if ((null != invocationSequenceData.getNestedSequences()) && !invocationSequenceData.getNestedSequences().isEmpty()) {
 					getRawInputList(invocationSequenceData.getNestedSequences(), sqlStatementDataList);
 				}
 			}
@@ -422,18 +428,21 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof DatabaseInfoHelper) {
 				List<SqlStatementData> children = databaseSqlMap.get(parentElement);
@@ -449,7 +458,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 		 */
 		@Override
 		public Object getParent(Object element) {
-			if (!rawMode && element instanceof SqlStatementData) {
+			if (!rawMode && (element instanceof SqlStatementData)) {
 				return new DatabaseInfoHelper((SqlStatementData) element);
 			}
 			return null;
@@ -467,15 +476,15 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 	/**
 	 * The sql label provider used by this view.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	private final class SqlInvocLabelProvider extends StyledCellIndexLabelProvider {
 
 		/**
 		 * Creates the styled text.
-		 * 
+		 *
 		 * @param element
 		 *            The element to create the styled text for.
 		 * @param index
@@ -511,7 +520,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param enumId
@@ -567,7 +576,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            {@link DatabaseInfoHelper}.
 	 * @param enumId
@@ -588,12 +597,13 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	 */
 	@Override
 	public int getExpandLevel() {
-		return TreeViewer.ALL_LEVELS;
+		return AbstractTreeViewer.ALL_LEVELS;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof SqlStatementData) {
 			SqlStatementData data = (SqlStatementData) object;
@@ -622,14 +632,14 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof SqlStatementData) {
 			SqlStatementData data = (SqlStatementData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, column).toString());
 			}
 			return values;
 		} else if (object instanceof DatabaseInfoHelper) {
 			DatabaseInfoHelper data = (DatabaseInfoHelper) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getDatabaseStyledTextForColumn(data, column).toString());
 			}

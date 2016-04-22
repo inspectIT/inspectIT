@@ -7,17 +7,17 @@ import com.google.common.base.Objects;
 
 /**
  * Class that defines the editor properties like title, image, description.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EditorPropertiesData {
 
 	/**
 	 * Enumeration that can be used to specify what should be used for editors part image and name.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum PartType {
 
@@ -84,7 +84,7 @@ public class EditorPropertiesData {
 	 * {@link #SENSOR} - Uses sensor name as the part name<br>
 	 * {@link #VIEW} - Uses view name as the part name<br>
 	 * {@link #INFO} - Uses info as the part name
-	 * 
+	 *
 	 * @param partType
 	 *            Flag to set for part name.
 	 */
@@ -110,7 +110,7 @@ public class EditorPropertiesData {
 	 * Values acceptable are:<br>
 	 * {@link #SENSOR} - Uses sensor image as the part image<br>
 	 * {@link #VIEW} - Uses view image as the part image<br>
-	 * 
+	 *
 	 * @param partType
 	 *            Flag to set for part image.
 	 */
@@ -120,7 +120,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Gets {@link #partTooltip}.
-	 * 
+	 *
 	 * @return {@link #partTooltip}
 	 */
 	public String getPartTooltip() {
@@ -136,7 +136,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Gets {@link #sensorImage}.
-	 * 
+	 *
 	 * @return {@link #sensorImage}
 	 */
 	public Image getSensorImage() {
@@ -145,7 +145,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Sets {@link #sensorImage}.
-	 * 
+	 *
 	 * @param image
 	 *            New value for {@link #sensorImage}
 	 */
@@ -155,7 +155,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Gets {@link #sensorName}.
-	 * 
+	 *
 	 * @return {@link #sensorName}
 	 */
 	public String getSensorName() {
@@ -164,7 +164,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Sets {@link #sensorName}.
-	 * 
+	 *
 	 * @param sensorName
 	 *            New value for {@link #sensorName}
 	 */
@@ -174,7 +174,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Gets {@link #viewImage}.
-	 * 
+	 *
 	 * @return {@link #viewImage}
 	 */
 	public Image getViewImage() {
@@ -183,7 +183,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Sets {@link #viewImage}.
-	 * 
+	 *
 	 * @param descriptionImage
 	 *            New value for {@link #viewImage}
 	 */
@@ -193,7 +193,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Gets {@link #viewName}.
-	 * 
+	 *
 	 * @return {@link #viewName}
 	 */
 	public String getViewName() {
@@ -202,7 +202,7 @@ public class EditorPropertiesData {
 
 	/**
 	 * Sets {@link #viewName}.
-	 * 
+	 *
 	 * @param viewName
 	 *            New value for {@link #viewName}
 	 */

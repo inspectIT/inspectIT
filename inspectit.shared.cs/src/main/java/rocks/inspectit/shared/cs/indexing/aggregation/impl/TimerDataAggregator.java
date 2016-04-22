@@ -9,9 +9,9 @@ import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 
 /**
  * {@link IAggregator} for {@link TimerData}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimerDataAggregator implements IAggregator<TimerData>, Serializable {
 
@@ -23,6 +23,7 @@ public class TimerDataAggregator implements IAggregator<TimerData>, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(IAggregatedData<TimerData> aggregatedObject, TimerData objectToAdd) {
 		aggregatedObject.aggregate(objectToAdd);
 	}
@@ -30,6 +31,7 @@ public class TimerDataAggregator implements IAggregator<TimerData>, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IAggregatedData<TimerData> getClone(TimerData timerData) {
 		AggregatedTimerData clone = new AggregatedTimerData();
 		clone.setPlatformIdent(timerData.getPlatformIdent());
@@ -42,6 +44,7 @@ public class TimerDataAggregator implements IAggregator<TimerData>, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object getAggregationKey(TimerData object) {
 		return object.getMethodIdent();
 	}
@@ -54,7 +57,7 @@ public class TimerDataAggregator implements IAggregator<TimerData>, Serializable
 		final int prime = 31;
 		int result = 1;
 		// we must make constant hashCode because of the caching
-		result = prime * result + this.getClass().getName().hashCode();
+		result = (prime * result) + this.getClass().getName().hashCode();
 		return result;
 	}
 

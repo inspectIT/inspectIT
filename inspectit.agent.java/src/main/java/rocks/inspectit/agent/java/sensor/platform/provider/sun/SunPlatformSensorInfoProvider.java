@@ -11,9 +11,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.def.DefaultThreadInfo
 
 /**
  * Special {@link PlatformSensorInfoProvider} for SunVM..
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SunPlatformSensorInfoProvider implements PlatformSensorInfoProvider {
 

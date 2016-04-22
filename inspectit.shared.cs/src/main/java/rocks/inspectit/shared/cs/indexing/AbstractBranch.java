@@ -21,9 +21,9 @@ import rocks.inspectit.shared.cs.indexing.indexer.IBranchIndexer;
 
 /**
  * Abstract class for all {@link ITreeComponent}s that are a branch.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <R>
  *            Type of the element returned by the branch when querying.
  * @param <E>
@@ -40,7 +40,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	 * Branch indexer.
 	 */
 	private IBranchIndexer<E> branchIndexer;
-	
+
 	/**
 	 * Map for holding references.
 	 */
@@ -49,18 +49,18 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	/**
 	 * Default constructor. {@link Branch} can only be initialized with proper branch indexer
 	 * supplied. If null is passed, {@link IllegalArgumentException} will be thrown.
-	 * 
+	 *
 	 * @param branchIndexer
 	 *            Branch indexer used in this branch.
 	 */
 	public AbstractBranch(IBranchIndexer<E> branchIndexer) {
 		this.branchIndexer = branchIndexer;
-		map = new ConcurrentHashMap<Object, ITreeComponent<R, E>>(1, 0.75f, CONCURRENCY_LEVEL);
+		map = new ConcurrentHashMap<>(1, 0.75f, CONCURRENCY_LEVEL);
 	}
 
 	/**
 	 * Returns branch indexer.
-	 * 
+	 *
 	 * @return Branch indexer
 	 */
 	protected IBranchIndexer<E> getBranchIndexer() {
@@ -69,7 +69,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 
 	/**
 	 * Each concrete implementation should create new component and put the element in it.
-	 * 
+	 *
 	 * @param element
 	 *            Element to put in new component.
 	 * @return Return type by the tree component.
@@ -79,6 +79,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public R put(E element) throws IndexingException {
 		// get key for object
 		Object key = branchIndexer.getKey(element);
@@ -108,6 +109,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public R get(E template) {
 		// get key for template
 		Object key = branchIndexer.getKey(template);
@@ -141,6 +143,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public R getAndRemove(E template) {
 		// get key for template
 		Object key = getBranchIndexer().getKey(template);
@@ -174,6 +177,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<R> query(IIndexQuery query) {
 		// get all keys for query
 		Object[] keys = getBranchIndexer().getKeys(query);
@@ -185,29 +189,29 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 			return querySingleKey(query, keys[0]);
 		} else {
 			// combine results for all keys
-			List<R> results = new ArrayList<R>();
+			List<R> results = new ArrayList<>();
 			for (Object key : keys) {
 				List<R> componentResult = querySingleKey(query, key);
-				if (null != componentResult && !componentResult.isEmpty()) {
+				if ((null != componentResult) && !componentResult.isEmpty()) {
 					results.addAll(componentResult);
 				}
 			}
 			return results;
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<R> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
 		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
-	
 
 	/**
 	 * Queries the single {@link ITreeComponent} that is mapped with key. If passed key is null, or
 	 * if there is no component mapped with given key, result will be empty list.
-	 * 
+	 *
 	 * @param query
 	 *            Query to process.
 	 * @param key
@@ -232,17 +236,17 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 
 	/**
 	 * Returns results from all branches for given query.
-	 * 
+	 *
 	 * @param query
 	 *            Query to process.
 	 * @return Combined result from all {@link ITreeComponent}s that are mapped in this branch.
 	 */
 	protected List<R> queryAllTreeComponents(IIndexQuery query) {
-		List<R> results = new ArrayList<R>();
+		List<R> results = new ArrayList<>();
 		Iterator<ITreeComponent<R, E>> iterator = map.values().iterator();
 		while (iterator.hasNext()) {
 			List<R> componentResult = iterator.next().query(query);
-			if (null != componentResult && !componentResult.isEmpty()) {
+			if ((null != componentResult) && !componentResult.isEmpty()) {
 				results.addAll(componentResult);
 			}
 		}
@@ -252,6 +256,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getComponentSize(IObjectSizes objectSizes) {
 		int mapSize = map.size();
 		long size = objectSizes.getSizeOfObjectHeader();
@@ -285,8 +290,8 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((branchIndexer == null) ? 0 : branchIndexer.hashCode());
-		result = prime * result + ((map == null) ? 0 : map.hashCode());
+		result = (prime * result) + ((branchIndexer == null) ? 0 : branchIndexer.hashCode());
+		result = (prime * result) + ((map == null) ? 0 : map.hashCode());
 		return result;
 	}
 
@@ -333,10 +338,10 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 		toStringBuilder.append("branchMap", map);
 		return toStringBuilder.toString();
 	}
-	
+
 	/**
 	 * Returns the branches to Query.
-	 * 
+	 *
 	 * @param query
 	 *            query
 	 * @return the list of branches
@@ -344,13 +349,13 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	public Collection<ITreeComponent<R, E>> getBranchesToQuery(IIndexQuery query) {
 		// The given keys which fit to the query
 		Object[] keys = this.getBranchIndexer().getKeys(query);
-		
+
 		// The map, which holds all branches of the next level
 		if (ArrayUtils.isEmpty(keys)) {
 			return map.values();
 		} else {
 			// the branches which have to be queried
-			Collection<ITreeComponent<R, E>> branchesToQuery = new ArrayList<ITreeComponent<R, E>>();
+			Collection<ITreeComponent<R, E>> branchesToQuery = new ArrayList<>();
 			for (Object key : keys) {
 				ITreeComponent<R, E> branch = map.get(key);
 				if (branch != null) {
@@ -364,6 +369,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RecursiveTask<List<R>> getTaskForForkJoinQuery(IIndexQuery query) {
 		return new QueryTask<>(this.getBranchesToQuery(query), query);
 	}

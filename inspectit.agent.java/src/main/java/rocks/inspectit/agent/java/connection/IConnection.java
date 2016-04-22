@@ -63,8 +63,8 @@ public interface IConnection {
 	void sendDataObjects(List<? extends DefaultData> dataObjects) throws ServerUnavailableException;
 
 	/**
-	 * Registers the agent with the CMR. The CMR will answer with the {@link AgentConfig}
-	 * containing all necessary information for the agent initialization.
+	 * Registers the agent with the CMR. The CMR will answer with the {@link AgentConfig} containing
+	 * all necessary information for the agent initialization.
 	 *
 	 * @param agentName
 	 *            The self-defined name of the inspectIT Agent. Can not be <code>null</code>.
@@ -75,7 +75,8 @@ public interface IConnection {
 	 *             If server to send the request to is unavailable.
 	 * @throws RegistrationException
 	 *             This exception is thrown when a problem with the registration process appears.
-	 * @throws BusinessException If {@link BusinessException} occurs on the server.
+	 * @throws BusinessException
+	 *             If {@link BusinessException} occurs on the server.
 	 */
 	AgentConfig register(String agentName, String version) throws ServerUnavailableException, RegistrationException, BusinessException;
 

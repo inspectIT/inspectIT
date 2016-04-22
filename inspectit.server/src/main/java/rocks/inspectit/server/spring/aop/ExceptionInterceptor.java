@@ -22,9 +22,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
  * provides additional information like what method was executed, what parameters where passed, etc.
  * In addition all exceptions except our BusinessException are transformed to a
  * {@link RemoteException}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Aspect
 @Component
@@ -39,7 +39,7 @@ public class ExceptionInterceptor {
 	/**
 	 * Field that identifies the cause field in a {@link Throwable} used for modifying it via
 	 * reflection.
-	 * */
+	 */
 	private static Field throwableCauseField;
 
 	// get the #throwableCauseField via reflection
@@ -54,7 +54,7 @@ public class ExceptionInterceptor {
 
 	/**
 	 * The advice.
-	 * 
+	 *
 	 * @param jp
 	 *            {@link ProceedingJoinPoint} holding all information about pointcut.
 	 * @return Result of method invocation.
@@ -74,9 +74,8 @@ public class ExceptionInterceptor {
 
 			throw e;
 		} catch (RemoteException e) {
-			log.warn(
-					"Exception thrown in the service method " + jp.getSignature() + " executed with following parameters: " + Arrays.toString(jp.getArgs()) + ". Original exception class is: "
-							+ e.getOriginalExceptionClass(), e);
+			log.warn("Exception thrown in the service method " + jp.getSignature() + " executed with following parameters: " + Arrays.toString(jp.getArgs()) + ". Original exception class is: "
+					+ e.getOriginalExceptionClass(), e);
 
 			// if we already have remote one service signature and just re-throw it
 			e.setServiceMethodSignature(jp.getSignature().toString());
@@ -94,7 +93,7 @@ public class ExceptionInterceptor {
 
 	/**
 	 * Transforms the given throwable to the {@link RemoteException}.
-	 * 
+	 *
 	 * @param throwable
 	 *            {@link Throwable} to transform.
 	 * @return {@link RemoteException}
@@ -109,7 +108,7 @@ public class ExceptionInterceptor {
 
 	/**
 	 * Transforms the given throwable to the {@link RemoteException}.
-	 * 
+	 *
 	 * @param throwable
 	 *            {@link Throwable} to transform.
 	 * @param visitedException
@@ -120,7 +119,7 @@ public class ExceptionInterceptor {
 	 *             {@link ExceptionInterceptor#throwableCauseField}.
 	 */
 	private static RemoteException transformException(Throwable throwable, List<Throwable> visitedException) throws IllegalAccessException {
-		if (throwable == null || !visitedException.add(throwable) || throwable instanceof RemoteException) {
+		if ((throwable == null) || !visitedException.add(throwable) || (throwable instanceof RemoteException)) {
 			return null;
 		}
 

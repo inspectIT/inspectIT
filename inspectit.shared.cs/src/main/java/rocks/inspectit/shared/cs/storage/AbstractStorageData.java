@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 /**
  * Abstract storage data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractStorageData implements IStorageData, Serializable {
 
@@ -43,6 +43,7 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getStorageFolder() {
 		return id;
 	}
@@ -50,22 +51,24 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 	/**
 	 * @return the diskSize
 	 */
+	@Override
 	public long getDiskSize() {
 		return diskSize;
 	}
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -75,16 +78,17 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 
 	/**
 	 * Gets {@link #name}.
-	 * 
+	 *
 	 * @return {@link #name}
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
 	/**
 	 * Sets {@link #name}.
-	 * 
+	 *
 	 * @param name
 	 *            New value for {@link #name}
 	 */
@@ -94,16 +98,17 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
 	/**
 	 * Sets {@link #description}.
-	 * 
+	 *
 	 * @param description
 	 *            New value for {@link #description}
 	 */
@@ -113,7 +118,7 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 
 	/**
 	 * Sets {@link #diskSize}.
-	 * 
+	 *
 	 * @param diskSize
 	 *            New value for {@link #diskSize}
 	 */
@@ -123,16 +128,17 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 
 	/**
 	 * Gets {@link #cmrVersion}.
-	 * 
+	 *
 	 * @return {@link #cmrVersion}
 	 */
+	@Override
 	public String getCmrVersion() {
 		return cmrVersion;
 	}
 
 	/**
 	 * Sets {@link #cmrVersion}.
-	 * 
+	 *
 	 * @param cmrVersion
 	 *            New value for {@link #cmrVersion}
 	 */
@@ -147,7 +153,7 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = (prime * result) + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -179,6 +185,7 @@ public abstract class AbstractStorageData implements IStorageData, Serializable 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return "'" + name + "' (id=" + id + ")";
 	}

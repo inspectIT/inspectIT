@@ -18,9 +18,9 @@ import rocks.inspectit.shared.all.indexing.IIndexQuery;
  * The {@link MethodSensorData} abstract class is extended by all data & value objects which are
  * used for gathered measurements from instrumented methods. Thus an additional identifier is
  * necessary to store the unique method identifier.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Entity
 public abstract class MethodSensorData extends DefaultData {
@@ -49,7 +49,7 @@ public abstract class MethodSensorData extends DefaultData {
 
 	/**
 	 * Constructor which accepts four parameters to initialize itself.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The timestamp.
 	 * @param platformIdent
@@ -67,7 +67,7 @@ public abstract class MethodSensorData extends DefaultData {
 
 	/**
 	 * Constructor which accepts four parameters to initialize itself.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The timestamp.
 	 * @param platformIdent
@@ -89,7 +89,7 @@ public abstract class MethodSensorData extends DefaultData {
 
 	/**
 	 * Gets {@link #methodIdent}.
-	 * 
+	 *
 	 * @return {@link #methodIdent}
 	 */
 	public long getMethodIdent() {
@@ -98,7 +98,7 @@ public abstract class MethodSensorData extends DefaultData {
 
 	/**
 	 * Sets {@link #methodIdent}.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            New value for {@link #methodIdent}
 	 */
@@ -108,7 +108,7 @@ public abstract class MethodSensorData extends DefaultData {
 
 	/**
 	 * Adds parameter content data.
-	 * 
+	 *
 	 * @param parameterContent
 	 *            the data to add.
 	 */
@@ -122,7 +122,7 @@ public abstract class MethodSensorData extends DefaultData {
 
 	/**
 	 * Gets {@link #parameterContentData}.
-	 * 
+	 *
 	 * @return {@link #parameterContentData}
 	 */
 	public Set<ParameterContentData> getParameterContentData() {
@@ -131,7 +131,7 @@ public abstract class MethodSensorData extends DefaultData {
 
 	/**
 	 * Sets {@link #parameterContentData}.
-	 * 
+	 *
 	 * @param parameterContentData
 	 *            New value for {@link #parameterContentData}
 	 */
@@ -142,17 +142,19 @@ public abstract class MethodSensorData extends DefaultData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (int) (methodIdent ^ (methodIdent >>> 32));
-		result = prime * result + ((parameterContentData == null) ? 0 : parameterContentData.hashCode());
+		result = (prime * result) + (int) (methodIdent ^ (methodIdent >>> 32));
+		result = (prime * result) + ((parameterContentData == null) ? 0 : parameterContentData.hashCode());
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -180,6 +182,7 @@ public abstract class MethodSensorData extends DefaultData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 1, 0);
@@ -199,8 +202,9 @@ public abstract class MethodSensorData extends DefaultData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isQueryComplied(IIndexQuery query) {
-		if (query.getMethodIdent() != 0 && query.getMethodIdent() != methodIdent) {
+		if ((query.getMethodIdent() != 0) && (query.getMethodIdent() != methodIdent)) {
 			return false;
 		}
 		return super.isQueryComplied(query);

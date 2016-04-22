@@ -9,7 +9,7 @@ import rocks.inspectit.shared.all.indexing.IIndexQuery;
 
 /**
  * Queries through the branches and creates new tasks for each branch.
- * 
+ *
  * @author Tobias Angerstein
  *
  * @param <R>
@@ -17,6 +17,7 @@ import rocks.inspectit.shared.all.indexing.IIndexQuery;
  * @param <E>
  *            Type of the element that can be indexed by the branch.
  */
+@SuppressWarnings("serial")
 public class QueryTask<R, E> extends RecursiveTask<List<R>> {
 
 	/**
@@ -31,7 +32,7 @@ public class QueryTask<R, E> extends RecursiveTask<List<R>> {
 
 	/**
 	 * Default constructor. The current branch and the query is needed.
-	 * 
+	 *
 	 * @param branchesToQuery
 	 *            The branches, which have to be queried.
 	 * @param query
@@ -47,10 +48,11 @@ public class QueryTask<R, E> extends RecursiveTask<List<R>> {
 	 * <p>
 	 * Forks and queries all subbranches.
 	 */
+	@Override
 	protected List<R> compute() {
 		// List of Forks which will be started
-		List<RecursiveTask<List<R>>> forks = new ArrayList<RecursiveTask<List<R>>>();
-		List<R> resultList = new ArrayList<R>();
+		List<RecursiveTask<List<R>>> forks = new ArrayList<>();
+		List<R> resultList = new ArrayList<>();
 		for (ITreeComponent<R, E> component : branchesToQuery) {
 			// New fork is being started
 			RecursiveTask<List<R>> task = component.getTaskForForkJoinQuery(query);

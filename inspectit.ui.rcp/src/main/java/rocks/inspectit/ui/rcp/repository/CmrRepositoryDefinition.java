@@ -13,10 +13,10 @@ import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
+import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IStorageService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
-import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
@@ -25,13 +25,13 @@ import rocks.inspectit.ui.rcp.repository.service.cmr.CmrServiceProvider;
 
 /**
  * The CMR repository definition initializes the services exposed by the CMR.
- * 
+ *
  * @author Patrice Bouillet
  * @author Dirk Maucher
  * @author Eduard Tudenhoefner
  * @author Matthias Huber
  * @author Alfred Krauss
- * 
+ *
  */
 public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrRepositoryProvider {
 
@@ -57,9 +57,9 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * Enumeration for the online status of {@link CmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum OnlineStatus {
 
@@ -85,7 +85,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 		/**
 		 * Defines if the status can be changed.
-		 * 
+		 *
 		 * @param newStatus
 		 *            New status
 		 * @return True if the status change is allowed.
@@ -187,7 +187,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * The {@link IGlobalDataAccessService}.
 	 */
 	private IGlobalDataAccessService globalDataAccessService;
-	
+
 	/**
 	 * The {@link IJmxDataAccessService}.
 	 */
@@ -206,11 +206,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * CMR repository change listeners.
 	 */
-	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<CmrRepositoryChangeListener>(1);
+	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<>(1);
 
 	/**
 	 * Calls default constructor with name 'Undefined'.
-	 * 
+	 *
 	 * @param ip
 	 *            The ip of the CMR.
 	 * @param port
@@ -222,7 +222,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * The default constructor of this class. The ip and port is mandatory to create the connection.
-	 * 
+	 *
 	 * @param ip
 	 *            The ip of the CMR.
 	 * @param port
@@ -325,7 +325,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * Gets {@link #configurationInterfaceService}.
-	 * 
+	 *
 	 * @return {@link #configurationInterfaceService}
 	 */
 	public IConfigurationInterfaceService getConfigurationInterfaceService() {
@@ -358,7 +358,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * Registers a CMR repository change listener to this CMR if it was not already.
-	 * 
+	 *
 	 * @param cmrRepositoryChangeListener
 	 *            {@link CmrRepositoryChangeListener}.
 	 */
@@ -372,7 +372,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * Removes a CMR repository change listener to this CMR.
-	 * 
+	 *
 	 * @param cmrRepositoryChangeListener
 	 *            {@link CmrRepositoryChangeListener}.
 	 */
@@ -423,7 +423,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * If the CMR is online invokes the {@link IServerStatusService} to get the version. Otherwise
 	 * returns 'N/A'.
-	 * 
+	 *
 	 * @return Version of this CMR.
 	 */
 	public String getVersion() {
@@ -440,7 +440,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * Updates the status of the CMR if possible.
-	 * 
+	 *
 	 * @param newStatus
 	 *            New status.
 	 * @return True if change was successful, false if the change is not allowed.
@@ -474,7 +474,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * Returns if the server is online by checking the {@link IServerStatusService}.
-	 * 
+	 *
 	 * @return Returns if the server is online by checking the {@link IServerStatusService}.
 	 */
 	private boolean isOnline() {
@@ -500,7 +500,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 
 	/**
 	 * Check if key has changed and fire the refresh idents if necessary.
-	 * 
+	 *
 	 * @param newKey
 	 *            New key received from status.
 	 */
@@ -525,8 +525,8 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
-		result = prime * result + port;
+		result = (prime * result) + ((ip == null) ? 0 : ip.hashCode());
+		result = (prime * result) + port;
 		return result;
 	}
 

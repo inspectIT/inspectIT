@@ -20,9 +20,9 @@ import rocks.inspectit.ui.rcp.editor.tree.SteppingTreeSubView;
 
 /**
  * Abstract handler for all other handlers that are working with locate functionality.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class LocateHandler extends AbstractTemplateHandler {
 
@@ -52,19 +52,20 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 
 	/**
 	 * Return {@link AbstractTemplateDefinitionDialog}.
-	 * 
+	 *
 	 * @param structuredSelection
 	 *            Current {@link StructuredSelection}.
-	 * 
+	 *
 	 * @return {@link AbstractTemplateDefinitionDialog}.
 	 */
 	public abstract List<DefaultData> getTemplates(StructuredSelection structuredSelection);
 
 	/**
-	 * {@link LocateHandler} for {@link rocks.inspectit.shared.cs.communication.data.SqlStatementData}.
-	 * 
+	 * {@link LocateHandler} for
+	 * {@link rocks.inspectit.shared.cs.communication.data.SqlStatementData}.
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static final class SqlLocateHandler extends LocateHandler {
 
@@ -73,7 +74,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 */
 		@Override
 		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<DefaultData>();
+			List<DefaultData> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof SqlStatementData) {
 					results.add(super.getTemplate((SqlStatementData) selected, true, true, true));
@@ -87,9 +88,9 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 	/**
 	 * {@link LocateHandler} for
 	 * {@link rocks.inspectit.shared.cs.communication.data.ExceptionSensorData}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static final class ExceptionLocateHandler extends LocateHandler {
 
@@ -98,7 +99,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 */
 		@Override
 		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<DefaultData>();
+			List<DefaultData> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof ExceptionSensorData) {
 					results.add(super.getTemplate((ExceptionSensorData) selected, true, true, true, true, true));
@@ -112,9 +113,9 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 	/**
 	 * {@link LocateHandler} for
 	 * {@link rocks.inspectit.shared.cs.communication.data.InvocationSequenceData}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static final class InvocationLocateHandler extends LocateHandler {
 
@@ -123,7 +124,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 */
 		@Override
 		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<DefaultData>();
+			List<DefaultData> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof InvocationSequenceData) {
 					InvocationSequenceData invocationSequenceData = (InvocationSequenceData) selected;
@@ -134,17 +135,17 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 						results.add(super.getTemplate(invocationSequenceData.getSqlStatementData(), false, true, false));
 
 						// add also a timer data or created timer data, so that we can find method
-						if (null != invocationSequenceData.getTimerData() && TimerData.class.equals(invocationSequenceData.getTimerData().getClass())) {
+						if ((null != invocationSequenceData.getTimerData()) && TimerData.class.equals(invocationSequenceData.getTimerData().getClass())) {
 							results.add(super.getTemplate(invocationSequenceData.getTimerData(), false, true));
 						} else {
 							results.add(super.getTemplate(getTimerDataForSql(invocationSequenceData.getSqlStatementData()), false, true));
 						}
-					} else if (null != invocationSequenceData.getExceptionSensorDataObjects() && !invocationSequenceData.getExceptionSensorDataObjects().isEmpty()) {
+					} else if ((null != invocationSequenceData.getExceptionSensorDataObjects()) && !invocationSequenceData.getExceptionSensorDataObjects().isEmpty()) {
 						// locate all exceptions of the same throwable type
 						// we don't care here for stake trace, message and exception event
 						ExceptionSensorData data = invocationSequenceData.getExceptionSensorDataObjects().get(0);
 						results.add(super.getTemplate(data, false, true, false, false, false));
-					} else if (null != invocationSequenceData.getTimerData() && TimerData.class.equals(invocationSequenceData.getTimerData().getClass())) {
+					} else if ((null != invocationSequenceData.getTimerData()) && TimerData.class.equals(invocationSequenceData.getTimerData().getClass())) {
 						// if we have timer and not http timer data add
 						results.add(super.getTemplate(invocationSequenceData.getTimerData(), false, true));
 					} else {
@@ -159,7 +160,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		/**
 		 * Returns {@link TimerData} instance with the same method ident as given
 		 * {@link SqlStatementData}.
-		 * 
+		 *
 		 * @param sqlStatementData
 		 *            {@link SqlStatementData}.
 		 * @return Returns {@link TimerData} instance with the same method ident as given
@@ -175,9 +176,9 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 
 	/**
 	 * {@link LocateHandler} for {@link rocks.inspectit.shared.cs.communication.data.TimerData}.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static final class TimerLocateHandler extends LocateHandler {
 
@@ -186,7 +187,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 */
 		@Override
 		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<DefaultData>();
+			List<DefaultData> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof TimerData) {
 					results.add(super.getTemplate((TimerData) selected, true, true));

@@ -8,9 +8,9 @@ import rocks.inspectit.shared.all.communication.ExceptionEvent;
 /**
  * The exception sensor data object used to store all information collected on an instrumented
  * exception path.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ExceptionSensorData extends InvocationAwareData {
 
@@ -63,7 +63,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Creates a new instance.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            the timestamp.
 	 * @param platformIdent
@@ -79,7 +79,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #errorMessage}.
-	 * 
+	 *
 	 * @return {@link #errorMessage}
 	 */
 	public String getErrorMessage() {
@@ -88,7 +88,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #errorMessage}.
-	 * 
+	 *
 	 * @param errorMessage
 	 *            New value for {@link #errorMessage}
 	 */
@@ -98,7 +98,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #cause}.
-	 * 
+	 *
 	 * @return {@link #cause}
 	 */
 	public String getCause() {
@@ -107,7 +107,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #cause}.
-	 * 
+	 *
 	 * @param cause
 	 *            New value for {@link #cause}
 	 */
@@ -117,7 +117,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #stackTrace}.
-	 * 
+	 *
 	 * @return {@link #stackTrace}
 	 */
 	public String getStackTrace() {
@@ -126,7 +126,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #stackTrace}.
-	 * 
+	 *
 	 * @param stackTrace
 	 *            New value for {@link #stackTrace}
 	 */
@@ -136,7 +136,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #exceptionEvent}.
-	 * 
+	 *
 	 * @return {@link #exceptionEvent}
 	 */
 	public ExceptionEvent getExceptionEvent() {
@@ -145,7 +145,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #exceptionEvent}.
-	 * 
+	 *
 	 * @param exceptionEvent
 	 *            New value for {@link #exceptionEvent}
 	 */
@@ -155,7 +155,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #throwableType}.
-	 * 
+	 *
 	 * @return {@link #throwableType}
 	 */
 	public String getThrowableType() {
@@ -164,7 +164,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #throwableType}.
-	 * 
+	 *
 	 * @param throwableType
 	 *            New value for {@link #throwableType}
 	 */
@@ -174,7 +174,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #child}.
-	 * 
+	 *
 	 * @return {@link #child}
 	 */
 	public ExceptionSensorData getChild() {
@@ -183,7 +183,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #child}.
-	 * 
+	 *
 	 * @param child
 	 *            New value for {@link #child}
 	 */
@@ -193,7 +193,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Gets {@link #throwableIdentityHashCode}.
-	 * 
+	 *
 	 * @return {@link #throwableIdentityHashCode}
 	 */
 	public long getThrowableIdentityHashCode() {
@@ -202,7 +202,7 @@ public class ExceptionSensorData extends InvocationAwareData {
 
 	/**
 	 * Sets {@link #throwableIdentityHashCode}.
-	 * 
+	 *
 	 * @param throwableIdentityHashCode
 	 *            New value for {@link #throwableIdentityHashCode}
 	 */
@@ -213,13 +213,15 @@ public class ExceptionSensorData extends InvocationAwareData {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public double getInvocationAffiliationPercentage() {
-		return (double) getObjectsInInvocationsCount() / 1d;
+		return getObjectsInInvocationsCount() / 1d;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(6, 0, 0, 0, 1, 0);
@@ -243,12 +245,12 @@ public class ExceptionSensorData extends InvocationAwareData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((cause == null) ? 0 : cause.hashCode());
-		result = prime * result + ((child == null) ? 0 : child.hashCode());
-		result = prime * result + ((exceptionEvent == null) ? 0 : exceptionEvent.hashCode());
-		result = prime * result + ((stackTrace == null) ? 0 : stackTrace.hashCode());
-		result = prime * result + (int) (throwableIdentityHashCode ^ (throwableIdentityHashCode >>> 32));
-		result = prime * result + ((throwableType == null) ? 0 : throwableType.hashCode());
+		result = (prime * result) + ((cause == null) ? 0 : cause.hashCode());
+		result = (prime * result) + ((child == null) ? 0 : child.hashCode());
+		result = (prime * result) + ((exceptionEvent == null) ? 0 : exceptionEvent.hashCode());
+		result = (prime * result) + ((stackTrace == null) ? 0 : stackTrace.hashCode());
+		result = (prime * result) + (int) (throwableIdentityHashCode ^ (throwableIdentityHashCode >>> 32));
+		result = (prime * result) + ((throwableType == null) ? 0 : throwableType.hashCode());
 		return result;
 	}
 

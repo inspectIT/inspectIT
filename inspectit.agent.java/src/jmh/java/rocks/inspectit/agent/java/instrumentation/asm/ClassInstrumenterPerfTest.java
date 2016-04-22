@@ -58,7 +58,7 @@ public class ClassInstrumenterPerfTest {
 		Method[] methods = instrumentedClass.getDeclaredMethods();
 
 		configs = new ArrayList<MethodInstrumentationConfig>();
-		for (int i = 0; i < maxMethods && methods.length > 0; i++) {
+		for (int i = 0; (i < maxMethods) && (methods.length > 0); i++) {
 			int index = RandomUtils.nextInt(methods.length);
 			Method method = methods[index];
 			methods = (Method[]) ArrayUtils.remove(methods, index);

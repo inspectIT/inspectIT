@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.ci.form.part.AgentMappingPart;
 
 /**
  * Page for agent mapping.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentMappingPage extends FormPage {
 

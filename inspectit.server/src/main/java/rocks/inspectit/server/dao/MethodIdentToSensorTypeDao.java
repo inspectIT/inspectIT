@@ -4,16 +4,16 @@ import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
 
 /**
  * This DAO is used to handle all {@link MethodIdentToSensorType} objects.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface MethodIdentToSensorTypeDao {
 
 	/**
 	 * Load a specific {@link MethodIdentToSensorType} from the underlying storage by passing the
 	 * id.
-	 * 
+	 *
 	 * @param id
 	 *            The id of the object.
 	 * @return The found {@link MethodIdentToSensorType} object.
@@ -22,7 +22,7 @@ public interface MethodIdentToSensorTypeDao {
 
 	/**
 	 * Find the {@link MethodIdentToSensorType} for given method id and method sensor type id.
-	 * 
+	 *
 	 * @param methodId
 	 *            Id of the method ident.
 	 * @param methodSensorTypeId
@@ -34,7 +34,7 @@ public interface MethodIdentToSensorTypeDao {
 
 	/**
 	 * Saves or updates this {@link MethodIdentToSensorType} in the underlying storage.
-	 * 
+	 *
 	 * @param methodIdentToSensorType
 	 *            The {@link MethodIdentToSensorType} object to save or update.
 	 */

@@ -17,9 +17,9 @@ import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 /**
  * Provider of all storage related services. This classes correctly initialize the service with help
  * of Spring.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class StorageServiceProvider {
 
@@ -30,7 +30,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageTimerDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -55,7 +55,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageHttpTimerDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -80,7 +80,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageSqlDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -105,7 +105,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageExceptionDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -130,7 +130,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageInvocationDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -156,7 +156,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageGlobalDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData
@@ -184,7 +184,7 @@ public abstract class StorageServiceProvider {
 
 	/**
 	 * Properly initialized {@link StorageJmxDataAccessService}.
-	 * 
+	 *
 	 * @param storageRepositoryDefinition
 	 *            {@link StorageRepositoryDefinition}.
 	 * @param localStorageData

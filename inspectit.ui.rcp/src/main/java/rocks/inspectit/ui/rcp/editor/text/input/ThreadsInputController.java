@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
  * This class represents the textual view of the {@link ThreadInformation} sensor-type.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class ThreadsInputController extends AbstractTextInputController {
 

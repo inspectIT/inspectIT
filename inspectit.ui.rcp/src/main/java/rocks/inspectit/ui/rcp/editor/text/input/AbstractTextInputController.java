@@ -11,6 +11,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -22,9 +23,9 @@ import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
  * General implementation of {@link TextInputController}, where most of the methods are not doing
  * anything. Classes that extend should override the methods they want to define the proper
  * behavior.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractTextInputController implements TextInputController {
 
@@ -36,11 +37,12 @@ public abstract class AbstractTextInputController implements TextInputController
 	/**
 	 * The {@link HashMap} containing the different sections.
 	 */
-	protected Map<String, Composite> sections = new HashMap<String, Composite>();
+	protected Map<String, Composite> sections = new HashMap<>();
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		Assert.isNotNull(inputDefinition);
 
@@ -49,7 +51,7 @@ public abstract class AbstractTextInputController implements TextInputController
 
 	/**
 	 * Returns the input definition.
-	 * 
+	 *
 	 * @return The input definition.
 	 */
 	protected InputDefinition getInputDefinition() {
@@ -60,7 +62,7 @@ public abstract class AbstractTextInputController implements TextInputController
 
 	/**
 	 * Adds a section to bundle some content.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent used to draw the elements to.
 	 * @param toolkit
@@ -69,7 +71,7 @@ public abstract class AbstractTextInputController implements TextInputController
 	 *            The section title
 	 */
 	protected void addSection(Composite parent, FormToolkit toolkit, String sectionTitle) {
-		Section section = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText(sectionTitle);
 		section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		Composite sectionComposite = toolkit.createComposite(section);
@@ -86,7 +88,7 @@ public abstract class AbstractTextInputController implements TextInputController
 
 	/**
 	 * Adds an item to the specified section.
-	 * 
+	 *
 	 * @param toolkit
 	 *            The form toolkit.
 	 * @param sectionTitle
@@ -100,7 +102,7 @@ public abstract class AbstractTextInputController implements TextInputController
 
 	/**
 	 * Adds an item to the specified section.
-	 * 
+	 *
 	 * @param toolkit
 	 *            The form toolkit.
 	 * @param sectionTitle
@@ -125,7 +127,7 @@ public abstract class AbstractTextInputController implements TextInputController
 
 	/**
 	 * Adds an item to the specified section.
-	 * 
+	 *
 	 * @param toolkit
 	 *            The form toolkit.
 	 * @param sectionTitle

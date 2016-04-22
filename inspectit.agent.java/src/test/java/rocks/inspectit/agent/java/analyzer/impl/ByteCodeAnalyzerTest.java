@@ -32,6 +32,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -124,7 +125,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 				((Runnable) invocation.getArguments()[0]).run();
 				return null;
 			}
-		}).when(executorService).submit(Mockito.<Runnable> any());
+		}).when(executorService).submit(Matchers.<Runnable> any());
 
 		// method sensor and config
 		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
@@ -158,7 +159,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
 			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
 			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
-			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
+			when(sensorInstrumentationPoint.getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
 			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
 			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
@@ -220,7 +221,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
 			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
 			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
-			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
+			when(sensorInstrumentationPoint.getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
 			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
 			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
@@ -281,7 +282,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
 			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
 			when(methodInstrumentationConfig.getAllInstrumentationPoints())
-			.thenReturn(Collections.<IMethodInstrumentationPoint> singleton(new SpecialInstrumentationPoint(SpecialInstrumentationType.CLASS_LOADING_DELEGATION)));
+					.thenReturn(Collections.<IMethodInstrumentationPoint> singleton(new SpecialInstrumentationPoint(SpecialInstrumentationType.CLASS_LOADING_DELEGATION)));
 
 			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
 			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
@@ -344,7 +345,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
 			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
 			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
-			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
+			when(sensorInstrumentationPoint.getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
 			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
 			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
@@ -455,7 +456,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
 			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
 			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
-			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
+			when(sensorInstrumentationPoint.getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
 			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
 			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
@@ -508,7 +509,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
 			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
 			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
-			when(sensorInstrumentationPoint.getMethodVisitor(Mockito.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
+			when(sensorInstrumentationPoint.getMethodVisitor(Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
 
 			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
 			when(classHashHelper.isSent(anyString(), anyString())).thenReturn(false);

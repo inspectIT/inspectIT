@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePro
 
 /**
  * Is percentage validator.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  */
 @XmlRootElement(name = "isPercentage")
@@ -21,6 +21,7 @@ public class PercentageValidator<T extends Number> extends AbstractSinglePropert
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected boolean prove(T value) {
 		return Matchers.greaterThanOrEqualTo(0d).matches(value.doubleValue()) && Matchers.lessThanOrEqualTo(1d).matches(value.doubleValue());
 	}

@@ -9,9 +9,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 /**
  * An interceptor that populates the CachedDataService cache with the loaded {@link PlatformIdent}
  * from the service.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CachingPlatformIdentInterceptor implements MethodInterceptor {
 
@@ -21,7 +21,7 @@ public class CachingPlatformIdentInterceptor implements MethodInterceptor {
 	@Override
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 		Object result = methodInvocation.proceed();
-		if (result instanceof PlatformIdent && InterceptorUtils.isServiceMethod(methodInvocation)) {
+		if ((result instanceof PlatformIdent) && InterceptorUtils.isServiceMethod(methodInvocation)) {
 			CmrRepositoryDefinition cmrRepositoryDefinition = InterceptorUtils.getRepositoryDefinition(methodInvocation);
 			if (null != cmrRepositoryDefinition) {
 				PlatformIdent platformIdent = (PlatformIdent) result;

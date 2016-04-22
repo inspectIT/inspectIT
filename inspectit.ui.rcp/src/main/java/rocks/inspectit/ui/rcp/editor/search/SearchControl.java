@@ -39,9 +39,9 @@ import rocks.inspectit.ui.rcp.editor.search.criteria.SearchResult;
 
 /**
  * Control that is displayed for search purposes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SearchControl {
 
@@ -92,7 +92,7 @@ public class SearchControl {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param searchExecutor
 	 *            The implementation that will be pass the search string.
 	 * @param parentShell
@@ -111,7 +111,7 @@ public class SearchControl {
 	/**
 	 * Creates the control. The control will be painted in the top-right corner of the
 	 * controlToPaint.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Parent shell.
 	 * @param paintRelativeControl
@@ -166,7 +166,7 @@ public class SearchControl {
 				int width = fontMetrics.getAverageCharWidth() * string.length();
 				int height = fontMetrics.getHeight();
 				e.gc.setForeground(color);
-				e.gc.drawString(string, point.x - width - searchTextBox.getBorderWidth() - 2, (point.y - height - searchTextBox.getBorderWidth() * 2) / 2, true);
+				e.gc.drawString(string, point.x - width - searchTextBox.getBorderWidth() - 2, (point.y - height - (searchTextBox.getBorderWidth() * 2)) / 2, true);
 			}
 		});
 
@@ -248,8 +248,8 @@ public class SearchControl {
 		Point controlPosition = paintRelativeControl.toDisplay(0, 0);
 		Point controlSize = paintRelativeControl.getSize();
 
-		int xPosition = controlPosition.x + controlSize.x - shellSize.x - paintRelativeControl.getBorderWidth();
-		int yPosition = controlPosition.y + controlSize.y - shellSize.y - paintRelativeControl.getBorderWidth();
+		int xPosition = (controlPosition.x + controlSize.x) - shellSize.x - paintRelativeControl.getBorderWidth();
+		int yPosition = (controlPosition.y + controlSize.y) - shellSize.y - paintRelativeControl.getBorderWidth();
 
 		shell.setLocation(xPosition, yPosition);
 		shell.setSize(shellSize);
@@ -261,8 +261,8 @@ public class SearchControl {
 				if (!shell.isDisposed()) {
 					Point controlPosition = paintRelativeControl.toDisplay(0, 0);
 					Point controlSize = paintRelativeControl.getSize();
-					int xPosition = controlPosition.x + controlSize.x - shellSize.x - paintRelativeControl.getBorderWidth();
-					int yPosition = controlPosition.y + controlSize.y - shellSize.y - paintRelativeControl.getBorderWidth();
+					int xPosition = (controlPosition.x + controlSize.x) - shellSize.x - paintRelativeControl.getBorderWidth();
+					int yPosition = (controlPosition.y + controlSize.y) - shellSize.y - paintRelativeControl.getBorderWidth();
 
 					shell.setLocation(xPosition, yPosition);
 				}
@@ -352,7 +352,7 @@ public class SearchControl {
 
 	/**
 	 * Processes the {@link SearchResult}.
-	 * 
+	 *
 	 * @param result
 	 *            {@link SearchResult}.
 	 */

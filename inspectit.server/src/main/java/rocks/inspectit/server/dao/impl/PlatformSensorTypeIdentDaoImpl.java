@@ -12,9 +12,9 @@ import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
 /**
  * The default implementation of the {@link PlatformSensorTypeIdentDao} interface by using the
  * Entity manager.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Repository
 public class PlatformSensorTypeIdentDaoImpl extends AbstractJpaDao<PlatformSensorTypeIdent> implements PlatformSensorTypeIdentDao {
@@ -29,6 +29,7 @@ public class PlatformSensorTypeIdentDaoImpl extends AbstractJpaDao<PlatformSenso
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void saveOrUpdate(PlatformSensorTypeIdent platformSensorTypeIdent) {
 		if (null == platformSensorTypeIdent.getId()) {
 			super.create(platformSensorTypeIdent);

@@ -5,9 +5,9 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 /**
  * This class maps the identity hashcode of a {@link Throwable} object to the
  * {@link ExceptionSensorData} object.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class IdentityHashToDataObject {
 	/**
@@ -29,7 +29,7 @@ public class IdentityHashToDataObject {
 	/**
 	 * Constructor taking the identity hashcode and the {@link ExceptionSensorData} object for
 	 * initialization.
-	 * 
+	 *
 	 * @param identityHash
 	 *            The identity hashcode of the {@link Throwable} object.
 	 * @param exceptionSensorData
@@ -42,7 +42,7 @@ public class IdentityHashToDataObject {
 
 	/**
 	 * Returns the identity hashcode of the {@link Throwable} object.
-	 * 
+	 *
 	 * @return The identity hashcode of the {@link Throwable} object.
 	 */
 	public Long getIdentityHash() {
@@ -51,7 +51,7 @@ public class IdentityHashToDataObject {
 
 	/**
 	 * Sets the identity hashcode of the {@link Throwable} object.
-	 * 
+	 *
 	 * @param identityHash
 	 *            The identity hashcode of the {@link Throwable} object.
 	 */
@@ -61,7 +61,7 @@ public class IdentityHashToDataObject {
 
 	/**
 	 * Returns the {@link ExceptionSensorData} object containing the information.
-	 * 
+	 *
 	 * @return The {@link ExceptionSensorData} object containing the information.
 	 */
 	public ExceptionSensorData getExceptionSensorData() {
@@ -70,7 +70,7 @@ public class IdentityHashToDataObject {
 
 	/**
 	 * Sets the {@link ExceptionSensorData} object.
-	 * 
+	 *
 	 * @param exceptionSensorData
 	 *            The {@link ExceptionSensorData} object containing the information.
 	 */

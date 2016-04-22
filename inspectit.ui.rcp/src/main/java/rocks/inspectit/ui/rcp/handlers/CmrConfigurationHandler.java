@@ -8,9 +8,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -23,9 +23,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Handler for starting the CMR configuration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CmrConfigurationHandler extends AbstractHandler implements IHandler {
 
@@ -40,7 +40,7 @@ public class CmrConfigurationHandler extends AbstractHandler implements IHandler
 			CmrRepositoryDefinition cmrRepositoryDefinition = ((ICmrRepositoryProvider) selection.getFirstElement()).getCmrRepositoryDefinition();
 			CmrConfigurationDialog preferenceDialog = new CmrConfigurationDialog(shell, cmrRepositoryDefinition);
 			preferenceDialog.open();
-			if (Dialog.OK == preferenceDialog.getReturnCode()) {
+			if (Window.OK == preferenceDialog.getReturnCode()) {
 				ConfigurationUpdate configurationUpdate = preferenceDialog.getConfigurationUpdate();
 				boolean restartRequired = preferenceDialog.isServerRestartRequired();
 				if (null != configurationUpdate) {
@@ -58,9 +58,9 @@ public class CmrConfigurationHandler extends AbstractHandler implements IHandler
 
 	/**
 	 * Job for updating the configuration.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static final class ConfigurationUpdateJob extends Job {
 
@@ -81,7 +81,7 @@ public class CmrConfigurationHandler extends AbstractHandler implements IHandler
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param cmrRepositoryDefinition
 		 *            CMR to update.
 		 * @param configurationUpdate
@@ -107,12 +107,12 @@ public class CmrConfigurationHandler extends AbstractHandler implements IHandler
 				try {
 					cmrRepositoryDefinition.getCmrManagementService().updateConfiguration(configurationUpdate, executeRestart);
 				} catch (Exception e) {
-					return new Status(Status.ERROR, InspectIT.ID, "Exception occurred trying to update the CMR configuration.", e);
+					return new Status(IStatus.ERROR, InspectIT.ID, "Exception occurred trying to update the CMR configuration.", e);
 				}
 				monitor.done();
 				return Status.OK_STATUS;
 			} else {
-				return new Status(Status.ERROR, InspectIT.ID, "Can not update the configuration because selected CMR is offline.");
+				return new Status(IStatus.ERROR, InspectIT.ID, "Can not update the configuration because selected CMR is offline.");
 			}
 		}
 	}

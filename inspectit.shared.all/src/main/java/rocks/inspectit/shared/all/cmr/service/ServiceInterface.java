@@ -9,15 +9,15 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates that an annotated class is a "Service" interface (e.g. a business service facade).
- * 
+ *
  * <p>
  * This annotation serves as a specialization of {@link Component @Component}, allowing for
  * interface classes to be autodetected through classpath scanning.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="http://jira.springframework.org/browse/SPR-3926">Spring JIRA (SPR-3926)</a>. Original
  * authors are James Douglas and Henno Vermeulen.
- * 
+ *
  * @author Henno Vermeulen
  * @author James Douglas
  * @author Patrice Bouillet
@@ -37,7 +37,7 @@ public @interface ServiceInterface {
 	/**
 	 * The value may indicate a suggestion for a logical component name, to be turned into a Spring
 	 * bean in case of an autodetected component.
-	 * 
+	 *
 	 * @return the suggested component name, if any //NOCHK
 	 */
 	String name() default "";
@@ -45,7 +45,7 @@ public @interface ServiceInterface {
 	/**
 	 * Defines the exporter used for exposing this service. Valid values are defined in the
 	 * enumeration {@link ServiceExporterType}.
-	 * 
+	 *
 	 * @return the defined exporter type. //NOCHK
 	 */
 	ServiceExporterType exporter();
@@ -53,7 +53,7 @@ public @interface ServiceInterface {
 	/**
 	 * Service id for kryonet remote export. This must be a unique value, thus two different
 	 * services must not share the same id.
-	 * 
+	 *
 	 * @return Service id for kryonet remote export. //NOCHK
 	 */
 	int serviceId() default 0;

@@ -17,10 +17,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * <p>
  * <b>IMPORTANT:</b> The class code is copied/taken/based from <a href=
  * "http://www.eclipse.org/articles/Article-WorkbenchSelections/SelectionProviderIntermediate.java"
- * >Eclipse Workbench article</a>. Original author is Marc R. Hoffmann. License info can be found <a
- * href="https://eclipse.org/legal/termsofuse.php">here</a>. Copied from
- * 
- * 
+ * >Eclipse Workbench article</a>. Original author is Marc R. Hoffmann. License info can be found
+ * <a href="https://eclipse.org/legal/termsofuse.php">here</a>. Copied from
+ *
+ *
  * @author Marc R. Hoffmann
  */
 public class SelectionProviderIntermediate implements IPostSelectionProvider {
@@ -32,6 +32,7 @@ public class SelectionProviderIntermediate implements IPostSelectionProvider {
 	private ISelectionProvider delegate;
 
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			if (event.getSelectionProvider() == delegate) {
 				fireSelectionChanged(event.getSelection());
@@ -40,6 +41,7 @@ public class SelectionProviderIntermediate implements IPostSelectionProvider {
 	};
 
 	private ISelectionChangedListener postSelectionListener = new ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			if (event.getSelectionProvider() == delegate) {
 				firePostSelectionChanged(event.getSelection());
@@ -50,7 +52,7 @@ public class SelectionProviderIntermediate implements IPostSelectionProvider {
 	/**
 	 * Sets a new selection provider to delegate to. Selection listeners registered with the
 	 * previous delegate are removed before.
-	 * 
+	 *
 	 * @param newDelegate
 	 *            new selection provider
 	 */
@@ -86,34 +88,40 @@ public class SelectionProviderIntermediate implements IPostSelectionProvider {
 	private void fireSelectionChanged(ListenerList list, ISelection selection) {
 		SelectionChangedEvent event = new SelectionChangedEvent(delegate, selection);
 		Object[] listeners = list.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
+		for (Object listener2 : listeners) {
+			ISelectionChangedListener listener = (ISelectionChangedListener) listener2;
 			listener.selectionChanged(event);
 		}
 	}
 
 	// IPostSelectionProvider Implementation
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
 
+	@Override
 	public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
 		postSelectionListeners.add(listener);
 	}
 
+	@Override
 	public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
 		postSelectionListeners.remove(listener);
 	}
 
+	@Override
 	public ISelection getSelection() {
 		return delegate == null ? null : delegate.getSelection();
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		if (delegate != null) {
 			delegate.setSelection(selection);

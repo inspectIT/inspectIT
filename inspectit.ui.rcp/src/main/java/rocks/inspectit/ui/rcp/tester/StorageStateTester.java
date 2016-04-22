@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.storage.InspectITStorageManager;
 /**
  * Testing the state of storage. Works if receiver is {@link StorageData} or
  * {@link rocks.inspectit.ui.rcp.model.storage.StorageLeaf}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageStateTester extends PropertyTester {
 
@@ -32,13 +32,13 @@ public class StorageStateTester extends PropertyTester {
 		}
 
 		if ("storageState".equals(property)) {
-			if ("CREATED".equalsIgnoreCase((String) expectedValue) && storageData.getState() == StorageState.CREATED_NOT_OPENED) {
+			if ("CREATED".equalsIgnoreCase((String) expectedValue) && (storageData.getState() == StorageState.CREATED_NOT_OPENED)) {
 				return true;
-			} else if ("OPENED".equalsIgnoreCase((String) expectedValue) && storageData.getState() == StorageState.OPENED) {
+			} else if ("OPENED".equalsIgnoreCase((String) expectedValue) && (storageData.getState() == StorageState.OPENED)) {
 				return true;
-			} else if ("RECORDING".equalsIgnoreCase((String) expectedValue) && storageData.getState() == StorageState.RECORDING) {
+			} else if ("RECORDING".equalsIgnoreCase((String) expectedValue) && (storageData.getState() == StorageState.RECORDING)) {
 				return true;
-			} else if ("CLOSED".equalsIgnoreCase((String) expectedValue) && storageData.getState() == StorageState.CLOSED) {
+			} else if ("CLOSED".equalsIgnoreCase((String) expectedValue) && (storageData.getState() == StorageState.CLOSED)) {
 				return true;
 			}
 			return false;

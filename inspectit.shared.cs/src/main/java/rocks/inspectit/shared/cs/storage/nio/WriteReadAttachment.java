@@ -8,9 +8,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * Simple POJO class that defines attachment that is supplied to every writing to the
  * {@link AsynchronousFileChannel}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class WriteReadAttachment {
 
@@ -47,7 +47,7 @@ public class WriteReadAttachment {
 
 	/**
 	 * Constructor that sets all class fields.
-	 * 
+	 *
 	 * @param byteBuffer
 	 *            {@link ByteBuffer} where writing is taking bytes from.
 	 * @param writingPosition

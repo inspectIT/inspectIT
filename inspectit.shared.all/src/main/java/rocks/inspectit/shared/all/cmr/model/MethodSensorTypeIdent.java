@@ -19,14 +19,13 @@ import rocks.inspectit.shared.all.jpa.MapStringConverter;
 /**
  * The Method Sensor Type Ident class is used to store the sensor types which are used for methods
  * and basically called when the respective method is called.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("MSTI")
-@NamedQueries({
-		@NamedQuery(name = MethodSensorTypeIdent.FIND_ALL, query = "SELECT ms FROM MethodSensorTypeIdent ms"),
+@NamedQueries({ @NamedQuery(name = MethodSensorTypeIdent.FIND_ALL, query = "SELECT ms FROM MethodSensorTypeIdent ms"),
 		@NamedQuery(name = MethodSensorTypeIdent.FIND_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ms FROM MethodSensorTypeIdent ms JOIN ms.platformIdent p WHERE p.id=:platformIdent AND ms.fullyQualifiedClassName=:fullyQualifiedClassName") })
 public class MethodSensorTypeIdent extends SensorTypeIdent {
 
@@ -60,7 +59,7 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 
 	/**
 	 * Gets {@link #methodIdentToSensorTypes}.
-	 * 
+	 *
 	 * @return {@link #methodIdentToSensorTypes}
 	 */
 	public Set<MethodIdentToSensorType> getMethodIdentToSensorTypes() {
@@ -69,7 +68,7 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 
 	/**
 	 * Sets {@link #methodIdentToSensorTypes}.
-	 * 
+	 *
 	 * @param methodIdentToSensorTypes
 	 *            New value for {@link #methodIdentToSensorTypes}
 	 */
@@ -79,7 +78,7 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 
 	/**
 	 * Gets {@link #settings}.
-	 * 
+	 *
 	 * @return {@link #settings}
 	 */
 	public Map<String, Object> getSettings() {
@@ -88,7 +87,7 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 
 	/**
 	 * Sets {@link #settings}.
-	 * 
+	 *
 	 * @param settings
 	 *            New value for {@link #settings}
 	 */

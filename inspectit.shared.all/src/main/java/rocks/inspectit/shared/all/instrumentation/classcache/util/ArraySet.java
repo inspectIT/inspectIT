@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 /**
  * Set implemented by {@link ArrayList}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of elements in the set.
  */

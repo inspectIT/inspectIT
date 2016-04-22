@@ -10,9 +10,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 /**
  * The optimized timer storage instantly computes the new values and saves them in the
  * {@link TimerData}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class OptimizedTimerStorage implements ITimerStorage {
 
@@ -23,7 +23,7 @@ public class OptimizedTimerStorage implements ITimerStorage {
 
 	/**
 	 * Default constructor which initializes a {@link TimerData} object.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The time stamp.
 	 * @param platformIdent

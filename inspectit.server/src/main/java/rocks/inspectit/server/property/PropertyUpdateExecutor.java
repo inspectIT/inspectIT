@@ -29,9 +29,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 
 /**
  * This class executes method annotated with {@link PropertyUpdate} annotation.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAware {
@@ -61,7 +61,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 	/**
 	 * Executes the methods that declare the {@link PropertyUpdate} annotations if the list of
 	 * updated properties names matches the ones specified in the annotation.
-	 * 
+	 *
 	 * @param properties
 	 *            List of updated properties.
 	 */
@@ -152,7 +152,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 					int startChar = placeholder.indexOf('{');
 					int endChar = placeholder.indexOf('}');
 					String property;
-					if (startChar > 0 && endChar > startChar) {
+					if ((startChar > 0) && (endChar > startChar)) {
 						property = placeholder.substring(startChar + 1, endChar);
 					} else {
 						property = placeholder;
@@ -170,6 +170,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		if (!(beanFactory instanceof ConfigurableListableBeanFactory)) {
 			throw new IllegalArgumentException("PropertyUpdateExecutor requires a ConfigurableListableBeanFactory");
@@ -180,9 +181,9 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 	/**
 	 * Class that combines all needed information for one field that needs to be updated when
 	 * certain property is changed.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static final class PropertyUpdateFieldInfo {
 
@@ -226,7 +227,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 		/**
 		 * Gets {@link #target}.
-		 * 
+		 *
 		 * @return {@link #target}
 		 */
 		public Object getTarget() {
@@ -235,7 +236,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 		/**
 		 * Gets {@link #field}.
-		 * 
+		 *
 		 * @return {@link #field}
 		 */
 		public Field getField() {
@@ -244,7 +245,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 		/**
 		 * Gets {@link #property}.
-		 * 
+		 *
 		 * @return {@link #property}
 		 */
 		public String getProperty() {
@@ -254,7 +255,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 		/**
 		 * Returns true if the name of the property field is bounded to is matching the logical name
 		 * of the update property.
-		 * 
+		 *
 		 * @param updatedProperty
 		 *            {@link SingleProperty}.
 		 * @return Returns true if the name of the property field is bounded to is matching the
@@ -268,9 +269,9 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 	/**
 	 * Class that combines all needed information for one method that needs to be executed when
 	 * certain properties are changed.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static final class PropertyUpdateMethodInfo {
 
@@ -291,7 +292,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param target
 		 *            Target object.
 		 * @param method
@@ -316,7 +317,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 		/**
 		 * Gets {@link #target}.
-		 * 
+		 *
 		 * @return {@link #target}
 		 */
 		public Object getTarget() {
@@ -325,7 +326,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 		/**
 		 * Gets {@link #method}.
-		 * 
+		 *
 		 * @return {@link #method}
 		 */
 		public Method getMethod() {
@@ -334,7 +335,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 		/**
 		 * Gets {@link #properties}.
-		 * 
+		 *
 		 * @return {@link #properties}
 		 */
 		public String[] getProperties() {
@@ -344,7 +345,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 		/**
 		 * Returns true if given list of properties are matching any property name in this
 		 * {@link PropertyUpdateMethodInfo} object.
-		 * 
+		 *
 		 * @param updatedProperties
 		 *            Updated properties.
 		 * @return Returns true if given list of are matching any property name in this
@@ -368,8 +369,8 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((method == null) ? 0 : method.hashCode());
-			result = prime * result + ((target == null) ? 0 : System.identityHashCode(target));
+			result = (prime * result) + ((method == null) ? 0 : method.hashCode());
+			result = (prime * result) + ((target == null) ? 0 : System.identityHashCode(target));
 			return result;
 		}
 

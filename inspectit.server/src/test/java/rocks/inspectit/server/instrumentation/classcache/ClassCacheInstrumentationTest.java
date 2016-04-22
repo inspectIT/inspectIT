@@ -26,17 +26,14 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.instrumentation.classcache.ClassCache;
-import rocks.inspectit.server.instrumentation.classcache.ClassCacheInstrumentation;
-import rocks.inspectit.server.instrumentation.classcache.ClassCacheLookup;
 import rocks.inspectit.server.instrumentation.config.ClassCacheSearchNarrower;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.shared.all.instrumentation.classcache.AnnotationType;
@@ -94,8 +91,8 @@ public class ClassCacheInstrumentationTest extends TestBase {
 				return callable.call();
 			}
 		};
-		doAnswer(callableAnswer).when(classCache).executeWithReadLock(Mockito.<Callable<?>> anyObject());
-		doAnswer(callableAnswer).when(classCache).executeWithWriteLock(Mockito.<Callable<?>> anyObject());
+		doAnswer(callableAnswer).when(classCache).executeWithReadLock(Matchers.<Callable<?>> anyObject());
+		doAnswer(callableAnswer).when(classCache).executeWithWriteLock(Matchers.<Callable<?>> anyObject());
 
 		instrumentation.init(classCache);
 	}
@@ -153,7 +150,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			instrumentation.removeInstrumentationPoints();
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(methodType, times(1)).setMethodInstrumentationConfig(null);
 		}
 
@@ -164,7 +161,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			instrumentation.removeInstrumentationPoints();
 
 			// not touching the write lock
-			verify(classCache, times(0)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(0)).executeWithWriteLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -174,7 +171,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			instrumentation.removeInstrumentationPoints(Collections.singleton(annotationType), Collections.singleton(instrumentationApplier));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verifyZeroInteractions(instrumentationApplier);
 		}
 
@@ -185,7 +182,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			instrumentation.removeInstrumentationPoints(Collections.singleton(interfaceType), Collections.singleton(instrumentationApplier));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verifyZeroInteractions(instrumentationApplier);
 		}
 
@@ -207,7 +204,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat((Collection<ClassType>) result, hasItem(classType));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).addInstrumentationPoints(agentConfiguration, classType);
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
@@ -228,7 +225,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat((Collection<ClassType>) result, hasItem(classType));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).addInstrumentationPoints(agentConfiguration, classType);
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
@@ -248,7 +245,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat((Collection<ClassType>) result, is(empty()));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).addInstrumentationPoints(agentConfiguration, classType);
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
@@ -269,7 +266,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat((Collection<ClassType>) result, is(empty()));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).addInstrumentationPoints(agentConfiguration, classType);
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
@@ -286,7 +283,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(result, is(empty()));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
 
@@ -304,7 +301,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(result, is(empty()));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
 
@@ -320,7 +317,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(result, is(empty()));
 
 			// not touching the write lock
-			verify(classCache, times(0)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(0)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
 		}
@@ -336,7 +333,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(result, is(empty()));
 
 			// not touching the write lock
-			verify(classCache, times(0)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(0)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
 		}
@@ -345,7 +342,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 		public void addNothingForNonClassTypes() throws Exception {
 			AnnotationType annotationType = new AnnotationType("");
 			InterfaceType interfaceType = new InterfaceType("");
-			List<Type> types = new ArrayList<Type>();
+			List<Type> types = new ArrayList<>();
 			types.add(annotationType);
 			types.add(interfaceType);
 			doReturn(types).when(lookup).findAll();
@@ -356,7 +353,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(result, is(empty()));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
 		}
@@ -365,7 +362,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 		public void searchNarrowAddNothingForNonClassTypes() throws Exception {
 			AnnotationType annotationType = new AnnotationType("");
 			InterfaceType interfaceType = new InterfaceType("");
-			List<Type> types = new ArrayList<Type>();
+			List<Type> types = new ArrayList<>();
 			types.add(annotationType);
 			types.add(interfaceType);
 			doReturn(assignment).when(instrumentationApplier).getSensorAssignment();
@@ -377,7 +374,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(result, is(empty()));
 
 			// must be write lock
-			verify(classCache, times(1)).executeWithWriteLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithWriteLock(Matchers.<Callable<?>> any());
 			verify(instrumentationApplier, times(1)).getSensorAssignment();
 			verifyNoMoreInteractions(instrumentationApplier);
 		}
@@ -405,7 +402,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentationResult.getMethodInstrumentationConfigs(), is(configs));
 
 			// read lock is enough
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -416,7 +413,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResults(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 			verifyZeroInteractions(log);
 		}
 
@@ -429,7 +426,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResults(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -439,7 +436,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResults(), is(empty()));
 
 			// not touching the read lock
-			verify(classCache, times(0)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(0)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -449,7 +446,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResults(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -459,7 +456,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResults(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 	}
@@ -489,7 +486,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(entry.getValue().getMethodInstrumentationConfigs(), is(configs));
 
 			// read lock is enough
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -500,7 +497,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResultsWithHashes().entrySet(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -512,7 +509,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResultsWithHashes().entrySet(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -522,7 +519,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResultsWithHashes().entrySet(), is(empty()));
 
 			// not touching the read lock
-			verify(classCache, times(0)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(0)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -532,7 +529,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResultsWithHashes().entrySet(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 		@Test
@@ -542,7 +539,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			assertThat(instrumentation.getInstrumentationResultsWithHashes().entrySet(), is(empty()));
 
 			// must be read lock
-			verify(classCache, times(1)).executeWithReadLock(Mockito.<Callable<?>> any());
+			verify(classCache, times(1)).executeWithReadLock(Matchers.<Callable<?>> any());
 		}
 
 	}

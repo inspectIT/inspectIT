@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * Processor that filters out data based on the agent id.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentFilterDataProcessor extends AbstractChainedDataProcessor {
 
@@ -30,12 +30,12 @@ public class AgentFilterDataProcessor extends AbstractChainedDataProcessor {
 	 * No-arg constructor.
 	 */
 	public AgentFilterDataProcessor() {
-		this.agentIds = new HashSet<Long>();
+		this.agentIds = new HashSet<>();
 	}
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param dataProcessors
 	 *            List of chained processors.
 	 * @param agentIds

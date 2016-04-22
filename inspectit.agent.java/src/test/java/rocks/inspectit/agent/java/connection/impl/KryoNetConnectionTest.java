@@ -19,13 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
 import com.esotericsoftware.kryonet.rmi.TimeoutException;
 
+import rocks.inspectit.agent.java.connection.RetryStrategy;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.shared.all.cmr.service.IAgentService;
 import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
@@ -141,7 +142,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(agentStorageService).addDataObjects(Mockito.<List<? extends DefaultData>> any());
+			doThrow(TimeoutException.class).when(agentStorageService).addDataObjects(Matchers.<List<? extends DefaultData>> any());
 			List<DefaultData> measurements = new ArrayList<DefaultData>();
 			measurements.add(new TimerData());
 
@@ -159,7 +160,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(agentStorageService).addDataObjects(Mockito.<List<? extends DefaultData>> any());
+			doThrow(RuntimeException.class).when(agentStorageService).addDataObjects(Matchers.<List<? extends DefaultData>> any());
 			List<DefaultData> measurements = new ArrayList<DefaultData>();
 			measurements.add(new TimerData());
 
@@ -170,7 +171,7 @@ public class KryoNetConnectionTest extends TestBase {
 				throw e;
 			} finally {
 				// call depends on the retry strategy
-				verify(agentStorageService, times(AdditiveWaitRetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).addDataObjects(measurements);
+				verify(agentStorageService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).addDataObjects(measurements);
 				verifyNoMoreInteractions(agentStorageService);
 			}
 		}
@@ -198,21 +199,21 @@ public class KryoNetConnectionTest extends TestBase {
 		public void register() throws Exception {
 			AgentConfig agentConfiguration = mock(AgentConfig.class);
 			when(client.isConnected()).thenReturn(true);
-			doReturn(agentConfiguration).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
+			doReturn(agentConfiguration).when(agentService).register(Matchers.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
 			AgentConfig receivedAgentConfiguration = connection.register(agentName, version);
 			assertThat(receivedAgentConfiguration, is(agentConfiguration));
 
-			verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+			verify(agentService, times(1)).register(Matchers.<List<String>> any(), eq(agentName), eq(version));
 			verifyNoMoreInteractions(agentService);
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
+			doThrow(TimeoutException.class).when(agentService).register(Matchers.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
@@ -222,7 +223,7 @@ public class KryoNetConnectionTest extends TestBase {
 				assertThat(e.isServerTimeout(), is(true));
 				throw e;
 			} finally {
-				verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+				verify(agentService, times(1)).register(Matchers.<List<String>> any(), eq(agentName), eq(version));
 				verifyNoMoreInteractions(agentService);
 			}
 		}
@@ -230,7 +231,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
+			doThrow(RuntimeException.class).when(agentService).register(Matchers.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
@@ -241,7 +242,7 @@ public class KryoNetConnectionTest extends TestBase {
 				throw e;
 			} finally {
 				// fail fast call, only one attempt
-				verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+				verify(agentService, times(1)).register(Matchers.<List<String>> any(), eq(agentName), eq(version));
 				verifyNoMoreInteractions(agentService);
 			}
 		}
@@ -249,14 +250,14 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { BusinessException.class })
 		public void businessException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(BusinessException.class).when(agentService).register(Mockito.<List<String>> any(), anyString(), anyString());
+			doThrow(BusinessException.class).when(agentService).register(Matchers.<List<String>> any(), anyString(), anyString());
 			String agentName = "agentName";
 			String version = "version";
 
 			try {
 				connection.register(agentName, version);
 			} finally {
-				verify(agentService, times(1)).register(Mockito.<List<String>> any(), eq(agentName), eq(version));
+				verify(agentService, times(1)).register(Matchers.<List<String>> any(), eq(agentName), eq(version));
 				verifyNoMoreInteractions(agentService);
 			}
 		}
@@ -362,7 +363,7 @@ public class KryoNetConnectionTest extends TestBase {
 		public void analyzeAndInstrument() throws Exception {
 			InstrumentationDefinition instrumentationResult = mock(InstrumentationDefinition.class);
 			when(client.isConnected()).thenReturn(true);
-			doReturn(instrumentationResult).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			doReturn(instrumentationResult).when(agentService).analyze(anyLong(), anyString(), Matchers.<Type> any());
 			long id = 7;
 			String hash = "hash";
 			Type type = mock(Type.class);
@@ -377,7 +378,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			doThrow(TimeoutException.class).when(agentService).analyze(anyLong(), anyString(), Matchers.<Type> any());
 			long id = 7;
 			String hash = "hash";
 			Type type = mock(Type.class);
@@ -396,7 +397,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			doThrow(RuntimeException.class).when(agentService).analyze(anyLong(), anyString(), Matchers.<Type> any());
 			long id = 7;
 			String hash = "hash";
 			Type type = mock(Type.class);
@@ -416,7 +417,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { BusinessException.class })
 		public void businessException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(BusinessException.class).when(agentService).analyze(anyLong(), anyString(), Mockito.<Type> any());
+			doThrow(BusinessException.class).when(agentService).analyze(anyLong(), anyString(), Matchers.<Type> any());
 			long id = 7;
 			String hash = "hash";
 			Type type = mock(Type.class);
@@ -464,7 +465,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(agentService).instrumentationApplied(Mockito.<Map<Long, long[]>> any());
+			doThrow(TimeoutException.class).when(agentService).instrumentationApplied(Matchers.<Map<Long, long[]>> any());
 			Map<Long, long[]> methodToSensorMap = mock(Map.class);
 			when(methodToSensorMap.isEmpty()).thenReturn(false);
 
@@ -482,7 +483,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(agentService).instrumentationApplied(Mockito.<Map<Long, long[]>> any());
+			doThrow(RuntimeException.class).when(agentService).instrumentationApplied(Matchers.<Map<Long, long[]>> any());
 			Map<Long, long[]> methodToSensorMap = mock(Map.class);
 			when(methodToSensorMap.isEmpty()).thenReturn(false);
 
@@ -493,7 +494,7 @@ public class KryoNetConnectionTest extends TestBase {
 				throw e;
 			} finally {
 				// call depends on the retry strategy
-				verify(agentService, times(AdditiveWaitRetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).instrumentationApplied(methodToSensorMap);
+				verify(agentService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).instrumentationApplied(methodToSensorMap);
 				verifyNoMoreInteractions(agentService);
 			}
 		}

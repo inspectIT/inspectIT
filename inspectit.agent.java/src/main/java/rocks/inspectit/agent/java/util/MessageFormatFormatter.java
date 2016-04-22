@@ -10,9 +10,9 @@ import java.util.logging.LogRecord;
  * <code>java.util.logging</code> package. To activate this formatter, edit the
  * <b>logging.properties</b> file in the <b>lib</b> folder of the Java installation or pass a new
  * Java Argument named <code>-Djava.util.logging.config.file</code> in the start command line.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class MessageFormatFormatter extends Formatter {
 
@@ -31,6 +31,7 @@ public class MessageFormatFormatter extends Formatter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String format(LogRecord record) {
 		Object[] arguments = new Object[5];
 		arguments[0] = new Date(record.getMillis());

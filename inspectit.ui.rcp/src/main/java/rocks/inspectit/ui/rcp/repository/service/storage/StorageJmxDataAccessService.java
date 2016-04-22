@@ -19,10 +19,10 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 /**
  * {@link IJmxDataAccessService} for storage purposes. This class indirectly uses the
  * {@link AbstractCachedJmxDataAccessService} to cache the data.
- * 
+ *
  * @author Alfred Krauss
  * @author Marius Oehler
- * 
+ *
  */
 public class StorageJmxDataAccessService extends AbstractStorageService<JmxSensorValueData> implements IJmxDataAccessService {
 
@@ -38,7 +38,7 @@ public class StorageJmxDataAccessService extends AbstractStorageService<JmxSenso
 
 	/**
 	 * Returns the {@link JmxSensorValueData} that match the given template and the time span.
-	 * 
+	 *
 	 * @param template
 	 *            the template
 	 * @param fromDate
@@ -74,7 +74,7 @@ public class StorageJmxDataAccessService extends AbstractStorageService<JmxSenso
 		List<JmxSensorValueData> resultList = executeQuery(query);
 
 		if (onlyLatest) {
-			HashMap<Long, JmxSensorValueData> map = new HashMap<Long, JmxSensorValueData>();
+			HashMap<Long, JmxSensorValueData> map = new HashMap<>();
 
 			for (DefaultData data : resultList) {
 				JmxSensorValueData jmxData = (JmxSensorValueData) data;
@@ -87,7 +87,7 @@ public class StorageJmxDataAccessService extends AbstractStorageService<JmxSenso
 				}
 			}
 
-			return new ArrayList<JmxSensorValueData>(map.values());
+			return new ArrayList<>(map.values());
 		} else {
 			return resultList;
 		}
@@ -96,6 +96,7 @@ public class StorageJmxDataAccessService extends AbstractStorageService<JmxSenso
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected IStorageTreeComponent<JmxSensorValueData> getIndexingTree() {
 		return indexingTree;
 	}

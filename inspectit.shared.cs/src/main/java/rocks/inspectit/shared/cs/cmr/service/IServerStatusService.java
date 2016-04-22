@@ -5,18 +5,18 @@ import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 
 /**
  * This interface is used to retrieve the status of the CMR.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface IServerStatusService {
 
 	/**
 	 * Enumeration that denotes the server status.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public enum ServerStatus {
 
@@ -49,7 +49,7 @@ public interface IServerStatusService {
 
 		/**
 		 * Gets {@link #registrationIdsValidationKey}.
-		 * 
+		 *
 		 * @return {@link #registrationIdsValidationKey}
 		 */
 		public String getRegistrationIdsValidationKey() {
@@ -58,7 +58,7 @@ public interface IServerStatusService {
 
 		/**
 		 * Sets {@link #registrationIdsValidationKey}.
-		 * 
+		 *
 		 * @param registrationIdsValidationKey
 		 *            New value for {@link #registrationIdsValidationKey}
 		 */
@@ -69,14 +69,14 @@ public interface IServerStatusService {
 
 	/**
 	 * Returns the current server status.
-	 * 
+	 *
 	 * @return The server status.
 	 */
 	ServerStatus getServerStatus();
 
 	/**
 	 * Returns the current version of the server.
-	 * 
+	 *
 	 * @return the current version of the server.
 	 */
 	String getVersion();

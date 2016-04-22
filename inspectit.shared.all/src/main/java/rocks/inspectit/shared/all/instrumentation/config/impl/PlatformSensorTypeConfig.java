@@ -3,15 +3,16 @@ package rocks.inspectit.shared.all.instrumentation.config.impl;
 /**
  * Only a marker class currently to define the platform sensor type configurations. They have no
  * additional information as already available in the {@link AbstractSensorTypeConfig}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class PlatformSensorTypeConfig extends AbstractSensorTypeConfig {
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		return getId() + " :: class: " + getClassName();
 	}

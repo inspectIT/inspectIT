@@ -14,7 +14,7 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Realization of the <code>IDetailsGenerator</code> for logging entries.
- * 
+ *
  * @author Stefan Siegl
  */
 public class LoggingDetailsGenerator implements IDetailsGenerator {

@@ -11,7 +11,7 @@ import com.google.common.cache.CacheBuilder;
 
 /**
  * Provides caching of Reflection calls.
- * 
+ *
  * @author Stefan Siegl
  */
 public class ReflectionCache {
@@ -29,13 +29,13 @@ public class ReflectionCache {
 	/**
 	 * Invokes the given method on the given class. This method uses the cache to only lookup the
 	 * method if the same method was not looked up before for the same class.
-	 * 
+	 *
 	 * <b> Known limitation: The method name is used as key and not the whole signature, so you
 	 * cannot cache methods with the same name but different parameters. The reason is that we do
 	 * not need this feature right now and it would complicate and slow down the cache. </b>
-	 * 
+	 *
 	 * <b> Known limitation: Exceptions are not passed along, but will break the invocation. </b>
-	 * 
+	 *
 	 * @param clazz
 	 *            The class on which the method should be invoked.
 	 * @param methodName
@@ -52,7 +52,7 @@ public class ReflectionCache {
 	 * @return the invocation result.
 	 */
 	public Object invokeMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object instance, Object[] values, Object errorValue) {
-		if (null == clazz || null == methodName) {
+		if ((null == clazz) || (null == methodName)) {
 			return errorValue;
 		}
 		Cache<String, Method> classCache = cache.getIfPresent(clazz);

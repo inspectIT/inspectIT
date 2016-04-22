@@ -9,15 +9,15 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**
  * Abstract processor class for CMR data.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractCmrDataProcessor {
 
 	/**
 	 * Processes many {@link DefaultData} objects.
-	 * 
+	 *
 	 * @param defaultDatas
 	 *            Default data objects.
 	 * @param entityManager
@@ -33,7 +33,7 @@ public abstract class AbstractCmrDataProcessor {
 	 * Processes one {@link DefaultData} object. This method will check is
 	 * {@link #canBeProcessed(DefaultData)} is true, and then delegate the processing to the
 	 * {@link #processData(DefaultData)} method.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @param entityManager
@@ -47,7 +47,7 @@ public abstract class AbstractCmrDataProcessor {
 
 	/**
 	 * Concrete method for processing. Implemented by sub-classes.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @param entityManager
@@ -58,7 +58,7 @@ public abstract class AbstractCmrDataProcessor {
 	/**
 	 * Returns if the {@link DefaultData} object can be processed by this
 	 * {@link AbstractDataProcessor}.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Default data object.
 	 * @return True if data can be processed, false otherwise.

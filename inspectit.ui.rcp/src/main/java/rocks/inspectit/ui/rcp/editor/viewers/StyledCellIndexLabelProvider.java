@@ -16,9 +16,9 @@ import rocks.inspectit.ui.rcp.editor.tooltip.IColumnToolTipProvider;
 /**
  * This class extends the {@link StyledCellLabelProvider} with support for the index of the cell,
  * used in the {@link org.eclipse.swt.widgets.Tree} or the {@link org.eclipse.swt.widgets.Table}.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class StyledCellIndexLabelProvider extends StyledCellLabelProvider implements IColumnToolTipProvider {
 
@@ -62,7 +62,7 @@ public class StyledCellIndexLabelProvider extends StyledCellLabelProvider implem
 	/**
 	 * Default behavior is to return an empty instance of {@link StyledString}. Clients should
 	 * override this method if needed.
-	 * 
+	 *
 	 * @param element
 	 *            The element for which to provide the styled label text
 	 * @param index
@@ -76,7 +76,7 @@ public class StyledCellIndexLabelProvider extends StyledCellLabelProvider implem
 	/**
 	 * Default behavior is to return <code>null</code>. Clients should override this method if
 	 * needed.
-	 * 
+	 *
 	 * @param element
 	 *            the element for which to provide the label image
 	 * @param index
@@ -91,7 +91,7 @@ public class StyledCellIndexLabelProvider extends StyledCellLabelProvider implem
 	/**
 	 * Default behavior is to return <code>null</code>. Clients should override this method if
 	 * needed.
-	 * 
+	 *
 	 * @param element
 	 *            the element
 	 * @param index
@@ -105,7 +105,7 @@ public class StyledCellIndexLabelProvider extends StyledCellLabelProvider implem
 	/**
 	 * Default behavior is to return <code>null</code>. Clients should override this method if
 	 * needed.
-	 * 
+	 *
 	 * @param element
 	 *            the element
 	 * @param index
@@ -120,7 +120,7 @@ public class StyledCellIndexLabelProvider extends StyledCellLabelProvider implem
 	/**
 	 * Default behavior is to return <code>null</code>. Clients should override this method if
 	 * needed.
-	 * 
+	 *
 	 * @param element
 	 *            the element
 	 * @param index

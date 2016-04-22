@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
 
 /**
  * Styled cell label provider for the tree of storages.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageManagerTreeLabelProvider extends StyledCellIndexLabelProvider {
 

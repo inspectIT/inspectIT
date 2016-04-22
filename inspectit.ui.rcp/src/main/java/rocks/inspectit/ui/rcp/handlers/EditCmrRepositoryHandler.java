@@ -5,6 +5,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -17,9 +18,9 @@ import rocks.inspectit.ui.rcp.wizard.EditCmrRepositoryWizard;
 
 /**
  * Rename the CMR name and description handler.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EditCmrRepositoryHandler extends AbstractHandler implements IHandler {
 
@@ -38,7 +39,7 @@ public class EditCmrRepositoryHandler extends AbstractHandler implements IHandle
 
 		EditCmrRepositoryWizard editWizard = new EditCmrRepositoryWizard(cmrRepositoryDefinition);
 		WizardDialog wizardDialog = new WizardDialog(HandlerUtil.getActiveShell(event), editWizard);
-		if (WizardDialog.OK == wizardDialog.open()) {
+		if (Window.OK == wizardDialog.open()) {
 			// update view if we have OK from the wizard
 			IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(RepositoryManagerView.VIEW_ID);
 			if (viewPart instanceof RepositoryManagerView) {

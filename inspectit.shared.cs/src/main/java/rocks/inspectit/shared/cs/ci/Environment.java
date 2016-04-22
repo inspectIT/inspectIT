@@ -95,8 +95,8 @@ public class Environment {
 	 */
 	@XmlElementWrapper(name = "platform-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ClassLoadingSensorConfig.class), @XmlElementRef(type = CompilationSensorConfig.class), @XmlElementRef(type = CpuSensorConfig.class),
-		@XmlElementRef(type = MemorySensorConfig.class), @XmlElementRef(type = RuntimeSensorConfig.class), @XmlElementRef(type = SystemSensorConfig.class),
-		@XmlElementRef(type = ThreadSensorConfig.class) })
+			@XmlElementRef(type = MemorySensorConfig.class), @XmlElementRef(type = RuntimeSensorConfig.class), @XmlElementRef(type = SystemSensorConfig.class),
+			@XmlElementRef(type = ThreadSensorConfig.class) })
 	private final List<IPlatformSensorConfig> platformSensorConfigs = ConfigurationDefaultsFactory.getAvailablePlatformSensorConfigs();
 
 	/**
@@ -104,8 +104,8 @@ public class Environment {
 	 */
 	@XmlElementWrapper(name = "method-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class), @XmlElementRef(type = InvocationSequenceSensorConfig.class),
-		@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
-		@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class) })
+			@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
+			@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**
@@ -330,17 +330,17 @@ public class Environment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((bufferStrategyConfig == null) ? 0 : bufferStrategyConfig.hashCode());
-		result = prime * result + (classLoadingDelegation ? 1231 : 1237);
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((exceptionSensorConfig == null) ? 0 : exceptionSensorConfig.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((methodSensorConfigs == null) ? 0 : methodSensorConfigs.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((platformSensorConfigs == null) ? 0 : platformSensorConfigs.hashCode());
-		result = prime * result + ((profileIds == null) ? 0 : profileIds.hashCode());
-		result = prime * result + revision;
-		result = prime * result + ((sendingStrategyConfig == null) ? 0 : sendingStrategyConfig.hashCode());
+		result = (prime * result) + ((bufferStrategyConfig == null) ? 0 : bufferStrategyConfig.hashCode());
+		result = (prime * result) + (classLoadingDelegation ? 1231 : 1237);
+		result = (prime * result) + ((description == null) ? 0 : description.hashCode());
+		result = (prime * result) + ((exceptionSensorConfig == null) ? 0 : exceptionSensorConfig.hashCode());
+		result = (prime * result) + ((id == null) ? 0 : id.hashCode());
+		result = (prime * result) + ((methodSensorConfigs == null) ? 0 : methodSensorConfigs.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + ((platformSensorConfigs == null) ? 0 : platformSensorConfigs.hashCode());
+		result = (prime * result) + ((profileIds == null) ? 0 : profileIds.hashCode());
+		result = (prime * result) + revision;
+		result = (prime * result) + ((sendingStrategyConfig == null) ? 0 : sendingStrategyConfig.hashCode());
 		return result;
 	}
 

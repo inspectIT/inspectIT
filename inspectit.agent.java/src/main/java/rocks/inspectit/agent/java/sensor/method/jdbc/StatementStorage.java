@@ -18,7 +18,7 @@ import rocks.inspectit.agent.java.util.ThreadLocalStack;
 
 /**
  * Stores the mapping between statements and objects so that these statements are later accessible.
- * 
+ *
  * @author Patrice Bouillet
  * @author Stefan Siegl
  */
@@ -40,7 +40,7 @@ public class StatementStorage {
 	 * looses the reference to this object (which is usually very quickly after the invocation), the
 	 * garbage collector can remove this object and thus the entry in the cache. In order to
 	 * safe-guard our cache, elements will also be removed if they are not used for 20 minutes.
-	 * 
+	 *
 	 * <b> Note that this data structure provides atomic access like a <code>ConcurrentMap</code>.
 	 * </b>.
 	 */
@@ -53,7 +53,7 @@ public class StatementStorage {
 
 	/**
 	 * Adds a prepared statement to this storage for later retrieval.
-	 * 
+	 *
 	 * @param object
 	 *            The object which will be the key of the mapping.
 	 */
@@ -68,7 +68,7 @@ public class StatementStorage {
 
 	/**
 	 * Returns a stored sql string for this object.
-	 * 
+	 *
 	 * @param object
 	 *            The object which will be used to look up in the map.
 	 * @return The sql string or <code>null</code> if this statement is not available within the
@@ -91,7 +91,7 @@ public class StatementStorage {
 
 	/**
 	 * Returns a stored parameters for the object.
-	 * 
+	 *
 	 * @param object
 	 *            The object which will be used to look up in the map.
 	 * @return The list of parameters or <code> null </code> if there is no container for the given
@@ -108,7 +108,7 @@ public class StatementStorage {
 
 	/**
 	 * Adds a parameter to a specific prepared statement.
-	 * 
+	 *
 	 * @param preparedStatement
 	 *            The prepared statement object.
 	 * @param index
@@ -128,7 +128,7 @@ public class StatementStorage {
 
 		String[] parameters = queryAndParameters.getParameters();
 
-		if (0 > index || parameters.length <= index) {
+		if ((0 > index) || (parameters.length <= index)) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Trying to set the parameter with value " + value + " at index " + index + ", but the prepared statement did not have parameter on this index.");
 			}
@@ -136,7 +136,7 @@ public class StatementStorage {
 		}
 
 		if (null != value) {
-			if (value instanceof String || value instanceof Date || value instanceof Time || value instanceof Timestamp) {
+			if ((value instanceof String) || (value instanceof Date) || (value instanceof Time) || (value instanceof Timestamp)) {
 				parameters[index] = "'" + value.toString() + "'";
 			} else {
 				parameters[index] = value.toString();
@@ -153,7 +153,7 @@ public class StatementStorage {
 
 	/**
 	 * Clears all the parameters in the array.
-	 * 
+	 *
 	 * @param preparedStatement
 	 *            The prepared statement for which all parameters are going to be cleared.
 	 */
@@ -178,7 +178,7 @@ public class StatementStorage {
 	 * contains the string three times. Now the Prepared Statement is created which results in
 	 * calling the {@link #addPreparedStatement(Object, String)} method. The last added String is
 	 * taken and associated with the object.
-	 * 
+	 *
 	 * @param sql
 	 *            The SQL String.
 	 */
@@ -196,16 +196,16 @@ public class StatementStorage {
 	/**
 	 * Value container to store the SQL query and its parameters within the cache of prepared
 	 * statements. The JDBC sensor in inspectIT allows for two modes. The SQL query can be enhanced
-	 * with the values of the bind parameters. This happens if and only if
-	 * "SQL Prepared Statement Parameter Replacement" is set. Thus this container ensures that this
-	 * calculation is only done if this is needed, that is when the parameters are first accessed.
-	 * Thus ensure that you only access the parameters if you really want to fill them!
-	 * 
+	 * with the values of the bind parameters. This happens if and only if "SQL Prepared Statement
+	 * Parameter Replacement" is set. Thus this container ensures that this calculation is only done
+	 * if this is needed, that is when the parameters are first accessed. Thus ensure that you only
+	 * access the parameters if you really want to fill them!
+	 *
 	 * <p>
 	 * To access the parameters during the "filling stage", prefer the
 	 * <code> public String[] getParameters() </code> method as this allows to access the internal
 	 * String[].
-	 * 
+	 *
 	 * @author Stefan Siegl
 	 */
 	private static class QueryInformation {
@@ -222,7 +222,7 @@ public class StatementStorage {
 		 * Creates a new instance of this value container. Please note that creating an instance of
 		 * this class does not calculate the number of available bind values (a.k.a. "parameters").
 		 * They are creating on first use.
-		 * 
+		 *
 		 * @param query
 		 *            The SQL query.
 		 */
@@ -235,11 +235,11 @@ public class StatementStorage {
 		 * should be used over the <code>List<String> getParametersAsList</code> method to fill the
 		 * parameters as this method provides access to the backing String[] and is thus more
 		 * efficient.
-		 * 
+		 *
 		 * <b> please note that the calculation of the number of parameters within the SQL query is
 		 * done with the first access to this method. Thus only call this method if you know that
 		 * you do have parameters to set, else there will be unnecessary calculations. </b>
-		 * 
+		 *
 		 * @return <code>String[]</code> containing the current bind values of this SQL query. The
 		 *         size of the array can be used to deduce the number of available bind parameters
 		 *         based on the SQL query.
@@ -263,7 +263,7 @@ public class StatementStorage {
 
 		/**
 		 * Resets the bind parameters of this SQL query.
-		 * 
+		 *
 		 * <b> please note that the calculation of the number of parameters within the SQL query
 		 * will be done as a side-effect of this method (but only if it is not already done before).
 		 * Thus only call this method if you know that you do have parameters to set, else there
@@ -283,7 +283,7 @@ public class StatementStorage {
 		 * current parameters.
 		 * <p>
 		 * Please note that to fill the parameters the String[] should be used.
-		 * 
+		 *
 		 * @return the parameter values as <code>List<String></code> or <code> null </code> if no
 		 *         parameters are captured.
 		 */

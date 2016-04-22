@@ -43,7 +43,7 @@ public interface IRegistrationService {
 
 	/**
 	 * Unregisters a platform by passing the agent ID.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            The unique identifier of the platform.
 	 *
@@ -147,6 +147,6 @@ public interface IRegistrationService {
 	 *            MBeanAttributeInfo.
 	 * @return Returns the unique JMX definition data identifier.
 	 */
-	long registerJmxSensorDefinitionDataIdent(long platformIdent, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs,// NOCHK
+	long registerJmxSensorDefinitionDataIdent(long platformIdent, String mBeanObjectName, String mBeanAttributeName, String mBeanAttributeDescription, String mBeanAttributeType, boolean isIs, // NOCHK
 			boolean isReadable, boolean isWritable);
 }

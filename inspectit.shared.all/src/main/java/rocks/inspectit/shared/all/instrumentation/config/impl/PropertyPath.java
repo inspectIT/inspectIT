@@ -1,11 +1,11 @@
 package rocks.inspectit.shared.all.instrumentation.config.impl;
 
 /**
- * Every path can have another follower path. These classes are used to describe the way to find
- * a specific property in an object.
- * 
+ * Every path can have another follower path. These classes are used to describe the way to find a
+ * specific property in an object.
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class PropertyPath {
 
@@ -27,7 +27,7 @@ public class PropertyPath {
 
 	/**
 	 * Creates a new instance and sets the name.
-	 * 
+	 *
 	 * @param name
 	 *            the name of this path.
 	 */
@@ -58,6 +58,7 @@ public class PropertyPath {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		if (null != pathToContinue) {
 			return name + "-->" + pathToContinue.toString();

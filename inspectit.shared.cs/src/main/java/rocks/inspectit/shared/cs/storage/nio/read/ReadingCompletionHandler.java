@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 
 /**
  * Completion handler for asynchronous reading.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ReadingCompletionHandler implements CompletionHandler<Integer, WriteReadAttachment> {
 
@@ -29,6 +29,7 @@ public class ReadingCompletionHandler implements CompletionHandler<Integer, Writ
 	 * with updated position and size is performed. If yes, the completion runnable is invoke if it
 	 * is not null and buffer is flip.
 	 */
+	@Override
 	public void completed(Integer result, WriteReadAttachment attachment) {
 		long bytesToReadMore = attachment.getSize() - result.longValue();
 		if (bytesToReadMore > 0) {
@@ -64,6 +65,7 @@ public class ReadingCompletionHandler implements CompletionHandler<Integer, Writ
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void failed(Throwable exc, WriteReadAttachment attachment) {
 		LOG.error("Write to the disk failed.", exc);
 		WriteReadCompletionRunnable completionRunnable = attachment.getCompletionRunnable();

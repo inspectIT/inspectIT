@@ -15,7 +15,7 @@ import rocks.inspectit.ui.rcp.editor.ISubView;
 
 /**
  * @author Patrice Bouillet
- * 
+ *
  */
 public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 
@@ -37,7 +37,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 
 	/**
 	 * Constructor needs a root editor.
-	 * 
+	 *
 	 * @param rootEditor
 	 *            The root editor.
 	 */
@@ -50,6 +50,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
 		postListeners.add(listener);
 	}
@@ -57,6 +58,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
 		postListeners.remove(listener);
 	}
@@ -64,6 +66,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.add(listener);
 	}
@@ -71,6 +74,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.remove(listener);
 	}
@@ -78,6 +82,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ISelection getSelection() {
 		ISubView subView = rootEditor.getActiveSubView();
 		if (null != subView) {
@@ -93,6 +98,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setSelection(ISelection selection) {
 		ISubView subView = rootEditor.getActiveSubView();
 		if (null != subView) {
@@ -106,7 +112,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 	/**
 	 * Notifies all registered selection changed listeners that the editor's selection has changed.
 	 * Only listeners registered at the time this method is called are notified.
-	 * 
+	 *
 	 * @param event
 	 *            the selection changed event
 	 */
@@ -117,7 +123,7 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 
 	/**
 	 * Notifies all post selection changed listeners that the editor's selection has changed.
-	 * 
+	 *
 	 * @param event
 	 *            the event to propagate.
 	 */
@@ -128,16 +134,17 @@ public class MultiSubViewSelectionProvider implements IPostSelectionProvider {
 
 	/**
 	 * Fires the actual event.
-	 * 
+	 *
 	 * @param event
 	 *            The event to fire.
 	 * @param listeners
 	 *            All the registered listeners.
 	 */
 	private void fireEventChange(final SelectionChangedEvent event, Object[] listeners) {
-		for (int i = 0; i < listeners.length; ++i) {
-			final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
+		for (Object listener : listeners) {
+			final ISelectionChangedListener l = (ISelectionChangedListener) listener;
 			SafeRunner.run(new SafeRunnable() {
+				@Override
 				public void run() {
 					l.selectionChanged(event);
 				}

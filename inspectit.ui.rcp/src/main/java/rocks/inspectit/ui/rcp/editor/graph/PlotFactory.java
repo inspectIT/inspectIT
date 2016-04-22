@@ -12,9 +12,9 @@ import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 
 /**
  * The factory for the plot creation.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class PlotFactory {
 
@@ -26,7 +26,7 @@ public final class PlotFactory {
 
 	/**
 	 * Creates and returns an instance of {@link PlotController}.
-	 * 
+	 *
 	 * @param sensorTypeEnum
 	 *            The {@link SensorTypeEnum}.
 	 * @return An instance of {@link PlotController}.
@@ -61,7 +61,7 @@ public final class PlotFactory {
 
 	/**
 	 * Returns an instance of {@link PlotController}.
-	 * 
+	 *
 	 * @param fqn
 	 *            The fully-qualified-name.
 	 * @return An instance of {@link PlotController}.

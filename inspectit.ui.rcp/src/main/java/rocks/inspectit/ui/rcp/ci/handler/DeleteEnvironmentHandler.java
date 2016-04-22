@@ -30,9 +30,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Handler for the environment deletion.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DeleteEnvironmentHandler extends AbstractHandler implements IHandler {
 

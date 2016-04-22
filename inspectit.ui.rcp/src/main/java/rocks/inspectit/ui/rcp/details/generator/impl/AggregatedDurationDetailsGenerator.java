@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Generator that displays the duration info from the {@link TimerData} and it's subclasses.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AggregatedDurationDetailsGenerator implements IDetailsGenerator {
 
@@ -27,7 +27,7 @@ public class AggregatedDurationDetailsGenerator implements IDetailsGenerator {
 	 */
 	@Override
 	public boolean canGenerateFor(DefaultData defaultData) {
-		return defaultData instanceof TimerData && defaultData instanceof IAggregatedData;
+		return (defaultData instanceof TimerData) && (defaultData instanceof IAggregatedData);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class AggregatedDurationDetailsGenerator implements IDetailsGenerator {
 		DetailsTable table = new DetailsTable(parent, toolkit, "Duration Info", 4);
 
 		// first headings
-		table.addContentRow("", null, new DetailsCellContent[] { new DetailsCellContent("Count"), new DetailsCellContent("Avg (ms)"), new DetailsCellContent("Min (ms)"),
-				new DetailsCellContent("Max (ms)") });
+		table.addContentRow("", null,
+				new DetailsCellContent[] { new DetailsCellContent("Count"), new DetailsCellContent("Avg (ms)"), new DetailsCellContent("Min (ms)"), new DetailsCellContent("Max (ms)") });
 
 		// then the total duration
 		DetailsCellContent[] total = new DetailsCellContent[] { new DetailsCellContent(NumberFormatter.formatLong(timerData.getCount())),

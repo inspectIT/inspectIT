@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.StringPropertyUpdate;
 
 /**
  * Abstract class representing the property update.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <V>
  *            Type of property and update value.
  */
@@ -38,7 +38,7 @@ public abstract class AbstractPropertyUpdate<V> implements IPropertyUpdate<V> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property update is related to.
 	 * @param updateValue
@@ -57,14 +57,15 @@ public abstract class AbstractPropertyUpdate<V> implements IPropertyUpdate<V> {
 
 	/**
 	 * Gets the update value.
-	 * 
+	 *
 	 * @return Gets the update value.
 	 */
+	@Override
 	public abstract V getUpdateValue();
 
 	/**
 	 * Sets the currently used value.
-	 * 
+	 *
 	 * @param updateValue
 	 *            Update value for the property.
 	 */
@@ -73,15 +74,17 @@ public abstract class AbstractPropertyUpdate<V> implements IPropertyUpdate<V> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isRestoreDefault() {
 		return false;
 	}
 
 	/**
 	 * Gets {@link #propertyLogicalName}.
-	 * 
+	 *
 	 * @return {@link #propertyLogicalName}
 	 */
+	@Override
 	public String getPropertyLogicalName() {
 		return propertyLogicalName;
 	}
@@ -93,7 +96,7 @@ public abstract class AbstractPropertyUpdate<V> implements IPropertyUpdate<V> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((propertyLogicalName == null) ? 0 : propertyLogicalName.hashCode());
+		result = (prime * result) + ((propertyLogicalName == null) ? 0 : propertyLogicalName.hashCode());
 		return result;
 	}
 

@@ -41,9 +41,9 @@ import rocks.inspectit.shared.cs.storage.util.StorageUtil;
  * Changing this class can cause the break of the backward/forward compatibility of the storage in
  * the way that we will not be able to read any data from the storage. Thus, please be careful with
  * performing any changes until there is a proper mechanism to protect against this problem.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of the elements indexed.
  */
@@ -98,7 +98,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 
 	/**
 	 * Secondary constructor. Assigns the leaf with the ID.
-	 * 
+	 *
 	 * @param id
 	 *            ID to be assigned to the leaf.
 	 */
@@ -119,6 +119,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageDescriptor put(E element) throws IndexingException {
 		if (null == element) {
 			throw new IndexingException("Element to index can not be null.");
@@ -137,7 +138,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	/**
 	 * Insert a new long and its {@link StorageDescriptor} into arrays, keeping the arrays sorted,
 	 * and ensuring space.
-	 * 
+	 *
 	 * @param id
 	 *            New long to insert in {@link #idArray}.
 	 * @param simpleDescriptor
@@ -202,6 +203,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageDescriptor get(E element) {
 		readLock.lock();
 		try {
@@ -224,13 +226,14 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<IStorageDescriptor> query(IIndexQuery query) {
 		if (query instanceof StorageIndexQuery) {
 			return this.queryWithStorageQuery((StorageIndexQuery) query);
 		} else {
 			readLock.lock();
 			try {
-				List<IStorageDescriptor> returnList = new ArrayList<IStorageDescriptor>();
+				List<IStorageDescriptor> returnList = new ArrayList<>();
 				int index = 0;
 
 				// if min id is given, we will start from the first id that is bigger or equal than
@@ -258,17 +261,18 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 			}
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<IStorageDescriptor> query(IIndexQuery query, ForkJoinPool forkJoinPool) {
 		return forkJoinPool.invoke(getTaskForForkJoinQuery(query));
 	}
 
 	/**
 	 * Queries the leaf with more information given in the {@link StorageIndexQuery}.
-	 * 
+	 *
 	 * @param query
 	 *            {@link StorageIndexQuery}.
 	 * @return List of descriptors.
@@ -276,7 +280,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	private List<IStorageDescriptor> queryWithStorageQuery(StorageIndexQuery query) {
 		readLock.lock();
 		try {
-			List<IStorageDescriptor> returnList = new ArrayList<IStorageDescriptor>();
+			List<IStorageDescriptor> returnList = new ArrayList<>();
 			int index = 0;
 
 			// if min id is given, we will start from the first id that is bigger or equal than min
@@ -289,10 +293,10 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 			}
 
 			for (; index < size; index++) {
-				if (query.getExcludeIds() != null && query.getExcludeIds().contains(idArray[index])) {
+				if ((query.getExcludeIds() != null) && query.getExcludeIds().contains(idArray[index])) {
 					continue;
 				}
-				if (0 != idArray[index] && (query.getIncludeIds() == null || query.getIncludeIds().contains(idArray[index]))) {
+				if ((0 != idArray[index]) && ((query.getIncludeIds() == null) || query.getIncludeIds().contains(idArray[index]))) {
 					SimpleStorageDescriptor simpleDescriptor = descriptorArray[index];
 					if (null != simpleDescriptor) {
 						returnList.add(new StorageDescriptor(this.id, simpleDescriptor));
@@ -310,6 +314,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStorageDescriptor getAndRemove(E element) {
 		// / first acquire the read lock to see if the element exists
 		readLock.lock();
@@ -346,12 +351,14 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	 * <p>
 	 * Does nothing.
 	 */
+	@Override
 	public void preWriteFinalization() {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getComponentSize(IObjectSizes objectSizes) {
 		long sizeInBytes = objectSizes.getSizeOfObjectHeader();
 		sizeInBytes += objectSizes.getPrimitiveTypesSize(2, 0, 4, 0, 0, 0);
@@ -365,7 +372,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	int getId() {
@@ -376,14 +383,22 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	 * {@inheritDoc}
 	 */
 	@Override
+	public RecursiveTask<List<IStorageDescriptor>> getTaskForForkJoinQuery(IIndexQuery query) {
+		return new LeafTask<>(this, query);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + capacity;
-		result = prime * result + Arrays.hashCode(descriptorArray);
-		result = prime * result + id;
-		result = prime * result + Arrays.hashCode(idArray);
-		result = prime * result + size;
+		result = (prime * result) + capacity;
+		result = (prime * result) + Arrays.hashCode(descriptorArray);
+		result = (prime * result) + id;
+		result = (prime * result) + Arrays.hashCode(idArray);
+		result = (prime * result) + size;
 		return result;
 	}
 
@@ -430,12 +445,5 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 		toStringBuilder.append("elements", size);
 		toStringBuilder.append("capacity", capacity);
 		return toStringBuilder.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public RecursiveTask<List<IStorageDescriptor>> getTaskForForkJoinQuery(IIndexQuery query) {
-		return new LeafTask<>(this, query);
 	}
 }

@@ -16,9 +16,9 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * The default implementation of the {@link MethodIdentDao} interface by using the Entity manager.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @Repository
 public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements MethodIdentDao {
@@ -39,6 +39,7 @@ public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements M
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void saveOrUpdate(MethodIdent methodIdent) {
 		// we save if id is not set, otherwise merge
 		if (null == methodIdent.getId()) {
@@ -60,6 +61,7 @@ public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements M
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<MethodIdent> findForPlatformIdAndExample(long platformId, MethodIdent methodIdentExample) {
 		TypedQuery<MethodIdent> query = getEntityManager().createNamedQuery(MethodIdent.FIND_BY_PLATFORM_AND_EXAMPLE, MethodIdent.class);
 		query.setParameter("platformIdent", platformId);

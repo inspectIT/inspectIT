@@ -8,9 +8,9 @@ import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
  * A component can be used in any tree based views.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public abstract class Component {
 
@@ -46,7 +46,7 @@ public abstract class Component {
 
 	/**
 	 * Gets {@link #name}.
-	 * 
+	 *
 	 * @return {@link #name}
 	 */
 	public String getName() {
@@ -55,7 +55,7 @@ public abstract class Component {
 
 	/**
 	 * Sets {@link #name}.
-	 * 
+	 *
 	 * @param name
 	 *            New value for {@link #name}
 	 */
@@ -65,7 +65,7 @@ public abstract class Component {
 
 	/**
 	 * Gets {@link #tooltip}.
-	 * 
+	 *
 	 * @return {@link #tooltip}
 	 */
 	public String getTooltip() {
@@ -74,7 +74,7 @@ public abstract class Component {
 
 	/**
 	 * Sets {@link #tooltip}.
-	 * 
+	 *
 	 * @param tooltip
 	 *            New value for {@link #tooltip}
 	 */
@@ -84,7 +84,7 @@ public abstract class Component {
 
 	/**
 	 * Gets {@link #image}.
-	 * 
+	 *
 	 * @return {@link #image}
 	 */
 	public Image getImage() {
@@ -93,7 +93,7 @@ public abstract class Component {
 
 	/**
 	 * Sets {@link #image}.
-	 * 
+	 *
 	 * @param image
 	 *            New value for {@link #image}
 	 */
@@ -103,7 +103,7 @@ public abstract class Component {
 
 	/**
 	 * Gets {@link #parent}.
-	 * 
+	 *
 	 * @return {@link #parent}
 	 */
 	public Component getParent() {
@@ -112,7 +112,7 @@ public abstract class Component {
 
 	/**
 	 * Sets {@link #parent}.
-	 * 
+	 *
 	 * @param parent
 	 *            New value for {@link #parent}
 	 */
@@ -122,7 +122,7 @@ public abstract class Component {
 
 	/**
 	 * Gets {@link #inputDefinition}.
-	 * 
+	 *
 	 * @return {@link #inputDefinition}
 	 */
 	public InputDefinition getInputDefinition() {
@@ -131,7 +131,7 @@ public abstract class Component {
 
 	/**
 	 * Sets {@link #inputDefinition}.
-	 * 
+	 *
 	 * @param inputDefinition
 	 *            New value for {@link #inputDefinition}
 	 */
@@ -141,7 +141,7 @@ public abstract class Component {
 
 	/**
 	 * Gets {@link #enabled}.
-	 * 
+	 *
 	 * @return {@link #enabled}
 	 */
 	public boolean isEnabled() {
@@ -150,7 +150,7 @@ public abstract class Component {
 
 	/**
 	 * Sets {@link #enabled}.
-	 * 
+	 *
 	 * @param enabled
 	 *            New value for {@link #enabled}
 	 */

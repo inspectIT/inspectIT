@@ -19,9 +19,9 @@ import rocks.inspectit.ui.rcp.property.control.AbstractPropertyControl;
 
 /**
  * {@link AbstractPropertyControl} for the long property.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class LongPropertyControl extends AbstractPropertyControl<LongProperty, Long> {
 
@@ -32,7 +32,7 @@ public class LongPropertyControl extends AbstractPropertyControl<LongProperty, L
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param property
 	 *            Property.
 	 * @param propertyUpdateListener
@@ -59,7 +59,7 @@ public class LongPropertyControl extends AbstractPropertyControl<LongProperty, L
 				// allow blank text
 				if (StringUtils.isNotBlank(newText)) {
 					// allow minus to be specified only
-					if (1 == newText.length() && '-' == newText.charAt(0)) {
+					if ((1 == newText.length()) && ('-' == newText.charAt(0))) {
 						return;
 					}
 
@@ -77,7 +77,7 @@ public class LongPropertyControl extends AbstractPropertyControl<LongProperty, L
 			@Override
 			public void modifyText(ModifyEvent e) {
 				String valueText = text.getText();
-				if (!valueText.isEmpty() && (valueText.charAt(0) != '-' || valueText.length() > 1)) {
+				if (!valueText.isEmpty() && ((valueText.charAt(0) != '-') || (valueText.length() > 1))) {
 					Long value = Long.parseLong(valueText);
 					sendPropertyUpdateEvent(value);
 				}

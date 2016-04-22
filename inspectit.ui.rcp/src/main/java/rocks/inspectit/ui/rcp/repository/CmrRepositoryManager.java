@@ -22,9 +22,9 @@ import rocks.inspectit.ui.rcp.util.ListenerList;
 
 /**
  * The repository manager only for {@link CmrRepositoryDefinition}s.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class CmrRepositoryManager {
 
@@ -36,17 +36,17 @@ public class CmrRepositoryManager {
 	/**
 	 * The list containing the available {@link RepositoryDefinition} objects.
 	 */
-	private List<CmrRepositoryDefinition> cmrRepositoryDefinitions = new ArrayList<CmrRepositoryDefinition>();
+	private List<CmrRepositoryDefinition> cmrRepositoryDefinitions = new ArrayList<>();
 
 	/**
 	 * The list of listeners to be notified.
 	 */
-	private ListenerList<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ListenerList<CmrRepositoryChangeListener>();
+	private ListenerList<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ListenerList<>();
 
 	/**
 	 * Map of jobs.
 	 */
-	private Map<CmrRepositoryDefinition, UpdateRepositoryJob> repositoryUpdateJobMap = new ConcurrentHashMap<CmrRepositoryDefinition, UpdateRepositoryJob>();
+	private Map<CmrRepositoryDefinition, UpdateRepositoryJob> repositoryUpdateJobMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Default constructor.
@@ -70,7 +70,7 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Adds a repository definition handled by this manager.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            The definition to add.
 	 */
@@ -95,7 +95,7 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Removes a repository definition and notifies all registered listeners.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            The definition to remove.
 	 */
@@ -121,7 +121,7 @@ public class CmrRepositoryManager {
 	 * Forces the CMR Online update check. If the {@link CmrRepositoryDefinition} to check is not on
 	 * the current list of repositories, this method will create a small job to check online status,
 	 * but this job won't be rescheduled.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @return Returns the job that will be performing the update. Caller can use this job to react
@@ -139,12 +139,12 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Forces update of all repositories.
-	 * 
+	 *
 	 * @return Returns the collection of jobs that will be performing the update. Caller can use
 	 *         these jobs to react on the one or more jobs being done.
 	 */
 	public Collection<UpdateRepositoryJob> forceAllCmrRepositoriesOnlineStatusUpdate() {
-		List<UpdateRepositoryJob> jobs = new ArrayList<UpdateRepositoryJob>();
+		List<UpdateRepositoryJob> jobs = new ArrayList<>();
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositoryDefinitions) {
 			jobs.add(this.forceCmrRepositoryOnlineStatusUpdate(cmrRepositoryDefinition));
 		}
@@ -154,7 +154,7 @@ public class CmrRepositoryManager {
 	/**
 	 * Returns all registered repository definitions handled by this manager. The list is
 	 * unmodifiable.
-	 * 
+	 *
 	 * @return The list of repository definitions.
 	 */
 	public List<CmrRepositoryDefinition> getCmrRepositoryDefinitions() {
@@ -163,7 +163,7 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Adds a listener which notifies on certain events.
-	 * 
+	 *
 	 * @param repositoryChangeListener
 	 *            The listener to add.
 	 */
@@ -177,7 +177,7 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Removes the listener.
-	 * 
+	 *
 	 * @param repositoryChangeListener
 	 *            The listener to remove.
 	 */
@@ -207,7 +207,7 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Updates the {@link CmrRepositoryDefinition} entry in the preferences.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            Repository to update.
 	 */
@@ -220,7 +220,7 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Informs all listener that the provided agent on the repository has been deleted.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            the repository definition.
 	 * @param agent
@@ -236,7 +236,7 @@ public class CmrRepositoryManager {
 	 * Save the preferences to the backend store.
 	 */
 	private void savePreference() {
-		List<CmrRepositoryDefinition> toSave = new ArrayList<CmrRepositoryDefinition>();
+		List<CmrRepositoryDefinition> toSave = new ArrayList<>();
 		for (CmrRepositoryDefinition repositoryDefinition : cmrRepositoryDefinitions) {
 			toSave.add(repositoryDefinition);
 		}
@@ -245,9 +245,9 @@ public class CmrRepositoryManager {
 
 	/**
 	 * Update online status of all repositories job.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	public static class UpdateRepositoryJob extends Job {
 
@@ -263,7 +263,7 @@ public class CmrRepositoryManager {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param cmrRepositoryDefinition
 		 *            {@link CmrRepositoryDefinition} to update.
 		 * @param rescheduleJob

@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * An implementation of a root editor which uses a form to create a nicer view.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class FormRootEditor extends AbstractRootEditor {
 
@@ -104,7 +104,7 @@ public class FormRootEditor extends AbstractRootEditor {
 
 	/**
 	 * Gets {@link #breadcrumbTitleComposite}.
-	 * 
+	 *
 	 * @return {@link #breadcrumbTitleComposite}
 	 */
 	public BreadcrumbTitleComposite getBreadcrumbTitleComposite() {

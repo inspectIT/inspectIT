@@ -25,14 +25,13 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
-import rocks.inspectit.ui.rcp.editor.search.factory.SearchFactory;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
  * Tests the {@link SearchFactory} class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class SearchFactoryTest {
@@ -99,7 +98,7 @@ public class SearchFactoryTest {
 		assertThat(SearchFactory.isSearchCompatible(timerData, wrong, repositoryDefinition), is(equalTo(false)));
 
 		when(methodIdent.getMethodName()).thenReturn("");
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("blaha");
 		when(methodIdent.getParameters()).thenReturn(params);
 		searchCriteria.setCaseSensitive(false);
@@ -127,7 +126,7 @@ public class SearchFactoryTest {
 		assertThat(SearchFactory.isSearchCompatible(sqlData, searchCriteria, repositoryDefinition), is(equalTo(false)));
 		assertThat(SearchFactory.isSearchCompatible(sqlData, wrong, repositoryDefinition), is(equalTo(false)));
 
-		List<String> parameters = new ArrayList<String>();
+		List<String> parameters = new ArrayList<>();
 		parameters.add("blah");
 		sqlData.setSql("Select somthing from table where condition=?");
 		sqlData.setParameterValues(parameters);
@@ -173,7 +172,7 @@ public class SearchFactoryTest {
 		assertThat(SearchFactory.isSearchCompatible(httpData, searchCriteria, repositoryDefinition), is(equalTo(false)));
 		assertThat(SearchFactory.isSearchCompatible(httpData, wrong, repositoryDefinition), is(equalTo(false)));
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("ablaha", "value");
 		httpData.getHttpInfo().setRequestMethod("");
 		httpData.setAttributes(map);
@@ -202,7 +201,7 @@ public class SearchFactoryTest {
 		assertThat(SearchFactory.isSearchCompatible(httpData, wrong, repositoryDefinition), is(equalTo(false)));
 
 		httpData.setHeaders(Collections.<String, String> emptyMap());
-		Map<String, String[]> map1 = new HashMap<String, String[]>();
+		Map<String, String[]> map1 = new HashMap<>();
 		map1.put("key", new String[] { "blah", "anotherValue" });
 		httpData.setParameters(map1);
 		searchCriteria.setCaseSensitive(false);
@@ -291,7 +290,7 @@ public class SearchFactoryTest {
 		ExceptionSensorData exceptionData = new ExceptionSensorData();
 		exceptionData.setMethodIdent(1L);
 		exceptionData.setCause("blah");
-		List<ExceptionSensorData> exceptionList = new ArrayList<ExceptionSensorData>();
+		List<ExceptionSensorData> exceptionList = new ArrayList<>();
 		exceptionList.add(exceptionData);
 		invocationData.setExceptionSensorDataObjects(exceptionList);
 		searchCriteria.setCaseSensitive(false);

@@ -16,9 +16,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This component can shutdown or restart the CMR.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class ShutdownService {
@@ -58,6 +58,7 @@ public class ShutdownService {
 	 */
 	private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new ThreadFactory() {
 
+		@Override
 		public Thread newThread(Runnable r) {
 			Thread t = new Thread(r);
 			t.setDaemon(true);
@@ -95,7 +96,7 @@ public class ShutdownService {
 	/**
 	 * Executes shutdown. If restart is true, there will be a shutdown hook added that will execute
 	 * the {@link #restartCommand} so that new CMR is launched.
-	 * 
+	 *
 	 * @param restart
 	 *            If new CMR should be launched.
 	 */
@@ -143,7 +144,7 @@ public class ShutdownService {
 
 	/**
 	 * Loads restart command from startup file.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If {@link IOException} occurs during reading.
 	 */

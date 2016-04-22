@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Job for loading of the profile from the CMR and opening the profile editor.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class OpenProfileJob extends Job {
 

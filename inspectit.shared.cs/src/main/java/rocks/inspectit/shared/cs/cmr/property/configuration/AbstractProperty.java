@@ -11,9 +11,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyV
 
 /**
  * Abstract property class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ SingleProperty.class, GroupedProperty.class })
@@ -39,7 +39,7 @@ public abstract class AbstractProperty {
 
 	/**
 	 * Constructor that sets all attributes.
-	 * 
+	 *
 	 * @param name
 	 *            Display name of the property. Can not be <code>null</code>.
 	 * @param description
@@ -57,7 +57,7 @@ public abstract class AbstractProperty {
 
 	/**
 	 * Returns if the property is advanced, thus should be available only to expert users.
-	 * 
+	 *
 	 * @return Returns <code>true</code> is property is considered as advanced, <code>false</code>
 	 *         otherwise.
 	 */
@@ -65,7 +65,7 @@ public abstract class AbstractProperty {
 
 	/**
 	 * Returns if the change of this property should trigger server restart.
-	 * 
+	 *
 	 * @return Returns <code>true</code> if changing of property should trigger server restart,
 	 *         <code>false</code> otherwise.
 	 */
@@ -74,7 +74,7 @@ public abstract class AbstractProperty {
 	/**
 	 * Executes the validation of the property and reports and validation break to the
 	 * {@link PropertyValidation}.
-	 * 
+	 *
 	 * @param propertyValidation
 	 *            {@link PropertyValidation} to report errors during validation.
 	 */
@@ -83,7 +83,7 @@ public abstract class AbstractProperty {
 	/**
 	 * Adds the value/key property pair(s) contained in this property to the given
 	 * {@link Properties} object.
-	 * 
+	 *
 	 * @param properties
 	 *            {@link Properties} to fill.
 	 */
@@ -91,7 +91,7 @@ public abstract class AbstractProperty {
 
 	/**
 	 * Returns {@link SingleProperty} for the given logical name if this property knows about it.
-	 * 
+	 *
 	 * @param propertyLogicalName
 	 *            Logical name to search for.
 	 * @return {@link SingleProperty} or <code>null</code> if the property does not know about
@@ -102,7 +102,7 @@ public abstract class AbstractProperty {
 	/**
 	 * Validate current property value(s) and report any validation problems via the
 	 * {@link PropertyValidation} that is returned.
-	 * 
+	 *
 	 * @return {@link PropertyValidation} containing validation errors if found.
 	 */
 	public PropertyValidation validate() {
@@ -113,7 +113,7 @@ public abstract class AbstractProperty {
 
 	/**
 	 * Gets {@link #name}.
-	 * 
+	 *
 	 * @return {@link #name}
 	 */
 	public String getName() {
@@ -122,7 +122,7 @@ public abstract class AbstractProperty {
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
 	public String getDescription() {

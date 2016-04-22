@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  * <p>
  * This class implements the {@link IAggregatedData} interface but does not provide the IDs of the
  * aggregated instances since they are not related to any data and are useless.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @Entity
 public class ThreadInformationData extends SystemSensorData implements IAggregatedData<ThreadInformationData> {
@@ -100,7 +100,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * The constructor which needs three parameters.
-	 * 
+	 *
 	 * @param timeStamp
 	 *            The Timestamp.
 	 * @param platformIdent
@@ -114,7 +114,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #count}.
-	 * 
+	 *
 	 * @return {@link #count}
 	 */
 	public int getCount() {
@@ -123,7 +123,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #count}.
-	 * 
+	 *
 	 * @param count
 	 *            New value for {@link #count}
 	 */
@@ -140,7 +140,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * increases the peak thread count by the given number.
-	 * 
+	 *
 	 * @param peakThreadCount
 	 *            the number to increase the peak thread count by.
 	 */
@@ -150,7 +150,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * increases the daemon thread count by the given number.
-	 * 
+	 *
 	 * @param daemonThreadCount
 	 *            the number to increase the daemon thread count.
 	 */
@@ -160,7 +160,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * adds the given number to the thread count.
-	 * 
+	 *
 	 * @param threadCount
 	 *            the number to increase the thread count.
 	 */
@@ -170,7 +170,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minDaemonThreadCount}.
-	 * 
+	 *
 	 * @return {@link #minDaemonThreadCount}
 	 */
 	public int getMinDaemonThreadCount() {
@@ -179,7 +179,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minDaemonThreadCount}.
-	 * 
+	 *
 	 * @param minDaemonThreadCount
 	 *            New value for {@link #minDaemonThreadCount}
 	 */
@@ -189,7 +189,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxDaemonThreadCount}.
-	 * 
+	 *
 	 * @return {@link #maxDaemonThreadCount}
 	 */
 	public int getMaxDaemonThreadCount() {
@@ -198,7 +198,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxDaemonThreadCount}.
-	 * 
+	 *
 	 * @param maxDaemonThreadCount
 	 *            New value for {@link #maxDaemonThreadCount}
 	 */
@@ -208,7 +208,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalDaemonThreadCount}.
-	 * 
+	 *
 	 * @return {@link #totalDaemonThreadCount}
 	 */
 	public int getTotalDaemonThreadCount() {
@@ -217,7 +217,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalDaemonThreadCount}.
-	 * 
+	 *
 	 * @param totalDaemonThreadCount
 	 *            New value for {@link #totalDaemonThreadCount}
 	 */
@@ -227,7 +227,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minPeakThreadCount}.
-	 * 
+	 *
 	 * @return {@link #minPeakThreadCount}
 	 */
 	public int getMinPeakThreadCount() {
@@ -236,7 +236,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minPeakThreadCount}.
-	 * 
+	 *
 	 * @param minPeakThreadCount
 	 *            New value for {@link #minPeakThreadCount}
 	 */
@@ -246,7 +246,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxPeakThreadCount}.
-	 * 
+	 *
 	 * @return {@link #maxPeakThreadCount}
 	 */
 	public int getMaxPeakThreadCount() {
@@ -255,7 +255,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxPeakThreadCount}.
-	 * 
+	 *
 	 * @param maxPeakThreadCount
 	 *            New value for {@link #maxPeakThreadCount}
 	 */
@@ -265,7 +265,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalPeakThreadCount}.
-	 * 
+	 *
 	 * @return {@link #totalPeakThreadCount}
 	 */
 	public int getTotalPeakThreadCount() {
@@ -274,7 +274,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalPeakThreadCount}.
-	 * 
+	 *
 	 * @param totalPeakThreadCount
 	 *            New value for {@link #totalPeakThreadCount}
 	 */
@@ -284,7 +284,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minThreadCount}.
-	 * 
+	 *
 	 * @return {@link #minThreadCount}
 	 */
 	public int getMinThreadCount() {
@@ -293,7 +293,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minThreadCount}.
-	 * 
+	 *
 	 * @param minThreadCount
 	 *            New value for {@link #minThreadCount}
 	 */
@@ -303,7 +303,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxThreadCount}.
-	 * 
+	 *
 	 * @return {@link #maxThreadCount}
 	 */
 	public int getMaxThreadCount() {
@@ -312,7 +312,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxThreadCount}.
-	 * 
+	 *
 	 * @param maxThreadCount
 	 *            New value for {@link #maxThreadCount}
 	 */
@@ -322,7 +322,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalThreadCount}.
-	 * 
+	 *
 	 * @return {@link #totalThreadCount}
 	 */
 	public int getTotalThreadCount() {
@@ -331,7 +331,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalThreadCount}.
-	 * 
+	 *
 	 * @param totalThreadCount
 	 *            New value for {@link #totalThreadCount}
 	 */
@@ -341,7 +341,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * increase the total number of started threads by the given value.
-	 * 
+	 *
 	 * @param totalStartedThreadCount
 	 *            the value to increase the total number of started threads.
 	 */
@@ -351,7 +351,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #minTotalStartedThreadCount}.
-	 * 
+	 *
 	 * @return {@link #minTotalStartedThreadCount}
 	 */
 	public long getMinTotalStartedThreadCount() {
@@ -360,7 +360,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #minTotalStartedThreadCount}.
-	 * 
+	 *
 	 * @param minTotalStartedThreadCount
 	 *            New value for {@link #minTotalStartedThreadCount}
 	 */
@@ -370,7 +370,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #maxTotalStartedThreadCount}.
-	 * 
+	 *
 	 * @return {@link #maxTotalStartedThreadCount}
 	 */
 	public long getMaxTotalStartedThreadCount() {
@@ -379,7 +379,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #maxTotalStartedThreadCount}.
-	 * 
+	 *
 	 * @param maxTotalStartedThreadCount
 	 *            New value for {@link #maxTotalStartedThreadCount}
 	 */
@@ -389,7 +389,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Gets {@link #totalTotalStartedThreadCount}.
-	 * 
+	 *
 	 * @return {@link #totalTotalStartedThreadCount}
 	 */
 	public long getTotalTotalStartedThreadCount() {
@@ -398,7 +398,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Sets {@link #totalTotalStartedThreadCount}.
-	 * 
+	 *
 	 * @param totalTotalStartedThreadCount
 	 *            New value for {@link #totalTotalStartedThreadCount}
 	 */
@@ -408,7 +408,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 
 	/**
 	 * Aggregates other class loading object info this object.
-	 * 
+	 *
 	 * @param other
 	 *            Object to aggregate data from.
 	 */
@@ -441,28 +441,30 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + count;
-		result = prime * result + maxDaemonThreadCount;
-		result = prime * result + maxPeakThreadCount;
-		result = prime * result + maxThreadCount;
-		result = prime * result + (int) (maxTotalStartedThreadCount ^ (maxTotalStartedThreadCount >>> 32));
-		result = prime * result + minDaemonThreadCount;
-		result = prime * result + minPeakThreadCount;
-		result = prime * result + minThreadCount;
-		result = prime * result + (int) (minTotalStartedThreadCount ^ (minTotalStartedThreadCount >>> 32));
-		result = prime * result + totalDaemonThreadCount;
-		result = prime * result + totalPeakThreadCount;
-		result = prime * result + totalThreadCount;
-		result = prime * result + (int) (totalTotalStartedThreadCount ^ (totalTotalStartedThreadCount >>> 32));
+		result = (prime * result) + count;
+		result = (prime * result) + maxDaemonThreadCount;
+		result = (prime * result) + maxPeakThreadCount;
+		result = (prime * result) + maxThreadCount;
+		result = (prime * result) + (int) (maxTotalStartedThreadCount ^ (maxTotalStartedThreadCount >>> 32));
+		result = (prime * result) + minDaemonThreadCount;
+		result = (prime * result) + minPeakThreadCount;
+		result = (prime * result) + minThreadCount;
+		result = (prime * result) + (int) (minTotalStartedThreadCount ^ (minTotalStartedThreadCount >>> 32));
+		result = (prime * result) + totalDaemonThreadCount;
+		result = (prime * result) + totalPeakThreadCount;
+		result = (prime * result) + totalThreadCount;
+		result = (prime * result) + (int) (totalTotalStartedThreadCount ^ (totalTotalStartedThreadCount >>> 32));
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -519,6 +521,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
 		size += objectSizes.getPrimitiveTypesSize(0, 0, 10, 0, 3, 0);

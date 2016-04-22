@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.wizard.UploadStorageWizard;
 
 /**
  * Handler for starting the {@link UploadStorageWizard} upon the correct selection.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class UploadStorageHandler extends AbstractHandler implements IHandler {
 

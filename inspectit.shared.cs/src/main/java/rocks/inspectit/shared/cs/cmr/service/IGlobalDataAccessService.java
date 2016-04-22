@@ -15,9 +15,9 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 /**
  * Interface used to define all methods which clients (be it graphical/textual) can access the
  * stored information on the CMR.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface IGlobalDataAccessService {
@@ -29,7 +29,7 @@ public interface IGlobalDataAccessService {
 	 * Note that this method will not return the {@link PlatformIdent} with the complete tree of
 	 * sensors and method idents, but only the general info about the Agent. If you need the
 	 * complete sensor/method tree, please use the {@link #getCompleteAgent(long)} method.
-	 * 
+	 *
 	 * @return All connected Agents with it's statues. Note that it is possible that the status of
 	 *         an agent is not available. Thus it is recommended to use the entry set of this map.
 	 */
@@ -39,7 +39,7 @@ public interface IGlobalDataAccessService {
 	 * Returns the platform ident with complete sensor/method tree.
 	 * <p>
 	 * IDs of available agents can be retrieved by executing {@link #getAgentsOverview()} method.
-	 * 
+	 *
 	 * @param id
 	 *            Id of wanted agent.
 	 * @return Agent with complete tree.
@@ -50,7 +50,7 @@ public interface IGlobalDataAccessService {
 
 	/**
 	 * Deletes the Agent completely.
-	 * 
+	 *
 	 * @param platformId
 	 *            Id of the Agent to be delete.
 	 * @throws BusinessException
@@ -62,7 +62,7 @@ public interface IGlobalDataAccessService {
 	/**
 	 * Returns the last saved data objects (with the given time interval). Returns a list of
 	 * {@link DefaultData} objects.
-	 * 
+	 *
 	 * @param template
 	 *            The template object used to identify which data should be loaded.
 	 * @param timeInterval
@@ -73,7 +73,7 @@ public interface IGlobalDataAccessService {
 
 	/**
 	 * Returns the last saved data object.
-	 * 
+	 *
 	 * @param template
 	 *            The template object used to identify which data should be loaded.
 	 * @return The last data object.
@@ -83,7 +83,7 @@ public interface IGlobalDataAccessService {
 	/**
 	 * Returns all last saved data objects since the {@link DefaultData#getId()} stored in the
 	 * template object.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object. The ID needs to be set.
 	 * @return List of data objects.
@@ -95,7 +95,7 @@ public interface IGlobalDataAccessService {
 	 * template object. The only difference to the {@link #getDataObjectsSinceId(DefaultData)} is
 	 * the fact that the method id is always ignored. Useful for sensor types like the SQL one where
 	 * you don't care about the method being sensored.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object. The ID needs to be set.
 	 * @return List of data objects.
@@ -104,7 +104,7 @@ public interface IGlobalDataAccessService {
 
 	/**
 	 * All data objects from the passed template in the given time range.
-	 * 
+	 *
 	 * @param template
 	 *            The template data object.
 	 * @param fromDate
@@ -117,7 +117,7 @@ public interface IGlobalDataAccessService {
 
 	/**
 	 * All data objects from the passed templates in the given time range.
-	 * 
+	 *
 	 * @param templates
 	 *            The templates objects. Return list will include all found data that matches the
 	 *            templates.

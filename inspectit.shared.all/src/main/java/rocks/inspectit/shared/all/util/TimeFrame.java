@@ -5,9 +5,9 @@ import java.util.Date;
 
 /**
  * Class defining the timeframe.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class TimeFrame implements Comparable<TimeFrame> {
 
@@ -29,7 +29,7 @@ public class TimeFrame implements Comparable<TimeFrame> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param from
 	 *            Date representing start of the time frame.
 	 * @param to
@@ -43,7 +43,7 @@ public class TimeFrame implements Comparable<TimeFrame> {
 
 	/**
 	 * Gets {@link #from}.
-	 * 
+	 *
 	 * @return {@link #from}
 	 */
 	public Date getFrom() {
@@ -52,7 +52,7 @@ public class TimeFrame implements Comparable<TimeFrame> {
 
 	/**
 	 * Sets {@link #from}.
-	 * 
+	 *
 	 * @param from
 	 *            New value for {@link #from}
 	 */
@@ -62,7 +62,7 @@ public class TimeFrame implements Comparable<TimeFrame> {
 
 	/**
 	 * Gets {@link #to}.
-	 * 
+	 *
 	 * @return {@link #to}
 	 */
 	public Date getTo() {
@@ -71,7 +71,7 @@ public class TimeFrame implements Comparable<TimeFrame> {
 
 	/**
 	 * Sets {@link #to}.
-	 * 
+	 *
 	 * @param to
 	 *            New value for {@link #to}
 	 */
@@ -86,8 +86,8 @@ public class TimeFrame implements Comparable<TimeFrame> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((from == null) ? 0 : from.hashCode());
-		result = prime * result + ((to == null) ? 0 : to.hashCode());
+		result = (prime * result) + ((from == null) ? 0 : from.hashCode());
+		result = (prime * result) + ((to == null) ? 0 : to.hashCode());
 		return result;
 	}
 

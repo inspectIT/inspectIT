@@ -14,9 +14,9 @@ import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
 /**
  * This is an abstract class that holds general calculations and object sizes that are equal in both
  * 32-bit and 64-bit VM. Architecture specific calculations need to be done in implementing classes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractObjectSizes implements IObjectSizes {
 
@@ -54,9 +54,10 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Returns the size of reference in bytes.
-	 * 
+	 *
 	 * @return Size of reference.
 	 */
+	@Override
 	public abstract long getReferenceSize();
 
 	/**
@@ -74,6 +75,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOf(String str) {
 		if (null == str) {
 			return 0;
@@ -89,7 +91,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	 */
 	@Override
 	public long getSizeOf(String... strings) {
-		Set<Integer> identityHashCodeSet = new HashSet<Integer>();
+		Set<Integer> identityHashCodeSet = new HashSet<>();
 		long size = 0L;
 		for (String str : strings) {
 			if (null == str) {
@@ -105,6 +107,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOf(Timestamp timestamp) {
 		if (null == timestamp) {
 			return 0;
@@ -124,6 +127,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOf(List<?> arrayList) {
 		return this.getSizeOf(arrayList, ARRAY_LIST_INITIAL_CAPACITY);
 	}
@@ -131,6 +135,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOf(List<?> arrayList, int initialCapacity) {
 		if (null == arrayList) {
 			return 0;
@@ -145,7 +150,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	 * Returns the capacity of the array list from its size. Note that this calculation will be
 	 * correct only if the array list in initialized with default capacity of
 	 * {@value #ARRAY_LIST_INITIAL_CAPACITY}.
-	 * 
+	 *
 	 * @param size
 	 *            Array List size.
 	 * @param initialCapacity
@@ -160,7 +165,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 		}
 
 		while (initialCapacity < size) {
-			if (initialCapacity == 0 || initialCapacity == 1) {
+			if ((initialCapacity == 0) || (initialCapacity == 1)) {
 				initialCapacity = initialCapacity + 1;
 			} else {
 				initialCapacity = initialCapacity + (initialCapacity >> 1);
@@ -172,6 +177,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOfCustomWeakReference() {
 		long size = this.getSizeOfObjectHeader();
 		size += this.getPrimitiveTypesSize(4, 0, 0, 0, 1, 0);
@@ -181,6 +187,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOfHashSet(int hashSetSize) {
 		return this.getSizeOfHashSet(hashSetSize, MAP_INITIAL_CAPACITY);
 	}
@@ -188,6 +195,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOfHashSet(int hashSetSize, int initialCapacity) {
 		long size = this.getSizeOfObjectHeader();
 		size += this.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
@@ -204,6 +212,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOfHashMap(int hashMapSize) {
 		return this.getSizeOfHashMap(hashMapSize, MAP_INITIAL_CAPACITY);
 	}
@@ -211,6 +220,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOfHashMap(int hashMapSize, int initialCapacity) {
 		long size = this.getSizeOfObjectHeader();
 		size += this.getPrimitiveTypesSize(4, 0, 4, 1, 0, 0);
@@ -233,9 +243,10 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Returns size of HashMap's inner Key or Entry set classes.
-	 * 
+	 *
 	 * @return Returns size of HashMap's inner Key or Entry set classes.
 	 */
+	@Override
 	public long getSizeOfHashMapKeyEntrySet() {
 		// since these are inner classes, one reference to enclosing class is needed
 		long size = this.getSizeOfObjectHeader() + this.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
@@ -245,6 +256,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOfConcurrentHashMap(int mapSize, int concurrencyLevel) {
 		long size = this.getSizeOfObjectHeader();
 		size += this.getPrimitiveTypesSize(6, 0, 3, 0, 0, 0);
@@ -272,6 +284,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getSizeOfNonBlockingHashMapLong(int mapSize) {
 		long size = this.getSizeOfObjectHeader();
 		size += this.getPrimitiveTypesSize(5, 1, 0, 0, 1, 0);
@@ -289,7 +302,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Returns size of the CHM object used in the high scale lib NonBlockingHashMapLong.
-	 * 
+	 *
 	 * @param mapSize
 	 *            Size of map.
 	 * @return Size in bytes.
@@ -316,7 +329,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Returns size of the Counter object used in the high scale lib NonBlockingHashMapLong.
-	 * 
+	 *
 	 * @return Size in bytes.
 	 */
 	private long getSizeOfHighScaleLibCounter() {
@@ -329,7 +342,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Returns size of the CAT object used in the high scale lib Counter.
-	 * 
+	 *
 	 * @return Size in bytes.
 	 */
 	private long getSizeOfHighScaleLibCAT() {
@@ -343,7 +356,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Returns number of segments in the concurrent hash map.
-	 * 
+	 *
 	 * @param mapSize
 	 *            Size of map
 	 * @param concurrencyLevel
@@ -358,12 +371,13 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long alignTo8Bytes(long size) {
 		long d = size % 8;
 		if (d == 0) {
 			return size;
 		} else {
-			return size + 8 - d;
+			return (size + 8) - d;
 		}
 	}
 
@@ -423,20 +437,22 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getPrimitiveTypesSize(int referenceCount, int booleanCount, int intCount, int floatCount, int longCount, int doubleCount) {
 		// note that the size of the booleans must be aligned to the int size
 		// thus 1 boolean is in 4 bytes, but are also 2, 3 and 4 booleans in an object packed to int
 		long booleanSize = 0;
 		if (booleanCount > 0) {
-			booleanSize = booleanCount * BOOLEAN_SIZE + INT_SIZE - (booleanCount * BOOLEAN_SIZE) % INT_SIZE;
+			booleanSize = ((booleanCount * BOOLEAN_SIZE) + INT_SIZE) - ((booleanCount * BOOLEAN_SIZE) % INT_SIZE);
 		}
 
-		return booleanSize + referenceCount * getReferenceSize() + intCount * INT_SIZE + floatCount * FLOAT_SIZE + longCount * LONG_SIZE + doubleCount * DOUBLE_SIZE;
+		return booleanSize + (referenceCount * getReferenceSize()) + (intCount * INT_SIZE) + (floatCount * FLOAT_SIZE) + (longCount * LONG_SIZE) + (doubleCount * DOUBLE_SIZE);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float getObjectSecurityExpansionRate() {
 		return objectSecurityExpansionRate;
 	}
@@ -444,6 +460,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setObjectSecurityExpansionRate(float objectSecurityExpansionRate) {
 		this.objectSecurityExpansionRate = objectSecurityExpansionRate;
 	}
@@ -451,11 +468,12 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * Calculates the size of the array with out objects in the array - <b> Can only be used on
 	 * non-primitive arrays </b>.
-	 * 
+	 *
 	 * @param arraySize
 	 *            Size of array (length).
 	 * @return Size in bytes.
 	 */
+	@Override
 	public long getSizeOfArray(int arraySize) {
 		long size = this.getSizeOfObjectHeader();
 		size += this.getPrimitiveTypesSize(arraySize, 0, 1, 0, 0, 0);
@@ -464,13 +482,14 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Calculates the size of the primitive array with the primitives in the array.
-	 * 
+	 *
 	 * @param arraySize
 	 *            Size of array (length).
 	 * @param primitiveSize
 	 *            Size in bytes of the primitive type in array
 	 * @return Size in bytes.
 	 */
+	@Override
 	public long getSizeOfPrimitiveArray(int arraySize, long primitiveSize) {
 		long size = this.getSizeOfObjectHeader() + INT_SIZE;
 		if (ALLIGN_CLASS_CALCULATION) {
@@ -482,10 +501,10 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Calculates the size of the {@link ConcurrentHashMap} segment.
-	 * 
+	 *
 	 * @param seqmentCapacity
 	 *            Capacity that segment has.
-	 * 
+	 *
 	 * @return Size in bytes.
 	 */
 	protected long getSizeOfConcurrentSeqment(int seqmentCapacity) {
@@ -505,7 +524,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	 * Returns the size of a HashMap entry. Not that the key and value objects are not in this size.
 	 * If HashSet is used the HashMapEntry value object will be a simple Object, thus this size has
 	 * to be added to the HashSet.
-	 * 
+	 *
 	 * @return Returns the size of a HashMap entry. Not that the key and value objects are not in
 	 *         this size. If HashSet is used the HashMapEntry value object will be a simple Object,
 	 *         thus this size has to be added to the HashSet.
@@ -519,7 +538,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	/**
 	 * Returns the capacity of the HashMap from it size. The calculations take the default capacity
 	 * of 16 and default load factor of 0.75.
-	 * 
+	 *
 	 * @param hashMapSize
 	 *            Size of hash map.
 	 * @param initialCapacity
@@ -549,7 +568,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 
 	/**
 	 * Returns the concurrent hash map segment capacity from its size and initial capacity.
-	 * 
+	 *
 	 * @param seqmentSize
 	 *            Number of elements in the segment.
 	 * @param initialCapacity
@@ -560,7 +579,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 		int capacity = initialCapacity;
 		float loadFactor = 0.75f;
 		int threshold = (int) (capacity * loadFactor);
-		while (threshold + 1 <= seqmentSize) {
+		while ((threshold + 1) <= seqmentSize) {
 			capacity *= 2;
 			threshold = (int) (capacity * loadFactor);
 		}

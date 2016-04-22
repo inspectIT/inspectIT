@@ -11,15 +11,15 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * Interface for details generator.
  * <p>
  * Each generator generates one composite.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IDetailsGenerator {
 
 	/**
 	 * Specifies if generator can generate composite for given {@link DefaultData} object.
-	 * 
+	 *
 	 * @param defaultData
 	 *            {@link DefaultData}.
 	 * @return Return <code>true</code> if generator can generate the details for the
@@ -29,7 +29,7 @@ public interface IDetailsGenerator {
 
 	/**
 	 * Creates details composite on the given parent composite for the {@link DefaultData} object.
-	 * 
+	 *
 	 * @param defaultData
 	 *            {@link DefaultData}
 	 * @param repositoryDefinition

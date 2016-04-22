@@ -7,9 +7,9 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * The class provide different methods for color manipulation.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public final class ColorFormatter {
 
@@ -21,7 +21,7 @@ public final class ColorFormatter {
 
 	/**
 	 * Creates the color that is between two supplied color descriptors in linear gradient.
-	 * 
+	 *
 	 * @param rgb1
 	 *            {@link RGB} descriptor for first (starting) color.
 	 * @param rgb2
@@ -36,10 +36,10 @@ public final class ColorFormatter {
 	 * @return {@link Color}
 	 */
 	public static Color getLinearGradientColor(RGB rgb1, RGB rgb2, double ratio, ResourceManager resourceManager) {
-		Assert.isTrue(ratio >= 0 && ratio <= 1, "Ratio for linear gradient must me between 0 and 1 (including).");
-		int red = (int) (rgb2.red * ratio + rgb1.red * (1 - ratio));
-		int green = (int) (rgb2.green * ratio + rgb1.green * (1 - ratio));
-		int blue = (int) (rgb2.blue * ratio + rgb1.blue * (1 - ratio));
+		Assert.isTrue((ratio >= 0) && (ratio <= 1), "Ratio for linear gradient must me between 0 and 1 (including).");
+		int red = (int) ((rgb2.red * ratio) + (rgb1.red * (1 - ratio)));
+		int green = (int) ((rgb2.green * ratio) + (rgb1.green * (1 - ratio)));
+		int blue = (int) ((rgb2.blue * ratio) + (rgb1.blue * (1 - ratio)));
 		RGB newRgb = new RGB(red, green, blue);
 		return resourceManager.createColor(newRgb);
 	}
@@ -52,7 +52,7 @@ public final class ColorFormatter {
 	 * value, and in this case always the good color is returned. It is irrelevant if the good value
 	 * is higher or smaller that bad value, but it is important that they are not the same
 	 * (exception will be thrown in that case).
-	 * 
+	 *
 	 * @param goodRgb
 	 *            {@link RGB} that defines a color that should be returned if performance is good.
 	 * @param avgRgb

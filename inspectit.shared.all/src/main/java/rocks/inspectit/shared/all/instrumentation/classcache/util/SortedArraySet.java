@@ -316,7 +316,7 @@ public class SortedArraySet<E> extends AbstractCollection<E> implements Updateab
 	 * @return long as a result.
 	 */
 	protected long pack(int upper, int lower) {
-		return ((long) upper) << 32 | lower;
+		return (((long) upper) << 32) | lower;
 	}
 
 	/**
@@ -352,7 +352,7 @@ public class SortedArraySet<E> extends AbstractCollection<E> implements Updateab
 	 * @return Element or <code>null</code> if index is out of bound.
 	 */
 	protected E getAt(int index) {
-		if (index >= 0 && index < array.length) {
+		if ((index >= 0) && (index < array.length)) {
 			return array[index];
 		}
 		return null;

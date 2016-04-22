@@ -7,9 +7,9 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 
 /**
  * Abstract class for all {@link IBufferStrategy} for correct initialization with Spring.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  */
 public abstract class AbstractBufferStrategy<E> implements InitializingBean, IBufferStrategy<E> {

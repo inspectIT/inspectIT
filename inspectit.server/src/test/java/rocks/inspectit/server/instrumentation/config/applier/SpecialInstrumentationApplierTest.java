@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -72,8 +72,8 @@ public class SpecialInstrumentationApplierTest extends TestBase {
 		// filters to true by default
 		when(filterProvider.getClassSensorAssignmentFilter()).thenReturn(classFilter);
 		when(filterProvider.getMethodSensorAssignmentFilter()).thenReturn(methodFilter);
-		when(methodFilter.matches(Mockito.<MethodSensorAssignment> any(), Mockito.<MethodType> any())).thenReturn(true);
-		when(classFilter.matches(Mockito.<AbstractClassSensorAssignment<?>> any(), Mockito.<ClassType> any(), Mockito.eq(false))).thenReturn(true);
+		when(methodFilter.matches(Matchers.<MethodSensorAssignment> any(), Matchers.<MethodType> any())).thenReturn(true);
+		when(classFilter.matches(Matchers.<AbstractClassSensorAssignment<?>> any(), Matchers.<ClassType> any(), Matchers.eq(false))).thenReturn(true);
 
 		// class to return one method
 		when(classType.getMethods()).thenReturn(Collections.singleton(methodType));

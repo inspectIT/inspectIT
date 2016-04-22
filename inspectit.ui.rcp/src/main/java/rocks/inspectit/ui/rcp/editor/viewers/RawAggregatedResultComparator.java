@@ -8,9 +8,9 @@ import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 
 /**
  * Extension of {@link ResultComparator} to solve problems with raw/aggregated comparison on the UI.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type that can be sorted with this comparator.
  */
@@ -27,7 +27,7 @@ public abstract class RawAggregatedResultComparator<T extends DefaultData> exten
 	private boolean compareInAggregatedMode;
 
 	/**
-	 * 
+	 *
 	 * @param comparator
 	 *            Delegating comparator.
 	 * @param cachedDataService
@@ -42,7 +42,7 @@ public abstract class RawAggregatedResultComparator<T extends DefaultData> exten
 	}
 
 	/**
-	 * 
+	 *
 	 * @param comparator
 	 *            Delegating comparator.
 	 * @param cachedDataService
@@ -63,7 +63,7 @@ public abstract class RawAggregatedResultComparator<T extends DefaultData> exten
 	/**
 	 * Returns if the raw mode for the table where comparing should be done is on. Sub-classes
 	 * should provide implementations for this.
-	 * 
+	 *
 	 * @return Returns if the raw mode is on.
 	 */
 	protected abstract boolean isRawMode();
@@ -73,6 +73,7 @@ public abstract class RawAggregatedResultComparator<T extends DefaultData> exten
 	 * <p>
 	 * Will only compare if the conditions are met.
 	 */
+	@Override
 	public int compare(T o1, T o2) {
 		if ((compareInRawMode && isRawMode()) || (compareInAggregatedMode && !isRawMode())) {
 			return super.compare(o1, o2);

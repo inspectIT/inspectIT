@@ -38,9 +38,9 @@ import rocks.inspectit.ui.rcp.wizard.page.SelectExistingStorageWizardPage;
 
 /**
  * Wizard for starting a recording.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StartRecordingWizard extends Wizard implements INewWizard {
 
@@ -106,7 +106,7 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 	/**
 	 * This constructor will extract the {@link CmrRepositoryDefinition} out of
 	 * {@link IStorageDataProvider}.
-	 * 
+	 *
 	 * @param storageDataProvider
 	 *            {@link IStorageDataProvider}.
 	 */
@@ -117,7 +117,7 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 
 	/**
 	 * This constructor gets the selected {@link CmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            Selected {@link CmrRepositoryDefinition}.
 	 */
@@ -128,7 +128,7 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 	/**
 	 * The constructor sets the CMR and provides option to define the collection of agents that will
 	 * be automatically selected in the {@link SelectExistingStorageWizardPage}.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            Selected {@link CmrRepositoryDefinition}.
 	 * @param autoSelectedAgents
@@ -161,8 +161,8 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 		addPage(selectStorageWizardPage);
 		selectAgentsWizardPage = new SelectAgentsWizardPage("Select Agent(s) that should participate in recording", autoSelectedAgents);
 		addPage(selectAgentsWizardPage);
-		defineDataPage = new DefineDataProcessorsWizardPage(DefineDataProcessorsWizardPage.BUFFER_DATA | DefineDataProcessorsWizardPage.SYSTEM_DATA
-				| DefineDataProcessorsWizardPage.EXTRACT_INVOCATIONS);
+		defineDataPage = new DefineDataProcessorsWizardPage(
+				DefineDataProcessorsWizardPage.BUFFER_DATA | DefineDataProcessorsWizardPage.SYSTEM_DATA | DefineDataProcessorsWizardPage.EXTRACT_INVOCATIONS);
 		addPage(defineDataPage);
 		timelineWizardPage = new DefineTimelineWizardPage("Limit Recording", "Optionally select how long recording should last", DefineTimelineWizardPage.FUTURE | DefineTimelineWizardPage.BOTH_DATES);
 		addPage(timelineWizardPage);
@@ -191,9 +191,9 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 
 		List<AbstractDataProcessor> recordingProcessors = defineDataPage.getProcessorList();
 		if (!selectAgentsWizardPage.isAllAgents()) {
-			Set<Long> agentsIds = new HashSet<Long>(selectAgentsWizardPage.getSelectedAgents());
+			Set<Long> agentsIds = new HashSet<>(selectAgentsWizardPage.getSelectedAgents());
 			AgentFilterDataProcessor agentFilterDataProcessor = new AgentFilterDataProcessor(recordingProcessors, agentsIds);
-			recordingProcessors = new ArrayList<AbstractDataProcessor>(1);
+			recordingProcessors = new ArrayList<>(1);
 			recordingProcessors.add(agentFilterDataProcessor);
 		}
 
@@ -205,11 +205,11 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 				Date recordStartDate = timelineWizardPage.getFromDate();
 				Date recordEndDate = timelineWizardPage.getToDate();
 				Date now = new Date();
-				if (null != recordStartDate && recordStartDate.after(now)) {
+				if ((null != recordStartDate) && recordStartDate.after(now)) {
 					recordingProperties.setStartDelay(recordStartDate.getTime() - now.getTime());
 				}
-				if (null != recordEndDate && recordEndDate.after(now)) {
-					if (null != recordStartDate && recordStartDate.before(recordEndDate)) {
+				if ((null != recordEndDate) && recordEndDate.after(now)) {
+					if ((null != recordStartDate) && recordStartDate.before(recordEndDate)) {
 						recordingProperties.setRecordDuration(recordEndDate.getTime() - recordStartDate.getTime());
 					} else {
 						recordingProperties.setRecordDuration(recordEndDate.getTime() - now.getTime());
@@ -301,7 +301,7 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Gets {@link #recordingProperties}.
-	 * 
+	 *
 	 * @return {@link #recordingProperties}
 	 */
 	public RecordingProperties getRecordingProperties() {

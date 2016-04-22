@@ -21,9 +21,9 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 
 /**
  * Dialog for editing name and description.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class EditNameDescriptionDialog extends TitleAreaDialog {
 
@@ -84,7 +84,7 @@ public class EditNameDescriptionDialog extends TitleAreaDialog {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Parent shell.
 	 * @param oldName
@@ -100,7 +100,7 @@ public class EditNameDescriptionDialog extends TitleAreaDialog {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Parent shell.
 	 * @param oldName
@@ -227,7 +227,7 @@ public class EditNameDescriptionDialog extends TitleAreaDialog {
 
 	/**
 	 * Is input in textual boxes valid.
-	 * 
+	 *
 	 * @return Is input in textual boxes valid.
 	 */
 	private boolean isInputValid() {

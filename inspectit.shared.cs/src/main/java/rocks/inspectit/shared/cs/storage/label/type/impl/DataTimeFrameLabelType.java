@@ -8,9 +8,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Label type to define the data time-frame in storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 @DiscriminatorValue("TFLT")

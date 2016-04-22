@@ -7,10 +7,10 @@ import java.util.LinkedList;
  * a stack. Extending {@link ThreadLocal} and using the {@link #initialValue()} method helps to keep
  * the variable private to the actual {@link Thread}. A {@link LinkedList} is used because it can be
  * easily used as a FIFO stack.
- * 
+ *
  * @param <E>
  *            elements of the linked list.
- * 
+ *
  * @author Patrice Bouillet
  */
 public class ThreadLocalStack<E> extends ThreadLocal<LinkedList<E>> {
@@ -18,13 +18,14 @@ public class ThreadLocalStack<E> extends ThreadLocal<LinkedList<E>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public LinkedList<E> initialValue() { // NOPMD
 		return new LinkedList<E>();
 	}
 
 	/**
 	 * Pushes the specified value onto the stack.
-	 * 
+	 *
 	 * @param value
 	 *            the value to push onto the stack.
 	 */
@@ -34,7 +35,7 @@ public class ThreadLocalStack<E> extends ThreadLocal<LinkedList<E>> {
 
 	/**
 	 * Returns the last pushed value.
-	 * 
+	 *
 	 * @return The last pushed value.
 	 */
 	public E pop() {
@@ -43,7 +44,7 @@ public class ThreadLocalStack<E> extends ThreadLocal<LinkedList<E>> {
 
 	/**
 	 * Returns the last pushed value without removing it.
-	 * 
+	 *
 	 * @return The last pushed value.
 	 */
 	public E getLast() {
@@ -52,7 +53,7 @@ public class ThreadLocalStack<E> extends ThreadLocal<LinkedList<E>> {
 
 	/**
 	 * Returns the first value pushed onto the stack.
-	 * 
+	 *
 	 * @return The first value pushed onto the stack.
 	 */
 	public E getAndRemoveFirst() {

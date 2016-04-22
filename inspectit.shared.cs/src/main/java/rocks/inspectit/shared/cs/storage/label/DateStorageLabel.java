@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Label that has a {@link Date} as a value.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 public class DateStorageLabel extends AbstractStorageLabel<Date> {
@@ -36,7 +36,7 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param dateValue
 	 *            Label value.
 	 * @param storageLabelType
@@ -60,7 +60,7 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 	 */
 	@Override
 	public void setValue(Date value) {
-		dateValue = (Date) value;
+		dateValue = value;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 
 	/**
 	 * Gets {@link #dateValue}.
-	 * 
+	 *
 	 * @return {@link #dateValue}
 	 */
 	public Date getDateValue() {
@@ -82,7 +82,7 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 
 	/**
 	 * Sets {@link #dateValue}.
-	 * 
+	 *
 	 * @param dateValue
 	 *            New value for {@link #dateValue}
 	 */
@@ -97,7 +97,7 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((dateValue == null) ? 0 : dateValue.hashCode());
+		result = (prime * result) + ((dateValue == null) ? 0 : dateValue.hashCode());
 		return result;
 	}
 
@@ -129,6 +129,7 @@ public class DateStorageLabel extends AbstractStorageLabel<Date> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(AbstractStorageLabel<?> other) {
 		int typeCompare = storageLabelType.compareTo(other.getStorageLabelType());
 		if (0 != typeCompare) {

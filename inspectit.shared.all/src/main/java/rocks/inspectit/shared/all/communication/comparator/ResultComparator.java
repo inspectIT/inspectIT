@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
  * Result comparator implements the {@link Comparator} interface and serves to keep track on sorting
  * type (ascending/descending) and to provide {@link CachedDataService} to the delegating
  * comparator.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type that can be sorted with this comparator.
  */
@@ -40,7 +40,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Constructor that sets only delegating constructor.
-	 * 
+	 *
 	 * @param comparator
 	 *            Delegating comparator.
 	 */
@@ -50,7 +50,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Constructor that sets only comparator and ascending.
-	 * 
+	 *
 	 * @param comparator
 	 *            Delegating comparator.
 	 * @param ascending
@@ -62,7 +62,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Secondary constructor. Initializes the {@link #ascending} with <code>true</code>.
-	 * 
+	 *
 	 * @param comparator
 	 *            Delegating comparator.
 	 * @param cachedDataService
@@ -74,14 +74,14 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Construct that allows everything to be set.
-	 * 
+	 *
 	 * @param comparator
 	 *            Delegating comparator.
 	 * @param cachedDataService
 	 *            {@link CachedDataService}.
 	 * @param ascending
 	 *            True if ascending sorting is on, false if descending sorting is on.
-	 * 
+	 *
 	 */
 	public ResultComparator(IDataComparator<? super T> comparator, ICachedDataService cachedDataService, boolean ascending) {
 		this.comparator = comparator;
@@ -94,7 +94,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 	 */
 	public int compare(T o1, T o2) {
 		int res = comparator.compare(o1, o2, cachedDataService);
-		if (!ascending && res != 0) {
+		if (!ascending && (res != 0)) {
 			return res * -1;
 		} else {
 			return res;
@@ -103,7 +103,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Gets {@link #cachedDataService}.
-	 * 
+	 *
 	 * @return {@link #cachedDataService}
 	 */
 	public ICachedDataService getCachedDataService() {
@@ -112,7 +112,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Sets {@link #cachedDataService}.
-	 * 
+	 *
 	 * @param cachedDataService
 	 *            New value for {@link #cachedDataService}
 	 */
@@ -122,7 +122,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Gets {@link #comparator}.
-	 * 
+	 *
 	 * @return {@link #comparator}
 	 */
 	public IDataComparator<? super T> getComparator() {
@@ -131,7 +131,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Sets {@link #comparator}.
-	 * 
+	 *
 	 * @param comparator
 	 *            New value for {@link #comparator}
 	 */
@@ -141,7 +141,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Gets {@link #ascending}.
-	 * 
+	 *
 	 * @return {@link #ascending}
 	 */
 	public boolean isAscending() {
@@ -150,7 +150,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 
 	/**
 	 * Sets {@link #ascending}.
-	 * 
+	 *
 	 * @param ascending
 	 *            New value for {@link #ascending}
 	 */

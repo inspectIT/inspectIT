@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * Utility class for handling currently a proper equals comparison of objects.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public final class ObjectUtils {
 
@@ -24,7 +24,7 @@ public final class ObjectUtils {
 	 * This method is actually calling the
 	 * {@link org.apache.commons.lang.ObjectUtils#equals(Object, Object)} method.
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * ObjectUtils.equals(null, null) = true
 	 * ObjectUtils.equals(null, "") = false
@@ -35,7 +35,7 @@ public final class ObjectUtils {
 	 * ObjectUtils.equals(Boolean.TRUE, Boolean.TRUE) = true
 	 * ObjectUtils.equals(Boolean.TRUE, Boolean.FALSE) = false
 	 * </pre>
-	 * 
+	 *
 	 * @param object1
 	 *            the first object, may be <code>null</code>
 	 * @param object2
@@ -48,11 +48,11 @@ public final class ObjectUtils {
 
 	/**
 	 * Null safe compare. Returns following results:
-	 * 
+	 *
 	 * ObjectUtils.equals(Comparable, Object) = Comparable.compareTo(object)
 	 * ObjectUtils.equals(null, Object) = -1 ObjectUtils.equals(Comparable, null) = 1
 	 * ObjectUtils.equals(null, null) = 0
-	 * 
+	 *
 	 * @param <T>
 	 *            Type of comparing objects.
 	 * @param object1
@@ -64,7 +64,7 @@ public final class ObjectUtils {
 	 * @see Comparable#compareTo(Object)
 	 */
 	public static <T> int compare(Comparable<T> object1, T object2) {
-		if (null != object1 && null != object2) {
+		if ((null != object1) && (null != object2)) {
 			return object1.compareTo(object2);
 		} else if (null != object1) {
 			return 1;
@@ -89,7 +89,7 @@ public final class ObjectUtils {
 	 * {"a"} vs <code>null</code> - negative<br>
 	 * <code>null</code> vs {} - positive<br>
 	 * <code>null</code> vs <code>null</code> - 0<br>
-	 * 
+	 *
 	 * @param list1
 	 *            First list of strings.
 	 * @param list2
@@ -99,11 +99,11 @@ public final class ObjectUtils {
 	 * @see Comparator#compare(Object, Object)
 	 */
 	public static int compare(List<String> list1, List<String> list2) {
-		if (null != list1 && null != list2) {
+		if ((null != list1) && (null != list2)) {
 			int i = 0;
 			int listSize1 = list1.size();
 			int listSize2 = list2.size();
-			while (i < listSize1 && i < listSize2) {
+			while ((i < listSize1) && (i < listSize2)) {
 				int result = ObjectUtils.compare(list1.get(i), list2.get(i));
 				if (0 != result) {
 					return result;

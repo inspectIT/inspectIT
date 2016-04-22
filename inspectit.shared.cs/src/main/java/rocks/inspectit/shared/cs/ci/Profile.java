@@ -1,6 +1,5 @@
 package rocks.inspectit.shared.cs.ci;
 
-import java.util.Collections;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,7 +8,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
 
 /**
@@ -276,16 +274,16 @@ public class Profile {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (active ? 1231 : 1237);
-		result = prime * result + (commonProfile ? 1231 : 1237);
-		result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
-		result = prime * result + (defaultProfile ? 1231 : 1237);
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((profileData == null) ? 0 : profileData.hashCode());
-		result = prime * result + revision;
-		result = prime * result + ((updatedDate == null) ? 0 : updatedDate.hashCode());
+		result = (prime * result) + (active ? 1231 : 1237);
+		result = (prime * result) + (commonProfile ? 1231 : 1237);
+		result = (prime * result) + ((createdDate == null) ? 0 : createdDate.hashCode());
+		result = (prime * result) + (defaultProfile ? 1231 : 1237);
+		result = (prime * result) + ((description == null) ? 0 : description.hashCode());
+		result = (prime * result) + ((id == null) ? 0 : id.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + ((profileData == null) ? 0 : profileData.hashCode());
+		result = (prime * result) + revision;
+		result = (prime * result) + ((updatedDate == null) ? 0 : updatedDate.hashCode());
 		return result;
 	}
 

@@ -7,9 +7,9 @@ import javax.persistence.PersistenceContext;
 
 /**
  * Abstract JPA DAO class that can execute simple operations on an entity class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <T>
  *            Type of entities to load.
  */
@@ -36,10 +36,10 @@ public abstract class AbstractJpaDao<T> {
 
 	/**
 	 * Find entity by id.
-	 * 
+	 *
 	 * @param id
 	 *            Not <code>null</code> id value
-	 * 
+	 *
 	 * @return Loaded entity or <code>null</code>
 	 */
 	public T load(Long id) {
@@ -48,7 +48,7 @@ public abstract class AbstractJpaDao<T> {
 
 	/**
 	 * Creates new entity.
-	 * 
+	 *
 	 * @param object
 	 *            Object to persist.
 	 */
@@ -58,18 +58,18 @@ public abstract class AbstractJpaDao<T> {
 
 	/**
 	 * Updates an entity object.
-	 * 
+	 *
 	 * @param object
 	 *            Object to update.
 	 * @return Updated object.
 	 */
 	public T update(T object) {
-		return (T) getEntityManager().merge(object);
+		return getEntityManager().merge(object);
 	}
 
 	/**
 	 * Deletes an object by executing {@link #entityManager} remove method.
-	 * 
+	 *
 	 * @param object
 	 *            Object to delete.
 	 */
@@ -79,7 +79,7 @@ public abstract class AbstractJpaDao<T> {
 
 	/**
 	 * Deletes collection of objects.
-	 * 
+	 *
 	 * @param objects
 	 *            Objects to remove.
 	 */
@@ -91,7 +91,7 @@ public abstract class AbstractJpaDao<T> {
 
 	/**
 	 * Gets {@link #entityManager}.
-	 * 
+	 *
 	 * @return {@link #entityManager}
 	 */
 	protected EntityManager getEntityManager() {

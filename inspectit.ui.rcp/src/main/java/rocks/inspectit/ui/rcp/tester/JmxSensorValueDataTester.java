@@ -6,7 +6,7 @@ import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
 /**
  * Tester for charting possibilities of {@link JmxSensorValueData}.
- * 
+ *
  * @author Marius Oehler
  *
  */

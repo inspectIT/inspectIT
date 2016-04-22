@@ -137,7 +137,7 @@ public class ClassCacheModification {
 							// we know that it can happen that annotations are used as interfaces,
 							// thus we will only removed if it's not that kind of change as this one
 							// will be handled by the mergeAnnotationAsInterface() method
-							if (!(given instanceof AnnotationType && inStructureRaw instanceof InterfaceType)) {
+							if (!((given instanceof AnnotationType) && (inStructureRaw instanceof InterfaceType))) {
 								removeDueToTypeChange(inStructureRaw, events);
 								inStructureRaw = null; // NOPMD
 							}
@@ -176,7 +176,7 @@ public class ClassCacheModification {
 			// RESOLVE the references of the type
 			resolveReferences(givenType, events);
 		} else {
-			if (givenType instanceof AnnotationType && inputType instanceof InterfaceType) {
+			if ((givenType instanceof AnnotationType) && (inputType instanceof InterfaceType)) {
 
 				// special case, when annotation is used as interface must be handled in different
 				// way

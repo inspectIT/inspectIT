@@ -17,7 +17,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Field;
@@ -34,18 +33,12 @@ import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IObjectStorage;
+import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
-import rocks.inspectit.agent.java.sensor.method.timer.AggregateTimerStorage;
-import rocks.inspectit.agent.java.sensor.method.timer.ITimerStorage;
-import rocks.inspectit.agent.java.sensor.method.timer.OptimizedTimerStorage;
-import rocks.inspectit.agent.java.sensor.method.timer.PlainTimerStorage;
-import rocks.inspectit.agent.java.sensor.method.timer.TimerHook;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO;
-import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO.TimerRawContainer;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 
 @SuppressWarnings("PMD")

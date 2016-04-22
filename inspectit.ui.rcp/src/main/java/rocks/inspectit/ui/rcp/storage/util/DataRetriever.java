@@ -63,9 +63,9 @@ import rocks.inspectit.ui.rcp.storage.http.TransferDataMonitor;
 
 /**
  * Class responsible for retrieving the data via HTTP, and de-serializing the data into objects.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DataRetriever {
 
@@ -87,7 +87,7 @@ public class DataRetriever {
 	/**
 	 * Queue for {@link ISerializer} that are available.
 	 */
-	private BlockingQueue<ISerializer> serializerQueue = new LinkedBlockingQueue<ISerializer>();
+	private BlockingQueue<ISerializer> serializerQueue = new LinkedBlockingQueue<>();
 
 	/**
 	 * Stream provider needed for local data reading.
@@ -96,7 +96,7 @@ public class DataRetriever {
 
 	/**
 	 * Initializes the retriever.
-	 * 
+	 *
 	 * @throws Exception
 	 *             If exception occurs.
 	 */
@@ -117,7 +117,7 @@ public class DataRetriever {
 	 * provided descriptors. If some of the descriptors are pointing to the wrong files or files
 	 * positions, it can happen that this influences the rest of the descriptor that point to the
 	 * same file. Thus, a special care needs to be taken that the data in descriptors is correct.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of the objects are wanted.
 	 * @param cmrRepositoryDefinition
@@ -135,10 +135,10 @@ public class DataRetriever {
 	 *             If {@link IOException} occurs.
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends DefaultData> List<E> getDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, IStorageData storageData, List<IStorageDescriptor> descriptors) throws IOException,
-			SerializationException {
+	public <E extends DefaultData> List<E> getDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, IStorageData storageData, List<IStorageDescriptor> descriptors)
+			throws IOException, SerializationException {
 		Map<Integer, List<IStorageDescriptor>> separateFilesGroup = createFilesGroup(descriptors);
-		List<E> receivedData = new ArrayList<E>();
+		List<E> receivedData = new ArrayList<>();
 		String serverUri = getServerUri(cmrRepositoryDefinition);
 
 		HttpClient httpClient = new DefaultHttpClient();
@@ -151,8 +151,8 @@ public class DataRetriever {
 				if (null == rangeDescriptor) {
 					rangeDescriptor = new RangeDescriptor(descriptor);
 				} else {
-					if (rangeDescriptor.getEnd() + 1 == descriptor.getPosition()) {
-						rangeDescriptor.setEnd(descriptor.getPosition() + descriptor.getSize() - 1);
+					if ((rangeDescriptor.getEnd() + 1) == descriptor.getPosition()) {
+						rangeDescriptor.setEnd((descriptor.getPosition() + descriptor.getSize()) - 1);
 					} else {
 						rangeHeader.append(rangeDescriptor.toString());
 						rangeHeader.append(',');
@@ -222,7 +222,7 @@ public class DataRetriever {
 	 * provided descriptors. If some of the descriptors are pointing to the wrong files or files
 	 * positions, it can happen that this influences the rest of the descriptor that point to the
 	 * same file. Thus, a special care needs to be taken that the data in descriptors is correct.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of the objects are wanted.
 	 * @param localStorageData
@@ -240,7 +240,7 @@ public class DataRetriever {
 	@SuppressWarnings("unchecked")
 	public <E extends DefaultData> List<E> getDataLocally(LocalStorageData localStorageData, List<IStorageDescriptor> descriptors) throws IOException, SerializationException {
 		Map<Integer, List<IStorageDescriptor>> separateFilesGroup = createFilesGroup(descriptors);
-		List<IStorageDescriptor> optimizedDescriptors = new ArrayList<IStorageDescriptor>();
+		List<IStorageDescriptor> optimizedDescriptors = new ArrayList<>();
 		for (Map.Entry<Integer, List<IStorageDescriptor>> entry : separateFilesGroup.entrySet()) {
 			StorageDescriptor storageDescriptor = null;
 			for (IStorageDescriptor descriptor : entry.getValue()) {
@@ -258,7 +258,7 @@ public class DataRetriever {
 			optimizedDescriptors.add(storageDescriptor);
 		}
 
-		List<E> receivedData = new ArrayList<E>(descriptors.size());
+		List<E> receivedData = new ArrayList<>(descriptors.size());
 
 		ISerializer serializer = null;
 		try {
@@ -289,7 +289,7 @@ public class DataRetriever {
 	/**
 	 * Returns cached data for the storage from the CMR if the cached data exists for given hash. If
 	 * data does not exist <code>null</code> is returned.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of the objects are wanted.
 	 * @param cmrRepositoryDefinition
@@ -308,8 +308,8 @@ public class DataRetriever {
 	 *             If {@link IOException} occurs.
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends DefaultData> List<E> getCachedDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, int hash) throws BusinessException, IOException,
-			SerializationException {
+	public <E extends DefaultData> List<E> getCachedDataViaHttp(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, int hash)
+			throws BusinessException, IOException, SerializationException {
 		String cachedFileLocation = cmrRepositoryDefinition.getStorageService().getCachedStorageDataFileLocation(storageData, hash);
 		if (null == cachedFileLocation) {
 			return null;
@@ -347,10 +347,10 @@ public class DataRetriever {
 	/**
 	 * Returns cached data for the given hash locally. This method can be used when storage if fully
 	 * downloaded.
-	 * 
+	 *
 	 * @param <E>
 	 *            Type of the objects are wanted.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            {@link LocalStorageData} that points to the wanted storage.
 	 * @param hash
@@ -394,7 +394,7 @@ public class DataRetriever {
 	 * Downloads and saves locally wanted files associated with given {@link StorageData}. Files
 	 * will be saved in passed directory. The caller can specify the type of the files to download
 	 * by passing the proper {@link StorageFileType}s to the method.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param storageData
@@ -452,7 +452,7 @@ public class DataRetriever {
 	 * Downloads and saves locally wanted files associated with given {@link StorageData}. Files
 	 * will be saved in passed directory. The caller can specify the type of the files to download
 	 * by passing the proper {@link StorageFileType}s to the method.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param storageData
@@ -497,7 +497,7 @@ public class DataRetriever {
 	/**
 	 * Returns the map of the existing files for the given storage. The value in the map is file
 	 * size. Only wanted file types will be included in the map.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @param storageData
@@ -509,7 +509,7 @@ public class DataRetriever {
 	 *             If {@link BusinessException} occurs during service invocation.
 	 */
 	private Map<String, Long> getFilesFromCmr(CmrRepositoryDefinition cmrRepositoryDefinition, StorageData storageData, StorageFileType... fileTypes) throws BusinessException {
-		Map<String, Long> allFiles = new HashMap<String, Long>();
+		Map<String, Long> allFiles = new HashMap<>();
 
 		// agent files
 		if (ArrayUtils.contains(fileTypes, StorageFileType.AGENT_FILE)) {
@@ -541,7 +541,7 @@ public class DataRetriever {
 	/**
 	 * Down-loads and saves the file from a {@link CmrRepositoryDefinition}. Files will be saved in
 	 * the directory that is denoted as the given Path object. Original file names will be used.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            Repository.
 	 * @param files
@@ -600,7 +600,7 @@ public class DataRetriever {
 
 	/**
 	 * Returns the URI of the server in format 'http://ip:port'.
-	 * 
+	 *
 	 * @param repositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @return URI as string.
@@ -613,19 +613,19 @@ public class DataRetriever {
 	 * Creates the pairs that have a channel ID as a key, and list of descriptors as value. All the
 	 * descriptors in the list are associated with the channel, thus all the data described in the
 	 * descriptors can be retrieved with a single HTTP/local request.
-	 * 
+	 *
 	 * @param descriptors
 	 *            Un-grouped descriptors.
-	 * 
+	 *
 	 * @return Map of channel IDs with its descriptors.
 	 */
 	private Map<Integer, List<IStorageDescriptor>> createFilesGroup(List<IStorageDescriptor> descriptors) {
-		Map<Integer, List<IStorageDescriptor>> filesMap = new HashMap<Integer, List<IStorageDescriptor>>();
+		Map<Integer, List<IStorageDescriptor>> filesMap = new HashMap<>();
 		for (IStorageDescriptor storageDescriptor : descriptors) {
 			Integer channelId = Integer.valueOf(storageDescriptor.getChannelId());
 			List<IStorageDescriptor> oneFileList = filesMap.get(channelId);
 			if (null == oneFileList) {
-				oneFileList = new ArrayList<IStorageDescriptor>();
+				oneFileList = new ArrayList<>();
 				filesMap.put(channelId, oneFileList);
 			}
 			oneFileList.add(storageDescriptor);
@@ -648,7 +648,7 @@ public class DataRetriever {
 
 	/**
 	 * Sets {@link #storageManager}.
-	 * 
+	 *
 	 * @param storageManager
 	 *            New value for {@link #storageManager}
 	 */
@@ -657,7 +657,7 @@ public class DataRetriever {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 *            {@link HttpEntity}
 	 * @return True if the GZip encoding is active.
@@ -666,8 +666,8 @@ public class DataRetriever {
 		Header ceHeader = entity.getContentEncoding();
 		if (ceHeader != null) {
 			HeaderElement[] codecs = ceHeader.getElements();
-			for (int i = 0; i < codecs.length; i++) {
-				if (codecs[i].getName().equalsIgnoreCase("gzip")) {
+			for (HeaderElement codec : codecs) {
+				if (codec.getName().equalsIgnoreCase("gzip")) {
 					return true;
 				}
 			}
@@ -677,7 +677,7 @@ public class DataRetriever {
 
 	/**
 	 * Sets {@link #serializerCount}.
-	 * 
+	 *
 	 * @param serializerCount
 	 *            New value for {@link #serializerCount}
 	 */
@@ -687,7 +687,7 @@ public class DataRetriever {
 
 	/**
 	 * Sets {@link #serializationManagerProvider}.
-	 * 
+	 *
 	 * @param serializationManagerProvider
 	 *            New value for {@link #serializationManagerProvider}
 	 */
@@ -697,7 +697,7 @@ public class DataRetriever {
 
 	/**
 	 * Sets {@link #streamProvider}.
-	 * 
+	 *
 	 * @param streamProvider
 	 *            New value for {@link #streamProvider}
 	 */
@@ -711,16 +711,16 @@ public class DataRetriever {
 	 * <p>
 	 * <b>IMPORTANT:</b> The class code is copied/taken/based from <a href=
 	 * "https://svn.apache.org/repos/asf/httpcomponents/httpcore/branches/4.0.x/contrib/src/main/java/org/apache/http/contrib/compress/GzipDecompressingEntity.java"
-	 * >Http Core's GzipDecompressingEntity</a>. License info can be found <a
-	 * href="http://www.apache.org/licenses/LICENSE-2.0">here</a>.
-	 * 
-	 * 
+	 * >Http Core's GzipDecompressingEntity</a>. License info can be found
+	 * <a href="http://www.apache.org/licenses/LICENSE-2.0">here</a>.
+	 *
+	 *
 	 */
 	private static class GzipDecompressingEntity extends HttpEntityWrapper {
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param entity
 		 *            Entity that has the response in the GZip format.
 		 */
@@ -731,6 +731,7 @@ public class DataRetriever {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public InputStream getContent() throws IOException {
 			// the wrapped entity's getContent() decides about repeatability
 			InputStream wrappedin = wrappedEntity.getContent();
@@ -750,9 +751,9 @@ public class DataRetriever {
 
 	/**
 	 * Response interceptor that alters the response entity if the encoding is gzip.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class GzipHttpResponseInterceptor implements HttpResponseInterceptor {
 
@@ -770,15 +771,15 @@ public class DataRetriever {
 
 	/**
 	 * Simple interface to enable multiple operations after file download.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private interface PostDownloadRunnable {
 
 		/**
 		 * Process the input stream. If stream is not closed, it will be after exiting this method.
-		 * 
+		 *
 		 * @param content
 		 *            {@link InputStream} that represents content of downloaded file.
 		 * @param fileName

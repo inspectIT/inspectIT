@@ -15,9 +15,9 @@ import rocks.inspectit.shared.cs.storage.StorageData;
 
 /**
  * Abstract class for all storage label types.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <V>
  *            Type of value label is holding.
  */
@@ -46,7 +46,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 
 	/**
 	 * Define if type of the label can only exists one in a {@link StorageData}.
-	 * 
+	 *
 	 * @return True if only one type of the label is allowed per {@link StorageData}.
 	 */
 	public abstract boolean isOnePerStorage();
@@ -54,7 +54,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 	/**
 	 * Defines if the values that can be assigned with this label type are reusable. In other words
 	 * the labels values that are not reusable will not be saved in the CMR label manager.
-	 * 
+	 *
 	 * @return If the values of the label are reusable.
 	 */
 	public abstract boolean isValueReusable();
@@ -63,7 +63,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 	 * Defines if the many instances of the implementing classes can created and saved to the DB. In
 	 * other words if class in not "MultiType" than only one object of that class will be saved to
 	 * the CMR database.
-	 * 
+	 *
 	 * @return Returns if the many instances of the implementing classes can created and saved to
 	 *         the DB.
 	 */
@@ -71,7 +71,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 
 	/**
 	 * Returns the value class.
-	 * 
+	 *
 	 * @return Returns the value class.
 	 */
 	public abstract Class<V> getValueClass();
@@ -79,7 +79,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 	/**
 	 * If the value of the label type can be edited by the user. Returns <code>true</code> by
 	 * default, sub-classes may override.
-	 * 
+	 *
 	 * @return If the value of the label type can be edited by the user.
 	 */
 	public boolean isEditable() {
@@ -89,7 +89,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 	/**
 	 * If the labels of this type can be grouped. Returns <code>true</code> by default, sub-classes
 	 * may override.
-	 * 
+	 *
 	 * @return If the labels of this type can be grouped.
 	 */
 	public boolean isGroupingEnabled() {
@@ -98,7 +98,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public int getId() {
@@ -107,7 +107,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -118,6 +118,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(AbstractStorageLabelType<?> other) {
 		return this.getClass().getName().compareTo(other.getClass().getName());
 	}
@@ -129,7 +130,7 @@ public abstract class AbstractStorageLabelType<V> implements Serializable, Compa
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + this.getClass().hashCode();
+		result = (prime * result) + this.getClass().hashCode();
 		return result;
 	}
 

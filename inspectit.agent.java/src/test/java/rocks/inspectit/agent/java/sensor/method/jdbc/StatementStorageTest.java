@@ -15,11 +15,10 @@ import java.util.List;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.AbstractLogSupport;
-import rocks.inspectit.agent.java.sensor.method.jdbc.StatementStorage;
 
 /**
  * @author Stefan Siegl
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class StatementStorageTest extends AbstractLogSupport {

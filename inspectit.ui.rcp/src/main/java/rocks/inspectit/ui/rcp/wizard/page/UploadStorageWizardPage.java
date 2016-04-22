@@ -32,9 +32,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Page for selecting CMR to upload storage to.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class UploadStorageWizardPage extends WizardPage {
 
@@ -80,7 +80,7 @@ public class UploadStorageWizardPage extends WizardPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            Local data to upload. Must not be null.
 	 */
@@ -88,7 +88,7 @@ public class UploadStorageWizardPage extends WizardPage {
 		super("Upload Storage");
 		Assert.isNotNull(localStorageData);
 		this.localStorageData = localStorageData;
-		this.cmrRepositories = new ArrayList<CmrRepositoryDefinition>();
+		this.cmrRepositories = new ArrayList<>();
 		this.cmrRepositories.addAll(InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions());
 		this.setTitle("Upload Storage");
 		this.setMessage(DEFAULT_MESSAGE);
@@ -119,10 +119,10 @@ public class UploadStorageWizardPage extends WizardPage {
 			public void handleEvent(Event event) {
 				boolean isPageComplete = isPageComplete();
 				setPageComplete(isPageComplete);
-				if (event.widget.equals(cmrRepositoryCombo) && cmrRepositoryCombo.getSelectionIndex() == -1) {
+				if (event.widget.equals(cmrRepositoryCombo) && (cmrRepositoryCombo.getSelectionIndex() == -1)) {
 					setMessage("Repository must be selected", IMessageProvider.ERROR);
 					return;
-				} else if (event.widget.equals(cmrRepositoryCombo) && getCmrRepositoryDefinition().getOnlineStatus() == OnlineStatus.OFFLINE) {
+				} else if (event.widget.equals(cmrRepositoryCombo) && (getCmrRepositoryDefinition().getOnlineStatus() == OnlineStatus.OFFLINE)) {
 					setMessage("The selected repository is currently unavailable", IMessageProvider.ERROR);
 				} else if (alreadyAvailable) {
 					setMessage("The selected storage to upload is already available on the selected repository", IMessageProvider.ERROR);

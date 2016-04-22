@@ -1,7 +1,7 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import java.sql.Timestamp;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +109,7 @@ public class ThreadInformation extends AbstractPlatformSensor implements IPlatfo
 		if (threadData == null) {
 			try {
 				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(GregorianCalendar.getInstance().getTimeInMillis());
+				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
 				threadData = new ThreadInformationData(timestamp, platformId, sensorTypeIdent);
 				threadData.incrementCount();

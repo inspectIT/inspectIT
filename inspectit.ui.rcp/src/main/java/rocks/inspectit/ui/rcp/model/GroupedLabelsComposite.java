@@ -4,9 +4,9 @@ import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
 
 /**
  * Composite for storage leafs when grouping by labels is used.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class GroupedLabelsComposite extends Composite implements Comparable<GroupedLabelsComposite> {
 
@@ -23,7 +23,7 @@ public class GroupedLabelsComposite extends Composite implements Comparable<Grou
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param label
 	 *            Example label to represent the group or <code>null</code> if this group can not be
 	 *            represent by label.
@@ -35,7 +35,7 @@ public class GroupedLabelsComposite extends Composite implements Comparable<Grou
 
 	/**
 	 * Gets {@link #exampleLabel}.
-	 * 
+	 *
 	 * @return {@link #exampleLabel}
 	 */
 	public AbstractStorageLabel<?> getLabel() {
@@ -44,7 +44,7 @@ public class GroupedLabelsComposite extends Composite implements Comparable<Grou
 
 	/**
 	 * Sets {@link #exampleLabel}.
-	 * 
+	 *
 	 * @param label
 	 *            New value for {@link #exampleLabel}
 	 */
@@ -57,7 +57,7 @@ public class GroupedLabelsComposite extends Composite implements Comparable<Grou
 	 */
 	@Override
 	public int compareTo(GroupedLabelsComposite other) {
-		if (null != exampleLabel && null != other.exampleLabel) {
+		if ((null != exampleLabel) && (null != other.exampleLabel)) {
 			return exampleLabel.compareTo(other.exampleLabel);
 		} else if (null == exampleLabel) {
 			return 1;

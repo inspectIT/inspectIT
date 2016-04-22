@@ -170,7 +170,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	 * Checks whether the type is completely initialized.
 	 */
 	protected final void checkInitialized() {
-		if (!getHashes().isEmpty() && 0 != modifiers) {
+		if (!getHashes().isEmpty() && (0 != modifiers)) {
 			initialized = true;
 		}
 	}
@@ -304,7 +304,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fqn == null) ? 0 : fqn.hashCode());
+		result = (prime * result) + ((fqn == null) ? 0 : fqn.hashCode());
 		return result;
 	}
 

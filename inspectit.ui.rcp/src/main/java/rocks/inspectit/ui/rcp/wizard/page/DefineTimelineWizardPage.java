@@ -32,9 +32,9 @@ import rocks.inspectit.shared.cs.storage.processor.impl.TimeFrameDataProcessor;
 /**
  * Wizard page where user can limit the time frame for the storage write/record. The time frame can
  * be in past or future, depending on the {@link #timeStyle} value.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DefineTimelineWizardPage extends WizardPage {
 
@@ -56,7 +56,7 @@ public class DefineTimelineWizardPage extends WizardPage {
 	/**
 	 * Map of the time characters associated to the multiplier of a second.
 	 */
-	private static final Map<Character, Integer> PERIOD_MULTIPLIERS_MAP = new HashMap<Character, Integer>(4);
+	private static final Map<Character, Integer> PERIOD_MULTIPLIERS_MAP = new HashMap<>(4);
 
 	static {
 		PERIOD_MULTIPLIERS_MAP.put('m', 1);
@@ -67,7 +67,7 @@ public class DefineTimelineWizardPage extends WizardPage {
 
 	/**
 	 * Time style. The style is defining if the page will display the future selection or past time.
-	 * 
+	 *
 	 * @see DefineTimelineWizardPage#FUTURE
 	 * @see DefineTimelineWizardPage#PAST
 	 */
@@ -111,7 +111,7 @@ public class DefineTimelineWizardPage extends WizardPage {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param pageName
 	 *            Page name.
 	 * @param defaultMessage
@@ -231,14 +231,14 @@ public class DefineTimelineWizardPage extends WizardPage {
 
 	/**
 	 * Returns the properly initialized {@link TimeFrameDataProcessor}.
-	 * 
+	 *
 	 * @param chainedProcessors
 	 *            Processors that need to be chained to {@link TimeFrameDataProcessor}.
 	 * @return {@link TimeFrameDataProcessor}
 	 * @see {AbstractChainedDataProcessor}
 	 */
 	public TimeFrameDataProcessor getTimeFrameDataProcessor(Collection<AbstractDataProcessor> chainedProcessors) {
-		List<AbstractDataProcessor> normalProcessors = new ArrayList<AbstractDataProcessor>(chainedProcessors);
+		List<AbstractDataProcessor> normalProcessors = new ArrayList<>(chainedProcessors);
 		Date fromDate = getFromDate();
 		Date toDate = getToDate();
 		TimeFrameDataProcessor timeFrameDataProcessor = new TimeFrameDataProcessor(fromDate, toDate, normalProcessors);
@@ -289,7 +289,7 @@ public class DefineTimelineWizardPage extends WizardPage {
 
 	/**
 	 * Enables or disables composite and all its children.
-	 * 
+	 *
 	 * @param composite
 	 *            Composite to enable.
 	 * @param enabled
@@ -309,10 +309,10 @@ public class DefineTimelineWizardPage extends WizardPage {
 	 * Updates the widgets on the page based on the selection.
 	 */
 	private void updatePage() {
-		if (null != cdtComposite && !cdtComposite.isDisposed()) {
+		if ((null != cdtComposite) && !cdtComposite.isDisposed()) {
 			cdtComposite.dispose();
 		}
-		if (null != periodComposite && !periodComposite.isDisposed()) {
+		if ((null != periodComposite) && !periodComposite.isDisposed()) {
 			periodComposite.dispose();
 		}
 
@@ -347,7 +347,7 @@ public class DefineTimelineWizardPage extends WizardPage {
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(Calendar.SECOND, 0);
 			calendar.set(Calendar.MILLISECOND, 0);
-			if ((timeStyle & FUTURE) != 0 && (timeStyle & BOTH_DATES) == 0) {
+			if (((timeStyle & FUTURE) != 0) && ((timeStyle & BOTH_DATES) == 0)) {
 				cdtPrimary.setPattern("'Till\t\t' EEEE, MMMM d YYYY '@' h:mm a");
 				calendar.add(Calendar.HOUR, 1);
 			} else {

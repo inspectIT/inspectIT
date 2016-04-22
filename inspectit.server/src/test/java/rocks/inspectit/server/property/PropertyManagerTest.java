@@ -30,6 +30,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.collections.MapUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -90,8 +91,8 @@ public class PropertyManagerTest {
 	 */
 	@Test
 	public void propertyInDefaultConfiguration() throws JAXBException, IOException, SAXException {
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
 		when(configuration.validate()).thenReturn(Collections.<AbstractProperty, PropertyValidation> emptyMap());
 
 		SingleProperty<?> property = mock(SingleProperty.class);
@@ -104,7 +105,7 @@ public class PropertyManagerTest {
 				return null;
 			}
 		};
-		doAnswer(answer).when(property).register(Mockito.<Properties> anyObject());
+		doAnswer(answer).when(property).register(Matchers.<Properties> anyObject());
 		when(configuration.getAllProperties()).thenReturn(Collections.<AbstractProperty> singleton(property));
 
 		Properties properties = propertyManager.getProperties();
@@ -119,8 +120,8 @@ public class PropertyManagerTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void propertyNotValidInDefaultConfiguration() throws JAXBException, IOException, SAXException {
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
 
 		SingleProperty<?> property = mock(SingleProperty.class);
 		PropertyValidation propertyValidation = mock(PropertyValidation.class, Mockito.RETURNS_SMART_NULLS);
@@ -128,7 +129,7 @@ public class PropertyManagerTest {
 		when(configuration.validate()).thenReturn(MapUtils.putAll(new HashMap<AbstractProperty, PropertyValidation>(), new Object[][] { { property, propertyValidation } }));
 
 		Properties properties = propertyManager.getProperties();
-		verify(property, times(0)).register(Mockito.<Properties> anyObject());
+		verify(property, times(0)).register(Matchers.<Properties> anyObject());
 		assertThat(properties.size(), is(0));
 	}
 
@@ -145,8 +146,8 @@ public class PropertyManagerTest {
 		section.addProperty(property);
 		configuration.addSection(section);
 
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(configurationUpdate).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
 
 		AbstractPropertyUpdate<String> propertyUpdate = mock(AbstractPropertyUpdate.class);
 		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
@@ -170,8 +171,8 @@ public class PropertyManagerTest {
 		section.addProperty(property);
 		configuration.addSection(section);
 
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(configurationUpdate).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
 
 		AbstractPropertyUpdate<String> propertyUpdate = mock(AbstractPropertyUpdate.class);
 		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
@@ -190,8 +191,8 @@ public class PropertyManagerTest {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(expectedExceptions = { Exception.class })
 	public void noUpdateIfCanNotUpdateProperty() throws Exception {
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
 
 		ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
 		AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
@@ -200,7 +201,7 @@ public class PropertyManagerTest {
 
 		SingleProperty singleProperty = mock(SingleProperty.class);
 		when(singleProperty.canUpdate(propertyUpdate)).thenReturn(false);
-		when(configuration.forLogicalName(Mockito.<String> anyObject())).thenReturn(singleProperty);
+		when(configuration.forLogicalName(Matchers.<String> anyObject())).thenReturn(singleProperty);
 
 		propertyManager.loadConfigurationAndUpdates();
 		propertyManager.updateConfiguration(configurationUpdate, false);
@@ -213,9 +214,9 @@ public class PropertyManagerTest {
 	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = { Exception.class })
 	public void noUpdateIfPropertyNotFound() throws Exception {
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
-		when(configuration.forLogicalName(Mockito.<String> anyObject())).thenReturn(null);
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		when(configuration.forLogicalName(Matchers.<String> anyObject())).thenReturn(null);
 		ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
 		AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
 		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
@@ -237,9 +238,9 @@ public class PropertyManagerTest {
 		section.addProperty(property);
 		configuration.addSection(section);
 
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
-		doNothing().when(transformator).marshall(Mockito.<Path> anyObject(), any(), anyString());
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
 
 		ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
 		AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
@@ -258,7 +259,7 @@ public class PropertyManagerTest {
 		assertThat(list, hasItem(property));
 
 		// confirm configuration update write
-		verify(transformator, times(1)).marshall(Mockito.<Path> anyObject(), eq(configurationUpdate), anyString());
+		verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
 	}
 
 	/**
@@ -281,9 +282,9 @@ public class PropertyManagerTest {
 		propertyUpdates.add(propertyUpdate);
 		when(configurationUpdate.getPropertyUpdates()).thenReturn(propertyUpdates);
 
-		doReturn(configuration).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(Configuration.class));
-		doReturn(configurationUpdate).when(transformator).unmarshall(Mockito.<Path> anyObject(), Mockito.<Path> anyObject(), eq(ConfigurationUpdate.class));
-		doNothing().when(transformator).marshall(Mockito.<Path> anyObject(), any(), anyString());
+		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+		doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+		doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
 
 		ConfigurationUpdate configurationUpdateRuntime = mock(ConfigurationUpdate.class);
 		AbstractPropertyUpdate<Long> propertyUpdateRuntime = mock(AbstractPropertyUpdate.class);
@@ -304,6 +305,6 @@ public class PropertyManagerTest {
 
 		// confirm merging of configurations and write
 		verify(configurationUpdate, times(1)).merge(configurationUpdateRuntime, true);
-		verify(transformator, times(1)).marshall(Mockito.<Path> anyObject(), eq(configurationUpdate), anyString());
+		verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
 	}
 }

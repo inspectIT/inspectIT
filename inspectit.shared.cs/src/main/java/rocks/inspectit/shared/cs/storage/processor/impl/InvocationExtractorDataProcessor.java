@@ -15,9 +15,9 @@ import rocks.inspectit.shared.cs.storage.processor.AbstractExtractorDataProcesso
 /**
  * This is a special type of processor. It extract the children information from a
  * {@link InvocationSequenceData} and passes the data to any chained processor that it has.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class InvocationExtractorDataProcessor extends AbstractExtractorDataProcessor {
 
@@ -35,7 +35,7 @@ public class InvocationExtractorDataProcessor extends AbstractExtractorDataProce
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param chainedDataProcessors
 	 *            List of the processors that will have the children of invocation passed to.
 	 */
@@ -46,6 +46,7 @@ public class InvocationExtractorDataProcessor extends AbstractExtractorDataProce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Collection<Future<Void>> processData(DefaultData defaultData) {
 		if (defaultData instanceof InvocationSequenceData) {
 			InvocationSequenceData invocation = (InvocationSequenceData) defaultData;
@@ -57,13 +58,14 @@ public class InvocationExtractorDataProcessor extends AbstractExtractorDataProce
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
 		return defaultData instanceof InvocationSequenceData;
 	}
 
 	/**
 	 * Extract data from the invocation and return it to the storage writer to process it.
-	 * 
+	 *
 	 * @param invocation
 	 *            {@link InvocationSequenceData}
 	 */
@@ -75,14 +77,14 @@ public class InvocationExtractorDataProcessor extends AbstractExtractorDataProce
 			passToChainedProcessors(invocation.getSqlStatementData());
 		}
 		if (null != invocation.getExceptionSensorDataObjects()) {
-			for (ExceptionSensorData exceptionSensorData : (List<ExceptionSensorData>) invocation.getExceptionSensorDataObjects()) {
+			for (ExceptionSensorData exceptionSensorData : invocation.getExceptionSensorDataObjects()) {
 				if (exceptionSensorData.getExceptionEvent() == ExceptionEvent.CREATED) {
 					passToChainedProcessors(exceptionSensorData);
 				}
 			}
 		}
 
-		for (InvocationSequenceData child : (List<InvocationSequenceData>) invocation.getNestedSequences()) {
+		for (InvocationSequenceData child : invocation.getNestedSequences()) {
 			extractDataFromInvocation(child);
 		}
 	}

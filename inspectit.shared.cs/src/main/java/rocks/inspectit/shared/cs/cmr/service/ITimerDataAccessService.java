@@ -9,9 +9,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * Service for providing general timer data objects.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface ITimerDataAccessService {
@@ -19,7 +19,7 @@ public interface ITimerDataAccessService {
 	/**
 	 * Returns a list of the timer data for a given template. In this template, only the platform id
 	 * is extracted.
-	 * 
+	 *
 	 * @param timerData
 	 *            The template containing the platform id.
 	 * @return The list of the timer data object.
@@ -29,7 +29,7 @@ public interface ITimerDataAccessService {
 	/**
 	 * Returns a list of the timer data for a given template for a time frame. In this template,
 	 * only the platform id is extracted.
-	 * 
+	 *
 	 * @param timerData
 	 *            The template containing the platform id.
 	 * @param fromDate

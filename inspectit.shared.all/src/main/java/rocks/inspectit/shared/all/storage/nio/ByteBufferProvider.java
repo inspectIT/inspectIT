@@ -26,9 +26,9 @@ import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
  * <P>
  * This class does not have protection against not returning a buffer, thus all components using the
  * provider have to ensure they will return the buffer to the provider.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements InitializingBean {
@@ -120,7 +120,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	 * Note that if pool maximum is reached, the calling thread will wait for {@value #MAX_WAIT}
 	 * milliseconds for a buffer to become available. After this time if no buffer becomes available
 	 * {@link IOException} will thrown.
-	 * 
+	 *
 	 * @return {@link ByteBuffer}
 	 * @throws IOException
 	 *             If buffer can not be acquired.
@@ -137,7 +137,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * Gives back the {@link ByteBuffer} to the pool, so that others can use it.
-	 * 
+	 *
 	 * @param byteBuffer
 	 *            {@link ByteBuffer} to put back to the pool.
 	 */
@@ -159,7 +159,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * Gets {@link #createdCapacity}.
-	 * 
+	 *
 	 * @return {@link #createdCapacity}
 	 */
 	public long getCreatedCapacity() {
@@ -168,7 +168,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * Gets {@link #availableCapacity}.
-	 * 
+	 *
 	 * @return {@link #availableCapacity}
 	 */
 	public long getAvailableCapacity() {
@@ -177,7 +177,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * <i>This setter can be removed when the Spring3.0 on the GUI side is working properly.</i>
-	 * 
+	 *
 	 * @param poolMaxCapacity
 	 *            the poolMaxCapacity to set
 	 */
@@ -187,7 +187,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * Sets {@link #poolMinCapacity}.
-	 * 
+	 *
 	 * @param poolMinCapacity
 	 *            New value for {@link #poolMinCapacity}
 	 */
@@ -197,7 +197,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * Sets {@link #bufferPoolMinDirectMemoryOccupancy}.
-	 * 
+	 *
 	 * @param bufferPoolMinDirectMemoryOccupancy
 	 *            New value for {@link #bufferPoolMinDirectMemoryOccupancy}
 	 */
@@ -207,7 +207,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * Sets {@link #bufferPoolMaxDirectMemoryOccupancy}.
-	 * 
+	 *
 	 * @param bufferPoolMaxDirectMemoryOccupancy
 	 *            New value for {@link #bufferPoolMaxDirectMemoryOccupancy}
 	 */
@@ -217,7 +217,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 
 	/**
 	 * Sets {@link #bufferSize}.
-	 * 
+	 *
 	 * @param bufferSize
 	 *            New value for {@link #bufferSize}
 	 */
@@ -234,8 +234,8 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 					+ ") is greater than bufferPoolMaxDirectMemoryOccupancy (" + bufferPoolMinDirectMemoryOccupancy + ")");
 		}
 		if (poolMinCapacity > poolMaxCapacity) {
-			throw new BeanInitializationException("Settings for the byte buffer pool are not correct. poolMinCapacity (" + poolMinCapacity + ") is greater than poolMaxCapacity (" + poolMaxCapacity
-					+ ")");
+			throw new BeanInitializationException(
+					"Settings for the byte buffer pool are not correct. poolMinCapacity (" + poolMinCapacity + ") is greater than poolMaxCapacity (" + poolMaxCapacity + ")");
 		}
 
 		updatePoolProperties();

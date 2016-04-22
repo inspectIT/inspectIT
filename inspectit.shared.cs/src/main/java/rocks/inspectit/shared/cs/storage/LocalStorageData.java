@@ -9,9 +9,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 /**
  * Local storage data holds all information about a storage that will be saved on the client
  * machine.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class LocalStorageData extends AbstractStorageData {
 
@@ -28,7 +28,7 @@ public class LocalStorageData extends AbstractStorageData {
 	/**
 	 * List of labels. Read only.
 	 */
-	private List<AbstractStorageLabel<?>> labelList = new ArrayList<AbstractStorageLabel<?>>();
+	private List<AbstractStorageLabel<?>> labelList = new ArrayList<>();
 
 	/**
 	 * No-argument constructor.
@@ -38,7 +38,7 @@ public class LocalStorageData extends AbstractStorageData {
 
 	/**
 	 * Creates a {@link LocalStorageData} from a corresponding {@link StorageData}.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData}.
 	 */
@@ -48,7 +48,7 @@ public class LocalStorageData extends AbstractStorageData {
 
 	/**
 	 * Copies the local storage data information in this local storage instance.
-	 * 
+	 *
 	 * @param storageData
 	 *            {@link StorageData} to copy information from.
 	 */
@@ -79,16 +79,17 @@ public class LocalStorageData extends AbstractStorageData {
 
 	/**
 	 * Gets {@link #labelList}.
-	 * 
+	 *
 	 * @return {@link #labelList}
 	 */
+	@Override
 	public List<AbstractStorageLabel<?>> getLabelList() {
 		return labelList;
 	}
 
 	/**
 	 * Return all labels of these storage that are of a given type.
-	 * 
+	 *
 	 * @param <T>
 	 *            Type
 	 * @param labelType
@@ -97,7 +98,7 @@ public class LocalStorageData extends AbstractStorageData {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<AbstractStorageLabel<T>> getLabels(AbstractStorageLabelType<T> labelType) {
-		List<AbstractStorageLabel<T>> labels = new ArrayList<AbstractStorageLabel<T>>();
+		List<AbstractStorageLabel<T>> labels = new ArrayList<>();
 		for (AbstractStorageLabel<?> label : labelList) {
 			if (label.getStorageLabelType().equals(labelType)) {
 				labels.add((AbstractStorageLabel<T>) label);

@@ -18,9 +18,9 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  * The {@link CachedDataService} to be used on the UI. When refresh of idents is triggered, all
  * editors on the given {@link CmrRepositoryDefinition} are refreshed so that correct data is
  * displayed.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class RefreshEditorsCachedDataService extends CachedDataService {
 

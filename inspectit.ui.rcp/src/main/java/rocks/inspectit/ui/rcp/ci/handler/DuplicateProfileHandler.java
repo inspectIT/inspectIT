@@ -14,9 +14,9 @@ import rocks.inspectit.ui.rcp.provider.IProfileProvider;
 
 /**
  * Handler for the duplicate profile.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class DuplicateProfileHandler extends AbstractHandler implements IHandler {
 

@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.storage.http.TransferRateOutputStream;
 
 /**
  * Wrapping entity to support upload speed monitoring.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class UploadHttpEntityWrapper extends HttpEntityWrapper {
 
@@ -24,7 +24,7 @@ public class UploadHttpEntityWrapper extends HttpEntityWrapper {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param wrapped
 	 *            Entity to be wrapped.
 	 * @param transferDataMonitor
@@ -38,6 +38,7 @@ public class UploadHttpEntityWrapper extends HttpEntityWrapper {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void writeTo(OutputStream outstream) throws IOException {
 		OutputStream targetStream = new TransferRateOutputStream(outstream, transferDataMonitor);
 		super.writeTo(targetStream);

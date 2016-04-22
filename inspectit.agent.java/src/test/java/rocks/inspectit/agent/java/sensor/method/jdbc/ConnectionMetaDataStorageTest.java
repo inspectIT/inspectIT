@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage;
 import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaData;
 import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaDataExtractor;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;

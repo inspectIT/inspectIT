@@ -45,8 +45,8 @@ import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
@@ -54,9 +54,9 @@ import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class GroupedExceptionOverviewInputController extends AbstractTableInputController {
 
@@ -69,9 +69,9 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	 * The private inner enumeration used to define the used IDs which are mapped into the columns.
 	 * The order in this enumeration represents the order of the columns. If it is reordered,
 	 * nothing else has to be changed.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private static enum Column {
 		/** The class column. */
@@ -96,7 +96,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 
 		/**
 		 * Default constructor which creates a column enumeration object.
-		 * 
+		 *
 		 * @param name
 		 *            The name of the column.
 		 * @param width
@@ -115,13 +115,13 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 
 		/**
 		 * Converts an ordinal into a column.
-		 * 
+		 *
 		 * @param i
 		 *            The ordinal.
 		 * @return The appropriate column.
 		 */
 		public static Column fromOrd(int i) {
-			if (i < 0 || i >= Column.values().length) {
+			if ((i < 0) || (i >= Column.values().length)) {
 				throw new IndexOutOfBoundsException("Invalid ordinal");
 			}
 			return Column.values()[i];
@@ -147,7 +147,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * The list of {@link ExceptionSensorData} objects which is displayed.
 	 */
-	private List<AggregatedExceptionSensorData> exceptionSensorDataList = new ArrayList<AggregatedExceptionSensorData>();
+	private List<AggregatedExceptionSensorData> exceptionSensorDataList = new ArrayList<>();
 
 	/**
 	 * This map holds all objects that are needed to be represented in this view. It uses the fqn of
@@ -164,6 +164,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
 
@@ -183,6 +184,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createColumns(TableViewer tableViewer) {
 		for (Column column : Column.values()) {
 			TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -209,6 +211,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentProvider getContentProvider() {
 		return new GroupedExceptionOverviewContentProvider();
 	}
@@ -216,6 +219,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IBaseLabelProvider getLabelProvider() {
 		return new GroupedExceptionOverviewLabelProvider();
 	}
@@ -223,11 +227,12 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ViewerComparator getComparator() {
 		ICachedDataService cachedDataService = getInputDefinition().getRepositoryDefinition().getCachedDataService();
-		TableViewerComparator<AggregatedExceptionSensorData> exceptionOverviewViewerComparator = new TableViewerComparator<AggregatedExceptionSensorData>();
+		TableViewerComparator<AggregatedExceptionSensorData> exceptionOverviewViewerComparator = new TableViewerComparator<>();
 		for (Column column : Column.values()) {
-			ResultComparator<AggregatedExceptionSensorData> resultComparator = new ResultComparator<AggregatedExceptionSensorData>(column.dataComparator, cachedDataService);
+			ResultComparator<AggregatedExceptionSensorData> resultComparator = new ResultComparator<>(column.dataComparator, cachedDataService);
 			exceptionOverviewViewerComparator.addColumn(getMappedTableViewerColumn(column).getColumn(), resultComparator);
 		}
 
@@ -292,21 +297,21 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 
 		// if fromDate and toDate are set, then we retrieve only the data for
 		// this time interval
-		if (null != fromDate && null != toDate) {
+		if ((null != fromDate) && (null != toDate)) {
 			ungroupedList = dataAccessService.getDataForGroupedExceptionOverview(template, fromDate, toDate);
 		} else {
 			ungroupedList = dataAccessService.getDataForGroupedExceptionOverview(template);
 		}
 
-		List<AggregatedExceptionSensorData> groupedOverviewList = new ArrayList<AggregatedExceptionSensorData>();
-		overviewMap = new HashMap<String, List<AggregatedExceptionSensorData>>();
+		List<AggregatedExceptionSensorData> groupedOverviewList = new ArrayList<>();
+		overviewMap = new HashMap<>();
 
 		for (AggregatedExceptionSensorData ungroupedObject : ungroupedList) {
 			List<AggregatedExceptionSensorData> groupedObjects = Collections.EMPTY_LIST;
 			if (!overviewMap.containsKey(ungroupedObject.getThrowableType())) {
 				// map doesn't contain the actual exception class, so we create
 				// and add a new list for exception classes of the same type
-				groupedObjects = new ArrayList<AggregatedExceptionSensorData>();
+				groupedObjects = new ArrayList<>();
 				groupedObjects.add(ungroupedObject);
 				overviewMap.put(ungroupedObject.getThrowableType(), groupedObjects);
 			} else {
@@ -338,7 +343,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * Creates the {@link AggregatedExceptionSensorData} object for the table input from the list of
 	 * same type aggregated objects.
-	 * 
+	 *
 	 * @param throwableType
 	 *            Throwable type.
 	 * @param dataList
@@ -368,12 +373,14 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 		if (!selection.isEmpty()) {
 			try {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+					@Override
 					public void run(final IProgressMonitor monitor) {
 						monitor.beginTask("Retrieving Exception Messages", IProgressMonitor.UNKNOWN);
 						AggregatedExceptionSensorData data = (AggregatedExceptionSensorData) selection.getFirstElement();
-						final List<AggregatedExceptionSensorData> dataList = (List<AggregatedExceptionSensorData>) overviewMap.get(data.getThrowableType());
+						final List<AggregatedExceptionSensorData> dataList = overviewMap.get(data.getThrowableType());
 
 						Display.getDefault().asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 								IWorkbenchPage page = window.getActivePage();
@@ -394,9 +401,9 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 
 	/**
 	 * The label provider for this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private final class GroupedExceptionOverviewLabelProvider extends StyledCellIndexLabelProvider {
 
@@ -415,15 +422,16 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 
 	/**
 	 * The content provider for this view.
-	 * 
+	 *
 	 * @author Eduard Tudenhoefner
-	 * 
+	 *
 	 */
 	private static final class GroupedExceptionOverviewContentProvider implements IStructuredContentProvider {
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<AggregatedExceptionSensorData> exceptionSensorData = (List<AggregatedExceptionSensorData>) inputElement;
@@ -433,12 +441,14 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -446,7 +456,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 
 	/**
 	 * Returns the styled text for a specific column.
-	 * 
+	 *
 	 * @param data
 	 *            The data object to extract the information from.
 	 * @param enumId
@@ -478,6 +488,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getReadableString(Object object) {
 		if (object instanceof AggregatedExceptionSensorData) {
 			AggregatedExceptionSensorData data = (AggregatedExceptionSensorData) object;
@@ -498,7 +509,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	public List<String> getColumnValues(Object object) {
 		if (object instanceof AggregatedExceptionSensorData) {
 			AggregatedExceptionSensorData data = (AggregatedExceptionSensorData) object;
-			List<String> values = new ArrayList<String>();
+			List<String> values = new ArrayList<>();
 			for (Column column : Column.values()) {
 				values.add(getStyledTextForColumn(data, column).toString());
 			}

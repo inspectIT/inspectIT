@@ -22,9 +22,9 @@ import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManag
 /**
  * This service exporter using kryo for (de-)serialization is nearly the same as the one with plain
  * java serialization.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class KryoHttpInvokerServiceExporter extends HttpInvokerServiceExporter {
 

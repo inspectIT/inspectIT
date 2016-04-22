@@ -7,9 +7,9 @@ import rocks.inspectit.shared.cs.storage.label.type.AbstractStorageLabelType;
 
 /**
  * Label that has a {@link String} as a value.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Entity
 public class StringStorageLabel extends AbstractStorageLabel<String> {
@@ -33,7 +33,7 @@ public class StringStorageLabel extends AbstractStorageLabel<String> {
 
 	/**
 	 * Secondary constructor.
-	 * 
+	 *
 	 * @param stringValue
 	 *            Label value.
 	 * @param storageLabelType
@@ -90,7 +90,7 @@ public class StringStorageLabel extends AbstractStorageLabel<String> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((stringValue == null) ? 0 : stringValue.hashCode());
+		result = (prime * result) + ((stringValue == null) ? 0 : stringValue.hashCode());
 		return result;
 	}
 
@@ -122,6 +122,7 @@ public class StringStorageLabel extends AbstractStorageLabel<String> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(AbstractStorageLabel<?> other) {
 		int typeCompare = storageLabelType.compareTo(other.getStorageLabelType());
 		if (0 != typeCompare) {

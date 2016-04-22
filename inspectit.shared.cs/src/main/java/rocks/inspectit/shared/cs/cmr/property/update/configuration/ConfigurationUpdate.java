@@ -20,9 +20,9 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.RestoreDefaultProperty
 
 /**
  * Class holding all the {@link AbstractPropertyUpdate}s for one configuration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "cmr-configuration-update")
@@ -34,14 +34,14 @@ public class ConfigurationUpdate {
 	 */
 	@XmlElementWrapper(name = "updates")
 	@XmlElementRefs({ @XmlElementRef(type = AbstractPropertyUpdate.class), @XmlElementRef(type = RestoreDefaultPropertyUpdate.class) })
-	private Set<IPropertyUpdate<?>> propertyUpdates = new HashSet<IPropertyUpdate<?>>();
+	private Set<IPropertyUpdate<?>> propertyUpdates = new HashSet<>();
 
 	/**
 	 * Merges two configuration updates. If overwrite is set to <code>true</code> and there is a
 	 * same property in this and other {@link ConfigurationUpdate}, then value from the other will
 	 * be used. If <code>false</code> is passed, this {@link ConfigurationUpdate} object will only
 	 * merge non-existing properties from the other configuration.
-	 * 
+	 *
 	 * @param other
 	 *            Other {@link ConfigurationUpdate}
 	 * @param overwrite
@@ -66,7 +66,7 @@ public class ConfigurationUpdate {
 	/**
 	 * Returns the {@link IPropertyUpdate} for the given property logical name if such update is
 	 * existing in the configuration.
-	 * 
+	 *
 	 * @param propertyLogicalName
 	 *            Logical name of property.
 	 * @return {@link AbstractPropertyUpdate} or <code>null</code>.
@@ -84,7 +84,7 @@ public class ConfigurationUpdate {
 
 	/**
 	 * Adds {@link IPropertyUpdate} to this configuration update.
-	 * 
+	 *
 	 * @param propertyUpdate
 	 *            {@link IPropertyUpdate} to add.
 	 */
@@ -94,7 +94,7 @@ public class ConfigurationUpdate {
 
 	/**
 	 * Removes {@link IPropertyUpdate} to this configuration update.
-	 * 
+	 *
 	 * @param propertyUpdate
 	 *            {@link IPropertyUpdate} to remove.
 	 */
@@ -104,7 +104,7 @@ public class ConfigurationUpdate {
 
 	/**
 	 * Gets {@link #propertyUpdates}.
-	 * 
+	 *
 	 * @return {@link #propertyUpdates}
 	 */
 	public Set<IPropertyUpdate<?>> getPropertyUpdates() {
@@ -113,7 +113,7 @@ public class ConfigurationUpdate {
 
 	/**
 	 * Sets {@link #propertyUpdates}.
-	 * 
+	 *
 	 * @param propertyUpdates
 	 *            New value for {@link #propertyUpdates}
 	 */
@@ -128,7 +128,7 @@ public class ConfigurationUpdate {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((propertyUpdates == null) ? 0 : propertyUpdates.hashCode());
+		result = (prime * result) + ((propertyUpdates == null) ? 0 : propertyUpdates.hashCode());
 		return result;
 	}
 

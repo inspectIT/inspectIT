@@ -4,7 +4,7 @@ import java.rmi.Remote;
 
 /**
  * This service is used by the Agent to continuously send a keep-alive signal to the CMR.
- * 
+ *
  * @author Marius Oehler
  *
  */
@@ -28,7 +28,7 @@ public interface IKeepAliveService extends Remote {
 
 	/**
 	 * Sends a keep-alive message of the platform with the given id.
-	 * 
+	 *
 	 * @param platformId
 	 *            ID of the platform ident.
 	 */

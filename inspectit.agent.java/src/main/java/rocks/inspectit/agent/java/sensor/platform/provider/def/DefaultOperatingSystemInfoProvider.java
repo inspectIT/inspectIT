@@ -9,9 +9,9 @@ import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoPr
  * needed information. Only the methods {@link #getArch()}, {@link #getAvailableProcessors()},
  * {@link #getName()}, {@link #getVersion()}, and {@link #getSystemLoadAverage()} provide data. All
  * other methods in this class return -1L values.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoProvider {
 

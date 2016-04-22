@@ -12,9 +12,9 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
 
 /**
  * {@link ISqlDataAccessService} for storage purposes.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class StorageSqlDataAccessService extends AbstractStorageService<SqlStatementData> implements ISqlDataAccessService {
 
@@ -31,6 +31,7 @@ public class StorageSqlDataAccessService extends AbstractStorageService<SqlState
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<SqlStatementData> getAggregatedSqlStatements(SqlStatementData sqlStatementData) {
 		return this.getAggregatedSqlStatements(sqlStatementData, null, null);
 	}
@@ -38,6 +39,7 @@ public class StorageSqlDataAccessService extends AbstractStorageService<SqlState
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<SqlStatementData> getAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		StorageIndexQuery query = sqlDataQueryFactory.getAggregatedSqlStatementsQuery(sqlStatementData, fromDate, toDate);
 		return super.executeQuery(query, Aggregators.SQL_STATEMENT_DATA_AGGREGATOR);
@@ -46,6 +48,7 @@ public class StorageSqlDataAccessService extends AbstractStorageService<SqlState
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<SqlStatementData> getParameterAggregatedSqlStatements(SqlStatementData sqlStatementData) {
 		return this.getParameterAggregatedSqlStatements(sqlStatementData, null, null);
 	}
@@ -53,6 +56,7 @@ public class StorageSqlDataAccessService extends AbstractStorageService<SqlState
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<SqlStatementData> getParameterAggregatedSqlStatements(SqlStatementData sqlStatementData, Date fromDate, Date toDate) {
 		StorageIndexQuery query = sqlDataQueryFactory.getAggregatedSqlStatementsQuery(sqlStatementData, fromDate, toDate);
 		query.setSql(sqlStatementData.getSql());
@@ -62,6 +66,7 @@ public class StorageSqlDataAccessService extends AbstractStorageService<SqlState
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected IStorageTreeComponent<SqlStatementData> getIndexingTree() {
 		return indexingTree;
 	}

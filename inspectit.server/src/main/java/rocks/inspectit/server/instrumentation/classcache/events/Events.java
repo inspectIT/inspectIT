@@ -66,8 +66,8 @@ public class Events {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((nodeEvents == null) ? 0 : nodeEvents.hashCode());
-		result = prime * result + ((referenceEvents == null) ? 0 : referenceEvents.hashCode());
+		result = (prime * result) + ((nodeEvents == null) ? 0 : nodeEvents.hashCode());
+		result = (prime * result) + ((referenceEvents == null) ? 0 : referenceEvents.hashCode());
 		return result;
 	}
 

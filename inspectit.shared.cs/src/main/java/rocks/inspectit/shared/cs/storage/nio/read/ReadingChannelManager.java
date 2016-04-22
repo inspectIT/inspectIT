@@ -14,9 +14,9 @@ import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
 
 /**
  * Channel manager that performs reading.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ReadingChannelManager extends AbstractChannelManager {
 
@@ -42,7 +42,7 @@ public class ReadingChannelManager extends AbstractChannelManager {
 	 * <p>
 	 * It is a responsibility of a caller to assure that the buffer supplied would not be used by
 	 * other threads until the read operation is finished.
-	 * 
+	 *
 	 * @param byteBuffer
 	 *            {@link ByteBuffer} that data will be read to.
 	 * @param position

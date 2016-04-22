@@ -13,7 +13,7 @@ import rocks.inspectit.ui.rcp.util.ClipboardUtil;
 
 /**
  * Handler that copies the logging message to the clipboard.
- * 
+ *
  * @author Stefan Siegl
  */
 public class CopyLogMessageHandler extends AbstractHandler implements IHandler {

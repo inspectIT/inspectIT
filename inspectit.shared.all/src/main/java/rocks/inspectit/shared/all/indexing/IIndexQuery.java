@@ -8,23 +8,23 @@ import rocks.inspectit.shared.all.indexing.restriction.IIndexQueryRestriction;
 
 /**
  * Interface for query that queries the indexing tree.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IIndexQuery {
 
 	/**
 	 * Minimum object id to be returned by the query. Query should return only objects that have
 	 * bigger id than this one.
-	 * 
+	 *
 	 * @return minimum id
 	 */
 	long getMinId();
 
 	/**
 	 * Set minimum id for objects to be returned by the query.
-	 * 
+	 *
 	 * @param minId
 	 *            minimum id or 0 for returning all objects
 	 */
@@ -32,14 +32,14 @@ public interface IIndexQuery {
 
 	/**
 	 * Platform id that objects returned by query should have.
-	 * 
+	 *
 	 * @return platform id
 	 */
 	long getPlatformIdent();
 
 	/**
 	 * Set platform id for objects to be returned by the query.
-	 * 
+	 *
 	 * @param platformIdent
 	 *            platform id or 0 for not including this property in the query
 	 */
@@ -47,14 +47,14 @@ public interface IIndexQuery {
 
 	/**
 	 * Sensor type id that objects returned by query should have.
-	 * 
+	 *
 	 * @return sensor type id
 	 */
 	long getSensorTypeIdent();
 
 	/**
 	 * Set sensor type id for objects to be returned by the query.
-	 * 
+	 *
 	 * @param sensorTypeIdent
 	 *            sensor type id or 0 for not including this property in the query
 	 */
@@ -62,14 +62,14 @@ public interface IIndexQuery {
 
 	/**
 	 * Method id that objects returned by query should have.
-	 * 
+	 *
 	 * @return method id
 	 */
 	long getMethodIdent();
 
 	/**
 	 * Set method id for objects to be returned by the query.
-	 * 
+	 *
 	 * @param methodIdent
 	 *            method id or 0 for not including this property in the query
 	 */
@@ -78,7 +78,7 @@ public interface IIndexQuery {
 	/**
 	 * Classes of the objects returned by query. Query will only return objects that are of this
 	 * classes, thus no objects that are of a class that is extending one of the classes.
-	 * 
+	 *
 	 * @return class
 	 */
 	List<Class<?>> getObjectClasses();
@@ -86,7 +86,7 @@ public interface IIndexQuery {
 	/**
 	 * Set the classes for objects to be returned by query. Only objects that are instances of
 	 * supplied classes will be returned by query.
-	 * 
+	 *
 	 * @param objectClasses
 	 *            class or null for not including this property in the query
 	 */
@@ -94,7 +94,7 @@ public interface IIndexQuery {
 
 	/**
 	 * Time stamp that represents date after which objects returned by query are created.
-	 * 
+	 *
 	 * @return timestamp
 	 */
 	Timestamp getFromDate();
@@ -102,7 +102,7 @@ public interface IIndexQuery {
 	/**
 	 * Sets that time stamp that represents date, so that all objects returned by query are created
 	 * after this date.
-	 * 
+	 *
 	 * @param fromDate
 	 *            starting date
 	 */
@@ -110,7 +110,7 @@ public interface IIndexQuery {
 
 	/**
 	 * Time stamp that represents date before which objects returned by query are created.
-	 * 
+	 *
 	 * @return timestamp
 	 */
 	Timestamp getToDate();
@@ -118,7 +118,7 @@ public interface IIndexQuery {
 	/**
 	 * Sets that time stamp that represents date, so that all objects returned by query are created
 	 * before this date.
-	 * 
+	 *
 	 * @param toDate
 	 *            end date
 	 */
@@ -126,7 +126,7 @@ public interface IIndexQuery {
 
 	/**
 	 * Adds one indexing restriction to the query.
-	 * 
+	 *
 	 * @param indexingRestriction
 	 *            Indexing restriction.
 	 */
@@ -136,7 +136,7 @@ public interface IIndexQuery {
 	 * Returns if the searching interval is set for current {@link IIndexQuery} object. The method
 	 * will return true only when both {@link #getFromDate} and {@link #getToDate} time stamps are
 	 * not null, and when {@link #getToDate} is after {@link #getFromDate}.
-	 * 
+	 *
 	 * @return if the searching interval is set for current {@link IIndexQuery} object.
 	 */
 	boolean isIntervalSet();
@@ -146,7 +146,7 @@ public interface IIndexQuery {
 	 * object. This method will return true only when interval is set for current object (see
 	 * {@link #isInIntervalSet()}) and given time stamp object is in interval ({@link #getFromDate}
 	 * >= timestamp >= {@link #getToDate}).
-	 * 
+	 *
 	 * @param timestamp
 	 *            time stamp to be checked
 	 * @return if the given time stamp is belonging to the interval set in the {@link IIndexQuery}
@@ -157,7 +157,7 @@ public interface IIndexQuery {
 	/**
 	 * Checks if the all restrictions in the query are fulfilled for given {@link DefaultData}
 	 * object.
-	 * 
+	 *
 	 * @param defaultData
 	 *            Object to be checked
 	 * @return true if all restrictions are fulfilled, otherwise no

@@ -11,9 +11,9 @@ import rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService;
 /**
  * {@link MethodInterceptor} that delegates the call to the concrete service of a
  * {@link ICmrService} class.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ServiceInterfaceDelegateInterceptor implements MethodInterceptor {
 
@@ -39,7 +39,7 @@ public class ServiceInterfaceDelegateInterceptor implements MethodInterceptor {
 
 	/**
 	 * Invokes the concrete object using reflection.
-	 * 
+	 *
 	 * @param concreteService
 	 *            Service to invoke.
 	 * @param method

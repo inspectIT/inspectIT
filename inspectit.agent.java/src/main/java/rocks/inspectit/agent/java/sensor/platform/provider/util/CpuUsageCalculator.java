@@ -2,9 +2,9 @@ package rocks.inspectit.agent.java.sensor.platform.provider.util;
 
 /**
  * This class is used to calculate the cpu usage of the underlying Virtual Machine.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 public class CpuUsageCalculator {
 
@@ -40,7 +40,7 @@ public class CpuUsageCalculator {
 
 	/**
 	 * Gets {@link #cpuUsage}.
-	 * 
+	 *
 	 * @return {@link #cpuUsage}
 	 */
 	public float getCpuUsage() {
@@ -49,7 +49,7 @@ public class CpuUsageCalculator {
 
 	/**
 	 * Sets {@link #uptime}.
-	 * 
+	 *
 	 * @param uptime
 	 *            New value for {@link #uptime}
 	 */
@@ -59,7 +59,7 @@ public class CpuUsageCalculator {
 
 	/**
 	 * Sets {@link #processCpuTime}.
-	 * 
+	 *
 	 * @param processCpuTime
 	 *            New value for {@link #processCpuTime}
 	 */
@@ -69,7 +69,7 @@ public class CpuUsageCalculator {
 
 	/**
 	 * Sets {@link #availableProcessors}.
-	 * 
+	 *
 	 * @param availableProcessors
 	 *            New value for {@link #availableProcessors}
 	 */
@@ -79,14 +79,14 @@ public class CpuUsageCalculator {
 
 	/**
 	 * Calculates the current cpuUsage in percent.
-	 * 
+	 *
 	 * elapsedCpu is in ns and elapsedTime is in ms. cpuUsage could go higher than 100% because
 	 * elapsedTime and elapsedCpu are not fetched simultaneously. Limit to 99% to avoid showing a
 	 * scale from 0% to 200%.
-	 * 
+	 *
 	 */
 	public void updateCpuUsage() {
-		if (prevUptime > 0L && this.uptime > prevUptime) {
+		if ((prevUptime > 0L) && (this.uptime > prevUptime)) {
 			long elapsedCpu = this.processCpuTime - prevProcessCpuTime;
 			long elapsedTime = this.uptime - prevUptime;
 

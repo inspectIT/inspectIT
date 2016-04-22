@@ -7,9 +7,9 @@ import java.util.Set;
  * if the element e2 exists in the set and element e is equal to it, the replace will occur if these
  * are not the same objects in terms of reference address. This can be useful when the objects are
  * equal in terms of equalTo, but not with == terms.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  * @param <E>
  *            Type of element in the set.
  */
@@ -20,7 +20,7 @@ public interface UpdateableSet<E> extends Set<E> {
 	 * element e is equal to it, the replace will occur if these are not the same objects in terms
 	 * of reference address. This can be useful when the objects are equal in terms of equalTo, but
 	 * not with == terms.
-	 * 
+	 *
 	 * @param e
 	 *            element
 	 */

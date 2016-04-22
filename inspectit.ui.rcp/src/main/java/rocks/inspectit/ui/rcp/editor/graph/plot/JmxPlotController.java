@@ -35,17 +35,17 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolve
 import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.impl.PlotDataSolverFactory;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
-import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
  * This input controller displays the JMX sensor data in a chart.
- * 
+ *
  * @author Marius Oehler
- * 
+ *
  */
 public class JmxPlotController extends AbstractPlotController {
 
@@ -137,7 +137,7 @@ public class JmxPlotController extends AbstractPlotController {
 
 	/**
 	 * Returns the selected {@link AbstractPlotDataSolver} of this view.
-	 * 
+	 *
 	 * @return the {@link AbstractPlotDataSolver}
 	 */
 	private AbstractPlotDataSolver getCurrentDataSolver() {
@@ -152,7 +152,7 @@ public class JmxPlotController extends AbstractPlotController {
 
 	/**
 	 * Initializes the upper plot.
-	 * 
+	 *
 	 * @return An instance of {@link XYPlot}.
 	 */
 	private XYPlot initializePlot() {
@@ -200,7 +200,7 @@ public class JmxPlotController extends AbstractPlotController {
 	/**
 	 * Loads the {@link JmxSensorValueData} objects which were created between the given
 	 * {@link Date} objects.
-	 * 
+	 *
 	 * @param from
 	 *            the start date
 	 * @param to
@@ -214,7 +214,7 @@ public class JmxPlotController extends AbstractPlotController {
 
 	/**
 	 * Returns the date of the latest element in the {@link #loadedData} list.
-	 * 
+	 *
 	 * @return Date of the latest loaded {@link JmxSensorValueData}
 	 */
 	private Date getLatestLoadedElementDate() {
@@ -238,7 +238,7 @@ public class JmxPlotController extends AbstractPlotController {
 		// Prevent loading into the future
 		Date to = new Date(Math.min(System.currentTimeMillis(), toUnchecked.getTime()));
 
-		if (loadedData == null || loadedData.isEmpty()) {
+		if ((loadedData == null) || loadedData.isEmpty()) {
 			loadedData = loadJmxData(from, to);
 			loadedFromDate = from;
 			loadedToDate = getLatestLoadedElementDate();
@@ -312,7 +312,7 @@ public class JmxPlotController extends AbstractPlotController {
 	/**
 	 * Returns a list containing {@link JmxSensorValueData} objects which were created between the
 	 * {@code from} and {@code to} date.
-	 * 
+	 *
 	 * @param from
 	 *            Objects have to be created after this date
 	 * @param to
@@ -320,7 +320,7 @@ public class JmxPlotController extends AbstractPlotController {
 	 * @return List containing {@link JmxSensorValueData} objects
 	 */
 	private List<JmxSensorValueData> selectChartingData(Date from, Date to) {
-		List<JmxSensorValueData> resultList = new ArrayList<JmxSensorValueData>();
+		List<JmxSensorValueData> resultList = new ArrayList<>();
 
 		Date fromShifted = new Date(from.getTime() - 1);
 		Date toShifted = new Date(to.getTime() + 1);
@@ -368,7 +368,7 @@ public class JmxPlotController extends AbstractPlotController {
 
 	/**
 	 * The logic which handles the {@link PreferenceId#JMX_PLOTDATASOLVER} events.
-	 * 
+	 *
 	 * @param preferenceEvent
 	 *            the event object
 	 */
@@ -386,7 +386,7 @@ public class JmxPlotController extends AbstractPlotController {
 
 	/**
 	 * Returns the {@link Date} where the plot starts.
-	 * 
+	 *
 	 * @return the {@link #plottedFrom} variable
 	 */
 	public Date getPlottedFrom() {
@@ -395,7 +395,7 @@ public class JmxPlotController extends AbstractPlotController {
 
 	/**
 	 * Returns the {@link Date} where the plot ends.
-	 * 
+	 *
 	 * @return the {@link #plottedTo} variable
 	 */
 	public Date getPlottedTo() {

@@ -38,9 +38,9 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Dialog for displaying the CMR configuration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class CmrConfigurationDialog extends FilteredPreferenceDialog {
@@ -68,7 +68,7 @@ public class CmrConfigurationDialog extends FilteredPreferenceDialog {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell to use.
 	 * @param cmrRepositoryDefinition
@@ -150,7 +150,7 @@ public class CmrConfigurationDialog extends FilteredPreferenceDialog {
 
 	/**
 	 * Show/hide advanced properties on the pages.
-	 * 
+	 *
 	 * @param show
 	 *            True if advanced should be shown, false otherwise.
 	 */
@@ -189,7 +189,7 @@ public class CmrConfigurationDialog extends FilteredPreferenceDialog {
 
 	/**
 	 * Defines if node should be displayed if no advanced is selected. This method is recursive.
-	 * 
+	 *
 	 * @param node
 	 *            Node to check.
 	 * @return <code>true</code> this node should be displayed if only normal properties are
@@ -215,7 +215,7 @@ public class CmrConfigurationDialog extends FilteredPreferenceDialog {
 	/**
 	 * Gets {@link #configurationUpdate}. Note that this method will return <code>null</code> if no
 	 * updates were created in the dialog.
-	 * 
+	 *
 	 * @return {@link #configurationUpdate}
 	 */
 	public ConfigurationUpdate getConfigurationUpdate() {
@@ -224,7 +224,7 @@ public class CmrConfigurationDialog extends FilteredPreferenceDialog {
 
 	/**
 	 * Gets {@link #serverRestartRequired}.
-	 * 
+	 *
 	 * @return {@link #serverRestartRequired}
 	 */
 	public boolean isServerRestartRequired() {
@@ -233,7 +233,7 @@ public class CmrConfigurationDialog extends FilteredPreferenceDialog {
 
 	/**
 	 * Creates preference manager for the given {@link CmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}.
 	 * @return {@link PreferenceManager}.

@@ -1,11 +1,10 @@
 package rocks.inspectit.agent.java.instrumentation.asm;
 
-
 /**
  * DO NOT MODIFY THIS CLASS UNLESS YOU KNOW WHAT YOU'RE DOING.
- * 
+ *
  * @author Eduard Tudenhoefner
- * 
+ *
  */
 @SuppressWarnings("PMD")
 public class InstrumentationExceptionTestClass {

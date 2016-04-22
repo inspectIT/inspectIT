@@ -10,9 +10,9 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.SingleProperty;
 
 /**
  * Single validation error containing the message describing the validation.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @XmlTransient
 public class ValidationError {
@@ -46,7 +46,7 @@ public class ValidationError {
 
 	/**
 	 * Gets {@link #message}.
-	 * 
+	 *
 	 * @return {@link #message}
 	 */
 	public String getMessage() {
@@ -55,7 +55,7 @@ public class ValidationError {
 
 	/**
 	 * Sets {@link #message}.
-	 * 
+	 *
 	 * @param message
 	 *            New value for {@link #message}
 	 */
@@ -65,7 +65,7 @@ public class ValidationError {
 
 	/**
 	 * Gets {@link #involvedProperties}.
-	 * 
+	 *
 	 * @return {@link #involvedProperties}
 	 */
 	public Collection<SingleProperty<?>> getInvolvedProperties() {
@@ -74,7 +74,7 @@ public class ValidationError {
 
 	/**
 	 * Sets {@link #involvedProperties}.
-	 * 
+	 *
 	 * @param involvedProperties
 	 *            New value for {@link #involvedProperties}
 	 */
@@ -89,8 +89,8 @@ public class ValidationError {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((involvedProperties == null) ? 0 : involvedProperties.hashCode());
-		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = (prime * result) + ((involvedProperties == null) ? 0 : involvedProperties.hashCode());
+		result = (prime * result) + ((message == null) ? 0 : message.hashCode());
 		return result;
 	}
 

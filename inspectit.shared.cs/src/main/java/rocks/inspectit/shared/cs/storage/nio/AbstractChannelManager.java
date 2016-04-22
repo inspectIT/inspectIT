@@ -15,21 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract class for all channel managers.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public abstract class AbstractChannelManager {
 
 	/**
 	 * All channels.
 	 */
-	private Map<Path, CustomAsyncChannel> writingChannelsMap = new ConcurrentHashMap<Path, CustomAsyncChannel>(64, 0.75f, 1);
+	private Map<Path, CustomAsyncChannel> writingChannelsMap = new ConcurrentHashMap<>(64, 0.75f, 1);
 
 	/**
 	 * Opened channels queue.
 	 */
-	private ConcurrentLinkedQueue<CustomAsyncChannel> openedChannelsQueue = new ConcurrentLinkedQueue<CustomAsyncChannel>();
+	private ConcurrentLinkedQueue<CustomAsyncChannel> openedChannelsQueue = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Executor service for IO operations.
@@ -49,14 +49,14 @@ public abstract class AbstractChannelManager {
 
 	/**
 	 * Subclasses should provide the max number of opened channels.
-	 * 
+	 *
 	 * @return Returns the number of maximum opened channels.
 	 */
 	protected abstract int getMaxOpenedChannels();
 
 	/**
 	 * Returns the channel. If necessary channel will be open.
-	 * 
+	 *
 	 * @param channelPath
 	 *            Path for the channel.
 	 * @return {@link CustomAsyncChannel} that is already open.
@@ -74,7 +74,7 @@ public abstract class AbstractChannelManager {
 	/**
 	 * Creates a new channel. We need to do this in synchronized method since the channel also has
 	 * to be opened, thus we can not use putIfAbsent.
-	 * 
+	 *
 	 * @param channelPath
 	 *            Path.
 	 * @return Created channel.
@@ -95,7 +95,7 @@ public abstract class AbstractChannelManager {
 	 * Opens the {@link CustomAsyncChannel} and adds it to the beginning of the
 	 * {@link #openedChannelsQueue}. If limit for opened channels is reached, one channel will be
 	 * closed.
-	 * 
+	 *
 	 * @param customAsyncChannel
 	 *            Channel to open.
 	 * @throws IOException
@@ -117,7 +117,7 @@ public abstract class AbstractChannelManager {
 
 	/**
 	 * Closes the last opened channel in the queue.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If {@link IOException} happens.
 	 */
@@ -132,7 +132,7 @@ public abstract class AbstractChannelManager {
 
 	/**
 	 * Closes the {@link CustomAsyncChannel} and removes it from the {@link #openedChannelsQueue}.
-	 * 
+	 *
 	 * @param channelToClose
 	 *            Channel to close.
 	 * @throws IOException
@@ -148,7 +148,7 @@ public abstract class AbstractChannelManager {
 	/**
 	 * Finalize all open channels. Before closing the channels, force will be performed, so that all
 	 * pending writing on the file channel are performed.
-	 * 
+	 *
 	 * @throws IOException
 	 *             When {@link IOException} occurs.
 	 */
@@ -164,7 +164,7 @@ public abstract class AbstractChannelManager {
 	/**
 	 * Finalize the file channel with specified channel's file path. Before closing the channel,
 	 * force will be performed, so that all pending writing on the file channel are performed.
-	 * 
+	 *
 	 * @param channelPath
 	 *            Path to the channel's file.
 	 * @throws IOException
@@ -172,7 +172,7 @@ public abstract class AbstractChannelManager {
 	 */
 	public void finalizeChannel(Path channelPath) throws IOException {
 		CustomAsyncChannel channel = writingChannelsMap.remove(channelPath);
-		if (channel != null && channel.isOpened()) {
+		if ((channel != null) && channel.isOpened()) {
 			closeAsyncChannel(channel);
 		}
 	}
@@ -180,7 +180,7 @@ public abstract class AbstractChannelManager {
 	/**
 	 * Returns executor service status. This methods just returns the result of
 	 * {@link #executorService#toString()} method.
-	 * 
+	 *
 	 * @return Returns executor service status. This methods just returns the result of
 	 *         {@link #executorService#toString()} method.
 	 */
@@ -190,7 +190,7 @@ public abstract class AbstractChannelManager {
 
 	/**
 	 * Sets {@link #executorService}.
-	 * 
+	 *
 	 * @param executorService
 	 *            New value for {@link #executorService}
 	 */

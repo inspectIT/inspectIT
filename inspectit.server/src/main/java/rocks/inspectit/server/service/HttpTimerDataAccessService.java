@@ -18,7 +18,7 @@ import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 
 /**
  * This class provides access to the http related data in the CMR.
- * 
+ *
  * @author Stefan Siegl
  */
 @Service
@@ -43,6 +43,7 @@ public class HttpTimerDataAccessService implements IHttpTimerDataAccessService, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<HttpTimerData> getAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod) {
 		return dao.getAggregatedHttpTimerData(httpData, includeRequestMethod);
@@ -51,6 +52,7 @@ public class HttpTimerDataAccessService implements IHttpTimerDataAccessService, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<HttpTimerData> getAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod, Date fromDate, Date toDate) {
 		return dao.getAggregatedHttpTimerData(httpData, includeRequestMethod, fromDate, toDate);
@@ -59,6 +61,7 @@ public class HttpTimerDataAccessService implements IHttpTimerDataAccessService, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<HttpTimerData> getTaggedAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod) {
 		return dao.getTaggedAggregatedHttpTimerData(httpData, includeRequestMethod);
@@ -67,6 +70,7 @@ public class HttpTimerDataAccessService implements IHttpTimerDataAccessService, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public List<HttpTimerData> getTaggedAggregatedTimerData(HttpTimerData httpData, boolean includeRequestMethod, Date fromDate, Date toDate) {
 		return dao.getTaggedAggregatedHttpTimerData(httpData, includeRequestMethod, fromDate, toDate);
@@ -80,6 +84,7 @@ public class HttpTimerDataAccessService implements IHttpTimerDataAccessService, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (log.isInfoEnabled()) {
 			log.info("|-Http Timer Data Access Service active...");

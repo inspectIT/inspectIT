@@ -14,9 +14,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 /**
  * This implementation will hold all list of measurements for the given size. It works as a FILO
  * stack.
- * 
+ *
  * @author Patrice Bouillet
- * 
+ *
  */
 public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData> implements IBufferStrategy<MethodSensorData> {
 
@@ -50,7 +50,7 @@ public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData>
 
 	/**
 	 * The second constructor where one can specify the actual count or stack size.
-	 * 
+	 *
 	 * @param size
 	 *            The stack size.
 	 */
@@ -111,7 +111,7 @@ public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData>
 	 */
 	public void init(Map<String, String> settings) {
 		if (settings.containsKey("size")) {
-			this.size = Integer.parseInt((String) settings.get("size"));
+			this.size = Integer.parseInt(settings.get("size"));
 		}
 	}
 

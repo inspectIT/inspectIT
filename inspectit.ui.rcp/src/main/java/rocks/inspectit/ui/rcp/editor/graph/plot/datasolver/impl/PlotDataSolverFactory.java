@@ -8,7 +8,7 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 
 /**
  * Factory to access the implementation of the {@link AbstractPlotDataSolver}.
- * 
+ *
  * @author Marius Oehler
  *
  */
@@ -31,7 +31,7 @@ public final class PlotDataSolverFactory {
 	 * There is only one instance of each dataSolver which is stored in the {@link #dataSolverMap}.
 	 * If there is no instance of the desired implementation, a new one is created and stored in the
 	 * map.
-	 * 
+	 *
 	 * @param dataSolver
 	 *            desired {@link AbstractPlotDataSolver}
 	 * @return {@link AbstractPlotDataSolver} implementation
@@ -55,7 +55,7 @@ public final class PlotDataSolverFactory {
 
 	/**
 	 * Returns the singleton. If there is no instance of this class, it will be created.
-	 * 
+	 *
 	 * @return singleton of this class.
 	 */
 	private static PlotDataSolverFactory instance() {
@@ -77,7 +77,7 @@ public final class PlotDataSolverFactory {
 	/**
 	 * Returns an implementation of {@link AbstractPlotDataSolver} which is represented by the given
 	 * {@link EPlotDataSolver} enum.
-	 * 
+	 *
 	 * @param dataSolver
 	 *            desired {@link AbstractPlotDataSolver}
 	 * @return {@link AbstractPlotDataSolver} implementation
@@ -90,7 +90,7 @@ public final class PlotDataSolverFactory {
 	 * Returns the default implementation of the {@link AbstractPlotDataSolver} interface. Equals to
 	 * a call of the {@link #getDataSolver(EPlotDataSolver)} method with parameter
 	 * {@link EPlotDataSolver#DEFAULT}.
-	 * 
+	 *
 	 * @return default {@link AbstractPlotDataSolver} implementation
 	 */
 	public static AbstractPlotDataSolver getDefaultDataSolver() {

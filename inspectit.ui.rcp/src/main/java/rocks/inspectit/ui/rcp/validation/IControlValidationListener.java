@@ -2,15 +2,15 @@ package rocks.inspectit.ui.rcp.validation;
 
 /**
  * Interface for listeners on the validation control decoration.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public interface IControlValidationListener {
 
 	/**
 	 * State changed.
-	 * 
+	 *
 	 * @param valid
 	 *            If current state is valid.
 	 * @param validationControlDecoration
