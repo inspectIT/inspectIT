@@ -78,8 +78,8 @@ The [end user documentation](https://inspectit-performance.atlassian.net/wiki/di
 
 
 You can get inspectIT in three ways:
-- Get yourself an [installer](http://inspectit.rocks/download)
-- Get the [manual installation packages](http://inspectit.rocks/download)
+- Get yourself an [installer](http://inspectit.rocks/#downloads)
+- Get the [manual installation packages](http://inspectit.rocks/#downloads)
 - Use a pre-built [Docker image](https://hub.docker.com/u/inspectit/)
 
 ## Get in touch
@@ -105,7 +105,7 @@ If you want to fix Bugs or implement Features on your own, you're very welcome t
 We primarily use [Atlassian JIRA](https://inspectit-performance.atlassian.net/secure/Dashboard.jspa) for ticketing. But if you are in a hurry, please feel free to open a GitHub issue.
 
 ## Licensing
-inspectIT is licensed under [AGPLv3](https://github.com/inspectIT/inspectIT/blob/master/LICENSE.txt) (with [exception clause](https://github.com/inspectIT/inspectIT/blob/master/LICENSEEXCEPTIONS.txt)), which basically means you can change inspectIT but must open source all your changes and put them under the AGPLv3 license. Please see our [licensing documentation](https://inspectit-performance.atlassian.net/wiki/display/LIC/Licensing) for more details.
+inspectIT is licensed under [AGPLv3](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSE.txt) (with [exception clause](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSEEXCEPTIONS.txt)), which basically means you can change inspectIT but must open source all your changes and put them under the AGPLv3 license. Please see our [licensing documentation](https://inspectit-performance.atlassian.net/wiki/display/LIC/Licensing) for more details.
 
 ## Sponsoring
 inspectIT is mainly driven by [NovaTec Consulting GmbH](http://www.novatec-gmbh.de/), a German consultancy firm that specializes in software performance. Sponsoring a feature in inspectIT is always possible and welcome. Just get in touch with us through [Sponsor a feature](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Sponsor+a+feature).
