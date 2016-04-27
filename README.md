@@ -1,4 +1,4 @@
-[![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](http://jenkins.inspectit.rocks/buildStatus/icon?job=inspectIT%20-%20Integration)](http://jenkins.inspectit.rocks/job/inspectIT%20-%20Integration/) [![License](https://img.shields.io/badge/License-AGPLv3--with--exception-brightgreen.svg)](https://github.com/inspectIT/inspectIT/blob/master/LICENSE.txt)
+[![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](http://jenkins.inspectit.rocks/buildStatus/icon?job=inspectIT%20-%20Integration)](http://jenkins.inspectit.rocks/job/inspectIT%20-%20Integration/) [![License](https://img.shields.io/badge/License-AGPLv3--with--exception-brightgreen.svg)](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSE.txt)
 
 ## Overview
 inspectIT (http://inspectit.rocks) is the leading Open Source APM (application performance management) tool for monitoring and analyzing your Java(EE) software applications.
@@ -78,8 +78,8 @@ The [end user documentation](https://inspectit-performance.atlassian.net/wiki/di
 
 
 You can get inspectIT in three ways:
-- Get yourself an [installer](http://inspectit.rocks/download)
-- Get the [manual installation packages](http://inspectit.rocks/download)
+- Download the [latest stable release](https://github.com/inspectIT/inspectIT/releases/latest)
+- Download a [specific version](https://github.com/inspectIT/inspectIT/releases)
 - Use a pre-built [Docker image](https://hub.docker.com/u/inspectit/)
 
 ## Get in touch
@@ -105,7 +105,7 @@ If you want to fix Bugs or implement Features on your own, you're very welcome t
 We primarily use [Atlassian JIRA](https://inspectit-performance.atlassian.net/secure/Dashboard.jspa) for ticketing. But if you are in a hurry, please feel free to open a GitHub issue.
 
 ## Licensing
-inspectIT is licensed under [AGPLv3](https://github.com/inspectIT/inspectIT/blob/master/LICENSE.txt) (with [exception clause](https://github.com/inspectIT/inspectIT/blob/master/LICENSEEXCEPTIONS.txt)), which basically means you can change inspectIT but must open source all your changes and put them under the AGPLv3 license. Please see our [licensing documentation](https://inspectit-performance.atlassian.net/wiki/display/LIC/Licensing) for more details.
+inspectIT is licensed under [AGPLv3](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSE.txt) (with [exception clause](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSEEXCEPTIONS.txt)), which basically means you can change inspectIT but must open source all your changes and put them under the AGPLv3 license. Please see our [licensing documentation](https://inspectit-performance.atlassian.net/wiki/display/LIC/Licensing) for more details.
 
 ## Sponsoring
 inspectIT is mainly driven by [NovaTec Consulting GmbH](http://www.novatec-gmbh.de/), a German consultancy firm that specializes in software performance. Sponsoring a feature in inspectIT is always possible and welcome. Just get in touch with us through [Sponsor a feature](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Sponsor+a+feature).
