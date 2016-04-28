@@ -118,6 +118,14 @@ public class CheckNewVersionJob extends Job {
 			} else {
 				return new Status(IStatus.WARNING, InspectIT.ID, "Error occurred reading the existing versions from GitHub during check for new version job.", exception);
 			}
+		} catch (ClassCastException exception) {
+			// sometimes we are not getting JsonArray from the GitHub
+			// thus just in case a catch of the class cast exception
+			if (userTriggered) {
+				return new Status(IStatus.ERROR, InspectIT.ID, "Check new version failed due to the invalid API response. Please try again later.");
+			} else {
+				return Status.CANCEL_STATUS;
+			}
 		}
 
 		if (highestVersionRelease.getVersion().compareTo(currentVersion) > 0) {
