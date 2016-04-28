@@ -15,12 +15,12 @@ public final class ResourcesPathResolver {
 	/**
 	 * Folder path to the resources.
 	 */
-	private static final String RESOURCES = "src" + File.separator + "main" + File.separator + "resources";
+	public static final String RESOURCES = "src" + File.separator + "main" + File.separator + "resources";
 
 	/**
 	 * Folder path to the external resources.
 	 */
-	private static final String EXT_RESOURCES = "src" + File.separator + "main" + File.separator + "external-resources";
+	public static final String EXT_RESOURCES = "src" + File.separator + "main" + File.separator + "external-resources";
 
 	/**
 	 * Private constructor.

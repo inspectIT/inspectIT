@@ -143,7 +143,7 @@ public class InspectIT extends AbstractUIPlugin {
 		if (null != bundleFile && bundleFile.isDirectory()) {
 			runtimeDir = Paths.get(bundleFile.getAbsolutePath());
 			// in development bundle file is in src/main/resources
-			if (runtimeDir.toString().endsWith("src/main/resources")) {
+			if (runtimeDir.toString().endsWith(ResourcesPathResolver.RESOURCES)) {
 				runtimeDir = runtimeDir.getParent().getParent().getParent().toAbsolutePath();
 			}
 		} else {
