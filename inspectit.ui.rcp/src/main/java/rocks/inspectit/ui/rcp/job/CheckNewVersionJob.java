@@ -35,6 +35,7 @@ import org.eclipse.ui.forms.widgets.FormText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import rocks.inspectit.shared.all.version.InvalidVersionException;
@@ -108,16 +109,17 @@ public class CheckNewVersionJob extends Job {
 
 			try (InputStream inputStream = entity.getContent()) {
 				Gson gson = new GsonBuilder().create();
-				JsonArray readed = gson.fromJson(new InputStreamReader(inputStream), JsonArray.class);
-				highestVersionRelease = getHighestVersionFromJson(readed);
+				JsonElement readed = gson.fromJson(new InputStreamReader(inputStream), JsonElement.class);
+				if (!(readed instanceof JsonArray)) {
+					// sometimes we are not getting JsonArray from the GitHub
+					return new Status(userTriggered ? IStatus.ERROR : IStatus.WARNING, InspectIT.ID,
+							"Check new version failed due to the invalid API response. Try again later. Received object: " + readed);
+				}
+				highestVersionRelease = getHighestVersionFromJson((JsonArray) readed);
 			}
 		} catch (IOException | InvalidVersionException exception) {
 			// give feedback if user triggered it
-			if (userTriggered) {
-				return new Status(IStatus.ERROR, InspectIT.ID, "Error occurred reading the existing versions from GitHub during check for new version job.", exception);
-			} else {
-				return new Status(IStatus.WARNING, InspectIT.ID, "Error occurred reading the existing versions from GitHub during check for new version job.", exception);
-			}
+			return new Status(userTriggered ? IStatus.ERROR : IStatus.WARNING, InspectIT.ID, "Error occurred reading the existing versions from GitHub during check for new version job.", exception);
 		}
 
 		if (highestVersionRelease.getVersion().compareTo(currentVersion) > 0) {
