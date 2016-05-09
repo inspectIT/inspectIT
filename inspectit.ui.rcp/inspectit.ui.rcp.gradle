@@ -40,9 +40,19 @@ cobertura {
 }
 
 /**
+ * Cleans the PDE build 'plugins/rocks.inspectit.ui.rcp' folder.
+ */
+task cleanPdeBuild(type: Delete) {
+	description = 'Cleans the PDE build folder.'
+	group = 'Build Setup'
+
+	delete "${pdeBuildDir}/plugins/rocks.inspectit.ui.rcp"
+}
+
+/**
  * Copies relevant files for the PDE build to the 'plugins' folder.
  */
-task preparePdeBuild(type: Copy) {
+task preparePdeBuild(type: Copy, dependsOn: cleanPdeBuild) {
 	description = 'Prepares artifacts for the PDE build.'
 	group = 'Build Setup'
 
