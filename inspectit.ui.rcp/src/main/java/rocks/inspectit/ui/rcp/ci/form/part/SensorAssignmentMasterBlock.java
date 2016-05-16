@@ -52,6 +52,7 @@ import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
@@ -205,6 +206,7 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		detailsPart.registerPage(MethodSensorAssignment.class, new MethodSensorAssignmentDetailsPage(masterBlockListener, validationManager, !profile.isCommonProfile()));
 		detailsPart.registerPage(TimerMethodSensorAssignment.class, new TimerSensorAssignmentDetailsPage(masterBlockListener, validationManager, !profile.isCommonProfile()));
 		detailsPart.registerPage(ExceptionSensorAssignment.class, new ExceptionSensorAssignmentDetailsPage(masterBlockListener, validationManager, !profile.isCommonProfile()));
+		detailsPart.registerPage(ChartingMethodSensorAssignment.class, new ChartingMethodSensorAssignmentDetailsPage(masterBlockListener, validationManager, !profile.isCommonProfile()));
 	}
 
 	/**

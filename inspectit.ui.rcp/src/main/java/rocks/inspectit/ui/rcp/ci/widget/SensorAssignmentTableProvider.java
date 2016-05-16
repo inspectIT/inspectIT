@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
@@ -242,14 +243,19 @@ public class SensorAssignmentTableProvider {
 						}
 					}
 
+					if (element instanceof ChartingMethodSensorAssignment) {
+						ChartingMethodSensorAssignment assignment = (ChartingMethodSensorAssignment) element;
+
+						if (assignment.isCharting()) {
+							stringBuilder.append("Charting = ON\n");
+						}
+					}
+
 					if (element instanceof TimerMethodSensorAssignment) {
 						TimerMethodSensorAssignment assignment = (TimerMethodSensorAssignment) element;
 
 						if (assignment.isStartsInvocation()) {
 							stringBuilder.append("Starts invocation = ON\n");
-						}
-						if (assignment.isCharting()) {
-							stringBuilder.append("Charting = ON\n");
 						}
 						if (CollectionUtils.isNotEmpty(assignment.getContextCaptures())) {
 							for (AbstractContextCapture contextCapture : assignment.getContextCaptures()) {
