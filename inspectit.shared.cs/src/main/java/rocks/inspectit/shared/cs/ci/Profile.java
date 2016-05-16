@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
 
 /**

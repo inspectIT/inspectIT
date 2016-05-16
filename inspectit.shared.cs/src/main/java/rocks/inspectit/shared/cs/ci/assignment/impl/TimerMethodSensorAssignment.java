@@ -28,13 +28,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "timer-method-sensor-assignment")
-public class TimerMethodSensorAssignment extends MethodSensorAssignment {
-
-	/**
-	 * If it is charting.
-	 */
-	@XmlAttribute(name = "charting")
-	private boolean charting;
+public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment {
 
 	/**
 	 * If it starts an invocation.
@@ -72,36 +66,12 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 			settings = new HashMap<>();
 		}
 
-		// charting
-		if (charting) {
-			settings.put("charting", Boolean.TRUE);
-		}
-
 		// min duration
 		if (minInvocationDuration > 0) {
 			settings.put("minduration", minInvocationDuration);
 		}
 
 		return settings;
-	}
-
-	/**
-	 * Gets {@link #charting}.
-	 *
-	 * @return {@link #charting}
-	 */
-	public boolean isCharting() {
-		return charting;
-	}
-
-	/**
-	 * Sets {@link #charting}.
-	 *
-	 * @param charting
-	 *            New value for {@link #charting}
-	 */
-	public void setCharting(boolean charting) {
-		this.charting = charting;
 	}
 
 	/**
@@ -168,7 +138,6 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (charting ? 1231 : 1237);
 		result = prime * result + ((contextCaptures == null) ? 0 : contextCaptures.hashCode());
 		result = prime * result + (int) (minInvocationDuration ^ (minInvocationDuration >>> 32));
 		result = prime * result + (startsInvocation ? 1231 : 1237);
@@ -190,9 +159,6 @@ public class TimerMethodSensorAssignment extends MethodSensorAssignment {
 			return false;
 		}
 		TimerMethodSensorAssignment other = (TimerMethodSensorAssignment) obj;
-		if (charting != other.charting) {
-			return false;
-		}
 		if (contextCaptures == null) {
 			if (other.contextCaptures != null) {
 				return false;

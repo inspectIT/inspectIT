@@ -18,6 +18,7 @@ import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
@@ -490,15 +491,19 @@ public final class ImageFormatter {
 			descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_ANNOTATION));
 		}
 
+		if (assignment instanceof ChartingMethodSensorAssignment) {
+			ChartingMethodSensorAssignment chartingAssignment = (ChartingMethodSensorAssignment) assignment;
+
+			if (chartingAssignment.isCharting()) {
+				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_CHART_PIE));
+			}
+		}
+
 		if (assignment instanceof TimerMethodSensorAssignment) {
 			TimerMethodSensorAssignment timerAssignment = (TimerMethodSensorAssignment) assignment;
 
 			if (timerAssignment.isStartsInvocation()) {
 				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_INVOCATION));
-			}
-
-			if (timerAssignment.isCharting()) {
-				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_CHART_PIE));
 			}
 
 			boolean paramsCapture = false, returnCapture = false, fieldsCapture = false;
