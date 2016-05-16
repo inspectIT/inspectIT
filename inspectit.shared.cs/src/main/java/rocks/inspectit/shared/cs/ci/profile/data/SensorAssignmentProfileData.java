@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.collections.CollectionUtils;
 
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
@@ -34,7 +35,7 @@ public class SensorAssignmentProfileData extends AbstractProfileData<List<? exte
 	/**
 	 * {@link MethodSensorAssignment}s.
 	 */
-	@XmlElementRefs({ @XmlElementRef(type = MethodSensorAssignment.class), @XmlElementRef(type = TimerMethodSensorAssignment.class) })
+	@XmlElementRefs({ @XmlElementRef(type = MethodSensorAssignment.class), @XmlElementRef(type = TimerMethodSensorAssignment.class), @XmlElementRef(type = ChartingMethodSensorAssignment.class) })
 	private List<MethodSensorAssignment> methodSensorAssignments;
 
 	/**

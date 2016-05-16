@@ -4,12 +4,12 @@
 
 	<!-- Http -->
 	<sensor-assignment-profile-data>
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" />
+		<charting-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" charting="true" />
+		<charting-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" charting="true" />
 
 		<!-- Plus timer to start invocation and activate charting -->
-		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" charting="true" starts-invocation="true" />
-		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" charting="true" starts-invocation="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" starts-invocation="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" starts-invocation="true" />
 	</sensor-assignment-profile-data>
 	
 </profile>

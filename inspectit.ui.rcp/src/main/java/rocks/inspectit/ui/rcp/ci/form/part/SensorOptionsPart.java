@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -43,9 +44,9 @@ import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Part for displaying sensor options.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class SensorOptionsPart extends SectionPart implements IPropertyListener {
 
@@ -67,16 +68,21 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 	/**
 	 * All {@link StringConstraintComponent} on the page.
 	 */
-	private List<StringConstraintComponent> constrainComponents = new ArrayList<>();
+	private final List<StringConstraintComponent> constrainComponents = new ArrayList<>();
 
 	/**
 	 * Form page part belongs to.
 	 */
-	private FormPage formPage;
+	private final FormPage formPage;
+
+	/**
+	 * Combo for the HTTP session capture.
+	 */
+	private Combo sessionCaptureCombo;
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param formPage
 	 *            {@link FormPage} section belongs to.
 	 * @param parent
@@ -105,7 +111,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 	/**
 	 * Creates complete client.
-	 * 
+	 *
 	 * @param section
 	 *            {@link Section}
 	 * @param toolkit
@@ -132,6 +138,8 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 				} else if (methodSensorConfig instanceof HttpSensorConfig) {
 					stringConstraintComponent.createComponent(mainComposite, toolkit, "String length of captured HTTP data:",
 							"Defines the maximum string length of captured HTTP data (parameters, headers, attributes, etc) for HTTP sensor.", layoutColumns);
+
+					createHttpSensorConfigOptions((HttpSensorConfig) methodSensorConfig, mainComposite, toolkit);
 				} else if (methodSensorConfig instanceof InvocationSequenceSensorConfig) {
 					stringConstraintComponent.createComponent(mainComposite, toolkit, "String length of captured context(s):",
 							"Defines the maximum string length of captured context (parameters, fields, return values) for invocation sensor.", layoutColumns);
@@ -184,6 +192,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 		}
 		exceptionSimple.addListener(SWT.Selection, dirtyListener);
 		exceptionEnhanced.addListener(SWT.Selection, dirtyListener);
+		sessionCaptureCombo.addListener(SWT.Selection, dirtyListener);
 	}
 
 	/**
@@ -198,6 +207,13 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 				constraintComponent.validateUpdate(true);
 			}
 			((ExceptionSensorConfig) environment.getExceptionSensorConfig()).setEnhanced(exceptionEnhanced.getSelection());
+			for (IMethodSensorConfig sensorTypeConfig : environment.getMethodSensorConfigs()) {
+				if (sensorTypeConfig instanceof HttpSensorConfig) {
+					boolean sessionCapture = (boolean) sessionCaptureCombo.getData(sessionCaptureCombo.getText());
+					((HttpSensorConfig) sensorTypeConfig).setSessionCapture(sessionCapture);
+					break;
+				}
+			}
 		}
 	}
 
@@ -222,7 +238,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 	/**
 	 * Creates info icon with given text as tool-tip.
-	 * 
+	 *
 	 * @param parent
 	 *            Composite to create on.
 	 * @param toolkit
@@ -237,10 +253,41 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 	}
 
 	/**
+	 * Creates special HTTP sensor related options.
+	 *
+	 * @param httpSensorConfig
+	 *            {@link HttpSensorConfig}.
+	 * @param parent
+	 *            Parent composite
+	 * @param toolkit
+	 *            {@link FormToolkit}
+	 */
+	private void createHttpSensorConfigOptions(HttpSensorConfig httpSensorConfig, Composite parent, FormToolkit toolkit) {
+		// session capture
+		toolkit.createLabel(parent, "Session Capture:").setLayoutData(getIndentGridData());
+		sessionCaptureCombo = new Combo(parent, SWT.READ_ONLY);
+		GridData layoutData = new GridData(GridData.FILL_BOTH);
+		layoutData.horizontalSpan = 2;
+		sessionCaptureCombo.setLayoutData(layoutData);
+		sessionCaptureCombo.add("No");
+		sessionCaptureCombo.add("Yes");
+		sessionCaptureCombo.setData("No", Boolean.FALSE);
+		sessionCaptureCombo.setData("Yes", Boolean.TRUE);
+		toolkit.adapt(sessionCaptureCombo, false, false);
+		createInfoLabel(parent, toolkit,
+				"The Http sensor can capture information about the HTTP session that is currently associated with the respective request. In the current realization the http sensor always captures the session attributes at the start of the invocation. Session capturing will never open a new http session, but just read data from an existing one.");
+		if (httpSensorConfig.isSessionCapture()) {
+			sessionCaptureCombo.select(1);
+		} else {
+			sessionCaptureCombo.select(0);
+		}
+	}
+
+	/**
 	 * Help class for managing {@link StringConstraintSensorConfig}s.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private static class StringConstraintComponent {
 
@@ -252,7 +299,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 		/**
 		 * Message manager to use in the validation control decoration.
 		 */
-		private IMessageManager messageManager;
+		private final IMessageManager messageManager;
 
 		/**
 		 * Unlimited button.
@@ -276,7 +323,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param sensorConfig
 		 *            Sensor config.
 		 * @param messageManager
@@ -289,7 +336,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Creates component.
-		 * 
+		 *
 		 * @param parent
 		 *            Parent composite
 		 * @param toolkit
@@ -353,7 +400,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Adds dirty listener to needed controls.
-		 * 
+		 *
 		 * @param listener
 		 *            Dirty listener.
 		 */
@@ -365,7 +412,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Validates the value and updates if needed.
-		 * 
+		 *
 		 * @param update
 		 *            If beside validation an update on the model object should be done.
 		 * @return if value in the control is valid
@@ -412,7 +459,7 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 
 		/**
 		 * Updates the sensor config if it's relating to the same class.
-		 * 
+		 *
 		 * @param sensorConfig
 		 *            new config
 		 * @return <code>true</code> if update occurred

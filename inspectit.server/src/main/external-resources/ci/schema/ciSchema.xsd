@@ -5,6 +5,8 @@
 
   <xs:element name="agent-mappings" type="agentMappings"/>
 
+  <xs:element name="charting-method-sensor-assignment" type="chartingMethodSensorAssignment"/>
+
   <xs:element name="class-loading-sensor-config" type="classLoadingSensorConfig"/>
 
   <xs:element name="compilation-sensor-config" type="compilationSensorConfig"/>
@@ -242,6 +244,7 @@
     <xs:complexContent>
       <xs:extension base="stringConstraintSensorConfig">
         <xs:sequence/>
+        <xs:attribute name="sessionCapture" type="xs:boolean" use="optional"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -337,6 +340,7 @@
           <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element ref="method-sensor-assignment"/>
             <xs:element ref="timer-method-sensor-assignment"/>
+            <xs:element ref="charting-method-sensor-assignment"/>
           </xs:choice>
           <xs:element ref="exception-sensor-assignment" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
@@ -382,7 +386,7 @@
 
   <xs:complexType name="timerMethodSensorAssignment">
     <xs:complexContent>
-      <xs:extension base="methodSensorAssignment">
+      <xs:extension base="chartingMethodSensorAssignment">
         <xs:sequence>
           <xs:element name="context-captures" minOccurs="0">
             <xs:complexType>
@@ -396,9 +400,17 @@
             </xs:complexType>
           </xs:element>
         </xs:sequence>
-        <xs:attribute name="charting" type="xs:boolean" use="optional"/>
         <xs:attribute name="starts-invocation" type="xs:boolean" use="optional"/>
         <xs:attribute name="min-invocation-duration" type="xs:long" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="chartingMethodSensorAssignment">
+    <xs:complexContent>
+      <xs:extension base="methodSensorAssignment">
+        <xs:sequence/>
+        <xs:attribute name="charting" type="xs:boolean" use="optional"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
