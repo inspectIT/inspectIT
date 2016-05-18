@@ -122,6 +122,29 @@ public class ConfigurationInterfaceManagerTest {
 	}
 
 	@Test
+	public void createProfileImport() throws Exception {
+		Profile profile = new Profile();
+		profile.setId("myId");
+		profile.setName("test");
+
+		manager.createProfile(profile);
+
+		assertThat(profile.getId(), is("myId"));
+		assertThat(manager.getAllProfiles(), hasItem(profile));
+	}
+
+	@Test (expectedExceptions = BusinessException.class)
+	public void createProfileImportExists() throws Exception {
+		Profile profile = new Profile();
+		profile.setName("test");
+		manager.createProfile(profile);
+		Profile importProfile = new Profile();
+		importProfile.setId(profile.getId());
+
+		manager.createProfile(importProfile);
+	}
+
+	@Test
 	public void deleteProfile() throws Exception {
 		Profile profile = new Profile();
 		profile.setName("test");
@@ -175,6 +198,44 @@ public class ConfigurationInterfaceManagerTest {
 
 		environment = manager.createEnvironment(environment);
 		assertThat(manager.getAllEnvironments(), hasItem(environment));
+	}
+
+	@Test
+	public void createEnvironmentImport() throws Exception {
+		Environment environment = new Environment();
+		environment.setId("myId");
+		environment.setName("test");
+
+		environment = manager.createEnvironment(environment);
+
+		assertThat(environment.getId(), is("myId"));
+		assertThat(manager.getEnvironment(environment.getId()), is(equalTo(environment)));
+	}
+
+	@Test (expectedExceptions = BusinessException.class)
+	public void createEnvironmentImportExists() throws Exception {
+		Environment environment = new Environment();
+		environment.setName("test");
+		manager.createEnvironment(environment);
+		Environment importEnvironment = new Environment();
+		importEnvironment.setId(environment.getId());
+
+		manager.createEnvironment(importEnvironment);
+	}
+
+	@Test
+	public void createEnvironmentImportProfileDoesNotExists() throws Exception {
+		Environment environment = new Environment();
+		environment.setId("myId");
+		environment.setName("test");
+		Set<String> profiles = new HashSet<>();
+		profiles.add("whatever");
+		environment.setProfileIds(profiles);
+
+		environment = manager.createEnvironment(environment);
+
+		assertThat(environment.getId(), is("myId"));
+		assertThat(environment.getProfileIds(), is(empty()));
 	}
 
 	@Test

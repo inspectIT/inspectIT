@@ -40,9 +40,9 @@ import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Manages all configuration interface operations.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Component
 public class ConfigurationInterfaceManager {
@@ -62,7 +62,7 @@ public class ConfigurationInterfaceManager {
 	/**
 	 * {@link JAXBTransformator}.
 	 */
-	private JAXBTransformator transformator = new JAXBTransformator();
+	private final JAXBTransformator transformator = new JAXBTransformator();
 
 	/**
 	 * Existing profiles in the system mapped by the id.
@@ -77,11 +77,11 @@ public class ConfigurationInterfaceManager {
 	/**
 	 * Currently used agent mapping.
 	 */
-	private AtomicReference<AgentMappings> agentMappingsReference = new AtomicReference<>();
+	private final AtomicReference<AgentMappings> agentMappingsReference = new AtomicReference<>();
 
 	/**
 	 * Returns all existing profiles.
-	 * 
+	 *
 	 * @return Returns all existing profiles.
 	 */
 	public List<Profile> getAllProfiles() {
@@ -90,7 +90,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the profile with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of profile.
 	 * @return {@link Profile}
@@ -107,20 +107,30 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Creates new profile.
-	 * 
+	 *
 	 * @param profile
-	 *            Profile template.
+	 *            Profile template. If profile template has ID set, then this is considered to be
+	 *            import operation.
 	 * @return Returns created profile with correctly set id.
 	 * @throws BusinessException
-	 *             If attempt is made to create common profile.
+	 *             If attempt is made to create common profile or to import existing profile.
 	 * @throws IOException
 	 *             If {@link IOException} occurs during save.
 	 * @throws JAXBException
 	 *             If {@link JAXBException} occurs during save.
 	 */
 	public Profile createProfile(Profile profile) throws BusinessException, JAXBException, IOException {
-		profile.setId(getRandomUUIDString());
-		profile.setCreatedDate(new Date());
+		// if we have set ID then it's a import
+		if (null != profile.getId()) {
+			// only check if we have same ID already
+			if (existingProfiles.containsKey(profile.getId())) {
+				throw new BusinessException("Create the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.PROFILE_DUPLICATED);
+			}
+		} else {
+			profile.setId(getRandomUUIDString());
+			profile.setCreatedDate(new Date());
+		}
+
 		existingProfiles.put(profile.getId(), profile);
 		saveProfile(profile);
 		return profile;
@@ -133,7 +143,7 @@ public class ConfigurationInterfaceManager {
 	 * <li>Profile does not exists on the CMR.
 	 * <li>Profile revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to update.
 	 * @return updated profile instance
@@ -154,7 +164,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Deletes the existing profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to delete.
 	 * @throws IOException
@@ -186,7 +196,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns all existing environment.
-	 * 
+	 *
 	 * @return Returns all existing environment.
 	 */
 	public Collection<Environment> getAllEnvironments() {
@@ -195,7 +205,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the environment with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of environment.
 	 * @return {@link Environment}
@@ -212,28 +222,38 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Creates new environment.
-	 * 
+	 *
 	 * @param environment
-	 *            Environment template.
-	 * @return Returns created environment with correctly set id.
+	 *            Environment template. If environment template has ID set, then this is considered
+	 *            to be import operation.
+	 * @return Returns created environment with correctly set id
+	 * @throws BusinessException
+	 *             If attempt is made to create or import existing environment.
 	 * @throws IOException
 	 *             If {@link IOException} occurs during create.
 	 * @throws JAXBException
 	 *             If {@link JAXBException} occurs during create.
 	 */
-	public Environment createEnvironment(Environment environment) throws JAXBException, IOException {
-		environment.setId(getRandomUUIDString());
-		existingEnvironments.put(environment.getId(), environment);
-
-		// add the default include profiles
-		Set<String> profileIds = new HashSet<>();
-		for (Profile profile : existingProfiles.values()) {
-			if (profile.isDefaultProfile()) {
-				profileIds.add(profile.getId());
+	public Environment createEnvironment(Environment environment) throws BusinessException, JAXBException, IOException {
+		if (null != environment.getId()) {
+			// only check if we have same ID already and all the profiles
+			if (existingEnvironments.containsKey(environment.getId())) {
+				throw new BusinessException("Create the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.ENVIRONMENT_DUPLICATED);
 			}
+			checkProfiles(environment);
+		} else {
+			environment.setId(getRandomUUIDString());
+			// add the default include profiles
+			Set<String> profileIds = new HashSet<>();
+			for (Profile profile : existingProfiles.values()) {
+				if (profile.isDefaultProfile()) {
+					profileIds.add(profile.getId());
+				}
+			}
+			environment.setProfileIds(profileIds);
 		}
-		environment.setProfileIds(profileIds);
 
+		existingEnvironments.put(environment.getId(), environment);
 		saveEnvironment(environment);
 		return environment;
 	}
@@ -245,7 +265,7 @@ public class ConfigurationInterfaceManager {
 	 * <li>Environment does not exists on the CMR.
 	 * <li>Environment revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to update.
 	 * @param checkProfiles
@@ -288,7 +308,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Deletes the existing environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to delete.
 	 * @throws IOException
@@ -313,7 +333,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the currently used agent mappings.
-	 * 
+	 *
 	 * @return Returns the currently used agent mappings.
 	 */
 	public AgentMappings getAgentMappings() {
@@ -322,7 +342,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Sets the agent mappings to be used.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings}
 	 * @param checkEnvironments
@@ -358,7 +378,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Internal process of updating the profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile being updated.
 	 * @return Updated instance.
@@ -396,7 +416,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Cleans the non-existing profiles from the {@link Environment}.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment}.
 	 * @return if environment was changed during the check process
@@ -417,7 +437,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Cleans the non-existing environments from the {@link AgentMappings}.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings}.
 	 * @return if mappings where changed during the check process
@@ -438,7 +458,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves profile and persists it to the list.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to be saved.
 	 * @throws IOException
@@ -457,7 +477,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves {@link Environment} to the disk.
-	 * 
+	 *
 	 * @param environment
 	 *            {@link Environment} to save.
 	 * @throws IOException
@@ -471,7 +491,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Saves agent mapping.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            To save
 	 * @throws IOException
@@ -485,7 +505,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns given path relative to schema part.
-	 * 
+	 *
 	 * @param path
 	 *            path to relativize
 	 * @return path relative to schema part
@@ -637,7 +657,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * If path is a file that ends with the <i>.xml</i> extension.
-	 * 
+	 *
 	 * @param path
 	 *            Path to the file.
 	 * @return If path is a file that ends with the <i>.xml</i> extension.
@@ -648,7 +668,7 @@ public class ConfigurationInterfaceManager {
 
 	/**
 	 * Returns the unique String that will be used for IDs.
-	 * 
+	 *
 	 * @return Returns unique string based on the {@link UUID}.
 	 */
 	private String getRandomUUIDString() {

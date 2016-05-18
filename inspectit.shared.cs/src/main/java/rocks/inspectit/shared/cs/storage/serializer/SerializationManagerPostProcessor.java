@@ -5,6 +5,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.esotericsoftware.kryo.serializers.DefaultArraySerializers.ObjectArraySerializer;
 import com.esotericsoftware.kryo.serializers.DefaultSerializers.EnumSerializer;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
@@ -23,6 +24,7 @@ import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.shared.cs.ci.export.ConfigurationInterfaceExportData;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionMetaDataSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
@@ -273,52 +275,53 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(PositiveValidator.class, new FieldSerializer<PositiveValidator<?>>(kryo, PositiveValidator.class), nextRegistrationId++);
 
 		// INSPECTIT-658
-		// this classes can be registered with FieldSerializer since they are not saved to disk
-		kryo.register(AgentMapping.class, new FieldSerializer<AgentMapping>(kryo, AgentMapping.class), nextRegistrationId++);
-		kryo.register(AgentMappings.class, new FieldSerializer<AgentMappings>(kryo, AgentMappings.class), nextRegistrationId++);
-		kryo.register(Environment.class, new FieldSerializer<Environment>(kryo, Environment.class), nextRegistrationId++);
-		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
+		// this classes are registered with CompatibleFieldSerializer since they can be
+		// exported/imported
+		kryo.register(AgentMapping.class, new CompatibleFieldSerializer<AgentMapping>(kryo, AgentMapping.class), nextRegistrationId++);
+		kryo.register(AgentMappings.class, new CompatibleFieldSerializer<AgentMappings>(kryo, AgentMappings.class), nextRegistrationId++);
+		kryo.register(Environment.class, new CompatibleFieldSerializer<Environment>(kryo, Environment.class), nextRegistrationId++);
+		kryo.register(Profile.class, new CompatibleFieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
 		// assignments
-		kryo.register(ExceptionSensorAssignment.class, new FieldSerializer<ExceptionSensorAssignment>(kryo, ExceptionSensorAssignment.class), nextRegistrationId++);
-		kryo.register(MethodSensorAssignment.class, new FieldSerializer<MethodSensorAssignment>(kryo, MethodSensorAssignment.class), nextRegistrationId++);
-		kryo.register(TimerMethodSensorAssignment.class, new FieldSerializer<TimerMethodSensorAssignment>(kryo, TimerMethodSensorAssignment.class), nextRegistrationId++);
+		kryo.register(ExceptionSensorAssignment.class, new CompatibleFieldSerializer<ExceptionSensorAssignment>(kryo, ExceptionSensorAssignment.class), nextRegistrationId++);
+		kryo.register(MethodSensorAssignment.class, new CompatibleFieldSerializer<MethodSensorAssignment>(kryo, MethodSensorAssignment.class), nextRegistrationId++);
+		kryo.register(TimerMethodSensorAssignment.class, new CompatibleFieldSerializer<TimerMethodSensorAssignment>(kryo, TimerMethodSensorAssignment.class), nextRegistrationId++);
 		// context capture
-		kryo.register(FieldContextCapture.class, new FieldSerializer<FieldContextCapture>(kryo, FieldContextCapture.class), nextRegistrationId++);
-		kryo.register(ParameterContextCapture.class, new FieldSerializer<ParameterContextCapture>(kryo, ParameterContextCapture.class), nextRegistrationId++);
-		kryo.register(ReturnContextCapture.class, new FieldSerializer<ReturnContextCapture>(kryo, ReturnContextCapture.class), nextRegistrationId++);
+		kryo.register(FieldContextCapture.class, new CompatibleFieldSerializer<FieldContextCapture>(kryo, FieldContextCapture.class), nextRegistrationId++);
+		kryo.register(ParameterContextCapture.class, new CompatibleFieldSerializer<ParameterContextCapture>(kryo, ParameterContextCapture.class), nextRegistrationId++);
+		kryo.register(ReturnContextCapture.class, new CompatibleFieldSerializer<ReturnContextCapture>(kryo, ReturnContextCapture.class), nextRegistrationId++);
 		// exclude
-		kryo.register(ExcludeRule.class, new FieldSerializer<ExcludeRule>(kryo, ExcludeRule.class), nextRegistrationId++);
+		kryo.register(ExcludeRule.class, new CompatibleFieldSerializer<ExcludeRule>(kryo, ExcludeRule.class), nextRegistrationId++);
 		// exception sensor config
-		kryo.register(ExceptionSensorConfig.class, new FieldSerializer<ExceptionSensorConfig>(kryo, ExceptionSensorConfig.class), nextRegistrationId++);
+		kryo.register(ExceptionSensorConfig.class, new CompatibleFieldSerializer<ExceptionSensorConfig>(kryo, ExceptionSensorConfig.class), nextRegistrationId++);
 		// method sensor configs
-		kryo.register(ConnectionMetaDataSensorConfig.class, new FieldSerializer<ConnectionMetaDataSensorConfig>(kryo, ConnectionMetaDataSensorConfig.class), nextRegistrationId++);
-		kryo.register(ConnectionSensorConfig.class, new FieldSerializer<ConnectionSensorConfig>(kryo, ConnectionSensorConfig.class), nextRegistrationId++);
-		kryo.register(HttpSensorConfig.class, new FieldSerializer<HttpSensorConfig>(kryo, HttpSensorConfig.class), nextRegistrationId++);
-		kryo.register(InvocationSequenceSensorConfig.class, new FieldSerializer<InvocationSequenceSensorConfig>(kryo, InvocationSequenceSensorConfig.class), nextRegistrationId++);
-		kryo.register(PreparedStatementParameterSensorConfig.class, new FieldSerializer<PreparedStatementParameterSensorConfig>(kryo, PreparedStatementParameterSensorConfig.class),
+		kryo.register(ConnectionMetaDataSensorConfig.class, new CompatibleFieldSerializer<ConnectionMetaDataSensorConfig>(kryo, ConnectionMetaDataSensorConfig.class), nextRegistrationId++);
+		kryo.register(ConnectionSensorConfig.class, new CompatibleFieldSerializer<ConnectionSensorConfig>(kryo, ConnectionSensorConfig.class), nextRegistrationId++);
+		kryo.register(HttpSensorConfig.class, new CompatibleFieldSerializer<HttpSensorConfig>(kryo, HttpSensorConfig.class), nextRegistrationId++);
+		kryo.register(InvocationSequenceSensorConfig.class, new CompatibleFieldSerializer<InvocationSequenceSensorConfig>(kryo, InvocationSequenceSensorConfig.class), nextRegistrationId++);
+		kryo.register(PreparedStatementParameterSensorConfig.class, new CompatibleFieldSerializer<PreparedStatementParameterSensorConfig>(kryo, PreparedStatementParameterSensorConfig.class),
 				nextRegistrationId++);
-		kryo.register(PreparedStatementSensorConfig.class, new FieldSerializer<PreparedStatementSensorConfig>(kryo, PreparedStatementSensorConfig.class), nextRegistrationId++);
-		kryo.register(StatementSensorConfig.class, new FieldSerializer<StatementSensorConfig>(kryo, StatementSensorConfig.class), nextRegistrationId++);
-		kryo.register(TimerSensorConfig.class, new FieldSerializer<TimerSensorConfig>(kryo, TimerSensorConfig.class), nextRegistrationId++);
+		kryo.register(PreparedStatementSensorConfig.class, new CompatibleFieldSerializer<PreparedStatementSensorConfig>(kryo, PreparedStatementSensorConfig.class), nextRegistrationId++);
+		kryo.register(StatementSensorConfig.class, new CompatibleFieldSerializer<StatementSensorConfig>(kryo, StatementSensorConfig.class), nextRegistrationId++);
+		kryo.register(TimerSensorConfig.class, new CompatibleFieldSerializer<TimerSensorConfig>(kryo, TimerSensorConfig.class), nextRegistrationId++);
 		// platform sensor configs
-		kryo.register(ClassLoadingSensorConfig.class, new FieldSerializer<ClassLoadingSensorConfig>(kryo, ClassLoadingSensorConfig.class), nextRegistrationId++);
-		kryo.register(CompilationSensorConfig.class, new FieldSerializer<CompilationSensorConfig>(kryo, CompilationSensorConfig.class), nextRegistrationId++);
-		kryo.register(CpuSensorConfig.class, new FieldSerializer<CpuSensorConfig>(kryo, CpuSensorConfig.class), nextRegistrationId++);
-		kryo.register(MemorySensorConfig.class, new FieldSerializer<MemorySensorConfig>(kryo, MemorySensorConfig.class), nextRegistrationId++);
-		kryo.register(RuntimeSensorConfig.class, new FieldSerializer<RuntimeSensorConfig>(kryo, RuntimeSensorConfig.class), nextRegistrationId++);
-		kryo.register(SystemSensorConfig.class, new FieldSerializer<SystemSensorConfig>(kryo, SystemSensorConfig.class), nextRegistrationId++);
-		kryo.register(ThreadSensorConfig.class, new FieldSerializer<ThreadSensorConfig>(kryo, ThreadSensorConfig.class), nextRegistrationId++);
-		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
-		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
-		kryo.register(Profile.class, new FieldSerializer<Profile>(kryo, Profile.class), nextRegistrationId++);
+		kryo.register(ClassLoadingSensorConfig.class, new CompatibleFieldSerializer<ClassLoadingSensorConfig>(kryo, ClassLoadingSensorConfig.class), nextRegistrationId++);
+		kryo.register(CompilationSensorConfig.class, new CompatibleFieldSerializer<CompilationSensorConfig>(kryo, CompilationSensorConfig.class), nextRegistrationId++);
+		kryo.register(CpuSensorConfig.class, new CompatibleFieldSerializer<CpuSensorConfig>(kryo, CpuSensorConfig.class), nextRegistrationId++);
+		kryo.register(MemorySensorConfig.class, new CompatibleFieldSerializer<MemorySensorConfig>(kryo, MemorySensorConfig.class), nextRegistrationId++);
+		kryo.register(RuntimeSensorConfig.class, new CompatibleFieldSerializer<RuntimeSensorConfig>(kryo, RuntimeSensorConfig.class), nextRegistrationId++);
+		kryo.register(SystemSensorConfig.class, new CompatibleFieldSerializer<SystemSensorConfig>(kryo, SystemSensorConfig.class), nextRegistrationId++);
+		kryo.register(ThreadSensorConfig.class, new CompatibleFieldSerializer<ThreadSensorConfig>(kryo, ThreadSensorConfig.class), nextRegistrationId++);
 		// strategies
-		kryo.register(TimeSendingStrategyConfig.class, new FieldSerializer<TimeSendingStrategyConfig>(kryo, TimeSendingStrategyConfig.class), nextRegistrationId++);
-		kryo.register(ListSendingStrategyConfig.class, new FieldSerializer<ListSendingStrategyConfig>(kryo, ListSendingStrategyConfig.class), nextRegistrationId++);
-		kryo.register(SimpleBufferStrategyConfig.class, new FieldSerializer<SimpleBufferStrategyConfig>(kryo, SimpleBufferStrategyConfig.class), nextRegistrationId++);
-		kryo.register(SizeBufferStrategyConfig.class, new FieldSerializer<SizeBufferStrategyConfig>(kryo, SizeBufferStrategyConfig.class), nextRegistrationId++);
+		kryo.register(TimeSendingStrategyConfig.class, new CompatibleFieldSerializer<TimeSendingStrategyConfig>(kryo, TimeSendingStrategyConfig.class), nextRegistrationId++);
+		kryo.register(ListSendingStrategyConfig.class, new CompatibleFieldSerializer<ListSendingStrategyConfig>(kryo, ListSendingStrategyConfig.class), nextRegistrationId++);
+		kryo.register(SimpleBufferStrategyConfig.class, new CompatibleFieldSerializer<SimpleBufferStrategyConfig>(kryo, SimpleBufferStrategyConfig.class), nextRegistrationId++);
+		kryo.register(SizeBufferStrategyConfig.class, new CompatibleFieldSerializer<SizeBufferStrategyConfig>(kryo, SizeBufferStrategyConfig.class), nextRegistrationId++);
 
 		// INSPECTIT-2020
-		kryo.register(Log4jLoggingSensorConfig.class, new FieldSerializer<Log4jLoggingSensorConfig>(kryo, Log4jLoggingSensorConfig.class), nextRegistrationId++);
+		kryo.register(Log4jLoggingSensorConfig.class, new CompatibleFieldSerializer<Log4jLoggingSensorConfig>(kryo, Log4jLoggingSensorConfig.class), nextRegistrationId++);
+
+		// INSPECTIT-2031
+		kryo.register(ConfigurationInterfaceExportData.class, new CompatibleFieldSerializer<>(kryo, ConfigurationInterfaceExportData.class), nextRegistrationId++);
 	}
 
 }
