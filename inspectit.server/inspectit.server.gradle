@@ -96,35 +96,6 @@ task schemagenCi {
 	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${mainExtResources}/ci/schema", "ciSchema.xsd", ""))
 }
 
-/**
- * Uses ant SchemaGenTask to generate .xsd schema from the annotated classes.
- *
- * @param sourceDir Directory where java files are located.
- * @param outputDir Directory where to store schema.
- * @param fileName Name of the schema file.
- * @param excludes Any excludes patterns to pass to the ant task.
- */
-def schemagen(sourceDir, outputDir, fileName, excludes) {
-	return tasks.create(name: "schemagen-${fileName}") {
-		inputs.sourceDir(sourceDir)
-		outputs.file file("${outputDir}/${fileName}")
-	
-		doLast {
-			file(outputDir).mkdirs()
-			ant.taskdef(name: 'schemagen', classname: 'com.sun.tools.jxc.SchemaGenTask', classpath: configurations.xjc.asPath)
-			ant.schemagen (
-				srcdir: sourceDir,
-				destdir: outputDir,
-				excludes: excludes,
-				includeAntRuntime: 'false',
-				debug: 'true'
-			)
-
-			file("${outputDir}/schema1.xsd").renameTo(file("${outputDir}/${fileName}"))
-		}
-	}
-}
-
 /** Tests on the server must run with specific properties */
 test {
 	def classmexerPath = configurations.classmexer.asPath

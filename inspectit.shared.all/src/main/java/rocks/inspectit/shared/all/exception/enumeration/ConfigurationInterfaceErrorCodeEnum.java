@@ -6,9 +6,9 @@ import rocks.inspectit.shared.all.exception.IErrorCode;
 
 /**
  * Error code enumeration for the CI component.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
@@ -32,6 +32,11 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	 * Environment not existing on the CMR.
 	 */
 	ENVIRONMENT_DOES_NOT_EXIST("The environment to execute the selected operation on does not exist.", "The environment might be deleted.", null),
+	
+	/**
+	 * Import not valid.
+	 */
+	IMPORT_DATA_NOT_VALID("The data you are trying import is not valid.", null, null),
 
 	/**
 	 * IO operation failed.
@@ -65,7 +70,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param description
 	 *            Description of the error code.
 	 * @param possibleCause
@@ -98,7 +103,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #description}.
-	 * 
+	 *
 	 * @return {@link #description}
 	 */
 	public String getDescription() {
@@ -107,7 +112,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleCause}.
-	 * 
+	 *
 	 * @return {@link #possibleCause}
 	 */
 	public String getPossibleCause() {
@@ -116,7 +121,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 
 	/**
 	 * Gets {@link #possibleSolution}.
-	 * 
+	 *
 	 * @return {@link #possibleSolution}
 	 */
 	public String getPossibleSolution() {

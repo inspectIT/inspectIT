@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.xml.sax.SAXException;
 
-import rocks.inspectit.server.jaxb.JAXBTransformator;
 import rocks.inspectit.server.util.ShutdownService;
 import rocks.inspectit.shared.all.util.ResourcesPathResolver;
 import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
@@ -35,6 +34,7 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyV
 import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
+import rocks.inspectit.shared.cs.jaxb.JAXBTransformator;
 
 /**
  * Properties manager bean that controls all properties specified in the configuration files and
