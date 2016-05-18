@@ -83,9 +83,9 @@ import rocks.inspectit.ui.rcp.view.IRefreshableView;
 
 /**
  * View displaying {@link Profile}s and {@link Environment}s.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ConfigurationInterfaceManagerView extends ViewPart implements IRefreshableView, CmrRepositoryChangeListener, IProfileChangeListener, IEnvironmentChangeListener {
 
@@ -305,6 +305,9 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		environmentSelection.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (null != displayedCmrRepositoryDefinition) {
+					selectionProviderAdapter.setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
+				}
 				performUpdate(false);
 			}
 		});
@@ -361,7 +364,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 			viewerColumn.getColumn().setText("Active");
 			viewerColumn.getColumn().setWidth(55);
 			viewerColumn.getColumn()
-					.setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
+			.setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
 
 			viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 			viewerColumn.getColumn().setMoveable(true);
@@ -422,7 +425,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	/**
 	 * Returns the {@link ITreeContentProvider} to be used in the tree viewer. The sub-classes can
 	 * override if needed. Default implementation returns the array/collection provider.
-	 * 
+	 *
 	 * @return Returns the {@link ITreeContentProvider} to be used in the tree viewer.
 	 */
 	protected IContentProvider getContentProvider() {
@@ -432,7 +435,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 	/**
 	 * Returns comparator to be used in the tree viewer. Default implementation returns
 	 * <code>null</code>, which means no-comparator. Sub-class can override.
-	 * 
+	 *
 	 * @return Returns comparator to be used in the tree viewer.
 	 */
 	protected ViewerComparator getViewerComparator() {
@@ -727,7 +730,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 	/**
 	 * Displays the message on the provided composite.
-	 * 
+	 *
 	 * @param text
 	 *            Text of message.
 	 * @param image
@@ -775,7 +778,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 	/**
 	 * Informs that the editing repository for the configuration interface has been changed.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            CmrRepositoryDefinition
 	 */
@@ -787,7 +790,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 	/**
 	 * Performs update.
-	 * 
+	 *
 	 * @param updateInput
 	 *            If the update should go to the CMRs for an updated list of profiles and
 	 *            environments.
@@ -828,7 +831,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 	/**
 	 * Updates profiles and environment by communicating with the CMR.
-	 * 
+	 *
 	 * @param jobListener
 	 *            the listener to the job completion, may be <code>null</code>
 	 */
@@ -880,7 +883,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 	/**
 	 * Makes the view show the environments.
-	 * 
+	 *
 	 * @param update
 	 *            If update of the input should be made.
 	 */
@@ -895,7 +898,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 	/**
 	 * Makes the view show the profiles.
-	 * 
+	 *
 	 * @param update
 	 *            If update of the input should be made.
 	 */
@@ -962,9 +965,9 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 	/**
 	 * Action to select CMR from the form menu.
-	 * 
+	 *
 	 * @author Ivan Senic
-	 * 
+	 *
 	 */
 	private class SelectCmrAction extends Action {
 
@@ -975,7 +978,7 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param cmrRepositoryDefinition
 		 *            {@link CmrRepositoryDefinition}
 		 */
