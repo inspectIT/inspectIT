@@ -9,6 +9,11 @@ evaluationDependsOn(':inspectit.shared.all')
 evaluationDependsOn(':inspectit.shared.cs')
 defaultTasks 'releaseAndAnalyze'
 
+/** Some ui specific properties */
+ext {
+	sharedCsMainJava = project(':inspectit.shared.cs').projectDir.absolutePath + '/src/main/java'
+}
+
 /** Setting compile configuration as plugin in Eclipse needs it */
 configurations {
 	compile {
@@ -37,6 +42,16 @@ cobertura {
 	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
 	coverageDirs += project(':inspectit.shared.cs').sourceSets.main.output.classesDir.path
 	auxiliaryClasspath += fileTree(include: '**/*.jar', dir: eclipsePlugins) 
+}
+
+task schemagenCi {
+	description = 'Schema (.xsd) generation for the configuration interface.'
+	group = BasePlugin.BUILD_GROUP
+	
+	inputs.dir project(':inspectit.shared.cs').sourceSets.main.java.srcDirs
+	outputs.file file("${mainExtResources}/ci/schema/ciSchema.xsd")
+
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${mainExtResources}/ci/schema", "ciSchema.xsd", ""))
 }
 
 /**
@@ -192,7 +207,7 @@ def releaseSingle(os, arch, distName) {
 		def distNameWithExtension = "${distName}.zip"
 		def archiveFile  = file("${pdeBuildDir}/I.inspectit/${distNameWithExtension}")
 		def distDir = file(buildReleasePackages)
-		def logConfigFile = file("${mainExtResources}/logging-config.xml")
+		def extResourcesDir = file(mainExtResources)
 		// match the correct jre
 		def jreFile
 		configurations.jvms.getFiles().each { path ->
@@ -209,7 +224,12 @@ def releaseSingle(os, arch, distName) {
 		from zipTree(archiveFile)
 		into('inspectit'){
 			from files(sharedResourcesLicense)
-			from logConfigFile
+		}
+		into('inspectit'){
+			from extResourcesDir
+			include('logging-config.xml')
+			include('ci/schema/*.xsd')
+			includeEmptyDirs = false
 		}
 		into('inspectit/jre'){
 			from zipTree(jreFile)

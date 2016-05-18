@@ -245,6 +245,15 @@
             Import Storage
          </description>
       </wizard>
+      <wizard
+            class="rocks.inspectit.ui.rcp.ci.wizard.ImportCiWizard"
+            icon="icons/eclipse/import.gif"
+            id="rocks.inspectit.ui.rcp.wizard.importCiWizard"
+            name="Import Configuration">
+         <description>
+            Import Configuration
+         </description>
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.exportWizards">
@@ -255,6 +264,15 @@
             name="Export Storage">
          <description>
             Export Storage
+         </description>
+      </wizard>
+      <wizard
+            class="rocks.inspectit.ui.rcp.ci.wizard.ExportCiWizard"
+            icon="icons/eclipse/export.gif"
+            id="rocks.inspectit.ui.rcp.wizard.exportCiWizard"
+            name="Export Configuration">
+         <description>
+            Export Configuration
          </description>
       </wizard>
    </extension>
@@ -2719,6 +2737,53 @@
             </visibleWhen>
          </command>
          <command
+               commandId="org.eclipse.ui.file.import"
+               style="push">
+            <parameter
+                  name="importWizardId"
+                  value="rocks.inspectit.ui.rcp.wizard.importCiWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <iterate>
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.file.export"
+               style="push">
+            <parameter
+                  name="exportWizardId"
+                  value="rocks.inspectit.ui.rcp.wizard.exportCiWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="+">
+                  </count>
+                  <iterate>
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+         <command
                commandId="org.eclipse.ui.edit.delete"
                style="push"
                tooltip="Delete">
@@ -3134,6 +3199,56 @@
          <separator
                name="rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table.separator2"
                visible="true">
+         </separator>
+         <command
+               commandId="org.eclipse.ui.file.import"
+               style="push">
+            <parameter
+                  name="importWizardId"
+                  value="rocks.inspectit.ui.rcp.wizard.importCiWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <iterate>
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.file.export"
+               style="push">
+            <parameter
+                  name="exportWizardId"
+                  value="rocks.inspectit.ui.rcp.wizard.exportCiWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="+">
+                  </count>
+                  <iterate>
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+         <separator
+               name="rocks.inspectit.ui.rcp.view.configurationInterfaceManager.table.separator3">
          </separator>
          <command
                commandId="org.eclipse.ui.edit.delete"

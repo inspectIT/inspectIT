@@ -305,6 +305,9 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		environmentSelection.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (null != displayedCmrRepositoryDefinition) {
+					selectionProviderAdapter.setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
+				}
 				performUpdate(false);
 			}
 		});

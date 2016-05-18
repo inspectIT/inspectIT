@@ -24,9 +24,9 @@ import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 
 /**
  * Implementation of the {@link ICmrManagementService}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Service
 public class ConfigurationInterfaceService implements IConfigurationInterfaceService {
@@ -70,6 +70,20 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 			throw new TechnicalException("Create the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
 		} catch (IOException e) {
 			throw new TechnicalException("Create the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Profile importProfile(Profile profile) throws BusinessException {
+		try {
+			return ciManager.importProfile(profile);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Import the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Import the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -133,6 +147,20 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Environment importEnvironment(Environment environment) throws BusinessException {
+		try {
+			return ciManager.importEnvironment(environment);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Import the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Import the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Environment updateEnvironment(Environment environment) throws BusinessException {
 		try {
 			return ciManager.updateEnvironment(environment, true);
@@ -179,7 +207,7 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */
