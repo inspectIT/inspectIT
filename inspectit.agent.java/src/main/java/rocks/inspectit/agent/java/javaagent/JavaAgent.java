@@ -24,6 +24,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
@@ -37,10 +38,10 @@ import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 /**
  * The JavaAgent is used since Java 5.0 to instrument classes before they are actually loaded by the
  * VM.
- * 
+ *
  * This method is used by specifying the -javaagent attribute on the command line. Example:
  * <code>-javaagent:inspectit-agent.jar</code>
- * 
+ *
  * @author Patrice Bouillet
  */
 public class JavaAgent implements ClassFileTransformer {
@@ -73,7 +74,7 @@ public class JavaAgent implements ClassFileTransformer {
 
 	/**
 	 * The premain method will be executed before anything else.
-	 * 
+	 *
 	 * @param agentArgs
 	 *            Some arguments.
 	 * @param inst
@@ -235,13 +236,14 @@ public class JavaAgent implements ClassFileTransformer {
 		LOGGER.info("Preloading classes ...");
 
 		StringIndexOutOfBoundsException.class.getClass();
+		LinkedBlockingQueue.class.getClass();
 
 		LOGGER.info("Preloading classes complete...");
 	}
 
 	/**
 	 * See ClassPool#get(String) why it is needed to replace the '.' with '$' for inner class.
-	 * 
+	 *
 	 * @param clazz
 	 *            The class to get the name from.
 	 * @return the name to be passed to javassist.
@@ -263,7 +265,7 @@ public class JavaAgent implements ClassFileTransformer {
 
 	/**
 	 * Returns the path to the inspectit-agent.jar file.
-	 * 
+	 *
 	 * @return the path to the jar file.
 	 */
 	public static String getInspectItAgentJarFileLocation() {
@@ -298,9 +300,9 @@ public class JavaAgent implements ClassFileTransformer {
 	/**
 	 * Self first class loader handling the boundaries of our needed dependency classes and
 	 * inspectit classes so we don't mess up with the target.
-	 * 
+	 *
 	 * @author Patrice Bouillet
-	 * 
+	 *
 	 */
 	public static class InspectItClassLoader extends URLClassLoader {
 
@@ -308,12 +310,12 @@ public class JavaAgent implements ClassFileTransformer {
 		 * We need to ignore some of the self first classes so that they are accessible from this
 		 * class (different class loader) and from the SUD.
 		 */
-		private Set<String> ignoreClasses = new HashSet<String>();
+		private final Set<String> ignoreClasses = new HashSet<String>();
 
 		/**
 		 * Default constructor initialized with the urls of the dependency jars etc. and the parent
 		 * classloader.
-		 * 
+		 *
 		 * @param urls
 		 *            the urls to search for the classes for.
 		 * @param parent
@@ -351,7 +353,7 @@ public class JavaAgent implements ClassFileTransformer {
 		/**
 		 * Analyze this jar file for containing jar files and classes to be used in our own
 		 * classloader.
-		 * 
+		 *
 		 * @param file
 		 *            the file to analyze
 		 * @throws IOException
@@ -372,7 +374,7 @@ public class JavaAgent implements ClassFileTransformer {
 
 		/**
 		 * If the file name denotes a jar file.
-		 * 
+		 *
 		 * @param fileName
 		 *            the file name to define if it is a jar file.
 		 * @return <b>true</b> if the file name denotes a jar file, <b>false</b> otherwise.
@@ -384,7 +386,7 @@ public class JavaAgent implements ClassFileTransformer {
 		/**
 		 * The entry in the jar file is a jar file and needs to be extracted into a temporary file
 		 * and analyzed/added to our valid classes.
-		 * 
+		 *
 		 * @param jarFile
 		 *            the jar file to get the input stream from.
 		 * @param jarEntry
@@ -421,7 +423,7 @@ public class JavaAgent implements ClassFileTransformer {
 
 		/**
 		 * Analyzes the (jar) file to get the contained classes for our single first approach.
-		 * 
+		 *
 		 * @param file
 		 *            the file to analyze.
 		 * @throws IOException
@@ -444,7 +446,7 @@ public class JavaAgent implements ClassFileTransformer {
 		/**
 		 * Convenience method to close the Closeable object and ignore the exception being thrown if
 		 * there is one.
-		 * 
+		 *
 		 * @param closeable
 		 *            the Closeable object.
 		 */
@@ -474,6 +476,7 @@ public class JavaAgent implements ClassFileTransformer {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 			Class<?> result = findLoadedClass(name);
 			if (null != result) {
