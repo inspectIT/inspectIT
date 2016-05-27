@@ -1,3 +1,4 @@
+
 package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -75,13 +76,14 @@ public class CpuInformationTest extends TestBase {
 			when(osBean.getAvailableProcessors()).thenReturn(availableProc);
 			when(osBean.getProcessCpuTime()).thenReturn(processCpuTime);
 			when(osBean.retrieveCpuUsage()).thenReturn(cpuUsage);
-			when(sensorTypeConfig.getId()).thenReturn(sensorType);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+
+			when(idManager.getPlatformId()).thenReturn(platformIdent);
+			when(idManager.getRegisteredSensorTypeId(sensorType)).thenReturn(sensorType);
 
 			// no current data object is available
 			when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);
 
-			cpuInfo.update(coreService);
+			cpuInfo.update(coreService, sensorType);
 
 			// -> The service must create a new one and add it to the storage
 			// We use an argument capturer to further inspect the given argument.
@@ -123,14 +125,15 @@ public class CpuInformationTest extends TestBase {
 
 			// We use an argument capturer to further inspect the given argument.
 			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			SystemSensorData parameter = null;
+			SystemSensorData parameter;
 
 			when(runtimeBean.getUptime()).thenReturn(uptime1).thenReturn(uptime2);
 			when(osBean.getAvailableProcessors()).thenReturn(availableProc);
 			when(osBean.getProcessCpuTime()).thenReturn(processCpuTime1).thenReturn(processCpuTime2);
 			when(osBean.retrieveCpuUsage()).thenReturn(cpuUsage1).thenReturn(cpuUsage2);
-			when(sensorTypeConfig.getId()).thenReturn(sensorType);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+
+			when(idManager.getPlatformId()).thenReturn(platformIdent);
+			when(idManager.getRegisteredSensorTypeId(sensorType)).thenReturn(sensorType);
 
 			// ------------------------
 			// FIRST UPDATE CALL
@@ -139,7 +142,7 @@ public class CpuInformationTest extends TestBase {
 			// initialized version. The second call provides the parameter that was
 			// internally registered.
 			when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);
-			cpuInfo.update(coreService);
+			cpuInfo.update(coreService, sensorType);
 
 			// -> The service must create a new one and add it to the storage
 			verify(coreService, times(1)).addPlatformSensorData(eq(sensorType), sensorDataCaptor.capture());
@@ -164,7 +167,7 @@ public class CpuInformationTest extends TestBase {
 			// SECOND UPDATE CALL
 			// ------------------------
 			when(coreService.getPlatformSensorData(sensorType)).thenReturn(parameter);
-			cpuInfo.update(coreService);
+			cpuInfo.update(coreService, sensorType);
 			verify(coreService, times(1)).addPlatformSensorData(eq(sensorType), sensorDataCaptor.capture());
 
 			// Cast the parameter to the expected concrete class:
@@ -196,12 +199,13 @@ public class CpuInformationTest extends TestBase {
 			when(runtimeBean.getUptime()).thenReturn(uptime);
 			when(osBean.getAvailableProcessors()).thenReturn(availableProc);
 			when(osBean.getProcessCpuTime()).thenReturn(processCpuTime);
-			when(sensorTypeConfig.getId()).thenReturn(sensorType);
-			when(platformManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
+
+			when(idManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
+			when(idManager.getRegisteredSensorTypeId(sensorType)).thenThrow(new IdNotAvailableException("expected"));
 
 			// no current data object is available
 			when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);
-			cpuInfo.update(coreService);
+			cpuInfo.update(coreService, sensorType);
 
 			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
 			verify(coreService, times(0)).addPlatformSensorData(eq(sensorType), sensorDataCaptor.capture());
