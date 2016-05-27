@@ -250,16 +250,16 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * {@inheritDoc}
 	 */
 	public void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(sensorTypeIdent);
-		buffer.append('.');
-		buffer.append(objectName);
-		buffer.append('.');
-		buffer.append(attributeName);
-		buffer.append('.');
+		StringBuilder builder = new StringBuilder();
+		builder.append(sensorTypeIdent);
+		builder.append('.');
+		builder.append(objectName);
+		builder.append('.');
+		builder.append(attributeName);
+		builder.append('.');
 		// Added timestamp to be able to send multiple objects to cmr.
-		buffer.append(jmxSensorValueData.getTimeStamp().getTime());
-		sensorDataObjects.put(buffer.toString(), jmxSensorValueData);
+		builder.append(jmxSensorValueData.getTimeStamp().getTime());
+		sensorDataObjects.put(builder.toString(), jmxSensorValueData);
 		notifyListListeners();
 	}
 
@@ -267,15 +267,15 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * {@inheritDoc}
 	 */
 	public void addMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix, MethodSensorData methodSensorData) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
-			buffer.append(prefix);
-			buffer.append('.');
+			builder.append(prefix);
+			builder.append('.');
 		}
-		buffer.append(methodIdent);
-		buffer.append('.');
-		buffer.append(sensorTypeIdent);
-		sensorDataObjects.put(buffer.toString(), methodSensorData);
+		builder.append(methodIdent);
+		builder.append('.');
+		builder.append(sensorTypeIdent);
+		sensorDataObjects.put(builder.toString(), methodSensorData);
 		notifyListListeners();
 	}
 
@@ -283,15 +283,15 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * {@inheritDoc}
 	 */
 	public MethodSensorData getMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
-			buffer.append(prefix);
-			buffer.append('.');
+			builder.append(prefix);
+			builder.append('.');
 		}
-		buffer.append(methodIdent);
-		buffer.append('.');
-		buffer.append(sensorTypeIdent);
-		return (MethodSensorData) sensorDataObjects.get(buffer.toString());
+		builder.append(methodIdent);
+		builder.append('.');
+		builder.append(sensorTypeIdent);
+		return (MethodSensorData) sensorDataObjects.get(builder.toString());
 	}
 
 	/**
@@ -313,11 +313,11 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * {@inheritDoc}
 	 */
 	public void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(sensorTypeIdent);
-		buffer.append("::");
-		buffer.append(throwableIdentityHashCode);
-		String key = buffer.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append(sensorTypeIdent);
+		builder.append("::");
+		builder.append(throwableIdentityHashCode);
+		String key = builder.toString();
 
 		// we always only save the first data object, because this object contains the nested
 		// objects to create the whole exception tree
@@ -333,27 +333,27 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * {@inheritDoc}
 	 */
 	public ExceptionSensorData getExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(sensorTypeIdent);
-		buffer.append("::");
-		buffer.append(throwableIdentityHashCode);
+		StringBuilder builder = new StringBuilder();
+		builder.append(sensorTypeIdent);
+		builder.append("::");
+		builder.append(throwableIdentityHashCode);
 
-		return (ExceptionSensorData) sensorDataObjects.get(buffer.toString());
+		return (ExceptionSensorData) sensorDataObjects.get(builder.toString());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void addObjectStorage(long sensorTypeIdent, long methodIdent, String prefix, IObjectStorage objectStorage) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
-			buffer.append(prefix);
-			buffer.append('.');
+			builder.append(prefix);
+			builder.append('.');
 		}
-		buffer.append(methodIdent);
-		buffer.append('.');
-		buffer.append(sensorTypeIdent);
-		objectStorages.put(buffer.toString(), objectStorage);
+		builder.append(methodIdent);
+		builder.append('.');
+		builder.append(sensorTypeIdent);
+		objectStorages.put(builder.toString(), objectStorage);
 		notifyListListeners();
 	}
 
@@ -361,15 +361,15 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * {@inheritDoc}
 	 */
 	public IObjectStorage getObjectStorage(long sensorTypeIdent, long methodIdent, String prefix) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
-			buffer.append(prefix);
-			buffer.append('.');
+			builder.append(prefix);
+			builder.append('.');
 		}
-		buffer.append(methodIdent);
-		buffer.append('.');
-		buffer.append(sensorTypeIdent);
-		return (IObjectStorage) objectStorages.get(buffer.toString());
+		builder.append(methodIdent);
+		builder.append('.');
+		builder.append(sensorTypeIdent);
+		return (IObjectStorage) objectStorages.get(builder.toString());
 	}
 
 	/**
