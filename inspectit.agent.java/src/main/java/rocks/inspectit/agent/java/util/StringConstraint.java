@@ -106,7 +106,7 @@ public class StringConstraint {
 
 			String[] value = entry.getValue();
 
-			String[] convertedValue = null;
+			String[] convertedValue;
 			if (null == value) {
 				convertedValue = new String[1];
 				convertedValue[0] = "<notset>";
