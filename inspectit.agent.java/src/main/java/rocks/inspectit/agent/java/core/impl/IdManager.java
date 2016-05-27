@@ -39,6 +39,7 @@ import rocks.inspectit.shared.all.version.VersionService;
 @DependsOn("configurationReader")
 public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 
+	public static final String IS_NOT_MAPPED = "' is not mapped";
 	/**
 	 * The logger of the class.
 	 */
@@ -245,7 +246,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		// do not enter the block if the method ID map already contains this
 		// identifier (which means that it is already registered).
 		if (!methodIdMap.containsKey(methodIdentifier)) {
-			throw new IdNotAvailableException("Method ID '" + methodId + "' is not mapped");
+			throw new IdNotAvailableException("Method ID '" + methodId + IS_NOT_MAPPED);
 		} else {
 			Long registeredMethodIdentifier = methodIdMap.get(methodIdentifier);
 			return registeredMethodIdentifier.longValue();
@@ -260,7 +261,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		Long sensorTypeIdentifier = Long.valueOf(sensorTypeId);
 
 		if (!sensorTypeIdMap.containsKey(sensorTypeIdentifier)) {
-			throw new IdNotAvailableException("Sensor Type ID '" + sensorTypeId + "' is not mapped");
+			throw new IdNotAvailableException("Sensor Type ID '" + sensorTypeId + IS_NOT_MAPPED);
 		} else {
 			Long registeredSensorTypeIdentifier = sensorTypeIdMap.get(sensorTypeIdentifier);
 			return registeredSensorTypeIdentifier.longValue();
@@ -275,7 +276,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		Long mBeanIdentifier = Long.valueOf(mBeanId);
 
 		if (!sensorTypeIdMap.containsKey(mBeanIdentifier)) {
-			throw new IdNotAvailableException("mBean '" + mBeanId + "' is not mapped");
+			throw new IdNotAvailableException("mBean '" + mBeanId + IS_NOT_MAPPED);
 		} else {
 			Long registeredSensorTypeIdentifier = jmxDefinitionDataIdMap.get(mBeanIdentifier);
 			return registeredSensorTypeIdentifier.longValue();
@@ -547,6 +548,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 		 * The default wait time between the registrations.
 		 */
 		private static final long REGISTRATION_WAIT_TIME = 10000L;
+		public static final String REGISTERED_ID_LOCAL_GLOBAL = " registered. ID (local/global): ";
 
 		/**
 		 * Creates a new instance of the <code>RegistrationThread</code> as a daemon thread.
@@ -760,7 +762,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 				sensorTypeIdMap.put(localId, Long.valueOf(registeredId));
 
 				if (log.isDebugEnabled()) {
-					log.debug("Sensor type " + astc.toString() + " registered. ID (local/global): " + localId + "/" + registeredId);
+					log.debug("Sensor type " + astc.toString() + REGISTERED_ID_LOCAL_GLOBAL + localId + "/" + registeredId);
 				}
 			}
 		}
@@ -803,7 +805,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 				methodIdMap.put(localId, Long.valueOf(registeredId));
 
 				if (log.isDebugEnabled()) {
-					log.debug("Method " + rsc.toString() + " registered. ID (local/global): " + localId + "/" + registeredId);
+					log.debug("Method " + rsc.toString() + REGISTERED_ID_LOCAL_GLOBAL + localId + "/" + registeredId);
 				}
 			}
 		}
@@ -845,7 +847,7 @@ public class IdManager implements IIdManager, InitializingBean, DisposableBean {
 				jmxDefinitionDataIdMap.put(localId, Long.valueOf(registeredId));
 
 				if (log.isDebugEnabled()) {
-					log.debug("Method " + config.toString() + " registered. ID (local/global): " + localId + "/" + registeredId);
+					log.debug("Method " + config.toString() + REGISTERED_ID_LOCAL_GLOBAL + localId + "/" + registeredId);
 				}
 			}
 		}

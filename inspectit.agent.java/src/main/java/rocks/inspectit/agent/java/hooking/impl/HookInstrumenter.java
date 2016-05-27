@@ -32,6 +32,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class HookInstrumenter implements IHookInstrumenter {
 
+	public static final String DISPATCH_FIRST_METHOD_AFTER_BODY = ".dispatchFirstMethodAfterBody(";
+	public static final String DISPATCH_SECOND_METHOD_AFTER_BODY = ".dispatchSecondMethodAfterBody(";
+	public static final String THROW_E = "throw $e; ";
+	public static final String L_ARGS = "l, $0, $args);";
 	/**
 	 * The logger of the class.
 	 */
@@ -121,8 +125,8 @@ public class HookInstrumenter implements IHookInstrumenter {
 			if (Modifier.isStatic(method.getModifiers())) {
 				// static method
 				method.insertBefore(hookDispatcherTarget + ".dispatchMethodBeforeBody(" + methodId + "l, null, $args);");
-				method.insertAfter(hookDispatcherTarget + ".dispatchFirstMethodAfterBody(" + methodId + "l, null, $args, ($w)$_);", asFinally);
-				method.insertAfter(hookDispatcherTarget + ".dispatchSecondMethodAfterBody(" + methodId + "l, null, $args, ($w)$_);", asFinally);
+				method.insertAfter(hookDispatcherTarget + DISPATCH_FIRST_METHOD_AFTER_BODY + methodId + "l, null, $args, ($w)$_);", asFinally);
+				method.insertAfter(hookDispatcherTarget + DISPATCH_SECOND_METHOD_AFTER_BODY + methodId + "l, null, $args, ($w)$_);", asFinally);
 
 				if (!asFinally) {
 					// the exception sensor is activated, so instrument the
@@ -131,9 +135,9 @@ public class HookInstrumenter implements IHookInstrumenter {
 				}
 			} else {
 				// normal method
-				method.insertBefore(hookDispatcherTarget + ".dispatchMethodBeforeBody(" + methodId + "l, $0, $args);");
-				method.insertAfter(hookDispatcherTarget + ".dispatchFirstMethodAfterBody(" + methodId + "l, $0, $args, ($w)$_);", asFinally);
-				method.insertAfter(hookDispatcherTarget + ".dispatchSecondMethodAfterBody(" + methodId + "l, $0, $args, ($w)$_);", asFinally);
+				method.insertBefore(hookDispatcherTarget + ".dispatchMethodBeforeBody(" + methodId + L_ARGS);
+				method.insertAfter(hookDispatcherTarget + DISPATCH_FIRST_METHOD_AFTER_BODY + methodId + "l, $0, $args, ($w)$_);", asFinally);
+				method.insertAfter(hookDispatcherTarget + DISPATCH_SECOND_METHOD_AFTER_BODY + methodId + "l, $0, $args, ($w)$_);", asFinally);
 
 				if (!asFinally) {
 					// the exception sensor is activated, so instrument the
@@ -179,7 +183,7 @@ public class HookInstrumenter implements IHookInstrumenter {
 			boolean asFinally = !(exceptionSensorActivated && exceptionSensorEnhanced);
 
 			constructor.insertBefore(hookDispatcherTarget + ".dispatchConstructorBeforeBody(" + constructorId + "l, $args);");
-			constructor.insertAfter(hookDispatcherTarget + ".dispatchConstructorAfterBody(" + constructorId + "l, $0, $args);", asFinally);
+			constructor.insertAfter(hookDispatcherTarget + ".dispatchConstructorAfterBody(" + constructorId + L_ARGS, asFinally);
 
 			if (!asFinally) {
 				instrumentConstructorWithTryCatch(constructor, constructorId);
@@ -243,12 +247,12 @@ public class HookInstrumenter implements IHookInstrumenter {
 
 		if (!isStatic) {
 			// normal method
-			method.addCatch(hookDispatcherTarget + ".dispatchOnThrowInBody(" + methodId + "l, $0, $args, $e);" + hookDispatcherTarget + ".dispatchFirstMethodAfterBody(" + methodId
-					+ "l, $0, $args, null);" + hookDispatcherTarget + ".dispatchSecondMethodAfterBody(" + methodId + "l, $0, $args, null);" + "throw $e; ", type);
+			method.addCatch(hookDispatcherTarget + ".dispatchOnThrowInBody(" + methodId + "l, $0, $args, $e);" + hookDispatcherTarget + DISPATCH_FIRST_METHOD_AFTER_BODY + methodId
+					+ "l, $0, $args, null);" + hookDispatcherTarget + DISPATCH_SECOND_METHOD_AFTER_BODY + methodId + "l, $0, $args, null);" + THROW_E, type);
 		} else {
 			// static method
-			method.addCatch(hookDispatcherTarget + ".dispatchOnThrowInBody(" + methodId + "l, null, $args, $e);" + hookDispatcherTarget + ".dispatchFirstMethodAfterBody(" + methodId
-					+ "l, null, $args, null);" + hookDispatcherTarget + ".dispatchSecondMethodAfterBody(" + methodId + "l, null, $args, null);" + "throw $e; ", type);
+			method.addCatch(hookDispatcherTarget + ".dispatchOnThrowInBody(" + methodId + "l, null, $args, $e);" + hookDispatcherTarget + DISPATCH_FIRST_METHOD_AFTER_BODY + methodId
+					+ "l, null, $args, null);" + hookDispatcherTarget + DISPATCH_SECOND_METHOD_AFTER_BODY + methodId + "l, null, $args, null);" + THROW_E, type);
 		}
 	}
 
@@ -277,7 +281,7 @@ public class HookInstrumenter implements IHookInstrumenter {
 
 		CtClass type = ClassPool.getDefault().get("java.lang.Throwable");
 		constructor.addCatch(hookDispatcherTarget + ".dispatchConstructorOnThrowInBody(" + constructorId + "l, $0, $args, $e);" + hookDispatcherTarget + ".dispatchConstructorAfterBody("
-				+ constructorId + "l, $0, $args);" + "throw $e; ", type);
+				+ constructorId + L_ARGS + THROW_E, type);
 	}
 
 	/**

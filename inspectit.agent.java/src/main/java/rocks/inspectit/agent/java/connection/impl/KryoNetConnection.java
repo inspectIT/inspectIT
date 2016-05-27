@@ -47,6 +47,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 @Component
 public class KryoNetConnection implements IConnection {
 
+	public static final String UNREGISTER_PLATFORM_LIST_STRING = "unregisterPlatform(List,String)";
+	public static final String COULD_NOT_UN_REGISTER_THE_PLATFORM = "Could not un-register the platform";
+	public static final String COULD_NOT_REGISTER_THE_METHOD_SENSOR_TYPE = "Could not register the method sensor type";
 	/**
 	 * The logger of the class.
 	 */
@@ -208,9 +211,9 @@ public class KryoNetConnection implements IConnection {
 		} catch (SocketException socketException) {
 			log.error("Could not obtain network interfaces from this machine!");
 			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", socketException);
+				log.trace(UNREGISTER_PLATFORM_LIST_STRING, socketException);
 			}
-			throw new RegistrationException("Could not un-register the platform", socketException);
+			throw new RegistrationException(COULD_NOT_UN_REGISTER_THE_PLATFORM, socketException);
 		}
 
 		// make call
@@ -247,9 +250,9 @@ public class KryoNetConnection implements IConnection {
 		} catch (SocketException socketException) {
 			log.error("Could not obtain network interfaces from this machine!");
 			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", socketException);
+				log.trace(UNREGISTER_PLATFORM_LIST_STRING, socketException);
 			}
-			throw new RegistrationException("Could not un-register the platform", socketException);
+			throw new RegistrationException(COULD_NOT_UN_REGISTER_THE_PLATFORM, socketException);
 		}
 
 		// make call
@@ -265,9 +268,9 @@ public class KryoNetConnection implements IConnection {
 			call.makeCall();
 		} catch (ExecutionException executionException) {
 			if (log.isTraceEnabled()) {
-				log.trace("unregisterPlatform(List,String)", executionException);
+				log.trace(UNREGISTER_PLATFORM_LIST_STRING, executionException);
 			}
-			throw new RegistrationException("Could not un-register the platform", executionException);
+			throw new RegistrationException(COULD_NOT_UN_REGISTER_THE_PLATFORM, executionException);
 		}
 	}
 
@@ -323,8 +326,8 @@ public class KryoNetConnection implements IConnection {
 			return id.longValue();
 		} catch (ExecutionException executionException) {
 			// there should be no execution exception
-			log.error("Could not register the method sensor type", executionException);
-			throw new RegistrationException("Could not register the method sensor type", executionException);
+			log.error(COULD_NOT_REGISTER_THE_METHOD_SENSOR_TYPE, executionException);
+			throw new RegistrationException(COULD_NOT_REGISTER_THE_METHOD_SENSOR_TYPE, executionException);
 		}
 	}
 
@@ -362,7 +365,7 @@ public class KryoNetConnection implements IConnection {
 		} catch (ExecutionException executionException) {
 			// there should be no execution exception
 			log.error("Could not register the jmx sensor type", executionException);
-			throw new RegistrationException("Could not register the method sensor type", executionException);
+			throw new RegistrationException(COULD_NOT_REGISTER_THE_METHOD_SENSOR_TYPE, executionException);
 		}
 	}
 
