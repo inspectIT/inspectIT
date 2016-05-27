@@ -267,8 +267,8 @@ public class SystemInformation extends AbstractPlatformSensor implements IPlatfo
 			SystemInformationData systemData = new SystemInformationData(timestamp, platformId, sensorTypeIdent);
 
 			updateRequested = false;
-			String vmArgumentName = "";
-			String vmArgumentValue = "";
+			String vmArgumentName;
+			String vmArgumentValue;
 			long totalPhysMemory = this.getTotalPhysMemory();
 			long totalSwapSpace = this.getTotalSwapSpace();
 			int availableProcessors = this.getAvailableProcessors();

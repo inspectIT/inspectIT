@@ -87,8 +87,7 @@ public class IbmJava6OperatingSystemInfoProvider extends DefaultOperatingSystemI
 	 *             If any exception occurs during the initialization.
 	 */
 	private void initAndCheckEnvironment() throws Exception {
-		Class<?> ibmOperatingSystemMxBeanClass = null;
-		ibmOperatingSystemMxBeanClass = Class.forName(IBM_OPERATING_SYSTEM_MX_BEAN_CLASS);
+		Class<?> ibmOperatingSystemMxBeanClass = Class.forName(IBM_OPERATING_SYSTEM_MX_BEAN_CLASS);
 
 		if (null != ibmOperatingSystemMxBeanClass) {
 			Method getInstanceMethod = ibmOperatingSystemMxBeanClass.getDeclaredMethod("getInstance");
