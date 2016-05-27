@@ -44,6 +44,8 @@ import javassist.Modifier;
 @Component
 public class ConfigurationStorage implements IConfigurationStorage, InitializingBean {
 
+	public static final String SUPERCLASS = "superclass";
+	public static final String INTERFACE = "interface";
 	/**
 	 * The logger of the class.
 	 */
@@ -390,12 +392,12 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		}
 
 		// check if we are dealing with a superclass definition
-		if (settings.containsKey("superclass") && settings.get("superclass").equals("true")) {
+		if (settings.containsKey(SUPERCLASS) && settings.get(SUPERCLASS).equals("true")) {
 			sensorConfig.setSuperclass(true);
 		}
 
 		// check if we are dealing with a interface definition
-		if (settings.containsKey("interface") && settings.get("interface").equals("true")) {
+		if (settings.containsKey(INTERFACE) && settings.get(INTERFACE).equals("true")) {
 			sensorConfig.setInterface(true);
 		}
 
@@ -693,12 +695,12 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		sensorConfig.setVirtual(isVirtual);
 
 		// check if we are dealing with a superclass definition
-		if (settings.containsKey("superclass") && settings.get("superclass").equals("true")) {
+		if (settings.containsKey(SUPERCLASS) && settings.get(SUPERCLASS).equals("true")) {
 			sensorConfig.setSuperclass(true);
 		}
 
 		// check if we are dealing with a interface definition
-		if (settings.containsKey("interface") && settings.get("interface").equals("true")) {
+		if (settings.containsKey(INTERFACE) && settings.get(INTERFACE).equals("true")) {
 			sensorConfig.setInterface(true);
 		}
 

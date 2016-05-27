@@ -41,6 +41,10 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 @Component("configurationReader")
 public class FileConfigurationReader implements IConfigurationReader, InitializingBean {
 
+	public static final String ABORTING = ", aborting!";
+	public static final String PROPERTY = "property";
+	public static final String FIELD = "field";
+	public static final String RETURN = "return";
 	/**
 	 * The logger of the class.
 	 */
@@ -157,7 +161,7 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 			}
 
 		} catch (FileNotFoundException e) {
-			log.info("Agent Configuration file not found at " + pathToConfig + ", aborting!");
+			log.info("Agent Configuration file not found at " + pathToConfig + ABORTING);
 			throw new ParserException("Agent Configuration file not found at " + pathToConfig, e);
 		}
 	}
@@ -494,28 +498,28 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 				String leftSide = parameterTokenizer.nextToken();
 				String rightSide = parameterTokenizer.nextToken();
 
-				if ("property".equals(leftSide) || "p".equals(leftSide)) {
+				if (PROPERTY.equals(leftSide) || "p".equals(leftSide)) {
 					@SuppressWarnings("unchecked")
-					List<String> propertyAccessorList = (List<String>) settings.get("property");
+					List<String> propertyAccessorList = (List<String>) settings.get(PROPERTY);
 					if (null == propertyAccessorList) {
 						propertyAccessorList = new ArrayList<String>();
-						settings.put("property", propertyAccessorList);
+						settings.put(PROPERTY, propertyAccessorList);
 					}
 					propertyAccessorList.add(rightSide);
-				} else if ("field".equals(leftSide) || "f".equals(leftSide)) {
+				} else if (FIELD.equals(leftSide) || "f".equals(leftSide)) {
 					@SuppressWarnings("unchecked")
-					List<String> propertyAccessorList = (List<String>) settings.get("field");
+					List<String> propertyAccessorList = (List<String>) settings.get(FIELD);
 					if (null == propertyAccessorList) {
 						propertyAccessorList = new ArrayList<String>();
-						settings.put("field", propertyAccessorList);
+						settings.put(FIELD, propertyAccessorList);
 					}
 					propertyAccessorList.add(rightSide);
-				} else if ("return".equals(leftSide) || "r".equals(leftSide)) {
+				} else if (RETURN.equals(leftSide) || "r".equals(leftSide)) {
 					@SuppressWarnings("unchecked")
-					List<String> propertyAccessorList = (List<String>) settings.get("return");
+					List<String> propertyAccessorList = (List<String>) settings.get(RETURN);
 					if (null == propertyAccessorList) {
 						propertyAccessorList = new ArrayList<String>();
-						settings.put("return", propertyAccessorList);
+						settings.put(RETURN, propertyAccessorList);
 					}
 					propertyAccessorList.add(rightSide);
 				} else {
@@ -627,7 +631,7 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 			file = new File(new File(pathToParentFile).getParent() + File.separator + fileName);
 		}
 		if (file.isDirectory()) {
-			log.info("Specified additional configuration is a folder: " + file.getAbsolutePath() + ", aborting!");
+			log.info("Specified additional configuration is a folder: " + file.getAbsolutePath() + ABORTING);
 			throw new ParserException("Specified additional configuration is a folder: " + file.getAbsolutePath());
 		}
 
@@ -637,7 +641,7 @@ public class FileConfigurationReader implements IConfigurationReader, Initializi
 			InputStreamReader reader = new InputStreamReader(is);
 			this.parse(reader, file.getAbsolutePath());
 		} catch (FileNotFoundException e) {
-			log.info("Additional agent configuration file not found at " + file.getAbsolutePath() + ", aborting!");
+			log.info("Additional agent configuration file not found at " + file.getAbsolutePath() + ABORTING);
 			throw new ParserException("Additional agent Configuration file not found at " + file.getAbsolutePath(), e);
 		}
 	}

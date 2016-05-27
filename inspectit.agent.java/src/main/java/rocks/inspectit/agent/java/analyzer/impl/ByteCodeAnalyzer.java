@@ -51,6 +51,11 @@ import org.springframework.stereotype.Component;
 public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 
 	/**
+	 * Error message for problems during instrumentation.
+	 */
+	private static final String ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS = "Error occurred instrumenting the byte code of class ";
+
+	/**
 	 * Log for the class.
 	 */
 	@Log
@@ -152,19 +157,19 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer {
 
 			return instrumentedByteCode;
 		} catch (NotFoundException notFoundException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, notFoundException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, notFoundException);
 			return null;
 		} catch (IOException iOException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, iOException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, iOException);
 			return null;
 		} catch (CannotCompileException cannotCompileException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, cannotCompileException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, cannotCompileException);
 			return null;
 		} catch (HookException hookException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, hookException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, hookException);
 			return null;
 		} catch (StorageException storageException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, storageException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, storageException);
 			return null;
 		} finally {
 			// Remove the byte array class path from the class pool. The class
