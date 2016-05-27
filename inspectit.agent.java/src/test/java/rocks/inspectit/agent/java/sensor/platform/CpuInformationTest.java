@@ -119,7 +119,7 @@ public class CpuInformationTest extends AbstractLogSupport {
 
 		// We use an argument capturer to further inspect the given argument.
 		ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-		SystemSensorData parameter = null;
+		SystemSensorData parameter;
 
 		when(runtimeBean.getUptime()).thenReturn(uptime1).thenReturn(uptime2);
 		when(osBean.getAvailableProcessors()).thenReturn(availableProc);

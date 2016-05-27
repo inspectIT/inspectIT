@@ -127,7 +127,7 @@ public class HookInstrumenterTest extends AbstractLogSupport {
 			parameters = new Object[0];
 		}
 		Class<?> clazz = object.getClass();
-		Class<?>[] parameterClasses = null;
+		Class<?>[] parameterClasses;
 		parameterClasses = new Class[parameters.length];
 		for (int i = 0; i < parameterClasses.length; i++) {
 			String parameter = (String) parameters[i];

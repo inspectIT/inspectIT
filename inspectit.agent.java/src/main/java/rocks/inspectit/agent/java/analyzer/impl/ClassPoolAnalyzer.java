@@ -137,7 +137,7 @@ public class ClassPoolAnalyzer implements IClassPoolAnalyzer {
 			classLoaders.add(classLoader);
 		}
 
-		ClassPool cp = null;
+		ClassPool cp;
 		if (null != classLoader.getParent() && !classLoaders.contains(classLoader.getParent())) {
 			// If the class loader has got a parent one and was not seen before
 			// -> initialize that one first

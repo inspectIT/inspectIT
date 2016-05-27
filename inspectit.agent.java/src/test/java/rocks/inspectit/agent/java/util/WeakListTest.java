@@ -57,10 +57,6 @@ public class WeakListTest {
 		weakList.add(objectTwo);
 		weakList.add(objectThree);
 
-		objectOne = null;
-		objectTwo = null;
-		objectThree = null;
-
 		System.gc();
 
 		weakList.clear();
@@ -76,8 +72,6 @@ public class WeakListTest {
 		weakList.add(objectOne);
 		weakList.add(objectTwo);
 
-		objectOne = null;
-
 		assertThat(weakList, hasItem(objectTwo));
 	}
 
@@ -88,8 +82,6 @@ public class WeakListTest {
 
 		weakList.add(objectOne);
 		weakList.add(objectTwo);
-
-		objectOne = null;
 
 		System.gc();
 
