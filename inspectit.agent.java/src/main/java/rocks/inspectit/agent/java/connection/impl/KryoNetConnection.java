@@ -44,6 +44,25 @@ import rocks.inspectit.shared.all.spring.logger.Log;
  */
 @Component
 public class KryoNetConnection implements IConnection {
+	/**
+	 * Register platform message.
+	 */
+	private static final String REGISTER_PLATFORM_LIST_STRING = "registerPlatform(List,String)";
+
+	/**
+	 * * Unregister platform message.
+	 */
+	private static final String UNREGISTER_PLATFORM_LONG = "unregisterPlatform(long)";
+
+	/**
+	 * Platform not registered message.
+	 */
+	private static final String COULD_NOT_REGISTER_THE_PLATFORM = "Could not register the platform";
+
+	/**
+	 * Platform not unregistered message.
+	 */
+	private static final String COULD_NOT_UN_REGISTER_THE_PLATFORM = "Could not un-register the platform";
 
 	/**
 	 * The logger of the class.
@@ -206,9 +225,9 @@ public class KryoNetConnection implements IConnection {
 		} catch (SocketException socketException) {
 			log.error("Could not obtain network interfaces from this machine!");
 			if (log.isTraceEnabled()) {
-				log.trace("unregister(List,String)", socketException);
+				log.trace(REGISTER_PLATFORM_LIST_STRING, socketException);
 			}
-			throw new RegistrationException("Could not un-register the platform", socketException);
+			throw new RegistrationException(COULD_NOT_REGISTER_THE_PLATFORM, socketException);
 		}
 
 		// make call
@@ -223,14 +242,14 @@ public class KryoNetConnection implements IConnection {
 			return call.makeCall();
 		} catch (ExecutionException executionException) {
 			if (log.isTraceEnabled()) {
-				log.trace("register(String, String)", executionException);
+				log.trace(REGISTER_PLATFORM_LIST_STRING, executionException);
 			}
 			// check for business exception
 			if (executionException.getCause() instanceof BusinessException) {
 				throw ((BusinessException) executionException.getCause()); // NOPMD
 			}
 
-			throw new RegistrationException("Could not register the platform", executionException.getCause()); // NOPMD
+			throw new RegistrationException(COULD_NOT_REGISTER_THE_PLATFORM, executionException.getCause()); // NOPMD
 		}
 	}
 
@@ -255,14 +274,14 @@ public class KryoNetConnection implements IConnection {
 			call.makeCall();
 		} catch (ExecutionException executionException) {
 			if (log.isTraceEnabled()) {
-				log.trace("unregister(long)", executionException);
+				log.trace(UNREGISTER_PLATFORM_LONG, executionException);
 			}
 			// check for business exception
 			if (executionException.getCause() instanceof BusinessException) {
 				throw ((BusinessException) executionException.getCause()); // NOPMD
 			}
 
-			throw new RegistrationException("Could not un-register the platform", executionException.getCause()); // NOPMD
+			throw new RegistrationException(COULD_NOT_UN_REGISTER_THE_PLATFORM, executionException.getCause()); // NOPMD
 		}
 	}
 

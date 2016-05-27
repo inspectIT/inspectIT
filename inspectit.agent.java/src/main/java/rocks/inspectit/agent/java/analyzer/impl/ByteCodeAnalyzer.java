@@ -56,6 +56,11 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 
 	/**
+	 * Error message for problems during instrumentation.
+	 */
+	private static final String ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS = "Error occurred instrumenting the byte code of class ";
+
+	/**
 	 * Log for the class.
 	 */
 	@Log
@@ -192,16 +197,16 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 				return null;
 			}
 		} catch (IdNotAvailableException idNotAvailableException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, idNotAvailableException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, idNotAvailableException);
 			return null;
 		} catch (ServerUnavailableException serverUnavailableException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, serverUnavailableException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, serverUnavailableException);
 			return null;
 		} catch (BusinessException businessException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, businessException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, businessException);
 			return null;
 		} catch (StorageException storageException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, storageException);
+			log.error(ERROR_OCCURRED_INSTRUMENTING_THE_BYTE_CODE_OF_CLASS + className, storageException);
 			return null;
 		}
 	}
