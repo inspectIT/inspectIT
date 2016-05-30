@@ -67,7 +67,7 @@ The integration of inspectIT in your application is completely transparent, you 
 The integration is as simple as adding the following to the startup of your application.
 
 ```
--javaagent:[INSPECTIT_AGENT_HOME]/inspectit-agent.jar -Dinspectit.config=[INSPECTIT_CONFIG_HOME]
+-javaagent:[INSPECTIT_AGENT_HOME]/inspectit-agent.jar -Dinspectit.repository=[REPOSITORY_IP]:[REPOSITORY_PORT] -Dinspectit.agent.name=[AGENT_DISPLAY_NAME]
 ```
 
 The [end user documentation](https://inspectit-performance.atlassian.net/wiki/display/DOC/End+User+Documentation+Home) provides in-depth documentation on the installation of inspectIT for all supported platforms. If you have further questions please get in touch with us.
