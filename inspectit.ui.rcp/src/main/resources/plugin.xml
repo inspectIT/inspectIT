@@ -40,7 +40,7 @@
          </property>
          <property
                name="windowImages"
-               value="icons/selfmade/16x16.png,icons/selfmade/32x32.png,icons/selfmade/48x48.png,icons/selfmade/64x64.png,icons/selfmade/128x128.png">
+               value="icons/selfmade/16x16.png,icons/selfmade/32x32.png,icons/selfmade/48x48.png,icons/selfmade/64x64.png,icons/selfmade/128x128.png,icons/selfmade/256x256.png">
          </property>
          <property
                name="aboutImage"
