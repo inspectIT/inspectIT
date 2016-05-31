@@ -22,7 +22,7 @@
       </vmArgs>
    </launcherArgs>
 
-   <windowImages i16="icons/selfmade/16x16.png" i32="icons/selfmade/32x32.png" i48="icons/selfmade/48x48.png" i64="icons/selfmade/64x64.png" i128="icons/selfmade/128x128.png"/>
+   <windowImages i16="icons/selfmade/16x16.png" i32="icons/selfmade/32x32.png" i48="icons/selfmade/48x48.png" i64="icons/selfmade/64x64.png" i128="icons/selfmade/128x128.png" i256="icons/selfmade/256x256.png"/>
 
    <splash
       location="rocks.inspectit.ui.rcp"

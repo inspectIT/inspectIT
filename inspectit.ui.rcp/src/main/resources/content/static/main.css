@@ -12,10 +12,10 @@ html {
 }
 
 body {
-	background-color: #911a1d;
-	background-image: url('graphics/background.jpg');
-	background-repeat: no-repeat;
-	background-position: fixed;
+	background-color: #090923;
+	background-image: url('graphics/background.png');
+	background-repeat: y-repeat;
+	background-position: top center;
 	margin: 0 auto;
 	padding: 0;
 	text-align: center;
