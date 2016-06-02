@@ -1,4 +1,4 @@
-inspectIT is licensed under Apache license version 2.0 except the places that explicitely define another license.
+inspectIT is licensed under Apache license version 2.0 except the places that explicitly define another license.
 
 --
 
