@@ -4,22 +4,22 @@
 		this tag will make the panel be silent on non-supported systems. The default is to show the alternative UI. -->
 	<skipIfNotSupported />
 
-	<programGroup defaultName="$PROGRAMM_GROUP" location="$PROGRAMM_LOCATION" />
+	<programGroup defaultName="$PROGRAMM_GROUP" location="$PROGRAMM_LOCATION" iconFile="$INSTALL_PATH/inspectit/icon.xpm" />
 
 	<!-- Shortcuts for inspectIT UI -->
 	<shortcut name="inspectIT" applications="no" type="Application" description="The grafical user interface (Frontend) for inspectIT" desktop="yes" programGroup="yes" startMenu="no" startup="no"
-		terminal="false" encoding="UTF-8" target="$INSTALL_PATH/inspectit/inspectIT" workingDirectory="$INSTALL_PATH/inspectit">
+		terminal="false" iconFile="$INSTALL_PATH/inspectit/icon.xpm" encoding="UTF-8" target="$INSTALL_PATH/inspectit/inspectIT" workingDirectory="$INSTALL_PATH/inspectit">
 		<createForPack name="inspectIT UI" />
 	</shortcut>
 
 	<!-- Shortcut for inspectIT CMR -->
 	<shortcut name="inspectIT CMR" applications="no" type="Application" description="Central Measurement Repository" desktop="yes" programGroup="yes" startMenu="no" startup="no" terminal="true"
-		encoding="UTF-8" target="$INSTALL_PATH/CMR/startup.sh" workingDirectory="$INSTALL_PATH/CMR">
+		iconFile="terminal" encoding="UTF-8" target="$INSTALL_PATH/CMR/startup.sh" workingDirectory="$INSTALL_PATH/CMR">
 		<createForPack name="inspectIT Server (CMR)" />
 	</shortcut>
 
 	<!-- Shortcut for inspectIT Uninstaller -->
-	<shortcut name="inspectIT Uninstaller" programGroup="yes" desktop="yes" applications="no" startMenu="no" startup="no" target="$JAVA_HOME/bin/java" commandLine="-jar &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
+	<shortcut name="inspectIT Uninstaller" programGroup="yes" desktop="no" applications="no" startMenu="no" startup="no" target="$JAVA_HOME/bin/java" commandLine="-jar &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
 		initialState="noShow" iconFile="trashcan_full" iconIndex="0" workingDirectory="$INSTALL_PATH/Uninstaller/" type="Application" encoding="UTF-8" description="inspectIT Uninstaller">
 	</shortcut>
 </shortcuts>

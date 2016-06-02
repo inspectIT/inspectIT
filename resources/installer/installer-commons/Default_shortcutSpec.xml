@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<shortcuts>
+	<!-- By default do nothing with shortcuts. It's important to have the default one due to the MacOSX installer. -->
+	<skipIfNotSupported />
+
+	</shortcut>
+</shortcuts>
