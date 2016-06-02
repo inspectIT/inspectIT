@@ -62,6 +62,7 @@
 		<res id="CustomLangPack.xml_eng" src="installer-commons/bin/langpacks/installer/eng-custom.xml" />
 		<res id="Installer.image" src="installer-commons/side-logo.png" />
 		<res id="Heading.image" src="installer-commons/head-logo.png" />
+		<res id="shortcutSpec.xml" src="installer-commons/Default_shortcutSpec.xml" />
 		<res id="Win_shortcutSpec.xml" src="installer-commons/Win_shortcutSpec.xml" />
 		<res id="Unix_shortcutSpec.xml" src="installer-commons/Unix_shortcutSpec.xml" />
 		<res id="HTMLLicencePanel.licence" src="installer-commons/license.html" />
@@ -155,11 +156,12 @@
 
 			<file override="update" src="@{installerResources}/service/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is64" />
 			<file override="update" src="@{installerResources}/service/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is32" />
-
 			<file override="update" src="@{installerResources}/service/inspectITCMRw.exe" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
+			<file override="update" src="@{installerInstallServiceBat}" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
+			<file override="update" src="@{installerUninstallServiceBat}" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
 
-			<parsable targetfile="@{installerInstallServiceBat}" condition="izpack.windowsinstall" />
-			<parsable targetfile="@{installerUninstallServiceBat}" condition="izpack.windowsinstall" />
+			<parsable targetfile="$INSTALL_PATH/CMR/installService.bat" condition="izpack.windowsinstall" />
+			<parsable targetfile="$INSTALL_PATH/CMR/uninstallService.bat" condition="izpack.windowsinstall" />
 
 			<executable type="bin" stage="postinstall" targetfile="$INSTALL_PATH/CMR/uninstallService.bat" keep="true" condition="izpack.windowsinstall" />
 			<executable type="bin" stage="postinstall" targetfile="$INSTALL_PATH/CMR/installService.bat" keep="true" condition="izpack.windowsinstall" />

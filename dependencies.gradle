@@ -77,6 +77,7 @@ configurations {
 	jvms
 	java15rt
 	eclipseBase
+	antContrib
 }
 // all our configurations to transitive=false
 configurations.sharedAllProd.transitive = false
@@ -256,5 +257,8 @@ dependencies {
 	)
 	eclipseBase (
 		'org.eclipse:eclipse-base:3.8.2'
+	)
+	antContrib (
+		'ant-contrib:ant-contrib:1.0b3'
 	)
 }

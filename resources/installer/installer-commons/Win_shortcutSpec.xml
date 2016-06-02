@@ -33,7 +33,7 @@
 	</shortcut>
 
 	<!-- Shortcut for inspectIT Uninstaller -->
-	<shortcut name="inspectIT Uninstaller" programGroup="yes" desktop="yes" applications="no" startMenu="no" startup="no" target="$SYSTEM_java_home\bin\java.exe" commandLine="-jar &quot;$INSTALL_PATH\Uninstaller\uninstaller.jar&quot;"
+	<shortcut name="inspectIT Uninstaller" programGroup="yes" desktop="no" applications="no" startMenu="no" startup="no" target="$SYSTEM_java_home\bin\java.exe" commandLine="-jar &quot;$INSTALL_PATH\Uninstaller\uninstaller.jar&quot;"
 		initialState="noShow" iconFile="trashcan_full" iconIndex="0" workingDirectory="$INSTALL_PATH/Uninstaller/" type="Link" encoding="UTF-8" description="inspectIT Uninstaller">
 	</shortcut>
 </shortcuts>
