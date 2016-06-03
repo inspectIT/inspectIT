@@ -64,7 +64,7 @@ public class ExportStorageWizard extends Wizard implements INewWizard {
 	 */
 	protected ExportStorageWizard() {
 		this.setWindowTitle("Export Storage");
-		this.setDefaultPageImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_WIZBAN_IMPORT));
+		this.setDefaultPageImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_WIZBAN_EXPORT));
 	}
 
 	/**

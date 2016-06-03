@@ -11,6 +11,8 @@
 
   <xs:element name="compilation-sensor-config" type="compilationSensorConfig"/>
 
+  <xs:element name="configuration-interface-import-data" type="configurationInterfaceImportData"/>
+
   <xs:element name="connection-sensor-config" type="connectionSensorConfig"/>
 
   <xs:element name="cpu-sensor-config" type="cpuSensorConfig"/>
@@ -75,6 +77,17 @@
 
   <xs:element name="timer-sensor-config" type="timerSensorConfig"/>
 
+  <xs:complexType name="abstractCiData">
+    <xs:sequence/>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="created-on" type="xs:dateTime" use="required"/>
+    <xs:attribute name="updated-on" type="xs:dateTime"/>
+    <xs:attribute name="imported-on" type="xs:dateTime"/>
+    <xs:attribute name="revision" type="xs:int" use="optional"/>
+  </xs:complexType>
+
   <xs:complexType name="agentMapping">
     <xs:sequence/>
     <xs:attribute name="active" type="xs:boolean" use="required"/>
@@ -92,60 +105,60 @@
   </xs:complexType>
 
   <xs:complexType name="environment">
-    <xs:sequence>
-      <xs:choice>
-        <xs:element ref="time-sending-strategy-config"/>
-        <xs:element ref="list-sending-strategy-config"/>
-      </xs:choice>
-      <xs:choice>
-        <xs:element ref="simple-buffer-strategy-config"/>
-        <xs:element ref="size-buffer-strategy-config"/>
-      </xs:choice>
-      <xs:element name="platform-sensor-configs" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="class-loading-sensor-config"/>
-              <xs:element ref="compilation-sensor-config"/>
-              <xs:element ref="cpu-sensor-config"/>
-              <xs:element ref="memory-sensor-config"/>
-              <xs:element ref="runtime-sensor-config"/>
-              <xs:element ref="system-sensor-config"/>
-              <xs:element ref="thread-sensor-config"/>
-            </xs:choice>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="method-sensor-configs" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="connection-sensor-config"/>
-              <xs:element ref="http-sensor-config"/>
-              <xs:element ref="invocation-sequence-sensor-config"/>
-              <xs:element ref="prepared-statement-parameter-sensor-config"/>
-              <xs:element ref="prepared-statement-sensor-config"/>
-              <xs:element ref="statement-sensor-config"/>
-              <xs:element ref="timer-sensor-config"/>
-              <xs:element ref="log4j-logging-sensor-config"/>
-            </xs:choice>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element ref="exception-sensor-config"/>
-      <xs:element name="profile-ids" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="profile-id" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="classLoadingDelegation" type="xs:boolean"/>
-    </xs:sequence>
-    <xs:attribute name="id" type="xs:string" use="required"/>
-    <xs:attribute name="name" type="xs:string" use="required"/>
-    <xs:attribute name="description" type="xs:string"/>
-    <xs:attribute name="revision" type="xs:int" use="optional"/>
+    <xs:complexContent>
+      <xs:extension base="abstractCiData">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element ref="time-sending-strategy-config"/>
+            <xs:element ref="list-sending-strategy-config"/>
+          </xs:choice>
+          <xs:choice>
+            <xs:element ref="simple-buffer-strategy-config"/>
+            <xs:element ref="size-buffer-strategy-config"/>
+          </xs:choice>
+          <xs:element name="platform-sensor-configs" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="class-loading-sensor-config"/>
+                  <xs:element ref="compilation-sensor-config"/>
+                  <xs:element ref="cpu-sensor-config"/>
+                  <xs:element ref="memory-sensor-config"/>
+                  <xs:element ref="runtime-sensor-config"/>
+                  <xs:element ref="system-sensor-config"/>
+                  <xs:element ref="thread-sensor-config"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="method-sensor-configs" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element ref="connection-sensor-config"/>
+                  <xs:element ref="http-sensor-config"/>
+                  <xs:element ref="invocation-sequence-sensor-config"/>
+                  <xs:element ref="prepared-statement-parameter-sensor-config"/>
+                  <xs:element ref="prepared-statement-sensor-config"/>
+                  <xs:element ref="statement-sensor-config"/>
+                  <xs:element ref="timer-sensor-config"/>
+                  <xs:element ref="log4j-logging-sensor-config"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element ref="exception-sensor-config"/>
+          <xs:element name="profile-ids" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="profile-id" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="classLoadingDelegation" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="timeSendingStrategyConfig">
@@ -313,20 +326,18 @@
   </xs:complexType>
 
   <xs:complexType name="profile">
-    <xs:choice>
-      <xs:element ref="sensor-assignment-profile-data"/>
-      <xs:element ref="exclude-rules-profile-data"/>
-      <xs:element ref="jmx-definition-profile-data"/>
-    </xs:choice>
-    <xs:attribute name="id" type="xs:string" use="required"/>
-    <xs:attribute name="name" type="xs:string" use="required"/>
-    <xs:attribute name="description" type="xs:string"/>
-    <xs:attribute name="created-on" type="xs:dateTime" use="required"/>
-    <xs:attribute name="updated-on" type="xs:dateTime"/>
-    <xs:attribute name="common" type="xs:boolean" use="optional"/>
-    <xs:attribute name="active" type="xs:boolean" use="optional"/>
-    <xs:attribute name="default" type="xs:boolean" use="optional"/>
-    <xs:attribute name="revision" type="xs:int" use="optional"/>
+    <xs:complexContent>
+      <xs:extension base="abstractCiData">
+        <xs:choice>
+          <xs:element ref="sensor-assignment-profile-data"/>
+          <xs:element ref="exclude-rules-profile-data"/>
+          <xs:element ref="jmx-definition-profile-data"/>
+        </xs:choice>
+        <xs:attribute name="common" type="xs:boolean" use="optional"/>
+        <xs:attribute name="active" type="xs:boolean" use="optional"/>
+        <xs:attribute name="default" type="xs:boolean" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="abstractProfileData" abstract="true">
@@ -504,6 +515,25 @@
       </xs:element>
     </xs:sequence>
     <xs:attribute name="domain" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="configurationInterfaceImportData">
+    <xs:sequence>
+      <xs:element name="profiles" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="profile" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="environments" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="environment" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="jmxSensorConfig">
