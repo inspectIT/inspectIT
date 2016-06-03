@@ -11,10 +11,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -31,9 +32,9 @@ import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 
 /**
  * Dialog for creating new {@link AgentMapping}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class AgentMappingDialog extends TitleAreaDialog implements IControlValidationListener {
 
@@ -45,12 +46,12 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 	/**
 	 * Possible environments to map to.
 	 */
-	private List<Environment> environments;
+	private final List<Environment> environments;
 
 	/**
 	 * All {@link ValidationControlDecoration}s.
 	 */
-	private List<ValidationControlDecoration<?>> validationControlDecorations = new ArrayList<>();
+	private final List<ValidationControlDecoration<?>> validationControlDecorations = new ArrayList<>();
 
 	/**
 	 * OK button.
@@ -75,16 +76,16 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 	/**
 	 * Combo for selecting {@link Environment}.
 	 */
-	private CCombo environmentCombo;
+	private Combo environmentCombo;
 
 	/**
 	 * Text box for description.
 	 */
-	private Text descriptionText;
+	private StyledText descriptionText;
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell.
 	 * @param environments
@@ -96,7 +97,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Edit mode constructor. Data will be populated with the given {@link AgentMapping}.
-	 * 
+	 *
 	 * @param parentShell
 	 *            Shell.
 	 * @param agentMapping
@@ -133,7 +134,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Defines dialog title.
-	 * 
+	 *
 	 * @return Title
 	 */
 	private String getTitle() {
@@ -233,20 +234,11 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 		Label environmentLabel = new Label(main, SWT.NONE);
 		environmentLabel.setText("Environment:");
 
-		environmentCombo = new CCombo(main, SWT.READ_ONLY | SWT.BORDER | SWT.FLAT);
+		environmentCombo = new Combo(main, SWT.READ_ONLY | SWT.BORDER | SWT.FLAT);
 		environmentCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		for (Environment environment : environments) {
 			environmentCombo.add(environment.getName());
 		}
-		ValidationControlDecoration<CCombo> environmentValidationDecoration = new ValidationControlDecoration<CCombo>(environmentCombo, null, this) {
-			@Override
-			protected boolean validate(CCombo control) {
-				return environmentCombo.getSelectionIndex() >= 0;
-			}
-		};
-		environmentValidationDecoration.registerListener(SWT.Selection);
-		environmentValidationDecoration.setDescriptionText("Mapping must define extacly one environment to map agent to.");
-		validationControlDecorations.add(environmentValidationDecoration);
 
 		createInfoLabel(main, "IP address of the agent. Use wild-card '*' for matching several IPs with one mapping. For example, 192.168.* will match all IP addresses in starting with 192.168.");
 
@@ -255,7 +247,8 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 		descriptionLabel.setText("Description:");
 		descriptionLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 
-		descriptionText = new Text(main, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+		descriptionText = new StyledText(main, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+		descriptionText.setAlwaysShowScrollBars(false);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.minimumHeight = 50;
 		descriptionText.setLayoutData(gd);
@@ -273,15 +266,26 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 					break;
 				}
 			}
-			environmentValidationDecoration.executeValidation();
 		}
+
+		// add the validation as last as we need to have something either selected in the combo box
+		// or not if e.g. no agent mapping is available
+		ValidationControlDecoration<Combo> environmentValidationDecoration = new ValidationControlDecoration<Combo>(environmentCombo, null, false, this) {
+			@Override
+			protected boolean validate(Combo control) {
+				return environmentCombo.getSelectionIndex() >= 0;
+			}
+		};
+		environmentValidationDecoration.registerListener(SWT.Selection);
+		environmentValidationDecoration.setDescriptionText("Mapping must define exactly one environment to map agent to.");
+		validationControlDecorations.add(environmentValidationDecoration);
 
 		return main;
 	}
 
 	/**
 	 * Gets {@link #agentMapping}.
-	 * 
+	 *
 	 * @return {@link #agentMapping}
 	 */
 	public AgentMapping getAgentMapping() {
@@ -308,7 +312,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 
 	/**
 	 * Creates info icon with given text as tool-tip.
-	 * 
+	 *
 	 * @param parent
 	 *            Composite to create on.
 	 * @param text
