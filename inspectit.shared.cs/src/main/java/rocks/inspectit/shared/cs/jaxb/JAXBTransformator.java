@@ -1,5 +1,7 @@
-package rocks.inspectit.server.jaxb;
+package rocks.inspectit.shared.cs.jaxb;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,6 +63,34 @@ public class JAXBTransformator {
 	}
 
 	/**
+	 * Marshals the object to the bytes.
+	 *
+	 * @param object
+	 *            Object to marshal
+	 * @param noNamespaceSchemaLocation
+	 *            NoNamespaceSchemaLocation to set. If it's <code>null</code> no location will be
+	 *            set.
+	 * @return bytes representing the results of the marshall operation
+	 * @throws JAXBException
+	 *             If {@link JAXBException} occurs.
+	 * @throws IOException
+	 *             If {@link IOException} occurs.
+	 */
+	public byte[] marshall(Object object, String noNamespaceSchemaLocation) throws JAXBException, IOException {
+		JAXBContext context = JAXBContext.newInstance(object.getClass());
+		Marshaller marshaller = context.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		if (null != noNamespaceSchemaLocation) {
+			marshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, noNamespaceSchemaLocation);
+		}
+
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+			marshaller.marshal(object, outputStream);
+			return outputStream.toByteArray();
+		}
+	}
+
+	/**
 	 * Unmarshalls the given file. The root class of the XML must be given.
 	 *
 	 * @param <T>
@@ -98,6 +128,44 @@ public class JAXBTransformator {
 		}
 
 		try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ)) {
+			return (T) unmarshaller.unmarshal(inputStream);
+		}
+	}
+
+	/**
+	 * Unmarshalls the bytes. The root class of the XML must be given.
+	 *
+	 * @param <T>
+	 *            Type of root object.
+	 * @param data
+	 *            bytes
+	 * @param schemaPath
+	 *            Path to the XSD schema that will be used to validate the XML file. If no schema is
+	 *            provided no validation will be performed.
+	 * @param rootClass
+	 *            Root class of the XML document.
+	 * @return Unmarshalled object.
+	 * @throws JAXBException
+	 *             If {@link JAXBException} occurs during loading.
+	 * @throws IOException
+	 *             If {@link IOException} occurs during loading.
+	 * @throws SAXException
+	 *             If {@link SAXException} occurs during schema parsing.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T unmarshall(byte[] data, Path schemaPath, Class<T> rootClass) throws JAXBException, IOException, SAXException {
+		JAXBContext context = JAXBContext.newInstance(rootClass);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		if (null != schemaPath && Files.exists(schemaPath)) {
+			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			try (InputStream inputStream = Files.newInputStream(schemaPath, StandardOpenOption.READ)) {
+				Schema schema = sf.newSchema(new StreamSource(inputStream));
+				unmarshaller.setSchema(schema);
+			}
+		}
+
+		try (InputStream inputStream = new ByteArrayInputStream(data)) {
 			return (T) unmarshaller.unmarshal(inputStream);
 		}
 	}

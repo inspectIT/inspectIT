@@ -36,6 +36,11 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	 * Environment not existing on the CMR.
 	 */
 	ENVIRONMENT_DOES_NOT_EXIST("The environment to execute the selected operation on does not exist.", "The environment might be deleted.", null),
+	
+	/**
+	 * Import not valid.
+	 */
+	IMPORT_DATA_NOT_VALID("The data you are trying import is not valid.", null, null),
 
 	/**
 	 * IO operation failed.
