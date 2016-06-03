@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration-interface-import-data xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <profiles>
+        <profile common="false" active="true" default="false" id="0e814034-384a-4252-9bac-5f8a82bd48ad" name="Exclude rules [self monitoring]" description="Exclude rules for CMR self monitoring. Does not include ignore options for the inspectIT classes." created-on="2016-06-20T14:33:39.071+02:00" updated-on="2016-06-20T14:44:58.176+02:00" revision="4">
+            <exclude-rules-profile-data>
+                <exclude-rule class-name="*$Proxy*"/>
+                <exclude-rule class-name="sun.*"/>
+                <exclude-rule class-name="java.lang.ThreadLocal"/>
+                <exclude-rule class-name="java.lang.ref.Reference"/>
+                <exclude-rule class-name="*_WLStub"/>
+                <exclude-rule class-name="*[]"/>
+                <exclude-rule class-name="*CGLIB$$*"/>
+                <exclude-rule class-name="java.lang.invoke.LambdaForm*"/>
+                <exclude-rule class-name="oracle.jdbc.driver.OracleClosedStatement"/>
+            </exclude-rules-profile-data>
+        </profile>
+        <profile common="false" active="true" default="false" id="2971ab3b-7cd6-496d-885e-5e6ed4764a3e" name="CMR [self monitoring]" description="Includes sensor definitions for the CMR self monitoring: Services, DAOs, Buffer, Storage, Indexing, Aggregation, NIO, upload servlet and exceptions" created-on="2016-06-20T14:37:17.594+02:00" updated-on="2016-06-20T14:41:30.772+02:00" revision="4">
+            <sensor-assignment-profile-data>
+                <timer-method-sensor-assignment starts-invocation="true" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="*" constructor="false" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" class-name="rocks.inspectit.server.service.*" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="*" constructor="false" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" class-name="rocks.inspectit.server.dao.*" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="put" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.cache.IBuffer" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="evict" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.cache.IBuffer" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="analyzeNext" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.cache.IBuffer" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="indexNext" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.cache.IBuffer" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="*" constructor="false" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" class-name="rocks.inspectit.shared.cs.storage.StorageManager" superclass="true" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="*" constructor="false" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" class-name="rocks.inspectit.shared.cs.storage.StorageWriter" superclass="true" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="stop*" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.storage.CmrStorageRecorder" superclass="false" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="start*" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.storage.CmrStorageRecorder" superclass="false" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="record" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.storage.CmrStorageRecorder" superclass="false" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="query*" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.shared.cs.indexing.ITreeComponent" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="query*" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.shared.cs.indexing.AbstractBranch" superclass="false" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="cleanWithRunnable" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent" superclass="false" interface="true"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="processCollection" constructor="false" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" class-name="rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer" superclass="false" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="write*" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.shared.cs.storage.nio.write.WritingChannelManager" superclass="false" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="read*" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager" superclass="false" interface="false"/>
+                <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="doGet" constructor="false" public-mod="true" protected-mod="true" private-mod="true" default-mod="true" class-name="rocks.inspectit.server.jetty.FileUploadServlet" superclass="false" interface="false"/>
+                <exception-sensor-assignment class-name="rocks.inspectit.*" superclass="false" interface="false"/>
+            </sensor-assignment-profile-data>
+        </profile>
+    </profiles>
+    <environments>
+        <environment id="b74a5530-834a-4d3e-8acb-55ae4d42010c" name="CMR [self monitoring]" description="Environment setup for the self monitoring the inspectIT CMR." created-on="2016-06-20T14:33:04.574+02:00" updated-on="2016-06-20T14:42:35.123+02:00" revision="7">
+            <time-sending-strategy-config time="5000"/>
+            <simple-buffer-strategy-config/>
+            <platform-sensor-configs>
+                <class-loading-sensor-config active="true"/>
+                <compilation-sensor-config active="true"/>
+                <cpu-sensor-config active="true"/>
+                <memory-sensor-config active="true"/>
+                <runtime-sensor-config active="true"/>
+                <system-sensor-config active="true"/>
+                <thread-sensor-config active="true"/>
+            </platform-sensor-configs>
+            <method-sensor-configs>
+                <connection-sensor-config/>
+                <http-sensor-config sessionCapture="false" string-length="500"/>
+                <invocation-sequence-sensor-config string-length="100"/>
+                <prepared-statement-parameter-sensor-config/>
+                <prepared-statement-sensor-config string-length="1000"/>
+                <statement-sensor-config string-length="1000"/>
+                <timer-sensor-config string-length="100"/>
+                <log4j-logging-sensor-config minLevel="WARN"/>
+            </method-sensor-configs>
+            <exception-sensor-config enhanced="false" string-length="500"/>
+            <profile-ids>
+                <profile-id>sql</profile-id>
+                <profile-id>sql-parameters</profile-id>
+                <profile-id>2971ab3b-7cd6-496d-885e-5e6ed4764a3e</profile-id>
+                <profile-id>http</profile-id>
+                <profile-id>0e814034-384a-4252-9bac-5f8a82bd48ad</profile-id>
+            </profile-ids>
+            <classLoadingDelegation>false</classLoadingDelegation>
+        </environment>
+    </environments>
+</configuration-interface-import-data>

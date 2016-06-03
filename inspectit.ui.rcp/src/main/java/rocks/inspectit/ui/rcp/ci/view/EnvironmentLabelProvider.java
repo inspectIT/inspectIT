@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Image;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
+import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.provider.IEnvironmentProvider;
 
@@ -34,12 +35,18 @@ class EnvironmentLabelProvider extends StyledCellIndexLabelProvider {
 			case 0:
 				return new StyledString(environment.getName());
 			case 1:
+				if (null != environment.getUpdatedDate()) {
+				return new StyledString(NumberFormatter.formatTime(environment.getUpdatedDate()));
+			} else {
+				return new StyledString(NumberFormatter.formatTime(environment.getCreatedDate()));
+			}
+			case 2:
 				if (CollectionUtils.isEmpty(environment.getProfileIds())) {
 					return new StyledString(String.valueOf(0));
 				} else {
 					return new StyledString(String.valueOf(environment.getProfileIds().size()));
 				}
-			case 2:
+			case 3:
 				return TextFormatter.emptyStyledStringIfNull(TextFormatter.clearLineBreaks(environment.getDescription()));
 			default:
 				return EMPTY;

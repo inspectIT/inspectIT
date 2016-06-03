@@ -205,7 +205,7 @@ def releaseSingle(os, arch, distName) {
 		def distNameWithExtension = "${distName}.zip"
 		def archiveFile  = file("${pdeBuildDir}/I.inspectit/${distNameWithExtension}")
 		def distDir = file(buildReleasePackages)
-		def logConfigFile = file("${mainExtResources}/logging-config.xml")
+		def extResourcesDir = file(mainExtResources)
 		// match the correct jre
 		def jreFile
 		configurations.jvms.getFiles().each { path ->
@@ -222,7 +222,12 @@ def releaseSingle(os, arch, distName) {
 		from zipTree(archiveFile)
 		into('inspectit'){
 			from files(sharedResourcesLicense)
-			from logConfigFile
+		}
+		into('inspectit'){
+			from extResourcesDir
+			include('logging-config.xml')
+			include('ci/schema/*.xsd')
+			includeEmptyDirs = false
 		}
 		into('inspectit/jre'){
 			from zipTree(jreFile)
