@@ -40,7 +40,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
-import rocks.inspectit.server.jaxb.JAXBTransformator;
 import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
 import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
@@ -51,6 +50,7 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyV
 import rocks.inspectit.shared.cs.cmr.property.update.AbstractPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.property.update.IPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.property.update.configuration.ConfigurationUpdate;
+import rocks.inspectit.shared.cs.jaxb.JAXBTransformator;
 
 @SuppressWarnings("PMD")
 public class PropertyManagerTest {

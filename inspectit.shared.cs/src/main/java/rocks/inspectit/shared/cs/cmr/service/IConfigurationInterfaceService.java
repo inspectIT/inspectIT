@@ -9,6 +9,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.export.ConfigurationInterfaceImportData;
 
 /**
  * Service for the CI.
@@ -47,6 +48,18 @@ public interface IConfigurationInterfaceService {
 	 *             If saving fails.
 	 */
 	Profile createProfile(Profile profile) throws BusinessException;
+
+	/**
+	 * Imports the profile. Note that if profile with the same id already exists it will be
+	 * overwritten.
+	 *
+	 * @param profile
+	 *            Profile.
+	 * @return Returns created/updated profile depending if the overwrite was executed.
+	 * @throws BusinessException
+	 *             If import fails.
+	 */
+	Profile importProfile(Profile profile) throws BusinessException;
 
 	/**
 	 * Updates the given profile and saves it to the disk. Update will fail with an Exception if:
@@ -105,6 +118,18 @@ public interface IConfigurationInterfaceService {
 	Environment createEnvironment(Environment environment) throws BusinessException;
 
 	/**
+	 * Imports the environment. Note that if environment with the same id already exists it will be
+	 * overwritten.
+	 *
+	 * @param environment
+	 *            Environment.
+	 * @return Returns created/updated environment depending if the overwrite was executed.
+	 * @throws BusinessException
+	 *             If import fails.
+	 */
+	Environment importEnvironment(Environment environment) throws BusinessException;
+
+	/**
 	 * Updates the given environment and saves it to the disk. Update will fail with an Exception
 	 * if:
 	 * <ul>
@@ -147,5 +172,30 @@ public interface IConfigurationInterfaceService {
 	 *             If the revision fails. If save fails.
 	 */
 	AgentMappings saveAgentMappings(AgentMappings agentMappings) throws BusinessException;
+
+	/**
+	 * Returns the bytes for the given import data consisted out of given environments and profiles.
+	 * These bytes can be saved directly to export file.
+	 *
+	 * @param environments
+	 *            Environments to export.
+	 * @param profiles
+	 *            Profiles to export.
+	 * @return Byte array.
+	 * @throws BusinessException
+	 *             If operation fails.
+	 */
+	byte[] getExportData(Collection<Environment> environments, Collection<Profile> profiles) throws BusinessException;
+
+	/**
+	 * Returns the {@link ConfigurationInterfaceImportData} from the given import data bytes.
+	 *
+	 * @param importData
+	 *            bytes that were exported.
+	 * @return {@link ConfigurationInterfaceImportData}.
+	 * @throws BusinessException
+	 *             If operation fails.
+	 */
+	ConfigurationInterfaceImportData getImportData(byte[] importData) throws BusinessException;
 
 }

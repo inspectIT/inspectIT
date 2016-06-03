@@ -109,6 +109,7 @@ task schemagenCi {
 	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${mainExtResources}/ci/schema", "ciSchema.xsd", "factory/**"))
 }
 
+
 /**
  * Uses ant SchemaGenTask to generate .xsd schema from the annotated classes.
  *
@@ -118,10 +119,10 @@ task schemagenCi {
  * @param excludes Any excludes patterns to pass to the ant task.
  */
 def schemagen(sourceDir, outputDir, fileName, excludes) {
-	return tasks.create(name: "schemagen-${fileName}") {
+	return tasks.create(name: "schemagen-${outputDir}${fileName}") {
 		inputs.sourceDir(sourceDir)
 		outputs.file file("${outputDir}/${fileName}")
-	
+
 		doLast {
 			file(outputDir).mkdirs()
 			ant.taskdef(name: 'schemagen', classname: 'com.sun.tools.jxc.SchemaGenTask', classpath: configurations.xjc.asPath)

@@ -305,6 +305,9 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		SelectionAdapter listener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (null != displayedCmrRepositoryDefinition) {
+					selectionProviderAdapter.setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
+				}
 				performUpdate(false);
 			}
 		};
@@ -330,8 +333,15 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 			viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 			viewerColumn.getColumn().setMoveable(true);
 			viewerColumn.getColumn().setResizable(true);
-			viewerColumn.getColumn().setText("Profiles");
+			viewerColumn.getColumn().setText("Updated");
 			viewerColumn.getColumn().setWidth(80);
+			viewerColumn.getColumn().setToolTipText("The date and time when the environment was last time updated.");
+
+			viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+			viewerColumn.getColumn().setMoveable(true);
+			viewerColumn.getColumn().setResizable(true);
+			viewerColumn.getColumn().setText("Profiles");
+			viewerColumn.getColumn().setWidth(60);
 			viewerColumn.getColumn().setToolTipText("Number of linked profiles in the Environment.");
 
 			viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
