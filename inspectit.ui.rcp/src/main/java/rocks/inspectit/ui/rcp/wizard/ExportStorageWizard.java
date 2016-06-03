@@ -33,9 +33,9 @@ import rocks.inspectit.ui.rcp.wizard.page.StorageCompressionWizardPage;
 
 /**
  * Wizard for exporting the storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 public class ExportStorageWizard extends Wizard implements INewWizard {
 
@@ -64,12 +64,12 @@ public class ExportStorageWizard extends Wizard implements INewWizard {
 	 */
 	protected ExportStorageWizard() {
 		this.setWindowTitle("Export Storage");
-		this.setDefaultPageImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_WIZBAN_IMPORT));
+		this.setDefaultPageImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_WIZBAN_EXPORT));
 	}
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param localStorageData
 	 *            Storage to export.
 	 */
@@ -80,7 +80,7 @@ public class ExportStorageWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to export.
 	 * @param cmrRepositoryDefinition

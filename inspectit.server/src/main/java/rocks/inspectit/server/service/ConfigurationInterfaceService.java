@@ -10,6 +10,7 @@ import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
 import rocks.inspectit.shared.all.exception.BusinessException;
@@ -19,14 +20,15 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.export.ConfigurationInterfaceExportData;
 import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 
 /**
  * Implementation of the {@link ICmrManagementService}.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @Service
 public class ConfigurationInterfaceService implements IConfigurationInterfaceService {
@@ -70,6 +72,20 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 			throw new TechnicalException("Create the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
 		} catch (IOException e) {
 			throw new TechnicalException("Create the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Profile importProfile(Profile profile) throws BusinessException {
+		try {
+			return ciManager.importProfile(profile);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Import the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Import the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
@@ -133,6 +149,20 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Environment importEnvironment(Environment environment) throws BusinessException {
+		try {
+			return ciManager.importEnvironment(environment);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Import the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Import the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Environment updateEnvironment(Environment environment) throws BusinessException {
 		try {
 			return ciManager.updateEnvironment(environment, true);
@@ -173,13 +203,41 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 		} catch (JAXBException e) {
 			throw new TechnicalException("Update the agent mappings.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
 		} catch (IOException e) {
-			throw new TechnicalException("Update the agent mappings..", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+			throw new TechnicalException("Update the agent mappings.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public byte[] getExportData(ConfigurationInterfaceExportData exportData) throws BusinessException {
+		try {
+			return ciManager.getExportData(exportData);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Export the data.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Export the data.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ConfigurationInterfaceExportData getImportData(byte[] importData) throws BusinessException {
+		try {
+			return ciManager.getImportData(importData);
+		} catch (JAXBException | SAXException e) {
+			throw new TechnicalException("Export the data.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Export the data.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 
 	/**
 	 * Is executed after dependency injection is done to perform any initialization.
-	 * 
+	 *
 	 * @throws Exception
 	 *             if an error occurs during {@link PostConstruct}
 	 */

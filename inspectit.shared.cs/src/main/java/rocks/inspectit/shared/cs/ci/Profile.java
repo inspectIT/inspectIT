@@ -1,8 +1,5 @@
 package rocks.inspectit.shared.cs.ci;
 
-import java.util.Collections;
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -13,44 +10,15 @@ import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignme
 import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
 
 /**
- * Profile defines sensor assignments and exclude rules.
+ * Profile defines different data based on the provided profile data.
  *
+ * @see AbstractProfileData
  * @author Ivan Senic
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "profile")
-public class Profile {
-
-	/**
-	 * Id of the profile.
-	 */
-	@XmlAttribute(name = "id", required = true)
-	private String id;
-
-	/**
-	 * Name of the profile.
-	 */
-	@XmlAttribute(name = "name", required = true)
-	private String name;
-
-	/**
-	 * Description.
-	 */
-	@XmlAttribute(name = "description")
-	private String description;
-
-	/**
-	 * Date created.
-	 */
-	@XmlAttribute(name = "created-on", required = true)
-	private Date createdDate;
-
-	/**
-	 * Date updated.
-	 */
-	@XmlAttribute(name = "updated-on")
-	private Date updatedDate;
+public class Profile extends AbstractCiData {
 
 	/**
 	 * Is it the "common" profile.
@@ -72,35 +40,10 @@ public class Profile {
 	private boolean defaultProfile;
 
 	/**
-	 * Revision. Server for version control and updating control.
-	 */
-	@XmlAttribute(name = "revision")
-	private int revision = 1;
-
-	/**
 	 * Type of profile data this profile is holding.
 	 */
 	@XmlElementRef
 	private AbstractProfileData<?> profileData;
-
-	/**
-	 * Gets {@link #id}.
-	 *
-	 * @return {@link #id}
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Sets {@link #id}.
-	 *
-	 * @param id
-	 *            New value for {@link #id}
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	/**
 	 * Gets {@link #name}.
@@ -109,79 +52,13 @@ public class Profile {
 	 *
 	 * @return {@link #name}
 	 */
+	@Override
 	public String getName() {
 		if (commonProfile) {
-			return "[Common] " + name;
+			return "[Common] " + super.getName();
 		} else {
-			return name;
+			return super.getName();
 		}
-	}
-
-	/**
-	 * Sets {@link #name}.
-	 *
-	 * @param name
-	 *            New value for {@link #name}
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Gets {@link #description}.
-	 *
-	 * @return {@link #description}
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Sets {@link #description}.
-	 *
-	 * @param description
-	 *            New value for {@link #description}
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Gets {@link #createdDate}.
-	 *
-	 * @return {@link #createdDate}
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	/**
-	 * Sets {@link #createdDate}.
-	 *
-	 * @param createdDate
-	 *            New value for {@link #createdDate}
-	 */
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	/**
-	 * Gets {@link #updatedDate}.
-	 *
-	 * @return {@link #updatedDate}
-	 */
-	public Date getUpdatedDate() {
-		return updatedDate;
-	}
-
-	/**
-	 * Sets {@link #updatedDate}.
-	 *
-	 * @param updatedDate
-	 *            New value for {@link #updatedDate}
-	 */
-	public void setUpdatedDate(Date updatedDate) {
-		this.updatedDate = updatedDate;
 	}
 
 	/**
@@ -232,25 +109,6 @@ public class Profile {
 	}
 
 	/**
-	 * Gets {@link #revision}.
-	 *
-	 * @return {@link #revision}
-	 */
-	public int getRevision() {
-		return revision;
-	}
-
-	/**
-	 * Sets {@link #revision}.
-	 *
-	 * @param revision
-	 *            New value for {@link #revision}
-	 */
-	public void setRevision(int revision) {
-		this.revision = revision;
-	}
-
-	/**
 	 * Gets {@link #profileData}.
 	 *
 	 * @return {@link #profileData}
@@ -275,17 +133,11 @@ public class Profile {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + (active ? 1231 : 1237);
 		result = prime * result + (commonProfile ? 1231 : 1237);
-		result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
 		result = prime * result + (defaultProfile ? 1231 : 1237);
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((profileData == null) ? 0 : profileData.hashCode());
-		result = prime * result + revision;
-		result = prime * result + ((updatedDate == null) ? 0 : updatedDate.hashCode());
 		return result;
 	}
 
@@ -297,7 +149,7 @@ public class Profile {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
@@ -310,35 +162,7 @@ public class Profile {
 		if (commonProfile != other.commonProfile) {
 			return false;
 		}
-		if (createdDate == null) {
-			if (other.createdDate != null) {
-				return false;
-			}
-		} else if (!createdDate.equals(other.createdDate)) {
-			return false;
-		}
 		if (defaultProfile != other.defaultProfile) {
-			return false;
-		}
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		} else if (!description.equals(other.description)) {
-			return false;
-		}
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
 			return false;
 		}
 		if (profileData == null) {
@@ -346,16 +170,6 @@ public class Profile {
 				return false;
 			}
 		} else if (!profileData.equals(other.profileData)) {
-			return false;
-		}
-		if (revision != other.revision) {
-			return false;
-		}
-		if (updatedDate == null) {
-			if (other.updatedDate != null) {
-				return false;
-			}
-		} else if (!updatedDate.equals(other.updatedDate)) {
 			return false;
 		}
 		return true;
