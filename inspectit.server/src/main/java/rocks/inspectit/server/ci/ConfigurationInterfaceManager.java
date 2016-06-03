@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
 import rocks.inspectit.server.ci.event.AgentMappingsUpdateEvent;
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
 import rocks.inspectit.server.ci.event.ProfileUpdateEvent;
-import rocks.inspectit.server.jaxb.JAXBTransformator;
 import rocks.inspectit.server.util.CollectionSubtractUtils;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
@@ -42,6 +41,7 @@ import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.jaxb.JAXBTransformator;
 
 /**
  * Manages all configuration interface operations.
@@ -120,10 +120,11 @@ public class ConfigurationInterfaceManager {
 	 * Creates new profile.
 	 *
 	 * @param profile
-	 *            Profile template.
+	 *            Profile template. If profile template has ID set, then this is considered to be
+	 *            import operation.
 	 * @return Returns created profile with correctly set id.
 	 * @throws BusinessException
-	 *             If attempt is made to create common profile.
+	 *             If attempt is made to create common profile or to import existing profile.
 	 * @throws IOException
 	 *             If {@link IOException} occurs during save.
 	 * @throws JAXBException
@@ -137,6 +138,37 @@ public class ConfigurationInterfaceManager {
 		profile.setId(getRandomUUIDString());
 		profile.setCreatedDate(new Date());
 		existingProfiles.put(profile.getId(), profile);
+		saveProfile(profile);
+		return profile;
+	}
+
+	/**
+	 * Imports the profile. Note that if profile with the same id already exists it will be
+	 * overwritten.
+	 *
+	 * @param profile
+	 *            Profile.
+	 * @return Returns created/updated profile depending if the overwrite was executed.
+	 * @throws BusinessException
+	 *             If attempt is made to import common profile or profile without the id.
+	 * @throws IOException
+	 *             If {@link IOException} occurs during save.
+	 * @throws JAXBException
+	 *             If {@link JAXBException} occurs during save.
+	 */
+	public Profile importProfile(Profile profile) throws BusinessException, JAXBException, IOException {
+		if (null == profile.getId()) {
+			throw new BusinessException("Import the profile '" + profile.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.IMPORT_DATA_NOT_VALID);
+		}
+
+		if (existingProfiles.containsKey(profile.getId())) {
+			Profile old = existingProfiles.replace(profile.getId(), profile);
+			Files.deleteIfExists(pathResolver.getProfileFilePath(old));
+		} else {
+			existingProfiles.put(profile.getId(), profile);
+		}
+
+
 		saveProfile(profile);
 		return profile;
 	}
@@ -229,16 +261,18 @@ public class ConfigurationInterfaceManager {
 	 * Creates new environment.
 	 *
 	 * @param environment
-	 *            Environment template.
-	 * @return Returns created environment with correctly set id.
+	 *            Environment template. If environment template has ID set, then this is considered
+	 *            to be import operation.
+	 * @return Returns created environment with correctly set id
+	 * @throws BusinessException
+	 *             If attempt is made to create or import existing environment.
 	 * @throws IOException
 	 *             If {@link IOException} occurs during create.
 	 * @throws JAXBException
 	 *             If {@link JAXBException} occurs during create.
 	 */
-	public Environment createEnvironment(Environment environment) throws JAXBException, IOException {
+	public Environment createEnvironment(Environment environment) throws BusinessException, JAXBException, IOException {
 		environment.setId(getRandomUUIDString());
-		existingEnvironments.put(environment.getId(), environment);
 
 		// add the default include profiles
 		Set<String> profileIds = new HashSet<>();
@@ -249,6 +283,38 @@ public class ConfigurationInterfaceManager {
 		}
 		environment.setProfileIds(profileIds);
 
+		existingEnvironments.put(environment.getId(), environment);
+		saveEnvironment(environment);
+		return environment;
+	}
+
+	/**
+	 * Imports the environment. Note that if environment with the same id already exists it will be
+	 * overwritten.
+	 *
+	 * @param environment
+	 *            Environment.
+	 * @return Returns created/updated environment depending if the overwrite was executed.
+	 * @throws BusinessException
+	 *             If attempt is made to import environment without the id.
+	 * @throws IOException
+	 *             If {@link IOException} occurs during save.
+	 * @throws JAXBException
+	 *             If {@link JAXBException} occurs during save.
+	 */
+	public Environment importEnvironment(Environment environment) throws BusinessException, JAXBException, IOException {
+		if (null == environment.getId()) {
+			throw new BusinessException("Import the environment '" + environment.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.IMPORT_DATA_NOT_VALID);
+		}
+
+		if (existingEnvironments.containsKey(environment.getId())) {
+			Environment old = existingEnvironments.replace(environment.getId(), environment);
+			Files.deleteIfExists(pathResolver.getEnvironmentFilePath(old));
+		} else {
+			existingEnvironments.put(environment.getId(), environment);
+		}
+
+		checkProfiles(environment);
 		saveEnvironment(environment);
 		return environment;
 	}
@@ -748,6 +814,6 @@ public class ConfigurationInterfaceManager {
 	 * @return Returns unique string based on the {@link UUID}.
 	 */
 	private String getRandomUUIDString() {
-		return String.valueOf(UUID.randomUUID().getLeastSignificantBits());
+		return UUID.randomUUID().toString();
 	}
 }

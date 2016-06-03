@@ -2,17 +2,11 @@ package rocks.inspectit.ui.rcp.wizard.page;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 import rocks.inspectit.shared.cs.storage.IStorageData;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
@@ -23,11 +17,11 @@ import rocks.inspectit.ui.rcp.composite.StorageInfoComposite;
 
 /**
  * Page for exporting storage.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
-public class ExportStorageWizardPage extends WizardPage {
+public class ExportStorageWizardPage extends SelectFileWizardPage {
 
 	/**
 	 * Default message for wizard page.
@@ -37,23 +31,16 @@ public class ExportStorageWizardPage extends WizardPage {
 	/**
 	 * Storage to export.
 	 */
-	private IStorageData storageData;
-
-	/**
-	 * Text box where selected file will be displayed.
-	 */
-	private Text fileText;
+	private final IStorageData storageData;
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to export.
 	 */
 	public ExportStorageWizardPage(IStorageData storageData) {
-		super("Export Storage");
-		this.setTitle("Export Storage");
-		this.setMessage(DEFAULT_MESSAGE);
+		super("Export Storage", DEFAULT_MESSAGE, new String[] { "*" + StorageFileType.ZIP_STORAGE_FILE.getExtension() }, storageData.getName(), SWT.SAVE);
 		this.storageData = storageData;
 
 	}
@@ -63,37 +50,9 @@ public class ExportStorageWizardPage extends WizardPage {
 	 */
 	@Override
 	public void createControl(Composite parent) {
-		Composite main = new Composite(parent, SWT.NONE);
-		main.setLayout(new GridLayout(3, false));
+		super.createControl(parent);
 
-		new Label(main, SWT.NONE).setText("File:");
-
-		fileText = new Text(main, SWT.READ_ONLY | SWT.BORDER);
-		fileText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-
-		Button select = new Button(main, SWT.PUSH);
-		select.setText("Select");
-		select.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
-				fileDialog.setOverwrite(true);
-				fileDialog.setText("Select File for Export");
-				fileDialog.setFilterExtensions(new String[] { "*" + StorageFileType.ZIP_STORAGE_FILE.getExtension() });
-				fileDialog.setFileName(storageData.getName());
-				String file = fileDialog.open();
-				if (null != file) {
-					fileText.setText(file);
-				}
-				setPageComplete(isPageComplete());
-				if (fileText.getText().isEmpty()) {
-					setMessage("No file selected", ERROR);
-				} else {
-					setMessage(DEFAULT_MESSAGE);
-				}
-			}
-		});
-		select.forceFocus();
+		Composite main = (Composite) getControl();
 
 		StorageInfoComposite storageInfoComposite = new StorageInfoComposite(main, SWT.NONE, true, storageData);
 		storageInfoComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
@@ -112,22 +71,6 @@ public class ExportStorageWizardPage extends WizardPage {
 			new Label(infoComposite, SWT.NONE).setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
 			new Label(infoComposite, SWT.WRAP).setText("The not downloaded storage will have to be downloaded prior to export operation.");
 		}
-
-		setControl(main);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isPageComplete() {
-		return !fileText.getText().isEmpty();
-	}
-
-	/**
-	 * @return Returns the selected file name.
-	 */
-	public String getFileName() {
-		return fileText.getText();
-	}
 }

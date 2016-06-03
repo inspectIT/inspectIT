@@ -11,6 +11,8 @@
 
   <xs:element name="configuration-interface-export-data" type="configurationInterfaceExportData"/>
 
+  <xs:element name="connection-meta-data-sensor-config" type="connectionMetaDataSensorConfig"/>
+
   <xs:element name="connection-sensor-config" type="connectionSensorConfig"/>
 
   <xs:element name="cpu-sensor-config" type="cpuSensorConfig"/>
@@ -23,19 +25,11 @@
 
   <xs:element name="exclude-rule" type="excludeRule"/>
 
-  <xs:element name="exclude-rules-profile-data" type="excludeRulesProfileData"/>
-
   <xs:element name="field-capture" type="fieldContextCapture"/>
 
   <xs:element name="http-sensor-config" type="httpSensorConfig"/>
 
   <xs:element name="invocation-sequence-sensor-config" type="invocationSequenceSensorConfig"/>
-
-  <xs:element name="jmx-bean-assignment" type="jmxBeanSensorAssignment"/>
-
-  <xs:element name="jmx-definition-profile-data" type="jmxDefinitionProfileData"/>
-
-  <xs:element name="jmx-loading-sensor-config" type="jmxSensorConfig"/>
 
   <xs:element name="list-sending-strategy-config" type="listSendingStrategyConfig"/>
 
@@ -56,8 +50,6 @@
   <xs:element name="return-capture" type="returnContextCapture"/>
 
   <xs:element name="runtime-sensor-config" type="runtimeSensorConfig"/>
-
-  <xs:element name="sensor-assignment-profile-data" type="sensorAssignmentProfileData"/>
 
   <xs:element name="simple-buffer-strategy-config" type="simpleBufferStrategyConfig"/>
 
@@ -120,6 +112,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="connection-meta-data-sensor-config"/>
               <xs:element ref="connection-sensor-config"/>
               <xs:element ref="http-sensor-config"/>
               <xs:element ref="invocation-sequence-sensor-config"/>
@@ -228,7 +221,7 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="connectionSensorConfig">
+  <xs:complexType name="connectionMetaDataSensorConfig">
     <xs:complexContent>
       <xs:extension base="abstractMethodSensorConfig">
         <xs:sequence/>
@@ -238,6 +231,14 @@
 
   <xs:complexType name="abstractMethodSensorConfig" abstract="true">
     <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="connectionSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="httpSensorConfig">
@@ -312,11 +313,14 @@
   </xs:complexType>
 
   <xs:complexType name="profile">
-    <xs:choice>
-      <xs:element ref="sensor-assignment-profile-data"/>
-      <xs:element ref="exclude-rules-profile-data"/>
-      <xs:element ref="jmx-definition-profile-data"/>
-    </xs:choice>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="method-sensor-assignment"/>
+        <xs:element ref="timer-method-sensor-assignment"/>
+      </xs:choice>
+      <xs:element ref="exception-sensor-assignment" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="exclude-rule" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required"/>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="description" type="xs:string"/>
@@ -326,24 +330,6 @@
     <xs:attribute name="active" type="xs:boolean" use="optional"/>
     <xs:attribute name="default" type="xs:boolean" use="optional"/>
     <xs:attribute name="revision" type="xs:int" use="optional"/>
-  </xs:complexType>
-
-  <xs:complexType name="abstractProfileData" abstract="true">
-    <xs:sequence/>
-  </xs:complexType>
-
-  <xs:complexType name="sensorAssignmentProfileData">
-    <xs:complexContent>
-      <xs:extension base="abstractProfileData">
-        <xs:sequence>
-          <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="method-sensor-assignment"/>
-            <xs:element ref="timer-method-sensor-assignment"/>
-          </xs:choice>
-          <xs:element ref="exception-sensor-assignment" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="methodSensorAssignment">
@@ -444,56 +430,9 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="excludeRulesProfileData">
-    <xs:complexContent>
-      <xs:extension base="abstractProfileData">
-        <xs:sequence>
-          <xs:element ref="exclude-rule" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="excludeRule">
     <xs:sequence/>
     <xs:attribute name="class-name" type="xs:string" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="jmxDefinitionProfileData">
-    <xs:complexContent>
-      <xs:extension base="abstractProfileData">
-        <xs:sequence>
-          <xs:element ref="jmx-bean-assignment" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="jmxBeanSensorAssignment">
-    <xs:sequence>
-      <xs:element name="object-name-parameters">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="key" minOccurs="0" type="xs:string"/>
-                  <xs:element name="value" minOccurs="0" type="xs:string"/>
-                </xs:sequence>
-              </xs:complexType>
-            </xs:element>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="attributes">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="attributes" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-    <xs:attribute name="domain" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="configurationInterfaceExportData">
@@ -515,7 +454,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="jmxSensorConfig">
+  <xs:complexType name="configurationDefaultsFactory" final="extension restriction">
     <xs:sequence/>
   </xs:complexType>
 </xs:schema>
