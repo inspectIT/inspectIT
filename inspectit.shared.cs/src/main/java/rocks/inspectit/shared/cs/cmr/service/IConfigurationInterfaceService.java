@@ -12,23 +12,23 @@ import rocks.inspectit.shared.cs.ci.Profile;
 
 /**
  * Service for the CI.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @ServiceInterface(exporter = ServiceExporterType.HTTP)
 public interface IConfigurationInterfaceService {
 
 	/**
 	 * Returns all existing profiles.
-	 * 
+	 *
 	 * @return Returns all existing profiles.
 	 */
 	List<Profile> getAllProfiles();
 
 	/**
 	 * Returns the profile with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of profile.
 	 * @return {@link Profile}
@@ -39,7 +39,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Creates new profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile template.
 	 * @return Returns created profile with correctly set id.
@@ -49,13 +49,25 @@ public interface IConfigurationInterfaceService {
 	Profile createProfile(Profile profile) throws BusinessException;
 
 	/**
+	 * Imports the profile. Note that if profile with the same id already exists it will be
+	 * overwritten.
+	 *
+	 * @param profile
+	 *            Profile.
+	 * @return Returns created/updated profile depending if the overwrite was executed.
+	 * @throws BusinessException
+	 *             If import fails.
+	 */
+	Profile importProfile(Profile profile) throws BusinessException;
+
+	/**
 	 * Updates the given profile and saves it to the disk. Update will fail with an Exception if:
 	 * <ul>
 	 * <li>Attempt is made to update default profile.
 	 * <li>Profile does not exists on the CMR.
 	 * <li>Profile revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to update.
 	 * @return updated profile instance
@@ -67,7 +79,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Deletes the existing profile.
-	 * 
+	 *
 	 * @param profile
 	 *            Profile to delete.
 	 * @throws BusinessException
@@ -77,14 +89,14 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Returns all existing environment.
-	 * 
+	 *
 	 * @return Returns all existing environment.
 	 */
 	Collection<Environment> getAllEnvironments();
 
 	/**
 	 * Returns the environment with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Id of environment.
 	 * @return {@link Environment}
@@ -95,7 +107,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Creates new environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment template.
 	 * @return Returns created environment with correctly set id.
@@ -105,13 +117,25 @@ public interface IConfigurationInterfaceService {
 	Environment createEnvironment(Environment environment) throws BusinessException;
 
 	/**
+	 * Imports the environment. Note that if environment with the same id already exists it will be
+	 * overwritten.
+	 *
+	 * @param environment
+	 *            Environment.
+	 * @return Returns created/updated environment depending if the overwrite was executed.
+	 * @throws BusinessException
+	 *             If import fails.
+	 */
+	Environment importEnvironment(Environment environment) throws BusinessException;
+
+	/**
 	 * Updates the given environment and saves it to the disk. Update will fail with an Exception
 	 * if:
 	 * <ul>
 	 * <li>Environment does not exists on the CMR.
 	 * <li>Environment revision sequence does not match the current sequence.
 	 * </ul>
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to update.
 	 * @return updated environment instance
@@ -122,7 +146,7 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Deletes the existing environment.
-	 * 
+	 *
 	 * @param environment
 	 *            Environment to delete.
 	 * @throws BusinessException
@@ -132,14 +156,14 @@ public interface IConfigurationInterfaceService {
 
 	/**
 	 * Returns the currently used agent mappings.
-	 * 
+	 *
 	 * @return Returns the currently used agent mappings.
 	 */
 	AgentMappings getAgentMappings();
 
 	/**
 	 * Saves the agent mappings to be used.
-	 * 
+	 *
 	 * @param agentMappings
 	 *            {@link AgentMappings} to save
 	 * @return updated {@link AgentMappings} instance

@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
@@ -48,31 +47,7 @@ import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "environment")
-public class Environment {
-
-	/**
-	 * Id of the environment.
-	 */
-	@XmlAttribute(name = "id", required = true)
-	private String id;
-
-	/**
-	 * Name of the environment.
-	 */
-	@XmlAttribute(name = "name", required = true)
-	private String name;
-
-	/**
-	 * Description of the environment.
-	 */
-	@XmlAttribute(name = "description")
-	private String description;
-
-	/**
-	 * Revision. Server for version control and updating control.
-	 */
-	@XmlAttribute(name = "revision")
-	private int revision = 1;
+public class Environment extends AbstractCiData {
 
 	/**
 	 * Configuration for the sending strategy.
@@ -142,82 +117,6 @@ public class Environment {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Gets {@link #id}.
-	 *
-	 * @return {@link #id}
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Sets {@link #id}.
-	 *
-	 * @param id
-	 *            New value for {@link #id}
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * Gets {@link #name}.
-	 *
-	 * @return {@link #name}
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Sets {@link #name}.
-	 *
-	 * @param name
-	 *            New value for {@link #name}
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Gets {@link #description}.
-	 *
-	 * @return {@link #description}
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Sets {@link #description}.
-	 *
-	 * @param description
-	 *            New value for {@link #description}
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Gets {@link #revision}.
-	 *
-	 * @return {@link #revision}
-	 */
-	public int getRevision() {
-		return revision;
-	}
-
-	/**
-	 * Sets {@link #revision}.
-	 *
-	 * @param revision
-	 *            New value for {@link #revision}
-	 */
-	public void setRevision(int revision) {
-		this.revision = revision;
 	}
 
 	/**
@@ -329,17 +228,13 @@ public class Environment {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((bufferStrategyConfig == null) ? 0 : bufferStrategyConfig.hashCode());
 		result = prime * result + (classLoadingDelegation ? 1231 : 1237);
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((exceptionSensorConfig == null) ? 0 : exceptionSensorConfig.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((methodSensorConfigs == null) ? 0 : methodSensorConfigs.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((platformSensorConfigs == null) ? 0 : platformSensorConfigs.hashCode());
 		result = prime * result + ((profileIds == null) ? 0 : profileIds.hashCode());
-		result = prime * result + revision;
 		result = prime * result + ((sendingStrategyConfig == null) ? 0 : sendingStrategyConfig.hashCode());
 		return result;
 	}
@@ -352,7 +247,7 @@ public class Environment {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
@@ -369,13 +264,6 @@ public class Environment {
 		if (classLoadingDelegation != other.classLoadingDelegation) {
 			return false;
 		}
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		} else if (!description.equals(other.description)) {
-			return false;
-		}
 		if (exceptionSensorConfig == null) {
 			if (other.exceptionSensorConfig != null) {
 				return false;
@@ -383,25 +271,11 @@ public class Environment {
 		} else if (!exceptionSensorConfig.equals(other.exceptionSensorConfig)) {
 			return false;
 		}
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
 		if (methodSensorConfigs == null) {
 			if (other.methodSensorConfigs != null) {
 				return false;
 			}
 		} else if (!methodSensorConfigs.equals(other.methodSensorConfigs)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
 			return false;
 		}
 		if (platformSensorConfigs == null) {
@@ -416,9 +290,6 @@ public class Environment {
 				return false;
 			}
 		} else if (!profileIds.equals(other.profileIds)) {
-			return false;
-		}
-		if (revision != other.revision) {
 			return false;
 		}
 		if (sendingStrategyConfig == null) {

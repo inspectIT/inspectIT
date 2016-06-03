@@ -2,20 +2,16 @@ package rocks.inspectit.ui.rcp.wizard.page;
 
 import java.util.List;
 
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 
 import rocks.inspectit.shared.cs.storage.StorageFileType;
 import rocks.inspectit.ui.rcp.InspectIT;
@@ -24,11 +20,11 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
  * Wizard page for selection of the storage to import.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
-public class ImportStorageSelectPage extends WizardPage {
+public class ImportStorageSelectPage extends SelectFileWizardPage {
 
 	/**
 	 * Default wizard page message.
@@ -38,7 +34,7 @@ public class ImportStorageSelectPage extends WizardPage {
 	/**
 	 * List of available CMR repositories.
 	 */
-	private List<CmrRepositoryDefinition> cmrRepositoryList;
+	private final List<CmrRepositoryDefinition> cmrRepositoryList;
 
 	/**
 	 * Button for selecting if storage should be imported locally.
@@ -51,17 +47,10 @@ public class ImportStorageSelectPage extends WizardPage {
 	private Combo cmrCombo;
 
 	/**
-	 * Text box where the file name will be displayed.
-	 */
-	private Text fileText;
-
-	/**
 	 * Default constructor.
 	 */
 	public ImportStorageSelectPage() {
-		super("Import Storage");
-		this.setTitle("Import Storage");
-		this.setMessage(DEFAULT_MESSAGE);
+		super("Import Storage", DEFAULT_MESSAGE, new String[] { "*" + StorageFileType.ZIP_STORAGE_FILE.getExtension() }, "", SWT.OPEN);
 		cmrRepositoryList = InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions();
 	}
 
@@ -70,28 +59,9 @@ public class ImportStorageSelectPage extends WizardPage {
 	 */
 	@Override
 	public void createControl(Composite parent) {
-		Composite main = new Composite(parent, SWT.NONE);
-		main.setLayout(new GridLayout(3, false));
+		super.createControl(parent);
 
-		new Label(main, SWT.NONE).setText("File:");
-
-		fileText = new Text(main, SWT.READ_ONLY | SWT.BORDER);
-		fileText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-
-		Button select = new Button(main, SWT.PUSH);
-		select.setText("Select");
-		select.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(getShell(), SWT.OPEN);
-				fileDialog.setText("Select File to Import");
-				fileDialog.setFilterExtensions(new String[] { "*" + StorageFileType.ZIP_STORAGE_FILE.getExtension() });
-				String file = fileDialog.open();
-				if (null != file) {
-					fileText.setText(file);
-				}
-			}
-		});
+		Composite main = (Composite) getControl();
 
 		Label lbl = new Label(main, SWT.NONE);
 		lbl.setText("Import to:");
@@ -147,10 +117,6 @@ public class ImportStorageSelectPage extends WizardPage {
 		select.addListener(SWT.Selection, pageCompleteListener);
 		locallyButton.addListener(SWT.Selection, pageCompleteListener);
 		cmrCombo.addListener(SWT.Selection, pageCompleteListener);
-
-		select.forceFocus();
-
-		setControl(main);
 	}
 
 	/**
@@ -158,7 +124,7 @@ public class ImportStorageSelectPage extends WizardPage {
 	 */
 	@Override
 	public boolean isPageComplete() {
-		if (fileText.getText().isEmpty()) {
+		if (!super.isPageComplete()) {
 			return false;
 		}
 		if (!locallyButton.getSelection()) {
@@ -171,13 +137,6 @@ public class ImportStorageSelectPage extends WizardPage {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * @return Returns the selected file name.
-	 */
-	public String getFileName() {
-		return fileText.getText();
 	}
 
 	/**

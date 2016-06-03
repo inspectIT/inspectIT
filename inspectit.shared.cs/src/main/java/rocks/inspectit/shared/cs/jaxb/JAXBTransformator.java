@@ -1,4 +1,4 @@
-package rocks.inspectit.server.jaxb;
+package rocks.inspectit.shared.cs.jaxb;
 
 import java.io.IOException;
 import java.io.InputStream;

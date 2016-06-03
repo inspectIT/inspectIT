@@ -3,6 +3,7 @@ package rocks.inspectit.server.ci;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
@@ -128,6 +129,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 			manager.createProfile(profile);
 
 			assertThat(profile.getId(), is(not(nullValue())));
+			assertThat(profile.getCreatedDate(), is(not(nullValue())));
 			assertThat(manager.getAllProfiles(), hasItem(profile));
 		}
 
@@ -169,6 +171,46 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		public void getNotExisting() throws Exception {
 			Profile result = manager.getProfile("someId");
 		}
+	}
+
+	public class ImportProfile extends ConfigurationInterfaceManagerTest {
+
+		@Test
+		public void importProfile() throws Exception {
+			Profile profile = new Profile();
+			profile.setId("myId");
+			profile.setName("test");
+
+			manager.importProfile(profile);
+
+			assertThat(profile.getId(), is("myId"));
+			assertThat(profile.getImportDate(), is(not(nullValue())));
+			assertThat(manager.getAllProfiles(), hasItem(profile));
+		}
+
+		@Test
+		public void importProfileExists() throws Exception {
+			Profile profile = new Profile();
+			profile.setName("test");
+			profile.setProfileData(new SensorAssignmentProfileData());
+			manager.createProfile(profile);
+			Profile importProfile = new Profile();
+			importProfile.setId(profile.getId());
+			importProfile.setName("imported");
+
+			manager.importProfile(importProfile);
+
+			assertThat(manager.getProfile(profile.getId()), is(importProfile));
+		}
+
+		@Test(expectedExceptions = BusinessException.class)
+		public void importProfileNoId() throws Exception {
+			Profile profile = new Profile();
+			profile.setName("test");
+
+			manager.importProfile(profile);
+		}
+
 	}
 
 	public class DeleteProfile extends ConfigurationInterfaceManagerTest {
@@ -227,6 +269,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 			assertThat(updated.getName(), is("new"));
 			assertThat(updated.getRevision(), is(2));
+			assertThat(updated.getUpdatedDate(), is(greaterThanOrEqualTo(updated.getCreatedDate())));
 
 			ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
 			verify(eventPublisher).publishEvent(captor.capture());
@@ -344,6 +387,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 			environment = manager.createEnvironment(environment);
 
 			assertThat(environment.getId(), is(not(nullValue())));
+			assertThat(environment.getCreatedDate(), is(not(nullValue())));
 			assertThat(manager.getEnvironment(environment.getId()), is(equalTo(environment)));
 		}
 
@@ -392,6 +436,59 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		}
 	}
 
+	public class ImportEnvironment extends ConfigurationInterfaceManagerTest {
+
+		@Test
+		public void importEnvironment() throws Exception {
+			Environment environment = new Environment();
+			environment.setId("myId");
+			environment.setName("test");
+
+			environment = manager.importEnvironment(environment);
+
+			assertThat(environment.getId(), is("myId"));
+			assertThat(environment.getImportDate(), is(not(nullValue())));
+			assertThat(manager.getEnvironment(environment.getId()), is(equalTo(environment)));
+		}
+
+		@Test
+		public void importEnvironemtExists() throws Exception {
+			Environment environment = new Environment();
+			environment.setName("test");
+			manager.createEnvironment(environment);
+			Environment importEnvironment = new Environment();
+			importEnvironment.setId(environment.getId());
+			importEnvironment.setName("imported");
+
+			manager.importEnvironment(importEnvironment);
+
+			assertThat(manager.getEnvironment(environment.getId()), is(equalTo(importEnvironment)));
+		}
+
+		@Test
+		public void importEnvironmentProfileDoesNotExists() throws Exception {
+			Environment environment = new Environment();
+			environment.setId("myId");
+			environment.setName("test");
+			Set<String> profiles = new HashSet<>();
+			profiles.add("whatever");
+			environment.setProfileIds(profiles);
+
+			environment = manager.importEnvironment(environment);
+
+			assertThat(environment.getId(), is("myId"));
+			assertThat(environment.getProfileIds(), is(empty()));
+		}
+
+		@Test(expectedExceptions = BusinessException.class)
+		public void importEnvironmentNoId() throws Exception {
+			Environment environment = new Environment();
+			environment.setName("test");
+
+			environment = manager.importEnvironment(environment);
+		}
+	}
+
 	public class DeleteEnvironment extends ConfigurationInterfaceManagerTest {
 
 		@Test
@@ -437,6 +534,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 			assertThat(updated.getName(), is("new"));
 			assertThat(updated.getRevision(), is(2));
+			assertThat(environment.getUpdatedDate(), is(greaterThanOrEqualTo(environment.getCreatedDate())));
 
 			ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
 			verify(eventPublisher).publishEvent(captor.capture());
