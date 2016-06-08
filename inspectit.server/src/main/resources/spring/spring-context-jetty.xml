@@ -179,6 +179,22 @@
 		<property name="pathSpec" value="/remoting/HttpTimerDataAccessService" />
 	</bean>
 	<!-- END -->
+	
+	<!-- Remote Data Access Service -->
+	<bean name="remoteCallDataAccessServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="remoteCallDataAccessServiceServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="remoteDataAccessServiceExporter" />
+		<property name="servlet" ref="remoteCallDataAccessServiceRequestHandlerServlet" />
+	</bean>
+
+
+	<bean id="remoteCallDataAccessServiceServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="remoteDataAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/RemoteDataAccessService" />
+	</bean>
+	<!-- END -->
 
 	<!-- Storage Service -->
 	<bean name="storageServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
@@ -333,6 +349,7 @@
 				<ref bean="cmrManagementServiceServletHolder" />
 				<ref bean="timerDataAccessServiceServletHolder" />
 				<ref bean="httpTimerDataAccessServiceServletHolder" />
+				<ref bean="remoteCallDataAccessServiceServletHolder" />
 				<ref bean="storageServiceServletHolder" />
 				<ref bean="configurationInterfaceServiceServletHolder" />
 				<ref bean="businessCtxMngmtServletHolder" />
@@ -352,6 +369,7 @@
 				<ref bean="cmrManagementServiceServiceMapping" />
 				<ref bean="timerDataAccessServiceServiceMapping" />
 				<ref bean="httpTimerDataAccessServiceServiceMapping" />
+				<ref bean="remoteCallDataAccessServiceServiceMapping" />
 				<ref bean="storageServiceServiceMapping" />
 				<ref bean="configurationInterfaceServiceServiceMapping" />
 				<ref bean="businessCtxMngmtServiceMapping" />

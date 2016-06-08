@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="remote-http" name="Remote-HTTP" common="true" created-on="2015-02-24T12:00:00" description="Profile for the Remote HTTP Calls."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<sensor-assignment-profile-data>
+		<!-- Inserter for apache httpclient 4.3 and above-->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig" class-name="org.apache.http.impl.client.CloseableHttpClient" method-name="doExecute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" superclass="true" />
+		
+		<!-- Inserter for apache httpclient 4.0 - 4.2.x-->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig" class-name="org.apache.http.impl.client.AbstractHttpClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" />
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig" class-name="org.apache.http.impl.client.DefaultRequestDirector" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" superclass="true" />
+		
+		<!-- Inserter for Java HttpURLConnection-->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig" class-name="java.net.HttpURLConnection" method-name="connect" parameters="" superclass="true" />
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig" class-name="java.net.HttpURLConnection" method-name="getInputStream" parameters="" superclass="true" />
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig" class-name="java.net.HttpURLConnection" method-name="getOutputStream" parameters="" superclass="true" />
+		
+		<!-- Inserter for Jetty HttpClient 6.1 - 8.x-->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig" class-name="org.mortbay.jetty.client.HttpClient" method-name="send" parameters="org.mortbay.jetty.client.HttpExchange" />
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig" class-name="org.eclipse.jetty.client.HttpClient" method-name="send" parameters="org.eclipse.jetty.client.HttpExchange" />
+		
+		<!-- Extractor for http -->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig" class-name="javax.servlet.FilterChain" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" />
+		
+		
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.http.impl.client.CloseableHttpClient" method-name="doExecute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" superclass="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.http.impl.client.AbstractHttpClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" superclass="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.apache.http.impl.client.DefaultRequestDirector" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" superclass="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="java.net.HttpURLConnection" method-name="connect" parameters="" superclass="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="java.net.HttpURLConnection" method-name="getInputStream" parameters="" superclass="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="java.net.HttpURLConnection" method-name="getOutputStream" parameters="" superclass="true" />		
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.mortbay.jetty.client.HttpClient" method-name="send" parameters="org.mortbay.jetty.client.HttpExchange" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="org.eclipse.jetty.client.HttpClient" method-name="send" parameters="org.eclipse.jetty.client.HttpExchange" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.FilterChain" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" />
+		
+	</sensor-assignment-profile-data>
+
+</profile>

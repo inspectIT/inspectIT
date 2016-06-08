@@ -41,6 +41,13 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQListenerExtractorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
@@ -727,6 +734,20 @@ public final class TextFormatter {
 			return "Thread Information";
 		} else if (ObjectUtils.equals(sensorClass, JmxSensorConfig.class)) {
 			return "JMX Sensor";
+		} else if (ObjectUtils.equals(sensorClass, RemoteApacheHttpClientV40InserterSensorConfig.class)) {
+			return "Apache Http";
+		} else if (ObjectUtils.equals(sensorClass, RemoteHttpExtractorSensorConfig.class)) {
+			return "Http Extractor";
+		} else if (ObjectUtils.equals(sensorClass, RemoteHttpUrlConnectionInserterSensorConfig.class)) {
+			return "Java Http";
+		} else if (ObjectUtils.equals(sensorClass, RemoteJettyHttpClientV61InserterSensorConfig.class)) {
+			return "Jetty Http";
+		} else if (ObjectUtils.equals(sensorClass, RemoteMQConsumerExtractorSensorConfig.class)) {
+			return "MQ Consumer";
+		} else if (ObjectUtils.equals(sensorClass, RemoteMQInserterSensorConfig.class)) {
+			return "MQ Inserter";
+		} else if (ObjectUtils.equals(sensorClass, RemoteMQListenerExtractorSensorConfig.class)) {
+			return "MQ Listener";
 		}
 		return null;
 	}

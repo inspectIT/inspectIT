@@ -22,6 +22,7 @@
 				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.ParameterContentDetailsGenerator" />
 				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.LoggingDetailsGenerator" />
 				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.JmxDetailsGenerator" />
+				<bean class="rocks.inspectit.ui.rcp.details.generator.impl.RemoteCallDetailGenerator" />
 			</util:list>
 		</property>
 	</bean>

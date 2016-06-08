@@ -155,6 +155,39 @@ public final class InvocationSequenceDataHelper {
 	}
 
 	/**
+	 * Checks whether this data object contains a remote call data object.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return whether this data object contains a remote call data object.
+	 */
+	public static boolean hasRemoteCallData(InvocationSequenceData data) {
+		return null != data.getRemoteCallData();
+	}
+
+	/**
+	 * Checks whether this data object has nested RemoteCalls.
+	 *
+	 * @param data
+	 *            {@link InvocationSequenceData}
+	 * @return True if is has nested outgoing RemoteCalls, false otherwise.
+	 */
+	public static boolean hasNestedOutgoingRemoteCalls(InvocationSequenceData data) {
+		return null != data.isNestedOutgoingRemoteCalls() && data.isNestedOutgoingRemoteCalls().booleanValue();
+	}
+
+	/**
+	 * Checks whether this data object has nested RemoteCalls.
+	 *
+	 * @param data
+	 *            {@link InvocationSequenceData}
+	 * @return True if is has nested incomming RemoteCalls, false otherwise.
+	 */
+	public static boolean hasNestedIncommingRemoteCalls(InvocationSequenceData data) {
+		return null != data.isNestedIncommingRemoteCalls() && data.isNestedIncommingRemoteCalls().booleanValue();
+	}
+
+	/**
 	 * Checks whether this data object is the root element of the invocation.
 	 *
 	 * @param data

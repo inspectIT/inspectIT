@@ -40,6 +40,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelpe
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.RemoteCallData;
+import rocks.inspectit.shared.all.communication.data.RemoteHttpCallData;
+import rocks.inspectit.shared.all.communication.data.RemoteMQCallData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
@@ -484,6 +487,13 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			// object.
 			if (null == invocationSequenceData.getTimerData()) {
 				invocationSequenceData.setTimerData((TimerData) dataObject);
+			}
+		}
+
+		if (dataObject.getClass().equals(RemoteHttpCallData.class) || dataObject.getClass().equals(RemoteMQCallData.class)) {
+			// don't overwrite ourself
+			if (null == invocationSequenceData.getRemoteCallData()) {
+				invocationSequenceData.setRemoteCallData((RemoteCallData) dataObject);
 			}
 		}
 

@@ -55,6 +55,13 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQListenerExtractorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
@@ -376,6 +383,15 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 
 		// INSPECTIT-2071
 		kryo.register(JmxSensorConfig.class, new FieldSerializer<JmxSensorConfig>(kryo, JmxSensorConfig.class), nextRegistrationId++);
+
+		// INSPECTIT-1921
+		kryo.register(RemoteApacheHttpClientV40InserterSensorConfig.class, new FieldSerializer<>(kryo, RemoteApacheHttpClientV40InserterSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteHttpExtractorSensorConfig.class, new FieldSerializer<>(kryo, RemoteHttpExtractorSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteHttpUrlConnectionInserterSensorConfig.class, new FieldSerializer<>(kryo, RemoteHttpUrlConnectionInserterSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteJettyHttpClientV61InserterSensorConfig.class, new FieldSerializer<>(kryo, RemoteJettyHttpClientV61InserterSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteMQConsumerExtractorSensorConfig.class, new FieldSerializer<>(kryo, RemoteMQConsumerExtractorSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteMQInserterSensorConfig.class, new FieldSerializer<>(kryo, RemoteMQInserterSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteMQListenerExtractorSensorConfig.class, new FieldSerializer<>(kryo, RemoteMQListenerExtractorSensorConfig.class), nextRegistrationId++);
 	}
 
 }

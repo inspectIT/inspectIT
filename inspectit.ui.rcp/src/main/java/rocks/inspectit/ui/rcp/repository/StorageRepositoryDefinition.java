@@ -11,6 +11,7 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.RemoteCallData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
@@ -20,6 +21,7 @@ import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IRemoteCallDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
@@ -90,6 +92,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 * {@link IBusinessContextDefinition}.
 	 */
 	private IBusinessContextManagementService businessContextService;
+	
+	/**
+	 * {@link IRemoteCallDataAccessService}.
+	 */
+	private IRemoteCallDataAccessService remoteCallDataAccessService;
 
 	/**
 	 * {@link StorageServiceProvider} for instantiating storage services.
@@ -210,6 +217,14 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public IRemoteCallDataAccessService getRemoteCallDataAccessService() {
+		return remoteCallDataAccessService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressWarnings("unchecked")
 	public void initServices() {
 		// init services
@@ -221,6 +236,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
 		jmxDataAccessService = storageServiceProvider.createStorageJmxDataAccessService(this, localStorageData, (IStorageTreeComponent<JmxSensorValueData>) indexingTree);
 		businessContextService = storageServiceProvider.createStorageBusinessContextService(this, localStorageData, (IStorageTreeComponent<DefaultData>) indexingTree, businessTransactions);
+		remoteCallDataAccessService = storageServiceProvider.createStorageRemoteDataAccessService(this, localStorageData, (IStorageTreeComponent<RemoteCallData>) indexingTree);
 		// for storage we use the regular cached data service because ids can never change
 		cachedDataService = new CachedDataService(globalDataAccessService, businessContextService);
 	}

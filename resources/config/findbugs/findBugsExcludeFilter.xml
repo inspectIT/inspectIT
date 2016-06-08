@@ -49,6 +49,16 @@
 		<Method name="premain" />
 		<Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" />
 	</Match>
+	<Match>
+		<Class name="rocks.inspectit.agent.java.sensor.method.remote.inserter.RemoteDefaultInserterHook" />
+		<Field name="METHOD_PARAMETER_ONE_STRING_FIELD" />
+		<Bug pattern="MS_PKGPROTECT" />
+	</Match>
+	<Match>
+		<Class name="rocks.inspectit.agent.java.sensor.method.remote.inserter.RemoteDefaultInserterHook" />
+		<Field name="METHOD_PARAMETER_TWO_STRING_FIELD" />
+		<Bug pattern="MS_PKGPROTECT" />
+	</Match>
 	<!-- Agent ignores END -->
 
 	<!-- CMR ignores START -->

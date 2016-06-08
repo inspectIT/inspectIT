@@ -41,6 +41,13 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQListenerExtractorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
@@ -436,6 +443,20 @@ public final class ImageFormatter {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_THREADS_OVERVIEW);
 		} else if (ObjectUtils.equals(sensorClass, JmxSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
+		} else if (ObjectUtils.equals(sensorClass, RemoteApacheHttpClientV40InserterSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		} else if (ObjectUtils.equals(sensorClass, RemoteHttpExtractorSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		} else if (ObjectUtils.equals(sensorClass, RemoteHttpUrlConnectionInserterSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		} else if (ObjectUtils.equals(sensorClass, RemoteJettyHttpClientV61InserterSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		} else if (ObjectUtils.equals(sensorClass, RemoteMQConsumerExtractorSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		} else if (ObjectUtils.equals(sensorClass, RemoteMQInserterSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		} else if (ObjectUtils.equals(sensorClass, RemoteMQListenerExtractorSensorConfig.class)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
 		}
 		return null;
 	}

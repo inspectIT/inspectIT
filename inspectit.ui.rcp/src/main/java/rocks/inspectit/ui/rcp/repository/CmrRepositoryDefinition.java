@@ -13,6 +13,7 @@ import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IRemoteCallDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
@@ -185,6 +186,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private final IHttpTimerDataAccessService httpTimerDataAccessService;
 
 	/**
+	 * The {@link IRemoteCallDataAccessService}.
+	 */
+	private final IRemoteCallDataAccessService remoteCallDataAccessService;
+
+	/**
 	 * The {@link IGlobalDataAccessService}.
 	 */
 	private final IGlobalDataAccessService globalDataAccessService;
@@ -212,7 +218,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * CMR repository change listeners.
 	 */
-	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<>(1);
+	private final List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<CmrRepositoryChangeListener>(1);
 
 	/**
 	 * Calls default constructor with name 'Undefined'.
@@ -256,6 +262,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		configurationInterfaceService = cmrServiceProvider.getConfigurationInterfaceService(this);
 		jmxDataAccessService = cmrServiceProvider.getJmxDataAccessService(this);
 		businessContextManagementService = cmrServiceProvider.getBusinessContextManagementService(this);
+		remoteCallDataAccessService = cmrServiceProvider.getRemoteDataAccessService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, businessContextManagementService, this);
 	}
@@ -353,6 +360,13 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public IJmxDataAccessService getJmxDataAccessService() {
 		return jmxDataAccessService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IRemoteCallDataAccessService getRemoteCallDataAccessService() {
+		return remoteCallDataAccessService;
 	}
 
 	/**

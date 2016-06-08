@@ -1,0 +1,52 @@
+package rocks.inspectit.agent.java.sensor.method.remote.extractor.mq;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
+
+/**
+ * The remote mq sensor which initializes and returns the {@link RemoteMQConsumerExtractorHook}
+ * class.
+ *
+ * @author Thomas Kluge
+ *
+ */
+public class RemoteMQListenerExtractorSensor extends AbstractMethodSensor {
+
+	/**
+	 * The hook.
+	 */
+	private RemoteMQListenerExtractorHook hook = null;
+
+	/**
+	 * The Platform manager.
+	 */
+	@Autowired
+	private IPlatformManager platformManager;
+
+	/**
+	 * The extractor.
+	 */
+	@Autowired
+	private RemoteMQParameterExtractor extractor;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void initHook(Map<String, Object> parameters) {
+		hook = new RemoteMQListenerExtractorHook(platformManager, extractor);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IHook getHook() {
+		return hook;
+	}
+
+}

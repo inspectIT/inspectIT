@@ -83,6 +83,22 @@
 
   <xs:element name="profile" type="profile"/>
 
+  <xs:element name="remote-apache-httpclientV40-inserter-sensor-config" type="remoteApacheHttpClientV40InserterSensorConfig"/>
+
+  <xs:element name="remote-http-extractor-sensor-config" type="remoteHttpExtractorSensorConfig"/>
+
+  <xs:element name="remote-http-urlconnection-inserter-sensor-config" type="remoteHttpUrlConnectionInserterSensorConfig"/>
+
+  <xs:element name="remote-invocation-sequence-sensor-config" type="remoteInvocationSequenceSensorConfig"/>
+
+  <xs:element name="remote-jetty-httpclientV61-inserter-sensor-config" type="remoteJettyHttpClientV61InserterSensorConfig"/>
+
+  <xs:element name="remote-mq-consumer-extractor-sensor-config" type="remoteMQConsumerExtractorSensorConfig"/>
+
+  <xs:element name="remote-mq-inserter-sensor-config" type="remoteMQInserterSensorConfig"/>
+
+  <xs:element name="remote-mq-listener-inserter-sensor-config" type="remoteMQListenerExtractorSensorConfig"/>
+
   <xs:element name="return-capture" type="returnContextCapture"/>
 
   <xs:element name="runtime-sensor-config" type="runtimeSensorConfig"/>
@@ -389,6 +405,14 @@
                   <xs:element ref="statement-sensor-config"/>
                   <xs:element ref="timer-sensor-config"/>
                   <xs:element ref="log4j-logging-sensor-config"/>
+              <xs:element ref="remote-apache-httpclientV40-inserter-sensor-config"/>
+              <xs:element ref="remote-http-extractor-sensor-config"/>
+              <xs:element ref="remote-http-urlconnection-inserter-sensor-config"/>
+              <xs:element ref="remote-invocation-sequence-sensor-config"/>
+              <xs:element ref="remote-jetty-httpclientV61-inserter-sensor-config"/>
+              <xs:element ref="remote-mq-consumer-extractor-sensor-config"/>
+              <xs:element ref="remote-mq-inserter-sensor-config"/>
+              <xs:element ref="remote-mq-listener-inserter-sensor-config"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -563,6 +587,66 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="abstractRemoteSensorConfig" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="remoteHttpExtractorSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteMQConsumerExtractorSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteMQListenerExtractorSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteApacheHttpClientV40InserterSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteHttpUrlConnectionInserterSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteJettyHttpClientV61InserterSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteMQInserterSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="log4JLoggingSensorConfig">
     <xs:complexContent>
       <xs:extension base="abstractMethodSensorConfig">
@@ -570,6 +654,10 @@
         <xs:attribute name="minLevel" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteInvocationSequenceSensorConfig">
+    <xs:sequence/>
   </xs:complexType>
 
   <xs:complexType name="jmxSensorConfig">

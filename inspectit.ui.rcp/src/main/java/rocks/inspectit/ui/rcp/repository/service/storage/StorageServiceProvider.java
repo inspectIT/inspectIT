@@ -9,6 +9,7 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.RemoteCallData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
@@ -232,4 +233,30 @@ public abstract class StorageServiceProvider {
 		storageBusinessContextService.setBusinessTransactions(businessTransactions);
 		return storageBusinessContextService;
 	}
+
+	/**
+	 * Properly initialized {@link StorageRemoteDataAccessService}.
+	 *
+	 * @param storageRepositoryDefinition
+	 *            {@link StorageRepositoryDefinition}.
+	 * @param localStorageData
+	 *            {@link LocalStorageData}.
+	 * @param storageTreeComponent
+	 *            Indexing tree.
+	 * @return Properly initialized {@link StorageRemoteDataAccessService}.
+	 */
+	public StorageRemoteDataAccessService createStorageRemoteDataAccessService(StorageRepositoryDefinition storageRepositoryDefinition, LocalStorageData localStorageData,
+			IStorageTreeComponent<RemoteCallData> storageTreeComponent) {
+		StorageRemoteDataAccessService storageRemoteDataAccessService = createStorageRemoteDataAccessService();
+		storageRemoteDataAccessService.setStorageRepositoryDefinition(storageRepositoryDefinition);
+		storageRemoteDataAccessService.setLocalStorageData(localStorageData);
+		storageRemoteDataAccessService.setIndexingTree(storageTreeComponent);
+		return storageRemoteDataAccessService;
+
+	}
+
+	/**
+	 * @return Spring created {@link StorageRemoteDataAccessService}.
+	 */
+	protected abstract StorageRemoteDataAccessService createStorageRemoteDataAccessService();
 }

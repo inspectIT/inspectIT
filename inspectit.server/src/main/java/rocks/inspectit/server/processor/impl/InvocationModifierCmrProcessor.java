@@ -14,6 +14,7 @@ import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.all.communication.data.RemoteCallData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 
@@ -106,10 +107,35 @@ public class InvocationModifierCmrProcessor extends AbstractChainedCmrDataProces
 			extractDataFromInvocation(entityManager, child, topInvocationParent);
 		}
 
-		// process the SQL Statement and Timer
+		// process the SQL Statement, Timer and Remote
 		processSqlStatementData(entityManager, invData, topInvocationParent);
 		processTimerData(entityManager, invData, topInvocationParent, exclusiveDurationDelta);
 		processExceptionSensorData(entityManager, invData, topInvocationParent);
+		processRemoteCallData(entityManager, invData, topInvocationParent);
+	}
+
+	/**
+	 * Process RemoteCalls if one exists in the invData object and passes it to the chained
+	 * processors.
+	 *
+	 * @param entityManager
+	 *            {@link EntityManager} needed for DB persistence.
+	 * @param invData
+	 *            Invocation data to be processed.
+	 * @param topInvocationParent
+	 *            Top invocation object.
+	 */
+	private void processRemoteCallData(EntityManager entityManager, InvocationSequenceData invData, InvocationSequenceData topInvocationParent) {
+		RemoteCallData remoteCallData = invData.getRemoteCallData();
+		if (null != remoteCallData) {
+			if (remoteCallData.isCalling()) {
+				topInvocationParent.setNestedOutgoingRemoteCalls(Boolean.TRUE);
+			} else {
+				topInvocationParent.setNestedIncommingRemoteCalls(Boolean.TRUE);
+			}
+			remoteCallData.addInvocationParentId(topInvocationParent.getId());
+			passToChainedProcessors(remoteCallData, entityManager);
+		}
 	}
 
 	/**

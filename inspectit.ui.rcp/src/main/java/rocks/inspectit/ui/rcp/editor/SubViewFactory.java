@@ -23,6 +23,7 @@ import rocks.inspectit.ui.rcp.editor.table.input.SqlParameterAggregationInputCon
 import rocks.inspectit.ui.rcp.editor.table.input.TaggedHttpTimerDataInputController;
 import rocks.inspectit.ui.rcp.editor.table.input.TimerDataInputController;
 import rocks.inspectit.ui.rcp.editor.table.input.UngroupedExceptionOverviewInputController;
+import rocks.inspectit.ui.rcp.editor.table.input.UngroupedRemoteCallOverviewDataInputController;
 import rocks.inspectit.ui.rcp.editor.text.TextSubView;
 import rocks.inspectit.ui.rcp.editor.text.input.ClassesInputController;
 import rocks.inspectit.ui.rcp.editor.text.input.CpuInputController;
@@ -214,6 +215,16 @@ public final class SubViewFactory {
 			jmxChartSashSubView.addSubView(jmxGraphSubView, 3);
 			jmxChartSashSubView.addSubView(jmxTextSubView, 2);
 			return jmxChartSashSubView;
+		case REMOTE_HTTP_CALL_RESPONSE:
+		case REMOTE_MQ_CONSUMER_RESPONSE:
+		case REMOTE_MQ_LISTENER_RESPONSE:
+		case REMOTE_CALL_REQUEST_APACHE_HTTPCLIENT_V40:
+		case REMOTE_CALL_REQUEST_HTTPURLCONNECTION:
+		case REMOTE_CALL_REQUEST_JETTY_HTTPCONNECTION:
+		case REMOTE_CALL_REQUEST_MQ:
+			SashCompositeSubView remoteSashSubView = new SashCompositeSubView();
+			remoteSashSubView.addSubView(new TableSubView(new UngroupedRemoteCallOverviewDataInputController()));
+			return remoteSashSubView;
 		default:
 			throw new IllegalArgumentException("Could not create sub-view. Not supported: " + sensorTypeEnum.toString());
 		}
