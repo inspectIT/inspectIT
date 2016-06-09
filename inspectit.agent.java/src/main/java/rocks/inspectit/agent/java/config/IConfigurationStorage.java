@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import rocks.inspectit.agent.java.config.impl.RepositoryConfig;
-import rocks.inspectit.agent.java.config.impl.UnregisteredJmxConfig;
 import rocks.inspectit.agent.java.sensor.exception.IExceptionSensor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
@@ -105,8 +104,10 @@ public interface IConfigurationStorage {
 	 * Returns a {@link List} of the {@link JmxSensorTypeConfig} classes.
 	 *
 	 * @return A {@link List} of {@link JmxSensorTypeConfig} classes.
+	 * @throws StorageException
+	 *             If agent configuration is not set.
 	 */
-	List<JmxSensorTypeConfig> getJmxSensorTypes();
+	List<JmxSensorTypeConfig> getJmxSensorTypes() throws StorageException;
 
 	/**
 	 * Returns the exception sensor types.
@@ -126,13 +127,6 @@ public interface IConfigurationStorage {
 	 *             If agent configuration is not set.
 	 */
 	List<PlatformSensorTypeConfig> getPlatformSensorTypes() throws StorageException;
-
-	/**
-	 * Returns a {@link List} of the {@link UnregisteredJmxConfig} classes.
-	 *
-	 * @return A {@link List} of {@link UnregisteredJmxConfig} classes.
-	 */
-	List<UnregisteredJmxConfig> getUnregisteredJmxConfigs();
 
 	/**
 	 * Returns whether the {@link IExceptionSensor} is activated.

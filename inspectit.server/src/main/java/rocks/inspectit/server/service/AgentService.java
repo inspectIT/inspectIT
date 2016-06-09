@@ -1,5 +1,6 @@
 package rocks.inspectit.server.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
@@ -70,8 +72,18 @@ public class AgentService implements IAgentService {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@MethodLog
 	public void instrumentationApplied(Map<Long, long[]> methodToSensorMap) {
 		nextGenInstrumentationManager.instrumentationApplied(methodToSensorMap);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@MethodLog
+	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException {
+		return nextGenInstrumentationManager.analyzeJmxAttributes(platformIdent, attributeDescriptors);
 	}
 
 	/**

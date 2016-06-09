@@ -3,6 +3,7 @@ package rocks.inspectit.ui.rcp.formatter;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +28,7 @@ import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
@@ -67,6 +69,8 @@ import rocks.inspectit.ui.rcp.model.AgentLeaf;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 import rocks.inspectit.ui.rcp.util.data.RegExAggregatedHttpTimerData;
+import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
+import rocks.inspectit.ui.rcp.validation.ValidationState;
 
 /**
  * This class provides some static methods to create some common {@link String} and
@@ -723,6 +727,62 @@ public final class TextFormatter {
 			return "JMX Sensor";
 		}
 		return null;
+	}
+
+	/**
+	 * Returns short (1 line) error message for the assignment based on the validation states.
+	 *
+	 * @param sensorAssignment
+	 *            assignment
+	 * @param states
+	 *            {@link ValidationControlDecoration}
+	 * @return short error message
+	 */
+	public static String getErroMessageShort(ISensorAssignment<?> sensorAssignment, Collection<ValidationState> states) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(TextFormatter.getSensorConfigName(sensorAssignment.getSensorConfigClass()));
+		builder.append(" Assignment (");
+		String singleStateMessage = StringUtils.EMPTY;
+		int count = 0;
+		for (ValidationState state : states) {
+			if (!state.isValid()) {
+				count++;
+				singleStateMessage = state.getMessage();
+			}
+		}
+		if (count > 1) {
+			builder.append(count);
+			builder.append(" fields contain validation errors)");
+		} else {
+			builder.append(singleStateMessage);
+			builder.append(')');
+		}
+
+		return builder.toString();
+	}
+
+	/**
+	 * Returns full error message for the assignment based on the validation states. In this
+	 * message each line will contain error reported by any invalid {@link ValidationState}
+	 *
+	 * @param sensorAssignment
+	 *            assignment
+	 * @param states
+	 *            {@link ValidationState}s
+	 * @return fill error message
+	 */
+	public static String getErroMessageFull(ISensorAssignment<?> sensorAssignment, Collection<ValidationState> states) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(TextFormatter.getSensorConfigName(sensorAssignment.getSensorConfigClass()));
+		builder.append(" Assignment:");
+
+		for (ValidationState state : states) {
+			if (!state.isValid()) {
+				builder.append('\n');
+				builder.append(state.getMessage());
+			}
+		}
+		return builder.toString();
 	}
 
 }

@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
@@ -54,8 +55,10 @@ public class ConfigurationHolderTest extends TestBase {
 			Environment environment = mock(Environment.class);
 			AgentConfig configuration = mock(AgentConfig.class);
 			IInstrumentationApplier applier = mock(IInstrumentationApplier.class);
+			JmxMonitoringApplier jmxApplier = mock(JmxMonitoringApplier.class);
 			when(configurationCreator.environmentToConfiguration(environment, platformId)).thenReturn(configuration);
 			when(configurationResolver.getInstrumentationAppliers(environment)).thenReturn(Collections.singleton(applier));
+			when(configurationResolver.getJmxMonitoringAppliers(environment)).thenReturn(Collections.singleton(jmxApplier));
 
 			holder.update(environment, platformId);
 
@@ -64,9 +67,12 @@ public class ConfigurationHolderTest extends TestBase {
 			assertThat(holder.getAgentConfiguration(), is(configuration));
 			assertThat(holder.getInstrumentationAppliers(), hasSize(1));
 			assertThat(holder.getInstrumentationAppliers(), hasItem(applier));
+			assertThat(holder.getJmxMonitoringAppliers(), hasSize(1));
+			assertThat(holder.getJmxMonitoringAppliers(), hasItem(jmxApplier));
 
 			verify(configurationCreator).environmentToConfiguration(environment, platformId);
 			verify(configurationResolver).getInstrumentationAppliers(environment);
+			verify(configurationResolver).getJmxMonitoringAppliers(environment);
 			verifyNoMoreInteractions(configurationCreator, configurationResolver);
 		}
 
@@ -76,8 +82,10 @@ public class ConfigurationHolderTest extends TestBase {
 			Environment environment = mock(Environment.class);
 			AgentConfig configuration = mock(AgentConfig.class);
 			IInstrumentationApplier applier = mock(IInstrumentationApplier.class);
+			JmxMonitoringApplier jmxApplier = mock(JmxMonitoringApplier.class);
 			when(configurationCreator.environmentToConfiguration(environment, platformId)).thenReturn(configuration);
 			when(configurationResolver.getInstrumentationAppliers(environment)).thenReturn(Collections.singleton(applier));
+			when(configurationResolver.getJmxMonitoringAppliers(environment)).thenReturn(Collections.singleton(jmxApplier));
 
 			holder.update(environment, platformId);
 			holder.update(null, platformId);
@@ -87,6 +95,7 @@ public class ConfigurationHolderTest extends TestBase {
 			// only one time verifications
 			verify(configurationCreator).environmentToConfiguration(environment, platformId);
 			verify(configurationResolver).getInstrumentationAppliers(environment);
+			verify(configurationResolver).getJmxMonitoringAppliers(environment);
 			verifyNoMoreInteractions(configurationCreator, configurationResolver);
 		}
 	}

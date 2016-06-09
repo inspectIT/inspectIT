@@ -148,6 +148,7 @@
             </xs:complexType>
           </xs:element>
           <xs:element ref="exception-sensor-config"/>
+      <xs:element ref="jmx-loading-sensor-config"/>
           <xs:element name="profile-ids" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
@@ -323,6 +324,10 @@
         <xs:attribute name="minLevel" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="jmxSensorConfig">
+    <xs:sequence/>
   </xs:complexType>
 
   <xs:complexType name="profile">
@@ -534,10 +539,6 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="jmxSensorConfig">
-    <xs:sequence/>
   </xs:complexType>
 </xs:schema>
 

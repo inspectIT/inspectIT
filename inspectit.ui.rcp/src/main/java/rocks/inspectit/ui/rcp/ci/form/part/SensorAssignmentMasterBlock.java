@@ -1,7 +1,6 @@
 package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +69,6 @@ import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.util.RemoveSelection;
 import rocks.inspectit.ui.rcp.validation.AbstractValidationManager;
 import rocks.inspectit.ui.rcp.validation.TableItemControlDecorationManager;
-import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
 import rocks.inspectit.ui.rcp.validation.ValidationState;
 
 /**
@@ -809,8 +807,8 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 		 */
 		@Override
 		protected void showMessage(AbstractClassSensorAssignment<?> key, Set<ValidationState> states) {
-			tableItemControlDecorationManager.showTableItemControlDecoration(getActiveTableViewer(), key, getErroMessageFull(key, states));
-			formPage.getManagedForm().getMessageManager().addMessage(key, getErroMessageShort(key, states), null, IMessageProvider.ERROR);
+			tableItemControlDecorationManager.showTableItemControlDecoration(getActiveTableViewer(), key, TextFormatter.getErroMessageFull(key, states));
+			formPage.getManagedForm().getMessageManager().addMessage(key, TextFormatter.getErroMessageShort(key, states), null, IMessageProvider.ERROR);
 		}
 
 		/**
@@ -837,67 +835,13 @@ public class SensorAssignmentMasterBlock extends MasterDetailsBlock implements I
 
 					Set<ValidationState> states = super.getValidationErrorStates(assignment);
 					if (CollectionUtils.isNotEmpty(states)) {
-						tableItemControlDecorationManager.showTableItemControlDecoration(activeTableViewer, assignment, getErroMessageFull(assignment, states));
+						tableItemControlDecorationManager.showTableItemControlDecoration(activeTableViewer, assignment, TextFormatter.getErroMessageFull(assignment, states));
 					} else {
 						tableItemControlDecorationManager.hideTableItemControlDecoration(activeTableViewer, assignment);
 					}
 				}
 			}
 		}
-
-		/**
-		 * Returns short (1 line) error message for the assignment based on the validation states.
-		 *
-		 * @param sensorAssignment
-		 *            assignment
-		 * @param states
-		 *            {@link ValidationControlDecoration}
-		 * @return short error message
-		 */
-		private String getErroMessageShort(AbstractClassSensorAssignment<?> sensorAssignment, Collection<ValidationState> states) {
-			StringBuilder builder = new StringBuilder();
-			builder.append(TextFormatter.getSensorConfigName(sensorAssignment.getSensorConfigClass()));
-			builder.append(" Assignment (");
-			int count = 0;
-			for (ValidationState state : states) {
-				if (!state.isValid()) {
-					count++;
-				}
-			}
-			builder.append(count);
-			if (count > 1) {
-				builder.append(" fields contain validation errors)");
-			} else {
-				builder.append(" field contains validation error)");
-			}
-
-			return builder.toString();
-		}
-
-		/**
-		 * Returns full error message for the assignment based on the validation states. In this
-		 * message each line will contain error reported by any invalid {@link ValidationState}
-		 *
-		 * @param sensorAssignment
-		 *            assignment
-		 * @param states
-		 *            {@link ValidationState}s
-		 * @return fill error message
-		 */
-		private String getErroMessageFull(AbstractClassSensorAssignment<?> sensorAssignment, Collection<ValidationState> states) {
-			StringBuilder builder = new StringBuilder();
-			builder.append(TextFormatter.getSensorConfigName(sensorAssignment.getSensorConfigClass()));
-			builder.append(" Assignment:");
-
-			for (ValidationState state : states) {
-				if (!state.isValid()) {
-					builder.append('\n');
-					builder.append(state.getMessage());
-				}
-			}
-			return builder.toString();
-		}
-
 	}
 
 	/**

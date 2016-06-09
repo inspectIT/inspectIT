@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.management.ObjectName;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -308,6 +311,15 @@ public class JmxMasterDetailsBlock extends MasterDetailsBlock implements IFormPa
 
 				tableViewer.update(modifiedElement, null);
 				markDirty();
+
+				// check object name
+				ObjectName objectName = modifiedElement.constructObjectName();
+				if (null == objectName) {
+					validationManager.validationStateChanged(modifiedElement,
+							new ValidationState(this, false, "Object name can not be constructed, please check the domain and object name properties."));
+				} else {
+					validationManager.validationStateChanged(modifiedElement, new ValidationState(this, true, StringUtils.EMPTY));
+				}
 			}
 		};
 		detailsPart.registerPage(JmxBeanSensorAssignment.class, new JmxDetailsPage(listener, validationManager));
@@ -605,8 +617,8 @@ public class JmxMasterDetailsBlock extends MasterDetailsBlock implements IFormPa
 		 */
 		@Override
 		protected void showMessage(JmxBeanSensorAssignment key, Set<ValidationState> states) {
-			tableItemControlDecorationManager.showTableItemControlDecoration(tableViewer, key, getErroMessageFull(states));
-			formPage.getManagedForm().getMessageManager().addMessage(key, getErroMessageShort(states), null, IMessageProvider.ERROR);
+			tableItemControlDecorationManager.showTableItemControlDecoration(tableViewer, key, TextFormatter.getErroMessageFull(key, states));
+			formPage.getManagedForm().getMessageManager().addMessage(key, TextFormatter.getErroMessageShort(key, states), null, IMessageProvider.ERROR);
 		}
 
 		/**
@@ -626,56 +638,11 @@ public class JmxMasterDetailsBlock extends MasterDetailsBlock implements IFormPa
 			for (JmxBeanSensorAssignment assignment : jmxAssignments) {
 				Set<ValidationState> states = super.getValidationErrorStates(assignment);
 				if (CollectionUtils.isNotEmpty(states)) {
-					tableItemControlDecorationManager.showTableItemControlDecoration(tableViewer, assignment, getErroMessageFull(states));
+					tableItemControlDecorationManager.showTableItemControlDecoration(tableViewer, assignment, TextFormatter.getErroMessageFull(assignment, states));
 				} else {
 					tableItemControlDecorationManager.hideTableItemControlDecoration(tableViewer, assignment);
 				}
 			}
-		}
-
-		/**
-		 * Creates short error message based on validation states. Should be used for the message
-		 * manager.
-		 *
-		 * @param states
-		 *            Set of states.
-		 * @return Short error message.
-		 */
-		private String getErroMessageShort(Set<ValidationState> states) {
-			StringBuilder builder = new StringBuilder();
-			int count = 0;
-			for (ValidationState state : states) {
-				if (!state.isValid()) {
-					count++;
-				}
-			}
-			builder.append(count);
-			if (count > 1) {
-				builder.append(" fields contain validation errors");
-			} else {
-				builder.append(" field contains validation error");
-			}
-
-			return builder.toString();
-		}
-
-		/**
-		 * Returns full error message for the assignment based on the validation states. In this
-		 * message each line will contain error reported by any invalid {@link ValidationState}.
-		 *
-		 * @param states
-		 *            Set of states.
-		 * @return full error message
-		 */
-		private String getErroMessageFull(Set<ValidationState> states) {
-			StringBuilder builder = new StringBuilder("Jmx Sensor Assignment:");
-			for (ValidationState state : states) {
-				if (!state.isValid()) {
-					builder.append('\n');
-					builder.append(state.getMessage());
-				}
-			}
-			return builder.toString();
 		}
 
 	}

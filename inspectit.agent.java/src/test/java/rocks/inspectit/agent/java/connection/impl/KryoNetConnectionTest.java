@@ -15,12 +15,15 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
@@ -37,6 +40,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.kryonet.Client;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
@@ -357,7 +361,7 @@ public class KryoNetConnectionTest extends TestBase {
 		}
 	}
 
-	public static class AnalyzeAndInstrument extends KryoNetConnectionTest {
+	public static class Analyze extends KryoNetConnectionTest {
 
 		@Test
 		public void analyzeAndInstrument() throws Exception {
@@ -439,6 +443,77 @@ public class KryoNetConnectionTest extends TestBase {
 
 			try {
 				connection.analyze(id, hash, type);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(false));
+				throw e;
+			} finally {
+				verifyZeroInteractions(agentService);
+			}
+		}
+	}
+
+	public static class AnalyzeJmxAttributes extends KryoNetConnectionTest {
+
+		@Test
+		public void analyzeJmxAttributes() throws Exception {
+			Collection<JmxAttributeDescriptor> result = mock(Collection.class);
+			when(client.isConnected()).thenReturn(true);
+			doReturn(result).when(agentService).analyzeJmxAttributes(anyLong(), Mockito.<Collection<JmxAttributeDescriptor>> any());
+			long id = 7;
+			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
+
+			Collection<JmxAttributeDescriptor> receivedResult = connection.analyzeJmxAttributes(id, descriptors);
+			assertThat(receivedResult, is(result));
+
+			verify(agentService, times(1)).analyzeJmxAttributes(id, descriptors);
+			verifyNoMoreInteractions(agentService);
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void timeout() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			doThrow(TimeoutException.class).when(agentService).analyzeJmxAttributes(anyLong(), Mockito.<Collection<JmxAttributeDescriptor>> any());
+			long id = 7;
+			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
+
+			try {
+				connection.analyzeJmxAttributes(id, descriptors);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(true));
+				throw e;
+			} finally {
+				verify(agentService, times(1)).analyzeJmxAttributes(id, descriptors);
+				verifyNoMoreInteractions(agentService);
+			}
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void remoteException() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			doThrow(RuntimeException.class).when(agentService).analyzeJmxAttributes(anyLong(), Mockito.<Collection<JmxAttributeDescriptor>> any());
+			long id = 7;
+			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
+
+			try {
+				connection.analyzeJmxAttributes(id, descriptors);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(false));
+				throw e;
+			} finally {
+				// fail fast call, only one attempt
+				verify(agentService, times(1)).analyzeJmxAttributes(id, descriptors);
+				verifyNoMoreInteractions(agentService);
+			}
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void notConnected() throws Exception {
+			when(client.isConnected()).thenReturn(false);
+			long id = 7;
+			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
+
+			try {
+				connection.analyzeJmxAttributes(id, descriptors);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;

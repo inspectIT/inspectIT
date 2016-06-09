@@ -97,7 +97,7 @@ public abstract class AbstractTextInputController implements TextInputController
 	 *            The text which will be shown.
 	 */
 	protected void addItemToSection(FormToolkit toolkit, String sectionTitle, String text) {
-		addItemToSection(toolkit, sectionTitle, text, null);
+		addItemToSection(toolkit, sectionTitle, text, null, SWT.DEFAULT);
 	}
 
 	/**
@@ -111,8 +111,10 @@ public abstract class AbstractTextInputController implements TextInputController
 	 *            The text which will be shown.
 	 * @param image
 	 *            The image which will be shown.
+	 * @param minColumnWidth
+	 *            the minimum width of the column.
 	 */
-	protected void addItemToSection(FormToolkit toolkit, String sectionTitle, String text, Image image) {
+	protected void addItemToSection(FormToolkit toolkit, String sectionTitle, String text, Image image, int minColumnWidth) {
 		if (sections.containsKey(sectionTitle)) {
 			FormText formText = toolkit.createFormText(sections.get(sectionTitle), false);
 			if (image != null) {
@@ -121,7 +123,7 @@ public abstract class AbstractTextInputController implements TextInputController
 			} else {
 				formText.setText("<form><p>" + text + "</p></form>", true, false);
 			}
-			formText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+			formText.setLayoutData(new GridData(minColumnWidth, SWT.DEFAULT));
 		}
 	}
 

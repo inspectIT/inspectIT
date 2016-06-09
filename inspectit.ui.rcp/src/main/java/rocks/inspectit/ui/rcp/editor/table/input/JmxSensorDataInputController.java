@@ -66,13 +66,9 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 		/** The column for the attribute name. */
 		ATTRIBUTE("Attribute", 300, InspectITImages.IMG_BLUE_DOCUMENT_TABLE, JmxDataComparatorEnum.ATTRIBUTENAME),
 		/** The column for the time stamp when the last value was acquired. */
-		TIMESTAMP("Timestamp", 100, InspectITImages.IMG_TIMESTAMP, DefaultDataComparatorEnum.TIMESTAMP),
+		TIMESTAMP("Last Date", 150, InspectITImages.IMG_TIMESTAMP, DefaultDataComparatorEnum.TIMESTAMP),
 		/** The column for the most recent value of the attribute. */
-		VALUE("Value", 150, null, JmxDataComparatorEnum.VALUE),
-		/** The column indicates if the attribute is readable. */
-		ISREADABLE("Readable", 100, null, JmxDataComparatorEnum.READABLE),
-		/** The column indicates if the attribute is writable. */
-		ISWRITEABLE("Writeable", 100, null, JmxDataComparatorEnum.WRITABLE);
+		VALUE("Value", 150, null, JmxDataComparatorEnum.VALUE);
 
 		/**
 		 * The name.
@@ -331,21 +327,7 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 			JmxSensorValueData data = (JmxSensorValueData) element;
 			Column enumId = Column.fromOrd(index);
 
-			JmxDefinitionDataIdent jmxDefinitionDataIdent = cachedDataService.getJmxDefinitionDataIdentForId(data.getJmxSensorDefinitionDataIdentId());
-
 			switch (enumId) {
-			case ISREADABLE:
-				if (jmxDefinitionDataIdent.getmBeanAttributeIsReadable()) {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK);
-				} else {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_CLOSE);
-				}
-			case ISWRITEABLE:
-				if (jmxDefinitionDataIdent.getmBeanAttributeIsWritable()) {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK);
-				} else {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_CLOSE);
-				}
 			case CHARTING:
 				if (data.isBooleanOrNumeric()) {
 					return InspectIT.getDefault().getImage(InspectITImages.IMG_CHART_PIE);
@@ -381,8 +363,6 @@ public class JmxSensorDataInputController extends AbstractTableInputController {
 			return new StyledString(NumberFormatter.formatTime(data.getTimeStamp()));
 		case VALUE:
 			return new StyledString(data.getValue());
-		case ISREADABLE:
-		case ISWRITEABLE:
 		case CHARTING:
 			return emptyStyledString;
 		default:
