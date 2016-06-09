@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.management.ObjectName;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -308,6 +311,14 @@ public class JmxMasterDetailsBlock extends MasterDetailsBlock implements IFormPa
 
 				tableViewer.update(modifiedElement, null);
 				markDirty();
+
+				// check object name
+				ObjectName objectName = modifiedElement.constructObjectName();
+				if (null == objectName) {
+					validationManager.validationStateChanged(modifiedElement, new ValidationState(this, false, "Object name can not be constructed."));
+				} else {
+					validationManager.validationStateChanged(modifiedElement, new ValidationState(this, true, StringUtils.EMPTY));
+				}
 			}
 		};
 		detailsPart.registerPage(JmxBeanSensorAssignment.class, new JmxDetailsPage(listener, validationManager));

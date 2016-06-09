@@ -53,8 +53,8 @@ public class NavigateToJmxPlottingHandler extends AbstractHandler {
 
 			EditorPropertiesData editorPropertiesData = new EditorPropertiesData();
 			editorPropertiesData.setSensorImage(SensorTypeEnum.CHARTING_JMX_SENSOR_DATA.getImage());
-			editorPropertiesData.setSensorName(String.format("Chart - %s", jmxIdent.getmBeanAttributeName()));
-			editorPropertiesData.setPartNameFlag(PartType.SENSOR);
+			editorPropertiesData.setSensorName("JMX Data");
+			editorPropertiesData.setPartNameFlag(PartType.VIEW);
 			editorPropertiesData.setViewImage(InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN));
 			editorPropertiesData.setViewName(TextFormatter.getJmxDefinitionString(jmxIdent));
 			inputDefinition.setEditorPropertiesData(editorPropertiesData);

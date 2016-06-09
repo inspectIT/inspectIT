@@ -1,8 +1,5 @@
 package rocks.inspectit.server.instrumentation.config.applier;
 
-import rocks.inspectit.server.instrumentation.config.filter.AssignmentFilterProvider;
-import rocks.inspectit.server.instrumentation.config.filter.ClassSensorAssignmentFilter;
-import rocks.inspectit.server.instrumentation.config.filter.MethodSensorAssignmentFilter;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
@@ -15,17 +12,7 @@ import rocks.inspectit.shared.cs.ci.Environment;
  * @author Ivan Senic
  *
  */
-public abstract class AbstractInstrumentationApplier implements IInstrumentationApplier {
-
-	/**
-	 * Assignment filter provider for providing class and method matching filters.
-	 */
-	protected AssignmentFilterProvider assignmentFilterProvider = new AssignmentFilterProvider();
-
-	/**
-	 * Environment belonging to the assignment.
-	 */
-	protected Environment environment;
+public abstract class AbstractInstrumentationApplier extends GenericApplier implements IInstrumentationApplier {
 
 	/**
 	 * Default constructor.
@@ -34,10 +21,7 @@ public abstract class AbstractInstrumentationApplier implements IInstrumentation
 	 *            Environment belonging to the assignment.
 	 */
 	public AbstractInstrumentationApplier(Environment environment) {
-		if (null == environment) {
-			throw new IllegalArgumentException("Environment can not be null in instrumentation applier.");
-		}
-		this.environment = environment;
+		super(environment);
 	}
 
 	/**
@@ -108,24 +92,6 @@ public abstract class AbstractInstrumentationApplier implements IInstrumentation
 	 *            {@link MethodInstrumentationConfig}.
 	 */
 	protected abstract void applyAssignment(AgentConfig agentConfiguration, MethodType methodType, MethodInstrumentationConfig methodInstrumentationConfig);
-
-	/**
-	 * Gets {@link AssignmentFilterProvider#getClassSensorAssignmentFilter()}.
-	 *
-	 * @return {@link AssignmentFilterProvider#getClassSensorAssignmentFilter()}
-	 */
-	protected ClassSensorAssignmentFilter getClassSensorAssignmentFilter() {
-		return assignmentFilterProvider.getClassSensorAssignmentFilter();
-	}
-
-	/**
-	 * Gets {@link AssignmentFilterProvider#getMethodsSensorAssignmentFilter()}.
-	 *
-	 * @return {@link AssignmentFilterProvider#getMethodSensorAssignmentFilter()}
-	 */
-	protected MethodSensorAssignmentFilter getMethodSensorAssignmentFilter() {
-		return assignmentFilterProvider.getMethodSensorAssignmentFilter();
-	}
 
 	/**
 	 * Creates method instrumentation configuration for the given {@link MethodType} or returns

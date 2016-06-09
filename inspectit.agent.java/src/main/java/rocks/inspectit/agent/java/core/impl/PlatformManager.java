@@ -166,8 +166,8 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	private void register() throws ServerUnavailableException, RegistrationException, StorageException {
 		try {
 			AgentConfig agentConfiguration = connection.register(configurationStorage.getAgentName(), versionService.getVersionAsString());
-			configurationStorage.setAgentConfiguration(agentConfiguration);
 			platformId = agentConfiguration.getPlatformId();
+			configurationStorage.setAgentConfiguration(agentConfiguration);
 
 			if (log.isDebugEnabled()) {
 				log.debug("Received platform ID: " + platformId);

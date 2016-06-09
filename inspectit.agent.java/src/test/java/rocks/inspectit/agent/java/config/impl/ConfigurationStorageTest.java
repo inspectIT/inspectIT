@@ -27,6 +27,7 @@ import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.spring.SpringConfiguration;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
@@ -257,6 +258,29 @@ public class ConfigurationStorageTest extends TestBase {
 			ExceptionSensorTypeConfig config = configurationStorage.getExceptionSensorType();
 
 			assertThat(config, is(nullValue()));
+		}
+	}
+
+	public class GetJmxSensorTypes extends ConfigurationStorageTest {
+
+		@Test
+		public void defined() throws StorageException {
+			JmxSensorTypeConfig jmxSensorTypeConfig = mock(JmxSensorTypeConfig.class);
+			when(agentConfiguration.getJmxSensorTypeConfig()).thenReturn(jmxSensorTypeConfig);
+
+			List<JmxSensorTypeConfig> jmxSensorTypes = configurationStorage.getJmxSensorTypes();
+
+			assertThat(jmxSensorTypes, hasSize(1));
+			assertThat(jmxSensorTypes, hasItem(jmxSensorTypeConfig));
+		}
+
+		@Test
+		public void notDefined() throws StorageException {
+			when(agentConfiguration.getJmxSensorTypeConfig()).thenReturn(null);
+
+			List<JmxSensorTypeConfig> jmxSensorTypes = configurationStorage.getJmxSensorTypes();
+
+			assertThat(jmxSensorTypes, is(empty()));
 		}
 	}
 

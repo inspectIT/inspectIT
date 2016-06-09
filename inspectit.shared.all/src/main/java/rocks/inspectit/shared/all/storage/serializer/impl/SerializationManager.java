@@ -110,6 +110,8 @@ import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationT
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
@@ -373,6 +375,12 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(MethodTypeSet.class, new CollectionSerializer());
 		kryo.register(TypeSet.class, new CollectionSerializer());
 		kryo.register(TypeWithAnnotationsSet.class, new CollectionSerializer());
+
+		// added with INSPECTIT-2071
+		kryo.register(JmxAttributeDescriptor.class, new FieldSerializer<JmxAttributeDescriptor>(kryo, JmxAttributeDescriptor.class));
+
+		// added with INSPECTIT-2071
+		kryo.register(JmxSensorTypeConfig.class, new FieldSerializer<JmxSensorTypeConfig>(kryo, JmxSensorTypeConfig.class));
 	}
 
 	/**
