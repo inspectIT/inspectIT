@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
@@ -70,8 +71,8 @@ public class Environment extends AbstractCiData {
 	 */
 	@XmlElementWrapper(name = "platform-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ClassLoadingSensorConfig.class), @XmlElementRef(type = CompilationSensorConfig.class), @XmlElementRef(type = CpuSensorConfig.class),
-			@XmlElementRef(type = MemorySensorConfig.class), @XmlElementRef(type = RuntimeSensorConfig.class), @XmlElementRef(type = SystemSensorConfig.class),
-			@XmlElementRef(type = ThreadSensorConfig.class) })
+		@XmlElementRef(type = MemorySensorConfig.class), @XmlElementRef(type = RuntimeSensorConfig.class), @XmlElementRef(type = SystemSensorConfig.class),
+		@XmlElementRef(type = ThreadSensorConfig.class) })
 	private final List<IPlatformSensorConfig> platformSensorConfigs = ConfigurationDefaultsFactory.getAvailablePlatformSensorConfigs();
 
 	/**
@@ -79,8 +80,8 @@ public class Environment extends AbstractCiData {
 	 */
 	@XmlElementWrapper(name = "method-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class), @XmlElementRef(type = InvocationSequenceSensorConfig.class),
-			@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
-			@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class) })
+		@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
+		@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**
@@ -88,6 +89,12 @@ public class Environment extends AbstractCiData {
 	 */
 	@XmlElementRef(type = ExceptionSensorConfig.class)
 	private final IExceptionSensorConfig exceptionSensorConfig = ConfigurationDefaultsFactory.getDefaultExceptionSensorConfig();
+
+	/**
+	 * JMX sensor config. We have only one.
+	 */
+	@XmlElementRef(type = JmxSensorConfig.class)
+	private final JmxSensorConfig jmxSensorConfig = ConfigurationDefaultsFactory.getDefaultJmxSensorConfig();
 
 	/**
 	 * List of profile ids. Needed for saving to the XML.
@@ -185,6 +192,15 @@ public class Environment extends AbstractCiData {
 	}
 
 	/**
+	 * Gets {@link #jmxSensorConfig}.
+	 *
+	 * @return {@link #jmxSensorConfig}
+	 */
+	public JmxSensorConfig getJmxSensorConfig() {
+		return jmxSensorConfig;
+	}
+
+	/**
 	 * Gets {@link #profileIds}.
 	 *
 	 * @return {@link #profileIds}
@@ -229,13 +245,14 @@ public class Environment extends AbstractCiData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + ((bufferStrategyConfig == null) ? 0 : bufferStrategyConfig.hashCode());
-		result = (prime * result) + (classLoadingDelegation ? 1231 : 1237);
-		result = (prime * result) + ((exceptionSensorConfig == null) ? 0 : exceptionSensorConfig.hashCode());
-		result = (prime * result) + ((methodSensorConfigs == null) ? 0 : methodSensorConfigs.hashCode());
-		result = (prime * result) + ((platformSensorConfigs == null) ? 0 : platformSensorConfigs.hashCode());
-		result = (prime * result) + ((profileIds == null) ? 0 : profileIds.hashCode());
-		result = (prime * result) + ((sendingStrategyConfig == null) ? 0 : sendingStrategyConfig.hashCode());
+		result = (prime * result) + ((this.bufferStrategyConfig == null) ? 0 : this.bufferStrategyConfig.hashCode());
+		result = (prime * result) + (this.classLoadingDelegation ? 1231 : 1237);
+		result = (prime * result) + ((this.exceptionSensorConfig == null) ? 0 : this.exceptionSensorConfig.hashCode());
+		result = (prime * result) + ((this.jmxSensorConfig == null) ? 0 : this.jmxSensorConfig.hashCode());
+		result = (prime * result) + ((this.methodSensorConfigs == null) ? 0 : this.methodSensorConfigs.hashCode());
+		result = (prime * result) + ((this.platformSensorConfigs == null) ? 0 : this.platformSensorConfigs.hashCode());
+		result = (prime * result) + ((this.profileIds == null) ? 0 : this.profileIds.hashCode());
+		result = (prime * result) + ((this.sendingStrategyConfig == null) ? 0 : this.sendingStrategyConfig.hashCode());
 		return result;
 	}
 
@@ -254,49 +271,56 @@ public class Environment extends AbstractCiData {
 			return false;
 		}
 		Environment other = (Environment) obj;
-		if (bufferStrategyConfig == null) {
+		if (this.bufferStrategyConfig == null) {
 			if (other.bufferStrategyConfig != null) {
 				return false;
 			}
-		} else if (!bufferStrategyConfig.equals(other.bufferStrategyConfig)) {
+		} else if (!this.bufferStrategyConfig.equals(other.bufferStrategyConfig)) {
 			return false;
 		}
-		if (classLoadingDelegation != other.classLoadingDelegation) {
+		if (this.classLoadingDelegation != other.classLoadingDelegation) {
 			return false;
 		}
-		if (exceptionSensorConfig == null) {
+		if (this.exceptionSensorConfig == null) {
 			if (other.exceptionSensorConfig != null) {
 				return false;
 			}
-		} else if (!exceptionSensorConfig.equals(other.exceptionSensorConfig)) {
+		} else if (!this.exceptionSensorConfig.equals(other.exceptionSensorConfig)) {
 			return false;
 		}
-		if (methodSensorConfigs == null) {
+		if (this.jmxSensorConfig == null) {
+			if (other.jmxSensorConfig != null) {
+				return false;
+			}
+		} else if (!this.jmxSensorConfig.equals(other.jmxSensorConfig)) {
+			return false;
+		}
+		if (this.methodSensorConfigs == null) {
 			if (other.methodSensorConfigs != null) {
 				return false;
 			}
-		} else if (!methodSensorConfigs.equals(other.methodSensorConfigs)) {
+		} else if (!this.methodSensorConfigs.equals(other.methodSensorConfigs)) {
 			return false;
 		}
-		if (platformSensorConfigs == null) {
+		if (this.platformSensorConfigs == null) {
 			if (other.platformSensorConfigs != null) {
 				return false;
 			}
-		} else if (!platformSensorConfigs.equals(other.platformSensorConfigs)) {
+		} else if (!this.platformSensorConfigs.equals(other.platformSensorConfigs)) {
 			return false;
 		}
-		if (profileIds == null) {
+		if (this.profileIds == null) {
 			if (other.profileIds != null) {
 				return false;
 			}
-		} else if (!profileIds.equals(other.profileIds)) {
+		} else if (!this.profileIds.equals(other.profileIds)) {
 			return false;
 		}
-		if (sendingStrategyConfig == null) {
+		if (this.sendingStrategyConfig == null) {
 			if (other.sendingStrategyConfig != null) {
 				return false;
 			}
-		} else if (!sendingStrategyConfig.equals(other.sendingStrategyConfig)) {
+		} else if (!this.sendingStrategyConfig.equals(other.sendingStrategyConfig)) {
 			return false;
 		}
 		return true;

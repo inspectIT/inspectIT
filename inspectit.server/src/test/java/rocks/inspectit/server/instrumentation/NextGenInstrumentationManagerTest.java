@@ -1,6 +1,9 @@
 package rocks.inspectit.server.instrumentation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doAnswer;
@@ -10,7 +13,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -32,12 +37,14 @@ import rocks.inspectit.server.instrumentation.classcache.ClassCacheModificationE
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
 import rocks.inspectit.server.instrumentation.config.ConfigurationResolver;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableType;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
@@ -358,6 +365,141 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 			verify(instrumentationService).addAndGetInstrumentationResult(classType, configuration, appliers);
 			verifyNoMoreInteractions(instrumentationService);
 			verifyZeroInteractions(modificationService);
+		}
+
+	}
+
+	public class AnalyzeJmxAttributes extends NextGenInstrumentationManagerTest {
+
+		private final static long ID = 10;
+
+		@Mock
+		JmxAttributeDescriptor descriptor;
+
+		@Mock
+		JmxMonitoringApplier applier;
+
+		@Test(expectedExceptions = BusinessException.class)
+		public void agentNotRegistered() throws BusinessException {
+			manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+		}
+
+		@Test
+		public void nothingSent() throws BusinessException, ClassCacheModificationException {
+			List<String> definedIPs = mock(List.class);
+			String agentName = "agentName";
+			String version = "v1";
+			when(registrationService.registerPlatformIdent(definedIPs, agentName, version)).thenReturn(ID);
+
+			manager.register(definedIPs, agentName, version);
+
+			Collection<JmxAttributeDescriptor> toMonitor = manager.analyzeJmxAttributes(ID, Collections.<JmxAttributeDescriptor> emptyList());
+
+			assertThat(toMonitor, is(empty()));
+		}
+
+		@Test
+		public void configurationHolderNotInitialized() throws BusinessException, ClassCacheModificationException {
+			List<String> definedIPs = mock(List.class);
+			String agentName = "agentName";
+			String version = "v1";
+			when(registrationService.registerPlatformIdent(definedIPs, agentName, version)).thenReturn(ID);
+
+			manager.register(definedIPs, agentName, version);
+
+			when(configurationHolder.isInitialized()).thenReturn(false);
+
+			Collection<JmxAttributeDescriptor> toMonitor = manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+
+			assertThat(toMonitor, is(empty()));
+		}
+
+		@Test
+		public void configurationHolderHasNoAppliers() throws BusinessException, ClassCacheModificationException {
+			List<String> definedIPs = mock(List.class);
+			String agentName = "agentName";
+			String version = "v1";
+			when(registrationService.registerPlatformIdent(definedIPs, agentName, version)).thenReturn(ID);
+
+			manager.register(definedIPs, agentName, version);
+
+			when(configurationHolder.isInitialized()).thenReturn(true);
+			when(configurationHolder.getJmxMonitoringAppliers()).thenReturn(null);
+
+			Collection<JmxAttributeDescriptor> toMonitor = manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+
+			assertThat(toMonitor, is(empty()));
+		}
+
+		@Test
+		public void applierDoesNothing() throws BusinessException, ClassCacheModificationException {
+			List<String> definedIPs = mock(List.class);
+			String agentName = "agentName";
+			String version = "v1";
+			when(registrationService.registerPlatformIdent(definedIPs, agentName, version)).thenReturn(ID);
+
+			manager.register(definedIPs, agentName, version);
+
+			AgentConfig configuration = mock(AgentConfig.class);
+			when(configurationHolder.isInitialized()).thenReturn(true);
+			when(configurationHolder.getAgentConfiguration()).thenReturn(configuration);
+			when(configurationHolder.getJmxMonitoringAppliers()).thenReturn(Collections.singleton(applier));
+			when(applier.addMonitoringPoint(configuration, descriptor)).thenReturn(false);
+
+			Collection<JmxAttributeDescriptor> toMonitor = manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+
+			assertThat(toMonitor, is(empty()));
+
+			verify(applier).addMonitoringPoint(configuration, descriptor);
+		}
+
+		@Test
+		public void applierAddsMonitoringPoint() throws BusinessException, ClassCacheModificationException {
+			List<String> definedIPs = mock(List.class);
+			String agentName = "agentName";
+			String version = "v1";
+			when(registrationService.registerPlatformIdent(definedIPs, agentName, version)).thenReturn(ID);
+
+			manager.register(definedIPs, agentName, version);
+
+			AgentConfig configuration = mock(AgentConfig.class);
+			when(configurationHolder.isInitialized()).thenReturn(true);
+			when(configurationHolder.getAgentConfiguration()).thenReturn(configuration);
+			when(configurationHolder.getJmxMonitoringAppliers()).thenReturn(Collections.singleton(applier));
+			when(applier.addMonitoringPoint(configuration, descriptor)).thenReturn(true);
+
+			Collection<JmxAttributeDescriptor> toMonitor = manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+
+			assertThat(toMonitor, hasSize(1));
+			assertThat(toMonitor, hasItem(descriptor));
+
+			verify(applier).addMonitoringPoint(configuration, descriptor);
+		}
+
+		@Test
+		public void ensureNoDoubleRegistration() throws BusinessException, ClassCacheModificationException {
+			List<String> definedIPs = mock(List.class);
+			String agentName = "agentName";
+			String version = "v1";
+			when(registrationService.registerPlatformIdent(definedIPs, agentName, version)).thenReturn(ID);
+
+			manager.register(definedIPs, agentName, version);
+
+			AgentConfig configuration = mock(AgentConfig.class);
+			when(configurationHolder.isInitialized()).thenReturn(true);
+			when(configurationHolder.getAgentConfiguration()).thenReturn(configuration);
+			List<JmxMonitoringApplier> appliers = new ArrayList<>();
+			appliers.add(applier);
+			appliers.add(applier);
+			when(configurationHolder.getJmxMonitoringAppliers()).thenReturn(appliers);
+			when(applier.addMonitoringPoint(configuration, descriptor)).thenReturn(true);
+
+			Collection<JmxAttributeDescriptor> toMonitor = manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+
+			assertThat(toMonitor, hasSize(1));
+			assertThat(toMonitor, hasItem(descriptor));
+
+			verify(applier).addMonitoringPoint(configuration, descriptor);
 		}
 
 	}

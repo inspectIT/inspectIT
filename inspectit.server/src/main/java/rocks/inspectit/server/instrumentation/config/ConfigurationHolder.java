@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.cs.ci.Environment;
 
@@ -56,6 +57,12 @@ public class ConfigurationHolder {
 	private Collection<IInstrumentationApplier> instrumentationAppliers;
 
 	/**
+	 * Cached JMX monitoring appliers for the current environment. Can be <code>null</code> if no
+	 * environment is set.
+	 */
+	private Collection<JmxMonitoringApplier> jmxMonitoringAppliers;
+
+	/**
 	 * Returns if the configuration in this holder is properly initialized.
 	 *
 	 * @return Returns if the configuration in this holder is properly initialized.
@@ -83,10 +90,12 @@ public class ConfigurationHolder {
 			this.environment = environment;
 			this.agentConfiguration = configurationCreator.environmentToConfiguration(environment, platformId);
 			this.instrumentationAppliers = configurationResolver.getInstrumentationAppliers(environment);
+			this.jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(environment);
 		} else {
 			this.environment = null; // NOPMD
 			this.agentConfiguration = null; // NOPMD
 			this.instrumentationAppliers = null; // NOPMD
+			this.jmxMonitoringAppliers = null; // NOPMD
 		}
 	}
 
@@ -115,6 +124,15 @@ public class ConfigurationHolder {
 	 */
 	public Collection<IInstrumentationApplier> getInstrumentationAppliers() {
 		return instrumentationAppliers;
+	}
+
+	/**
+	 * Gets {@link #jmxMonitoringAppliers}.
+	 * 
+	 * @return {@link #jmxMonitoringAppliers}
+	 */
+	public Collection<JmxMonitoringApplier> getJmxMonitoringAppliers() {
+		return this.jmxMonitoringAppliers;
 	}
 
 }

@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
 import rocks.inspectit.server.instrumentation.config.applier.ExceptionSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.server.instrumentation.config.applier.MethodSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.SpecialInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.TimerMethodSensorInstrumentationApplier;
@@ -36,12 +37,14 @@ import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
 import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.JmxDefinitionProfileData;
 import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
@@ -73,6 +76,9 @@ public class ConfigurationResolverTest extends TestBase {
 
 	@Mock
 	ExcludeRulesProfileData excludeRulesProfileData;
+
+	@Mock
+	JmxDefinitionProfileData jmxDefinitionProfileData;
 
 	@Mock
 	Logger log;
@@ -463,6 +469,98 @@ public class ConfigurationResolverTest extends TestBase {
 			Collection<ExcludeRule> rules = configurationResolver.getAllExcludeRules(environment);
 
 			assertThat(rules, is(empty()));
+		}
+
+	}
+
+	public static class GetJmxMonitoringAppliers extends ConfigurationResolverTest {
+
+		@Mock
+		private JmxBeanSensorAssignment jmxAssignment;
+
+		@BeforeMethod
+		public void setupProfileData() {
+			when(jmxDefinitionProfileData.isOfType(JmxDefinitionProfileData.class)).thenReturn(true);
+		}
+
+		@Test
+		public void nullEnvironment() {
+			Collection<JmxMonitoringApplier> jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(null);
+
+			assertThat(jmxMonitoringAppliers, is(empty()));
+
+			verifyZeroInteractions(configurationInterfaceManager);
+		}
+
+		@Test
+		public void noProfile() {
+			when(environment.getProfileIds()).thenReturn(Collections.<String> emptySet());
+
+			Collection<JmxMonitoringApplier> jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(environment);
+
+			assertThat(jmxMonitoringAppliers, is(empty()));
+		}
+
+		@Test
+		public void profileDoesNotExists() throws BusinessException {
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenThrow(new BusinessException(null));
+
+			Collection<JmxMonitoringApplier> jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(environment);
+
+			assertThat(jmxMonitoringAppliers, is(empty()));
+		}
+
+		@Test
+		public void profileNotActive() throws BusinessException {
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
+			doReturn(jmxDefinitionProfileData).when(profile).getProfileData();
+			when(jmxDefinitionProfileData.getData(JmxDefinitionProfileData.class)).thenReturn(Collections.singletonList(jmxAssignment));
+			when(profile.isActive()).thenReturn(false);
+
+			Collection<JmxMonitoringApplier> jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(environment);
+
+			assertThat(jmxMonitoringAppliers, is(empty()));
+		}
+
+		@Test
+		public void nullDataFromProfile() throws BusinessException {
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
+			doReturn(jmxDefinitionProfileData).when(profile).getProfileData();
+			when(jmxDefinitionProfileData.getData(JmxDefinitionProfileData.class)).thenReturn(null);
+			when(profile.isActive()).thenReturn(true);
+
+			Collection<JmxMonitoringApplier> jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(environment);
+
+			assertThat(jmxMonitoringAppliers, is(empty()));
+		}
+
+		@Test
+		public void applier() throws BusinessException {
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
+			doReturn(jmxDefinitionProfileData).when(profile).getProfileData();
+			when(jmxDefinitionProfileData.getData(JmxDefinitionProfileData.class)).thenReturn(Collections.singletonList(jmxAssignment));
+			when(profile.isActive()).thenReturn(true);
+
+			Collection<JmxMonitoringApplier> jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(environment);
+
+			assertThat(jmxMonitoringAppliers, hasSize(1));
+			assertThat(jmxMonitoringAppliers.iterator().next().getJmxSensorAssignment(), is(jmxAssignment));
+		}
+
+		@Test
+		public void wrongProfileData() throws BusinessException {
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
+			doReturn(new SensorAssignmentProfileData()).when(profile).getProfileData();
+			when(profile.isActive()).thenReturn(true);
+
+			Collection<JmxMonitoringApplier> jmxMonitoringAppliers = configurationResolver.getJmxMonitoringAppliers(environment);
+
+			assertThat(jmxMonitoringAppliers, is(empty()));
 		}
 
 	}

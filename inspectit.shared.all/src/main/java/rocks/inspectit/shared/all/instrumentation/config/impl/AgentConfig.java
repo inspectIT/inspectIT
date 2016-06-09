@@ -43,6 +43,11 @@ public class AgentConfig {
 	private ExceptionSensorTypeConfig exceptionSensorTypeConfig;
 
 	/**
+	 * Configuration of the JMX sensor type.
+	 */
+	private JmxSensorTypeConfig jmxSensorTypeConfig;
+
+	/**
 	 * Buffer strategy.
 	 */
 	private StrategyConfig bufferStrategyConfig;
@@ -186,6 +191,25 @@ public class AgentConfig {
 	}
 
 	/**
+	 * Gets {@link #jmxSensorTypeConfig}.
+	 *
+	 * @return {@link #jmxSensorTypeConfig}
+	 */
+	public JmxSensorTypeConfig getJmxSensorTypeConfig() {
+		return jmxSensorTypeConfig;
+	}
+
+	/**
+	 * Sets {@link #jmxSensorTypeConfig}.
+	 *
+	 * @param jmxSensorTypeConfig
+	 *            New value for {@link #jmxSensorTypeConfig}
+	 */
+	public void setJmxSensorTypeConfig(JmxSensorTypeConfig jmxSensorTypeConfig) {
+		this.jmxSensorTypeConfig = jmxSensorTypeConfig;
+	}
+
+	/**
 	 * Gets {@link #bufferStrategyConfig}.
 	 *
 	 * @return {@link #bufferStrategyConfig}
@@ -293,6 +317,7 @@ public class AgentConfig {
 		result = (prime * result) + ((exceptionSensorTypeConfig == null) ? 0 : exceptionSensorTypeConfig.hashCode());
 		result = (prime * result) + ((excludeClassesPatterns == null) ? 0 : excludeClassesPatterns.hashCode());
 		result = (prime * result) + ((initialInstrumentationResults == null) ? 0 : initialInstrumentationResults.hashCode());
+		result = (prime * result) + ((jmxSensorTypeConfig == null) ? 0 : jmxSensorTypeConfig.hashCode());
 		result = (prime * result) + ((methodSensorTypeConfigs == null) ? 0 : methodSensorTypeConfigs.hashCode());
 		result = (prime * result) + (int) (platformId ^ (platformId >>> 32));
 		result = (prime * result) + ((platformSensorTypeConfigs == null) ? 0 : platformSensorTypeConfigs.hashCode());
@@ -351,6 +376,13 @@ public class AgentConfig {
 				return false;
 			}
 		} else if (!initialInstrumentationResults.equals(other.initialInstrumentationResults)) {
+			return false;
+		}
+		if (jmxSensorTypeConfig == null) {
+			if (other.jmxSensorTypeConfig != null) {
+				return false;
+			}
+		} else if (!jmxSensorTypeConfig.equals(other.jmxSensorTypeConfig)) {
 			return false;
 		}
 		if (methodSensorTypeConfigs == null) {

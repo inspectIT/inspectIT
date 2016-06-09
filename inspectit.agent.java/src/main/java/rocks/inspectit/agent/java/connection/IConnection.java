@@ -1,6 +1,7 @@
 package rocks.inspectit.agent.java.connection;
 
 import java.net.ConnectException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 
 /**
  * The connection interface to implement different connection types, like RMI, Corba, etc.
@@ -123,4 +125,20 @@ public interface IConnection {
 	 *             If server to send the request to is unavailable.
 	 */
 	void instrumentationApplied(Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException;
+
+	/**
+	 * Sends the given {@link JmxAttributeDescriptor} to the CMR, returning the ones that will be
+	 * monitored, based on the current configuration on the server.
+	 *
+	 * @param platformIdent
+	 *            Id of the agent.
+	 * @param attributeDescriptors
+	 *            {@link JmxAttributeDescriptor}s that are available on the agent for monitoring.
+	 * @return Collection of {@link JmxAttributeDescriptor} to be monitored with their correctly set
+	 *         IDs.
+	 * @throws ServerUnavailableException
+	 *             If server to send the request to is unavailable.
+	 */
+	Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws ServerUnavailableException;
+
 }

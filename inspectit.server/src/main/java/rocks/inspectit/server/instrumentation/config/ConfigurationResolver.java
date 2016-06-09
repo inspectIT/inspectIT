@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
 import rocks.inspectit.server.instrumentation.config.applier.ExceptionSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.server.instrumentation.config.applier.MethodSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.SpecialInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.TimerMethodSensorInstrumentationApplier;
@@ -29,6 +30,7 @@ import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
@@ -36,6 +38,7 @@ import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
 import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
 import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.JmxDefinitionProfileData;
 import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
@@ -76,9 +79,9 @@ public class ConfigurationResolver {
 	 * Returns all instrumentation appliers for one environment.
 	 *
 	 * @param environment
-	 *            environment {@link Environment} to get appliers for.
+	 *            {@link Environment} to get appliers for.
 	 * @return Returns all {@link IInstrumentationApplier}s contained in all profiles for the given
-	 *         environment and all functional applier defined by environment..
+	 *         environment and all functional applier defined by environment.
 	 */
 	public Collection<IInstrumentationApplier> getInstrumentationAppliers(Environment environment) {
 		if (null == environment) {
@@ -107,7 +110,7 @@ public class ConfigurationResolver {
 			} catch (BusinessException e) {
 				// on exception just exclude the profile
 				if (log.isDebugEnabled()) {
-					log.debug("Profile with id " + profileId + " ignored during profile difference calculation due to the exception.", e);
+					log.debug("Profile with id " + profileId + " ignored during collecting method sensor assignments due to the exception.", e);
 				}
 				continue;
 			}
@@ -146,6 +149,50 @@ public class ConfigurationResolver {
 			return new MethodSensorInstrumentationApplier((MethodSensorAssignment) sensorAssignment, environment, registrationService);
 		}
 		throw new IllegalArgumentException("Instrumentation applier can be created. Assignment " + sensorAssignment + " is of unknow type.");
+	}
+
+	/**
+	 * Returns all JMX monitoring appliers for one environment.
+	 *
+	 * @param environment
+	 *            {@link Environment} to get appliers for.
+	 * @return Returns all {@link JmxMonitoringApplier}s contained in all profiles for the given
+	 *         environment.
+	 */
+	public Collection<JmxMonitoringApplier> getJmxMonitoringAppliers(Environment environment) {
+		if (null == environment) {
+			return Collections.emptyList();
+		}
+
+		Collection<JmxMonitoringApplier> appliers = new ArrayList<>();
+		for (String profileId : environment.getProfileIds()) {
+			try {
+				Profile profile = configurationInterfaceManager.getProfile(profileId);
+				// don't include inactive profiles
+				if (!profile.isActive()) {
+					continue;
+				}
+
+				// all assignments
+				AbstractProfileData<?> profileData = profile.getProfileData();
+				if (profileData.isOfType(JmxDefinitionProfileData.class)) {
+					List<JmxBeanSensorAssignment> assignments = profileData.getData(JmxDefinitionProfileData.class);
+					if (CollectionUtils.isNotEmpty(assignments)) {
+						for (JmxBeanSensorAssignment assignment : assignments) {
+							appliers.add(new JmxMonitoringApplier(assignment, environment, registrationService));
+						}
+					}
+				}
+			} catch (BusinessException e) {
+				// on exception just exclude the profile
+				if (log.isDebugEnabled()) {
+					log.debug("Profile with id " + profileId + " ignored during collecting JMX sensor assignments due to the exception.", e);
+				}
+				continue;
+			}
+		}
+
+		return appliers;
 	}
 
 	/**

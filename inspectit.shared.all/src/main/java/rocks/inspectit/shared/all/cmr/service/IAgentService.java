@@ -1,5 +1,6 @@
 package rocks.inspectit.shared.all.cmr.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 
 /**
  * Interface for agent communication with the CMR.
@@ -68,5 +70,20 @@ public interface IAgentService {
 	 *            map containing method id as key and applied sensor IDs
 	 */
 	void instrumentationApplied(Map<Long, long[]> methodToSensorMap);
+
+	/**
+	 * Analyzes the given {@link JmxAttributeDescriptor} and decides which ones will be monitored,
+	 * based on the current configuration.
+	 *
+	 * @param platformIdent
+	 *            Id of the agent sending the descriptors.
+	 * @param attributeDescriptors
+	 *            {@link JmxAttributeDescriptor}s that are available on the agent for monitoring.
+	 * @return Collection of {@link JmxAttributeDescriptor} to be monitored with their correctly set
+	 *         IDs.
+	 * @throws BusinessException
+	 *             If agent with given ID does not exist.
+	 */
+	Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException;
 
 }

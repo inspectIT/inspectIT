@@ -30,6 +30,7 @@ import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
 import rocks.inspectit.shared.cs.ci.profile.data.JmxDefinitionProfileData;
 import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -333,6 +334,9 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 
 		// INSPECTIT-2031
 		kryo.register(ConfigurationInterfaceImportData.class, new FieldSerializer<>(kryo, ConfigurationInterfaceImportData.class), nextRegistrationId++);
+
+		// INSPECTIT-2071
+		kryo.register(JmxSensorConfig.class, new FieldSerializer<JmxSensorConfig>(kryo, JmxSensorConfig.class), nextRegistrationId++);
 	}
 
 }

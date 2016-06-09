@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
@@ -18,6 +19,7 @@ import rocks.inspectit.shared.all.pattern.PatternFactory;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
@@ -85,6 +87,11 @@ public class ConfigurationCreator {
 		IExceptionSensorConfig exceptionSensorConfig = environment.getExceptionSensorConfig();
 		if (null != exceptionSensorConfig) {
 			agentConfiguration.setExceptionSensorTypeConfig(getExceptionSensorTypeConfig(platformId, exceptionSensorConfig));
+		}
+
+		JmxSensorConfig jmxSensorConfig = environment.getJmxSensorConfig();
+		if (null != jmxSensorConfig) {
+			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
 
 		// buffer strategy
@@ -175,6 +182,26 @@ public class ConfigurationCreator {
 		exceptionSensorTypeConfig.setEnhanced(exceptionSensorConfig.isEnhanced());
 
 		return exceptionSensorTypeConfig;
+	}
+
+	/**
+	 * Creates the agent based {@link JmxAttributeDescriptor} with correctly registered ID.
+	 *
+	 * @param platformId
+	 *            ID of the agent.
+	 * @param jmxSensorConfig
+	 *            {@link JmxAttributeDescriptor} defined in the {@link Environment}.
+	 * @return {@link JmxSensorTypeConfig}.
+	 */
+	private JmxSensorTypeConfig getJmxSensorTypeConfig(long platformId, JmxSensorConfig jmxSensorConfig) {
+		long id = registrationService.registerJmxSensorTypeIdent(platformId, jmxSensorConfig.getClassName());
+
+		JmxSensorTypeConfig jmxSensorTypeConfig = new JmxSensorTypeConfig();
+		jmxSensorTypeConfig.setId(id);
+		jmxSensorTypeConfig.setClassName(jmxSensorConfig.getClassName());
+		jmxSensorTypeConfig.setParameters(jmxSensorConfig.getParameters());
+
+		return jmxSensorTypeConfig;
 	}
 
 }

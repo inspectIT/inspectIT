@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.kryonet.Client;
 import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -305,7 +308,7 @@ public class KryoNetConnection implements IConnection {
 			return call.makeCall();
 		} catch (ExecutionException executionException) {
 			if (log.isTraceEnabled()) {
-				log.trace("analyzeAndInstrument(long,String,Type)", executionException);
+				log.trace("analyze(long,String,Type)", executionException);
 			}
 
 			// check for business exception
@@ -338,6 +341,35 @@ public class KryoNetConnection implements IConnection {
 			}
 		}
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(final long platformIdent, final Collection<JmxAttributeDescriptor> descriptors) throws ServerUnavailableException {
+		if (!isConnected()) {
+			throw new ServerUnavailableException();
+		}
+
+		// make call
+		FailFastRemoteMethodCall<IAgentService, Collection<JmxAttributeDescriptor>> call = new FailFastRemoteMethodCall<IAgentService, Collection<JmxAttributeDescriptor>>(agentService) {
+			@Override
+			protected Collection<JmxAttributeDescriptor> performRemoteCall(IAgentService service) throws Exception {
+				return agentService.analyzeJmxAttributes(platformIdent, descriptors);
+			}
+		};
+
+		try {
+			return call.makeCall();
+		} catch (ExecutionException executionException) {
+			if (log.isTraceEnabled()) {
+				log.trace("analyze(long,Collection)", executionException);
+			}
+
+			// otherwise we log and return null as it's unexpected exception for us
+			log.error("Could not get jmx attribute analyze result", executionException);
+			return Collections.emptyList();
+		}
 	}
 
 	/**
