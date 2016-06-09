@@ -203,6 +203,15 @@ public class JmxDetailsPage extends AbstractDetailsPage<JmxBeanSensorAssignment>
 		propertiesTableViewer.setContentProvider(new ArrayContentProvider());
 		propertiesTableViewer.setInput(parametersMap.entrySet());
 		createColumnsForParametersTable();
+		// decoration
+		final ValidationControlDecoration<Table> nonEmptyParametersDecoration = new ValidationControlDecoration<Table>(propertiesTable, this) {
+			@Override
+			protected boolean validate(Table control) {
+				return MapUtils.isNotEmpty(parametersMap);
+			}
+		};
+		nonEmptyParametersDecoration.setDescriptionText("At least one object name key property must be defined.");
+		addValidationControlDecoration(nonEmptyParametersDecoration);
 
 		// buttons
 		Composite propertiesComposite = toolkit.createComposite(objectNameComposite);

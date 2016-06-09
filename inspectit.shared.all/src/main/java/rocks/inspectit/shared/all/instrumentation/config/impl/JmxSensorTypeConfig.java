@@ -8,6 +8,7 @@ package rocks.inspectit.shared.all.instrumentation.config.impl;
  */
 public class JmxSensorTypeConfig extends AbstractSensorTypeConfig {
 
+	// TODO name not needed anymore
 	/**
 	 * The name of the sensor type.
 	 */

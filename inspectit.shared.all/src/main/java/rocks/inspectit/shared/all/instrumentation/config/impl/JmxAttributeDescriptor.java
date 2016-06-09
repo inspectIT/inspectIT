@@ -1,19 +1,12 @@
-package rocks.inspectit.agent.java.config.impl;
-
-import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
+package rocks.inspectit.shared.all.instrumentation.config.impl;
 
 /**
- * Container for the values which describe the monitored JMX MBean. It stores all the values defined
- * in a config file for later access.
+ * Container for the values which describe the monitored JMX MBean attribute.
  *
  * @author Alfred Krauss
+ * @author Ivan Senic
  */
-public class JmxSensorConfig {
-
-	/**
-	 * SensorType of this config.
-	 */
-	private JmxSensorTypeConfig jmxSensorTypeConfig;
+public class JmxAttributeDescriptor {
 
 	/**
 	 * The hash value of this sensor type.
@@ -21,14 +14,14 @@ public class JmxSensorConfig {
 	private long id = -1;
 
 	/**
-	 * Name of the monitored attribute of the MBean.
-	 */
-	private String attributeName;
-
-	/**
 	 * The ObjectName of the to the attribute corresponding MBean.
 	 */
 	private String mBeanObjectName;
+
+	/**
+	 * Name of the monitored attribute of the MBean.
+	 */
+	private String attributeName;
 
 	/**
 	 * The ID of the attribute.
@@ -61,15 +54,6 @@ public class JmxSensorConfig {
 	private boolean mBeanAttributeIsWritable;
 
 	/**
-	 * Returns the config of the Sensor if assigned else a new one is created and stored.
-	 *
-	 * @return JmxSensorType config of this sensor.
-	 */
-	public JmxSensorTypeConfig getJmxSensorTypeConfig() {
-		return jmxSensorTypeConfig;
-	}
-
-	/**
 	 * Gets {@link #id}.
 	 *
 	 * @return {@link #id}
@@ -89,25 +73,6 @@ public class JmxSensorConfig {
 	}
 
 	/**
-	 * Gets {@link #attributeName}.
-	 *
-	 * @return {@link #attributeName}
-	 */
-	public String getAttributeName() {
-		return attributeName;
-	}
-
-	/**
-	 * Sets {@link #attributeName}.
-	 *
-	 * @param attributeName
-	 *            New value for {@link #attributeName}
-	 */
-	public void setAttributeName(String attributeName) {
-		this.attributeName = attributeName;
-	}
-
-	/**
 	 * Gets {@link #mBeanObjectName}.
 	 *
 	 * @return {@link #mBeanObjectName}
@@ -124,6 +89,25 @@ public class JmxSensorConfig {
 	 */
 	public void setmBeanObjectName(String mBeanObjectName) {
 		this.mBeanObjectName = mBeanObjectName;
+	}
+
+	/**
+	 * Gets {@link #attributeName}.
+	 *
+	 * @return {@link #attributeName}
+	 */
+	public String getAttributeName() {
+		return attributeName;
+	}
+
+	/**
+	 * Sets {@link #attributeName}.
+	 *
+	 * @param attributeName
+	 *            New value for {@link #attributeName}
+	 */
+	public void setAttributeName(String attributeName) {
+		this.attributeName = attributeName;
 	}
 
 	/**
@@ -188,7 +172,7 @@ public class JmxSensorConfig {
 	 *
 	 * @return {@link #mBeanAttributeIsIs}
 	 */
-	public Boolean getmBeanAttributeIsIs() {
+	public boolean ismBeanAttributeIsIs() {
 		return mBeanAttributeIsIs;
 	}
 
@@ -198,7 +182,7 @@ public class JmxSensorConfig {
 	 * @param mBeanAttributeIsIs
 	 *            New value for {@link #mBeanAttributeIsIs}
 	 */
-	public void setmBeanAttributeIsIs(Boolean mBeanAttributeIsIs) {
+	public void setmBeanAttributeIsIs(boolean mBeanAttributeIsIs) {
 		this.mBeanAttributeIsIs = mBeanAttributeIsIs;
 	}
 
@@ -207,7 +191,7 @@ public class JmxSensorConfig {
 	 *
 	 * @return {@link #mBeanAttributeIsReadable}
 	 */
-	public Boolean getmBeanAttributeIsReadable() {
+	public boolean ismBeanAttributeIsReadable() {
 		return mBeanAttributeIsReadable;
 	}
 
@@ -217,7 +201,7 @@ public class JmxSensorConfig {
 	 * @param mBeanAttributeIsReadable
 	 *            New value for {@link #mBeanAttributeIsReadable}
 	 */
-	public void setmBeanAttributeIsReadable(Boolean mBeanAttributeIsReadable) {
+	public void setmBeanAttributeIsReadable(boolean mBeanAttributeIsReadable) {
 		this.mBeanAttributeIsReadable = mBeanAttributeIsReadable;
 	}
 
@@ -226,7 +210,7 @@ public class JmxSensorConfig {
 	 *
 	 * @return {@link #mBeanAttributeIsWritable}
 	 */
-	public Boolean getmBeanAttributeIsWritable() {
+	public boolean ismBeanAttributeIsWritable() {
 		return mBeanAttributeIsWritable;
 	}
 
@@ -236,18 +220,8 @@ public class JmxSensorConfig {
 	 * @param mBeanAttributeIsWritable
 	 *            New value for {@link #mBeanAttributeIsWritable}
 	 */
-	public void setmBeanAttributeIsWritable(Boolean mBeanAttributeIsWritable) {
+	public void setmBeanAttributeIsWritable(boolean mBeanAttributeIsWritable) {
 		this.mBeanAttributeIsWritable = mBeanAttributeIsWritable;
-	}
-
-	/**
-	 * Sets {@link #jmxSensorTypeConfig}.
-	 *
-	 * @param jmxSensorTypeConfig
-	 *            New value for {@link #jmxSensorTypeConfig}
-	 */
-	public void setJmxSensorTypeConfig(JmxSensorTypeConfig jmxSensorTypeConfig) {
-		this.jmxSensorTypeConfig = jmxSensorTypeConfig;
 	}
 
 	/**
@@ -255,8 +229,8 @@ public class JmxSensorConfig {
 	 */
 	@Override
 	public String toString() {
-		return "JmxSensorConfig [jmxSensorTypeConfig=" + jmxSensorTypeConfig + ", id=" + id + ", attributeName=" + attributeName + ", mBeanObjectName=" + mBeanObjectName + ", mBeanAttributeId="
-				+ mBeanAttributeId + ", mBeanAttributeDescription=" + mBeanAttributeDescription + ", mBeanAttributeType=" + mBeanAttributeType + ", mBeanAttributeIsIs=" + mBeanAttributeIsIs
+		return "JmxAttributeDescriptor [id=" + id + ", attributeName=" + attributeName + ", mBeanObjectName=" + mBeanObjectName + ", mBeanAttributeId=" + mBeanAttributeId
+				+ ", mBeanAttributeDescription=" + mBeanAttributeDescription + ", mBeanAttributeType=" + mBeanAttributeType + ", mBeanAttributeIsIs=" + mBeanAttributeIsIs
 				+ ", mBeanAttributeIsReadable=" + mBeanAttributeIsReadable + ", mBeanAttributeIsWritable=" + mBeanAttributeIsWritable + "]";
 	}
 
@@ -269,7 +243,6 @@ public class JmxSensorConfig {
 		int result = 1;
 		result = (prime * result) + ((attributeName == null) ? 0 : attributeName.hashCode());
 		result = (prime * result) + (int) (id ^ (id >>> 32));
-		result = (prime * result) + ((jmxSensorTypeConfig == null) ? 0 : jmxSensorTypeConfig.hashCode());
 		result = (prime * result) + ((mBeanAttributeDescription == null) ? 0 : mBeanAttributeDescription.hashCode());
 		result = (prime * result) + (int) (mBeanAttributeId ^ (mBeanAttributeId >>> 32));
 		result = (prime * result) + (mBeanAttributeIsIs ? 1231 : 1237);
@@ -294,7 +267,7 @@ public class JmxSensorConfig {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		JmxSensorConfig other = (JmxSensorConfig) obj;
+		JmxAttributeDescriptor other = (JmxAttributeDescriptor) obj;
 		if (attributeName == null) {
 			if (other.attributeName != null) {
 				return false;
@@ -303,13 +276,6 @@ public class JmxSensorConfig {
 			return false;
 		}
 		if (id != other.id) {
-			return false;
-		}
-		if (jmxSensorTypeConfig == null) {
-			if (other.jmxSensorTypeConfig != null) {
-				return false;
-			}
-		} else if (!jmxSensorTypeConfig.equals(other.jmxSensorTypeConfig)) {
 			return false;
 		}
 		if (mBeanAttributeDescription == null) {

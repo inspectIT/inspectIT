@@ -1,7 +1,7 @@
 package rocks.inspectit.server.instrumentation.config.filter;
 
 /**
- * Defaults for the class and method filters.
+ * Defaults for the class, method and jmx filters.
  *
  * @author Ivan Senic
  *
@@ -19,6 +19,11 @@ public class AssignmentFilterProvider {
 	private static final MethodSensorAssignmentFilter METHOD_SENSOR_ASSIGNMENT_FILTER = new MethodSensorAssignmentFilter();
 
 	/**
+	 * Filter to use for the JMX bean/attribute matching.
+	 */
+	private static final JmxSensorAssignmentFilter JMX_SENSOR_ASSIGNMENT_FILTER = new JmxSensorAssignmentFilter();
+
+	/**
 	 * Gets {@link #CLASS_SENSOR_ASSIGNMENT_FILTER}.
 	 *
 	 * @return {@link #CLASS_SENSOR_ASSIGNMENT_FILTER}
@@ -34,6 +39,15 @@ public class AssignmentFilterProvider {
 	 */
 	public MethodSensorAssignmentFilter getMethodSensorAssignmentFilter() {
 		return METHOD_SENSOR_ASSIGNMENT_FILTER;
+	}
+
+	/**
+	 * Gets {@link #JMX_SENSOR_ASSIGNMENT_FILTER}.
+	 *
+	 * @return {@link #JMX_SENSOR_ASSIGNMENT_FILTER}
+	 */
+	public JmxSensorAssignmentFilter getJmxSensorAssignmentFilter() {
+		return JMX_SENSOR_ASSIGNMENT_FILTER;
 	}
 
 }

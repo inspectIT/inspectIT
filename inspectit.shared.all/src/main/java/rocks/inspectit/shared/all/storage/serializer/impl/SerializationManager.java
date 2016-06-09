@@ -110,6 +110,8 @@ import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationT
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
@@ -353,6 +355,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(PlatformSensorTypeConfig.class, new FieldSerializer<PlatformSensorTypeConfig>(kryo, PlatformSensorTypeConfig.class));
 		kryo.register(MethodSensorTypeConfig.class, new FieldSerializer<MethodSensorTypeConfig>(kryo, MethodSensorTypeConfig.class));
 		kryo.register(ExceptionSensorTypeConfig.class, new FieldSerializer<ExceptionSensorTypeConfig>(kryo, ExceptionSensorTypeConfig.class));
+		kryo.register(JmxSensorTypeConfig.class, new FieldSerializer<JmxSensorTypeConfig>(kryo, JmxSensorTypeConfig.class));
 		kryo.register(PropertyPath.class, new FieldSerializer<PropertyPath>(kryo, PropertyPath.class));
 		kryo.register(PropertyPathStart.class, new FieldSerializer<PropertyPathStart>(kryo, PropertyPathStart.class));
 		kryo.register(InstrumentationDefinition.class, new FieldSerializer<InstrumentationDefinition>(kryo, InstrumentationDefinition.class));
@@ -373,6 +376,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(MethodTypeSet.class, new CollectionSerializer());
 		kryo.register(TypeSet.class, new CollectionSerializer());
 		kryo.register(TypeWithAnnotationsSet.class, new CollectionSerializer());
+
+		// added with INSPECTIT-2071
+		kryo.register(JmxAttributeDescriptor.class, new FieldSerializer<JmxAttributeDescriptor>(kryo, JmxAttributeDescriptor.class));
 	}
 
 	/**

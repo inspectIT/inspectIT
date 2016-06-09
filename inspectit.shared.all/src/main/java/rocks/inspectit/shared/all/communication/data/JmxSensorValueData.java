@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -25,6 +26,11 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
 public class JmxSensorValueData extends SystemSensorData implements IAggregatedData<JmxSensorValueData> {
 
 	/**
+	 * Maximum {@link #value} length.
+	 */
+	private static final int MAX_VALUE_LENGTH = 10000;
+
+	/**
 	 * The serial version uid for this class.
 	 */
 	private static final long serialVersionUID = 1064800467325690317L;
@@ -37,7 +43,7 @@ public class JmxSensorValueData extends SystemSensorData implements IAggregatedD
 	/**
 	 * Values of the attribute to a given time.
 	 */
-	@Column(length = 10000)
+	@Column(length = MAX_VALUE_LENGTH)
 	private String value;
 
 	/**
@@ -264,12 +270,22 @@ public class JmxSensorValueData extends SystemSensorData implements IAggregatedD
 	}
 
 	/**
+	 * Pre-persist to ensure size of the {@link #value} is not more than {@value #MAX_VALUE_LENGTH}.
+	 */
+	@PrePersist
+	protected void prePersist() {
+		if (null != value && value.length() > MAX_VALUE_LENGTH) {
+			value = value.substring(0, MAX_VALUE_LENGTH);
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		return "JmxSensorValueData [jmxSensorDefinitionDataIdent=" + jmxSensorDefinitionDataIdentId + ", value=" + value + ", getId()=" + getId() + ", getPlatformIdent()=" + getPlatformIdent()
-				+ ", getSensorTypeIdent()=" + getSensorTypeIdent() + ", getTimeStamp()=" + getTimeStamp() + "]";
+		+ ", getSensorTypeIdent()=" + getSensorTypeIdent() + ", getTimeStamp()=" + getTimeStamp() + "]";
 	}
 
 	/**

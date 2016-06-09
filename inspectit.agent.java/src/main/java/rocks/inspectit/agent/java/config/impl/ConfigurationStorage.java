@@ -245,18 +245,19 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @throws StorageException
 	 */
-	public List<JmxSensorTypeConfig> getJmxSensorTypes() {
-		// TODO read from configuration
-		return Collections.emptyList();
-	}
+	public List<JmxSensorTypeConfig> getJmxSensorTypes() throws StorageException {
+		ensureConfigurationExists();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<UnregisteredJmxConfig> getUnregisteredJmxConfigs() {
-		// TODO depending on decision for the jmx sensor collection
-		return Collections.emptyList();
+		List<JmxSensorTypeConfig> result = new ArrayList<JmxSensorTypeConfig>(1);
+
+		if (null != agentConfiguration.getJmxSensorTypeConfig()) {
+			result.add(agentConfiguration.getJmxSensorTypeConfig());
+		}
+
+		return result;
 	}
 
 	/**

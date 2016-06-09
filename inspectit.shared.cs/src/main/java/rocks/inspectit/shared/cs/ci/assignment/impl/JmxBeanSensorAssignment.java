@@ -1,13 +1,19 @@
 package rocks.inspectit.shared.cs.ci.assignment.impl;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.collections.MapUtils;
 
 import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
@@ -39,6 +45,11 @@ public class JmxBeanSensorAssignment implements ISensorAssignment<JmxSensorConfi
 	 */
 	@XmlElementWrapper(name = "attributes", required = true)
 	private Set<String> attributes;
+
+	/**
+	 * Cached object name for easier matching.
+	 */
+	private transient ObjectName objectName;
 
 	/**
 	 * {@inheritDoc}
@@ -103,6 +114,41 @@ public class JmxBeanSensorAssignment implements ISensorAssignment<JmxSensorConfi
 	 */
 	public void setAttributes(Set<String> attributes) {
 		this.attributes = attributes;
+	}
+
+	/**
+	 * Gets {@link #objectName}.
+	 *
+	 * @return {@link #objectName}
+	 */
+	public ObjectName getObjectName() {
+		if (null == this.objectName) {
+			// we need at least one object name parameter for constructing the object name
+			if (MapUtils.isNotEmpty(objectNameParameters)) {
+				StringBuilder nameString = new StringBuilder(domain);
+				nameString.append(':');
+				Iterator<Entry<String, String>> it = objectNameParameters.entrySet().iterator();
+				while (it.hasNext()) {
+					Entry<String, String> next = it.next();
+					nameString.append(next.getKey());
+					nameString.append('=');
+					nameString.append(next.getValue());
+					if (it.hasNext()) {
+						nameString.append(',');
+					}
+				}
+
+				// construct object
+				try {
+					this.objectName = new ObjectName(nameString.toString());
+				} catch (MalformedObjectNameException e) {
+					this.objectName = null; // NOPMD
+				}
+			}
+
+		}
+
+		return this.objectName;
 	}
 
 	/**

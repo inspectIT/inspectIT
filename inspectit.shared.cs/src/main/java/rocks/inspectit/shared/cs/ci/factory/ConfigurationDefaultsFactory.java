@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
@@ -103,6 +104,15 @@ public final class ConfigurationDefaultsFactory {
 	 */
 	public static IExceptionSensorConfig getDefaultExceptionSensorConfig() {
 		return new ExceptionSensorConfig();
+	}
+
+	/**
+	 * Returns default {@link JmxAttributeDescriptor}.
+	 *
+	 * @return Returns default {@link JmxAttributeDescriptor}.
+	 */
+	public static JmxSensorConfig getDefaultJmxSensorConfig() {
+		return new JmxSensorConfig();
 	}
 
 }
