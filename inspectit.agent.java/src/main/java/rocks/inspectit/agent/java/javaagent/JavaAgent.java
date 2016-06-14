@@ -91,7 +91,7 @@ public class JavaAgent implements ClassFileTransformer {
 		try {
 			// now we load the PicoAgent via our own classloader
 			@SuppressWarnings("resource")
-			InspectItClassLoader classLoader = new InspectItClassLoader(new URL[0], JavaAgent.class.getClassLoader());
+			InspectItClassLoader classLoader = new InspectItClassLoader(new URL[0]);
 			Class<?> agentClazz = classLoader.loadClass(INSPECTIT_AGENT);
 			Constructor<?> constructor = agentClazz.getConstructor(String.class);
 			Object realAgent = constructor.newInstance(getInspectItAgentJarFileLocation());
@@ -313,16 +313,13 @@ public class JavaAgent implements ClassFileTransformer {
 		private final Set<String> ignoreClasses = new HashSet<String>();
 
 		/**
-		 * Default constructor initialized with the urls of the dependency jars etc. and the parent
-		 * classloader.
+		 * Default constructor initialized with the urls of the dependency jars etc.
 		 *
 		 * @param urls
 		 *            the urls to search for the classes for.
-		 * @param parent
-		 *            the parent class loader.
 		 */
-		public InspectItClassLoader(URL[] urls, ClassLoader parent) {
-			super(urls, parent);
+		public InspectItClassLoader(URL[] urls) {
+			super(urls, null);
 
 			try {
 				String agentFile = getInspectItAgentJarFileLocation();
