@@ -32,6 +32,7 @@ import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
+import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.agent.java.instrumentation.asm.ClassAnalyzer;
 import rocks.inspectit.agent.java.instrumentation.asm.ClassInstrumenter;
 import rocks.inspectit.agent.java.instrumentation.asm.LoaderAwareClassWriter;
@@ -95,6 +96,12 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 	 */
 	@Autowired
 	private ICoreService coreService;
+
+	/**
+	 * {@link InstrumenterFactory} needed for the instrumentation process.
+	 */
+	@Autowired
+	private InstrumenterFactory instrumenterFactory;
 
 	/**
 	 * All initialized {@link IMethodSensor}s.
@@ -245,7 +252,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 		// here do the instrumentation
 		ClassReader classReader = new ClassReader(byteCode);
 		LoaderAwareClassWriter classWriter = new LoaderAwareClassWriter(classReader, ClassWriter.COMPUTE_FRAMES, classLoader);
-		ClassInstrumenter classInstrumenter = new ClassInstrumenter(classWriter, instrumentationConfigs, configurationStorage.isEnhancedExceptionSensorActivated());
+		ClassInstrumenter classInstrumenter = new ClassInstrumenter(instrumenterFactory, classWriter, instrumentationConfigs, configurationStorage.isEnhancedExceptionSensorActivated());
 		classReader.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
 
 		// return changed byte code if we did actually add some byte code

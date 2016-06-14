@@ -111,7 +111,6 @@ END OF TERMS AND CONDITIONS
       <plugin id="com.ibm.icu"/>
       <plugin id="com.springsource.javax.inject"/>
       <plugin id="com.springsource.org.aopalliance"/>
-      <plugin id="info.novatec.asm-all-shaded"/>
       <plugin id="info.novatec.hamcrest-all"/>
       <plugin id="info.novatec.high-scale-lib"/>
       <plugin id="info.novatec.httpclient"/>

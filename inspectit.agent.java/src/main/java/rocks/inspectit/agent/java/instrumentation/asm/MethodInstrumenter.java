@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.instrumentation.asm;
+package rocks.inspectit.agent.java.instrumentation.asm;
 
 import info.novatec.inspectit.org.objectweb.asm.Label;
 import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;

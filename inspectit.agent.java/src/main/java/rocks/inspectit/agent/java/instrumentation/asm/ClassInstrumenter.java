@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
+import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 
@@ -41,6 +42,11 @@ public class ClassInstrumenter extends ClassVisitor {
 	private final LoaderAwareClassWriter loaderAwareClassWriter;
 
 	/**
+	 * {@link InstrumenterFactory} for providing correct method visitors.
+	 */
+	private final InstrumenterFactory instrumenterFactory;
+
+	/**
 	 * If enhanced exception sensor is active.
 	 */
 	private final boolean enhancedExceptionSensor;
@@ -48,6 +54,8 @@ public class ClassInstrumenter extends ClassVisitor {
 	/**
 	 * Default constructor.
 	 *
+	 * @param instrumenterFactory
+	 *            {@link InstrumenterFactory} for providing correct method visitors.
 	 * @param loaderAwareClassWriter
 	 *            LoaderAwareClassWriter
 	 * @param methodInstrumentationConfigs
@@ -55,8 +63,10 @@ public class ClassInstrumenter extends ClassVisitor {
 	 * @param enhancedExceptionSensor
 	 *            If enhanced exception sensor is active.
 	 */
-	public ClassInstrumenter(LoaderAwareClassWriter loaderAwareClassWriter, Collection<MethodInstrumentationConfig> methodInstrumentationConfigs, boolean enhancedExceptionSensor) {
+	public ClassInstrumenter(InstrumenterFactory instrumenterFactory, LoaderAwareClassWriter loaderAwareClassWriter, Collection<MethodInstrumentationConfig> methodInstrumentationConfigs,
+			boolean enhancedExceptionSensor) {
 		super(Opcodes.ASM5, loaderAwareClassWriter);
+		this.instrumenterFactory = instrumenterFactory;
 		this.instrumentationConfigs = new ArrayList<MethodInstrumentationConfig>(methodInstrumentationConfigs);
 		this.enhancedExceptionSensor = enhancedExceptionSensor;
 		this.loaderAwareClassWriter = loaderAwareClassWriter;
@@ -93,7 +103,7 @@ public class ClassInstrumenter extends ClassVisitor {
 			for (IMethodInstrumentationPoint instrumentationPoint : instrumentationConfig.getAllInstrumentationPoints()) {
 				// note that here we create a chain of method visitor by passing the current one to
 				// the one being created, thus following the visitor pattern of ASM
-				MethodVisitor mv = instrumentationPoint.getMethodVisitor(methodVisitor, access, name, desc, enhancedExceptionSensor);
+				MethodVisitor mv = instrumenterFactory.getMethodVisitor(instrumentationPoint, methodVisitor, access, name, desc, enhancedExceptionSensor);
 
 				// safety for the null returned method visitor
 				if (null != mv) {
