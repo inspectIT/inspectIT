@@ -41,7 +41,7 @@ public class SpringAgent implements IAgent {
 	/**
 	 * Our class start with {@value #CLASS_NAME_PREFIX}.
 	 */
-	private static final String CLASS_NAME_PREFIX = "rocks.inspectit.shared.all";
+	private static final String CLASS_NAME_PREFIX = "rocks.inspectit";
 
 	/**
 	 * Location of inspectIT jar file.
