@@ -1,7 +1,5 @@
 package rocks.inspectit.shared.all.instrumentation.config.impl;
 
-import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,8 +9,6 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
-import rocks.inspectit.shared.all.instrumentation.asm.ConstructorInstrumenter;
-import rocks.inspectit.shared.all.instrumentation.asm.MethodInstrumenter;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 
@@ -62,17 +58,6 @@ public class SensorInstrumentationPoint implements IMethodInstrumentationPoint {
 	 * The contents is of type {@link PropertyPathStart}.
 	 */
 	private List<PropertyPathStart> propertyAccessorList;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public MethodVisitor getMethodVisitor(MethodVisitor superMethodVisitor, int access, String name, String desc, boolean enhancedExceptionSensor) {
-		if (constructor) {
-			return new ConstructorInstrumenter(superMethodVisitor, access, name, desc, id, enhancedExceptionSensor);
-		} else {
-			return new MethodInstrumenter(superMethodVisitor, access, name, desc, id, enhancedExceptionSensor);
-		}
-	}
 
 	/**
 	 * {@inheritDoc}

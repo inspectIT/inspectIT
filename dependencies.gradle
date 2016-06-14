@@ -126,8 +126,6 @@ dependencies {
 
 		'com.google.guava:guava-jdk5:13.0',
 		'com.github.stephenc.high-scale-lib:info.novatec.high-scale-lib:1.1.2',
-		
-		'org.ow2.asm:info.novatec.asm-all-shaded:5.0.4'
 	) 
 	sharedAllTest (
 		'nl.jqno.equalsverifier:equalsverifier:1.0.2',
@@ -143,6 +141,7 @@ dependencies {
 
 	/** inspectit.agent.java */
 	agentJavaProd (
+		'org.ow2.asm:info.novatec.asm-all-shaded:5.0.4',
 		'commons-codec:commons-codec:1.6',
 		'org.slf4j:jcl-over-slf4j:1.7.21',
 		'org.slf4j:log4j-over-slf4j:1.7.21',

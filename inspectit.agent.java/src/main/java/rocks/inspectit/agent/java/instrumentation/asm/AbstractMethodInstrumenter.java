@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.instrumentation.asm;
+package rocks.inspectit.agent.java.instrumentation.asm;
 
 import info.novatec.inspectit.org.objectweb.asm.Label;
 import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
@@ -7,6 +7,8 @@ import info.novatec.inspectit.org.objectweb.asm.commons.AdviceAdapter;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 
 /**
  * Base class for both method instrumenter and constructor instrumenter.
@@ -132,6 +134,24 @@ public abstract class AbstractMethodInstrumenter extends AdviceAdapter {
 	 */
 	protected void pushNull() {
 		mv.visitInsn(Opcodes.ACONST_NULL);
+	}
+
+	/**
+	 * Gets {@link #methodId}.
+	 * 
+	 * @return {@link #methodId}
+	 */
+	public long getMethodId() {
+		return this.methodId;
+	}
+
+	/**
+	 * Gets {@link #enhancedExceptionSensor}.
+	 * 
+	 * @return {@link #enhancedExceptionSensor}
+	 */
+	public boolean isEnhancedExceptionSensor() {
+		return this.enhancedExceptionSensor;
 	}
 
 }

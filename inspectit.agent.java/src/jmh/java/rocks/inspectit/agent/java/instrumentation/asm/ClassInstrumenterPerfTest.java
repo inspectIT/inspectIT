@@ -24,6 +24,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
+import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 
@@ -40,6 +41,8 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentat
 @Fork(value = 1)
 @State(Scope.Thread)
 public class ClassInstrumenterPerfTest {
+
+	private static final InstrumenterFactory INSTRUMENTER_FACTORY = new InstrumenterFactory();
 
 	@Param({ "java.lang.String", "java.lang.Boolean" })
 	private String clazz;
@@ -80,7 +83,7 @@ public class ClassInstrumenterPerfTest {
 	public void instrument() throws InterruptedException, IOException {
 		ClassReader classReader = new ClassReader(clazz);
 		LoaderAwareClassWriter classWriter = new LoaderAwareClassWriter(classReader, ClassWriter.COMPUTE_FRAMES, null);
-		ClassInstrumenter classInstrumenter = new ClassInstrumenter(classWriter, new ArrayList<MethodInstrumentationConfig>(configs), enhancedExceptionSensor);
+		ClassInstrumenter classInstrumenter = new ClassInstrumenter(INSTRUMENTER_FACTORY, classWriter, new ArrayList<MethodInstrumentationConfig>(configs), enhancedExceptionSensor);
 		classReader.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
 	}
 }
