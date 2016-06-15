@@ -302,12 +302,14 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		profileSelection = new Button(headClient, SWT.RADIO);
 		profileSelection.setText("Profiles");
 
-		environmentSelection.addSelectionListener(new SelectionAdapter() {
+		SelectionAdapter listener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				performUpdate(false);
 			}
-		});
+		};
+		environmentSelection.addSelectionListener(listener);
+		profileSelection.addSelectionListener(listener);
 
 		mainForm.setHeadClient(headClient);
 	}
@@ -722,14 +724,14 @@ public class ConfigurationInterfaceManagerView extends ViewPart implements IRefr
 		if (messageComposite != null && !messageComposite.isDisposed()) {
 			messageComposite.dispose();
 		}
-		for (TableColumn tableColumn : tableViewer.getTable().getColumns()) {
-			tableColumn.dispose();
-		}
 		tableViewer.setInput(Collections.emptyList());
 		tableViewer.getTable().setHeaderVisible(false);
 		tableViewer.getTable().setLinesVisible(false);
 		tableViewer.getTable().setVisible(false);
 		tableViewer.getTable().setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+		for (TableColumn tableColumn : tableViewer.getTable().getColumns()) {
+			tableColumn.dispose();
+		}
 	}
 
 	/**
