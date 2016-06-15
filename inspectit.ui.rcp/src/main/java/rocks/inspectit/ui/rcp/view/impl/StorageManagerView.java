@@ -385,13 +385,15 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 		localStorageSelection = new Button(headClient, SWT.RADIO);
 		localStorageSelection.setText("Local");
 
-		remoteStorageSelection.addSelectionListener(new SelectionAdapter() {
+		SelectionAdapter listener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateViewToolbar();
 				updateFormBody();
 			}
-		});
+		};
+		remoteStorageSelection.addSelectionListener(listener);
+		localStorageSelection.addSelectionListener(listener);
 
 		// filter composite
 		filterStorageComposite = new FilterStorageComposite(headClient, SWT.NONE);

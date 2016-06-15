@@ -240,7 +240,7 @@ public class MethodSensorAssignmentDetailsPage extends AbstractClassSensorAssign
 		methodValidationDecoration.registerListener(SWT.Modify);
 		addValidationControlDecoration(methodValidationDecoration);
 		// listeners
-		methodButton.addSelectionListener(new SelectionAdapter() {
+		SelectionAdapter methodConstructorListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				methodText.setEnabled(methodButton.getSelection());
@@ -249,7 +249,9 @@ public class MethodSensorAssignmentDetailsPage extends AbstractClassSensorAssign
 				}
 				methodValidationDecoration.executeValidation();
 			}
-		});
+		};
+		methodButton.addSelectionListener(methodConstructorListener);
+		constructorButton.addSelectionListener(methodConstructorListener);
 
 		// parameters
 		// first row

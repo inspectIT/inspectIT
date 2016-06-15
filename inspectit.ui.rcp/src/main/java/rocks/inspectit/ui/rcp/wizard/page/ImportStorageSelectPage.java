@@ -38,7 +38,7 @@ public class ImportStorageSelectPage extends WizardPage {
 	/**
 	 * List of available CMR repositories.
 	 */
-	private List<CmrRepositoryDefinition> cmrRepositoryList;
+	private final List<CmrRepositoryDefinition> cmrRepositoryList;
 
 	/**
 	 * Button for selecting if storage should be imported locally.
@@ -101,17 +101,19 @@ public class ImportStorageSelectPage extends WizardPage {
 		locallyButton.setSelection(true);
 		locallyButton.setText("Local machine");
 		locallyButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		locallyButton.addSelectionListener(new SelectionAdapter() {
+		SelectionAdapter radioListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				cmrCombo.setEnabled(!locallyButton.getSelection());
 			}
-		});
+		};
+		locallyButton.addSelectionListener(radioListener);
 
 		new Label(main, SWT.NONE);
 		final Button cmrButton = new Button(main, SWT.RADIO);
 		cmrButton.setText("CMR Repository");
 		cmrButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		cmrButton.addSelectionListener(radioListener);
 
 		new Label(main, SWT.NONE);
 		cmrCombo = new Combo(main, SWT.DROP_DOWN | SWT.READ_ONLY);
