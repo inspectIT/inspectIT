@@ -1,0 +1,9 @@
+connection.arguments=
+connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
+connection.gradle.user.home=null
+connection.java.home=null
+connection.jvm.arguments=
+connection.project.dir=
+derived.resources=.gradle,build
+eclipse.preferences.version=1
+project.path=\:

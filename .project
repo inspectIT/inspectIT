@@ -5,30 +5,26 @@
 	<projects>
 	</projects>
 	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
+		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1456927517295</id>
+			<id>1466160012975</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
-				<id>org.eclipse.ui.ide.notFilterMatcher</id>
+				<id>org.eclipse.ui.ide.andFilterMatcher</id>
 				<arguments>
 					<matcher>
-						<id>org.eclipse.ui.ide.orFilterMatcher</id>
-						<arguments>
-							<matcher>
-								<id>org.eclipse.ui.ide.multiFilter</id>
-								<arguments>1.0-name-matches-false-false-resources</arguments>
-							</matcher>
-							<matcher>
-								<id>org.eclipse.ui.ide.multiFilter</id>
-								<arguments>1.0-name-matches-false-false-build</arguments>
-							</matcher>
-						</arguments>
+						<id>org.eclipse.ui.ide.multiFilter</id>
+						<arguments>1.0-name-matches-false-true-inspectit.*</arguments>
 					</matcher>
 				</arguments>
 			</matcher>
