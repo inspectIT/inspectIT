@@ -199,8 +199,7 @@ public abstract class AbstractStorageService<E extends DefaultData> {
 				StorageData storageData = new StorageData(localStorageData);
 				try {
 					returnList = dataRetriever.getCachedDataViaHttp(getCmrRepositoryDefinition(), storageData, hash);
-				} catch (BusinessException | IOException | SerializationException e) { // NOPMD //
-																						// NOCHK
+				} catch (BusinessException | IOException | SerializationException e) { // NOPMD // NOCHK
 					// ignore cause we can still load results in other way
 				}
 

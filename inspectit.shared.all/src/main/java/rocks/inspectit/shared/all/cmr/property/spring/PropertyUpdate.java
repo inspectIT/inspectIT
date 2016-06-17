@@ -20,8 +20,9 @@ public @interface PropertyUpdate {
 
 	/**
 	 * List of all property names that when change will fire up annotated method.
-	 *
-	 * @return
 	 */
-	String[] properties() default {};
+	String[] properties() default { // NOCHK
+
+	};
+
 }

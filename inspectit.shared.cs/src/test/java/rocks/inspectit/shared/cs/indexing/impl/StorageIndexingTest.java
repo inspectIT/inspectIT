@@ -46,7 +46,6 @@ import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
  * @author Ivan Senic
  *
  */
-@SuppressWarnings({ "PMD", "all" })
 public class StorageIndexingTest {
 
 	/**
@@ -535,6 +534,7 @@ public class StorageIndexingTest {
 	/**
 	 * Test that tests the functionality of {@link CombinedStorageQueryTask}
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void queryCombinedStorageBranch() {
 		List<IStorageDescriptor> testResultList = new ArrayList<>();
