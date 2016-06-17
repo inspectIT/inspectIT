@@ -11,6 +11,11 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
+			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.pde.ManifestBuilder</name>
 			<arguments>
 			</arguments>
@@ -32,9 +37,9 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
-		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
 		<nature>net.sourceforge.pmd.eclipse.plugin.pmdNature</nature>
 		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
 	</natures>
