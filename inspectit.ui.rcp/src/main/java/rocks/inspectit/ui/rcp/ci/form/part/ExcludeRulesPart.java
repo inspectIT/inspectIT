@@ -236,6 +236,7 @@ public class ExcludeRulesPart extends AbstractFormPart implements IPropertyListe
 		column.getColumn().setResizable(false);
 		column.getColumn().setWidth(400);
 		column.getColumn().setText("Rule");
+		column.getColumn().setToolTipText("The fully qualified name of the class or set of classes to be excluded. The wildcard * can be used to match any length of characters.");
 		column.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
