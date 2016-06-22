@@ -76,8 +76,9 @@ public class AgentMappingsEventListener implements ApplicationListener<AgentMapp
 				// see what 's the new environment for the agent
 				Environment environment = configurationResolver.getEnvironmentForAgent(platformIdent.getDefinedIPs(), platformIdent.getAgentName());
 
-				// only if we have new environment fire job
-				if (!ObjectUtils.equals(cachedEnvironment.getId(), environment.getId())) {
+				// fire job only if we have new environment or we were not bounded to any
+				// environment
+				if ((null == cachedEnvironment) || !ObjectUtils.equals(cachedEnvironment.getId(), environment.getId())) {
 					EnvironmentMappingUpdateJob mappingUpdateJob = mappingUpdateJobFactory.getObject();
 					mappingUpdateJob.setEnvironment(environment);
 					mappingUpdateJob.setAgentCacheEntry(agentCacheEntry);
