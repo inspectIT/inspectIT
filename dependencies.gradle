@@ -240,7 +240,10 @@ dependencies {
 		'org.openjdk.jmh:jmh-generator-annprocess:1.11.3'
 	)
 	xjc (
-		'com.sun.xml.bind:jaxb-xjc:2.2.4-1'
+		'com.sun.xml.bind:jaxb-jxc:2.2.11',
+		'com.sun.xml.bind:jaxb-xjc:2.2.11',
+		'com.sun.xml.bind:jaxb-impl:2.2.11',
+		'com.sun.xml.bind:jaxb-core:2.2.11'
 	)
 	izpack (
 		'org.codehaus.izpack:izpack-standalone-compiler:4.3.5',
