@@ -477,11 +477,11 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Logs the message with given severity. Logging only means no dialog will be displayed to the
-	 * user. Severity can be {@link IStatus#INFO}, {@link IStatus#WARN} or {@link IStatus#ERROR}
+	 * user. Severity can be {@link IStatus#INFO}, {@link IStatus#WARNING} or {@link IStatus#ERROR}
 	 * which will define log level for the logger.
 	 *
 	 * @param severity
-	 *            {@link IStatus#INFO}, {@link IStatus#WARN} or {@link IStatus#ERROR}
+	 *            {@link IStatus#INFO}, {@link IStatus#WARNING} or {@link IStatus#ERROR}
 	 * @param message
 	 *            Message to log.
 	 */
@@ -491,11 +491,11 @@ public class InspectIT extends AbstractUIPlugin {
 
 	/**
 	 * Logs the message and throwbale with given severity. Logging only means no dialog will be
-	 * displayed to the user. Severity can be {@link IStatus#INFO}, {@link IStatus#WARN} or
+	 * displayed to the user. Severity can be {@link IStatus#INFO}, {@link IStatus#WARNING} or
 	 * {@link IStatus#ERROR} which will define log level for the logger.
 	 *
 	 * @param severity
-	 *            {@link IStatus#INFO}, {@link IStatus#WARN} or {@link IStatus#ERROR}
+	 *            {@link IStatus#INFO}, {@link IStatus#WARNING} or {@link IStatus#ERROR}
 	 * @param message
 	 *            Message to log.
 	 * @param throwable

@@ -1,5 +1,6 @@
 package rocks.inspectit.ui.rcp.ci.form.editor;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -11,11 +12,13 @@ import org.eclipse.ui.PartInitException;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
 import rocks.inspectit.ui.rcp.ci.form.page.EnvironmentSettingsPage;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
+import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -26,7 +29,7 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
  * @author Ivan Senic
  *
  */
-public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor implements IEnvironmentChangeListener {
+public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor implements IEnvironmentChangeListener, IProfileChangeListener {
 
 	/**
 	 * Editor ID.
@@ -50,6 +53,7 @@ public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor 
 		setTitleImage(ImageFormatter.getEnvironmentImage(environmentEditorInput.getEnvironment()));
 
 		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().addEnvironmentChangeListener(this);
+		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().addProfileChangeListener(this);
 	}
 
 	/**
@@ -172,8 +176,66 @@ public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor 
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void profileCreated(Profile profile, CmrRepositoryDefinition repositoryDefinition) {
+		// ignore
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void profileUpdated(Profile profile, CmrRepositoryDefinition repositoryDefinition, boolean onlyProperties) {
+		// ignore
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void profileDeleted(Profile profile, CmrRepositoryDefinition repositoryDefinition) {
+		EnvironmentEditorInput input = (EnvironmentEditorInput) getEditorInput();
+
+		if (!Objects.equals(repositoryDefinition, input.getCmrRepositoryDefinition())) {
+			return;
+		}
+
+		// check if deleted profile was used
+		boolean update = false;
+		for (String profileId : input.getEnvironment().getProfileIds()) {
+			if (Objects.equals(profileId, profile.getId())) {
+				update = true;
+				break;
+			}
+		}
+
+		if (update) {
+			try {
+				Environment updatedEnvironment = repositoryDefinition.getConfigurationInterfaceService().getEnvironment(input.getEnvironment().getId());
+				List<Profile> updatedProfiles = repositoryDefinition.getConfigurationInterfaceService().getAllProfiles();
+
+				final EnvironmentEditorInput newInput = new EnvironmentEditorInput(updatedEnvironment, updatedProfiles, repositoryDefinition);
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						setPartName(newInput.getName());
+						setTitleImage(ImageFormatter.getEnvironmentImage(newInput.getEnvironment()));
+						setInputWithNotify(newInput);
+					}
+				});
+			} catch (BusinessException e) {
+				InspectIT.getDefault().log(IStatus.WARNING, "Error updating the Environment editor on profile update", e);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void dispose() {
 		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().removeEnvironmentChangeListener(this);
+		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().removeProfileChangeListener(this);
 		super.dispose();
 	}
+
 }

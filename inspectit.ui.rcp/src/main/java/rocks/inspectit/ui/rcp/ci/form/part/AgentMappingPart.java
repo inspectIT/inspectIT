@@ -19,6 +19,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -201,7 +203,6 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 				AgentMappingDialog agentMappingDialog = new AgentMappingDialog(getManagedForm().getForm().getShell(), environments);
 				if (Window.OK == agentMappingDialog.open()) {
 					AgentMapping mapping = agentMappingDialog.getAgentMapping();
-					mapping.setEnvironmentId(environments.iterator().next().getId());
 					inputList.add(mapping);
 
 					updateInternal(true);
@@ -252,6 +253,12 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 				} else if (e.keyCode == SWT.DEL) {
 					fireRemove();
 				}
+			}
+		});
+		tableViewer.getTable().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				fireEdit();
 			}
 		});
 	}
