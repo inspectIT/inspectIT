@@ -224,7 +224,7 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 		selectedColumn.getColumn().setResizable(false);
 		selectedColumn.getColumn().setWidth(40);
 		selectedColumn.getColumn().setText("Selected");
-		selectedColumn.getColumn().setToolTipText("If profile is included in the Environment.");
+		selectedColumn.getColumn().setToolTipText("If profile is included in the environment.");
 
 		TableViewerColumn profileNameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		profileNameColumn.getColumn().setResizable(true);
@@ -237,14 +237,14 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 		activeColumn.getColumn().setResizable(true);
 		activeColumn.getColumn().setText("Active");
 		activeColumn.getColumn().setWidth(40);
-		activeColumn.getColumn().setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an Environment.");
+		activeColumn.getColumn().setToolTipText("If profile is active or not, note that deactivated profile will not be considered during the instrumentation even if it's a part of an environment.");
 
 		TableViewerColumn defaultColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		defaultColumn.getColumn().setMoveable(true);
 		defaultColumn.getColumn().setResizable(true);
 		defaultColumn.getColumn().setText("Default");
 		defaultColumn.getColumn().setWidth(40);
-		defaultColumn.getColumn().setToolTipText("If profile is default or not, note that default profile will be added to any new created Environment.");
+		defaultColumn.getColumn().setToolTipText("If profile is default or not, note that default profile will be added to any new created environment.");
 
 		TableViewerColumn typeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		typeColumn.getColumn().setMoveable(true);
@@ -356,6 +356,19 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 				}
 			}
 			return super.getForeground(element, index);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String getToolTipText(Object element, int index) {
+			switch (index) {
+			case 0:
+				return "Selecting the profile will include it in the environment.";
+			default:
+				return super.getToolTipText(element, index);
+			}
 		}
 
 	}
