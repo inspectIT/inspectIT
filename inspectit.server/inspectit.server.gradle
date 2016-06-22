@@ -117,6 +117,7 @@ def schemagen(sourceDir, outputDir, fileName, excludes) {
 				destdir: outputDir,
 				excludes: excludes,
 				includeAntRuntime: 'false',
+				classpath: sourceSets.main.runtimeClasspath.asPath,
 				debug: 'true'
 			)
 
