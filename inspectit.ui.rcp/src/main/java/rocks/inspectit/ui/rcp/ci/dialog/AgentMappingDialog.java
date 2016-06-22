@@ -239,7 +239,7 @@ public class AgentMappingDialog extends TitleAreaDialog implements IControlValid
 			environmentCombo.add(environment.getName());
 		}
 
-		createInfoLabel(main, "IP address of the agent. Use wild-card '*' for matching several IPs with one mapping. For example, 192.168.* will match all IP addresses in starting with 192.168.");
+		createInfoLabel(main, "Environment that should be assigned to the agent fulfilling the name and IP parameters.");
 
 		// description
 		Label descriptionLabel = new Label(main, SWT.NONE);
