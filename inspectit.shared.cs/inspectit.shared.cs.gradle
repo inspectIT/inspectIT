@@ -7,6 +7,10 @@
 evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
+/** used by the eclipse buildship plugin */
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
 /** Artifact names */
 ext {
 	distJarName = 'inspectit-shared-cs'
