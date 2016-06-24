@@ -7,6 +7,10 @@
 evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
+/** used by the eclipse buildship plugin */
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
 /** Artifact names */
 ext {
 	distJarName = 'inspectit-shared-cs'
@@ -26,7 +30,7 @@ configurations {
 /** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
 dependencies {
 	compile project(':inspectit.shared.all')
-	testCompile project(':inspectit.shared.all').sourceSets.test.output
+	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
 /** Compile compatibility to 1.7 for all compile tasks */
