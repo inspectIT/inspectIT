@@ -23,6 +23,7 @@ import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.PatternFactory;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
+import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
@@ -242,7 +243,14 @@ public class ConfigurationResolver {
 	 *             there is more than one valid environment for the agent.
 	 */
 	public Environment getEnvironmentForAgent(List<String> definedIPs, String agentName) throws BusinessException {
-		List<AgentMapping> mappings = new ArrayList<>(configurationInterfaceManager.getAgentMappings().getMappings());
+		AgentMappings agentMappings = configurationInterfaceManager.getAgentMappings();
+
+		if (CollectionUtils.isEmpty(agentMappings.getMappings())) {
+			throw new BusinessException("Determing an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs,
+					ConfigurationInterfaceErrorCodeEnum.NO_MAPPING_DEFINED);
+		}
+
+		List<AgentMapping> mappings = new ArrayList<>(agentMappings.getMappings());
 
 		for (Iterator<AgentMapping> it = mappings.iterator(); it.hasNext();) {
 			AgentMapping agentMapping = it.next();

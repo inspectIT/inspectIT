@@ -48,9 +48,14 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED("JAXB marshaling or demarshalling to/from disk failed.", "CMR version is not compatible with the data.", "Check the CMR version."),
 
 	/**
+	 * No mapping exists.
+	 */
+	NO_MAPPING_DEFINED("Locating an environment for the agent to use failed.", "Not a single agent mapping definition exists.", "Add the agent mapping definition in the Configuration Interface."),
+
+	/**
 	 * Environment not found when registering the agent.
 	 */
-	ENVIRONMENT_FOR_AGENT_NOT_FOUND("Locating an environment for the agent to use failed.", "No  matching environment found for the specified agent name and IP address(es).", "Check the agent mapping settings in the Configuration Interface."),
+	ENVIRONMENT_FOR_AGENT_NOT_FOUND("Locating an environment for the agent to use failed.", "No matching environment found for the specified agent name and IP address(es).", "Check the agent mapping settings in the Configuration Interface."),
 
 	/**
 	 * More than one environment found.

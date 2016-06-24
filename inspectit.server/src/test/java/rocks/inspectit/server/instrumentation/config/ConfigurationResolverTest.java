@@ -98,6 +98,12 @@ public class ConfigurationResolverTest extends TestBase {
 		}
 
 		@Test(expectedExceptions = { BusinessException.class })
+		public void nullMappings() throws BusinessException {
+			when(agentMappings.getMappings()).thenReturn(null);
+			configurationResolver.getEnvironmentForAgent(definedIPs, agentName);
+		}
+
+		@Test(expectedExceptions = { BusinessException.class })
 		public void noMatchingMappingsName() throws BusinessException {
 			AgentMapping mapping = mock(AgentMapping.class);
 			when(agentMappings.getMappings()).thenReturn(Collections.singletonList(mapping));
