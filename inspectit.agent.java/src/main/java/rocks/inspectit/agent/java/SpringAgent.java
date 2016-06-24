@@ -44,9 +44,9 @@ public class SpringAgent implements IAgent {
 	private static final String CLASS_NAME_PREFIX = "rocks.inspectit";
 
 	/**
-	 * Location of inspectIT jar file.
+	 * inspectIT jar file.
 	 */
-	private static String inspectitJarLocation;
+	private static File inspectitJarFile;
 
 	/**
 	 * The hook dispatcher used by the instrumented methods.
@@ -82,11 +82,11 @@ public class SpringAgent implements IAgent {
 	/**
 	 * Constructor initializing this agent.
 	 *
-	 * @param inspectitJarLocation
-	 *            location of inspectIT jar needed for proper logging
+	 * @param inspectitJarFile
+	 *            The inspectIT jar file needed for proper logging
 	 */
-	public SpringAgent(String inspectitJarLocation) {
-		setInspectITJarLocation(inspectitJarLocation);
+	public SpringAgent(File inspectitJarFile) {
+		setInspectITJarFile(inspectitJarFile);
 
 		// init logging
 		LogInitializer.initLogging();
@@ -96,14 +96,14 @@ public class SpringAgent implements IAgent {
 	}
 
 	/**
-	 * Sets {@link #inspectitJarLocation} in synch mode.
+	 * Sets {@link #inspectitJarFile} in synch mode.
 	 *
-	 * @param inspectitJarLocation
-	 *            Location of the inspectIT jar.
+	 * @param inspectitJarFile
+	 *            The inspectIT jar file.
 	 */
-	private synchronized void setInspectITJarLocation(String inspectitJarLocation) {
-		SpringAgent.inspectitJarLocation = inspectitJarLocation;
-		LOG.info("Location of inspectit-agent.jar set to: " + inspectitJarLocation);
+	private synchronized void setInspectITJarFile(File inspectitJarFile) {
+		SpringAgent.inspectitJarFile = inspectitJarFile;
+		LOG.info("Location of inspectit-agent.jar set to: " + inspectitJarFile.getAbsolutePath());
 	}
 
 	/**
@@ -251,15 +251,15 @@ public class SpringAgent implements IAgent {
 	}
 
 	/**
-	 * Returns absolute file to the inspectit jar if the {@link #inspectitJarLocation} is set,
-	 * otherwise returns <code>null</code>.
+	 * Returns absolute file to the inspectit jar if the {@link #inspectitJarFile} is set, otherwise
+	 * returns <code>null</code>.
 	 *
-	 * @return Returns absolute file to the inspectit jar if the {@link #inspectitJarLocation} is
-	 *         set, otherwise returns <code>null</code>.
+	 * @return Returns absolute file to the inspectit jar if the {@link #inspectitJarFile} is set,
+	 *         otherwise returns <code>null</code>.
 	 */
 	public static File getInspectitJarFile() {
-		if (null != inspectitJarLocation) {
-			return new File(inspectitJarLocation).getAbsoluteFile();
+		if (null != inspectitJarFile) {
+			return inspectitJarFile.getAbsoluteFile();
 		}
 		return null;
 	}
