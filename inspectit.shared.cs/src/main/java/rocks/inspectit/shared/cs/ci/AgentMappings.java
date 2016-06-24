@@ -1,6 +1,7 @@
 package rocks.inspectit.shared.cs.ci;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -23,7 +24,7 @@ public class AgentMappings {
 	 * {@link AgentMapping}s.
 	 */
 	@XmlElementRefs({ @XmlElementRef(type = AgentMapping.class) })
-	private Collection<AgentMapping> mappings;
+	private Collection<AgentMapping> mappings = Collections.emptyList();
 
 	/**
 	 * Revision. Server for version control and updating control.
