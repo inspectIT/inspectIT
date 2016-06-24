@@ -6,6 +6,10 @@
  */
 defaultTasks 'releaseAndAnalyze'
 
+/** used by the eclipse buildship plugin */
+sourceCompatibility = '1.5'
+targetCompatibility = '1.5'
+
 /** Artifact names */
 ext {
 	distJarName = 'inspectit-shared-all'
@@ -20,6 +24,7 @@ configurations {
 	testCompile {
 		extendsFrom configurations.sharedAllTest
 	}
+	testArchives.extendsFrom (testCompile)
 }
 
 /** Compile compatibility to 1.5 for all compile tasks */
@@ -64,4 +69,21 @@ task releaseAndAnalyze {
 	group = 'Release'
 
 	dependsOn(analyze, jar)
+}
+
+/**
+ * The following task is needed because we want to have our base test classes available in the other sub-projects, too.
+ */
+task ('jarTest', type:Jar, dependsOn: testClasses, description: 'Assembles a jar archive from the test source set') {
+	group = BasePlugin.BUILD_GROUP
+	from project.sourceSets.test.output
+	include '**/testbase/*'
+	classifier = 'test'
+}
+
+/**
+ * The artifact definition for this new test jar defined by the jarTest task.
+ */
+artifacts {
+	testArchives project.jarTest
 }

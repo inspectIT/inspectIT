@@ -7,6 +7,19 @@
 evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
+/** used by the eclipse buildship plugin */
+sourceCompatibility = '1.5'
+targetCompatibility = '1.5'
+
+/** defined to have it included in Eclipse as source */
+sourceSets {
+	externalResources {
+		resources {
+			srcDir mainExtResources
+		}
+	}
+}
+
 /** Some agent specific properties */
 ext {
 	distJarName = 'inspectit-agent'
@@ -27,7 +40,7 @@ configurations {
 /** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
 dependencies {
 	compile project(':inspectit.shared.all')
-	testCompile project(':inspectit.shared.all').sourceSets.test.output
+	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
 /** Compile compatibility to 1.5 for all compile tasks */

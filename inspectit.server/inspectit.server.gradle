@@ -9,6 +9,19 @@ evaluationDependsOn(':inspectit.shared.all')
 evaluationDependsOn(':inspectit.shared.cs')
 defaultTasks 'releaseAndAnalyze'
 
+/** used by the eclipse buildship plugin */
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+/** defined to have it included in Eclipse as source */
+sourceSets {
+	externalResources {
+		resources {
+			srcDir mainExtResources
+		}
+	}
+}
+
 /** Some server specific properties */
 ext {
 	distJarName = 'inspectit-cmr'
@@ -30,7 +43,7 @@ configurations {
 dependencies {
 	compile project(':inspectit.shared.all')
 	compile project(':inspectit.shared.cs')
-	testCompile project(':inspectit.shared.all').sourceSets.test.output
+	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
 /** Compile compatibility to 1.7 for all compile tasks */
