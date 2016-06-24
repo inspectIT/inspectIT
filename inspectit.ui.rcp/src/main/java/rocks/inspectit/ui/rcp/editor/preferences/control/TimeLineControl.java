@@ -150,11 +150,11 @@ public class TimeLineControl extends AbstractPreferenceControl implements IPrefe
 		Date toDate = toDateTime.getSelection();
 		Date fromDate = fromDateTime.getSelection();
 
-		if ((null == oldToDate) || (oldToDate.getTime() != toDate.getTime())) {
+		if ((null != toDate) && ((null == oldToDate) || (oldToDate.getTime() != toDate.getTime()))) {
 			preferenceControlMap.put(PreferenceId.TimeLine.TO_DATE_ID, toDate);
 			oldToDate = new Date(toDate.getTime());
 		}
-		if ((null == oldFromDate) || (oldFromDate.getTime() != fromDate.getTime())) {
+		if ((null != fromDate) && ((null == oldFromDate) || (oldFromDate.getTime() != fromDate.getTime()))) {
 			preferenceControlMap.put(PreferenceId.TimeLine.FROM_DATE_ID, fromDate);
 			oldFromDate = new Date(fromDate.getTime());
 		}
