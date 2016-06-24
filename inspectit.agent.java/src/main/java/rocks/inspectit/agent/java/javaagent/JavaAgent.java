@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -16,6 +17,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLDecoder;
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
@@ -119,6 +121,7 @@ public class JavaAgent implements ClassFileTransformer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
 		try {
 			if ((null != classLoader) && InspectItClassLoader.class.getCanonicalName().equals(classLoader.getClass().getCanonicalName())) {
@@ -273,7 +276,13 @@ public class JavaAgent implements ClassFileTransformer {
 		if (null != cs) {
 			// no bootstrap definition for the inspectit agent is in place, thus we can use this
 			// mechanism
-			return cs.getLocation().getFile();
+			String fileURL = cs.getLocation().getFile();
+			try {
+				// decode URL to file pattern to replace encoded characters such as whitespaces
+				return URLDecoder.decode(fileURL, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				return fileURL;
+			}
 		} else {
 			List<String> inputArgs = ManagementFactory.getRuntimeMXBean().getInputArguments();
 			for (String arg : inputArgs) {
