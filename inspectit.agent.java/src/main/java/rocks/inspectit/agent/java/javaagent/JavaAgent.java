@@ -14,6 +14,7 @@ import java.lang.instrument.UnmodifiableClassException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AllPermission;
@@ -93,7 +94,7 @@ public class JavaAgent implements ClassFileTransformer {
 			@SuppressWarnings("resource")
 			InspectItClassLoader classLoader = new InspectItClassLoader(new URL[0]);
 			Class<?> agentClazz = classLoader.loadClass(INSPECTIT_AGENT);
-			Constructor<?> constructor = agentClazz.getConstructor(String.class);
+			Constructor<?> constructor = agentClazz.getConstructor(File.class);
 			Object realAgent = constructor.newInstance(getInspectItAgentJarFileLocation());
 
 			// we can reference the Agent now here because it should have been added to the
@@ -119,6 +120,7 @@ public class JavaAgent implements ClassFileTransformer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
 		try {
 			if ((null != classLoader) && InspectItClassLoader.class.getCanonicalName().equals(classLoader.getClass().getCanonicalName())) {
@@ -264,16 +266,21 @@ public class JavaAgent implements ClassFileTransformer {
 	}
 
 	/**
-	 * Returns the path to the inspectit-agent.jar file.
+	 * Returns the {@link File} to the inspectit-agent.jar file.
 	 *
-	 * @return the path to the jar file.
+	 * @return the {@link File} to the jar file.
 	 */
-	public static String getInspectItAgentJarFileLocation() {
+	public static File getInspectItAgentJarFileLocation() {
 		CodeSource cs = JavaAgent.class.getProtectionDomain().getCodeSource();
+		File agentJarFile = null;
 		if (null != cs) {
 			// no bootstrap definition for the inspectit agent is in place, thus we can use this
 			// mechanism
-			return cs.getLocation().getFile();
+			try {
+				agentJarFile = new File(cs.getLocation().toURI());
+			} catch (URISyntaxException e) {
+				throw new RuntimeException("Could not determine the location of the Agent Jar!", e);
+			}
 		} else {
 			List<String> inputArgs = ManagementFactory.getRuntimeMXBean().getInputArguments();
 			for (String arg : inputArgs) {
@@ -287,14 +294,21 @@ public class JavaAgent implements ClassFileTransformer {
 						String path = matcher.group(1);
 						// for multiple javaagent definitions, this will fail, but we won't include
 						// this right now.
-						return path;
+						agentJarFile = new File(path);
+						break;
 					} else {
 						break;
 					}
 				}
 			}
 		}
-		return null;
+		if (null == agentJarFile) {
+			throw new RuntimeException("Could not determine the location of the Agent Jar!");
+		} else if (!agentJarFile.exists()) {
+			throw new RuntimeException("The agent Jar file " + agentJarFile.getAbsolutePath() + " does not exist!");
+		}
+
+		return agentJarFile;
 	}
 
 	/**
@@ -322,9 +336,9 @@ public class JavaAgent implements ClassFileTransformer {
 			super(urls, null);
 
 			try {
-				String agentFile = getInspectItAgentJarFileLocation();
-				if (isJar(agentFile)) {
-					addJarResource(new File(agentFile));
+				File agentFile = getInspectItAgentJarFileLocation();
+				if (isJar(agentFile.getAbsolutePath())) {
+					addJarResource(agentFile);
 				} else {
 					LOGGER.severe("There was a problem in retrieving the root jar name!");
 					throw new RuntimeException("There was a problem in retrieving the root jar name!");
