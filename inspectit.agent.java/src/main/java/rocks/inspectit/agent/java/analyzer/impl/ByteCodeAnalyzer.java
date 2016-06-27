@@ -10,7 +10,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -27,7 +29,6 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.connection.IConnection;
-import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
@@ -37,7 +38,6 @@ import rocks.inspectit.agent.java.instrumentation.asm.ClassAnalyzer;
 import rocks.inspectit.agent.java.instrumentation.asm.ClassInstrumenter;
 import rocks.inspectit.agent.java.instrumentation.asm.LoaderAwareClassWriter;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
-import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
@@ -178,7 +178,13 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 				analyzeDependingTypes(type, classLoader);
 
 				// try connecting to server
-				instrumentationResult = connection.analyze(platformManager.getPlatformId(), hash, type);
+				Callable<InstrumentationDefinition> analyzeCallable = new AnalyzeCallable(connection, platformManager.getPlatformId(), hash, type);
+				try {
+					instrumentationResult = coreService.getCommunicationExecutorService().submit(analyzeCallable).get();
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return null;
+				}
 
 				// register type as sent
 				classHashHelper.registerSent(className, hash);
@@ -194,14 +200,11 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 		} catch (IdNotAvailableException idNotAvailableException) {
 			log.error("Error occurred instrumenting the byte code of class " + className, idNotAvailableException);
 			return null;
-		} catch (ServerUnavailableException serverUnavailableException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, serverUnavailableException);
-			return null;
-		} catch (BusinessException businessException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, businessException);
-			return null;
 		} catch (StorageException storageException) {
 			log.error("Error occurred instrumenting the byte code of class " + className, storageException);
+			return null;
+		} catch (ExecutionException executionException) {
+			log.error("Error occurred instrumenting the byte code of class " + className, executionException);
 			return null;
 		}
 	}
@@ -271,7 +274,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 
 			// inform CMR of the applied instrumentation ids
 			if (MapUtils.isNotEmpty(methodToSensorMap)) {
-				coreService.getExecutorService().submit(new InstrumentationAppliedRunnable(connection, methodToSensorMap));
+				coreService.getCommunicationExecutorService().submit(new InstrumentationAppliedRunnable(connection, methodToSensorMap));
 			}
 
 			return classWriter.toByteArray();

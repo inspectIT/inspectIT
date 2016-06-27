@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -90,11 +91,18 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	private List<IJmxSensor> jmxSensors;
 
 	/**
-	 * Executor service that other components can use for asynchronous tasks.
+	 * Executor service that other components can use for general asynchronous tasks.
 	 */
 	@Autowired
-	@Qualifier("coreServiceExecutorService")
-	private ScheduledExecutorService executorService;
+	@Qualifier("generalExecutorService")
+	private ScheduledExecutorService generalExecutorService;
+
+	/**
+	 * Executor service that other components can use for communication tasks.
+	 */
+	@Autowired
+	@Qualifier("generalExecutorService")
+	private ScheduledExecutorService communicationExecutorService;
 
 	/**
 	 * Already used data objects which can be used directly on the CMR to persist.
@@ -201,24 +209,8 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 			temp.interrupt();
 		}
 
-		// shutdown core service
-		executorService.shutdown();
-		try {
-			// Wait a while for existing tasks to terminate
-			if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-				// Cancel currently executing tasks
-				executorService.shutdownNow();
-				// Wait a while for tasks to respond to being canceled
-				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-					log.error("Executor service for the inspectIT Core service did not terminate.");
-				}
-			}
-		} catch (InterruptedException ie) {
-			// (Re-)Cancel if current thread also interrupted
-			executorService.shutdownNow();
-			// Preserve interrupt status
-			Thread.currentThread().interrupt();
-		}
+		shutDownExecutorService(generalExecutorService);
+		shutDownExecutorService(communicationExecutorService);
 	}
 
 	/**
@@ -359,10 +351,48 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Correctly shuts down the executor service.
+	 *
+	 * @param executorService
+	 *            Executor service to shut down.
 	 */
-	public ScheduledExecutorService getExecutorService() {
-		return executorService;
+	private void shutDownExecutorService(ExecutorService executorService) {
+		// shutdown core service
+		executorService.shutdown();
+		try {
+			// Wait a while for existing tasks to terminate
+			if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+				// Cancel currently executing tasks
+				executorService.shutdownNow();
+				// Wait a while for tasks to respond to being canceled
+				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+					log.error("Executor service for the inspectIT Core service did not terminate.");
+				}
+			}
+		} catch (InterruptedException ie) {
+			// (Re-)Cancel if current thread also interrupted
+			executorService.shutdownNow();
+			// Preserve interrupt status
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	/**
+	 * Gets {@link #generalExecutorService}.
+	 * 
+	 * @return {@link #generalExecutorService}
+	 */
+	public ScheduledExecutorService getGeneralExecutorService() {
+		return this.generalExecutorService;
+	}
+
+	/**
+	 * Gets {@link #communicationExecutorService}.
+	 * 
+	 * @return {@link #communicationExecutorService}
+	 */
+	public ScheduledExecutorService getCommunicationExecutorService() {
+		return this.communicationExecutorService;
 	}
 
 	/**

@@ -161,9 +161,16 @@ public interface ICoreService {
 	void removeListListener(ListListener<?> listener);
 
 	/**
-	 * Returns the scheduled executor-service.
+	 * Returns the executor service that other components can use for communication tasks.
 	 *
 	 * @return a {@link ScheduledExecutorService}
 	 */
-	ScheduledExecutorService getExecutorService();
+	ScheduledExecutorService getGeneralExecutorService();
+
+	/**
+	 * Returns the executor service that other components can use for general asynchronous tasks.
+	 *
+	 * @return a {@link ScheduledExecutorService}
+	 */
+	ScheduledExecutorService getCommunicationExecutorService();
 }

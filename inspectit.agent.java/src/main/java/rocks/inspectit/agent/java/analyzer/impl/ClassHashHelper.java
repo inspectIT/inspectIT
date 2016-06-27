@@ -237,7 +237,7 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 				saveCacheToDisk();
 			}
 		};
-		coreService.getExecutorService().scheduleAtFixedRate(saveCacheToDiskRunnable, 30, 300, TimeUnit.SECONDS);
+		coreService.getGeneralExecutorService().scheduleAtFixedRate(saveCacheToDiskRunnable, 30, 300, TimeUnit.SECONDS);
 	}
 
 	/**

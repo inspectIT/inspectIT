@@ -89,13 +89,23 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	}
 
 	/**
+	 * @return Returns generalExecutorService
+	 */
+	@Bean(name = "generalExecutorService")
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	public ScheduledExecutorService getGeneralExecutorService() {
+		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-general-executor-service-thread-%d").setDaemon(true).build();
+		return Executors.newScheduledThreadPool(1, threadFactory);
+	}
+
+	/**
 	 * @return Returns coreServiceExecutorService
 	 */
-	@Bean(name = "coreServiceExecutorService")
+	@Bean(name = "communicationExecutorService")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
-	public ScheduledExecutorService getCoreServiceExecutorService() {
-		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
-		return Executors.newScheduledThreadPool(1, threadFactory);
+	public ScheduledExecutorService getCommunicationExecutorService() {
+		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-communication-executor-service-thread-%d").setDaemon(true).build();
+		return Executors.newScheduledThreadPool(2, threadFactory);
 	}
 
 	/**

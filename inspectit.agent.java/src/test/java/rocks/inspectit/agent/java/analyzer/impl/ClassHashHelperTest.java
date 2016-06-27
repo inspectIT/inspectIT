@@ -71,7 +71,7 @@ public class ClassHashHelperTest extends TestBase {
 		doReturn(new File(TEST_CACHE_FILE)).when(fileResolver).getClassHashCacheFile();
 
 		when(prototypesProvider.createSerializer()).thenReturn(serializationManager);
-		when(coreService.getExecutorService()).thenReturn(executorService);
+		when(coreService.getGeneralExecutorService()).thenReturn(executorService);
 	}
 
 	@AfterMethod

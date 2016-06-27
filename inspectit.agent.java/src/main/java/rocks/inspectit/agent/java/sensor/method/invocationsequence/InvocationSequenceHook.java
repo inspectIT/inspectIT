@@ -652,7 +652,14 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
-	public ScheduledExecutorService getExecutorService() {
+	public ScheduledExecutorService getGeneralExecutorService() {
+		throw new UnsupportedMethodException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ScheduledExecutorService getCommunicationExecutorService() {
 		throw new UnsupportedMethodException();
 	}
 
