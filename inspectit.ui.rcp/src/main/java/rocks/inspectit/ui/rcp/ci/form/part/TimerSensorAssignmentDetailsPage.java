@@ -121,7 +121,8 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 		toolkit.createLabel(mainComposite, "Capture context:");
 		captureContextButton = toolkit.createButton(mainComposite, "Yes", SWT.CHECK);
 		captureContextButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
-		createInfoLabel(mainComposite, toolkit, "");
+		createInfoLabel(mainComposite, toolkit,
+				"If additional context should be captured alongside the method execution time. inspectIT currently supports capturing method return value, method parameters or fields of the object defining the method to monitor.");
 
 		// second row
 		toolkit.createLabel(mainComposite, "");
@@ -144,8 +145,7 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 		addCaptureButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_ADD));
 		removeCaptureButton = toolkit.createButton(captureContextComposite, "", SWT.PUSH);
 		removeCaptureButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_REMOVE));
-		toolkit.createLabel(mainComposite,
-				"If additional context should be captured alongside the method execution time. inspectIT currently supports capturing method return value, method parameters or fields of the object defining the method to monitor.");
+		toolkit.createLabel(mainComposite, "");
 		// decoration
 		final ValidationControlDecoration<Table> nonEmptyCaptureContextDecoration = new ValidationControlDecoration<Table>(captureContextTable, this) {
 			@Override
