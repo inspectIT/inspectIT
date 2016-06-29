@@ -65,13 +65,13 @@ task cleanPdeBuild(type: Delete) {
 /**
  * Copies relevant files for the PDE build to the 'plugins' folder.
  */
-task preparePdeBuild(type: Copy, dependsOn: cleanPdeBuild) {
+task preparePdeBuild(type: Copy, dependsOn: [cleanPdeBuild, rootProject.updateSite]) {
 	description = 'Prepares artifacts for the PDE build.'
 	group = 'Build Setup'
 
 	// all dependencies and our shared jars (we rename it to mach the plugin name)
 	into ('plugins') {
-		from configurations.uiRcpProd
+		from file(updateSiteInternal)
 		from project(':inspectit.shared.all').jar.outputs
 		from project(':inspectit.shared.cs').jar.outputs
 		exclude '**/*sources*.jar'

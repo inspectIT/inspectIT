@@ -48,24 +48,19 @@ configurations {
 	classmexer
 	sharedAllTest {
 		extendsFrom configurations.testbase
-		extendsFrom configurations.sharedAllProd
 	}
 	sharedCsTest {
 		extendsFrom configurations.testbase
-		extendsFrom configurations.sharedCsProd
 	}
 	agentJavaTest {
 		extendsFrom configurations.testbase
-		extendsFrom configurations.agentJavaProd
 	}
 	serverTest {
 		extendsFrom configurations.testbase
 		extendsFrom configurations.classmexer
-		extendsFrom configurations.serverProd
 	}
 	uiRcpTest {
 		extendsFrom configurations.testbase
-		extendsFrom configurations.uiRcpProd
 	}
 
 	/** JMH test configurations */
@@ -104,20 +99,20 @@ dependencies {
 		'commons-collections:commons-collections:3.2.1',
 		'commons-pool:commons-pool:1.6',
 
-		'org.springframework:info.novatec.spring-core:3.2.16',
-		'org.springframework:info.novatec.spring-beans:3.2.16',
-		'org.springframework:info.novatec.spring-context:3.2.16',
-		'org.springframework:info.novatec.spring-web:3.2.16',
-		'org.springframework:info.novatec.spring-expression:3.2.16',
-		'org.springframework:info.novatec.spring-aop:3.2.16',
+		'org.springframework:spring-core:3.2.16.RELEASE',
+		'org.springframework:spring-beans:3.2.16.RELEASE',
+		'org.springframework:spring-context:3.2.16.RELEASE',
+		'org.springframework:spring-web:3.2.16.RELEASE',
+		'org.springframework:spring-expression:3.2.16.RELEASE',
+		'org.springframework:spring-aop:3.2.16.RELEASE',
 		'org.aopalliance:com.springsource.org.aopalliance:1.0.0',
 		'javax.servlet:javax.servlet:3.0.0.v201103241009',
 
 		'com.esotericsoftware.kryo:kryo:2.24.0',
-		'com.esotericsoftware.kryonet:info.novatec.kryonet:2.21',
-		'de.javakaffee:info.novatec.kryo-serializers:0.23',
-		'com.esotericsoftware.reflectasm:info.novatec.reflectasm:1.07',
-		'com.esotericsoftware.minlog:info.novatec.minlog:1.2',
+		'com.esotericsoftware.kryonet:kryonet:2.21',
+		'de.javakaffee:kryo-serializers:0.23',
+		'com.esotericsoftware.reflectasm:reflectasm:1.07',
+		'com.esotericsoftware.minlog:minlog:1.2',
 		'org.objenesis:objenesis:2.1',
 
 		'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final',
@@ -125,7 +120,7 @@ dependencies {
 		'javax.inject:com.springsource.javax.inject:1.0.0',
 
 		'com.google.guava:guava-jdk5:13.0',
-		'com.github.stephenc.high-scale-lib:info.novatec.high-scale-lib:1.1.2',
+		'com.github.stephenc.high-scale-lib:high-scale-lib:1.1.2',
 		'org.codehaus.jackson:jackson-core-asl:1.9.13',
 		'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
 	) 
@@ -138,7 +133,7 @@ dependencies {
 	sharedCsProd (
 		'commons-pool:commons-pool:1.6',
 		'commons-collections:commons-collections:3.2.2',
-		'org.hamcrest:info.novatec.hamcrest-all:1.3'
+		'org.hamcrest:hamcrest-all:1.3'
 	)
 
 	/** inspectit.agent.java */
@@ -157,14 +152,14 @@ dependencies {
 		'org.slf4j:log4j-over-slf4j:1.7.21',
 		'ch.qos.logback:logback-core:1.1.7',
 		'ch.qos.logback:logback-classic:1.1.7',
-		'uk.org.lidalia:info.novatec.sysout-over-slf4j:1.0.2',
+		'uk.org.lidalia:sysout-over-slf4j:1.0.2',
 		
-		'org.springframework:info.novatec.spring-context-support:3.2.16',
-		'org.springframework:info.novatec.spring-orm:3.2.16',
-		'org.springframework:info.novatec.spring-tx:3.2.16',
-		'org.springframework:info.novatec.spring-jdbc:3.2.16',
-		'org.springframework:info.novatec.spring-webmvc:3.2.16',
-		'org.springframework:info.novatec.spring-oxm:3.2.16',
+		'org.springframework:spring-context-support:3.2.16.RELEASE',
+		'org.springframework:spring-orm:3.2.16.RELEASE',
+		'org.springframework:spring-tx:3.2.16.RELEASE',
+		'org.springframework:spring-jdbc:3.2.16.RELEASE',
+		'org.springframework:spring-webmvc:3.2.16.RELEASE',
+		'org.springframework:spring-oxm:3.2.16.RELEASE',
 
 		'org.aspectj:aspectjweaver:1.7.4',
 		'org.aspectj:aspectjrt:1.7.4',
@@ -198,7 +193,7 @@ dependencies {
 		'org.slf4j:log4j-over-slf4j:1.7.21',
 		'ch.qos.logback:logback-core:1.1.7',
 		'ch.qos.logback:logback-classic:1.1.7',
-		'uk.org.lidalia:info.novatec.sysout-over-slf4j:1.0.2',
+		'uk.org.lidalia:sysout-over-slf4j:1.0.2',
 
 		'commons-fileupload:commons-fileupload:1.2.2',
 		'commons-io:commons-io:2.4',
@@ -212,15 +207,15 @@ dependencies {
 		
 		'com.google.code.gson:gson:2.3.1',
 
-		'jfree:info.novatec.jcommon:1.0.20',
-		'jfree:info.novatec.jfreechart:1.0.16',
-		'jfree:info.novatec.jfreechart-experimental:1.0.16',
-		'jfree:info.novatec.jfreechart-swt:1.0.16',
-		'jfree:info.novatec.swtgraphics2d:1.0.16',
+		'org.jfree:jcommon:1.0.20',
+		'org.jfree:jfreechart:1.0.16',
+		'org.jfree:jfreechart-experimental:1.0.16',
+		'org.jfree:jfreechart-swt:1.0.16',
+		'org.jfree:swtgraphics2d:1.0',
 
-		'org.apache.httpcomponents:info.novatec.httpclient:4.1.1',
-		'org.apache.httpcomponents:info.novatec.httpcore:4.1.1',
-		'org.apache.httpcomponents:info.novatec.httpmime:4.1.1'
+		'org.apache.httpcomponents:httpclient:4.1.1',
+		'org.apache.httpcomponents:httpcore:4.1.1',
+		'org.apache.httpcomponents:httpmime:4.1.1'
 	)
 
 	/** other */

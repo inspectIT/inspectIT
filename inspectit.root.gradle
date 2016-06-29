@@ -9,10 +9,12 @@ buildscript {
 		maven {
 			url "https://plugins.gradle.org/m2/"
 		}
+		jcenter()
 	}
 	dependencies {
 		classpath "net.saliman:gradle-cobertura-plugin:2.3.1"
 		classpath "gradle.plugin.me.champeau.gradle:jmh-gradle-plugin:0.3.0"
+		classpath 'org.standardout:bnd-platform:1.4.0'
 	}
 }
 
@@ -23,6 +25,7 @@ plugins {
 
 File propertiesFile = file("properties.gradle")
 File dependenciesFile = file("dependencies.gradle")
+File platformFile = file("platform.gradle")
 
 /** Apply base plug-in to the root project so that we enable tasks like clean */
 apply plugin: 'base'
@@ -61,15 +64,6 @@ task unzipEclipse (type: Copy){
 	destinationDir = outputDir
 }
 unzipEclipse.onlyIf { !file(eclipseDir).exists() }
-
-/**
- * Easy way to copy all dependencies that are needed by the inspectIT.target file
- */
-task copyTargetDependencies {
-	description = 'Copies all productive dependencies to the "prod/lib" folder for all plug-in projects. Run this task before setting the inspectIT.target in Eclipse IDE.'
-
-	dependsOn(':inspectit.shared.all:prodToLib', ':inspectit.shared.cs:prodToLib', ':inspectit.ui.rcp:prodToLib')
-}
 
 gradle.projectsEvaluated {
 
@@ -242,6 +236,9 @@ task cpdHtmlReport << {
 }
 cpdCheck.finalizedBy cpdHtmlReport
 
+/** Platform settings defined in separate file */
+apply from: file(platformFile.absolutePath)
+
 /**
  * All tasks that sub-projects can use.
  */
@@ -296,15 +293,6 @@ subprojects {
 		description = 'Runs all unit tests and all checks.'
 		group = 'Verification'
 		dependsOn(project.tasks.cobertura, check)
-	}
-
-	/**
-	 * Copies all productive dependencies to the lib/prod folder
-	 */
-	task prodToLib (type: Copy) {
-		description = 'Copies all productive dependencies to the "lib/prod" folder.'
-		into file("${libRoot}/prod") 
-		from project.configurations.compile
 	}
 
 	/**
