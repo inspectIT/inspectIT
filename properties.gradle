@@ -80,6 +80,9 @@ ext {
 	eclipseBaseDir = "${eclipseDir}/base/eclipse"
 	eclipsePlugins = "${eclipseBaseDir}/plugins"
 	
+	/** Update site */
+	updateSiteInternal = "${sharedBuildRoot}/updatesite"
+	
 	/** Installers */
 	// folder structure
 	installerBase = "${sharedResources}/installer"
