@@ -61,9 +61,13 @@ public interface InspectITImages {
 	String IMG_ITEM_NA_GREY = InspectITConstants.ICON_PATH_ECLIPSE + "remove_exc.gif";
 	String IMG_LIVE_MODE = InspectITConstants.ICON_PATH_ECLIPSE + "start_task.gif";
 	String IMG_METHOD_PUBLIC = InspectITConstants.ICON_PATH_ECLIPSE + "methpub_obj.gif";
+	String IMG_METHOD_PUBLIC_DISABLED = InspectITConstants.ICON_PATH_ECLIPSE + "methpub_obj_dis.gif";
 	String IMG_METHOD_PROTECTED = InspectITConstants.ICON_PATH_ECLIPSE + "methpro_obj.gif";
+	String IMG_METHOD_PROTECTED_DISABLED = InspectITConstants.ICON_PATH_ECLIPSE + "methpro_obj_dis.gif";
 	String IMG_METHOD_DEFAULT = InspectITConstants.ICON_PATH_ECLIPSE + "methdef_obj.gif";
+	String IMG_METHOD_DEFAULT_DISABLED = InspectITConstants.ICON_PATH_ECLIPSE + "methdef_obj_dis.gif";
 	String IMG_METHOD_PRIVATE = InspectITConstants.ICON_PATH_ECLIPSE + "methpri_obj.gif";
+	String IMG_METHOD_PRIVATE_DISABLED = InspectITConstants.ICON_PATH_ECLIPSE + "methpri_obj_dis.gif";
 	String IMG_NEXT = InspectITConstants.ICON_PATH_ECLIPSE + "next_nav.gif";
 	String IMG_OVERLAY_UP = InspectITConstants.ICON_PATH_ECLIPSE + "over_co.gif";
 	String IMG_PACKAGE = InspectITConstants.ICON_PATH_ECLIPSE + "package_obj.gif";

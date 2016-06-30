@@ -220,12 +220,6 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 	 * Creates columns for table.
 	 */
 	private void createColumns() {
-		TableViewerColumn selectedColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-		selectedColumn.getColumn().setResizable(false);
-		selectedColumn.getColumn().setWidth(40);
-		selectedColumn.getColumn().setText("Selected");
-		selectedColumn.getColumn().setToolTipText("If profile is included in the environment.");
-
 		TableViewerColumn profileNameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		profileNameColumn.getColumn().setResizable(true);
 		profileNameColumn.getColumn().setWidth(250);
@@ -310,9 +304,9 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 			if (element instanceof Profile) {
 				Profile profile = ((Profile) element);
 				switch (index) {
-				case 1:
+				case 0:
 					return new StyledString(profile.getName());
-				case 5:
+				case 4:
 					return TextFormatter.emptyStyledStringIfNull(TextFormatter.clearLineBreaks(profile.getDescription()));
 				default:
 					return EMPTY;
@@ -329,13 +323,13 @@ public class ProfileSelectionPart extends SectionPart implements IProfileChangeL
 			if (element instanceof Profile) {
 				Profile profile = ((Profile) element);
 				switch (index) {
-				case 1:
+				case 0:
 					return ImageFormatter.getProfileImage(profile);
-				case 2:
+				case 1:
 					return profile.isActive() ? InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK) : null; // NOPMD
-				case 3:
+				case 2:
 					return profile.isDefaultProfile() ? InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK) : null; // NOPMD
-				case 4:
+				case 3:
 					return ImageFormatter.getProfileDataImage(profile.getProfileData());
 				default:
 					return super.getColumnImage(element, index);
