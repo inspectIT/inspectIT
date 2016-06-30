@@ -452,25 +452,25 @@ public final class ImageFormatter {
 		if (methodSensorAssignment.isPublicModifier()) {
 			descriptors[0] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PUBLIC);
 		} else {
-			descriptors[0] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PUBLIC), SWT.IMAGE_DISABLE);
+			descriptors[0] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PUBLIC_DISABLED);
 		}
 
 		if (methodSensorAssignment.isProtectedModifier()) {
 			descriptors[1] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PROTECTED);
 		} else {
-			descriptors[1] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PROTECTED), SWT.IMAGE_DISABLE);
+			descriptors[1] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PROTECTED_DISABLED);
 		}
 
 		if (methodSensorAssignment.isDefaultModifier()) {
 			descriptors[2] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_DEFAULT);
 		} else {
-			descriptors[2] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_DEFAULT), SWT.IMAGE_DISABLE);
+			descriptors[2] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_DEFAULT_DISABLED);
 		}
 
 		if (methodSensorAssignment.isPrivateModifier()) {
 			descriptors[3] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PRIVATE);
 		} else {
-			descriptors[3] = ImageDescriptor.createWithFlags(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PRIVATE), SWT.IMAGE_DISABLE);
+			descriptors[3] = InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_METHOD_PRIVATE_DISABLED);
 		}
 
 		return getCombinedImage(resourceManager, SWT.HORIZONTAL, descriptors);

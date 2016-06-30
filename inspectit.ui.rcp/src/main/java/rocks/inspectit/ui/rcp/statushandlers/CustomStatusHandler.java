@@ -1,6 +1,8 @@
 package rocks.inspectit.ui.rcp.statushandlers;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -70,6 +72,10 @@ public class CustomStatusHandler extends WorkbenchErrorHandler {
 	 *            {@link StatusAdapter}
 	 */
 	protected void showErrorDialog(StatusAdapter statusAdapter) {
+		if (ignore(statusAdapter.getStatus())) {
+			return;
+		}
+
 		if (!PlatformUI.isWorkbenchRunning()) {
 			// we are shutting down, so just log
 			WorkbenchPlugin.log(statusAdapter.getStatus());
@@ -87,5 +93,33 @@ public class CustomStatusHandler extends WorkbenchErrorHandler {
 			dialog = new ThrowableDialog(null, message, statusAdapter.getStatus().getException());
 		}
 		dialog.open();
+	}
+
+	/**
+	 * If status should be ignored for showing the the error dialog.
+	 * <P>
+	 * Currently we ignore statuses with following exceptions:
+	 * <ul>
+	 * <li>NullPointerException on MacOSx in the
+	 * {@link org.eclipse.swt.widgets.Control#internal_new_GC(org.eclipse.swt.graphics.GCData)}
+	 * method as it's known SWT bug.
+	 * </ul>
+	 *
+	 * @param status
+	 *            status to check
+	 * @return true if this status should be ignored
+	 */
+	private boolean ignore(IStatus status) {
+		Throwable exception = status.getException();
+		if ((exception instanceof NullPointerException) && SystemUtils.IS_OS_MAC_OSX) {
+			StackTraceElement[] stackTrace = exception.getStackTrace();
+			if (ArrayUtils.isNotEmpty(stackTrace)) {
+				StackTraceElement topElement = stackTrace[0];
+				if ("org.eclipse.swt.widgets.Control".equals(topElement.getClassName()) && "internal_new_GC".equals(topElement.getMethodName())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

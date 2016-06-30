@@ -122,18 +122,6 @@ public class PlatformSensorSelectionPart extends SectionPart implements IPropert
 	 * Creates columns for table.
 	 */
 	private void createColumns() {
-		TableViewerColumn activeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-		activeColumn.getColumn().setResizable(false);
-		activeColumn.getColumn().setWidth(60);
-		activeColumn.getColumn().setText("Active");
-		activeColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return "";
-			}
-		});
-		activeColumn.getColumn().setToolTipText("If sensor is active then it is sending monitoring data.");
-
 		TableViewerColumn sensorNameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		sensorNameColumn.getColumn().setResizable(true);
 		sensorNameColumn.getColumn().setWidth(250);
@@ -150,6 +138,7 @@ public class PlatformSensorSelectionPart extends SectionPart implements IPropert
 			}
 		});
 		sensorNameColumn.getColumn().setToolTipText("Sensor type.");
+		sensorNameColumn.getColumn().setToolTipText("If sensor is selected then it will be active and collect monitoring data.");
 	}
 
 	/**

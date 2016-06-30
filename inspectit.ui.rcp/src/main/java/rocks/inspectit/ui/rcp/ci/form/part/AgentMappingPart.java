@@ -350,7 +350,7 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		ipColumn.getColumn().setWidth(150);
 		ipColumn.getColumn().setText("IP Address");
 		ipColumn.getColumn()
-				.setToolTipText("IP address of the agent. Use wild-card '*' for matching several IPs with one mapping. For example, 192.168.* will match all IP addresses in starting with 192.168.");
+		.setToolTipText("IP address of the agent. Use wild-card '*' for matching several IPs with one mapping. For example, 192.168.* will match all IP addresses in starting with 192.168.");
 		ipColumn.getColumn().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_INFORMATION));
 
 		TableViewerColumn environmentColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -415,6 +415,8 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 				AgentMapping mapping = (AgentMapping) element;
 
 				switch (index) {
+				case 0:
+					return mapping.isActive() ? new StyledString("Yes") : new StyledString("No");
 				case 1:
 					return TextFormatter.emptyStyledStringIfNull(mapping.getAgentName());
 				case 2:

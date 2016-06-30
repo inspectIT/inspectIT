@@ -226,7 +226,6 @@ def releaseSingle(os, arch, distName) {
 		into('inspectit'){
 			from extResourcesDir
 			include('logging-config.xml')
-			include('ci/schema/*.xsd')
 			includeEmptyDirs = false
 		}
 		into('inspectit/jre'){
