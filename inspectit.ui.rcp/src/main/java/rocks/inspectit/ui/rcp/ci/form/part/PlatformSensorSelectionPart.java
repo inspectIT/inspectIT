@@ -25,6 +25,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.AbstractPlatformSensorConfig;
+import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
@@ -91,7 +93,7 @@ public class PlatformSensorSelectionPart extends SectionPart implements IPropert
 	 */
 	private void createClient(Section section, FormToolkit toolkit) {
 		Composite mainComposite = toolkit.createComposite(section);
-		mainComposite.setLayout(new GridLayout(1, true));
+		mainComposite.setLayout(new GridLayout(2, false));
 		section.setClient(mainComposite);
 
 		Table table = toolkit.createTable(mainComposite, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.CHECK);
@@ -116,24 +118,17 @@ public class PlatformSensorSelectionPart extends SectionPart implements IPropert
 				}
 			}
 		});
+
+		Label label = toolkit.createLabel(mainComposite, "");
+		label.setToolTipText("If sensor is selected then it will be active and collect monitoring data.");
+		label.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_INFORMATION));
+		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 	}
 
 	/**
 	 * Creates columns for table.
 	 */
 	private void createColumns() {
-		TableViewerColumn activeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-		activeColumn.getColumn().setResizable(false);
-		activeColumn.getColumn().setWidth(60);
-		activeColumn.getColumn().setText("Active");
-		activeColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return "";
-			}
-		});
-		activeColumn.getColumn().setToolTipText("If sensor is active then it is sending monitoring data.");
-
 		TableViewerColumn sensorNameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		sensorNameColumn.getColumn().setResizable(true);
 		sensorNameColumn.getColumn().setWidth(250);
