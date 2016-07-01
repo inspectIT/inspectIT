@@ -119,10 +119,10 @@ task schemagenCi {
  * @param excludes Any excludes patterns to pass to the ant task.
  */
 def schemagen(sourceDir, outputDir, fileName, excludes) {
-	return tasks.create(name: "schemagen-${outputDir}${fileName}") {
+	return tasks.create(name: "schemagen-${outputDir}/${fileName}") {
 		inputs.sourceDir(sourceDir)
 		outputs.file file("${outputDir}/${fileName}")
-
+		
 		doLast {
 			file(outputDir).mkdirs()
 			ant.taskdef(name: 'schemagen', classname: 'com.sun.tools.jxc.SchemaGenTask', classpath: configurations.xjc.asPath)
@@ -134,7 +134,8 @@ def schemagen(sourceDir, outputDir, fileName, excludes) {
 				classpath: sourceSets.main.runtimeClasspath.asPath,
 				debug: 'true'
 			)
-
+			
+			file("${outputDir}/${fileName}").delete()
 			file("${outputDir}/schema1.xsd").renameTo(file("${outputDir}/${fileName}"))
 		}
 	}
