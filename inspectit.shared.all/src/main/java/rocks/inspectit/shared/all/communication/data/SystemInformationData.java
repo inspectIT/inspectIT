@@ -13,7 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 
 /**
  * Here are the static informations of a system. These informations don't change at runtime.
@@ -24,7 +24,7 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
 @Entity
 @NamedQueries({ @NamedQuery(name = SystemInformationData.FIND_ALL_FOR_PLATFORM_ID, query = "SELECT s FROM SystemInformationData s WHERE s.platformIdent=:platformIdent"),
 		@NamedQuery(name = SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS, query = "SELECT s FROM SystemInformationData s WHERE s.id IN (SELECT MAX(sd.id) FROM SystemInformationData sd WHERE sd.platformIdent IN (:platformIdents) GROUP BY sd.platformIdent)") })
-public class SystemInformationData extends SystemSensorData {
+public class SystemInformationData extends PlatformSensorData {
 
 	/**
 	 * The serial version uid for this class.

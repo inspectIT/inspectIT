@@ -13,7 +13,7 @@ import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 import rocks.inspectit.ui.rcp.util.SafeExecutor;
 
 /**
- * This class represents the textual view of the {@link ClassLoadingInformation} sensor-type.
+ * This class represents the textual view of the {@link ClassLoadingSensor} sensor-type.
  *
  * @author Eduard Tudenhoefner
  *

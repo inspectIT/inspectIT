@@ -30,7 +30,7 @@ import rocks.inspectit.agent.java.sensor.platform.IPlatformSensor;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -174,7 +174,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		sendingThread = new SendingThread();
 		sendingThread.start();
 
-		sensorRefresher = new SensorRefresher();
+		sensorRefresher = new SensorRefresher(this);
 		sensorRefresher.start();
 
 		Runtime.getRuntime().addShutdownHook(new ShutdownHookSender());
@@ -267,16 +267,16 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData) {
-		sensorDataObjects.put(Long.toString(sensorTypeIdent), systemSensorData);
+	public void addPlatformSensorData(long sensorTypeIdent, PlatformSensorData platformSensorData) {
+		sensorDataObjects.put(Long.toString(sensorTypeIdent), platformSensorData);
 		notifyListListeners();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public SystemSensorData getPlatformSensorData(long sensorTypeIdent) {
-		return (SystemSensorData) sensorDataObjects.get(Long.toString(sensorTypeIdent));
+	public PlatformSensorData getPlatformSensorData(long sensorTypeIdent) {
+		return (PlatformSensorData) sensorDataObjects.get(Long.toString(sensorTypeIdent));
 	}
 
 	/**
@@ -410,16 +410,33 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	private class SensorRefresher extends Thread {
 
 		/**
-		 * Creates a new instance of the <code>PlatformSensorRefresher</code> as a daemon thread.
+		 * Counts the number of iterations from the start. Used to distinguish between reset, gather
+		 * and get phase.
 		 */
-		public SensorRefresher() {
-			setName("inspectit-platform-sensor-refresher-thread");
-			setDaemon(true);
-		}
+		private long count = 0;
+
+		/** Data will be stored to the coreService before it is send to the CMR. */
+		private final CoreService coreService;
 
 		/**
-		 * {@inheritDoc}
+		 * Defines how many iterations are gathered (and aggregated within the specific sensors)
+		 * before the data is retrieved from the sensors.
 		 */
+		private static final int DATA_COLLECT_ITERATION = 5;
+
+		/**
+		 * Creates a new instance of the <code>PlatformSensorRefresher</code> as a daemon thread.
+		 *
+		 * @param coreService
+		 *            {@link CoreService}.
+		 */
+		SensorRefresher(CoreService coreService) {
+			setName("inspectit-platform-sensor-refresher-thread");
+			setDaemon(true);
+			this.coreService = coreService;
+		}
+
+		/** {@inheritDoc} */
 		@Override
 		public void run() {
 			Thread thisThread = Thread.currentThread();
@@ -435,10 +452,28 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 
 				// iterate the platformSensors and update the information
 				if (CollectionUtils.isNotEmpty(platformSensors)) {
-					for (IPlatformSensor platformSensor : platformSensors) {
-						if (platformSensor.automaticUpdate()) {
-							platformSensor.update(CoreService.this);
+					count++;
+
+					if (count == 1) {
+						for (IPlatformSensor platformSensor : platformSensors) {
+							platformSensor.reset();
 						}
+					}
+
+					for (IPlatformSensor platformSensor : platformSensors) {
+						platformSensor.gather();
+					}
+
+					if (count == DATA_COLLECT_ITERATION) {
+						for (IPlatformSensor platformSensor : platformSensors) {
+							PlatformSensorData platformSensorData = platformSensor.get();
+
+							if (null != platformSensorData) {
+								coreService.addPlatformSensorData(platformSensorData.getSensorTypeIdent(), platformSensorData);
+							}
+						}
+
+						count = 0;
 					}
 				}
 

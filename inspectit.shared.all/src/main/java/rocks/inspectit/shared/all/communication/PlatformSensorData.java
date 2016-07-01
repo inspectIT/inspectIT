@@ -5,14 +5,14 @@ import java.sql.Timestamp;
 import javax.persistence.Entity;
 
 /**
- * The {@link SystemSensorData} class is extended by all value & data objects which are used to
+ * The {@link PlatformSensorData} class is extended by all value & data objects which are used to
  * gather system/platform information.
  *
  * @author Patrice Bouillet
  *
  */
 @Entity
-public abstract class SystemSensorData extends DefaultData {
+public abstract class PlatformSensorData extends DefaultData {
 
 	/**
 	 * The serial version UID.
@@ -22,7 +22,7 @@ public abstract class SystemSensorData extends DefaultData {
 	/**
 	 * Default no-args constructor.
 	 */
-	public SystemSensorData() {
+	public PlatformSensorData() {
 	}
 
 	/**
@@ -35,7 +35,7 @@ public abstract class SystemSensorData extends DefaultData {
 	 * @param sensorTypeIdent
 	 *            The unique identifier of the sensor type.
 	 */
-	public SystemSensorData(Timestamp timeStamp, long platformIdent, long sensorTypeIdent) {
+	public PlatformSensorData(Timestamp timeStamp, long platformIdent, long sensorTypeIdent) {
 		super(timeStamp, platformIdent, sensorTypeIdent);
 	}
 

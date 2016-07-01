@@ -80,7 +80,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * The map containing the weight of the {@link XYPlot}s.
 	 */
-	private Map<XYPlot, Integer> weights = new HashMap<>();
+	private final Map<XYPlot, Integer> weights = new HashMap<XYPlot, Integer>();
 
 	/**
 	 * The {@link YIntervalSeriesImproved} for heap memory.
@@ -122,7 +122,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 	/**
 	 * {@link IAggregator}.
 	 */
-	private IAggregator<MemoryInformationData> aggregator = new MemoryInformationDataAggregator();
+	private final IAggregator<MemoryInformationData> aggregator = new MemoryInformationDataAggregator();
 
 	/**
 	 * {@inheritDoc}
@@ -151,7 +151,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 		upperPlot = initializeUpperPlot();
 		lowerPlot = initializeLowerPlot();
 
-		List<XYPlot> plots = new ArrayList<>(2);
+		List<XYPlot> plots = new ArrayList<XYPlot>(2);
 		plots.add(upperPlot);
 		plots.add(lowerPlot);
 		weights.put(upperPlot, WEIGHT_UPPER_PLOT);
@@ -190,10 +190,10 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 			// if the max heap size is not available set the range upper level to the double of
 			// initial heap size, if this is also unavailable then set it to 728MB
 			double maxHeapUpperRange;
-			if (systemData.getMaxHeapMemorySize() != -1) {
+			if (systemData.getMaxHeapMemorySize() > 0) {
 				maxHeapUpperRange = systemData.getMaxHeapMemorySize() / 1024.0d;
-			} else if (systemData.getInitHeapMemorySize() != -1) {
-				maxHeapUpperRange = (systemData.getInitHeapMemorySize() * 2) / 1024.0d;
+			} else if (systemData.getInitHeapMemorySize() > 0) {
+				maxHeapUpperRange = systemData.getInitHeapMemorySize() * 2 / 1024.0d;
 			} else {
 				maxHeapUpperRange = 728 * 1024 * 1024;
 			}
@@ -266,7 +266,7 @@ public class DefaultMemoryPlotController extends AbstractPlotController {
 			if (systemData.getMaxNonHeapMemorySize() != -1) {
 				maxNonHeapUpperRange = systemData.getMaxNonHeapMemorySize() / 1024.0d;
 			} else if (systemData.getInitNonHeapMemorySize() != -1) {
-				maxNonHeapUpperRange = (systemData.getInitNonHeapMemorySize() * 2) / 1024.0d;
+				maxNonHeapUpperRange = systemData.getInitNonHeapMemorySize() * 2 / 1024.0d;
 			} else {
 				maxNonHeapUpperRange = 128 * 1024 * 1024;
 			}

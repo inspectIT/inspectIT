@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.IAggregatedData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 
 /**
  * This class provide dynamic informations about the underlying operating system such as cpu usage
@@ -19,7 +19,7 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  *
  */
 @Entity
-public class CpuInformationData extends SystemSensorData implements IAggregatedData<CpuInformationData> {
+public class CpuInformationData extends PlatformSensorData implements IAggregatedData<CpuInformationData> {
 
 	/**
 	 * The serial version uid for this class.

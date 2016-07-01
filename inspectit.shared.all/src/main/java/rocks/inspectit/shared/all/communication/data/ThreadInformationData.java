@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.IAggregatedData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 
 /**
  * This class provide dynamic informations about the threads running/started in the virtual machine.
@@ -15,64 +15,42 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  * aggregated instances since they are not related to any data and are useless.
  *
  * @author Eduard Tudenhoefner
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
 @Entity
-public class ThreadInformationData extends SystemSensorData implements IAggregatedData<ThreadInformationData> {
+public class ThreadInformationData extends PlatformSensorData implements IAggregatedData<ThreadInformationData> {
 
-	/**
-	 * The serial version uid for this class.
-	 */
+	/** The serial version uid for this class. */
 	private static final long serialVersionUID = -4782628082344900101L;
 
-	/**
-	 * The count.
-	 */
+	/** The count. */
 	private int count = 0;
 
-	/**
-	 * The minimum number of live daemon threads.
-	 */
+	/** The minimum number of live daemon threads. */
 	private int minDaemonThreadCount = Integer.MAX_VALUE;
 
-	/**
-	 * The maximum number of live daemon threads.
-	 */
+	/** The maximum number of live daemon threads. */
 	private int maxDaemonThreadCount = 0;
 
-	/**
-	 * The total number of live daemon threads.
-	 */
+	/** The total number of live daemon threads. */
 	private int totalDaemonThreadCount = 0;
 
-	/**
-	 * The minimum peak live thread count since the virtual machine has started.
-	 */
+	/** The minimum peak live thread count since the virtual machine has started. */
 	private int minPeakThreadCount = Integer.MAX_VALUE;
 
-	/**
-	 * The maximum peak live thread count since the virtual machine has started.
-	 */
+	/** The maximum peak live thread count since the virtual machine has started. */
 	private int maxPeakThreadCount = 0;
 
-	/**
-	 * The total peak live thread count since the virtual machine has started.
-	 */
+	/** The total peak live thread count since the virtual machine has started. */
 	private int totalPeakThreadCount = 0;
 
-	/**
-	 * The minimum number of live threads including both daemon and non-daemon threads.
-	 */
+	/** The minimum number of live threads including both daemon and non-daemon threads. */
 	private int minThreadCount = Integer.MAX_VALUE;
 
-	/**
-	 * The maximum number of live threads including both daemon and non-daemon threads.
-	 */
+	/** The maximum number of live threads including both daemon and non-daemon threads. */
 	private int maxThreadCount = 0;
 
-	/**
-	 * The total number of live threads including both daemon and non-daemon threads.
-	 */
+	/** The total number of live threads including both daemon and non-daemon threads. */
 	private int totalThreadCount = 0;
 
 	/**
@@ -92,9 +70,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 	 */
 	private long totalTotalStartedThreadCount = 0;
 
-	/**
-	 * Default no-args constructor.
-	 */
+	/** Default no-args constructor. */
 	public ThreadInformationData() {
 	}
 
@@ -445,19 +421,19 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + count;
-		result = (prime * result) + maxDaemonThreadCount;
-		result = (prime * result) + maxPeakThreadCount;
-		result = (prime * result) + maxThreadCount;
-		result = (prime * result) + (int) (maxTotalStartedThreadCount ^ (maxTotalStartedThreadCount >>> 32));
-		result = (prime * result) + minDaemonThreadCount;
-		result = (prime * result) + minPeakThreadCount;
-		result = (prime * result) + minThreadCount;
-		result = (prime * result) + (int) (minTotalStartedThreadCount ^ (minTotalStartedThreadCount >>> 32));
-		result = (prime * result) + totalDaemonThreadCount;
-		result = (prime * result) + totalPeakThreadCount;
-		result = (prime * result) + totalThreadCount;
-		result = (prime * result) + (int) (totalTotalStartedThreadCount ^ (totalTotalStartedThreadCount >>> 32));
+		result = prime * result + count;
+		result = prime * result + maxDaemonThreadCount;
+		result = prime * result + maxPeakThreadCount;
+		result = prime * result + maxThreadCount;
+		result = prime * result + (int) (maxTotalStartedThreadCount ^ (maxTotalStartedThreadCount >>> 32));
+		result = prime * result + minDaemonThreadCount;
+		result = prime * result + minPeakThreadCount;
+		result = prime * result + minThreadCount;
+		result = prime * result + (int) (minTotalStartedThreadCount ^ (minTotalStartedThreadCount >>> 32));
+		result = prime * result + totalDaemonThreadCount;
+		result = prime * result + totalPeakThreadCount;
+		result = prime * result + totalThreadCount;
+		result = prime * result + (int) (totalTotalStartedThreadCount ^ (totalTotalStartedThreadCount >>> 32));
 		return result;
 	}
 

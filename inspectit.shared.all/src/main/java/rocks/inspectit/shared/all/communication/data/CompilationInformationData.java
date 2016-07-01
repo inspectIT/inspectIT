@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import javax.persistence.Entity;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 
 /**
  * This class provide dynamic informations about the compilation system of the virtual machine.
@@ -14,7 +14,7 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  *
  */
 @Entity
-public class CompilationInformationData extends SystemSensorData {
+public class CompilationInformationData extends PlatformSensorData {
 
 	/**
 	 * The serial version uid for this class.

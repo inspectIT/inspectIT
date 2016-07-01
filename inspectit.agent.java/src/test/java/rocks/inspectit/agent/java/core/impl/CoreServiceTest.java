@@ -33,7 +33,7 @@ import rocks.inspectit.agent.java.sensor.method.timer.PlainTimerStorage;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 import rocks.inspectit.shared.all.communication.data.CpuInformationData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
@@ -140,7 +140,7 @@ public class CoreServiceTest extends TestBase {
 		long sensorTypeId = 1;
 		CpuInformationData cpuInformationData = new CpuInformationData();
 		when(bufferStrategy.hasNext()).thenReturn(true).thenReturn(false);
-		List<SystemSensorData> dataList = new ArrayList<SystemSensorData>();
+		List<PlatformSensorData> dataList = new ArrayList<PlatformSensorData>();
 		dataList.add(cpuInformationData);
 		when(bufferStrategy.next()).thenReturn(dataList);
 
@@ -246,9 +246,9 @@ public class CoreServiceTest extends TestBase {
 
 	@Test
 	public void verifyListListenerPlatformData() {
-		ListListener<SystemSensorData> listener = mock(ListListener.class);
+		ListListener<CpuInformationData> listener = mock(ListListener.class);
 		CpuInformationData cpuInformationData = new CpuInformationData();
-		List<SystemSensorData> dataList = new ArrayList<SystemSensorData>();
+		List<CpuInformationData> dataList = new ArrayList<CpuInformationData>();
 		dataList.add(cpuInformationData);
 
 		coreService.addListListener(listener);
@@ -334,8 +334,8 @@ public class CoreServiceTest extends TestBase {
 
 		coreService.addPlatformSensorData(sensorTypeId, cpuInformationData);
 
-		SystemSensorData systemSensorData = coreService.getPlatformSensorData(sensorTypeId);
-		assertThat(systemSensorData, is(equalTo(((SystemSensorData) cpuInformationData))));
+		PlatformSensorData platformSensorData = coreService.getPlatformSensorData(sensorTypeId);
+		assertThat(platformSensorData, is(equalTo(((PlatformSensorData) cpuInformationData))));
 	}
 
 	@Test

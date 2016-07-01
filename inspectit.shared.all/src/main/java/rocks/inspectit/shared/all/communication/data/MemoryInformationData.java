@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.IAggregatedData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 
 /**
  * This class provide dynamic informations about the memory of the underlying operating system and
@@ -19,7 +19,7 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  *
  */
 @Entity
-public class MemoryInformationData extends SystemSensorData implements IAggregatedData<MemoryInformationData> {
+public class MemoryInformationData extends PlatformSensorData implements IAggregatedData<MemoryInformationData> {
 
 	/**
 	 * The serial version uid for this class.

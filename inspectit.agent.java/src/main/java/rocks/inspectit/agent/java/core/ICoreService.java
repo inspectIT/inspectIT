@@ -1,9 +1,10 @@
 package rocks.inspectit.agent.java.core;
 
 import rocks.inspectit.shared.all.communication.MethodSensorData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 
 /**
  * Interface definition for the core service. The core service is the central point of the Agent
@@ -59,10 +60,10 @@ public interface ICoreService {
 	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type.
-	 * @param systemSensorData
+	 * @param platformSensorData
 	 *            The system sensor data.
 	 */
-	void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData);
+	void addPlatformSensorData(long sensorTypeIdent, PlatformSensorData platformSensorData);
 
 	/**
 	 * Adds a new data object from the exception sensor to the value storage.
@@ -114,9 +115,9 @@ public interface ICoreService {
 	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type to retrieve the data object.
-	 * @return Returns a {@link SystemSensorData}
+	 * @return Returns a {@link SystemInformationData}
 	 */
-	SystemSensorData getPlatformSensorData(long sensorTypeIdent);
+	PlatformSensorData getPlatformSensorData(long sensorTypeIdent);
 
 	/**
 	 * Returns a saved data object for further processing.

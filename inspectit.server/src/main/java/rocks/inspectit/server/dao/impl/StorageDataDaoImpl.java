@@ -27,7 +27,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import rocks.inspectit.server.dao.StorageDataDao;
 import rocks.inspectit.server.util.JpaUtil;
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
@@ -74,7 +74,7 @@ public class StorageDataDaoImpl implements StorageDataDao {
 	/**
 	 * Transaction template to use to do init work.
 	 */
-	private TransactionTemplate tt;
+	private final TransactionTemplate tt;
 
 	/**
 	 * Default constructor.
@@ -220,10 +220,10 @@ public class StorageDataDaoImpl implements StorageDataDao {
 			results.addAll(bufferData);
 		}
 
-		// then load all System sensor data from DB
+		// then load all Platform sensor data from DB
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<SystemSensorData> criteria = builder.createQuery(SystemSensorData.class);
-		Root<? extends SystemSensorData> root = criteria.from(SystemSensorData.class);
+		CriteriaQuery<PlatformSensorData> criteria = builder.createQuery(PlatformSensorData.class);
+		Root<? extends PlatformSensorData> root = criteria.from(PlatformSensorData.class);
 
 		Predicate platformIdPredicate = builder.equal(root.get("platformIdent"), platformId);
 		Predicate timestampPredicate = null;
@@ -236,7 +236,7 @@ public class StorageDataDaoImpl implements StorageDataDao {
 		} else {
 			criteria.where(platformIdPredicate);
 		}
-		List<SystemSensorData> sensorDatas = entityManager.createQuery(criteria).getResultList();
+		List<PlatformSensorData> sensorDatas = entityManager.createQuery(criteria).getResultList();
 
 		// combine results
 		if (CollectionUtils.isNotEmpty(sensorDatas)) {

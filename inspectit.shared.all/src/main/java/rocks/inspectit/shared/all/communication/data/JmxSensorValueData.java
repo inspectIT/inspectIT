@@ -13,7 +13,7 @@ import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.all.communication.IAggregatedData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 
 /**
  * This class is needed to store the values of a single attribute.
@@ -23,7 +23,7 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  *
  */
 @Entity
-public class JmxSensorValueData extends SystemSensorData implements IAggregatedData<JmxSensorValueData> {
+public class JmxSensorValueData extends PlatformSensorData implements IAggregatedData<JmxSensorValueData> {
 
 	/**
 	 * Maximum {@link #value} length.

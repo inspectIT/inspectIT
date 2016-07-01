@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.IAggregatedData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 
 /**
  * This class provide dynamic informations about the class loading system of the virtual machine.
@@ -18,31 +18,21 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  *
  */
 @Entity
-public class ClassLoadingInformationData extends SystemSensorData implements IAggregatedData<ClassLoadingInformationData> {
+public class ClassLoadingInformationData extends PlatformSensorData implements IAggregatedData<ClassLoadingInformationData> {
 
-	/**
-	 * The serial version uid for this class.
-	 */
+	/** The serial version uid for this class. */
 	private static final long serialVersionUID = 3670151927025437963L;
 
-	/**
-	 * The count.
-	 */
+	/** The count. */
 	private int count = 0;
 
-	/**
-	 * The minimum number of loaded classes in the virtual machine.
-	 */
+	/** The minimum number of loaded classes in the virtual machine. */
 	private int minLoadedClassCount = Integer.MAX_VALUE;
 
-	/**
-	 * The maximum number of loaded classes in the virtual machine.
-	 */
+	/** The maximum number of loaded classes in the virtual machine. */
 	private int maxLoadedClassCount = 0;
 
-	/**
-	 * The total number of loaded classes in the virtual machine.
-	 */
+	/** The total number of loaded classes in the virtual machine. */
 	private int totalLoadedClassCount = 0;
 
 	/**
@@ -60,24 +50,16 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 	 */
 	private long totalTotalLoadedClassCount = 0;
 
-	/**
-	 * The minimum number of unloaded classes since the virtual machine started.
-	 */
+	/** The minimum number of unloaded classes since the virtual machine started. */
 	private long minUnloadedClassCount = Long.MAX_VALUE;
 
-	/**
-	 * The maximum number of unloaded classes since the virtual machine started.
-	 */
+	/** The maximum number of unloaded classes since the virtual machine started. */
 	private long maxUnloadedClassCount = 0;
 
-	/**
-	 * The total number of unloaded classes since the virtual machine started.
-	 */
+	/** The total number of unloaded classes since the virtual machine started. */
 	private long totalUnloadedClassCount = 0;
 
-	/**
-	 * Default no-args constructor.
-	 */
+	/** Default no-args constructor. */
 	public ClassLoadingInformationData() {
 	}
 
@@ -114,9 +96,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 		this.count = count;
 	}
 
-	/**
-	 * increases the count by 1.
-	 */
+	/** increases the count by 1. */
 	public void incrementCount() {
 		this.count++;
 	}
@@ -344,36 +324,30 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 		totalUnloadedClassCount += other.maxUnloadedClassCount;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	public ClassLoadingInformationData getData() {
 		return this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + count;
-		result = (prime * result) + maxLoadedClassCount;
-		result = (prime * result) + (int) (maxTotalLoadedClassCount ^ (maxTotalLoadedClassCount >>> 32));
-		result = (prime * result) + (int) (maxUnloadedClassCount ^ (maxUnloadedClassCount >>> 32));
-		result = (prime * result) + minLoadedClassCount;
-		result = (prime * result) + (int) (minTotalLoadedClassCount ^ (minTotalLoadedClassCount >>> 32));
-		result = (prime * result) + (int) (minUnloadedClassCount ^ (minUnloadedClassCount >>> 32));
-		result = (prime * result) + totalLoadedClassCount;
-		result = (prime * result) + (int) (totalTotalLoadedClassCount ^ (totalTotalLoadedClassCount >>> 32));
-		result = (prime * result) + (int) (totalUnloadedClassCount ^ (totalUnloadedClassCount >>> 32));
+		result = prime * result + count;
+		result = prime * result + maxLoadedClassCount;
+		result = prime * result + (int) (maxTotalLoadedClassCount ^ (maxTotalLoadedClassCount >>> 32));
+		result = prime * result + (int) (maxUnloadedClassCount ^ (maxUnloadedClassCount >>> 32));
+		result = prime * result + minLoadedClassCount;
+		result = prime * result + (int) (minTotalLoadedClassCount ^ (minTotalLoadedClassCount >>> 32));
+		result = prime * result + (int) (minUnloadedClassCount ^ (minUnloadedClassCount >>> 32));
+		result = prime * result + totalLoadedClassCount;
+		result = prime * result + (int) (totalTotalLoadedClassCount ^ (totalTotalLoadedClassCount >>> 32));
+		result = prime * result + (int) (totalUnloadedClassCount ^ (totalUnloadedClassCount >>> 32));
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -419,9 +393,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);

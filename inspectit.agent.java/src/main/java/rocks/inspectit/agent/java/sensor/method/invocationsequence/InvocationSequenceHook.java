@@ -32,7 +32,7 @@ import rocks.inspectit.agent.java.util.ThreadLocalStack;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.PlatformSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
@@ -528,8 +528,8 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData) {
-		saveDataObject(systemSensorData.finalizeData());
+	public void addPlatformSensorData(long sensorTypeIdent, PlatformSensorData platformSensorData) {
+		saveDataObject(platformSensorData.finalizeData());
 	}
 
 	/**
@@ -571,7 +571,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
-	public SystemSensorData getPlatformSensorData(long sensorTypeIdent) {
+	public PlatformSensorData getPlatformSensorData(long sensorTypeIdent) {
 		return null;
 	}
 
