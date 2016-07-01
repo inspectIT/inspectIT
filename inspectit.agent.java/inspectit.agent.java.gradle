@@ -51,6 +51,8 @@ tasks.withType(JavaCompile) { t ->
 		targetCompatibility = '1.5'
 
 		options.bootClasspath = configurations.java15rt.asPath
+		// Used to suppress the warning that source value 1.5 will be obsolete in the future.
+		options.compilerArgs << '-Xlint:-options'
 	}
 }
 
