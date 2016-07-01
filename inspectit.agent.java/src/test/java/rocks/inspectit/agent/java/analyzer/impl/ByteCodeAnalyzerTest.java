@@ -28,7 +28,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -47,7 +52,6 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
-import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
@@ -98,13 +102,10 @@ public class ByteCodeAnalyzerTest extends TestBase {
 	ClassHashHelper classHashHelper;
 
 	@Mock
-	ICoreService coreService;
-
-	@Mock
 	InstrumenterFactory instrumenterFactory;
 
 	@Mock
-	ScheduledExecutorService executorService;
+	ExecutorService executorService;
 
 	@Mock
 	MethodVisitor methodVisitor;
@@ -123,13 +124,38 @@ public class ByteCodeAnalyzerTest extends TestBase {
 	@BeforeMethod
 	public void setup() throws IdNotAvailableException, ServerUnavailableException {
 		when(platformManager.getPlatformId()).thenReturn(platformId);
-		when(coreService.getExecutorService()).thenReturn(executorService);
 		doAnswer(new Answer<Void>() {
 			public Void answer(InvocationOnMock invocation) throws Throwable {
 				((Runnable) invocation.getArguments()[0]).run();
 				return null;
 			}
 		}).when(executorService).submit(Matchers.<Runnable> any());
+		doAnswer(new Answer<Object>() {
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				final Object result = ((Callable<?>) invocation.getArguments()[0]).call();
+				return new Future<Object>() {
+					public boolean cancel(boolean mayInterruptIfRunning) {
+						return false;
+					}
+
+					public boolean isCancelled() {
+						return false;
+					}
+
+					public boolean isDone() {
+						return false;
+					}
+
+					public Object get() throws InterruptedException, ExecutionException {
+						return result;
+					}
+
+					public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+						return result;
+					}
+				};
+			}
+		}).when(executorService).submit(Matchers.<Callable> any());
 
 		// method sensor and config
 		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
@@ -188,7 +214,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as instrumentation happened, we get a not null object
 			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-			verify(connection, times(2)).isConnected();
+			verify(connection, times(3)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
 			verify(connection, times(1)).instrumentationApplied(captor.capture());
@@ -210,8 +236,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
-			verify(coreService, times(1)).getExecutorService();
-			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, coreService);
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 
 		@Test
@@ -250,7 +275,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as instrumentation happened, we get a not null object
 			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-			verify(connection, times(2)).isConnected();
+			verify(connection, times(3)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
 			verify(connection, times(1)).instrumentationApplied(captor.capture());
@@ -272,8 +297,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
-			verify(coreService, times(1)).getExecutorService();
-			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, coreService);
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 
 		@Test
@@ -302,7 +326,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as instrumentation happened, we get a not null object
 			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-			verify(connection, times(1)).isConnected();
+			verify(connection, times(2)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
@@ -310,7 +334,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
 			verifyNoMoreInteractions(connection, classHashHelper);
-			verifyZeroInteractions(hookDispatcherMapper, coreService);
+			verifyZeroInteractions(hookDispatcherMapper);
 		}
 
 		@Test
@@ -330,7 +354,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(instrumentedByteCode, is(nullValue()));
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
-			verifyZeroInteractions(platformManager, connection, hookDispatcherMapper, coreService);
+			verifyZeroInteractions(platformManager, connection, hookDispatcherMapper);
 			// but we asked for the instrumentation result
 			verify(classHashHelper, times(1)).getInstrumentationDefinition(fqnCaptor.getValue());
 			verifyNoMoreInteractions(classHashHelper);
@@ -392,8 +416,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(connection, times(1)).instrumentationApplied(captor.capture());
 			assertThat(captor.getValue().size(), is(1));
 			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
-			verify(coreService, times(1)).getExecutorService();
-			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, platformManager, coreService);
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, platformManager);
 		}
 
 		@Test
@@ -415,14 +438,14 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as no instrumentation happened, we get a null object
 			assertThat(instrumentedByteCode, is(nullValue()));
 
-			verify(connection, times(1)).isConnected();
+			verify(connection, times(2)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
 			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), null);
-			verifyZeroInteractions(hookDispatcherMapper, coreService);
+			verifyZeroInteractions(hookDispatcherMapper);
 			verifyNoMoreInteractions(connection, classHashHelper);
 		}
 
@@ -445,7 +468,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(connection, times(1)).isConnected();
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
-			verifyZeroInteractions(hookDispatcherMapper, coreService);
+			verifyZeroInteractions(hookDispatcherMapper);
 			verifyNoMoreInteractions(connection, classHashHelper);
 		}
 
@@ -478,7 +501,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as no instrumentation happened, we get a null object
 			assertThat(instrumentedByteCode, is(nullValue()));
 
-			verify(connection, times(1)).isConnected();
+			verify(connection, times(2)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
@@ -486,7 +509,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
 			verifyNoMoreInteractions(connection, classHashHelper);
-			verifyZeroInteractions(hookDispatcherMapper, coreService);
+			verifyZeroInteractions(hookDispatcherMapper);
 		}
 
 		@Test
@@ -497,7 +520,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 
 			assertThat(instrumentedByteCode, is(nullValue()));
 
-			verifyZeroInteractions(hookDispatcherMapper, coreService, connection, classHashHelper, configurationStorage, platformManager);
+			verifyZeroInteractions(hookDispatcherMapper, connection, classHashHelper, configurationStorage, platformManager);
 		}
 
 		@Test
@@ -537,7 +560,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as instrumentation happened, we get a not null object
 			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-			verify(connection, times(3)).isConnected();
+			verify(connection, times(5)).isConnected();
 			verify(connection, times(1)).analyze(eq(platformId.longValue()), anyString(), eq(classCaptor.getAllValues().get(0)));
 			verify(connection, times(1)).analyze(eq(platformId.longValue()), anyString(), eq(classCaptor.getAllValues().get(1)));
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
@@ -571,8 +594,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
-			verify(coreService, times(1)).getExecutorService();
-			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, coreService);
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 
 	}

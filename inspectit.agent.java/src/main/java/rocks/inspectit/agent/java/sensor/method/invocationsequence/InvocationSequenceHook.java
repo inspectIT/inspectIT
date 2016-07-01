@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -646,13 +645,6 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * {@inheritDoc}
 	 */
 	public void stop() {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ScheduledExecutorService getExecutorService() {
 		throw new UnsupportedMethodException();
 	}
 

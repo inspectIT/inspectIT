@@ -95,7 +95,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
 	public ScheduledExecutorService getCoreServiceExecutorService() {
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
-		return Executors.newScheduledThreadPool(1, threadFactory);
+		return Executors.newScheduledThreadPool(3, threadFactory);
 	}
 
 	/**

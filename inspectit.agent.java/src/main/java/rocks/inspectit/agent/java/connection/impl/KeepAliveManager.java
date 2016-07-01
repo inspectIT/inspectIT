@@ -1,5 +1,6 @@
 package rocks.inspectit.agent.java.connection.impl;
 
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -7,11 +8,11 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
-import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
@@ -70,15 +71,16 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	private IPlatformManager platformManager;
 
 	/**
+	 * Core-service executor service.
+	 */
+	@Autowired
+	@Qualifier("coreServiceExecutorService")
+	private ScheduledExecutorService executorService;
+
+	/**
 	 * ScheduledFuture representing pending keep-alive sending task.
 	 */
 	private ScheduledFuture<?> scheduledTask;
-
-	/**
-	 * The default core service.
-	 */
-	@Autowired
-	private ICoreService coreService;
 
 	/**
 	 * {@inheritDoc}
@@ -87,7 +89,7 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	 */
 	public void afterPropertiesSet() throws Exception {
 		if (scheduledTask == null) {
-			scheduledTask = coreService.getExecutorService().scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
+			scheduledTask = executorService.scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
 		}
 	}
 
