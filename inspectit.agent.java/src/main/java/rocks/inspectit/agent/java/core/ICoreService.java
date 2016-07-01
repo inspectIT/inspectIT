@@ -1,7 +1,5 @@
 package rocks.inspectit.agent.java.core;
 
-import java.util.concurrent.ScheduledExecutorService;
-
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
@@ -160,10 +158,4 @@ public interface ICoreService {
 	 */
 	void removeListListener(ListListener<?> listener);
 
-	/**
-	 * Returns the scheduled executor-service.
-	 *
-	 * @return a {@link ScheduledExecutorService}
-	 */
-	ScheduledExecutorService getExecutorService();
 }

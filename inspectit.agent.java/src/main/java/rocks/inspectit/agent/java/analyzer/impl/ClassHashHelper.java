@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections.MapUtils;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +27,6 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
-import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.io.FileResolver;
 import rocks.inspectit.agent.java.spring.PrototypesProvider;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
@@ -60,10 +61,11 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 	private IConfigurationStorage configurationStorage;
 
 	/**
-	 * Core service.
+	 * Core-service executor service.
 	 */
 	@Autowired
-	private ICoreService coreService;
+	@Qualifier("coreServiceExecutorService")
+	private ScheduledExecutorService executorService;
 
 	/**
 	 * {@link SerializationManagerProvider} for the serialization.
@@ -237,7 +239,7 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 				saveCacheToDisk();
 			}
 		};
-		coreService.getExecutorService().scheduleAtFixedRate(saveCacheToDiskRunnable, 30, 300, TimeUnit.SECONDS);
+		executorService.scheduleAtFixedRate(saveCacheToDiskRunnable, 30, 300, TimeUnit.SECONDS);
 	}
 
 	/**

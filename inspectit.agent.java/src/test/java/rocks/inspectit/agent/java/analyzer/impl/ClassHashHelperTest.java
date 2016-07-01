@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
 import com.esotericsoftware.kryo.io.Input;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
-import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.io.FileResolver;
 import rocks.inspectit.agent.java.spring.PrototypesProvider;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
@@ -52,9 +51,6 @@ public class ClassHashHelperTest extends TestBase {
 	IConfigurationStorage configurationStorage;
 
 	@Mock
-	ICoreService coreService;
-
-	@Mock
 	PrototypesProvider prototypesProvider;
 
 	@Mock
@@ -71,7 +67,6 @@ public class ClassHashHelperTest extends TestBase {
 		doReturn(new File(TEST_CACHE_FILE)).when(fileResolver).getClassHashCacheFile();
 
 		when(prototypesProvider.createSerializer()).thenReturn(serializationManager);
-		when(coreService.getExecutorService()).thenReturn(executorService);
 	}
 
 	@AfterMethod

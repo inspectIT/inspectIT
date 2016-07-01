@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -201,24 +202,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 			temp.interrupt();
 		}
 
-		// shutdown core service
-		executorService.shutdown();
-		try {
-			// Wait a while for existing tasks to terminate
-			if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-				// Cancel currently executing tasks
-				executorService.shutdownNow();
-				// Wait a while for tasks to respond to being canceled
-				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-					log.error("Executor service for the inspectIT Core service did not terminate.");
-				}
-			}
-		} catch (InterruptedException ie) {
-			// (Re-)Cancel if current thread also interrupted
-			executorService.shutdownNow();
-			// Preserve interrupt status
-			Thread.currentThread().interrupt();
-		}
+		shutDownExecutorService(executorService);
 	}
 
 	/**
@@ -359,10 +343,30 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Correctly shuts down the executor service.
+	 *
+	 * @param executorService
+	 *            Executor service to shut down.
 	 */
-	public ScheduledExecutorService getExecutorService() {
-		return executorService;
+	private void shutDownExecutorService(ExecutorService executorService) {
+		// shutdown core service
+		executorService.shutdown();
+		try {
+			// Wait a while for existing tasks to terminate
+			if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+				// Cancel currently executing tasks
+				executorService.shutdownNow();
+				// Wait a while for tasks to respond to being canceled
+				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+					log.error("Executor service for the inspectIT Core service did not terminate.");
+				}
+			}
+		} catch (InterruptedException ie) {
+			// (Re-)Cancel if current thread also interrupted
+			executorService.shutdownNow();
+			// Preserve interrupt status
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	/**
