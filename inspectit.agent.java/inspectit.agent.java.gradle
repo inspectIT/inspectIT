@@ -100,3 +100,10 @@ task releaseAndAnalyze {
 	group = 'Release'
 	dependsOn(analyze, release)
 }
+
+/**
+ * Used to suppress the warning that source value 1.5 will be obsolete in the future.
+ */
+compileJava {
+	options.compilerArgs << '-Xlint:-options'
+}
