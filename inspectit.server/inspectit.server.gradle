@@ -109,6 +109,24 @@ task schemagenCi {
 	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${mainExtResources}/ci/schema", "ciSchema.xsd", "factory/**"))
 }
 
+/**
+ * Checks if the CI schemas as up-to-date. Set to run always after classes task.
+ */
+task ciSchemaCheck () {
+	dependsOn(schemagen("${sharedCsMainJava}/rocks/inspectit/shared/cs/ci", "${buildRoot}/schema-check", "ciSchema.xsd", "factory/**"))
+
+	doLast {
+		def fileMatch = new org.apache.tools.ant.taskdefs.condition.FilesMatch()
+		fileMatch.setTextfile true
+		fileMatch.setFile1 file("${buildRoot}/schema-check/ciSchema.xsd")
+		fileMatch.setFile2 file("${mainExtResources}/ci/schema/ciSchema.xsd")
+		if (!fileMatch.eval()) {
+			throw new GradleException("CI schema (${mainExtResources}/ci/schema/ciSchema.xsd) is not up-to-date. Please re-generate.")
+		}
+	}
+}
+classes.finalizedBy ciSchemaCheck
+
 
 /**
  * Uses ant SchemaGenTask to generate .xsd schema from the annotated classes.
@@ -119,7 +137,7 @@ task schemagenCi {
  * @param excludes Any excludes patterns to pass to the ant task.
  */
 def schemagen(sourceDir, outputDir, fileName, excludes) {
-	return tasks.create(name: "schemagen-${outputDir}${fileName}") {
+	return tasks.create(name: "schemagen-${outputDir}/${fileName}", dependsOn: compileJava) {
 		inputs.sourceDir(sourceDir)
 		outputs.file file("${outputDir}/${fileName}")
 

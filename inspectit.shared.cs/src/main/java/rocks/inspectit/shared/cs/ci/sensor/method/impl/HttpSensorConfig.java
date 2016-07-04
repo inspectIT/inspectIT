@@ -4,10 +4,12 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.cs.ci.sensor.StringConstraintSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.jaxb.DefaultValue.BooleanFalse;
 
 /**
  * HTTP sensor configuration.
@@ -32,7 +34,8 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 * Session capture option.
 	 */
 	@XmlAttribute(name = "sessionCapture")
-	private boolean sessionCapture;
+	@XmlJavaTypeAdapter(BooleanFalse.class)
+	private Boolean sessionCapture = Boolean.FALSE;
 
 	/**
 	 * No-args constructor.
@@ -93,7 +96,7 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 * @return {@link #sessionCapture}
 	 */
 	public boolean isSessionCapture() {
-		return sessionCapture;
+		return sessionCapture.booleanValue();
 	}
 
 	/**
@@ -103,7 +106,7 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 *            New value for {@link #sessionCapture}
 	 */
 	public void setSessionCapture(boolean sessionCapture) {
-		this.sessionCapture = sessionCapture;
+		this.sessionCapture = Boolean.valueOf(sessionCapture);
 	}
 
 }

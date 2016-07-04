@@ -55,7 +55,7 @@ public class AbstractCiData {
 	 * Revision. Server for version control and updating control.
 	 */
 	@XmlAttribute(name = "revision")
-	private int revision = 1;
+	private Integer revision = Integer.valueOf(1);
 
 	/**
 	 * Gets {@link #id}.
@@ -177,7 +177,7 @@ public class AbstractCiData {
 	 * @return {@link #revision}
 	 */
 	public int getRevision() {
-		return revision;
+		return revision.intValue();
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class AbstractCiData {
 	 *            New value for {@link #revision}
 	 */
 	public void setRevision(int revision) {
-		this.revision = revision;
+		this.revision = Integer.valueOf(revision);
 	}
 
 	/**
@@ -197,13 +197,13 @@ public class AbstractCiData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((importDate == null) ? 0 : importDate.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + revision;
-		result = prime * result + ((updatedDate == null) ? 0 : updatedDate.hashCode());
+		result = (prime * result) + ((this.createdDate == null) ? 0 : this.createdDate.hashCode());
+		result = (prime * result) + ((this.description == null) ? 0 : this.description.hashCode());
+		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
+		result = (prime * result) + ((this.importDate == null) ? 0 : this.importDate.hashCode());
+		result = (prime * result) + ((this.name == null) ? 0 : this.name.hashCode());
+		result = (prime * result) + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = (prime * result) + ((this.updatedDate == null) ? 0 : this.updatedDate.hashCode());
 		return result;
 	}
 
@@ -222,49 +222,53 @@ public class AbstractCiData {
 			return false;
 		}
 		AbstractCiData other = (AbstractCiData) obj;
-		if (createdDate == null) {
+		if (this.createdDate == null) {
 			if (other.createdDate != null) {
 				return false;
 			}
-		} else if (!createdDate.equals(other.createdDate)) {
+		} else if (!this.createdDate.equals(other.createdDate)) {
 			return false;
 		}
-		if (description == null) {
+		if (this.description == null) {
 			if (other.description != null) {
 				return false;
 			}
-		} else if (!description.equals(other.description)) {
+		} else if (!this.description.equals(other.description)) {
 			return false;
 		}
-		if (id == null) {
+		if (this.id == null) {
 			if (other.id != null) {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
+		} else if (!this.id.equals(other.id)) {
 			return false;
 		}
-		if (importDate == null) {
+		if (this.importDate == null) {
 			if (other.importDate != null) {
 				return false;
 			}
-		} else if (!importDate.equals(other.importDate)) {
+		} else if (!this.importDate.equals(other.importDate)) {
 			return false;
 		}
-		if (name == null) {
+		if (this.name == null) {
 			if (other.name != null) {
 				return false;
 			}
-		} else if (!name.equals(other.name)) {
+		} else if (!this.name.equals(other.name)) {
 			return false;
 		}
-		if (revision != other.revision) {
+		if (this.revision == null) {
+			if (other.revision != null) {
+				return false;
+			}
+		} else if (!this.revision.equals(other.revision)) {
 			return false;
 		}
-		if (updatedDate == null) {
+		if (this.updatedDate == null) {
 			if (other.updatedDate != null) {
 				return false;
 			}
-		} else if (!updatedDate.equals(other.updatedDate)) {
+		} else if (!this.updatedDate.equals(other.updatedDate)) {
 			return false;
 		}
 		return true;
