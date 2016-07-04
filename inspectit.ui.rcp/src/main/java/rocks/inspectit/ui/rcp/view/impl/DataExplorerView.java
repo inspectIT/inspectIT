@@ -256,8 +256,13 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 			public void done(IJobChangeEvent event) {
 				selectAgentForDisplay(agent);
 
-				StructuredSelection ss = new StructuredSelection(repositoryDefinition);
-				selectionProviderAdapter.setSelection(ss);
+				SafeExecutor.syncExec(new Runnable() {
+					@Override
+					public void run() {
+						StructuredSelection ss = new StructuredSelection(repositoryDefinition);
+						selectionProviderAdapter.setSelection(ss);
+					}
+				});
 
 				performUpdate();
 			}
