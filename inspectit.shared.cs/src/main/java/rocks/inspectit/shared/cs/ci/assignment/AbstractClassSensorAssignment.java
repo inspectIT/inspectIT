@@ -33,14 +33,14 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	/**
 	 * If superclass marker is set.
 	 */
-	@XmlAttribute(name = "superclass", required = true)
-	private boolean superclass;
+	@XmlAttribute(name = "superclass")
+	private Boolean superclass = Boolean.FALSE;
 
 	/**
 	 * If interface marker is set.
 	 */
-	@XmlAttribute(name = "interface", required = true)
-	private boolean interf;
+	@XmlAttribute(name = "interface")
+	private Boolean interf = Boolean.FALSE;
 
 	/**
 	 * Annotation class.
@@ -80,7 +80,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	 * @return {@link #superclass}
 	 */
 	public boolean isSuperclass() {
-		return superclass;
+		return superclass.booleanValue();
 	}
 
 	/**
@@ -90,7 +90,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	 *            New value for {@link #superclass}
 	 */
 	public void setSuperclass(boolean superclass) {
-		this.superclass = superclass;
+		this.superclass = Boolean.valueOf(superclass);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	 * @return {@link #interf}
 	 */
 	public boolean isInterf() {
-		return interf;
+		return interf.booleanValue();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	 *            New value for {@link #interf}
 	 */
 	public void setInterf(boolean interf) {
-		this.interf = interf;
+		this.interf = Boolean.valueOf(interf);
 	}
 
 	/**
@@ -146,10 +146,10 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((annotation == null) ? 0 : annotation.hashCode());
-		result = (prime * result) + ((className == null) ? 0 : className.hashCode());
-		result = (prime * result) + (interf ? 1231 : 1237);
-		result = (prime * result) + (superclass ? 1231 : 1237);
+		result = (prime * result) + ((this.annotation == null) ? 0 : this.annotation.hashCode());
+		result = (prime * result) + ((this.className == null) ? 0 : this.className.hashCode());
+		result = (prime * result) + ((this.interf == null) ? 0 : this.interf.hashCode());
+		result = (prime * result) + ((this.superclass == null) ? 0 : this.superclass.hashCode());
 		return result;
 	}
 
@@ -168,24 +168,32 @@ public abstract class AbstractClassSensorAssignment<T extends ISensorConfig> imp
 			return false;
 		}
 		AbstractClassSensorAssignment<?> other = (AbstractClassSensorAssignment<?>) obj;
-		if (annotation == null) {
+		if (this.annotation == null) {
 			if (other.annotation != null) {
 				return false;
 			}
-		} else if (!annotation.equals(other.annotation)) {
+		} else if (!this.annotation.equals(other.annotation)) {
 			return false;
 		}
-		if (className == null) {
+		if (this.className == null) {
 			if (other.className != null) {
 				return false;
 			}
-		} else if (!className.equals(other.className)) {
+		} else if (!this.className.equals(other.className)) {
 			return false;
 		}
-		if (interf != other.interf) {
+		if (this.interf == null) {
+			if (other.interf != null) {
+				return false;
+			}
+		} else if (!this.interf.equals(other.interf)) {
 			return false;
 		}
-		if (superclass != other.superclass) {
+		if (this.superclass == null) {
+			if (other.superclass != null) {
+				return false;
+			}
+		} else if (!this.superclass.equals(other.superclass)) {
 			return false;
 		}
 		return true;
