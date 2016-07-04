@@ -5,8 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
+import rocks.inspectit.shared.cs.jaxb.DefaultValue.BooleanFalse;
+import rocks.inspectit.shared.cs.jaxb.DefaultValue.BooleanTrue;
 
 /**
  * Profile defines different data based on the provided profile data.
@@ -23,20 +26,23 @@ public class Profile extends AbstractCiData {
 	 * Is it the "common" profile.
 	 */
 	@XmlAttribute(name = "common")
-	private boolean commonProfile;
+	@XmlJavaTypeAdapter(BooleanFalse.class)
+	private Boolean commonProfile = Boolean.FALSE;
 
 	/**
 	 * If profile is active. Deactivating profiles means they are not used even when they are
 	 * assigned to the Environments.
 	 */
 	@XmlAttribute(name = "active")
-	private boolean active = true;
+	@XmlJavaTypeAdapter(BooleanTrue.class)
+	private Boolean active = Boolean.TRUE;
 
 	/**
 	 * If the profile should be included in the Environment by default.
 	 */
 	@XmlAttribute(name = "default")
-	private boolean defaultProfile;
+	@XmlJavaTypeAdapter(BooleanFalse.class)
+	private Boolean defaultProfile = Boolean.FALSE;
 
 	/**
 	 * Type of profile data this profile is holding.
@@ -66,7 +72,7 @@ public class Profile extends AbstractCiData {
 	 * @return {@link #commonProfile}
 	 */
 	public boolean isCommonProfile() {
-		return commonProfile;
+		return commonProfile.booleanValue();
 	}
 
 	/**
@@ -75,7 +81,7 @@ public class Profile extends AbstractCiData {
 	 * @return {@link #active}
 	 */
 	public boolean isActive() {
-		return active;
+		return active.booleanValue();
 	}
 
 	/**
@@ -85,7 +91,7 @@ public class Profile extends AbstractCiData {
 	 *            New value for {@link #active}
 	 */
 	public void setActive(boolean active) {
-		this.active = active;
+		this.active = Boolean.valueOf(active);
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class Profile extends AbstractCiData {
 	 * @return {@link #defaultProfile}
 	 */
 	public boolean isDefaultProfile() {
-		return defaultProfile;
+		return defaultProfile.booleanValue();
 	}
 
 	/**
@@ -104,7 +110,7 @@ public class Profile extends AbstractCiData {
 	 *            New value for {@link #defaultProfile}
 	 */
 	public void setDefaultProfile(boolean defaultProfile) {
-		this.defaultProfile = defaultProfile;
+		this.defaultProfile = Boolean.valueOf(defaultProfile);
 	}
 
 	/**
@@ -133,10 +139,10 @@ public class Profile extends AbstractCiData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + (active ? 1231 : 1237);
-		result = (prime * result) + (commonProfile ? 1231 : 1237);
-		result = (prime * result) + (defaultProfile ? 1231 : 1237);
-		result = (prime * result) + ((profileData == null) ? 0 : profileData.hashCode());
+		result = (prime * result) + ((this.active == null) ? 0 : this.active.hashCode());
+		result = (prime * result) + ((this.commonProfile == null) ? 0 : this.commonProfile.hashCode());
+		result = (prime * result) + ((this.defaultProfile == null) ? 0 : this.defaultProfile.hashCode());
+		result = (prime * result) + ((this.profileData == null) ? 0 : this.profileData.hashCode());
 		return result;
 	}
 
@@ -155,20 +161,32 @@ public class Profile extends AbstractCiData {
 			return false;
 		}
 		Profile other = (Profile) obj;
-		if (active != other.active) {
+		if (this.active == null) {
+			if (other.active != null) {
+				return false;
+			}
+		} else if (!this.active.equals(other.active)) {
 			return false;
 		}
-		if (commonProfile != other.commonProfile) {
+		if (this.commonProfile == null) {
+			if (other.commonProfile != null) {
+				return false;
+			}
+		} else if (!this.commonProfile.equals(other.commonProfile)) {
 			return false;
 		}
-		if (defaultProfile != other.defaultProfile) {
+		if (this.defaultProfile == null) {
+			if (other.defaultProfile != null) {
+				return false;
+			}
+		} else if (!this.defaultProfile.equals(other.defaultProfile)) {
 			return false;
 		}
-		if (profileData == null) {
+		if (this.profileData == null) {
 			if (other.profileData != null) {
 				return false;
 			}
-		} else if (!profileData.equals(other.profileData)) {
+		} else if (!this.profileData.equals(other.profileData)) {
 			return false;
 		}
 		return true;

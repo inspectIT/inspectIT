@@ -85,7 +85,7 @@
     <xs:attribute name="created-on" type="xs:dateTime" use="required"/>
     <xs:attribute name="updated-on" type="xs:dateTime"/>
     <xs:attribute name="imported-on" type="xs:dateTime"/>
-    <xs:attribute name="revision" type="xs:int" use="optional"/>
+    <xs:attribute name="revision" type="xs:int"/>
   </xs:complexType>
 
   <xs:complexType name="agentMapping">
@@ -148,7 +148,7 @@
             </xs:complexType>
           </xs:element>
           <xs:element ref="exception-sensor-config"/>
-      <xs:element ref="jmx-loading-sensor-config"/>
+          <xs:element ref="jmx-loading-sensor-config"/>
           <xs:element name="profile-ids" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
@@ -258,7 +258,7 @@
     <xs:complexContent>
       <xs:extension base="stringConstraintSensorConfig">
         <xs:sequence/>
-        <xs:attribute name="sessionCapture" type="xs:boolean" use="optional"/>
+        <xs:attribute name="sessionCapture" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -338,9 +338,9 @@
           <xs:element ref="exclude-rules-profile-data"/>
           <xs:element ref="jmx-definition-profile-data"/>
         </xs:choice>
-        <xs:attribute name="common" type="xs:boolean" use="optional"/>
-        <xs:attribute name="active" type="xs:boolean" use="optional"/>
-        <xs:attribute name="default" type="xs:boolean" use="optional"/>
+        <xs:attribute name="common" type="xs:boolean"/>
+        <xs:attribute name="active" type="xs:boolean"/>
+        <xs:attribute name="default" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -375,11 +375,11 @@
             <xs:list itemType="xs:string"/>
           </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="constructor" type="xs:boolean" use="optional"/>
-        <xs:attribute name="public-mod" type="xs:boolean" use="optional"/>
-        <xs:attribute name="protected-mod" type="xs:boolean" use="optional"/>
-        <xs:attribute name="private-mod" type="xs:boolean" use="optional"/>
-        <xs:attribute name="default-mod" type="xs:boolean" use="optional"/>
+        <xs:attribute name="constructor" type="xs:boolean"/>
+        <xs:attribute name="public-mod" type="xs:boolean"/>
+        <xs:attribute name="protected-mod" type="xs:boolean"/>
+        <xs:attribute name="private-mod" type="xs:boolean"/>
+        <xs:attribute name="default-mod" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -387,8 +387,8 @@
   <xs:complexType name="abstractClassSensorAssignment" abstract="true">
     <xs:sequence/>
     <xs:attribute name="class-name" type="xs:string" use="required"/>
-    <xs:attribute name="superclass" type="xs:boolean" use="optional"/>
-    <xs:attribute name="interface" type="xs:boolean" use="optional"/>
+    <xs:attribute name="superclass" type="xs:boolean"/>
+    <xs:attribute name="interface" type="xs:boolean"/>
     <xs:attribute name="annotation" type="xs:string"/>
   </xs:complexType>
 
@@ -416,8 +416,8 @@
             </xs:complexType>
           </xs:element>
         </xs:sequence>
-        <xs:attribute name="starts-invocation" type="xs:boolean" use="optional"/>
-        <xs:attribute name="min-invocation-duration" type="xs:long" use="optional"/>
+        <xs:attribute name="starts-invocation" type="xs:boolean"/>
+        <xs:attribute name="min-invocation-duration" type="xs:long"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -426,7 +426,7 @@
     <xs:complexContent>
       <xs:extension base="methodSensorAssignment">
         <xs:sequence/>
-        <xs:attribute name="charting" type="xs:boolean" use="optional"/>
+        <xs:attribute name="charting" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

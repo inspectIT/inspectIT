@@ -8,12 +8,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.collections.MapUtils;
 
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.shared.cs.jaxb.DefaultValue.BooleanFalse;
 
 /**
  * Method sensor assignment for all the sensors (at the moment http and timer) that support charting
@@ -30,7 +32,8 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 	 * If it is charting.
 	 */
 	@XmlAttribute(name = "charting")
-	private boolean charting;
+	@XmlJavaTypeAdapter(BooleanFalse.class)
+	private Boolean charting = Boolean.FALSE;
 
 	/**
 	 * No arg-constructor.
@@ -77,7 +80,7 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 	 * @return {@link #charting}
 	 */
 	public boolean isCharting() {
-		return charting;
+		return charting.booleanValue();
 	}
 
 	/**
@@ -87,7 +90,7 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 	 *            New value for {@link #charting}
 	 */
 	public void setCharting(boolean charting) {
-		this.charting = charting;
+		this.charting = Boolean.valueOf(charting);
 	}
 
 	/**
@@ -97,7 +100,7 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + (charting ? 1231 : 1237);
+		result = (prime * result) + ((this.charting == null) ? 0 : this.charting.hashCode());
 		return result;
 	}
 
@@ -116,7 +119,11 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 			return false;
 		}
 		ChartingMethodSensorAssignment other = (ChartingMethodSensorAssignment) obj;
-		if (charting != other.charting) {
+		if (this.charting == null) {
+			if (other.charting != null) {
+				return false;
+			}
+		} else if (!this.charting.equals(other.charting)) {
 			return false;
 		}
 		return true;
