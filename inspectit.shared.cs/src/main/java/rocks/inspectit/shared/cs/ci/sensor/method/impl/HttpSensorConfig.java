@@ -32,7 +32,7 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 * Session capture option.
 	 */
 	@XmlAttribute(name = "sessionCapture")
-	private boolean sessionCapture;
+	private Boolean sessionCapture = Boolean.FALSE;
 
 	/**
 	 * No-args constructor.
@@ -93,7 +93,7 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 * @return {@link #sessionCapture}
 	 */
 	public boolean isSessionCapture() {
-		return sessionCapture;
+		return sessionCapture.booleanValue();
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 *            New value for {@link #sessionCapture}
 	 */
 	public void setSessionCapture(boolean sessionCapture) {
-		this.sessionCapture = sessionCapture;
+		this.sessionCapture = Boolean.valueOf(sessionCapture);
 	}
 
 }

@@ -34,13 +34,13 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 	 * If it starts an invocation.
 	 */
 	@XmlAttribute(name = "starts-invocation")
-	private boolean startsInvocation;
+	private Boolean startsInvocation = Boolean.FALSE;
 
 	/**
 	 * Invocation min duration.
 	 */
 	@XmlAttribute(name = "min-invocation-duration")
-	private long minInvocationDuration;
+	private Long minInvocationDuration = Long.valueOf(0L);
 
 	/**
 	 * List of context captures.
@@ -80,7 +80,7 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 	 * @return {@link #startsInvocation}
 	 */
 	public boolean isStartsInvocation() {
-		return startsInvocation;
+		return startsInvocation.booleanValue();
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 	 *            New value for {@link #startsInvocation}
 	 */
 	public void setStartsInvocation(boolean startsInvocation) {
-		this.startsInvocation = startsInvocation;
+		this.startsInvocation = Boolean.valueOf(startsInvocation);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 	 * @return {@link #minInvocationDuration}
 	 */
 	public long getMinInvocationDuration() {
-		return minInvocationDuration;
+		return minInvocationDuration.longValue();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 	 *            New value for {@link #minInvocationDuration}
 	 */
 	public void setMinInvocationDuration(long minInvocationDuration) {
-		this.minInvocationDuration = minInvocationDuration;
+		this.minInvocationDuration = Long.valueOf(minInvocationDuration);
 	}
 
 	/**
@@ -138,9 +138,9 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + ((contextCaptures == null) ? 0 : contextCaptures.hashCode());
-		result = (prime * result) + (int) (minInvocationDuration ^ (minInvocationDuration >>> 32));
-		result = (prime * result) + (startsInvocation ? 1231 : 1237);
+		result = (prime * result) + ((this.contextCaptures == null) ? 0 : this.contextCaptures.hashCode());
+		result = (prime * result) + ((this.minInvocationDuration == null) ? 0 : this.minInvocationDuration.hashCode());
+		result = (prime * result) + ((this.startsInvocation == null) ? 0 : this.startsInvocation.hashCode());
 		return result;
 	}
 
@@ -159,17 +159,25 @@ public class TimerMethodSensorAssignment extends ChartingMethodSensorAssignment 
 			return false;
 		}
 		TimerMethodSensorAssignment other = (TimerMethodSensorAssignment) obj;
-		if (contextCaptures == null) {
+		if (this.contextCaptures == null) {
 			if (other.contextCaptures != null) {
 				return false;
 			}
-		} else if (!contextCaptures.equals(other.contextCaptures)) {
+		} else if (!this.contextCaptures.equals(other.contextCaptures)) {
 			return false;
 		}
-		if (minInvocationDuration != other.minInvocationDuration) {
+		if (this.minInvocationDuration == null) {
+			if (other.minInvocationDuration != null) {
+				return false;
+			}
+		} else if (!this.minInvocationDuration.equals(other.minInvocationDuration)) {
 			return false;
 		}
-		if (startsInvocation != other.startsInvocation) {
+		if (this.startsInvocation == null) {
+			if (other.startsInvocation != null) {
+				return false;
+			}
+		} else if (!this.startsInvocation.equals(other.startsInvocation)) {
 			return false;
 		}
 		return true;
