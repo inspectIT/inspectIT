@@ -121,6 +121,12 @@ public class JavaAgent implements ClassFileTransformer {
 	 * {@inheritDoc}
 	 */
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
+		boolean threadTransformDisabled = Agent.agent.isThreadTransformDisabled();
+		if (threadTransformDisabled) {
+			// if transform is currently disabled for thread trying to transform the class do
+			// nothing
+			return null;
+		}
 		try {
 			if ((null != classLoader) && InspectItClassLoader.class.getCanonicalName().equals(classLoader.getClass().getCanonicalName())) {
 				// return if the classloader to load the class is our own, we don't want to
@@ -140,6 +146,10 @@ public class JavaAgent implements ClassFileTransformer {
 				return data;
 			}
 
+			// set transform disabled from this point for this thread
+			Agent.agent.setThreadTransformDisabled(true);
+			threadTransformDisabled = true;
+
 			// now the real inspectit agent will handle this class
 			String modifiedClassName = className.replaceAll("/", ".");
 			byte[] instrumentedData = Agent.agent.inspectByteCode(data, modifiedClassName, classLoader);
@@ -148,6 +158,11 @@ public class JavaAgent implements ClassFileTransformer {
 			LOGGER.severe("Error occurred while dealing with class: " + className + " " + ex.getMessage());
 			ex.printStackTrace(); // NOPMD
 			return null;
+		} finally {
+			// reset the state of transform disabled if we set it originally
+			if (threadTransformDisabled) {
+				Agent.agent.setThreadTransformDisabled(false);
+			}
 		}
 	}
 

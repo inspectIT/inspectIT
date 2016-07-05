@@ -47,4 +47,22 @@ public interface IAgent {
 	 */
 	Class<?> loadClass(Object[] params);
 
+	/**
+	 * Returns if the instrumentation transform method for the thread calling this method is
+	 * currently disabled.
+	 *
+	 * @return Returns true if the transform is disabled for current thread, otherwise
+	 *         <code>false</code>.
+	 */
+	boolean isThreadTransformDisabled();
+
+	/**
+	 * Sets if the instrumentation transform method for the thread calling this method is currently
+	 * disabled.
+	 *
+	 * @param disabled
+	 *            <code>true</code> to disable, <code>false</code> otherwise
+	 */
+	void setThreadTransformDisabled(boolean disabled);
+
 }
