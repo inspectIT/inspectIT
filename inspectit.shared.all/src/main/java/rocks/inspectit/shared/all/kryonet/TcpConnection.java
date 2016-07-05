@@ -27,13 +27,19 @@ import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
  * href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan Sweet.
  * License info can be found <a
  * href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
- * 
+ *
  * @author Nathan Sweet <misc@n4te.com>
  */
 @SuppressWarnings("all")
 // NOCHKALL
 class TcpConnection {
 	static private final int IPTOS_LOWDELAY = 0x10;
+
+	/**
+	 * Amount of output streams to create in the empty queue.
+	 */
+	// Added by ISE
+	private static final int MAX_OUTPUT_STREAMS = 10;
 
 	/**
 	 * {@link StreamProvider} for creating streams.
@@ -52,6 +58,12 @@ class TcpConnection {
 	 */
 	// Added by ISE
 	private LinkedBlockingQueue<ExtendedByteBufferOutputStream> writeQueue = new LinkedBlockingQueue<ExtendedByteBufferOutputStream>();
+
+	/**
+	 * Queue of {@link ExtendedByteBufferOutputStream}s to be written to.
+	 */
+	// Added by ISE
+	private LinkedBlockingQueue<ExtendedByteBufferOutputStream> emptyQueue = new LinkedBlockingQueue<ExtendedByteBufferOutputStream>();
 
 	/**
 	 * {@link SocketExtendedByteBufferInputStream} to read data with.
@@ -79,6 +91,14 @@ class TcpConnection {
 		writeBuffer = ByteBuffer.allocate(writeBufferSize);
 		readBuffer = ByteBuffer.allocate(objectBufferSize);
 		readBuffer.flip();
+
+		for (int i = 0; i < MAX_OUTPUT_STREAMS; i++) {
+			try {
+				emptyQueue.add(streamProvider.getExtendedByteBufferOutputStream());
+			} catch (IOException e) {
+				throw new KryoNetException("Can not initalize the output streams for the TCP Connection.", e);
+			}
+		}
 	}
 
 	public SelectionKey accept(Selector selector, SocketChannel socketChannel) throws IOException {
@@ -239,8 +259,9 @@ class TcpConnection {
 
 			// here we have done with this output stream
 			// close it and remove from queue
-			outputStream.close();
 			writeQueue.remove(outputStream);
+			outputStream.prepare();
+			emptyQueue.offer(outputStream);
 		}
 
 		return writeQueue.isEmpty();
@@ -254,9 +275,15 @@ class TcpConnection {
 
 		// Change by ISE from here to end of method
 
+		ExtendedByteBufferOutputStream outputStream = null;
+		try {
+			outputStream = emptyQueue.take();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IOException("Sending was interrupted.");
+		}
 		writeReentrantLock.lock();
 		try {
-			ExtendedByteBufferOutputStream outputStream = streamProvider.getExtendedByteBufferOutputStream();
 			int lengthLength = serialization.getLengthLength();
 			// make space for the length
 			// just write empty byte array in correct size
@@ -346,7 +373,7 @@ class TcpConnection {
 
 	/**
 	 * Returns current size to be written.
-	 * 
+	 *
 	 * @return Current size to be written.
 	 */
 	// Added by ISE

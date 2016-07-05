@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
@@ -29,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -119,6 +119,9 @@ public class ByteCodeAnalyzerTest extends TestBase {
 	@Mock
 	List<IMethodSensor> methodSensors;
 
+	@Mock
+	Future<Object> future;
+
 	final Long platformId = 10L;
 
 	@BeforeMethod
@@ -130,30 +133,11 @@ public class ByteCodeAnalyzerTest extends TestBase {
 				return null;
 			}
 		}).when(executorService).submit(Matchers.<Runnable> any());
-		doAnswer(new Answer<Object>() {
-			public Object answer(InvocationOnMock invocation) throws Throwable {
+		doAnswer(new Answer<Future<Object>>() {
+			public Future<Object> answer(InvocationOnMock invocation) throws Throwable {
 				final Object result = ((Callable<?>) invocation.getArguments()[0]).call();
-				return new Future<Object>() {
-					public boolean cancel(boolean mayInterruptIfRunning) {
-						return false;
-					}
-
-					public boolean isCancelled() {
-						return false;
-					}
-
-					public boolean isDone() {
-						return false;
-					}
-
-					public Object get() throws InterruptedException, ExecutionException {
-						return result;
-					}
-
-					public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-						return result;
-					}
-				};
+				when(future.get(anyLong(), Matchers.<TimeUnit> any())).thenReturn(result);
+				return future;
 			}
 		}).when(executorService).submit(Matchers.<Callable> any());
 
@@ -595,6 +579,71 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
 			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
+		}
+
+		@Test
+		public void analyzeTimeout() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
+
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			doAnswer(new Answer<Future<Object>>() {
+				public Future<Object> answer(InvocationOnMock invocation) throws Throwable {
+					when(future.get(anyLong(), Matchers.<TimeUnit> any())).thenThrow(TimeoutException.class);
+					return future;
+				}
+			}).when(executorService).submit(Matchers.<Callable> any());
+
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+
+			// as no instrumentation happened, we get a null object
+			assertThat(instrumentedByteCode, is(nullValue()));
+
+			verify(connection, times(1)).isConnected();
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verifyZeroInteractions(hookDispatcherMapper);
+			verifyNoMoreInteractions(connection, classHashHelper);
+		}
+
+		@Test
+		public void analyzeInterruptedException() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
+
+			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
+			when(classHashHelper.isSent(fqnCaptor.capture(), hashCaptor.capture())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			doAnswer(new Answer<Future<Object>>() {
+				public Future<Object> answer(InvocationOnMock invocation) throws Throwable {
+					when(future.get(anyLong(), Matchers.<TimeUnit> any())).thenThrow(InterruptedException.class);
+					return future;
+				}
+			}).when(executorService).submit(Matchers.<Callable> any());
+
+
+			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+
+			// as no instrumentation happened, we get a null object
+			assertThat(instrumentedByteCode, is(nullValue()));
+			// assert we kept the interrupted exception
+			assertThat(Thread.currentThread().isInterrupted(), is(true));
+
+			verify(connection, times(1)).isConnected();
+			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
+			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
+			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
+			verifyZeroInteractions(hookDispatcherMapper);
+			verifyNoMoreInteractions(connection, classHashHelper);
 		}
 
 	}

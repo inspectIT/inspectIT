@@ -14,6 +14,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -55,6 +57,11 @@ import rocks.inspectit.shared.all.spring.logger.Log;
  */
 @Component
 public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
+
+	/**
+	 * Amount of milliseconds to wait for the result of the {@link AnalyzeCallable}.
+	 */
+	private static final int ANALYZE_TIMEOUT_MILLIS = 1000;
 
 	/**
 	 * Log for the class.
@@ -182,9 +189,17 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 				// try connecting to server
 				Callable<InstrumentationDefinition> analyzeCallable = new AnalyzeCallable(connection, platformManager.getPlatformId(), hash, type);
 				try {
-					instrumentationResult = executorService.submit(analyzeCallable).get();
+					instrumentationResult = executorService.submit(analyzeCallable).get(ANALYZE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
+					if (log.isWarnEnabled()) {
+						log.warn("Error occurred instrumenting the byte code of class " + className + ". Thread loding the class was interrupted.");
+					}
+					return null;
+				} catch (TimeoutException e) {
+					if (log.isWarnEnabled()) {
+						log.warn("Error occurred instrumenting the byte code of class " + className + ". Sending the class staructure to the CMR resulted in a time-out.");
+					}
 					return null;
 				}
 
