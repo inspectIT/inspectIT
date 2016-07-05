@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import rocks.inspectit.agent.java.Agent;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
@@ -70,6 +71,8 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 	 * {@inheritDoc}
 	 */
 	public InstrumentationDefinition call() throws Exception {
+		// set that transform is disabled from this thread that is doing the call
+		Agent.agent.setThreadTransformDisabled(true);
 		try {
 			if (connection.isConnected()) {
 				return connection.analyze(platformId, hash, type);
@@ -87,6 +90,9 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 				LOG.info("Type could not be sent to the CMR due to the ServerUnavailableException.");
 			}
 			throw e;
+		} finally {
+			// finally remove the transform flag
+			Agent.agent.setThreadTransformDisabled(false);
 		}
 	}
 

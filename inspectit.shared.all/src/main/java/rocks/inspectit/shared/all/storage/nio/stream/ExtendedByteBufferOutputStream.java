@@ -97,7 +97,7 @@ public class ExtendedByteBufferOutputStream extends ByteBufferOutputStream {
 	 *             if preparation fails due to inability to obtain a byte buffers
 	 */
 	public void prepare() throws IOException {
-		byteBuffers.clear();
+		releaseAllBuffers();
 		totalWriteSize = 0L;
 		ByteBuffer byteBuffer = byteBufferProvider.acquireByteBuffer();
 		byteBuffer.clear();
@@ -129,16 +129,7 @@ public class ExtendedByteBufferOutputStream extends ByteBufferOutputStream {
 		if (closed) {
 			return;
 		}
-		for (ByteBuffer byteBuffer : byteBuffers) {
-			byteBufferProvider.releaseByteBuffer(byteBuffer);
-		}
-		byteBuffers.clear();
-
-		ByteBuffer currentBuffer = super.getByteBuffer();
-		if (null != currentBuffer) {
-			byteBufferProvider.releaseByteBuffer(currentBuffer);
-			super.setByteBuffer(null);
-		}
+		releaseAllBuffers();
 		closed = true;
 	}
 
@@ -192,5 +183,21 @@ public class ExtendedByteBufferOutputStream extends ByteBufferOutputStream {
 	protected void finalize() throws Throwable {
 		this.close();
 		super.finalize();
+	}
+
+	/**
+	 * Releases all buffers in the stream.
+	 */
+	private void releaseAllBuffers() {
+		for (ByteBuffer byteBuffer : byteBuffers) {
+			byteBufferProvider.releaseByteBuffer(byteBuffer);
+		}
+		byteBuffers.clear();
+
+		ByteBuffer currentBuffer = super.getByteBuffer();
+		if (null != currentBuffer) {
+			byteBufferProvider.releaseByteBuffer(currentBuffer);
+			super.setByteBuffer(null);
+		}
 	}
 }

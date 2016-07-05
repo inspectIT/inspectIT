@@ -80,6 +80,16 @@ public class SpringAgent implements IAgent {
 	private Collection<IMatchPattern> ignoreClassesPatterns;
 
 	/**
+	 * Thread local to control the instrumentation transform disabled states for threads.
+	 */
+	private ThreadLocal<Boolean> transformDisabledThreadLocal = new ThreadLocal<Boolean>() {
+		@Override
+		protected Boolean initialValue() {
+			return Boolean.FALSE;
+		};
+	};
+
+	/**
 	 * Constructor initializing this agent.
 	 *
 	 * @param inspectitJarFile
@@ -262,6 +272,20 @@ public class SpringAgent implements IAgent {
 			return inspectitJarFile.getAbsoluteFile();
 		}
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isThreadTransformDisabled() {
+		return transformDisabledThreadLocal.get();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setThreadTransformDisabled(boolean disabled) {
+		transformDisabledThreadLocal.set(Boolean.valueOf(disabled));
 	}
 
 }
