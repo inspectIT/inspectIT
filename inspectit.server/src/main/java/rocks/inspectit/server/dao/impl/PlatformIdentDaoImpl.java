@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -147,7 +146,7 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 			}
 		}
 
-		List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(Collections.<Long> emptyList(), Collections.singleton(Long.valueOf(id)));
+		List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(Collections.singleton(Long.valueOf(id)));
 		if (CollectionUtils.isNotEmpty(cleanPlatformIdents)) {
 			if (1 == cleanPlatformIdents.size()) {
 				return cleanPlatformIdents.get(0);
@@ -182,7 +181,7 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 
 		wantedAgentsIds.removeAll(cleanIdents);
 		if (cleanIdents.size() != platformIdentCache.getSize()) {
-			List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(cleanIdents, wantedAgentsIds);
+			List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(wantedAgentsIds);
 			for (PlatformIdent platformIdent : cleanPlatformIdents) {
 				if (wantedAgentsIds.contains(platformIdent.getId())) {
 					initializedPlatformIdents.add(platformIdent);
@@ -204,43 +203,34 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 	 */
 	@PostConstruct
 	public void postConstruct() {
-		loadIdentsFromDB(Collections.<Long> emptyList(), Collections.<Long> emptyList());
+		loadIdentsFromDB(Collections.<Long> emptyList());
 	}
 
 	/**
-	 * Loads agents from database, excluding the agents which IDs is supplied in the exclude
-	 * collection.
+	 * Loads complete agents from database.
 	 *
-	 * @param excludeIdents
-	 *            IDs of the agents that should not be loaded. If empty or <code>null</code> it
-	 *            won't be taken into consideration.
-	 * @param includeIdents
-	 *            IDs of the agents that should be loaded. If empty or <code>null</code> it won't be
-	 *            taken into consideration.
+	 * @param ids
+	 *            IDs of the agents that should be loaded. If empty or <code>null</code> all will be
+	 *            loaded.
 	 *
 	 * @return List of {@link PlatformIdent}.
 	 */
-	@SuppressWarnings("unchecked")
-	private List<PlatformIdent> loadIdentsFromDB(Collection<Long> excludeIdents, Collection<Long> includeIdents) {
-		StringBuilder gl = new StringBuilder(
-				"select distinct platformIdent from PlatformIdent as platformIdent left join fetch platformIdent.methodIdents methodIdent left join fetch platformIdent.jmxDefinitionDataIdents jmxDefinitionDataIdents left join fetch platformIdent.sensorTypeIdents left join fetch methodIdent.methodIdentToSensorTypes");
-		if (CollectionUtils.isNotEmpty(includeIdents) && CollectionUtils.isNotEmpty(excludeIdents)) {
-			gl.append(" where platformIdent.id in :includeIdents and platformIdent.id not in :excludeIdents");
-		} else if (CollectionUtils.isNotEmpty(includeIdents)) {
-			gl.append(" where platformIdent.id in :includeIdents");
-		} else if (CollectionUtils.isNotEmpty(excludeIdents)) {
-			gl.append(" where platformIdent.id not in :excludeIdents");
+	private List<PlatformIdent> loadIdentsFromDB(Collection<Long> ids) {
+		List<PlatformIdent> platformIdents = new ArrayList<>();
+
+		if (CollectionUtils.isNotEmpty(ids)) {
+			// load one by one
+			for (Long id : ids) {
+				PlatformIdent platformIdent = load(id);
+				if (null != platformIdent) {
+					platformIdents.add(platformIdent);
+				}
+			}
+		} else {
+			List<PlatformIdent> all = findAll();
+			platformIdents.addAll(all);
 		}
 
-		Query query = getEntityManager().createQuery(gl.toString());
-		if (CollectionUtils.isNotEmpty(includeIdents)) {
-			query.setParameter("includeIdents", includeIdents);
-		}
-		if (CollectionUtils.isNotEmpty(excludeIdents)) {
-			query.setParameter("excludeIdents", excludeIdents);
-		}
-
-		List<PlatformIdent> platformIdents = query.getResultList();
 		for (PlatformIdent platformIdent : platformIdents) {
 			platformIdentCache.markClean(platformIdent);
 		}

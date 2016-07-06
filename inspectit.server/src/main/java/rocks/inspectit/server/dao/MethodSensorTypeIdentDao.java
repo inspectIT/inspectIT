@@ -1,6 +1,7 @@
 package rocks.inspectit.server.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
 
@@ -53,15 +54,25 @@ public interface MethodSensorTypeIdentDao {
 	List<MethodSensorTypeIdent> findAll();
 
 	/**
-	 * Find the {@link MethodSensorTypeIdent} with given fully qualified sensor class name and
-	 * platform ident.
+	 * Find the {@link MethodSensorTypeIdent} object IDs with given fully qualified sensor class
+	 * name and platform ident.
 	 *
 	 * @param fullyQualifiedClassName
 	 *            FQN of sensor
 	 * @param platformId
 	 *            Platform ident id.
-	 * @return List of existing objects.
+	 * @return List of existing objects IDs.
 	 */
-	List<MethodSensorTypeIdent> findByClassNameAndPlatformId(String fullyQualifiedClassName, long platformId);
+	List<Long> findIdByClassNameAndPlatformId(String fullyQualifiedClassName, long platformId);
+
+	/**
+	 * Updates parameters of the {@link MethodSensorTypeIdent} with the given ID.
+	 *
+	 * @param id
+	 *            ID of the object to update.
+	 * @param parameters
+	 *            new parameters
+	 */
+	void updateParameters(Long id, Map<String, Object> parameters);
 
 }

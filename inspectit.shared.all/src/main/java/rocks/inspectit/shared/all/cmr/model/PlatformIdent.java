@@ -33,7 +33,7 @@ import rocks.inspectit.shared.all.jpa.ListStringConverter;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = PlatformIdent.FIND_ALL, query = "SELECT p FROM PlatformIdent p"),
-		@NamedQuery(name = PlatformIdent.FIND_BY_AGENT_NAME, query = "SELECT p FROM PlatformIdent p WHERE p.agentName=:agentName") })
+	@NamedQuery(name = PlatformIdent.FIND_BY_AGENT_NAME, query = "SELECT p FROM PlatformIdent p WHERE p.agentName=:agentName") })
 public class PlatformIdent implements Serializable {
 
 	/**
@@ -68,14 +68,14 @@ public class PlatformIdent implements Serializable {
 	/**
 	 * The many-to-many association to the {@link SensorTypeIdent} objects.
 	 */
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	@JsonIgnore
 	private Set<SensorTypeIdent> sensorTypeIdents = new HashSet<SensorTypeIdent>(0);
 
 	/**
 	 * The one-to-many association to the {@link MethodIdent} objects.
 	 */
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	@JsonIgnore
 	private Set<MethodIdent> methodIdents = new HashSet<MethodIdent>(0);
 
@@ -83,7 +83,7 @@ public class PlatformIdent implements Serializable {
 	 * The one-to-many association to the {@link JmxDefinitionDataIdent} objects.
 	 */
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	private Set<JmxDefinitionDataIdent> jmxDefinitionDataIdents = new HashSet<JmxDefinitionDataIdent>(0);
 
 	/**
