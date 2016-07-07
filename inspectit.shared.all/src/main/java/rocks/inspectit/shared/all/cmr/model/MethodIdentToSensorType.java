@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -25,7 +26,9 @@ import org.codehaus.jackson.annotate.JsonBackReference;
  *
  */
 @Table(indexes = { @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodIdent"), @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodSensorTypeIdent") })
-@NamedQuery(name = MethodIdentToSensorType.FIND_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, query = "SELECT m from MethodIdentToSensorType m JOIN m.methodIdent mi JOIN m.methodSensorTypeIdent ms WHERE mi.id=:methodIdentId AND ms.id=:methodSensorTypeIdentId")
+@NamedQueries({
+	@NamedQuery(name = MethodIdentToSensorType.FIND_ID_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, query = "SELECT m.id from MethodIdentToSensorType m JOIN m.methodIdent mi JOIN m.methodSensorTypeIdent ms WHERE mi.id=:methodIdentId AND ms.id=:methodSensorTypeIdentId"),
+	@NamedQuery(name = MethodIdentToSensorType.UPDATE_TIMESTAMP, query = "UPDATE MethodIdentToSensorType SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
 @Entity
 public class MethodIdentToSensorType implements Serializable {
 
@@ -35,7 +38,7 @@ public class MethodIdentToSensorType implements Serializable {
 	private static final long serialVersionUID = -3767712432753232084L;
 
 	/**
-	 * Constant for findForMethodAndMethodSensorType query.
+	 * Constant for findIdForMethodAndMethodSensorType query.
 	 * <p>
 	 * Parameters in the query:
 	 * <ul>
@@ -43,7 +46,17 @@ public class MethodIdentToSensorType implements Serializable {
 	 * <li>methodSensorTypeIdent
 	 * </ul>
 	 */
-	public static final String FIND_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID = "MethodIdentToSensorType.findForMethodIdAndMethodSensorTypeId";
+	public static final String FIND_ID_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID = "MethodIdentToSensorType.findIdForMethodIdAndMethodSensorTypeId";
+
+	/**
+	 * Constant for updateTimestamp query.
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>ids
+	 * </ul>
+	 */
+	public static final String UPDATE_TIMESTAMP = "MethodIdentToSensorType.updateTimestamp";
 
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).

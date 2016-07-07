@@ -47,18 +47,22 @@ public interface MethodIdentDao {
 	void deleteAll(List<MethodIdent> methodIdents);
 
 	/**
-	 * This method returns a list containing {@link MethodIdent} objects which have an association
-	 * to the given {@link PlatformIdent} object.
+	 * This method returns a list containing {@link MethodIdent} objects IDs which have an
+	 * association to the given {@link PlatformIdent} object.
 	 *
 	 * @param platformId
 	 *            The id of the platform.
 	 * @param methodIdentExample
 	 *            The {@link MethodIdent} example object to look for similar object(s).
-	 * @return A list containing the {@link MethodIdent} objects which are already in an association
-	 *         with the passed {@link PlatformIdent} object and have identical fields like the
-	 *         example object.
+	 * @param updateTimestamp
+	 *            As this method is used by the registration service there is an optional flag to
+	 *            automatically update the time-stamp of the found {@link MethodIdent} to current
+	 *            time.
+	 * @return A list containing the {@link MethodIdent} objects IDs which are already in an
+	 *         association with the passed {@link PlatformIdent} object and have identical fields
+	 *         like the example object.
 	 */
-	List<MethodIdent> findForPlatformIdAndExample(long platformId, MethodIdent methodIdentExample);
+	List<Long> findIdForPlatformIdAndExample(long platformId, MethodIdent methodIdentExample, boolean updateTimestamp);
 
 	/**
 	 * Returns all {@link MethodIdent} objects which are saved in the underlying storage.

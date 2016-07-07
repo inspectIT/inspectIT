@@ -15,7 +15,7 @@ import javax.persistence.NamedQuery;
 @Entity
 @DiscriminatorValue("PSTI")
 @NamedQueries({ @NamedQuery(name = PlatformSensorTypeIdent.FIND_ALL, query = "SELECT ps FROM PlatformSensorTypeIdent ps"),
-		@NamedQuery(name = PlatformSensorTypeIdent.FIND_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ps FROM PlatformSensorTypeIdent ps JOIN ps.platformIdent p WHERE p.id=:platformIdent AND ps.fullyQualifiedClassName=:fullyQualifiedClassName") })
+	@NamedQuery(name = PlatformSensorTypeIdent.FIND_ID_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ps.id FROM PlatformSensorTypeIdent ps JOIN ps.platformIdent p WHERE p.id=:platformIdent AND ps.fullyQualifiedClassName=:fullyQualifiedClassName") })
 public class PlatformSensorTypeIdent extends SensorTypeIdent {
 
 	/**
@@ -29,8 +29,8 @@ public class PlatformSensorTypeIdent extends SensorTypeIdent {
 	public static final String FIND_ALL = "PlatformSensorTypeIdent.findAll";
 
 	/**
-	 * Constant for findByClassAndPlatformId query.
+	 * Constant for findIdByClassAndPlatformId query.
 	 */
-	public static final String FIND_BY_CLASS_AND_PLATFORM_ID = "PlatformSensorTypeIdent.findByClassAndPlatformId";
+	public static final String FIND_ID_BY_CLASS_AND_PLATFORM_ID = "PlatformSensorTypeIdent.findIdByClassAndPlatformId";
 
 }

@@ -1,20 +1,14 @@
 package rocks.inspectit.shared.all.cmr.model;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import rocks.inspectit.shared.all.jpa.MapStringConverter;
@@ -29,7 +23,8 @@ import rocks.inspectit.shared.all.jpa.MapStringConverter;
 @Entity
 @DiscriminatorValue("MSTI")
 @NamedQueries({ @NamedQuery(name = MethodSensorTypeIdent.FIND_ALL, query = "SELECT ms FROM MethodSensorTypeIdent ms"),
-		@NamedQuery(name = MethodSensorTypeIdent.FIND_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ms FROM MethodSensorTypeIdent ms JOIN ms.platformIdent p WHERE p.id=:platformIdent AND ms.fullyQualifiedClassName=:fullyQualifiedClassName") })
+	@NamedQuery(name = MethodSensorTypeIdent.FIND_ID_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ms.id FROM MethodSensorTypeIdent ms JOIN ms.platformIdent p WHERE p.id=:platformIdent AND ms.fullyQualifiedClassName=:fullyQualifiedClassName"),
+	@NamedQuery(name = MethodSensorTypeIdent.UPDATE_PARAMETERS, query = "UPDATE MethodSensorTypeIdent SET settings=:parameters WHERE id=:id") })
 public class MethodSensorTypeIdent extends SensorTypeIdent {
 
 	/**
@@ -43,17 +38,26 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 	public static final String FIND_ALL = "MethodSensorTypeIdent.findAll";
 
 	/**
-	 * Constant for findByClassAndPlatformId query.
+	 * Constant for findIdByClassAndPlatformId query. *
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>platformIdent
+	 * <li>fullyQualifiedClassName
+	 * </ul>
 	 */
-	public static final String FIND_BY_CLASS_AND_PLATFORM_ID = "MethodSensorTypeIdent.findByClassAndPlatformId";
+	public static final String FIND_ID_BY_CLASS_AND_PLATFORM_ID = "MethodSensorTypeIdent.findIdByClassAndPlatformId";
 
 	/**
-	 * The one-to-many association to the {@link MethodIdentToSensorType} objects.
+	 * Constant for updateParameters query. *
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>id
+	 * <li>parameters
+	 * </ul>
 	 */
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "methodSensorTypeIdent", cascade = CascadeType.ALL)
-	@JsonBackReference
-	@JsonIgnore
-	private Set<MethodIdentToSensorType> methodIdentToSensorTypes = new HashSet<MethodIdentToSensorType>(0);
+	public static final String UPDATE_PARAMETERS = "MethodSensorTypeIdent.updateParameters";
 
 	/**
 	 * Settings of the sensor on the agent.
@@ -61,25 +65,6 @@ public class MethodSensorTypeIdent extends SensorTypeIdent {
 	@Convert(converter = MapStringConverter.class)
 	@Column(length = 2000)
 	private Map<String, Object> settings;
-
-	/**
-	 * Gets {@link #methodIdentToSensorTypes}.
-	 *
-	 * @return {@link #methodIdentToSensorTypes}
-	 */
-	public Set<MethodIdentToSensorType> getMethodIdentToSensorTypes() {
-		return methodIdentToSensorTypes;
-	}
-
-	/**
-	 * Sets {@link #methodIdentToSensorTypes}.
-	 *
-	 * @param methodIdentToSensorTypes
-	 *            New value for {@link #methodIdentToSensorTypes}
-	 */
-	public void setMethodIdentToSensorTypes(Set<MethodIdentToSensorType> methodIdentToSensorTypes) {
-		this.methodIdentToSensorTypes = methodIdentToSensorTypes;
-	}
 
 	/**
 	 * Gets {@link #settings}.

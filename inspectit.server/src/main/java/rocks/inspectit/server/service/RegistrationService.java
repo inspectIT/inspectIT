@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -33,7 +32,6 @@ import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
 import rocks.inspectit.shared.all.cmr.model.MethodSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
-import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -110,7 +108,7 @@ public class RegistrationService implements IRegistrationService {
 	AgentStatusDataProvider agentStatusDataProvider;
 
 	/**
-	 * {@link PlatformIdentCache}.
+	 * {@link PlatformIdentCache} called directly for marking dirty state.
 	 */
 	@Autowired
 	PlatformIdentCache platformIdentCache;
@@ -172,11 +170,9 @@ public class RegistrationService implements IRegistrationService {
 	public void unregisterPlatformIdent(long platformId) throws BusinessException {
 		log.info("Trying to unregister the Agent with the ID " + platformId);
 
-		PlatformIdent platformIdent = platformIdentDao.load(platformId);
-
-		if (null != platformIdent) {
-			agentStatusDataProvider.registerDisconnected(platformIdent.getId());
-			log.info("The Agent '" + platformIdent.getAgentName() + "' has been successfully unregistered.");
+		boolean unregistered = agentStatusDataProvider.registerDisconnected(platformId);
+		if (unregistered) {
+			log.info("The Agent with the ID " + platformId + " has been successfully unregistered.");
 		} else {
 			log.warn("No registered agent with given ID exists. Unregistration is aborted.");
 			throw new BusinessException("Unregister the agent with ID " + platformId + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
@@ -200,22 +196,21 @@ public class RegistrationService implements IRegistrationService {
 		methodIdent.setReturnType(returnType);
 		methodIdent.setModifiers(modifiers);
 
-		List<MethodIdent> methodIdents = methodIdentDao.findForPlatformIdAndExample(platformId, methodIdent);
-		if (1 == methodIdents.size()) {
-			methodIdent = methodIdents.get(0);
-		} else {
-			PlatformIdent platformIdent = platformIdentDao.load(platformId);
-			methodIdent.setPlatformIdent(platformIdent);
+		try {
+			List<Long> methodIdentIds = methodIdentDao.findIdForPlatformIdAndExample(platformId, methodIdent, true);
+			if (1 == methodIdentIds.size()) {
+				return methodIdentIds.get(0).longValue();
+			} else {
+				PlatformIdent platformIdent = new PlatformIdent();
+				platformIdent.setId(platformId);
+				methodIdent.setPlatformIdent(platformIdent);
+				methodIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+				methodIdentDao.saveOrUpdate(methodIdent);
+				return methodIdent.getId();
+			}
+		} finally {
+			platformIdentCache.markDirty(platformId);
 		}
-
-		// always update the time stamp, no matter if this is an old or new
-		// record.
-		methodIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-
-		methodIdentDao.saveOrUpdate(methodIdent);
-		platformIdentCache.markDirty(platformId);
-
-		return methodIdent.getId();
 	}
 
 	/**
@@ -226,30 +221,26 @@ public class RegistrationService implements IRegistrationService {
 	public long registerMethodSensorTypeIdent(long platformId, String fullyQualifiedClassName, Map<String, Object> parameters) {
 		MethodSensorTypeIdent methodSensorTypeIdent;
 
-		List<MethodSensorTypeIdent> methodSensorTypeIdents = methodSensorTypeIdentDao.findByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
-		if (1 == methodSensorTypeIdents.size()) {
-			methodSensorTypeIdent = methodSensorTypeIdents.get(0);
-
-			// update preferences
-			methodSensorTypeIdent.setSettings(parameters);
-			methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
-		} else {
-			// only if the new sensor is registered we need to update the platform ident
-			PlatformIdent platformIdent = platformIdentDao.load(platformId);
-			methodSensorTypeIdent = new MethodSensorTypeIdent();
-			methodSensorTypeIdent.setPlatformIdent(platformIdent);
-			methodSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
-			methodSensorTypeIdent.setSettings(parameters);
-
-			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
-			sensorTypeIdents.add(methodSensorTypeIdent);
-
-			methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
-			platformIdentDao.saveOrUpdate(platformIdent);
-
+		try {
+			List<Long> methodSensorTypeIdents = methodSensorTypeIdentDao.findIdByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
+			if (1 == methodSensorTypeIdents.size()) {
+				Long id = methodSensorTypeIdents.get(0);
+				methodSensorTypeIdentDao.updateParameters(id, parameters);
+				return id;
+			} else {
+				// only if the new sensor is registered we need to update the platform ident
+				PlatformIdent platformIdent = new PlatformIdent();
+				platformIdent.setId(platformId);
+				methodSensorTypeIdent = new MethodSensorTypeIdent();
+				methodSensorTypeIdent.setPlatformIdent(platformIdent);
+				methodSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
+				methodSensorTypeIdent.setSettings(parameters);
+				methodSensorTypeIdentDao.saveOrUpdate(methodSensorTypeIdent);
+				return methodSensorTypeIdent.getId();
+			}
+		} finally {
+			platformIdentCache.markDirty(platformId);
 		}
-		platformIdentCache.markDirty(platformId);
-		return methodSensorTypeIdent.getId();
 	}
 
 	/**
@@ -258,19 +249,20 @@ public class RegistrationService implements IRegistrationService {
 	@Override
 	@MethodLog
 	public void addSensorTypeToMethod(long platformId, long methodSensorTypeId, long methodId) {
-		MethodIdentToSensorType methodIdentToSensorType = methodIdentToSensorTypeDao.find(methodId, methodSensorTypeId);
-		if (null == methodIdentToSensorType) {
-			MethodIdent methodIdent = methodIdentDao.load(methodId);
-			MethodSensorTypeIdent methodSensorTypeIdent = methodSensorTypeIdentDao.load(methodSensorTypeId);
-			methodIdentToSensorType = new MethodIdentToSensorType(methodIdent, methodSensorTypeIdent, null);
+		try {
+			Long id = methodIdentToSensorTypeDao.findId(methodId, methodSensorTypeId, true);
+			if (null == id) {
+				MethodIdent methodIdent = new MethodIdent();
+				methodIdent.setId(methodId);
+				MethodSensorTypeIdent methodSensorTypeIdent = new MethodSensorTypeIdent();
+				methodSensorTypeIdent.setId(methodSensorTypeId);
+				MethodIdentToSensorType methodIdentToSensorType = new MethodIdentToSensorType(methodIdent, methodSensorTypeIdent, null);
+				methodIdentToSensorType.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+				methodIdentToSensorTypeDao.saveOrUpdate(methodIdentToSensorType);
+			}
+		} finally {
+			platformIdentCache.markDirty(platformId);
 		}
-
-		// always update the timestamp
-		methodIdentToSensorType.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-		methodIdentToSensorTypeDao.saveOrUpdate(methodIdentToSensorType);
-
-		// we need to mark the platform dirty
-		platformIdentCache.markDirty(platformId);
 	}
 
 	/**
@@ -279,26 +271,23 @@ public class RegistrationService implements IRegistrationService {
 	@Override
 	@MethodLog
 	public long registerPlatformSensorTypeIdent(long platformId, String fullyQualifiedClassName) {
-		PlatformSensorTypeIdent platformSensorTypeIdent;
-		List<PlatformSensorTypeIdent> platformSensorTypeIdents = platformSensorTypeIdentDao.findByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
-		if (1 == platformSensorTypeIdents.size()) {
-			platformSensorTypeIdent = platformSensorTypeIdents.get(0);
-		} else {
-			// only if it s not registered we need updating
-			PlatformIdent platformIdent = platformIdentDao.load(platformId);
-			platformSensorTypeIdent = new PlatformSensorTypeIdent();
-			platformSensorTypeIdent.setPlatformIdent(platformIdent);
-			platformSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
-
-			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
-			sensorTypeIdents.add(platformSensorTypeIdent);
-
-			platformSensorTypeIdentDao.saveOrUpdate(platformSensorTypeIdent);
-			platformIdentDao.saveOrUpdate(platformIdent);
+		try {
+			List<Long> platformSensorTypeIdentIds = platformSensorTypeIdentDao.findIdByClassNameAndPlatformId(fullyQualifiedClassName, platformId);
+			if (1 == platformSensorTypeIdentIds.size()) {
+				return platformSensorTypeIdentIds.get(0).longValue();
+			} else {
+				// only if it s not registered we need updating
+				PlatformIdent platformIdent = new PlatformIdent();
+				platformIdent.setId(platformId);
+				PlatformSensorTypeIdent platformSensorTypeIdent = new PlatformSensorTypeIdent();
+				platformSensorTypeIdent.setPlatformIdent(platformIdent);
+				platformSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
+				platformSensorTypeIdentDao.saveOrUpdate(platformSensorTypeIdent);
+				return platformSensorTypeIdent.getId();
+			}
+		} finally {
+			platformIdentCache.markDirty(platformId);
 		}
-
-		platformIdentCache.markDirty(platformId);
-		return platformSensorTypeIdent.getId();
 	}
 
 	/**
@@ -311,22 +300,20 @@ public class RegistrationService implements IRegistrationService {
 		JmxSensorTypeIdent jmxSensorTypeIdent = new JmxSensorTypeIdent();
 		jmxSensorTypeIdent.setFullyQualifiedClassName(fullyQualifiedClassName);
 
-		List<JmxSensorTypeIdent> jmxSensorTypeIdents = jmxSensorTypeIdentDao.findByExample(platformId, jmxSensorTypeIdent);
-		if (1 == jmxSensorTypeIdents.size()) {
-			jmxSensorTypeIdent = jmxSensorTypeIdents.get(0);
-		} else {
-			PlatformIdent platformIdent = platformIdentDao.load(platformId);
-			jmxSensorTypeIdent.setPlatformIdent(platformIdent);
-
-			Set<SensorTypeIdent> sensorTypeIdents = platformIdent.getSensorTypeIdents();
-			sensorTypeIdents.add(jmxSensorTypeIdent);
-
-			jmxSensorTypeIdentDao.saveOrUpdate(jmxSensorTypeIdent);
-			platformIdentDao.saveOrUpdate(platformIdent);
+		try {
+			List<Long> jmxSensorTypeIdents = jmxSensorTypeIdentDao.findIdByExample(platformId, jmxSensorTypeIdent);
+			if (1 == jmxSensorTypeIdents.size()) {
+				return jmxSensorTypeIdents.get(0).longValue();
+			} else {
+				PlatformIdent platformIdent = new PlatformIdent();
+				platformIdent.setId(platformId);
+				jmxSensorTypeIdent.setPlatformIdent(platformIdent);
+				jmxSensorTypeIdentDao.saveOrUpdate(jmxSensorTypeIdent);
+				return jmxSensorTypeIdent.getId();
+			}
+		} finally {
+			platformIdentCache.markDirty(platformId);
 		}
-
-		platformIdentCache.markDirty(platformId);
-		return jmxSensorTypeIdent.getId();
 	}
 
 	/**
@@ -346,19 +333,21 @@ public class RegistrationService implements IRegistrationService {
 		jmxDefinitionDataIdent.setmBeanAttributeIsReadable(isReadable);
 		jmxDefinitionDataIdent.setmBeanAttributeIsWritable(isWritable);
 
-		List<JmxDefinitionDataIdent> jmxDefinitionDataIdents = jmxDefinitionDataIdentDao.findForPlatformIdent(platformId, jmxDefinitionDataIdent);
-		if (1 == jmxDefinitionDataIdents.size()) {
-			jmxDefinitionDataIdent = jmxDefinitionDataIdents.get(0);
-		} else {
-			PlatformIdent platformIdent = platformIdentDao.load(Long.valueOf(platformId));
-			jmxDefinitionDataIdent.setPlatformIdent(platformIdent);
+		try {
+			List<Long> ids = jmxDefinitionDataIdentDao.findIdForPlatformIdent(platformId, jmxDefinitionDataIdent, true);
+			if (1 == ids.size()) {
+				return ids.get(0).longValue();
+			} else {
+				PlatformIdent platformIdent = new PlatformIdent();
+				platformIdent.setId(platformId);
+				jmxDefinitionDataIdent.setPlatformIdent(platformIdent);
+				jmxDefinitionDataIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+				jmxDefinitionDataIdentDao.saveOrUpdate(jmxDefinitionDataIdent);
+				return jmxDefinitionDataIdent.getId();
+			}
+		} finally {
+			platformIdentCache.markDirty(platformId);
 		}
-
-		jmxDefinitionDataIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-		jmxDefinitionDataIdentDao.saveOrUpdate(jmxDefinitionDataIdent);
-
-		platformIdentCache.markDirty(platformId);
-		return jmxDefinitionDataIdent.getId();
 	}
 
 	/**
