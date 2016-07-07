@@ -25,7 +25,8 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = JmxDefinitionDataIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName") })
+	@NamedQuery(name = JmxDefinitionDataIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j.id FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName"),
+	@NamedQuery(name = JmxDefinitionDataIdent.UPDATE_TIMESTAMP, query = "UPDATE JmxDefinitionDataIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
 public class JmxDefinitionDataIdent implements Serializable {
 
 	/**
@@ -34,7 +35,7 @@ public class JmxDefinitionDataIdent implements Serializable {
 	private static final long serialVersionUID = 5190671450845879357L;
 
 	/**
-	 * Constant for findByPlatformAndExample query.
+	 * Constant for findIdByPlatformAndExample query.
 	 * <p>
 	 * Parameters in the query:
 	 * <ul>
@@ -42,9 +43,18 @@ public class JmxDefinitionDataIdent implements Serializable {
 	 * <li>mBeanObjectName
 	 * <li>mBeanAttributeName
 	 * </ul>
-	 * </p>
 	 */
-	public static final String FIND_BY_PLATFORM_AND_EXAMPLE = "JmxDefinitionDataIdent.findByPlatformAndExample";
+	public static final String FIND_ID_BY_PLATFORM_AND_EXAMPLE = "JmxDefinitionDataIdent.findIdByPlatformAndExample";
+
+	/**
+	 * Constant for updateTimestamp query.
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>ids
+	 * </ul>
+	 */
+	public static final String UPDATE_TIMESTAMP = "JmxDefinitionDataIdent.updateTimestamp";
 
 	/**
 	 * The ID on the CMR.

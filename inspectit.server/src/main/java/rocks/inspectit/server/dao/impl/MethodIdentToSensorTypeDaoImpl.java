@@ -2,8 +2,10 @@ package rocks.inspectit.server.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import rocks.inspectit.server.dao.MethodIdentToSensorTypeDao;
@@ -43,12 +45,19 @@ public class MethodIdentToSensorTypeDaoImpl extends AbstractJpaDao<MethodIdentTo
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodIdentToSensorType find(long methodIdentId, long methodSensorTypeIdentId) {
-		TypedQuery<MethodIdentToSensorType> query = getEntityManager().createNamedQuery(MethodIdentToSensorType.FIND_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, MethodIdentToSensorType.class);
+	public Long findId(long methodIdentId, long methodSensorTypeIdentId, boolean updateTimestamp) {
+		TypedQuery<Long> query = getEntityManager().createNamedQuery(MethodIdentToSensorType.FIND_ID_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, Long.class);
 		query.setParameter("methodIdentId", methodIdentId);
 		query.setParameter("methodSensorTypeIdentId", methodSensorTypeIdentId);
 
-		List<MethodIdentToSensorType> results = query.getResultList();
+		List<Long> results = query.getResultList();
+
+		if (updateTimestamp && CollectionUtils.isNotEmpty(results)) {
+			Query updateQuery = getEntityManager().createNamedQuery(MethodIdentToSensorType.UPDATE_TIMESTAMP);
+			updateQuery.setParameter("ids", results);
+			updateQuery.executeUpdate();
+		}
+
 		if (1 == results.size()) {
 			return results.get(0);
 		} else {

@@ -47,7 +47,12 @@ public class PlatformIdent implements Serializable {
 	public static final String FIND_ALL = "PlatformIdent.findAll";
 
 	/**
-	 * Constant for findByName query.
+	 * Constant for findByName query. *
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>agentName
+	 * </ul>
 	 */
 	public static final String FIND_BY_AGENT_NAME = "PlatformIdent.findByAgentName";
 
@@ -68,7 +73,7 @@ public class PlatformIdent implements Serializable {
 	/**
 	 * The many-to-many association to the {@link SensorTypeIdent} objects.
 	 */
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "platformIdent")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "platformIdent")
 	@JsonIgnore
 	private Set<SensorTypeIdent> sensorTypeIdents = new HashSet<SensorTypeIdent>(0);
 

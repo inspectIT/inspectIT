@@ -36,7 +36,8 @@ import rocks.inspectit.shared.all.jpa.ListStringConverter;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
-		@NamedQuery(name = MethodIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m from MethodIdent m JOIN m.platformIdent p WHERE p.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType ") })
+	@NamedQuery(name = MethodIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m.id, m.parameters FROM MethodIdent m WHERE m.platformIdent.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType "),
+	@NamedQuery(name = MethodIdent.UPDATE_TIMESTAMP, query = "UPDATE MethodIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
 public class MethodIdent implements Serializable {
 
 	/**
@@ -50,7 +51,7 @@ public class MethodIdent implements Serializable {
 	public static final String FIND_ALL = "MethodIdent.findAll";
 
 	/**
-	 * Constant for findByPlatformAndExample query.
+	 * Constant for findIdByPlatformAndExample query.
 	 * <p>
 	 * Parameters in the query:
 	 * <ul>
@@ -60,7 +61,17 @@ public class MethodIdent implements Serializable {
 	 * <li>returnType
 	 * </ul>
 	 */
-	public static final String FIND_BY_PLATFORM_AND_EXAMPLE = "MethodIdent.findByPlatformAndExample";
+	public static final String FIND_ID_BY_PLATFORM_AND_EXAMPLE = "MethodIdent.findIdByPlatformAndExample";
+
+	/**
+	 * Constant for updateTimestamp query.
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>ids
+	 * </ul>
+	 */
+	public static final String UPDATE_TIMESTAMP = "MethodIdent.updateTimestamp";
 
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).

@@ -10,15 +10,20 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.util.PlatformIdentCache;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
@@ -37,14 +42,28 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 	private PlatformIdentCache platformIdentCache;
 
 	/**
-	 * Default constructor.
+	 * Transaction template to use to do init work.
 	 */
-	public PlatformIdentDaoImpl() {
+	private TransactionTemplate tt;
+
+	/**
+	 * Default constructor.
+	 * <p>
+	 * Needs {@link PlatformTransactionManager} for instantiating the {@link TransactionTemplate} to
+	 * execute the initialization.
+	 *
+	 * @param transactionManager
+	 *            {@link PlatformTransactionManager}. Autowired by Spring.
+	 */
+	@Autowired
+	public PlatformIdentDaoImpl(PlatformTransactionManager transactionManager) {
 		super(PlatformIdent.class);
+		this.tt = new TransactionTemplate(transactionManager);
 	}
 
 	/**
 	 * {@inheritDoc}
+	 *
 	 */
 	@Override
 	public void delete(PlatformIdent platformIdent) {
@@ -147,7 +166,7 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 			}
 		}
 
-		List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(Collections.<Long> emptyList(), Collections.singleton(Long.valueOf(id)));
+		List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(Collections.singleton(Long.valueOf(id)));
 		if (CollectionUtils.isNotEmpty(cleanPlatformIdents)) {
 			if (1 == cleanPlatformIdents.size()) {
 				return cleanPlatformIdents.get(0);
@@ -182,7 +201,7 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 
 		wantedAgentsIds.removeAll(cleanIdents);
 		if (cleanIdents.size() != platformIdentCache.getSize()) {
-			List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(cleanIdents, wantedAgentsIds);
+			List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(wantedAgentsIds);
 			for (PlatformIdent platformIdent : cleanPlatformIdents) {
 				if (wantedAgentsIds.contains(platformIdent.getId())) {
 					initializedPlatformIdents.add(platformIdent);
@@ -204,43 +223,51 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 	 */
 	@PostConstruct
 	public void postConstruct() {
-		loadIdentsFromDB(Collections.<Long> emptyList(), Collections.<Long> emptyList());
+		tt.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				Collection<Long> toLoad = new ArrayList<>();
+				// if nothing is passed then load all non-fetched and collect ids
+				List<PlatformIdent> allNonFetched = findAll();
+				if (CollectionUtils.isNotEmpty(allNonFetched)) {
+					toLoad = new ArrayList<>(allNonFetched.size());
+					for (PlatformIdent platformIdent : allNonFetched) {
+						toLoad.add(platformIdent.getId());
+					}
+				}
+
+				loadIdentsFromDB(toLoad);
+			}
+		});
 	}
 
 	/**
-	 * Loads agents from database, excluding the agents which IDs is supplied in the exclude
-	 * collection.
+	 * Loads complete agents from database.
 	 *
-	 * @param excludeIdents
-	 *            IDs of the agents that should not be loaded. If empty or <code>null</code> it
-	 *            won't be taken into consideration.
-	 * @param includeIdents
-	 *            IDs of the agents that should be loaded. If empty or <code>null</code> it won't be
-	 *            taken into consideration.
+	 * @param ids
+	 *            IDs of the agents that should be loaded.
 	 *
 	 * @return List of {@link PlatformIdent}.
 	 */
-	@SuppressWarnings("unchecked")
-	private List<PlatformIdent> loadIdentsFromDB(Collection<Long> excludeIdents, Collection<Long> includeIdents) {
-		StringBuilder gl = new StringBuilder(
-				"select distinct platformIdent from PlatformIdent as platformIdent left join fetch platformIdent.methodIdents methodIdent left join fetch platformIdent.jmxDefinitionDataIdents jmxDefinitionDataIdents left join fetch platformIdent.sensorTypeIdents left join fetch methodIdent.methodIdentToSensorTypes");
-		if (CollectionUtils.isNotEmpty(includeIdents) && CollectionUtils.isNotEmpty(excludeIdents)) {
-			gl.append(" where platformIdent.id in :includeIdents and platformIdent.id not in :excludeIdents");
-		} else if (CollectionUtils.isNotEmpty(includeIdents)) {
-			gl.append(" where platformIdent.id in :includeIdents");
-		} else if (CollectionUtils.isNotEmpty(excludeIdents)) {
-			gl.append(" where platformIdent.id not in :excludeIdents");
+	private List<PlatformIdent> loadIdentsFromDB(Collection<Long> ids) {
+		// check if there s anything to load
+		if (CollectionUtils.isEmpty(ids)) {
+			return Collections.emptyList();
 		}
 
-		Query query = getEntityManager().createQuery(gl.toString());
-		if (CollectionUtils.isNotEmpty(includeIdents)) {
-			query.setParameter("includeIdents", includeIdents);
-		}
-		if (CollectionUtils.isNotEmpty(excludeIdents)) {
-			query.setParameter("excludeIdents", excludeIdents);
+		List<PlatformIdent> platformIdents = new ArrayList<>();
+		for (Long id : ids) {
+			PlatformIdent platformIdent = load(id);
+			Hibernate.initialize(platformIdent.getSensorTypeIdents());
+			Hibernate.initialize(platformIdent.getJmxDefinitionDataIdents());
+			Hibernate.initialize(platformIdent.getMethodIdents());
+			for (MethodIdent methodIdent : platformIdent.getMethodIdents()) {
+				Hibernate.initialize(methodIdent.getMethodIdentToSensorTypes());
+			}
+			platformIdents.add(platformIdent);
 		}
 
-		List<PlatformIdent> platformIdents = query.getResultList();
+		// mark all as clean
 		for (PlatformIdent platformIdent : platformIdents) {
 			platformIdentCache.markClean(platformIdent);
 		}
