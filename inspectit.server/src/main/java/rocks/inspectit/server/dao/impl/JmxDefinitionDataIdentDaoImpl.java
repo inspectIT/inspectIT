@@ -2,8 +2,10 @@ package rocks.inspectit.server.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import rocks.inspectit.server.dao.JmxDefinitionDataIdentDao;
@@ -52,12 +54,19 @@ public class JmxDefinitionDataIdentDaoImpl extends AbstractJpaDao<JmxDefinitionD
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<JmxDefinitionDataIdent> findForPlatformIdent(long platformId, JmxDefinitionDataIdent jmxDefinitionDataIdentExample) {
-		TypedQuery<JmxDefinitionDataIdent> query = getEntityManager().createNamedQuery(JmxDefinitionDataIdent.FIND_BY_PLATFORM_AND_EXAMPLE, JmxDefinitionDataIdent.class);
+	public List<Long> findIdForPlatformIdent(long platformId, JmxDefinitionDataIdent jmxDefinitionDataIdentExample, boolean updateTimestamp) {
+		TypedQuery<Long> query = getEntityManager().createNamedQuery(JmxDefinitionDataIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, Long.class);
 		query.setParameter("platformIdentId", platformId);
 		query.setParameter("mBeanObjectName", jmxDefinitionDataIdentExample.getmBeanObjectName());
 		query.setParameter("mBeanAttributeName", jmxDefinitionDataIdentExample.getmBeanAttributeName());
+		List<Long> resultList = query.getResultList();
 
-		return query.getResultList();
+		if (updateTimestamp && CollectionUtils.isNotEmpty(resultList)) {
+			Query updateQuery = getEntityManager().createNamedQuery(JmxDefinitionDataIdent.UPDATE_TIMESTAMP);
+			updateQuery.setParameter("ids", resultList);
+			updateQuery.executeUpdate();
+		}
+
+		return resultList;
 	}
 }

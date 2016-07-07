@@ -24,23 +24,24 @@ public interface JmxSensorTypeIdentDao {
 	JmxSensorTypeIdent load(Long id);
 
 	/**
-	 * Execute a findByExample query against the underlying storage.
-	 *
-	 * @param platformId
-	 *            Platform ID sensor should belong to.
-	 * @param jmxSensorTypeIdent
-	 *            The {@link JmxSensorTypeIdent} object which serves as the example.
-	 * @return The list of {@link JmxSensorTypeIdent} objects which have the same contents as the
-	 *         passed example object.
-	 * @see HibernateTemplate#findByExample(Object)
-	 */
-	List<JmxSensorTypeIdent> findByExample(long platformId, JmxSensorTypeIdent jmxSensorTypeIdent);
-
-	/**
 	 * Saves or updates this {@link JmxSensorTypeIdent} in the underlying storage.
 	 *
 	 * @param jmxSensorTypeIdent
 	 *            The {@link JmxSensorTypeIdent} object to save or update.
 	 */
 	void saveOrUpdate(JmxSensorTypeIdent jmxSensorTypeIdent);
+
+	/**
+	 * Execute a findByExample query against the underlying storage and returns the ID of the found
+	 * element.
+	 *
+	 * @param platformId
+	 *            Platform ID sensor should belong to.
+	 * @param jmxSensorTypeIdent
+	 *            The {@link JmxSensorTypeIdent} object which serves as the example.
+	 * @return The list of {@link JmxSensorTypeIdent} objects IDs which have the same contents as
+	 *         the passed example object.
+	 * @see HibernateTemplate#findByExample(Object)
+	 */
+	List<Long> findIdByExample(long platformId, JmxSensorTypeIdent jmxSensorTypeIdent);
 }

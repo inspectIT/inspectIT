@@ -31,8 +31,8 @@ public class JmxSensorTypeIdentDaoImpl extends AbstractJpaDao<JmxSensorTypeIdent
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<JmxSensorTypeIdent> findByExample(long platformId, JmxSensorTypeIdent jmxSensorTypeIdent) {
-		TypedQuery<JmxSensorTypeIdent> query = getEntityManager().createNamedQuery(JmxSensorTypeIdent.FIND_BY_PLATFORM, JmxSensorTypeIdent.class);
+	public List<Long> findIdByExample(long platformId, JmxSensorTypeIdent jmxSensorTypeIdent) {
+		TypedQuery<Long> query = getEntityManager().createNamedQuery(JmxSensorTypeIdent.FIND_ID_BY_PLATFORM, Long.class);
 		query.setParameter("platformIdentId", platformId);
 
 		return query.getResultList();
