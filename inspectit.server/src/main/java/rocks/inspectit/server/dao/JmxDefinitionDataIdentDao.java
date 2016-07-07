@@ -31,16 +31,20 @@ public interface JmxDefinitionDataIdentDao {
 	void saveOrUpdate(JmxDefinitionDataIdent jmxDefinitionDataIdent);
 
 	/**
-	 * This method returns a list containing {@link JmxDefinitionDataIdent} objects which have an
+	 * This method returns a list containing {@link JmxDefinitionDataIdent} IDs which have an
 	 * association to the given {@link PlatformIdent} object.
 	 *
 	 * @param platformId
 	 *            The id of the platform.
 	 * @param jmxDefinitionDataIdentExample
 	 *            The {@link JmxDefinitionDataIdent} example object to look for similar object(s).
-	 * @return A list containing the {@link JmxDefinitionDataIdent} objects which are already in an
-	 *         association with the passed {@link PlatformIdent} object and have identical fields
+	 * @param updateTimestamp
+	 *            As this method is used by the registration service there is an optional flag to
+	 *            automatically update the time-stamp of the found {@link JmxDefinitionDataIdent} to
+	 *            current time.
+	 * @return A list containing the {@link JmxDefinitionDataIdent} objects IDs which are already in
+	 *         an association with the passed {@link PlatformIdent} object and have identical fields
 	 *         like the example object.
 	 */
-	List<JmxDefinitionDataIdent> findForPlatformIdent(long platformId, JmxDefinitionDataIdent jmxDefinitionDataIdentExample);
+	List<Long> findIdForPlatformIdent(long platformId, JmxDefinitionDataIdent jmxDefinitionDataIdentExample, boolean updateTimestamp);
 }

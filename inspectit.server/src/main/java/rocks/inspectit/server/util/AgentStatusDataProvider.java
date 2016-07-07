@@ -111,11 +111,16 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 	 *
 	 * @param platformIdent
 	 *            ID of the platform ident.
+	 * @return Returns <code>true</code> if the agent has been marked as disconnected,
+	 *         <code>false</code> if the agent with given ID does not exist.
 	 */
-	public void registerDisconnected(long platformIdent) {
+	public boolean registerDisconnected(long platformIdent) {
 		AgentStatusData agentStatusData = agentStatusDataMap.get(platformIdent);
 		if (null != agentStatusData) {
 			agentStatusData.setAgentConnection(AgentConnection.DISCONNECTED);
+			return true;
+		} else {
+			return false;
 		}
 	}
 

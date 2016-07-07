@@ -55,15 +55,15 @@ public interface PlatformSensorTypeIdentDao {
 	List<PlatformSensorTypeIdent> findAll();
 
 	/**
-	 * Find the {@link PlatformSensorTypeIdent} with given fully qualified sensor class name and
-	 * platform ident.
+	 * Find the {@link PlatformSensorTypeIdent} object IDs with given fully qualified sensor class
+	 * name and platform ident.
 	 *
 	 * @param fullyQualifiedClassName
 	 *            FQN of sensor
 	 * @param platformId
 	 *            Platform ident id.
-	 * @return List of existing objects.
+	 * @return List of existing objects IDs.
 	 */
-	List<PlatformSensorTypeIdent> findByClassNameAndPlatformId(String fullyQualifiedClassName, long platformId);
+	List<Long> findIdByClassNameAndPlatformId(String fullyQualifiedClassName, long platformId);
 
 }

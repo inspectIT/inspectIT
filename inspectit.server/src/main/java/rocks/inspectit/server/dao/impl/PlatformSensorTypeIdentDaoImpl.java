@@ -50,8 +50,8 @@ public class PlatformSensorTypeIdentDaoImpl extends AbstractJpaDao<PlatformSenso
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<PlatformSensorTypeIdent> findByClassNameAndPlatformId(String fullyQualifiedClassName, long platformId) {
-		TypedQuery<PlatformSensorTypeIdent> query = getEntityManager().createNamedQuery(PlatformSensorTypeIdent.FIND_BY_CLASS_AND_PLATFORM_ID, PlatformSensorTypeIdent.class);
+	public List<Long> findIdByClassNameAndPlatformId(String fullyQualifiedClassName, long platformId) {
+		TypedQuery<Long> query = getEntityManager().createNamedQuery(PlatformSensorTypeIdent.FIND_ID_BY_CLASS_AND_PLATFORM_ID, Long.class);
 		query.setParameter("fullyQualifiedClassName", fullyQualifiedClassName);
 		query.setParameter("platformIdent", platformId);
 
