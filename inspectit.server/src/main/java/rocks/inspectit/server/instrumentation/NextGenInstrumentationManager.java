@@ -176,10 +176,12 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	/**
 	 * Generates {@link RefreshInstrumentationTimestampsJob} for the given method IDs.
 	 *
+	 * @param platformId
+	 *            Id of the platform.
 	 * @param methodToSensorMap
 	 *            methods being instrumented on agent
 	 */
-	public void instrumentationApplied(final Map<Long, long[]> methodToSensorMap) {
+	public void instrumentationApplied(final long platformId, final Map<Long, long[]> methodToSensorMap) {
 		// Asynchronously refresh idents
 		executor.submit(new Runnable() {
 			@Override
@@ -189,7 +191,7 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 					long[] sensorIds = entry.getValue();
 
 					for (long sensorID : sensorIds) {
-						registrationService.addSensorTypeToMethod(sensorID, methodId);
+						registrationService.addSensorTypeToMethod(platformId, sensorID, methodId);
 					}
 				}
 			}

@@ -23,10 +23,16 @@ public class PlatformIdentCache {
 	 */
 	private Map<Long, PlatformIdent> cleanPlatformIdents = new ConcurrentHashMap<>();
 
+
 	/**
-	 * Dirty set.
+	 * Marks platform ident dirty if the one with given ID is known to the cache.
+	 *
+	 * @param platformIdentId
+	 *            {@link PlatformIdent} id.
 	 */
-	private Map<Long, PlatformIdent> dirtyPlatformIdents = new ConcurrentHashMap<>();
+	public void markDirty(long platformIdentId) {
+		cleanPlatformIdents.remove(platformIdentId);
+	}
 
 	/**
 	 * Marks platform ident dirty.
@@ -35,7 +41,7 @@ public class PlatformIdentCache {
 	 *            {@link PlatformIdent}.
 	 */
 	public void markDirty(PlatformIdent platformIdent) {
-		mark(platformIdent, true);
+		markDirty(platformIdent.getId());
 	}
 
 	/**
@@ -46,7 +52,7 @@ public class PlatformIdentCache {
 	 *            {@link PlatformIdent}.
 	 */
 	public void markClean(PlatformIdent platformIdent) {
-		mark(platformIdent, false);
+		cleanPlatformIdents.put(platformIdent.getId(), platformIdent);
 	}
 
 	/**
@@ -57,7 +63,6 @@ public class PlatformIdentCache {
 	 */
 	public void remove(PlatformIdent platformIdent) {
 		cleanPlatformIdents.remove(platformIdent.getId());
-		dirtyPlatformIdents.remove(platformIdent.getId());
 	}
 
 	/**
@@ -66,56 +71,7 @@ public class PlatformIdentCache {
 	 * @return Returns clean {@link PlatformIdent}s.
 	 */
 	public Collection<PlatformIdent> getCleanPlatformIdents() {
-		return getPlatformIdents(false);
-	}
-
-	/**
-	 * Returns dirty {@link PlatformIdent}s. This one can not be transfered to the UI.
-	 *
-	 * @return Returns dirty {@link PlatformIdent}s.
-	 */
-	public Collection<PlatformIdent> getDirtyPlatformIdents() {
-		return getPlatformIdents(true);
-	}
-
-	/**
-	 * @return Returns number of {@link PlatformIdent} obejcts in the cache.
-	 */
-	public int getSize() {
-		return cleanPlatformIdents.size() + dirtyPlatformIdents.size();
-	}
-
-	/**
-	 * Provides the list of clean or dirty {@link PlatformIdent}s.
-	 *
-	 * @param dirty
-	 *            Should idents be dirty or not.
-	 * @return List of {@link PlatformIdent}s.
-	 */
-	private Collection<PlatformIdent> getPlatformIdents(boolean dirty) {
-		if (dirty) {
-			return dirtyPlatformIdents.values();
-		} else {
-			return cleanPlatformIdents.values();
-		}
-	}
-
-	/**
-	 * Marks a {@link PlatformIdent} dirty or clean.
-	 *
-	 * @param platformIdent
-	 *            {@link PlatformIdent} to mark.
-	 * @param dirty
-	 *            Is it dirty.
-	 */
-	private void mark(PlatformIdent platformIdent, boolean dirty) {
-		cleanPlatformIdents.remove(platformIdent.getId());
-		dirtyPlatformIdents.remove(platformIdent.getId());
-		if (dirty) {
-			dirtyPlatformIdents.put(platformIdent.getId(), platformIdent);
-		} else {
-			cleanPlatformIdents.put(platformIdent.getId(), platformIdent);
-		}
+		return cleanPlatformIdents.values();
 	}
 
 }

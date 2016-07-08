@@ -6,13 +6,10 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import rocks.inspectit.server.dao.MethodIdentDao;
-import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * The default implementation of the {@link MethodIdentDao} interface by using the Entity manager.
@@ -31,12 +28,6 @@ public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements M
 	}
 
 	/**
-	 * {@link PlatformIdent} cache.
-	 */
-	@Autowired
-	private PlatformIdentCache platformIdentCache;
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -47,7 +38,6 @@ public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements M
 		} else {
 			super.update(methodIdent);
 		}
-		platformIdentCache.markDirty(methodIdent.getPlatformIdent());
 	}
 
 	/**
@@ -86,4 +76,5 @@ public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements M
 
 		return results;
 	}
+
 }

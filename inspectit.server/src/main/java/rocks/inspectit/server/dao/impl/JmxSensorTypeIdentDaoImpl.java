@@ -4,13 +4,10 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import rocks.inspectit.server.dao.JmxSensorTypeIdentDao;
-import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * The default implementation of the {@link JmxSensorTypeIdentDao} interface by using Entity
@@ -29,12 +26,6 @@ public class JmxSensorTypeIdentDaoImpl extends AbstractJpaDao<JmxSensorTypeIdent
 	public JmxSensorTypeIdentDaoImpl() {
 		super(JmxSensorTypeIdent.class);
 	}
-
-	/**
-	 * {@link PlatformIdent} cache.
-	 */
-	@Autowired
-	private PlatformIdentCache platformIdentCache;
 
 	/**
 	 * {@inheritDoc}
@@ -66,7 +57,6 @@ public class JmxSensorTypeIdentDaoImpl extends AbstractJpaDao<JmxSensorTypeIdent
 		} else {
 			super.update(jmxSensorTypeIdent);
 		}
-		platformIdentCache.markDirty(jmxSensorTypeIdent.getPlatformIdent());
 	}
 
 }

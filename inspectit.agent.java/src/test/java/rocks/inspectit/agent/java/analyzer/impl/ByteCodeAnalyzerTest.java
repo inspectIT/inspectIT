@@ -217,7 +217,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(connection, times(3)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
-			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			verify(connection, times(1)).instrumentationApplied(eq(platformId), captor.capture());
 			assertThat(captor.getValue().size(), is(1));
 			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
@@ -278,7 +278,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(connection, times(3)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
-			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			verify(connection, times(1)).instrumentationApplied(eq(platformId), captor.capture());
 			assertThat(captor.getValue().size(), is(1));
 			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
@@ -413,10 +413,10 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
 			verify(connection, times(1)).isConnected();
-			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			verify(connection, times(1)).instrumentationApplied(eq(platformId), captor.capture());
 			assertThat(captor.getValue().size(), is(1));
 			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
-			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper, platformManager);
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 
 		@Test
@@ -564,7 +564,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(connection, times(1)).analyze(eq(platformId.longValue()), anyString(), eq(classCaptor.getAllValues().get(0)));
 			verify(connection, times(1)).analyze(eq(platformId.longValue()), anyString(), eq(classCaptor.getAllValues().get(1)));
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
-			verify(connection, times(1)).instrumentationApplied(captor.capture());
+			verify(connection, times(1)).instrumentationApplied(eq(platformId), captor.capture());
 			assertThat(captor.getValue().size(), is(1));
 			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
 

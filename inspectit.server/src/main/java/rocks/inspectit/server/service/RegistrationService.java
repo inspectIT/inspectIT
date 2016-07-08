@@ -25,6 +25,7 @@ import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.dao.PlatformSensorTypeIdentDao;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
 import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
@@ -107,6 +108,12 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Autowired
 	AgentStatusDataProvider agentStatusDataProvider;
+
+	/**
+	 * {@link PlatformIdentCache}.
+	 */
+	@Autowired
+	PlatformIdentCache platformIdentCache;
 
 	/**
 	 * {@inheritDoc}
@@ -206,6 +213,7 @@ public class RegistrationService implements IRegistrationService {
 		methodIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 		methodIdentDao.saveOrUpdate(methodIdent);
+		platformIdentCache.markDirty(platformId);
 
 		return methodIdent.getId();
 	}
@@ -240,7 +248,7 @@ public class RegistrationService implements IRegistrationService {
 			platformIdentDao.saveOrUpdate(platformIdent);
 
 		}
-
+		platformIdentCache.markDirty(platformId);
 		return methodSensorTypeIdent.getId();
 	}
 
@@ -249,7 +257,7 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Override
 	@MethodLog
-	public void addSensorTypeToMethod(long methodSensorTypeId, long methodId) {
+	public void addSensorTypeToMethod(long platformId, long methodSensorTypeId, long methodId) {
 		MethodIdentToSensorType methodIdentToSensorType = methodIdentToSensorTypeDao.find(methodId, methodSensorTypeId);
 		if (null == methodIdentToSensorType) {
 			MethodIdent methodIdent = methodIdentDao.load(methodId);
@@ -259,8 +267,10 @@ public class RegistrationService implements IRegistrationService {
 
 		// always update the timestamp
 		methodIdentToSensorType.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-
 		methodIdentToSensorTypeDao.saveOrUpdate(methodIdentToSensorType);
+
+		// we need to mark the platform dirty
+		platformIdentCache.markDirty(platformId);
 	}
 
 	/**
@@ -287,6 +297,7 @@ public class RegistrationService implements IRegistrationService {
 			platformIdentDao.saveOrUpdate(platformIdent);
 		}
 
+		platformIdentCache.markDirty(platformId);
 		return platformSensorTypeIdent.getId();
 	}
 
@@ -314,6 +325,7 @@ public class RegistrationService implements IRegistrationService {
 			platformIdentDao.saveOrUpdate(platformIdent);
 		}
 
+		platformIdentCache.markDirty(platformId);
 		return jmxSensorTypeIdent.getId();
 	}
 
@@ -343,8 +355,9 @@ public class RegistrationService implements IRegistrationService {
 		}
 
 		jmxDefinitionDataIdent.setTimeStamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-
 		jmxDefinitionDataIdentDao.saveOrUpdate(jmxDefinitionDataIdent);
+
+		platformIdentCache.markDirty(platformId);
 		return jmxDefinitionDataIdent.getId();
 	}
 
