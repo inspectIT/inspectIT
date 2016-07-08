@@ -666,7 +666,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as no instrumentation happened, we get a null object
 			assertThat(instrumentedByteCode, is(nullValue()));
 			// assert we kept the interrupted exception
-			assertThat(Thread.currentThread().isInterrupted(), is(true));
+			assertThat(Thread.interrupted(), is(true));
 
 			verify(connection, times(1)).isConnected();
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
