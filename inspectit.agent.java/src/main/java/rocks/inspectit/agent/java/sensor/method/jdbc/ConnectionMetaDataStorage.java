@@ -120,6 +120,10 @@ public class ConnectionMetaDataStorage {
 	 */
 	static class ConnectionMetaDataExtractor {
 
+		/** FQN of the java.sql.DatabaseMetaData. */
+		private static final String JAVA_SQL_DATABASE_META_DATA_FQN = "java.sql.DatabaseMetaData";
+		/** FQN of the java.sql.Connection. */
+		private static final String JAVA_SQL_CONNECTION_FQN = "java.sql.Connection";
 		/** Method names. */
 		private static final String GET_META_DATA = "getMetaData";
 		/** Method names. */
@@ -191,7 +195,7 @@ public class ConnectionMetaDataStorage {
 		 *         exception occurs during method invocation
 		 */
 		private boolean isClosed(Class<?> connectionClass, Object connection) {
-			return (Boolean) cache.invokeMethod(connectionClass, IS_CLOSED, null, connection, null, true);
+			return (Boolean) cache.invokeMethod(connectionClass, IS_CLOSED, null, connection, null, true, JAVA_SQL_CONNECTION_FQN);
 		}
 
 		/**
@@ -205,7 +209,7 @@ public class ConnectionMetaDataStorage {
 		 *         problems.
 		 */
 		private Object getMetaData(Class<?> connectionClass, Object connection) {
-			return cache.invokeMethod(connectionClass, GET_META_DATA, null, connection, null, null);
+			return cache.invokeMethod(connectionClass, GET_META_DATA, null, connection, null, null, JAVA_SQL_CONNECTION_FQN);
 		}
 
 		/**
@@ -218,7 +222,7 @@ public class ConnectionMetaDataStorage {
 		 * @return the target/url from the jdbc connection string.
 		 */
 		private String parseTarget(Class<?> databaseMetaDataClass, Object databaseMetaData) {
-			String url = (String) cache.invokeMethod(databaseMetaDataClass, GET_URL, null, databaseMetaData, null, null);
+			String url = (String) cache.invokeMethod(databaseMetaDataClass, GET_URL, null, databaseMetaData, null, null, JAVA_SQL_DATABASE_META_DATA_FQN);
 			return urlExtractor.extractURLfromJDBCURL(url);
 		}
 
@@ -232,7 +236,7 @@ public class ConnectionMetaDataStorage {
 		 * @return the version of the database.
 		 */
 		private String parseVersion(Class<?> databaseMetaDataClass, Object databaseMetaData) {
-			return (String) cache.invokeMethod(databaseMetaDataClass, GET_DATABASE_PRODUCT_VERSION, null, databaseMetaData, null, null);
+			return (String) cache.invokeMethod(databaseMetaDataClass, GET_DATABASE_PRODUCT_VERSION, null, databaseMetaData, null, null, JAVA_SQL_DATABASE_META_DATA_FQN);
 		}
 
 		/**
@@ -245,7 +249,7 @@ public class ConnectionMetaDataStorage {
 		 * @return the product name of the database.
 		 */
 		private String parseProduct(Class<?> databaseMetaDataClass, Object databaseMetaData) {
-			return (String) cache.invokeMethod(databaseMetaDataClass, GET_DATABASE_PRODUCT_NAME, null, databaseMetaData, null, null);
+			return (String) cache.invokeMethod(databaseMetaDataClass, GET_DATABASE_PRODUCT_NAME, null, databaseMetaData, null, null, JAVA_SQL_DATABASE_META_DATA_FQN);
 		}
 	}
 
