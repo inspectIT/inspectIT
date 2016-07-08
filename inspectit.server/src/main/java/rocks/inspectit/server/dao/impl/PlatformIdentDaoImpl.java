@@ -181,7 +181,7 @@ public class PlatformIdentDaoImpl extends AbstractJpaDao<PlatformIdent> implemen
 		}
 
 		wantedAgentsIds.removeAll(cleanIdents);
-		if (cleanIdents.size() != platformIdentCache.getSize()) {
+		if (CollectionUtils.isNotEmpty(wantedAgentsIds)) {
 			List<PlatformIdent> cleanPlatformIdents = loadIdentsFromDB(cleanIdents, wantedAgentsIds);
 			for (PlatformIdent platformIdent : cleanPlatformIdents) {
 				if (wantedAgentsIds.contains(platformIdent.getId())) {

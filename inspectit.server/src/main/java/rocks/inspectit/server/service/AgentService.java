@@ -73,8 +73,8 @@ public class AgentService implements IAgentService {
 	 */
 	@Override
 	@MethodLog
-	public void instrumentationApplied(Map<Long, long[]> methodToSensorMap) {
-		nextGenInstrumentationManager.instrumentationApplied(methodToSensorMap);
+	public void instrumentationApplied(long platformId, Map<Long, long[]> methodToSensorMap) {
+		nextGenInstrumentationManager.instrumentationApplied(platformId, methodToSensorMap);
 	}
 
 	/**

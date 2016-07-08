@@ -11,7 +11,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
  * Afterwards, all sensor types (no matter if method- or platform-) are registered. Then they are
  * going to register all methods which are instrumented by that Agent. The last step is to map the
  * method sensor type to the instrumented method by calling the
- * {@link #addSensorTypeToMethod(long, long)} method.
+ * {@link #addSensorTypeToMethod(long, long, long)} method.
  * <p>
  * All of this information will be persisted in the database. The returned values are basically
  * representing the index of the data in the db.
@@ -92,12 +92,14 @@ public interface IRegistrationService {
 	/**
 	 * This method is used to map a registered method sensor type to a registered method.
 	 *
+	 * @param platformId
+	 *            The unique identifier of the platform.
 	 * @param methodSensorTypeIdent
 	 *            The unique identifier of the sensor type.
 	 * @param methodIdent
 	 *            The unique identifier of the method.
 	 */
-	void addSensorTypeToMethod(long methodSensorTypeIdent, long methodIdent);
+	void addSensorTypeToMethod(long platformId, long methodSensorTypeIdent, long methodIdent);
 
 	/**
 	 * Every sensor type which gathers information about the target platform/system has to be

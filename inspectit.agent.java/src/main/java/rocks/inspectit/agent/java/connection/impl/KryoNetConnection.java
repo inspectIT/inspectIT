@@ -326,14 +326,14 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void instrumentationApplied(Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException {
+	public void instrumentationApplied(final long platformIdent, Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
 		}
 
 		if (MapUtils.isNotEmpty(methodToSensorMap)) {
 			try {
-				InstrumentationAppliedCall call = new InstrumentationAppliedCall(agentService, methodToSensorMap);
+				InstrumentationAppliedCall call = new InstrumentationAppliedCall(agentService, platformIdent, methodToSensorMap);
 				call.makeCall();
 			} catch (ExecutionException executionException) {
 				// there should be no execution exception
