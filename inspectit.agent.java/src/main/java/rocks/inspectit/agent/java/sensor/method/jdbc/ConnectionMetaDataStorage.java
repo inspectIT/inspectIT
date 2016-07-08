@@ -120,6 +120,8 @@ public class ConnectionMetaDataStorage {
 	 */
 	static class ConnectionMetaDataExtractor {
 
+		/** FQN of the java.sql.Connection. */
+		private static final String JAVA_SQL_CONNECTION_FQN = "java.sql.Connection";
 		/** Method names. */
 		private static final String GET_META_DATA = "getMetaData";
 		/** Method names. */
@@ -191,7 +193,7 @@ public class ConnectionMetaDataStorage {
 		 *         exception occurs during method invocation
 		 */
 		private boolean isClosed(Class<?> connectionClass, Object connection) {
-			return (Boolean) cache.invokeMethod(connectionClass, IS_CLOSED, null, connection, null, true);
+			return (Boolean) cache.invokeMethod(connectionClass, IS_CLOSED, null, connection, null, true, JAVA_SQL_CONNECTION_FQN);
 		}
 
 		/**
@@ -205,7 +207,7 @@ public class ConnectionMetaDataStorage {
 		 *         problems.
 		 */
 		private Object getMetaData(Class<?> connectionClass, Object connection) {
-			return cache.invokeMethod(connectionClass, GET_META_DATA, null, connection, null, null);
+			return cache.invokeMethod(connectionClass, GET_META_DATA, null, connection, null, null, JAVA_SQL_CONNECTION_FQN);
 		}
 
 		/**
