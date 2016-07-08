@@ -530,27 +530,29 @@ public class KryoNetConnectionTest extends TestBase {
 			when(client.isConnected()).thenReturn(true);
 			Map<Long, long[]> methodToSensorMap = mock(Map.class);
 			when(methodToSensorMap.isEmpty()).thenReturn(false);
+			long id = 7;
 
-			connection.instrumentationApplied(methodToSensorMap);
+			connection.instrumentationApplied(id, methodToSensorMap);
 
-			verify(agentService, times(1)).instrumentationApplied(methodToSensorMap);
+			verify(agentService, times(1)).instrumentationApplied(id, methodToSensorMap);
 			verifyNoMoreInteractions(agentService);
 		}
 
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(agentService).instrumentationApplied(Matchers.<Map<Long, long[]>> any());
+			doThrow(TimeoutException.class).when(agentService).instrumentationApplied(anyLong(), Matchers.<Map<Long, long[]>> any());
 			Map<Long, long[]> methodToSensorMap = mock(Map.class);
 			when(methodToSensorMap.isEmpty()).thenReturn(false);
+			long id = 7;
 
 			try {
-				connection.instrumentationApplied(methodToSensorMap);
+				connection.instrumentationApplied(id, methodToSensorMap);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(true));
 				throw e;
 			} finally {
-				verify(agentService, times(1)).instrumentationApplied(methodToSensorMap);
+				verify(agentService, times(1)).instrumentationApplied(id, methodToSensorMap);
 				verifyNoMoreInteractions(agentService);
 			}
 		}
@@ -558,18 +560,19 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(agentService).instrumentationApplied(Matchers.<Map<Long, long[]>> any());
+			doThrow(RuntimeException.class).when(agentService).instrumentationApplied(anyLong(), Matchers.<Map<Long, long[]>> any());
 			Map<Long, long[]> methodToSensorMap = mock(Map.class);
 			when(methodToSensorMap.isEmpty()).thenReturn(false);
+			long id = 7;
 
 			try {
-				connection.instrumentationApplied(methodToSensorMap);
+				connection.instrumentationApplied(id, methodToSensorMap);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
 			} finally {
 				// call depends on the retry strategy
-				verify(agentService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).instrumentationApplied(methodToSensorMap);
+				verify(agentService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).instrumentationApplied(id, methodToSensorMap);
 				verifyNoMoreInteractions(agentService);
 			}
 		}
@@ -578,9 +581,10 @@ public class KryoNetConnectionTest extends TestBase {
 		public void notConnected() throws Exception {
 			when(client.isConnected()).thenReturn(false);
 			Map<Long, long[]> methodToSensorMap = mock(Map.class);
+			long id = 7;
 
 			try {
-				connection.instrumentationApplied(methodToSensorMap);
+				connection.instrumentationApplied(id, methodToSensorMap);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;

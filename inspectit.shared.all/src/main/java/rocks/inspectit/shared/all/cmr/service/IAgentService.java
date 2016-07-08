@@ -65,11 +65,13 @@ public interface IAgentService {
 
 	/**
 	 * Informs the CMR that the methods have been instrumented on the agent.
-	 *
+	 * 
+	 * @param platformId
+	 *            Id of the agent.
 	 * @param methodToSensorMap
 	 *            map containing method id as key and applied sensor IDs
 	 */
-	void instrumentationApplied(Map<Long, long[]> methodToSensorMap);
+	void instrumentationApplied(long platformId, Map<Long, long[]> methodToSensorMap);
 
 	/**
 	 * Analyzes the given {@link JmxAttributeDescriptor} and decides which ones will be monitored,

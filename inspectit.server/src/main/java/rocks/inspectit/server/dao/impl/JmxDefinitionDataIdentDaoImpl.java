@@ -4,13 +4,10 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import rocks.inspectit.server.dao.JmxDefinitionDataIdentDao;
-import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 
 /**
  * The default implementation of the {@link JmxDefinitionDataIdentDao} interface by using Entity
@@ -31,12 +28,6 @@ public class JmxDefinitionDataIdentDaoImpl extends AbstractJpaDao<JmxDefinitionD
 	}
 
 	/**
-	 * {@link PlatformIdent} cache.
-	 */
-	@Autowired
-	private PlatformIdentCache platformIdentCache;
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -55,7 +46,6 @@ public class JmxDefinitionDataIdentDaoImpl extends AbstractJpaDao<JmxDefinitionD
 		} else {
 			super.update(jmxDefinitionDataIdent);
 		}
-		platformIdentCache.markDirty(jmxDefinitionDataIdent.getPlatformIdent());
 	}
 
 	/**

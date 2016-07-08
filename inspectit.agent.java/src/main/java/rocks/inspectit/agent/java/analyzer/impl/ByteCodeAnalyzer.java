@@ -291,7 +291,11 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 
 			// inform CMR of the applied instrumentation ids
 			if (MapUtils.isNotEmpty(methodToSensorMap)) {
-				executorService.submit(new InstrumentationAppliedRunnable(connection, methodToSensorMap));
+				try {
+					executorService.submit(new InstrumentationAppliedRunnable(connection, platformManager.getPlatformId(), methodToSensorMap));
+				} catch (IdNotAvailableException idNotAvailableException) {
+					log.warn("Error trying to send applied instrumentations to the server.", idNotAvailableException);
+				}
 			}
 
 			return classWriter.toByteArray();

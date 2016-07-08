@@ -119,12 +119,14 @@ public interface IConnection {
 	/**
 	 * Informs the CMR that the methods have been instrumented on the agent.
 	 *
+	 * @param platformIdent
+	 *            Id of the agent.
 	 * @param methodToSensorMap
 	 *            Map containing method id as key and applied sensor IDs.
 	 * @throws ServerUnavailableException
 	 *             If server to send the request to is unavailable.
 	 */
-	void instrumentationApplied(Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException;
+	void instrumentationApplied(long platformIdent, Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException;
 
 	/**
 	 * Sends the given {@link JmxAttributeDescriptor} to the CMR, returning the ones that will be

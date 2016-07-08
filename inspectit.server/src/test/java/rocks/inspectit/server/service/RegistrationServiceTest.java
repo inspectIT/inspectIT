@@ -44,6 +44,7 @@ import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformSensorTypeIdentDaoImpl;
 import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
 import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
@@ -103,6 +104,9 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	@Mock
 	private JmxDefinitionDataIdentDao jmxDefinitionDataIdentDao;
 
+	@Mock
+	private PlatformIdentCache platformIdentCache;
+
 	/**
 	 * Initializes mocks. Has to run before each test so that mocks are clear.
 	 */
@@ -119,6 +123,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		registrationService.methodIdentToSensorTypeDao = methodIdentToSensorTypeDao;
 		registrationService.jmxSensorTypeIdentDao = jmxSensorTypeIdentDao;
 		registrationService.jmxDefinitionDataIdentDao = jmxDefinitionDataIdentDao;
+		registrationService.platformIdentCache = platformIdentCache;
 		registrationService.log = LoggerFactory.getLogger(RegistrationService.class);
 	}
 
@@ -370,6 +375,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		long registeredId = registrationService.registerMethodIdent(platformId, packageName, className, methodName, parameterTypes, returnType, modifiers);
 		assertThat(registeredId, equalTo(methodId));
 
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 		ArgumentCaptor<MethodIdent> argument = ArgumentCaptor.forClass(MethodIdent.class);
 		verify(methodIdentDao, times(1)).saveOrUpdate(argument.capture());
 
@@ -420,6 +426,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		long registeredId = registrationService.registerMethodIdent(platformId, packageName, className, methodName, parameterTypes, returnType, modifiers);
 		assertThat(registeredId, equalTo(methodId));
 
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 		ArgumentCaptor<MethodIdent> argument = ArgumentCaptor.forClass(MethodIdent.class);
 		verify(methodIdentDao, times(1)).saveOrUpdate(argument.capture());
 
@@ -459,6 +466,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		long registeredId = registrationService.registerMethodSensorTypeIdent(platformId, fqcName, Collections.<String, Object> emptyMap());
 		assertThat(registeredId, is(equalTo(methodSensorId)));
 
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 		ArgumentCaptor<MethodSensorTypeIdent> methodSensorArgument = ArgumentCaptor.forClass(MethodSensorTypeIdent.class);
 		verify(methodSensorTypeIdentDao, times(1)).saveOrUpdate(methodSensorArgument.capture());
 		assertThat(methodSensorArgument.getValue().getFullyQualifiedClassName(), is(equalTo(fqcName)));
@@ -498,6 +506,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		long registeredId = registrationService.registerMethodSensorTypeIdent(platformId, fqcName, settings);
 		assertThat(registeredId, is(equalTo(methodSensorId)));
 
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 		ArgumentCaptor<MethodSensorTypeIdent> methodSensorArgument = ArgumentCaptor.forClass(MethodSensorTypeIdent.class);
 		verify(methodSensorTypeIdentDao, times(1)).saveOrUpdate(methodSensorArgument.capture());
 		assertThat(methodSensorArgument.getValue().getSettings(), is(settings));
@@ -528,6 +537,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		long registeredId = registrationService.registerPlatformSensorTypeIdent(platformId, fqcName);
 		assertThat(registeredId, is(equalTo(platformSensorId)));
 
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 		ArgumentCaptor<PlatformSensorTypeIdent> platformSensorArgument = ArgumentCaptor.forClass(PlatformSensorTypeIdent.class);
 		verify(platformSensorTypeIdentDao, times(1)).saveOrUpdate(platformSensorArgument.capture());
 		assertThat(platformSensorArgument.getValue().getFullyQualifiedClassName(), is(equalTo(fqcName)));
@@ -560,6 +570,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		long registeredId = registrationService.registerJmxSensorTypeIdent(platformId, fqcName);
 		assertThat(registeredId, is(equalTo(jmxSensorId)));
 
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 		ArgumentCaptor<JmxSensorTypeIdent> jmxSensorArgument = ArgumentCaptor.forClass(JmxSensorTypeIdent.class);
 		verify(jmxSensorTypeIdentDao, times(1)).saveOrUpdate(jmxSensorArgument.capture());
 		assertThat(jmxSensorArgument.getValue().getFullyQualifiedClassName(), is(equalTo(fqcName)));
@@ -601,6 +612,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 
 		ArgumentCaptor<JmxDefinitionDataIdent> jmxSensorArgument = ArgumentCaptor.forClass(JmxDefinitionDataIdent.class);
 		verify(jmxDefinitionDataIdentDao, times(1)).saveOrUpdate(jmxSensorArgument.capture());
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 
 		JmxDefinitionDataIdent dataIdent = jmxSensorArgument.getValue();
 
@@ -618,6 +630,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 */
 	@Test
 	public void registerSensorTypeWithMethodFirstTime() {
+		long platformId = 1;
 		long methodId = 20;
 		long methodSensorId = 50;
 
@@ -628,10 +641,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		when(methodIdentDao.load(methodId)).thenReturn(methodIdent);
 		when(methodSensorTypeIdentDao.load(methodSensorId)).thenReturn(methodSensorTypeIdent);
 
-		registrationService.addSensorTypeToMethod(methodSensorId, methodId);
+		registrationService.addSensorTypeToMethod(platformId, methodSensorId, methodId);
 
 		ArgumentCaptor<MethodIdentToSensorType> argument = ArgumentCaptor.forClass(MethodIdentToSensorType.class);
 		verify(methodIdentToSensorTypeDao, times(1)).saveOrUpdate(argument.capture());
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 
 		assertThat(argument.getValue().getMethodIdent(), is(equalTo(methodIdent)));
 		assertThat(argument.getValue().getMethodSensorTypeIdent(), is(equalTo(methodSensorTypeIdent)));
@@ -642,6 +656,7 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 	 */
 	@Test
 	public void registerSensorTypeWithMethodSecondTime() {
+		long platformId = 1;
 		long methodId = 20;
 		long methodSensorId = 50;
 
@@ -651,11 +666,11 @@ public class RegistrationServiceTest extends AbstractTestNGLogSupport {
 		methodIdentToSensorType.setTimestamp(timestamp);
 		when(methodIdentToSensorTypeDao.find(methodId, methodSensorId)).thenReturn(methodIdentToSensorType);
 
-		registrationService.addSensorTypeToMethod(methodSensorId, methodId);
+		registrationService.addSensorTypeToMethod(platformId, methodSensorId, methodId);
 
 		ArgumentCaptor<MethodIdentToSensorType> argument = ArgumentCaptor.forClass(MethodIdentToSensorType.class);
 		verify(methodIdentToSensorTypeDao, times(1)).saveOrUpdate(argument.capture());
-		verifyZeroInteractions(methodIdentDao);
+		verify(platformIdentCache, times(1)).markDirty(platformId);
 		verifyZeroInteractions(methodSensorTypeIdentDao);
 
 		assertThat(argument.getValue().getId(), is(equalTo(1L)));
