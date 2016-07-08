@@ -36,7 +36,8 @@ import rocks.inspectit.shared.all.jpa.ListStringConverter;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
-		@NamedQuery(name = MethodIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m from MethodIdent m JOIN m.platformIdent p WHERE p.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType ") })
+	@NamedQuery(name = MethodIdent.FIND_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m from MethodIdent m JOIN m.platformIdent p WHERE p.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType "),
+	@NamedQuery(name = MethodIdent.FIND_PLATFORM_ID_BY_ID, query = "SELECT m.platformIdent.id FROM MethodIdent m WHERE m.id=:id") })
 public class MethodIdent implements Serializable {
 
 	/**
@@ -61,6 +62,16 @@ public class MethodIdent implements Serializable {
 	 * </ul>
 	 */
 	public static final String FIND_BY_PLATFORM_AND_EXAMPLE = "MethodIdent.findByPlatformAndExample";
+
+	/**
+	 * Constant for findPlatformIdById query.
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>id
+	 * </ul>
+	 */
+	public static final String FIND_PLATFORM_ID_BY_ID = "MethodIdent.findPlatformIdById";
 
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).

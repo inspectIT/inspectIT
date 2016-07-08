@@ -25,6 +25,7 @@ import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.dao.PlatformSensorTypeIdentDao;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
+import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
 import rocks.inspectit.shared.all.cmr.model.JmxSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
@@ -107,6 +108,12 @@ public class RegistrationService implements IRegistrationService {
 	 */
 	@Autowired
 	AgentStatusDataProvider agentStatusDataProvider;
+
+	/**
+	 * {@link PlatformIdentCache}.
+	 */
+	@Autowired
+	PlatformIdentCache platformIdentCache;
 
 	/**
 	 * {@inheritDoc}
@@ -259,8 +266,11 @@ public class RegistrationService implements IRegistrationService {
 
 		// always update the timestamp
 		methodIdentToSensorType.setTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-
 		methodIdentToSensorTypeDao.saveOrUpdate(methodIdentToSensorType);
+
+		// we need to mark the platform dirty, thus load the ID of the platform method belongs to
+		Long platformId = methodIdentDao.findPlatformId(methodId);
+		platformIdentCache.markDirty(platformId.longValue());
 	}
 
 	/**

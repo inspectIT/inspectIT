@@ -86,4 +86,15 @@ public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements M
 
 		return results;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Long findPlatformId(long id) {
+		TypedQuery<Long> query = getEntityManager().createNamedQuery(MethodIdent.FIND_PLATFORM_ID_BY_ID, Long.class);
+		query.setParameter("id", id);
+		return query.getSingleResult();
+	}
+
 }

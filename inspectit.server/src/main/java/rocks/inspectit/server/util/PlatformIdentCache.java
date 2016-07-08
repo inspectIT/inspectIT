@@ -29,6 +29,19 @@ public class PlatformIdentCache {
 	private Map<Long, PlatformIdent> dirtyPlatformIdents = new ConcurrentHashMap<>();
 
 	/**
+	 * Marks platform ident dirty if the one with given ID is known to the cache.
+	 *
+	 * @param platformIdentId
+	 *            {@link PlatformIdent} id.
+	 */
+	public void markDirty(long platformIdentId) {
+		PlatformIdent platformIdent = find(platformIdentId);
+		if (null != platformIdent) {
+			mark(platformIdent, true);
+		}
+	}
+
+	/**
 	 * Marks platform ident dirty.
 	 *
 	 * @param platformIdent
@@ -116,6 +129,25 @@ public class PlatformIdentCache {
 		} else {
 			cleanPlatformIdents.put(platformIdent.getId(), platformIdent);
 		}
+	}
+
+	/**
+	 * Finds platform ident in the clean or dirty map by given id.
+	 *
+	 * @param id
+	 *            id of the platform
+	 * @return Found instance or <code>null</code> if cache does not have this id.
+	 */
+	private PlatformIdent find(long id) {
+		PlatformIdent platformIdent = cleanPlatformIdents.get(id);
+		if (null != platformIdent) {
+			return platformIdent;
+		}
+		platformIdent = dirtyPlatformIdents.get(id);
+		if (null != platformIdent) {
+			return platformIdent;
+		}
+		return null;
 	}
 
 }

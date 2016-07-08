@@ -61,6 +61,15 @@ public interface MethodIdentDao {
 	List<MethodIdent> findForPlatformIdAndExample(long platformId, MethodIdent methodIdentExample);
 
 	/**
+	 * This method returns ID of the platform the {@link MethodIdent} object belongs to.
+	 *
+	 * @param id
+	 *            The id of the MethodIdent.
+	 * @return Platform id.
+	 */
+	Long findPlatformId(long id);
+
+	/**
 	 * Returns all {@link MethodIdent} objects which are saved in the underlying storage.
 	 *
 	 * @return Returns all stored {@link MethodIdent} objects.
