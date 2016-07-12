@@ -102,7 +102,9 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 				agentStatusData = existing;
 			}
 		}
-		agentStatusData.setConnectionTimestamp(System.currentTimeMillis());
+		long currentTimeMillis = System.currentTimeMillis();
+		agentStatusData.setLastKeepAliveTimestamp(currentTimeMillis);
+		agentStatusData.setConnectionTimestamp(currentTimeMillis);
 		agentStatusData.setAgentConnection(AgentConnection.CONNECTED);
 	}
 
