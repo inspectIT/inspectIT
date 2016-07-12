@@ -1,18 +1,32 @@
 package rocks.inspectit.server.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.doAnswer;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.event.AgentDeletedEvent;
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
  * Tests the {@link AgentStatusDataProvider}.
@@ -21,63 +35,230 @@ import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentCo
  *
  */
 @SuppressWarnings("PMD")
-public class AgentStatusDataProviderTest {
+public class AgentStatusDataProviderTest extends TestBase {
 
 	/**
 	 * Class under test.
 	 */
-	private AgentStatusDataProvider agentStatusDataProvider;
+	@InjectMocks
+	AgentStatusDataProvider agentStatusDataProvider;
 
-	/**
-	 * Init method.
-	 */
-	@BeforeMethod
-	public void init() {
-		agentStatusDataProvider = new AgentStatusDataProvider();
+	@Mock
+	ScheduledExecutorService executorService;
+
+	@Mock
+	Logger log;
+
+	public class RegisterConnected extends AgentStatusDataProviderTest {
+
+		@Test
+		public void connectFirstTime() {
+			long platformIdent = 10L;
+
+			agentStatusDataProvider.registerConnected(platformIdent);
+
+			assertThat(agentStatusDataProvider.getAgentStatusDataMap().entrySet(), hasSize(1));
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
+			assertThat(agentStatusData.getConnectionTimestamp(), is(greaterThan(0L)));
+			assertThat(agentStatusData.getLastKeepAliveTimestamp(), is(greaterThan(0L)));
+			assertThat(agentStatusData.getMillisSinceLastData(), is(nullValue()));
+		}
+
+		@Test
+		public void connectTwice() {
+			long platformIdent = 10L;
+
+			agentStatusDataProvider.registerConnected(platformIdent);
+			long currentTimeMillis = System.currentTimeMillis();
+			agentStatusDataProvider.registerConnected(platformIdent);
+
+			assertThat(agentStatusDataProvider.getAgentStatusDataMap().entrySet(), hasSize(1));
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
+			assertThat(agentStatusData.getConnectionTimestamp(), is(greaterThanOrEqualTo(currentTimeMillis)));
+			assertThat(agentStatusData.getLastKeepAliveTimestamp(), is(greaterThanOrEqualTo(currentTimeMillis)));
+			assertThat(agentStatusData.getMillisSinceLastData(), is(nullValue()));
+		}
+
 	}
 
-	/**
-	 * Test the correct change of statuses.
-	 */
-	@Test
-	public void statuses() {
-		long platformIdent = 10L;
-		agentStatusDataProvider.registerConnected(platformIdent);
-		assertThat(agentStatusDataProvider.getAgentStatusDataMap().size(), is(1));
+	public class registerDisconnected extends AgentStatusDataProviderTest {
 
-		AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
-		assertThat(agentStatusData, is(notNullValue()));
-		assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
-		assertThat(agentStatusData.getMillisSinceLastData(), is(nullValue()));
+		@Test
+		public void neverConnected() {
+			long platformIdent = 10L;
 
-		long millis = System.currentTimeMillis();
-		agentStatusDataProvider.registerDataSent(platformIdent);
-		assertThat(agentStatusDataProvider.getAgentStatusDataMap().size(), is(1));
+			boolean disconnected = agentStatusDataProvider.registerDisconnected(platformIdent);
 
-		agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
-		assertThat(agentStatusData, is(notNullValue()));
-		assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
-		assertThat(agentStatusData.getMillisSinceLastData(), is(lessThanOrEqualTo(System.currentTimeMillis() - millis)));
+			assertThat(disconnected, is(false));
+		}
 
-		agentStatusDataProvider.registerDisconnected(platformIdent);
-		assertThat(agentStatusDataProvider.getAgentStatusDataMap().size(), is(1));
+		@Test
+		public void disconnected() {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
 
-		agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
-		assertThat(agentStatusData, is(notNullValue()));
-		assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.DISCONNECTED));
+			boolean disconnected = agentStatusDataProvider.registerDisconnected(platformIdent);
 
-		PlatformIdent p = new PlatformIdent();
-		p.setId(platformIdent);
-		AgentDeletedEvent event = new AgentDeletedEvent(this, p);
-		agentStatusDataProvider.onApplicationEvent(event);
-		assertThat(agentStatusDataProvider.getAgentStatusDataMap().size(), is(0));
+			assertThat(disconnected, is(true));
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.DISCONNECTED));
+		}
 	}
 
-	/**
-	 * Test that initially there is not information.
-	 */
-	@Test
-	public void noStatusAvailable() {
-		assertThat(agentStatusDataProvider.getAgentStatusDataMap().size(), is(0));
+	public class RegisterDataSent extends AgentStatusDataProviderTest {
+
+		@Test
+		public void neverConnected() {
+			long platformIdent = 10L;
+
+			agentStatusDataProvider.registerDataSent(platformIdent);
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(nullValue()));
+		}
+
+		@Test
+		public void connected() {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
+
+			agentStatusDataProvider.registerDataSent(platformIdent);
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getMillisSinceLastData(), is(notNullValue()));
+		}
 	}
+
+	public class HandleKeepAliveSignal extends AgentStatusDataProviderTest {
+
+		@Test
+		public void neverConnected() {
+			long platformIdent = 10L;
+
+			agentStatusDataProvider.handleKeepAliveSignal(platformIdent);
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(nullValue()));
+		}
+
+		@Test
+		public void connected() {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
+			long currentTimeMillis = System.currentTimeMillis();
+
+			agentStatusDataProvider.handleKeepAliveSignal(platformIdent);
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
+			assertThat(agentStatusData.getLastKeepAliveTimestamp(), is(greaterThanOrEqualTo(currentTimeMillis)));
+		}
+
+		@Test
+		public void afterTimeout() {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
+			agentStatusDataProvider.registerKeepAliveTimeout(platformIdent);
+			long currentTimeMillis = System.currentTimeMillis();
+
+			agentStatusDataProvider.handleKeepAliveSignal(platformIdent);
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
+			assertThat(agentStatusData.getLastKeepAliveTimestamp(), is(greaterThanOrEqualTo(currentTimeMillis)));
+		}
+	}
+
+	public class RegisterKeepAliveTimeout extends AgentStatusDataProviderTest {
+
+		@Test
+		public void neverConnected() {
+			long platformIdent = 10L;
+
+			agentStatusDataProvider.registerKeepAliveTimeout(platformIdent);
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(nullValue()));
+		}
+
+		@Test
+		public void connected() {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
+
+			agentStatusDataProvider.registerKeepAliveTimeout(platformIdent);
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.NO_KEEP_ALIVE));
+		}
+	}
+
+	// tests runnable in fact
+	public class AfterPropertiesSet extends AgentStatusDataProviderTest {
+
+		@BeforeMethod
+		public void init() {
+			doAnswer(new Answer<Void>() {
+				@Override
+				public Void answer(InvocationOnMock invocation) throws Throwable {
+					Runnable runnable = (Runnable) invocation.getArguments()[0];
+					runnable.run();
+					return null;
+				}
+			}).when(executorService).scheduleAtFixedRate(Mockito.<Runnable> any(), anyLong(), anyLong(), Mockito.<TimeUnit> any());
+		}
+
+		@Test
+		public void noAgent() throws Exception {
+			agentStatusDataProvider.afterPropertiesSet();
+
+			assertThat(agentStatusDataProvider.getAgentStatusDataMap().entrySet(), is(empty()));
+		}
+
+		@Test
+		public void noTimeout() throws Exception {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
+
+			agentStatusDataProvider.afterPropertiesSet();
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
+		}
+
+		@Test
+		public void timeout() throws Exception {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
+			Thread.sleep(IKeepAliveService.KA_TIMEOUT + 1);
+
+			agentStatusDataProvider.afterPropertiesSet();
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.NO_KEEP_ALIVE));
+		}
+
+		@Test
+		public void disconnected() throws Exception {
+			long platformIdent = 10L;
+			agentStatusDataProvider.registerConnected(platformIdent);
+			agentStatusDataProvider.registerDisconnected(platformIdent);
+
+			agentStatusDataProvider.afterPropertiesSet();
+
+			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
+			assertThat(agentStatusData, is(notNullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.DISCONNECTED));
+		}
+	}
+
 }
