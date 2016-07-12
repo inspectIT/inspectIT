@@ -43,11 +43,6 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 					continue;
 				}
 
-				// Skip recently connected agents
-				if ((currentTime - entry.getValue().getConnectionTimestamp()) < IKeepAliveService.KA_TIMEOUT) {
-					continue;
-				}
-
 				long timeToLastSignal = currentTime - entry.getValue().getLastKeepAliveTimestamp();
 
 				if (timeToLastSignal > IKeepAliveService.KA_TIMEOUT) {
@@ -102,7 +97,9 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 				agentStatusData = existing;
 			}
 		}
-		agentStatusData.setConnectionTimestamp(System.currentTimeMillis());
+		long currentTimeMillis = System.currentTimeMillis();
+		agentStatusData.setLastKeepAliveTimestamp(currentTimeMillis);
+		agentStatusData.setConnectionTimestamp(currentTimeMillis);
 		agentStatusData.setAgentConnection(AgentConnection.CONNECTED);
 	}
 
