@@ -163,6 +163,13 @@ public class JmxSensorTest extends TestBase {
 
 	public static class Update extends JmxSensorTest {
 
+		@Test
+		public void notInitialzed() {
+			jmxSensor.update(coreService);
+
+			verifyZeroInteractions(coreService, mBeanServer);
+		}
+
 		/**
 		 * Tests the registration of a mBean.
 		 *
@@ -464,7 +471,7 @@ public class JmxSensorTest extends TestBase {
 		@DataProvider(name = "throwableProvider")
 		public Object[][] getThrowables() {
 			return new Object[][] { { AttributeNotFoundException.class }, { InstanceNotFoundException.class }, { MBeanException.class }, { ReflectionException.class },
-					{ RuntimeMBeanException.class } };
+				{ RuntimeMBeanException.class } };
 		}
 
 	}
@@ -487,6 +494,9 @@ public class JmxSensorTest extends TestBase {
 			MBeanAttributeInfo mBeanAttributeInfo = new MBeanAttributeInfo(testAttributeName, testAttrType, testAttrDescription, testAttrIsReadable, testAttrIsWriteable, testAttrIsIs);
 			MBeanAttributeInfo[] mBeanAttributeInfos = { mBeanAttributeInfo };
 			ObjectName objectName = new ObjectName(testObjectName);
+
+			jmxSensor.init(sensorTypeConfig);
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
 
 			when(sensorTypeConfig.getId()).thenReturn(sensorType);
 			when(mBeanServer.queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName));
