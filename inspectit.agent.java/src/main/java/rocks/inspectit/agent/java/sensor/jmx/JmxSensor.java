@@ -19,7 +19,6 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerNotification;
-import javax.management.MalformedObjectNameException;
 import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
@@ -28,7 +27,6 @@ import javax.management.ReflectionException;
 import javax.management.RuntimeMBeanException;
 
 import org.slf4j.Logger;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +111,11 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	private MBeanServer mBeanServer;
 
 	/**
+	 * If {@link #mBeanServer} has been successfully initialized.
+	 */
+	private boolean initialized = false;
+
+	/**
 	 * Map used to connect the ObjectName of a MBean with the string-representation of the same
 	 * MBean. Recreation of the ObjectName is no longer necessary for the update-method.
 	 */
@@ -134,19 +137,26 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	public void init(JmxSensorTypeConfig sensorTypeConfig) {
 		this.sensorTypeConfig = sensorTypeConfig;
 
-		if (null == mBeanServer) {
-			mBeanServer = ManagementFactory.getPlatformMBeanServer();
-		}
-
 		try {
+			if (null == mBeanServer) {
+				mBeanServer = ManagementFactory.getPlatformMBeanServer();
+			}
+
+			// mark as initialized
+			initialized = true;
+
 			// register listener
-			mBeanServer.addNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), this, NOTIFICATION_FILTER, null);
+			try {
+				mBeanServer.addNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), this, NOTIFICATION_FILTER, null);
+			} catch (Exception e) {
+				log.warn("Failed to add notification listener to the MBean server. New added beans/attributes will not be monitored.", e);
+			}
+
 			// register already existing beans
 			registerMBeans(null);
-		} catch (InstanceNotFoundException e) {
-			throw new BeanInitializationException("Failed to initialize Jmx Sensor.", e);
-		} catch (MalformedObjectNameException e) {
-			throw new BeanInitializationException("Failed to initialize Jmx Sensor.", e);
+		} catch (Throwable t) { // NOPMD
+			// catching throwable if anything goes wrong
+			log.warn("Unable to initialize the JMX sensor. Sensor will be inactive.", t);
 		}
 	}
 
@@ -161,6 +171,10 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	 * {@inheritDoc}
 	 */
 	public void update(ICoreService coreService) {
+		if (!initialized) {
+			return;
+		}
+
 		long sensorTypeIdent = sensorTypeConfig.getId();
 		long currentTime = System.currentTimeMillis();
 
@@ -264,8 +278,8 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	 */
 	@SuppressWarnings("unchecked")
 	private void registerMBeans(ObjectName mBeanName) {
-		// do nothing if connection is not there
-		if (!connection.isConnected()) {
+		// do nothing if not intialized or connection is not there
+		if (!initialized || !connection.isConnected()) {
 			return;
 		}
 
