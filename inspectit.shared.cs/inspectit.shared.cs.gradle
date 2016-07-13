@@ -39,11 +39,6 @@ tasks.withType(JavaCompile) {
 	targetCompatibility = '1.7'
 }
 
-/** Include shared.all also for the coverage */
-cobertura {
-	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
-}
-
 /**
  * Creates the jar. If needed update the version in the MANIFEST.MF.
  */

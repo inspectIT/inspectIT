@@ -12,7 +12,6 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath "net.saliman:gradle-cobertura-plugin:2.3.1"
 		classpath "gradle.plugin.me.champeau.gradle:jmh-gradle-plugin:0.3.0"
 		classpath "org.standardout:bnd-platform:1.4.0"
 	}
@@ -250,8 +249,8 @@ subprojects {
 	apply plugin: 'pmd'
 	apply plugin: 'checkstyle'
 	apply plugin: 'findbugs'
-	apply plugin: 'net.saliman.cobertura'
 	apply plugin: 'me.champeau.gradle.jmh'
+	apply plugin: 'jacoco'
 	
 	/** all compile, test and runtime configurations to transitive = false */
 	configurations.compile.transitive = false
@@ -292,21 +291,12 @@ subprojects {
 	task analyze {
 		description = 'Runs all unit tests and all checks.'
 		group = 'Verification'
-		dependsOn(project.tasks.cobertura, check)
+		dependsOn(check)
 	}
 
 	/**
 	 *  Tasks for the TestNG and Cobertura.
 	 */
-	cobertura {
-		// ignore getters and setters, new options from Cobertura
-		// can not be used for now due to the https://github.com/cobertura/cobertura/issues/200
-		//coverageIgnoreTrivial = true
-
-		//reporting
-		coverageReportDir = file(buildQATestCoveragedata)
-		coverageFormats = ['xml', 'html']
-	}
 
 	/**
 	 * Definition of the test properties.
@@ -399,5 +389,12 @@ subprojects {
 		humanOutputFile = file("${buildQAPerfTest}/jmh/human.txt") 
 		resultsFile = file("${buildQAPerfTest}/jmh/results.txt")
 	}
-
+	
+	/** 
+	 * Configures the jacoco plugin.
+	 */
+	jacoco {
+		reportsDir = file(buildQATestCoveragedata)
+	}
+	
 }

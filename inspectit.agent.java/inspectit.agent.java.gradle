@@ -51,12 +51,6 @@ tasks.withType(JavaCompile) { t ->
 	options.bootClasspath = configurations.java16rt.asPath
 }
 
-
-/** This is not working when specified in the subprojects{ } part, thus each project must do it */
-cobertura {
-	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
-}
-
 /**
  * Creates the jar. Excludes libs from the configurations.agentJavaProd that are not Java5 compatible. Uses existing manifest.
  */
