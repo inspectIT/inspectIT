@@ -480,6 +480,7 @@ public class JmxMasterDetailsBlock extends MasterDetailsBlock implements IFormPa
 
 		// Refresh and deal with the possible changes in the table row structure, so re-check error
 		// descriptors
+		tableViewer.setSelection(StructuredSelection.EMPTY);
 		tableViewer.refresh();
 		validationManager.checkTableControlDecorations();
 
