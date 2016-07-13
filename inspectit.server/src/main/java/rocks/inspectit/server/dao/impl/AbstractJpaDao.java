@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import rocks.inspectit.server.util.JpaUtil;
+
 /**
  * Abstract JPA DAO class that can execute simple operations on an entity class.
  *
@@ -74,7 +76,7 @@ public abstract class AbstractJpaDao<T> {
 	 *            Object to delete.
 	 */
 	public void delete(T object) {
-		entityManager.remove(object);
+		JpaUtil.delete(entityManager, object);
 	}
 
 	/**

@@ -25,6 +25,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import rocks.inspectit.server.dao.StorageDataDao;
+import rocks.inspectit.server.util.JpaUtil;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
@@ -117,7 +118,7 @@ public class StorageDataDaoImpl implements StorageDataDao {
 	@Override
 	public void removeLabel(AbstractStorageLabel<?> label) {
 		if (label.getStorageLabelType().isValueReusable()) {
-			entityManager.remove(label);
+			JpaUtil.delete(entityManager, label);
 		}
 	}
 
@@ -174,7 +175,7 @@ public class StorageDataDaoImpl implements StorageDataDao {
 	@Override
 	public void removeLabelType(AbstractStorageLabelType<?> labelType) throws BusinessException {
 		if (getAllLabelsForType(labelType).isEmpty()) {
-			entityManager.remove(labelType);
+			JpaUtil.delete(entityManager, labelType);
 		} else {
 			throw new BusinessException("Delete label type " + labelType.getClass().getSimpleName() + ".", StorageErrorCodeEnum.LABEL_TYPE_CAN_NOT_BE_DELETED);
 		}
