@@ -45,13 +45,6 @@ tasks.withType(JavaCompile) {
 	targetCompatibility = '1.7'
 }
 
-/** Include shared.all & shared.cs also for the coverage Extend auxiliaryClasspath so that corbertura can find eclipse-base jars. */
-cobertura {
-	coverageDirs += project(':inspectit.shared.all').sourceSets.main.output.classesDir.path
-	coverageDirs += project(':inspectit.shared.cs').sourceSets.main.output.classesDir.path
-	auxiliaryClasspath += fileTree(include: '**/*.jar', dir: eclipsePlugins) 
-}
-
 /**
  * Cleans the PDE build 'plugins/rocks.inspectit.ui.rcp' folder.
  */
