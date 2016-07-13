@@ -117,7 +117,7 @@ public class StorageDataDaoImpl implements StorageDataDao {
 	@Override
 	public void removeLabel(AbstractStorageLabel<?> label) {
 		if (label.getStorageLabelType().isValueReusable()) {
-			entityManager.remove(label);
+			AbstractJpaDao.delete(entityManager, label);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class StorageDataDaoImpl implements StorageDataDao {
 	@Override
 	public void removeLabelType(AbstractStorageLabelType<?> labelType) throws BusinessException {
 		if (getAllLabelsForType(labelType).isEmpty()) {
-			entityManager.remove(labelType);
+			AbstractJpaDao.delete(entityManager, labelType);
 		} else {
 			throw new BusinessException("Delete label type " + labelType.getClass().getSimpleName() + ".", StorageErrorCodeEnum.LABEL_TYPE_CAN_NOT_BE_DELETED);
 		}

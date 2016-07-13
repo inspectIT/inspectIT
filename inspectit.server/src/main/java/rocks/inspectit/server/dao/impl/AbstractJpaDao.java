@@ -35,6 +35,26 @@ public abstract class AbstractJpaDao<T> {
 	}
 
 	/**
+	 * Small util to correctly delete object from database. If object is not contained in the
+	 * current session denoted by given entity manager it will be merged first.
+	 *
+	 * @param <T>
+	 *            type of object
+	 * @param entityManager
+	 *            {@link EntityManager} to be used for deletion.
+	 * @param object
+	 *            Persisted object to delete.
+	 */
+	public static <T> void delete(EntityManager entityManager, T object) {
+		if (entityManager.contains(object)) {
+			entityManager.remove(object);
+		} else {
+			T merged = entityManager.merge(object);
+			entityManager.remove(merged);
+		}
+	}
+
+	/**
 	 * Find entity by id.
 	 *
 	 * @param id
@@ -74,7 +94,7 @@ public abstract class AbstractJpaDao<T> {
 	 *            Object to delete.
 	 */
 	public void delete(T object) {
-		entityManager.remove(object);
+		AbstractJpaDao.delete(entityManager, object);
 	}
 
 	/**
