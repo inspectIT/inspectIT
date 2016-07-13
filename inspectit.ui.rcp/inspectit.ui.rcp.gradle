@@ -133,23 +133,26 @@ task pdeBuild (type: JavaExec,  dependsOn: [rootProject.unzipEclipse, preparePde
 	
 	def packagesDir = file("${pdeBuildDir}/I.inspectit")
 	def builtClassesDir = file("${pdeBuildDir}/plugins/rocks.inspectit.ui.rcp/@dot")
-	def logfile = file("${pdeBuildDir}/build.log")
 	
 	inputs.files preparePdeBuild.outputs
 	outputs.dir builtClassesDir
 	outputs.dir packagesDir
 	
-	// setup for the log file, delete if exists, then create first directories, then new file
-	if (logfile.exists()) {
-		logfile.delete()
-	}
-	file(pdeBuildDir).mkdirs()
-	logfile.createNewFile()
-	logger.info "PDE build output is logged in the file " + logfile
+	doFirst {
+		def logfile = file("${pdeBuildDir}/build.log")
+		
+		// setup for the log file, delete if exists, then create first directories, then new file
+		if (logfile.exists()) {
+			logfile.delete()
+		}
+		file(pdeBuildDir).mkdirs()
+		logfile.createNewFile()
+		logger.info "PDE build output is logged in the file " + logfile
 
-	def logOutputStream = logfile.newOutputStream()
-	standardOutput = logOutputStream
-	errorOutput = logOutputStream
+		def logOutputStream = logfile.newOutputStream()
+		standardOutput = logOutputStream
+		errorOutput = logOutputStream
+	}
 	classpath = files("${eclipseBaseDir}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar")
 	main = 'org.eclipse.equinox.launcher.Main'
 	args = ['-application', 'org.eclipse.ant.core.antRunner', '-buildfile', "${eclipseBaseDir}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/productBuild/productBuild.xml", "-Drelease.basedir=${buildRoot}", "-Declipse.basedir=${eclipseDir}", "-Dbuilder=${mainExtResources}/pdebuild"]
