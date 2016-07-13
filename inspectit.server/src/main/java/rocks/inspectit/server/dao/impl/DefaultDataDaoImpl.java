@@ -270,6 +270,8 @@ public class DefaultDataDaoImpl implements DefaultDataDao {
 		Query query = entityManager.createNamedQuery(SystemInformationData.FIND_ALL_FOR_PLATFORM_ID);
 		query.setParameter("platformIdent", platformId);
 		for (Object s : query.getResultList()) {
+			// we can directly remove here as objects belong to the session
+			// no need for merging
 			entityManager.remove(s);
 		}
 
