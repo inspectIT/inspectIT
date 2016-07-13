@@ -43,6 +43,7 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingState;
  *
  */
 @Service
+@Transactional
 public class StorageService implements IStorageService {
 
 	/** The logger of this class. */

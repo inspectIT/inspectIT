@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.dao.HttpTimerDataDao;
@@ -22,6 +23,7 @@ import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
  * @author Stefan Siegl
  */
 @Service
+@Transactional
 public class HttpTimerDataAccessService implements IHttpTimerDataAccessService, InitializingBean {
 
 	/** The logger of this class. */
