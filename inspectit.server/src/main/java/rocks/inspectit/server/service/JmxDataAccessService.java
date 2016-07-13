@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.spring.aop.MethodLog;
@@ -22,6 +23,7 @@ import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
  *
  */
 @Service
+@Transactional
 public class JmxDataAccessService implements IJmxDataAccessService {
 
 	/** The logger of this class. */
