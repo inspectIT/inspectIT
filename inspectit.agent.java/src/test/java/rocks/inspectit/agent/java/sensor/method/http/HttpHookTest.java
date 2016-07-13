@@ -93,7 +93,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		Long firstCpuTimerValue = 5000L;
 		Long secondCpuTimerValue = 6872L;
 
-		MethodSensorData data = new HttpTimerData(null, platformId, sensorTypeId, methodId);
+		HttpTimerData data = new HttpTimerData(null, platformId, sensorTypeId, methodId);
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
@@ -107,8 +107,37 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, registeredSensorConfig);
 
+		Mockito.verify(coreService).addMethodSensorData(Matchers.eq(sensorTypeId), Matchers.eq(methodId), (String) Matchers.eq(null), Matchers.argThat(new HttpTimerDataVerifier(data)));
+
+		Mockito.verifyZeroInteractions(result);
+	}
+
+	@Test
+	public void oneRecordThatIsHttpCharting() throws IdNotAvailableException {
+		Double firstTimerValue = 1000.453d;
+		Double secondTimerValue = 1323.675d;
+
+		Long firstCpuTimerValue = 5000L;
+		Long secondCpuTimerValue = 6872L;
+
+		HttpTimerData data = new HttpTimerData(null, platformId, sensorTypeId, methodId);
+		data.setCharting(true);
+
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
+		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+		when(registeredSensorConfig.getSettings()).thenReturn(Collections.<String, Object> singletonMap("charting", Boolean.TRUE));
+
+		Object[] parameters = new Object[] { httpServletRequest };
+
+		httpHook.beforeBody(methodId, sensorTypeId, servlet, parameters, registeredSensorConfig);
+
+		httpHook.firstAfterBody(methodId, sensorTypeId, servlet, parameters, result, registeredSensorConfig);
+
+		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, registeredSensorConfig);
+
 		Mockito.verify(coreService).addMethodSensorData(Matchers.eq(sensorTypeId), Matchers.eq(methodId), (String) Matchers.eq(null),
-				Matchers.argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
+				Matchers.argThat(new HttpTimerDataVerifier(data)));
 
 		Mockito.verifyZeroInteractions(result);
 	}
@@ -282,9 +311,9 @@ public class HttpHookTest extends AbstractLogSupport {
 		MethodSensorData data2 = new HttpTimerData(null, platformId, sensorTypeId, methodId21);
 
 		when(timer.getCurrentTime()).thenReturn(timerS11).thenReturn(timerS12).thenReturn(timerE12).thenReturn(timerE11).thenReturn(timerS21).thenReturn(timerS22).thenReturn(timerE22)
-				.thenReturn(timerE21);
+		.thenReturn(timerE21);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(cpuS11).thenReturn(cpuS12).thenReturn(cpuE12).thenReturn(cpuE11).thenReturn(cpuS21).thenReturn(cpuS22).thenReturn(cpuE22)
-				.thenReturn(cpuE21);
+		.thenReturn(cpuE21);
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		Object[] parametersNoHttp = new Object[] { servletRequest };
@@ -420,6 +449,7 @@ public class HttpHookTest extends AbstractLogSupport {
 			assertThat(data.getHeaders(), is(equalTo(other.getHeaders())));
 			assertThat(data.getSessionAttributes(), is(equalTo(other.getSessionAttributes())));
 			assertThat(data.getParameters(), is(equalTo(other.getParameters())));
+			assertThat(data.isCharting(), is(equalTo(other.isCharting())));
 
 			return true;
 		}

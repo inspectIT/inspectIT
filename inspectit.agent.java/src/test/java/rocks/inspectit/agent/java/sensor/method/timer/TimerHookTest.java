@@ -2,6 +2,7 @@ package rocks.inspectit.agent.java.sensor.method.timer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -37,6 +39,7 @@ import rocks.inspectit.agent.java.core.IObjectStorage;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.util.Timer;
+import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.valueobject.TimerRawVO;
 import rocks.inspectit.shared.all.util.ObjectUtils;
@@ -211,6 +214,35 @@ public class TimerHookTest extends AbstractLogSupport {
 
 		verify(registeredSensorConfig, times(1)).isPropertyAccess();
 		verify(propertyAccessor, times(1)).getParameterContentData(registeredSensorConfig.getPropertyAccessorList(), object, parameters, result);
+	}
+
+	@Test
+	public void charting() throws IdNotAvailableException {
+		// set up data
+		long platformId = 1L;
+		long methodId = 3L;
+		long sensorTypeId = 11L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[2];
+		Object result = mock(Object.class);
+
+		Double firstTimerValue = 1000.453d;
+		Double secondTimerValue = 1323.675d;
+
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+		when(registeredSensorConfig.getSettings()).thenReturn(Collections.<String, Object> singletonMap("charting", Boolean.TRUE));
+
+		timerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
+		timerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+
+		ArgumentCaptor<IObjectStorage> capture = ArgumentCaptor.forClass(IObjectStorage.class);
+		verify(coreService).addObjectStorage(eq(sensorTypeId), eq(methodId), anyString(), capture.capture());
+		DefaultData finalizedDataObject = capture.getValue().finalizeDataObject();
+		assertThat(finalizedDataObject, is(instanceOf(TimerRawVO.class)));
+		TimerData timerData = (TimerData) ((TimerRawVO) finalizedDataObject).finalizeData();
+		assertThat(timerData.isCharting(), is(true));
 	}
 
 	@Test
