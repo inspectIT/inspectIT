@@ -35,22 +35,30 @@ tasks.withType(JavaCompile) {
 	options.bootClasspath = configurations.java16rt.asPath
 }
 
+/** Task for creating the version file if needed. */
+task createVersionFile {
+	ext.versionFile = new File(buildDir.getAbsolutePath(), 'version/version.log')
+	inputs.property(versionInfo, null)
+	outputs.file versionFile
+	
+	doLast {
+		versionFile.getParentFile().mkdirs()
+		if (!versionFile.exists()) {
+			versionFile.createNewFile()
+		}
+		versionFile.text = versionInfo
+	}
+}
+createVersionFile.onlyIf { project.hasProperty('versionInfo') }
+
 /** 
  * Creates the jar. If needed create version.log on the fly and update the version in the MANIFEST.MF.
  */
 jar {
 	archivesBaseName = distJarName
 	
-	// add version.log only to shared.all
-	if (project.hasProperty('versionInfo')) {
-		def tempFile = File.createTempFile('version', '.log')
-		tempFile.text = versionInfo
-		tempFile.deleteOnExit()
-		
-		into('') {
-			from tempFile
-			rename tempFile.getName(), 'version.log'
-		}
+	into('') {
+		from new File(buildDir.getAbsolutePath(), 'version/version.log')
 	}
 	
 	manifest  {
@@ -63,6 +71,7 @@ jar {
 		}
 	}
 }
+jar.dependsOn createVersionFile
 
 task releaseAndAnalyze {
 	description = "Runs all unit tests, all checks and assembles a jar archive."
