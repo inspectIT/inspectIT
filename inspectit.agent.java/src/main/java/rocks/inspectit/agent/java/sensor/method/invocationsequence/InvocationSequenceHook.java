@@ -247,7 +247,8 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				} else {
 					// maybe not saved yet in the map
 					if (rsc.getSettings().containsKey("minduration")) {
-						minDurationMap.put(invocationStartId.get(), Double.valueOf((String) rsc.getSettings().get("minduration")));
+						Long minDuration = (Long) rsc.getSettings().get("minduration");
+						minDurationMap.put(invocationStartId.get(), minDuration.doubleValue());
 						checkForSavingOrNot(coreService, methodId, sensorTypeId, rsc, invocationSequenceData, startTime, endTime, duration);
 					} else {
 						invocationSequenceData.setDuration(duration);

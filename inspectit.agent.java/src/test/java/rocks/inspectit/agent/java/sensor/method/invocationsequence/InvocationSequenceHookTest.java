@@ -262,7 +262,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		double firstTimerValue = 1000.0d;
 		double secondTimerValue = 1200.0d;
-		String minDuration = "201";
+		Long minDuration = 201L;
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue, secondTimerValue);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("minduration", minDuration);

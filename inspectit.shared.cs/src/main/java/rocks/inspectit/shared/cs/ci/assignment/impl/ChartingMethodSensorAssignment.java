@@ -65,7 +65,7 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 
 		// charting
 		if (charting) {
-			settings.put("charting", "true");
+			settings.put("charting", Boolean.TRUE);
 		}
 
 		return settings;

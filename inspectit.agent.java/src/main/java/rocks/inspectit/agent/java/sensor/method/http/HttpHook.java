@@ -282,7 +282,7 @@ public class HttpHook implements IMethodHook {
 							data.setSessionAttributes(extractor.getSessionAttributes(servletRequestClass, httpServletRequest));
 						}
 
-						boolean charting = "true".equals(rsc.getSettings().get("charting"));
+						boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
 						data.setCharting(charting);
 
 						// returning gathered information
