@@ -239,10 +239,12 @@ dependencies {
 		'org.openjdk.jmh:jmh-generator-annprocess:1.11.3'
 	)
 	xjc (
-		'com.sun.xml.bind:jaxb-jxc:2.2.11',
-		'com.sun.xml.bind:jaxb-xjc:2.2.11',
-		'com.sun.xml.bind:jaxb-impl:2.2.11',
-		'com.sun.xml.bind:jaxb-core:2.2.11'
+		/* We intentionally use an older version of JAXB-XJC: 
+		 * From version 2.2.5 upwards schema file generation is indeterministic in the order of elements for enumerations (Java Enum transformation). 
+		 * This leads to the problem that the schemaCheck task fails because of syntactically different (but semantically equal) schema files.
+		 */
+		'com.sun.xml.bind:jaxb-xjc:2.2.4',
+		'com.sun.xml.bind:jaxb-impl:2.2.4'
 	)
 	izpack (
 		'org.codehaus.izpack:izpack-standalone-compiler:4.3.5',
