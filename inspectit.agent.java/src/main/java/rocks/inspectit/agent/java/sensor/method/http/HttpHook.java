@@ -14,6 +14,7 @@ import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
 import rocks.inspectit.agent.java.sensor.method.timer.TimerHook;
+import rocks.inspectit.agent.java.util.ClassUtil;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.agent.java.util.ThreadLocalStack;
 import rocks.inspectit.agent.java.util.Timer;
@@ -86,11 +87,6 @@ public class HttpHook implements IMethodHook {
 	 * Expected name of the HttpServletRequest interface.
 	 */
 	private static final String HTTP_SERVLET_REQUEST_CLASS = "javax.servlet.http.HttpServletRequest";
-
-	/**
-	 * Name of Object class. Stored to reduce number of created String objects during comparison.
-	 */
-	private static final String OBJECT_CLASS = Object.class.getName();
 
 	/**
 	 * Whitelist that contains all classes that we already checked if they provide
@@ -312,38 +308,14 @@ public class HttpHook implements IMethodHook {
 		if (BLACK_LIST.contains(c)) {
 			return false;
 		}
-		boolean realizesInterface = checkForInterface(c, HTTP_SERVLET_REQUEST_CLASS);
-		if (realizesInterface) {
+		Class<?> intf = ClassUtil.searchInterface(c, HTTP_SERVLET_REQUEST_CLASS);
+		if (null != intf) {
 			WHITE_LIST.addIfAbsent(c);
+			return true;
 		} else {
 			BLACK_LIST.addIfAbsent(c);
-		}
-		return realizesInterface;
-	}
-
-	/**
-	 * recursively checks if the given <code>Class</code> object realizes a given interface. This is
-	 * done by recursively checking the implementing interfaces of the current class, then jump to
-	 * the superclass and repeat. If you reach the java.lang.Object class we know that we can stop
-	 *
-	 * @param c
-	 *            the <code>Class</code> object to search for
-	 * @param interfaceName
-	 *            the name of the interface that should be searched
-	 * @return whether the given class realizes the given interface.
-	 */
-	private boolean checkForInterface(Class<?> c, String interfaceName) {
-		if (c.getName().equals(OBJECT_CLASS)) {
 			return false;
 		}
-
-		for (Class<?> clazz : c.getInterfaces()) {
-			if (clazz.getName().equals(interfaceName)) {
-				return true;
-			}
-		}
-
-		return checkForInterface(c.getSuperclass(), interfaceName);
 	}
 
 }

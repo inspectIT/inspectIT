@@ -109,7 +109,7 @@ public class ReflectionCache {
 				// check if we need to search with interface
 				Class<?> interfaceClass = null;
 				if (null != interfaceName) {
-					interfaceClass = searchInterface(clazz, interfaceName);
+					interfaceClass = ClassUtil.searchInterface(clazz, interfaceName);
 				}
 
 				// if interface class is found than use method from interface, otherwise from class
@@ -141,29 +141,4 @@ public class ReflectionCache {
 		}
 	}
 
-	/**
-	 * Search if class implements the specified interface. If so it returns the class representing
-	 * the interface. This is recursive method, so it searches also all the superclasses of the
-	 * given class.
-	 *
-	 * @param clazz
-	 *            Class to check
-	 * @param interfaceName
-	 *            Interface to locate
-	 * @return Interface {@link Class} object or <code>null</code> if one can not be found on the
-	 *         given class and it's superclasses.
-	 */
-	private Class<?> searchInterface(Class<?> clazz, String interfaceName) {
-		if ((clazz == null) || clazz.equals(Object.class)) {
-			return null;
-		}
-		Class<?>[] interfaces = clazz.getInterfaces();
-		for (Class<?> interf : interfaces) {
-			if (interf.getCanonicalName().equals(interfaceName)) {
-				return interf;
-			}
-		}
-		Class<?> superclass = clazz.getSuperclass();
-		return searchInterface(superclass, interfaceName);
-	}
 }
