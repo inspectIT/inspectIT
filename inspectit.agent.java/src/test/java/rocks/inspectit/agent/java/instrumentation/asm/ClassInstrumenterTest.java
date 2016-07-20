@@ -29,6 +29,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
@@ -85,6 +88,22 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 		public MethodVisitor answer(InvocationOnMock invocation) throws Throwable {
 			Object[] arguments = invocation.getArguments();
 			return getClassLoaderDelegationMethodInstrumenter((MethodVisitor) arguments[1], (Integer) arguments[2], (String) arguments[3], (String) arguments[4]);
+		}
+	};
+
+	protected static final Answer<MethodVisitor> MBEAN_SERVER_ADD_INSTRUMENTER_ANSWER = new Answer<MethodVisitor>() {
+
+		public MethodVisitor answer(InvocationOnMock invocation) throws Throwable {
+			Object[] arguments = invocation.getArguments();
+			return getMBeanServerFactoryInstrumenterAdd((MethodVisitor) arguments[1], (Integer) arguments[2], (String) arguments[3], (String) arguments[4]);
+		}
+	};
+
+	protected static final Answer<MethodVisitor> MBEAN_SERVER_REMOVE_INSTRUMENTER_ANSWER = new Answer<MethodVisitor>() {
+
+		public MethodVisitor answer(InvocationOnMock invocation) throws Throwable {
+			Object[] arguments = invocation.getArguments();
+			return getMBeanServerFactoryInstrumenterRemove((MethodVisitor) arguments[1], (Integer) arguments[2], (String) arguments[3], (String) arguments[4]);
 		}
 	};
 
@@ -1230,6 +1249,71 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			verifyNoMoreInteractions(agent);
 		}
 
+		@Test
+		public void mbeanServerAdd() throws Exception {
+			MBeanServer server = mock(MBeanServer.class);
+			Class<?>[] parameters = { MBeanServer.class};
+			String methodName = "addMBeanServer";
+
+			prepareConfigurationMockMethod(config, MBeanServerFactory.class, methodName, parameters);
+			SpecialInstrumentationPoint functionalInstrumentationPoint = mock(SpecialInstrumentationPoint.class);
+			doAnswer(MBEAN_SERVER_ADD_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(functionalInstrumentationPoint), Matchers.<MethodVisitor> any(), anyInt(), anyString(),
+					anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(functionalInstrumentationPoint));
+
+			ClassReader cr = new ClassReader(MBeanServerFactory.class.getCanonicalName());
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Class<?> testClass = this.createClass(MBeanServerFactory.class.getCanonicalName(), b);
+			// call this method via reflection as we would get a class cast
+			// exception by casting to the concrete class.
+			Method method = testClass.getDeclaredMethod(methodName, parameters);
+			method.setAccessible(true);
+			method.invoke(null, server);
+
+			verify(agent, times(1)).mbeanServerAdded(server);
+			verifyNoMoreInteractions(agent);
+		}
+
+		@Test
+		public void mbeanServerRemoved() throws Exception {
+			MBeanServer server = mock(MBeanServer.class);
+			Class<?>[] parameters = { MBeanServer.class };
+			String methodName = "removeMBeanServer";
+
+			prepareConfigurationMockMethod(config, MBeanServerFactory.class, methodName, parameters);
+			SpecialInstrumentationPoint functionalInstrumentationPoint = mock(SpecialInstrumentationPoint.class);
+			doAnswer(MBEAN_SERVER_REMOVE_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(functionalInstrumentationPoint), Matchers.<MethodVisitor> any(), anyInt(), anyString(),
+					anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(functionalInstrumentationPoint));
+
+			ClassReader cr = new ClassReader(MBeanServerFactory.class.getCanonicalName());
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Class<?> testClass = this.createClass(MBeanServerFactory.class.getCanonicalName(), b);
+			// need to add server first
+			Method method = testClass.getDeclaredMethod("addMBeanServer", parameters);
+			method.setAccessible(true);
+			method.invoke(null, server);
+
+			// call this method via reflection as we would get a class cast
+			// exception by casting to the concrete class.
+			method = testClass.getDeclaredMethod(methodName, parameters);
+			method.setAccessible(true);
+			method.invoke(null, server);
+
+			verify(agent, times(1)).mbeanServerRemoved(server);
+			verifyNoMoreInteractions(agent);
+		}
+
 	}
 
 	protected void prepareWriter(ClassReader cr, ClassLoader classLoader, boolean enhancedExceptionSensor, MethodInstrumentationConfig... configs) {
@@ -1257,6 +1341,24 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 	protected static ClassLoaderDelegationMethodInstrumenter getClassLoaderDelegationMethodInstrumenter(MethodVisitor superMethodVisitor, int access, String name, String desc) {
 		return new ClassLoaderDelegationMethodInstrumenter(superMethodVisitor, access, name, desc) {
+			@Override
+			protected void loadAgent() {
+				mv.visitFieldInsn(Opcodes.GETSTATIC, Type.getInternalName(ClassInstrumenterTest.class), "a", Type.getDescriptor(IAgent.class));
+			}
+		};
+	}
+
+	protected static MBeanServerFactoryInstrumenter getMBeanServerFactoryInstrumenterAdd(MethodVisitor superMethodVisitor, int access, String name, String desc) {
+		return new MBeanServerFactoryInstrumenter.Add(superMethodVisitor, access, name, desc) {
+			@Override
+			protected void loadAgent() {
+				mv.visitFieldInsn(Opcodes.GETSTATIC, Type.getInternalName(ClassInstrumenterTest.class), "a", Type.getDescriptor(IAgent.class));
+			}
+		};
+	}
+
+	protected static MBeanServerFactoryInstrumenter getMBeanServerFactoryInstrumenterRemove(MethodVisitor superMethodVisitor, int access, String name, String desc) {
+		return new MBeanServerFactoryInstrumenter.Remove(superMethodVisitor, access, name, desc) {
 			@Override
 			protected void loadAgent() {
 				mv.visitFieldInsn(Opcodes.GETSTATIC, Type.getInternalName(ClassInstrumenterTest.class), "a", Type.getDescriptor(IAgent.class));

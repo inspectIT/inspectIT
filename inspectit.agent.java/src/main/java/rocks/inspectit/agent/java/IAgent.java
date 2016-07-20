@@ -1,6 +1,8 @@
 package rocks.inspectit.agent.java;
 
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+import rocks.inspectit.agent.java.sensor.jmx.IMBeanServerListener;
+import rocks.inspectit.agent.listener.IPremainListener;
 
 /**
  * Interface for accessing the real agent implementation from the SUD and our JavaAgent.
@@ -8,7 +10,7 @@ import rocks.inspectit.agent.java.hooking.IHookDispatcher;
  * @author Patrice Bouillet
  *
  */
-public interface IAgent {
+public interface IAgent extends IMBeanServerListener, IPremainListener {
 
 	/**
 	 * This method will inspect the given byte code and class name to check if it needs to be

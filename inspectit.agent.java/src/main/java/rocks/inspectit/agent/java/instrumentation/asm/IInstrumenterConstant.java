@@ -2,6 +2,10 @@ package rocks.inspectit.agent.java.instrumentation.asm;
 
 import info.novatec.inspectit.org.objectweb.asm.Type;
 
+import javax.management.MBeanServer;
+
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+
 /**
  * Constants that are often used in the instrumenters like type and method descriptions.
  *
@@ -46,6 +50,11 @@ public interface IInstrumenterConstant {
 	String IAGENT_LOAD_CLASS_METHOD_DESCRIPTOR = Type.getMethodDescriptor(Type.getType(Class.class), Type.getType(Object[].class));
 
 	/**
+	 * Method descriptor for add or remove mbean server on the agent.
+	 */
+	String IAGENT_MBEAN_SERVER_ADD_REMOVE_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(MBeanServer.class));
+
+	/**
 	 * {@link IHookDispatcher#dispatchMethodBeforeBody(long, Object, Object[])} descriptor.
 	 */
 	String DISPATCH_METHOD_BEFORE_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class));
@@ -83,5 +92,4 @@ public interface IInstrumenterConstant {
 	 */
 	String DISPATCH_CONSTRUCTOR_ON_THROW_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class),
 			Type.getType(Object.class));
-
 }
