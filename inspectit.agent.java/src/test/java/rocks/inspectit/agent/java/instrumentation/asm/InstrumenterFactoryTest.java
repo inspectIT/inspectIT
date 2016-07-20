@@ -120,6 +120,30 @@ public class InstrumenterFactoryTest extends TestBase {
 			assertThat(methodVisitor, is(instanceOf(ClassLoaderDelegationMethodInstrumenter.class)));
 		}
 
+		@Test
+		public void mbeanServerAdd() {
+			when(specialInstrumentationPoint.getInstrumentationType()).thenReturn(SpecialInstrumentationType.MBEAN_SERVER_ADD);
+			String name = "method";
+			String desc = "()V";
+			boolean enhancedExceptionSensor = false;
+
+			MethodVisitor methodVisitor = factory.getMethodVisitor(specialInstrumentationPoint, superMethodVisitor, 0, name, desc, enhancedExceptionSensor);
+
+			assertThat(methodVisitor, is(instanceOf(MBeanServerFactoryInstrumenter.Add.class)));
+		}
+
+		@Test
+		public void mbeanServerRemove() {
+			when(specialInstrumentationPoint.getInstrumentationType()).thenReturn(SpecialInstrumentationType.MBEAN_SERVER_REMOVE);
+			String name = "method";
+			String desc = "()V";
+			boolean enhancedExceptionSensor = false;
+
+			MethodVisitor methodVisitor = factory.getMethodVisitor(specialInstrumentationPoint, superMethodVisitor, 0, name, desc, enhancedExceptionSensor);
+
+			assertThat(methodVisitor, is(instanceOf(MBeanServerFactoryInstrumenter.Remove.class)));
+		}
+
 		@Test(expectedExceptions = IllegalArgumentException.class)
 		public void nullInstrumentationPoint() {
 			String name = "method";

@@ -26,6 +26,7 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.RuntimeMBeanException;
 
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -39,6 +40,7 @@ import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
+import rocks.inspectit.agent.listener.IPremainListener;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -52,7 +54,7 @@ import rocks.inspectit.shared.all.spring.logger.Log;
  * @author Ivan Senic
  *
  */
-public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, NotificationListener {
+public class JmxSensor implements IJmxSensor, IPremainListener, InitializingBean, DisposableBean {
 
 	/**
 	 * Name of the MBeanServerDelegate to register as listener for the {@link NotificationListener}.
@@ -101,30 +103,14 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	private IConnection connection;
 
 	/**
-	 * Sensor configruation.
+	 * Sensor configuration.
 	 */
 	private JmxSensorTypeConfig sensorTypeConfig;
 
 	/**
-	 * The MBeanServer providing information about registered MBeans.
+	 * Set of active MBeanServerHolders.
 	 */
-	private MBeanServer mBeanServer;
-
-	/**
-	 * If {@link #mBeanServer} has been successfully initialized.
-	 */
-	private boolean initialized = false;
-
-	/**
-	 * Map used to connect the ObjectName of a MBean with the string-representation of the same
-	 * MBean. Recreation of the ObjectName is no longer necessary for the update-method.
-	 */
-	private final Map<String, ObjectName> nameStringToObjectName = new ConcurrentHashMap<String, ObjectName>();
-
-	/**
-	 * Set of active attributes (represented as Map).
-	 */
-	private final Map<JmxAttributeDescriptor, Boolean> activeAttributes = new ConcurrentHashMap<JmxAttributeDescriptor, Boolean>();
+	private final Map<MBeanServer, MBeanServerHolder> activeServerMap = new ConcurrentHashMap<MBeanServer, MBeanServerHolder>();
 
 	/**
 	 * The timestamp of the last {@link #collectData(ICoreService, long)} method invocation.
@@ -136,28 +122,81 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	 */
 	public void init(JmxSensorTypeConfig sensorTypeConfig) {
 		this.sensorTypeConfig = sensorTypeConfig;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void afterPremain() {
+		// check for forcing server creation
+		Map<String, Object> parameters = sensorTypeConfig.getParameters();
+		if (MapUtils.isNotEmpty(parameters)) {
+			if (Boolean.TRUE.equals(parameters.get("forceMBeanServer"))) {
+				// create only, get it via hook
+				ManagementFactory.getPlatformMBeanServer();
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void mbeanServerAdded(MBeanServer server) {
+		// if null do nothing
+		if (null == server) {
+			return;
+		}
 
 		try {
-			if (null == mBeanServer) {
-				mBeanServer = ManagementFactory.getPlatformMBeanServer();
-			}
-
-			// mark as initialized
-			initialized = true;
+			// create holder
+			MBeanServerHolder holder = new MBeanServerHolder(server);
 
 			// register listener
 			try {
-				mBeanServer.addNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), this, NOTIFICATION_FILTER, null);
+				server.addNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), holder, NOTIFICATION_FILTER, null);
 			} catch (Exception e) {
-				log.warn("Failed to add notification listener to the MBean server. New added beans/attributes will not be monitored.", e);
+				log.warn("Failed to add notification listener to the MBean server with the default domain " + server.getDefaultDomain() + ". New added beans/attributes will not be monitored.", e);
 			}
 
 			// register already existing beans
-			registerMBeans(null);
+			registerMBeans(holder, null);
+
+			// add to map if it all works
+			activeServerMap.put(server, holder);
 		} catch (Throwable t) { // NOPMD
 			// catching throwable if anything goes wrong
-			log.warn("Unable to initialize the JMX sensor. Sensor will be inactive.", t);
+			log.warn("Unable to add the MBean server with the default domain " + server.getDefaultDomain() + ".", t);
 		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void mbeanServerRemoved(MBeanServer server) {
+		// if null do nothing
+		if (null == server) {
+			return;
+		}
+
+		try {
+			// remove holder
+			MBeanServerHolder holder = activeServerMap.remove(server);
+			if (null == holder) {
+				return;
+			}
+
+			// un-register listener
+			try {
+				server.removeNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), holder, NOTIFICATION_FILTER, null);
+			} catch (Exception e) {
+				log.warn("Failed to remove notification listener to the MBean server with the default domain " + server.getDefaultDomain() + ".", e);
+			}
+		} catch (Throwable t) { // NOPMD
+			// catching throwable if anything goes wrong
+			log.warn("Unable to remove the MBean server with the default domain " + server.getDefaultDomain() + ".", t);
+		}
+
 	}
 
 	/**
@@ -171,10 +210,6 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	 * {@inheritDoc}
 	 */
 	public void update(ICoreService coreService) {
-		if (!initialized) {
-			return;
-		}
-
 		long sensorTypeIdent = sensorTypeConfig.getId();
 		long currentTime = System.currentTimeMillis();
 
@@ -183,21 +218,30 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 			// store the invocation timestamp
 			lastDataCollectionTimestamp = System.currentTimeMillis();
 
-			collectData(coreService, sensorTypeIdent);
+			if (MapUtils.isNotEmpty(activeServerMap)) {
+				for (MBeanServerHolder holder : activeServerMap.values()) {
+					collectData(holder, coreService, sensorTypeIdent);
+				}
+			}
 		}
 	}
 
 	/**
-	 * Collects the data and sends it to the CMR.
+	 * Collects the data from the MBean server in the holder and sends it to the CMR.
 	 *
+	 * @param holder
+	 *            {@link MBeanServerHolder} to collect data from
 	 * @param coreService
 	 *            The core service which is needed to store the measurements to.
 	 * @param sensorTypeIdent
 	 *            The ID of the sensor type so that old data can be found. (for aggregating etc.)
 	 */
-	private void collectData(ICoreService coreService, long sensorTypeIdent) {
-		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTime().getTime());
+	private void collectData(MBeanServerHolder holder, ICoreService coreService, long sensorTypeIdent) {
+		MBeanServer mBeanServer = holder.mBeanServer;
+		Map<JmxAttributeDescriptor, Boolean> activeAttributes = holder.activeAttributes;
+		Map<String, ObjectName> nameStringToObjectName = holder.nameStringToObjectName;
 
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTime().getTime());
 		for (Iterator<JmxAttributeDescriptor> iterator = activeAttributes.keySet().iterator(); iterator.hasNext();) {
 			JmxAttributeDescriptor descriptor = iterator.next();
 
@@ -249,37 +293,26 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	 * {@inheritDoc}
 	 */
 	public void handleNotification(Notification notification, Object handback) {
-		if (notification instanceof MBeanServerNotification) {
-			MBeanServerNotification serverNotification = (MBeanServerNotification) notification;
-			ObjectName mBeanName = serverNotification.getMBeanName();
-			if (MBeanServerNotification.REGISTRATION_NOTIFICATION.equals(serverNotification.getType())) {
-				// if we have registration pick up the attributes
-				registerMBeans(mBeanName);
-			} else if (MBeanServerNotification.UNREGISTRATION_NOTIFICATION.equals(serverNotification.getType())) {
-				// if we have un-registration remove from maps
-				String mBeanNameString = mBeanName.toString();
-				for (Iterator<JmxAttributeDescriptor> it = activeAttributes.keySet().iterator(); it.hasNext();) {
-					JmxAttributeDescriptor descriptor = it.next();
-					if (Objects.equal(descriptor.getmBeanObjectName(), mBeanNameString)) {
-						it.remove();
-					}
-				}
-				nameStringToObjectName.remove(mBeanNameString);
-			}
-		}
+
 	}
 
 	/**
 	 * Registers all attributes of all object names that are returned as the result of querying with
-	 * the given mBeanName.
+	 * the given mBeanName on the server in the given holder.
 	 *
+	 * @param holder
+	 *            {@link MBeanServerHolder} instance to register beans for
 	 * @param mBeanName
 	 *            Object name to be used in the query. Use <code>null</code> to include all MBeans.
 	 */
 	@SuppressWarnings("unchecked")
-	private void registerMBeans(ObjectName mBeanName) {
-		// do nothing if not intialized or connection is not there
-		if (!initialized || !connection.isConnected()) {
+	private void registerMBeans(MBeanServerHolder holder, ObjectName mBeanName) {
+		MBeanServer mBeanServer = holder.mBeanServer;
+		Map<JmxAttributeDescriptor, Boolean> activeAttributes = holder.activeAttributes;
+		Map<String, ObjectName> nameStringToObjectName = holder.nameStringToObjectName;
+
+		// do nothing if connection is not there
+		if (!connection.isConnected()) {
 			return;
 		}
 
@@ -349,9 +382,11 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	 * {@inheritDoc}
 	 */
 	public void destroy() throws Exception {
-		// remove listener
-		if (null != mBeanServer) {
-			mBeanServer.removeNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), this, NOTIFICATION_FILTER, null);
+		// remove listeners
+		if (MapUtils.isNotEmpty(activeServerMap)) {
+			for (MBeanServerHolder holder : activeServerMap.values()) {
+				holder.mBeanServer.removeNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), holder, NOTIFICATION_FILTER, null);
+			}
 		}
 	}
 
@@ -377,6 +412,71 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 			return sb.toString();
 		}
 		return "";
+	}
+
+	/**
+	 * Holder to keep needed information per server.
+	 *
+	 * @author Ivan Senic
+	 *
+	 */
+	final class MBeanServerHolder implements NotificationListener {
+
+		/**
+		 * The MBeanServer providing information about registered MBeans.
+		 */
+		final MBeanServer mBeanServer;
+
+		/**
+		 * Map used to connect the ObjectName of a MBean with the string-representation of the same
+		 * MBean. Recreation of the ObjectName is no longer necessary for the update-method.
+		 */
+		final Map<String, ObjectName> nameStringToObjectName = new ConcurrentHashMap<String, ObjectName>();
+
+		/**
+		 * Set of active attributes (represented as Map).
+		 */
+		final Map<JmxAttributeDescriptor, Boolean> activeAttributes = new ConcurrentHashMap<JmxAttributeDescriptor, Boolean>();
+
+		/**
+		 * Default constructor.
+		 *
+		 * @param mBeanServer
+		 *            Server to store in this holder. Can not be <code>null</code>.
+		 */
+		MBeanServerHolder(MBeanServer mBeanServer) {
+			if (mBeanServer == null) {
+				throw new IllegalArgumentException("MBean server can not be null.");
+			}
+
+			this.mBeanServer = mBeanServer;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void handleNotification(Notification notification, Object handback) {
+			if (notification instanceof MBeanServerNotification) {
+				MBeanServerNotification serverNotification = (MBeanServerNotification) notification;
+				ObjectName mBeanName = serverNotification.getMBeanName();
+				if (MBeanServerNotification.REGISTRATION_NOTIFICATION.equals(serverNotification.getType())) {
+					// if we have registration pick up the attributes
+					registerMBeans(MBeanServerHolder.this, mBeanName);
+				} else if (MBeanServerNotification.UNREGISTRATION_NOTIFICATION.equals(serverNotification.getType())) {
+					// get maps from holder
+					// if we have un-registration remove from maps
+					String mBeanNameString = mBeanName.toString();
+					for (Iterator<JmxAttributeDescriptor> it = activeAttributes.keySet().iterator(); it.hasNext();) {
+						JmxAttributeDescriptor descriptor = it.next();
+						if (Objects.equal(descriptor.getmBeanObjectName(), mBeanNameString)) {
+							it.remove();
+						}
+					}
+					nameStringToObjectName.remove(mBeanNameString);
+				}
+			}
+		}
+
 	}
 
 }

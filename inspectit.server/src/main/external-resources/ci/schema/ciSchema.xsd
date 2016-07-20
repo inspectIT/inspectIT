@@ -328,6 +328,8 @@
 
   <xs:complexType name="jmxSensorConfig">
     <xs:sequence/>
+    <xs:attribute name="active" type="xs:boolean"/>
+    <xs:attribute name="forceMBeanServerCreation" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="profile">

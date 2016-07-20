@@ -114,6 +114,16 @@ public class JavaAgent implements ClassFileTransformer {
 		} catch (Exception e) {
 			LOGGER.severe("Something unexpected happened while trying to initialize the Agent, aborting!");
 			e.printStackTrace(); // NOPMD
+		} finally {
+			// call after premain hook on the agent
+			if (null != Agent.agent) {
+				try {
+					Agent.agent.afterPremain();
+				} catch (Throwable t) { // NOPMD
+					LOGGER.severe("Error occurred during afterPremain() hook call.");
+					t.printStackTrace(); // NOPMD
+				}
+			}
 		}
 	}
 
