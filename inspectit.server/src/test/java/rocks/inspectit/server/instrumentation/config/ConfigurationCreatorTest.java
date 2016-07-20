@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,6 +26,7 @@ import org.testng.annotations.Test;
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
@@ -35,6 +37,7 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
@@ -171,6 +174,45 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, className, parameters);
 			verifyNoMoreInteractions(registrationService);
+		}
+
+		@Test
+		public void configureJmxSensor() throws Exception {
+			long agentId = 13L;
+			long sensorId = 17L;
+			String className = "className";
+			Map<String, Object> parameters = Collections.<String, Object> singletonMap("key", "value");
+			JmxSensorConfig jmxSensorConfig = mock(JmxSensorConfig.class);
+			when(jmxSensorConfig.getClassName()).thenReturn(className);
+			when(jmxSensorConfig.getParameters()).thenReturn(parameters);
+			when(jmxSensorConfig.isActive()).thenReturn(true);
+			when(environment.getJmxSensorConfig()).thenReturn(jmxSensorConfig);
+			when(registrationService.registerJmxSensorTypeIdent(agentId, className)).thenReturn(sensorId);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			JmxSensorTypeConfig sensorTypeConfig = agentConfiguration.getJmxSensorTypeConfig();
+			assertThat(sensorTypeConfig.getId(), is(sensorId));
+			assertThat(sensorTypeConfig.getClassName(), is(className));
+			assertThat(sensorTypeConfig.getParameters(), is(parameters));
+
+			verify(registrationService, times(1)).registerJmxSensorTypeIdent(agentId, className);
+			verifyNoMoreInteractions(registrationService);
+		}
+
+		@Test
+		public void configureJmxSensorNotActive() throws Exception {
+			long agentId = 13L;
+			JmxSensorConfig jmxSensorConfig = mock(JmxSensorConfig.class);
+			when(jmxSensorConfig.isActive()).thenReturn(false);
+			when(environment.getJmxSensorConfig()).thenReturn(jmxSensorConfig);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			JmxSensorTypeConfig sensorTypeConfig = agentConfiguration.getJmxSensorTypeConfig();
+			assertThat(sensorTypeConfig, is(nullValue()));
+
+			verifyZeroInteractions(registrationService);
 		}
 
 		@Test

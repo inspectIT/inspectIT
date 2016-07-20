@@ -1,11 +1,18 @@
 package rocks.inspectit.agent.java;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
+import javax.management.MBeanServer;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -13,7 +20,9 @@ import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 import rocks.inspectit.agent.java.logback.LogInitializer;
+import rocks.inspectit.agent.java.sensor.jmx.IMBeanServerListener;
 import rocks.inspectit.agent.java.spring.SpringConfiguration;
+import rocks.inspectit.agent.listener.IPremainListener;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.version.VersionService;
 
@@ -62,6 +71,11 @@ public class SpringAgent implements IAgent {
 	 * The byte code analyzer.
 	 */
 	private IByteCodeAnalyzer byteCodeAnalyzer;
+
+	/**
+	 * Listeners to the {@link MBeanServer} changes.
+	 */
+	private final Collection<IMBeanServerListener> mbeanServerListeners = new ArrayList<IMBeanServerListener>(0);
 
 	/**
 	 * Set to <code>true</code> if something happened and we need to disable further
@@ -164,6 +178,14 @@ public class SpringAgent implements IAgent {
 			hookDispatcher = beanFactory.getBean(IHookDispatcher.class);
 			configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
 			byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
+			if (beanFactory instanceof ListableBeanFactory) {
+				Map<String, IMBeanServerListener> listenerMap = ((ListableBeanFactory) beanFactory).getBeansOfType(IMBeanServerListener.class, true, false);
+				if (MapUtils.isNotEmpty(listenerMap)) {
+					for (IMBeanServerListener listener : listenerMap.values()) {
+						this.mbeanServerListeners.add(listener);
+					}
+				}
+			}
 
 			// load ignore patterns only once
 			ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
@@ -288,4 +310,49 @@ public class SpringAgent implements IAgent {
 		transformDisabledThreadLocal.set(Boolean.valueOf(disabled));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void mbeanServerAdded(MBeanServer server) {
+		if (null == server) {
+			return;
+		}
+
+		if (CollectionUtils.isNotEmpty(mbeanServerListeners)) {
+			for (IMBeanServerListener listener : mbeanServerListeners) {
+				listener.mbeanServerAdded(server);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void mbeanServerRemoved(MBeanServer server) {
+		if (null == server) {
+			return;
+		}
+
+		if (CollectionUtils.isNotEmpty(mbeanServerListeners)) {
+			for (IMBeanServerListener listener : mbeanServerListeners) {
+				listener.mbeanServerRemoved(server);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void afterPremain() {
+		// just notify all the listeners
+		// as this is called only once it's OK to directly search the beans in the factory
+		if (beanFactory instanceof ListableBeanFactory) {
+			Map<String, IPremainListener> premainListenersMap = ((ListableBeanFactory) beanFactory).getBeansOfType(IPremainListener.class);
+			if (MapUtils.isNotEmpty(premainListenersMap)) {
+				for (IPremainListener listener : premainListenersMap.values()) {
+					listener.afterPremain();
+				}
+			}
+		}
+	}
 }

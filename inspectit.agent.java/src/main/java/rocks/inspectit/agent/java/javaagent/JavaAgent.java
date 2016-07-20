@@ -35,6 +35,8 @@ import java.util.regex.Pattern;
 import rocks.inspectit.agent.java.Agent;
 import rocks.inspectit.agent.java.IAgent;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+import rocks.inspectit.agent.java.sensor.jmx.IMBeanServerListener;
+import rocks.inspectit.agent.listener.IPremainListener;
 
 /**
  * The JavaAgent is used since Java 5.0 to instrument classes before they are actually loaded by the
@@ -114,6 +116,16 @@ public class JavaAgent implements ClassFileTransformer {
 		} catch (Exception e) {
 			LOGGER.severe("Something unexpected happened while trying to initialize the Agent, aborting!");
 			e.printStackTrace(); // NOPMD
+		} finally {
+			// call after premain hook on the agent
+			if (null != Agent.agent) {
+				try {
+					Agent.agent.afterPremain();
+				} catch (Throwable t) { // NOPMD
+					LOGGER.severe("Error occurred during afterPremain() hook call.");
+					t.printStackTrace(); // NOPMD
+				}
+			}
 		}
 	}
 
@@ -364,6 +376,8 @@ public class JavaAgent implements ClassFileTransformer {
 
 			// ignore IAgent because this is the interface for the SUD to access the real agent
 			ignoreClasses.add(IAgent.class.getCanonicalName());
+			ignoreClasses.add(IMBeanServerListener.class.getCanonicalName());
+			ignoreClasses.add(IPremainListener.class.getCanonicalName());
 			ignoreClasses.add(Agent.class.getCanonicalName());
 
 			// ignore hook dispatcher because it is defined in the IAgent interface and thus must be

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
@@ -90,7 +91,7 @@ public class ConfigurationCreator {
 		}
 
 		JmxSensorConfig jmxSensorConfig = environment.getJmxSensorConfig();
-		if (null != jmxSensorConfig) {
+		if ((null != jmxSensorConfig) && jmxSensorConfig.isActive()) {
 			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
 
