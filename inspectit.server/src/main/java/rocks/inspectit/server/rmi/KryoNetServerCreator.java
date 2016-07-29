@@ -81,7 +81,7 @@ public class KryoNetServerCreator {
 			server.bind(port);
 			log.info("|-Kryonet server successfully started and running on port " + port);
 		} catch (IOException e) {
-			throw new BeanInitializationException("Could not bind the kryonet server to the specified ports.", e);
+			throw new BeanInitializationException("Could not bind the kryonet server to the specified port (" + port + ").", e);
 		}
 
 		return server;
