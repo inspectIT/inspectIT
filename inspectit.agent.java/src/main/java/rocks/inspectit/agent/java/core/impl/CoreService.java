@@ -275,13 +275,6 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
-	public SystemSensorData getPlatformSensorData(long sensorTypeIdent) {
-		return (SystemSensorData) sensorDataObjects.get(Long.toString(sensorTypeIdent));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(sensorTypeIdent);
@@ -410,6 +403,18 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	private class SensorRefresher extends Thread {
 
 		/**
+		 * Counts the number of iterations from the start. Used to distinguish between reset, gather
+		 * and get phase.
+		 */
+		private long count = 0;
+
+		/**
+		 * Defines how many iterations are gathered (and aggregated within the specific sensors)
+		 * before the data is retrieved from the sensors.
+		 */
+		private static final int DATA_COLLECT_ITERATION = 5;
+
+		/**
 		 * Creates a new instance of the <code>PlatformSensorRefresher</code> as a daemon thread.
 		 */
 		public SensorRefresher() {
@@ -435,10 +440,32 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 
 				// iterate the platformSensors and update the information
 				if (CollectionUtils.isNotEmpty(platformSensors)) {
-					for (IPlatformSensor platformSensor : platformSensors) {
-						if (platformSensor.automaticUpdate()) {
-							platformSensor.update(CoreService.this);
+					count++;
+
+					if (count == 1) {
+						for (IPlatformSensor platformSensor : platformSensors) {
+							platformSensor.reset();
 						}
+					}
+
+					for (IPlatformSensor platformSensor : platformSensors) {
+						try {
+							platformSensor.gather();
+						} catch (Exception e) {
+							log.error("Platform sensor " + platformSensor.getClass().getSimpleName() + " cannot update data!", e);
+						}
+					}
+
+					if (count == DATA_COLLECT_ITERATION) {
+						for (IPlatformSensor platformSensor : platformSensors) {
+							SystemSensorData systemSensorData = platformSensor.get();
+
+							if (null != systemSensorData) {
+								CoreService.this.addPlatformSensorData(systemSensorData.getSensorTypeIdent(), systemSensorData);
+							}
+						}
+
+						count = 0;
 					}
 				}
 

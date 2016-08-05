@@ -11,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+
+import org.apache.commons.lang.StringUtils;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
@@ -23,13 +26,18 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = SystemInformationData.FIND_ALL_FOR_PLATFORM_ID, query = "SELECT s FROM SystemInformationData s WHERE s.platformIdent=:platformIdent"),
-		@NamedQuery(name = SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS, query = "SELECT s FROM SystemInformationData s WHERE s.id IN (SELECT MAX(sd.id) FROM SystemInformationData sd WHERE sd.platformIdent IN (:platformIdents) GROUP BY sd.platformIdent)") })
+	@NamedQuery(name = SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS, query = "SELECT s FROM SystemInformationData s WHERE s.id IN (SELECT MAX(sd.id) FROM SystemInformationData sd WHERE sd.platformIdent IN (:platformIdents) GROUP BY sd.platformIdent)") })
 public class SystemInformationData extends SystemSensorData {
 
 	/**
 	 * The serial version uid for this class.
 	 */
 	private static final long serialVersionUID = -8294531858844656994L;
+
+	/**
+	 * Max length of parameter name and value.
+	 */
+	private static final int MAX_LENGTH = 10000;
 
 	/**
 	 * Constant for findLatestForPlatformId query.
@@ -534,6 +542,23 @@ public class SystemInformationData extends SystemSensorData {
 	public void addVMArguments(String vmArgumentName, String vmArgumentValue) {
 		VmArgumentData vmArg = new VmArgumentData(vmArgumentName, vmArgumentValue);
 		vmSet.add(vmArg);
+	}
+
+	/**
+	 * Checks for the {@link #classPath}, {@link #classPath} and {@link #libraryPath} lengths prior
+	 * to persisting.
+	 */
+	@PrePersist
+	protected void checkLengths() {
+		if (StringUtils.isNotEmpty(classPath) && (classPath.length() > MAX_LENGTH)) {
+			classPath = classPath.substring(0, MAX_LENGTH);
+		}
+		if (StringUtils.isNotEmpty(classPath) && (bootClassPath.length() > MAX_LENGTH)) {
+			bootClassPath = bootClassPath.substring(0, MAX_LENGTH);
+		}
+		if (StringUtils.isNotEmpty(libraryPath) && (libraryPath.length() > MAX_LENGTH)) {
+			libraryPath = libraryPath.substring(0, MAX_LENGTH);
+		}
 	}
 
 	/**

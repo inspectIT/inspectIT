@@ -328,17 +328,6 @@ public class CoreServiceTest extends TestBase {
 	}
 
 	@Test
-	public void addAndRetrievePlatformSensorData() {
-		long sensorTypeId = 4;
-		CpuInformationData cpuInformationData = new CpuInformationData();
-
-		coreService.addPlatformSensorData(sensorTypeId, cpuInformationData);
-
-		SystemSensorData systemSensorData = coreService.getPlatformSensorData(sensorTypeId);
-		assertThat(systemSensorData, is(equalTo(((SystemSensorData) cpuInformationData))));
-	}
-
-	@Test
 	public void addAndRetrieveExceptionSensorData() {
 		long sensorTypeId = 10;
 		ExceptionSensorData exceptionSensorData = new ExceptionSensorData();

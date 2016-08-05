@@ -3,156 +3,125 @@ package rocks.inspectit.agent.java.sensor.platform;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData;
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the class loading system through MXBeans.
  *
  * @author Eduard Tudenhoefner
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
-public class ClassLoadingInformation extends AbstractPlatformSensor implements IPlatformSensor {
+public class ClassLoadingInformation extends AbstractPlatformSensor {
 
-	/**
-	 * The logger of the class.
-	 */
-	@Log
-	Logger log;
-
-	/**
-	 * The Platform manager used to get the correct IDs.
-	 */
-	@Autowired
-	private IPlatformManager platformManager;
+	/** Collector class. */
+	private ClassLoadingInformationData classLoadingInformationData = new ClassLoadingInformationData();
 
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the class loading system.
 	 */
-	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private RuntimeInfoProvider runtimeBean;
 
 	/**
-	 * No-arg constructor needed for Spring.
+	 * {@inheritDoc}
 	 */
-	public ClassLoadingInformation() {
-	}
+	public void gather() {
 
-	/**
-	 * The default constructor which needs one parameter.
-	 *
-	 * @param platformManager
-	 *            The Platform manager.
-	 */
-	public ClassLoadingInformation(IPlatformManager platformManager) {
-		this.platformManager = platformManager;
-	}
+		// The timestamp is set in the {@link ClassLoadingInformation#reset()} to avoid multiple
+		// renewal. It will not be set on the first execution of
+		// {@link ClassLoadingInformation#gather()}, but shortly before.
+		int loadedClassCount = this.getRuntimeBean().getLoadedClassCount();
+		long totalLoadedClassCount = this.getRuntimeBean().getTotalLoadedClassCount();
+		long unloadedClassCount = this.getRuntimeBean().getUnloadedClassCount();
 
-	/**
-	 * Returns the number of loaded classes in the virtual machine.
-	 *
-	 * @return The number of loaded classes.
-	 */
-	public int getLoadedClassCount() {
-		return runtimeBean.getLoadedClassCount();
-	}
+		this.classLoadingInformationData.incrementCount();
+		this.classLoadingInformationData.addLoadedClassCount(loadedClassCount);
+		this.classLoadingInformationData.addTotalLoadedClassCount(totalLoadedClassCount);
+		this.classLoadingInformationData.addUnloadedClassCount(unloadedClassCount);
 
-	/**
-	 * Returns the total number of loaded classes since the virtual machine started.
-	 *
-	 * @return The total number of loaded classes.
-	 */
-	public long getTotalLoadedClassCount() {
-		return runtimeBean.getTotalLoadedClassCount();
-	}
+		if (loadedClassCount < this.classLoadingInformationData.getMinLoadedClassCount()) {
+			this.classLoadingInformationData.setMinLoadedClassCount(loadedClassCount);
+		} else if (loadedClassCount > this.classLoadingInformationData.getMaxLoadedClassCount()) {
+			this.classLoadingInformationData.setMaxLoadedClassCount(loadedClassCount);
+		}
 
-	/**
-	 * Returns the number of unloaded classes since the virtual machine started.
-	 *
-	 * @return The number of unloaded classes.
-	 */
-	public long getUnloadedClassCount() {
-		return runtimeBean.getUnloadedClassCount();
-	}
+		if (totalLoadedClassCount < this.classLoadingInformationData.getMinTotalLoadedClassCount()) {
+			this.classLoadingInformationData.setMinTotalLoadedClassCount(totalLoadedClassCount);
+		} else if (totalLoadedClassCount > this.classLoadingInformationData.getMaxTotalLoadedClassCount()) {
+			this.classLoadingInformationData.setMaxTotalLoadedClassCount(totalLoadedClassCount);
+		}
 
-	/**
-	 * Updates all dynamic class loading information.
-	 *
-	 * @param coreService
-	 *            The {@link ICoreService}.
-	 */
-	public void update(ICoreService coreService) {
-		long sensorTypeIdent = getSensorTypeConfig().getId();
-		int loadedClassCount = this.getLoadedClassCount();
-		long totalLoadedClassCount = this.getTotalLoadedClassCount();
-		long unloadedClassCount = this.getUnloadedClassCount();
-
-		ClassLoadingInformationData classLoadingData = (ClassLoadingInformationData) coreService.getPlatformSensorData(sensorTypeIdent);
-
-		if (classLoadingData == null) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-
-				classLoadingData = new ClassLoadingInformationData(timestamp, platformId, sensorTypeIdent);
-				classLoadingData.incrementCount();
-
-				classLoadingData.addLoadedClassCount(loadedClassCount);
-				classLoadingData.setMinLoadedClassCount(loadedClassCount);
-				classLoadingData.setMaxLoadedClassCount(loadedClassCount);
-
-				classLoadingData.addTotalLoadedClassCount(totalLoadedClassCount);
-				classLoadingData.setMinTotalLoadedClassCount(totalLoadedClassCount);
-				classLoadingData.setMaxTotalLoadedClassCount(totalLoadedClassCount);
-
-				classLoadingData.addUnloadedClassCount(unloadedClassCount);
-				classLoadingData.setMinUnloadedClassCount(unloadedClassCount);
-				classLoadingData.setMaxUnloadedClassCount(unloadedClassCount);
-
-				coreService.addPlatformSensorData(sensorTypeIdent, classLoadingData);
-			} catch (IdNotAvailableException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Could not save the class loading information because of an unavailable id. " + e.getMessage());
-				}
-			}
-		} else {
-			classLoadingData.incrementCount();
-			classLoadingData.addLoadedClassCount(loadedClassCount);
-			classLoadingData.addTotalLoadedClassCount(totalLoadedClassCount);
-			classLoadingData.addUnloadedClassCount(unloadedClassCount);
-
-			if (loadedClassCount < classLoadingData.getMinLoadedClassCount()) {
-				classLoadingData.setMinLoadedClassCount(loadedClassCount);
-			} else if (loadedClassCount > classLoadingData.getMaxLoadedClassCount()) {
-				classLoadingData.setMaxLoadedClassCount(loadedClassCount);
-			}
-
-			if (totalLoadedClassCount < classLoadingData.getMinTotalLoadedClassCount()) {
-				classLoadingData.setMinTotalLoadedClassCount(totalLoadedClassCount);
-			} else if (totalLoadedClassCount > classLoadingData.getMaxTotalLoadedClassCount()) {
-				classLoadingData.setMaxTotalLoadedClassCount(totalLoadedClassCount);
-			}
-
-			if (unloadedClassCount < classLoadingData.getMinUnloadedClassCount()) {
-				classLoadingData.setMinUnloadedClassCount(unloadedClassCount);
-			} else if (unloadedClassCount > classLoadingData.getMaxUnloadedClassCount()) {
-				classLoadingData.setMaxUnloadedClassCount(unloadedClassCount);
-			}
+		if (unloadedClassCount < this.classLoadingInformationData.getMinUnloadedClassCount()) {
+			this.classLoadingInformationData.setMinUnloadedClassCount(unloadedClassCount);
+		} else if (unloadedClassCount > this.classLoadingInformationData.getMaxUnloadedClassCount()) {
+			this.classLoadingInformationData.setMaxUnloadedClassCount(unloadedClassCount);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean automaticUpdate() {
-		return true;
+	public SystemSensorData get() {
+		ClassLoadingInformationData newClassLoadingInformationData = new ClassLoadingInformationData();
+
+		newClassLoadingInformationData.setPlatformIdent(this.classLoadingInformationData.getPlatformIdent());
+		newClassLoadingInformationData.setSensorTypeIdent(this.classLoadingInformationData.getSensorTypeIdent());
+		newClassLoadingInformationData.setCount(this.classLoadingInformationData.getCount());
+		newClassLoadingInformationData.setTotalLoadedClassCount(this.classLoadingInformationData.getTotalLoadedClassCount());
+		newClassLoadingInformationData.setMinLoadedClassCount(this.classLoadingInformationData.getMinLoadedClassCount());
+		newClassLoadingInformationData.setMaxLoadedClassCount(this.classLoadingInformationData.getMaxLoadedClassCount());
+		newClassLoadingInformationData.setTotalTotalLoadedClassCount(this.classLoadingInformationData.getTotalTotalLoadedClassCount());
+		newClassLoadingInformationData.setMinTotalLoadedClassCount(this.classLoadingInformationData.getMinTotalLoadedClassCount());
+		newClassLoadingInformationData.setMaxTotalLoadedClassCount(this.classLoadingInformationData.getMaxTotalLoadedClassCount());
+		newClassLoadingInformationData.setTotalUnloadedClassCount(this.classLoadingInformationData.getTotalUnloadedClassCount());
+		newClassLoadingInformationData.setMinUnloadedClassCount(this.classLoadingInformationData.getMinUnloadedClassCount());
+		newClassLoadingInformationData.setMaxUnloadedClassCount(this.classLoadingInformationData.getMaxUnloadedClassCount());
+		newClassLoadingInformationData.setTimeStamp(this.classLoadingInformationData.getTimeStamp());
+
+		return newClassLoadingInformationData;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void reset() {
+		this.classLoadingInformationData.setCount(0);
+
+		this.classLoadingInformationData.setTotalLoadedClassCount(0);
+		this.classLoadingInformationData.setMinLoadedClassCount(Integer.MAX_VALUE);
+		this.classLoadingInformationData.setMaxLoadedClassCount(0);
+
+		this.classLoadingInformationData.setTotalTotalLoadedClassCount(0L);
+		this.classLoadingInformationData.setMinTotalLoadedClassCount(Long.MAX_VALUE);
+		this.classLoadingInformationData.setMaxTotalLoadedClassCount(0L);
+
+		this.classLoadingInformationData.setTotalUnloadedClassCount(0L);
+		this.classLoadingInformationData.setMinUnloadedClassCount(Long.MAX_VALUE);
+		this.classLoadingInformationData.setMaxUnloadedClassCount(0L);
+
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		this.classLoadingInformationData.setTimeStamp(timestamp);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected SystemSensorData getSystemSensorData() {
+		return this.classLoadingInformationData;
+	}
+
+	/**
+	 * Gets the {@link RuntimeInfoProvider}. The getter method is provided for better testability.
+	 *
+	 * @return {@link RuntimeInfoProvider}.
+	 */
+	private RuntimeInfoProvider getRuntimeBean() {
+		if (this.runtimeBean == null) {
+			this.runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+		}
+		return this.runtimeBean;
+	}
 }

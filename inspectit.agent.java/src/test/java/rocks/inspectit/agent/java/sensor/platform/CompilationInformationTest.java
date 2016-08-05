@@ -1,217 +1,140 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
+import java.sql.Timestamp;
 
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.testng.annotations.BeforeMethod;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.CompilationInformationData;
-import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
-@SuppressWarnings("PMD")
+/**
+ * Test class for {@link CompilationSensorTest}.
+ *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
+ */
 public class CompilationInformationTest extends TestBase {
 
+	/** Class under test. */
 	@InjectMocks
-	CompilationInformation compilationInfo;
+	CompilationInformation cut;
 
+	/** The mocked {@link CompilationInformationData}. */
+	@Mock
+	CompilationInformationData collector;
+
+	/** The mocked {@link RuntimeInfoProvider}. */
 	@Mock
 	RuntimeInfoProvider runtimeBean;
 
-	@Mock
-	IPlatformManager platformManager;
-
-	@Mock
-	ICoreService coreService;
-
-	@Mock
-	PlatformSensorTypeConfig sensorTypeConfig;
-
-	@Mock
-	Logger log;
-
-	@BeforeMethod
-	public void initTestClass() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		// we have to replace the real runtimeBean by the mocked one, so that we don't retrieve the
-		// info from the underlying JVM
-		Field field = compilationInfo.getClass().getDeclaredField("runtimeBean");
-		field.setAccessible(true);
-		field.set(compilationInfo, runtimeBean);
-	}
-
-	public class Update extends CompilationInformationTest {
+	/**
+	 * Tests the {@link CompilationInformation#gather()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Gather extends CompilationInformationTest {
 
 		@Test
-		public void oneDataSet() throws IdNotAvailableException {
-			long totalCompilationTime = 12345L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
+		void gatherMax() {
+			when(this.runtimeBean.getTotalCompilationTime()).thenReturn(10L);
+			when(this.collector.getMinTotalCompilationTime()).thenReturn(9L);
+			when(this.collector.getMaxTotalCompilationTime()).thenReturn(9L);
 
-			when(runtimeBean.getTotalCompilationTime()).thenReturn(totalCompilationTime);
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+			this.cut.gather();
 
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-			compilationInfo.update(coreService);
-
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(CompilationInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			CompilationInformationData compilationData = (CompilationInformationData) sensorData;
-			assertThat(compilationData.getCount(), is(equalTo(1)));
-
-			// as there was only one data object min/max/total the values must be the
-			// same
-			assertThat(compilationData.getMinTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-			assertThat(compilationData.getMaxTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-			assertThat(compilationData.getTotalTotalCompilationTime(), is(equalTo(totalCompilationTime)));
+			verify(this.collector).incrementCount();
+			verify(this.collector).addTotalCompilationTime(10);
+			verify(this.collector).setMaxTotalCompilationTime(10);
+			verify(this.collector, never()).setMinTotalCompilationTime(Mockito.anyLong());
 		}
 
 		@Test
-		public void twoDataSets() throws IdNotAvailableException {
-			long totalCompilationTime = 12345L;
-			long totalCompilationTime2 = 12359L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
+		void gatherMin() {
+			when(this.runtimeBean.getTotalCompilationTime()).thenReturn(10L);
+			when(this.collector.getMinTotalCompilationTime()).thenReturn(11L);
 
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+			this.cut.gather();
 
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-
-			// ------------------------
-			// FIRST UPDATE CALL
-			// ------------------------
-			when(runtimeBean.getTotalCompilationTime()).thenReturn(totalCompilationTime);
-			compilationInfo.update(coreService);
-
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(CompilationInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			CompilationInformationData compilationData = (CompilationInformationData) sensorData;
-			assertThat(compilationData.getCount(), is(equalTo(1)));
-
-			// as there was only one data object min/max/total the values must be the
-			// same
-			assertThat(compilationData.getMinTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-			assertThat(compilationData.getMaxTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-			assertThat(compilationData.getTotalTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-
-			// ------------------------
-			// SECOND UPDATE CALL
-			// ------------------------
-			when(runtimeBean.getTotalCompilationTime()).thenReturn(totalCompilationTime2);
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(compilationData);
-			compilationInfo.update(coreService);
-
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(CompilationInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			compilationData = (CompilationInformationData) sensorData;
-			assertThat(compilationData.getCount(), is(equalTo(2)));
-
-			assertThat(compilationData.getMinTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-			assertThat(compilationData.getMaxTotalCompilationTime(), is(equalTo(totalCompilationTime2)));
-			assertThat(compilationData.getTotalTotalCompilationTime(), is(equalTo(totalCompilationTime + totalCompilationTime2)));
-		}
-
-		/**
-		 * Maybe this test is obsolete because we don't expect an exception to be thrown directly in
-		 * {@link CompilationInformation#getTotalCompilationTime()} but only in
-		 * {@link DefaultRuntimeMXBean#getTotalCompilationTime()}
-		 *
-		 * @throws IdNotAvailableException
-		 */
-		@Test
-		public void compilationTimeNotAvailable() throws IdNotAvailableException {
-			long totalCompilationTime = -1L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
-
-			when(runtimeBean.getTotalCompilationTime()).thenReturn(-1L);
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
-
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-
-			compilationInfo.update(coreService);
-
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(CompilationInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			CompilationInformationData compilationData = (CompilationInformationData) sensorData;
-			assertThat(compilationData.getCount(), is(equalTo(1)));
-
-			// as there was only one data object min/max/total the values must be the
-			// same
-			assertThat(compilationData.getMinTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-			assertThat(compilationData.getMaxTotalCompilationTime(), is(equalTo(totalCompilationTime)));
-			assertThat(compilationData.getTotalTotalCompilationTime(), is(equalTo(totalCompilationTime)));
+			verify(this.collector).incrementCount();
+			verify(this.collector).addTotalCompilationTime(10);
+			verify(this.collector).setMinTotalCompilationTime(10);
+			verify(this.collector, never()).setMaxTotalCompilationTime(Mockito.anyLong());
+			verify(this.collector, never()).getMaxTotalCompilationTime();
 		}
 
 		@Test
-		public void idNotAvailableTest() throws IdNotAvailableException {
-			long totalCompilationTime = 12345L;
-			long sensorTypeIdent = 13L;
+		void noRecentInformation() {
+			when(this.runtimeBean.getTotalCompilationTime()).thenReturn(10L);
+			when(this.collector.getMinTotalCompilationTime()).thenReturn(9L);
+			when(this.collector.getMaxTotalCompilationTime()).thenReturn(10L);
 
-			when(runtimeBean.getTotalCompilationTime()).thenReturn(totalCompilationTime);
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
+			this.cut.gather();
 
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-
-			compilationInfo.update(coreService);
-
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(0)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
+			verify(this.collector).incrementCount();
+			verify(this.collector).addTotalCompilationTime(10);
+			verify(this.collector, never()).setMinTotalCompilationTime(Mockito.anyLong());
+			verify(this.collector, never()).setMaxTotalCompilationTime(Mockito.anyLong());
 		}
 	}
 
+	/**
+	 * Tests the {@link CompilationInformation#get()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Get extends CompilationInformationTest {
+
+		@Test
+		void getNewCompilationInformationData() throws Exception {
+			when(this.collector.getPlatformIdent()).thenReturn(1L);
+			when(this.collector.getSensorTypeIdent()).thenReturn(2L);
+			when(this.collector.getCount()).thenReturn(3);
+			when(this.collector.getTotalTotalCompilationTime()).thenReturn(4L);
+			when(this.collector.getMaxTotalCompilationTime()).thenReturn(5L);
+			when(this.collector.getMinTotalCompilationTime()).thenReturn(6L);
+
+			Timestamp timestamp = mock(Timestamp.class);
+			when(this.collector.getTimeStamp()).thenReturn(timestamp);
+
+			CompilationInformationData collector = (CompilationInformationData) this.cut.get();
+
+			assertThat(collector.getPlatformIdent(), is(1L));
+			assertThat(collector.getSensorTypeIdent(), is(2L));
+			assertThat(collector.getCount(), is(3));
+			assertThat(collector.getTotalTotalCompilationTime(), is(4L));
+			assertThat(collector.getMaxTotalCompilationTime(), is(5L));
+			assertThat(collector.getMinTotalCompilationTime(), is(6L));
+			assertThat(collector.getTimeStamp(), is(timestamp));
+		}
+	}
+
+	/**
+	 * Tests the {@link CompilationInformationTest#reset()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Reset extends CompilationInformationTest {
+
+		@Test
+		void collectorClassIsResetted() throws Exception {
+			this.cut.reset();
+
+			verify(this.collector).setCount(0);
+			verify(this.collector).setTotalTotalCompilationTime(0L);
+			verify(this.collector).setMinTotalCompilationTime(Long.MAX_VALUE);
+			verify(this.collector).setMaxTotalCompilationTime(0L);
+			verify(this.collector).setTimeStamp(any(Timestamp.class));
+		}
+	}
 }

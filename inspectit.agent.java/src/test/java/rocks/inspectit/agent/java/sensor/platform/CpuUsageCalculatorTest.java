@@ -14,12 +14,12 @@ import org.testng.annotations.Test;
 
 import com.sun.management.OperatingSystemMXBean;
 
-import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.sun.SunOperatingSystemInfoProvider;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings("PMD")
-public class CpuUsageCalculatorTest extends AbstractLogSupport {
+public class CpuUsageCalculatorTest extends TestBase {
 
 	@Mock
 	private RuntimeMXBean runtimeBean;
