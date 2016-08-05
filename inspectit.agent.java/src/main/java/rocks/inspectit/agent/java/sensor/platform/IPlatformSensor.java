@@ -1,7 +1,7 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
-import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.sensor.ISensor;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 
 /**
@@ -9,26 +9,9 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorType
  * Memory etc.
  *
  * @author Patrice Bouillet
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
 public interface IPlatformSensor extends ISensor {
-
-	/**
-	 * Defines if the sensor should be updated automatically. For static information, this method
-	 * shall return <code>false</code> as its data will nearly never change. Thus a decrease in
-	 * network traffic and processing usage can be accomplished.
-	 *
-	 * @return If this platform sensor should be updated automatically.
-	 */
-	boolean automaticUpdate();
-
-	/**
-	 * This method is called whenever the sensor should be updated.
-	 *
-	 * @param coreService
-	 *            The core service which is needed to store the measurements to.
-	 */
-	void update(ICoreService coreService);
 
 	/**
 	 * Returns the {@link PlatformSensorTypeConfig} for this sensor.
@@ -37,4 +20,20 @@ public interface IPlatformSensor extends ISensor {
 	 */
 	PlatformSensorTypeConfig getSensorTypeConfig();
 
+	/**
+	 * Reset any saved state in the sensor. Used to reset the sensor data collector class.
+	 */
+	void reset();
+
+	/**
+	 * This method is called whenever the sensor should be updated.
+	 */
+	void gather();
+
+	/**
+	 * Get the corresponding collector class of type {@link SystemSensorData}.
+	 *
+	 * @return the collector class.
+	 */
+	SystemSensorData get();
 }

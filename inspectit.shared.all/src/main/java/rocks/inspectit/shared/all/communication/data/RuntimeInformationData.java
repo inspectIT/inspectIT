@@ -27,16 +27,6 @@ public class RuntimeInformationData extends SystemSensorData {
 	private int count = 0;
 
 	/**
-	 * The minimum uptime of the virtual machine in milliseconds.
-	 */
-	private long minUptime = Long.MAX_VALUE;
-
-	/**
-	 * The maximum uptime of the virtual machine in milliseconds.
-	 */
-	private long maxUptime = 0;
-
-	/**
 	 * The total uptime of the virtual machine in milliseconds.
 	 */
 	private long totalUptime = 0;
@@ -98,44 +88,6 @@ public class RuntimeInformationData extends SystemSensorData {
 	}
 
 	/**
-	 * Gets {@link #minUptime}.
-	 *
-	 * @return {@link #minUptime}
-	 */
-	public long getMinUptime() {
-		return minUptime;
-	}
-
-	/**
-	 * Sets {@link #minUptime}.
-	 *
-	 * @param minUptime
-	 *            New value for {@link #minUptime}
-	 */
-	public void setMinUptime(long minUptime) {
-		this.minUptime = minUptime;
-	}
-
-	/**
-	 * Gets {@link #maxUptime}.
-	 *
-	 * @return {@link #maxUptime}
-	 */
-	public long getMaxUptime() {
-		return maxUptime;
-	}
-
-	/**
-	 * Sets {@link #maxUptime}.
-	 *
-	 * @param maxUptime
-	 *            New value for {@link #maxUptime}
-	 */
-	public void setMaxUptime(long maxUptime) {
-		this.maxUptime = maxUptime;
-	}
-
-	/**
 	 * Gets {@link #totalUptime}.
 	 *
 	 * @return {@link #totalUptime}
@@ -162,8 +114,6 @@ public class RuntimeInformationData extends SystemSensorData {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = (prime * result) + count;
-		result = (prime * result) + (int) (maxUptime ^ (maxUptime >>> 32));
-		result = (prime * result) + (int) (minUptime ^ (minUptime >>> 32));
 		result = (prime * result) + (int) (totalUptime ^ (totalUptime >>> 32));
 		return result;
 	}
@@ -186,12 +136,6 @@ public class RuntimeInformationData extends SystemSensorData {
 		if (count != other.count) {
 			return false;
 		}
-		if (maxUptime != other.maxUptime) {
-			return false;
-		}
-		if (minUptime != other.minUptime) {
-			return false;
-		}
 		if (totalUptime != other.totalUptime) {
 			return false;
 		}
@@ -204,7 +148,7 @@ public class RuntimeInformationData extends SystemSensorData {
 	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(0, 0, 1, 0, 3, 0);
+		size += objectSizes.getPrimitiveTypesSize(0, 0, 1, 0, 1, 0);
 		if (doAlign) {
 			return objectSizes.alignTo8Bytes(size);
 		} else {

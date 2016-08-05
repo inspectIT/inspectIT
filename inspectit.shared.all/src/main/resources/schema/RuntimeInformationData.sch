@@ -10,6 +10,6 @@ class: rocks.inspectit.shared.all.communication.data.RuntimeInformationData
 
 # Runtime Information Data
 5: count
-6: minUptime
-7: maxUptime
+#6: minUptime
+#7: maxUptime
 8: totalUptime

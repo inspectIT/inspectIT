@@ -3,249 +3,196 @@ package rocks.inspectit.agent.java.sensor.platform;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the memory system through MXBeans.
  *
  * @author Eduard Tudenhoefner
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
-public class MemoryInformation extends AbstractPlatformSensor implements IPlatformSensor {
+public class MemoryInformation extends AbstractPlatformSensor {
+
+	/** Collector class. */
+	private MemoryInformationData memoryInformationData = new MemoryInformationData();
+
+	/** The {@link MemoryInfoProvider} used to retrieve heap memory information. */
+	private MemoryInfoProvider memoryBean;
+
+	/** The {@link OperatingSystemInfoProvider} used to retrieve physical memory information. */
+	private OperatingSystemInfoProvider osBean;
 
 	/**
-	 * The logger of the class.
+	 * {@inheritDoc}
 	 */
-	@Log
-	Logger log;
+	public void gather() {
 
-	/**
-	 * The Platform manager used to get the correct IDs.
-	 */
-	@Autowired
-	private IPlatformManager platformManager;
+		// The timestamp is set in the {@link MemoryInformation#reset()} to avoid multiple renewal.
+		// It will not be set on the first execution of {@link MemoryInformation#gather()}, but
+		// shortly before.
+		long freePhysMemory = this.getOsBean().getFreePhysicalMemorySize();
+		long freeSwapSpace = this.getOsBean().getFreeSwapSpaceSize();
+		long comittedVirtualMemSize = this.getOsBean().getCommittedVirtualMemorySize();
+		long usedHeapMemorySize = this.getMemoryBean().getHeapMemoryUsage().getUsed();
+		long comittedHeapMemorySize = this.getMemoryBean().getHeapMemoryUsage().getCommitted();
+		long usedNonHeapMemorySize = this.getMemoryBean().getNonHeapMemoryUsage().getUsed();
+		long comittedNonHeapMemorySize = this.getMemoryBean().getNonHeapMemoryUsage().getCommitted();
 
-	/**
-	 * The {@link MemoryInfoProvider} used to retrieve heap memory information.
-	 */
-	private final MemoryInfoProvider memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
+		this.memoryInformationData.incrementCount();
+		this.memoryInformationData.addFreePhysMemory(freePhysMemory);
+		this.memoryInformationData.addFreeSwapSpace(freeSwapSpace);
+		this.memoryInformationData.addComittedVirtualMemSize(comittedVirtualMemSize);
+		this.memoryInformationData.addUsedHeapMemorySize(usedHeapMemorySize);
+		this.memoryInformationData.addComittedHeapMemorySize(comittedHeapMemorySize);
+		this.memoryInformationData.addUsedNonHeapMemorySize(usedNonHeapMemorySize);
+		this.memoryInformationData.addComittedNonHeapMemorySize(comittedNonHeapMemorySize);
 
-	/**
-	 * The {@link OperatingSystemInfoProvider} used to retrieve physical memory information.
-	 */
-	private final OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
+		if (freePhysMemory < this.memoryInformationData.getMinFreePhysMemory()) {
+			this.memoryInformationData.setMinFreePhysMemory(freePhysMemory);
+		} else if (freePhysMemory > this.memoryInformationData.getMaxFreePhysMemory()) {
+			this.memoryInformationData.setMaxFreePhysMemory(freePhysMemory);
+		}
 
-	/**
-	 * No-arg constructor needed for Spring.
-	 */
-	public MemoryInformation() {
-	}
+		if (freeSwapSpace < this.memoryInformationData.getMinFreeSwapSpace()) {
+			this.memoryInformationData.setMinFreeSwapSpace(freeSwapSpace);
+		} else if (freeSwapSpace > this.memoryInformationData.getMaxFreeSwapSpace()) {
+			this.memoryInformationData.setMaxFreeSwapSpace(freeSwapSpace);
+		}
 
-	/**
-	 * The default constructor which needs one parameter.
-	 *
-	 * @param platformManager
-	 *            The Platform manager.
-	 */
-	public MemoryInformation(IPlatformManager platformManager) {
-		this.platformManager = platformManager;
-	}
+		if (comittedVirtualMemSize < this.memoryInformationData.getMinComittedVirtualMemSize()) {
+			this.memoryInformationData.setMinComittedVirtualMemSize(comittedVirtualMemSize);
+		} else if (comittedVirtualMemSize > this.memoryInformationData.getMaxComittedVirtualMemSize()) {
+			this.memoryInformationData.setMaxComittedVirtualMemSize(comittedVirtualMemSize);
+		}
 
-	/**
-	 * Returns the amount of free physical memory.
-	 *
-	 * @return the free physical memory.
-	 */
-	public long getFreePhysMemory() {
-		return osBean.getFreePhysicalMemorySize();
-	}
+		if (usedHeapMemorySize < this.memoryInformationData.getMinUsedHeapMemorySize()) {
+			this.memoryInformationData.setMinUsedHeapMemorySize(usedHeapMemorySize);
+		} else if (usedHeapMemorySize > this.memoryInformationData.getMaxUsedHeapMemorySize()) {
+			this.memoryInformationData.setMaxUsedHeapMemorySize(usedHeapMemorySize);
+		}
 
-	/**
-	 * Returns the amount of free swap space.
-	 *
-	 * @return the free swap space.
-	 */
-	public long getFreeSwapSpace() {
-		return osBean.getFreeSwapSpaceSize();
-	}
+		if (comittedHeapMemorySize < this.memoryInformationData.getMinComittedHeapMemorySize()) {
+			this.memoryInformationData.setMinComittedHeapMemorySize(comittedHeapMemorySize);
+		} else if (comittedHeapMemorySize > this.memoryInformationData.getMaxComittedHeapMemorySize()) {
+			this.memoryInformationData.setMaxComittedHeapMemorySize(comittedHeapMemorySize);
+		}
 
-	/**
-	 * Returns the amount of virtual memory that is guaranteed to be available to the running
-	 * process.
-	 *
-	 * @return the virtual memory size.
-	 */
-	public long getComittedVirtualMemSize() {
-		return osBean.getCommittedVirtualMemorySize();
-	}
+		if (usedNonHeapMemorySize < this.memoryInformationData.getMinUsedNonHeapMemorySize()) {
+			this.memoryInformationData.setMinUsedNonHeapMemorySize(usedNonHeapMemorySize);
+		} else if (usedNonHeapMemorySize > this.memoryInformationData.getMaxUsedNonHeapMemorySize()) {
+			this.memoryInformationData.setMaxUsedNonHeapMemorySize(usedNonHeapMemorySize);
+		}
 
-	/**
-	 * Returns the memory usage of the heap that is used for object allocation.
-	 *
-	 * @return the memory usage of the heap for object allocation.
-	 */
-	public long getUsedHeapMemorySize() {
-		return memoryBean.getHeapMemoryUsage().getUsed();
-	}
-
-	/**
-	 * Returns the amount of memory that is guaranteed to be available for use by the virtual
-	 * machine for heap memory usage.
-	 *
-	 * @return the amount of guaranteed to be available memory for heap memory usage.
-	 */
-	public long getComittedHeapMemorySize() {
-		return memoryBean.getHeapMemoryUsage().getCommitted();
-	}
-
-	/**
-	 * Returns the amount of memory for non-heap memory usage of the virtual machine.
-	 *
-	 * @return the amount of memory for non-heap memory usage.
-	 */
-	public long getUsedNonHeapMemorySize() {
-		return memoryBean.getNonHeapMemoryUsage().getUsed();
-	}
-
-	/**
-	 * Returns the amount of memory that is guaranteed to be available for use by the virtual
-	 * machine for non-heap memory usage.
-	 *
-	 * @return the guaranteed to be available memory for non-heap memory usage.
-	 */
-	public long getComittedNonHeapMemoryUsage() {
-		return memoryBean.getNonHeapMemoryUsage().getCommitted();
-	}
-
-	/**
-	 * Updates all dynamic memory informations.
-	 *
-	 * @param coreService
-	 *            The {@link ICoreService}.
-	 */
-	public void update(ICoreService coreService) {
-		long sensorTypeIdent = getSensorTypeConfig().getId();
-		long freePhysMemory = this.getFreePhysMemory();
-		long freeSwapSpace = this.getFreeSwapSpace();
-		long comittedVirtualMemSize = this.getComittedVirtualMemSize();
-		long usedHeapMemorySize = this.getUsedHeapMemorySize();
-		long comittedHeapMemorySize = this.getComittedHeapMemorySize();
-		long usedNonHeapMemorySize = this.getUsedNonHeapMemorySize();
-		long comittedNonHeapMemorySize = this.getComittedNonHeapMemoryUsage();
-
-		MemoryInformationData memoryData = (MemoryInformationData) coreService.getPlatformSensorData(sensorTypeIdent);
-
-		if (memoryData == null) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-
-				memoryData = new MemoryInformationData(timestamp, platformId, sensorTypeIdent);
-				memoryData.incrementCount();
-
-				memoryData.addFreePhysMemory(freePhysMemory);
-				memoryData.setMinFreePhysMemory(freePhysMemory);
-				memoryData.setMaxFreePhysMemory(freePhysMemory);
-
-				memoryData.addFreeSwapSpace(freeSwapSpace);
-				memoryData.setMinFreeSwapSpace(freeSwapSpace);
-				memoryData.setMaxFreeSwapSpace(freeSwapSpace);
-
-				memoryData.addComittedVirtualMemSize(comittedVirtualMemSize);
-				memoryData.setMinComittedVirtualMemSize(comittedVirtualMemSize);
-				memoryData.setMaxComittedVirtualMemSize(comittedVirtualMemSize);
-
-				memoryData.addUsedHeapMemorySize(usedHeapMemorySize);
-				memoryData.setMinUsedHeapMemorySize(usedHeapMemorySize);
-				memoryData.setMaxUsedHeapMemorySize(usedHeapMemorySize);
-
-				memoryData.addComittedHeapMemorySize(comittedHeapMemorySize);
-				memoryData.setMinComittedHeapMemorySize(comittedHeapMemorySize);
-				memoryData.setMaxComittedHeapMemorySize(comittedHeapMemorySize);
-
-				memoryData.addUsedNonHeapMemorySize(usedNonHeapMemorySize);
-				memoryData.setMinUsedNonHeapMemorySize(usedNonHeapMemorySize);
-				memoryData.setMaxUsedNonHeapMemorySize(usedNonHeapMemorySize);
-
-				memoryData.addComittedNonHeapMemorySize(comittedNonHeapMemorySize);
-				memoryData.setMinComittedNonHeapMemorySize(comittedNonHeapMemorySize);
-				memoryData.setMaxComittedNonHeapMemorySize(comittedNonHeapMemorySize);
-
-				coreService.addPlatformSensorData(sensorTypeIdent, memoryData);
-			} catch (IdNotAvailableException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Could not save the memory information because of an unavailable id. " + e.getMessage());
-				}
-			}
-		} else {
-			memoryData.incrementCount();
-			memoryData.addFreePhysMemory(freePhysMemory);
-			memoryData.addFreeSwapSpace(freeSwapSpace);
-			memoryData.addComittedVirtualMemSize(comittedVirtualMemSize);
-			memoryData.addUsedHeapMemorySize(usedHeapMemorySize);
-			memoryData.addComittedHeapMemorySize(comittedHeapMemorySize);
-			memoryData.addUsedNonHeapMemorySize(usedNonHeapMemorySize);
-			memoryData.addComittedNonHeapMemorySize(comittedNonHeapMemorySize);
-
-			if (freePhysMemory < memoryData.getMinFreePhysMemory()) {
-				memoryData.setMinFreePhysMemory(freePhysMemory);
-			} else if (freePhysMemory > memoryData.getMaxFreePhysMemory()) {
-				memoryData.setMaxFreePhysMemory(freePhysMemory);
-			}
-
-			if (freeSwapSpace < memoryData.getMinFreeSwapSpace()) {
-				memoryData.setMinFreeSwapSpace(freeSwapSpace);
-			} else if (freeSwapSpace > memoryData.getMaxFreeSwapSpace()) {
-				memoryData.setMaxFreeSwapSpace(freeSwapSpace);
-			}
-
-			if (comittedVirtualMemSize < memoryData.getMinComittedVirtualMemSize()) {
-				memoryData.setMinComittedVirtualMemSize(comittedVirtualMemSize);
-			} else if (comittedVirtualMemSize > memoryData.getMaxComittedVirtualMemSize()) {
-				memoryData.setMaxComittedVirtualMemSize(comittedVirtualMemSize);
-			}
-
-			if (usedHeapMemorySize < memoryData.getMinUsedHeapMemorySize()) {
-				memoryData.setMinUsedHeapMemorySize(usedHeapMemorySize);
-			} else if (usedHeapMemorySize > memoryData.getMaxUsedHeapMemorySize()) {
-				memoryData.setMaxUsedHeapMemorySize(usedHeapMemorySize);
-			}
-
-			if (comittedHeapMemorySize < memoryData.getMinComittedHeapMemorySize()) {
-				memoryData.setMinComittedHeapMemorySize(comittedHeapMemorySize);
-			} else if (comittedHeapMemorySize > memoryData.getMaxComittedHeapMemorySize()) {
-				memoryData.setMaxComittedHeapMemorySize(comittedHeapMemorySize);
-			}
-
-			if (usedNonHeapMemorySize < memoryData.getMinUsedNonHeapMemorySize()) {
-				memoryData.setMinUsedNonHeapMemorySize(usedNonHeapMemorySize);
-			} else if (usedNonHeapMemorySize > memoryData.getMaxUsedNonHeapMemorySize()) {
-				memoryData.setMaxUsedNonHeapMemorySize(usedNonHeapMemorySize);
-			}
-
-			if (comittedNonHeapMemorySize < memoryData.getMinComittedNonHeapMemorySize()) {
-				memoryData.setMinComittedNonHeapMemorySize(comittedNonHeapMemorySize);
-			} else if (comittedNonHeapMemorySize > memoryData.getMaxComittedNonHeapMemorySize()) {
-				memoryData.setMaxComittedNonHeapMemorySize(comittedNonHeapMemorySize);
-			}
+		if (comittedNonHeapMemorySize < this.memoryInformationData.getMinComittedNonHeapMemorySize()) {
+			this.memoryInformationData.setMinComittedNonHeapMemorySize(comittedNonHeapMemorySize);
+		} else if (comittedNonHeapMemorySize > this.memoryInformationData.getMaxComittedNonHeapMemorySize()) {
+			this.memoryInformationData.setMaxComittedNonHeapMemorySize(comittedNonHeapMemorySize);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean automaticUpdate() {
-		return true;
+	public SystemSensorData get() {
+		MemoryInformationData newMemoryInformationData = new MemoryInformationData();
+
+		newMemoryInformationData.setPlatformIdent(this.memoryInformationData.getPlatformIdent());
+		newMemoryInformationData.setSensorTypeIdent(this.memoryInformationData.getSensorTypeIdent());
+		newMemoryInformationData.setCount(this.memoryInformationData.getCount());
+		newMemoryInformationData.setTotalFreePhysMemory(this.memoryInformationData.getTotalFreePhysMemory());
+		newMemoryInformationData.setMinFreePhysMemory(this.memoryInformationData.getMinFreePhysMemory());
+		newMemoryInformationData.setMaxFreePhysMemory(this.memoryInformationData.getMaxFreePhysMemory());
+		newMemoryInformationData.setTotalFreeSwapSpace(this.memoryInformationData.getTotalFreeSwapSpace());
+		newMemoryInformationData.setMinFreeSwapSpace(this.memoryInformationData.getMinFreeSwapSpace());
+		newMemoryInformationData.setMaxFreeSwapSpace(this.memoryInformationData.getMaxFreeSwapSpace());
+		newMemoryInformationData.setTotalComittedVirtualMemSize(this.memoryInformationData.getTotalComittedVirtualMemSize());
+		newMemoryInformationData.setMinComittedVirtualMemSize(this.memoryInformationData.getMinComittedVirtualMemSize());
+		newMemoryInformationData.setMaxComittedVirtualMemSize(this.memoryInformationData.getMaxComittedVirtualMemSize());
+		newMemoryInformationData.setTotalUsedHeapMemorySize(this.memoryInformationData.getTotalUsedHeapMemorySize());
+		newMemoryInformationData.setMinUsedHeapMemorySize(this.memoryInformationData.getMinUsedHeapMemorySize());
+		newMemoryInformationData.setMaxUsedHeapMemorySize(this.memoryInformationData.getMaxUsedHeapMemorySize());
+		newMemoryInformationData.setTotalComittedHeapMemorySize(this.memoryInformationData.getTotalComittedHeapMemorySize());
+		newMemoryInformationData.setMinComittedHeapMemorySize(this.memoryInformationData.getMinComittedHeapMemorySize());
+		newMemoryInformationData.setMaxComittedHeapMemorySize(this.memoryInformationData.getMaxComittedHeapMemorySize());
+		newMemoryInformationData.setTotalUsedNonHeapMemorySize(this.memoryInformationData.getTotalUsedNonHeapMemorySize());
+		newMemoryInformationData.setMinComittedNonHeapMemorySize(this.memoryInformationData.getMinComittedNonHeapMemorySize());
+		newMemoryInformationData.setMaxComittedNonHeapMemorySize(this.memoryInformationData.getMaxComittedNonHeapMemorySize());
+		newMemoryInformationData.setTotalComittedNonHeapMemorySize(this.memoryInformationData.getTotalComittedNonHeapMemorySize());
+		newMemoryInformationData.setTimeStamp(this.memoryInformationData.getTimeStamp());
+
+		return newMemoryInformationData;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void reset() {
+		this.memoryInformationData.setCount(0);
+
+		this.memoryInformationData.setTotalFreePhysMemory(0L);
+		this.memoryInformationData.setMinFreePhysMemory(Long.MAX_VALUE);
+		this.memoryInformationData.setMaxFreePhysMemory(0L);
+
+		this.memoryInformationData.setTotalFreeSwapSpace(0L);
+		this.memoryInformationData.setMinFreeSwapSpace(Long.MAX_VALUE);
+		this.memoryInformationData.setMaxFreeSwapSpace(0L);
+
+		this.memoryInformationData.setTotalComittedVirtualMemSize(0L);
+		this.memoryInformationData.setMinComittedVirtualMemSize(Long.MAX_VALUE);
+		this.memoryInformationData.setMaxComittedVirtualMemSize(0L);
+
+		this.memoryInformationData.setTotalUsedHeapMemorySize(0L);
+		this.memoryInformationData.setMinUsedHeapMemorySize(Long.MAX_VALUE);
+		this.memoryInformationData.setMaxUsedHeapMemorySize(0L);
+
+		this.memoryInformationData.setTotalComittedHeapMemorySize(0L);
+		this.memoryInformationData.setMinComittedHeapMemorySize(Long.MAX_VALUE);
+		this.memoryInformationData.setMaxComittedHeapMemorySize(0L);
+
+		this.memoryInformationData.setTotalUsedNonHeapMemorySize(0L);
+		this.memoryInformationData.setMinComittedNonHeapMemorySize(Long.MAX_VALUE);
+		this.memoryInformationData.setMaxComittedNonHeapMemorySize(0L);
+
+		this.memoryInformationData.setTotalComittedNonHeapMemorySize(0L);
+
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		this.memoryInformationData.setTimeStamp(timestamp);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected SystemSensorData getSystemSensorData() {
+		return this.memoryInformationData;
+	}
+
+	/**
+	 * Gets the {@link OperatingSystemInfoProvider}. The getter method is provided for better
+	 * testability.
+	 *
+	 * @return {@link OperatingSystemInfoProvider}.
+	 */
+	private OperatingSystemInfoProvider getOsBean() {
+		if (this.osBean == null) {
+			this.osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
+		}
+		return this.osBean;
+	}
+
+	/**
+	 * Gets the {@link MemoryInfoProvider}. The getter method is provided for better testability.
+	 *
+	 * @return {@link MemoryInfoProvider}.
+	 */
+	private MemoryInfoProvider getMemoryBean() {
+		if (this.memoryBean == null) {
+			this.memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
+		}
+		return this.memoryBean;
+	}
 }
