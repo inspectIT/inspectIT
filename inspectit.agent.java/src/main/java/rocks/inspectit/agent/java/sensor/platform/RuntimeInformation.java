@@ -3,114 +3,83 @@ package rocks.inspectit.agent.java.sensor.platform;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.RuntimeInformationData;
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the runtime of the Virtual Machine through MXBeans.
  *
  * @author Eduard Tudenhoefner
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
-public class RuntimeInformation extends AbstractPlatformSensor implements IPlatformSensor {
+public class RuntimeInformation extends AbstractPlatformSensor {
+
+	/** Collector class. */
+	private RuntimeInformationData runtimeInformationData = new RuntimeInformationData();
+
+	/** The {@link RuntimeInfoProvider} used to retrieve information from the runtime. */
+	private RuntimeInfoProvider runtimeBean;
 
 	/**
-	 * The logger of the class.
+	 * {@inheritDoc}
 	 */
-	@Log
-	Logger log;
+	@Override
+	public void gather() {
+		// The timestamp is set in the {@link RuntimeInformation#reset()} to avoid multiple renewal.
+		// It will not be set on the first execution of {@link RuntimeInformation#gather()}, but
+		// shortly before.
+		long uptime = this.getRuntimeBean().getUptime();
 
-	/**
-	 * The Platform manager used to get the correct IDs.
-	 */
-	@Autowired
-	private IPlatformManager platformManager;
-
-	/**
-	 * The {@link RuntimeInfoProvider} used to retrieve information from the runtime.
-	 */
-	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
-
-	/**
-	 * No-arg constructor needed for Spring.
-	 */
-	public RuntimeInformation() {
-	}
-
-	/**
-	 * The default constructor which needs one parameter.
-	 *
-	 * @param platformManager
-	 *            The Platform manager.
-	 */
-	public RuntimeInformation(IPlatformManager platformManager) {
-		this.platformManager = platformManager;
-	}
-
-	/**
-	 * Returns the uptime of the virtual machine in milliseconds.
-	 *
-	 * @return the uptime in milliseconds.
-	 */
-	public long getUptime() {
-		return runtimeBean.getUptime();
-	}
-
-	/**
-	 * Updates all dynamic runtime informations.
-	 *
-	 * @param coreService
-	 *            The {@link ICoreService}.
-	 */
-	public void update(ICoreService coreService) {
-		long sensorTypeIdent = getSensorTypeConfig().getId();
-		long uptime = this.getUptime();
-
-		RuntimeInformationData runtimeData = (RuntimeInformationData) coreService.getPlatformSensorData(sensorTypeIdent);
-
-		if (runtimeData == null) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-				runtimeData = new RuntimeInformationData(timestamp, platformId, sensorTypeIdent);
-
-				runtimeData.incrementCount();
-				runtimeData.addUptime(uptime);
-				runtimeData.setMinUptime(uptime);
-				runtimeData.setMaxUptime(uptime);
-
-				coreService.addPlatformSensorData(sensorTypeIdent, runtimeData);
-			} catch (IdNotAvailableException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Could not save the runtime information because of an unavailable id. " + e.getMessage());
-				}
-			}
-		} else {
-
-			runtimeData.incrementCount();
-			runtimeData.addUptime(uptime);
-
-			if (uptime < runtimeData.getMinUptime()) {
-				runtimeData.setMinUptime(uptime);
-			} else if (uptime > runtimeData.getMaxUptime()) {
-				runtimeData.setMaxUptime(uptime);
-			}
-		}
+		this.runtimeInformationData.setUptime(uptime);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean automaticUpdate() {
-		return true;
+	@Override
+	public SystemSensorData get() {
+		RuntimeInformationData newRuntimeInformationData = new RuntimeInformationData();
+
+		newRuntimeInformationData.setPlatformIdent(this.runtimeInformationData.getPlatformIdent());
+		newRuntimeInformationData.setSensorTypeIdent(this.runtimeInformationData.getSensorTypeIdent());
+
+		newRuntimeInformationData.setUptime(this.runtimeInformationData.getUptime());
+
+		newRuntimeInformationData.setTimeStamp(this.runtimeInformationData.getTimeStamp());
+
+		return this.runtimeInformationData;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void reset() {
+		this.runtimeInformationData.setUptime(0L);
+
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		this.runtimeInformationData.setTimeStamp(timestamp);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected SystemSensorData getSystemSensorData() {
+		return this.runtimeInformationData;
+	}
+
+	/**
+	 * Gets the {@link RuntimeInfoProvider}. The getter method is provided for better testability.
+	 *
+	 * @return {@link RuntimeInfoProvider}.
+	 */
+	private RuntimeInfoProvider getRuntimeBean() {
+		if (this.runtimeBean == null) {
+			this.runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+		}
+		return this.runtimeBean;
+	}
 }

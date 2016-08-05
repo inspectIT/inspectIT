@@ -1,456 +1,243 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.management.MemoryUsage;
-import java.lang.reflect.Field;
+import java.sql.Timestamp;
 
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
-import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
-@SuppressWarnings("PMD")
+/**
+ * Test class for {@link SystemInformation}.
+ *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
+ */
 public class SystemInformationTest extends TestBase {
 
+	/** Class under test. */
 	@InjectMocks
-	SystemInformation systemInfo;
+	SystemInformation cut;
 
-	@Mock
-	MemoryInfoProvider memoryBean;
-
+	/** The mocked {@link OperatingSystemInfoProvider}. */
 	@Mock
 	OperatingSystemInfoProvider osBean;
 
+	/** The mocked {@link MemoryInfoProvider}. */
+	@Mock
+	MemoryInfoProvider memoryBean;
+
+	/** The mocked {@link RuntimeInfoProvider}. */
 	@Mock
 	RuntimeInfoProvider runtimeBean;
 
-	@Mock
-	MemoryUsage heapMemoryUsage;
+	/**
+	 * Tests the {@link SystemInformation#gather()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Gather extends SystemInformationTest {
 
-	@Mock
-	MemoryUsage nonHeapMemoryUsage;
+		@Test
+		void gatherForTheFirstTime() {
+			SystemInformationData collector = (SystemInformationData) this.cut.getSystemSensorData();
 
-	@Mock
-	IPlatformManager platformManager;
+			collector.setTimeStamp(new Timestamp(1L));
 
-	@Mock
-	ICoreService coreService;
+			when(this.osBean.getTotalPhysicalMemorySize()).thenReturn(2L);
+			when(this.osBean.getTotalSwapSpaceSize()).thenReturn(3L);
+			when(this.osBean.getAvailableProcessors()).thenReturn(4);
+			when(this.osBean.getArch()).thenReturn("5");
+			when(this.osBean.getName()).thenReturn("6");
+			when(this.osBean.getVersion()).thenReturn("7");
 
-	@Mock
-	PlatformSensorTypeConfig sensorTypeConfig;
+			when(this.runtimeBean.getJitCompilerName()).thenReturn("8");
+			when(this.runtimeBean.getClassPath()).thenReturn("9");
+			when(this.runtimeBean.getBootClassPath()).thenReturn("10");
+			when(this.runtimeBean.getLibraryPath()).thenReturn("11");
+			when(this.runtimeBean.getVmVendor()).thenReturn("12");
+			when(this.runtimeBean.getVmVersion()).thenReturn("13");
+			when(this.runtimeBean.getVmName()).thenReturn("14");
+			when(this.runtimeBean.getSpecName()).thenReturn("15");
 
-	@Mock
-	Logger log;
+			MemoryUsage heapMemoryUsage = mock(MemoryUsage.class);
+			when(heapMemoryUsage.getInit()).thenReturn(16L);
+			when(heapMemoryUsage.getMax()).thenReturn(17L);
+			when(this.memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
 
-	@BeforeMethod
-	public void initTestClass() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		// we have to replace the real osBean by the mocked one, so that we don't retrieve the
-		// info from the underlying JVM
-		Field field = systemInfo.getClass().getDeclaredField("osBean");
-		field.setAccessible(true);
-		field.set(systemInfo, osBean);
+			MemoryUsage nonHeapMemoryUsage = mock(MemoryUsage.class);
+			when(nonHeapMemoryUsage.getInit()).thenReturn(18L);
+			when(nonHeapMemoryUsage.getMax()).thenReturn(19L);
+			when(this.memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
 
-		// we have to replace the real memoryBean by the mocked one, so that we don't retrieve the
-		// info from the underlying JVM
-		field = systemInfo.getClass().getDeclaredField("memoryBean");
-		field.setAccessible(true);
-		field.set(systemInfo, memoryBean);
+			collector.setPlatformIdent(20L);
+			collector.setSensorTypeIdent(21L);
 
-		// we have to replace the real runtimeBean by the mocked one, so that we don't retrieve the
-		// info from the underlying JVM
-		field = systemInfo.getClass().getDeclaredField("runtimeBean");
-		field.setAccessible(true);
-		field.set(systemInfo, runtimeBean);
+			this.cut.gather();
+			SystemInformationData systemInformationData = (SystemInformationData) this.cut.getSystemSensorData();
+
+			assertThat(systemInformationData.getTimeStamp().getTime(), is(not(1L)));
+
+			assertThat(systemInformationData.getTotalPhysMemory(), is(2L));
+			assertThat(systemInformationData.getTotalSwapSpace(), is(3L));
+			assertThat(systemInformationData.getAvailableProcessors(), is(4));
+			assertThat(systemInformationData.getArchitecture(), is("5"));
+			assertThat(systemInformationData.getOsName(), is("6"));
+			assertThat(systemInformationData.getOsVersion(), is("7"));
+
+			assertThat(systemInformationData.getJitCompilerName(), is("8"));
+			assertThat(systemInformationData.getClassPath(), is("9"));
+			assertThat(systemInformationData.getBootClassPath(), is("10"));
+			assertThat(systemInformationData.getLibraryPath(), is("11"));
+			assertThat(systemInformationData.getVmVendor(), is("12"));
+			assertThat(systemInformationData.getVmVersion(), is("13"));
+			assertThat(systemInformationData.getVmName(), is("14"));
+			assertThat(systemInformationData.getVmSpecName(), is("15"));
+
+			assertThat(systemInformationData.getInitHeapMemorySize(), is(16L));
+			assertThat(systemInformationData.getMaxHeapMemorySize(), is(17L));
+
+			assertThat(systemInformationData.getInitNonHeapMemorySize(), is(18L));
+			assertThat(systemInformationData.getMaxNonHeapMemorySize(), is(19L));
+
+			assertThat(systemInformationData.getPlatformIdent(), is(20L));
+			assertThat(systemInformationData.getSensorTypeIdent(), is(21L));
+		}
+
+		@Test
+		void gatherForTheSecondTime() {
+			// First time
+			SystemInformationData collector = (SystemInformationData) this.cut.getSystemSensorData();
+
+			collector.setTimeStamp(new Timestamp(1L));
+
+			when(this.osBean.getTotalPhysicalMemorySize()).thenReturn(2L);
+			when(this.osBean.getTotalSwapSpaceSize()).thenReturn(3L);
+			when(this.osBean.getAvailableProcessors()).thenReturn(4);
+			when(this.osBean.getArch()).thenReturn("5");
+			when(this.osBean.getName()).thenReturn("6");
+			when(this.osBean.getVersion()).thenReturn("7");
+
+			when(this.runtimeBean.getJitCompilerName()).thenReturn("8");
+			when(this.runtimeBean.getClassPath()).thenReturn("9");
+			when(this.runtimeBean.getBootClassPath()).thenReturn("10");
+			when(this.runtimeBean.getLibraryPath()).thenReturn("11");
+			when(this.runtimeBean.getVmVendor()).thenReturn("12");
+			when(this.runtimeBean.getVmVersion()).thenReturn("13");
+			when(this.runtimeBean.getVmName()).thenReturn("14");
+			when(this.runtimeBean.getSpecName()).thenReturn("15");
+
+			MemoryUsage heapMemoryUsageA = mock(MemoryUsage.class);
+			when(heapMemoryUsageA.getInit()).thenReturn(16L);
+			when(heapMemoryUsageA.getMax()).thenReturn(17L);
+			when(this.memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsageA);
+
+			MemoryUsage nonHeapMemoryUsageA = mock(MemoryUsage.class);
+			when(nonHeapMemoryUsageA.getInit()).thenReturn(18L);
+			when(nonHeapMemoryUsageA.getMax()).thenReturn(19L);
+			when(this.memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsageA);
+
+			collector.setPlatformIdent(20L);
+			collector.setSensorTypeIdent(21L);
+
+			this.cut.gather();
+
+			// Second time
+			collector = (SystemInformationData) this.cut.getSystemSensorData();
+
+			collector.setTimeStamp(new Timestamp(100L));
+
+			when(this.osBean.getTotalPhysicalMemorySize()).thenReturn(200L);
+			when(this.osBean.getTotalSwapSpaceSize()).thenReturn(300L);
+			when(this.osBean.getAvailableProcessors()).thenReturn(400);
+			when(this.osBean.getArch()).thenReturn("500");
+			when(this.osBean.getName()).thenReturn("600");
+			when(this.osBean.getVersion()).thenReturn("700");
+
+			when(this.runtimeBean.getJitCompilerName()).thenReturn("800");
+			when(this.runtimeBean.getClassPath()).thenReturn("900");
+			when(this.runtimeBean.getBootClassPath()).thenReturn("1000");
+			when(this.runtimeBean.getLibraryPath()).thenReturn("1100");
+			when(this.runtimeBean.getVmVendor()).thenReturn("1200");
+			when(this.runtimeBean.getVmVersion()).thenReturn("1300");
+			when(this.runtimeBean.getVmName()).thenReturn("1400");
+			when(this.runtimeBean.getSpecName()).thenReturn("1500");
+
+			MemoryUsage heapMemoryUsageB = mock(MemoryUsage.class);
+			when(heapMemoryUsageB.getInit()).thenReturn(1600L);
+			when(heapMemoryUsageB.getMax()).thenReturn(1700L);
+			when(this.memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsageB);
+
+			MemoryUsage nonHeapMemoryUsageB = mock(MemoryUsage.class);
+			when(nonHeapMemoryUsageB.getInit()).thenReturn(1800L);
+			when(nonHeapMemoryUsageB.getMax()).thenReturn(1900L);
+			when(this.memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsageB);
+
+			this.cut.gather();
+			SystemInformationData systemInformationData = (SystemInformationData) this.cut.getSystemSensorData();
+
+			assertThat(systemInformationData.getTimeStamp().getTime(), is(not(1L)));
+
+			assertThat(systemInformationData.getTotalPhysMemory(), is(2L));
+			assertThat(systemInformationData.getTotalSwapSpace(), is(3L));
+			assertThat(systemInformationData.getAvailableProcessors(), is(4));
+			assertThat(systemInformationData.getArchitecture(), is("5"));
+			assertThat(systemInformationData.getOsName(), is("6"));
+			assertThat(systemInformationData.getOsVersion(), is("7"));
+
+			assertThat(systemInformationData.getJitCompilerName(), is("8"));
+			assertThat(systemInformationData.getClassPath(), is("9"));
+			assertThat(systemInformationData.getBootClassPath(), is("10"));
+			assertThat(systemInformationData.getLibraryPath(), is("11"));
+			assertThat(systemInformationData.getVmVendor(), is("12"));
+			assertThat(systemInformationData.getVmVersion(), is("13"));
+			assertThat(systemInformationData.getVmName(), is("14"));
+			assertThat(systemInformationData.getVmSpecName(), is("15"));
+
+			assertThat(systemInformationData.getInitHeapMemorySize(), is(16L));
+			assertThat(systemInformationData.getMaxHeapMemorySize(), is(17L));
+
+			assertThat(systemInformationData.getInitNonHeapMemorySize(), is(18L));
+			assertThat(systemInformationData.getMaxNonHeapMemorySize(), is(19L));
+
+			assertThat(systemInformationData.getPlatformIdent(), is(20L));
+			assertThat(systemInformationData.getSensorTypeIdent(), is(21L));
+		}
 	}
 
-	public class Update extends SystemInformationTest {
-
+	/**
+	 * Tests the {@link SystemInformation#get()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Get extends SystemInformationTest {
 		@Test
-		public void oneStaticDataSet() throws IdNotAvailableException {
-			long totalPhysMemory = 775000L;
-			long totalSwapSpace = 555000L;
-			int availableProcessors = 4;
-			String architecture = "i386";
-			String osName = "linux";
-			String osVersion = "2.26";
-			String jitCompilerName = "HotSpot Client Compiler";
-			String classPath = "thisIsTheClassPath";
-			String bootClassPath = "thisIsTheBootClassPath";
-			String libraryPath = "thisIsTheLibraryPath";
-			String vmVendor = "Sun Microsystems";
-			String vmVersion = "1.5.0_15";
-			String vmName = "inspectit-vm";
-			String vmSpecName = "Java Virtual Machine";
-			long initHeapMemorySize = 4000L;
-			long maxHeapMemorySize = 10000L;
-			long initNonHeapMemorySize = 12000L;
-			long maxNonHeapMemorySize = 14000L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
+		void getForTheFirstTime() {
+			SystemInformationData systemInformationData = (SystemInformationData) this.cut.getSystemSensorData();
 
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
-			when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
-			when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
+			Object firstExecution = this.cut.get();
 
-			when(osBean.getArch()).thenReturn(architecture);
-			when(osBean.getAvailableProcessors()).thenReturn(availableProcessors);
-			when(osBean.getTotalPhysicalMemorySize()).thenReturn(totalPhysMemory);
-			when(osBean.getTotalSwapSpaceSize()).thenReturn(totalSwapSpace);
-			when(osBean.getVersion()).thenReturn(osVersion);
-			when(osBean.getName()).thenReturn(osName);
-			when(runtimeBean.getJitCompilerName()).thenReturn(jitCompilerName);
-			when(runtimeBean.getClassPath()).thenReturn(classPath);
-			when(runtimeBean.getBootClassPath()).thenReturn(bootClassPath);
-			when(runtimeBean.getLibraryPath()).thenReturn(libraryPath);
-			when(runtimeBean.getVmName()).thenReturn(vmName);
-			when(runtimeBean.getVmVendor()).thenReturn(vmVendor);
-			when(runtimeBean.getVmVersion()).thenReturn(vmVersion);
-			when(runtimeBean.getSpecName()).thenReturn(vmSpecName);
-			when(memoryBean.getHeapMemoryUsage().getInit()).thenReturn(initHeapMemorySize);
-			when(memoryBean.getHeapMemoryUsage().getMax()).thenReturn(maxHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getInit()).thenReturn(initNonHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getMax()).thenReturn(maxNonHeapMemorySize);
-
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-
-			systemInfo.update(coreService);
-
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(SystemInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			SystemInformationData systemData = (SystemInformationData) sensorData;
-
-			// as there was only one data object values must be the
-			// same
-			assertThat(systemData.getArchitecture(), is(equalTo(architecture)));
-			assertThat(systemData.getAvailableProcessors(), is(equalTo(availableProcessors)));
-			assertThat(systemData.getBootClassPath(), is(equalTo(bootClassPath)));
-			assertThat(systemData.getClassPath(), is(equalTo(classPath)));
-			assertThat(systemData.getInitHeapMemorySize(), is(equalTo(initHeapMemorySize)));
-			assertThat(systemData.getInitNonHeapMemorySize(), is(equalTo(initNonHeapMemorySize)));
-			assertThat(systemData.getJitCompilerName(), is(equalTo(jitCompilerName)));
-			assertThat(systemData.getLibraryPath(), is(equalTo(libraryPath)));
-			assertThat(systemData.getMaxHeapMemorySize(), is(equalTo(maxHeapMemorySize)));
-			assertThat(systemData.getMaxNonHeapMemorySize(), is(equalTo(maxNonHeapMemorySize)));
-			assertThat(systemData.getOsName(), is(equalTo(osName)));
-			assertThat(systemData.getOsVersion(), is(equalTo(osVersion)));
-			assertThat(systemData.getTotalPhysMemory(), is(equalTo(totalPhysMemory)));
-			assertThat(systemData.getTotalSwapSpace(), is(equalTo(totalSwapSpace)));
-			assertThat(systemData.getVmName(), is(equalTo(vmName)));
-			assertThat(systemData.getVmSpecName(), is(equalTo(vmSpecName)));
-			assertThat(systemData.getVmVendor(), is(equalTo(vmVendor)));
-			assertThat(systemData.getVmVersion(), is(equalTo(vmVersion)));
-		}
-
-		/**
-		 * This testcase combines different testcases that simulate the absense of static
-		 * information. Realizing each case separately would require many code with almost no
-		 * additional value.
-		 *
-		 * Maybe this test is obsolete because we don't expect an exception to be thrown directly in
-		 * {@link SystemInformation} but only in the getter methods of {@link DefaultRuntimeMXBean}
-		 *
-		 * @throws IdNotAvailableException
-		 */
-		@Test
-		public void informationNotAvailable() throws IdNotAvailableException {
-			long totalPhysMemory = 775000L;
-			long totalSwapSpace = 555000L;
-			int availableProcessors = 4;
-			String empty = "";
-			String jitCompilerName = "HotSpot Client Compiler";
-			String vmName = "inspectit-vm";
-			long initHeapMemorySize = 4000L;
-			long maxHeapMemorySize = 10000L;
-			long initNonHeapMemorySize = 12000L;
-			long maxNonHeapMemorySize = 14000L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
-
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
-			when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
-			when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
-
-			when(osBean.getArch()).thenReturn("");
-			when(osBean.getAvailableProcessors()).thenReturn(availableProcessors);
-			when(osBean.getTotalPhysicalMemorySize()).thenReturn(totalPhysMemory);
-			when(osBean.getTotalSwapSpaceSize()).thenReturn(totalSwapSpace);
-			when(osBean.getVersion()).thenReturn("");
-			when(osBean.getName()).thenReturn("");
-			when(runtimeBean.getJitCompilerName()).thenReturn(jitCompilerName);
-			when(runtimeBean.getClassPath()).thenReturn("");
-			when(runtimeBean.getBootClassPath()).thenReturn("");
-			when(runtimeBean.getLibraryPath()).thenReturn("");
-			when(runtimeBean.getVmName()).thenReturn(vmName);
-			when(runtimeBean.getVmVendor()).thenReturn("");
-			when(runtimeBean.getVmVersion()).thenReturn("");
-			when(runtimeBean.getSpecName()).thenReturn("");
-			when(memoryBean.getHeapMemoryUsage().getInit()).thenReturn(initHeapMemorySize);
-			when(memoryBean.getHeapMemoryUsage().getMax()).thenReturn(maxHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getInit()).thenReturn(initNonHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getMax()).thenReturn(maxNonHeapMemorySize);
-
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-			systemInfo.update(coreService);
-
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(SystemInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			SystemInformationData systemData = (SystemInformationData) sensorData;
-
-			// as there was only one data object the values must be the
-			// same
-			assertThat(systemData.getArchitecture(), is(equalTo(empty)));
-			assertThat(systemData.getAvailableProcessors(), is(equalTo(availableProcessors)));
-			assertThat(systemData.getBootClassPath(), is(equalTo(empty)));
-			assertThat(systemData.getClassPath(), is(equalTo(empty)));
-			assertThat(systemData.getInitHeapMemorySize(), is(equalTo(initHeapMemorySize)));
-			assertThat(systemData.getInitNonHeapMemorySize(), is(equalTo(initNonHeapMemorySize)));
-			assertThat(systemData.getJitCompilerName(), is(equalTo(jitCompilerName)));
-			assertThat(systemData.getLibraryPath(), is(equalTo(empty)));
-			assertThat(systemData.getMaxHeapMemorySize(), is(equalTo(maxHeapMemorySize)));
-			assertThat(systemData.getMaxNonHeapMemorySize(), is(equalTo(maxNonHeapMemorySize)));
-			assertThat(systemData.getOsName(), is(equalTo(empty)));
-			assertThat(systemData.getOsVersion(), is(equalTo(empty)));
-			assertThat(systemData.getTotalPhysMemory(), is(equalTo(totalPhysMemory)));
-			assertThat(systemData.getTotalSwapSpace(), is(equalTo(totalSwapSpace)));
-			assertThat(systemData.getVmName(), is(equalTo(vmName)));
-			assertThat(systemData.getVmSpecName(), is(equalTo(empty)));
-			assertThat(systemData.getVmVendor(), is(equalTo(empty)));
-			assertThat(systemData.getVmVersion(), is(equalTo(empty)));
-		}
-
-		/**
-		 * Maybe this test is obsolete because we don't expect an exception to be thrown directly in
-		 * {@link SystemInformation#getBootClassPath()} but only in
-		 * {@link DefaultRuntimeMXBean#getBootClassPath()}
-		 *
-		 * @throws IdNotAvailableException
-		 */
-		@Test
-		public void bootClassPathNotSupported() throws IdNotAvailableException {
-			long totalPhysMemory = 775000L;
-			long totalSwapSpace = 555000L;
-			int availableProcessors = 4;
-			String architecture = "i386";
-			String osName = "linux";
-			String osVersion = "2.26";
-			String jitCompilerName = "HotSpot Client Compiler";
-			String classPath = "thisIsTheClassPath";
-			String bootClassPath = "";
-			String libraryPath = "thisIsTheLibraryPath";
-			String vmVendor = "Sun Microsystems";
-			String vmVersion = "1.5.0_15";
-			String vmName = "inspectit-vm";
-			String vmSpecName = "Java Virtual Machine";
-			long initHeapMemorySize = 4000L;
-			long maxHeapMemorySize = 10000L;
-			long initNonHeapMemorySize = 12000L;
-			long maxNonHeapMemorySize = 14000L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
-
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
-			when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
-			when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
-
-			when(osBean.getArch()).thenReturn(architecture);
-			when(osBean.getAvailableProcessors()).thenReturn(availableProcessors);
-			when(osBean.getTotalPhysicalMemorySize()).thenReturn(totalPhysMemory);
-			when(osBean.getTotalSwapSpaceSize()).thenReturn(totalSwapSpace);
-			when(osBean.getVersion()).thenReturn(osVersion);
-			when(osBean.getName()).thenReturn(osName);
-			when(runtimeBean.getJitCompilerName()).thenReturn(jitCompilerName);
-			when(runtimeBean.getClassPath()).thenReturn(classPath);
-			when(runtimeBean.getBootClassPath()).thenReturn("");
-			when(runtimeBean.getLibraryPath()).thenReturn(libraryPath);
-			when(runtimeBean.getVmName()).thenReturn(vmName);
-			when(runtimeBean.getVmVendor()).thenReturn(vmVendor);
-			when(runtimeBean.getVmVersion()).thenReturn(vmVersion);
-			when(runtimeBean.getSpecName()).thenReturn(vmSpecName);
-			when(memoryBean.getHeapMemoryUsage().getInit()).thenReturn(initHeapMemorySize);
-			when(memoryBean.getHeapMemoryUsage().getMax()).thenReturn(maxHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getInit()).thenReturn(initNonHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getMax()).thenReturn(maxNonHeapMemorySize);
-
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-			systemInfo.update(coreService);
-
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(SystemInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			SystemInformationData systemData = (SystemInformationData) sensorData;
-
-			// as there was only one data object values must be the
-			// same
-			assertThat(systemData.getArchitecture(), is(equalTo(architecture)));
-			assertThat(systemData.getAvailableProcessors(), is(equalTo(availableProcessors)));
-			assertThat(systemData.getBootClassPath(), is(equalTo(bootClassPath)));
-			assertThat(systemData.getClassPath(), is(equalTo(classPath)));
-			assertThat(systemData.getInitHeapMemorySize(), is(equalTo(initHeapMemorySize)));
-			assertThat(systemData.getInitNonHeapMemorySize(), is(equalTo(initNonHeapMemorySize)));
-			assertThat(systemData.getJitCompilerName(), is(equalTo(jitCompilerName)));
-			assertThat(systemData.getLibraryPath(), is(equalTo(libraryPath)));
-			assertThat(systemData.getMaxHeapMemorySize(), is(equalTo(maxHeapMemorySize)));
-			assertThat(systemData.getMaxNonHeapMemorySize(), is(equalTo(maxNonHeapMemorySize)));
-			assertThat(systemData.getOsName(), is(equalTo(osName)));
-			assertThat(systemData.getOsVersion(), is(equalTo(osVersion)));
-			assertThat(systemData.getTotalPhysMemory(), is(equalTo(totalPhysMemory)));
-			assertThat(systemData.getTotalSwapSpace(), is(equalTo(totalSwapSpace)));
-			assertThat(systemData.getVmName(), is(equalTo(vmName)));
-			assertThat(systemData.getVmSpecName(), is(equalTo(vmSpecName)));
-			assertThat(systemData.getVmVendor(), is(equalTo(vmVendor)));
-			assertThat(systemData.getVmVersion(), is(equalTo(vmVersion)));
+			assertThat((SystemInformationData) firstExecution, is(systemInformationData));
 		}
 
 		@Test
-		public void valueTooLong() throws IdNotAvailableException {
-			String tooLong = fillString('x', 10001);
-			String limit = fillString('x', 10000);
+		void getForTheSecondTime() {
+			this.cut.get();
+			Object secondExecution = this.cut.get();
 
-			long totalPhysMemory = 775000L;
-			long totalSwapSpace = 555000L;
-			int availableProcessors = 4;
-			String architecture = "i386";
-			String osName = "linux";
-			String osVersion = "2.26";
-			String jitCompilerName = "HotSpot Client Compiler";
-			String vmVendor = "Sun Microsystems";
-			String vmVersion = "1.5.0_15";
-			String vmName = "inspectit-vm";
-			String vmSpecName = "Java Virtual Machine";
-			long initHeapMemorySize = 4000L;
-			long maxHeapMemorySize = 10000L;
-			long initNonHeapMemorySize = 12000L;
-			long maxNonHeapMemorySize = 14000L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
-
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
-			when(memoryBean.getHeapMemoryUsage()).thenReturn(heapMemoryUsage);
-			when(memoryBean.getNonHeapMemoryUsage()).thenReturn(nonHeapMemoryUsage);
-
-			when(osBean.getArch()).thenReturn(architecture);
-			when(osBean.getAvailableProcessors()).thenReturn(availableProcessors);
-			when(osBean.getTotalPhysicalMemorySize()).thenReturn(totalPhysMemory);
-			when(osBean.getTotalSwapSpaceSize()).thenReturn(totalSwapSpace);
-			when(osBean.getVersion()).thenReturn(osVersion);
-			when(osBean.getName()).thenReturn(osName);
-			when(runtimeBean.getJitCompilerName()).thenReturn(jitCompilerName);
-			when(runtimeBean.getClassPath()).thenReturn(tooLong);
-			when(runtimeBean.getBootClassPath()).thenReturn(tooLong);
-			when(runtimeBean.getLibraryPath()).thenReturn(tooLong);
-			when(runtimeBean.getVmName()).thenReturn(vmName);
-			when(runtimeBean.getVmVendor()).thenReturn(vmVendor);
-			when(runtimeBean.getVmVersion()).thenReturn(vmVersion);
-			when(runtimeBean.getSpecName()).thenReturn(vmSpecName);
-			when(memoryBean.getHeapMemoryUsage().getInit()).thenReturn(initHeapMemorySize);
-			when(memoryBean.getHeapMemoryUsage().getMax()).thenReturn(maxHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getInit()).thenReturn(initNonHeapMemorySize);
-			when(memoryBean.getNonHeapMemoryUsage().getMax()).thenReturn(maxNonHeapMemorySize);
-
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-			systemInfo.update(coreService);
-
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(SystemInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			SystemInformationData systemData = (SystemInformationData) sensorData;
-
-			// as there was only one data object the values must be the
-			// same
-			assertThat(systemData.getArchitecture(), is(equalTo(architecture)));
-			assertThat(systemData.getAvailableProcessors(), is(equalTo(availableProcessors)));
-			assertThat(systemData.getBootClassPath(), is(equalTo(limit)));
-			assertThat(systemData.getClassPath(), is(equalTo(limit)));
-			assertThat(systemData.getInitHeapMemorySize(), is(equalTo(initHeapMemorySize)));
-			assertThat(systemData.getInitNonHeapMemorySize(), is(equalTo(initNonHeapMemorySize)));
-			assertThat(systemData.getJitCompilerName(), is(equalTo(jitCompilerName)));
-			assertThat(systemData.getLibraryPath(), is(equalTo(limit)));
-			assertThat(systemData.getMaxHeapMemorySize(), is(equalTo(maxHeapMemorySize)));
-			assertThat(systemData.getMaxNonHeapMemorySize(), is(equalTo(maxNonHeapMemorySize)));
-			assertThat(systemData.getOsName(), is(equalTo(osName)));
-			assertThat(systemData.getOsVersion(), is(equalTo(osVersion)));
-			assertThat(systemData.getTotalPhysMemory(), is(equalTo(totalPhysMemory)));
-			assertThat(systemData.getTotalSwapSpace(), is(equalTo(totalSwapSpace)));
-			assertThat(systemData.getVmName(), is(equalTo(vmName)));
-			assertThat(systemData.getVmSpecName(), is(equalTo(vmSpecName)));
-			assertThat(systemData.getVmVendor(), is(equalTo(vmVendor)));
-			assertThat(systemData.getVmVersion(), is(equalTo(vmVersion)));
+			assertThat(secondExecution, is(nullValue()));
 		}
-
-		/**
-		 * Creates a new String with the specified length.
-		 *
-		 * @param character
-		 * @param count
-		 * @return
-		 */
-		private String fillString(char character, int count) {
-			// creates a string of 'x' repeating characters
-			char[] chars = new char[count];
-			while (count > 0) {
-				chars[--count] = character;
-			}
-			return new String(chars);
-		}
-
 	}
 }

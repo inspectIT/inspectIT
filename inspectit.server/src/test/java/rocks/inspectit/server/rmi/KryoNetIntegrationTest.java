@@ -129,7 +129,7 @@ public class KryoNetIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 		server.stop();
 	}
 
-	public class RemothMethodInvocation extends KryoNetIntegrationTest {
+	public class RemoteMethodInvocation extends KryoNetIntegrationTest {
 
 		@Test
 		public void simple() {
@@ -268,7 +268,7 @@ public class KryoNetIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	}
 
 	/**
-	 * Invoker for the {@link RemothMethodInvocation#multiThreaded()} method.
+	 * Invoker for the {@link RemoteMethodInvocation#multiThreaded()} method.
 	 *
 	 * @author Ivan Senic
 	 *
