@@ -114,15 +114,6 @@ public interface ICoreService {
 	 *
 	 * @param sensorTypeIdent
 	 *            The id of the sensor type to retrieve the data object.
-	 * @return Returns a {@link SystemSensorData}
-	 */
-	SystemSensorData getPlatformSensorData(long sensorTypeIdent);
-
-	/**
-	 * Returns a saved data object for further processing.
-	 *
-	 * @param sensorTypeIdent
-	 *            The id of the sensor type to retrieve the data object.
 	 * @param throwableIdentityHashCode
 	 *            The identityHashCode of the data object to retrieve.
 	 * @return Returns a {@link ExceptionSensorData}
