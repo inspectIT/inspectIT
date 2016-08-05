@@ -1,237 +1,233 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
+import java.sql.Timestamp;
 
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
-import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
-@SuppressWarnings("PMD")
+/**
+ * Test class for {@link ThreadInformation}.
+ *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
+ */
 public class ThreadInformationTest extends TestBase {
 
+	/** Class under test. */
 	@InjectMocks
-	ThreadInformation threadInfo;
+	ThreadInformation cut;
 
+	/** The mocked {@link ThreadInfoProvider}. */
 	@Mock
 	ThreadInfoProvider threadBean;
 
-	@Mock
-	IPlatformManager platformManager;
+	/**
+	 * Tests the {@link ThreadInformation#gather()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Gather extends ThreadInformationTest {
 
-	@Mock
-	ICoreService coreService;
+		@Test
+		void daemonThreadCountIsCalculated() {
+			when(this.threadBean.getDaemonThreadCount()).thenReturn(10).thenReturn(9).thenReturn(11).thenReturn(10);
 
-	@Mock
-	PlatformSensorTypeConfig sensorTypeConfig;
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
 
-	@Mock
-	Logger log;
+			ThreadInformationData collector = (ThreadInformationData) this.cut.get();
 
-	@BeforeMethod
-	public void initTestClass() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		// we have to replace the real threadBean by the mocked one, so that we don't retrieve the
-		// info from the underlying JVM
-		Field field = threadInfo.getClass().getDeclaredField("threadBean");
-		field.setAccessible(true);
-		field.set(threadInfo, threadBean);
+			assertThat(collector.getMinDaemonThreadCount(), is(9));
+			assertThat(collector.getMaxDaemonThreadCount(), is(11));
+			assertThat(collector.getTotalDaemonThreadCount(), is(40));
+		}
+
+		@Test
+		void peakThreadCountIsCalculated() {
+			when(this.threadBean.getPeakThreadCount()).thenReturn(10).thenReturn(9).thenReturn(11).thenReturn(10);
+
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+
+			ThreadInformationData collector = (ThreadInformationData) this.cut.get();
+
+			assertThat(collector.getMinPeakThreadCount(), is(9));
+			assertThat(collector.getMaxPeakThreadCount(), is(11));
+			assertThat(collector.getTotalPeakThreadCount(), is(40));
+		}
+
+		@Test
+		void threadCountIsCalculated() {
+			when(this.threadBean.getThreadCount()).thenReturn(10).thenReturn(9).thenReturn(11).thenReturn(10);
+
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+
+			ThreadInformationData collector = (ThreadInformationData) this.cut.get();
+
+			assertThat(collector.getMinThreadCount(), is(9));
+			assertThat(collector.getMaxThreadCount(), is(11));
+			assertThat(collector.getTotalThreadCount(), is(40));
+		}
+
+		@Test
+		void totalStartedThreadCountIsCalculated() {
+			when(this.threadBean.getTotalStartedThreadCount()).thenReturn(10L).thenReturn(9L).thenReturn(11L).thenReturn(10L);
+
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+
+			ThreadInformationData collector = (ThreadInformationData) this.cut.get();
+
+			assertThat(collector.getMinTotalStartedThreadCount(), is(9L));
+			assertThat(collector.getMaxTotalStartedThreadCount(), is(11L));
+			assertThat(collector.getTotalTotalStartedThreadCount(), is(40L));
+		}
+
+		@Test
+		void countIsIncremented() {
+			this.cut.gather();
+			this.cut.gather();
+
+			ThreadInformationData collector = (ThreadInformationData) this.cut.get();
+
+			assertThat(collector.getCount(), is(2));
+		}
 	}
 
-	public class Update extends ThreadInformationTest {
+	/**
+	 * Tests the {@link ThreadInformationTest#get()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Get extends ThreadInformationTest {
 
 		@Test
-		public void oneDataSet() throws IdNotAvailableException {
-			int daemonThreadCount = 5;
-			int threadCount = 13;
-			int peakThreadCount = 25;
-			long totalStartedThreadCount = 55L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
+		void getNewThreadInformationTestData() throws Exception {
+			ThreadInformationData collector = (ThreadInformationData) this.cut.getSystemSensorData();
 
-			when(threadBean.getDaemonThreadCount()).thenReturn(daemonThreadCount);
-			when(threadBean.getThreadCount()).thenReturn(threadCount);
-			when(threadBean.getPeakThreadCount()).thenReturn(peakThreadCount);
-			when(threadBean.getTotalStartedThreadCount()).thenReturn(totalStartedThreadCount);
+			collector.setPlatformIdent(1L);
+			collector.setSensorTypeIdent(2L);
+			collector.setCount(3);
 
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+			collector.setTotalDaemonThreadCount(4);
+			collector.setMinDaemonThreadCount(5);
+			collector.setMaxDaemonThreadCount(6);
 
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-			threadInfo.update(coreService);
+			collector.setTotalPeakThreadCount(7);
+			collector.setMinPeakThreadCount(8);
+			collector.setMaxPeakThreadCount(9);
 
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
+			collector.setTotalThreadCount(10);
+			collector.setMinThreadCount(11);
+			collector.setMaxThreadCount(12);
 
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(ThreadInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
+			collector.setTotalTotalStartedThreadCount(13L);
+			collector.setMinTotalStartedThreadCount(14L);
+			collector.setMaxTotalStartedThreadCount(15L);
 
-			ThreadInformationData threadData = (ThreadInformationData) sensorData;
-			assertThat(threadData.getCount(), is(equalTo(1)));
+			collector.setTimeStamp(new Timestamp(16L));
 
-			// as there was only one data object min/max/total the values must be the
-			// same
-			assertThat(threadData.getMinDaemonThreadCount(), is(equalTo(daemonThreadCount)));
-			assertThat(threadData.getMaxDaemonThreadCount(), is(equalTo(daemonThreadCount)));
-			assertThat(threadData.getTotalDaemonThreadCount(), is(equalTo(daemonThreadCount)));
+			ThreadInformationData threadInformationData = (ThreadInformationData) this.cut.get();
 
-			assertThat(threadData.getMinPeakThreadCount(), is(equalTo(peakThreadCount)));
-			assertThat(threadData.getMaxPeakThreadCount(), is(equalTo(peakThreadCount)));
-			assertThat(threadData.getTotalPeakThreadCount(), is(equalTo(peakThreadCount)));
+			assertThat(threadInformationData.getPlatformIdent(), is(1L));
+			assertThat(threadInformationData.getSensorTypeIdent(), is(2L));
+			assertThat(threadInformationData.getCount(), is(3));
 
-			assertThat(threadData.getMinThreadCount(), is(equalTo(threadCount)));
-			assertThat(threadData.getMaxThreadCount(), is(equalTo(threadCount)));
-			assertThat(threadData.getTotalThreadCount(), is(equalTo(threadCount)));
+			assertThat(threadInformationData.getTotalDaemonThreadCount(), is(4));
+			assertThat(threadInformationData.getMinDaemonThreadCount(), is(5));
+			assertThat(threadInformationData.getMaxDaemonThreadCount(), is(6));
 
-			assertThat(threadData.getMinTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount)));
-			assertThat(threadData.getMaxTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount)));
-			assertThat(threadData.getTotalTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount)));
+			assertThat(threadInformationData.getTotalPeakThreadCount(), is(7));
+			assertThat(threadInformationData.getMinPeakThreadCount(), is(8));
+			assertThat(threadInformationData.getMaxPeakThreadCount(), is(9));
+
+			assertThat(threadInformationData.getTotalThreadCount(), is(10));
+			assertThat(threadInformationData.getMinThreadCount(), is(11));
+			assertThat(threadInformationData.getMaxThreadCount(), is(12));
+
+			assertThat(threadInformationData.getTotalTotalStartedThreadCount(), is(13L));
+			assertThat(threadInformationData.getMinTotalStartedThreadCount(), is(14L));
+			assertThat(threadInformationData.getMaxTotalStartedThreadCount(), is(15L));
+
+			assertThat(threadInformationData.getTimeStamp().getTime(), is(16L));
 		}
+	}
+
+	/**
+	 * Tests the {@link ThreadInformation#reset()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Reset extends ThreadInformationTest {
 
 		@Test
-		public void twoDataSets() throws IdNotAvailableException {
-			int daemonThreadCount = 5;
-			int daemonThreadCount2 = 6;
-			int threadCount = 13;
-			int threadCount2 = 15;
-			int peakThreadCount = 25;
-			int peakThreadCount2 = 25;
-			long totalStartedThreadCount = 55L;
-			long totalStartedThreadCount2 = 60L;
-			long sensorTypeIdent = 13L;
-			long platformIdent = 11L;
+		void collectorClassIsResetted() throws Exception {
+			ThreadInformationData collector = (ThreadInformationData) this.cut.getSystemSensorData();
 
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+			collector.setPlatformIdent(1L);
+			collector.setSensorTypeIdent(2L);
+			collector.setCount(3);
 
-			// ------------------------
-			// FIRST UPDATE CALL
-			// ------------------------
-			when(threadBean.getDaemonThreadCount()).thenReturn(daemonThreadCount);
-			when(threadBean.getThreadCount()).thenReturn(threadCount);
-			when(threadBean.getPeakThreadCount()).thenReturn(peakThreadCount);
-			when(threadBean.getTotalStartedThreadCount()).thenReturn(totalStartedThreadCount);
+			collector.setTotalDaemonThreadCount(4);
+			collector.setMinDaemonThreadCount(5);
+			collector.setMaxDaemonThreadCount(6);
 
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-			threadInfo.update(coreService);
+			collector.setTotalPeakThreadCount(7);
+			collector.setMinPeakThreadCount(8);
+			collector.setMaxPeakThreadCount(9);
 
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
+			collector.setTotalThreadCount(10);
+			collector.setMinThreadCount(11);
+			collector.setMaxThreadCount(12);
 
-			SystemSensorData sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(ThreadInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
+			collector.setTotalTotalStartedThreadCount(13L);
+			collector.setMinTotalStartedThreadCount(14L);
+			collector.setMaxTotalStartedThreadCount(15L);
 
-			ThreadInformationData threadData = (ThreadInformationData) sensorData;
-			assertThat(threadData.getCount(), is(equalTo(1)));
+			collector.setTimeStamp(new Timestamp(16L));
 
-			// as there was only one data object min/max/total values must be the
-			// same
-			assertThat(threadData.getMinDaemonThreadCount(), is(equalTo(daemonThreadCount)));
-			assertThat(threadData.getMaxDaemonThreadCount(), is(equalTo(daemonThreadCount)));
-			assertThat(threadData.getTotalDaemonThreadCount(), is(equalTo(daemonThreadCount)));
+			this.cut.reset();
+			ThreadInformationData threadInformationData = (ThreadInformationData) this.cut.get();
 
-			assertThat(threadData.getMinPeakThreadCount(), is(equalTo(peakThreadCount)));
-			assertThat(threadData.getMaxPeakThreadCount(), is(equalTo(peakThreadCount)));
-			assertThat(threadData.getTotalPeakThreadCount(), is(equalTo(peakThreadCount)));
+			assertThat(threadInformationData.getPlatformIdent(), is(1L));
+			assertThat(threadInformationData.getSensorTypeIdent(), is(2L));
+			assertThat(threadInformationData.getCount(), is(0));
 
-			assertThat(threadData.getMinThreadCount(), is(equalTo(threadCount)));
-			assertThat(threadData.getMaxThreadCount(), is(equalTo(threadCount)));
-			assertThat(threadData.getTotalThreadCount(), is(equalTo(threadCount)));
+			assertThat(threadInformationData.getTotalDaemonThreadCount(), is(0));
+			assertThat(threadInformationData.getMinDaemonThreadCount(), is(Integer.MAX_VALUE));
+			assertThat(threadInformationData.getMaxDaemonThreadCount(), is(0));
 
-			assertThat(threadData.getMinTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount)));
-			assertThat(threadData.getMaxTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount)));
-			assertThat(threadData.getTotalTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount)));
+			assertThat(threadInformationData.getTotalPeakThreadCount(), is(0));
+			assertThat(threadInformationData.getMinPeakThreadCount(), is(Integer.MAX_VALUE));
+			assertThat(threadInformationData.getMaxPeakThreadCount(), is(0));
 
-			// ------------------------
-			// SECOND UPDATE CALL
-			// ------------------------
-			when(threadBean.getDaemonThreadCount()).thenReturn(daemonThreadCount2);
-			when(threadBean.getThreadCount()).thenReturn(threadCount2);
-			when(threadBean.getPeakThreadCount()).thenReturn(peakThreadCount2);
-			when(threadBean.getTotalStartedThreadCount()).thenReturn(totalStartedThreadCount2);
+			assertThat(threadInformationData.getTotalThreadCount(), is(0));
+			assertThat(threadInformationData.getMinThreadCount(), is(Integer.MAX_VALUE));
+			assertThat(threadInformationData.getMaxThreadCount(), is(0));
 
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(threadData);
+			assertThat(threadInformationData.getTotalTotalStartedThreadCount(), is(0L));
+			assertThat(threadInformationData.getMinTotalStartedThreadCount(), is(Long.MAX_VALUE));
+			assertThat(threadInformationData.getMaxTotalStartedThreadCount(), is(0L));
 
-			threadInfo.update(coreService);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-
-			sensorData = sensorDataCaptor.getValue();
-			assertThat(sensorData, is(instanceOf(ThreadInformationData.class)));
-			assertThat(sensorData.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(sensorData.getSensorTypeIdent(), is(equalTo(sensorTypeIdent)));
-
-			threadData = (ThreadInformationData) sensorData;
-			assertThat(threadData.getCount(), is(equalTo(2)));
-
-			assertThat(threadData.getMinDaemonThreadCount(), is(equalTo(daemonThreadCount)));
-			assertThat(threadData.getMaxDaemonThreadCount(), is(equalTo(daemonThreadCount2)));
-			assertThat(threadData.getTotalDaemonThreadCount(), is(equalTo(daemonThreadCount + daemonThreadCount2)));
-
-			assertThat(threadData.getMinPeakThreadCount(), is(equalTo(peakThreadCount)));
-			assertThat(threadData.getMaxPeakThreadCount(), is(equalTo(peakThreadCount2)));
-			assertThat(threadData.getTotalPeakThreadCount(), is(equalTo(peakThreadCount + peakThreadCount2)));
-
-			assertThat(threadData.getMinThreadCount(), is(equalTo(threadCount)));
-			assertThat(threadData.getMaxThreadCount(), is(equalTo(threadCount2)));
-			assertThat(threadData.getTotalThreadCount(), is(equalTo(threadCount + threadCount2)));
-
-			assertThat(threadData.getMinTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount)));
-			assertThat(threadData.getMaxTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount2)));
-			assertThat(threadData.getTotalTotalStartedThreadCount(), is(equalTo(totalStartedThreadCount + totalStartedThreadCount2)));
+			assertThat(threadInformationData.getTimeStamp().getTime(), is(not(16L)));
 		}
-
-		@Test
-		public void idNotAvailableTest() throws IdNotAvailableException {
-			int daemonThreadCount = 5;
-			int threadCount = 13;
-			int peakThreadCount = 25;
-			long totalStartedThreadCount = 55L;
-			long sensorTypeIdent = 13L;
-
-			when(threadBean.getDaemonThreadCount()).thenReturn(daemonThreadCount);
-			when(threadBean.getThreadCount()).thenReturn(threadCount);
-			when(threadBean.getPeakThreadCount()).thenReturn(peakThreadCount);
-			when(threadBean.getTotalStartedThreadCount()).thenReturn(totalStartedThreadCount);
-
-			when(sensorTypeConfig.getId()).thenReturn(sensorTypeIdent);
-			when(platformManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
-
-			// there is no current data object available
-			when(coreService.getPlatformSensorData(sensorTypeIdent)).thenReturn(null);
-			threadInfo.update(coreService);
-
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(0)).addPlatformSensorData(eq(sensorTypeIdent), sensorDataCaptor.capture());
-		}
-
 	}
 }

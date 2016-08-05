@@ -1,211 +1,172 @@
 package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
+import java.sql.Timestamp;
 
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
-import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.CpuInformationData;
-import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
-@SuppressWarnings("PMD")
+/**
+ * Test class for {@link CpuInformation}.
+ *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
+ */
 public class CpuInformationTest extends TestBase {
 
+	/** Class under test. */
 	@InjectMocks
-	CpuInformation cpuInfo;
+	CpuInformation cut;
 
+	/** The mocked {@link OperatingSystemInfoProvider}. */
 	@Mock
 	OperatingSystemInfoProvider osBean;
 
-	@Mock
-	RuntimeInfoProvider runtimeBean;
+	/**
+	 * Tests the {@link CpuInformation#gather()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Gather extends CpuInformationTest {
 
-	@Mock
-	IPlatformManager platformManager;
+		@Test
+		void cpuUsageIsSetForMinAndMaxOnTheFirstRun() {
+			when(this.osBean.retrieveCpuUsage()).thenReturn(10f);
 
-	@Mock
-	ICoreService coreService;
+			this.cut.gather();
 
-	@Mock
-	PlatformSensorTypeConfig sensorTypeConfig;
+			CpuInformationData collector = (CpuInformationData) this.cut.get();
 
-	@Mock
-	Logger log;
+			assertThat(collector.getMinCpuUsage(), is(10f));
+			assertThat(collector.getMaxCpuUsage(), is(10f));
+			assertThat(collector.getTotalCpuUsage(), is(10f));
+		}
 
-	@BeforeMethod
-	public void initTestClass() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		// we have to replace the real osBean by the mocked one, so that we
-		// don't retrieve the info from the underlying JVM
-		Field field = cpuInfo.getClass().getDeclaredField("osBean");
-		field.setAccessible(true);
-		field.set(cpuInfo, osBean);
+		@Test
+		void cpuUsageIsCalculated() {
+			when(this.osBean.retrieveCpuUsage()).thenReturn(10f).thenReturn(9f).thenReturn(11f).thenReturn(10f);
+
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+
+			CpuInformationData collector = (CpuInformationData) this.cut.get();
+
+			assertThat(collector.getMinCpuUsage(), is(9f));
+			assertThat(collector.getMaxCpuUsage(), is(11f));
+			assertThat(collector.getTotalCpuUsage(), is(40f));
+		}
+
+		@Test
+		void updateProcessCpuTime() {
+			when(this.osBean.getProcessCpuTime()).thenReturn(10L).thenReturn(9L).thenReturn(11L).thenReturn(10L);
+
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+			this.cut.gather();
+
+			CpuInformationData collector = (CpuInformationData) this.cut.get();
+
+			assertThat(collector.getProcessCpuTime(), is(11L));
+		}
+
+		@Test
+		void countIsIncremented() {
+			this.cut.gather();
+			this.cut.gather();
+
+			CpuInformationData collector = (CpuInformationData) this.cut.get();
+
+			assertThat(collector.getCount(), is(2));
+		}
 	}
 
-	public class Update extends CpuInformationTest {
+	/**
+	 * Tests the {@link CpuInformationData#get()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Get extends CpuInformationTest {
 
 		@Test
-		public void oneDataSet() throws IdNotAvailableException {
-			int availableProc = 1;
-			long processCpuTime = 2L;
-			long sensorType = 13L;
-			long platformIdent = 11L;
-			float cpuUsage = 0.0f;
+		void getNewCpuInformationData() throws Exception {
+			CpuInformationData collector = (CpuInformationData) this.cut.getSystemSensorData();
 
-			when(osBean.getAvailableProcessors()).thenReturn(availableProc);
-			when(osBean.getProcessCpuTime()).thenReturn(processCpuTime);
-			when(osBean.retrieveCpuUsage()).thenReturn(cpuUsage);
-			when(sensorTypeConfig.getId()).thenReturn(sensorType);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+			collector.setCount(1);
+			collector.setPlatformIdent(2L);
+			collector.setSensorTypeIdent(3L);
 
-			// no current data object is available
-			when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);
+			collector.setProcessCpuTime(4L);
 
-			cpuInfo.update(coreService);
+			collector.setTotalCpuUsage(5f);
+			collector.setMaxCpuUsage(6f);
+			collector.setMinCpuUsage(7f);
 
-			// -> The service must create a new one and add it to the storage
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorType), sensorDataCaptor.capture());
+			collector.setTimeStamp(new Timestamp(8L));
 
-			// Cast the parameter to the expected concrete class:
-			SystemSensorData parameter = sensorDataCaptor.getValue();
-			assertThat(parameter, is(instanceOf(CpuInformationData.class)));
-			assertThat(parameter.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(parameter.getSensorTypeIdent(), is(equalTo(sensorType)));
+			CpuInformationData cpuInformationData = (CpuInformationData) this.cut.get();
 
-			CpuInformationData data = (CpuInformationData) parameter;
-			assertThat(data.getCount(), is(1));
+			assertThat(cpuInformationData.getCount(), is(1));
+			assertThat(cpuInformationData.getPlatformIdent(), is(2L));
+			assertThat(cpuInformationData.getSensorTypeIdent(), is(3L));
 
-			// CPU usage can only be deduced after two sets of data are captured
-			assertThat((double) data.getMaxCpuUsage(), is(closeTo(0d, 0.01d)));
-			assertThat((double) data.getMinCpuUsage(), is(closeTo(0d, 0.01d)));
-			assertThat((double) data.getTotalCpuUsage(), is(closeTo(0d, 0.01d)));
+			assertThat(cpuInformationData.getProcessCpuTime(), is(4L));
 
-			assertThat(data.getProcessCpuTime(), is(equalTo(processCpuTime)));
+			assertThat(cpuInformationData.getTotalCpuUsage(), is(5f));
+			assertThat(cpuInformationData.getMaxCpuUsage(), is(6f));
+			assertThat(cpuInformationData.getMinCpuUsage(), is(7f));
+
+			assertThat(cpuInformationData.getTimeStamp().getTime(), is(8L));
 		}
+	}
+
+	/**
+	 * Tests the {@link CpuInformationData#reset()}.
+	 *
+	 * @author Max Wassiljew (NovaTec Consulting GmbH)
+	 */
+	public static class Reset extends CpuInformationTest {
 
 		@Test
-		public void twoDataSets() throws IdNotAvailableException {
-			int availableProc = 1;
+		void collectorClassIsResetted() throws Exception {
+			CpuInformationData collector = (CpuInformationData) this.cut.getSystemSensorData();
 
-			// process cpu time is provided as nanoseconds
-			long processCpuTime1 = 200L * 1000 * 1000; // ns representation of 200ms
-			long processCpuTime2 = 500L * 1000 * 1000; // ns representation of 500ms
+			collector.setCount(1);
+			collector.setPlatformIdent(2L);
+			collector.setSensorTypeIdent(3L);
 
-			// uptime is provided in milliseconds
-			long uptime1 = 500L; // 500ms
-			long uptime2 = 1100L; // 1100ms
-			long sensorType = 13L;
-			long platformIdent = 11L;
-			float cpuUsage1 = 0.0f;
-			float cpuUsage2 = 50.0f;
+			collector.setProcessCpuTime(4L);
 
-			// We use an argument capturer to further inspect the given argument.
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			SystemSensorData parameter = null;
+			collector.setTotalCpuUsage(5f);
+			collector.setMaxCpuUsage(6f);
+			collector.setMinCpuUsage(7f);
 
-			when(runtimeBean.getUptime()).thenReturn(uptime1).thenReturn(uptime2);
-			when(osBean.getAvailableProcessors()).thenReturn(availableProc);
-			when(osBean.getProcessCpuTime()).thenReturn(processCpuTime1).thenReturn(processCpuTime2);
-			when(osBean.retrieveCpuUsage()).thenReturn(cpuUsage1).thenReturn(cpuUsage2);
-			when(sensorTypeConfig.getId()).thenReturn(sensorType);
-			when(platformManager.getPlatformId()).thenReturn(platformIdent);
+			collector.setTimeStamp(new Timestamp(8L));
 
-			// ------------------------
-			// FIRST UPDATE CALL
-			// ------------------------
-			// no current data object is available, second call provides an
-			// initialized version. The second call provides the parameter that was
-			// internally registered.
-			when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);
-			cpuInfo.update(coreService);
+			this.cut.reset();
+			CpuInformationData cpuInformationData = (CpuInformationData) this.cut.get();
 
-			// -> The service must create a new one and add it to the storage
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorType), sensorDataCaptor.capture());
+			assertThat(cpuInformationData.getCount(), is(0));
+			assertThat(cpuInformationData.getPlatformIdent(), is(2L));
+			assertThat(cpuInformationData.getSensorTypeIdent(), is(3L));
 
-			// Cast the parameter to the expected concrete class:
-			parameter = sensorDataCaptor.getValue();
-			assertThat(parameter, is(instanceOf(CpuInformationData.class)));
-			assertThat(parameter.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(parameter.getSensorTypeIdent(), is(equalTo(sensorType)));
+			assertThat(cpuInformationData.getProcessCpuTime(), is(0L));
 
-			CpuInformationData data = (CpuInformationData) parameter;
-			assertThat(data.getCount(), is(1));
+			assertThat(cpuInformationData.getTotalCpuUsage(), is(0f));
+			assertThat(cpuInformationData.getMaxCpuUsage(), is(0f));
+			assertThat(cpuInformationData.getMinCpuUsage(), is(Float.MAX_VALUE));
 
-			// CPU usage can only be deduced after two sets of data are captured
-			assertThat((double) data.getMaxCpuUsage(), is(closeTo(0d, 0.01d)));
-			assertThat((double) data.getMinCpuUsage(), is(closeTo(0d, 0.01d)));
-			assertThat((double) data.getTotalCpuUsage(), is(closeTo(0d, 0.01d)));
-
-			assertThat(data.getProcessCpuTime(), is(equalTo(processCpuTime1)));
-
-			// ------------------------
-			// SECOND UPDATE CALL
-			// ------------------------
-			when(coreService.getPlatformSensorData(sensorType)).thenReturn(parameter);
-			cpuInfo.update(coreService);
-			verify(coreService, times(1)).addPlatformSensorData(eq(sensorType), sensorDataCaptor.capture());
-
-			// Cast the parameter to the expected concrete class:
-			parameter = sensorDataCaptor.getValue();
-			assertThat(parameter, is(instanceOf(CpuInformationData.class)));
-			assertThat(parameter.getPlatformIdent(), is(equalTo(platformIdent)));
-			assertThat(parameter.getSensorTypeIdent(), is(equalTo(sensorType)));
-
-			data = (CpuInformationData) parameter;
-			assertThat(data.getCount(), is(2));
-
-			// CPU usage can only be deduced after two sets of data are captured
-			assertThat((double) data.getMaxCpuUsage(), is(closeTo(cpuUsage2, 0.01d)));
-
-			// the first data set was 0
-			assertThat((double) data.getMinCpuUsage(), is(closeTo(0d, 0.01d)));
-			assertThat((double) data.getTotalCpuUsage(), is(closeTo(cpuUsage2, 0.01d)));
-
-			assertThat(data.getProcessCpuTime(), is(equalTo(processCpuTime2)));
+			assertThat(cpuInformationData.getTimeStamp().getTime(), is(not(8L)));
 		}
-
-		@Test
-		public void idNotAvailableTest() throws IdNotAvailableException {
-			int availableProc = 1;
-			long processCpuTime = 2L;
-			long uptime = 5L;
-			long sensorType = 13L;
-
-			when(runtimeBean.getUptime()).thenReturn(uptime);
-			when(osBean.getAvailableProcessors()).thenReturn(availableProc);
-			when(osBean.getProcessCpuTime()).thenReturn(processCpuTime);
-			when(sensorTypeConfig.getId()).thenReturn(sensorType);
-			when(platformManager.getPlatformId()).thenThrow(new IdNotAvailableException("expected"));
-
-			// no current data object is available
-			when(coreService.getPlatformSensorData(sensorType)).thenReturn(null);
-			cpuInfo.update(coreService);
-
-			ArgumentCaptor<SystemSensorData> sensorDataCaptor = ArgumentCaptor.forClass(SystemSensorData.class);
-			verify(coreService, times(0)).addPlatformSensorData(eq(sensorType), sensorDataCaptor.capture());
-		}
-
 	}
 }

@@ -3,177 +3,145 @@ package rocks.inspectit.agent.java.sensor.platform;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.ThreadInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the thread system through MXBeans.
  *
  * @author Eduard Tudenhoefner
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
-public class ThreadInformation extends AbstractPlatformSensor implements IPlatformSensor {
+public class ThreadInformation extends AbstractPlatformSensor {
+
+	/** Collector class. */
+	private ThreadInformationData threadInformationData = new ThreadInformationData();
+
+	/** The {@link ThreadInfoProvider} used to retrieve information from the thread system. */
+	private ThreadInfoProvider threadBean;
 
 	/**
-	 * The logger of the class.
+	 * {@inheritDoc}
 	 */
-	@Log
-	Logger log;
+	@Override
+	public void gather() {
+		// The timestamp is set in the {@link ThreadInformation#reset()} to avoid multiple renewal.
+		// It will not be set on the first execution of {@link ThreadInformation#gather()}, but
+		// shortly before.
+		int daemonThreadCount = this.getThreadBean().getDaemonThreadCount();
+		int peakThreadCount = this.getThreadBean().getPeakThreadCount();
+		int threadCount = this.getThreadBean().getThreadCount();
+		long totalStartedThreadCount = this.getThreadBean().getTotalStartedThreadCount();
 
-	/**
-	 * The Platform manager used to get the correct IDs.
-	 */
-	@Autowired
-	private IPlatformManager platformManager;
+		this.threadInformationData.incrementCount();
+		this.threadInformationData.addDaemonThreadCount(daemonThreadCount);
+		this.threadInformationData.addPeakThreadCount(peakThreadCount);
+		this.threadInformationData.addThreadCount(threadCount);
+		this.threadInformationData.addTotalStartedThreadCount(totalStartedThreadCount);
 
-	/**
-	 * The {@link ThreadInfoProvider} used to retrieve information from the thread system.
-	 */
-	private final ThreadInfoProvider threadBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getThreadInfoProvider();
+		if (daemonThreadCount < this.threadInformationData.getMinDaemonThreadCount()) {
+			this.threadInformationData.setMinDaemonThreadCount(daemonThreadCount);
+		} else if (daemonThreadCount > this.threadInformationData.getMaxDaemonThreadCount()) {
+			this.threadInformationData.setMaxDaemonThreadCount(daemonThreadCount);
+		}
 
-	/**
-	 * No-arg constructor needed for Spring.
-	 */
-	public ThreadInformation() {
-	}
+		if (peakThreadCount < this.threadInformationData.getMinPeakThreadCount()) {
+			this.threadInformationData.setMinPeakThreadCount(peakThreadCount);
+		} else if (peakThreadCount > this.threadInformationData.getMaxPeakThreadCount()) {
+			this.threadInformationData.setMaxPeakThreadCount(peakThreadCount);
+		}
 
-	/**
-	 * The default constructor which needs one parameter.
-	 *
-	 * @param platformManager
-	 *            The Platform manager.
-	 */
-	public ThreadInformation(IPlatformManager platformManager) {
-		this.platformManager = platformManager;
-	}
+		if (threadCount < this.threadInformationData.getMinThreadCount()) {
+			this.threadInformationData.setMinThreadCount(threadCount);
+		} else if (threadCount > this.threadInformationData.getMaxThreadCount()) {
+			this.threadInformationData.setMaxThreadCount(threadCount);
+		}
 
-	/**
-	 * Returns the current number of live daemon threads.
-	 *
-	 * @return The daemon thread count.
-	 */
-	public int getDaemonThreadCount() {
-		return threadBean.getDaemonThreadCount();
-	}
-
-	/**
-	 * Returns the peak live thread count since the virtual machine started.
-	 *
-	 * @return The peak thread count.
-	 */
-	public int getPeakThreadCount() {
-		return threadBean.getPeakThreadCount();
-	}
-
-	/**
-	 * Returns the live thread count both daemon and non-daemon threads.
-	 *
-	 * @return The thread count.
-	 */
-	public int getThreadCount() {
-		return threadBean.getThreadCount();
-	}
-
-	/**
-	 * Returns the total number of created and also started threads.
-	 *
-	 * @return The total started thread count.
-	 */
-	public long getTotalStartedThreadCount() {
-		return threadBean.getTotalStartedThreadCount();
-	}
-
-	/**
-	 * Updates all dynamic thread information.
-	 *
-	 * @param coreService
-	 *            The {@link ICoreService}.
-	 */
-	public void update(ICoreService coreService) {
-		long sensorTypeIdent = getSensorTypeConfig().getId();
-		int daemonThreadCount = this.getDaemonThreadCount();
-		int peakThreadCount = this.getPeakThreadCount();
-		int threadCount = this.getThreadCount();
-		long totalStartedThreadCount = this.getTotalStartedThreadCount();
-
-		ThreadInformationData threadData = (ThreadInformationData) coreService.getPlatformSensorData(sensorTypeIdent);
-
-		if (threadData == null) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-
-				threadData = new ThreadInformationData(timestamp, platformId, sensorTypeIdent);
-				threadData.incrementCount();
-
-				threadData.addDaemonThreadCount(daemonThreadCount);
-				threadData.setMinDaemonThreadCount(daemonThreadCount);
-				threadData.setMaxDaemonThreadCount(daemonThreadCount);
-
-				threadData.addPeakThreadCount(peakThreadCount);
-				threadData.setMinPeakThreadCount(peakThreadCount);
-				threadData.setMaxPeakThreadCount(peakThreadCount);
-
-				threadData.addThreadCount(threadCount);
-				threadData.setMinThreadCount(threadCount);
-				threadData.setMaxThreadCount(threadCount);
-
-				threadData.addTotalStartedThreadCount(totalStartedThreadCount);
-				threadData.setMinTotalStartedThreadCount(totalStartedThreadCount);
-				threadData.setMaxTotalStartedThreadCount(totalStartedThreadCount);
-
-				coreService.addPlatformSensorData(sensorTypeIdent, threadData);
-			} catch (IdNotAvailableException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Could not save the thread information because of an unavailable id. " + e.getMessage());
-				}
-			}
-		} else {
-			threadData.incrementCount();
-			threadData.addDaemonThreadCount(daemonThreadCount);
-			threadData.addPeakThreadCount(peakThreadCount);
-			threadData.addThreadCount(threadCount);
-			threadData.addTotalStartedThreadCount(totalStartedThreadCount);
-
-			if (daemonThreadCount < threadData.getMinDaemonThreadCount()) {
-				threadData.setMinDaemonThreadCount(daemonThreadCount);
-			} else if (daemonThreadCount > threadData.getMaxDaemonThreadCount()) {
-				threadData.setMaxDaemonThreadCount(daemonThreadCount);
-			}
-
-			if (peakThreadCount < threadData.getMinPeakThreadCount()) {
-				threadData.setMinPeakThreadCount(peakThreadCount);
-			} else if (peakThreadCount > threadData.getMaxPeakThreadCount()) {
-				threadData.setMaxPeakThreadCount(peakThreadCount);
-			}
-
-			if (threadCount < threadData.getMinThreadCount()) {
-				threadData.setMinThreadCount(threadCount);
-			} else if (threadCount > threadData.getMaxThreadCount()) {
-				threadData.setMaxThreadCount(threadCount);
-			}
-
-			if (totalStartedThreadCount < threadData.getMinTotalStartedThreadCount()) {
-				threadData.setMinTotalStartedThreadCount(totalStartedThreadCount);
-			} else if (totalStartedThreadCount > threadData.getMaxTotalStartedThreadCount()) {
-				threadData.setMaxTotalStartedThreadCount(totalStartedThreadCount);
-			}
+		if (totalStartedThreadCount < this.threadInformationData.getMinTotalStartedThreadCount()) {
+			this.threadInformationData.setMinTotalStartedThreadCount(totalStartedThreadCount);
+		} else if (totalStartedThreadCount > this.threadInformationData.getMaxTotalStartedThreadCount()) {
+			this.threadInformationData.setMaxTotalStartedThreadCount(totalStartedThreadCount);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean automaticUpdate() {
-		return true;
+	@Override
+	public SystemSensorData get() {
+		ThreadInformationData newThreadInformationData = new ThreadInformationData();
+
+		newThreadInformationData.setPlatformIdent(this.threadInformationData.getPlatformIdent());
+		newThreadInformationData.setSensorTypeIdent(this.threadInformationData.getSensorTypeIdent());
+		newThreadInformationData.setCount(this.threadInformationData.getCount());
+
+		newThreadInformationData.setTotalDaemonThreadCount(this.threadInformationData.getTotalDaemonThreadCount());
+		newThreadInformationData.setMinDaemonThreadCount(this.threadInformationData.getMinDaemonThreadCount());
+		newThreadInformationData.setMaxDaemonThreadCount(this.threadInformationData.getMaxDaemonThreadCount());
+
+		newThreadInformationData.setTotalPeakThreadCount(this.threadInformationData.getTotalPeakThreadCount());
+		newThreadInformationData.setMinPeakThreadCount(this.threadInformationData.getMinPeakThreadCount());
+		newThreadInformationData.setMaxPeakThreadCount(this.threadInformationData.getMaxPeakThreadCount());
+
+		newThreadInformationData.setTotalThreadCount(this.threadInformationData.getTotalThreadCount());
+		newThreadInformationData.setMinThreadCount(this.threadInformationData.getMinThreadCount());
+		newThreadInformationData.setMaxThreadCount(this.threadInformationData.getMaxThreadCount());
+
+		newThreadInformationData.setTotalTotalStartedThreadCount(this.threadInformationData.getTotalTotalStartedThreadCount());
+		newThreadInformationData.setMinTotalStartedThreadCount(this.threadInformationData.getMinTotalStartedThreadCount());
+		newThreadInformationData.setMaxTotalStartedThreadCount(this.threadInformationData.getMaxTotalStartedThreadCount());
+
+		newThreadInformationData.setTimeStamp(this.threadInformationData.getTimeStamp());
+
+		return newThreadInformationData;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void reset() {
+		this.threadInformationData.setCount(0);
+
+		this.threadInformationData.setTotalDaemonThreadCount(0);
+		this.threadInformationData.setMinDaemonThreadCount(Integer.MAX_VALUE);
+		this.threadInformationData.setMaxDaemonThreadCount(0);
+
+		this.threadInformationData.setTotalPeakThreadCount(0);
+		this.threadInformationData.setMinPeakThreadCount(Integer.MAX_VALUE);
+		this.threadInformationData.setMaxPeakThreadCount(0);
+
+		this.threadInformationData.setTotalThreadCount(0);
+		this.threadInformationData.setMinThreadCount(Integer.MAX_VALUE);
+		this.threadInformationData.setMaxThreadCount(0);
+
+		this.threadInformationData.setTotalTotalStartedThreadCount(0L);
+		this.threadInformationData.setMinTotalStartedThreadCount(Long.MAX_VALUE);
+		this.threadInformationData.setMaxTotalStartedThreadCount(0);
+
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		this.threadInformationData.setTimeStamp(timestamp);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected SystemSensorData getSystemSensorData() {
+		return this.threadInformationData;
+	}
+
+	/**
+	 * Gets the {@link ThreadInfoProvider}. The getter method is provided for better testability.
+	 *
+	 * @return {@link ThreadInfoProvider}.
+	 */
+	private ThreadInfoProvider getThreadBean() {
+		if (this.threadBean == null) {
+			this.threadBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getThreadInfoProvider();
+		}
+		return this.threadBean;
+	}
 }

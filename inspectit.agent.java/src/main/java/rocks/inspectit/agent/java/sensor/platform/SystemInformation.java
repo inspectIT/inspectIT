@@ -5,341 +5,154 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.MemoryInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.OperatingSystemInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides static information about heap memory/operating system/runtime through
  * MXBeans.
  *
  * @author Eduard Tudenhoefner
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
-public class SystemInformation extends AbstractPlatformSensor implements IPlatformSensor {
+public class SystemInformation extends AbstractPlatformSensor {
 
-	/**
-	 * The logger of the class.
-	 */
-	@Log
-	Logger log;
-
-	/**
-	 * The maximum length of the fields saved into the database.
-	 */
-	private static final int MAX_LENGTH = 10000;
-
-	/**
-	 * The Platform manager used to get the correct IDs.
-	 */
-	@Autowired
-	private IPlatformManager platformManager;
-
-	/**
-	 * After the first update()-call the static information will only be updated when the update is
-	 * requested by the user.
-	 */
-	private boolean updateRequested = true;
+	/** Collector class. */
+	private SystemInformationData systemInformationData = new SystemInformationData();
 
 	/**
 	 * The {@link OperatingSystemInfoProvider} used to retrieve information from the operating
 	 * system.
 	 */
-	private final OperatingSystemInfoProvider osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
+	private OperatingSystemInfoProvider osBean;
 
 	/**
 	 * The {@link MemoryInfoProvider} used to retrieve heap memory information.
 	 */
-	private final MemoryInfoProvider memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
+	private MemoryInfoProvider memoryBean;
 
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the runtime VM.
 	 */
-	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private RuntimeInfoProvider runtimeBean;
+
+	/** The switch for gathering the system information data once. */
+	private boolean isGathered = false;
+
+	/** The switch for returning the system information data once. */
+	private boolean isDelivered = false;
 
 	/**
-	 * No-arg constructor needed for Spring.
+	 * {@inheritDoc}
 	 */
-	public SystemInformation() {
-	}
-
-	/**
-	 * The default constructor which needs one parameter.
-	 *
-	 * @param platformManager
-	 *            The Platform manager.
-	 */
-	public SystemInformation(IPlatformManager platformManager) {
-		this.platformManager = platformManager;
-	}
-
-	/**
-	 * Returns the total amount of physical memory.
-	 *
-	 * @return The total amount of physical memory.
-	 */
-	public long getTotalPhysMemory() {
-		return osBean.getTotalPhysicalMemorySize();
-	}
-
-	/**
-	 * Returns the total amount of swap space.
-	 *
-	 * @return The total amount of swap space.
-	 */
-	public long getTotalSwapSpace() {
-		return osBean.getTotalSwapSpaceSize();
-	}
-
-	/**
-	 * Returns the number of processors available to the virtual machine.
-	 *
-	 * @return The number of processors available to the virtual machine.
-	 */
-	public int getAvailableProcessors() {
-		return osBean.getAvailableProcessors();
-	}
-
-	/**
-	 * Returns the operating system architecture.
-	 *
-	 * @return The operating system architecture.
-	 */
-	public String getArchitecture() {
-		return osBean.getArch();
-	}
-
-	/**
-	 * Returns the name of the operating system.
-	 *
-	 * @return The name of the operating system.
-	 */
-	public String getOsName() {
-		return osBean.getName();
-	}
-
-	/**
-	 * Returns the version of the operating system.
-	 *
-	 * @return The version of the operating system.
-	 */
-	public String getOsVersion() {
-		return osBean.getVersion();
-	}
-
-	/**
-	 * Return the name of the Just-in-time (JIT) compiler.
-	 *
-	 * @return The name of the Just-in-time (JIT) compiler.
-	 */
-	public String getJitCompilerName() {
-		return runtimeBean.getJitCompilerName();
-	}
-
-	/**
-	 * Returns the java class path that is used by the system class loader to search for class
-	 * files.
-	 *
-	 * @return The java class path that is used by the system class loader to search for class
-	 *         files.
-	 */
-	public String getClassPath() {
-		return runtimeBean.getClassPath();
-	}
-
-	/**
-	 * Returns the boot class path that is used by the bootstrap class loader to search for class
-	 * files.
-	 *
-	 * @return The boot class path that is used by the bootstrap class loader to search for class
-	 *         files.
-	 */
-	public String getBootClassPath() {
-		return runtimeBean.getBootClassPath();
-	}
-
-	/**
-	 * Returns the java library path.
-	 *
-	 * @return The java library path.
-	 */
-	public String getLibraryPath() {
-		return runtimeBean.getLibraryPath();
-	}
-
-	/**
-	 * Returns the vendor of the virtual machine.
-	 *
-	 * @return The vendor of the virtual machine.
-	 */
-	public String getVmVendor() {
-		return runtimeBean.getVmVendor();
-	}
-
-	/**
-	 * Returns the name of the virtual machine.
-	 *
-	 * @return The name of the virtual machine.
-	 */
-	public String getVmName() {
-		return runtimeBean.getVmName();
-	}
-
-	/**
-	 * Returns the version of the virtual machine.
-	 *
-	 * @return The version of the virtual machine.
-	 */
-	public String getVmVersion() {
-		return runtimeBean.getVmVersion();
-	}
-
-	/**
-	 * Returns the name representing the running virtual machine. for example: 12456@pc-name.
-	 *
-	 * @return The name representing the running virtual machine.
-	 */
-	public String getVmSpecName() {
-		return runtimeBean.getSpecName();
-	}
-
-	/**
-	 * Returns the initial amount of memory that the virtual machine requests from the operating
-	 * system for heap memory management during startup.
-	 *
-	 * @return The initial amount of memory that the virtual machine requests from the operating
-	 *         system for heap memory management during startup.
-	 */
-	public long getInitHeapMemorySize() {
-		return memoryBean.getHeapMemoryUsage().getInit();
-	}
-
-	/**
-	 * Returns the maximum amount of memory that can be used for heap memory management.
-	 *
-	 * @return The maximum amount of memory that can be used for heap memory management.
-	 */
-	public long getMaxHeapMemorySize() {
-		return memoryBean.getHeapMemoryUsage().getMax();
-	}
-
-	/**
-	 * Returns the initial amount of memory that the virtual machine requests from the operating
-	 * system for non-heap memory management during startup.
-	 *
-	 * @return The initial amount of memory that the virtual machine requests from the operating
-	 *         system for non-heap memory management during startup.
-	 */
-	public long getInitNonHeapMemorySize() {
-		return memoryBean.getNonHeapMemoryUsage().getInit();
-	}
-
-	/**
-	 * Returns the maximum amount of memory that can be used for non-heap memory management.
-	 *
-	 * @return The maximum amount of memory that can be used for non-heap memory management.
-	 */
-	public long getMaxNonHeapMemorySize() {
-		return memoryBean.getNonHeapMemoryUsage().getMax();
-	}
-
-	/**
-	 * Updates all static information.
-	 *
-	 * @param coreService
-	 *            The {@link ICoreService}.
-	 */
-	public void update(ICoreService coreService) {
-		long sensorTypeIdent = getSensorTypeConfig().getId();
-		try {
-			long platformId = platformManager.getPlatformId();
+	@Override
+	public void gather() {
+		if (!isGathered) {
 			Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+			this.systemInformationData.setTimeStamp(timestamp);
 
-			SystemInformationData systemData = new SystemInformationData(timestamp, platformId, sensorTypeIdent);
+			this.systemInformationData.setTotalPhysMemory(this.getOsBean().getTotalPhysicalMemorySize());
+			this.systemInformationData.setTotalSwapSpace(this.getOsBean().getTotalSwapSpaceSize());
 
-			updateRequested = false;
-			String vmArgumentName;
-			String vmArgumentValue;
-			long totalPhysMemory = this.getTotalPhysMemory();
-			long totalSwapSpace = this.getTotalSwapSpace();
-			int availableProcessors = this.getAvailableProcessors();
-			String architecture = this.getArchitecture();
-			String osName = this.getOsName();
-			String osVersion = this.getOsVersion();
-			String jitCompilerName = this.getJitCompilerName();
-			String classPath = crop(this.getClassPath());
-			String bootClassPath = crop(this.getBootClassPath());
-			String libraryPath = crop(this.getLibraryPath());
-			String vmVendor = this.getVmVendor();
-			String vmVersion = this.getVmVersion();
-			String vmName = this.getVmName();
-			String vmSpecName = this.getVmSpecName();
-			long initHeapMemorySize = this.getInitHeapMemorySize();
-			long maxHeapMemorySize = this.getMaxHeapMemorySize();
-			long initNonHeapMemorySize = this.getInitNonHeapMemorySize();
-			long maxNonHeapMemorySize = this.getMaxNonHeapMemorySize();
+			this.systemInformationData.setAvailableProcessors(this.getOsBean().getAvailableProcessors());
 
-			systemData.setTotalPhysMemory(totalPhysMemory);
-			systemData.setTotalSwapSpace(totalSwapSpace);
-			systemData.setAvailableProcessors(availableProcessors);
-			systemData.setArchitecture(architecture);
-			systemData.setOsName(osName);
-			systemData.setOsVersion(osVersion);
-			systemData.setJitCompilerName(jitCompilerName);
-			systemData.setClassPath(classPath);
-			systemData.setBootClassPath(bootClassPath);
-			systemData.setLibraryPath(libraryPath);
-			systemData.setVmVendor(vmVendor);
-			systemData.setVmVersion(vmVersion);
-			systemData.setVmName(vmName);
-			systemData.setVmSpecName(vmSpecName);
-			systemData.setInitHeapMemorySize(initHeapMemorySize);
-			systemData.setMaxHeapMemorySize(maxHeapMemorySize);
-			systemData.setInitNonHeapMemorySize(initNonHeapMemorySize);
-			systemData.setMaxNonHeapMemorySize(maxNonHeapMemorySize);
+			this.systemInformationData.setArchitecture(this.getOsBean().getArch());
+
+			this.systemInformationData.setOsName(this.getOsBean().getName());
+			this.systemInformationData.setOsVersion(this.getOsBean().getVersion());
+
+			this.systemInformationData.setJitCompilerName(this.getRuntimeBean().getJitCompilerName());
+			this.systemInformationData.setClassPath(this.getRuntimeBean().getClassPath());
+			this.systemInformationData.setBootClassPath(this.getRuntimeBean().getBootClassPath());
+			this.systemInformationData.setLibraryPath(this.getRuntimeBean().getLibraryPath());
+
+			this.systemInformationData.setVmVendor(this.getRuntimeBean().getVmVendor());
+			this.systemInformationData.setVmVersion(this.getRuntimeBean().getVmVersion());
+			this.systemInformationData.setVmName(this.getRuntimeBean().getVmName());
+			this.systemInformationData.setVmSpecName(this.getRuntimeBean().getSpecName());
+
+			this.systemInformationData.setInitHeapMemorySize(this.getMemoryBean().getHeapMemoryUsage().getInit());
+			this.systemInformationData.setMaxHeapMemorySize(this.getMemoryBean().getHeapMemoryUsage().getMax());
+
+			this.systemInformationData.setInitNonHeapMemorySize(this.getMemoryBean().getNonHeapMemoryUsage().getInit());
+			this.systemInformationData.setMaxNonHeapMemorySize(this.getMemoryBean().getNonHeapMemoryUsage().getMax());
 
 			Properties properties = System.getProperties();
 			for (Map.Entry<Object, Object> property : properties.entrySet()) {
-				vmArgumentName = (String) property.getKey();
-				vmArgumentValue = (String) property.getValue();
-				systemData.addVMArguments(vmArgumentName, vmArgumentValue);
+				this.systemInformationData.addVMArguments((String) property.getKey(), (String) property.getValue());
 			}
 
-			coreService.addPlatformSensorData(sensorTypeIdent, systemData);
-		} catch (IdNotAvailableException e) {
-			if (log.isDebugEnabled()) {
-				log.debug("Could not save the system information because of an unavailable id. " + e.getMessage());
-			}
+			this.isGathered = true;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean automaticUpdate() {
-		return updateRequested;
+	@Override
+	public SystemSensorData get() {
+		if (!isDelivered) {
+			isDelivered = true;
+			return systemInformationData;
+		}
+
+		return null;
 	}
 
 	/**
-	 * Crops a string if it is longer than the specified MAX_LENGTH.
-	 *
-	 * @param value
-	 *            The value to crop.
-	 * @return A cropped string which length is smaller than the MAX_LENGTH.
+	 * {@inheritDoc}
 	 */
-	private String crop(String value) {
-		if ((null != value) && (value.length() > MAX_LENGTH)) {
-			return value.substring(0, MAX_LENGTH);
+	@Override
+	public void reset() {
+		// no need to reset data. It is delivered only once.
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected SystemSensorData getSystemSensorData() {
+		return this.systemInformationData;
+	}
+
+	/**
+	 * Gets the {@link OperatingSystemInfoProvider}. The getter method is provided for better
+	 * testability.
+	 *
+	 * @return {@link OperatingSystemInfoProvider}.
+	 */
+	private OperatingSystemInfoProvider getOsBean() {
+		if (this.osBean == null) {
+			this.osBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getOperatingSystemInfoProvider();
 		}
-		return value;
+		return this.osBean;
+	}
+
+	/**
+	 * Gets the {@link MemoryInfoProvider}. The getter method is provided for better testability.
+	 *
+	 * @return {@link MemoryInfoProvider}.
+	 */
+	private MemoryInfoProvider getMemoryBean() {
+		if (this.memoryBean == null) {
+			this.memoryBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getMemoryInfoProvider();
+		}
+		return this.memoryBean;
+	}
+
+	/**
+	 * Gets the {@link RuntimeInfoProvider}. The getter method is provided for better testability.
+	 *
+	 * @return {@link RuntimeInfoProvider}.
+	 */
+	private RuntimeInfoProvider getRuntimeBean() {
+		if (this.runtimeBean == null) {
+			this.runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+		}
+		return this.runtimeBean;
 	}
 }

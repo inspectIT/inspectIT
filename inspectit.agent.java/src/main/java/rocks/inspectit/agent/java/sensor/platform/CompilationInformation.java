@@ -3,114 +3,99 @@ package rocks.inspectit.agent.java.sensor.platform;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.platform.provider.RuntimeInfoProvider;
 import rocks.inspectit.agent.java.sensor.platform.provider.factory.PlatformSensorInfoProviderFactory;
+import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.CompilationInformationData;
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * This class provides dynamic information about the compilation system through MXBeans.
  *
  * @author Eduard Tudenhoefner
- *
+ * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
-public class CompilationInformation extends AbstractPlatformSensor implements IPlatformSensor {
+public class CompilationInformation extends AbstractPlatformSensor {
 
-	/**
-	 * The logger of the class.
-	 */
-	@Log
-	Logger log;
-
-	/**
-	 * The Platform manager used to get the correct IDs.
-	 */
-	@Autowired
-	private IPlatformManager platformManager;
+	/** Collector class. */
+	private CompilationInformationData compilationInformationData = new CompilationInformationData();
 
 	/**
 	 * The {@link RuntimeInfoProvider} used to retrieve information from the compilation system.
 	 */
-	private final RuntimeInfoProvider runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+	private RuntimeInfoProvider runtimeBean;
 
 	/**
-	 * No-arg constructor needed for Spring.
+	 * {@inheritDoc}
 	 */
-	public CompilationInformation() {
-	}
+	@Override
+	public void gather() {
+		// The timestamp is set in the {@link CompilationInformation#reset()} to avoid multiple
+		// renewal. It will not be set on the first execution of
+		// {@link CompilationInformation#gather()}, but shortly before.
+		long totalCompilationTime = this.getRuntimeBean().getTotalCompilationTime();
 
-	/**
-	 * The default constructor which needs one parameter.
-	 *
-	 * @param platformManager
-	 *            The Platform manager.
-	 */
-	public CompilationInformation(IPlatformManager platformManager) {
-		this.platformManager = platformManager;
-	}
+		this.compilationInformationData.incrementCount();
+		this.compilationInformationData.addTotalCompilationTime(totalCompilationTime);
 
-	/**
-	 * Returns the approximate accumulated elapsed time (milliseconds) spent in compilation.
-	 *
-	 * @return The compilation time in milliseconds.
-	 */
-	public long getTotalCompilationTime() {
-		return runtimeBean.getTotalCompilationTime();
-	}
-
-	/**
-	 * Updates all dynamic compilation information.
-	 *
-	 * @param coreService
-	 *            The {@link ICoreService}.
-	 */
-	public void update(ICoreService coreService) {
-		long sensorTypeIdent = getSensorTypeConfig().getId();
-		long totalCompilationTime = this.getTotalCompilationTime();
-
-		CompilationInformationData compilationData = (CompilationInformationData) coreService.getPlatformSensorData(sensorTypeIdent);
-
-		if (compilationData == null) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-
-				compilationData = new CompilationInformationData(timestamp, platformId, sensorTypeIdent);
-				compilationData.incrementCount();
-
-				compilationData.addTotalCompilationTime(totalCompilationTime);
-				compilationData.setMinTotalCompilationTime(totalCompilationTime);
-				compilationData.setMaxTotalCompilationTime(totalCompilationTime);
-
-				coreService.addPlatformSensorData(sensorTypeIdent, compilationData);
-			} catch (IdNotAvailableException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Could not save the compilation information because of an unavailable id. " + e.getMessage());
-				}
-			}
-		} else {
-			compilationData.incrementCount();
-			compilationData.addTotalCompilationTime(totalCompilationTime);
-
-			if (totalCompilationTime < compilationData.getMinTotalCompilationTime()) {
-				compilationData.setMinTotalCompilationTime(totalCompilationTime);
-			} else if (totalCompilationTime > compilationData.getMaxTotalCompilationTime()) {
-				compilationData.setMaxTotalCompilationTime(totalCompilationTime);
-			}
+		if (totalCompilationTime < this.compilationInformationData.getMinTotalCompilationTime()) {
+			this.compilationInformationData.setMinTotalCompilationTime(totalCompilationTime);
+		} else if (totalCompilationTime > this.compilationInformationData.getMaxTotalCompilationTime()) {
+			this.compilationInformationData.setMaxTotalCompilationTime(totalCompilationTime);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean automaticUpdate() {
-		return true;
+	@Override
+	public SystemSensorData get() {
+		CompilationInformationData newCompilationInformationData = new CompilationInformationData();
+
+		newCompilationInformationData.setPlatformIdent(this.compilationInformationData.getPlatformIdent());
+		newCompilationInformationData.setSensorTypeIdent(this.compilationInformationData.getSensorTypeIdent());
+		newCompilationInformationData.setCount(this.compilationInformationData.getCount());
+
+		newCompilationInformationData.setTotalTotalCompilationTime(this.compilationInformationData.getTotalTotalCompilationTime());
+		newCompilationInformationData.setMaxTotalCompilationTime(this.compilationInformationData.getMaxTotalCompilationTime());
+		newCompilationInformationData.setMinTotalCompilationTime(this.compilationInformationData.getMinTotalCompilationTime());
+
+		newCompilationInformationData.setTimeStamp(this.compilationInformationData.getTimeStamp());
+
+		return this.compilationInformationData;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void reset() {
+		this.compilationInformationData.setCount(0);
+
+		this.compilationInformationData.setTotalTotalCompilationTime(0L);
+		this.compilationInformationData.setMinTotalCompilationTime(Long.MAX_VALUE);
+		this.compilationInformationData.setMaxTotalCompilationTime(0L);
+
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		this.compilationInformationData.setTimeStamp(timestamp);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected SystemSensorData getSystemSensorData() {
+		return this.compilationInformationData;
+	}
+
+	/**
+	 * Gets the {@link RuntimeInfoProvider}. The getter method is provided for better testability.
+	 *
+	 * @return {@link RuntimeInfoProvider}.
+	 */
+	private RuntimeInfoProvider getRuntimeBean() {
+		if (this.runtimeBean == null) {
+			this.runtimeBean = PlatformSensorInfoProviderFactory.getPlatformSensorInfoProvider().getRuntimeInfoProvider();
+		}
+		return this.runtimeBean;
+	}
 }

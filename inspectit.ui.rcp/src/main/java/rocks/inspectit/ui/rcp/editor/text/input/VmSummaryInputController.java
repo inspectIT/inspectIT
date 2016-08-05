@@ -680,7 +680,7 @@ public class VmSummaryInputController extends AbstractTextInputController {
 				}
 
 				if (runtimeData != null) {
-					uptime.setText(NumberFormatter.millisecondsToString(runtimeData.getTotalUptime() / runtimeData.getCount()));
+					uptime.setText(NumberFormatter.millisecondsToString(runtimeData.getUptime()));
 				}
 
 				if (threadData != null) {
