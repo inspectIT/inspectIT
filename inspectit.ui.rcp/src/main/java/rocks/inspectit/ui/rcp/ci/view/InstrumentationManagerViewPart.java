@@ -503,7 +503,7 @@ public class InstrumentationManagerViewPart extends ViewPart implements IRefresh
 			// reset lists
 			profileLeafs = new ArrayList<>();
 			environmentLeafs = new ArrayList<>();
-			if (displayedCmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
+			if ((null != displayedCmrRepositoryDefinition) && (displayedCmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE)) {
 
 				// profiles
 				List<Profile> profiles = displayedCmrRepositoryDefinition.getConfigurationInterfaceService().getAllProfiles();

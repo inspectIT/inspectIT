@@ -270,14 +270,16 @@ public abstract class AbstractTableBasedManagerView implements CmrRepositoryChan
 				} else {
 					// setting selection to the CMR so that we can perform all the necessary
 					// operations
-					getSelectionProviderAdapter().setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
+					ISelection selection = (null != displayedCmrRepositoryDefinition) ? new StructuredSelection(displayedCmrRepositoryDefinition) : StructuredSelection.EMPTY;
+					getSelectionProviderAdapter().setSelection(selection);
 				}
 			}
 		});
 		if (null != workbenchPartSite) {
 			workbenchPartSite.setSelectionProvider(getSelectionProviderAdapter());
 		}
-		getSelectionProviderAdapter().setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
+		ISelection selection = (null != displayedCmrRepositoryDefinition) ? new StructuredSelection(displayedCmrRepositoryDefinition) : StructuredSelection.EMPTY;
+		getSelectionProviderAdapter().setSelection(selection);
 	}
 
 	/**
@@ -311,6 +313,9 @@ public abstract class AbstractTableBasedManagerView implements CmrRepositoryChan
 			@Override
 			public void run() {
 				updateFormMenuManager();
+				if (null == displayedCmrRepositoryDefinition) {
+					selectDisplayedCmrRepositoryDefinition();
+				}
 			}
 		}, mainForm);
 	}
@@ -686,6 +691,11 @@ public abstract class AbstractTableBasedManagerView implements CmrRepositoryChan
 			displayedCmrRepositoryDefinition = repositories.get(0);
 			performUpdate(true);
 			getSelectionProviderAdapter().setSelection(new StructuredSelection(displayedCmrRepositoryDefinition));
+		} else {
+			// if no CMR available display none
+			displayedCmrRepositoryDefinition = null; // NOPMD
+			performUpdate(true);
+			getSelectionProviderAdapter().setSelection(StructuredSelection.EMPTY);
 		}
 	}
 
