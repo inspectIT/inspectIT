@@ -22,7 +22,8 @@ public class FqnMethodSignatureValidator implements IInputValidator {
 	 * Pattern to use when matching.
 	 */
 	private static final Pattern PATTERN = Pattern
-			.compile("([A-Za-z_$][a-zA-Z\\d_$]*\\.)+[A-Za-z_$][a-zA-Z\\d_$]*\\(((([A-Za-z_][a-zA-Z\\d_$]*\\.)*[A-Za-z_][a-zA-Z\\d_$]*,)*([A-Za-z_][a-zA-Z\\d_$]*\\.)*[A-Za-z_][a-zA-Z\\d_$]*)?\\)");
+			.compile(
+					"([A-Za-z_$][a-zA-Z\\d_$]*\\.)+[A-Za-z_$][a-zA-Z\\d_$]*\\(((([A-Za-z_][a-zA-Z\\d_$]*\\.)*[A-Za-z_][a-zA-Z\\d_$]*(\\[\\])?,)*([A-Za-z_][a-zA-Z\\d_$]*\\.)*[A-Za-z_][a-zA-Z\\d_$]*(\\[\\])?)?\\)");
 
 	/**
 	 * Allow empty string.
