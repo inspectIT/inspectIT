@@ -753,6 +753,11 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 			PlatformIdent platformIdent = null;
 
 			StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
+			// if selection is empty do nothing
+			if (selection.isEmpty()) {
+				return;
+			}
+
 			Object firstElement = selection.getFirstElement();
 			if (firstElement instanceof DeferredAgentsComposite) {
 				repositoryDefinition = ((DeferredAgentsComposite) firstElement).getRepositoryDefinition();
