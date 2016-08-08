@@ -108,7 +108,7 @@ public class BusinessContextManagerViewPart extends ViewPart implements IRefresh
 
 	/**
 	 * Select application definition in the table view.
-	 * 
+	 *
 	 * @param applicationDefinition
 	 *            {@link ApplicationDefinition} to select.
 	 * @param repositoryDefinition
@@ -231,7 +231,7 @@ public class BusinessContextManagerViewPart extends ViewPart implements IRefresh
 		@Override
 		protected void updateContent() {
 			getApplications().clear();
-			if (displayedCmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
+			if ((null != displayedCmrRepositoryDefinition) && (displayedCmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE)) {
 
 				List<ApplicationDefinition> applicationDefinitions = displayedCmrRepositoryDefinition.getConfigurationInterfaceService().getApplicationDefinitions();
 
