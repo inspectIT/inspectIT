@@ -81,6 +81,9 @@ import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.MemoryInformationData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentType;
+import rocks.inspectit.shared.all.communication.data.RemoteCallData;
+import rocks.inspectit.shared.all.communication.data.RemoteHttpCallData;
+import rocks.inspectit.shared.all.communication.data.RemoteMQCallData;
 import rocks.inspectit.shared.all.communication.data.RuntimeInformationData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
@@ -387,6 +390,12 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(BusinessContextErrorCodeEnum.class, new EnumSerializer(BusinessContextErrorCodeEnum.class));
 		kryo.register(ApplicationData.class, new CustomCompatibleFieldSerializer<ApplicationData>(kryo, ApplicationData.class, schemaManager));
 		kryo.register(BusinessTransactionData.class, new CustomCompatibleFieldSerializer<BusinessTransactionData>(kryo, BusinessTransactionData.class, schemaManager));
+		
+		// addet with INSPECTIT-1921
+		kryo.register(RemoteCallData.class, new InvocationAwareDataSerializer<RemoteCallData>(kryo, RemoteCallData.class, schemaManager));
+		kryo.register(RemoteHttpCallData.class, new InvocationAwareDataSerializer<RemoteHttpCallData>(kryo, RemoteHttpCallData.class, schemaManager));
+		kryo.register(RemoteMQCallData.class, new InvocationAwareDataSerializer<RemoteMQCallData>(kryo, RemoteMQCallData.class, schemaManager));
+
 	}
 
 	/**

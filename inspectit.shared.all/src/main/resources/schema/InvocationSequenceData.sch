@@ -27,3 +27,6 @@ class: rocks.inspectit.shared.all.communication.data.InvocationSequenceData
 18: loggingData
 19: applicationId
 20: businessTransactionId
+21: remoteCallData
+22: nestedOutgoingRemoteCalls
+23: nestedIncomingRemoteCalls

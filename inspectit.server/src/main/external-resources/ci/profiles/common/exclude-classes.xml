@@ -6,7 +6,8 @@
 		<!-- Default exclude rules -->
 		<exclude-rule class-name="rocks.inspectit.*"/>
 		<exclude-rule class-name="*$Proxy*"/>
-		<exclude-rule class-name="sun.*"/>
+		<exclude-rule class-name="sun.reflect*"/>
+		<exclude-rule class-name="sun.net.ExtendedOptions*"/>
 		<exclude-rule class-name="java.lang.ThreadLocal"/>
 		<exclude-rule class-name="java.lang.ref.Reference"/>
 		<exclude-rule class-name="*_WLStub"/>

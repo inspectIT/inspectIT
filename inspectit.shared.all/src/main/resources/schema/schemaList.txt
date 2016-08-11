@@ -43,3 +43,6 @@ schema/JmxSensorValueData.sch
 schema/HttpInfo.sch
 schema/ApplicationData.sch
 schema/BusinessTransactionData.sch
+schema/RemoteCallData.sch
+schema/RemoteHttpCallData.sch
+schema/RemoteMQCallData.sch

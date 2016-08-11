@@ -26,6 +26,7 @@
 		<lookup-method name="getCmrManagementService" bean="cmrManagementService" />
 		<lookup-method name="getExceptionDataAccessService" bean="exceptionDataAccessService" />
 		<lookup-method name="getJmxDataAccessService" bean="jmxDataAccessService" />
+		<lookup-method name="getRemoteDataAccessService" bean="remoteCallDataAccessService" />
 		<lookup-method name="getGlobalDataAccessService" bean="globalDataAccessService" />
 		<lookup-method name="getInvocationDataAccessService" bean="invocationDataAccessService" />
 		<lookup-method name="getServerStatusService" bean="serverStatusService" />
@@ -107,6 +108,29 @@
 		<property name="serviceName" value="JmxDataAccessService" />
 	</bean>
 	<!-- JmxDataAccessService End -->
+	
+	<!-- RemoteCallDataAccessService -->
+	<bean id="remoteCallDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
+		<property name="proxyInterfaces">
+			<list>
+				<value>rocks.inspectit.shared.cs.cmr.service.IRemoteCallDataAccessService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
+			</list>
+		</property>
+		<property name="target" ref="remoteCallDataAccessServiceTarget" />
+		<property name="interceptorNames">
+			<list>
+				<value>serviceMethodInterceptor</value>
+				<value>interfaceInterceptor</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="remoteCallDataAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IRemoteCallDataAccessService" />
+		<property name="serviceName" value="RemoteDataAccessService" />
+	</bean>
+	<!-- RemoteCallDataAccessService End -->
 
 	<!-- GlobalDataAccessService -->
 	<bean id="globalDataAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">

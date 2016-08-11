@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="remote-jms" name="Remote-JMS" common="true" created-on="2015-02-24T12:00:00" description="Profile for the Remote JMS Calls."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<sensor-assignment-profile-data>
+	
+		<!-- Inserter for MQ -->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message int int long" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message int int long" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message int int long" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message int int long" interface="true"/>
+	
+		<!-- Extractor for MQ -->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig" class-name="javax.jms.MessageConsumer" method-name="receive" parameters="" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig" class-name="javax.jms.MessageConsumer" method-name="receive" parameters="long" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig" class-name="javax.jms.MessageConsumer" method-name="receiveNoWait" parameters="" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQListenerExtractorSensorConfig" class-name="javax.jms.MessageListener" method-name="onMessage" parameters="javax.jms.Messag" interface="true"/>
+		
+		<!-- Timer for each remote sensor-->
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message int int long" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message int int long" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Message int int long" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.QueueSender" method-name="send" parameters="javax.jms.Queue javax.jms.Message int int long" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.MessageConsumer" method-name="receive" parameters="" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.MessageConsumer" method-name="receive" parameters="long" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.MessageConsumer" method-name="receiveNoWait" parameters="" interface="true" charting="true"/>
+		<timer-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.jms.MessageConsumer" method-name="onMessage" parameters="javax.jms.Messag" interface="true" charting="true"/>
+	</sensor-assignment-profile-data>
+
+</profile>

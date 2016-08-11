@@ -23,6 +23,13 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQListenerExtractorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
@@ -81,7 +88,10 @@ public class Environment extends AbstractCiData {
 	@XmlElementWrapper(name = "method-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class), @XmlElementRef(type = InvocationSequenceSensorConfig.class),
 		@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
-		@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class) })
+			@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class), @XmlElementRef(type = RemoteApacheHttpClientV40InserterSensorConfig.class),
+			@XmlElementRef(type = RemoteHttpExtractorSensorConfig.class), @XmlElementRef(type = RemoteHttpUrlConnectionInserterSensorConfig.class),
+			@XmlElementRef(type = RemoteJettyHttpClientV61InserterSensorConfig.class), @XmlElementRef(type = RemoteMQConsumerExtractorSensorConfig.class),
+			@XmlElementRef(type = RemoteMQInserterSensorConfig.class), @XmlElementRef(type = RemoteMQListenerExtractorSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**

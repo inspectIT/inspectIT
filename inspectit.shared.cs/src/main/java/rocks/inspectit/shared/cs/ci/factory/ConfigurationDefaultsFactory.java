@@ -15,6 +15,13 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQListenerExtractorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
@@ -94,6 +101,13 @@ public final class ConfigurationDefaultsFactory {
 		methodSensorConfigs.add(new StatementSensorConfig());
 		methodSensorConfigs.add(new TimerSensorConfig());
 		methodSensorConfigs.add(new Log4jLoggingSensorConfig());
+		methodSensorConfigs.add(new RemoteApacheHttpClientV40InserterSensorConfig());
+		methodSensorConfigs.add(new RemoteHttpExtractorSensorConfig());
+		methodSensorConfigs.add(new RemoteHttpUrlConnectionInserterSensorConfig());
+		methodSensorConfigs.add(new RemoteJettyHttpClientV61InserterSensorConfig());
+		methodSensorConfigs.add(new RemoteMQConsumerExtractorSensorConfig());
+		methodSensorConfigs.add(new RemoteMQInserterSensorConfig());
+		methodSensorConfigs.add(new RemoteMQListenerExtractorSensorConfig());
 		return methodSensorConfigs;
 	}
 

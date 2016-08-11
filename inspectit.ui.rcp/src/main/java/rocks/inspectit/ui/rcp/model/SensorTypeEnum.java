@@ -16,6 +16,13 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteHttpUrlConnectionInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61InserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQConsumerExtractorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQInserterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteMQListenerExtractorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
@@ -88,7 +95,21 @@ public enum SensorTypeEnum {
 	/** The JMX sensor data type. hard-coded until support for the JMX in CI */
 	JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
 	/** The JMX sensor data type. hard-coded until support for the JMX in CI */
-	CHARTING_JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor#charting", InspectITImages.IMG_BEAN);
+	CHARTING_JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor#charting", InspectITImages.IMG_BEAN),
+	/** The Http Remote Call Extractor sensor type. */
+	REMOTE_HTTP_CALL_RESPONSE(RemoteHttpExtractorSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP),
+	/** The MQ Remote Call Extractor sensor type. */
+	REMOTE_MQ_CONSUMER_RESPONSE(RemoteMQConsumerExtractorSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP),
+	/** The MQ Remote Call Extractor sensor type. */
+	REMOTE_MQ_LISTENER_RESPONSE(RemoteMQListenerExtractorSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP),
+	/** The Remote Call Inserter for ApacheV40 sensor type. */
+	REMOTE_CALL_REQUEST_APACHE_HTTPCLIENT_V40(RemoteApacheHttpClientV40InserterSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP),
+	/** The Remote Call Inserter for URL Connection sensor type. */
+	REMOTE_CALL_REQUEST_HTTPURLCONNECTION(RemoteHttpUrlConnectionInserterSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP),
+	/** The Remote Call Inserter for JettyV61 sensor type. */
+	REMOTE_CALL_REQUEST_JETTY_HTTPCONNECTION(RemoteJettyHttpClientV61InserterSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP),
+	/** The Remote Call Inserter for MQ sensor type. */
+	REMOTE_CALL_REQUEST_MQ(RemoteMQInserterSensorConfig.CLASS_NAME, InspectITImages.IMG_HTTP);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full

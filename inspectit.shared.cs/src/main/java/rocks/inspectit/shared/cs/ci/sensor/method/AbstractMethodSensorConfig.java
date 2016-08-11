@@ -20,7 +20,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
  *
  */
 @XmlSeeAlso({ ConnectionSensorConfig.class, HttpSensorConfig.class, InvocationSequenceSensorConfig.class, PreparedStatementParameterSensorConfig.class, PreparedStatementSensorConfig.class,
-		StatementSensorConfig.class, TimerSensorConfig.class })
+		StatementSensorConfig.class, TimerSensorConfig.class, AbstractRemoteSensorConfig.class })
 public abstract class AbstractMethodSensorConfig implements IMethodSensorConfig {
 
 	/**

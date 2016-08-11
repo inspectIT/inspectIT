@@ -74,11 +74,23 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 			if (InvocationSequenceDataHelper.hasNestedExceptions(o1)) {
 				invNested1++;
 			}
+			if (InvocationSequenceDataHelper.hasNestedOutgoingRemoteCalls(o1)) {
+				invNested1++;
+			}
+			if (InvocationSequenceDataHelper.hasNestedIncommingRemoteCalls(o1)) {
+				invNested1++;
+			}
 			int invNested2 = 0;
 			if (InvocationSequenceDataHelper.hasNestedSqlStatements(o2)) {
 				invNested2 += 2;
 			}
 			if (InvocationSequenceDataHelper.hasNestedExceptions(o2)) {
+				invNested2++;
+			}
+			if (InvocationSequenceDataHelper.hasNestedOutgoingRemoteCalls(o2)) {
+				invNested2++;
+			}
+			if (InvocationSequenceDataHelper.hasNestedIncommingRemoteCalls(o2)) {
 				invNested2++;
 			}
 			return invNested1 - invNested2;

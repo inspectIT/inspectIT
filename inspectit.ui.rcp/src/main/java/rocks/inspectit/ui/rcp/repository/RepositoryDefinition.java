@@ -7,6 +7,7 @@ import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IRemoteCallDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 
@@ -94,11 +95,18 @@ public interface RepositoryDefinition {
 	 * @return Returns the {@link IJmxDataAccessService}.
 	 */
 	IJmxDataAccessService getJmxDataAccessService();
-	
+
 	/**
 	 * Returns the {@link IBusinessContextManagementService}.
-	 * 
+	 *
 	 * @return Returns the {@link IBusinessContextManagementService}.
 	 */
 	IBusinessContextManagementService getBusinessContextMangementService();
+
+	/**
+	 * Returns the {@link IRemoteCallDataAccessService}.
+	 *
+	 * @return Returns the {@link IRemoteCallDataAccessService}.
+	 */
+	IRemoteCallDataAccessService getRemoteCallDataAccessService();
 }
