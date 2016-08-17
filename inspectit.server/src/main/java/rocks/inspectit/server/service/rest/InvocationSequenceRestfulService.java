@@ -1,6 +1,7 @@
 package rocks.inspectit.server.service.rest;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import rocks.inspectit.server.service.rest.error.JsonError;
+import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 
@@ -27,6 +30,13 @@ import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 @Controller
 @RequestMapping(value = "/data/invocations")
 public class InvocationSequenceRestfulService {
+
+	/**
+	 * Default comparator for th
+	 * {@link #getInvocationSequenceOverview(long, Date, Date, long, int, long)} method. Sorts by
+	 * invocation id in ascending order.
+	 */
+	private static final ResultComparator<InvocationSequenceData> OVERVIEW_COMPARATOR = new ResultComparator<>(DefaultDataComparatorEnum.ID, true);
 
 	/**
 	 * Reference to the existing {@link IInvocationDataAccessService}.
@@ -64,16 +74,27 @@ public class InvocationSequenceRestfulService {
 	 *            Latest read ID of the invocations, only invocations with higher id are submitted.
 	 * @param limit
 	 *            The limit/size of the results.
+	 * @param minDuration
+	 *            Minimum duration in milliseconds of the invocation to be returned.
 	 * @return a list of {@link InvocationSequenceData}.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "overview")
 	@ResponseBody
-	public List<InvocationSequenceData> getInvocationSequenceOverview(@RequestParam(value = "platformId", required = false, defaultValue = "0") Long platformId,
+	public List<InvocationSequenceData> getInvocationSequenceOverview(@RequestParam(value = "platformId", required = false, defaultValue = "0") long platformId,
 			@RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date fromDate,
 			@RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date toDate,
-			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") Long latestReadId, @RequestParam(value = "limit", defaultValue = "100") int limit) {
+			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") long latestReadId,
+			@RequestParam(value = "limit", defaultValue = "100") int limit,
+			@RequestParam(value = "minDuration", defaultValue = "0") long minDuration) {
 
-		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(platformId, limit, fromDate, toDate, latestReadId + 1, null);
+		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(platformId, limit, fromDate, toDate, latestReadId + 1, OVERVIEW_COMPARATOR);
+
+		// manually filter the duration
+		for (Iterator<InvocationSequenceData> it = result.iterator(); it.hasNext();) {
+			if (it.next().getDuration() < minDuration) {
+				it.remove();
+			}
+		}
 
 		return result;
 	}
