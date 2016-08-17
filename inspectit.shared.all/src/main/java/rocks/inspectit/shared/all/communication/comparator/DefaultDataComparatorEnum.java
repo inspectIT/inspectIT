@@ -2,6 +2,8 @@ package rocks.inspectit.shared.all.communication.comparator;
 
 import java.util.Comparator;
 
+import com.google.common.primitives.Longs;
+
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
@@ -17,7 +19,12 @@ public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, C
 	/**
 	 * Compares objects by time stamps.
 	 */
-	TIMESTAMP;
+	TIMESTAMP,
+
+	/**
+	 * Compares objects by id.
+	 */
+	ID;
 
 	/**
 	 * {@inheritDoc}
@@ -33,6 +40,8 @@ public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, C
 		switch (this) {
 		case TIMESTAMP:
 			return ObjectUtils.compare(o1.getTimeStamp(), o2.getTimeStamp());
+		case ID:
+			return Longs.compare(o1.getId(), o2.getId());
 		default:
 			return 0;
 		}
