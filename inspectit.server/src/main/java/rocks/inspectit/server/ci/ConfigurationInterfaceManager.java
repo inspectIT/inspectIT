@@ -44,6 +44,7 @@ import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.export.ConfigurationInterfaceImportData;
+import rocks.inspectit.shared.cs.jaxb.ISchemaVersionAware;
 import rocks.inspectit.shared.cs.jaxb.JAXBTransformator;
 
 /**
@@ -542,7 +543,8 @@ public class ConfigurationInterfaceManager {
 	 *             If {@link JAXBException} occurs during unmarshall.
 	 */
 	public ConfigurationInterfaceImportData getImportData(byte[] importData) throws JAXBException, IOException, SAXException {
-		return transformator.unmarshall(importData, pathResolver.getSchemaPath(), ConfigurationInterfaceImportData.class);
+		return transformator.unmarshall(importData, pathResolver.getSchemaPath(), ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION, pathResolver.getMigrationPath(),
+				ConfigurationInterfaceImportData.class);
 	}
 
 	/**
@@ -707,7 +709,8 @@ public class ConfigurationInterfaceManager {
 		if (profile.isCommonProfile()) {
 			throw new BusinessException("Save the profile '" + profile.getName() + " to disk.", ConfigurationInterfaceErrorCodeEnum.COMMON_PROFILE_CAN_NOT_BE_ALTERED);
 		}
-		transformator.marshall(pathResolver.getProfileFilePath(profile), profile, getRelativeToSchemaPath(pathResolver.getProfilesPath()).toString());
+		transformator.marshall(pathResolver.getProfileFilePath(profile), profile, getRelativeToSchemaPath(pathResolver.getProfilesPath()).toString(),
+				ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION);
 	}
 
 	/**
@@ -721,7 +724,8 @@ public class ConfigurationInterfaceManager {
 	 *             If {@link JAXBException} occurs. If saving fails.
 	 */
 	private void saveEnvironment(Environment environment) throws JAXBException, IOException {
-		transformator.marshall(pathResolver.getEnvironmentFilePath(environment), environment, getRelativeToSchemaPath(pathResolver.getEnvironmentPath()).toString());
+		transformator.marshall(pathResolver.getEnvironmentFilePath(environment), environment, getRelativeToSchemaPath(pathResolver.getEnvironmentPath()).toString(),
+				ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION);
 	}
 
 	/**
@@ -735,7 +739,8 @@ public class ConfigurationInterfaceManager {
 	 *             If {@link JAXBException} occurs. If saving fails.
 	 */
 	private void saveAgentMapping(AgentMappings agentMappings) throws JAXBException, IOException {
-		transformator.marshall(pathResolver.getAgentMappingFilePath(), agentMappings, getRelativeToSchemaPath(pathResolver.getDefaultCiPath()).toString());
+		transformator.marshall(pathResolver.getAgentMappingFilePath(), agentMappings, getRelativeToSchemaPath(pathResolver.getDefaultCiPath()).toString(),
+				ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION);
 	}
 
 	/**
@@ -750,7 +755,8 @@ public class ConfigurationInterfaceManager {
 	 */
 	private void saveBusinessContext(BusinessContextDefinition businessContextDefinition) throws JAXBException, IOException {
 		businessContextDefinitionReference.set(businessContextDefinition);
-		transformator.marshall(pathResolver.getBusinessContextFilePath(), businessContextDefinition, getRelativeToSchemaPath(pathResolver.getDefaultCiPath()).toString());
+		transformator.marshall(pathResolver.getBusinessContextFilePath(), businessContextDefinition, getRelativeToSchemaPath(pathResolver.getDefaultCiPath()).toString(),
+				ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION);
 	}
 
 	/**
@@ -798,7 +804,7 @@ public class ConfigurationInterfaceManager {
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if (isXmlFile(file)) {
 						try {
-							Profile profile = transformator.unmarshall(file, schemaPath, Profile.class);
+							Profile profile = transformator.unmarshall(file, schemaPath, ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION, pathResolver.getMigrationPath(), Profile.class);
 							existingProfiles.put(profile.getId(), profile);
 						} catch (JAXBException | SAXException e) {
 							log.error("Error reading existing Configuration interface profile file. File path: " + file.toString() + ".", e);
@@ -846,7 +852,8 @@ public class ConfigurationInterfaceManager {
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if (isXmlFile(file)) {
 						try {
-							Environment environment = transformator.unmarshall(file, schemaPath, Environment.class);
+							Environment environment = transformator.unmarshall(file, schemaPath, ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION, pathResolver.getMigrationPath(),
+									Environment.class);
 							existingEnvironments.put(environment.getId(), environment);
 
 							// if checking of the profile made a change, save it
@@ -895,7 +902,8 @@ public class ConfigurationInterfaceManager {
 			}
 		} else {
 			try {
-				agentMappings = transformator.unmarshall(path, pathResolver.getSchemaPath(), AgentMappings.class);
+				agentMappings = transformator.unmarshall(path, pathResolver.getSchemaPath(), ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION, pathResolver.getMigrationPath(),
+						AgentMappings.class);
 			} catch (JAXBException | IOException | SAXException e) {
 				agentMappings = new AgentMappings(Collections.<AgentMapping> emptyList());
 				log.error("Error loading Configuration interface agent mappings file. File path: " + path.toString() + ".", e);
@@ -926,7 +934,8 @@ public class ConfigurationInterfaceManager {
 		BusinessContextDefinition businessContextDefinition = null;
 		if (Files.exists(path)) {
 			try {
-				businessContextDefinition = transformator.unmarshall(path, pathResolver.getSchemaPath(), BusinessContextDefinition.class);
+				businessContextDefinition = transformator.unmarshall(path, pathResolver.getSchemaPath(), ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION, pathResolver.getMigrationPath(),
+						BusinessContextDefinition.class);
 			} catch (JAXBException | IOException | SAXException e) {
 				log.error("Error loading Configuration interface business context file. File path: " + path.toString() + ".", e);
 			}

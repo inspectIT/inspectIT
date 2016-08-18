@@ -15,6 +15,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.BusinessContextErrorCodeEnum;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
+import rocks.inspectit.shared.cs.jaxb.ISchemaVersionAware;
 
 /**
  * Root element of the XML holding the business context configuration.
@@ -24,7 +25,14 @@ import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "business-context")
-public class BusinessContextDefinition {
+public class BusinessContextDefinition implements ISchemaVersionAware {
+
+	/**
+	 * Schema version.
+	 */
+	@XmlAttribute(name = "schemaVersion", required = true)
+	private int schemaVersion;
+
 	/**
 	 * Application definition configurations.
 	 */
@@ -191,6 +199,26 @@ public class BusinessContextDefinition {
 			return appDefinition;
 		}
 
+	}
+
+	/**
+	 * Gets {@link #schemaVersion}.
+	 * 
+	 * @return {@link #schemaVersion}
+	 */
+	public int getSchemaVersion() {
+		return this.schemaVersion;
+	}
+
+	/**
+	 * Sets {@link #schemaVersion}.
+	 * 
+	 * @param schemaVersion
+	 *            New value for {@link #schemaVersion}
+	 */
+	@Override
+	public void setSchemaVersion(int schemaVersion) {
+		this.schemaVersion = schemaVersion;
 	}
 
 	/**

@@ -109,6 +109,7 @@
 
   <xs:complexType name="abstractCiData">
     <xs:sequence/>
+    <xs:attribute name="schemaVersion" type="xs:int" use="required"/>
     <xs:attribute name="id" type="xs:string" use="required"/>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="description" type="xs:string"/>
@@ -131,6 +132,7 @@
     <xs:sequence>
       <xs:element ref="agent-mapping" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
+    <xs:attribute name="schemaVersion" type="xs:int" use="required"/>
     <xs:attribute name="revision" type="xs:int"/>
   </xs:complexType>
 
@@ -144,6 +146,7 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
+    <xs:attribute name="schemaVersion" type="xs:int" use="required"/>
     <xs:attribute name="revision" type="xs:int"/>
   </xs:complexType>
 

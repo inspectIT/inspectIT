@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.jaxb.ISchemaVersionAware;
+
 /**
  * Utility class that combines all {@link AgentMappings} for easier marshalling.
  *
@@ -18,7 +20,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "agent-mappings")
-public class AgentMappings {
+public class AgentMappings implements ISchemaVersionAware {
+
+	/**
+	 * Schema version.
+	 */
+	@XmlAttribute(name = "schemaVersion", required = true)
+	private int schemaVersion;
 
 	/**
 	 * {@link AgentMapping}s.
@@ -44,6 +52,26 @@ public class AgentMappings {
 	 */
 	public AgentMappings(Collection<AgentMapping> mappings) {
 		this.mappings = mappings;
+	}
+
+	/**
+	 * Gets {@link #schemaVersion}.
+	 * 
+	 * @return {@link #schemaVersion}
+	 */
+	public int getSchemaVersion() {
+		return this.schemaVersion;
+	}
+
+	/**
+	 * Sets {@link #schemaVersion}.
+	 * 
+	 * @param schemaVersion
+	 *            New value for {@link #schemaVersion}
+	 */
+	@Override
+	public void setSchemaVersion(int schemaVersion) {
+		this.schemaVersion = schemaVersion;
 	}
 
 	/**

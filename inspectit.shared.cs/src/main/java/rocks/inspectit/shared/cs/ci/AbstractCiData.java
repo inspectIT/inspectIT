@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+import rocks.inspectit.shared.cs.jaxb.ISchemaVersionAware;
+
 /**
  * Abstract data POJO to contain shared properties of {@link Profile}s and {@link Environment}s.
  *
@@ -13,7 +15,13 @@ import javax.xml.bind.annotation.XmlAttribute;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AbstractCiData {
+public class AbstractCiData implements ISchemaVersionAware {
+
+	/**
+	 * Schema version.
+	 */
+	@XmlAttribute(name = "schemaVersion", required = true)
+	private int schemaVersion;
 
 	/**
 	 * Id.
@@ -56,6 +64,27 @@ public class AbstractCiData {
 	 */
 	@XmlAttribute(name = "revision")
 	private Integer revision = Integer.valueOf(1);
+
+
+	/**
+	 * Gets {@link #schemaVersion}.
+	 *
+	 * @return {@link #schemaVersion}
+	 */
+	public int getSchemaVersion() {
+		return this.schemaVersion;
+	}
+
+	/**
+	 * Sets {@link #schemaVersion}.
+	 *
+	 * @param schemaVersion
+	 *            New value for {@link #schemaVersion}
+	 */
+	@Override
+	public void setSchemaVersion(int schemaVersion) {
+		this.schemaVersion = schemaVersion;
+	}
 
 	/**
 	 * Gets {@link #id}.
