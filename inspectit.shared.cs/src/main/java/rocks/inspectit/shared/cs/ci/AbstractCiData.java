@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+import rocks.inspectit.shared.cs.jaxb.AbstractSchemaVersionAware;
+
 /**
  * Abstract data POJO to contain shared properties of {@link Profile}s and {@link Environment}s.
  *
@@ -13,7 +15,7 @@ import javax.xml.bind.annotation.XmlAttribute;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AbstractCiData {
+public abstract class AbstractCiData extends AbstractSchemaVersionAware {
 
 	/**
 	 * Id.

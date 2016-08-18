@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.jaxb.AbstractSchemaVersionAware;
+
 /**
  * Utility class that combines all {@link AgentMappings} for easier marshalling.
  *
@@ -18,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "agent-mappings")
-public class AgentMappings {
+public class AgentMappings extends AbstractSchemaVersionAware {
 
 	/**
 	 * {@link AgentMapping}s.
