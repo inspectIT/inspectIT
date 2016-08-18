@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<!-- In this update we'll add the version="1" attribute to all the root objects (environment, profile, agent-mappings, business-context and alerting definitions) -->
+
+	<!--Copy all -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+
+	<!--Add schema version attribute -->
+	<xsl:template match="environment">
+		<xsl:copy>
+			<xsl:attribute name="schemaVersion">1</xsl:attribute>
+			<xsl:apply-templates select="@* | node()"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="profile">
+		<xsl:copy>
+			<xsl:attribute name="schemaVersion">1</xsl:attribute>
+			<xsl:apply-templates select="@* | node()"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="agent-mappings">
+		<xsl:copy>
+			<xsl:attribute name="schemaVersion">1</xsl:attribute>
+			<xsl:apply-templates select="@* | node()"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="business-context">
+		<xsl:copy>
+			<xsl:attribute name="schemaVersion">1</xsl:attribute>
+			<xsl:apply-templates select="@* | node()"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="alerting-definition">
+		<xsl:copy>
+			<xsl:attribute name="schemaVersion">1</xsl:attribute>
+			<xsl:apply-templates select="@* | node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>

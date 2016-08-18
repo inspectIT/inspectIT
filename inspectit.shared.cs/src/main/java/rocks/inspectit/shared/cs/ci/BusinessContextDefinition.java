@@ -15,6 +15,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.BusinessContextErrorCodeEnum;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
+import rocks.inspectit.shared.cs.jaxb.AbstractSchemaVersionAware;
 
 /**
  * Root element of the XML holding the business context configuration.
@@ -24,7 +25,8 @@ import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "business-context")
-public class BusinessContextDefinition {
+public class BusinessContextDefinition extends AbstractSchemaVersionAware {
+
 	/**
 	 * Application definition configurations.
 	 */
