@@ -110,14 +110,23 @@
   <xs:element name="timer-sensor-config" type="timerSensorConfig"/>
 
   <xs:complexType name="abstractCiData">
+    <xs:complexContent>
+      <xs:extension base="abstractSchemaVersionAware">
+        <xs:sequence/>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="created-on" type="xs:dateTime" use="required"/>
+        <xs:attribute name="updated-on" type="xs:dateTime"/>
+        <xs:attribute name="imported-on" type="xs:dateTime"/>
+        <xs:attribute name="revision" type="xs:int"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractSchemaVersionAware" abstract="true">
     <xs:sequence/>
-    <xs:attribute name="id" type="xs:string" use="required"/>
-    <xs:attribute name="name" type="xs:string" use="required"/>
-    <xs:attribute name="description" type="xs:string"/>
-    <xs:attribute name="created-on" type="xs:dateTime" use="required"/>
-    <xs:attribute name="updated-on" type="xs:dateTime"/>
-    <xs:attribute name="imported-on" type="xs:dateTime"/>
-    <xs:attribute name="revision" type="xs:int"/>
+    <xs:attribute name="schemaVersion" type="xs:int" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="agentMapping">
@@ -130,10 +139,14 @@
   </xs:complexType>
 
   <xs:complexType name="agentMappings">
-    <xs:sequence>
-      <xs:element ref="agent-mapping" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-    <xs:attribute name="revision" type="xs:int"/>
+    <xs:complexContent>
+      <xs:extension base="abstractSchemaVersionAware">
+        <xs:sequence>
+          <xs:element ref="agent-mapping" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="revision" type="xs:int"/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="alertingDefinition">
@@ -172,16 +185,20 @@
   </xs:complexType>
 
   <xs:complexType name="businessContextDefinition">
-    <xs:sequence>
-      <xs:element name="applications" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element ref="applicaction" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-    <xs:attribute name="revision" type="xs:int"/>
+    <xs:complexContent>
+      <xs:extension base="abstractSchemaVersionAware">
+        <xs:sequence>
+          <xs:element name="applications" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="applicaction" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="revision" type="xs:int"/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="applicationDefinition">

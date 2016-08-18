@@ -64,6 +64,11 @@ public class ConfigurationInterfacePathResolver {
 	private static final String ALERTING_DEFINITIONS_FOLDER = "alerting";
 
 	/**
+	 * Migration folder name.
+	 */
+	private static final String MIGRATION_FOLDER = "migration";
+
+	/**
 	 * Used with {@link ResourcesPathResolver} to get the file of the ci dir.
 	 */
 	private File ciDirFile;
@@ -96,6 +101,15 @@ public class ConfigurationInterfacePathResolver {
 	 */
 	public Path getSchemaPath() {
 		return getDefaultCiPath().resolve(SCHEMA_FOLDER).resolve(SCHEMA_FILE);
+	}
+
+	/**
+	 * Returns the schema path.
+	 *
+	 * @return Returns the schema path.
+	 */
+	public Path getMigrationPath() {
+		return getDefaultCiPath().resolve(SCHEMA_FOLDER).resolve(MIGRATION_FOLDER);
 	}
 
 	/**
