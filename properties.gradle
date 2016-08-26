@@ -85,8 +85,8 @@ ext {
 	
 	/** Installers */
 	// folder structure
-	installerBase = "${sharedResources}/installer"
-	installerResources = "${installerBase}/installer-commons"
+	installerBase = "${sharedResources}/izpack"
+	installerResources = "${installerBase}"
 	// Installer meta information
 	installerApplicationName = 'inspectIT'
 	installerApplicationHomepage = 'http://www.inspectit.rocks'
@@ -99,8 +99,8 @@ ext {
 	installerCmrWinserviceDescriptionLong = 'Windows Service for inspectIT CMR.'
 	installerAgentDescriptionLong = 'The Java Agent integrates with Java applications and sent measurement data to the CMR. Install this component if you want to monitor an application running on this computer.'
 	// Windows Service templates
-	installerWindowsServiceInstallTemplate = "${installerResources}/service/template_installService.bat"
-	installerWindowsServiceUninstallTemplate = "${installerResources}/service/template_uninstallService.bat"
+	installerWindowsServiceInstallTemplate = "${installerResources}/procrun/template_installService.bat"
+	installerWindowsServiceUninstallTemplate = "${installerResources}/procrun/template_uninstallService.bat"
 	// Windows Service meta settings
 	installerWindowsServiceName = 'inspectITCMR'
 	installerWindowsServiceDescription = 'inspectIT Server - http://www.inspectit.eu/'
