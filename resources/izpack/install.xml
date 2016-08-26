@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 
 <!-- Main installation file for all installer types -->
-<installation version="1.0">
+<izpack:installation version="5.0" xmlns:izpack="http://izpack.org/schema/installation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
+
 	<info>
 		<appname>@{installerApplicationName}</appname>
 		<appversion>@{installerApplicationVersion}</appversion>
@@ -42,11 +44,11 @@
 		<variable name="PROGRAMM_LOCATION" value="applications" />
 
 		<!-- Preset installation path -->
-		<variable name="TargetPanel.dir.windows" value="$APPLICATIONS_DEFAULT_ROOT\${APP_NAME}" />
-		<variable name="TargetPanel.dir.unix" value="$APPLICATIONS_DEFAULT_ROOT/${APP_NAME}" />
+		<variable name="TargetPanel.dir.windows" value="$APPLICATIONS_DEFAULT_ROOT${APP_NAME}" />
+		<variable name="TargetPanel.dir.unix" value="$APPLICATIONS_DEFAULT_ROOT${APP_NAME}" />
 	</variables>
 
-	<guiprefs height="526" width="670" resizable="yes">
+	<guiprefs height="526" width="670" resizable="no">
 		<modifier key="headingBackgroundColor" value="0x00ffffff" />
 		<modifier key="headingForegroundColor" value="0x00000000" />
 		<modifier key="layoutAnchor" value="NORTWEST" />
@@ -56,36 +58,39 @@
 		<modifier key="labelFontSize" value="0.99" />
 		<modifier key="headingFontSize" value="1.3" />
 		<modifier key="headingLineCount" value="1" />
+		<modifier key="showDebugWindow" value="false" />
 	</guiprefs>
 
 	<resources>
-		<res id="CustomLangPack.xml_eng" src="installer-commons/bin/langpacks/installer/eng-custom.xml" />
-		<res id="Installer.image" src="installer-commons/side-logo.png" />
-		<res id="Heading.image" src="installer-commons/head-logo.png" />
-		<res id="shortcutSpec.xml" src="installer-commons/Default_shortcutSpec.xml" />
-		<res id="Win_shortcutSpec.xml" src="installer-commons/Win_shortcutSpec.xml" />
-		<res id="Unix_shortcutSpec.xml" src="installer-commons/Unix_shortcutSpec.xml" />
-		<res id="HTMLLicencePanel.licence" src="installer-commons/license.html" />
-		<res id="HTMLHelloPanel.info" src="installer-commons/welcome-information.html" />
+		<res id="CustomLangPack.xml_eng" src="resources/bin/langpacks/installer/eng-custom.xml" />
+		<res id="Installer.image" src="media/side-logo.png" />
+		<res id="Heading.image" src="media/head-logo.png" />
+		<res id="shortcutSpec.xml" src="resources/shortcuts/Default_shortcutSpec.xml" />
+		<res id="Win_shortcutSpec.xml" src="resources/shortcuts/Win_shortcutSpec.xml" />
+		<res id="Unix_shortcutSpec.xml" src="resources/shortcuts/Unix_shortcutSpec.xml" />
+		<res id="HTMLLicencePanel.licence" src="resources/license.html" />
+		<res id="HTMLHelloPanel.info" src="resources/welcome-information.html" />
 	</resources>
 
 	<locale>
-		<langpack iso3="eng-custom" />
+		<langpack iso3="eng" />
 	</locale>
 
-	<native type="izpack" name="ShellLink.dll">
-		<os family="windows" />
-	</native>
-	<native type="izpack" name="ShellLink_x64.dll">
-		<os family="windows" />
-	</native>
+	<natives>
+		<native type="izpack" name="ShellLink.dll">
+			<os family="windows" />
+		</native>
+		<native type="izpack" name="ShellLink_x64.dll">
+			<os family="windows" />
+		</native>
+	</natives>
 
 	<panels>
 		<panel classname="HTMLHelloPanel" />
 		<panel classname="HTMLLicencePanel" />
-		<panel classname="TreePacksPanel" />
 		<panel classname="TargetPanel" />
-		<panel classname="ExtendedInstallPanel" />
+		<panel classname="TreePacksPanel" />
+		<panel classname="InstallPanel" />
 		<panel classname="ShortcutPanel" />
 		<panel classname="FinishPanel" />
 		<panel classname="SimpleFinishPanel" />
@@ -154,9 +159,9 @@
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/tnameserv" condition="izpack.linuxinstall|izpack.macinstall" />
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/unpack200" condition="izpack.linuxinstall|izpack.macinstall" />
 
-			<file override="update" src="@{installerResources}/service/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is64" />
-			<file override="update" src="@{installerResources}/service/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is32" />
-			<file override="update" src="@{installerResources}/service/inspectITCMRw.exe" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
+			<file override="update" src="@{installerResources}/procrun/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is64" />
+			<file override="update" src="@{installerResources}/procrun/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is32" />
+			<file override="update" src="@{installerResources}/procrun/inspectITCMRw.exe" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
 			<file override="update" src="@{installerInstallServiceBat}" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
 			<file override="update" src="@{installerUninstallServiceBat}" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
 
@@ -175,4 +180,4 @@
 			<file override="update" src="@{installerAgentPointer}" unpack="true" targetdir="$INSTALL_PATH" />
 		</pack>
 	</packs>
-</installation>
+</izpack:installation>
