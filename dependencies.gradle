@@ -260,7 +260,8 @@ dependencies {
 		'com.sun.xml.bind:jaxb-core:2.2.11'
 	)
 	izpack (
-		'org.codehaus.izpack:izpack-standalone-compiler:4.3.5',
+		'org.codehaus.izpack:izpack-ant:5.0.10',
+		'org.icepdf.os:icepdf-viewer:6.1.2'
 	)
 	jvms (
 		'org.openjdk:openjdk-7-jre-windows-x86:1.7.0-u80-unofficial',
