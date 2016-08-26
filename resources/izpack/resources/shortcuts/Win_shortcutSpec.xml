@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<shortcuts>
+<izpack:shortcuts version="5.0" xmlns:izpack="http://izpack.org/schema/shortcuts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://izpack.org/schema/shortcuts http://izpack.org/schema/5.0/izpack-shortcuts-5.0.xsd">
 	<!-- skipIfNotSupported tag can be used to avoid the panel to show the alternative UI which shows the shortcut information that would have been created on a system that supports it. In other words, using 
 		this tag will make the panel be silent on non-supported systems. The default is to show the alternative UI. -->
 	<skipIfNotSupported />
@@ -36,4 +35,4 @@
 	<shortcut name="inspectIT Uninstaller" programGroup="yes" desktop="no" applications="no" startMenu="no" startup="no" target="$SYSTEM_java_home\bin\java.exe" commandLine="-jar &quot;$INSTALL_PATH\Uninstaller\uninstaller.jar&quot;"
 		initialState="noShow" iconFile="trashcan_full" iconIndex="0" workingDirectory="$INSTALL_PATH/Uninstaller/" type="Link" encoding="UTF-8" description="inspectIT Uninstaller">
 	</shortcut>
-</shortcuts>
+</izpack:shortcuts>

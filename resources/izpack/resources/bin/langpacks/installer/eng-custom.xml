@@ -1,0 +1,15 @@
+<izpack:langpack version="5.0" xmlns:izpack="http://izpack.org/schema/langpack" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://izpack.org/schema/langpack http://izpack.org/schema/5.0/izpack-langpack-5.0.xsd">
+	<str id="HTMLInfoPanel.headline.agent" txt="Agent deployment information" />
+	<str id="HTMLInfoPanel.headline.cmr" txt="CMR deployment information" />
+	<str id="HTMLInfoPanel.headline.ui" txt="UI deployment information" />
+	<str id="installer.madewith" txt="powered by NovaTec Consulting GmbH" />
+
+	<str id="HelloPanel.welcome1" txt="Welcome to the installation of " />
+	<str id="HelloPanel.reversewelcome1" txt="inspectIT offers free performance analysis for all Java applications." />
+	<str id="HelloPanel.welcome2" txt="!" />
+	<str id="HelloPanel.authors" txt="This software is developed by: " />
+	<str id="HelloPanel.url" txt="The homepage is at: " />
+
+	<str id="installer.title" txt="inspectIT all-component Installer for $OS_VER $ARCH_VER Bits" />
+	<str id="installer.reversetitle" txt="inspectIT all-component Installer for $OS_VER $ARCH_VER Bits" />
+</izpack:langpack>
