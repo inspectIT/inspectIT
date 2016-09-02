@@ -4,7 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -25,7 +25,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.MapUtils;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -120,7 +122,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, false, registeredSensorConfig);
 
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq(String.valueOf(firstTimerValue)), argThat(new HttpTimerDataVerifier(data)));
+		verify(coreService).addDefaultData(argThat(new HttpTimerDataVerifier(data)));
 		verifyZeroInteractions(result);
 	}
 
@@ -148,7 +150,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, false, registeredSensorConfig);
 
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq(String.valueOf(firstTimerValue)), argThat(new HttpTimerDataVerifier(data)));
+		verify(coreService).addDefaultData(Matchers.argThat(new HttpTimerDataVerifier(data)));
 		verifyZeroInteractions(result);
 	}
 
@@ -249,7 +251,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, false, registeredSensorConfig);
 
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq(String.valueOf(firstTimerValue)), argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
+		verify(coreService).addDefaultData(Matchers.argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
 		verifyZeroInteractions(result);
 	}
 
@@ -343,7 +345,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		httpHook.firstAfterBody(methodId11, sensorTypeId, servlet, parametersNoHttp, result, false, registeredSensorConfig);
 		httpHook.secondAfterBody(coreService, methodId11, sensorTypeId, servlet, parametersNoHttp, result, false, registeredSensorConfig);
 
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId12), eq(String.valueOf(timerS11)), argThat(new HttpTimerDataVerifier((HttpTimerData) data1)));
+		verify(coreService).addDefaultData(Matchers.argThat(new HttpTimerDataVerifier((HttpTimerData) data1)));
 
 		httpHook.beforeBody(methodId21, sensorTypeId, servlet, parametersHttp, registeredSensorConfig);
 		httpHook.beforeBody(methodId22, sensorTypeId, servlet, parametersNoHttp, registeredSensorConfig);
@@ -354,7 +356,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		httpHook.firstAfterBody(methodId21, sensorTypeId, servlet, parametersHttp, result, false, registeredSensorConfig);
 		httpHook.secondAfterBody(coreService, methodId21, sensorTypeId, servlet, parametersHttp, result, false, registeredSensorConfig);
 
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId21), eq(String.valueOf(timerE12)), argThat(new HttpTimerDataVerifier((HttpTimerData) data2)));
+		verify(coreService, times(2)).addDefaultData(Matchers.argThat(new HttpTimerDataVerifier((HttpTimerData) data2)));
 
 		// ensure that there are no exceptions (like "NoSuchElement" which means that before or
 		// after did not push a timer object)
@@ -430,7 +432,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		httpHook.firstAfterBody(methodId1, sensorTypeId, servlet, parameters1, result, false, registeredSensorConfig);
 		httpHook.secondAfterBody(coreService, methodId1, sensorTypeId, servlet, parameters1, result, false, registeredSensorConfig);
 
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId2), eq(String.valueOf(timerS1)), argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
+		Mockito.verify(coreService).addDefaultData(Matchers.argThat(new HttpTimerDataVerifier((HttpTimerData) data)));
 
 		// No other data must not be pushed!
 		verifyNoMoreInteractions(coreService);

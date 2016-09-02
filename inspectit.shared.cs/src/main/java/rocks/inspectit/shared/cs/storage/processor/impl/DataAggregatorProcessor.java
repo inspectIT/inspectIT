@@ -188,7 +188,6 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 		IAggregatedData<E> oldest = queue.poll();
 		E data = oldest.getData();
 		map.remove(getCacheHash(data, data.getTimeStamp().getTime()));
-		data.finalizeData();
 		elementCount.decrementAndGet();
 		passToStorageWriter(data);
 	}
@@ -203,7 +202,6 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 		while (null != oldest) {
 			E data = oldest.getData();
 			map.remove(getCacheHash(data, data.getTimeStamp().getTime()));
-			data.finalizeData();
 			elementCount.decrementAndGet();
 			Future<Void> future = passToStorageWriter(data);
 			CollectionUtils.addIgnoreNull(futures, future);

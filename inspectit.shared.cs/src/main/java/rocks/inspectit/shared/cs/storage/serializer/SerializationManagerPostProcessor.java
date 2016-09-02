@@ -79,10 +79,6 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.ListSendingStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.SimpleBufferStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.SizeBufferStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
 import rocks.inspectit.shared.cs.cmr.property.configuration.GroupedProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
@@ -389,11 +385,11 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(RuntimeSensorConfig.class, new FieldSerializer<RuntimeSensorConfig>(kryo, RuntimeSensorConfig.class), nextRegistrationId++);
 		kryo.register(SystemSensorConfig.class, new FieldSerializer<SystemSensorConfig>(kryo, SystemSensorConfig.class), nextRegistrationId++);
 		kryo.register(ThreadSensorConfig.class, new FieldSerializer<ThreadSensorConfig>(kryo, ThreadSensorConfig.class), nextRegistrationId++);
-		// strategies
-		kryo.register(TimeSendingStrategyConfig.class, new FieldSerializer<TimeSendingStrategyConfig>(kryo, TimeSendingStrategyConfig.class), nextRegistrationId++);
-		kryo.register(ListSendingStrategyConfig.class, new FieldSerializer<ListSendingStrategyConfig>(kryo, ListSendingStrategyConfig.class), nextRegistrationId++);
-		kryo.register(SimpleBufferStrategyConfig.class, new FieldSerializer<SimpleBufferStrategyConfig>(kryo, SimpleBufferStrategyConfig.class), nextRegistrationId++);
-		kryo.register(SizeBufferStrategyConfig.class, new FieldSerializer<SizeBufferStrategyConfig>(kryo, SizeBufferStrategyConfig.class), nextRegistrationId++);
+		// 4 strategies removed
+		nextRegistrationId++;
+		nextRegistrationId++;
+		nextRegistrationId++;
+		nextRegistrationId++;
 
 		// INSPECTIT-2020
 		kryo.register(Log4jLoggingSensorConfig.class, new FieldSerializer<Log4jLoggingSensorConfig>(kryo, Log4jLoggingSensorConfig.class), nextRegistrationId++);
@@ -442,7 +438,7 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(InvocationSequenceDataComparatorEnum.class, new EnumSerializer(InvocationSequenceDataComparatorEnum.class), nextRegistrationId++);
 		kryo.register(ResultComparator.class, new FieldSerializer<ResultComparator<?>>(kryo, ResultComparator.class), nextRegistrationId++);
 		kryo.register(SpanComparator.class, new EnumSerializer(SpanComparator.class), nextRegistrationId++);
-		
+
 		// INSPECTIT-1959
 		kryo.register(EndUserMonitoringConfig.class, new FieldSerializer<EndUserMonitoringConfig>(kryo, EndUserMonitoringConfig.class), nextRegistrationId++);
 	}

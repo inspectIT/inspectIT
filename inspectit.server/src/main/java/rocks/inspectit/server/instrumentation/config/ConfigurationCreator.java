@@ -15,20 +15,19 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescri
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
-import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.PatternFactory;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
-import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 /**
@@ -95,14 +94,14 @@ public class ConfigurationCreator {
 			agentConfiguration.setExceptionSensorTypeConfig(getExceptionSensorTypeConfig(platformId, exceptionSensorConfig));
 		}
 
-			JmxSensorConfig jmxSensorConfig = environment.getJmxSensorConfig();
+		JmxSensorConfig jmxSensorConfig = environment.getJmxSensorConfig();
 		if ((null != jmxSensorConfig) && jmxSensorConfig.isActive()) {
 			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
-		
+
 		EndUserMonitoringConfig eumConf = environment.getEumConfig();
 		agentConfiguration.setEumConfig(new AgentEndUserMonitoringConfig(eumConf.isEumEnabled(), eumConf.getScriptBaseUrl(), eumConf.getActiveModules()));
-		
+
 		// then all special sensors
 		Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs = new ArrayList<>(0);
 		if (environment.isClassLoadingDelegation()) {
@@ -116,13 +115,8 @@ public class ConfigurationCreator {
 		}
 		agentConfiguration.setSpecialMethodSensorTypeConfigs(specialMethodSensorTypeConfigs);
 
-		// buffer strategy
-		IStrategyConfig bufferStrategyConfig = environment.getBufferStrategyConfig();
-		agentConfiguration.setBufferStrategyConfig(new StrategyConfig(bufferStrategyConfig.getClassName(), bufferStrategyConfig.getSettings()));
-
-		// sending strategy
-		IStrategyConfig sendingStrategyConfig = environment.getSendingStrategyConfig();
-		agentConfiguration.setSendingStrategyConfig(new StrategyConfig(sendingStrategyConfig.getClassName(), sendingStrategyConfig.getSettings()));
+		// data buffer size
+		agentConfiguration.setDataBufferSize(checkPowerOfTwo(environment.getDataBufferSize(), ConfigurationDefaultsFactory.getDefaultDataBufferSize()));
 
 		// retransformation strategy
 		agentConfiguration.setRetransformationStrategy(environment.getRetransformationStrategy());
@@ -227,6 +221,27 @@ public class ConfigurationCreator {
 		jmxSensorTypeConfig.setParameters(jmxSensorConfig.getParameters());
 
 		return jmxSensorTypeConfig;
+	}
+
+	/**
+	 * Checks if the given number is power of two and if not returns the next power of two number
+	 * that is bigger than given number.
+	 *
+	 * @param n
+	 *            Number to check.
+	 * @param nonPositiveDefault
+	 *            Number to return in case given number is negative.
+	 * @return Negative default if num is zero or less, num if it's power of two number, otherwise
+	 *         closest higher power of two.
+	 */
+	private int checkPowerOfTwo(int n, int nonPositiveDefault) {
+		if (n <= 0) {
+			return nonPositiveDefault;
+		} else if ((n & (n - 1)) == 0) {
+			return n;
+		} else {
+			return (int) Math.pow(2, Math.ceil(Math.log(n) / Math.log(2)));
+		}
 	}
 
 }

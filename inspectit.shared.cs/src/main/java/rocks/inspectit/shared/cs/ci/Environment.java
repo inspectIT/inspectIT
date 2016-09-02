@@ -12,8 +12,8 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
@@ -30,11 +30,6 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.AbstractPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
-import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.ListSendingStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.SimpleBufferStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.SizeBufferStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
 
 /**
  * Environment definition. Defines sending & buffer strategies, sensors and their options. Also has
@@ -55,22 +50,6 @@ public class Environment extends AbstractCiData {
 	private EndUserMonitoringConfig eumConfig = ConfigurationDefaultsFactory.getDefaultEndUserMonitoringConfig();
 
 	/**
-	 * Configuration for the sending strategy.
-	 * <p>
-	 * Default is {@link TimeSendingStrategyConfig}.
-	 */
-	@XmlElementRefs({ @XmlElementRef(type = TimeSendingStrategyConfig.class), @XmlElementRef(type = ListSendingStrategyConfig.class) })
-	private IStrategyConfig sendingStrategyConfig = ConfigurationDefaultsFactory.getDefaultSendingStrategy();
-
-	/**
-	 * Configuration for the buffer strategy.
-	 * <p>
-	 * Default is {@link SimpleBufferStrategyConfig}.
-	 */
-	@XmlElementRefs({ @XmlElementRef(type = SimpleBufferStrategyConfig.class), @XmlElementRef(type = SizeBufferStrategyConfig.class) })
-	private IStrategyConfig bufferStrategyConfig = ConfigurationDefaultsFactory.getDefaultBufferStrategy();
-
-	/**
 	 * List of the platform sensors configurations.
 	 */
 	@XmlElementWrapper(name = "platform-sensor-configs")
@@ -83,7 +62,7 @@ public class Environment extends AbstractCiData {
 	@XmlElementWrapper(name = "method-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class), @XmlElementRef(type = InvocationSequenceSensorConfig.class),
 		@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
-			@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class), @XmlElementRef(type = AbstractRemoteSensorConfig.class) })
+		@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class), @XmlElementRef(type = AbstractRemoteSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**
@@ -118,6 +97,13 @@ public class Environment extends AbstractCiData {
 	private RetransformationStrategy retransformationStrategy = ConfigurationDefaultsFactory.getDefaultRetransformationStrategy();
 
 	/**
+	 * Size of the agent buffer for storing the monitoring data. Default value defined in
+	 * {@link ConfigurationDefaultsFactory#getDefaultDataBufferSize()}.
+	 */
+	@XmlElement(name = "dataBufferSize")
+	private int dataBufferSize = ConfigurationDefaultsFactory.getDefaultDataBufferSize();
+
+	/**
 	 * Returns the {@link IMethodSensorConfig} for the given {@link IMethodSensorConfig} class.
 	 *
 	 * @param clazz
@@ -132,44 +118,6 @@ public class Environment extends AbstractCiData {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Gets {@link #sendingStrategyConfig}.
-	 *
-	 * @return {@link #sendingStrategyConfig}
-	 */
-	public IStrategyConfig getSendingStrategyConfig() {
-		return sendingStrategyConfig;
-	}
-
-	/**
-	 * Sets {@link #sendingStrategyConfig}.
-	 *
-	 * @param sendingStrategyConfig
-	 *            New value for {@link #sendingStrategyConfig}
-	 */
-	public void setSendingStrategyConfig(IStrategyConfig sendingStrategyConfig) {
-		this.sendingStrategyConfig = sendingStrategyConfig;
-	}
-
-	/**
-	 * Gets {@link #bufferStrategyConfig}.
-	 *
-	 * @return {@link #bufferStrategyConfig}
-	 */
-	public IStrategyConfig getBufferStrategyConfig() {
-		return bufferStrategyConfig;
-	}
-
-	/**
-	 * Sets {@link #bufferStrategyConfig}.
-	 *
-	 * @param bufferStrategyConfig
-	 *            New value for {@link #bufferStrategyConfig}
-	 */
-	public void setBufferStrategyConfig(IStrategyConfig bufferStrategyConfig) {
-		this.bufferStrategyConfig = bufferStrategyConfig;
 	}
 
 	/**
@@ -266,6 +214,25 @@ public class Environment extends AbstractCiData {
 	}
 
 	/**
+	 * Gets {@link #dataBufferSize}.
+	 *
+	 * @return {@link #dataBufferSize}
+	 */
+	public int getDataBufferSize() {
+		return this.dataBufferSize;
+	}
+
+	/**
+	 * Sets {@link #dataBufferSize}.
+	 *
+	 * @param dataBufferSize
+	 *            New value for {@link #dataBufferSize}
+	 */
+	public void setDataBufferSize(int dataBufferSize) {
+		this.dataBufferSize = dataBufferSize;
+	}
+
+	/**
 	 * Gets {@link #eumConfig}.
 	 *
 	 * @return {@link #eumConfig}
@@ -291,16 +258,15 @@ public class Environment extends AbstractCiData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + ((this.bufferStrategyConfig == null) ? 0 : this.bufferStrategyConfig.hashCode());
 		result = (prime * result) + (this.classLoadingDelegation ? 1231 : 1237);
+		result = (prime * result) + this.dataBufferSize;
+		result = (prime * result) + ((this.eumConfig == null) ? 0 : this.eumConfig.hashCode());
 		result = (prime * result) + ((this.exceptionSensorConfig == null) ? 0 : this.exceptionSensorConfig.hashCode());
-		result = (prime * result) + ((eumConfig == null) ? 0 : eumConfig.hashCode());
 		result = (prime * result) + ((this.jmxSensorConfig == null) ? 0 : this.jmxSensorConfig.hashCode());
 		result = (prime * result) + ((this.methodSensorConfigs == null) ? 0 : this.methodSensorConfigs.hashCode());
 		result = (prime * result) + ((this.platformSensorConfigs == null) ? 0 : this.platformSensorConfigs.hashCode());
 		result = (prime * result) + ((this.profileIds == null) ? 0 : this.profileIds.hashCode());
 		result = (prime * result) + ((this.retransformationStrategy == null) ? 0 : this.retransformationStrategy.hashCode());
-		result = (prime * result) + ((this.sendingStrategyConfig == null) ? 0 : this.sendingStrategyConfig.hashCode());
 		return result;
 	}
 
@@ -319,14 +285,17 @@ public class Environment extends AbstractCiData {
 			return false;
 		}
 		Environment other = (Environment) obj;
-		if (this.bufferStrategyConfig == null) {
-			if (other.bufferStrategyConfig != null) {
-				return false;
-			}
-		} else if (!this.bufferStrategyConfig.equals(other.bufferStrategyConfig)) {
+		if (this.classLoadingDelegation != other.classLoadingDelegation) {
 			return false;
 		}
-		if (this.classLoadingDelegation != other.classLoadingDelegation) {
+		if (this.dataBufferSize != other.dataBufferSize) {
+			return false;
+		}
+		if (this.eumConfig == null) {
+			if (other.eumConfig != null) {
+				return false;
+			}
+		} else if (!this.eumConfig.equals(other.eumConfig)) {
 			return false;
 		}
 		if (this.exceptionSensorConfig == null) {
@@ -334,13 +303,6 @@ public class Environment extends AbstractCiData {
 				return false;
 			}
 		} else if (!this.exceptionSensorConfig.equals(other.exceptionSensorConfig)) {
-			return false;
-		}
-		if (eumConfig == null) {
-			if (other.eumConfig != null) {
-				return false;
-			}
-		} else if (!eumConfig.equals(other.eumConfig)) {
 			return false;
 		}
 		if (this.jmxSensorConfig == null) {
@@ -372,13 +334,6 @@ public class Environment extends AbstractCiData {
 			return false;
 		}
 		if (this.retransformationStrategy != other.retransformationStrategy) {
-			return false;
-		}
-		if (this.sendingStrategyConfig == null) {
-			if (other.sendingStrategyConfig != null) {
-				return false;
-			}
-		} else if (!this.sendingStrategyConfig.equals(other.sendingStrategyConfig)) {
 			return false;
 		}
 		return true;

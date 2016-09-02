@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<!-- In this update we'll add new remote sensor types to existing environment(s)-->
+
+	<!-- Setting for auto indent -->
+	<xsl:output indent="yes"/>
+
+	<!-- Define element names to remove -->
+	<xsl:param name="removeElementsNamed" select="'|time-sending-strategy-config|list-sending-strategy-config|simple-buffer-strategy-config|size-buffer-strategy-config|'"/>
+
+	<!--Copy all -->
+	<xsl:template match="@*|node()">
+		<xsl:if test="not(contains($removeElementsNamed, concat('|', name(), '|')))">
+			<xsl:copy>
+				<xsl:apply-templates select="@*|node()" />
+			</xsl:copy>
+		</xsl:if>
+	</xsl:template>
+
+	<!--Add sensor types to method-sensor-configs -->
+	<xsl:template match="environment">
+		<xsl:copy>
+			<xsl:apply-templates select="@* | node()"/>
+			<xsl:element name="dataBufferSize">1024</xsl:element>
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>

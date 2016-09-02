@@ -34,7 +34,6 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfi
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
-import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
@@ -42,13 +41,13 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
+import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
-import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 @SuppressWarnings("PMD")
@@ -69,8 +68,6 @@ public class ConfigurationCreatorTest extends TestBase {
 	@BeforeMethod
 	public void setup() {
 		// mock strategies
-		when(environment.getSendingStrategyConfig()).thenReturn(mock(IStrategyConfig.class));
-		when(environment.getBufferStrategyConfig()).thenReturn(mock(IStrategyConfig.class));
 		when(environment.getEumConfig()).thenReturn(mock(EndUserMonitoringConfig.class));
 	}
 
@@ -242,38 +239,6 @@ public class ConfigurationCreatorTest extends TestBase {
 		}
 
 		@Test
-		public void sendingStrategy() throws Exception {
-			String className = "className";
-			Map<String, String> settings = Collections.singletonMap("key", "value");
-			IStrategyConfig config = mock(IStrategyConfig.class);
-			when(config.getClassName()).thenReturn(className);
-			when(config.getSettings()).thenReturn(settings);
-			when(environment.getSendingStrategyConfig()).thenReturn(config);
-
-			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
-
-			StrategyConfig strategyConfig = agentConfiguration.getSendingStrategyConfig();
-			assertThat(strategyConfig.getClazzName(), is(className));
-			assertThat(strategyConfig.getSettings(), is(settings));
-		}
-
-		@Test
-		public void bufferStrategy() throws Exception {
-			String className = "className";
-			Map<String, String> settings = Collections.singletonMap("key", "value");
-			IStrategyConfig config = mock(IStrategyConfig.class);
-			when(config.getClassName()).thenReturn(className);
-			when(config.getSettings()).thenReturn(settings);
-			when(environment.getBufferStrategyConfig()).thenReturn(config);
-
-			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
-
-			StrategyConfig strategyConfig = agentConfiguration.getBufferStrategyConfig();
-			assertThat(strategyConfig.getClazzName(), is(className));
-			assertThat(strategyConfig.getSettings(), is(settings));
-		}
-
-		@Test
 		public void retransformationStrategy() throws Exception {
 			RetransformationStrategy retransformationStrategy = RetransformationStrategy.ALWAYS;
 			when(environment.getRetransformationStrategy()).thenReturn(retransformationStrategy);
@@ -319,7 +284,40 @@ public class ConfigurationCreatorTest extends TestBase {
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters());
 			verifyNoMoreInteractions(registrationService);
 		}
-		
+
+		@Test
+		public void dataBufferSize() {
+			long agentId = 13L;
+			int dataBufferSize = 128;
+			when(environment.getDataBufferSize()).thenReturn(dataBufferSize);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			assertThat(agentConfiguration.getDataBufferSize(), is(dataBufferSize));
+		}
+
+		@Test
+		public void dataBufferSizeNotPowerOf2() {
+			long agentId = 13L;
+			int dataBufferSize = 111;
+			when(environment.getDataBufferSize()).thenReturn(dataBufferSize);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			assertThat(agentConfiguration.getDataBufferSize(), is(128));
+		}
+
+		@Test
+		public void dataBufferSizeNegative() {
+			long agentId = 13L;
+			int dataBufferSize = -44;
+			when(environment.getDataBufferSize()).thenReturn(dataBufferSize);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			assertThat(agentConfiguration.getDataBufferSize(), is(ConfigurationDefaultsFactory.getDefaultDataBufferSize()));
+		}
+
 		@Test
 		public void eumConfig() throws Exception {
 

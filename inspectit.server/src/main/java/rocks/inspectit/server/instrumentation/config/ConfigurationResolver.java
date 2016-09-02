@@ -271,6 +271,7 @@ public class ConfigurationResolver {
 
 		// some options
 		stringBuilder.append("Options:\n"); // NOPMD
+		stringBuilder.append("|-data buffer size: " + environment.getDataBufferSize() + "\n"); // NOPMD
 		stringBuilder.append("|-class loading delegation: " + environment.isClassLoadingDelegation() + "\n"); // NOPMD
 		stringBuilder.append("|-enhanced exception sensor: " + environment.getExceptionSensorConfig().isEnhanced() + "\n"); // NOPMD
 		stringBuilder.append("|-retransformation strategy: " + environment.getRetransformationStrategy().toString() + "\n"); // NOPMD
@@ -282,7 +283,7 @@ public class ConfigurationResolver {
 			stringBuilder.append(
 					"\n||-EUM JS agent URL: " + eumConfig.getScriptBaseUrl() + JSAgentModule.JAVASCRIPT_URL_PREFIX + JSAgentModule.JS_AGENT_REVISION + "_" + eumConfig.getActiveModules() + ".js"); // NOPMD
 		}
-		
+
 		return stringBuilder.toString();
 	}
 

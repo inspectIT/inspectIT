@@ -123,7 +123,6 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPath;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
-import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
 import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
@@ -359,7 +358,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-1919
 		kryo.register(AgentConfig.class, new FieldSerializer<AgentConfig>(kryo, AgentConfig.class), nextRegistrationId++);
-		kryo.register(StrategyConfig.class, new FieldSerializer<StrategyConfig>(kryo, StrategyConfig.class), nextRegistrationId++);
+		nextRegistrationId++; // removed Sensor config class
 		kryo.register(PlatformSensorTypeConfig.class, new FieldSerializer<PlatformSensorTypeConfig>(kryo, PlatformSensorTypeConfig.class), nextRegistrationId++);
 		kryo.register(MethodSensorTypeConfig.class, new FieldSerializer<MethodSensorTypeConfig>(kryo, MethodSensorTypeConfig.class), nextRegistrationId++);
 		kryo.register(ExceptionSensorTypeConfig.class, new FieldSerializer<ExceptionSensorTypeConfig>(kryo, ExceptionSensorTypeConfig.class), nextRegistrationId++);
@@ -403,7 +402,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(SpanIdent.class, new CustomCompatibleFieldSerializer<SpanIdent>(kryo, SpanIdent.class, schemaManager), nextRegistrationId++);
 		kryo.register(ClientSpan.class, new CustomCompatibleFieldSerializer<ClientSpan>(kryo, ClientSpan.class, schemaManager, true), nextRegistrationId++);
 		kryo.register(ServerSpan.class, new CustomCompatibleFieldSerializer<ServerSpan>(kryo, ServerSpan.class, schemaManager, true), nextRegistrationId++);
-	
+
 		// ADDED with INSPECT-1959
 		// TODO: Use the CustomCompatibleFieldSerializer as soon as the data is stable
 		kryo.register(AgentEndUserMonitoringConfig.class, new FieldSerializer<AgentEndUserMonitoringConfig>(kryo, AgentEndUserMonitoringConfig.class), nextRegistrationId++);
@@ -413,7 +412,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(PageLoadRequest.class, new FieldSerializer<PageLoadRequest>(kryo, PageLoadRequest.class), nextRegistrationId++);
 		kryo.register(ResourceLoadRequest.class, new FieldSerializer<ResourceLoadRequest>(kryo, ResourceLoadRequest.class), nextRegistrationId++);
 		kryo.register(UserAction.class, new FieldSerializer<UserAction>(kryo, UserAction.class), nextRegistrationId++);
-		kryo.register(UserSessionInfo.class, new FieldSerializer<UserSessionInfo>(kryo, UserSessionInfo.class), nextRegistrationId++);	
+		kryo.register(UserSessionInfo.class, new FieldSerializer<UserSessionInfo>(kryo, UserSessionInfo.class), nextRegistrationId++);
 	}
 
 	/**

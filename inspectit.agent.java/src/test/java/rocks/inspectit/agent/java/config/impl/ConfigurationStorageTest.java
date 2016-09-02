@@ -30,7 +30,6 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTyp
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
-import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
@@ -176,44 +175,18 @@ public class ConfigurationStorageTest extends TestBase {
 		}
 	}
 
-	public class GetSendingStrategyConfig extends ConfigurationStorageTest {
+	public class GetDataBufferSize extends ConfigurationStorageTest {
 
 		@Test
 		public void strategyCheck() throws StorageException {
-			StrategyConfig strategyConfig = mock(StrategyConfig.class);
-			when(agentConfiguration.getSendingStrategyConfig()).thenReturn(strategyConfig);
+			int size = 2234;
+			when(agentConfiguration.getDataBufferSize()).thenReturn(2234);
 
-			StrategyConfig config = configurationStorage.getSendingStrategyConfig();
+			int result = configurationStorage.getDataBufferSize();
 
-			assertThat(config, is(strategyConfig));
+			assertThat(result, is(size));
 		}
 
-		@Test(expectedExceptions = { StorageException.class })
-		public void strategyNotDefined() throws StorageException {
-			when(agentConfiguration.getSendingStrategyConfig()).thenReturn(null);
-
-			configurationStorage.getSendingStrategyConfig();
-		}
-	}
-
-	public class GetBufferStrategyConfig extends ConfigurationStorageTest {
-
-		@Test
-		public void strategyCheck() throws StorageException {
-			StrategyConfig strategyConfig = mock(StrategyConfig.class);
-			when(agentConfiguration.getBufferStrategyConfig()).thenReturn(strategyConfig);
-
-			StrategyConfig config = configurationStorage.getBufferStrategyConfig();
-
-			assertThat(config, is(strategyConfig));
-		}
-
-		@Test(expectedExceptions = { StorageException.class })
-		public void strategyNotDefined() throws StorageException {
-			when(agentConfiguration.getBufferStrategyConfig()).thenReturn(null);
-
-			configurationStorage.getBufferStrategyConfig();
-		}
 	}
 
 	public class GetMethodSensorTypes extends ConfigurationStorageTest {

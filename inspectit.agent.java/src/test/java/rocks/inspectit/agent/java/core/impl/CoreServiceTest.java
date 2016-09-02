@@ -1,416 +1,320 @@
 package rocks.inspectit.agent.java.core.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.hamcrest.internal.ArrayIterator;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.BeanInitializationException;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.buffer.IBufferStrategy;
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.StorageException;
-import rocks.inspectit.agent.java.connection.IConnection;
-import rocks.inspectit.agent.java.connection.ServerUnavailableException;
-import rocks.inspectit.agent.java.core.IObjectStorage;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.ListListener;
-import rocks.inspectit.agent.java.sending.ISendingStrategy;
-import rocks.inspectit.agent.java.sensor.method.timer.PlainTimerStorage;
+import rocks.inspectit.agent.java.core.impl.CoreService.SensorRefresher;
+import rocks.inspectit.agent.java.sensor.jmx.IJmxSensor;
+import rocks.inspectit.agent.java.sensor.platform.IPlatformSensor;
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.ExceptionEvent;
-import rocks.inspectit.shared.all.communication.MethodSensorData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
-import rocks.inspectit.shared.all.communication.data.CpuInformationData;
-import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
-import rocks.inspectit.shared.all.communication.data.ParameterContentData;
-import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
+import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
-@SuppressWarnings({ "PMD", "unchecked" })
+@SuppressWarnings({ "PMD" })
 public class CoreServiceTest extends TestBase {
 
 	@InjectMocks
-	private CoreService coreService;
+	CoreService coreService;
 
 	@Mock
-	private Logger log;
+	Logger log;
 
 	@Mock
-	private IConnection connection;
-
-	@SuppressWarnings("rawtypes")
-	@Mock
-	private IBufferStrategy bufferStrategy;
+	IConfigurationStorage configurationStorage;
 
 	@Mock
-	private List<ISendingStrategy> sendingStrategies;
+	DefaultDataHandler defaultDataHandler;
 
 	@Mock
-	private ISendingStrategy sendingStrategy;
+	IPlatformManager platformManager;
 
 	@Mock
-	private IPlatformManager platformManager;
+	ScheduledExecutorService executorService;
+
+	@Mock
+	List<IPlatformSensor> platformSensors;
+
+	@Mock
+	List<IJmxSensor> jmxSensors;
 
 	@BeforeMethod
-	public void sendingStrategyMock() {
-		Iterator<ISendingStrategy> itr = mock(Iterator.class);
-		when(itr.hasNext()).thenReturn(true, false);
-		when(itr.next()).thenReturn(sendingStrategy);
-		when(sendingStrategies.iterator()).thenReturn(itr);
+	public void executorShutdown() throws InterruptedException {
+		// avoid strange log messages in test
+		when(executorService.awaitTermination(anyLong(), Mockito.<TimeUnit> any())).thenReturn(true);
 	}
 
-	/**
-	 * This method could <b>fail</b> if the testing machine is currently under heavy load. There is
-	 * no reliable way to make this test always successful.
-	 */
-	@Test(enabled = false)
-	public void startStop() throws InterruptedException, StorageException {
-		coreService.start();
-		verify(sendingStrategy, times(1)).start(coreService);
+	public static class AddDefaultData extends CoreServiceTest {
 
-		// have to wait one second to be sure that the getPlatformSensorTypes
-		// method should be called at least once
-		synchronized (this) {
-			wait(3000);
+		@Mock
+		DefaultData data;
+
+		@Test
+		public void happyPath() throws InterruptedException, StorageException {
+			when(configurationStorage.getDataBufferSize()).thenReturn(8);
+			coreService.start();
+
+			coreService.addDefaultData(data);
+
+			// need to sleep a bit so handler is notified
+			Thread.sleep(100);
+
+			ArgumentCaptor<DefaultDataWrapper> captor = ArgumentCaptor.forClass(DefaultDataWrapper.class);
+			verify(defaultDataHandler).onEvent(captor.capture(), anyLong(), eq(true));
+			assertThat(captor.getValue().getDefaultData(), is(data));
 		}
 
-		coreService.stop();
-		verify(sendingStrategy, times(1)).stop();
+		@Test
+		public void noAddOnShutdown() throws InterruptedException, StorageException {
+			when(configurationStorage.getDataBufferSize()).thenReturn(8);
+			coreService.start();
+			coreService.stop();
 
-		verifyNoMoreInteractions(sendingStrategy);
-		verifyZeroInteractions(connection, bufferStrategy, platformManager);
-	}
+			coreService.addDefaultData(data);
 
-	/**
-	 * This method could also <b>fail</b> due to race conditions.
-	 *
-	 */
-	@Test(dependsOnMethods = { "startStop" }, enabled = false)
-	public void sendOneMethodSensorData() throws InterruptedException, ServerUnavailableException {
-		coreService.start();
-
-		long sensorTypeId = 1;
-		long methodId = 5;
-		TimerData timerData = new TimerData();
-		when(bufferStrategy.hasNext()).thenReturn(true).thenReturn(false);
-		List<TimerData> dataList = new ArrayList<TimerData>();
-		dataList.add(timerData);
-		when(bufferStrategy.next()).thenReturn(dataList);
-
-		coreService.addMethodSensorData(sensorTypeId, methodId, null, timerData);
-		coreService.sendData();
-
-		synchronized (this) {
-			wait(3000);
+			// need to sleep a bit so handler is notified
+			Thread.sleep(100);
+			verifyNoMoreInteractions(defaultDataHandler);
 		}
 
-		verify(bufferStrategy, times(1)).addMeasurements(dataList);
-		verify(bufferStrategy, times(2)).hasNext();
-		verify(bufferStrategy, times(1)).next();
-		verify(bufferStrategy, times(1)).remove();
+		@Test
+		public void capacityReached() throws InterruptedException, StorageException {
+			when(log.isWarnEnabled()).thenReturn(true);
+			when(configurationStorage.getDataBufferSize()).thenReturn(2);
+			// slow down the wrapper so we get capacity error
+			doAnswer(new Answer<Void>() {
+				@Override
+				public Void answer(InvocationOnMock invocation) throws Throwable {
+					Thread.sleep(1);
+					return null;
+				}
+			}).when(defaultDataHandler).onEvent(Mockito.<DefaultDataWrapper> any(), anyLong(), anyBoolean());
+			coreService.start();
 
-		verify(connection, times(1)).sendDataObjects(dataList);
+			coreService.addDefaultData(data);
+			coreService.addDefaultData(data);
+			coreService.addDefaultData(data);
+			coreService.addDefaultData(data);
 
-		verifyNoMoreInteractions(bufferStrategy, connection);
-		verifyZeroInteractions(platformManager);
-	}
-
-	/**
-	 * This method could also <b>fail</b> due to race conditions.
-	 *
-	 */
-	@Test(dependsOnMethods = { "startStop" }, enabled = false)
-	public void sendOnePlatformSensorData() throws InterruptedException, ServerUnavailableException {
-		coreService.start();
-
-		long sensorTypeId = 1;
-		CpuInformationData cpuInformationData = new CpuInformationData();
-		when(bufferStrategy.hasNext()).thenReturn(true).thenReturn(false);
-		List<SystemSensorData> dataList = new ArrayList<SystemSensorData>();
-		dataList.add(cpuInformationData);
-		when(bufferStrategy.next()).thenReturn(dataList);
-
-		coreService.addPlatformSensorData(sensorTypeId, cpuInformationData);
-		coreService.sendData();
-
-		synchronized (this) {
-			wait(3000);
+			// we should log only once
+			verify(log, times(2)).isWarnEnabled();
+			verify(log).warn(anyString());
+			verifyNoMoreInteractions(log);
 		}
 
-		verify(bufferStrategy, times(1)).addMeasurements(dataList);
-		verify(bufferStrategy, times(2)).hasNext();
-		verify(bufferStrategy, times(1)).next();
-		verify(bufferStrategy, times(1)).remove();
-
-		verify(connection, times(1)).sendDataObjects(dataList);
-
-		verifyNoMoreInteractions(bufferStrategy, connection);
-		verifyZeroInteractions(platformManager);
-	}
-
-	@Test(dependsOnMethods = { "startStop" }, enabled = false)
-	public void sendOneExceptionSensorData() throws InterruptedException, ServerUnavailableException {
-		coreService.start();
-
-		long sensorTypeId = 1;
-		ExceptionSensorData exceptionSensorData = new ExceptionSensorData();
-		exceptionSensorData.setThrowableIdentityHashCode(123456);
-		when(bufferStrategy.hasNext()).thenReturn(true).thenReturn(false);
-		List<MethodSensorData> dataList = new ArrayList<MethodSensorData>();
-		dataList.add(exceptionSensorData);
-		when(bufferStrategy.next()).thenReturn(dataList);
-
-		coreService.addExceptionSensorData(sensorTypeId, exceptionSensorData.getThrowableIdentityHashCode(), exceptionSensorData);
-		coreService.sendData();
-
-		synchronized (this) {
-			wait(3000);
+		@AfterMethod
+		public void stop() {
+			coreService.stop();
 		}
 
-		verify(bufferStrategy, times(1)).addMeasurements(dataList);
-		verify(bufferStrategy, times(2)).hasNext();
-		verify(bufferStrategy, times(1)).next();
-		verify(bufferStrategy, times(1)).remove();
-
-		verify(connection, times(1)).sendDataObjects(dataList);
-
-		verifyNoMoreInteractions(bufferStrategy, connection);
-		verifyZeroInteractions(platformManager);
 	}
 
-	/**
-	 * This method could also <b>fail</b> due to race conditions.
-	 *
-	 */
-	@Test(dependsOnMethods = { "startStop" }, enabled = false)
-	public void sendOneObjectStorageData() throws InterruptedException, ServerUnavailableException {
-		coreService.start();
+	public static class AddEUMData extends CoreServiceTest {
 
-		long sensorTypeId = 1;
-		long methodId = 5;
-		PlainTimerStorage timerStorage = new PlainTimerStorage(null, 0, sensorTypeId, methodId, Collections.<ParameterContentData> emptyList(), false);
-		when(bufferStrategy.hasNext()).thenReturn(true).thenReturn(false);
-		List<DefaultData> storageList = new ArrayList<DefaultData>();
-		storageList.add(timerStorage.finalizeDataObject());
-		when(bufferStrategy.next()).thenReturn(storageList);
+		@Mock
+		AbstractEUMData data;
 
-		coreService.addObjectStorage(sensorTypeId, methodId, null, timerStorage);
-		coreService.sendData();
+		@Test
+		public void happyPath() throws InterruptedException, StorageException {
+			when(configurationStorage.getDataBufferSize()).thenReturn(8);
+			coreService.start();
 
-		synchronized (this) {
-			wait(3000);
+			coreService.addEUMData(data);
+
+			// need to sleep a bit so handler is notified
+			Thread.sleep(100);
+
+			ArgumentCaptor<DefaultDataWrapper> captor = ArgumentCaptor.forClass(DefaultDataWrapper.class);
+			verify(defaultDataHandler).onEvent(captor.capture(), anyLong(), eq(true));
+			assertThat(captor.getValue().getDefaultData(), is((DefaultData) data));
 		}
 
-		verify(bufferStrategy, times(1)).addMeasurements(storageList);
-		verify(bufferStrategy, times(2)).hasNext();
-		verify(bufferStrategy, times(1)).next();
-		verify(bufferStrategy, times(1)).remove();
+		@AfterMethod
+		public void stop() {
+			coreService.stop();
+		}
 
-		verify(connection, times(1)).sendDataObjects(storageList);
-
-		verifyNoMoreInteractions(bufferStrategy, connection);
-		verifyZeroInteractions(platformManager);
 	}
 
-	@Test
-	public void verifyListListenerMethodData() {
-		ListListener<TimerData> listener = mock(ListListener.class);
-		TimerData timerData = new TimerData();
-		List<TimerData> dataList = new ArrayList<TimerData>();
-		dataList.add(timerData);
+	public static class Start extends CoreServiceTest {
 
-		coreService.addListListener(listener);
-		coreService.addMethodSensorData(0, 0, null, timerData);
+		@Test(expectedExceptions = BeanInitializationException.class)
+		public void bufferSizeNotPowerOf2() throws InterruptedException, StorageException {
+			when(configurationStorage.getDataBufferSize()).thenReturn(5);
+			coreService.start();
+		}
 
-		verify(listener, times(1)).contentChanged(dataList.size());
+		@Test
+		public void sensorRefresherScheduled() throws StorageException {
+			when(configurationStorage.getDataBufferSize()).thenReturn(8);
+			coreService.start();
 
-		coreService.removeListListener(listener);
+			ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
+			verify(executorService).schedule(captor.capture(), Mockito.anyLong(), Mockito.<TimeUnit> any());
+			assertThat(captor.getValue(), is(instanceOf(SensorRefresher.class)));
+		}
 
-		verifyNoMoreInteractions(listener, bufferStrategy, connection, sendingStrategy);
-		verifyZeroInteractions(platformManager);
 	}
 
-	@Test
-	public void verifyListListenerPlatformData() {
-		ListListener<SystemSensorData> listener = mock(ListListener.class);
-		CpuInformationData cpuInformationData = new CpuInformationData();
-		List<SystemSensorData> dataList = new ArrayList<SystemSensorData>();
-		dataList.add(cpuInformationData);
+	public static class SensorRefresherRun extends CoreServiceTest {
 
-		coreService.addListListener(listener);
-		coreService.addPlatformSensorData(0, cpuInformationData);
+		@Mock
+		IPlatformSensor platformSensor;
 
-		verify(listener, times(1)).contentChanged(dataList.size());
+		@Mock
+		IJmxSensor jmxSensor;
 
-		coreService.removeListListener(listener);
+		@Test
+		public void rescheduled() {
+			when(platformSensors.isEmpty()).thenReturn(true);
+			when(jmxSensors.isEmpty()).thenReturn(true);
 
-		verifyNoMoreInteractions(listener, bufferStrategy, connection, sendingStrategy);
-		verifyZeroInteractions(platformManager);
-	}
+			Runnable sensorRefresher = coreService.new SensorRefresher();
+			sensorRefresher.run();
 
-	@Test
-	public void verifyListListenerExceptionData() {
-		ListListener<ExceptionSensorData> listener = mock(ListListener.class);
-		ExceptionSensorData exceptionSensorData = new ExceptionSensorData();
-		exceptionSensorData.setThrowableType("MyException");
-		exceptionSensorData.setThrowableIdentityHashCode(1234);
-		exceptionSensorData.setExceptionEvent(ExceptionEvent.CREATED);
-		List<ExceptionSensorData> dataList = new ArrayList<ExceptionSensorData>();
-		dataList.add(exceptionSensorData);
+			// verify rescheduled
+			ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
+			verify(executorService).schedule(captor.capture(), Mockito.anyLong(), Mockito.<TimeUnit> any());
+			assertThat(captor.getValue(), is(sensorRefresher));
+		}
 
-		coreService.addListListener(listener);
-		coreService.addExceptionSensorData(0, exceptionSensorData.getThrowableIdentityHashCode(), exceptionSensorData);
+		@Test
+		public void platformSensor() {
+			when(jmxSensors.isEmpty()).thenReturn(true);
+			doAnswer(new Answer<Iterator<?>>() {
+				@Override
+				public Iterator<?> answer(InvocationOnMock invocation) throws Throwable {
+					return new ArrayIterator(new IPlatformSensor[] { platformSensor });
+				}
+			}).when(platformSensors).iterator();
 
-		verify(listener, times(1)).contentChanged(dataList.size());
+			Runnable sensorRefresher = coreService.new SensorRefresher();
+			sensorRefresher.run();
 
-		coreService.removeListListener(listener);
+			verify(platformSensor).reset();
+			verify(platformSensor).gather();
+			verifyNoMoreInteractions(platformSensor);
+		}
 
-		verifyNoMoreInteractions(listener, bufferStrategy, connection, sendingStrategy);
-		verifyZeroInteractions(platformManager);
-	}
+		@Test
+		public void platformSensorCollect() throws InterruptedException, StorageException {
+			when(jmxSensors.isEmpty()).thenReturn(true);
+			doAnswer(new Answer<Iterator<?>>() {
+				@Override
+				public Iterator<?> answer(InvocationOnMock invocation) throws Throwable {
+					return new ArrayIterator(new IPlatformSensor[] { platformSensor });
+				}
+			}).when(platformSensors).iterator();
+			SystemInformationData sid = mock(SystemInformationData.class);
+			when(platformSensor.get()).thenReturn(sid);
+			when(configurationStorage.getDataBufferSize()).thenReturn(8);
+			coreService.start();
 
-	@Test
-	public void verifyListListenerObjectStorageData() {
-		ListListener<IObjectStorage> listener = mock(ListListener.class);
-		PlainTimerStorage timerStorage = new PlainTimerStorage(null, 0, 0, 0, Collections.<ParameterContentData> emptyList(), false);
-		List<IObjectStorage> storageList = new ArrayList<IObjectStorage>();
-		storageList.add(timerStorage);
+			Runnable sensorRefresher = coreService.new SensorRefresher();
+			sensorRefresher.run();
+			sensorRefresher.run();
+			sensorRefresher.run();
+			sensorRefresher.run();
+			sensorRefresher.run();
 
-		coreService.addListListener(listener);
-		coreService.addObjectStorage(0, 0, null, timerStorage);
+			verify(platformSensor).reset();
+			verify(platformSensor, times(5)).gather();
+			verify(platformSensor).get();
+			verifyNoMoreInteractions(platformSensor);
 
-		verify(listener, times(1)).contentChanged(storageList.size());
+			// need to sleep a bit so handler is notified
+			Thread.sleep(100);
 
-		coreService.removeListListener(listener);
+			ArgumentCaptor<DefaultDataWrapper> captor = ArgumentCaptor.forClass(DefaultDataWrapper.class);
+			verify(defaultDataHandler).onEvent(captor.capture(), anyLong(), eq(true));
+			assertThat(captor.getValue().getDefaultData(), is((DefaultData) sid));
+		}
 
-		verifyNoMoreInteractions(listener, bufferStrategy, connection, sendingStrategy);
-		verifyZeroInteractions(platformManager);
-	}
+		@Test
+		public void platformSensorError() {
+			when(jmxSensors.isEmpty()).thenReturn(true);
+			final List<IPlatformSensor> sensors = new ArrayList<IPlatformSensor>();
+			sensors.add(platformSensor);
+			doAnswer(new Answer<Iterator<?>>() {
+				@Override
+				public Iterator<?> answer(InvocationOnMock invocation) throws Throwable {
+					return sensors.iterator();
+				}
+			}).when(platformSensors).iterator();
+			doThrow(RuntimeException.class).when(platformSensor).gather();
 
-	@Test
-	public void addAndRetrieveMethodSensorDataNoPrefix() {
-		long sensorTypeId = 2;
-		long methodId = 5;
-		String prefix = null;
-		TimerData timerData = new TimerData();
+			Runnable sensorRefresher = coreService.new SensorRefresher();
+			sensorRefresher.run();
 
-		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerData);
+			assertThat(sensors, is(empty()));
+		}
 
-		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
-		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerData))));
-	}
+		@Test
+		public void jmxSensor() {
+			when(platformSensors.isEmpty()).thenReturn(true);
+			doReturn(new ArrayIterator(new IJmxSensor[] { jmxSensor })).when(jmxSensors).iterator();
 
-	@Test
-	public void addAndRetrieveMethodSensorDataWithPrefix() {
-		long sensorTypeId = 2;
-		long methodId = 5;
-		String prefix = "prefix";
-		TimerData timerData = new TimerData();
+			Runnable sensorRefresher = coreService.new SensorRefresher();
+			sensorRefresher.run();
 
-		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerData);
+			verify(jmxSensor).update(coreService);
+			verifyNoMoreInteractions(jmxSensor);
+		}
 
-		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
-		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerData))));
-	}
+		@Test
+		public void jmxSensorTwice() {
+			when(platformSensors.isEmpty()).thenReturn(true);
+			doAnswer(new Answer<Iterator<?>>() {
+				@Override
+				public Iterator<?> answer(InvocationOnMock invocation) throws Throwable {
+					return new ArrayIterator(new IJmxSensor[] { jmxSensor });
+				}
+			}).when(jmxSensors).iterator();
 
-	@Test
-	public void addDuplicateMethodSensorDataNoPrefix() {
-		ListListener<TimerData> listener = mock(ListListener.class);
+			Runnable sensorRefresher = coreService.new SensorRefresher();
+			sensorRefresher.run();
+			sensorRefresher.run();
 
-		long sensorTypeId = 2;
-		long methodId = 5;
-		String prefix = null;
-		TimerData timerDataOne = new TimerData();
-		TimerData timerDataTwo = new TimerData();
+			verify(jmxSensor, times(2)).update(coreService);
+			verifyNoMoreInteractions(jmxSensor);
+		}
 
-		coreService.addListListener(listener);
-		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataOne);
-		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataTwo);
-		coreService.removeListListener(listener);
-
-		verify(listener).contentChanged(1);
-		verify(listener).contentChanged(2);
-		verifyNoMoreInteractions(listener);
-
-		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
-		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerDataOne))));
-	}
-
-	@Test
-	public void addDuplicateMethodSensorDataWithPrefix() {
-		ListListener<TimerData> listener = mock(ListListener.class);
-
-		long sensorTypeId = 2;
-		long methodId = 5;
-		String prefix = "prefix";
-		TimerData timerDataOne = new TimerData();
-		TimerData timerDataTwo = new TimerData();
-
-		coreService.addListListener(listener);
-		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataOne);
-		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataTwo);
-		coreService.removeListListener(listener);
-
-		verify(listener).contentChanged(1);
-		verify(listener).contentChanged(2);
-		verifyNoMoreInteractions(listener);
-
-		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
-		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerDataOne))));
-	}
-
-	@Test
-	public void addAndRetrieveExceptionSensorData() {
-		long sensorTypeId = 10;
-		ExceptionSensorData exceptionSensorData = new ExceptionSensorData();
-		exceptionSensorData.setThrowableType("MyException");
-		exceptionSensorData.setThrowableIdentityHashCode(1234);
-		exceptionSensorData.setExceptionEvent(ExceptionEvent.CREATED);
-
-		coreService.addExceptionSensorData(sensorTypeId, exceptionSensorData.getThrowableIdentityHashCode(), exceptionSensorData);
-
-		MethodSensorData methodSensorData = coreService.getExceptionSensorData(sensorTypeId, exceptionSensorData.getThrowableIdentityHashCode());
-		assertThat(methodSensorData, is(equalTo(((MethodSensorData) exceptionSensorData))));
-	}
-
-	@Test
-	public void addAndRetrieveObjectStorageDataNoPrefix() {
-		long sensorTypeId = 7;
-		long methodId = 10;
-		String prefix = null;
-		PlainTimerStorage timerStorage = new PlainTimerStorage(null, 0, 0, 0, Collections.<ParameterContentData> emptyList(), false);
-
-		coreService.addObjectStorage(sensorTypeId, methodId, prefix, timerStorage);
-
-		IObjectStorage objectStorage = coreService.getObjectStorage(sensorTypeId, methodId, prefix);
-		assertThat(objectStorage, is(equalTo(((IObjectStorage) timerStorage))));
-	}
-
-	@Test
-	public void addAndRetrieveObjectStorageDataWithPrefix() {
-		long sensorTypeId = 7;
-		long methodId = 10;
-		String prefix = "prefiXX";
-		PlainTimerStorage timerStorage = new PlainTimerStorage(null, 0, 0, 0, Collections.<ParameterContentData> emptyList(), false);
-
-		coreService.addObjectStorage(sensorTypeId, methodId, prefix, timerStorage);
-
-		IObjectStorage objectStorage = coreService.getObjectStorage(sensorTypeId, methodId, prefix);
-		assertThat(objectStorage, is(equalTo(((IObjectStorage) timerStorage))));
 	}
 
 }

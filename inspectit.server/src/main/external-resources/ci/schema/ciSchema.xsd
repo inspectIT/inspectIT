@@ -71,8 +71,6 @@
 
   <xs:element name="jmx-loading-sensor-config" type="jmxSensorConfig"/>
 
-  <xs:element name="list-sending-strategy-config" type="listSendingStrategyConfig"/>
-
   <xs:element name="log4j-logging-sensor-config" type="log4JLoggingSensorConfig"/>
 
   <xs:element name="memory-sensor-config" type="memorySensorConfig"/>
@@ -119,10 +117,6 @@
 
   <xs:element name="sensor-assignment-profile-data" type="sensorAssignmentProfileData"/>
 
-  <xs:element name="simple-buffer-strategy-config" type="simpleBufferStrategyConfig"/>
-
-  <xs:element name="size-buffer-strategy-config" type="sizeBufferStrategyConfig"/>
-
   <xs:element name="statement-sensor-config" type="statementSensorConfig"/>
 
   <xs:element name="string-matching" type="stringMatchingExpression"/>
@@ -130,8 +124,6 @@
   <xs:element name="system-sensor-config" type="systemSensorConfig"/>
 
   <xs:element name="thread-sensor-config" type="threadSensorConfig"/>
-
-  <xs:element name="time-sending-strategy-config" type="timeSendingStrategyConfig"/>
 
   <xs:element name="timer-method-sensor-assignment" type="timerMethodSensorAssignment"/>
 
@@ -487,14 +479,6 @@
       <xs:extension base="abstractCiData">
         <xs:sequence>
           <xs:element ref="end-user-monitoring-config" minOccurs="0"/>
-          <xs:choice>
-            <xs:element ref="time-sending-strategy-config"/>
-            <xs:element ref="list-sending-strategy-config"/>
-          </xs:choice>
-          <xs:choice>
-            <xs:element ref="simple-buffer-strategy-config"/>
-            <xs:element ref="size-buffer-strategy-config"/>
-          </xs:choice>
           <xs:element name="platform-sensor-configs" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
@@ -545,6 +529,7 @@
           </xs:element>
           <xs:element name="classLoadingDelegation" type="xs:boolean"/>
           <xs:element name="retransformation-strategy" type="retransformationStrategy" minOccurs="0"/>
+          <xs:element name="dataBufferSize" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -555,25 +540,6 @@
     <xs:attribute name="eum-enabled" type="xs:boolean" use="required"/>
     <xs:attribute name="eum-script-base-url" type="xs:string" use="required"/>
     <xs:attribute name="active-modules" type="xs:string" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="timeSendingStrategyConfig">
-    <xs:sequence/>
-    <xs:attribute name="time" type="xs:long" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="listSendingStrategyConfig">
-    <xs:sequence/>
-    <xs:attribute name="list-size" type="xs:int" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="simpleBufferStrategyConfig">
-    <xs:sequence/>
-  </xs:complexType>
-
-  <xs:complexType name="sizeBufferStrategyConfig">
-    <xs:sequence/>
-    <xs:attribute name="size" type="xs:int" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="abstractPlatformSensorConfig" abstract="true">

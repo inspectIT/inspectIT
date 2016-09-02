@@ -26,7 +26,6 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfi
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
-import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
@@ -184,28 +183,10 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 * {@inheritDoc}
 	 */
 	@Override
-	public StrategyConfig getBufferStrategyConfig() throws StorageException {
+	public int getDataBufferSize() throws StorageException {
 		ensureConfigurationExists();
 
-		StrategyConfig bufferStrategy = agentConfiguration.getBufferStrategyConfig();
-		if (null == bufferStrategy) {
-			throw new StorageException("Buffer strategy not defined in the agent configuration.");
-		}
-		return bufferStrategy;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public StrategyConfig getSendingStrategyConfig() throws StorageException {
-		ensureConfigurationExists();
-
-		StrategyConfig sendingStrategy = agentConfiguration.getSendingStrategyConfig();
-		if (null == sendingStrategy) {
-			throw new StorageException("Sending strategy not defined in the agent configuration.");
-		}
-		return sendingStrategy;
+		return agentConfiguration.getDataBufferSize();
 	}
 
 	/**
