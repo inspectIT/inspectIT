@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile id="websockets" name="WebSocket" common="true" created-on="2016-09-02T21:25:23.839+02:00" description="Profile for the WebSocket calls." xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<!-- Configuration for WebSeockets --> 
+	<sensor-assignment-profile-data>
+	
+		<!-- Annotation based -->
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.websocket.OnClose" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.websocket.OnError" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.websocket.OnMessage" private-mod="false" protected-mod="false" default-mod="false" />
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="*" method-name="*" annotation="javax.websocket.OnOpen" private-mod="false" protected-mod="false" default-mod="false" />
+
+		<!-- programmatically -->
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.websocket.Endpoint" method-name="onOpen" parameters="javax.websocket.Session javax.websocket.EndpointConfig" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" superclass="true"/>
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.websocket.Endpoint" method-name="onClose" parameters="javax.websocket.Session javax.websocket.CloseReason" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" superclass="true"/>
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.websocket.Endpoint" method-name="onError" parameters="javax.websocket.Session java.lang.Throwable" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" superclass="true"/>
+		<timer-method-sensor-assignment starts-invocation="true" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" class-name="javax.websocket.MessageHandler$Whole" method-name="onMessage" parameters="java.lang.Object" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" interface="true"/>
+
+	</sensor-assignment-profile-data>
+
+</profile>
