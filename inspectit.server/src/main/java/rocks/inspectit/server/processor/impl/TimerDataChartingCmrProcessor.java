@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import rocks.inspectit.server.dao.impl.TimerDataAggregator;
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
@@ -57,6 +58,12 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 	SerializationManager serializationManager;
 
 	/**
+	 * Indicates whether time series data shell be persisted.
+	 */
+	@Value("${timeseries.dataPersistence.active}")
+	boolean persistTimeSeriesData;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -81,7 +88,7 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 	 */
 	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
-		return (defaultData instanceof TimerData) && ((TimerData) defaultData).isCharting();
+		return persistTimeSeriesData && (defaultData instanceof TimerData) && ((TimerData) defaultData).isCharting();
 	}
 
 	/**

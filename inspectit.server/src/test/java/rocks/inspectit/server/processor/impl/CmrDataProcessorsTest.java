@@ -257,7 +257,7 @@ public class CmrDataProcessorsTest {
 	@Test
 	public void entityManagerInserterProcessor() {
 		// only Timer Data
-		PersistingCmrProcessor processor = new PersistingCmrProcessor(Collections.<Class<? extends DefaultData>> singletonList(TimerData.class));
+		PersistingCmrProcessor processor = new PersistingCmrProcessor(Collections.<Class<? extends DefaultData>> singletonList(TimerData.class), Collections.EMPTY_LIST);
 
 		// don't fail on null
 		processor.process((DefaultData) null, entityManager);
@@ -308,6 +308,7 @@ public class CmrDataProcessorsTest {
 		TimerDataChartingCmrProcessor processor = new TimerDataChartingCmrProcessor();
 		processor.timerDataAggregator = timerDataAggregator;
 		processor.serializationManager = serializationManager;
+		processor.persistTimeSeriesData = true;
 
 		// set up entity manager for quering
 		CriteriaBuilder build = mock(CriteriaBuilder.class, RETURNS_SMART_NULLS);

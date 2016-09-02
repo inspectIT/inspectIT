@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
 import rocks.inspectit.shared.all.communication.DefaultData;
 
@@ -17,20 +19,38 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 public class PersistingCmrProcessor extends AbstractCmrDataProcessor {
 
 	/**
-	 * List of classes that should be saved by this simple saver.
+	 * List of classes that must be saved by this simple saver.
 	 */
-	private List<Class<? extends DefaultData>> classes;
+	private List<Class<? extends DefaultData>> mandatoryClasses;
+
+	/**
+	 * List of classes that can be saved by this simple saver.
+	 */
+	private List<Class<? extends DefaultData>> optionalClasses;
+
+	/**
+	 * Indicates whether optional data shell be persisted.
+	 */
+	@Value("${timeseries.dataPersistence.active}")
+	boolean persistOptionalData;
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param classes
-	 *            List of classes that should be saved by this simple saver.
+	 * @param mandatoryClasses
+	 *            List of classes that must be saved by this simple saver.
+	 * @param optionalClasses
+	 *            List of classes that can be saved by this simple saver.
 	 */
-	public PersistingCmrProcessor(List<Class<? extends DefaultData>> classes) {
-		this.classes = classes;
-		if (null == this.classes) {
-			this.classes = Collections.emptyList();
+	public PersistingCmrProcessor(List<Class<? extends DefaultData>> mandatoryClasses, List<Class<? extends DefaultData>> optionalClasses) {
+		this.mandatoryClasses = mandatoryClasses;
+		if (null == this.mandatoryClasses) {
+			this.mandatoryClasses = Collections.emptyList();
+		}
+
+		this.optionalClasses = optionalClasses;
+		if (null == this.optionalClasses) {
+			this.optionalClasses = Collections.emptyList();
 		}
 	}
 
@@ -49,7 +69,7 @@ public class PersistingCmrProcessor extends AbstractCmrDataProcessor {
 	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
 		if (null != defaultData) {
-			return classes.contains(defaultData.getClass());
+			return mandatoryClasses.contains(defaultData.getClass()) || (persistOptionalData && optionalClasses.contains(defaultData.getClass()));
 		}
 		return false;
 	}

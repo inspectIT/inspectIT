@@ -8,20 +8,50 @@
 	<bean id="bufferInserterCmrProcessor" class="rocks.inspectit.server.processor.impl.BufferInserterCmrProcessor" />
 	<bean id="exceptionMessageCmrProcessor" class="rocks.inspectit.server.processor.impl.ExceptionMessageCmrProcessor" />
 	<bean id="indexerCmrProcessor" class="rocks.inspectit.server.processor.impl.IndexerCmrProcessor" />
-	<bean id="persistingCmrProcessor" class="rocks.inspectit.server.processor.impl.PersistingCmrProcessor" >
+	
+	<bean id="businessTxToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.BusinessTransactionToTsdbCmrProcessor" />
+	<bean id="cpuToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.CpuToTsdbCmrProcessor" />
+	<bean id="memoryToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.MemoryToTsdbCmrProcessor" />
+	<bean id="threadsToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.ThreadsToTsdbCmrProcessor" />
+	<bean id="classloadingToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.ClassloadingToTsdbCmrProcessor" />
+	<bean id="timerDataToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.TimerDataToTsdbCmrProcessor" />
+	<bean id="jmxToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.JmxToTsdbCmrProcessor" />
+	<bean id="jvmDataToTsdbProcessor" class="rocks.inspectit.server.processor.tsdb.impl.SystemDataToTsdbCmrProcessor" />
+	
+	<bean id="tsdbPersistingCmrProcessor" class="rocks.inspectit.server.processor.tsdb.impl.TsdbPersistingCmrProcessor">
 		<constructor-arg>
-				<util:list value-type="java.lang.Class">
-					<value>rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.CompilationInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.CpuInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.MemoryInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.RuntimeInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.ThreadInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.SystemInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.JmxSensorValueData</value>
-				</util:list>
+			<util:list value-type="rocks.inspectit.server.processor.AbstractCmrDataProcessor">
+				<ref bean="businessTxToTsdbProcessor" />
+				<ref bean="cpuToTsdbProcessor" />
+				<ref bean="memoryToTsdbProcessor" />
+				<ref bean="threadsToTsdbProcessor" />
+				<ref bean="classloadingToTsdbProcessor" />
+				<ref bean="timerDataToTsdbProcessor" />
+				<ref bean="jmxToTsdbProcessor" />
+				<ref bean="jvmDataToTsdbProcessor" />
+			</util:list>
 		</constructor-arg>
 	</bean>
+
+	<bean id="persistingCmrProcessor" class="rocks.inspectit.server.processor.impl.PersistingCmrProcessor">
+		<constructor-arg>
+			<util:list value-type="java.lang.Class">
+				<value>rocks.inspectit.shared.all.communication.data.SystemInformationData</value>
+			</util:list>
+		</constructor-arg>
+		<constructor-arg>
+			<util:list value-type="java.lang.Class">
+				<value>rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.CompilationInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.CpuInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.MemoryInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.RuntimeInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.ThreadInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.JmxSensorValueData</value>
+			</util:list>
+		</constructor-arg>
+	</bean>
+
 	<bean id="sqlExclusiveTimeCmrProcessor" class="rocks.inspectit.server.processor.impl.SqlExclusiveTimeCmrProcessor" />
 	<bean id="timerDataChartingCmrProcessor" class="rocks.inspectit.server.processor.impl.TimerDataChartingCmrProcessor" />
 	<bean id="invocationModifierCmrProcessor" class="rocks.inspectit.server.processor.impl.InvocationModifierCmrProcessor">
@@ -29,6 +59,7 @@
 			<util:list value-type="rocks.inspectit.server.processor.AbstractCmrDataProcessor">
 				<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
 				<ref bean="timerDataChartingCmrProcessor" />
+				<ref bean="timerDataToTsdbProcessor" />
 				<ref bean="indexerCmrProcessor" />
 				<ref bean="sqlExclusiveTimeCmrProcessor" />
 			</util:list>
@@ -36,6 +67,7 @@
 	</bean>
 	<bean id="recorderCmrProcessor" class="rocks.inspectit.server.processor.impl.RecorderCmrProcessor" />
 	<bean id="businessContextRecognitionProcessor" class="rocks.inspectit.server.processor.impl.BusinessContextRecognitionProcessor" />
+	
 
 	<util:list value-type="rocks.inspectit.server.processor.AbstractCmrDataProcessor" id="cmrDataProcessorList">
 		<ref bean="cacheIdGeneratorCmrProcessor" /> <!-- Must be first in list -->
@@ -43,6 +75,7 @@
 		<ref bean="bufferInserterCmrProcessor" />
 		<ref bean="exceptionMessageCmrProcessor" />
 		<ref bean="persistingCmrProcessor" />
+		<ref bean="tsdbPersistingCmrProcessor" />
 		<ref bean="sqlExclusiveTimeCmrProcessor" />
 		<ref bean="timerDataChartingCmrProcessor" />
 		<ref bean="invocationModifierCmrProcessor" />

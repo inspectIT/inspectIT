@@ -315,4 +315,20 @@
 			</group-property>
 		</properties>
 	</section>
+	<section name="Time Series Data">
+		<properties>
+			<boolean-property name="Write Data to local DB" default-value="true" server-restart-required="false" logical-name="timeseries.dataPersistence.active" advanced="false" description="If activated, all time series data (business transaction timings, resource utilizations, etc.) will be (also) written to the local inspectIT server database."></boolean-property>
+			<boolean-property name="Write Data to influxDB" default-value="false" server-restart-required="false" logical-name="influxdb.active" advanced="false" description="If activated, all time series data (business transaction timings, resource utilizations, etc.) will be (also) written to an influxDB."></boolean-property>
+			<string-property name="Host" default-value="localhost" server-restart-required="false" logical-name="influxdb.host" advanced="false" description="The hostname/IP of the influxDB instance."></string-property>
+			<long-property name="Port" default-value="8086" server-restart-required="false" logical-name="influxdb.port" advanced="false" description="The port of the influxDB instance.">
+				<validators>
+					<isPositive />
+				</validators>
+			</long-property>
+			<string-property name="Username" default-value="inspectit" server-restart-required="false" logical-name="influxdb.user" advanced="false" description="The username to be used to connect to the influxDB instance."></string-property>
+			<string-property name="Password" default-value="password" server-restart-required="false" logical-name="influxdb.passwd" advanced="false" description="The password to be used to connect to the influxDB instance."></string-property>
+			<string-property name="Database" default-value="inspectit" server-restart-required="false" logical-name="influxdb.database" advanced="false" description="The database name in the influxDB instance to write the data to."></string-property>
+			<string-property name="RetentionPolicy" default-value="autogen" server-restart-required="false" logical-name="influxdb.retentionPolicy" advanced="true" description="Retention policy for the influxDB database."></string-property>
+		</properties>
+	</section>
 </cmr-configuration>
