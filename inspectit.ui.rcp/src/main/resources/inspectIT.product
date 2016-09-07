@@ -111,7 +111,7 @@ END OF TERMS AND CONDITIONS
       <plugin id="com.esotericsoftware.reflectasm"/>
       <plugin id="com.github.stephenc.high-scale-lib"/>
       <plugin id="com.google.gson"/>
-      <plugin id="com.google.guava.jdk5"/>
+      <plugin id="com.google.guava"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.springsource.javax.inject"/>
       <plugin id="com.springsource.org.aopalliance"/>
