@@ -75,9 +75,10 @@ configurations {
 	xjc
 	izpack
 	jvms
-	java15rt
+	java16rt
 	eclipseBase
 	antContrib
+	jarCheck
 }
 // all our configurations to transitive=false
 configurations.sharedAllProd.transitive = false
@@ -124,7 +125,7 @@ dependencies {
 		'javax.validation:validation-api:1.1.0.Final',
 		'javax.inject:com.springsource.javax.inject:1.0.0',
 
-		'com.google.guava:guava-jdk5:13.0',
+		'com.google.guava:guava:18.0',
 		'com.github.stephenc.high-scale-lib:info.novatec.high-scale-lib:1.1.2',
 		'org.codehaus.jackson:jackson-core-asl:1.9.13',
 		'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
@@ -254,13 +255,16 @@ dependencies {
 		'org.openjdk:openjdk-7-jre-linux-x64:1.7.0-u80-unofficial',
 		'org.openjdk:openjdk-7-jre-macosx-x64:1.7.0-u80-unofficial'
 	)
-	java15rt (
-		'com.sun:rt:1.5.0_22'
+	java16rt (
+		'com.sun:rt:1.6.0_45'
 	)
 	eclipseBase (
 		'org.eclipse:eclipse-base:3.8.2'
 	)
 	antContrib (
 		'ant-contrib:ant-contrib:1.0b3'
+	)
+	jarCheck (
+		'jarcheck:jarcheck:1.5'
 	)
 }
