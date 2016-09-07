@@ -8,8 +8,8 @@ evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
 /** used by the eclipse buildship plugin */
-sourceCompatibility = '1.5'
-targetCompatibility = '1.5'
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
 
 /** defined to have it included in Eclipse as source */
 sourceSets {
@@ -23,7 +23,7 @@ sourceSets {
 /** Some agent specific properties */
 ext {
 	distJarName = 'inspectit-agent'
-	releaseNameSun15 = "inspectit-agent-sun1.5-${versionInfo}.zip"
+	releaseName = "inspectit-agent-java1.6-${versionInfo}.zip"
 }
 
 /** Setting compile configuration as plugin in Eclipse needs it */
@@ -43,17 +43,12 @@ dependencies {
 	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
-/** Compile compatibility to 1.5 for all compile tasks */
+/** Compile compatibility to 1.6 for all compile tasks */
 tasks.withType(JavaCompile) { t ->
-	// jmh can not run with java 1.5
-	if (!(t.getName().contains('jmh') || t.getName().contains('Jmh'))) {
-		sourceCompatibility = '1.5'
-		targetCompatibility = '1.5'
+	sourceCompatibility = '1.6'
+	targetCompatibility = '1.6'
 
-		options.bootClasspath = configurations.java15rt.asPath
-		// Used to suppress the warning that source value 1.5 will be obsolete in the future.
-		options.compilerArgs << '-Xlint:-options'
-	}
+	options.bootClasspath = configurations.java16rt.asPath
 }
 
 
@@ -66,15 +61,26 @@ cobertura {
  * Creates the jar. Excludes libs from the configurations.agentJavaProd that are not Java5 compatible. Uses existing manifest.
  */
 jar {
+	// use jarCheck to make sure all classes in our dependencies are at maximum in version 1.6
+	doFirst {
+		def jarCheckOutput = new File("$buildRoot/jarCheck")
+		jarCheckOutput.mkdirs()
+		configurations.agentJavaProd.each { file ->
+			def name = file.name
+			javaexec {
+				classpath configurations.jarCheck
+				main = 'com.mindprod.jarcheck.JarCheck'
+				args = ["$file", "1.0", "1.6"]
+				standardOutput = new File(jarCheckOutput, "$name-check.log").newOutputStream()
+			}
+		}
+	}
+
 	archivesBaseName = distJarName
-	
+
 	into('libs') {
 		from project(':inspectit.shared.all').jar.outputs
 		from configurations.agentJavaProd
-
-		// exclude due to the incompatibility with Java5
-		exclude('validation-api*')
-		exclude('hibernate-jpa-2.1-api*')
 	}
 
 	manifest {
@@ -86,10 +92,10 @@ jar {
  * Creates the release package.
  */
 task release (type: Zip, dependsOn: jar) {
-	description = "Releases the ${releaseNameSun15} package."
+	description = "Releases the ${releaseName} package."
 	group = 'Release'
 	destinationDir = file(buildReleasePackages)
-	archiveName = releaseNameSun15
+	archiveName = releaseName
 	into('agent') {
 		from jar.outputs
 		from file(mainExtResources)
@@ -98,7 +104,7 @@ task release (type: Zip, dependsOn: jar) {
 }
 
 task releaseAndAnalyze {
-	description = "Runs all unit tests, all checks and releases the ${releaseNameSun15} package."
+	description = "Runs all unit tests, all checks and releases the ${releaseName} package."
 	group = 'Release'
 	dependsOn(analyze, release)
 }
