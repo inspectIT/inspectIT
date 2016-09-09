@@ -7,10 +7,11 @@
  # commons-lang 
  # commons-pool
  # gson
- # guava-jdk5
+ # guava
  # httpclient
  # httpcore 
  # httpmime
+ # influxdb-java
  # javassist
  # jackson-core-asl
  # jackson-mapper-asl
@@ -21,6 +22,9 @@
  # jcl-over-slf4j
  # kryo-serializers
  # objensis
+ # okhttp
+ # okio
+ # retrofit
  # spring-aop
  # spring-asm
  # spring-beans
@@ -56,6 +60,8 @@ Copyright (c) 1995-2015 Mort Bay Consulting Pty Ltd. (jetty, jetty-util)
 Copyright (c) 2003-2013, Objenesis Team and all contributors. (objensis)
 
 Copyright (c) 2008 Google Inc. (gson) 
+
+Coptright (c) (okhttp, okio, retrofit)
 
 Note that copyright holder of a work retains his full rights without any 
 explicit notice.
@@ -1229,6 +1235,8 @@ which are included in the inspectIT.
 Copyright (c) 2004-2013 QOS.ch. (slf4j-api, log4j-over-slf4j)
 
 Copyright (c) 2009-2012 Robert Elliot. (sysout-over-slf4j)
+
+Copyright (c) (influxdb-java)
 
 Note that copyright holder of a work retains his full rights without any 
 explicit notice.

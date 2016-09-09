@@ -34,30 +34,71 @@
 			</group-property>
 		</properties>
 	</section>
-	<section name="JDBC">
+	<section name="Database">
 		<properties>
-			<string-property name="URL" default-value="jdbc:h2:./db/inspectit;LOCK_MODE=0;CACHE_SIZE=131072;DB_CLOSE_ON_EXIT=FALSE" server-restart-required="true" logical-name="database.url"
-				advanced="true" description="The JDBC URL pointing to the database.">
-				<validators>
-					<isNotEmpty />
-				</validators>
-			</string-property>
-			<string-property name="Driver" default-value="org.h2.Driver" server-restart-required="true" logical-name="database.driver" advanced="true" description="The driver class to be used. ">
-				<validators>
-					<isFullyQualifiedClassName />
-				</validators>
-			</string-property>
-			<string-property name="Username" default-value="inspectit" server-restart-required="true" logical-name="database.user" advanced="true" description="The username used to connect to the database.">
-				<validators>
-					<isNotEmpty />
-				</validators>
-			</string-property>
-			<string-property name="Password" default-value="inspectit" server-restart-required="true" logical-name="database.password" advanced="true" description="The password used to connect to the database.">
-				<validators>
-					<isNotEmpty />
-				</validators>
-			</string-property>
-
+			<boolean-property name="Write Data to influxDB" default-value="false" server-restart-required="false" logical-name="influxdb.active" advanced="false"
+				description="If activated, all long term data (business transaction timings, resource utilizations, etc.) will be written to an influxDB. Otherwise data will be written to relational database." />
+			<group-property name="JDBC" description="Defines JDBC properties to be used if relational database is used for string data.">
+				<properties>
+					<string-property name="URL" default-value="jdbc:h2:./db/inspectit;LOCK_MODE=0;CACHE_SIZE=131072;DB_CLOSE_ON_EXIT=FALSE" server-restart-required="true" logical-name="database.url"
+						advanced="true" description="The JDBC URL pointing to the database.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+					<string-property name="Driver" default-value="org.h2.Driver" server-restart-required="true" logical-name="database.driver" advanced="true" description="The driver class to be used.">
+						<validators>
+							<isFullyQualifiedClassName />
+						</validators>
+					</string-property>
+					<string-property name="Username" default-value="inspectit" server-restart-required="true" logical-name="database.user" advanced="true" description="The username used to connect to the database.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+					<string-property name="Password" default-value="inspectit" server-restart-required="true" logical-name="database.password" advanced="true" description="The password used to connect to the database.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+				</properties>
+				<group-validators/>
+			</group-property>
+			<group-property name="influxDB" description="Defines properties to be used if influxDB is used for storing long term data.">
+				<properties>
+					<string-property name="Host" default-value="localhost" server-restart-required="false" logical-name="influxdb.host" advanced="false" description="The hostname/IP of the influxDB instance.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+					<long-property name="Port" default-value="8086" server-restart-required="false" logical-name="influxdb.port" advanced="false" description="The port of the influxDB instance.">
+						<validators>
+							<isPositive />
+						</validators>
+					</long-property>
+					<string-property name="Username" default-value="inspectit" server-restart-required="false" logical-name="influxdb.user" advanced="false" description="The username to be used to connect to the influxDB instance.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+					<string-property name="Password" default-value="password" server-restart-required="false" logical-name="influxdb.passwd" advanced="false" description="The password to be used to connect to the influxDB instance.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+					<string-property name="Database Name" default-value="inspectit" server-restart-required="false" logical-name="influxdb.database" advanced="false" description="The database name in the influxDB instance to write the data to.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+					<string-property name="Retention Policy" default-value="default" server-restart-required="false" logical-name="influxdb.retentionPolicy" advanced="true" description="Retention policy for the influxDB database.">
+						<validators>
+							<isNotEmpty />
+						</validators>
+					</string-property>
+				</properties>
+				<group-validators/>
+			</group-property>
 		</properties>
 	</section>
 	<section name="Hibernate">
