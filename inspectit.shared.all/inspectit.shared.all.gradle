@@ -7,8 +7,8 @@
 defaultTasks 'releaseAndAnalyze'
 
 /** used by the eclipse buildship plugin */
-sourceCompatibility = '1.5'
-targetCompatibility = '1.5'
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
 
 /** Artifact names */
 ext {
@@ -27,14 +27,12 @@ configurations {
 	testArchives.extendsFrom (testCompile)
 }
 
-/** Compile compatibility to 1.5 for all compile tasks */
+/** Compile compatibility to 1.6 for all compile tasks */
 tasks.withType(JavaCompile) { 
-	sourceCompatibility = '1.5'
-	targetCompatibility = '1.5'
+	sourceCompatibility = '1.6'
+	targetCompatibility = '1.6'
 
-	options.bootClasspath = configurations.java15rt.asPath
-	// Used to suppress the warning that source value 1.5 will be obsolete in the future.
-	options.compilerArgs << '-Xlint:-options'
+	options.bootClasspath = configurations.java16rt.asPath
 }
 
 /** 
