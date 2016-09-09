@@ -1,0 +1,48 @@
+/**
+ * Gradle build file for managing the Eclipse RCP platform and bnd tasks.
+ * 
+ * @author Ivan Senic
+ */
+apply plugin: 'org.standardout.bnd-platform'
+
+configurations {
+	platform {
+		extendsFrom configurations.uiRcpProd
+	}
+}
+configurations.platform.transitive = false
+
+/** Settings for the Eclipse platform update site & bnd */
+platform {
+	eclipseHome = file(eclipseBaseDir)
+	updateSiteDir = file(updateSiteInternal)
+	defaultQualifier = null
+	useBndHashQualifiers = false
+	useFeatureHashQualifiers = false
+
+	bnd(group: 'org.springframework') {
+		optionalImport '*'
+	}
+	bnd(group: 'org.hamcrest', name: 'hamcrest-all') {
+		optionalImport '*'
+	}
+	bnd(group: 'com.esotericsoftware.kryonet', name: 'kryonet') {
+		optionalImport '*'
+	}
+	bnd(group: 'com.esotericsoftware.reflectasm', name: 'reflectasm') {
+		optionalImport '*'
+	}
+	bnd(group: 'com.esotericsoftware.minlog', name: 'minlog') {}
+	bnd(group: 'com.github.stephenc.high-scale-lib', name: 'high-scale-lib') {
+		optionalImport '*'
+	}
+	bnd(group: 'uk.org.lidalia', name: 'sysout-over-slf4j') {}
+	bnd(group: 'org.jfree') {
+		optionalImport '*'
+	}
+	bnd(group: 'org.apache.httpcomponents') {
+		optionalImport '*'
+	}
+}
+updateSite.dependsOn(rootProject.unzipEclipse)
+updateSiteZip.dependsOn(rootProject.unzipEclipse)
