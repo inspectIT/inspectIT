@@ -8,20 +8,21 @@
 	<bean id="bufferInserterCmrProcessor" class="rocks.inspectit.server.processor.impl.BufferInserterCmrProcessor" />
 	<bean id="exceptionMessageCmrProcessor" class="rocks.inspectit.server.processor.impl.ExceptionMessageCmrProcessor" />
 	<bean id="indexerCmrProcessor" class="rocks.inspectit.server.processor.impl.IndexerCmrProcessor" />
-	<bean id="persistingCmrProcessor" class="rocks.inspectit.server.processor.impl.PersistingCmrProcessor" >
+	<bean id="inxfluxProcessor" class="rocks.inspectit.server.processor.impl.InfluxProcessor" />
+	<bean id="persistingCmrProcessor" class="rocks.inspectit.server.processor.impl.PersistingCmrProcessor">
 		<constructor-arg>
-				<util:list value-type="java.lang.Class">
-					<value>rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.CompilationInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.CpuInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.MemoryInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.RuntimeInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.ThreadInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.SystemInformationData</value>
-					<value>rocks.inspectit.shared.all.communication.data.JmxSensorValueData</value>
-				</util:list>
+			<util:list value-type="java.lang.Class">
+				<value>rocks.inspectit.shared.all.communication.data.ClassLoadingInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.CompilationInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.CpuInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.MemoryInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.RuntimeInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.ThreadInformationData</value>
+				<value>rocks.inspectit.shared.all.communication.data.JmxSensorValueData</value>
+			</util:list>
 		</constructor-arg>
 	</bean>
+	<bean id="systemInformationPersistingCmrProcessor" class="rocks.inspectit.server.processor.impl.SystemInformationPersistingCmrProcessor" />
 	<bean id="sqlExclusiveTimeCmrProcessor" class="rocks.inspectit.server.processor.impl.SqlExclusiveTimeCmrProcessor" />
 	<bean id="timerDataChartingCmrProcessor" class="rocks.inspectit.server.processor.impl.TimerDataChartingCmrProcessor" />
 	<bean id="invocationModifierCmrProcessor" class="rocks.inspectit.server.processor.impl.InvocationModifierCmrProcessor">
@@ -31,6 +32,7 @@
 				<ref bean="timerDataChartingCmrProcessor" />
 				<ref bean="indexerCmrProcessor" />
 				<ref bean="sqlExclusiveTimeCmrProcessor" />
+				<ref bean="inxfluxProcessor" />
 			</util:list>
 		</constructor-arg>
 	</bean>
@@ -43,11 +45,12 @@
 		<ref bean="bufferInserterCmrProcessor" />
 		<ref bean="exceptionMessageCmrProcessor" />
 		<ref bean="persistingCmrProcessor" />
+		<ref bean="systemInformationPersistingCmrProcessor" />
 		<ref bean="sqlExclusiveTimeCmrProcessor" />
 		<ref bean="timerDataChartingCmrProcessor" />
 		<ref bean="invocationModifierCmrProcessor" />
+		<ref bean="inxfluxProcessor" />
 		<ref bean="recorderCmrProcessor" /> <!-- Must be last when all are processed -->
 	</util:list>
-	
 	
 </beans>

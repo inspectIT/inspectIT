@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import rocks.inspectit.server.dao.impl.TimerDataAggregator;
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
@@ -52,6 +53,13 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 	private SerializationManagerProvider serializationManagerProvider;
 
 	/**
+	 * If writing to the influxDB is active. In that case we will not persist anything to the
+	 * relational database.
+	 */
+	@Value("${influxdb.active}")
+	boolean influxActive;
+
+	/**
 	 * {@link SerializationManager} for cloning.
 	 */
 	SerializationManager serializationManager;
@@ -81,7 +89,7 @@ public class TimerDataChartingCmrProcessor extends AbstractCmrDataProcessor {
 	 */
 	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
-		return (defaultData instanceof TimerData) && ((TimerData) defaultData).isCharting();
+		return !influxActive && (defaultData instanceof TimerData) && ((TimerData) defaultData).isCharting();
 	}
 
 	/**

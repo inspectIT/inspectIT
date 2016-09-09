@@ -47,6 +47,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.storage.serializer.SerializationException;
 import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
@@ -255,7 +256,7 @@ public class CmrDataProcessorsTest {
 	 * Tests the {@link PersistingCmrProcessor}.
 	 */
 	@Test
-	public void entityManagerInserterProcessor() {
+	public void persistingCmrProcessor() {
 		// only Timer Data
 		PersistingCmrProcessor processor = new PersistingCmrProcessor(Collections.<Class<? extends DefaultData>> singletonList(TimerData.class));
 
@@ -272,6 +273,39 @@ public class CmrDataProcessorsTest {
 		TimerData timerData = new TimerData();
 		processor.process(timerData, entityManager);
 		verify(entityManager, times(1)).persist(timerData);
+
+		// no when influx is active
+		processor.influxActive = true;
+		processor.process(timerData, entityManager);
+		verifyNoMoreInteractions(entityManager);
+	}
+
+	/**
+	 * Tests the {@link SystemIn}.
+	 */
+	@Test
+	public void SystemInformationPersistingCmrProcessor() {
+		// only Timer Data
+		SystemInformationPersistingCmrProcessor processor = new SystemInformationPersistingCmrProcessor();
+
+		// don't fail on null
+		processor.process((DefaultData) null, entityManager);
+		verifyZeroInteractions(entityManager);
+
+		// don't process wrong classes
+		processor.process(new SqlStatementData(), entityManager);
+		processor.process(new HttpTimerData(), entityManager);
+		verifyZeroInteractions(entityManager);
+
+		// yes for correct class
+		SystemInformationData systemInformationData = new SystemInformationData();
+		processor.process(systemInformationData, entityManager);
+		verify(entityManager, times(1)).persist(systemInformationData);
+
+		// also when influx is active
+		processor.influxActive = true;
+		processor.process(systemInformationData, entityManager);
+		verify(entityManager, times(2)).persist(systemInformationData);
 	}
 
 	/**
@@ -355,6 +389,23 @@ public class CmrDataProcessorsTest {
 		// correct ID set on the clone
 		verify(clone, times(1)).setId(0);
 		verify(httpTimerData, times(0)).setId(0);
+	}
+
+	/**
+	 * Tests the {@link TimerDataChartingCmrProcessor} when influx is active.
+	 */
+	@Test
+	public void chartingProcessorInfluxActive() throws CloneNotSupportedException, SerializationException {
+		TimerDataChartingCmrProcessor processor = new TimerDataChartingCmrProcessor();
+		processor.timerDataAggregator = timerDataAggregator;
+		processor.serializationManager = serializationManager;
+		processor.influxActive = true;
+
+		// don't write
+		TimerData timerData = new TimerData();
+		timerData.setCharting(true);
+		processor.process(timerData, entityManager);
+		verifyZeroInteractions(timerDataAggregator, entityManager);
 	}
 
 	/**
