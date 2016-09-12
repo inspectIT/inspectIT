@@ -126,6 +126,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] analyzeAndInstrument(byte[] byteCode, String className, final ClassLoader classLoader) {
 		return analyzeAndInstrumentInternal(byteCode, className, classLoader, true);
 	}
@@ -148,6 +149,8 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 	 *         (or in case of error).
 	 */
 	private byte[] analyzeAndInstrumentInternal(byte[] byteCode, String className, final ClassLoader classLoader, boolean performInstrumentation) {
+		// clear any interrupted flag that might be there on the thread loading the class
+		boolean isInterrupted = Thread.interrupted();
 		try {
 			if (null == byteCode) {
 				// try to read from class loader, if it fails just return
@@ -191,9 +194,9 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 				try {
 					instrumentationResult = executorService.submit(analyzeCallable).get(ANALYZE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
 				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+					isInterrupted = true;
 					if (log.isWarnEnabled()) {
-						log.warn("Error occurred instrumenting the byte code of class " + className + ". Thread loading the class was interrupted.");
+						log.warn("Error occurred instrumenting the byte code of class " + className + ". Thread loading the class was interrupted during communication with the server.");
 					}
 					return null;
 				} catch (TimeoutException e) {
@@ -223,6 +226,10 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 		} catch (ExecutionException executionException) {
 			log.error("Error occurred instrumenting the byte code of class " + className, executionException);
 			return null;
+		} finally {
+			if (isInterrupted) {
+				Thread.currentThread().interrupt();
+			}
 		}
 	}
 
@@ -402,6 +409,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		methodSensorMap = new HashMap<Long, IMethodSensor>();
 		for (IMethodSensor methodSensor : methodSensors) {
