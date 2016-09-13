@@ -70,6 +70,7 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public InstrumentationDefinition call() throws Exception {
 		// set that transform is disabled from this thread that is doing the call
 		Agent.agent.setThreadTransformDisabled(true);
@@ -87,7 +88,7 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 					LOG.debug("Type could not be sent to the CMR. Server not available.", e);
 				}
 			} else {
-				LOG.info("Type could not be sent to the CMR due to the ServerUnavailableException.");
+				LOG.info("Type could not be sent to the CMR due to the ServerUnavailableException." + (e.isServerTimeout() ? " (timeout)" : "(error)"));
 			}
 			throw e;
 		} finally {

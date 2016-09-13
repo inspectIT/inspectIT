@@ -186,7 +186,7 @@
 			</group-property>
 			<group-property name="Byte Buffer Pool" description="Defines properties for the pool of byte buffers that will be used during serialization and IO operations.">
 				<properties>
-					<byte-property name="Byte Buffer Size" default-value="1MB" server-restart-required="false" logical-name="storage.bufferSize" advanced="true" description="Capacity of the byte buffers in the pool.">
+					<byte-property name="Byte Buffer Size" default-value="128KB" server-restart-required="false" logical-name="storage.bufferSize" advanced="true" description="Capacity of the byte buffers in the pool.">
 						<validators>
 							<isGreaterOrEqual than="64KB" />
 						</validators>

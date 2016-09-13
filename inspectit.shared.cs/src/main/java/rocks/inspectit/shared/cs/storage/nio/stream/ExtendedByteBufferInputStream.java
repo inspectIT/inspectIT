@@ -283,11 +283,11 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 								// add buffer to the queue
 								getFullBuffers().add(finalByteBuffer);
 							} else {
-								// if is failed, return buffer to empty buffers and decrease the
-								// total read size because we can not read that amount of bytes
+								// if is failed, return buffer to empty buffers and signal read
+								// failed
 								finalByteBuffer.clear();
 								getEmptyBuffers().add(finalByteBuffer);
-								setTotalSize(getTotalSize() - getAttemptedWriteReadSize());
+								setReadFailed(true);
 							}
 							// signal continue reading if await is active
 							continueReadLock.lock();
@@ -323,7 +323,14 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 							}
 						}
 					} catch (IOException e) {
-						log.warn("Exception occurred trying to read in the ReadTask.", e);
+						// log error not to lose it
+						log.error("Exception occurred trying to read in the ReadTask.", e);
+
+						// return buffer and signal error
+						finalByteBuffer.clear();
+						getEmptyBuffers().add(finalByteBuffer);
+						setReadFailed(true);
+						break;
 					}
 				}
 				nextDescriptorIndex.incrementAndGet();

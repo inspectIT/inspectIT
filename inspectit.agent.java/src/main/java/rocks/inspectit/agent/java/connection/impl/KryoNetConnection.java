@@ -89,6 +89,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void connect(String host, int port) throws ConnectException {
 		if (!isConnected()) {
 			try {
@@ -134,6 +135,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void disconnect() {
 		stopClient();
 
@@ -172,6 +174,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void sendKeepAlive(final long platformId) throws ServerUnavailableException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -190,12 +193,18 @@ public class KryoNetConnection implements IConnection {
 		} catch (ExecutionException e) {
 			// there should be no execution exception
 			log.error("Exception thrown while trying to send keep-alive signal to the server.", e);
+		} catch (ServerUnavailableException e) {
+			if (!e.isServerTimeout()) {
+				stopClient();
+			}
+			throw e;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public AgentConfig register(final String agentName, final String version) throws ServerUnavailableException, RegistrationException, BusinessException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -234,12 +243,18 @@ public class KryoNetConnection implements IConnection {
 			}
 
 			throw new RegistrationException("Could not register the platform", executionException.getCause()); // NOPMD
+		} catch (ServerUnavailableException e) {
+			if (!e.isServerTimeout()) {
+				stopClient();
+			}
+			throw e;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void unregister(final long platformIdent) throws ServerUnavailableException, RegistrationException, BusinessException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -266,12 +281,18 @@ public class KryoNetConnection implements IConnection {
 			}
 
 			throw new RegistrationException("Could not un-register the platform", executionException.getCause()); // NOPMD
+		} catch (ServerUnavailableException e) {
+			if (!e.isServerTimeout()) {
+				stopClient();
+			}
+			throw e;
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void sendDataObjects(List<? extends DefaultData> measurements) throws ServerUnavailableException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -284,6 +305,11 @@ public class KryoNetConnection implements IConnection {
 			} catch (ExecutionException executionException) {
 				// there should be no execution exception
 				log.error("Could not send data objects", executionException);
+			} catch (ServerUnavailableException e) {
+				if (!e.isServerTimeout()) {
+					stopClient();
+				}
+				throw e;
 			}
 		}
 	}
@@ -291,6 +317,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public InstrumentationDefinition analyze(final long platformIdent, final String hash, final Type type) throws ServerUnavailableException, BusinessException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -319,13 +346,18 @@ public class KryoNetConnection implements IConnection {
 			// otherwise we log and return null as it's unexpected exception for us
 			log.error("Could not get instrumentation result", executionException);
 			return null;
+		} catch (ServerUnavailableException e) {
+			if (!e.isServerTimeout()) {
+				stopClient();
+			}
+			throw e;
 		}
-
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void instrumentationApplied(final long platformIdent, Map<Long, long[]> methodToSensorMap) throws ServerUnavailableException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -338,6 +370,11 @@ public class KryoNetConnection implements IConnection {
 			} catch (ExecutionException executionException) {
 				// there should be no execution exception
 				log.error("Could not sent instrumented method ids", executionException);
+			} catch (ServerUnavailableException e) {
+				if (!e.isServerTimeout()) {
+					stopClient();
+				}
+				throw e;
 			}
 		}
 
@@ -346,6 +383,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(final long platformIdent, final Collection<JmxAttributeDescriptor> descriptors) throws ServerUnavailableException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
@@ -369,6 +407,11 @@ public class KryoNetConnection implements IConnection {
 			// otherwise we log and return null as it's unexpected exception for us
 			log.error("Could not get jmx attribute analyze result", executionException);
 			return Collections.emptyList();
+		} catch (ServerUnavailableException e) {
+			if (!e.isServerTimeout()) {
+				stopClient();
+			}
+			throw e;
 		}
 	}
 
@@ -399,6 +442,7 @@ public class KryoNetConnection implements IConnection {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isConnected() {
 		return (null != client) && client.isConnected();
 	}

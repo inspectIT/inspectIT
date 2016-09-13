@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Input stream that uses {@link SocketChannel} as input and provides bytes via our
@@ -23,6 +27,12 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBufferInputStream {
+
+	/**
+	 * The log of this class.
+	 */
+	@Log
+	Logger log;
 
 	/**
 	 * {@link SocketChannel} to read from.
@@ -103,6 +113,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void run() {
 			while (true) {
 				long bytesLeft = length - totalRead;
@@ -115,7 +126,7 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 				// otherwise take an empty buffer
 				ByteBuffer byteBuffer = null;
 				try {
-					byteBuffer = getEmptyBuffers().take();
+					byteBuffer = getEmptyBuffers().poll(100, TimeUnit.MILLISECONDS);
 				} catch (InterruptedException e) {
 					Thread.interrupted();
 				}
@@ -137,10 +148,22 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 						} else {
 							byteBuffer.clear();
 							getEmptyBuffers().add(byteBuffer);
+							// if we read negative value from the socket then we reached the end
+							// mark as read failed and get out
+							if (read < 0) {
+								setReadFailed(true);
+								break;
+							}
 						}
 					} catch (IOException e) {
+						// log error not to lose it
+						log.error("Error reading from the socket channel.", e);
+
+						// return buffer and signal error
 						byteBuffer.clear();
 						getEmptyBuffers().add(byteBuffer);
+						setReadFailed(true);
+						break;
 					}
 				}
 			}

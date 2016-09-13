@@ -66,6 +66,7 @@ public class SocketExtendedByteBufferInputStreamTest {
 		random.nextBytes(array);
 
 		when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
+			@Override
 			public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
 				return ByteBuffer.allocateDirect(bufferSize);
 			}
@@ -74,6 +75,7 @@ public class SocketExtendedByteBufferInputStreamTest {
 		when(socketChannel.read(Matchers.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
 			int readPosition = 0;
 
+			@Override
 			public Integer answer(InvocationOnMock invocation) throws Throwable {
 				Object[] args = invocation.getArguments();
 				ByteBuffer byteBuffer = (ByteBuffer) args[0];
@@ -94,9 +96,42 @@ public class SocketExtendedByteBufferInputStreamTest {
 		inputStream.reset(readSize);
 
 		byte[] bytes = new byte[readSize];
-		inputStream.read(bytes, 0, readSize);
+		int read = inputStream.read(bytes, 0, readSize);
 
+		assertThat(read, is(readSize));
 		assertThat(bytes, is(equalTo(array)));
+	}
+
+	@Test
+	public void endOfStream() throws IOException {
+		Random random = new Random();
+		final int readSize = random.nextInt(8096);
+		final int bufferSize = 1024;
+		final byte[] array = new byte[readSize];
+		random.nextBytes(array);
+
+		when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
+			@Override
+			public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
+				return ByteBuffer.allocateDirect(bufferSize);
+			}
+		});
+
+		when(socketChannel.read(Matchers.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
+			@Override
+			public Integer answer(InvocationOnMock invocation) throws Throwable {
+				return -1;
+			}
+		});
+
+		inputStream.prepare();
+		inputStream.reset(readSize);
+
+		byte[] bytes = new byte[readSize];
+		int read = inputStream.read(bytes, 0, readSize);
+
+		assertThat(read, is(-1));
+		assertThat(bytes, is(equalTo(new byte[readSize])));
 	}
 
 }
