@@ -1,17 +1,20 @@
 package rocks.inspectit.server.service.rest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import java.io.IOException;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import rocks.inspectit.server.service.rest.error.JsonError;
 import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.all.version.InvalidVersionException;
 import rocks.inspectit.shared.all.version.VersionService;
 import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 
@@ -57,21 +60,24 @@ public class CmrRestfulService {
 	 * @return Returns CMR version.
 	 * @throws IOException
 	 *             If version information is not available.
+	 * @throws InvalidVersionException
+	 *             If version information is not available.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "version")
+	@RequestMapping(method = GET, value = "version")
 	@ResponseBody
-	public String getVersion() throws IOException {
-		return versionService.getVersionAsString();
+	public String getVersion() throws IOException, InvalidVersionException {
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.writeValueAsString(versionService.getVersionAsString());
 	}
 
 	/**
 	 * Returns CMR status information.
 	 * <p>
-	 * <i> Example URL: /cmr/status-data</i>
+	 * <i> Example URL: /cmr/status</i>
 	 *
 	 * @return Returns CMR status information.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "status-data")
+	@RequestMapping(method = GET, value = "status")
 	@ResponseBody
 	public CmrStatusData getStatusData() {
 		return cmrManagementService.getCmrStatusData();

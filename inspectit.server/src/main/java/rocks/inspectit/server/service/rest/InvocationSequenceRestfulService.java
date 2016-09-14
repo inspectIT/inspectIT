@@ -1,5 +1,7 @@
 package rocks.inspectit.server.service.rest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,8 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,11 +53,11 @@ public class InvocationSequenceRestfulService {
 	 *
 	 * *
 	 * <p>
-	 * <i> Example URL: /data/invocations/overview</i>
+	 * <i> Example URL: /data/invocations</i>
 	 * </p>
 	 *
-	 * @param platformId
-	 *            Agent/Platform ID.
+	 * @param agentId
+	 *            Agent ID.
 	 * @param fromDate
 	 *            Begin of time period.
 	 * @param toDate
@@ -66,14 +68,14 @@ public class InvocationSequenceRestfulService {
 	 *            The limit/size of the results.
 	 * @return a list of {@link InvocationSequenceData}.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "overview")
+	@RequestMapping(method = GET, value = "")
 	@ResponseBody
-	public List<InvocationSequenceData> getInvocationSequenceOverview(@RequestParam(value = "platformId", required = false, defaultValue = "0") Long platformId,
+	public List<InvocationSequenceData> getInvocationSequenceOverview(@RequestParam(value = "agentId", required = false, defaultValue = "0") Long agentId,
 			@RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date fromDate,
 			@RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date toDate,
 			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") Long latestReadId, @RequestParam(value = "limit", defaultValue = "100") int limit) {
 
-		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(platformId, limit, fromDate, toDate, latestReadId + 1, null);
+		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(agentId, limit, fromDate, toDate, latestReadId + 1, null);
 
 		return result;
 	}
@@ -82,16 +84,16 @@ public class InvocationSequenceRestfulService {
 	 * Provides detail informations of an invocation sequence data.
 	 *
 	 * <p>
-	 * <i> Example URL: /data/invocations/details?id=4611686018427388252</i>
+	 * <i> Example URL: /data/invocations/{id}</i>
 	 * </p>
 	 *
 	 * @param id
 	 *            Invocation sequence ID.
 	 * @return detail information of an {@link InvocationSequenceData}.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "details")
+	@RequestMapping(method = GET, value = "{id}")
 	@ResponseBody
-	public InvocationSequenceData getInvocationSequenceDetails(@RequestParam(value = "id", required = true) long id) {
+	public InvocationSequenceData getInvocationSequenceDetails(@PathVariable long id) {
 		InvocationSequenceData template = new InvocationSequenceData();
 		template.setId(id);
 		InvocationSequenceData result = invocationDataAccessService.getInvocationSequenceDetail(template);
