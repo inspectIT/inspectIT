@@ -1,15 +1,19 @@
 package rocks.inspectit.server.service.rest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,13 +27,13 @@ import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCode
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 
 /**
- * Restful service provider for platform/agent information.
+ * Restful service provider for agent information.
  *
  * @author Mario Mann
  *
  */
 @Controller
-@RequestMapping(value = "/data/platform")
+@RequestMapping(value = "/data/agents")
 public class PlatformRestfulService {
 
 	/**
@@ -53,12 +57,12 @@ public class PlatformRestfulService {
 	/**
 	 * Returns information of all existing agents.
 	 * <p>
-	 * <i> Example URL: /data/platform/all</i>
+	 * <i> Example URL: /data/agents</i>
 	 * </p>
 	 *
 	 * @return a list of {@link PlatformIdent} with all existing agents.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "all")
+	@RequestMapping(method = GET, value = "")
 	@ResponseBody
 	public Set<PlatformIdent> getAll() {
 		Map<PlatformIdent, AgentStatusData> agentsOverviewMap = globalDataAccessService.getAgentsOverview();
@@ -68,28 +72,28 @@ public class PlatformRestfulService {
 	/**
 	 * Returns the status of a given agentId.
 	 * <p>
-	 * <i> Example URL: /data/platform/status?platformId=1</i>
+	 * <i> Example URL: /data/agents/{agentId}</i>
 	 * </p>
 	 *
-	 * @param platformId
-	 *            AGENT/PLATFORM ID bounded from path.
-	 * @return the status of a given platformId.
+	 * @param agentId
+	 *            AGENT ID bounded from path.
+	 * @return the status of a given agentId.
 	 * @throws BusinessException
-	 *             If given ID of the agent/platform is not valid.
+	 *             If given ID of the agent is not valid.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "status")
+	@RequestMapping(method = GET, value = "{agentId}")
 	@ResponseBody
-	public AgentStatusData getStatus(@RequestParam(value = "platformId", required = true) long platformId) throws BusinessException {
+	public AgentStatusData getStatus(@PathVariable long agentId) throws BusinessException {
 		AgentStatusData agentStatus = null;
 		Map<PlatformIdent, AgentStatusData> agents = globalDataAccessService.getAgentsOverview();
 		for (Entry<PlatformIdent, AgentStatusData> entry : agents.entrySet()) {
-			if (entry.getKey().getId() == platformId) {
+			if (entry.getKey().getId() == agentId) {
 				agentStatus = globalDataAccessService.getAgentsOverview().get(entry.getKey());
 			}
 		}
 
 		if (agentStatus == null) {
-			throw new BusinessException("Agent with ID " + platformId + " does not exist!", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			throw new BusinessException("Agent with ID " + agentId + " does not exist!", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 		}
 		return agentStatus;
 	}
@@ -97,37 +101,48 @@ public class PlatformRestfulService {
 	/**
 	 * Returns list of instrumented methods of a given agentId.
 	 * <p>
-	 * <i> Example URL: /data/platform/methods?platformId=1</i>
+	 * <i> Example URL: /data/agents/{agentId}/methods</i>
 	 * </p>
 	 *
-	 * @param platformId
-	 *            AGENT/PLATFORM ID bounded from path.
-	 * @return a Set of {@link MethodIdent} of a given platformId.
+	 * @param agentId
+	 *            AGENT ID bounded from path.
+	 * @return a Set of {@link MethodIdent} of a given agentId.
 	 * @throws BusinessException
-	 *             If given ID of the agent/platform is not valid.
+	 *             If given ID of the agent is not valid.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "methods")
+	@RequestMapping(method = GET, value = "{agentId}/methods")
 	@ResponseBody
-	public Set<MethodIdent> getMethods(@RequestParam(value = "platformId", required = true) long platformId) throws BusinessException {
-		return globalDataAccessService.getCompleteAgent(platformId).getMethodIdents();
+	public Set<MethodIdent> getMethods(@PathVariable long agentId) throws BusinessException {
+		return globalDataAccessService.getCompleteAgent(agentId).getMethodIdents();
 	}
 
 	/**
 	 * Returns the complete sensors informations of an agent.
 	 * <p>
-	 * <i> Example URL: /data/platform/sensors?platformId=1</i>
+	 * <i> Example URL: /data/agents/{agentId}/sensors</i>
 	 * </p>
 	 *
-	 * @param platformId
-	 *            AGENT/PLATFORM ID bounded from path.
+	 * @param agentId
+	 *            AGENT ID bounded from path.
 	 * @return a Set of {@link SensorTypeIdent} of the given agentId.
 	 * @throws BusinessException
-	 *             If given ID of the agent/platform is not valid.
+	 *             If given ID of the agent is not valid.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "sensors")
+	@RequestMapping(method = GET, value = "{agentId}/sensors")
 	@ResponseBody
-	public Set<SensorTypeIdent> getSensors(@RequestParam(value = "platformId", required = true) long platformId) throws BusinessException {
-		return globalDataAccessService.getCompleteAgent(platformId).getSensorTypeIdents();
+	public Set<SensorTypeIdent> getSensors(@PathVariable long agentId) throws BusinessException {
+		return globalDataAccessService.getCompleteAgent(agentId).getSensorTypeIdents();
 	}
 
+	/**
+	 * Header information for swagger requests.
+	 *
+	 * @param response
+	 *            Response information
+	 */
+	@ModelAttribute
+	public void setVaryResponseHeader(HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	}
 }
