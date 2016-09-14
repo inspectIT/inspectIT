@@ -1,12 +1,13 @@
 package rocks.inspectit.server.service.rest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,7 +59,7 @@ public class CmrRestfulService {
 	 * @throws IOException
 	 *             If version information is not available.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "version")
+	@RequestMapping(method = GET, value = "version")
 	@ResponseBody
 	public String getVersion() throws IOException {
 		return versionService.getVersionAsString();
@@ -71,7 +72,7 @@ public class CmrRestfulService {
 	 *
 	 * @return Returns CMR status information.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "status-data")
+	@RequestMapping(method = GET, value = "status-data")
 	@ResponseBody
 	public CmrStatusData getStatusData() {
 		return cmrManagementService.getCmrStatusData();

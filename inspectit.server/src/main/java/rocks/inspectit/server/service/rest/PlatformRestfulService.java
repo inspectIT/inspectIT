@@ -1,5 +1,7 @@
 package rocks.inspectit.server.service.rest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -7,9 +9,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,7 +59,7 @@ public class PlatformRestfulService {
 	 *
 	 * @return a list of {@link PlatformIdent} with all existing agents.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "all")
+	@RequestMapping(method = GET, value = "all")
 	@ResponseBody
 	public Set<PlatformIdent> getAll() {
 		Map<PlatformIdent, AgentStatusData> agentsOverviewMap = globalDataAccessService.getAgentsOverview();
@@ -68,7 +69,7 @@ public class PlatformRestfulService {
 	/**
 	 * Returns the status of a given agentId.
 	 * <p>
-	 * <i> Example URL: /data/platform/status?platformId=1</i>
+	 * <i> Example URL: /data/platform/{platformId}</i>
 	 * </p>
 	 *
 	 * @param platformId
@@ -77,9 +78,9 @@ public class PlatformRestfulService {
 	 * @throws BusinessException
 	 *             If given ID of the agent/platform is not valid.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "status")
+	@RequestMapping(method = GET, value = "status/{platformId}")
 	@ResponseBody
-	public AgentStatusData getStatus(@RequestParam(value = "platformId", required = true) long platformId) throws BusinessException {
+	public AgentStatusData getStatus(@PathVariable long platformId) throws BusinessException {
 		AgentStatusData agentStatus = null;
 		Map<PlatformIdent, AgentStatusData> agents = globalDataAccessService.getAgentsOverview();
 		for (Entry<PlatformIdent, AgentStatusData> entry : agents.entrySet()) {
@@ -97,7 +98,7 @@ public class PlatformRestfulService {
 	/**
 	 * Returns list of instrumented methods of a given agentId.
 	 * <p>
-	 * <i> Example URL: /data/platform/methods?platformId=1</i>
+	 * <i> Example URL: /data/platform/methods/{platformId}</i>
 	 * </p>
 	 *
 	 * @param platformId
@@ -106,16 +107,16 @@ public class PlatformRestfulService {
 	 * @throws BusinessException
 	 *             If given ID of the agent/platform is not valid.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "methods")
+	@RequestMapping(method = GET, value = "methods/{platformId}")
 	@ResponseBody
-	public Set<MethodIdent> getMethods(@RequestParam(value = "platformId", required = true) long platformId) throws BusinessException {
+	public Set<MethodIdent> getMethods(@PathVariable long platformId) throws BusinessException {
 		return globalDataAccessService.getCompleteAgent(platformId).getMethodIdents();
 	}
 
 	/**
 	 * Returns the complete sensors informations of an agent.
 	 * <p>
-	 * <i> Example URL: /data/platform/sensors?platformId=1</i>
+	 * <i> Example URL: /data/platform/sensors/{platformId}</i>
 	 * </p>
 	 *
 	 * @param platformId
@@ -124,9 +125,9 @@ public class PlatformRestfulService {
 	 * @throws BusinessException
 	 *             If given ID of the agent/platform is not valid.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "sensors")
+	@RequestMapping(method = GET, value = "sensors/{platformId}")
 	@ResponseBody
-	public Set<SensorTypeIdent> getSensors(@RequestParam(value = "platformId", required = true) long platformId) throws BusinessException {
+	public Set<SensorTypeIdent> getSensors(@PathVariable long platformId) throws BusinessException {
 		return globalDataAccessService.getCompleteAgent(platformId).getSensorTypeIdents();
 	}
 

@@ -1,5 +1,7 @@
 package rocks.inspectit.server.service.rest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,7 +84,7 @@ public class StorageRestfulService {
 	 *
 	 * @return List of all storages.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "all")
+	@RequestMapping(method = GET, value = "all")
 	@ResponseBody
 	public List<StorageData> getAllStorages() {
 		List<StorageData> storages = storageService.getExistingStorages();
@@ -91,15 +94,15 @@ public class StorageRestfulService {
 	/**
 	 * Returns storage by ID.
 	 * <p>
-	 * <i> Example URL: /storage/get?id=1</i>
+	 * <i> Example URL: /storage/get/{id}</i>
 	 *
 	 * @param id
 	 *            ID bounded from path.
 	 * @return One storage or <code>null</code> if the storage with given ID does not exists.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "get")
+	@RequestMapping(method = GET, value = "get/{id}")
 	@ResponseBody
-	public StorageData getStorageById(@RequestParam(value = "id", required = true) String id) {
+	public StorageData getStorageById(@PathVariable String id) {
 		List<StorageData> storages = storageService.getExistingStorages();
 		for (StorageData storageData : storages) {
 			if (Objects.equals(id, storageData.getId())) {
@@ -112,7 +115,7 @@ public class StorageRestfulService {
 	/**
 	 * Creates a new storage with given name.
 	 * <p>
-	 * <i> Example URL: /storage/create?name=ViaRest</i>
+	 * <i> Example URL: /storage/create/{name}</i>
 	 *
 	 * @param name
 	 *            Name of the storage.
@@ -120,9 +123,9 @@ public class StorageRestfulService {
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "create")
+	@RequestMapping(method = GET, value = "create/{name}")
 	@ResponseBody
-	public Object createStorage(@RequestParam(value = "name", required = true) String name) throws BusinessException {
+	public Object createStorage(@PathVariable String name) throws BusinessException {
 		if (StringUtils.isEmpty(name)) {
 			throw new BusinessException("Create a new storage via storage REST service.", StorageErrorCodeEnum.STORAGE_NAME_IS_NOT_PROVIDED);
 		}
@@ -140,7 +143,7 @@ public class StorageRestfulService {
 	/**
 	 * Finalize storage by ID.
 	 * <p>
-	 * <i> Example URL: /storage/finalize?id=1</i>
+	 * <i> Example URL: /storage/finalize/{id}</i>
 	 *
 	 * @param id
 	 *            ID bounded from path.
@@ -148,9 +151,9 @@ public class StorageRestfulService {
 	 *             If {@link BusinessException} occurs.
 	 * @return Message for the user.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "finalize")
+	@RequestMapping(method = GET, value = "finalize/{id}")
 	@ResponseBody
-	public Object finalizeStorage(@RequestParam(value = "id", required = true) String id) throws BusinessException {
+	public Object finalizeStorage(@PathVariable String id) throws BusinessException {
 		StorageData storageData = new StorageData();
 		storageData.setId(id);
 		storageService.closeStorage(storageData);
@@ -160,7 +163,7 @@ public class StorageRestfulService {
 	/**
 	 * Deletes storage by ID.
 	 * <p>
-	 * <i> Example URL: /storage/delete?id=1</i>
+	 * <i> Example URL: /storage/delete/{id}</i>
 	 *
 	 * @param id
 	 *            ID bounded from path.
@@ -168,9 +171,9 @@ public class StorageRestfulService {
 	 *             If {@link BusinessException} occurs.
 	 * @return Message for the user.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "delete")
+	@RequestMapping(method = GET, value = "delete/{id}")
 	@ResponseBody
-	public Object deleteStorage(@RequestParam(value = "id", required = true) String id) throws BusinessException {
+	public Object deleteStorage(@PathVariable String id) throws BusinessException {
 		StorageData storageData = new StorageData();
 		storageData.setId(id);
 		storageService.deleteStorage(storageData);
@@ -184,7 +187,7 @@ public class StorageRestfulService {
 	 *
 	 * @return {@link RecordingState}.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "recording-state")
+	@RequestMapping(method = GET, value = "recording-state")
 	@ResponseBody
 	public Map<String, Object> getRecordingState() {
 		RecordingState state = storageService.getRecordingState();
@@ -221,7 +224,7 @@ public class StorageRestfulService {
 	 *             If {@link BusinessException} occurs.
 	 * @return Message for the user.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "stop-recording")
+	@RequestMapping(method = GET, value = "stop-recording")
 	@ResponseBody
 	public Object stopRecording() throws BusinessException {
 		storageService.stopRecording();
@@ -233,7 +236,7 @@ public class StorageRestfulService {
 	 * allows specification of the start delay and recording duration in milliseconds. Zero values
 	 * for that parameters are omitting them.
 	 * <p>
-	 * <i> Example URL: /storage/start-recording/?id=1&startDelay=30000&recordingDuration=60000
+	 * <i> Example URL: /storage/start-recording?id=1&startDelay=30000&recordingDuration=60000
 	 * (makes a 30s delay and records for 60s)</i>
 	 *
 	 * @param id
