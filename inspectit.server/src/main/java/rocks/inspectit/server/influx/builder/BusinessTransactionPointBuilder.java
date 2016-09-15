@@ -63,6 +63,7 @@ public class BusinessTransactionPointBuilder extends DefaultDataPointBuilder<Inv
 	protected void addFields(InvocationSequenceData data, Builder builder) {
 		// fields
 		builder.addField(Series.BusinessTransaction.FIELD_DURATION, data.getDuration());
+		builder.addField(Series.BusinessTransaction.FIELD_TRACE_ID, data.getId());
 	}
 
 }
