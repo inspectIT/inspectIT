@@ -38,6 +38,11 @@ public interface Series {
 		String FIELD_DURATION = "duration";
 
 		/**
+		 * Trace id field.
+		 */
+		String FIELD_TRACE_ID = "traceId";
+
+		/**
 		 * Application name tag.
 		 */
 		String TAG_APPLICATION_NAME = "applicationName";
@@ -92,6 +97,11 @@ public interface Series {
 		 * Maximum CPU time field.
 		 */
 		String FIELD_MAX_CPU_TIME = "maxCpuTime";
+
+		/**
+		 * The invocation count field.
+		 */
+		String FIELD_COUNT = "count";
 
 		/**
 		 * Simple method name tag.
@@ -327,12 +337,12 @@ public interface Series {
 		/**
 		 * Initial heap memory size field.
 		 */
-		String FIELD_INIT_HEAP_MEMORY_SIZE = "initHeapMemprySize";
+		String FIELD_INIT_HEAP_MEMORY_SIZE = "initHeapMemorySize";
 
 		/**
 		 * Initial non-heap memory size field.
 		 */
-		String FIELD_INIT_NON_HEAP_MEMORY_SIZE = "initNonHeapMemprySize";
+		String FIELD_INIT_NON_HEAP_MEMORY_SIZE = "initNonHeapMemorySize";
 
 		/**
 		 * JIT compiler name field.

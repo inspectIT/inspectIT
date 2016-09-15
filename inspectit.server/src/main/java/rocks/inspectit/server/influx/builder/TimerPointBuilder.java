@@ -61,6 +61,7 @@ public class TimerPointBuilder extends DefaultDataPointBuilder<TimerData> {
 		builder.addField(Series.Methods.FIELD_MIN_CPU_TIME, data.getCpuMin());
 		builder.addField(Series.Methods.FIELD_CPU_TIME, data.getCpuAverage());
 		builder.addField(Series.Methods.FIELD_MAX_CPU_TIME, data.getCpuMax());
+		builder.addField(Series.Methods.FIELD_COUNT, data.getCount());
 	}
 
 }
