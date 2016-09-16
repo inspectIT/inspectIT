@@ -1,5 +1,6 @@
 package rocks.inspectit.server.processor.impl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ import org.influxdb.dto.Point.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import rocks.inspectit.server.influx.builder.DefaultDataPointBuilder;
+import rocks.inspectit.server.influx.builder.IPointBuilder;
 import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
 import rocks.inspectit.shared.all.communication.DefaultData;
@@ -37,25 +38,27 @@ public class InfluxProcessor extends AbstractCmrDataProcessor {
 	/**
 	 * Map of all builders.
 	 */
-	private Map<Class<? extends DefaultData>, DefaultDataPointBuilder<DefaultData>> builderMap;
+	private Map<Class<? extends DefaultData>, IPointBuilder<DefaultData>> builderMap;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param influxDbDao
-	 *            {@link IInfluxDBDao}
+	 *            {@link InfluxDBDao}
 	 * @param builders
 	 *            All available influx point builders.
 	 */
 	@Autowired
-	public InfluxProcessor(InfluxDBDao influxDbDao, List<DefaultDataPointBuilder<DefaultData>> builders) {
+	public InfluxProcessor(InfluxDBDao influxDbDao, List<IPointBuilder<DefaultData>> builders) {
 		this.influxDbDao = influxDbDao;
 		if (CollectionUtils.isEmpty(builders)) {
 			builderMap = Collections.emptyMap();
 		} else {
 			builderMap = new HashMap<>();
-			for (DefaultDataPointBuilder<DefaultData> builder : builders) {
-				builderMap.put(builder.getDataClass(), builder);
+			for (IPointBuilder<DefaultData> builder : builders) {
+				for (Class<? extends DefaultData> clazz : builder.getDataClasses()) {
+					builderMap.put(clazz, builder);
+				}
 			}
 		}
 	}
@@ -65,9 +68,11 @@ public class InfluxProcessor extends AbstractCmrDataProcessor {
 	 */
 	@Override
 	protected void processData(DefaultData defaultData, EntityManager entityManager) {
-		DefaultDataPointBuilder<DefaultData> defaultDataPointBuilder = builderMap.get(defaultData.getClass());
-		Builder builder = defaultDataPointBuilder.createBuilder(defaultData);
-		influxDbDao.insert(builder.build());
+		IPointBuilder<DefaultData> defaultDataPointBuilder = builderMap.get(defaultData.getClass());
+		Collection<Builder> builders = defaultDataPointBuilder.createBuilders(defaultData);
+		for (Builder builder : builders) {
+			influxDbDao.insert(builder.build());
+		}
 	}
 
 	/**

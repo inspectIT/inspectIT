@@ -1,6 +1,7 @@
 package rocks.inspectit.agent.java.instrumentation.asm;
 
 import info.novatec.inspectit.org.objectweb.asm.Type;
+import info.novatec.inspectit.org.objectweb.asm.commons.Method;
 
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 
@@ -31,6 +32,16 @@ public interface IInstrumenterConstant {
 	 * {@link Throwable} internal name.
 	 */
 	String THROWABLE_INTERNAL_NAME = Type.getInternalName(Throwable.class);
+
+	/**
+	 * {@link Throwable} type.
+	 */
+	Type THROWABLE_TYPE = Type.getType(Throwable.class);
+
+	/**
+	 * Reference to {@link Throwable#getCause()}.
+	 */
+	Method THROWABLE_GET_CAUSE_METHOD = Method.getMethod("Throwable getCause()");
 
 	/**
 	 * Descriptor of our IAgent.
@@ -99,6 +110,16 @@ public interface IInstrumenterConstant {
 	String DISPATCH_SPECIAL_METHOD_AFTER_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.getType(Object.class), Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class),
 			Type.getType(Object.class));
 
+	/**
+	 * The method name used for constructors by the java compiler.
+	 */
+	String CONSTRUCTOR_INTERNAL_NAME = "<init>";
+
+	/**
+	 * The ASM type representing {@link java.lang.reflect.Method}.
+	 */
+	Type REFLECTION_METHOD_TYPE = Type.getType(java.lang.reflect.Method.class);
+
 	// primitive wrappers cached
 	Type BOOLEAN_WRAPPER_TYPE = Type.getType(Boolean.class); // NOCHK
 	Type CHAR_WRAPPER_TYPE = Type.getType(Character.class); // NOCHK
@@ -116,6 +137,6 @@ public interface IInstrumenterConstant {
 	/**
 	 * Object[] type cached.
 	 */
-	Type OBJECT_ARRAY_TYPE = Type.getType(Object.class);
+	Type OBJECT_ARRAY_TYPE = Type.getType(Object[].class);
 
 }

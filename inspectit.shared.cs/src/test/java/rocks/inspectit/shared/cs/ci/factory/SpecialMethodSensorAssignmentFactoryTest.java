@@ -14,12 +14,15 @@ import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.AbstractSpecialMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 
 /**
@@ -88,6 +91,24 @@ public class SpecialMethodSensorAssignmentFactoryTest extends TestBase {
 			assertThat(assignments, is(not(empty())));
 			for (SpecialMethodSensorAssignment assignment : assignments) {
 				assertThat(assignment.getSpecialMethodSensorConfig(), is((AbstractSpecialMethodSensorConfig) MBeanServerInterceptorSensorConfig.INSTANCE));
+			}
+		}
+
+		@Test
+		public void endUserMonitoring() {
+
+			EndUserMonitoringConfig eumConf = new EndUserMonitoringConfig();
+			eumConf.setActiveModules("" + JSAgentModule.NAVTIMINGS_MODULE.getIdentifier());
+			eumConf.setScriptBaseUrl("/");
+			eumConf.setEumEnabled(true);
+
+			when(environment.getEumConfig()).thenReturn(eumConf);
+
+			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
+
+			assertThat(assignments, is(not(empty())));
+			for (SpecialMethodSensorAssignment assignment : assignments) {
+				assertThat(assignment.getSpecialMethodSensorConfig(), is((AbstractSpecialMethodSensorConfig) EUMInstrumentationSensorConfig.INSTANCE));
 			}
 		}
 	}

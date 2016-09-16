@@ -89,6 +89,11 @@
 		<property name="checkFormat" value=".*" />
 		<property name="influenceFormat" value="0" />
 	</module>
+	
+	<module name="SuppressionCommentFilter">
+	    <property name="offCommentFormat" value="NOCHKON"/>
+	    <property name="onCommentFormat" value="NOCHKOFF"/>
+	</module>
 
 	<!-- For wider ranged suppressions one can also use // NOCHKALL to disable it for a whole file. -->
 	<module name="SuppressionCommentFilter">

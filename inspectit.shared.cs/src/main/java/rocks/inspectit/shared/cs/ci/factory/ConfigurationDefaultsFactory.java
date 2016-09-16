@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
@@ -122,6 +123,15 @@ public final class ConfigurationDefaultsFactory {
 	 */
 	public static IExceptionSensorConfig getDefaultExceptionSensorConfig() {
 		return new ExceptionSensorConfig();
+	}
+
+	/**
+	 * Returns default End User Monitoring configuration.
+	 *
+	 * @return Returns default End User Monitoring configuration.
+	 */
+	public static EndUserMonitoringConfig getDefaultEndUserMonitoringConfig() {
+		return new EndUserMonitoringConfig();
 	}
 
 	/**

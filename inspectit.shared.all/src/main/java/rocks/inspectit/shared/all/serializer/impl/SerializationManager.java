@@ -84,6 +84,13 @@ import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentCo
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.all.communication.data.eum.AjaxRequest;
+import rocks.inspectit.shared.all.communication.data.eum.ClickAction;
+import rocks.inspectit.shared.all.communication.data.eum.PageLoadAction;
+import rocks.inspectit.shared.all.communication.data.eum.PageLoadRequest;
+import rocks.inspectit.shared.all.communication.data.eum.ResourceLoadRequest;
+import rocks.inspectit.shared.all.communication.data.eum.UserAction;
+import rocks.inspectit.shared.all.communication.data.eum.UserSessionInfo;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.RemoteException;
 import rocks.inspectit.shared.all.exception.TechnicalException;
@@ -104,6 +111,7 @@ import rocks.inspectit.shared.all.instrumentation.classcache.util.TypeWithAnnota
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
@@ -395,6 +403,17 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(SpanIdent.class, new CustomCompatibleFieldSerializer<SpanIdent>(kryo, SpanIdent.class, schemaManager), nextRegistrationId++);
 		kryo.register(ClientSpan.class, new CustomCompatibleFieldSerializer<ClientSpan>(kryo, ClientSpan.class, schemaManager, true), nextRegistrationId++);
 		kryo.register(ServerSpan.class, new CustomCompatibleFieldSerializer<ServerSpan>(kryo, ServerSpan.class, schemaManager, true), nextRegistrationId++);
+	
+		// ADDED with INSPECT-1959
+		// TODO: Use the CustomCompatibleFieldSerializer as soon as the data is stable
+		kryo.register(AgentEndUserMonitoringConfig.class, new FieldSerializer<AgentEndUserMonitoringConfig>(kryo, AgentEndUserMonitoringConfig.class), nextRegistrationId++);
+		kryo.register(AjaxRequest.class, new FieldSerializer<AjaxRequest>(kryo, AjaxRequest.class), nextRegistrationId++);
+		kryo.register(ClickAction.class, new FieldSerializer<ClickAction>(kryo, ClickAction.class), nextRegistrationId++);
+		kryo.register(PageLoadAction.class, new FieldSerializer<PageLoadAction>(kryo, PageLoadAction.class), nextRegistrationId++);
+		kryo.register(PageLoadRequest.class, new FieldSerializer<PageLoadRequest>(kryo, PageLoadRequest.class), nextRegistrationId++);
+		kryo.register(ResourceLoadRequest.class, new FieldSerializer<ResourceLoadRequest>(kryo, ResourceLoadRequest.class), nextRegistrationId++);
+		kryo.register(UserAction.class, new FieldSerializer<UserAction>(kryo, UserAction.class), nextRegistrationId++);
+		kryo.register(UserSessionInfo.class, new FieldSerializer<UserSessionInfo>(kryo, UserSessionInfo.class), nextRegistrationId++);	
 	}
 
 	/**
