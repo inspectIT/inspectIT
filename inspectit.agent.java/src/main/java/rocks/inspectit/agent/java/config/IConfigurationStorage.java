@@ -7,6 +7,7 @@ import java.util.Map;
 import rocks.inspectit.agent.java.config.impl.RepositoryConfig;
 import rocks.inspectit.agent.java.sensor.exception.IExceptionSensor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -189,4 +190,13 @@ public interface IConfigurationStorage {
 	 *             If agent configuration is not set.
 	 */
 	RetransformationStrategy getRetransformStrategy() throws StorageException;
+	
+	/**
+	 * Returns the configuration for the end user monitoring.
+	 *
+	 * @return the {@link AgentEndUserMonitoringConfig}.
+	 * @throws StorageException
+	 *             If agent configuration is not set.
+	 */
+	AgentEndUserMonitoringConfig getEndUserMonitoringConfig() throws StorageException;
 }

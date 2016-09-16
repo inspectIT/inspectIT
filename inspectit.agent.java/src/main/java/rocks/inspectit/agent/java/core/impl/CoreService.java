@@ -36,6 +36,7 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 
@@ -290,6 +291,15 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		builder.append('.');
 		builder.append(sensorTypeIdent);
 		return (MethodSensorData) sensorDataObjects.get(builder.toString());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addEUMData(AbstractEUMData eumData) {
+		sensorDataObjects.put(String.valueOf(counter.incrementAndGet()), eumData);
+		notifyListListeners();
 	}
 
 	/**

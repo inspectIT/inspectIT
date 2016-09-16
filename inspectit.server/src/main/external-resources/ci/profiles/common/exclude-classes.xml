@@ -13,6 +13,7 @@
 		<exclude-rule class-name="*_WLStub"/>
 		<exclude-rule class-name="*[]"/>
 		<exclude-rule class-name="*CGLIB$$*"/>
+		<exclude-rule class-name="proxied.*$inspectIT_proxy"/>
 		<exclude-rule class-name="java.lang.invoke.LambdaForm*"/>
 		<!-- non meaningful if the SQL is active -->
 		<exclude-rule class-name="oracle.jdbc.driver.OracleClosedStatement"/>
