@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
@@ -33,6 +34,7 @@ import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
@@ -60,6 +62,7 @@ public class ConfigurationCreatorTest extends TestBase {
 		// mock strategies
 		when(environment.getSendingStrategyConfig()).thenReturn(mock(IStrategyConfig.class));
 		when(environment.getBufferStrategyConfig()).thenReturn(mock(IStrategyConfig.class));
+		when(environment.getEumConfig()).thenReturn(mock(EndUserMonitoringConfig.class));
 	}
 
 	public class EnvironmentToConfiguration extends ConfigurationCreatorTest {
@@ -217,6 +220,25 @@ public class ConfigurationCreatorTest extends TestBase {
 			StrategyConfig strategyConfig = agentConfiguration.getBufferStrategyConfig();
 			assertThat(strategyConfig.getClazzName(), is(className));
 			assertThat(strategyConfig.getSettings(), is(settings));
+		}
+
+		@Test
+		public void eumConfig() throws Exception {
+
+			EndUserMonitoringConfig config = mock(EndUserMonitoringConfig.class);
+			when(config.isEumEnabled()).thenReturn(true);
+			String url = "/base/url";
+			when(config.getScriptBaseUrl()).thenReturn(url);
+			String modules = "12a";
+			when(config.getActiveModules()).thenReturn(modules);
+			when(environment.getEumConfig()).thenReturn(config);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
+
+			AgentEndUserMonitoringConfig eumConfig = agentConfiguration.getEumConfig();
+			assertThat(eumConfig.isEnabled(), is(true));
+			assertThat(eumConfig.getActiveModules(), is(modules));
+			assertThat(eumConfig.getScriptBaseUrl(), is(url));
 		}
 
 	}

@@ -111,6 +111,7 @@ import rocks.inspectit.shared.all.instrumentation.classcache.util.TypeWithAnnota
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
@@ -368,6 +369,8 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(PriorityEnum.class, new EnumSerializer(PriorityEnum.class));
 		kryo.register(EqualsMatchPattern.class, new FieldSerializer<EqualsMatchPattern>(kryo, EqualsMatchPattern.class));
 		kryo.register(WildcardMatchPattern.class, new FieldSerializer<WildcardMatchPattern>(kryo, WildcardMatchPattern.class));
+		// ADDED with INSPECT-1959
+		kryo.register(AgentEndUserMonitoringConfig.class, new FieldSerializer<AgentEndUserMonitoringConfig>(kryo, AgentEndUserMonitoringConfig.class));
 		// class cache structures
 		kryo.register(ClassType.class, new FieldSerializer<ClassType>(kryo, ClassType.class));
 		kryo.register(InterfaceType.class, new FieldSerializer<InterfaceType>(kryo, InterfaceType.class));

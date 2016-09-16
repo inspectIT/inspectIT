@@ -1,5 +1,6 @@
 package rocks.inspectit.agent.java;
 
+import rocks.inspectit.agent.java.eum.IServletInstrumenter;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 
 /**
@@ -33,6 +34,13 @@ public interface IAgent {
 	 * @return The hook dispatcher
 	 */
 	IHookDispatcher getHookDispatcher();
+
+	/**
+	 * Returns the Servlet Instrumenter responsible for UEM script injection.
+	 *
+	 * @return the servlet instrumenter singleton.
+	 */
+	IServletInstrumenter getServletInstrumenter();
 
 	/**
 	 * Loads class with the given parameters that have been passed to the target class loader.

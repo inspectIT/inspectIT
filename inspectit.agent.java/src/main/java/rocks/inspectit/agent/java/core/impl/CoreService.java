@@ -1,6 +1,8 @@
 package rocks.inspectit.agent.java.core.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +33,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.EUMData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -163,6 +166,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void start() {
 		for (ISendingStrategy strategy : sendingStrategies) {
 			strategy.start(this);
@@ -183,6 +187,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop() {
 		for (ISendingStrategy strategy : sendingStrategies) {
 			strategy.stop();
@@ -208,6 +213,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void sendData() {
 		// notify the sending thread. if it is currently sending something,
 		// nothing should happen
@@ -219,6 +225,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(sensorTypeIdent);
@@ -236,6 +243,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix, MethodSensorData methodSensorData) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -252,6 +260,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MethodSensorData getMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -267,6 +276,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData) {
 		sensorDataObjects.put(Long.toString(sensorTypeIdent), systemSensorData);
 		notifyListListeners();
@@ -275,6 +285,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SystemSensorData getPlatformSensorData(long sensorTypeIdent) {
 		return (SystemSensorData) sensorDataObjects.get(Long.toString(sensorTypeIdent));
 	}
@@ -282,6 +293,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(sensorTypeIdent);
@@ -302,6 +314,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ExceptionSensorData getExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(sensorTypeIdent);
@@ -314,6 +327,24 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	public void addEumData(EUMData data) {
+		if (data != null) {
+			data.setTimeStamp(new Timestamp(new Date().getTime()));
+			sensorDataObjects.put("eumdata", data);
+		}
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public EUMData getEumData() {
+		return (EUMData) sensorDataObjects.get("eumdata");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void addObjectStorage(long sensorTypeIdent, long methodIdent, String prefix, IObjectStorage objectStorage) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -330,6 +361,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IObjectStorage getObjectStorage(long sensorTypeIdent, long methodIdent, String prefix) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -372,6 +404,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addListListener(ListListener<?> listener) {
 		if (!listListeners.contains(listener)) {
 			listListeners.add(listener);
@@ -381,6 +414,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeListListener(ListListener<?> listener) {
 		listListeners.remove(listener);
 	}
@@ -699,6 +733,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		start();
 	}
@@ -706,6 +741,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroy() throws Exception {
 		stop();
 	}

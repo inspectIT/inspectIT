@@ -2,6 +2,7 @@ package rocks.inspectit.agent.java.core;
 
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.EUMData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 
@@ -77,6 +78,14 @@ public interface ICoreService {
 	void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData);
 
 	/**
+	 * Adds a new eum data object to the value storage.
+	 *
+	 * @param data
+	 *            the transformed eum data.
+	 */
+	void addEumData(EUMData data);
+
+	/**
 	 * Adds a new object storage to the value storage. An object storage contains an instance of
 	 * {@link IObjectStorage} which serves as a wrapper around a value object.
 	 *
@@ -128,6 +137,13 @@ public interface ICoreService {
 	 * @return Returns a {@link ExceptionSensorData}
 	 */
 	ExceptionSensorData getExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode);
+
+	/**
+	 * Gets the saved eum data object.
+	 * 
+	 * @return Returns a {@link EUMData}
+	 */
+	EUMData getEumData();
 
 	/**
 	 * Returns a saved object storage for further processing.

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
@@ -17,6 +18,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.PatternFactory;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
@@ -93,6 +95,10 @@ public class ConfigurationCreator {
 		if (null != jmxSensorConfig) {
 			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
+
+		// eum config
+		EndUserMonitoringConfig eumConf = environment.getEumConfig();
+		agentConfiguration.setEumConfig(new AgentEndUserMonitoringConfig(eumConf.isEumEnabled(), eumConf.getScriptBaseUrl(), eumConf.getActiveModules()));
 
 		// buffer strategy
 		IStrategyConfig bufferStrategyConfig = environment.getBufferStrategyConfig();

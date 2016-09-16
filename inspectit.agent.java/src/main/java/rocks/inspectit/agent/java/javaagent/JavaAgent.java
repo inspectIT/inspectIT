@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 
 import rocks.inspectit.agent.java.Agent;
 import rocks.inspectit.agent.java.IAgent;
+import rocks.inspectit.agent.java.eum.IServletInstrumenter;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 
 /**
@@ -369,6 +370,7 @@ public class JavaAgent implements ClassFileTransformer {
 			// ignore hook dispatcher because it is defined in the IAgent interface and thus must be
 			// available in the standard classloader.
 			ignoreClasses.add(IHookDispatcher.class.getCanonicalName());
+			ignoreClasses.add(IServletInstrumenter.class.getCanonicalName());
 
 			// ignore the following classes because they are used in the JavaAgent class
 			ignoreClasses.add(JavaAgent.class.getCanonicalName());

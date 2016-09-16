@@ -42,6 +42,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureVal
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.export.ConfigurationInterfaceImportData;
 import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
@@ -295,6 +296,9 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(NotEmptyValidator.class, new FieldSerializer<NotEmptyValidator<?>>(kryo, NotEmptyValidator.class), nextRegistrationId++);
 		kryo.register(PercentageValidator.class, new FieldSerializer<PercentageValidator<?>>(kryo, PercentageValidator.class), nextRegistrationId++);
 		kryo.register(PositiveValidator.class, new FieldSerializer<PositiveValidator<?>>(kryo, PositiveValidator.class), nextRegistrationId++);
+
+		// Added with INSPECTIT-1959
+		kryo.register(EndUserMonitoringConfig.class, new FieldSerializer<EndUserMonitoringConfig>(kryo, EndUserMonitoringConfig.class));
 
 		// added with INSPECTIT-1804
 		// used for recognition, configuration and visualization of business context information

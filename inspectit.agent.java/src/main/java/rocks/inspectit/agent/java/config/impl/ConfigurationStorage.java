@@ -19,6 +19,7 @@ import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.logback.LogInitializer;
 import rocks.inspectit.agent.java.spring.SpringConfiguration;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -309,6 +310,13 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		ensureConfigurationExists();
 
 		return agentConfiguration.getInitialInstrumentationResults();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public AgentEndUserMonitoringConfig getEndUserMonitoringConfig() {
+		return agentConfiguration.getEumConfig();
 	}
 
 	/**

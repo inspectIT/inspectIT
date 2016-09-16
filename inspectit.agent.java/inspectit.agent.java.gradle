@@ -4,6 +4,7 @@
  * @author Rene Kugel
  * @author Ivan Senic
  */
+ 
 evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
@@ -35,6 +36,11 @@ configurations {
 		extendsFrom configurations.agentJavaTest
 		extendsFrom configurations.jmhbase
 	}
+}
+
+processResources {
+	exclude ('js/tests/**')
+    exclude('js/tests/')
 }
 
 /** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
