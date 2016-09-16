@@ -42,6 +42,7 @@ import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 
@@ -580,13 +581,6 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public SystemSensorData getPlatformSensorData(long sensorTypeIdent) {
-		return null;
-	}
-
 	// //////////////////////////////////////////////
 	// All unsupported methods are below from here //
 	// //////////////////////////////////////////////
@@ -671,6 +665,14 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 */
 	@Override
 	public void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData) {
+		throw new UnsupportedMethodException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addEUMData(AbstractEUMData eumData) {
 		throw new UnsupportedMethodException();
 	}
 
