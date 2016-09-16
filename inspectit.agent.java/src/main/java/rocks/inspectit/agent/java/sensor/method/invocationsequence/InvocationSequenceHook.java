@@ -42,6 +42,7 @@ import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 
@@ -143,6 +144,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void beforeBody(long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		if (skip(rsc)) {
 			return;
@@ -193,6 +195,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 		if (skip(rsc)) {
 			return;
@@ -215,6 +218,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 		if (skip(rsc)) {
 			return;
@@ -443,6 +447,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void beforeConstructor(long methodId, long sensorTypeId, Object[] parameters, RegisteredSensorConfig rsc) {
 		beforeBody(methodId, sensorTypeId, null, parameters, rsc);
 	}
@@ -450,6 +455,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterConstructor(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		firstAfterBody(methodId, sensorTypeId, object, parameters, null, rsc);
 		secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, null, rsc);
@@ -505,6 +511,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addMethodSensorData(long sensorTypeId, long methodId, String prefix, MethodSensorData methodSensorData) {
 		if (null == threadLocalInvocationData.get()) {
 			LOG.error("thread data NULL!!!!");
@@ -516,6 +523,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addObjectStorage(long sensorTypeId, long methodId, String prefix, IObjectStorage objectStorage) {
 		if (null == threadLocalInvocationData.get()) {
 			LOG.error("thread data NULL!!!!");
@@ -528,6 +536,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData) {
 		saveDataObject(systemSensorData.finalizeData());
 	}
@@ -535,6 +544,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData) {
 		if (null == threadLocalInvocationData.get()) {
 			LOG.info("thread data NULL!!!!");
@@ -550,6 +560,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ExceptionSensorData getExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode) {
 		return null;
 	}
@@ -557,6 +568,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MethodSensorData getMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix) {
 		return null;
 	}
@@ -564,14 +576,8 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IObjectStorage getObjectStorage(long sensorTypeIdent, long methodIdent, String prefix) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public SystemSensorData getPlatformSensorData(long sensorTypeIdent) {
 		return null;
 	}
 
@@ -582,6 +588,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addListListener(ListListener<?> listener) {
 		throw new UnsupportedMethodException();
 	}
@@ -603,6 +610,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeListListener(ListListener<?> listener) {
 		throw new UnsupportedMethodException();
 	}
@@ -610,6 +618,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void sendData() {
 		throw new UnsupportedMethodException();
 	}
@@ -638,6 +647,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void start() {
 		throw new UnsupportedMethodException();
 	}
@@ -645,6 +655,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop() {
 		throw new UnsupportedMethodException();
 	}
@@ -652,7 +663,16 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData) {
+		throw new UnsupportedMethodException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addEUMData(AbstractEUMData eumData) {
 		throw new UnsupportedMethodException();
 	}
 

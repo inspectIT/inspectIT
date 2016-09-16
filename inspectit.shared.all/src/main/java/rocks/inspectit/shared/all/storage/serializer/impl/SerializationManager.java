@@ -111,6 +111,7 @@ import rocks.inspectit.shared.all.instrumentation.classcache.util.TypeWithAnnota
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
@@ -382,16 +383,20 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		// added with INSPECTIT-2071
 		kryo.register(JmxAttributeDescriptor.class, new FieldSerializer<JmxAttributeDescriptor>(kryo, JmxAttributeDescriptor.class));
 		kryo.register(JmxSensorTypeConfig.class, new FieldSerializer<JmxSensorTypeConfig>(kryo, JmxSensorTypeConfig.class));
-		
+
 		// added with INSPECTIT-1804, INSPECTIT-1807
 		kryo.register(BusinessContextErrorCodeEnum.class, new EnumSerializer(BusinessContextErrorCodeEnum.class));
 		kryo.register(ApplicationData.class, new CustomCompatibleFieldSerializer<ApplicationData>(kryo, ApplicationData.class, schemaManager));
 		kryo.register(BusinessTransactionData.class, new CustomCompatibleFieldSerializer<BusinessTransactionData>(kryo, BusinessTransactionData.class, schemaManager));
+
+		// ADDED with INSPECT-1959
+		kryo.register(AgentEndUserMonitoringConfig.class, new FieldSerializer<AgentEndUserMonitoringConfig>(kryo, AgentEndUserMonitoringConfig.class));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void serialize(Object object, Output output) throws SerializationException {
 		serialize(object, output, Collections.emptyMap());
 	}
@@ -399,6 +404,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void serialize(Object object, Output output, Map<?, ?> kryoPreferences) throws SerializationException {
 		if (MapUtils.isNotEmpty(kryoPreferences)) {
@@ -418,6 +424,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object deserialize(Input input) throws SerializationException {
 		Object object = null;
 		try {
@@ -431,6 +438,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public <T> T copy(T object) {
 		return kryo.copy(object);
 	}
@@ -469,6 +477,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	 *
 	 * @return {@link #kryo}
 	 */
+	@Override
 	public Kryo getKryo() {
 		return kryo;
 	}
@@ -476,6 +485,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		initKryo();
 	}

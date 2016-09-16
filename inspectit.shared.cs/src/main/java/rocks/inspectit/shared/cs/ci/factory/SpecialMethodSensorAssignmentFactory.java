@@ -1,5 +1,6 @@
 package rocks.inspectit.shared.cs.ci.factory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,6 +31,11 @@ public class SpecialMethodSensorAssignmentFactory {
 	private Collection<SpecialMethodSensorAssignment> classLoadingDelegationAssignments;
 
 	/**
+	 * Assignments for the end user monitoring instrumentation.
+	 */
+	private Collection<SpecialMethodSensorAssignment> endUserMonitoringAssignments;
+
+	/**
 	 * Private as factory.
 	 */
 	protected SpecialMethodSensorAssignmentFactory() {
@@ -44,10 +50,14 @@ public class SpecialMethodSensorAssignmentFactory {
 	 *         {@link Environment}.
 	 */
 	public Collection<SpecialMethodSensorAssignment> getSpecialAssignments(Environment environment) {
-		if (!environment.isClassLoadingDelegation()) {
-			return Collections.emptyList();
+		ArrayList<SpecialMethodSensorAssignment> result = new ArrayList<>();
+		if (environment.isClassLoadingDelegation()) {
+			result.addAll(classLoadingDelegationAssignments);
 		}
-		return classLoadingDelegationAssignments;
+		if (environment.getEumConfig().isEumEnabled()) {
+			result.addAll(endUserMonitoringAssignments);
+		}
+		return result;
 	}
 
 	/**
@@ -56,7 +66,32 @@ public class SpecialMethodSensorAssignmentFactory {
 	@PostConstruct
 	public void init() {
 		// init all assignments
-		// class loading delegation
+		buildClassLoaderDelegationAssignments();
+		buildEndUserMonitoringAssignments();
+	}
+
+	/**
+	 * Builds the selection criteria for eum instrumentation.
+	 */
+	private void buildEndUserMonitoringAssignments() {
+		SpecialMethodSensorAssignment eumFilterInstr = new SpecialMethodSensorAssignment(SpecialInstrumentationType.EUM_SERVLET_OR_FILTER_INSPECTION);
+		eumFilterInstr.setClassName("javax.servlet.Filter");
+		eumFilterInstr.setInterf(true);
+		eumFilterInstr.setMethodName("doFilter");
+		eumFilterInstr.setParameters(Arrays.asList("javax.servlet.ServletRequest", "javax.servlet.ServletResponse", "javax.servlet.FilterChain"));
+
+		SpecialMethodSensorAssignment eumServletInstr = new SpecialMethodSensorAssignment(SpecialInstrumentationType.EUM_SERVLET_OR_FILTER_INSPECTION);
+		eumServletInstr.setClassName("javax.servlet.Servlet");
+		eumServletInstr.setInterf(true);
+		eumServletInstr.setMethodName("service");
+		eumServletInstr.setParameters(Arrays.asList("javax.servlet.ServletRequest", "javax.servlet.ServletResponse"));
+		endUserMonitoringAssignments = Arrays.asList(eumFilterInstr, eumServletInstr);
+	}
+
+	/**
+	 * Builds the selection criteria for class loader delegation.
+	 */
+	private void buildClassLoaderDelegationAssignments() {
 		SpecialMethodSensorAssignment cldDirect = new SpecialMethodSensorAssignment(SpecialInstrumentationType.CLASS_LOADING_DELEGATION);
 		cldDirect.setClassName("java.lang.ClassLoader");
 		cldDirect.setMethodName("loadClass");

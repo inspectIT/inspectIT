@@ -37,6 +37,11 @@ configurations {
 	}
 }
 
+processResources {
+	exclude ('js/tests/**')
+	exclude('js/tests/')
+}
+
 /** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
 dependencies {
 	compile project(':inspectit.shared.all')

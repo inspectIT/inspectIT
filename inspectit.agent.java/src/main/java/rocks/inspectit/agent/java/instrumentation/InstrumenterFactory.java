@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import rocks.inspectit.agent.java.instrumentation.asm.ClassLoaderDelegationMethodInstrumenter;
 import rocks.inspectit.agent.java.instrumentation.asm.ConstructorInstrumenter;
+import rocks.inspectit.agent.java.instrumentation.asm.EUMServletFilterInstrumenter;
 import rocks.inspectit.agent.java.instrumentation.asm.MethodInstrumenter;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
@@ -68,6 +69,8 @@ public class InstrumenterFactory {
 			switch (instrumentationType) {
 			case CLASS_LOADING_DELEGATION:
 				return new ClassLoaderDelegationMethodInstrumenter(superMethodVisitor, access, name, desc);
+			case EUM_SERVLET_OR_FILTER_INSPECTION:
+				return new EUMServletFilterInstrumenter(superMethodVisitor, access, name, desc);
 			default:
 				throw new IllegalArgumentException("The special instrumentation type " + instrumentationType + " is not known to the InstrumenterFactory.");
 			}

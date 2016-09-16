@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.math.RandomUtils;
@@ -81,7 +82,9 @@ public class BusinessTransactionPointBuilderTest extends AbstractPointBuilderTes
 			when(data.getTimeStamp()).thenReturn(new Timestamp(time));
 			when(data.getDuration()).thenReturn(duration);
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.BusinessTransaction.NAME));
 			assertThat(getTime(pointBuilder), is(time));
@@ -107,7 +110,9 @@ public class BusinessTransactionPointBuilderTest extends AbstractPointBuilderTes
 			when(data.getTimeStamp()).thenReturn(new Timestamp(time));
 			when(data.getDuration()).thenReturn(duration);
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.BusinessTransaction.NAME));
 			assertThat(getTime(pointBuilder), is(time));
@@ -132,7 +137,9 @@ public class BusinessTransactionPointBuilderTest extends AbstractPointBuilderTes
 			when(data.getTimeStamp()).thenReturn(new Timestamp(time));
 			when(data.getDuration()).thenReturn(duration);
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.BusinessTransaction.NAME));
 			assertThat(getTime(pointBuilder), is(time));

@@ -11,6 +11,11 @@ public enum SpecialInstrumentationType {
 	/**
 	 * Special instrumentation for the class loading delegation.
 	 */
-	CLASS_LOADING_DELEGATION;
+	CLASS_LOADING_DELEGATION,
+
+	/**
+	 * Functional instrumentation for allowing the agent to interact with the client.
+	 */
+	EUM_SERVLET_OR_FILTER_INSPECTION;
 
 }

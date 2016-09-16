@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.math.RandomUtils;
@@ -69,7 +70,9 @@ public class JmxPointBuilderTest extends AbstractPointBuilderTest {
 			when(data.getTimeStamp()).thenReturn(new Timestamp(time));
 			when(data.getValueAsDouble()).thenReturn(RandomUtils.nextDouble());
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.Jmx.NAME));
 			assertThat(getTime(pointBuilder), is(time));
@@ -90,7 +93,9 @@ public class JmxPointBuilderTest extends AbstractPointBuilderTest {
 			when(data.getJmxSensorDefinitionDataIdentId()).thenReturn(JMX_IDENT);
 			when(data.getTimeStamp()).thenReturn(new Timestamp(time));
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.Jmx.NAME));
 			assertThat(getTime(pointBuilder), is(time));
@@ -110,7 +115,9 @@ public class JmxPointBuilderTest extends AbstractPointBuilderTest {
 			when(data.getJmxSensorDefinitionDataIdentId()).thenReturn(JMX_IDENT);
 			when(data.getTimeStamp()).thenReturn(new Timestamp(time));
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.Jmx.NAME));
 			assertThat(getTime(pointBuilder), is(time));

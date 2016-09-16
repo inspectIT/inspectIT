@@ -2,6 +2,8 @@ package rocks.inspectit.agent.java.instrumentation.asm;
 
 import info.novatec.inspectit.org.objectweb.asm.Type;
 
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+
 /**
  * Constants that are often used in the instrumenters like type and method descriptions.
  *
@@ -34,6 +36,21 @@ public interface IInstrumenterConstant {
 	 * Descriptor of our IAgent.
 	 */
 	String IAGENT_DESCRIPTOR = "L" + IAGENT_INTERNAL_NAME + ";";
+
+	/**
+	 * Descriptor of our Agent.
+	 */
+	String AGENT_DESCRIPTOR = "L" + AGENT_INTERNAL_NAME + ";";
+
+	/**
+	 * The descriptor for the IServletInstrumenter interface.
+	 */
+	String ISERVLET_INSTRUMENTER_DESCRIPTOR = "Lrocks/inspectit/agent/java/eum/IServletInstrumenter;";
+
+	/**
+	 * Thedescriptor for the javax.servlet.ServletResposne type.
+	 */
+	String SERVLET_RESPONSE_DESCRIPTOR = "Ljavax/servlet/ServletResponse;";
 
 	/**
 	 * Internal name of get IHookDispatcher method.
