@@ -29,6 +29,8 @@
 
   <xs:element name="cpu-sensor-config" type="cpuSensorConfig"/>
 
+  <xs:element name="end-user-monitoring-config" type="endUserMonitoringConfig"/>
+
   <xs:element name="environment" type="environment"/>
 
   <xs:element name="exception-sensor-assignment" type="exceptionSensorAssignment"/>
@@ -408,6 +410,7 @@
     <xs:complexContent>
       <xs:extension base="abstractCiData">
         <xs:sequence>
+          <xs:element ref="end-user-monitoring-config" minOccurs="0"/>
           <xs:choice>
             <xs:element ref="time-sending-strategy-config"/>
             <xs:element ref="list-sending-strategy-config"/>
@@ -460,6 +463,13 @@
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="endUserMonitoringConfig">
+    <xs:sequence/>
+    <xs:attribute name="eum-enabled" type="xs:boolean" use="required"/>
+    <xs:attribute name="eum-script-base-url" type="xs:string" use="required"/>
+    <xs:attribute name="active-modules" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="timeSendingStrategyConfig">

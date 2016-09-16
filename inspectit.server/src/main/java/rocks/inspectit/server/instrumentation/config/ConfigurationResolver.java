@@ -20,6 +20,7 @@ import rocks.inspectit.server.instrumentation.config.applier.SpecialInstrumentat
 import rocks.inspectit.server.instrumentation.config.applier.TimerMethodSensorInstrumentationApplier;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.PatternFactory;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -34,6 +35,7 @@ import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
 import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
@@ -271,6 +273,16 @@ public class ConfigurationResolver {
 		stringBuilder.append("Options:\n"); // NOPMD
 		stringBuilder.append("|-class loading delegation: " + environment.isClassLoadingDelegation() + "\n"); // NOPMD
 		stringBuilder.append("|-enhanced exception sensor: " + environment.getExceptionSensorConfig().isEnhanced()); // NOPMD
+
+		EndUserMonitoringConfig eumConfig = environment.getEumConfig();
+		stringBuilder.append("|-end user monitoring: " + eumConfig.isEumEnabled()); // NOPMD
+		if (eumConfig.isEumEnabled()) {
+			stringBuilder.append("||-EUM beacon URL: " + eumConfig.getScriptBaseUrl() + JSAgentModule.BEACON_SUB_PATH + "\n"); // NOPMD
+			stringBuilder.append(
+					"||-EUM JS agent URL: " + eumConfig.getScriptBaseUrl() + JSAgentModule.JAVASCRIPT_URL_PREFIX + JSAgentModule.JS_AGENT_REVISION + "_" + eumConfig.getActiveModules() + ".js"); // NOPMD
+		} else {
+			stringBuilder.append("End User Monitoring is disabled.\n"); // NOPMD
+		}
 
 		return stringBuilder.toString();
 	}

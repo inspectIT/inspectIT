@@ -1,5 +1,7 @@
 package rocks.inspectit.server.influx.builder;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import org.influxdb.dto.Point;
@@ -12,8 +14,9 @@ import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
- * Base class for all influx point builders that we provide. Builders can be created by passing the
- * data to the {@link #createBuilder(DefaultData)} method.
+ * Base class for all influx point builders that we provide which will always return exactly one
+ * Point per data object. Builders can be created by passing the data to the
+ * {@link #createBuilder(DefaultData)} method.
  *
  * @param <E>
  *            type of data builder can work with
@@ -22,20 +25,13 @@ import rocks.inspectit.shared.all.communication.DefaultData;
  * @author Alexander Wert
  *
  */
-public abstract class DefaultDataPointBuilder<E extends DefaultData> {
+public abstract class SinglePointBuilder<E extends DefaultData> implements IPointBuilder<E> {
 
 	/**
 	 * {@link ICachedDataService} for resolving all needed names.
 	 */
 	@Autowired
 	protected ICachedDataService cachedDataService;
-
-	/**
-	 * Returns data class builder is working with.
-	 *
-	 * @return Returns data class builder is working with.
-	 */
-	public abstract Class<E> getDataClass();
 
 	/**
 	 * Returns series name for this builder.
@@ -81,14 +77,15 @@ public abstract class DefaultDataPointBuilder<E extends DefaultData> {
 	 *            Data carrier
 	 * @return Builder that can be used to create influx Points.
 	 */
-	public Builder createBuilder(E data) {
+	@Override
+	public Collection<Builder> createBuilders(E data) {
 		Builder builder = Point.measurement(getSeriesName());
 		builder.time(data.getTimeStamp().getTime(), TimeUnit.MILLISECONDS);
 
 		this.addTags(data, builder);
 		this.addFields(data, builder);
 
-		return builder;
+		return Collections.singletonList(builder);
 	}
 
 }
