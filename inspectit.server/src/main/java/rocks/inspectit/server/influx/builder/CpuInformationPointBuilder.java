@@ -1,5 +1,8 @@
 package rocks.inspectit.server.influx.builder;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.influxdb.dto.Point.Builder;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +17,14 @@ import rocks.inspectit.shared.all.communication.data.CpuInformationData;
  *
  */
 @Component
-public class CpuInformationPointBuilder extends DefaultDataPointBuilder<CpuInformationData> {
+public class CpuInformationPointBuilder extends SinglePointBuilder<CpuInformationData> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<CpuInformationData> getDataClass() {
-		return CpuInformationData.class;
+	public Collection<Class<CpuInformationData>> getDataClasses() {
+		return Collections.singleton(CpuInformationData.class);
 	}
 
 	/**
