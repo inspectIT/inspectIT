@@ -1,5 +1,8 @@
 package rocks.inspectit.server.influx.builder;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.influxdb.dto.Point.Builder;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +18,14 @@ import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
  *
  */
 @Component
-public class JmxPointBuilder extends DefaultDataPointBuilder<JmxSensorValueData> {
+public class JmxPointBuilder extends SinglePointBuilder<JmxSensorValueData> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<JmxSensorValueData> getDataClass() {
-		return JmxSensorValueData.class;
+	public Collection<Class<JmxSensorValueData>> getDataClasses() {
+		return Collections.singleton(JmxSensorValueData.class);
 	}
 
 	/**

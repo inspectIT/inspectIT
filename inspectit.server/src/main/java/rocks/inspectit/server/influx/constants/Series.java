@@ -1,5 +1,9 @@
 package rocks.inspectit.server.influx.constants;
 
+import rocks.inspectit.shared.all.communication.data.eum.AjaxRequest;
+import rocks.inspectit.shared.all.communication.data.eum.PageLoadRequest;
+import rocks.inspectit.shared.all.communication.data.eum.ResourceLoadRequest;
+
 /**
  * Constants for all the series that we save to the influxDB. These include series name, as well as
  * all field and tag names.
@@ -456,4 +460,225 @@ public interface Series {
 
 	}
 
+	// TODO: possibly rename the series to avoid ambiguities with mobile application EUM in the
+	// future
+
+	/**
+	 * Common Fields andTags for all EUM series.
+	 *
+	 * @author Jonas Kunz
+	 *
+	 */
+	interface EUMBasicRequestSeries extends Series {
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String TAG_BROWSER = "browser";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String TAG_DEVICE = "device";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String TAG_LANGUAGE = "language";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String TAG_URL = "url";
+	}
+
+	/**
+	 * Series for Page Load Requests.
+	 *
+	 * @author Jonas Kunz
+	 *
+	 */
+	interface EumPageLoad extends EUMBasicRequestSeries {
+		/**
+		 * Series name.
+		 */
+		String NAME = "eum_pageload";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_NAVIGATION_START = "navigationStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_CONNECT_END = "connectEnd";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_CONNECT_START = "connectStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_DOM_CONTENT_LOADED_EVENT_START = "domContentLoadedEventStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 *
+		 */
+		String FIELD_DOM_CONTENT_LOADED_EVENT_END = "domContentLoadedEventEnd";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_DOM_INTERACTIVE = "domInteractive";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_DOM_LOADING = "domLoading";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_DOMAIN_LOOKUP_START = "domainLookupStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_DOMAIN_LOOKUP_END = "domainLookupEnd";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_FETCH_START = "fetchStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_LOAD_EVENT_START = "loadEventStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_LOAD_EVENT_END = "loadEventEnd";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_REDIRECT_START = "redirectStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_REDIRECT_END = "redirectEnd";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_REQUEST_START = "requestStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_RESPONSE_START = "responseStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_RESPONSE_END = "responseEnd";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_UNLOAD_EVENT_START = "unloadEventStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_UNLOAD_EVENT_END = "unloadEventEnd";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_FIRSTPAINT = "firstpaint";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_SPEEDINDEX = "speedindex";
+
+		/**
+		 * The total number of resources.
+		 */
+		String FIELD_RESOURCE_COUNT = "resourceCount";
+
+	}
+
+	/**
+	 * Series for Ajax Requests.
+	 *
+	 * @author Jonas Kunz
+	 *
+	 */
+	interface EumAjax extends EUMBasicRequestSeries {
+		/**
+		 * Series name.
+		 */
+		String NAME = "eum_ajax";
+
+		/**
+		 * See the corresponding field in {@link AjaxRequest}.
+		 */
+		String TAG_BASE_URL = "baseurl";
+
+		/**
+		 * See the corresponding field in {@link AjaxRequest}.
+		 */
+		String FIELD_STATUS = "status";
+
+		/**
+		 * See the corresponding field in {@link AjaxRequest}.
+		 */
+		String FIELD_METHOD = "method";
+
+		/**
+		 * The duration the ajax request took.
+		 */
+		String FIELD_DURATION = "duration";
+	}
+
+	/**
+	 * Series for Resource Load Requests.
+	 *
+	 * @author Jonas Kunz
+	 **/
+	interface EumResourceLoad extends EUMBasicRequestSeries {
+		/**
+		 * Series name.
+		 */
+		String NAME = "eum_resourceload";
+
+		/**
+		 * See the corresponding field in {@link ResourceLoadRequest}.
+		 */
+		String TAG_INITIATOR_URL = "initiatorUrl";
+
+		/**
+		 * See the corresponding field in {@link ResourceLoadRequest}.
+		 */
+		String TAG_INITIATOR_TYPE = "initiatorType";
+
+		/**
+		 * See the corresponding field in {@link ResourceLoadRequest}.
+		 */
+		String FIELD_TRANSFER_SIZE = "size";
+
+		/**
+		 * The duration the request took.
+		 */
+		String FIELD_DURATION = "duration";
+
+	}
 }

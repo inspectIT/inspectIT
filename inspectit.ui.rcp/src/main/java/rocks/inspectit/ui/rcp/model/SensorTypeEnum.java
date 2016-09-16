@@ -27,6 +27,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClient
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
@@ -120,7 +121,9 @@ public enum SensorTypeEnum {
 	/** The Remote jms listener sensor. */
 	REMOTE_JMS_LISTENER(RemoteJmsListenerServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
 	/** The manual Remote server sensor. */
-	REMOTE_MANUAL_SERVER(RemoteManualServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false);
+	REMOTE_MANUAL_SERVER(RemoteManualServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** End User Monitoring. */
+	END_USER_MONITORING(EUMInstrumentationSensorConfig.CLASS_NAME, InspectITImages.IMG_ASSIGNEE_LABEL_ICON, false);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full
@@ -157,7 +160,7 @@ public enum SensorTypeEnum {
 	 * @param imageName
 	 *            The name of the image. Names are defined in {@link InspectITImages}.
 	 */
-	private SensorTypeEnum(String fqn, String imageName) {
+	SensorTypeEnum(String fqn, String imageName) {
 		this.fqn = fqn;
 		this.image = InspectIT.getDefault().getImage(imageName);
 	}
@@ -172,7 +175,7 @@ public enum SensorTypeEnum {
 	 * @param openable
 	 *            Defines if this can be opened somehow in the UI.
 	 */
-	private SensorTypeEnum(String fqn, String imageName, boolean openable) {
+	SensorTypeEnum(String fqn, String imageName, boolean openable) {
 		this.fqn = fqn;
 		this.image = InspectIT.getDefault().getImage(imageName);
 		this.openable = openable;

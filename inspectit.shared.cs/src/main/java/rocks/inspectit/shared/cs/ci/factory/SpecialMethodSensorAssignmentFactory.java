@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 
 /**
@@ -37,6 +38,11 @@ public class SpecialMethodSensorAssignmentFactory {
 	private Collection<SpecialMethodSensorAssignment> mbeanServerFactoryAssignments;
 
 	/**
+	 * Assignments for the end user monitoring.
+	 */
+	private Collection<SpecialMethodSensorAssignment> endUserMonitoringAssignments;
+
+	/**
 	 * Private as factory.
 	 */
 	protected SpecialMethodSensorAssignmentFactory() {
@@ -51,10 +57,6 @@ public class SpecialMethodSensorAssignmentFactory {
 	 *         {@link Environment}.
 	 */
 	public Collection<SpecialMethodSensorAssignment> getSpecialAssignments(Environment environment) {
-		if (!environment.isClassLoadingDelegation() && !isJmxSensorActive(environment)) {
-			return Collections.emptyList();
-		}
-
 		Collection<SpecialMethodSensorAssignment> assignments = new ArrayList<>(0);
 		if (environment.isClassLoadingDelegation()) {
 			assignments.addAll(classLoadingDelegationAssignments);
@@ -63,6 +65,12 @@ public class SpecialMethodSensorAssignmentFactory {
 		if (isJmxSensorActive(environment)) {
 			assignments.addAll(mbeanServerFactoryAssignments);
 		}
+
+
+		if ((environment.getEumConfig() != null) && environment.getEumConfig().isEumEnabled()) {
+			assignments.addAll(endUserMonitoringAssignments);
+		}
+
 		return assignments;
 	}
 
@@ -114,6 +122,20 @@ public class SpecialMethodSensorAssignmentFactory {
 		msbRemove.setPrivateModifier(true);
 
 		mbeanServerFactoryAssignments = Arrays.asList(msbAdd, msbRemove);
+
+		SpecialMethodSensorAssignment eumFilterInstr = new SpecialMethodSensorAssignment(EUMInstrumentationSensorConfig.INSTANCE);
+		eumFilterInstr.setClassName("javax.servlet.Filter");
+		eumFilterInstr.setInterf(true);
+		eumFilterInstr.setMethodName("doFilter");
+		eumFilterInstr.setParameters(Arrays.asList("javax.servlet.ServletRequest", "javax.servlet.ServletResponse", "javax.servlet.FilterChain"));
+
+		SpecialMethodSensorAssignment eumServletInstr = new SpecialMethodSensorAssignment(EUMInstrumentationSensorConfig.INSTANCE);
+		eumServletInstr.setClassName("javax.servlet.Servlet");
+		eumServletInstr.setInterf(true);
+		eumServletInstr.setMethodName("service");
+		eumServletInstr.setParameters(Arrays.asList("javax.servlet.ServletRequest", "javax.servlet.ServletResponse"));
+
+		endUserMonitoringAssignments = Arrays.asList(eumFilterInstr, eumServletInstr);
 	}
 
 }

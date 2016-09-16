@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 
@@ -171,6 +173,11 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	private boolean sendingExceptionNotice = false;
 
 	/**
+	 * Coutner for assigning unique map ids to eum objects.
+	 */
+	private AtomicLong eumDataCounter = new AtomicLong(0);
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -278,6 +285,17 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		builder.append('.');
 		builder.append(sensorTypeIdent);
 		return (MethodSensorData) sensorDataObjects.get(builder.toString());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addEUMData(AbstractEUMData eumData) {
+		StringBuilder idBuilder = new StringBuilder("EUMDATA_");
+		idBuilder.append(eumDataCounter.incrementAndGet());
+		sensorDataObjects.put(idBuilder.toString(), eumData);
+		notifyListListeners();
 	}
 
 	/**

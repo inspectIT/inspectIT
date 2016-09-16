@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
@@ -46,6 +47,12 @@ import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "environment")
 public class Environment extends AbstractCiData {
+
+	/**
+	 * End User Monitoring config. We have only one.
+	 */
+	@XmlElementRef(type = EndUserMonitoringConfig.class, required = false)
+	private EndUserMonitoringConfig eumConfig = ConfigurationDefaultsFactory.getDefaultEndUserMonitoringConfig();
 
 	/**
 	 * Configuration for the sending strategy.
@@ -259,6 +266,25 @@ public class Environment extends AbstractCiData {
 	}
 
 	/**
+	 * Gets {@link #eumConfig}.
+	 *
+	 * @return {@link #eumConfig}
+	 */
+	public EndUserMonitoringConfig getEumConfig() {
+		return eumConfig;
+	}
+
+	/**
+	 * Sets {@link #eumConfig}.
+	 *
+	 * @param eumConfig
+	 *            New value for {@link #eumConfig}
+	 */
+	public void setEumConfig(EndUserMonitoringConfig eumConfig) {
+		this.eumConfig = eumConfig;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -268,6 +294,7 @@ public class Environment extends AbstractCiData {
 		result = (prime * result) + ((this.bufferStrategyConfig == null) ? 0 : this.bufferStrategyConfig.hashCode());
 		result = (prime * result) + (this.classLoadingDelegation ? 1231 : 1237);
 		result = (prime * result) + ((this.exceptionSensorConfig == null) ? 0 : this.exceptionSensorConfig.hashCode());
+		result = (prime * result) + ((eumConfig == null) ? 0 : eumConfig.hashCode());
 		result = (prime * result) + ((this.jmxSensorConfig == null) ? 0 : this.jmxSensorConfig.hashCode());
 		result = (prime * result) + ((this.methodSensorConfigs == null) ? 0 : this.methodSensorConfigs.hashCode());
 		result = (prime * result) + ((this.platformSensorConfigs == null) ? 0 : this.platformSensorConfigs.hashCode());
@@ -307,6 +334,13 @@ public class Environment extends AbstractCiData {
 				return false;
 			}
 		} else if (!this.exceptionSensorConfig.equals(other.exceptionSensorConfig)) {
+			return false;
+		}
+		if (eumConfig == null) {
+			if (other.eumConfig != null) {
+				return false;
+			}
+		} else if (!eumConfig.equals(other.eumConfig)) {
 			return false;
 		}
 		if (this.jmxSensorConfig == null) {
