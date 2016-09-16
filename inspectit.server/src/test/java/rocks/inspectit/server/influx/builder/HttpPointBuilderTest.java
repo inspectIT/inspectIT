@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.math.RandomUtils;
@@ -70,7 +71,9 @@ public class HttpPointBuilderTest extends AbstractPointBuilderTest {
 			when(httpInfo.hasInspectItTaggingHeader()).thenReturn(true);
 			when(httpInfo.getInspectItTaggingHeaderValue()).thenReturn(TAG);
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.Http.NAME));
 			assertThat(getTime(pointBuilder), is(time));
@@ -94,7 +97,9 @@ public class HttpPointBuilderTest extends AbstractPointBuilderTest {
 			when(httpInfo.hasInspectItTaggingHeader()).thenReturn(true);
 			when(httpInfo.getInspectItTaggingHeaderValue()).thenReturn(TAG);
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.Http.NAME));
 			assertThat(getTime(pointBuilder), is(time));
@@ -116,7 +121,9 @@ public class HttpPointBuilderTest extends AbstractPointBuilderTest {
 			when(httpInfo.hasInspectItTaggingHeader()).thenReturn(false);
 			when(httpInfo.getInspectItTaggingHeaderValue()).thenReturn(null);
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.Http.NAME));
 			assertThat(getTime(pointBuilder), is(time));
@@ -137,7 +144,9 @@ public class HttpPointBuilderTest extends AbstractPointBuilderTest {
 			when(httpInfo.hasInspectItTaggingHeader()).thenReturn(false);
 			when(httpInfo.getInspectItTaggingHeaderValue()).thenReturn(null);
 
-			Builder pointBuilder = builder.createBuilder(data);
+			Collection<Builder> pointBuilderCol = builder.createBuilders(data);
+			assertThat(pointBuilderCol.size(), is(1));
+			Builder pointBuilder = pointBuilderCol.iterator().next();
 
 			assertThat(getMeasurement(pointBuilder), is(Series.Http.NAME));
 			assertThat(getTime(pointBuilder), is(time));

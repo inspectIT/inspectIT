@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -18,12 +19,14 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.PatternFactory;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
@@ -92,11 +95,14 @@ public class ConfigurationCreator {
 			agentConfiguration.setExceptionSensorTypeConfig(getExceptionSensorTypeConfig(platformId, exceptionSensorConfig));
 		}
 
-		JmxSensorConfig jmxSensorConfig = environment.getJmxSensorConfig();
+			JmxSensorConfig jmxSensorConfig = environment.getJmxSensorConfig();
 		if ((null != jmxSensorConfig) && jmxSensorConfig.isActive()) {
 			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
-
+		
+		EndUserMonitoringConfig eumConf = environment.getEumConfig();
+		agentConfiguration.setEumConfig(new AgentEndUserMonitoringConfig(eumConf.isEumEnabled(), eumConf.getScriptBaseUrl(), eumConf.getActiveModules()));
+		
 		// then all special sensors
 		Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs = new ArrayList<>(0);
 		if (environment.isClassLoadingDelegation()) {
@@ -104,6 +110,9 @@ public class ConfigurationCreator {
 		}
 		if ((null != jmxSensorConfig) && jmxSensorConfig.isActive()) {
 			specialMethodSensorTypeConfigs.add(getMethodSensorTypeConfig(platformId, MBeanServerInterceptorSensorConfig.INSTANCE));
+		}
+		if (eumConf.isEumEnabled()) {
+			specialMethodSensorTypeConfigs.add(getMethodSensorTypeConfig(platformId, EUMInstrumentationSensorConfig.INSTANCE));
 		}
 		agentConfiguration.setSpecialMethodSensorTypeConfigs(specialMethodSensorTypeConfigs);
 

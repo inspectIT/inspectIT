@@ -43,6 +43,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureVal
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
+import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.export.ConfigurationInterfaceImportData;
 import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
@@ -389,6 +390,8 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(EMailListValidator.class, new FieldSerializer<EMailListValidator>(kryo, EMailListValidator.class), nextRegistrationId++);
 		kryo.register(AlertClosingReason.class, new EnumSerializer(AlertClosingReason.class), nextRegistrationId++);
 
+		// INSPECTIT-1959
+		kryo.register(EndUserMonitoringConfig.class, new FieldSerializer<EndUserMonitoringConfig>(kryo, EndUserMonitoringConfig.class));
 	}
 
 }
