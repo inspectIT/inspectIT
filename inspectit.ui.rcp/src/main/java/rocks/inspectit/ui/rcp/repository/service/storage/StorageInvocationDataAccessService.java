@@ -149,4 +149,12 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	public void setInvocationDataQueryFactory(InvocationSequenceDataQueryFactory<StorageIndexQuery> invocationDataQueryFactory) {
 		this.invocationDataQueryFactory = invocationDataQueryFactory;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
+		throw new UnsupportedOperationException();
+	}
 }

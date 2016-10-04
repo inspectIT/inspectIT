@@ -80,6 +80,7 @@ public class BusinessTransactionPointBuilderTest extends AbstractPointBuilderTes
 			when(data.getBusinessTransactionId()).thenReturn(BT_ID);
 			when(data.getTimeStamp()).thenReturn(new Timestamp(time));
 			when(data.getDuration()).thenReturn(duration);
+			when(data.getId()).thenReturn(Long.MAX_VALUE);
 
 			Builder pointBuilder = builder.createBuilder(data);
 
@@ -91,6 +92,7 @@ public class BusinessTransactionPointBuilderTest extends AbstractPointBuilderTes
 			assertThat(getTags(pointBuilder), hasEntry(Series.BusinessTransaction.TAG_APPLICATION_NAME, String.valueOf(APP_NAME)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.BusinessTransaction.TAG_BUSINESS_TRANSACTION_NAME, String.valueOf(BT_NAME)));
 			assertThat(getFields(pointBuilder), hasEntry(Series.BusinessTransaction.FIELD_DURATION, (Object) duration));
+			assertThat(getFields(pointBuilder), hasEntry(Series.BusinessTransaction.FIELD_TRACE_ID, (Object) Long.MAX_VALUE));
 		}
 
 		@Test

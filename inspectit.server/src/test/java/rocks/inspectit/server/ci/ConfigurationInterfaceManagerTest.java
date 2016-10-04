@@ -10,8 +10,10 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
@@ -41,6 +45,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.ci.event.AlertingDefinitionDeletedEvent;
+import rocks.inspectit.server.ci.event.AlertingDefinitionUpdateEvent;
 import rocks.inspectit.server.ci.event.BusinessContextDefinitionUpdateEvent;
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
 import rocks.inspectit.server.ci.event.ProfileUpdateEvent;
@@ -48,6 +54,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
@@ -104,6 +111,7 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 		when(pathResolver.getProfilesPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getProfilesPath())));
 		when(pathResolver.getSchemaPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getSchemaPath())));
 		when(pathResolver.getBusinessContextFilePath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getBusinessContextFilePath())));
+		when(pathResolver.getAlertingDefinitionsPath()).thenReturn(Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getAlertingDefinitionsPath())));
 		doAnswer(new Answer<Path>() {
 			@Override
 			public Path answer(InvocationOnMock invocation) throws Throwable {
@@ -118,6 +126,13 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 						.resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getProfileFilePath((Profile) invocation.getArguments()[0])));
 			}
 		}).when(pathResolver).getProfileFilePath(Matchers.<Profile> any());
+		doAnswer(new Answer<Path>() {
+			@Override
+			public Path answer(InvocationOnMock invocation) throws Throwable {
+				return Paths.get(TEST_FOLDER).resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getAlertingDefinitionsPath()))
+						.resolve(EXT_RESOURCES_PATH.relativize(resolverHelper.getAlertingDefinitionFilePath((AlertingDefinition) invocation.getArguments()[0])));
+			}
+		}).when(pathResolver).getAlertingDefinitionFilePath(Matchers.<AlertingDefinition> any());
 
 		manager.init();
 	}
@@ -147,9 +162,6 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 			assertThat(manager.getAllProfiles(), hasItem(profile));
 		}
-	}
-
-	public class GetProfile extends ConfigurationInterfaceManagerTest {
 
 		@Test(expectedExceptions = BusinessException.class)
 		public void createProfileNoProfileData() throws Exception {
@@ -158,7 +170,9 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 			manager.createProfile(profile);
 		}
+	}
 
+	public class GetProfile extends ConfigurationInterfaceManagerTest {
 		@Test
 		public void get() throws Exception {
 			Profile profile = new Profile();
@@ -691,6 +705,160 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 			businessCtxDefinition.setRevision(0);
 			businessCtxDefinition.addApplicationDefinition(new ApplicationDefinition(1, "newApplication", null));
 			manager.updateBusinessContextDefinition(businessCtxDefinition);
+		}
+	}
+
+	/**
+	 * Tests the {@link ConfigurationInterfaceManager#createAlertingDefinition(AlertingDefinition)}
+	 * method.
+	 */
+	public class CreateAlertingDefinition extends ConfigurationInterfaceManagerTest {
+
+		@Test
+		public void createAlertingDefinitionCheckId() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+
+			alertingDefinition = manager.createAlertingDefinition(alertingDefinition);
+
+			assertThat(alertingDefinition.getId(), is(not(nullValue())));
+			assertThat(alertingDefinition.getCreatedDate(), is(not(nullValue())));
+		}
+
+		@Test
+		public void createAlertingDefinitionExists() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+
+			alertingDefinition = manager.createAlertingDefinition(alertingDefinition);
+
+			assertThat(manager.getAlertingDefinitions(), hasItem(alertingDefinition));
+		}
+	}
+
+	/**
+	 * Tests the {@link ConfigurationInterfaceManager#getAlertingDefinitions()} and
+	 * {@link ConfigurationInterfaceManager#getAlertingDefinition(String)} methods.
+	 */
+	public class GetAlertingDefinition extends ConfigurationInterfaceManagerTest {
+		@Test
+		public void getAlertingDefinitions() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+
+			AlertingDefinition returnedDefinition = manager.createAlertingDefinition(alertingDefinition);
+
+			List<AlertingDefinition> alertingDefinitions = manager.getAlertingDefinitions();
+
+			assertThat(alertingDefinitions, hasItem(returnedDefinition));
+		}
+
+		@Test
+		public void getAlertingDefinition() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+
+			manager.createAlertingDefinition(alertingDefinition);
+
+			AlertingDefinition returnedDefinition = manager.getAlertingDefinition(alertingDefinition.getId());
+
+			assertThat(alertingDefinition.getId(), equalTo(returnedDefinition.getId()));
+		}
+
+		@Test(expectedExceptions = BusinessException.class)
+		public void getAlertingDefinitionNotExisting() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+
+			manager.createAlertingDefinition(alertingDefinition);
+
+			AlertingDefinition returnedDefinition = manager.getAlertingDefinition("unknown_id");
+		}
+	}
+
+	/**
+	 * Tests the {@link ConfigurationInterfaceManager#updateAlertingDefinition(AlertingDefinition)}
+	 * method.
+	 */
+	public class UpdateAlertingDefinition extends ConfigurationInterfaceManagerTest {
+		@Test
+		public void updateAlertingDefinition() throws BusinessException, JAXBException, IOException {
+			String newName = "newName";
+
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+			manager.createAlertingDefinition(alertingDefinition);
+
+			alertingDefinition.setName(newName);
+			AlertingDefinition updated = manager.updateAlertingDefinition(alertingDefinition);
+
+			assertThat(updated.getName(), is(newName));
+			assertThat(updated.getRevision(), is(2));
+			assertThat(alertingDefinition.getUpdatedDate(), is(greaterThanOrEqualTo(alertingDefinition.getCreatedDate())));
+
+			ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
+			verify(eventPublisher).publishEvent(captor.capture());
+			assertThat(captor.getValue(), is(instanceOf(AlertingDefinitionUpdateEvent.class)));
+		}
+
+		@Test(expectedExceptions = BusinessException.class)
+		public void updateAlertingDefinitionRevisionFailed() throws BusinessException, JAXBException, IOException {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+			manager.createAlertingDefinition(alertingDefinition);
+
+			AlertingDefinition clone = new AlertingDefinition();
+			clone.setId(alertingDefinition.getId());
+
+			manager.updateAlertingDefinition(alertingDefinition);
+			manager.updateAlertingDefinition(clone);
+		}
+
+		@Test(expectedExceptions = BusinessException.class)
+		public void updateAlertingDefinitionNotExisting() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setId("not-existing");
+
+			manager.updateAlertingDefinition(alertingDefinition);
+		}
+
+		@Test(expectedExceptions = BusinessException.class)
+		public void updateAlertingDefinitionNoId() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+
+			manager.updateAlertingDefinition(alertingDefinition);
+		}
+	}
+
+	/**
+	 * Tests the {@link ConfigurationInterfaceManager#deleteAlertingDefinition(AlertingDefinition)}
+	 * method.
+	 */
+	public class DeleteAlertingDefinition extends ConfigurationInterfaceManagerTest {
+
+		@Test
+		public void deleteAlertingDefinition() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setName("test");
+			manager.createAlertingDefinition(alertingDefinition);
+
+			manager.deleteAlertingDefinition(alertingDefinition);
+
+			assertThat(manager.getAlertingDefinitions(), not(hasItem(alertingDefinition)));
+
+			ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
+			verify(eventPublisher).publishEvent(captor.capture());
+			assertThat(captor.getValue(), is(instanceOf(AlertingDefinitionDeletedEvent.class)));
+		}
+
+		@Test
+		public void deleteAlertingDefinitionNotExisting() throws Exception {
+			AlertingDefinition alertingDefinition = new AlertingDefinition();
+			alertingDefinition.setId("not-existing");
+
+			manager.deleteAlertingDefinition(alertingDefinition);
+
+			verify(eventPublisher, never()).publishEvent(any(ApplicationEvent.class));
 		}
 	}
 

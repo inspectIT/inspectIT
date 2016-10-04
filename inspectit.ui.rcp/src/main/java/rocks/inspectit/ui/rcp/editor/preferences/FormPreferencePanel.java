@@ -175,7 +175,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 			if (null != toolBarManager) {
 				createButtons(preferenceSet, toolBarManager, inputDefinition);
 			}
-			createPreferenceControls(innerComposite, preferenceSet);
+			createPreferenceControls(innerComposite, preferenceSet, inputDefinition);
 		}
 
 		section.setClient(innerComposite);
@@ -245,10 +245,12 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 *            The parent {@link Composite} to which the controls will be added.
 	 * @param preferenceSet
 	 *            The set containing the preference IDs.
+	 * @param inputDefinition
+	 *            {@link InputDefinition} instance
 	 */
-	private void createPreferenceControls(Composite parent, Set<PreferenceId> preferenceSet) {
+	private void createPreferenceControls(Composite parent, Set<PreferenceId> preferenceSet, InputDefinition inputDefinition) {
 		for (PreferenceId preferenceIdEnum : preferenceSet) {
-			IPreferenceControl preferenceControl = PreferenceControlFactory.createPreferenceControls(parent, toolkit, preferenceIdEnum, this);
+			IPreferenceControl preferenceControl = PreferenceControlFactory.createPreferenceControls(parent, toolkit, preferenceIdEnum, this, inputDefinition);
 			if (null != preferenceControl) {
 				preferenceControlList.add(preferenceControl);
 			}
@@ -295,7 +297,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 
 		toolBarManager.add(new Separator());
 
-		if (preferenceSet.contains(PreferenceId.SAMPLINGRATE) || preferenceSet.contains(PreferenceId.TIMELINE)) {
+		if (preferenceSet.contains(PreferenceId.SAMPLINGRATE) || preferenceSet.contains(PreferenceId.TIMELINE) || preferenceSet.contains(PreferenceId.ALERT_INFO)) {
 			toolBarManager.add(switchPreferences);
 		}
 

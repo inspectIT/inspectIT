@@ -29,7 +29,7 @@ public interface IInvocationDataAccessService {
 	 * @param methodId
 	 *            The ID of the method.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
@@ -48,7 +48,7 @@ public interface IInvocationDataAccessService {
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
@@ -66,7 +66,7 @@ public interface IInvocationDataAccessService {
 	 * @param methodId
 	 *            The ID of the method.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param fromDate
 	 *            Date include invocation from.
 	 * @param toDate
@@ -89,7 +89,7 @@ public interface IInvocationDataAccessService {
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param fromDate
 	 *            Date include invocation from.
 	 * @param toDate
@@ -115,7 +115,7 @@ public interface IInvocationDataAccessService {
 	 * @param invocationIdCollection
 	 *            Collections of invocations IDs to search.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
@@ -132,7 +132,7 @@ public interface IInvocationDataAccessService {
 	 *            Platform ID where to look for the objects. If the zero value is passed, looking
 	 *            for the object will be done in all platforms.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param startDate
 	 *            Date include invocation from.
 	 * @param endDate
@@ -154,5 +154,24 @@ public interface IInvocationDataAccessService {
 	 * @return The detailed invocation sequence object.
 	 */
 	InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template);
+
+	/**
+	 * Returns a list of {@link InvocationSequenceData} objects belonging to an alert defined by the
+	 * passed alert id. The {@link InvocationSequenceData} objects in this list contain no
+	 * associations to other objects. Thus this list can be used to get an overview of the available
+	 * invocation sequences. The limit defines the size of the list.
+	 *
+	 * @param platformId
+	 *            The ID of the platform.
+	 * @param alertId
+	 *            The ID of the alert the invocation sequences belong to.
+	 * @param limit
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
+	 * @param resultComparator
+	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
+	 *            that case no sorting will be done.
+	 * @return Returns the list of invocation sequences.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator);
 
 }

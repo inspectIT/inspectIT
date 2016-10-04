@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+  <head></head>
+  <body style="background-color: #513d6e;">
+    <style>
+      * {
+        font-family: Arial;
+      }
+      .details td {
+        color: #999;
+        border-bottom: 1px solid #333;
+      }
+
+    </style>
+    <div align="center">
+
+      <table cellspacing="0" cellpadding="4" style="background-color: #08091e; width: 640px; border: 2px solid #3e0909;">
+        <tr>
+          <td align="center">
+            <img src="https://raw.githubusercontent.com/mariusoe/inspectIT/INSPECTIT-1953/inspectit.server/src/main/external-resources/templates/inspectit.jpg" height="132" width="640" style="margin-bottom: 16px;"/>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <p style="color: #eee; font-family: Arial; font-size: 24px;">
+              <b>inspectIT - A Threshold Has Been Violated</b>
+            </p>
+
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+
+            <p style="color: #ccc; font-family: Arial;">An alert time range has been startet at <i>{startTime}</i> because the specified threshold '<b>{alertDefinitionName}</b>' of '<b>{threshold}</b>' has been violated by value '<b style="color: #B42F2E;">{violationValue}</b>'.</p>
+
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+
+            <p style="color: #ccc; font-family: Arial;">All invocation sequences which violated the threshold are available in inspectIT using the following alert-id:<br/>
+              <b style="color: white;">{alertId}</b>
+            </p>
+
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+
+            <p style="color: #ccc; font-family: Arial; font-size: 18px;">
+              <b>Details</b>
+            </p>
+
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+
+            <table style="border: 1px solid #513d6e; background-color: #08091e;" cellspacing="0" cellpadding="4" class="details">
+              <tr>
+                <td style="width:200px">
+                  <b style="color: #fff;">Start Time</b>
+                </td>
+                <td style="width:300px">{startTime}</td>
+              </tr>
+              <tr>
+                <td style="width:200px">
+                  <b style="color: #fff;">Measurement</b>
+                </td>
+                <td style="width:300px">{measurement}</td>
+              </tr>
+              <tr>
+                <td style="width:200px">
+                  <b style="color: #fff;">Field</b>
+                </td>
+                <td style="width:300px">{field}</td>
+              </tr>
+              <tr>
+                <td style="width:200px">
+                  <b style="color: #fff;">Threshold</b>
+                </td>
+                <td style="width:300px">{threshold}</td>
+              </tr>
+              <tr>
+                <td style="width:200px">
+                  <b style="color: #fff;">Used Tags</b>
+                </td>
+                <td></td>
+              </tr>
+              {tags}
+            </table>
+
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+
+            <p style="color: #ccc; font-family: Arial;">If you do not have
+              <b>inspectIT</b>,
+              <br/>you can download it at
+              <a style="color:#b32a29;" href="http://www.inspectit.rocks/" taget="_blank">www.inspectit.rocks</a>.</p>
+            <br/>
+            <p style="color: #3f3f48; font-family: Arial; font-size: 11px; padding: 16px 0 4px;">This report was automatically generated at {currentTime}.</p>
+
+          </td>
+        </tr>
+      </table>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,21 @@
+>> inspectIT - A Threshold Has Been Violated
+
+An alert time range has been startet at {startTime} because the specified threshold ''{alertDefinitionName}' of '{threshold}' has been violated by value '{violationValue}'.
+
+All invocation sequences which violated the threshold are available in inspectIT using the following alert-id: {alertId}
+
+----------
+
+>> Details
+Start Time: {startTime}
+Measurement: {measurement}
+Field: {field}
+Threshold: {threshold}
+Used Tags:
+{tags}
+
+----------
+
+If you do not have inspectIT, you can download it at http://www.inspectit.rocks.
+
+This report was automatically generated at {currentTime}.

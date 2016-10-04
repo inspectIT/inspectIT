@@ -1268,6 +1268,8 @@ THE SOFTWARE.
 %% This notice is provided with respect to following libraries:
  # javax.servlet
  # javax.transaction
+ # javax.mail
+ # javax.activation
 which are included in the inspectIT.
 
 --- begin of LICENSE ---

@@ -191,6 +191,10 @@ public interface InspectITImages {
 	String IMG_YES_NO = InspectITConstants.ICON_PATH_FUGUE + "status-y-n.png";
 	String IMG_BROWSER = InspectITConstants.ICON_PATH_FUGUE + "application-browser.png";
 	String IMG_SERVER = InspectITConstants.ICON_PATH_FUGUE + "server.png";
+	String IMG_ALARM = InspectITConstants.ICON_PATH_FUGUE + "flag.png";
+	String IMG_ALARM_DELETE = InspectITConstants.ICON_PATH_FUGUE + "flag--minus.png";
+	String IMG_ALARM_ADD = InspectITConstants.ICON_PATH_FUGUE + "flag--plus.png";
+	String IMG_ALARM_EDIT = InspectITConstants.ICON_PATH_FUGUE + "flag--pencil.png";
 
 	// Images originally from Fugue set we modified - license Creative Commons v3.0
 	String IMG_HTTP_PARAMETER = InspectITConstants.ICON_PATH_FUGUE + "http-parameter.png";

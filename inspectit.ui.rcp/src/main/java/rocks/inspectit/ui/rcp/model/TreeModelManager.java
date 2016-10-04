@@ -21,6 +21,7 @@ import rocks.inspectit.ui.rcp.editor.inputdefinition.EditorPropertiesData.PartTy
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition.IdDefinition;
 import rocks.inspectit.ui.rcp.formatter.SensorTypeAvailabilityEnum;
+import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
 /**
@@ -190,27 +191,10 @@ public class TreeModelManager {
 		invocationSequence.setTooltip("Invocation Sequences are recorded call trees of the application. Only the starting points (which are defined "
 				+ "via the invocation sequence sensor in the agent configuration) are shown in the browser tree.");
 
-		Component showAll = new Leaf();
-		showAll.setName("Show All");
-		showAll.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SHOW_ALL));
+		// Show all leaf
+		Component showAll = createAllInvocationSequencesLeaf(platformIdent, definition, "Show All", InspectITImages.IMG_SHOW_ALL);
 
-		InputDefinition inputDefinition = new InputDefinition();
-		inputDefinition.setRepositoryDefinition(definition);
-		inputDefinition.setId(SensorTypeEnum.INVOCATION_SEQUENCE);
-
-		EditorPropertiesData editorPropertiesData = new EditorPropertiesData();
-		editorPropertiesData.setSensorImage(SensorTypeEnum.INVOCATION_SEQUENCE.getImage());
-		editorPropertiesData.setSensorName("Invocation Sequences");
-		editorPropertiesData.setViewImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SHOW_ALL));
-		editorPropertiesData.setViewName("Show All");
-		inputDefinition.setEditorPropertiesData(editorPropertiesData);
-
-		IdDefinition idDefinition = new IdDefinition();
-		idDefinition.setPlatformId(platformIdent.getId());
-
-		inputDefinition.setIdDefinition(idDefinition);
-		showAll.setInputDefinition(inputDefinition);
-
+		// Show browser tree
 		FilteredDeferredBrowserComposite browser = new FilteredDeferredBrowserComposite(SensorTypeEnum.INVOCATION_SEQUENCE);
 		browser.setPlatformIdent(platformIdent);
 		browser.setRepositoryDefinition(repositoryDefinition);
@@ -220,9 +204,52 @@ public class TreeModelManager {
 		browser.setHideInactiveInstrumentations(hideInactiveInstrumentations);
 
 		invocationSequence.addChild(showAll);
+		if (definition instanceof CmrRepositoryDefinition) {
+			// Show alert invocations leaf
+			Component showAlertRelated = createAllInvocationSequencesLeaf(platformIdent, definition, "Show Alert-related", InspectITImages.IMG_ALARM);
+			showAlertRelated.getInputDefinition().getIdDefinition().setAlertId(IdDefinition.UNDERSPECIFIED_ALERT_ID);
+			invocationSequence.addChild(showAlertRelated);
+		}
 		invocationSequence.addChild(browser);
 
 		return invocationSequence;
+	}
+
+	/**
+	 * Creates a tree component that shows all invocation sequences.
+	 *
+	 * @param platformIdent
+	 *            The platform identifier
+	 * @param definition
+	 *            The repository definition the data belongs to.
+	 * @param name
+	 *            The name of the view.
+	 * @param imageKey
+	 *            The key of the image to show as icon.
+	 * @return A tree component.
+	 */
+	private Component createAllInvocationSequencesLeaf(PlatformIdent platformIdent, RepositoryDefinition definition, String name, String imageKey) {
+		Component showAll = new Leaf();
+		showAll.setName(name);
+		showAll.setImage(InspectIT.getDefault().getImage(imageKey));
+
+		InputDefinition inputDefinitionAll = new InputDefinition();
+		inputDefinitionAll.setRepositoryDefinition(definition);
+		inputDefinitionAll.setId(SensorTypeEnum.INVOCATION_SEQUENCE);
+
+		EditorPropertiesData editorPropertiesDataAll = new EditorPropertiesData();
+		editorPropertiesDataAll.setSensorImage(SensorTypeEnum.INVOCATION_SEQUENCE.getImage());
+		editorPropertiesDataAll.setSensorName("Invocation Sequences");
+		editorPropertiesDataAll.setViewImage(InspectIT.getDefault().getImage(imageKey));
+		editorPropertiesDataAll.setViewName(name);
+		inputDefinitionAll.setEditorPropertiesData(editorPropertiesDataAll);
+
+		IdDefinition idDefinitionAll = new IdDefinition();
+		idDefinitionAll.setPlatformId(platformIdent.getId());
+
+		inputDefinitionAll.setIdDefinition(idDefinitionAll);
+		showAll.setInputDefinition(inputDefinitionAll);
+		return showAll;
 	}
 
 	/**

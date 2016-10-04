@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import rocks.inspectit.shared.all.spring.logger.Log;
  * This DAO encapsulates the HTTP connection to a influx database.
  *
  * @author Alexander Wert
+ * @author Marius Oehler
  *
  */
 @Component
@@ -104,7 +107,7 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 	/**
 	 * {@link ScheduledExecutorService} for periodic availability checks.
 	 */
-	private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
 	/**
 	 * {@inheritDoc}
@@ -118,6 +121,18 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 
 			influxDB.write(database, retentionPolicy, dataPoint);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public QueryResult query(String query) {
+		if (isConnected) {
+			return influxDB.query(new Query(query, database));
+		}
+
+		return null;
 	}
 
 	/**

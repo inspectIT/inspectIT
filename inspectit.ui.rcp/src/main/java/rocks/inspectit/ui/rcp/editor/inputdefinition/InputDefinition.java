@@ -36,6 +36,12 @@ public class InputDefinition {
 	public static final class IdDefinition {
 
 		/**
+		 * This is an ID placeholder for the alert id indicating that an alert shall be used in the
+		 * input but the id needs to be specified, yet.
+		 */
+		public static final String UNDERSPECIFIED_ALERT_ID = "";
+
+		/**
 		 * If an ID is not in use ({@link #platformId}, {@link #sensorTypeId}, {@link #methodId}) it
 		 * is set to this value to indicate this.
 		 */
@@ -60,6 +66,11 @@ public class InputDefinition {
 		 * The ID of the JMX sensor definition for the view. Default is {@link ID_NOT_USED}.
 		 */
 		private long jmxDefinitionId = ID_NOT_USED;
+
+		/**
+		 * The ID of the alert for which the data shall be shown. Default is <code>null</code>;
+		 */
+		private String alertId;
 
 		/**
 		 * Gets {@link #platformId}.
@@ -138,11 +149,30 @@ public class InputDefinition {
 		}
 
 		/**
+		 * Gets {@link #alertId}.
+		 *
+		 * @return {@link #alertId}
+		 */
+		public String getAlertId() {
+			return alertId;
+		}
+
+		/**
+		 * Sets {@link #alertId}.
+		 *
+		 * @param alertId
+		 *            New value for {@link #alertId}
+		 */
+		public void setAlertId(String alertId) {
+			this.alertId = alertId;
+		}
+
+		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(platformId, sensorTypeId, methodId, jmxDefinitionId);
+			return Objects.hashCode(platformId, sensorTypeId, methodId, jmxDefinitionId, alertId);
 		}
 
 		/**
@@ -161,7 +191,7 @@ public class InputDefinition {
 			}
 			IdDefinition that = (IdDefinition) object;
 			return Objects.equal(this.platformId, that.platformId) && Objects.equal(this.sensorTypeId, that.sensorTypeId) && Objects.equal(this.methodId, that.methodId)
-					&& Objects.equal(this.jmxDefinitionId, that.jmxDefinitionId);
+					&& Objects.equal(this.jmxDefinitionId, that.jmxDefinitionId) && Objects.equal(this.alertId, that.alertId);
 		}
 
 		/**
@@ -169,8 +199,11 @@ public class InputDefinition {
 		 */
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("platformId", platformId).add("sensorTypeId", sensorTypeId).add("methodId", methodId).add("jmxDefinitionId", jmxDefinitionId).toString();
+			return Objects.toStringHelper(this).add("platformId", platformId).add("sensorTypeId", sensorTypeId).add("methodId", methodId).add("jmxDefinitionId", jmxDefinitionId)
+					.add("alertId", alertId).toString();
 		}
+
+
 
 	}
 

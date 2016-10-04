@@ -1,0 +1,22 @@
+>> inspectIT - A Threshold Has Been Violated
+
+The alert for threshold '{alertDefinitionName}' started at {startTime} has been closed at {endTime}. The largest deviation from the threshold was {extremeValue}.
+
+All invocation sequences which violated the threshold are available in inspectIT using the following alert-id: {alertId}
+
+----------
+
+>> Details
+Start Time: {startTime}
+Measurement: {measurement}
+Field: {field}
+Threshold: {threshold}
+Extreme Value: {extremeValue}
+Used Tags:
+{tags}
+
+----------
+
+If you do not have inspectIT, you can download it at http://www.inspectit.rocks.
+
+This report was automatically generated at {currentTime}.

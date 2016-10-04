@@ -1,10 +1,12 @@
 package rocks.inspectit.ui.rcp.ci;
 
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.ui.rcp.ci.listener.IAgentMappingsChangeListener;
+import rocks.inspectit.ui.rcp.ci.listener.IAlertDefinitionChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IApplicationDefinitionChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
@@ -17,7 +19,8 @@ import rocks.inspectit.ui.rcp.util.ListenerList;
  * @author Ivan Senic
  *
  */
-public class InspectITConfigurationInterfaceManager implements IProfileChangeListener, IEnvironmentChangeListener, IAgentMappingsChangeListener, IApplicationDefinitionChangeListener {
+public class InspectITConfigurationInterfaceManager
+		implements IProfileChangeListener, IEnvironmentChangeListener, IAgentMappingsChangeListener, IApplicationDefinitionChangeListener, IAlertDefinitionChangeListener {
 
 	/**
 	 * List of {@link IProfileChangeListener}s.
@@ -38,6 +41,11 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	 * List of {@link IApplicationDefinitionChangeListener}s.
 	 */
 	private final ListenerList<IApplicationDefinitionChangeListener> applicationChangeListeners = new ListenerList<>();
+
+	/**
+	 * List of {@link IApplicationDefinitionChangeListener}s.
+	 */
+	private final ListenerList<IAlertDefinitionChangeListener> alertDefinitionChangeListeners = new ListenerList<>();
 
 	/**
 	 * {@inheritDoc}
@@ -112,6 +120,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void applicationCreated(ApplicationDefinition application, int positionIndex, CmrRepositoryDefinition repositoryDefinition) {
 		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
 			listener.applicationCreated(application, positionIndex, repositoryDefinition);
@@ -122,6 +131,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void applicationMoved(ApplicationDefinition application, int oldPositionIndex, int newPositionIndex, CmrRepositoryDefinition repositoryDefinition) {
 		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
 			listener.applicationMoved(application, oldPositionIndex, newPositionIndex, repositoryDefinition);
@@ -131,6 +141,7 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void applicationUpdated(ApplicationDefinition application, CmrRepositoryDefinition repositoryDefinition) {
 		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
 			listener.applicationUpdated(application, repositoryDefinition);
@@ -141,9 +152,40 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void applicationDeleted(ApplicationDefinition application, CmrRepositoryDefinition repositoryDefinition) {
 		for (IApplicationDefinitionChangeListener listener : applicationChangeListeners) {
 			listener.applicationDeleted(application, repositoryDefinition);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void alertDefinitionCreated(AlertingDefinition alertDefinition, CmrRepositoryDefinition repositoryDefinition) {
+		for (IAlertDefinitionChangeListener listener : alertDefinitionChangeListeners) {
+			listener.alertDefinitionCreated(alertDefinition, repositoryDefinition);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void alertDefinitionUpdated(AlertingDefinition alertDefinition, CmrRepositoryDefinition repositoryDefinition) {
+		for (IAlertDefinitionChangeListener listener : alertDefinitionChangeListeners) {
+			listener.alertDefinitionUpdated(alertDefinition, repositoryDefinition);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void alertDefinitionDeleted(AlertingDefinition alertDefinition, CmrRepositoryDefinition repositoryDefinition) {
+		for (IAlertDefinitionChangeListener listener : alertDefinitionChangeListeners) {
+			listener.alertDefinitionDeleted(alertDefinition, repositoryDefinition);
 		}
 	}
 
@@ -226,6 +268,27 @@ public class InspectITConfigurationInterfaceManager implements IProfileChangeLis
 	 */
 	public void removeApplicationDefinitionChangeListener(IApplicationDefinitionChangeListener applicationDefinitionChangeListener) {
 		applicationChangeListeners.remove(applicationDefinitionChangeListener);
+	}
+
+	/**
+	 * Registers a {@link IAlertDefinitionChangeListener} if the same listener does not already
+	 * exist.
+	 *
+	 * @param alertDefinitionChangeListener
+	 *            {@link IAlertDefinitionChangeListener} to add.
+	 */
+	public void addAlertDefinitionChangeListener(IAlertDefinitionChangeListener alertDefinitionChangeListener) {
+		alertDefinitionChangeListeners.add(alertDefinitionChangeListener);
+	}
+
+	/**
+	 * Removes a {@link IAlertDefinitionChangeListener}.
+	 *
+	 * @param alertDefinitionChangeListener
+	 *            {@link IAlertDefinitionChangeListener} to remove.
+	 */
+	public void removeAlertDefinitionChangeListener(IAlertDefinitionChangeListener alertDefinitionChangeListener) {
+		alertDefinitionChangeListeners.remove(alertDefinitionChangeListener);
 	}
 
 }

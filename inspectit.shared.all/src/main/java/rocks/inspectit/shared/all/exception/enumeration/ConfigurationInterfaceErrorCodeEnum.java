@@ -36,7 +36,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	 * Environment not existing on the CMR.
 	 */
 	ENVIRONMENT_DOES_NOT_EXIST("The environment to execute the selected operation on does not exist.", "The environment might be deleted.", null),
-	
+
 	/**
 	 * Import not valid.
 	 */
@@ -109,6 +109,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getComponent() {
 		return COMPONENT_NAME;
 	}
@@ -116,6 +117,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return WordUtils.capitalizeFully(this.toString().replace("_", " ").toLowerCase());
 	}
@@ -125,6 +127,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #description}
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -134,6 +137,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #possibleCause}
 	 */
+	@Override
 	public String getPossibleCause() {
 		return possibleCause;
 	}
@@ -143,6 +147,7 @@ public enum ConfigurationInterfaceErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #possibleSolution}
 	 */
+	@Override
 	public String getPossibleSolution() {
 		return possibleSolution;
 	}

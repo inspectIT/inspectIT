@@ -159,7 +159,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 	/**
 	 * The list of invocation sequence data objects which is displayed.
 	 */
-	private List<InvocationSequenceData> invocationSequenceData = new ArrayList<>();
+	private final List<InvocationSequenceData> invocationSequenceData = new ArrayList<>();
 
 	/**
 	 * The limit of the result set.
@@ -190,6 +190,16 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 	 * Are we in live mode.
 	 */
 	private boolean autoUpdate = LiveMode.ACTIVE_DEFAULT;
+
+	/**
+	 * The id of the alert for which invocation sequences shall be shown.
+	 */
+	private String alertId = null;
+
+	/**
+	 * Indicates whether the editor has been opened in alert mode or normal mode.
+	 */
+	private boolean alertMode = false;
 
 	/**
 	 * Empty styled string.
@@ -252,6 +262,9 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		template.setPlatformIdent(inputDefinition.getIdDefinition().getPlatformId());
 		template.setSensorTypeIdent(inputDefinition.getIdDefinition().getSensorTypeId());
 		template.setMethodIdent(inputDefinition.getIdDefinition().getMethodId());
+
+		alertId = inputDefinition.getIdDefinition().getAlertId();
+		alertMode = alertId != null;
 
 		dataAccessService = inputDefinition.getRepositoryDefinition().getInvocationDataAccessService();
 		cachedDataService = inputDefinition.getRepositoryDefinition().getCachedDataService();
@@ -337,7 +350,13 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		}
 		preferences.add(PreferenceId.UPDATE);
 		preferences.add(PreferenceId.ITEMCOUNT);
-		preferences.add(PreferenceId.TIMELINE);
+
+		if (alertMode) {
+			preferences.add(PreferenceId.ALERT_INFO);
+		} else {
+			preferences.add(PreferenceId.TIMELINE);
+		}
+
 		return preferences;
 	}
 
@@ -358,6 +377,11 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		case LIVEMODE:
 			if (preferenceEvent.getPreferenceMap().containsKey(PreferenceId.LiveMode.BUTTON_LIVE_ID)) {
 				autoUpdate = (Boolean) preferenceEvent.getPreferenceMap().get(PreferenceId.LiveMode.BUTTON_LIVE_ID);
+			}
+			break;
+		case ALERT_INFO:
+			if (preferenceEvent.getPreferenceMap().containsKey(PreferenceId.AlertInformation.ALERT_ID)) {
+				alertId = (String) preferenceEvent.getPreferenceMap().get(PreferenceId.AlertInformation.ALERT_ID);
 			}
 			break;
 		default:
@@ -403,7 +427,9 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 	private void loadDataFromService() {
 		List<InvocationSequenceData> invocData;
 
-		if (!autoUpdate) {
+		if (alertMode) {
+			invocData = dataAccessService.getInvocationSequenceOverview(template.getPlatformIdent(), alertId, limit, resultComparator);
+		} else if (!autoUpdate) {
 			if (template.getMethodIdent() != IdDefinition.ID_NOT_USED) {
 				invocData = dataAccessService.getInvocationSequenceOverview(template.getPlatformIdent(), template.getMethodIdent(), limit, fromDate, toDate, resultComparator);
 			} else {
