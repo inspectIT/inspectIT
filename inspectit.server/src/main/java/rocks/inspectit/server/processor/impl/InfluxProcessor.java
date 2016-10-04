@@ -15,6 +15,7 @@ import rocks.inspectit.server.influx.builder.DefaultDataPointBuilder;
 import rocks.inspectit.server.influx.dao.IInfluxDBDao;
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 
@@ -95,6 +96,10 @@ public class InfluxProcessor extends AbstractCmrDataProcessor {
 		}
 
 		if ((defaultData instanceof JmxSensorValueData) && !((JmxSensorValueData) defaultData).isBooleanOrNumeric()) {
+			return false;
+		}
+
+		if ((defaultData instanceof InvocationSequenceData) && (((InvocationSequenceData) defaultData).getParentSequence() != null)) {
 			return false;
 		}
 

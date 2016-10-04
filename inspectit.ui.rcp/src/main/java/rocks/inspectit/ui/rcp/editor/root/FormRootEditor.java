@@ -68,10 +68,15 @@ public class FormRootEditor extends AbstractRootEditor {
 
 		// create breadcrumb composite
 		RepositoryDefinition repositoryDefinition = getInputDefinition().getRepositoryDefinition();
-		PlatformIdent platformIdent = repositoryDefinition.getCachedDataService().getPlatformIdentForId(getInputDefinition().getIdDefinition().getPlatformId());
-		breadcrumbTitleComposite = new BreadcrumbTitleComposite(form.getHead(), SWT.NONE);
+
+		long platformId = getInputDefinition().getIdDefinition().getPlatformId();
+		boolean agentSpecified = platformId > 0;
+		breadcrumbTitleComposite = new BreadcrumbTitleComposite(form.getHead(), SWT.NONE, agentSpecified);
 		breadcrumbTitleComposite.setRepositoryDefinition(repositoryDefinition);
-		breadcrumbTitleComposite.setAgent(TextFormatter.getAgentDescription(platformIdent), InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT));
+		if (agentSpecified) {
+			PlatformIdent platformIdent = repositoryDefinition.getCachedDataService().getPlatformIdentForId(getInputDefinition().getIdDefinition().getPlatformId());
+			breadcrumbTitleComposite.setAgent(TextFormatter.getAgentDescription(platformIdent), InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT));
+		}
 		breadcrumbTitleComposite.setGroup(getInputDefinition().getEditorPropertiesData().getSensorName(), getInputDefinition().getEditorPropertiesData().getSensorImage());
 		breadcrumbTitleComposite.setView(getInputDefinition().getEditorPropertiesData().getViewName(), getInputDefinition().getEditorPropertiesData().getViewImage());
 		form.setHeadClient(breadcrumbTitleComposite);

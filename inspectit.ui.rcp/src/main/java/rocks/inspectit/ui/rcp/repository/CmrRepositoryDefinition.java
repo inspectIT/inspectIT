@@ -11,6 +11,7 @@ import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IInfluxDBService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
@@ -210,6 +211,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private final IBusinessContextManagementService businessContextManagementService;
 
 	/**
+	 * Influx Database service.
+	 */
+	private final IInfluxDBService influxDBService;
+
+	/**
 	 * CMR repository change listeners.
 	 */
 	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<>(1);
@@ -256,6 +262,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		configurationInterfaceService = cmrServiceProvider.getConfigurationInterfaceService(this);
 		jmxDataAccessService = cmrServiceProvider.getJmxDataAccessService(this);
 		businessContextManagementService = cmrServiceProvider.getBusinessContextManagementService(this);
+		influxDBService = cmrServiceProvider.getInfluxDBService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, businessContextManagementService, this);
 	}
@@ -293,7 +300,9 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns the CMR management service.
+	 *
+	 * @return The CMR management service.
 	 */
 	public ICmrManagementService getCmrManagementService() {
 		return cmrManagementService;
@@ -353,6 +362,15 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public IJmxDataAccessService getJmxDataAccessService() {
 		return jmxDataAccessService;
+	}
+
+	/**
+	 * Returns the Influx Database service.
+	 *
+	 * @return The Influx Database service.
+	 */
+	public IInfluxDBService getInfluxDBService() {
+		return influxDBService;
 	}
 
 	/**

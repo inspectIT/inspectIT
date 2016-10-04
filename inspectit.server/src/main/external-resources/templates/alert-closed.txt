@@ -1,0 +1,21 @@
+>> Closed Alert for Policy '{alertDefinitionName}'
+
+The value with the largest deviation from the specified threshold of {threshold} was {extremeValue}.
+
+----------
+
+>> Details
+Start Time: {startTime}
+End Time: {endTime}
+Measurement: {measurement}
+Field: {field}
+Threshold: {threshold}
+Extreme Value: {extremeValue}
+Used Tags:
+{tags}
+
+----------
+
+You can download inspectIT here: http://www.inspectit.rocks.
+
+This report was automatically generated at {currentTime}.

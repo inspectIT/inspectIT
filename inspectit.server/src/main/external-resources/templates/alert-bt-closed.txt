@@ -1,0 +1,26 @@
+>> Closed Business Transaction Alert for Policy '{alertDefinitionName}'
+
+* The affected application is: {applicationName}
+* The affected business transaction is: {businessTxName}
+
+The value with the largest deviation from the specified threshold of {threshold} ms was {violationValue} ms.
+
+All invocation sequences which violated the threshold can be analyzed with the inspectIT Rich Client using the following alert-id: {alertId}
+
+----------
+
+>> Details
+Start Time: {startTime}
+End Time: {endTime}
+Measurement: {measurement}
+Field: {field}
+Threshold: {threshold}
+Extreme Value: {extremeValue}
+Used Tags:
+{tags}
+
+----------
+
+You can download inspectIT here: http://www.inspectit.rocks.
+
+This report was automatically generated at {currentTime}.

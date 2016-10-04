@@ -1,8 +1,6 @@
 package rocks.inspectit.ui.rcp.property.control.impl;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
@@ -48,21 +46,10 @@ public class StringPropertyControl extends AbstractPropertyControl<StringPropert
 		text.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				String value = text.getText();
-				if (!value.isEmpty()) {
-					sendPropertyUpdateEvent(value);
-				}
+				sendPropertyUpdateEvent(text.getText());
 			}
 		});
-		text.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				String value = text.getText();
-				if (value.isEmpty()) {
-					text.setText(getLastCorrectValue());
-				}
-			}
-		});
+
 		return text;
 	}
 

@@ -4,6 +4,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import rocks.inspectit.ui.rcp.ci.view.AlertManagerViewPart;
 import rocks.inspectit.ui.rcp.ci.view.BusinessContextManagerViewPart;
 import rocks.inspectit.ui.rcp.ci.view.InstrumentationManagerViewPart;
 
@@ -33,11 +34,14 @@ public class ConfigurationInterfacePerspective implements IPerspectiveFactory {
 		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, ratio, editorArea);
 		topLeft.addView(InstrumentationManagerViewPart.VIEW_ID);
 		topLeft.addView(BusinessContextManagerViewPart.VIEW_ID);
-		
+		topLeft.addView(AlertManagerViewPart.VIEW_ID);
+
 		layout.getViewLayout(InstrumentationManagerViewPart.VIEW_ID).setCloseable(true);
 		layout.getViewLayout(InstrumentationManagerViewPart.VIEW_ID).setMoveable(true);
 		layout.getViewLayout(BusinessContextManagerViewPart.VIEW_ID).setCloseable(true);
 		layout.getViewLayout(BusinessContextManagerViewPart.VIEW_ID).setMoveable(true);
+		layout.getViewLayout(AlertManagerViewPart.VIEW_ID).setCloseable(true);
+		layout.getViewLayout(AlertManagerViewPart.VIEW_ID).setMoveable(true);
 	}
 
 }

@@ -6,6 +6,7 @@ import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.IInfluxDBService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
@@ -19,6 +20,7 @@ import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
  *
  * @author Ivan Senic
  * @author Alfred Krauss
+ * @author Marius Oehler
  *
  */
 public abstract class CmrServiceProvider {
@@ -258,10 +260,28 @@ public abstract class CmrServiceProvider {
 
 	/**
 	 * Returns Spring created {@link BusinessContextManagementService}.
-	 * 
+	 *
 	 * @return Returns Spring created {@link BusinessContextManagementService}.
 	 */
 	protected abstract IBusinessContextManagementService getBusinessContextManagementService();
 
+	/**
+	 * Returns properly initialized {@link IInfluxDBService}.
+	 *
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} to bound service to.
+	 * @return Returns {@link IInfluxDBService}.
+	 */
+	public IInfluxDBService getInfluxDBService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		IInfluxDBService influxDBService = getInfluxDBService();
+		((ICmrService) influxDBService).initService(cmrRepositoryDefinition);
+		return influxDBService;
+	}
 
+	/**
+	 * Returns Spring created {@link IInfluxDBService}.
+	 *
+	 * @return Returns Spring created {@link IInfluxDBService}.
+	 */
+	protected abstract IInfluxDBService getInfluxDBService();
 }

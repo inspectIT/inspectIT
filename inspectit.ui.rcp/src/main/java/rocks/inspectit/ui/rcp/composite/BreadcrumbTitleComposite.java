@@ -76,16 +76,24 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 	private CLabel viewLabel;
 
 	/**
+	 * Indicates whether agent shall be shown in bread crumb.
+	 */
+	private boolean showAgent;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param parent
 	 *            Parent composite.
 	 * @param style
 	 *            Style.
+	 * @param showAgent
+	 *            indicates whether the agent section shall be shown or not.
 	 * @see Composite#Composite(Composite, int)
 	 */
-	public BreadcrumbTitleComposite(Composite parent, int style) {
+	public BreadcrumbTitleComposite(Composite parent, int style, boolean showAgent) {
 		super(parent, style);
+		this.showAgent = showAgent;
 		arrow = new AccessibleArrowImage(true).createImage();
 		init();
 	}
@@ -109,10 +117,12 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 
 		new Label(breadcrumbComposite, SWT.NONE).setImage(arrow);
 
-		agentLabel = new CLabel(breadcrumbComposite, SWT.NONE);
-		agentLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		if (showAgent) {
+			agentLabel = new CLabel(breadcrumbComposite, SWT.NONE);
+			agentLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 
-		new Label(breadcrumbComposite, SWT.NONE).setImage(arrow);
+			new Label(breadcrumbComposite, SWT.NONE).setImage(arrow);
+		}
 
 		groupLabel = new CLabel(breadcrumbComposite, SWT.NONE);
 		groupLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
@@ -165,10 +175,12 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 	 *            the current image will be done.
 	 */
 	public void setAgent(String agentName, Image agentImg) {
-		agentLabel.setText(TextFormatter.crop(agentName, MAX_TEXT_LENGTH));
-		agentLabel.setToolTipText(agentName);
-		if (null != agentImg) {
-			agentLabel.setImage(agentImg);
+		if (showAgent) {
+			agentLabel.setText(TextFormatter.crop(agentName, MAX_TEXT_LENGTH));
+			agentLabel.setToolTipText(agentName);
+			if (null != agentImg) {
+				agentLabel.setImage(agentImg);
+			}
 		}
 	}
 
@@ -324,8 +336,10 @@ public class BreadcrumbTitleComposite extends Composite implements CmrRepository
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(repositoryLabel.getText());
-		sb.append(" > ");
-		sb.append(agentLabel.getText());
+		if (showAgent) {
+			sb.append(" > ");
+			sb.append(agentLabel.getText());
+		}
 		if (null != groupLabel.getText()) {
 			sb.append(" > ");
 			sb.append(groupLabel.getText());

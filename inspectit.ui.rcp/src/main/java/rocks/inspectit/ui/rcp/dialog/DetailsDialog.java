@@ -168,7 +168,7 @@ public class DetailsDialog extends Dialog {
 		ScrolledForm form = managedForm.getForm();
 		managedForm.getToolkit().decorateFormHeading(form.getForm());
 
-		breadcrumbTitleComposite = new BreadcrumbTitleComposite(form.getForm().getHead(), SWT.NONE);
+		breadcrumbTitleComposite = new BreadcrumbTitleComposite(form.getForm().getHead(), SWT.NONE, defaultData.getPlatformIdent() > 0);
 		setDataForBreadcrumbTitleComposite();
 		form.setHeadClient(breadcrumbTitleComposite);
 

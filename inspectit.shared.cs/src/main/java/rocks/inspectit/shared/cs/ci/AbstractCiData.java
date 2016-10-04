@@ -58,6 +58,30 @@ public class AbstractCiData {
 	private Integer revision = Integer.valueOf(1);
 
 	/**
+	 * Default constructor.
+	 */
+	public AbstractCiData() {
+	}
+
+	/**
+	 * Clone constructor.
+	 *
+	 * @param template
+	 *            template for the new instance
+	 */
+	public AbstractCiData(AbstractCiData template) {
+		if (template != null) {
+			this.id = template.id;
+			this.name = template.name;
+			this.description = template.description;
+			this.createdDate = template.createdDate;
+			this.updatedDate = template.updatedDate;
+			this.importDate = template.importDate;
+			this.revision = template.revision;
+		}
+	}
+
+	/**
 	 * Gets {@link #id}.
 	 *
 	 * @return {@link #id}

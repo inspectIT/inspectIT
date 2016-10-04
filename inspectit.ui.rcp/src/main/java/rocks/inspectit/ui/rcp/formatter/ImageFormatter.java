@@ -611,4 +611,13 @@ public final class ImageFormatter {
 		}
 		return null;
 	}
+
+	/**
+	 * Returns alert image.
+	 *
+	 * @return Returns alert image.
+	 */
+	public static Image getAlertImage() {
+		return InspectIT.getDefault().getImage(InspectITImages.IMG_ALARM);
+	}
 }
