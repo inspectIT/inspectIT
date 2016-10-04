@@ -27,6 +27,10 @@
 
   <xs:element name="isPositive" type="positiveValidator"/>
 
+  <xs:element name="isValidEMail" type="eMailValidator"/>
+
+  <xs:element name="isValidEMailList" type="eMailListValidator"/>
+
   <xs:element name="long-property" type="longProperty"/>
 
   <xs:element name="percentage-property" type="percentageProperty"/>
@@ -58,6 +62,8 @@
                   <xs:element ref="isNegative"/>
                   <xs:element ref="isFullyQualifiedClassName"/>
                   <xs:element ref="isNotEmpty"/>
+                  <xs:element ref="isValidEMail"/>
+                  <xs:element ref="isValidEMailList"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -145,6 +151,22 @@
   </xs:complexType>
 
   <xs:complexType name="notEmptyValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractSinglePropertyValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="eMailValidator">
+    <xs:complexContent>
+      <xs:extension base="abstractSinglePropertyValidator">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="eMailListValidator">
     <xs:complexContent>
       <xs:extension base="abstractSinglePropertyValidator">
         <xs:sequence/>

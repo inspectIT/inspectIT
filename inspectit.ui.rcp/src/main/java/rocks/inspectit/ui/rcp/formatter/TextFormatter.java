@@ -50,6 +50,7 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
+import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
 import rocks.inspectit.shared.cs.storage.StorageData;
@@ -822,5 +823,17 @@ public final class TextFormatter {
 			}
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * Returns string representation of an alert.
+	 *
+	 * @param alert
+	 *            {@link Alert} instance to create string for.
+	 * @return Returns string representation of an alert.
+	 */
+	public static String getAlertDescription(Alert alert) {
+		String closing = alert.isOpen() ? "Open" : DateFormat.getDateTimeInstance().format(new Date(alert.getStopTimestamp()));
+		return alert.getAlertingDefinition().getName() + " (" + DateFormat.getDateTimeInstance().format(new Date(alert.getStartTimestamp())) + " - " + closing + ")";
 	}
 }

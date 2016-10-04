@@ -6,9 +6,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PreDestroy;
+
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +21,13 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.server.influx.dao.IInfluxDBDao;
 import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
 import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 
 /**
  * This DAO encapsulates the HTTP connection to a influx database.
  *
  * @author Alexander Wert
+ * @author Marius Oehler
  *
  */
 @Component
@@ -104,7 +110,7 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 	/**
 	 * {@link ScheduledExecutorService} for periodic availability checks.
 	 */
-	private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
 	/**
 	 * {@inheritDoc}
@@ -118,6 +124,18 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 
 			influxDB.write(database, retentionPolicy, dataPoint);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public QueryResult query(String query) {
+		if (isConnected) {
+			return influxDB.query(new Query(query, database));
+		}
+
+		return null;
 	}
 
 	/**
@@ -241,4 +259,11 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 		}
 	}
 
+	/**
+	 * Shutting down the used executor service.
+	 */
+	@PreDestroy
+	protected void shutDownExecutorService() {
+		ExecutorServiceUtils.shutdownExecutor(scheduledExecutorService, 5L, TimeUnit.SECONDS);
+	}
 }

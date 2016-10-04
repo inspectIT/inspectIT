@@ -6,9 +6,14 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
@@ -21,6 +26,7 @@ import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.TechnicalException;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 
@@ -39,18 +45,29 @@ public class ConfigurationInterfaceServiceTest extends TestBase {
 
 	final int firstApplicationId = 10;
 	final int secondApplicationId = 20;
-
 	ApplicationDefinition firstAppDefinition;
 	ApplicationDefinition secondAppDefinition;
 	BusinessContextDefinition businessContextDef;
 
+	final String firstAlertingDefinitionId = "firstId";
+	final String secondAlertingDefinitionId = "secondId";
+	AlertingDefinition firstAlertingDefinition;
+	AlertingDefinition secondAlertingDefinition;
+
 	@BeforeMethod
 	public void init() throws BusinessException, JAXBException, IOException {
+		// ApplicationDefinition
 		firstAppDefinition = new ApplicationDefinition(firstApplicationId, "firstAppDefinition", null);
 		secondAppDefinition = new ApplicationDefinition(secondApplicationId, "secondAppDefinition", null);
 		businessContextDef = new BusinessContextDefinition();
 		when(ciManager.getBusinessconContextDefinition()).thenReturn(businessContextDef);
 		when(ciManager.updateBusinessContextDefinition(any(BusinessContextDefinition.class))).thenReturn(businessContextDef);
+
+		// AlertingDefinition
+		firstAlertingDefinition = new AlertingDefinition();
+		firstAlertingDefinition.setId(firstAlertingDefinitionId);
+		secondAlertingDefinition = new AlertingDefinition();
+		secondAlertingDefinition.setId(secondAlertingDefinitionId);
 	}
 
 	/**
@@ -336,6 +353,105 @@ public class ConfigurationInterfaceServiceTest extends TestBase {
 		public void ioExceptionThrown() throws BusinessException, JAXBException, IOException {
 			when(ciManager.updateBusinessContextDefinition(any(BusinessContextDefinition.class))).thenThrow(IOException.class);
 			ciService.deleteApplicationDefinition(firstAppDefinition);
+		}
+	}
+
+	/**
+	 * Tests {@link ConfigurationInterfaceService#createAlertingDefinition(AlertingDefinition)}
+	 * method.
+	 */
+	public static class CreateAlertingDefinition extends ConfigurationInterfaceServiceTest {
+		@Test
+		public void createAlertingDefinition() throws BusinessException, JAXBException, IOException {
+			when(ciManager.createAlertingDefinition(firstAlertingDefinition)).thenReturn(firstAlertingDefinition);
+
+			AlertingDefinition returnedDefinition = ciService.createAlertingDefinition(firstAlertingDefinition);
+
+			assertThat(returnedDefinition, is(firstAlertingDefinition));
+		}
+
+		@Test(expectedExceptions = { TechnicalException.class })
+		public void jaxbExceptionThrown() throws BusinessException, JAXBException, IOException {
+			doThrow(JAXBException.class).when(ciManager).createAlertingDefinition(firstAlertingDefinition);
+			ciService.createAlertingDefinition(firstAlertingDefinition);
+		}
+
+		@Test(expectedExceptions = { TechnicalException.class })
+		public void ioExceptionThrown() throws BusinessException, JAXBException, IOException {
+			doThrow(IOException.class).when(ciManager).createAlertingDefinition(firstAlertingDefinition);
+			ciService.createAlertingDefinition(firstAlertingDefinition);
+		}
+
+	}
+
+	/**
+	 * Tests {@link ConfigurationInterfaceService#getAlertingDefinitions()} and
+	 * {@link ConfigurationInterfaceService#getAlertingDefinition(String)} method.
+	 */
+	public static class GetAlertingDefinition extends ConfigurationInterfaceServiceTest {
+		@Test
+		public void getAlertingDefinitions() throws BusinessException, JAXBException, IOException {
+			List<AlertingDefinition> definitions = Arrays.asList(firstAlertingDefinition, secondAlertingDefinition);
+			when(ciManager.getAlertingDefinitions()).thenReturn(definitions);
+
+			List<AlertingDefinition> alertingDefinitions = ciService.getAlertingDefinitions();
+
+			assertThat(alertingDefinitions, is(definitions));
+		}
+
+		@Test
+		public void getAlertingDefinition() throws BusinessException, JAXBException, IOException {
+			when(ciManager.getAlertingDefinition(secondAlertingDefinitionId)).thenReturn(secondAlertingDefinition);
+
+			AlertingDefinition alertingDefinition = ciService.getAlertingDefinition(secondAlertingDefinitionId);
+
+			assertThat(alertingDefinition, is(secondAlertingDefinition));
+		}
+	}
+
+	/**
+	 * Tests {@link ConfigurationInterfaceService#updateAlertingDefinition(AlertingDefinition)}
+	 * method.
+	 */
+	public static class UpdateAlertingDefinition extends ConfigurationInterfaceServiceTest {
+		@Test
+		public void updateAlertingDefinition() throws BusinessException, JAXBException, IOException {
+			when(ciManager.updateAlertingDefinition(firstAlertingDefinition)).thenReturn(firstAlertingDefinition);
+
+			AlertingDefinition alertingDefinition = ciService.updateAlertingDefinition(firstAlertingDefinition);
+
+			assertThat(alertingDefinition, is(firstAlertingDefinition));
+		}
+
+		@Test(expectedExceptions = { TechnicalException.class })
+		public void jaxbExceptionThrown() throws BusinessException, JAXBException, IOException {
+			doThrow(JAXBException.class).when(ciManager).updateAlertingDefinition(firstAlertingDefinition);
+			ciService.updateAlertingDefinition(firstAlertingDefinition);
+		}
+
+		@Test(expectedExceptions = { TechnicalException.class })
+		public void ioExceptionThrown() throws BusinessException, JAXBException, IOException {
+			doThrow(IOException.class).when(ciManager).updateAlertingDefinition(firstAlertingDefinition);
+			ciService.updateAlertingDefinition(firstAlertingDefinition);
+		}
+	}
+
+	/**
+	 * Tests {@link ConfigurationInterfaceService#deleteAlertingDefinition(AlertingDefinition)}
+	 * method.
+	 */
+	public static class DeleteAlertingDefinition extends ConfigurationInterfaceServiceTest {
+		@Test
+		public void deleteAlertingDefinition() throws BusinessException, JAXBException, IOException {
+			ciService.deleteAlertingDefinition(firstAlertingDefinition);
+
+			verify(ciManager, only()).deleteAlertingDefinition(firstAlertingDefinition);
+		}
+
+		@Test(expectedExceptions = { TechnicalException.class })
+		public void ioExceptionThrown() throws BusinessException, JAXBException, IOException {
+			doThrow(IOException.class).when(ciManager).deleteAlertingDefinition(firstAlertingDefinition);
+			ciService.deleteAlertingDefinition(firstAlertingDefinition);
 		}
 	}
 }
