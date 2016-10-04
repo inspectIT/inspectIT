@@ -3,6 +3,7 @@ package rocks.inspectit.ui.rcp.tester;
 import org.eclipse.core.expressions.PropertyTester;
 
 import rocks.inspectit.shared.cs.storage.recording.RecordingState;
+import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
@@ -38,6 +39,13 @@ public class CmrOnlineStatusTester extends PropertyTester {
 			} else {
 				return false;
 			}
+		} else if ("anyOnline".equals(property)) {
+			for (CmrRepositoryDefinition cmr : InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions()) {
+				if (cmr.getOnlineStatus().equals(OnlineStatus.ONLINE)) {
+					return true;
+				}
+			}
+			return false;
 		} else {
 			return false;
 		}

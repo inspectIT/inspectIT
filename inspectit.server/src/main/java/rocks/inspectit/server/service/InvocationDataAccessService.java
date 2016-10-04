@@ -1,22 +1,32 @@
 package rocks.inspectit.server.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.influxdb.dto.QueryResult;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import rocks.inspectit.server.alerting.AlertRegistry;
+import rocks.inspectit.server.alerting.util.AlertingUtils;
 import rocks.inspectit.server.dao.InvocationDataDao;
+import rocks.inspectit.server.influx.dao.IInfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxQueryFactory;
+import rocks.inspectit.server.influx.util.QueryResultWrapper;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AlertErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 
 /**
  * @author Patrice Bouillet
@@ -40,6 +50,18 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 */
 	@Autowired
 	private ICachedDataService cachedDataService;
+
+	/**
+	 * The alert registry for business transaction alerts.
+	 */
+	@Autowired
+	private AlertRegistry alertRegistry;
+
+	/**
+	 * DAO for the influxDB data.
+	 */
+	@Autowired
+	private IInfluxDBDao influxDBDao;
 
 	/**
 	 * {@inheritDoc}
@@ -112,8 +134,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 */
 	@Override
 	@MethodLog
-	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId,
-			ResultComparator<InvocationSequenceData> resultComparator) {
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(cachedDataService);
 		}
@@ -129,6 +150,35 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
 		InvocationSequenceData result = invocationDataDao.getInvocationSequenceDetail(template);
 		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException {
+		if (!influxDBDao.isOnline()) {
+			throw new BusinessException("Retrieving invocation sequences for alert with id '" + alertId + "'", AlertErrorCodeEnum.DATABASE_OFFLINE);
+		}
+		Alert alert = alertRegistry.getAlert(alertId);
+		if (null == alert) {
+			throw new BusinessException("Retrieving invocation sequences for alert with id '" + alertId + "'", AlertErrorCodeEnum.UNKNOWN_ALERT_ID);
+		}
+		if (!AlertingUtils.isBusinessTransactionAlert(alert.getAlertingDefinition())) {
+			throw new BusinessException("The given alert '" + alertId + "' is not related to a buisness transaction.", AlertErrorCodeEnum.NO_BTX_ALERT);
+		}
+
+		String influxDbQuery = InfluxQueryFactory.buildTraceIdForAlertQuery(alert);
+		QueryResult queryResult = influxDBDao.query(influxDbQuery);
+		QueryResultWrapper resultWrapper = new QueryResultWrapper(queryResult);
+
+		List<Long> invocationSequenceIds = new ArrayList<>();
+		for (int i = 0; i < resultWrapper.getRowCount(); i++) {
+			long id = (long) resultWrapper.get(i, 1);
+			invocationSequenceIds.add(id);
+		}
+
+		return getInvocationSequenceOverview(0, invocationSequenceIds, limit, resultComparator);
 	}
 
 	/**

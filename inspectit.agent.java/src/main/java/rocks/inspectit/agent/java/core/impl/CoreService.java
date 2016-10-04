@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +34,7 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 
 /**
  * Default implementation of the {@link ICoreService} interface.
@@ -164,6 +164,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void start() {
 		for (ISendingStrategy strategy : sendingStrategies) {
 			strategy.start(this);
@@ -184,6 +185,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop() {
 		for (ISendingStrategy strategy : sendingStrategies) {
 			strategy.stop();
@@ -203,12 +205,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 			temp.interrupt();
 		}
 
-		shutDownExecutorService(executorService);
+		ExecutorServiceUtils.shutdownExecutor(executorService, 5L, TimeUnit.SECONDS);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void sendData() {
 		// notify the sending thread. if it is currently sending something,
 		// nothing should happen
@@ -220,6 +223,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(sensorTypeIdent);
@@ -237,6 +241,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix, MethodSensorData methodSensorData) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -253,6 +258,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MethodSensorData getMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -268,6 +274,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData) {
 		sensorDataObjects.put(Long.toString(sensorTypeIdent), systemSensorData);
 		notifyListListeners();
@@ -276,6 +283,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(sensorTypeIdent);
@@ -296,6 +304,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ExceptionSensorData getExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(sensorTypeIdent);
@@ -308,6 +317,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addObjectStorage(long sensorTypeIdent, long methodIdent, String prefix, IObjectStorage objectStorage) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -324,6 +334,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IObjectStorage getObjectStorage(long sensorTypeIdent, long methodIdent, String prefix) {
 		StringBuilder builder = new StringBuilder();
 		if (null != prefix) {
@@ -337,35 +348,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	}
 
 	/**
-	 * Correctly shuts down the executor service.
-	 *
-	 * @param executorService
-	 *            Executor service to shut down.
-	 */
-	private void shutDownExecutorService(ExecutorService executorService) {
-		// shutdown core service
-		executorService.shutdown();
-		try {
-			// Wait a while for existing tasks to terminate
-			if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-				// Cancel currently executing tasks
-				executorService.shutdownNow();
-				// Wait a while for tasks to respond to being canceled
-				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-					log.error("Executor service for the inspectIT Core service did not terminate.");
-				}
-			}
-		} catch (InterruptedException ie) {
-			// (Re-)Cancel if current thread also interrupted
-			executorService.shutdownNow();
-			// Preserve interrupt status
-			Thread.currentThread().interrupt();
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addListListener(ListListener<?> listener) {
 		if (!listListeners.contains(listener)) {
 			listListeners.add(listener);
@@ -375,6 +360,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeListListener(ListListener<?> listener) {
 		listListeners.remove(listener);
 	}
@@ -734,6 +720,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		start();
 	}
@@ -741,6 +728,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroy() throws Exception {
 		stop();
 	}

@@ -8,6 +8,7 @@ import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
 import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.exception.BusinessException;
 
 /**
  * Service interface which defines the methods to retrieve data objects based on the invocation
@@ -29,7 +30,7 @@ public interface IInvocationDataAccessService {
 	 * @param methodId
 	 *            The ID of the method.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
@@ -48,7 +49,7 @@ public interface IInvocationDataAccessService {
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
@@ -66,7 +67,7 @@ public interface IInvocationDataAccessService {
 	 * @param methodId
 	 *            The ID of the method.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param fromDate
 	 *            Date include invocation from.
 	 * @param toDate
@@ -89,7 +90,7 @@ public interface IInvocationDataAccessService {
 	 * @param platformId
 	 *            The ID of the platform.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param fromDate
 	 *            Date include invocation from.
 	 * @param toDate
@@ -115,7 +116,7 @@ public interface IInvocationDataAccessService {
 	 * @param invocationIdCollection
 	 *            Collections of invocations IDs to search.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
@@ -132,7 +133,7 @@ public interface IInvocationDataAccessService {
 	 *            Platform ID where to look for the objects. If the zero value is passed, looking
 	 *            for the object will be done in all platforms.
 	 * @param limit
-	 *            The limit/size of the list.
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
 	 * @param startDate
 	 *            Date include invocation from.
 	 * @param endDate
@@ -154,5 +155,24 @@ public interface IInvocationDataAccessService {
 	 * @return The detailed invocation sequence object.
 	 */
 	InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template);
+
+	/**
+	 * Returns a list of {@link InvocationSequenceData} objects belonging to an alert defined by the
+	 * passed alert id. The {@link InvocationSequenceData} objects in this list contain no
+	 * associations to other objects. Thus this list can be used to get an overview of the available
+	 * invocation sequences. The limit defines the size of the list.
+	 *
+	 * @param alertId
+	 *            The ID of the alert the invocation sequences belong to.
+	 * @param limit
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
+	 * @param resultComparator
+	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
+	 *            that case no sorting will be done.
+	 * @return Returns the list of invocation sequences.
+	 * @throws BusinessException
+	 *             If data cannot be retrieved.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException;
 
 }

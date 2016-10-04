@@ -223,6 +223,36 @@
 		<property name="pathSpec" value="/remoting/BusinessContextManagementService" />
 	</bean>
 	<!-- END -->
+	
+	<!-- Influx Database Service -->
+	<bean name="influxDBRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="influxDBServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="influxDBServiceExporter" />
+		<property name="servlet" ref="influxDBRequestHandlerServlet" />
+	</bean>
+
+	<bean id="influxDBServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="influxDBServiceExporter" />
+		<property name="pathSpec" value="/remoting/InfluxDBService" />
+	</bean>
+	<!-- END -->
+	
+	<!-- Alert Access Service -->
+	<bean name="alertAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="alertAccessServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="alertAccessServiceExporter" />
+		<property name="servlet" ref="alertAccessRequestHandlerServlet" />
+	</bean>
+
+	<bean id="alertAccessServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="alertAccessServiceExporter" />
+		<property name="pathSpec" value="/remoting/AlertAccessService" />
+	</bean>
+	<!-- END -->
 
 	<!-- DEFAULT SERVER FOR STATIC CONTENT -->
 	<bean id="defaultServlet" class="org.mortbay.jetty.servlet.DefaultServlet" />
@@ -336,6 +366,8 @@
 				<ref bean="storageServiceServletHolder" />
 				<ref bean="configurationInterfaceServiceServletHolder" />
 				<ref bean="businessCtxMngmtServletHolder" />
+				<ref bean="influxDBServletHolder" />
+				<ref bean="alertAccessServletHolder" />
 				<ref bean="defaultServletHolder" />
 				<ref bean="uploadServletHolder" />
 				<ref bean="springDispatcherServletHolder" />
@@ -355,6 +387,8 @@
 				<ref bean="storageServiceServiceMapping" />
 				<ref bean="configurationInterfaceServiceServiceMapping" />
 				<ref bean="businessCtxMngmtServiceMapping" />
+				<ref bean="influxDBServiceMapping" />
+				<ref bean="alertAccessServiceMapping" />
 				<ref bean="defaultServletMapping" />
 				<ref bean="uploadServletMapping" />
 				<ref bean="springDispatcherServletMapping" />
