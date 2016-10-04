@@ -2,10 +2,12 @@
  # cglib
  # commons-codec
  # commons-collections
+ # commons-email
  # commons-fileupload
  # commons-io
  # commons-lang 
  # commons-pool
+ # converter-jackson
  # gson
  # guava
  # httpclient
@@ -13,7 +15,10 @@
  # httpmime
  # influxdb-java
  # javassist
+ # jackson-annotations
+ # jackson-core
  # jackson-core-asl
+ # jackson-databind
  # jackson-mapper-asl
  # javax.inject
  # jboss-logging
@@ -21,6 +26,7 @@
  # jetty-util
  # jcl-over-slf4j
  # kryo-serializers
+ # logging-interceptor
  # objensis
  # okhttp
  # okio
@@ -45,8 +51,8 @@ which are included in the inspectIT.
 --- begin of LICENSE ---
 
 Copyright (c) 1999-2012 The Apache Software Foundation. (cglib, commons-codec, 
-commons-collections, commons-fileupload, commons-io, commons-lang, commons-net 
-, commons-pool, httpclient, httpcore, httpmime)
+commons-email, commons-collections, commons-fileupload, commons-io, commons-lang,
+commons-net, commons-pool, httpclient, httpcore, httpmime)
 
 Copyright (c) 2002-2011 SpringSource, a division of VMware, Inc. (spring-aop, 
 spring-asm, spring-beans, spring-context, spring-context-support, spring-core, 
@@ -61,7 +67,7 @@ Copyright (c) 2003-2013, Objenesis Team and all contributors. (objensis)
 
 Copyright (c) 2008 Google Inc. (gson) 
 
-Coptright (c) (okhttp, okio, retrofit)
+Coptright (c) (converter-jackson, gson, jackson-core, logging-interceptor, okhttp, okio, retrofit)
 
 Note that copyright holder of a work retains his full rights without any 
 explicit notice.
@@ -1268,6 +1274,8 @@ THE SOFTWARE.
 %% This notice is provided with respect to following libraries:
  # javax.servlet
  # javax.transaction
+ # javax.mail
+ # javax.activation
 which are included in the inspectIT.
 
 --- begin of LICENSE ---

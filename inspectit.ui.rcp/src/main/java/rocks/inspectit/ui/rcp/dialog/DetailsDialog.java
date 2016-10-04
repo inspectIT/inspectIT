@@ -260,7 +260,11 @@ public class DetailsDialog extends Dialog {
 
 		// agent
 		PlatformIdent platformIdent = repositoryDefinition.getCachedDataService().getPlatformIdentForId(defaultData.getPlatformIdent());
-		breadcrumbTitleComposite.setAgent(TextFormatter.getAgentDescription(platformIdent), InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT));
+		if (null != platformIdent) {
+			breadcrumbTitleComposite.setAgent(TextFormatter.getAgentDescription(platformIdent), InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT));
+		} else {
+			breadcrumbTitleComposite.setAgent("All Agents", InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT));
+		}
 
 		// sensor info
 		if (0 != defaultData.getSensorTypeIdent()) {
