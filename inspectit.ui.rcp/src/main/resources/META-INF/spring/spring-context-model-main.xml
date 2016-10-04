@@ -35,6 +35,8 @@
 		<lookup-method name="getStorageService" bean="storageService" />
 		<lookup-method name="getConfigurationInterfaceService" bean="configurationInterfaceService" />
 		<lookup-method name="getBusinessContextManagementService" bean="businessContextManagementService" />
+		<lookup-method name="getInfluxDBService" bean="influxDBService" />
+		<lookup-method name="getAlertAccessService" bean="alertAccessService" />
 	</bean>
 
 	<!-- CmrManagementService -->
@@ -321,6 +323,52 @@
 		<property name="defaultValueOnError" value="false" />
 	</bean>
 	<!-- ConfigurationInterfaceService End -->
+	
+	<!-- InfluxDBService -->
+	<bean id="influxDBService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
+		<property name="proxyInterfaces">
+			<list>
+				<value>rocks.inspectit.shared.cs.cmr.service.IInfluxDBService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
+			</list>
+		</property>
+		<property name="target" ref="influxDBServiceTarget" />
+		<property name="interceptorNames">
+			<list>
+				<value>serviceMethodInterceptor</value>
+				<value>interfaceInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="influxDBServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IInfluxDBService" />
+		<property name="serviceName" value="InfluxDBService" />
+	</bean>
+	<!-- InfluxDBService End -->
+	
+	<!-- AlertAccessService -->
+	<bean id="alertAccessService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
+		<property name="proxyInterfaces">
+			<list>
+				<value>rocks.inspectit.shared.cs.cmr.service.IAlertService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
+			</list>
+		</property>
+		<property name="target" ref="alertAccessServiceTarget" />
+		<property name="interceptorNames">
+			<list>
+				<value>serviceMethodInterceptor</value>
+				<value>interfaceInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="alertAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IAlertService" />
+		<property name="serviceName" value="AlertAccessService" />
+	</bean>
+	<!-- AlertAccessService End -->
 
 	<bean id="loggerPostProcessor" class="rocks.inspectit.shared.all.spring.logger.LoggerPostProcessor" />
 

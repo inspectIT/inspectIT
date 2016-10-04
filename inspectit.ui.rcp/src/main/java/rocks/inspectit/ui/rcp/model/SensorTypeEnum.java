@@ -88,7 +88,9 @@ public enum SensorTypeEnum {
 	/** The JMX sensor data type. hard-coded until support for the JMX in CI */
 	JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
 	/** The JMX sensor data type. hard-coded until support for the JMX in CI */
-	CHARTING_JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor#charting", InspectITImages.IMG_BEAN);
+	CHARTING_JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor#charting", InspectITImages.IMG_BEAN),
+	/** The alert invocation sequence sensor type. */
+	ALERT_INVOCATION(InvocationSequenceSensorConfig.CLASS_NAME + "#alert", InspectITImages.IMG_ALARM_INVOCATION);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full

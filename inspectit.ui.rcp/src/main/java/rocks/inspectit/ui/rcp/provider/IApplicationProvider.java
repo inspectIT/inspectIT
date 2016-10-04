@@ -5,6 +5,9 @@ import java.util.List;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 
 /**
+ * Interface for {@link ApplicationDefinition} provider. Note that this interface extends the
+ * {@link ICmrRepositoryProvider} which in fact denotes to which CMR environment belongs.
+ *
  * @author Alexander Wert
  *
  */

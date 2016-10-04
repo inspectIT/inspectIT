@@ -1,0 +1,19 @@
+>> Opened Alert for Policy '{alertDefinitionName}'
+
+The threshold {threshold} of the alerting policy {alertDefinitionName} has been violated by the value {violationValue}.
+
+----------
+
+>> Details
+Start Time: {startTime}
+Measurement: {measurement}
+Field: {field}
+Threshold: {threshold}
+Used Tags:
+{tags}
+
+----------
+
+You can download inspectIT here: http://www.inspectit.rocks.
+
+This report was automatically generated at {currentTime}.

@@ -14,6 +14,7 @@ import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
@@ -79,6 +80,8 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.impl.StringProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidationException;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.ValidationError;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.EMailListValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.EMailValidator;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.FullyQualifiedClassNameValidator;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterValidator;
@@ -96,6 +99,7 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.PercentagePropertyUpda
 import rocks.inspectit.shared.cs.cmr.property.update.impl.RestoreDefaultPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.property.update.impl.StringPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
+import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.shared.cs.communication.data.cmr.RecordingData;
 import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator;
@@ -376,6 +380,12 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 
 		// INSPECTIT-2071
 		kryo.register(JmxSensorConfig.class, new FieldSerializer<JmxSensorConfig>(kryo, JmxSensorConfig.class), nextRegistrationId++);
+
+		// INSPECTIT-1953
+		kryo.register(AlertingDefinition.class, new FieldSerializer<AlertingDefinition>(kryo, AlertingDefinition.class), nextRegistrationId++);
+		kryo.register(Alert.class, new FieldSerializer<Alert>(kryo, Alert.class), nextRegistrationId++);
+		kryo.register(EMailValidator.class, new FieldSerializer<EMailValidator>(kryo, EMailValidator.class), nextRegistrationId++);
+		kryo.register(EMailListValidator.class, new FieldSerializer<EMailListValidator>(kryo, EMailListValidator.class), nextRegistrationId++);
 	}
 
 }
