@@ -22,6 +22,8 @@ import rocks.inspectit.shared.cs.cmr.property.configuration.impl.StringProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidation;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validation.PropertyValidationException;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.ISinglePropertyValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.EMailListValidator;
+import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.EMailValidator;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.FullyQualifiedClassNameValidator;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterOrEqualValidator;
 import rocks.inspectit.shared.cs.cmr.property.configuration.validator.impl.GreaterValidator;
@@ -70,8 +72,9 @@ public abstract class SingleProperty<T> extends AbstractProperty {
 	 */
 	@XmlElementWrapper(name = "validators")
 	@XmlElementRefs({ @XmlElementRef(type = LessValidator.class), @XmlElementRef(type = LessOrEqualValidator.class), @XmlElementRef(type = GreaterValidator.class),
-			@XmlElementRef(type = GreaterOrEqualValidator.class), @XmlElementRef(type = PercentageValidator.class), @XmlElementRef(type = PositiveValidator.class),
-			@XmlElementRef(type = NegativeValidator.class), @XmlElementRef(type = FullyQualifiedClassNameValidator.class), @XmlElementRef(type = NotEmptyValidator.class) })
+		@XmlElementRef(type = GreaterOrEqualValidator.class), @XmlElementRef(type = PercentageValidator.class), @XmlElementRef(type = PositiveValidator.class),
+		@XmlElementRef(type = NegativeValidator.class), @XmlElementRef(type = FullyQualifiedClassNameValidator.class), @XmlElementRef(type = NotEmptyValidator.class),
+		@XmlElementRef(type = EMailValidator.class), @XmlElementRef(type = EMailListValidator.class) })
 	private List<ISinglePropertyValidator<? super T>> validators;
 
 	/**
@@ -196,7 +199,7 @@ public abstract class SingleProperty<T> extends AbstractProperty {
 	 *            Value to check for.
 	 * @return {@link PropertyValidation} with errors if ones exist.
 	 */
-	protected PropertyValidation validateForValue(T value) {
+	public PropertyValidation validateForValue(T value) {
 		PropertyValidation propertyValidation = PropertyValidation.createFor(this);
 		if (CollectionUtils.isNotEmpty(validators)) {
 			for (ISinglePropertyValidator<? super T> validator : validators) {

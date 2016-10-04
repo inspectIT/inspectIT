@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
 
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
@@ -50,6 +51,7 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
+import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
 import rocks.inspectit.shared.cs.storage.StorageData;
@@ -610,5 +612,28 @@ public final class ImageFormatter {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
 		}
 		return null;
+	}
+
+	/**
+	 * Returns alert image.
+	 * 
+	 * @param alertingDefinition
+	 *            The alerting definition to show the image for.
+	 *
+	 * @return Returns alert image.
+	 */
+	public static Image getAlertingDefinitionImage(AlertingDefinition alertingDefinition) {
+		return InspectIT.getDefault().getImage(InspectITImages.IMG_ALARM);
+	}
+
+	/**
+	 * Returns alert image.
+	 * 
+	 * @param alert
+	 *            The alert to show the image for.
+	 * @return Returns alert image.
+	 */
+	public static Image getAlertImage(Alert alert) {
+		return InspectIT.getDefault().getImage(InspectITImages.IMG_ALARM);
 	}
 }

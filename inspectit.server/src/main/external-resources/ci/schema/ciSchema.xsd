@@ -5,6 +5,8 @@
 
   <xs:element name="agent-mappings" type="agentMappings"/>
 
+  <xs:element name="alerting-definition" type="alertingDefinition"/>
+
   <xs:element name="and" type="andExpression"/>
 
   <xs:element name="applicaction" type="applicationDefinition"/>
@@ -132,6 +134,41 @@
       <xs:element ref="agent-mapping" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="revision" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="alertingDefinition">
+    <xs:complexContent>
+      <xs:extension base="abstractCiData">
+        <xs:sequence>
+          <xs:element name="tags">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="key" minOccurs="0" type="xs:string"/>
+                      <xs:element name="value" minOccurs="0" type="xs:string"/>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="notification-email-addresses" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="notification-email-address" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="threshold" type="xs:double"/>
+        <xs:attribute name="field" type="xs:string"/>
+        <xs:attribute name="threshold-type" type="thresholdType"/>
+        <xs:attribute name="measurement" type="xs:string"/>
+        <xs:attribute name="timerange" type="xs:long"/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="businessContextDefinition">
@@ -786,6 +823,13 @@
       </xs:element>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:simpleType name="thresholdType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LOWER_THRESHOLD"/>
+      <xs:enumeration value="UPPER_THRESHOLD"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <xs:simpleType name="patternMatchingType">
     <xs:restriction base="xs:string">

@@ -130,6 +130,13 @@
             name="Business Context Manager"
             restorable="true">
       </view>
+      <view
+            class="rocks.inspectit.ui.rcp.ci.view.AlertManagerViewPart"
+            icon="icons/fugue/flag.png"
+            id="rocks.inspectit.ui.rcp.ci.view.alertManager"
+            name="Alert Manager"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -245,6 +252,24 @@
             name="Create Environment">
          <description>
             Create Environment
+         </description>
+      </wizard>
+      <wizard
+            class="rocks.inspectit.ui.rcp.ci.wizard.CreateAlertDefinitionWizard"
+            icon="icons/eclipse/add_obj.gif"
+            id="rocks.inspectit.ui.rcp.ci.wizard.createAlertDefinitionWizard"
+            name="Create">
+         <description>
+            Create Alert Definition
+         </description>
+      </wizard>
+      <wizard
+            class="rocks.inspectit.ui.rcp.ci.wizard.EditAlertDefinitionWizard"
+            icon="icons/eclipse/edit.gif"
+            id="rocks.inspectit.ui.rcp.ci.wizard.editAlertDefinitionWizard"
+            name="Edit">
+         <description>
+            Edit Alert Definition
          </description>
       </wizard>
       <wizard
@@ -555,6 +580,10 @@
                name="direction"
                optional="false">
          </commandParameter>
+      </command>
+      <command
+            id="rocks.inspectit.ui.rcp.commands.openAlert"
+            name="Open Alert">
       </command>
    </extension>
    <extension
@@ -1021,23 +1050,9 @@
                </count>
                <iterate>
                   <instanceof
-                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                        value="rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition">
                   </instanceof>
-                  <not>
-                     <instanceof
-                           value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
-                     </instanceof>
-                  </not>
-                  <not>
-                     <instanceof
-                           value="rocks.inspectit.ui.rcp.provider.IEnvironmentProvider">
-                     </instanceof>
-                  </not>
-                  <not>
-                     <instanceof
-                           value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
-                     </instanceof>
-                  </not></iterate>
+               </iterate>
             </and>
          </activeWhen>
       </handler>
@@ -2082,6 +2097,42 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.ci.handler.DeleteAlertDefinitionHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IAlertDefinitionProvider">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.OpenAlertHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.openAlert">
+         <activeWhen>
+            <test
+                  property="rocks.inspectit.ui.rcp.anyOnline">
+            </test>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -2154,6 +2205,13 @@
             namespace="rocks.inspectit.ui.rcp"
             properties="onlineStatus, recordingActive"
             type="rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider">
+      </propertyTester>
+      <propertyTester
+            class="rocks.inspectit.ui.rcp.tester.CmrOnlineStatusTester"
+            id="rocks.inspectit.ui.rcp.CmrTester"
+            namespace="rocks.inspectit.ui.rcp"
+            properties="anyOnline"
+            type="java.lang.Object">
       </propertyTester>
       <propertyTester
             class="rocks.inspectit.ui.rcp.tester.InputDefinitionTester"
@@ -2632,6 +2690,25 @@
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
                         value="rocks.inspectit.ui.rcp.ci.view.businessContextManager">
+                  </parameter>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeWorkbenchWindow">
+                        <test
+                              property="org.eclipse.ui.workbenchWindow.isPerspectiveOpen">
+                        </test>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     icon="icons/fugue/flag.png"
+                     label="Alert Manager"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="rocks.inspectit.ui.rcp.ci.view.alertManager">
                   </parameter>
                   <visibleWhen
                         checkEnabled="false">
@@ -3198,6 +3275,11 @@
                   style="push"
                   tooltip="Search">
             </command>
+            <command
+                  commandId="rocks.inspectit.ui.rcp.commands.openAlert"
+                  icon="icons/fugue/flag.png"
+                  style="push">
+            </command>
          </toolbar>
          <toolbar
                id="rocks.inspectit.ui.rcp.helpToolbar">
@@ -3548,6 +3630,24 @@
                   name="newWizardId"
                   value="rocks.inspectit.ui.rcp.ci.wizard.createApplicationWizard">
             </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
          </command>
          <command
                commandId="org.eclipse.ui.edit.rename"
@@ -3594,6 +3694,119 @@
                commandId="org.eclipse.ui.edit.delete"
                style="push"
                tooltip="Delete">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:rocks.inspectit.ui.rcp.ci.view.alertManager">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               style="push"
+               tooltip="New">
+            <parameter
+                  name="newWizardId"
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createAlertDefinitionWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               style="push"
+               tooltip="Edit">
+            <parameter
+                  name="newWizardId"
+                  value="rocks.inspectit.ui.rcp.ci.wizard.editAlertDefinitionWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IAlertDefinitionProvider">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push"
+               tooltip="Delete Alert Definition">
+         </command>
+         <command
+               commandId="org.eclipse.ui.file.refresh"
+               icon="icons/eclipse/refresh.gif"
+               label="Refresh"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:rocks.inspectit.ui.rcp.ci.view.alertManager">
+         <command
+               commandId="org.eclipse.ui.newWizard"
+               style="push"
+               tooltip="New">
+            <parameter
+                  name="newWizardId"
+                  value="rocks.inspectit.ui.rcp.ci.wizard.createAlertDefinitionWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <count
+                        value="+">
+                  </count>
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <test
+                           property="rocks.inspectit.ui.rcp.onlineStatus"
+                           value="ONLINE">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+      <command
+               commandId="org.eclipse.ui.newWizard"
+               style="push"
+               tooltip="Edit">
+            <parameter
+                  name="newWizardId"
+                  value="rocks.inspectit.ui.rcp.ci.wizard.editAlertDefinitionWizard">
+            </parameter>
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.IAlertDefinitionProvider">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push"
+               tooltip="Delete Alert Definition">
          </command>
       </menuContribution>
    </extension>

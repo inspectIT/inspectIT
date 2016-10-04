@@ -3,6 +3,7 @@ package rocks.inspectit.ui.rcp.editor.preferences;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.control.IPreferenceControl;
 import rocks.inspectit.ui.rcp.editor.preferences.control.SamplingRateControl;
 import rocks.inspectit.ui.rcp.editor.preferences.control.TimeLineControl;
@@ -33,9 +34,11 @@ public final class PreferenceControlFactory {
 	 *            The {@link PreferenceId} by which the {@link IPreferenceControl} will be created.
 	 * @param preferencePanel
 	 *            Preference panel
+	 * @param inputDefinition
+	 *            {@link InputDefinition} instance.
 	 * @return An instance of {@link IPreferenceControl}.
 	 */
-	public static IPreferenceControl createPreferenceControls(Composite parent, FormToolkit toolkit, PreferenceId preferenceIdEnum, IPreferencePanel preferencePanel) {
+	public static IPreferenceControl createPreferenceControls(Composite parent, FormToolkit toolkit, PreferenceId preferenceIdEnum, IPreferencePanel preferencePanel, InputDefinition inputDefinition) {
 		switch (preferenceIdEnum) {
 		case TIMELINE:
 			IPreferenceControl timeLineControl = new TimeLineControl(preferencePanel);
