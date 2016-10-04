@@ -7,6 +7,7 @@ import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
 import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
@@ -198,7 +199,7 @@ public interface IConfigurationInterfaceService {
 	 *             If operation fails.
 	 */
 	ConfigurationInterfaceImportData getImportData(byte[] importData) throws BusinessException;
-	
+
 	/**
 	 * Returns an unmodifiable list of all {@link ApplicationDefinition} instances.
 	 *
@@ -281,4 +282,53 @@ public interface IConfigurationInterfaceService {
 	 */
 	ApplicationDefinition updateApplicationDefinition(ApplicationDefinition appDefinition) throws BusinessException;
 
+	/**
+	 * Returns all existing alerting definitions.
+	 *
+	 * @return {@link List} containing all {@link AlertingDefinition}s.
+	 */
+	List<AlertingDefinition> getAlertingDefinitions();
+
+	/***
+	 * Returns the {@link AlertingDefinition} of the given id.
+	 *
+	 * @param id
+	 *            identifier of the {@link AlertingDefinition}
+	 * @return the {@link AlertingDefinition} for the given id
+	 * @throws BusinessException
+	 *             if retrieving fails.
+	 */
+	AlertingDefinition getAlertingDefinition(String id) throws BusinessException;
+
+	/**
+	 * Creates a new {@link AlertingDefinition} based on the given template.
+	 *
+	 * @param alertingDefinition
+	 *            {@link AlertingDefinition} template
+	 * @return the new {@link AlertingDefinition}
+	 * @throws BusinessException
+	 *             if the creation fails
+	 */
+	AlertingDefinition createAlertingDefinition(AlertingDefinition alertingDefinition) throws BusinessException;
+
+	/**
+	 * Removes the given {@link AlertingDefinition}.
+	 *
+	 * @param alertingDefinition
+	 *            the {@link AlertingDefinition} to remove
+	 * @throws BusinessException
+	 *             if the removal fails
+	 */
+	void deleteAlertingDefinition(AlertingDefinition alertingDefinition) throws BusinessException;
+
+	/**
+	 * Updates the given {@link AlertingDefinition}.
+	 *
+	 * @param alertingDefinition
+	 *            the {@link AlertingDefinition} to update
+	 * @return the updated {@link AlertingDefinition} instance
+	 * @throws BusinessException
+	 *             if the update fails
+	 */
+	AlertingDefinition updateAlertingDefinition(AlertingDefinition alertingDefinition) throws BusinessException;
 }

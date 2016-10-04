@@ -356,4 +356,47 @@
 			</group-property>
 		</properties>
 	</section>
+	<section name="Mail" >
+		<properties>
+			<string-property name="SMTP Server Host" default-value="smtp-server" server-restart-required="false" logical-name="mail.smpt.host" advanced="false" description="The hostname/IP of the SMPT server to be used to send e-mails.">
+				<validators>
+					<isNotEmpty />
+				</validators>
+			</string-property>
+			<long-property name="SMTP Server Port" default-value="25" server-restart-required="false" logical-name="mail.smpt.port" advanced="false" description="The port of the SMPT server to be used to send e-mails.">
+				<validators>
+					<isPositive />
+				</validators>
+			</long-property>
+			<string-property name="Username" default-value="" server-restart-required="false" logical-name="mail.smtp.user" advanced="false" description="The username to be used to connect to the SMTP server." />
+			<string-property name="Password" default-value="" server-restart-required="false" logical-name="mail.smtp.passwd" advanced="false" description="The password to be used to connect to the SMTP server." />
+			<string-property name="From E-Mail Address" default-value="sender@inspectit.rocks" server-restart-required="false" logical-name="mail.from" advanced="false" description="The e-mail address to be used as sender when e-mails are sent by inspectIT.">
+				<validators>
+					<isNotEmpty />
+					<isValidEMail />
+				</validators>
+			</string-property>
+			<string-property name="From Name" default-value="inspectIT" server-restart-required="false" logical-name="mail.from.name" advanced="false" description="The name to be displayed as sender when e-mails are sent by inspectIT.">
+				<validators>
+					<isNotEmpty />
+				</validators>
+			</string-property>
+			<string-property name="Default Recipients" default-value="" server-restart-required="false" logical-name="mail.default.to" advanced="true" description="A comma separated list of default recipient e-mail addresses. These recipients will receive every e-mail that is sent by inspectIT.">
+				<validators>
+					<isValidEMailList />
+				</validators>
+			</string-property>
+			<string-property name="SMTP Properties" default-value="" server-restart-required="false" logical-name="mail.smtp.properties" advanced="true" description="A comma separated list of additional SMTP properties that might be needed by certain SMTP servers.\n\nExample:\nmail.smtp.auth=true,mail.smtp.starttls.enable=true" />
+		</properties>
+	</section>
+	<section name="Alerting">
+		<properties>
+			<boolean-property name="Alerting enabled" default-value="false" server-restart-required="false" logical-name="alerting.active" advanced="false" description="If activated, the alerting functionallity is active and executes the specified alerting definitions." />
+			<long-property name="Alert Resolution Delay" default-value="3" server-restart-required="false" logical-name="alerting.resolutionDelay" advanced="true" description="If an alert has been opened, this value specifies the amount of checking intervals (as configured for the individual alerting definition) which must not contain a threshold violation for the laert to be closed.">
+				<validators>
+					<isPositive />
+				</validators>
+			</long-property>
+		</properties>
+	</section>
 </cmr-configuration>

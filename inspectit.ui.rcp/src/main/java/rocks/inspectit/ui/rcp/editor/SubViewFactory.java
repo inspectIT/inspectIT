@@ -11,6 +11,7 @@ import rocks.inspectit.ui.rcp.editor.composite.TabbedCompositeSubView;
 import rocks.inspectit.ui.rcp.editor.graph.GraphSubView;
 import rocks.inspectit.ui.rcp.editor.table.TableSubView;
 import rocks.inspectit.ui.rcp.editor.table.input.AggregatedTimerSummaryInputController;
+import rocks.inspectit.ui.rcp.editor.table.input.AlertInvocInputController;
 import rocks.inspectit.ui.rcp.editor.table.input.ExceptionSensorInvocInputController;
 import rocks.inspectit.ui.rcp.editor.table.input.GroupedExceptionOverviewInputController;
 import rocks.inspectit.ui.rcp.editor.table.input.HttpTimerDataInputController;
@@ -214,6 +215,28 @@ public final class SubViewFactory {
 			jmxChartSashSubView.addSubView(jmxGraphSubView, 3);
 			jmxChartSashSubView.addSubView(jmxTextSubView, 2);
 			return jmxChartSashSubView;
+		case ALERT_INVOCATION:
+			GridCompositeSubView alertSqlCombinedView = new GridCompositeSubView();
+			ISubView alertInvocSql = new TreeSubView(new SqlInvocInputController());
+			ISubView alertInvocSqlSummary = new TextSubView(new SqlInvocSummaryTextInputController());
+			alertSqlCombinedView.addSubView(alertInvocSql, new GridData(SWT.FILL, SWT.FILL, true, true));
+			alertSqlCombinedView.addSubView(alertInvocSqlSummary, new GridData(SWT.FILL, SWT.FILL, true, false));
+
+			TabbedCompositeSubView alertInvocTabbedSubView = new TabbedCompositeSubView();
+			ISubView alertInvocDetails = new SteppingTreeSubView(new SteppingInvocDetailInputController(false));
+			ISubView alertInvocMethods = new TableSubView(new MethodInvocInputController());
+			ISubView alertInvocExceptions = new TableSubView(new ExceptionSensorInvocInputController());
+			alertInvocTabbedSubView.addSubView(alertInvocDetails, "Call Hierarchy", InspectIT.getDefault().getImage(InspectITImages.IMG_CALL_HIERARCHY));
+			alertInvocTabbedSubView.addSubView(alertSqlCombinedView, "SQL", InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE));
+			alertInvocTabbedSubView.addSubView(alertInvocMethods, "Methods", InspectIT.getDefault().getImage(InspectITImages.IMG_METHOD_PUBLIC));
+			alertInvocTabbedSubView.addSubView(alertInvocExceptions, "Exceptions", InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR));
+
+			SashCompositeSubView alertInvocSubView = new SashCompositeSubView();
+			ISubView alertInvocOverview = new TableSubView(new AlertInvocInputController());
+			alertInvocSubView.addSubView(alertInvocOverview, 1);
+			alertInvocSubView.addSubView(alertInvocTabbedSubView, 2);
+
+			return alertInvocSubView;
 		default:
 			throw new IllegalArgumentException("Could not create sub-view. Not supported: " + sensorTypeEnum.toString());
 		}

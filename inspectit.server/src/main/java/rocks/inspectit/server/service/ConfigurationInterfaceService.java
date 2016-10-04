@@ -18,6 +18,7 @@ import rocks.inspectit.shared.all.exception.TechnicalException;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.BusinessContextDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
@@ -30,6 +31,7 @@ import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
  * Implementation of the {@link ICmrManagementService}.
  *
  * @author Ivan Senic
+ * @author Marius Oehler
  *
  */
 @Service
@@ -338,6 +340,62 @@ public class ConfigurationInterfaceService implements IConfigurationInterfaceSer
 					ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
 		} catch (IOException e) {
 			throw new TechnicalException("Update the application definition '" + appDefinition.getApplicationName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<AlertingDefinition> getAlertingDefinitions() {
+		return ciManager.getAlertingDefinitions();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public AlertingDefinition getAlertingDefinition(String id) throws BusinessException {
+		return ciManager.getAlertingDefinition(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public AlertingDefinition createAlertingDefinition(AlertingDefinition alertingDefinition) throws BusinessException {
+		try {
+			return ciManager.createAlertingDefinition(alertingDefinition);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Update the alerting definition.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Update the alerting definition.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public AlertingDefinition updateAlertingDefinition(AlertingDefinition alertingDefinition) throws BusinessException {
+		try {
+			return ciManager.updateAlertingDefinition(alertingDefinition);
+		} catch (JAXBException e) {
+			throw new TechnicalException("Update the alerting definition.", ConfigurationInterfaceErrorCodeEnum.JAXB_MARSHALLING_OR_DEMARSHALLING_FAILED, e);
+		} catch (IOException e) {
+			throw new TechnicalException("Update the alerting definition.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteAlertingDefinition(AlertingDefinition alertingDefinition) throws BusinessException {
+		try {
+			ciManager.deleteAlertingDefinition(alertingDefinition);
+		} catch (IOException e) {
+			throw new TechnicalException("Delete the alerting definition '" + alertingDefinition.getName() + "'.", ConfigurationInterfaceErrorCodeEnum.INPUT_OUTPUT_OPERATION_FAILED, e);
 		}
 	}
 

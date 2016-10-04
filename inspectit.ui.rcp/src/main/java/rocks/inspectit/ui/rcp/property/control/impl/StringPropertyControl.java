@@ -48,21 +48,20 @@ public class StringPropertyControl extends AbstractPropertyControl<StringPropert
 		text.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				String value = text.getText();
-				if (!value.isEmpty()) {
-					sendPropertyUpdateEvent(value);
-				}
+				sendPropertyUpdateEvent(text.getText());
 			}
 		});
+
 		text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String value = text.getText();
-				if (value.isEmpty()) {
+				if (value.isEmpty() && (null == StringPropertyControl.super.propertyUpdate)) {
 					text.setText(getLastCorrectValue());
 				}
 			}
 		});
+
 		return text;
 	}
 
