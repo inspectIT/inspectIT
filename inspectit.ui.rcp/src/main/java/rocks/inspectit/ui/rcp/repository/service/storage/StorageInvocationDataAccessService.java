@@ -154,6 +154,22 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	 * {@inheritDoc}
 	 */
 	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, long minId, Long businessTrxId, Long applicationId,
+			ResultComparator<InvocationSequenceData> resultComparator) {
+		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, startDate, endDate, minId, businessTrxId, applicationId);
+		query.setOnlyInvocationsWithoutChildren(true);
+		if (null != resultComparator) {
+			resultComparator.setCachedDataService(getStorageRepositoryDefinition().getCachedDataService());
+			return super.executeQuery(query, resultComparator, limit);
+		} else {
+			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
 		throw new UnsupportedOperationException();
 	}

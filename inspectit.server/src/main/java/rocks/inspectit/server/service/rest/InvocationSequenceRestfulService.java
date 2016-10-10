@@ -3,7 +3,6 @@ package rocks.inspectit.server.service.rest;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import rocks.inspectit.server.service.rest.error.JsonError;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 
@@ -35,13 +32,6 @@ import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 @Controller
 @RequestMapping(value = "/data/invocations")
 public class InvocationSequenceRestfulService {
-
-	/**
-	 * Default comparator for the
-	 * {@link #getInvocationSequenceOverview(long, Date, Date, long, int, long)} method. Sorts by
-	 * invocation id in ascending order.
-	 */
-	private static final ResultComparator<InvocationSequenceData> OVERVIEW_COMPARATOR = new ResultComparator<>(DefaultDataComparatorEnum.ID, true);
 
 	/**
 	 * Reference to the existing {@link IInvocationDataAccessService}.
@@ -77,10 +67,12 @@ public class InvocationSequenceRestfulService {
 	 *            End of time period.
 	 * @param latestReadId
 	 *            Latest read ID of the invocations, only invocations with higher id are submitted.
+	 * @param businessTrxId
+	 *            Business transaction ID.
+	 * @param applicationId
+	 *            Application ID.
 	 * @param limit
 	 *            The limit/size of the results.
-	 * @param minDuration
-	 *            Minimum duration in milliseconds of the invocation to be returned.
 	 * @return a list of {@link InvocationSequenceData}.
 	 */
 	@RequestMapping(method = GET, value = "")
@@ -88,18 +80,11 @@ public class InvocationSequenceRestfulService {
 	public List<InvocationSequenceData> getInvocationSequenceOverview(@RequestParam(value = "agentId", required = false, defaultValue = "0") Long agentId,
 			@RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date fromDate,
 			@RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date toDate,
-			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") long latestReadId,
-			@RequestParam(value = "limit", defaultValue = "100") int limit,
-			@RequestParam(value = "minDuration", defaultValue = "0") long minDuration) {
+			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") Long latestReadId,
+			@RequestParam(value = "businessTrxId", required = false, defaultValue = "0") Long businessTrxId, @RequestParam(value = "appId", required = false, defaultValue = "0") Long applicationId,
+			@RequestParam(value = "limit", defaultValue = "100") int limit) {
 
-		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(agentId, limit, fromDate, toDate, latestReadId + 1, OVERVIEW_COMPARATOR);
-
-		// manually filter the duration
-		for (Iterator<InvocationSequenceData> it = result.iterator(); it.hasNext();) {
-			if (it.next().getDuration() < minDuration) {
-				it.remove();
-			}
-		}
+		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(agentId, limit, fromDate, toDate, latestReadId + 1, businessTrxId, applicationId, null);
 
 		return result;
 	}

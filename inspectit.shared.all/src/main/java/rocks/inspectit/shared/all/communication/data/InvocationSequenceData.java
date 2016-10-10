@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.indexing.IIndexQuery;
 
 /**
  * The invocation sequence data object which is used to store the path of method invocations from
@@ -110,11 +111,13 @@ public class InvocationSequenceData extends MethodSensorData {
 	/**
 	 * Identifier of the application this invocation sequence belongs to.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
 	private int applicationId = 0;
 
 	/**
 	 * Identifier of the business transaction this invocation sequence belongs to.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
 	private int businessTransactionId = 0;
 
 	/**
@@ -486,6 +489,20 @@ public class InvocationSequenceData extends MethodSensorData {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isQueryComplied(IIndexQuery query) {
+		if ((query.getBusinessTransactionId() != 0) && (query.getBusinessTransactionId() != getBusinessTransactionId())) {
+			return false;
+		}
+		if ((query.getApplicationId() != 0) && (query.getApplicationId() != getApplicationId())) {
+			return false;
+		}
+		return super.isQueryComplied(query);
 	}
 
 	/**

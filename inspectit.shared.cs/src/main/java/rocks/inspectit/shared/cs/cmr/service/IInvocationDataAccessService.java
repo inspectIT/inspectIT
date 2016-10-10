@@ -175,4 +175,30 @@ public interface IInvocationDataAccessService {
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException;
 
+	/**
+	 * @param platformId
+	 *            Agent ID where to look for the objects. If the zero value is passed, looking for
+	 *            the object will be done in all platforms.
+	 * @param limit
+	 *            The limit/size of the list.
+	 * @param startDate
+	 *            Date include invocation from.
+	 * @param endDate
+	 *            Date include invocation to.
+	 * @param minId
+	 *            Only invocations with equal or higher id are submitted.
+	 * @param businessTrxId
+	 *            Business transaction ID. If the zero value is passed, looking for the objects will
+	 *            be done on all business transactions.
+	 * @param applicationId
+	 *            Application ID. If the zero value is passed, looking for the objects will be done
+	 *            on all applications.
+	 * @param resultComparator
+	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
+	 *            that case no sorting will be done.
+	 * @return Returns the list of invocation sequences.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, long minId, Long businessTrxId, Long applicationId,
+			ResultComparator<InvocationSequenceData> resultComparator);
+
 }

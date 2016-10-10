@@ -137,4 +137,24 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, Date startDate, Date endDate, long minId, int limit, Long businessTrxId, Long applicationId,
+			Comparator<? super InvocationSequenceData> comparator) {
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, startDate, endDate, minId, businessTrxId, applicationId);
+		List<InvocationSequenceData> resultWithChildren;
+		if (null != comparator) {
+			resultWithChildren = super.executeQuery(query, comparator, limit, false);
+		} else {
+			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
+		}
+		List<InvocationSequenceData> realResults = new ArrayList<InvocationSequenceData>(resultWithChildren.size());
+		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {
+			realResults.add(invocationSequenceData.getClonedInvocationSequence());
+		}
+		return realResults;
+	}
+
 }

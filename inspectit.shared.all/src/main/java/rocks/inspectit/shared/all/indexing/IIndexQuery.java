@@ -164,4 +164,36 @@ public interface IIndexQuery {
 	 */
 	boolean areAllRestrictionsFulfilled(DefaultData defaultData);
 
+	/**
+	 * Business transaction ID to be returned by the query. Query should return only objects that
+	 * have business transaction id than this one.
+	 *
+	 * @return business transaction ID
+	 */
+	long getBusinessTransactionId();
+
+	/**
+	 * Set business transaction id for objects to be returned by the query.
+	 *
+	 * @param businessTransactionId
+	 *            business transaction id or 0 for returning all objects
+	 */
+	void setBusinessTransactionId(long businessTransactionId);
+
+	/**
+	 * Application ID to be returned by the query. Query should return only objects that have
+	 * application id than this one.
+	 *
+	 * @return application ID
+	 */
+	long getApplicationId();
+
+	/**
+	 * Set application id for objects to be returned by the query.
+	 *
+	 * @param applicationId
+	 *            application id or 0 for returning all objects
+	 */
+	void setApplicationId(long applicationId);
+
 }

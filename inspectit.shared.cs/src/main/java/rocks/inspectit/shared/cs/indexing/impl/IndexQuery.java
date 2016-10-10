@@ -76,6 +76,16 @@ public class IndexQuery implements IIndexQuery {
 	private List<IIndexQueryRestriction> indexingRestrictionList = new ArrayList<>();
 
 	/**
+	 * Business transaction id.
+	 */
+	private long businessTrxId;
+
+	/**
+	 * Application id.
+	 */
+	private long applicationId;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -262,6 +272,38 @@ public class IndexQuery implements IIndexQuery {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public long getBusinessTransactionId() {
+		return businessTrxId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setBusinessTransactionId(long businessTrxId) {
+		this.businessTrxId = businessTrxId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public long getApplicationId() {
+		return applicationId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setApplicationId(long applicationId) {
+		this.applicationId = applicationId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -357,4 +399,5 @@ public class IndexQuery implements IIndexQuery {
 		toStringBuilder.append("indexingRestrictionList", indexingRestrictionList);
 		return toStringBuilder.toString();
 	}
+
 }
