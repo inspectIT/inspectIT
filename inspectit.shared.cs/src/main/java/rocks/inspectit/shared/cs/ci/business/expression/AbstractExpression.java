@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.ci.business.expression.impl.AndExpression;
@@ -27,12 +29,14 @@ public abstract class AbstractExpression {
 	/**
 	 * Identifier of the expression.
 	 */
+	@JsonIgnore
 	@XmlAttribute(name = "id", required = true)
 	private final long id = UUID.randomUUID().getMostSignificantBits();
 
 	/**
 	 * Indicates whether the expression is modified in advanced mode.
 	 */
+	@JsonIgnore
 	@XmlAttribute(name = "advanced")
 	private Boolean advanced = Boolean.FALSE;
 

@@ -357,4 +357,5 @@ public class IndexQuery implements IIndexQuery {
 		toStringBuilder.append("indexingRestrictionList", indexingRestrictionList);
 		return toStringBuilder.toString();
 	}
+
 }
