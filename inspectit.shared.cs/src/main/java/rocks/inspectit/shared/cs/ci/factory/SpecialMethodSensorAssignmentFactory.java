@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.stereotype.Component;
 
-import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 
 /**
  * Factory that can return appropriate {@link SpecialMethodSensorAssignment}s based on the
@@ -57,13 +57,13 @@ public class SpecialMethodSensorAssignmentFactory {
 	public void init() {
 		// init all assignments
 		// class loading delegation
-		SpecialMethodSensorAssignment cldDirect = new SpecialMethodSensorAssignment(SpecialInstrumentationType.CLASS_LOADING_DELEGATION);
+		SpecialMethodSensorAssignment cldDirect = new SpecialMethodSensorAssignment(ClassLoadingDelegationSensorConfig.INSTANCE);
 		cldDirect.setClassName("java.lang.ClassLoader");
 		cldDirect.setMethodName("loadClass");
 		cldDirect.setParameters(Collections.singletonList("java.lang.String"));
 		cldDirect.setPublicModifier(true);
 
-		SpecialMethodSensorAssignment cldSuperclass = new SpecialMethodSensorAssignment(SpecialInstrumentationType.CLASS_LOADING_DELEGATION);
+		SpecialMethodSensorAssignment cldSuperclass = new SpecialMethodSensorAssignment(ClassLoadingDelegationSensorConfig.INSTANCE);
 		cldSuperclass.setClassName("java.lang.ClassLoader");
 		cldSuperclass.setMethodName("loadClass");
 		cldSuperclass.setParameters(Collections.singletonList("java.lang.String"));

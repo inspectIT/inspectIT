@@ -9,9 +9,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -23,13 +20,9 @@ import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
 import info.novatec.inspectit.org.objectweb.asm.Opcodes;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -64,6 +57,7 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 	protected static final Answer<MethodVisitor> METHOD_INSTRUMENTER_ANSWER = new Answer<MethodVisitor>() {
 
+		@Override
 		public MethodVisitor answer(InvocationOnMock invocation) throws Throwable {
 			Object[] arguments = invocation.getArguments();
 			SensorInstrumentationPoint sip = (SensorInstrumentationPoint) arguments[0];
@@ -73,18 +67,11 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 	protected static final Answer<MethodVisitor> CONSTRUCTOR_INSTRUMENTER_ANSWER = new Answer<MethodVisitor>() {
 
+		@Override
 		public MethodVisitor answer(InvocationOnMock invocation) throws Throwable {
 			Object[] arguments = invocation.getArguments();
 			SensorInstrumentationPoint sip = (SensorInstrumentationPoint) arguments[0];
 			return getConstructorInstrumenter((MethodVisitor) arguments[1], (Integer) arguments[2], (String) arguments[3], (String) arguments[4], sip.getId(), (Boolean) arguments[5]);
-		}
-	};
-
-	protected static final Answer<MethodVisitor> CLASS_LOADING_DELEGATION_INSTRUMENTER_ANSWER = new Answer<MethodVisitor>() {
-
-		public MethodVisitor answer(InvocationOnMock invocation) throws Throwable {
-			Object[] arguments = invocation.getArguments();
-			return getClassLoaderDelegationMethodInstrumenter((MethodVisitor) arguments[1], (Integer) arguments[2], (String) arguments[3], (String) arguments[4]);
 		}
 	};
 
@@ -112,6 +99,11 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 	@Mock
 	MethodInstrumentationConfig config2;
+
+	@Mock
+	SpecialInstrumentationPoint specIP;
+	@Mock
+	SpecialInstrumentationPoint specIP2;
 
 	ClassInstrumenter classInstrumenter;
 
@@ -1164,71 +1156,6 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
-		// class loader delegation
-
-		@Test
-		public void classLoadingDelegationActiveLoadClass() throws Exception {
-			Class<?> clazz = getClass();
-			Object[] parameters = { "java.lang.String" };
-			String methodName = "loadClass";
-
-			doReturn(clazz).when(agent).loadClass(parameters);
-
-			prepareConfigurationMockMethod(config, MyTestClassLoader.class, methodName, String.class);
-			SpecialInstrumentationPoint functionalInstrumentationPoint = mock(SpecialInstrumentationPoint.class);
-			doAnswer(CLASS_LOADING_DELEGATION_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(functionalInstrumentationPoint), Matchers.<MethodVisitor> any(), anyInt(), anyString(),
-					anyString(), anyBoolean());
-			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(functionalInstrumentationPoint));
-
-			ClassReader cr = new ClassReader(TEST_CLASS_LOADER_FQN);
-			prepareWriter(cr, null, false, config);
-			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
-			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
-			byte b[] = classWriter.toByteArray();
-
-			// now call this method
-			Object testClass = this.createInstance(TEST_CLASS_LOADER_FQN, b);
-			// call this method via reflection as we would get a class cast
-			// exception by casting to the concrete class.
-			Class<?> result = (Class<?>) this.callMethod(testClass, methodName, parameters);
-
-			assertThat((Object) result, is(equalTo((Object) clazz)));
-
-			verify(agent, times(1)).loadClass(parameters);
-			verifyNoMoreInteractions(agent);
-		}
-
-		@Test
-		public void classLoadingDelegationActiveDoesNotLoadClass() throws Exception {
-			Object[] parameters = { "java.lang.String" };
-			String methodName = "loadClass";
-
-			doReturn(null).when(agent).loadClass(parameters);
-
-			prepareConfigurationMockMethod(config, MyTestClassLoader.class, methodName, String.class);
-			SpecialInstrumentationPoint functionalInstrumentationPoint = mock(SpecialInstrumentationPoint.class);
-			doAnswer(CLASS_LOADING_DELEGATION_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(functionalInstrumentationPoint), Matchers.<MethodVisitor> any(), anyInt(), anyString(),
-					anyString(), anyBoolean());
-			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(functionalInstrumentationPoint));
-
-			ClassReader cr = new ClassReader(TEST_CLASS_LOADER_FQN);
-			prepareWriter(cr, null, false, config);
-			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
-			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
-			byte b[] = classWriter.toByteArray();
-
-			// now call this method
-			Object testClass = this.createInstance(TEST_CLASS_LOADER_FQN, b);
-			// call this method via reflection as we would get a class cast
-			// exception by casting to the concrete class.
-			Class<?> result = (Class<?>) this.callMethod(testClass, methodName, parameters);
-
-			// it's delegated to super class loader so we should get the String class back
-			assertThat((Object) result, is(equalTo((Object) String.class)));
-
-			verify(agent, times(1)).loadClass(parameters);
-			verifyNoMoreInteractions(agent);
-		}
 
 	}
 
@@ -1253,56 +1180,6 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 				mv.visitFieldInsn(Opcodes.GETSTATIC, Type.getInternalName(ClassInstrumenterTest.class), "dispatcher", Type.getDescriptor(IHookDispatcher.class));
 			}
 		};
-	}
-
-	protected static ClassLoaderDelegationMethodInstrumenter getClassLoaderDelegationMethodInstrumenter(MethodVisitor superMethodVisitor, int access, String name, String desc) {
-		return new ClassLoaderDelegationMethodInstrumenter(superMethodVisitor, access, name, desc) {
-			@Override
-			protected void loadAgent() {
-				mv.visitFieldInsn(Opcodes.GETSTATIC, Type.getInternalName(ClassInstrumenterTest.class), "a", Type.getDescriptor(IAgent.class));
-			}
-		};
-	}
-
-	protected void prepareConfigurationMockMethod(MethodInstrumentationConfig point, Class<?> clazz, String methodName, Class<?>... parameterTypes) throws SecurityException, NoSuchMethodException {
-		Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
-		when(point.getTargetClassFqn()).thenReturn(clazz.getName());
-		when(point.getTargetMethodName()).thenReturn(methodName);
-		if (method.getReturnType().isArray()) {
-			when(point.getReturnType()).thenReturn(method.getReturnType().getComponentType().getName() + "[]");
-		} else {
-			when(point.getReturnType()).thenReturn(method.getReturnType().getName());
-		}
-		if (ArrayUtils.isNotEmpty(parameterTypes)) {
-			List<String> params = new ArrayList<String>();
-			for (Class<?> paramType : parameterTypes) {
-				if (paramType.isArray()) {
-					params.add(paramType.getComponentType().getName() + "[]");
-				} else {
-					params.add(paramType.getName());
-				}
-			}
-			when(point.getParameterTypes()).thenReturn(params);
-		}
-	}
-
-	protected void prepareConfigurationMockConstructor(MethodInstrumentationConfig point, Class<?> clazz, boolean staticConstructor, Class<?>... parameterTypes)
-			throws SecurityException, NoSuchMethodException {
-		clazz.getDeclaredConstructor(parameterTypes);
-		when(point.getTargetClassFqn()).thenReturn(clazz.getName());
-		when(point.getTargetMethodName()).thenReturn(staticConstructor ? "<clinit>" : "<init>");
-		when(point.getReturnType()).thenReturn("void");
-		if (ArrayUtils.isNotEmpty(parameterTypes)) {
-			List<String> params = new ArrayList<String>();
-			for (Class<?> paramType : parameterTypes) {
-				if (paramType.isArray()) {
-					params.add(paramType.getComponentType().getName() + "[]");
-				} else {
-					params.add(paramType.getName());
-				}
-			}
-			when(point.getParameterTypes()).thenReturn(params);
-		}
 	}
 
 }

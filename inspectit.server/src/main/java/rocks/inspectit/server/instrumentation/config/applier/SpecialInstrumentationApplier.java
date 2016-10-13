@@ -4,18 +4,21 @@ import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 /**
- * {@link AbstractInstrumentationApplier} for the special assignments.
+ * {@link AbstractSensorInstrumentationApplier} for the special assignments.
  *
  * @author Ivan Senic
  *
  */
-public class SpecialInstrumentationApplier extends AbstractInstrumentationApplier {
+public class SpecialInstrumentationApplier extends AbstractSensorInstrumentationApplier {
 
 	/**
 	 * {@link SpecialMethodSensorAssignment} to use.
@@ -29,11 +32,14 @@ public class SpecialInstrumentationApplier extends AbstractInstrumentationApplie
 	 *            {@link SpecialMethodSensorAssignment} to use.
 	 * @param environment
 	 *            Environment belonging to the assignment.
+	 * @param registrationService
+	 *            Registration service needed for registration of the IDs.
 	 */
-	public SpecialInstrumentationApplier(SpecialMethodSensorAssignment functionalAssignment, Environment environment) {
-		super(environment);
+	public SpecialInstrumentationApplier(SpecialMethodSensorAssignment functionalAssignment, Environment environment, IRegistrationService registrationService) {
+		super(environment, registrationService);
 		this.functionalAssignment = functionalAssignment;
 	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -53,10 +59,13 @@ public class SpecialInstrumentationApplier extends AbstractInstrumentationApplie
 
 	/**
 	 * {@inheritDoc}
+	 * <p>
+	 * We only support method instrumentation with special assignments for now. No constructors of
+	 * any kind.
 	 */
 	@Override
 	protected boolean matches(MethodType methodType) {
-		return getMethodSensorAssignmentFilter().matches(functionalAssignment, methodType);
+		return MethodType.Character.METHOD.equals(methodType.getMethodCharacter()) && getMethodSensorAssignmentFilter().matches(functionalAssignment, methodType);
 	}
 
 	/**
@@ -64,8 +73,23 @@ public class SpecialInstrumentationApplier extends AbstractInstrumentationApplie
 	 */
 	@Override
 	protected void applyAssignment(AgentConfig agentConfiguration, MethodType methodType, MethodInstrumentationConfig methodInstrumentationConfig) {
-		SpecialInstrumentationPoint functionalInstrumentation = new SpecialInstrumentationPoint(functionalAssignment.getInstrumentationType());
-		methodInstrumentationConfig.addFunctionalInstrumentation(functionalInstrumentation);
+		SpecialInstrumentationPoint specialInstrumentationPoint = getOrCreateSpecialInstrumentationPoint(agentConfiguration, methodType, methodInstrumentationConfig);
+		MethodSensorTypeConfig methodSensorTypeConfig = getSensorTypeConfigFromConfiguration(agentConfiguration);
+
+		long sensorId = methodSensorTypeConfig.getId();
+		specialInstrumentationPoint.setSensorId(sensorId);
 	}
 
+	/**
+	 * Finds the proper sensor id from the agent configuration used for the
+	 * {@link SpecialMethodSensorAssignment}.
+	 *
+	 * @param agentConfiguration
+	 *            {@link AgentConfig}
+	 * @return {@link MethodSensorTypeConfig} for the given assignment.
+	 */
+	private MethodSensorTypeConfig getSensorTypeConfigFromConfiguration(AgentConfig agentConfiguration) {
+		IMethodSensorConfig methodSensorConfig = functionalAssignment.getSpecialMethodSensorConfig();
+		return agentConfiguration.getSpecialMethodSensorTypeConfig(methodSensorConfig.getClassName());
+	}
 }

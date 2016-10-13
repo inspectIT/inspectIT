@@ -30,6 +30,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
@@ -67,11 +68,6 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			}
 
 			@Override
-			protected void applyAssignment(AgentConfig agentConfiguration, SensorInstrumentationPoint registeredSensorConfig) {
-				// ignore
-			}
-
-			@Override
 			protected boolean matches(ClassType classType) {
 				return true;
 			}
@@ -79,6 +75,13 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			@Override
 			protected boolean matches(MethodType methodType) {
 				return true;
+			}
+
+			@Override
+			protected void applyAssignment(AgentConfig agentConfiguration, MethodType methodType, MethodInstrumentationConfig methodInstrumentationConfig) {
+				// test both
+				getOrCreateSensorInstrumentationPoint(agentConfiguration, methodType, methodInstrumentationConfig);
+				getOrCreateSpecialInstrumentationPoint(agentConfiguration, methodType, methodInstrumentationConfig);
 			}
 
 		};
@@ -123,7 +126,7 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			assertThat(changed, is(true));
 
 			// verify registration service
-			verify(registrationService, times(1)).registerMethodIdent(agentId, packageName, className, methodName, parameters, returnType, mod);
+			verify(registrationService, times(2)).registerMethodIdent(agentId, packageName, className, methodName, parameters, returnType, mod);
 			verifyNoMoreInteractions(registrationService);
 
 			// check RSC and instrumentation config
@@ -131,15 +134,18 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			verify(methodType, times(1)).setMethodInstrumentationConfig(captor.capture());
 
 			MethodInstrumentationConfig instrumentationConfig = captor.getValue();
-			SensorInstrumentationPoint rsc = instrumentationConfig.getSensorInstrumentationPoint();
 			assertThat(instrumentationConfig.getTargetClassFqn(), is(className));
 			assertThat(instrumentationConfig.getTargetMethodName(), is(methodName));
 			assertThat(instrumentationConfig.getReturnType(), is(returnType));
 			assertThat(instrumentationConfig.getParameterTypes(), is(parameters));
-			assertThat(instrumentationConfig.getAllInstrumentationPoints(), hasSize(1));
+			assertThat(instrumentationConfig.getAllInstrumentationPoints(), hasSize(2));
+			SensorInstrumentationPoint rsc = instrumentationConfig.getSensorInstrumentationPoint();
 			assertThat(rsc.getId(), is(methodId));
 			assertThat(rsc.getSensorIds().length, is(0));
 			assertThat(rsc.isConstructor(), is(false));
+			SpecialInstrumentationPoint ssc = instrumentationConfig.getSpecialInstrumentationPoint();
+			assertThat(ssc.getId(), is(methodId));
+			assertThat(ssc.getSensorId(), is(0L));
 		}
 
 		@Test
@@ -179,7 +185,7 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			assertThat(changed, is(true));
 
 			// verify registration service
-			verify(registrationService, times(1)).registerMethodIdent(agentId, packageName, className, methodName, parameters, returnType, mod);
+			verify(registrationService, times(2)).registerMethodIdent(agentId, packageName, className, methodName, parameters, returnType, mod);
 			verifyNoMoreInteractions(registrationService);
 
 			// check RSC and instrumentation config
@@ -187,15 +193,18 @@ public class AbstractSensorInstrumentationApplierTest extends TestBase {
 			verify(methodType, times(1)).setMethodInstrumentationConfig(captor.capture());
 
 			MethodInstrumentationConfig instrumentationConfig = captor.getValue();
-			SensorInstrumentationPoint rsc = instrumentationConfig.getSensorInstrumentationPoint();
 			assertThat(instrumentationConfig.getTargetClassFqn(), is(packageName + '.' + className));
 			assertThat(instrumentationConfig.getTargetMethodName(), is(methodName));
 			assertThat(instrumentationConfig.getReturnType(), is(returnType));
 			assertThat(instrumentationConfig.getParameterTypes(), is(parameters));
-			assertThat(instrumentationConfig.getAllInstrumentationPoints(), hasSize(1));
+			assertThat(instrumentationConfig.getAllInstrumentationPoints(), hasSize(2));
+			SensorInstrumentationPoint rsc = instrumentationConfig.getSensorInstrumentationPoint();
 			assertThat(rsc.getId(), is(methodId));
 			assertThat(rsc.getSensorIds().length, is(0));
 			assertThat(rsc.isConstructor(), is(true));
+			SpecialInstrumentationPoint ssc = instrumentationConfig.getSpecialInstrumentationPoint();
+			assertThat(ssc.getId(), is(methodId));
+			assertThat(ssc.getSensorId(), is(0L));
 		}
 	}
 

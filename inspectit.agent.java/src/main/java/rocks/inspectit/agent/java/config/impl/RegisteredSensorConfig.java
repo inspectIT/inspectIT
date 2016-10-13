@@ -16,32 +16,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
  * @author Ivan Senic
  *
  */
-public class RegisteredSensorConfig {
-
-	/**
-	 * The method id.
-	 */
-	private long id;
-
-	/**
-	 * The name of the target class.
-	 */
-	private String targetClassFqn;
-
-	/**
-	 * The name of the target method.
-	 */
-	private String targetMethodName;
-
-	/**
-	 * The return type of the method.
-	 */
-	private String returnType;
-
-	/**
-	 * The parameter types (as the fully qualified name) of the method.
-	 */
-	private List<String> parameterTypes;
+public class RegisteredSensorConfig extends AbstractSensorConfig {
 
 	/**
 	 * If the invocation should be started.
@@ -68,99 +43,6 @@ public class RegisteredSensorConfig {
 	 * Method sensor list reverse.
 	 */
 	private final List<IMethodSensor> methodSensorsReverse = new ArrayList<IMethodSensor>(1);
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * Sets {@link #id}.
-	 *
-	 * @param id
-	 *            New value for {@link #id}
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	/**
-	 * Gets {@link #targetClassFqn}.
-	 *
-	 * @return {@link #targetClassFqn}
-	 */
-	public String getTargetClassFqn() {
-		return targetClassFqn;
-	}
-
-	/**
-	 * Sets {@link #targetClassFqn}.
-	 *
-	 * @param targetClassFqn
-	 *            New value for {@link #targetClassFqn}
-	 */
-	public void setTargetClassFqn(String targetClassFqn) {
-		this.targetClassFqn = targetClassFqn;
-	}
-
-	/**
-	 * Gets {@link #targetMethodName}.
-	 *
-	 * @return {@link #targetMethodName}
-	 */
-	public String getTargetMethodName() {
-		return targetMethodName;
-	}
-
-	/**
-	 * Sets {@link #targetMethodName}.
-	 *
-	 * @param targetMethodName
-	 *            New value for {@link #targetMethodName}
-	 */
-	public void setTargetMethodName(String targetMethodName) {
-		this.targetMethodName = targetMethodName;
-	}
-
-	/**
-	 * Gets {@link #returnType}.
-	 *
-	 * @return {@link #returnType}
-	 */
-	public String getReturnType() {
-		return returnType;
-	}
-
-	/**
-	 * Sets {@link #returnType}.
-	 *
-	 * @param returnType
-	 *            New value for {@link #returnType}
-	 */
-	public void setReturnType(String returnType) {
-		this.returnType = returnType;
-	}
-
-	/**
-	 * Gets {@link #parameterTypes}.
-	 *
-	 * @return {@link #parameterTypes}
-	 */
-	public List<String> getParameterTypes() {
-		return parameterTypes;
-	}
-
-	/**
-	 * Sets {@link #parameterTypes}.
-	 *
-	 * @param parameterTypes
-	 *            New value for {@link #parameterTypes}
-	 */
-	public void setParameterTypes(List<String> parameterTypes) {
-		this.parameterTypes = parameterTypes;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -275,4 +157,69 @@ public class RegisteredSensorConfig {
 		methodSensors.add(methodSensor);
 		methodSensorsReverse.add(0, methodSensor);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = (prime * result) + ((this.methodSensors == null) ? 0 : this.methodSensors.hashCode());
+		result = (prime * result) + ((this.methodSensorsReverse == null) ? 0 : this.methodSensorsReverse.hashCode());
+		result = (prime * result) + ((this.propertyAccessorList == null) ? 0 : this.propertyAccessorList.hashCode());
+		result = (prime * result) + ((this.settings == null) ? 0 : this.settings.hashCode());
+		result = (prime * result) + (this.startsInvocation ? 1231 : 1237);
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		RegisteredSensorConfig other = (RegisteredSensorConfig) obj;
+		if (this.methodSensors == null) {
+			if (other.methodSensors != null) {
+				return false;
+			}
+		} else if (!this.methodSensors.equals(other.methodSensors)) {
+			return false;
+		}
+		if (this.methodSensorsReverse == null) {
+			if (other.methodSensorsReverse != null) {
+				return false;
+			}
+		} else if (!this.methodSensorsReverse.equals(other.methodSensorsReverse)) {
+			return false;
+		}
+		if (this.propertyAccessorList == null) {
+			if (other.propertyAccessorList != null) {
+				return false;
+			}
+		} else if (!this.propertyAccessorList.equals(other.propertyAccessorList)) {
+			return false;
+		}
+		if (this.settings == null) {
+			if (other.settings != null) {
+				return false;
+			}
+		} else if (!this.settings.equals(other.settings)) {
+			return false;
+		}
+		if (this.startsInvocation != other.startsInvocation) {
+			return false;
+		}
+		return true;
+	}
+
 }

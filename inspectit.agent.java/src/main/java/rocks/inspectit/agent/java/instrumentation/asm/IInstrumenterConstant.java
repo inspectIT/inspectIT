@@ -2,6 +2,8 @@ package rocks.inspectit.agent.java.instrumentation.asm;
 
 import info.novatec.inspectit.org.objectweb.asm.Type;
 
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+
 /**
  * Constants that are often used in the instrumenters like type and method descriptions.
  *
@@ -83,5 +85,32 @@ public interface IInstrumenterConstant {
 	 */
 	String DISPATCH_CONSTRUCTOR_ON_THROW_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class),
 			Type.getType(Object.class));
+
+	/**
+	 * {@link IHookDispatcher#dispatchSpecialMethodBeforeBody(long, Object, Object[])} descriptor.
+	 */
+	String DISPATCH_SPECIAL_METHOD_BEFORE_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.getType(Object.class), Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class));
+
+	/**
+	 * {@link IHookDispatcher#dispatchSpecialMethodAfterBody(long, Object, Object[], Object)}
+	 * descriptor.
+	 */
+	String DISPATCH_SPECIAL_METHOD_AFTER_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.getType(Object.class), Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class),
+			Type.getType(Object.class));
+
+	// primitive wrappers cached
+	Type BOOLEAN_WRAPPER_TYPE = Type.getType(Boolean.class); // NOCHK
+	Type CHAR_WRAPPER_TYPE = Type.getType(Character.class); // NOCHK
+	Type BYTE_WRAPPER_TYPE = Type.getType(Byte.class); // NOCHK
+	Type SHORT_WRAPPER_TYPE = Type.getType(Short.class); // NOCHK
+	Type INT_WRAPPER_TYPE = Type.getType(Integer.class); // NOCHK
+	Type FLOAT_WRAPPER_TYPE = Type.getType(Float.class); // NOCHK
+	Type LONG_WRAPPER_TYPE = Type.getType(Long.class); // NOCHK
+	Type DOUBLE_WRAPPER_TYPE = Type.getType(Double.class); // NOCHK
+
+	/**
+	 * Object type cached.
+	 */
+	Type OBJECT_TYPE = Type.getType(Object.class);
 
 }
