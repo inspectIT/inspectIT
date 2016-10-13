@@ -5,6 +5,10 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,6 +29,7 @@ import org.testng.annotations.Test;
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
@@ -35,8 +40,10 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
@@ -174,6 +181,48 @@ public class ConfigurationCreatorTest extends TestBase {
 			verifyNoMoreInteractions(registrationService);
 		}
 
+		@SuppressWarnings("unchecked")
+		@Test
+		public void configureJmxSensor() throws Exception {
+			long agentId = 13L;
+			long sensorId = 17L;
+			String className = "className";
+			Map<String, Object> parameters = Collections.<String, Object> singletonMap("key", "value");
+			JmxSensorConfig jmxSensorConfig = mock(JmxSensorConfig.class);
+			when(jmxSensorConfig.getClassName()).thenReturn(className);
+			when(jmxSensorConfig.getParameters()).thenReturn(parameters);
+			when(jmxSensorConfig.isActive()).thenReturn(true);
+			when(environment.getJmxSensorConfig()).thenReturn(jmxSensorConfig);
+			when(registrationService.registerJmxSensorTypeIdent(agentId, className)).thenReturn(sensorId);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			JmxSensorTypeConfig sensorTypeConfig = agentConfiguration.getJmxSensorTypeConfig();
+			assertThat(sensorTypeConfig.getId(), is(sensorId));
+			assertThat(sensorTypeConfig.getClassName(), is(className));
+			assertThat(sensorTypeConfig.getParameters(), is(parameters));
+
+			verify(registrationService, times(1)).registerJmxSensorTypeIdent(agentId, className);
+			// needed because of the intercepting server sensor
+			verify(registrationService, times(1)).registerMethodSensorTypeIdent(anyLong(), anyString(), anyMap());
+			verifyNoMoreInteractions(registrationService);
+		}
+
+		@Test
+		public void configureJmxSensorNotActive() throws Exception {
+			long agentId = 13L;
+			JmxSensorConfig jmxSensorConfig = mock(JmxSensorConfig.class);
+			when(jmxSensorConfig.isActive()).thenReturn(false);
+			when(environment.getJmxSensorConfig()).thenReturn(jmxSensorConfig);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			JmxSensorTypeConfig sensorTypeConfig = agentConfiguration.getJmxSensorTypeConfig();
+			assertThat(sensorTypeConfig, is(nullValue()));
+
+			verifyZeroInteractions(registrationService);
+		}
+
 		@Test
 		public void excludeRules() throws Exception {
 			ExcludeRule er1 = new ExcludeRule("excludeRule1");
@@ -226,6 +275,7 @@ public class ConfigurationCreatorTest extends TestBase {
 		public void noSpecialSensors() throws Exception {
 			long agentId = 13L;
 			when(environment.isClassLoadingDelegation()).thenReturn(false);
+			when(environment.getJmxSensorConfig()).thenReturn(null);
 
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
@@ -254,6 +304,48 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters());
 			verifyNoMoreInteractions(registrationService);
+		}
+
+		@Test
+		public void mbeanServerInterceptor() throws Exception {
+			long agentId = 13L;
+			long sensorId = 17L;
+			JmxSensorConfig jmxSensorConfig = mock(JmxSensorConfig.class);
+			when(jmxSensorConfig.isActive()).thenReturn(true);
+			when(environment.getJmxSensorConfig()).thenReturn(jmxSensorConfig);
+			MBeanServerInterceptorSensorConfig msiConfig = MBeanServerInterceptorSensorConfig.INSTANCE;
+			when(registrationService.registerMethodSensorTypeIdent(agentId, msiConfig.getClassName(), msiConfig.getParameters())).thenReturn(sensorId);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
+			assertThat(sensorTypeConfigs, hasSize(1));
+			MethodSensorTypeConfig sensorTypeConfig = sensorTypeConfigs.iterator().next();
+			assertThat(sensorTypeConfig.getId(), is(sensorId));
+			assertThat(sensorTypeConfig.getName(), is(msiConfig.getName()));
+			assertThat(sensorTypeConfig.getClassName(), is(msiConfig.getClassName()));
+			assertThat(sensorTypeConfig.getParameters(), is(msiConfig.getParameters()));
+			assertThat(sensorTypeConfig.getPriority(), is(msiConfig.getPriority()));
+
+			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, msiConfig.getClassName(), msiConfig.getParameters());
+			// needed because jmx sensor will be also registered
+			verify(registrationService, times(1)).registerJmxSensorTypeIdent(anyLong(), anyString());
+			verifyNoMoreInteractions(registrationService);
+		}
+
+		@Test
+		public void mbeanServerInterceptorJmxNotActive() throws Exception {
+			long agentId = 13L;
+			JmxSensorConfig jmxSensorConfig = mock(JmxSensorConfig.class);
+			when(jmxSensorConfig.isActive()).thenReturn(false);
+			when(environment.getJmxSensorConfig()).thenReturn(jmxSensorConfig);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
+			assertThat(sensorTypeConfigs, is(empty()));
+
+			verifyZeroInteractions(registrationService);
 		}
 
 	}

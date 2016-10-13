@@ -199,10 +199,6 @@ public class SpringAgent implements IAgent {
 		}
 	}
 
-
-
-
-
 	/**
 	 * {@inheritDoc}
 	 */

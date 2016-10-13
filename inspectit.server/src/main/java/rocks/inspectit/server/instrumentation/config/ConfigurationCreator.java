@@ -23,6 +23,7 @@ import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
@@ -92,7 +93,7 @@ public class ConfigurationCreator {
 		}
 
 		JmxSensorConfig jmxSensorConfig = environment.getJmxSensorConfig();
-		if (null != jmxSensorConfig) {
+		if ((null != jmxSensorConfig) && jmxSensorConfig.isActive()) {
 			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
 
@@ -100,6 +101,9 @@ public class ConfigurationCreator {
 		Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs = new ArrayList<>(0);
 		if (environment.isClassLoadingDelegation()) {
 			specialMethodSensorTypeConfigs.add(getMethodSensorTypeConfig(platformId, ClassLoadingDelegationSensorConfig.INSTANCE));
+		}
+		if ((null != jmxSensorConfig) && jmxSensorConfig.isActive()) {
+			specialMethodSensorTypeConfigs.add(getMethodSensorTypeConfig(platformId, MBeanServerInterceptorSensorConfig.INSTANCE));
 		}
 		agentConfiguration.setSpecialMethodSensorTypeConfigs(specialMethodSensorTypeConfigs);
 

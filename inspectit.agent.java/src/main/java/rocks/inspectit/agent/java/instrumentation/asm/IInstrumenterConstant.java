@@ -43,11 +43,6 @@ public interface IInstrumenterConstant {
 	String GET_IHOOK_DISPATCHER_DESCRIPTOR = "()L" + IHOOK_DISPATCHER_INTERNAL_NAME + ";";
 
 	/**
-	 * Method descriptor of the load class method in the IAgent class.
-	 */
-	String IAGENT_LOAD_CLASS_METHOD_DESCRIPTOR = Type.getMethodDescriptor(Type.getType(Class.class), Type.getType(Object[].class));
-
-	/**
 	 * {@link IHookDispatcher#dispatchMethodBeforeBody(long, Object, Object[])} descriptor.
 	 */
 	String DISPATCH_METHOD_BEFORE_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class));
@@ -112,5 +107,4 @@ public interface IInstrumenterConstant {
 	 * Object type cached.
 	 */
 	Type OBJECT_TYPE = Type.getType(Object.class);
-
 }
