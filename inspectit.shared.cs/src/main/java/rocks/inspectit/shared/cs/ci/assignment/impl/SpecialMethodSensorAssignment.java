@@ -2,15 +2,13 @@ package rocks.inspectit.shared.cs.ci.assignment.impl;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.AbstractSpecialMethodSensorConfig;
 
 /**
- * Special {@link MethodSensorAssignment} that server for defining special Instrumentation points
+ * Special {@link MethodSensorAssignment} that server for defining special instrumentation points
  * with the already existing assignment approach.
- * <p>
- * Defining the {@link #instrumentationType} will apply such instrumentation on the defined
- * method(s).
  *
+ * @see AbstractSpecialMethodSensorConfig
  * @author Ivan Senic
  *
  */
@@ -18,9 +16,9 @@ import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationT
 public class SpecialMethodSensorAssignment extends MethodSensorAssignment {
 
 	/**
-	 * Instrumentation type to apply on the assignment.
+	 * {@link AbstractSpecialMethodSensorConfig}.
 	 */
-	private SpecialInstrumentationType instrumentationType;
+	private AbstractSpecialMethodSensorConfig specialMethodSensorConfig;
 
 	/**
 	 * No-arg constructor.
@@ -31,37 +29,31 @@ public class SpecialMethodSensorAssignment extends MethodSensorAssignment {
 	/**
 	 * Default constructor.
 	 *
-	 * @param instrumentationType
-	 *            Special instrumentation type.
-	 * @throws IllegalArgumentException
-	 *             If passed instrumentation type is <code>null</code> or of type
-	 *             {@link SpecialInstrumentationType#HOOK}.
+	 * @param specialMethodSensorConfig
+	 *            {@link AbstractSpecialMethodSensorConfig}.
 	 */
-	public SpecialMethodSensorAssignment(SpecialInstrumentationType instrumentationType) throws IllegalArgumentException {
-		if (null == instrumentationType) {
-			throw new IllegalArgumentException("Functional method sensor assignment must define instrumentation type.");
-		}
-
-		this.instrumentationType = instrumentationType;
+	public SpecialMethodSensorAssignment(AbstractSpecialMethodSensorConfig specialMethodSensorConfig) {
+		super(specialMethodSensorConfig.getClass());
+		this.specialMethodSensorConfig = specialMethodSensorConfig;
 	}
 
 	/**
-	 * Gets {@link #instrumentationType}.
-	 *
-	 * @return {@link #instrumentationType}
+	 * Gets {@link #specialMethodSensorConfig}.
+	 * 
+	 * @return {@link #specialMethodSensorConfig}
 	 */
-	public SpecialInstrumentationType getInstrumentationType() {
-		return instrumentationType;
+	public AbstractSpecialMethodSensorConfig getSpecialMethodSensorConfig() {
+		return this.specialMethodSensorConfig;
 	}
 
 	/**
-	 * Sets {@link #instrumentationType}.
-	 *
-	 * @param instrumentationType
-	 *            New value for {@link #instrumentationType}
+	 * Sets {@link #specialMethodSensorConfig}.
+	 * 
+	 * @param specialMethodSensorConfig
+	 *            New value for {@link #specialMethodSensorConfig}
 	 */
-	public void setInstrumentationType(SpecialInstrumentationType instrumentationType) {
-		this.instrumentationType = instrumentationType;
+	public void setSpecialMethodSensorConfig(AbstractSpecialMethodSensorConfig specialMethodSensorConfig) {
+		this.specialMethodSensorConfig = specialMethodSensorConfig;
 	}
 
 	/**
@@ -71,7 +63,7 @@ public class SpecialMethodSensorAssignment extends MethodSensorAssignment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + ((instrumentationType == null) ? 0 : instrumentationType.hashCode());
+		result = (prime * result) + ((this.specialMethodSensorConfig == null) ? 0 : this.specialMethodSensorConfig.hashCode());
 		return result;
 	}
 
@@ -90,10 +82,15 @@ public class SpecialMethodSensorAssignment extends MethodSensorAssignment {
 			return false;
 		}
 		SpecialMethodSensorAssignment other = (SpecialMethodSensorAssignment) obj;
-		if (instrumentationType != other.instrumentationType) {
+		if (this.specialMethodSensorConfig == null) {
+			if (other.specialMethodSensorConfig != null) {
+				return false;
+			}
+		} else if (!this.specialMethodSensorConfig.equals(other.specialMethodSensorConfig)) {
 			return false;
 		}
 		return true;
 	}
+
 
 }

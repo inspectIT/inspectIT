@@ -86,6 +86,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void setRepository(String host, int port) throws StorageException {
 		if ((null == host) || "".equals(host)) {
 			throw new StorageException("Repository host name cannot be null or empty!");
@@ -108,6 +109,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RepositoryConfig getRepositoryConfig() {
 		return repository;
 	}
@@ -115,6 +117,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void setAgentName(String name) throws StorageException {
 		if ((null == name) || "".equals(name)) {
 			throw new StorageException("Agent name cannot be null or empty!");
@@ -136,6 +139,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getAgentName() {
 		return agentName;
 	}
@@ -149,6 +153,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 *             If registration of the components defined in the configuration fails.
 	 * @see SpringConfiguration#registerComponents(IConfigurationStorage)
 	 */
+	@Override
 	public void setAgentConfiguration(AgentConfig agentConfiguration) throws StorageException {
 		if (null == this.agentConfiguration) {
 			this.agentConfiguration = agentConfiguration;
@@ -176,6 +181,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public StrategyConfig getBufferStrategyConfig() throws StorageException {
 		ensureConfigurationExists();
 
@@ -189,6 +195,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public StrategyConfig getSendingStrategyConfig() throws StorageException {
 		ensureConfigurationExists();
 
@@ -202,6 +209,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<MethodSensorTypeConfig> getMethodSensorTypes() throws StorageException {
 		ensureConfigurationExists();
 
@@ -216,12 +224,18 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 			result.add(agentConfiguration.getExceptionSensorTypeConfig());
 		}
 
+		// special sensors are also method sensor types
+		if (CollectionUtils.isNotEmpty(agentConfiguration.getSpecialMethodSensorTypeConfigs())) {
+			result.addAll(agentConfiguration.getSpecialMethodSensorTypeConfigs());
+		}
+
 		return result;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ExceptionSensorTypeConfig getExceptionSensorType() throws StorageException {
 		ensureConfigurationExists();
 
@@ -231,6 +245,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<PlatformSensorTypeConfig> getPlatformSensorTypes() throws StorageException {
 		ensureConfigurationExists();
 
@@ -246,6 +261,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<JmxSensorTypeConfig> getJmxSensorTypes() throws StorageException {
 		ensureConfigurationExists();
 
@@ -261,6 +277,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isExceptionSensorActivated() throws StorageException {
 		ensureConfigurationExists();
 
@@ -270,6 +287,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isEnhancedExceptionSensorActivated() throws StorageException {
 		ensureConfigurationExists();
 
@@ -283,6 +301,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<IMatchPattern> getIgnoreClassesPatterns() throws StorageException {
 		ensureConfigurationExists();
 
@@ -296,6 +315,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isClassCacheExistsOnCmr() throws StorageException {
 		ensureConfigurationExists();
 
@@ -305,6 +325,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Map<Collection<String>, InstrumentationDefinition> getInitialInstrumentationResults() throws StorageException {
 		ensureConfigurationExists();
 
@@ -369,6 +390,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		loadConfigurationFromJvmParameters();
 		if ((null == repository) || StringUtils.isEmpty(agentName)) {

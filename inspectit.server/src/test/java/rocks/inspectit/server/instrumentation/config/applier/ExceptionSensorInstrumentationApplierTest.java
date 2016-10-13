@@ -3,6 +3,7 @@ package rocks.inspectit.server.instrumentation.config.applier;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -143,6 +144,7 @@ public class ExceptionSensorInstrumentationApplierTest extends TestBase {
 			assertThat(rsc.getSensorIds().length, is(1));
 			assertThat(rsc.getSensorIds()[0], is(sensorId));
 			assertThat(rsc.getSettings(), is(settings));
+			assertThat(instrumentationConfig.getSpecialInstrumentationPoint(), is(nullValue()));
 		}
 
 		@Test

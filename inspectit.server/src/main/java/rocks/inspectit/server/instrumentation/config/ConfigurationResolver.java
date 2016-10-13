@@ -144,7 +144,7 @@ public class ConfigurationResolver {
 		} else if (ExceptionSensorAssignment.class.isAssignableFrom(sensorAssigmentClass)) {
 			return new ExceptionSensorInstrumentationApplier((ExceptionSensorAssignment) sensorAssignment, environment, registrationService);
 		} else if (SpecialMethodSensorAssignment.class.isAssignableFrom(sensorAssigmentClass)) {
-			return new SpecialInstrumentationApplier((SpecialMethodSensorAssignment) sensorAssignment, environment);
+			return new SpecialInstrumentationApplier((SpecialMethodSensorAssignment) sensorAssignment, environment, registrationService);
 		} else if (MethodSensorAssignment.class.isAssignableFrom(sensorAssigmentClass)) {
 			return new MethodSensorInstrumentationApplier((MethodSensorAssignment) sensorAssignment, environment, registrationService);
 		}

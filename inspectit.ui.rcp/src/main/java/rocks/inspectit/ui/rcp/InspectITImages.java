@@ -47,6 +47,7 @@ public interface InspectITImages {
 	String IMG_EXCEPTION_SENSOR = InspectITConstants.ICON_PATH_ECLIPSE + "exceptiontracer.gif";
 	String IMG_EXCEPTION_TREE = InspectITConstants.ICON_PATH_ECLIPSE + "exceptiontree.gif";
 	String IMG_EXPORT = InspectITConstants.ICON_PATH_ECLIPSE + "export.gif";
+	String IMG_EXTERNALIZE = InspectITConstants.ICON_PATH_ECLIPSE + "externalize.gif";
 	String IMG_FILTER = InspectITConstants.ICON_PATH_ECLIPSE + "filter_ps.gif";
 	String IMG_FOLDER = InspectITConstants.ICON_PATH_ECLIPSE + "prj_obj.gif";
 	String IMG_FONT = InspectITConstants.ICON_PATH_ECLIPSE + "font.gif";

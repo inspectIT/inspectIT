@@ -48,6 +48,11 @@ public class AgentConfig {
 	private JmxSensorTypeConfig jmxSensorTypeConfig;
 
 	/**
+	 * Special method sensor configurations.
+	 */
+	private Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs;
+
+	/**
 	 * Buffer strategy.
 	 */
 	private StrategyConfig bufferStrategyConfig;
@@ -172,6 +177,26 @@ public class AgentConfig {
 	}
 
 	/**
+	 * Return the {@link MethodSensorTypeConfig} for given special sensor class name.
+	 *
+	 * @param sensorClassName
+	 *            Sensor class name.
+	 * @return {@link MethodSensorTypeConfig} or <code>null</code> if such does not exists in the
+	 *         configuration.
+	 */
+	public MethodSensorTypeConfig getSpecialMethodSensorTypeConfig(String sensorClassName) {
+		if (StringUtils.isNotBlank(sensorClassName)) {
+			for (MethodSensorTypeConfig methodSensorTypeConfig : specialMethodSensorTypeConfigs) {
+				if (sensorClassName.equals(methodSensorTypeConfig.getClassName())) {
+					return methodSensorTypeConfig;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets {@link #exceptionSensorTypeConfig}.
 	 *
 	 * @return {@link #exceptionSensorTypeConfig}
@@ -207,6 +232,25 @@ public class AgentConfig {
 	 */
 	public void setJmxSensorTypeConfig(JmxSensorTypeConfig jmxSensorTypeConfig) {
 		this.jmxSensorTypeConfig = jmxSensorTypeConfig;
+	}
+
+	/**
+	 * Gets {@link #specialMethodSensorTypeConfigs}.
+	 *
+	 * @return {@link #specialMethodSensorTypeConfigs}
+	 */
+	public Collection<MethodSensorTypeConfig> getSpecialMethodSensorTypeConfigs() {
+		return this.specialMethodSensorTypeConfigs;
+	}
+
+	/**
+	 * Sets {@link #specialMethodSensorTypeConfigs}.
+	 *
+	 * @param specialMethodSensorTypeConfigs
+	 *            New value for {@link #specialMethodSensorTypeConfigs}
+	 */
+	public void setSpecialMethodSensorTypeConfigs(Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs) {
+		this.specialMethodSensorTypeConfigs = specialMethodSensorTypeConfigs;
 	}
 
 	/**
@@ -311,17 +355,18 @@ public class AgentConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((bufferStrategyConfig == null) ? 0 : bufferStrategyConfig.hashCode());
-		result = (prime * result) + (classCacheExistsOnCmr ? 1231 : 1237);
-		result = (prime * result) + ((configurationInfo == null) ? 0 : configurationInfo.hashCode());
-		result = (prime * result) + ((exceptionSensorTypeConfig == null) ? 0 : exceptionSensorTypeConfig.hashCode());
-		result = (prime * result) + ((excludeClassesPatterns == null) ? 0 : excludeClassesPatterns.hashCode());
-		result = (prime * result) + ((initialInstrumentationResults == null) ? 0 : initialInstrumentationResults.hashCode());
-		result = (prime * result) + ((jmxSensorTypeConfig == null) ? 0 : jmxSensorTypeConfig.hashCode());
-		result = (prime * result) + ((methodSensorTypeConfigs == null) ? 0 : methodSensorTypeConfigs.hashCode());
-		result = (prime * result) + (int) (platformId ^ (platformId >>> 32));
-		result = (prime * result) + ((platformSensorTypeConfigs == null) ? 0 : platformSensorTypeConfigs.hashCode());
-		result = (prime * result) + ((sendingStrategyConfig == null) ? 0 : sendingStrategyConfig.hashCode());
+		result = (prime * result) + ((this.bufferStrategyConfig == null) ? 0 : this.bufferStrategyConfig.hashCode());
+		result = (prime * result) + (this.classCacheExistsOnCmr ? 1231 : 1237);
+		result = (prime * result) + ((this.configurationInfo == null) ? 0 : this.configurationInfo.hashCode());
+		result = (prime * result) + ((this.exceptionSensorTypeConfig == null) ? 0 : this.exceptionSensorTypeConfig.hashCode());
+		result = (prime * result) + ((this.excludeClassesPatterns == null) ? 0 : this.excludeClassesPatterns.hashCode());
+		result = (prime * result) + ((this.initialInstrumentationResults == null) ? 0 : this.initialInstrumentationResults.hashCode());
+		result = (prime * result) + ((this.jmxSensorTypeConfig == null) ? 0 : this.jmxSensorTypeConfig.hashCode());
+		result = (prime * result) + ((this.methodSensorTypeConfigs == null) ? 0 : this.methodSensorTypeConfigs.hashCode());
+		result = (prime * result) + (int) (this.platformId ^ (this.platformId >>> 32));
+		result = (prime * result) + ((this.platformSensorTypeConfigs == null) ? 0 : this.platformSensorTypeConfigs.hashCode());
+		result = (prime * result) + ((this.sendingStrategyConfig == null) ? 0 : this.sendingStrategyConfig.hashCode());
+		result = (prime * result) + ((this.specialMethodSensorTypeConfigs == null) ? 0 : this.specialMethodSensorTypeConfigs.hashCode());
 		return result;
 	}
 
@@ -340,73 +385,80 @@ public class AgentConfig {
 			return false;
 		}
 		AgentConfig other = (AgentConfig) obj;
-		if (bufferStrategyConfig == null) {
+		if (this.bufferStrategyConfig == null) {
 			if (other.bufferStrategyConfig != null) {
 				return false;
 			}
-		} else if (!bufferStrategyConfig.equals(other.bufferStrategyConfig)) {
+		} else if (!this.bufferStrategyConfig.equals(other.bufferStrategyConfig)) {
 			return false;
 		}
-		if (classCacheExistsOnCmr != other.classCacheExistsOnCmr) {
+		if (this.classCacheExistsOnCmr != other.classCacheExistsOnCmr) {
 			return false;
 		}
-		if (configurationInfo == null) {
+		if (this.configurationInfo == null) {
 			if (other.configurationInfo != null) {
 				return false;
 			}
-		} else if (!configurationInfo.equals(other.configurationInfo)) {
+		} else if (!this.configurationInfo.equals(other.configurationInfo)) {
 			return false;
 		}
-		if (exceptionSensorTypeConfig == null) {
+		if (this.exceptionSensorTypeConfig == null) {
 			if (other.exceptionSensorTypeConfig != null) {
 				return false;
 			}
-		} else if (!exceptionSensorTypeConfig.equals(other.exceptionSensorTypeConfig)) {
+		} else if (!this.exceptionSensorTypeConfig.equals(other.exceptionSensorTypeConfig)) {
 			return false;
 		}
-		if (excludeClassesPatterns == null) {
+		if (this.excludeClassesPatterns == null) {
 			if (other.excludeClassesPatterns != null) {
 				return false;
 			}
-		} else if (!excludeClassesPatterns.equals(other.excludeClassesPatterns)) {
+		} else if (!this.excludeClassesPatterns.equals(other.excludeClassesPatterns)) {
 			return false;
 		}
-		if (initialInstrumentationResults == null) {
+		if (this.initialInstrumentationResults == null) {
 			if (other.initialInstrumentationResults != null) {
 				return false;
 			}
-		} else if (!initialInstrumentationResults.equals(other.initialInstrumentationResults)) {
+		} else if (!this.initialInstrumentationResults.equals(other.initialInstrumentationResults)) {
 			return false;
 		}
-		if (jmxSensorTypeConfig == null) {
+		if (this.jmxSensorTypeConfig == null) {
 			if (other.jmxSensorTypeConfig != null) {
 				return false;
 			}
-		} else if (!jmxSensorTypeConfig.equals(other.jmxSensorTypeConfig)) {
+		} else if (!this.jmxSensorTypeConfig.equals(other.jmxSensorTypeConfig)) {
 			return false;
 		}
-		if (methodSensorTypeConfigs == null) {
+		if (this.methodSensorTypeConfigs == null) {
 			if (other.methodSensorTypeConfigs != null) {
 				return false;
 			}
-		} else if (!methodSensorTypeConfigs.equals(other.methodSensorTypeConfigs)) {
+		} else if (!this.methodSensorTypeConfigs.equals(other.methodSensorTypeConfigs)) {
 			return false;
 		}
-		if (platformId != other.platformId) {
+		if (this.platformId != other.platformId) {
 			return false;
 		}
-		if (platformSensorTypeConfigs == null) {
+		if (this.platformSensorTypeConfigs == null) {
 			if (other.platformSensorTypeConfigs != null) {
 				return false;
 			}
-		} else if (!platformSensorTypeConfigs.equals(other.platformSensorTypeConfigs)) {
+		} else if (!this.platformSensorTypeConfigs.equals(other.platformSensorTypeConfigs)) {
 			return false;
 		}
-		if (sendingStrategyConfig == null) {
+		if (this.sendingStrategyConfig == null) {
 			if (other.sendingStrategyConfig != null) {
 				return false;
 			}
-		} else if (!sendingStrategyConfig.equals(other.sendingStrategyConfig)) {
+		} else if (!this.sendingStrategyConfig.equals(other.sendingStrategyConfig)) {
+			return false;
+		}
+		if (this.specialMethodSensorTypeConfigs == null) {
+			if (other.specialMethodSensorTypeConfigs != null) {
+				return false;
+			}
+		} else if (!this.specialMethodSensorTypeConfigs.equals(other.specialMethodSensorTypeConfigs)) {
 			return false;
 		}
 		return true;

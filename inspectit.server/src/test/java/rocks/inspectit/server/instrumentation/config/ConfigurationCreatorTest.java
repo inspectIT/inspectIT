@@ -36,6 +36,7 @@ import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
@@ -217,6 +218,42 @@ public class ConfigurationCreatorTest extends TestBase {
 			StrategyConfig strategyConfig = agentConfiguration.getBufferStrategyConfig();
 			assertThat(strategyConfig.getClazzName(), is(className));
 			assertThat(strategyConfig.getSettings(), is(settings));
+		}
+
+		// special method sensor
+
+		@Test
+		public void noSpecialSensors() throws Exception {
+			long agentId = 13L;
+			when(environment.isClassLoadingDelegation()).thenReturn(false);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
+			assertThat(sensorTypeConfigs, is(empty()));
+		}
+
+		@Test
+		public void classLoadingDelegation() throws Exception {
+			long agentId = 13L;
+			long sensorId = 17L;
+			when(environment.isClassLoadingDelegation()).thenReturn(true);
+			ClassLoadingDelegationSensorConfig cldConfig = ClassLoadingDelegationSensorConfig.INSTANCE;
+			when(registrationService.registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters())).thenReturn(sensorId);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
+
+			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
+			assertThat(sensorTypeConfigs, hasSize(1));
+			MethodSensorTypeConfig sensorTypeConfig = sensorTypeConfigs.iterator().next();
+			assertThat(sensorTypeConfig.getId(), is(sensorId));
+			assertThat(sensorTypeConfig.getName(), is(cldConfig.getName()));
+			assertThat(sensorTypeConfig.getClassName(), is(cldConfig.getClassName()));
+			assertThat(sensorTypeConfig.getParameters(), is(cldConfig.getParameters()));
+			assertThat(sensorTypeConfig.getPriority(), is(cldConfig.getPriority()));
+
+			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters());
+			verifyNoMoreInteractions(registrationService);
 		}
 
 	}

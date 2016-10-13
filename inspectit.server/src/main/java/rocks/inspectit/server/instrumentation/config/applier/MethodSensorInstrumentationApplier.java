@@ -3,6 +3,7 @@ package rocks.inspectit.server.instrumentation.config.applier;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.cs.ci.Environment;
@@ -67,16 +68,24 @@ public class MethodSensorInstrumentationApplier extends AbstractSensorInstrument
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void applyAssignment(AgentConfig agentConfiguration, SensorInstrumentationPoint registeredSensorConfig) {
+	protected void applyAssignment(AgentConfig agentConfiguration, MethodType methodType, MethodInstrumentationConfig methodInstrumentationConfig) {
+		SensorInstrumentationPoint sensorInstrumentationPoint = getOrCreateSensorInstrumentationPoint(agentConfiguration, methodType, methodInstrumentationConfig);
+		applyAssignment(agentConfiguration, sensorInstrumentationPoint);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void applyAssignment(AgentConfig agentConfiguration, SensorInstrumentationPoint sensorInstrumentationPoint) {
 		// first deal with sensor id
 		MethodSensorTypeConfig methodSensorTypeConfig = getSensorTypeConfigFromConfiguration(agentConfiguration, environment, methodSensorAssignment);
 		long sensorId = methodSensorTypeConfig.getId();
 
 		// set to rsc
-		registeredSensorConfig.addSensorId(sensorId, methodSensorTypeConfig.getPriority());
+		sensorInstrumentationPoint.addSensorId(sensorId, methodSensorTypeConfig.getPriority());
 
 		// add all settings
-		registeredSensorConfig.addSettings(methodSensorAssignment.getSettings());
+		sensorInstrumentationPoint.addSettings(methodSensorAssignment.getSettings());
 	}
 
 	/**
@@ -95,4 +104,5 @@ public class MethodSensorInstrumentationApplier extends AbstractSensorInstrument
 		IMethodSensorConfig methodSensorConfig = environment.getMethodSensorTypeConfig(assignment.getSensorConfigClass());
 		return agentConfiguration.getMethodSensorTypeConfig(methodSensorConfig.getClassName());
 	}
+
 }
