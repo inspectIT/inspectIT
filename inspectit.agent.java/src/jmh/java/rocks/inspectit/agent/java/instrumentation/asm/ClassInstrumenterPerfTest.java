@@ -27,6 +27,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
 
 /**
  * Performance test for the {@link ClassInstrumenter} class using JMH framework.
@@ -53,6 +54,9 @@ public class ClassInstrumenterPerfTest {
 	@Param({ "true", "false" })
 	private boolean enhancedExceptionSensor;
 
+	@Param({ "true", "false" })
+	private boolean specialMethodInstrumentation;
+
 	private Collection<MethodInstrumentationConfig> configs;
 
 	@Setup(Level.Iteration)
@@ -70,8 +74,13 @@ public class ClassInstrumenterPerfTest {
 			instrumentationConfig.setTargetClassFqn(clazz);
 			instrumentationConfig.setTargetMethodName(method.getName());
 			instrumentationConfig.setReturnType(method.getReturnType().getCanonicalName());
-			SensorInstrumentationPoint registeredSensorConfig = new SensorInstrumentationPoint();
-			instrumentationConfig.setSensorInstrumentationPoint(registeredSensorConfig);
+			if (!specialMethodInstrumentation) {
+				SensorInstrumentationPoint registeredSensorConfig = new SensorInstrumentationPoint();
+				instrumentationConfig.setSensorInstrumentationPoint(registeredSensorConfig);
+			} else {
+				SpecialInstrumentationPoint specialInstrumentationPoint = new SpecialInstrumentationPoint();
+				instrumentationConfig.setSpecialInstrumentationPoint(specialInstrumentationPoint);
+			}
 			configs.add(instrumentationConfig);
 		}
 	}

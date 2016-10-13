@@ -120,4 +120,34 @@ public interface IHookDispatcher {
 	 */
 	void dispatchConstructorAfterBody(long id, Object object, Object[] parameters);
 
+	/**
+	 * Dispatches the 'before' on the special method.
+	 *
+	 * @param id
+	 *            The id of the method.
+	 * @param object
+	 *            The instance of the class or the class itself.
+	 * @param parameters
+	 *            The parameters of the method.
+	 * @return Result of the dispatch. Can be <code>null</code>.
+	 */
+	Object dispatchSpecialMethodBeforeBody(long id, Object object, Object[] parameters);
+
+	/**
+	 * Dispatches the 'after' on the special method.
+	 * <p>
+	 * Only dispatched if the original method did not throw an exception.
+	 *
+	 * @param id
+	 *            The id of the method.
+	 * @param object
+	 *            The instance of the class or the class itself.
+	 * @param parameters
+	 *            The parameters of the method.
+	 * @param returnValue
+	 *            The return value of the method.
+	 * @return Result of the dispatch. Can be <code>null</code>.
+	 */
+	Object dispatchSpecialMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue);
+
 }

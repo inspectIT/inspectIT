@@ -1,7 +1,6 @@
 package rocks.inspectit.shared.all.instrumentation.config.impl;
 
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
-import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 
 /**
  * Special instrumentation point. These points are not directly defined by user, but are specific
@@ -13,31 +12,51 @@ import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationT
 public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint {
 
 	/**
-	 * Type of instrumentation.
+	 * The method id.
 	 */
-	private SpecialInstrumentationType instrumentationType;
+	private long id;
 
 	/**
-	 * Needed for serialization.
+	 * The sensor id.
 	 */
-	protected SpecialInstrumentationPoint() {
+	private long sensorId;
+
+	/**
+	 * Gets {@link #id}.
+	 * 
+	 * @return {@link #id}
+	 */
+	public long getId() {
+		return this.id;
 	}
 
 	/**
-	 * Default constructor. Defines type of special instrumentation.
-	 *
-	 * @param instrumentationType
-	 *            Type of instrumentation.
+	 * Sets {@link #id}.
+	 * 
+	 * @param id
+	 *            New value for {@link #id}
 	 */
-	public SpecialInstrumentationPoint(SpecialInstrumentationType instrumentationType) {
-		this.instrumentationType = instrumentationType;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Gets {@link #sensorId}.
+	 * 
+	 * @return {@link #sensorId}
 	 */
-	public SpecialInstrumentationType getInstrumentationType() {
-		return instrumentationType;
+	public long getSensorId() {
+		return this.sensorId;
+	}
+
+	/**
+	 * Sets {@link #sensorId}.
+	 * 
+	 * @param sensorId
+	 *            New value for {@link #sensorId}
+	 */
+	public void setSensorId(long sensorId) {
+		this.sensorId = sensorId;
 	}
 
 	/**
@@ -47,7 +66,8 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((instrumentationType == null) ? 0 : instrumentationType.hashCode());
+		result = (prime * result) + (int) (this.id ^ (this.id >>> 32));
+		result = (prime * result) + (int) (this.sensorId ^ (this.sensorId >>> 32));
 		return result;
 	}
 
@@ -66,7 +86,10 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 			return false;
 		}
 		SpecialInstrumentationPoint other = (SpecialInstrumentationPoint) obj;
-		if (instrumentationType != other.instrumentationType) {
+		if (this.id != other.id) {
+			return false;
+		}
+		if (this.sensorId != other.sensorId) {
 			return false;
 		}
 		return true;
