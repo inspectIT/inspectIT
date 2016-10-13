@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<!-- In this update we'll add the active="true" and forceMBeanServerCreation="false" attributes to the jmx sensor configuration -->
+
+	<!--Copy all -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+
+	<!--Add attributes -->
+	<xsl:template match="environment/jmx-loading-sensor-config">
+		<xsl:copy>
+			<xsl:attribute name="active">true</xsl:attribute>
+			<xsl:attribute name="forceMBeanServerCreation">false</xsl:attribute>
+			<xsl:apply-templates select="@* | node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+
+</xsl:stylesheet>
