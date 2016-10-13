@@ -14,6 +14,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.form.part.EnvironmentSettingsPart;
+import rocks.inspectit.ui.rcp.ci.form.part.JmxSensorOptionsPart;
 import rocks.inspectit.ui.rcp.ci.form.part.LoggingSensorOptionsPart;
 import rocks.inspectit.ui.rcp.ci.form.part.PlatformSensorSelectionPart;
 import rocks.inspectit.ui.rcp.ci.form.part.ProfileSelectionPart;
@@ -76,7 +77,7 @@ public class EnvironmentSettingsPage extends FormPage {
 		profileSelectionPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		managedForm.addPart(profileSelectionPart);
 
-		EnvironmentSettingsPart environmentSettingsPart = new EnvironmentSettingsPart(this, right, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+		EnvironmentSettingsPart environmentSettingsPart = new EnvironmentSettingsPart(this, right, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		environmentSettingsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(environmentSettingsPart);
 
@@ -89,8 +90,12 @@ public class EnvironmentSettingsPage extends FormPage {
 		sensorOptionsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(sensorOptionsPart);
 
+		JmxSensorOptionsPart jmxSensorOptionsPart = new JmxSensorOptionsPart(this, right, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		jmxSensorOptionsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		managedForm.addPart(jmxSensorOptionsPart);
+
 		LoggingSensorOptionsPart loggingSensorOptionsPart = new LoggingSensorOptionsPart(this, right, toolkit,
-				ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+				ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		loggingSensorOptionsPart.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		managedForm.addPart(loggingSensorOptionsPart);
 	}

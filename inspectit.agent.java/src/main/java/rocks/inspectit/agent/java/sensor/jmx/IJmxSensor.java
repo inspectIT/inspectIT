@@ -10,7 +10,7 @@ import rocks.inspectit.agent.java.sensor.ISensor;
  * @author Alfred Krauss
  *
  */
-public interface IJmxSensor extends ISensor {
+public interface IJmxSensor extends ISensor, IMBeanServerListener {
 
 	/**
 	 * This method is called whenever the sensor should be updated.
@@ -19,4 +19,5 @@ public interface IJmxSensor extends ISensor {
 	 *            The core service which is needed to store the measurements to.
 	 */
 	void update(ICoreService coreService);
+
 }

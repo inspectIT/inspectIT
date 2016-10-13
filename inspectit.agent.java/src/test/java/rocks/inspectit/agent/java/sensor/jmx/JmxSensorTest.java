@@ -3,6 +3,7 @@ package rocks.inspectit.agent.java.sensor.jmx;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -10,6 +11,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.lang.management.ManagementFactory;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -20,7 +23,9 @@ import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerNotification;
+import javax.management.Notification;
 import javax.management.NotificationFilter;
+import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.management.QueryExp;
 import javax.management.ReflectionException;
@@ -33,6 +38,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -40,6 +46,7 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.sensor.jmx.JmxSensor.MBeanServerHolder;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -84,13 +91,6 @@ public class JmxSensorTest extends TestBase {
 	public static class Init extends JmxSensorTest {
 
 		@Test
-		public void listenerRegistered() throws Exception {
-			jmxSensor.init(sensorTypeConfig);
-
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
-		}
-
-		@Test
 		public void sensorSet() {
 			JmxSensorTypeConfig sensorTypeConfig1 = mock(JmxSensorTypeConfig.class);
 
@@ -100,12 +100,51 @@ public class JmxSensorTest extends TestBase {
 		}
 
 		@Test
-		public void connectionOff() throws Exception {
-			when(connection.isConnected()).thenReturn(false);
+		public void serverCreationForced() throws Exception {
+			when(sensorTypeConfig.getParameters()).thenReturn(Collections.<String, Object> singletonMap("forceMBeanServer", Boolean.TRUE));
 
 			jmxSensor.init(sensorTypeConfig);
 
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			// assert that field in Management factory has been created
+			Field field = ManagementFactory.class.getDeclaredField("platformMBeanServer");
+			field.setAccessible(true);
+			Object server = field.get(null);
+			assertThat(server, is(notNullValue()));
+		}
+
+	}
+
+	public static class MbeanServerAdded extends JmxSensorTest {
+
+		@BeforeMethod
+		public void init() {
+			jmxSensor.init(sensorTypeConfig);
+		}
+
+		@Test
+		public void nullServer() {
+			jmxSensor.mbeanServerAdded(null);
+
+			verifyZeroInteractions(connection);
+		}
+
+		@Test
+		public void listenerRegistered() throws Exception {
+			ArgumentCaptor<MBeanServerHolder> captor = ArgumentCaptor.forClass(MBeanServerHolder.class);
+
+			jmxSensor.mbeanServerAdded(mBeanServer);
+
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), captor.capture(), Matchers.<NotificationFilter> any(), eq(null));
+			assertThat(captor.getValue().mBeanServer, is(mBeanServer));
+		}
+
+		@Test
+		public void connectionOff() throws Exception {
+			when(connection.isConnected()).thenReturn(false);
+
+			jmxSensor.mbeanServerAdded(mBeanServer);
+
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 		}
 
@@ -143,7 +182,7 @@ public class JmxSensorTest extends TestBase {
 				}
 			});
 
-			jmxSensor.init(sensorTypeConfig);
+			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			JmxAttributeDescriptor sensorConfig = (JmxAttributeDescriptor) captor.getValue().iterator().next();
 			assertThat(sensorConfig.getId(), is(equalTo(definitionDataIdentId)));
@@ -157,18 +196,49 @@ public class JmxSensorTest extends TestBase {
 
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
+		}
+	}
+
+	public static class MbeanServerRemoved extends JmxSensorTest {
+
+		@BeforeMethod
+		public void init() {
+			jmxSensor.init(sensorTypeConfig);
+		}
+
+		@Test
+		public void unknownServer() throws Exception {
+			jmxSensor.mbeanServerRemoved(mBeanServer);
+
+			verifyZeroInteractions(mBeanServer);
+		}
+
+		@Test
+		public void listenerUnregistered() throws Exception {
+			ArgumentCaptor<MBeanServerHolder> captor = ArgumentCaptor.forClass(MBeanServerHolder.class);
+			jmxSensor.mbeanServerAdded(mBeanServer);
+
+			jmxSensor.mbeanServerRemoved(mBeanServer);
+
+			verify(mBeanServer).removeNotificationListener(Matchers.<ObjectName> any(), captor.capture(), Matchers.<NotificationFilter> any(), eq(null));
+			assertThat(captor.getValue().mBeanServer, is(mBeanServer));
 		}
 	}
 
 	public static class Update extends JmxSensorTest {
 
+		@BeforeMethod
+		public void init() {
+			jmxSensor.init(sensorTypeConfig);
+		}
+
 		@Test
-		public void notInitialzed() {
+		public void nothingToCollect() {
 			jmxSensor.update(coreService);
 
-			verifyZeroInteractions(coreService, mBeanServer);
+			verifyZeroInteractions(coreService);
 		}
 
 		/**
@@ -211,14 +281,14 @@ public class JmxSensorTest extends TestBase {
 				}
 			});
 			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenReturn(value);
-			jmxSensor.init(sensorTypeConfig);
+			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			jmxSensor.update(coreService);
 
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
 			verify(mBeanServer).getAttribute(objectName, testAttributeName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 
 			ArgumentCaptor<JmxSensorValueData> valueCaptor = ArgumentCaptor.forClass(JmxSensorValueData.class);
@@ -260,13 +330,13 @@ public class JmxSensorTest extends TestBase {
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), Matchers.<Collection<JmxAttributeDescriptor>> any())).thenReturn(Collections.<JmxAttributeDescriptor> emptyList());
 			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenReturn(value);
-			jmxSensor.init(sensorTypeConfig);
+			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			jmxSensor.update(coreService);
 
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 			verifyZeroInteractions(coreService);
 		}
@@ -304,7 +374,7 @@ public class JmxSensorTest extends TestBase {
 				}
 			});
 			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenThrow(throwableClass);
-			jmxSensor.init(sensorTypeConfig);
+			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			// update twice
 			jmxSensor.update(coreService);
@@ -314,7 +384,7 @@ public class JmxSensorTest extends TestBase {
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
 			verify(mBeanServer).getAttribute(objectName, testAttributeName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 		}
 
@@ -351,14 +421,14 @@ public class JmxSensorTest extends TestBase {
 				}
 			});
 			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenReturn(null);
-			jmxSensor.init(sensorTypeConfig);
+			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			jmxSensor.update(coreService);
 
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
 			verify(mBeanServer).getAttribute(objectName, testAttributeName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 
 			ArgumentCaptor<JmxSensorValueData> valueCaptor = ArgumentCaptor.forClass(JmxSensorValueData.class);
@@ -403,14 +473,14 @@ public class JmxSensorTest extends TestBase {
 				}
 			});
 			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenReturn(new int[] { 1, 2, 3 });
-			jmxSensor.init(sensorTypeConfig);
+			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			jmxSensor.update(coreService);
 
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
 			verify(mBeanServer).getAttribute(objectName, testAttributeName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 
 			ArgumentCaptor<JmxSensorValueData> valueCaptor = ArgumentCaptor.forClass(JmxSensorValueData.class);
@@ -455,14 +525,14 @@ public class JmxSensorTest extends TestBase {
 				}
 			});
 			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenReturn(new String[] { "1", "2", "3" });
-			jmxSensor.init(sensorTypeConfig);
+			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			jmxSensor.update(coreService);
 
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
 			verify(mBeanServer).getAttribute(objectName, testAttributeName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 
 			ArgumentCaptor<JmxSensorValueData> valueCaptor = ArgumentCaptor.forClass(JmxSensorValueData.class);
@@ -484,6 +554,11 @@ public class JmxSensorTest extends TestBase {
 
 	public static class HandleNotification extends JmxSensorTest {
 
+		@BeforeMethod
+		public void init() {
+			jmxSensor.init(sensorTypeConfig);
+		}
+
 		@Test
 		public void registrationNotification() throws Exception {
 			long sensorType = 13L;
@@ -501,8 +576,9 @@ public class JmxSensorTest extends TestBase {
 			MBeanAttributeInfo[] mBeanAttributeInfos = { mBeanAttributeInfo };
 			ObjectName objectName = new ObjectName(testObjectName);
 
-			jmxSensor.init(sensorTypeConfig);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
+			jmxSensor.mbeanServerAdded(mBeanServer);
+			ArgumentCaptor<MBeanServerHolder> notificationListener = ArgumentCaptor.forClass(MBeanServerHolder.class);
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), notificationListener.capture(), Matchers.<NotificationFilter> any(), eq(null));
 
 			when(sensorTypeConfig.getId()).thenReturn(sensorType);
 			when(mBeanServer.queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null))).thenReturn(Collections.singleton(objectName));
@@ -524,7 +600,7 @@ public class JmxSensorTest extends TestBase {
 			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenReturn(value);
 			MBeanServerNotification notification = new MBeanServerNotification(MBeanServerNotification.REGISTRATION_NOTIFICATION, this, 1, objectName);
 
-			jmxSensor.handleNotification(notification, null);
+			notificationListener.getValue().handleNotification(notification, null);
 			jmxSensor.update(coreService);
 
 			JmxAttributeDescriptor sensorConfig = (JmxAttributeDescriptor) captor.getValue().iterator().next();
@@ -583,17 +659,31 @@ public class JmxSensorTest extends TestBase {
 					return descriptors;
 				}
 			});
-
 			MBeanServerNotification notification = new MBeanServerNotification(MBeanServerNotification.UNREGISTRATION_NOTIFICATION, this, 1, objectName);
-			jmxSensor.init(sensorTypeConfig);
-			jmxSensor.handleNotification(notification, null);
+
+			jmxSensor.mbeanServerAdded(mBeanServer);
+			ArgumentCaptor<MBeanServerHolder> notificationListener = ArgumentCaptor.forClass(MBeanServerHolder.class);
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), notificationListener.capture(), Matchers.<NotificationFilter> any(), eq(null));
+			notificationListener.getValue().handleNotification(notification, null);
 			jmxSensor.update(coreService);
 
 			verify(mBeanServer).queryNames(Matchers.<ObjectName> any(), (QueryExp) eq(null));
 			verify(mBeanServer).getMBeanInfo(objectName);
-			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), eq(jmxSensor), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 			verifyZeroInteractions(coreService);
+		}
+
+		@Test
+		public void wrongNotification() throws Exception {
+			jmxSensor.mbeanServerAdded(mBeanServer);
+			ArgumentCaptor<MBeanServerHolder> notificationListener = ArgumentCaptor.forClass(MBeanServerHolder.class);
+			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), notificationListener.capture(), Matchers.<NotificationFilter> any(), eq(null));
+			Notification notification = mock(Notification.class);
+			when(connection.isConnected()).thenReturn(true);
+
+			notificationListener.getValue().handleNotification(notification, null);
+
+			verifyZeroInteractions(mBeanServer);
 		}
 	}
 
