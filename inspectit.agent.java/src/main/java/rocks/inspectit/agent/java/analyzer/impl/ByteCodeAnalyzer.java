@@ -31,7 +31,9 @@ import com.google.common.io.ByteStreams;
 import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.StorageException;
+import rocks.inspectit.agent.java.config.impl.AbstractSensorConfig;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.SpecialSensorConfig;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.IdNotAvailableException;
@@ -46,6 +48,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
@@ -294,6 +297,13 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 					hookDispatcherMapper.addMapping(registeredSensorConfig.getId(), registeredSensorConfig);
 					methodToSensorMap.put(Long.valueOf(registeredSensorConfig.getId()), sensorInstrumentationPoint.getSensorIds());
 				}
+
+				SpecialSensorConfig specialSensorConfig = createSpecialSensorConfig(config);
+				if (null != specialSensorConfig) {
+					SpecialInstrumentationPoint specialInstrumentationPoint = config.getSpecialInstrumentationPoint();
+					hookDispatcherMapper.addMapping(specialSensorConfig.getId(), specialSensorConfig);
+					methodToSensorMap.put(Long.valueOf(specialSensorConfig.getId()), new long[] { specialInstrumentationPoint.getSensorId() });
+				}
 			}
 
 			// inform CMR of the applied instrumentation ids
@@ -332,10 +342,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 
 		// copy properties
 		RegisteredSensorConfig rsc = new RegisteredSensorConfig();
-		rsc.setTargetClassFqn(config.getTargetClassFqn());
-		rsc.setTargetMethodName(config.getTargetMethodName());
-		rsc.setReturnType(config.getReturnType());
-		rsc.setParameterTypes(config.getParameterTypes());
+		this.copyInfo(rsc, config);
 		rsc.setId(sensorInstrumentationPoint.getId());
 		rsc.setStartsInvocation(sensorInstrumentationPoint.isStartsInvocation());
 		rsc.setSettings(sensorInstrumentationPoint.getSettings());
@@ -358,6 +365,56 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 		}
 
 		return rsc;
+	}
+
+	/**
+	 * Creates the new {@link SpecialSensorConfig} from the {@link MethodInstrumentationConfig} if
+	 * the {@link SpecialInstrumentationPoint} is defined in the configuration.
+	 * <p>
+	 * Data from the {@link SpecialSensorConfig} is copied to the {@link SpecialSensorConfig} and
+	 * special method sensor is resolved and attached to the returned sensor configuration.
+	 *
+	 * @param config
+	 *            {@link MethodInstrumentationConfig}
+	 * @return {@link SpecialSensorConfig} or <code>null</code> if this instrumentation config does
+	 *         not defined the {@link SpecialInstrumentationPoint}.
+	 */
+	private SpecialSensorConfig createSpecialSensorConfig(MethodInstrumentationConfig config) {
+		SpecialInstrumentationPoint specialInstrumentationPoint = config.getSpecialInstrumentationPoint();
+		if (null == specialInstrumentationPoint) {
+			return null;
+		}
+
+		SpecialSensorConfig ssc = new SpecialSensorConfig();
+		this.copyInfo(ssc, config);
+		ssc.setId(specialInstrumentationPoint.getId());
+
+		// resolve sensor
+		long sensorId = specialInstrumentationPoint.getSensorId();
+		IMethodSensor sensor = methodSensorMap.get(sensorId);
+		if (null != sensor) {
+			ssc.setSensor(sensor);
+		} else {
+			String methodFull = config.getTargetClassFqn() + "#" + config.getTargetMethodName();
+			log.error("Sensor with the id " + sensorId + " does not exists on the agent, but it's defined for the method: " + methodFull);
+		}
+		return ssc;
+	}
+
+	/**
+	 * Copies all the class/method information from the {@link MethodInstrumentationConfig} to the
+	 * {@link AbstractSensorConfig}.
+	 *
+	 * @param asc
+	 *            {@link AbstractSensorConfig}
+	 * @param config
+	 *            {@link MethodInstrumentationConfig}
+	 */
+	private void copyInfo(AbstractSensorConfig asc, MethodInstrumentationConfig config) {
+		asc.setTargetClassFqn(config.getTargetClassFqn());
+		asc.setTargetMethodName(config.getTargetMethodName());
+		asc.setReturnType(config.getReturnType());
+		asc.setParameterTypes(config.getParameterTypes());
 	}
 
 	/**

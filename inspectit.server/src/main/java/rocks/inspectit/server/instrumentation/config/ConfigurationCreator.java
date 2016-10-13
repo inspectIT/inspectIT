@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
@@ -21,6 +22,7 @@ import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
@@ -93,6 +95,13 @@ public class ConfigurationCreator {
 		if (null != jmxSensorConfig) {
 			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
+
+		// then all special sensors
+		Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs = new ArrayList<>(0);
+		if (environment.isClassLoadingDelegation()) {
+			specialMethodSensorTypeConfigs.add(getMethodSensorTypeConfig(platformId, ClassLoadingDelegationSensorConfig.INSTANCE));
+		}
+		agentConfiguration.setSpecialMethodSensorTypeConfigs(specialMethodSensorTypeConfigs);
 
 		// buffer strategy
 		IStrategyConfig bufferStrategyConfig = environment.getBufferStrategyConfig();

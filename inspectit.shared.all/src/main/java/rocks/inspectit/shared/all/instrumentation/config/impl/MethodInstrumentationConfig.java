@@ -3,11 +3,7 @@ package rocks.inspectit.shared.all.instrumentation.config.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.collections.CollectionUtils;
 
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationConfig;
@@ -48,9 +44,9 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	private SensorInstrumentationPoint sensorInstrumentationPoint;
 
 	/**
-	 * Collection of functional instrumentation belonging to this method instrumentation.
+	 * Special instrumentation belonging to this method instrumentation. Can be only one per method.
 	 */
-	private Set<SpecialInstrumentationPoint> functionalInstrumentations;
+	private SpecialInstrumentationPoint specialInstrumentationPoint;
 
 	/**
 	 * No-args constructor.
@@ -78,13 +74,15 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean hasInstrumentationPoints() {
-		return (sensorInstrumentationPoint != null) || CollectionUtils.isNotEmpty(functionalInstrumentations);
+		return (sensorInstrumentationPoint != null) || (specialInstrumentationPoint != null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<IMethodInstrumentationPoint> getAllInstrumentationPoints() {
 		if (!hasInstrumentationPoints()) {
 			return Collections.emptyList();
@@ -94,8 +92,8 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 		if (null != sensorInstrumentationPoint) {
 			instrumentationPoints.add(sensorInstrumentationPoint);
 		}
-		if (CollectionUtils.isNotEmpty(functionalInstrumentations)) {
-			instrumentationPoints.addAll(functionalInstrumentations);
+		if (null != specialInstrumentationPoint) {
+			instrumentationPoints.add(specialInstrumentationPoint);
 		}
 
 		return instrumentationPoints;
@@ -106,6 +104,7 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	 *
 	 * @return {@link #targetClassFqn}
 	 */
+	@Override
 	public String getTargetClassFqn() {
 		return targetClassFqn;
 	}
@@ -125,6 +124,7 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	 *
 	 * @return {@link #targetMethodName}
 	 */
+	@Override
 	public String getTargetMethodName() {
 		return targetMethodName;
 	}
@@ -144,6 +144,7 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	 *
 	 * @return {@link #returnType}
 	 */
+	@Override
 	public String getReturnType() {
 		return returnType;
 	}
@@ -163,6 +164,7 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	 *
 	 * @return {@link #parameterTypes}
 	 */
+	@Override
 	public List<String> getParameterTypes() {
 		return parameterTypes;
 	}
@@ -197,25 +199,22 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	}
 
 	/**
-	 * Gets {@link #functionalInstrumentations}.
+	 * Gets {@link #specialInstrumentationPoint}.
 	 *
-	 * @return {@link #functionalInstrumentations}
+	 * @return {@link #specialInstrumentationPoint}
 	 */
-	public Collection<SpecialInstrumentationPoint> getFunctionalInstrumentations() {
-		return functionalInstrumentations;
+	public SpecialInstrumentationPoint getSpecialInstrumentationPoint() {
+		return this.specialInstrumentationPoint;
 	}
 
 	/**
-	 * Adds functional instrumentation point.
+	 * Sets {@link #specialInstrumentationPoint}.
 	 *
-	 * @param functionalInstrumentation
-	 *            {@link SpecialInstrumentationPoint}
+	 * @param specialInstrumentationPoint
+	 *            New value for {@link #specialInstrumentationPoint}
 	 */
-	public void addFunctionalInstrumentation(SpecialInstrumentationPoint functionalInstrumentation) {
-		if (null == functionalInstrumentations) {
-			functionalInstrumentations = new HashSet<SpecialInstrumentationPoint>(1);
-		}
-		functionalInstrumentations.add(functionalInstrumentation);
+	public void setSpecialInstrumentationPoint(SpecialInstrumentationPoint specialInstrumentationPoint) {
+		this.specialInstrumentationPoint = specialInstrumentationPoint;
 	}
 
 	/**
@@ -225,12 +224,12 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((functionalInstrumentations == null) ? 0 : functionalInstrumentations.hashCode());
-		result = (prime * result) + ((parameterTypes == null) ? 0 : parameterTypes.hashCode());
-		result = (prime * result) + ((sensorInstrumentationPoint == null) ? 0 : sensorInstrumentationPoint.hashCode());
-		result = (prime * result) + ((returnType == null) ? 0 : returnType.hashCode());
-		result = (prime * result) + ((targetClassFqn == null) ? 0 : targetClassFqn.hashCode());
-		result = (prime * result) + ((targetMethodName == null) ? 0 : targetMethodName.hashCode());
+		result = (prime * result) + ((this.parameterTypes == null) ? 0 : this.parameterTypes.hashCode());
+		result = (prime * result) + ((this.returnType == null) ? 0 : this.returnType.hashCode());
+		result = (prime * result) + ((this.sensorInstrumentationPoint == null) ? 0 : this.sensorInstrumentationPoint.hashCode());
+		result = (prime * result) + ((this.specialInstrumentationPoint == null) ? 0 : this.specialInstrumentationPoint.hashCode());
+		result = (prime * result) + ((this.targetClassFqn == null) ? 0 : this.targetClassFqn.hashCode());
+		result = (prime * result) + ((this.targetMethodName == null) ? 0 : this.targetMethodName.hashCode());
 		return result;
 	}
 
@@ -249,49 +248,50 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 			return false;
 		}
 		MethodInstrumentationConfig other = (MethodInstrumentationConfig) obj;
-		if (functionalInstrumentations == null) {
-			if (other.functionalInstrumentations != null) {
-				return false;
-			}
-		} else if (!functionalInstrumentations.equals(other.functionalInstrumentations)) {
-			return false;
-		}
-		if (parameterTypes == null) {
+		if (this.parameterTypes == null) {
 			if (other.parameterTypes != null) {
 				return false;
 			}
-		} else if (!parameterTypes.equals(other.parameterTypes)) {
+		} else if (!this.parameterTypes.equals(other.parameterTypes)) {
 			return false;
 		}
-		if (sensorInstrumentationPoint == null) {
-			if (other.sensorInstrumentationPoint != null) {
-				return false;
-			}
-		} else if (!sensorInstrumentationPoint.equals(other.sensorInstrumentationPoint)) {
-			return false;
-		}
-		if (returnType == null) {
+		if (this.returnType == null) {
 			if (other.returnType != null) {
 				return false;
 			}
-		} else if (!returnType.equals(other.returnType)) {
+		} else if (!this.returnType.equals(other.returnType)) {
 			return false;
 		}
-		if (targetClassFqn == null) {
+		if (this.sensorInstrumentationPoint == null) {
+			if (other.sensorInstrumentationPoint != null) {
+				return false;
+			}
+		} else if (!this.sensorInstrumentationPoint.equals(other.sensorInstrumentationPoint)) {
+			return false;
+		}
+		if (this.specialInstrumentationPoint == null) {
+			if (other.specialInstrumentationPoint != null) {
+				return false;
+			}
+		} else if (!this.specialInstrumentationPoint.equals(other.specialInstrumentationPoint)) {
+			return false;
+		}
+		if (this.targetClassFqn == null) {
 			if (other.targetClassFqn != null) {
 				return false;
 			}
-		} else if (!targetClassFqn.equals(other.targetClassFqn)) {
+		} else if (!this.targetClassFqn.equals(other.targetClassFqn)) {
 			return false;
 		}
-		if (targetMethodName == null) {
+		if (this.targetMethodName == null) {
 			if (other.targetMethodName != null) {
 				return false;
 			}
-		} else if (!targetMethodName.equals(other.targetMethodName)) {
+		} else if (!this.targetMethodName.equals(other.targetMethodName)) {
 			return false;
 		}
 		return true;
 	}
+
 
 }

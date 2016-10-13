@@ -39,11 +39,6 @@ public class SpringAgent implements IAgent {
 	private static final Logger LOG = LoggerFactory.getLogger(SpringAgent.class);
 
 	/**
-	 * Our class start with {@value #CLASS_NAME_PREFIX}.
-	 */
-	private static final String CLASS_NAME_PREFIX = "rocks.inspectit";
-
-	/**
 	 * inspectIT jar file.
 	 */
 	private static File inspectitJarFile;
@@ -180,6 +175,7 @@ public class SpringAgent implements IAgent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] inspectByteCode(byte[] byteCode, String className, ClassLoader classLoader) {
 		// if an error in the init method was caught, we'll do nothing here.
 		// This prevents further errors.
@@ -203,59 +199,14 @@ public class SpringAgent implements IAgent {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?> loadClass(Object[] params) {
-		try {
-			if ((null != params) && (params.length == 1)) {
-				Object p = params[0];
-				if (p instanceof String) {
-					return loadClass((String) p);
-				}
-			}
-			return null;
-		} catch (Throwable e) { // NOPMD
-			return null;
-		}
-	}
 
-	/**
-	 * Delegates the class loading to the {@link #inspectItClassLoader} if the class name starts
-	 * with {@value #CLASS_NAME_PREFIX}. Otherwise loads the class with the target class loader. If
-	 * the inspectIT class loader throws {@link ClassNotFoundException}, the target class loader
-	 * will be used.
-	 *
-	 * @param className
-	 *            Class name.
-	 * @return Loaded class or <code>null</code> if it can not be found with inspectIT class loader.
-	 */
-	private Class<?> loadClass(String className) {
-		if (loadWithInspectItClassLoader(className)) {
-			try {
-				return getClass().getClassLoader().loadClass(className);
-			} catch (ClassNotFoundException e) {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
 
-	/**
-	 * Defines if the class should be loaded with our class loader.
-	 *
-	 * @param className
-	 *            Name of the class to load.
-	 * @return True if class name starts with {@value #CLASS_NAME_PREFIX}.
-	 */
-	private boolean loadWithInspectItClassLoader(String className) {
-		return className.startsWith(CLASS_NAME_PREFIX);
-	}
+
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHookDispatcher getHookDispatcher() {
 		return hookDispatcher;
 	}
@@ -277,6 +228,7 @@ public class SpringAgent implements IAgent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isThreadTransformDisabled() {
 		return transformDisabledThreadLocal.get();
 	}
@@ -284,6 +236,7 @@ public class SpringAgent implements IAgent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setThreadTransformDisabled(boolean disabled) {
 		transformDisabledThreadLocal.set(Boolean.valueOf(disabled));
 	}

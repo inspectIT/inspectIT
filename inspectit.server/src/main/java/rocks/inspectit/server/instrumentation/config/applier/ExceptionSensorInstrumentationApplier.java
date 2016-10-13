@@ -4,6 +4,7 @@ import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
@@ -67,16 +68,24 @@ public class ExceptionSensorInstrumentationApplier extends AbstractSensorInstrum
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void applyAssignment(AgentConfig agentConfiguration, SensorInstrumentationPoint registeredSensorConfig) {
+	protected void applyAssignment(AgentConfig agentConfiguration, MethodType methodType, MethodInstrumentationConfig methodInstrumentationConfig) {
+		SensorInstrumentationPoint sensorInstrumentationPoint = getOrCreateSensorInstrumentationPoint(agentConfiguration, methodType, methodInstrumentationConfig);
+		applyAssignment(agentConfiguration, sensorInstrumentationPoint);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void applyAssignment(AgentConfig agentConfiguration, SensorInstrumentationPoint sensorInstrumentationPoint) {
 		// there can be only one exception sensor so I just take the id
 		ExceptionSensorTypeConfig exceptionSensorTypeConfig = agentConfiguration.getExceptionSensorTypeConfig();
 		long sensorId = exceptionSensorTypeConfig.getId();
 
 		// set to rsc
-		registeredSensorConfig.addSensorId(sensorId, exceptionSensorTypeConfig.getPriority());
+		sensorInstrumentationPoint.addSensorId(sensorId, exceptionSensorTypeConfig.getPriority());
 
 		// add all settings
-		registeredSensorConfig.addSettings(exceptionSensorAssignment.getSettings());
+		sensorInstrumentationPoint.addSettings(exceptionSensorAssignment.getSettings());
 	}
 
 }

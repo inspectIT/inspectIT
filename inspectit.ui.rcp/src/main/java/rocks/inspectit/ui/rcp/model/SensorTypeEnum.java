@@ -18,6 +18,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParamete
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CpuSensorConfig;
@@ -89,6 +90,8 @@ public enum SensorTypeEnum {
 	JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor", InspectITImages.IMG_BEAN),
 	/** The JMX sensor data type. hard-coded until support for the JMX in CI */
 	CHARTING_JMX_SENSOR_DATA("rocks.inspectit.agent.java.sensor.jmx.JmxSensor#charting", InspectITImages.IMG_BEAN),
+	/** Class loading delegation. */
+	CLASS_LOADING_DELEGATION(ClassLoadingDelegationSensorConfig.CLASS_NAME, InspectITImages.IMG_EXTERNALIZE, false),
 	/** The alert invocation sequence sensor type. */
 	ALERT_INVOCATION(InvocationSequenceSensorConfig.CLASS_NAME + "#alert", InspectITImages.IMG_ALARM_INVOCATION);
 

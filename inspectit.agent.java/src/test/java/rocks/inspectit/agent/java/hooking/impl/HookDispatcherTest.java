@@ -1,5 +1,8 @@
 package rocks.inspectit.agent.java.hooking.impl;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
@@ -23,9 +26,11 @@ import org.testng.annotations.Test;
 import rocks.inspectit.agent.java.analyzer.classes.MyTestException;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.SpecialSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
+import rocks.inspectit.agent.java.hooking.ISpecialHook;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensorHook;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -821,6 +826,106 @@ public class HookDispatcherTest extends TestBase {
 			verifyZeroInteractions(object, coreService, returnValue);
 			verifyNoMoreInteractions(methodHook, exceptionHook, invocHook);
 			verifyNoMoreInteractions(registeredSensorConfig, registeredSensorConfigTwo, registeredConstructorSensorConfig);
+		}
+	}
+
+	public class SpecialHook extends HookDispatcherTest {
+
+		@Test
+		public void dispatchNoSpecialHooks() {
+			int methodId = 3;
+			Object object = mock(Object.class);
+			Object[] parameters = new Object[0];
+			Object returnValue = mock(Object.class);
+
+			SpecialSensorConfig specialSensorConfig = mock(SpecialSensorConfig.class);
+			when(specialSensorConfig.getSensor()).thenReturn(null);
+
+			hookDispatcher.addMapping(methodId, specialSensorConfig);
+
+			Object result = hookDispatcher.dispatchSpecialMethodBeforeBody(methodId, object, parameters);
+			verify(specialSensorConfig, times(1)).getSensor();
+			assertThat(result, is(nullValue()));
+
+			result = hookDispatcher.dispatchSpecialMethodAfterBody(methodId, object, parameters, returnValue);
+			verify(specialSensorConfig, times(2)).getSensor();
+			assertThat(result, is(nullValue()));
+
+			verifyZeroInteractions(object, coreService, returnValue);
+			verifyNoMoreInteractions(specialSensorConfig);
+		}
+
+		@Test
+		public void dispatchOneSpecialHook() {
+			long sensorTypeId = 7L;
+			IMethodSensor methodSensor = mock(IMethodSensor.class);
+			ISpecialHook specialHook = mock(ISpecialHook.class);
+			MethodSensorTypeConfig methodSensorConfig = mock(MethodSensorTypeConfig.class);
+			when(methodSensor.getHook()).thenReturn(specialHook);
+			when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorConfig);
+			when(methodSensorConfig.getId()).thenReturn(sensorTypeId);
+
+			SpecialSensorConfig specialSensorConfig = mock(SpecialSensorConfig.class);
+			when(specialSensorConfig.getSensor()).thenReturn(methodSensor);
+
+			int methodId = 3;
+			Object object = mock(Object.class);
+			Object[] parameters = new Object[0];
+			Object returnValue = mock(Object.class);
+
+			hookDispatcher.addMapping(methodId, specialSensorConfig);
+
+			Object result = hookDispatcher.dispatchSpecialMethodBeforeBody(methodId, object, parameters);
+			verify(specialSensorConfig, times(1)).getSensor();
+			verify(specialHook, times(1)).beforeBody(methodId, object, parameters, specialSensorConfig);
+			assertThat(result, is(nullValue()));
+
+			result = hookDispatcher.dispatchSpecialMethodAfterBody(methodId, object, parameters, returnValue);
+			verify(specialSensorConfig, times(2)).getSensor();
+			verify(specialHook, times(1)).afterBody(methodId, object, parameters, returnValue, specialSensorConfig);
+			assertThat(result, is(nullValue()));
+
+			verifyZeroInteractions(object, coreService, returnValue);
+			verifyNoMoreInteractions(specialSensorConfig, specialHook);
+		}
+
+		@Test
+		public void dispatchOneSpecialHookWithResults() {
+			long sensorTypeId = 7L;
+			IMethodSensor methodSensor = mock(IMethodSensor.class);
+			ISpecialHook specialHook = mock(ISpecialHook.class);
+			MethodSensorTypeConfig methodSensorConfig = mock(MethodSensorTypeConfig.class);
+			when(methodSensor.getHook()).thenReturn(specialHook);
+			when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorConfig);
+			when(methodSensorConfig.getId()).thenReturn(sensorTypeId);
+
+			SpecialSensorConfig specialSensorConfig = mock(SpecialSensorConfig.class);
+			when(specialSensorConfig.getSensor()).thenReturn(methodSensor);
+
+			int methodId = 3;
+			Object object = mock(Object.class);
+			Object[] parameters = new Object[0];
+			Object returnValue = mock(Object.class);
+
+			Object resultBefore = new Object();
+			Object resultAfter = new Object();
+			when(specialHook.beforeBody(methodId, object, parameters, specialSensorConfig)).thenReturn(resultBefore);
+			when(specialHook.afterBody(methodId, object, parameters, returnValue, specialSensorConfig)).thenReturn(resultAfter);
+
+			hookDispatcher.addMapping(methodId, specialSensorConfig);
+
+			Object result = hookDispatcher.dispatchSpecialMethodBeforeBody(methodId, object, parameters);
+			verify(specialSensorConfig, times(1)).getSensor();
+			verify(specialHook, times(1)).beforeBody(methodId, object, parameters, specialSensorConfig);
+			assertThat(result, is(resultBefore));
+
+			result = hookDispatcher.dispatchSpecialMethodAfterBody(methodId, object, parameters, returnValue);
+			verify(specialSensorConfig, times(2)).getSensor();
+			verify(specialHook, times(1)).afterBody(methodId, object, parameters, returnValue, specialSensorConfig);
+			assertThat(result, is(resultAfter));
+
+			verifyZeroInteractions(object, coreService, returnValue);
+			verifyNoMoreInteractions(specialSensorConfig, specialHook);
 		}
 	}
 

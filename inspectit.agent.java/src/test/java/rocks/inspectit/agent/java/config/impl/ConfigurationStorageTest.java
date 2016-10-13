@@ -237,6 +237,30 @@ public class ConfigurationStorageTest extends TestBase {
 
 			assertThat(methodSensorTypes, is(empty()));
 		}
+
+		@Test
+		public void includesExceptionSensor() throws StorageException {
+			when(agentConfiguration.getMethodSensorTypeConfigs()).thenReturn(null);
+			ExceptionSensorTypeConfig exceptionSensorTypeConfig = mock(ExceptionSensorTypeConfig.class);
+			when(agentConfiguration.getExceptionSensorTypeConfig()).thenReturn(exceptionSensorTypeConfig);
+
+			List<MethodSensorTypeConfig> methodSensorTypes = configurationStorage.getMethodSensorTypes();
+
+			assertThat(methodSensorTypes, hasSize(1));
+			assertThat(methodSensorTypes, hasItem(exceptionSensorTypeConfig));
+		}
+
+		@Test
+		public void includesSpecialSensors() throws StorageException {
+			when(agentConfiguration.getMethodSensorTypeConfigs()).thenReturn(null);
+			MethodSensorTypeConfig methodSensorTypeConfig = mock(MethodSensorTypeConfig.class);
+			when(agentConfiguration.getSpecialMethodSensorTypeConfigs()).thenReturn(Collections.singletonList(methodSensorTypeConfig));
+
+			List<MethodSensorTypeConfig> methodSensorTypes = configurationStorage.getMethodSensorTypes();
+
+			assertThat(methodSensorTypes, hasSize(1));
+			assertThat(methodSensorTypes, hasItem(methodSensorTypeConfig));
+		}
 	}
 
 	public class GetExceptionSensorType extends ConfigurationStorageTest {

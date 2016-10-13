@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.SpecialSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
+import rocks.inspectit.agent.java.hooking.ISpecialHook;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
 import rocks.inspectit.agent.java.sensor.exception.IExceptionSensorHook;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -57,8 +59,20 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * Contains all hooks. Using concurrent map as we need to enable thread-safety of
 	 * {@link #addMapping(long, RegisteredSensorConfig)}.
+	 * <p>
+	 * Not using the {@link java.util.Map} interface on purpose, in order to use put/get methods
+	 * with primitive longs.
 	 */
 	private final NonBlockingHashMapLong<RegisteredSensorConfig> mappings = new NonBlockingHashMapLong<RegisteredSensorConfig>();
+
+	/**
+	 * Contains all special hooks. Using concurrent map as we need to enable thread-safety of
+	 * {@link #addMapping(long, RegisteredSensorConfig)}.
+	 * <p>
+	 * Not using the {@link java.util.Map} interface on purpose, in order to use put/get methods
+	 * with primitive longs.
+	 */
+	private final NonBlockingHashMapLong<SpecialSensorConfig> specialMappings = new NonBlockingHashMapLong<SpecialSensorConfig>();
 
 	/**
 	 * Stores the current Status of the invocation sequence tracer in a {@link ThreadLocal} object.
@@ -79,6 +93,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addMapping(long id, RegisteredSensorConfig rsc) {
 		mappings.put(id, rsc);
 	}
@@ -86,6 +101,15 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public void addMapping(long id, SpecialSensorConfig ssc) {
+		specialMappings.put(id, ssc);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void dispatchMethodBeforeBody(long id, Object object, Object[] parameters) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -134,6 +158,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchFirstMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -160,6 +185,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchSecondMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -220,6 +246,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchOnThrowInBody(long id, Object object, Object[] parameters, Object exceptionObject) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -252,6 +279,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchBeforeCatch(long id, Object exceptionObject) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -283,6 +311,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchConstructorOnThrowInBody(long id, Object object, Object[] parameters, Object exceptionObject) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -315,6 +344,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchConstructorBeforeCatch(long id, Object exceptionObject) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -347,6 +377,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchConstructorBeforeBody(long id, Object[] parameters) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -393,6 +424,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchConstructorAfterBody(long id, Object object, Object[] parameters) {
 		if (!executionMarker.isActive()) {
 			try {
@@ -447,6 +479,48 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 				executionMarker.deactive();
 			}
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object dispatchSpecialMethodBeforeBody(long id, Object object, Object[] parameters) {
+		try {
+			SpecialSensorConfig ssc = specialMappings.get(id);
+
+			IMethodSensor methodSensor = ssc.getSensor();
+			ISpecialHook specialHook = (ISpecialHook) methodSensor.getHook();
+			Object result = specialHook.beforeBody(id, object, parameters, ssc);
+			if (null != result) {
+				return result;
+			}
+		} catch (Throwable throwable) { // NOPMD
+			log.error("An error happened in the Hook Dispatcher! (before special method)", throwable);
+		}
+
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object dispatchSpecialMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue) {
+		try {
+			SpecialSensorConfig ssc = specialMappings.get(id);
+
+			IMethodSensor methodSensor = ssc.getSensor();
+			ISpecialHook specialHook = (ISpecialHook) methodSensor.getHook();
+			Object result = specialHook.afterBody(id, object, parameters, returnValue, ssc);
+			if (null != result) {
+				return result;
+			}
+		} catch (Throwable throwable) { // NOPMD
+			log.error("An error happened in the Hook Dispatcher! (after special method)", throwable);
+		}
+
+		return null;
 	}
 
 	/**

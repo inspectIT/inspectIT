@@ -14,7 +14,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
-import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
 import rocks.inspectit.shared.all.testbase.TestBase;
@@ -109,15 +108,16 @@ public class InstrumenterFactoryTest extends TestBase {
 		}
 
 		@Test
-		public void classLoadingDelegation() {
-			when(specialInstrumentationPoint.getInstrumentationType()).thenReturn(SpecialInstrumentationType.CLASS_LOADING_DELEGATION);
+		public void specialMethod() {
+			long id = 7L;
 			String name = "method";
 			String desc = "()V";
 			boolean enhancedExceptionSensor = false;
+			when(specialInstrumentationPoint.getId()).thenReturn(id);
 
 			MethodVisitor methodVisitor = factory.getMethodVisitor(specialInstrumentationPoint, superMethodVisitor, 0, name, desc, enhancedExceptionSensor);
 
-			assertThat(methodVisitor, is(instanceOf(ClassLoaderDelegationMethodInstrumenter.class)));
+			assertThat(methodVisitor, is(instanceOf(SpecialMethodInstrumenter.class)));
 		}
 
 		@Test(expectedExceptions = IllegalArgumentException.class)
@@ -139,15 +139,6 @@ public class InstrumenterFactoryTest extends TestBase {
 			factory.getMethodVisitor(instrumentationPoint, superMethodVisitor, 0, name, desc, enhancedExceptionSensor);
 		}
 
-		@Test(expectedExceptions = IllegalArgumentException.class)
-		public void nullInstrumentationType() {
-			when(specialInstrumentationPoint.getInstrumentationType()).thenReturn(null);
-			String name = "method";
-			String desc = "()V";
-			boolean enhancedExceptionSensor = false;
-
-			factory.getMethodVisitor(specialInstrumentationPoint, superMethodVisitor, 0, name, desc, enhancedExceptionSensor);
-		}
 	}
 
 }
