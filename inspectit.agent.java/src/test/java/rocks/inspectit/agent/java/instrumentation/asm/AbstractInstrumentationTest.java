@@ -1,7 +1,14 @@
 package rocks.inspectit.agent.java.instrumentation.asm;
 
-import java.lang.reflect.Method;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
+
+import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -71,4 +78,46 @@ public abstract class AbstractInstrumentationTest extends TestBase {
 			return defineClass(name, bytes, 0, bytes.length);
 		}
 	}
+
+	protected void prepareConfigurationMockMethod(MethodInstrumentationConfig point, Class<?> clazz, String methodName, Class<?>... parameterTypes) throws SecurityException, NoSuchMethodException {
+		Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
+		when(point.getTargetClassFqn()).thenReturn(clazz.getName());
+		when(point.getTargetMethodName()).thenReturn(methodName);
+		if (method.getReturnType().isArray()) {
+			when(point.getReturnType()).thenReturn(method.getReturnType().getComponentType().getName() + "[]");
+		} else {
+			when(point.getReturnType()).thenReturn(method.getReturnType().getName());
+		}
+		if (ArrayUtils.isNotEmpty(parameterTypes)) {
+			List<String> params = new ArrayList<String>();
+			for (Class<?> paramType : parameterTypes) {
+				if (paramType.isArray()) {
+					params.add(paramType.getComponentType().getName() + "[]");
+				} else {
+					params.add(paramType.getName());
+				}
+			}
+			when(point.getParameterTypes()).thenReturn(params);
+		}
+	}
+
+	protected void prepareConfigurationMockConstructor(MethodInstrumentationConfig point, Class<?> clazz, boolean staticConstructor, Class<?>... parameterTypes)
+			throws SecurityException, NoSuchMethodException {
+		clazz.getDeclaredConstructor(parameterTypes);
+		when(point.getTargetClassFqn()).thenReturn(clazz.getName());
+		when(point.getTargetMethodName()).thenReturn(staticConstructor ? "<clinit>" : "<init>");
+		when(point.getReturnType()).thenReturn("void");
+		if (ArrayUtils.isNotEmpty(parameterTypes)) {
+			List<String> params = new ArrayList<String>();
+			for (Class<?> paramType : parameterTypes) {
+				if (paramType.isArray()) {
+					params.add(paramType.getComponentType().getName() + "[]");
+				} else {
+					params.add(paramType.getName());
+				}
+			}
+			when(point.getParameterTypes()).thenReturn(params);
+		}
+	}
+
 }

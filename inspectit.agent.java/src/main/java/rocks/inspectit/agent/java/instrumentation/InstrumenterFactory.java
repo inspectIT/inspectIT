@@ -4,11 +4,10 @@ import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
 
 import org.springframework.stereotype.Component;
 
-import rocks.inspectit.agent.java.instrumentation.asm.ClassLoaderDelegationMethodInstrumenter;
 import rocks.inspectit.agent.java.instrumentation.asm.ConstructorInstrumenter;
 import rocks.inspectit.agent.java.instrumentation.asm.MethodInstrumenter;
+import rocks.inspectit.agent.java.instrumentation.asm.SpecialMethodInstrumenter;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
-import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
 
@@ -59,18 +58,7 @@ public class InstrumenterFactory {
 			}
 		} else if (instrumentationPoint instanceof SpecialInstrumentationPoint) {
 			SpecialInstrumentationPoint specialInstrumentationPoint = (SpecialInstrumentationPoint) instrumentationPoint;
-			SpecialInstrumentationType instrumentationType = specialInstrumentationPoint.getInstrumentationType();
-
-			if (null == instrumentationType) {
-				throw new IllegalArgumentException("Intrumentation type of the special instrumentation point must be define.");
-			}
-
-			switch (instrumentationType) {
-			case CLASS_LOADING_DELEGATION:
-				return new ClassLoaderDelegationMethodInstrumenter(superMethodVisitor, access, name, desc);
-			default:
-				throw new IllegalArgumentException("The special instrumentation type " + instrumentationType + " is not known to the InstrumenterFactory.");
-			}
+			return new SpecialMethodInstrumenter(superMethodVisitor, access, name, desc, specialInstrumentationPoint.getId());
 		}
 		throw new IllegalArgumentException("The instrumentation point " + instrumentationPoint + " is not known to the InstrumenterFactory.");
 	}

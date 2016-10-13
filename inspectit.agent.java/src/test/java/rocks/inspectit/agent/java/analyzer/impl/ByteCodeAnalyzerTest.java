@@ -54,6 +54,7 @@ import rocks.inspectit.agent.java.analyzer.classes.AbstractSubTest;
 import rocks.inspectit.agent.java.analyzer.classes.TestClass;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
+import rocks.inspectit.agent.java.config.impl.SpecialSensorConfig;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.IPlatformManager;
@@ -63,7 +64,6 @@ import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
-import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
@@ -98,6 +98,9 @@ public class ByteCodeAnalyzerTest extends TestBase {
 
 	@Mock
 	SensorInstrumentationPoint sensorInstrumentationPoint;
+
+	@Mock
+	SpecialInstrumentationPoint specialInstrumentationPoint;
 
 	@Mock
 	IConfigurationStorage configurationStorage;
@@ -311,7 +314,8 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
 			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
 			when(methodInstrumentationConfig.getAllInstrumentationPoints())
-			.thenReturn(Collections.<IMethodInstrumentationPoint> singleton(new SpecialInstrumentationPoint(SpecialInstrumentationType.CLASS_LOADING_DELEGATION)));
+			.thenReturn(Collections.<IMethodInstrumentationPoint> singleton(specialInstrumentationPoint));
+			when(methodInstrumentationConfig.getSpecialInstrumentationPoint()).thenReturn(specialInstrumentationPoint);
 
 			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
 			ArgumentCaptor<String> hashCaptor = ArgumentCaptor.forClass(String.class);
@@ -321,14 +325,24 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(instrumentationResult);
 			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
+			long sscId = 13L;
+			long sensorId = 17L;
+			when(specialInstrumentationPoint.getId()).thenReturn(sscId);
+			when(specialInstrumentationPoint.getSensorId()).thenReturn(sensorId);
+			when(methodSensorTypeConfig.getId()).thenReturn(sensorId);
 
+			byteCodeAnalyzer.afterPropertiesSet();
 			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 
 			// as instrumentation happened, we get a not null object
 			assertThat(instrumentedByteCode, is(not(nullValue())));
 
-			verify(connection, times(2)).isConnected();
+			verify(connection, times(3)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
+			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+			verify(connection, times(1)).instrumentationApplied(eq(platformId), captor.capture());
+			assertThat(captor.getValue().size(), is(1));
+			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(sscId, new long[] { sensorId }));
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
@@ -337,8 +351,14 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			InOrder inOrder = inOrder(agent);
 			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
 			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
-			verifyNoMoreInteractions(connection, classHashHelper);
-			verifyZeroInteractions(hookDispatcherMapper);
+			ArgumentCaptor<SpecialSensorConfig> sscCaptor = ArgumentCaptor.forClass(SpecialSensorConfig.class);
+			verify(hookDispatcherMapper, times(1)).addMapping(eq(sscId), sscCaptor.capture());
+			assertThat(sscCaptor.getValue().getId(), is(sscId));
+			assertThat(sscCaptor.getValue().getSensor(), is(methodSensor));
+			assertThat(sscCaptor.getValue().getTargetClassFqn(), is(methodInstrumentationConfig.getTargetClassFqn()));
+			assertThat(sscCaptor.getValue().getTargetMethodName(), is(methodInstrumentationConfig.getTargetMethodName()));
+			assertThat(sscCaptor.getValue().getReturnType(), is(methodInstrumentationConfig.getReturnType()));
+			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 
 		@Test
