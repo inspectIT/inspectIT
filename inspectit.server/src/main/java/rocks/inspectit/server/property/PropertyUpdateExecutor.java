@@ -13,6 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.Advised;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -99,7 +101,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Invoked the method " + methodInfo.getMethod().toGenericString() + " on target object " + methodInfo.getTarget()
-							+ ". The method was invoked cause it defines the following properties of which at least one was updated: " + Arrays.toString(methodInfo.getProperties()));
+					+ ". The method was invoked cause it defines the following properties of which at least one was updated: " + Arrays.toString(methodInfo.getProperties()));
 				}
 			}
 		}
@@ -119,8 +121,27 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 	 */
 	@Override
 	public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+		Object realBean = null;
+		try {
+			realBean = getTargetObject(bean);
+		} catch (Exception e) {
+			if (LOG.isWarnEnabled()) {
+				LOG.warn("Unable to get the real bean object for bean named " + beanName + ".", e);
+			}
+			return bean;
+		}
+
+		// if we don't have the real object return
+		if (null == realBean) {
+			if (LOG.isWarnEnabled()) {
+				LOG.warn("Target bean object is null for bean named " + beanName + ".");
+			}
+			return bean;
+		}
+
+		final Object realBeanFinal = realBean;
 		// process methods for @PropertyUpdate
-		ReflectionUtils.doWithMethods(bean.getClass(), new MethodCallback() {
+		ReflectionUtils.doWithMethods(realBean.getClass(), new MethodCallback() {
 			@Override
 			public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
 				// make sure only no-arg methods with annotation are added
@@ -128,7 +149,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 					PropertyUpdate propertyUpdate = method.getAnnotation(PropertyUpdate.class);
 					if (ArrayUtils.isNotEmpty(propertyUpdate.properties())) {
 						ReflectionUtils.makeAccessible(method);
-						PropertyUpdateMethodInfo methodInfo = new PropertyUpdateMethodInfo(bean, method, propertyUpdate.properties());
+						PropertyUpdateMethodInfo methodInfo = new PropertyUpdateMethodInfo(realBeanFinal, method, propertyUpdate.properties());
 						methodInfoList.add(methodInfo);
 					}
 				}
@@ -136,7 +157,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 		});
 
 		// process fields for @Value
-		ReflectionUtils.doWithFields(bean.getClass(), new FieldCallback() {
+		ReflectionUtils.doWithFields(realBean.getClass(), new FieldCallback() {
 			@Override
 			public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
 				if (field.isAnnotationPresent(Value.class)) {
@@ -158,13 +179,32 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 						property = placeholder;
 					}
 					ReflectionUtils.makeAccessible(field);
-					PropertyUpdateFieldInfo fieldInfo = new PropertyUpdateFieldInfo(bean, field, property);
+					PropertyUpdateFieldInfo fieldInfo = new PropertyUpdateFieldInfo(realBeanFinal, field, property);
 					fieldInfoList.add(fieldInfo);
 				}
 			}
 		});
 
+		// always return original bean
 		return bean;
+	}
+
+	/**
+	 * Checks if the given bean is proxy and if so tries to get the target object. Otherwise returns
+	 * the original bean.
+	 *
+	 * @param bean
+	 *            bean
+	 * @return Target object of a bean if it's a proxy or bean itself.
+	 * @throws Exception
+	 *             passing exception
+	 */
+	private Object getTargetObject(Object bean) throws Exception {
+		if (AopUtils.isJdkDynamicProxy(bean)) {
+			return ((Advised) bean).getTargetSource().getTarget();
+		} else {
+			return bean;
+		}
 	}
 
 	/**
