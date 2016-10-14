@@ -719,8 +719,9 @@ public class ByteCodeAnalyzerTest extends TestBase {
 
 			// as instrumentation happened, we get a not null object
 			assertThat(instrumentedByteCode, is(not(nullValue())));
-			// we must ensure interrupted flag is
-			assertThat(Thread.currentThread().isInterrupted(), is(true));
+			// we must ensure interrupted flag is kept (clearing the flag for gradle build to not be
+			// interrupted)
+			assertThat(Thread.interrupted(), is(true));
 
 			verify(connection, times(3)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
