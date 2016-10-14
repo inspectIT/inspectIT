@@ -323,7 +323,14 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 							}
 						}
 					} catch (IOException e) {
-						log.warn("Exception occurred trying to read in the ReadTask.", e);
+						// log error not to lose it
+						log.error("Exception occurred trying to read in the ReadTask.", e);
+
+						// return buffer and signal error
+						finalByteBuffer.clear();
+						getEmptyBuffers().add(finalByteBuffer);
+						setReadFailed(true);
+						break;
 					}
 				}
 				nextDescriptorIndex.incrementAndGet();

@@ -55,6 +55,7 @@ public class InstrumentationAppliedRunnable implements Runnable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void run() {
 		try {
 			if (connection.isConnected()) {
@@ -68,7 +69,7 @@ public class InstrumentationAppliedRunnable implements Runnable {
 					LOG.debug("Instrumentations applied could not be sent to the CMR. Server not available.", e);
 				}
 			} else {
-				LOG.info("Instrumentations applied could not be sent to the CMR due to the ServerUnavailableException.");
+				LOG.warn("Instrumentations applied could not be sent to the CMR due to the ServerUnavailableException." + (e.isServerTimeout() ? " (timeout)" : "(error)"));
 			}
 		}
 	}

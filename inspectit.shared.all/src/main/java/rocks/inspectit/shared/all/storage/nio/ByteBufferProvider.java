@@ -48,7 +48,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	/**
 	 * Max waiting for the buffer to be available in milliseconds.
 	 */
-	private static final long MAX_WAIT = 60000;
+	private static final long MAX_WAIT = 5000;
 
 	/**
 	 * Buffer size.
@@ -247,7 +247,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	 * This is an automated properties update execution method.
 	 */
 	@PropertyUpdate(properties = { "storage.bufferSize", "storage.bufferPoolMinCapacity", "storage.bufferPoolMaxCapacity", "storage.bufferPoolMinDirectMemoryOccupancy",
-			"storage.bufferPoolMaxDirectMemoryOccupancy" })
+	"storage.bufferPoolMaxDirectMemoryOccupancy" })
 	protected void updatePoolProperties() {
 		// assume that the maxDirect memory is 64MB
 		long maxDirectMemory = 64 * 1024 * 1024;
@@ -280,6 +280,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		init();
 	}

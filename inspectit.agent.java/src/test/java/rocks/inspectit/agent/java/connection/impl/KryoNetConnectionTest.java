@@ -110,6 +110,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(keepAliveService, times(1)).sendKeepAlive(id);
 				verifyNoMoreInteractions(keepAliveService);
+				verify(client).stop();
 			}
 		}
 
@@ -177,6 +178,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// call depends on the retry strategy
 				verify(agentStorageService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).addDataObjects(measurements);
 				verifyNoMoreInteractions(agentStorageService);
+				verify(client).stop();
 			}
 		}
 
@@ -248,6 +250,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).register(Matchers.<List<String>> any(), eq(agentName), eq(version));
 				verifyNoMoreInteractions(agentService);
+				verify(client).stop();
 			}
 		}
 
@@ -328,6 +331,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).unregister(platformId);
 				verifyNoMoreInteractions(agentService);
+				verify(client).stop();
 			}
 		}
 
@@ -415,6 +419,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).analyze(id, hash, type);
 				verifyNoMoreInteractions(agentService);
+				verify(client).stop();
 			}
 		}
 
@@ -503,6 +508,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).analyzeJmxAttributes(id, descriptors);
 				verifyNoMoreInteractions(agentService);
+				verify(client).stop();
 			}
 		}
 

@@ -3,6 +3,7 @@ package rocks.inspectit.shared.all.storage.nio.stream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,6 +37,11 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	 * Maximum amount of buffers that can be used.
 	 */
 	private static final int MAX_BUFFERS = 5;
+
+	/**
+	 * MAx amount of tries to get the full or empty buffer from the queues.
+	 */
+	protected static final int MAX_BUFFER_POOL_TRIES = 30;
 
 	/**
 	 * {@link ByteBufferProvider}.
@@ -72,6 +78,16 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	 * If stream has been closed.
 	 */
 	private volatile boolean closed;
+
+	/**
+	 * Boolean for flagging that in some way reading has failed. For example a read from socket
+	 * returned an IO exception or the read resulted with -1 read size signaling that the stream has
+	 * been closed unexpectedly.
+	 * <p>
+	 * Sub-classes must set this to true when data could not be provided anymore (stream reached end
+	 * for example).
+	 */
+	private volatile boolean readFailed;
 
 	/**
 	 * No-arg constructor.
@@ -139,25 +155,29 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 			return -1;
 		}
 
-		// change the buffer if necessary
-		if (hasRemaining() || (null == super.getByteBuffer())) {
-			bufferChange();
-		}
-
-		if (!super.getByteBuffer().hasRemaining()) {
-			// check if we can read more
-			if (bytesLeft() > 0) {
+		try {
+			// change the buffer if necessary
+			if (hasRemaining() || (null == super.getByteBuffer())) {
 				bufferChange();
+			}
+
+			if (!super.getByteBuffer().hasRemaining()) {
+				// check if we can read more
+				if (hasRemaining()) {
+					bufferChange();
+					int read = super.read();
+					position += read;
+					return read;
+				} else {
+					return -1;
+				}
+			} else {
 				int read = super.read();
 				position += read;
 				return read;
-			} else {
-				return -1;
 			}
-		} else {
-			int read = super.read();
-			position += read;
-			return read;
+		} catch (ReadFailedException e) {
+			throw new IOException("Read from the input stream failed.", e);
 		}
 	}
 
@@ -176,51 +196,72 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 			return 0;
 		}
 
-		// change the buffer if necessary
-		if (hasRemaining() && (null == super.getByteBuffer())) {
-			bufferChange();
-		}
-
-		int bufferRemaining = super.getByteBuffer().remaining();
-		if (bufferRemaining >= len) {
-			int read = super.read(b, off, len);
-			position += read;
-			return read;
-		} else {
-			int res = 0;
-			if (bufferRemaining > 0) {
-				super.getByteBuffer().get(b, off, bufferRemaining);
-				res = bufferRemaining;
-				position += bufferRemaining;
-			}
-			if (bytesLeft() > 0) {
+		try {
+			// change the buffer if necessary
+			if (hasRemaining() && (null == super.getByteBuffer())) {
 				bufferChange();
-				int read = this.read(b, off + bufferRemaining, len - bufferRemaining);
-				res += read;
 			}
 
-			if (res > 0) {
-				return res;
+			int bufferRemaining = super.getByteBuffer().remaining();
+			if (bufferRemaining >= len) {
+				int read = super.read(b, off, len);
+				position += read;
+				return read;
 			} else {
-				return -1;
+				int res = 0;
+				if (bufferRemaining > 0) {
+					super.getByteBuffer().get(b, off, bufferRemaining);
+					res = bufferRemaining;
+					position += bufferRemaining;
+				}
+				if (hasRemaining()) {
+					bufferChange();
+					int read = this.read(b, off + bufferRemaining, len - bufferRemaining);
+					res += read;
+				}
+
+				if (res > 0) {
+					return res;
+				} else {
+					return -1;
+				}
 			}
+		} catch (ReadFailedException e) {
+			throw new IOException("Read from the input stream failed.", e);
 		}
 	}
 
 	/**
 	 * Changes the current buffer used for streaming with a full one.
+	 *
+	 * @throws ReadFailedException
+	 *             if buffer change can not be performed due to the flagged {@link #readFailed}.
 	 */
-	private synchronized void bufferChange() {
+	private synchronized void bufferChange() throws ReadFailedException {
 		ByteBuffer current = super.getByteBuffer();
 		if (null != current) {
 			current.clear();
 			emptyBuffers.add(current);
 		}
 
-		try {
-			super.setByteBuffer(fullBuffers.take());
-		} catch (InterruptedException e) {
-			Thread.interrupted();
+		int tries = 0;
+		while (true) {
+			try {
+				// poll for full buffer
+				ByteBuffer buffer = fullBuffers.poll(100, TimeUnit.MILLISECONDS);
+				if (null != buffer) {
+					// if we have full buffer, set is as current and break from while
+					super.setByteBuffer(buffer);
+					break;
+				} else {
+					tries++;
+					if (readFailed || (tries > MAX_BUFFER_POOL_TRIES)) {
+						throw new ReadFailedException("Time-out trying to get the full byte buffer to read from.");
+					}
+				}
+			} catch (InterruptedException e) {
+				Thread.interrupted();
+			}
 		}
 	}
 
@@ -334,6 +375,16 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	}
 
 	/**
+	 * Sets {@link #readFailed}.
+	 *
+	 * @param readFailed
+	 *            New value for {@link #readFailed}
+	 */
+	protected void setReadFailed(boolean readFailed) {
+		this.readFailed = readFailed;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * <p>
 	 * Closing the stream on finalize.
@@ -342,6 +393,32 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	protected void finalize() throws Throwable {
 		this.close();
 		super.finalize();
+	}
+
+	/**
+	 * Checked exception to be used when read has failed. As this will not be propagated outside
+	 * this class, it's private and final.
+	 *
+	 * @author Ivan Senic
+	 *
+	 */
+	private static final class ReadFailedException extends Exception {
+
+		/**
+		 * Generated UID.
+		 */
+		private static final long serialVersionUID = 706702393154564017L;
+
+		/**
+		 * Default constructor.
+		 *
+		 * @param message
+		 *            Message
+		 */
+		ReadFailedException(String message) {
+			super(message);
+		}
+
 	}
 
 }
