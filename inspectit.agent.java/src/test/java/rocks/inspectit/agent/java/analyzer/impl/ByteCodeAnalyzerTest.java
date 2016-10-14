@@ -45,6 +45,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -670,7 +671,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// as no instrumentation happened, we get a null object
 			assertThat(instrumentedByteCode, is(nullValue()));
 			// assert we kept the interrupted exception
-			assertThat(Thread.currentThread().isInterrupted(), is(true));
+			assertThat(Thread.interrupted(), is(true));
 
 			verify(connection, times(1)).isConnected();
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
@@ -719,8 +720,9 @@ public class ByteCodeAnalyzerTest extends TestBase {
 
 			// as instrumentation happened, we get a not null object
 			assertThat(instrumentedByteCode, is(not(nullValue())));
-			// we must ensure interrupted flag is
-			assertThat(Thread.currentThread().isInterrupted(), is(true));
+			// we must ensure interrupted flag is kept (clearing the flag for gradle build to not be
+			// interrupted)
+			assertThat(Thread.interrupted(), is(true));
 
 			verify(connection, times(3)).isConnected();
 			verify(connection, times(1)).analyze(platformId.longValue(), hashCaptor.getValue(), classCaptor.getValue());
@@ -748,6 +750,12 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
 			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
+		}
+
+		@AfterMethod
+		public void ensureNoInterruptedState() {
+			// ensure we don't leave any test method in interrupted state
+			assertThat(Thread.interrupted(), is(false));
 		}
 
 	}
