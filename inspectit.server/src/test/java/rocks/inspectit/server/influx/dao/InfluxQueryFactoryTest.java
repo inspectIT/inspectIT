@@ -2,8 +2,10 @@ package rocks.inspectit.server.influx.dao;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -155,8 +157,10 @@ public class InfluxQueryFactoryTest extends TestBase {
 
 			String query = InfluxQueryFactory.buildThresholdCheckForAlertingStateQuery(alertingState, currentTime);
 
-			assertThat(query, equalTo("SELECT MAX(\"" + field + "\") FROM \"" + measurement + "\" WHERE \"" + tagKey + "\" = '" + tagValue + "' AND \"" + tagKey2 + "\" = '" + tagValue2
-					+ "' AND time <= " + currentTime + "ms" + " AND time > " + lastCheckTime + "ms"));
+			assertThat(query, startsWith("SELECT MAX(\"" + field + "\") FROM \"" + measurement + "\""));
+			assertThat(query, containsString("\"" + tagKey + "\" = '" + tagValue + "'"));
+			assertThat(query, containsString("\"" + tagKey2 + "\" = '" + tagValue2 + "'"));
+			assertThat(query, endsWith("time <= " + currentTime + "ms" + " AND time > " + lastCheckTime + "ms"));
 		}
 	}
 }

@@ -43,6 +43,21 @@ public class AlertingDefinitionTest extends TestBase {
 
 	List<String> emailListBroken = Arrays.asList("test@example.com", null, "test3@example.com", "not_an_email@");
 
+	protected AlertingDefinition createAlertingDefinition() throws BusinessException {
+		AlertingDefinition definition = new AlertingDefinition();
+		definition.setField("field");
+		definition.setMeasurement("measurement");
+		definition.setThreshold(1D);
+		definition.setThresholdType(ThresholdType.LOWER_THRESHOLD);
+		definition.setTimerange(1);
+		definition.addNotificationEmailAddress("test@example.com");
+		definition.putTag("tagKey", "tagVal");
+		definition.setThreshold(10);
+		definition.setThresholdType(ThresholdType.UPPER_THRESHOLD);
+		definition.setTimerange(0);
+		return definition;
+	}
+
 	/**
 	 * Test the {@link AlertingDefinition#putTag(String, String)},
 	 * {@link AlertingDefinition#getTags()} and {@link AlertingDefinition#removeTag(String)}
@@ -282,6 +297,59 @@ public class AlertingDefinitionTest extends TestBase {
 			AlertingDefinition clone = new AlertingDefinition(null);
 
 			assertThat(clone, notNullValue());
+		}
+	}
+
+	/**
+	 * Test the {@link AlertingDefinition#equals(Object)} method.
+	 */
+	public static class Equals extends AlertingDefinitionTest {
+
+		@Test
+		public void testEquals() throws BusinessException {
+			AlertingDefinition thisDefinition = createAlertingDefinition();
+			AlertingDefinition thatDefinition = createAlertingDefinition();
+
+			assertThat(thisDefinition.equals(thatDefinition), is(true));
+		}
+
+		@Test
+		public void testEqualsNot() throws BusinessException {
+			AlertingDefinition thisDefinition = createAlertingDefinition();
+			AlertingDefinition thatDefinition = createAlertingDefinition();
+			thatDefinition.setField("anotherField");
+
+			assertThat(thisDefinition.equals(thatDefinition), is(false));
+		}
+
+		@Test
+		public void testEqualsEmpty() throws BusinessException {
+			AlertingDefinition thisDefinition = new AlertingDefinition();
+			AlertingDefinition thatDefinition = new AlertingDefinition();
+
+			assertThat(thisDefinition.equals(thatDefinition), is(true));
+		}
+	}
+
+	/**
+	 * Test the {@link AlertingDefinition#hashCode()} method.
+	 */
+	public static class HashCode extends AlertingDefinitionTest {
+		@Test
+		public void testSameHashCode() throws BusinessException {
+			AlertingDefinition thisDefinition = createAlertingDefinition();
+			AlertingDefinition thatDefinition = createAlertingDefinition();
+
+			assertThat(thisDefinition.hashCode(), equalTo(thatDefinition.hashCode()));
+		}
+
+		@Test
+		public void testDiffrentHashCode() throws BusinessException {
+			AlertingDefinition thisDefinition = createAlertingDefinition();
+			AlertingDefinition thatDefinition = createAlertingDefinition();
+			thatDefinition.setField("anotherField");
+
+			assertThat(thisDefinition.hashCode(), not(equalTo(thatDefinition.hashCode())));
 		}
 	}
 }

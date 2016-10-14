@@ -62,6 +62,12 @@ public class EmailAlertAction implements IAlertAction {
 		}
 
 		try {
+			String alertingName;
+			if (alertingState.getAlertingDefinition().getName() == null) {
+				alertingName = "unnamed";
+			} else {
+				alertingName = alertingState.getAlertingDefinition().getName();
+			}
 			String subject = "Alert - Threshold '" + alertingState.getAlertingDefinition().getName() + "' violated";
 			String htmlBody;
 			String textBody;

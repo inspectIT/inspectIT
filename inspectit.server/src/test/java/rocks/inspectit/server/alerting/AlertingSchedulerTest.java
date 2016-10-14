@@ -1,6 +1,3 @@
-/**
- *
- */
 package rocks.inspectit.server.alerting;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -165,6 +162,19 @@ public class AlertingSchedulerTest extends TestBase {
 			iterationCounterField.set(alertingScheduler, false);
 
 			alertingScheduler.updateState();
+
+			alertingScheduler.updateState();
+		}
+
+		@Test
+		public void disableWhenDisabledAndNull() throws Exception {
+			Field iterationCounterField = AlertingScheduler.class.getDeclaredField("active");
+			iterationCounterField.setAccessible(true);
+			iterationCounterField.set(alertingScheduler, false);
+
+			Field scheduledFutureField = AlertingScheduler.class.getDeclaredField("scheduledFuture");
+			scheduledFutureField.setAccessible(true);
+			scheduledFutureField.set(alertingScheduler, null);
 
 			alertingScheduler.updateState();
 		}

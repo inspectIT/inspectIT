@@ -1,14 +1,14 @@
-/**
- *
- */
 package rocks.inspectit.server.alerting;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -26,6 +26,7 @@ import rocks.inspectit.server.influx.dao.IInfluxDBDao;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition.ThresholdType;
 
 /**
  * Tests for the {@link ThresholdChecker}.
@@ -133,6 +134,85 @@ public class ThresholdCheckerTest extends TestBase {
 			thresholdChecker.checkThreshold(alertingState);
 
 			verifyNoMoreInteractions(stateManager);
+		}
+
+	}
+
+	/**
+	 * Test the private {@link ThresholdChecker#isViolating(AlertingDefinition, double)} method.
+	 */
+	public static class IsViolating extends ThresholdCheckerTest {
+
+		private boolean executeIsViolating(AlertingDefinition alertingDefinition, double value) throws Exception {
+			Method isViolatingMethod = ThresholdChecker.class.getDeclaredMethod("isViolating", AlertingDefinition.class, double.class);
+			isViolatingMethod.setAccessible(true);
+			return (boolean) isViolatingMethod.invoke(thresholdChecker, alertingDefinition, value);
+		}
+
+		@Test
+		public void isValidUpper() throws Exception {
+			AlertingDefinition definition = new AlertingDefinition();
+			definition.setThreshold(10);
+			definition.setThresholdType(ThresholdType.UPPER_THRESHOLD);
+
+			boolean isViolating = executeIsViolating(definition, 8);
+
+			assertThat(isViolating, equalTo(false));
+		}
+
+		@Test
+		public void isEqualsUpper() throws Exception {
+			AlertingDefinition definition = new AlertingDefinition();
+			definition.setThreshold(10);
+			definition.setThresholdType(ThresholdType.UPPER_THRESHOLD);
+
+			boolean isViolating = executeIsViolating(definition, 10);
+
+			assertThat(isViolating, equalTo(false));
+		}
+
+		@Test
+		public void isViolatingUpper() throws Exception {
+			AlertingDefinition definition = new AlertingDefinition();
+			definition.setThreshold(10);
+			definition.setThresholdType(ThresholdType.UPPER_THRESHOLD);
+
+			boolean isViolating = executeIsViolating(definition, 12);
+
+			assertThat(isViolating, equalTo(true));
+		}
+
+		@Test
+		public void isValidLower() throws Exception {
+			AlertingDefinition definition = new AlertingDefinition();
+			definition.setThreshold(10);
+			definition.setThresholdType(ThresholdType.LOWER_THRESHOLD);
+
+			boolean isViolating = executeIsViolating(definition, 12);
+
+			assertThat(isViolating, equalTo(false));
+		}
+
+		@Test
+		public void isEqualsLower() throws Exception {
+			AlertingDefinition definition = new AlertingDefinition();
+			definition.setThreshold(10);
+			definition.setThresholdType(ThresholdType.LOWER_THRESHOLD);
+
+			boolean isViolating = executeIsViolating(definition, 10);
+
+			assertThat(isViolating, equalTo(false));
+		}
+
+		@Test
+		public void isViolatingLower() throws Exception {
+			AlertingDefinition definition = new AlertingDefinition();
+			definition.setThreshold(10);
+			definition.setThresholdType(ThresholdType.LOWER_THRESHOLD);
+
+			boolean isViolating = executeIsViolating(definition, 8);
+
+			assertThat(isViolating, equalTo(true));
 		}
 	}
 }
