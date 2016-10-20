@@ -14,7 +14,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
-import rocks.inspectit.shared.all.util.ArrayUtil;
 import rocks.inspectit.shared.cs.indexing.LeafTask;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
@@ -150,7 +149,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	private boolean insertIntoArrays(long id, SimpleStorageDescriptor simpleDescriptor) {
 		writeLock.lock();
 		try {
-			int index = ArrayUtil.binarySearch(idArray, 0, size, id);
+			int index = Arrays.binarySearch(idArray, 0, size, id);
 			if (index >= 0) {
 				// same element is already in leaf, we return
 				return false;
@@ -207,7 +206,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 	public IStorageDescriptor get(E element) {
 		readLock.lock();
 		try {
-			int index = ArrayUtil.binarySearch(idArray, 0, size, element.getId());
+			int index = Arrays.binarySearch(idArray, 0, size, element.getId());
 			if (index >= 0) {
 				SimpleStorageDescriptor simpleDescriptor = descriptorArray[index];
 				if (null != simpleDescriptor) {
@@ -240,7 +239,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 				// min
 				// id
 				if (query.getMinId() != 0) {
-					index = ArrayUtil.binarySearch(idArray, 0, size, query.getMinId());
+					index = Arrays.binarySearch(idArray, 0, size, query.getMinId());
 					if (index < 0) {
 						index = -index - 1;
 					}
@@ -286,7 +285,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 			// if min id is given, we will start from the first id that is bigger or equal than min
 			// id
 			if (query.getMinId() != 0) {
-				index = ArrayUtil.binarySearch(idArray, 0, size, query.getMinId());
+				index = Arrays.binarySearch(idArray, 0, size, query.getMinId());
 				if (index < 0) {
 					index = -index - 1;
 				}
@@ -321,7 +320,7 @@ public class ArrayBasedStorageLeaf<E extends DefaultData> implements IStorageTre
 		int index;
 		SimpleStorageDescriptor simpleDescriptor;
 		try {
-			index = ArrayUtil.binarySearch(idArray, 0, size, element.getId());
+			index = Arrays.binarySearch(idArray, 0, size, element.getId());
 			if (index < 0) {
 				return null;
 			} else {
