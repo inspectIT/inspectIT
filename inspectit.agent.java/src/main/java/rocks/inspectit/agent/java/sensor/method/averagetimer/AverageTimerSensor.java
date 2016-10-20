@@ -67,6 +67,7 @@ public class AverageTimerSensor extends AbstractMethodSensor implements IMethodS
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return averageTimerHook;
 	}

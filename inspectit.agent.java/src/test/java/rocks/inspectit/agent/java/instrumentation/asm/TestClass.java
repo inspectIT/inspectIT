@@ -16,6 +16,7 @@ final public class TestClass extends AbstractTestClass implements TestInterface,
 	 */
 	private static final long serialVersionUID = 7191887277972979547L;
 
+	@Override
 	public String method1(int i, long[] j, String s, Object[][][] array3Dim) {
 		return null;
 	}
@@ -28,10 +29,12 @@ final public class TestClass extends AbstractTestClass implements TestInterface,
 	void methodWithException() throws Exception {
 	}
 
+	@Override
 	public Class<? extends Annotation> annotationType() {
 		return TestAnnotation.class;
 	}
 
+	@Override
 	public String value() {
 		return "";
 	}

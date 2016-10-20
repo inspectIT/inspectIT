@@ -31,6 +31,7 @@ public class ConnectionHook implements IMethodHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void beforeBody(long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		String sql = (String) parameters[0];
 		statementStorage.addSql(sql);
@@ -39,6 +40,7 @@ public class ConnectionHook implements IMethodHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 		// nothing to do
 	}
@@ -46,6 +48,7 @@ public class ConnectionHook implements IMethodHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 		statementStorage.removeSql();
 	}

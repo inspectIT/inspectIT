@@ -23,6 +23,7 @@ public abstract class AbstractBufferStrategy<E> implements InitializingBean, IBu
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.init(configurationStorage.getBufferStrategyConfig().getSettings());
 	}

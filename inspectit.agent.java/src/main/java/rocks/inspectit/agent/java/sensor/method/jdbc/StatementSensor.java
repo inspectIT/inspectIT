@@ -53,6 +53,7 @@ public class StatementSensor extends AbstractMethodSensor implements IMethodSens
 	 *
 	 * @return The method hook.
 	 */
+	@Override
 	public IHook getHook() {
 		return statementHook;
 	}

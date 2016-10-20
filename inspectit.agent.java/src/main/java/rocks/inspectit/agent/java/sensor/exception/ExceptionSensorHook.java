@@ -68,6 +68,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void beforeConstructor(long methodId, long sensorTypeId, Object[] parameters, RegisteredSensorConfig rsc) {
 		// nothing to do here
 	}
@@ -75,6 +76,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterConstructor(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		// getting the actual object class and comparing to the registered sensor config target
 		// class
@@ -117,6 +119,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchOnThrowInBody(ICoreService coreService, long id, long sensorTypeId, Object object, Object exceptionObject, Object[] parameters, RegisteredSensorConfig rsc) {
 		// get the mapping object
 		IdentityHashToDataObject mappingObject = exceptionDataHolder.get();
@@ -177,6 +180,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispatchBeforeCatchBody(ICoreService coreService, long id, long sensorTypeId, Object exceptionObject, RegisteredSensorConfig rsc) {
 		// get the mapping object
 		IdentityHashToDataObject mappingObject = exceptionDataHolder.get();

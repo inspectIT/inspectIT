@@ -22,6 +22,7 @@ public class TypeSet<E extends Type> extends SortedArraySet<E> {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int compare(Type o1, Type o2) {
 			return o1.getFQN().compareTo(o2.getFQN());
 		}

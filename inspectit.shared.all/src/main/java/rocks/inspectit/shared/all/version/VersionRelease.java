@@ -100,6 +100,7 @@ public class VersionRelease implements Comparable<VersionRelease> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(VersionRelease o) {
 		return version.compareTo(o.version);
 	}

@@ -37,6 +37,7 @@ public class DefaultPlatformSensorInfoProvider implements PlatformSensorInfoProv
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MemoryInfoProvider getMemoryInfoProvider() {
 		return MEMORY_INFO_PROVIDER;
 	}
@@ -44,6 +45,7 @@ public class DefaultPlatformSensorInfoProvider implements PlatformSensorInfoProv
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public OperatingSystemInfoProvider getOperatingSystemInfoProvider() {
 		return OPERATING_SYSTEM_INFO_PROVIDER;
 	}
@@ -51,6 +53,7 @@ public class DefaultPlatformSensorInfoProvider implements PlatformSensorInfoProv
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RuntimeInfoProvider getRuntimeInfoProvider() {
 		return RUNTIME_INFO_PROVIDER;
 	}
@@ -58,6 +61,7 @@ public class DefaultPlatformSensorInfoProvider implements PlatformSensorInfoProv
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ThreadInfoProvider getThreadInfoProvider() {
 		return THREAD_INFO_PROVIDER;
 	}

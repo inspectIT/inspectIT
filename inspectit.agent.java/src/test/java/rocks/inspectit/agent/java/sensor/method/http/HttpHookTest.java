@@ -143,8 +143,7 @@ public class HttpHookTest extends AbstractLogSupport {
 
 		httpHook.secondAfterBody(coreService, methodId, sensorTypeId, servlet, parameters, result, registeredSensorConfig);
 
-		Mockito.verify(coreService).addMethodSensorData(Matchers.eq(sensorTypeId), Matchers.eq(methodId), (String) Matchers.eq(null),
-				Matchers.argThat(new HttpTimerDataVerifier(data)));
+		Mockito.verify(coreService).addMethodSensorData(Matchers.eq(sensorTypeId), Matchers.eq(methodId), (String) Matchers.eq(null), Matchers.argThat(new HttpTimerDataVerifier(data)));
 
 		Mockito.verifyZeroInteractions(result);
 	}
@@ -324,9 +323,9 @@ public class HttpHookTest extends AbstractLogSupport {
 		MethodSensorData data2 = new HttpTimerData(null, platformId, sensorTypeId, methodId21);
 
 		when(timer.getCurrentTime()).thenReturn(timerS11).thenReturn(timerS12).thenReturn(timerE12).thenReturn(timerE11).thenReturn(timerS21).thenReturn(timerS22).thenReturn(timerE22)
-		.thenReturn(timerE21);
+				.thenReturn(timerE21);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(cpuS11).thenReturn(cpuS12).thenReturn(cpuE12).thenReturn(cpuE11).thenReturn(cpuS21).thenReturn(cpuS22).thenReturn(cpuE22)
-		.thenReturn(cpuE21);
+				.thenReturn(cpuE21);
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		Object[] parametersNoHttp = new Object[] { servletRequest, servletResponse };

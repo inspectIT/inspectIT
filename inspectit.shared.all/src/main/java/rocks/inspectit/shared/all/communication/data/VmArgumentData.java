@@ -190,6 +190,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes) {
 		return getObjectSize(objectSizes, true);
 	}
@@ -197,6 +198,7 @@ public class VmArgumentData implements Serializable, Sizeable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(2, 0, 0, 0, 1, 0);

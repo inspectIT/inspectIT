@@ -65,7 +65,7 @@ public interface IAgentService {
 
 	/**
 	 * Informs the CMR that the methods have been instrumented on the agent.
-	 * 
+	 *
 	 * @param platformId
 	 *            Id of the agent.
 	 * @param methodToSensorMap

@@ -23,6 +23,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		try {
 			return osBean.getName();
@@ -34,6 +35,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getArch() {
 		try {
 			return osBean.getArch();
@@ -45,6 +47,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getVersion() {
 		try {
 			return osBean.getVersion();
@@ -56,6 +59,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getAvailableProcessors() {
 		return osBean.getAvailableProcessors();
 	}
@@ -63,6 +67,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getCommittedVirtualMemorySize() {
 		return -1L;
 	}
@@ -70,6 +75,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getFreePhysicalMemorySize() {
 		return -1L;
 	}
@@ -77,6 +83,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getFreeSwapSpaceSize() {
 		return -1L;
 	}
@@ -84,6 +91,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getProcessCpuTime() {
 		return -1L;
 	}
@@ -91,6 +99,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getTotalPhysicalMemorySize() {
 		return -1L;
 	}
@@ -98,6 +107,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getTotalSwapSpaceSize() {
 		return -1L;
 	}
@@ -105,6 +115,7 @@ public class DefaultOperatingSystemInfoProvider implements OperatingSystemInfoPr
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float retrieveCpuUsage() {
 		return -1.0f;
 	}

@@ -25,8 +25,8 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name = JmxDefinitionDataIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j.id FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName"),
-	@NamedQuery(name = JmxDefinitionDataIdent.UPDATE_TIMESTAMP, query = "UPDATE JmxDefinitionDataIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
+		@NamedQuery(name = JmxDefinitionDataIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT j.id FROM JmxDefinitionDataIdent j JOIN j.platformIdent p WHERE p.id=:platformIdentId AND j.mBeanObjectName=:mBeanObjectName AND j.mBeanAttributeName=:mBeanAttributeName"),
+		@NamedQuery(name = JmxDefinitionDataIdent.UPDATE_TIMESTAMP, query = "UPDATE JmxDefinitionDataIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
 public class JmxDefinitionDataIdent implements Serializable {
 
 	/**

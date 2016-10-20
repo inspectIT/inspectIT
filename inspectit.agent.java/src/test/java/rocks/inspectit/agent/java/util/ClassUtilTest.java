@@ -119,14 +119,31 @@ public class ClassUtilTest extends TestBase {
 
 	}
 
-	interface SomeInterface {}
-	interface SearchedInterface {}
-	interface SubInterface extends SearchedInterface {}
-	public static class ClassWithoutInterface {}
-	public static class ClassWithSomeInterface implements SomeInterface {}
-	public static class ClassWithSearchedInterface implements SomeInterface, SearchedInterface {}
-	public static class ClassWithSubInterface implements SomeInterface, SubInterface {}
-	public static class SuperclassExtendsClassWithSearchedInterface extends ClassWithSearchedInterface implements SomeInterface {}
-	public static class SuperclassExtendsClassClassWithSubInterface extends ClassWithSubInterface implements SomeInterface {}
+	interface SomeInterface {
+	}
+
+	interface SearchedInterface {
+	}
+
+	interface SubInterface extends SearchedInterface {
+	}
+
+	public static class ClassWithoutInterface {
+	}
+
+	public static class ClassWithSomeInterface implements SomeInterface {
+	}
+
+	public static class ClassWithSearchedInterface implements SomeInterface, SearchedInterface {
+	}
+
+	public static class ClassWithSubInterface implements SomeInterface, SubInterface {
+	}
+
+	public static class SuperclassExtendsClassWithSearchedInterface extends ClassWithSearchedInterface implements SomeInterface {
+	}
+
+	public static class SuperclassExtendsClassClassWithSubInterface extends ClassWithSubInterface implements SomeInterface {
+	}
 
 }

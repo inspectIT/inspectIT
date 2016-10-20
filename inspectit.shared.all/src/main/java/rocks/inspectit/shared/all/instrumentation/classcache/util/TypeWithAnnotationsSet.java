@@ -21,6 +21,7 @@ public class TypeWithAnnotationsSet extends SortedArraySet<TypeWithAnnotations> 
 	 */
 	private static final Comparator<TypeWithAnnotations> TYPE_WITH_ANNOTATIONS_COMPARATOR = new Comparator<TypeWithAnnotations>() {
 
+		@Override
 		public int compare(TypeWithAnnotations o1, TypeWithAnnotations o2) {
 			if ((o1 instanceof Type) && (o2 instanceof Type)) {
 				return TypeSet.FQN_COMPARATOR.compare((Type) o1, (Type) o2);

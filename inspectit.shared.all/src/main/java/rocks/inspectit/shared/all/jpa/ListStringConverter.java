@@ -29,6 +29,7 @@ public class ListStringConverter implements AttributeConverter<List<?>, String> 
 	 * <p>
 	 * Concatenates the given list with the whitespace char and returns the generated String.
 	 */
+	@Override
 	public String convertToDatabaseColumn(List<?> list) {
 		StringBuilder stringBuilder = new StringBuilder();
 		if (CollectionUtils.isNotEmpty(list)) {
@@ -46,6 +47,7 @@ public class ListStringConverter implements AttributeConverter<List<?>, String> 
 	 * <p>
 	 * Explodes the given String by splitting it up. The split char is just a whitespace.
 	 */
+	@Override
 	public List<?> convertToEntityAttribute(String dbValue) {
 		if (StringUtils.isNotEmpty(dbValue)) {
 			String[] split = StringUtils.splitPreserveAllTokens(dbValue, DELIMITER);

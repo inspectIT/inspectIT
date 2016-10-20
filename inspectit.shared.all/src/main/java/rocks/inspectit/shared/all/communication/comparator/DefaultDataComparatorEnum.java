@@ -29,6 +29,7 @@ public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, C
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(DefaultData o1, DefaultData o2, ICachedDataService cachedDataService) {
 		return compare(o1, o2);
 	}
@@ -36,6 +37,7 @@ public enum DefaultDataComparatorEnum implements IDataComparator<DefaultData>, C
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(DefaultData o1, DefaultData o2) {
 		switch (this) {
 		case TIMESTAMP:

@@ -662,6 +662,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(MemoryInformationData other) {
 		count += other.count;
 
@@ -697,6 +698,7 @@ public class MemoryInformationData extends SystemSensorData implements IAggregat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MemoryInformationData getData() {
 		return this;
 	}

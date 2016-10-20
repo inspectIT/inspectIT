@@ -44,6 +44,7 @@ public class PlainTimerStorage implements ITimerStorage {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addData(double time, double cpuTime) {
 		if (cpuTime < 0) {
 			timerRawVO.add(time);
@@ -55,6 +56,7 @@ public class PlainTimerStorage implements ITimerStorage {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DefaultData finalizeDataObject() {
 		return timerRawVO;
 	}

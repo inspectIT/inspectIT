@@ -41,34 +41,34 @@ public class EqualsVerifierTest {
 	 * Classes to be tested.
 	 */
 	public static final Object[][] TESTING_CLASSES = new Object[][] { { TimerData.class }, { SqlStatementData.class }, { ExceptionSensorData.class }, { InvocationSequenceData.class },
-		{ ClassLoadingInformationData.class }, { CompilationInformationData.class }, { MemoryInformationData.class }, { RuntimeInformationData.class }, { SystemInformationData.class },
-		{ ThreadInformationData.class }, { HttpTimerData.class }, { MethodIdent.class }, { MethodSensorTypeIdent.class }, { PlatformIdent.class }, { PlatformSensorTypeIdent.class },
-		{ SensorTypeIdent.class }, { ApplicationData.class }, { BusinessTransactionData.class } };
+			{ ClassLoadingInformationData.class }, { CompilationInformationData.class }, { MemoryInformationData.class }, { RuntimeInformationData.class }, { SystemInformationData.class },
+			{ ThreadInformationData.class }, { HttpTimerData.class }, { MethodIdent.class }, { MethodSensorTypeIdent.class }, { PlatformIdent.class }, { PlatformSensorTypeIdent.class },
+			{ SensorTypeIdent.class }, { ApplicationData.class }, { BusinessTransactionData.class } };
 
-		/**
-		 * Verify equals contract test.
-		 *
-		 * @param clazz
-		 *            Class to test.
-		 */
-		@Test(dataProvider = "classProvider")
-		public void equalsContract(Class<?> clazz) {
-			EqualsVerifier.forClass(clazz).usingGetClass().withPrefabValues(Timestamp.class, new Timestamp(1), new Timestamp(2))
-			.withPrefabValues(ExceptionSensorData.class, new ExceptionSensorData(new Timestamp(1), 1, 1, 1), new ExceptionSensorData(new Timestamp(2), 2, 2, 2))
-			.withPrefabValues(InvocationSequenceData.class, new InvocationSequenceData(new Timestamp(1), 1, 1, 1), new InvocationSequenceData(new Timestamp(2), 2, 2, 2)).withRedefinedSuperclass()
+	/**
+	 * Verify equals contract test.
+	 *
+	 * @param clazz
+	 *            Class to test.
+	 */
+	@Test(dataProvider = "classProvider")
+	public void equalsContract(Class<?> clazz) {
+		EqualsVerifier.forClass(clazz).usingGetClass().withPrefabValues(Timestamp.class, new Timestamp(1), new Timestamp(2))
+				.withPrefabValues(ExceptionSensorData.class, new ExceptionSensorData(new Timestamp(1), 1, 1, 1), new ExceptionSensorData(new Timestamp(2), 2, 2, 2))
+				.withPrefabValues(InvocationSequenceData.class, new InvocationSequenceData(new Timestamp(1), 1, 1, 1), new InvocationSequenceData(new Timestamp(2), 2, 2, 2)).withRedefinedSuperclass()
 				.withPrefabValues(ApplicationData.class, new ApplicationData(1, 1, "name1"), new ApplicationData(2, 2, "name2")).withPrefabValues(BusinessTransactionData.class,
 						new BusinessTransactionData(1, 1, new ApplicationData(1, 1, "name1"), "name1"), new BusinessTransactionData(2, 2, new ApplicationData(2, 2, "name2"), "name2"))
-			.suppress(Warning.NONFINAL_FIELDS).suppress(Warning.TRANSIENT_FIELDS).verify();
-		}
+				.suppress(Warning.NONFINAL_FIELDS).suppress(Warning.TRANSIENT_FIELDS).verify();
+	}
 
-		/**
-		 * Provides classes to be tested.
-		 *
-		 * @return Provides classes to be tested.
-		 */
-		@DataProvider(name = "classProvider")
-		protected Object[][] classprovider() {
-			return TESTING_CLASSES;
-		}
+	/**
+	 * Provides classes to be tested.
+	 *
+	 * @return Provides classes to be tested.
+	 */
+	@DataProvider(name = "classProvider")
+	protected Object[][] classprovider() {
+		return TESTING_CLASSES;
+	}
 
 }

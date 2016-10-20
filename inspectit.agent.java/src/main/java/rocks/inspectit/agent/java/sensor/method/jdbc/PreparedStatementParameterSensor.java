@@ -44,6 +44,7 @@ public class PreparedStatementParameterSensor extends AbstractMethodSensor imple
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return preparedStatementParameterHook;
 	}

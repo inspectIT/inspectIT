@@ -51,6 +51,7 @@ public class ExtendedByteBufferOutputStreamTest {
 	public void init() throws IOException {
 		MockitoAnnotations.initMocks(this);
 		Mockito.when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
+			@Override
 			public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
 				return ByteBuffer.allocate(bufferSize);
 			}

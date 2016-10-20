@@ -38,6 +38,7 @@ public abstract class AbstractSendingStrategy implements ISendingStrategy, Initi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void start(ICoreService coreService) {
 		this.coreService = coreService;
 		startStrategy();
@@ -52,6 +53,7 @@ public abstract class AbstractSendingStrategy implements ISendingStrategy, Initi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public abstract void stop();
 
 	/**
@@ -66,6 +68,7 @@ public abstract class AbstractSendingStrategy implements ISendingStrategy, Initi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.init(configurationStorage.getSendingStrategyConfig().getSettings());
 	}

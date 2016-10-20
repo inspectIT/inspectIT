@@ -23,7 +23,6 @@ import java.util.Map;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
@@ -463,7 +462,7 @@ public class KryoNetConnectionTest extends TestBase {
 		public void analyzeJmxAttributes() throws Exception {
 			Collection<JmxAttributeDescriptor> result = mock(Collection.class);
 			when(client.isConnected()).thenReturn(true);
-			doReturn(result).when(agentService).analyzeJmxAttributes(anyLong(), Mockito.<Collection<JmxAttributeDescriptor>> any());
+			doReturn(result).when(agentService).analyzeJmxAttributes(anyLong(), Matchers.<Collection<JmxAttributeDescriptor>> any());
 			long id = 7;
 			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
 
@@ -477,7 +476,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void timeout() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(agentService).analyzeJmxAttributes(anyLong(), Mockito.<Collection<JmxAttributeDescriptor>> any());
+			doThrow(TimeoutException.class).when(agentService).analyzeJmxAttributes(anyLong(), Matchers.<Collection<JmxAttributeDescriptor>> any());
 			long id = 7;
 			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
 
@@ -495,7 +494,7 @@ public class KryoNetConnectionTest extends TestBase {
 		@Test(expectedExceptions = { ServerUnavailableException.class })
 		public void remoteException() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(agentService).analyzeJmxAttributes(anyLong(), Mockito.<Collection<JmxAttributeDescriptor>> any());
+			doThrow(RuntimeException.class).when(agentService).analyzeJmxAttributes(anyLong(), Matchers.<Collection<JmxAttributeDescriptor>> any());
 			long id = 7;
 			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
 

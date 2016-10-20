@@ -48,6 +48,7 @@ public class ConnectionSensor extends AbstractMethodSensor implements IMethodSen
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return connectionHook;
 	}

@@ -134,6 +134,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getComponent() {
 		return COMPONENT_NAME;
 	}
@@ -141,6 +142,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return WordUtils.capitalizeFully(this.toString().replace("_", " ").toLowerCase());
 	}
@@ -150,6 +152,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #description}
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -159,6 +162,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #possibleCause}
 	 */
+	@Override
 	public String getPossibleCause() {
 		return possibleCause;
 	}
@@ -168,6 +172,7 @@ public enum StorageErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #possibleSolution}
 	 */
+	@Override
 	public String getPossibleSolution() {
 		return possibleSolution;
 	}

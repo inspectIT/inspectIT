@@ -42,6 +42,7 @@ public class PrototypesProvider extends StreamProvider implements ISerializerPro
 	 *
 	 * @return Returns the new {@link SerializationManager} enhanced by Spring.
 	 */
+	@Override
 	public SerializationManager createSerializer() {
 		return serializationManagerFactory.getObject();
 	}

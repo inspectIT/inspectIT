@@ -24,12 +24,14 @@ public class RetryException extends Exception implements Externalizable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void readExternal(ObjectInput input) throws IOException, ClassNotFoundException {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void writeExternal(ObjectOutput output) throws IOException {
 	}
 

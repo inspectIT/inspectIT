@@ -31,6 +31,7 @@ public class AggregatedHttpTimerData extends HttpTimerData implements IIdsAwareA
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(HttpTimerData data) {
 		this.aggregateHttpTimerData(data);
 		if (data instanceof AggregatedHttpTimerData) {
@@ -49,6 +50,7 @@ public class AggregatedHttpTimerData extends HttpTimerData implements IIdsAwareA
 	 *
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<Long> getAggregatedIds() {
 		return aggregatedIds.keySet();
 	}
@@ -56,6 +58,7 @@ public class AggregatedHttpTimerData extends HttpTimerData implements IIdsAwareA
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clearAggregatedIds() {
 		aggregatedIds.clear();
 
@@ -64,6 +67,7 @@ public class AggregatedHttpTimerData extends HttpTimerData implements IIdsAwareA
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public HttpTimerData getData() {
 		return this;
 	}

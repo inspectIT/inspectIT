@@ -49,6 +49,7 @@ public abstract class AbstractMethodSensor implements IMethodSensor, Initializin
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MethodSensorTypeConfig getSensorTypeConfig() {
 		return sensorTypeConfig;
 	}
@@ -56,6 +57,7 @@ public abstract class AbstractMethodSensor implements IMethodSensor, Initializin
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		for (MethodSensorTypeConfig config : configurationStorage.getMethodSensorTypes()) {
 			if (config.getClassName().equals(this.getClass().getName())) {

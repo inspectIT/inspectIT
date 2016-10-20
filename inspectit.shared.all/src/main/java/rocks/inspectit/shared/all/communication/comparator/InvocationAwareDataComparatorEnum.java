@@ -21,6 +21,7 @@ public enum InvocationAwareDataComparatorEnum implements IDataComparator<Invocat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(InvocationAwareData o1, InvocationAwareData o2, ICachedDataService cachedDataService) {
 		return compare(o1, o2);
 	}
@@ -28,6 +29,7 @@ public enum InvocationAwareDataComparatorEnum implements IDataComparator<Invocat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(InvocationAwareData o1, InvocationAwareData o2) {
 		switch (this) {
 		case INVOCATION_AFFILIATION:

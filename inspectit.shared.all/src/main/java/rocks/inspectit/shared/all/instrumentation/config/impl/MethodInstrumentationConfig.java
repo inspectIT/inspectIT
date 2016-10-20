@@ -293,5 +293,4 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 		return true;
 	}
 
-
 }
