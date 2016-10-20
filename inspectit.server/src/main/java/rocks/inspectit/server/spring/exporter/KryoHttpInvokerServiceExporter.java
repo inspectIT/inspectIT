@@ -15,9 +15,9 @@ import org.springframework.remoting.support.RemoteInvocationResult;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import rocks.inspectit.shared.all.storage.serializer.ISerializer;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
-import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.shared.all.serializer.ISerializer;
+import rocks.inspectit.shared.all.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider;
 
 /**
  * This service exporter using kryo for (de-)serialization is nearly the same as the one with plain

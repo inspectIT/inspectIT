@@ -1,10 +1,10 @@
-package rocks.inspectit.shared.all.storage.serializer.impl;
+package rocks.inspectit.shared.all.serializer.impl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
 
 /**
  * {@link CustomCompatibleFieldSerializer} for the {@link InvocationSequenceData} that in the

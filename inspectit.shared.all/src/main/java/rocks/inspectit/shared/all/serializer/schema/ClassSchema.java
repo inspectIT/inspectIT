@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.schema;
+package rocks.inspectit.shared.all.serializer.schema;
 
 import java.util.HashMap;
 import java.util.Map;

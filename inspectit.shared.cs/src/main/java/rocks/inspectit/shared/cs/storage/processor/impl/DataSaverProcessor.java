@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
-import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.all.serializer.util.KryoSerializationPreferences;
 import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 
 /**

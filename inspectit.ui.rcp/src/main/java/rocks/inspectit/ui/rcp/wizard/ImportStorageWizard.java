@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.storage.IStorageData;
 import rocks.inspectit.ui.rcp.InspectIT;

@@ -9,9 +9,9 @@ import com.esotericsoftware.kryo.serializers.DefaultArraySerializers.ObjectArray
 import com.esotericsoftware.kryo.serializers.DefaultSerializers.EnumSerializer;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 
-import rocks.inspectit.shared.all.storage.serializer.impl.CustomCompatibleFieldSerializer;
-import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.serializer.impl.CustomCompatibleFieldSerializer;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;

@@ -10,8 +10,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import rocks.inspectit.shared.all.storage.serializer.IKryoProvider;
-import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
+import rocks.inspectit.shared.all.serializer.IKryoProvider;
+import rocks.inspectit.shared.all.serializer.ISerializerProvider;
 
 /**
  * Implementation of the {@link IExtendedSerialization} with some additional methods we need for

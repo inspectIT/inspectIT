@@ -22,8 +22,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchema;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchema;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
 
 /**
  * Tests if the schemas for serialization are up-to-date. Any change of the domain classes, needs to

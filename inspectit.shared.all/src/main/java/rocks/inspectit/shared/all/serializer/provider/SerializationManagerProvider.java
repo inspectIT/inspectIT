@@ -1,8 +1,8 @@
-package rocks.inspectit.shared.all.storage.serializer.provider;
+package rocks.inspectit.shared.all.serializer.provider;
 
-import rocks.inspectit.shared.all.storage.serializer.ISerializer;
-import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
-import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.serializer.ISerializer;
+import rocks.inspectit.shared.all.serializer.ISerializerProvider;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 
 /**
  * This is a typical provider of the new instances enhanced by Spring. Returns the

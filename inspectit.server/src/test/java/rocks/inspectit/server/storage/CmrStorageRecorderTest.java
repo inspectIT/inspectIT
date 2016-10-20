@@ -27,7 +27,7 @@ import rocks.inspectit.server.test.AbstractTestNGLogSupport;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 import rocks.inspectit.shared.all.exception.BusinessException;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.cs.storage.StorageWriter;
 import rocks.inspectit.shared.cs.storage.processor.AbstractDataProcessor;
 import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;

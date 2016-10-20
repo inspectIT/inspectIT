@@ -20,9 +20,9 @@ import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
 import rocks.inspectit.shared.all.kryonet.Listener;
 import rocks.inspectit.shared.all.kryonet.Server;
 import rocks.inspectit.shared.all.kryonet.rmi.ObjectSpace;
+import rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
-import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 
 /**
  * COnfiguration of the {@link Server} that will be used for communication with the agent.
