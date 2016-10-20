@@ -147,6 +147,7 @@ public class ClassSchemaManager implements InitializingBean {
 		}
 
 		File[] files = directory.listFiles(new FilenameFilter() {
+			@Override
 			public boolean accept(File dir, String fileName) {
 				return fileName.endsWith(ClassSchema.SCHEMA_EXT);
 			}
@@ -234,6 +235,7 @@ public class ClassSchemaManager implements InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		loadSchemasFromLocations();
 	}

@@ -115,6 +115,7 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void beforeBody(long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		timeStack.push(new Double(timer.getCurrentTime()));
 		threadLast.set(Boolean.TRUE);
@@ -123,6 +124,7 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 		timeStack.push(new Double(timer.getCurrentTime()));
 	}
@@ -130,6 +132,7 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 		double endTime = timeStack.pop().doubleValue();
 		double startTime = timeStack.pop().doubleValue();
@@ -183,12 +186,14 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void beforeConstructor(long methodId, long sensorTypeId, Object[] parameters, RegisteredSensorConfig rsc) {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterConstructor(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		try {
 			statementStorage.addPreparedStatement(object);

@@ -163,6 +163,7 @@ public final class Version implements Comparable<Version> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(Version o) {
 		return new CompareToBuilder().append(major, o.major).append(minor, o.minor).append(micro, o.micro).append(buildno, o.buildno).toComparison();
 	}

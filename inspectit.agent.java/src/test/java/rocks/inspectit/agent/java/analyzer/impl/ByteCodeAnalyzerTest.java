@@ -314,8 +314,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// need to fake the method
 			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
 			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
-			when(methodInstrumentationConfig.getAllInstrumentationPoints())
-			.thenReturn(Collections.<IMethodInstrumentationPoint> singleton(specialInstrumentationPoint));
+			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(specialInstrumentationPoint));
 			when(methodInstrumentationConfig.getSpecialInstrumentationPoint()).thenReturn(specialInstrumentationPoint);
 
 			ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
@@ -684,7 +683,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 					return future;
 				}
 			}).when(executorService).submit(Matchers.<Callable> any());
-
 
 			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 

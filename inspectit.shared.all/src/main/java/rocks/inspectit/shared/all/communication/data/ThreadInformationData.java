@@ -412,6 +412,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 	 * @param other
 	 *            Object to aggregate data from.
 	 */
+	@Override
 	public void aggregate(ThreadInformationData other) {
 		count += other.count;
 
@@ -434,6 +435,7 @@ public class ThreadInformationData extends SystemSensorData implements IAggregat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ThreadInformationData getData() {
 		return this;
 	}

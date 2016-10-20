@@ -31,6 +31,7 @@ public class AggregatedSqlStatementData extends SqlStatementData implements IIds
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(SqlStatementData data) {
 		this.aggregateSqlStatementData(data);
 		if (data instanceof AggregatedSqlStatementData) {
@@ -49,6 +50,7 @@ public class AggregatedSqlStatementData extends SqlStatementData implements IIds
 	 *
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<Long> getAggregatedIds() {
 		return aggregatedIds.keySet();
 	}
@@ -56,6 +58,7 @@ public class AggregatedSqlStatementData extends SqlStatementData implements IIds
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clearAggregatedIds() {
 		aggregatedIds.clear();
 
@@ -64,6 +67,7 @@ public class AggregatedSqlStatementData extends SqlStatementData implements IIds
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SqlStatementData getData() {
 		return this;
 	}

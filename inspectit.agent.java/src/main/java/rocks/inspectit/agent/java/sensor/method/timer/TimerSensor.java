@@ -68,6 +68,7 @@ public class TimerSensor extends AbstractMethodSensor implements IMethodSensor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return timerHook;
 	}

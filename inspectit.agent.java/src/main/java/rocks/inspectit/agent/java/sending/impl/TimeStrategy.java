@@ -98,6 +98,7 @@ public class TimeStrategy extends AbstractSendingStrategy {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void init(Map<String, String> settings) {
 		this.time = Long.parseLong(settings.get("time"));
 	}

@@ -53,6 +53,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		this.beanFactory = beanFactory;
 	}
@@ -60,6 +61,7 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 		this.registry = registry;
 	}

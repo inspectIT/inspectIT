@@ -45,6 +45,7 @@ public class ListSizeStrategy extends AbstractSendingStrategy implements ListLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void contentChanged(List<List<DefaultData>> list) {
 		if (list.size() > size) {
 			sendNow();
@@ -54,6 +55,7 @@ public class ListSizeStrategy extends AbstractSendingStrategy implements ListLis
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void init(Map<String, String> settings) {
 		this.size = Long.parseLong(settings.get("size"));
 	}

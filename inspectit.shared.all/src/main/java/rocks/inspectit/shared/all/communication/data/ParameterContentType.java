@@ -32,6 +32,7 @@ public enum ParameterContentType implements Serializable, Sizeable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes) {
 		return getObjectSize(objectSizes, true);
 	}
@@ -39,6 +40,7 @@ public enum ParameterContentType implements Serializable, Sizeable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 1, 0, 0, 0);

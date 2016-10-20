@@ -19,9 +19,11 @@ public class TestClass extends AbstractSubTest {
 		this("delegate");
 	}
 
+	@Override
 	public void voidNullParameter() {
 	}
 
+	@Override
 	public String stringNullParameter() {
 		return "stringNullParameter";
 	}

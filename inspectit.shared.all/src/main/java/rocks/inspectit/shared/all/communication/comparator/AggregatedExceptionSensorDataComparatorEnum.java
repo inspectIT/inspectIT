@@ -31,6 +31,7 @@ public enum AggregatedExceptionSensorDataComparatorEnum implements IDataComparat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(AggregatedExceptionSensorData o1, AggregatedExceptionSensorData o2, ICachedDataService cachedDataService) {
 		return compare(o1, o2);
 	}
@@ -38,6 +39,7 @@ public enum AggregatedExceptionSensorDataComparatorEnum implements IDataComparat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(AggregatedExceptionSensorData o1, AggregatedExceptionSensorData o2) {
 		switch (this) {
 		case CREATED:

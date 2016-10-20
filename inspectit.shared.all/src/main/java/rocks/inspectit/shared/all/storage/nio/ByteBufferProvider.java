@@ -247,7 +247,7 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 	 * This is an automated properties update execution method.
 	 */
 	@PropertyUpdate(properties = { "storage.bufferSize", "storage.bufferPoolMinCapacity", "storage.bufferPoolMaxCapacity", "storage.bufferPoolMinDirectMemoryOccupancy",
-	"storage.bufferPoolMaxDirectMemoryOccupancy" })
+			"storage.bufferPoolMaxDirectMemoryOccupancy" })
 	protected void updatePoolProperties() {
 		// assume that the maxDirect memory is 64MB
 		long maxDirectMemory = 64 * 1024 * 1024;

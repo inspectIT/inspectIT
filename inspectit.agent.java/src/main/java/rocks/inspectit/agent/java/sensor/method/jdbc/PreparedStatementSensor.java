@@ -54,6 +54,7 @@ public class PreparedStatementSensor extends AbstractMethodSensor implements IMe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return preparedStatementHook;
 	}

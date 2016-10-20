@@ -30,6 +30,7 @@ public class ByteBufferFactory implements PoolableObjectFactory<ByteBuffer> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ByteBuffer makeObject() throws Exception {
 		return ByteBuffer.allocateDirect(bufferCapacity);
 	}
@@ -37,12 +38,14 @@ public class ByteBufferFactory implements PoolableObjectFactory<ByteBuffer> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroyObject(ByteBuffer buffer) throws Exception {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean validateObject(ByteBuffer buffer) {
 		return true;
 	}
@@ -50,12 +53,14 @@ public class ByteBufferFactory implements PoolableObjectFactory<ByteBuffer> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void activateObject(ByteBuffer buffer) throws Exception {
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void passivateObject(ByteBuffer buffer) throws Exception {
 		buffer.clear();
 	}

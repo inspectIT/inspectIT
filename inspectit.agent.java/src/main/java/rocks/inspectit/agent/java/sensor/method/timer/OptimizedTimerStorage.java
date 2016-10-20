@@ -45,6 +45,7 @@ public class OptimizedTimerStorage implements ITimerStorage {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addData(double time, double cpuTime) {
 		timerData.increaseCount();
 		timerData.addDuration(time);
@@ -64,6 +65,7 @@ public class OptimizedTimerStorage implements ITimerStorage {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DefaultData finalizeDataObject() {
 		// processing is done during data adding, so nothing to do here.
 		return timerData;

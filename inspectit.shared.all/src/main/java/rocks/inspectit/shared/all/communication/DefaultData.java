@@ -232,6 +232,7 @@ public abstract class DefaultData implements Serializable, Sizeable {
 	 *            Appropriate instance of {@link IObjectSizes} depending on the VM architecture.
 	 * @return Approximate object size in bytes.
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes) {
 		return this.getObjectSize(objectSizes, true);
 	}
@@ -248,6 +249,7 @@ public abstract class DefaultData implements Serializable, Sizeable {
 	 *            align the result because the align occurs only one time per whole object.
 	 * @return Approximate object size in bytes.
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 3, 0);

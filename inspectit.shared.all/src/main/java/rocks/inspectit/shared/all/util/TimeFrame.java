@@ -128,6 +128,7 @@ public class TimeFrame implements Comparable<TimeFrame> {
 	 * <p>
 	 * Comparing by from date.
 	 */
+	@Override
 	public int compareTo(TimeFrame other) {
 		return from.compareTo(other.getFrom());
 	}

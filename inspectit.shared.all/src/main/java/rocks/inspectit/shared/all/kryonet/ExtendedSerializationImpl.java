@@ -18,9 +18,9 @@ import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
  * (de-)serializing the object during the communication. The idea is not to (de-)serialize from/to
  * buffer, but to use the streams which would give us opportunity to transfer objects of unlimited
  * size.
- * 
+ *
  * @author Ivan Senic
- * 
+ *
  */
 @SuppressWarnings("all")
 public class ExtendedSerializationImpl implements IExtendedSerialization {
@@ -44,7 +44,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 * One argument constructor. Same as calling
 	 * {@link #ExtendedSerializationImpl(ISerializerProvider, int)} with init serializers value of
 	 * {@value #INIT_CREATED_SERIALIZERS}.
-	 * 
+	 *
 	 * @param serializerProvider
 	 *            {@link ISerializerProvider} needed for creation of the {@link IKryoProvider}
 	 *            instances.
@@ -55,7 +55,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param serializerProvider
 	 *            {@link ISerializerProvider} needed for creation of the {@link IKryoProvider}
 	 *            instances.
@@ -76,6 +76,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 * Not implemented. It's not used because we won't write to the buffer, but to the output
 	 * stream. But it's defined in the Serialization interface, so we must implement it.
 	 */
+	@Override
 	public void write(Connection connection, ByteBuffer buffer, Object object) {
 	}
 
@@ -85,6 +86,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 * Not implemented. It's not used because we won't read from the buffer, but from the input
 	 * stream. But it's defined in the Serialization interface, so we must implement it.
 	 */
+	@Override
 	public Object read(Connection connection, ByteBuffer buffer) {
 		return null;
 	}
@@ -92,6 +94,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void writeLength(ByteBuffer buffer, int length) {
 		buffer.putInt(length);
 	}
@@ -99,6 +102,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int readLength(ByteBuffer buffer) {
 		return buffer.getInt();
 	}
@@ -109,6 +113,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 * Returns 4 as the original Kryo serialization. This should represent number of bytes needed
 	 * for storing the length of the bytes to send.
 	 */
+	@Override
 	public int getLengthLength() {
 		return 4;
 	}
@@ -116,6 +121,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void write(Connection connection, OutputStream outputStream, Object object) {
 		Output output = new Output(outputStream);
@@ -137,9 +143,10 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	}
 
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object read(Connection connection, InputStream inputStream) {
 		Input input = new Input(inputStream);
@@ -163,7 +170,7 @@ public class ExtendedSerializationImpl implements IExtendedSerialization {
 	 * Creates new {@link IKryoProvider}.
 	 * <p>
 	 * Sub-classes can override.
-	 * 
+	 *
 	 * @return Creates new {@link IKryoProvider}.
 	 */
 	protected IKryoProvider createKryoProvider() {

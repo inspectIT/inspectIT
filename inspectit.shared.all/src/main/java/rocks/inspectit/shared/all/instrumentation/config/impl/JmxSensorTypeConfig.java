@@ -8,7 +8,6 @@ package rocks.inspectit.shared.all.instrumentation.config.impl;
  */
 public class JmxSensorTypeConfig extends AbstractSensorTypeConfig {
 
-
 	/**
 	 * {@inheritDoc}
 	 */

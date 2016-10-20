@@ -29,7 +29,6 @@ public class ConnectionMetaDataExtractorTest {
 
 	private static final String URL = "url";
 
-	@SuppressWarnings("static-access")
 	@BeforeMethod
 	public void init() {
 		extractor = new ConnectionMetaDataExtractor();
@@ -59,7 +58,6 @@ public class ConnectionMetaDataExtractorTest {
 		assertThat(data.url, is(url));
 	}
 
-	@SuppressWarnings("static-access")
 	@Test
 	public void nullConnection() {
 		Logger mockedLogger = Mockito.mock(Logger.class);

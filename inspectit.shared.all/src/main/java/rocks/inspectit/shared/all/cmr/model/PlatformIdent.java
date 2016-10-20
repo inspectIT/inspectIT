@@ -33,7 +33,7 @@ import rocks.inspectit.shared.all.jpa.ListStringConverter;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = PlatformIdent.FIND_ALL, query = "SELECT p FROM PlatformIdent p"),
-	@NamedQuery(name = PlatformIdent.FIND_BY_AGENT_NAME, query = "SELECT p FROM PlatformIdent p WHERE p.agentName=:agentName") })
+		@NamedQuery(name = PlatformIdent.FIND_BY_AGENT_NAME, query = "SELECT p FROM PlatformIdent p WHERE p.agentName=:agentName") })
 public class PlatformIdent implements Serializable {
 
 	/**

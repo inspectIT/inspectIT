@@ -157,6 +157,7 @@ public class ByteBufferProviderTest {
 
 		for (int i = 0; i < threadCount; i++) {
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					for (int i = 0; i < iterationsPerThread; i++) {
 						try {

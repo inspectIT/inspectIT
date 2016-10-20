@@ -1156,7 +1156,6 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
-
 	}
 
 	protected void prepareWriter(ClassReader cr, ClassLoader classLoader, boolean enhancedExceptionSensor, MethodInstrumentationConfig... configs) {

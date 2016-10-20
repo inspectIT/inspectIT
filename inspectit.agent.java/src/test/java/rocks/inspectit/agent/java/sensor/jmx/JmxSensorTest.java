@@ -133,6 +133,7 @@ public class JmxSensorTest extends TestBase {
 			ArgumentCaptor<Collection> captor = ArgumentCaptor.forClass(Collection.class);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), captor.capture())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {
@@ -200,6 +201,7 @@ public class JmxSensorTest extends TestBase {
 			when(platformManager.getPlatformId()).thenReturn(platformIdent);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), Matchers.<Collection<JmxAttributeDescriptor>> any())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {
@@ -292,6 +294,7 @@ public class JmxSensorTest extends TestBase {
 			when(platformManager.getPlatformId()).thenReturn(platformIdent);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), Matchers.<Collection<JmxAttributeDescriptor>> any())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {
@@ -338,6 +341,7 @@ public class JmxSensorTest extends TestBase {
 			when(platformManager.getPlatformId()).thenReturn(platformIdent);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), Matchers.<Collection<JmxAttributeDescriptor>> any())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {
@@ -389,6 +393,7 @@ public class JmxSensorTest extends TestBase {
 			when(platformManager.getPlatformId()).thenReturn(platformIdent);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), Matchers.<Collection<JmxAttributeDescriptor>> any())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {
@@ -440,6 +445,7 @@ public class JmxSensorTest extends TestBase {
 			when(platformManager.getPlatformId()).thenReturn(platformIdent);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), Matchers.<Collection<JmxAttributeDescriptor>> any())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {
@@ -471,7 +477,7 @@ public class JmxSensorTest extends TestBase {
 		@DataProvider(name = "throwableProvider")
 		public Object[][] getThrowables() {
 			return new Object[][] { { AttributeNotFoundException.class }, { InstanceNotFoundException.class }, { MBeanException.class }, { ReflectionException.class },
-				{ RuntimeMBeanException.class } };
+					{ RuntimeMBeanException.class } };
 		}
 
 	}
@@ -506,6 +512,7 @@ public class JmxSensorTest extends TestBase {
 			ArgumentCaptor<Collection> captor = ArgumentCaptor.forClass(Collection.class);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), captor.capture())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {
@@ -567,6 +574,7 @@ public class JmxSensorTest extends TestBase {
 			when(platformManager.getPlatformId()).thenReturn(platformIdent);
 			when(connection.isConnected()).thenReturn(true);
 			when(connection.analyzeJmxAttributes(eq(platformIdent), Matchers.<Collection<JmxAttributeDescriptor>> any())).thenAnswer(new Answer<Collection<JmxAttributeDescriptor>>() {
+				@Override
 				public Collection<JmxAttributeDescriptor> answer(InvocationOnMock invocation) throws Throwable {
 					Collection<JmxAttributeDescriptor> descriptors = (Collection<JmxAttributeDescriptor>) invocation.getArguments()[1];
 					for (JmxAttributeDescriptor d : descriptors) {

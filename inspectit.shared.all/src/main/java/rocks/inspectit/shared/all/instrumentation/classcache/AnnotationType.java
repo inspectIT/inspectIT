@@ -109,6 +109,7 @@ public final class AnnotationType extends AbstractInterfaceType implements Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableTypeWithAnnotations> getImmutableAnnotatedTypes() {
 		return getAnnotatedTypes();
 	}

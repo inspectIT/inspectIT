@@ -18,6 +18,7 @@ public interface IPlatformSensor extends ISensor {
 	 *
 	 * @return Returns the {@link PlatformSensorTypeConfig} for this sensor.
 	 */
+	@Override
 	PlatformSensorTypeConfig getSensorTypeConfig();
 
 	/**

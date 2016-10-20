@@ -74,6 +74,7 @@ public class InterfaceType extends AbstractInterfaceType implements TypeWithMeth
 	 * @param type
 	 *            the method that is defined in this class.
 	 */
+	@Override
 	public void addMethod(MethodType type) {
 		addMethodNoBidirectionalUpdate(type);
 		type.setClassOrInterfaceTypeNoBidirectionalUpdate(this);
@@ -87,6 +88,7 @@ public class InterfaceType extends AbstractInterfaceType implements TypeWithMeth
 	 * @param type
 	 *            the method that is defined in this class.
 	 */
+	@Override
 	public void addMethodNoBidirectionalUpdate(MethodType type) {
 		if (methods == null) {
 			methods = new MethodTypeSet();
@@ -100,6 +102,7 @@ public class InterfaceType extends AbstractInterfaceType implements TypeWithMeth
 	 *
 	 * @return {@link #methods}
 	 */
+	@Override
 	public Set<MethodType> getMethods() {
 		if (null == methods) {
 			return Collections.emptySet();
@@ -110,6 +113,7 @@ public class InterfaceType extends AbstractInterfaceType implements TypeWithMeth
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableMethodType> getImmutableMethods() {
 		return getMethods();
 	}
@@ -170,6 +174,7 @@ public class InterfaceType extends AbstractInterfaceType implements TypeWithMeth
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableInterfaceType> getImmutableSuperInterfaces() {
 		return getSuperInterfaces();
 	}
@@ -230,6 +235,7 @@ public class InterfaceType extends AbstractInterfaceType implements TypeWithMeth
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableInterfaceType> getImmutableSubInterfaces() {
 		return getSubInterfaces();
 	}

@@ -39,6 +39,7 @@ public class SimpleBufferStrategy extends AbstractBufferStrategy<MethodSensorDat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void addMeasurements(final List<MethodSensorData> measurements) {
 		if (null == measurements) {
 			throw new IllegalArgumentException("Measurements cannot be null!");
@@ -60,6 +61,7 @@ public class SimpleBufferStrategy extends AbstractBufferStrategy<MethodSensorDat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final boolean hasNext() {
 		return newMeasurements;
 	}
@@ -67,6 +69,7 @@ public class SimpleBufferStrategy extends AbstractBufferStrategy<MethodSensorDat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final List<MethodSensorData> next() {
 		synchronized (this) {
 			if (newMeasurements) {
@@ -81,6 +84,7 @@ public class SimpleBufferStrategy extends AbstractBufferStrategy<MethodSensorDat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void remove() {
 		throw new UnsupportedOperationException();
 	}
@@ -88,6 +92,7 @@ public class SimpleBufferStrategy extends AbstractBufferStrategy<MethodSensorDat
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void init(final Map<String, String> settings) {
 		// nothing to do
 	}

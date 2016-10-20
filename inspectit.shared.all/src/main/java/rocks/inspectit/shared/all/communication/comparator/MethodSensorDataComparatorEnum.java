@@ -34,6 +34,7 @@ public enum MethodSensorDataComparatorEnum implements IDataComparator<MethodSens
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(MethodSensorData o1, MethodSensorData o2, ICachedDataService cachedDataService) {
 		if (null == cachedDataService) {
 			return 0;
@@ -50,6 +51,7 @@ public enum MethodSensorDataComparatorEnum implements IDataComparator<MethodSens
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(MethodIdent methodIdent1, MethodIdent methodIdent2) {
 		switch (this) {
 		case PACKAGE:

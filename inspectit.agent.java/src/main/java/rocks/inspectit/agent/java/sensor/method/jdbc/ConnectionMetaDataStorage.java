@@ -86,6 +86,7 @@ public class ConnectionMetaDataStorage {
 		}
 		try {
 			return storage.get(connection, new Callable<ConnectionMetaData>() {
+				@Override
 				public ConnectionMetaData call() throws Exception {
 					ConnectionMetaData data = dataExtractor.parse(connection);
 					return data != null ? data : EMPTY;

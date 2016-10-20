@@ -26,6 +26,7 @@ public interface IMethodSensor extends ISensor {
 	 *
 	 * @return Returns the {@link MethodSensorTypeConfig} for this sensor.
 	 */
+	@Override
 	MethodSensorTypeConfig getSensorTypeConfig();
 
 }

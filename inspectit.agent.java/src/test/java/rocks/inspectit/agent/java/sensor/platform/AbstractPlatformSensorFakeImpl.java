@@ -14,6 +14,7 @@ public class AbstractPlatformSensorFakeImpl extends AbstractPlatformSensor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 	}
@@ -21,6 +22,7 @@ public class AbstractPlatformSensorFakeImpl extends AbstractPlatformSensor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void gather() {
 		// TODO Auto-generated method stub
 	}
@@ -28,6 +30,7 @@ public class AbstractPlatformSensorFakeImpl extends AbstractPlatformSensor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SystemSensorData get() {
 		// TODO Auto-generated method stub
 		return null;

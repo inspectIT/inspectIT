@@ -23,8 +23,8 @@ import rocks.inspectit.shared.all.jpa.MapStringConverter;
 @Entity
 @DiscriminatorValue("MSTI")
 @NamedQueries({ @NamedQuery(name = MethodSensorTypeIdent.FIND_ALL, query = "SELECT ms FROM MethodSensorTypeIdent ms"),
-	@NamedQuery(name = MethodSensorTypeIdent.FIND_ID_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ms.id FROM MethodSensorTypeIdent ms JOIN ms.platformIdent p WHERE p.id=:platformIdent AND ms.fullyQualifiedClassName=:fullyQualifiedClassName"),
-	@NamedQuery(name = MethodSensorTypeIdent.UPDATE_PARAMETERS, query = "UPDATE MethodSensorTypeIdent SET settings=:parameters WHERE id=:id") })
+		@NamedQuery(name = MethodSensorTypeIdent.FIND_ID_BY_CLASS_AND_PLATFORM_ID, query = "SELECT ms.id FROM MethodSensorTypeIdent ms JOIN ms.platformIdent p WHERE p.id=:platformIdent AND ms.fullyQualifiedClassName=:fullyQualifiedClassName"),
+		@NamedQuery(name = MethodSensorTypeIdent.UPDATE_PARAMETERS, query = "UPDATE MethodSensorTypeIdent SET settings=:parameters WHERE id=:id") })
 public class MethodSensorTypeIdent extends SensorTypeIdent {
 
 	/**

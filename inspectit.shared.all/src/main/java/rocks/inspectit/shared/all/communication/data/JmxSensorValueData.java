@@ -169,6 +169,7 @@ public class JmxSensorValueData extends SystemSensorData implements IAggregatedD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public JmxSensorValueData getData() {
 		return this;
 	}
@@ -256,6 +257,7 @@ public class JmxSensorValueData extends SystemSensorData implements IAggregatedD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(JmxSensorValueData data) {
 		if (!data.isBooleanOrNumeric()) {
 			throw new RuntimeException("The given JMX data can not be aggregated.");
@@ -274,7 +276,7 @@ public class JmxSensorValueData extends SystemSensorData implements IAggregatedD
 	 */
 	@PrePersist
 	protected void prePersist() {
-		if (null != value && value.length() > MAX_VALUE_LENGTH) {
+		if ((null != value) && (value.length() > MAX_VALUE_LENGTH)) {
 			value = value.substring(0, MAX_VALUE_LENGTH);
 		}
 	}
@@ -285,7 +287,7 @@ public class JmxSensorValueData extends SystemSensorData implements IAggregatedD
 	@Override
 	public String toString() {
 		return "JmxSensorValueData [jmxSensorDefinitionDataIdent=" + jmxSensorDefinitionDataIdentId + ", value=" + value + ", getId()=" + getId() + ", getPlatformIdent()=" + getPlatformIdent()
-		+ ", getSensorTypeIdent()=" + getSensorTypeIdent() + ", getTimeStamp()=" + getTimeStamp() + "]";
+				+ ", getSensorTypeIdent()=" + getSensorTypeIdent() + ", getTimeStamp()=" + getTimeStamp() + "]";
 	}
 
 	/**

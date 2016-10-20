@@ -100,6 +100,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getFQN() {
 		return fqn;
 	}
@@ -131,6 +132,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean containsHash(String hash) {
 		if (null == hashes) {
 			return false;
@@ -141,6 +143,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<String> getHashes() {
 		if (null == hashes) {
 			return Collections.emptySet();
@@ -151,6 +154,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getModifiers() {
 		return modifiers;
 	}
@@ -161,6 +165,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	 * @param modifiers
 	 *            New value for {@link #modifiers}
 	 */
+	@Override
 	public void setModifiers(int modifiers) {
 		this.modifiers = modifiers;
 		checkInitialized();
@@ -178,6 +183,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isInitialized() {
 		return initialized;
 	}
@@ -185,6 +191,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addAnnotation(AnnotationType annotationType) {
 		addAnnotationNoBidirectionalUpdate(annotationType);
 		annotationType.addAnnotatedType(this);
@@ -193,6 +200,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableAnnotationType> getImmutableAnnotations() {
 		return getAnnotations();
 	}
@@ -200,6 +208,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addAnnotationNoBidirectionalUpdate(AnnotationType annotationType) {
 		if (null == annotations) {
 			annotations = new TypeSet<AnnotationType>();
@@ -210,6 +219,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<AnnotationType> getAnnotations() {
 		if (null == annotations) {
 			return Collections.emptySet();
@@ -220,6 +230,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeAnnotation(AnnotationType annotationType) {
 		if (null == annotations) {
 			return;
@@ -230,6 +241,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isType() {
 		return true;
 	}
@@ -237,6 +249,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isAnnotation() {
 		return AnnotationType.class.isAssignableFrom(this.getClass());
 	}
@@ -244,6 +257,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isInterface() {
 		return InterfaceType.class.isAssignableFrom(this.getClass());
 	}
@@ -251,6 +265,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isClass() {
 		return ClassType.class.isAssignableFrom(this.getClass());
 	}
@@ -258,6 +273,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isMethodType() {
 		return false;
 	}
@@ -265,6 +281,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImmutableType castToType() {
 		return this;
 	}
@@ -272,6 +289,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImmutableClassType castToClass() {
 		return (ImmutableClassType) this;
 	}
@@ -279,6 +297,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImmutableAnnotationType castToAnnotation() {
 		return (ImmutableAnnotationType) this;
 	}
@@ -286,6 +305,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImmutableInterfaceType castToInterface() {
 		return (ImmutableInterfaceType) this;
 	}
@@ -293,6 +313,7 @@ public abstract class Type implements ImmutableType, TypeWithAnnotations, TypeWi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImmutableMethodType castToMethodType() {
 		return null;
 	}

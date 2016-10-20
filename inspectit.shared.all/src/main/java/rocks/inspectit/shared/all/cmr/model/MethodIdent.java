@@ -22,12 +22,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import rocks.inspectit.shared.all.jpa.ListStringConverter;
-
-import org.apache.commons.collections.CollectionUtils;
 
 /**
  * The Method Ident class is used to store the information of the Agent(s) about an instrumented
@@ -38,8 +37,8 @@ import org.apache.commons.collections.CollectionUtils;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
-	@NamedQuery(name = MethodIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m.id, m.parameters FROM MethodIdent m WHERE m.platformIdent.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType "),
-	@NamedQuery(name = MethodIdent.UPDATE_TIMESTAMP, query = "UPDATE MethodIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
+		@NamedQuery(name = MethodIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m.id, m.parameters FROM MethodIdent m WHERE m.platformIdent.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType "),
+		@NamedQuery(name = MethodIdent.UPDATE_TIMESTAMP, query = "UPDATE MethodIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
 public class MethodIdent implements Serializable {
 
 	/**

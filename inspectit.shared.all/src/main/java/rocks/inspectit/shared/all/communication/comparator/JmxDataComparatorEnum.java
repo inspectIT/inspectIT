@@ -62,6 +62,7 @@ public enum JmxDataComparatorEnum implements IDataComparator<JmxSensorValueData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(JmxSensorValueData o1, JmxSensorValueData o2, ICachedDataService cachedDataService) {
 		switch (this) {
 		case VALUE:

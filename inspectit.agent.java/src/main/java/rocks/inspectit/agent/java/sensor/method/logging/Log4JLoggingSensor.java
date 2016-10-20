@@ -41,6 +41,7 @@ public class Log4JLoggingSensor extends AbstractMethodSensor implements IMethodS
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return hook;
 	}

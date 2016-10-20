@@ -62,6 +62,7 @@ public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addMeasurements(List<MethodSensorData> measurements) {
 		if (null == measurements) {
 			throw new IllegalArgumentException("Measurements cannot be null!");
@@ -86,6 +87,7 @@ public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean hasNext() {
 		return !stack.isEmpty();
 	}
@@ -93,6 +95,7 @@ public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<MethodSensorData> next() {
 		synchronized (this) {
 			return stack.removeLast();
@@ -102,6 +105,7 @@ public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
@@ -109,6 +113,7 @@ public class SizeBufferStrategy extends AbstractBufferStrategy<MethodSensorData>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void init(Map<String, String> settings) {
 		if (settings.containsKey("size")) {
 			this.size = Integer.parseInt(settings.get("size"));

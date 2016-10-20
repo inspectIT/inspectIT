@@ -109,6 +109,7 @@ public class SortedArraySet<E> extends AbstractCollection<E> implements Updateab
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void addOrUpdate(E e) {
 		if (null == e) {

@@ -64,6 +64,7 @@ public class IbmJava6PlatformSensorInfoProvider implements PlatformSensorInfoPro
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MemoryInfoProvider getMemoryInfoProvider() {
 		return MEMORY_INFO_PROVIDER;
 	}
@@ -71,6 +72,7 @@ public class IbmJava6PlatformSensorInfoProvider implements PlatformSensorInfoPro
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public OperatingSystemInfoProvider getOperatingSystemInfoProvider() {
 		return operatingSystemInfoProvider;
 	}
@@ -78,6 +80,7 @@ public class IbmJava6PlatformSensorInfoProvider implements PlatformSensorInfoPro
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RuntimeInfoProvider getRuntimeInfoProvider() {
 		return RUNTIME_INFO_PROVIDER;
 	}
@@ -85,6 +88,7 @@ public class IbmJava6PlatformSensorInfoProvider implements PlatformSensorInfoPro
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ThreadInfoProvider getThreadInfoProvider() {
 		return THREAD_INFO_PROVIDER;
 	}

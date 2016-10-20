@@ -87,6 +87,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	 *
 	 * @return Returns {@link ImmutableTypeWithMethods} being this method's class or interface.
 	 */
+	@Override
 	public ImmutableTypeWithMethods getImmutableClassOrInterfaceType() {
 		return classOrInterface;
 	}
@@ -117,6 +118,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	 *
 	 * @return {@link #name}
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -136,6 +138,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	 *
 	 * @return {@link #modifiers}
 	 */
+	@Override
 	public int getModifiers() {
 		return modifiers;
 	}
@@ -146,6 +149,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	 * @param modifiers
 	 *            New value for {@link #modifiers}
 	 */
+	@Override
 	public void setModifiers(int modifiers) {
 		this.modifiers = modifiers;
 	}
@@ -153,6 +157,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Character getMethodCharacter() {
 		if ("<init>".equals(name)) {
 			return Character.CONSTRUCTOR;
@@ -187,6 +192,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	 *
 	 * @return {@link #parameters}
 	 */
+	@Override
 	public List<String> getParameters() {
 		if (null == parameters) {
 			return Collections.emptyList();
@@ -282,6 +288,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableClassType> getImmutableExceptions() {
 		return getExceptions();
 	}
@@ -289,6 +296,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addAnnotation(AnnotationType annotationType) {
 		addAnnotationNoBidirectionalUpdate(annotationType);
 		annotationType.addAnnotatedType(this);
@@ -297,6 +305,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addAnnotationNoBidirectionalUpdate(AnnotationType annotationType) {
 		if (null == annotations) {
 			annotations = new TypeSet<AnnotationType>();
@@ -307,6 +316,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<AnnotationType> getAnnotations() {
 		if (null == annotations) {
 			return Collections.emptySet();
@@ -317,6 +327,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeAnnotation(AnnotationType annotationType) {
 		if (null == annotations) {
 			return;
@@ -327,6 +338,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableAnnotationType> getImmutableAnnotations() {
 		return getAnnotations();
 	}
@@ -353,6 +365,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isType() {
 		return false;
 	}
@@ -360,6 +373,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isMethodType() {
 		return true;
 	}
@@ -367,6 +381,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImmutableType castToType() {
 		return null;
 	}
@@ -374,6 +389,7 @@ public class MethodType implements TypeWithAnnotations, TypeWithModifiers, Immut
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ImmutableMethodType castToMethodType() {
 		return this;
 	}

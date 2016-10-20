@@ -111,6 +111,7 @@ public class WildcardMatchPattern implements IMatchPattern {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final boolean match(String match) {
 		if (everything) {
 			return true;
@@ -159,6 +160,7 @@ public class WildcardMatchPattern implements IMatchPattern {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getPattern() {
 		return template;
 	}

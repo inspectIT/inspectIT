@@ -21,6 +21,7 @@ public interface ImmutableInterfaceType extends ImmutableAbstractInterfaceType {
 	 *
 	 * @return Returns immutable annotations as an unmodifiableSet.
 	 */
+	@Override
 	Set<? extends ImmutableAnnotationType> getImmutableAnnotations();
 
 	/**

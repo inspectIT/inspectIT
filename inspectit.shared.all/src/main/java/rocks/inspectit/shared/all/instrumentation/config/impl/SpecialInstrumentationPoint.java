@@ -23,7 +23,7 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 
 	/**
 	 * Gets {@link #id}.
-	 * 
+	 *
 	 * @return {@link #id}
 	 */
 	public long getId() {
@@ -32,7 +32,7 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 
 	/**
 	 * Sets {@link #id}.
-	 * 
+	 *
 	 * @param id
 	 *            New value for {@link #id}
 	 */
@@ -42,7 +42,7 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 
 	/**
 	 * Gets {@link #sensorId}.
-	 * 
+	 *
 	 * @return {@link #sensorId}
 	 */
 	public long getSensorId() {
@@ -51,7 +51,7 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 
 	/**
 	 * Sets {@link #sensorId}.
-	 * 
+	 *
 	 * @param sensorId
 	 *            New value for {@link #sensorId}
 	 */

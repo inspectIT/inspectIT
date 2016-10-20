@@ -22,6 +22,7 @@ public class MethodTypeSet extends SortedArraySet<MethodType> {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int compare(MethodType o1, MethodType o2) {
 			// first name
 			int result = o1.getName().compareTo(o2.getName());

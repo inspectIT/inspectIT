@@ -32,6 +32,7 @@ public enum HttpTimerDataComparatorEnum implements IDataComparator<HttpTimerData
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(HttpTimerData o1, HttpTimerData o2, ICachedDataService cachedDataService) {
 		return compare(o1, o2);
 	}
@@ -39,6 +40,7 @@ public enum HttpTimerDataComparatorEnum implements IDataComparator<HttpTimerData
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(HttpTimerData o1, HttpTimerData o2) {
 		switch (this) {
 		case URI:

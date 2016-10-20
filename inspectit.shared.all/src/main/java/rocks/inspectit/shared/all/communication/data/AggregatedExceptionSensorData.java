@@ -154,6 +154,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(ExceptionSensorData data) {
 		if (data instanceof AggregatedExceptionSensorData) {
 			aggregateExceptionData((AggregatedExceptionSensorData) data);
@@ -166,6 +167,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<Long> getAggregatedIds() {
 		return aggregatedIds.keySet();
 	}
@@ -173,6 +175,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clearAggregatedIds() {
 		aggregatedIds.clear();
 
@@ -181,6 +184,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ExceptionSensorData getData() {
 		return this;
 	}
