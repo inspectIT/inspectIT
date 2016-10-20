@@ -11,7 +11,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.dialog.EditNameDescriptionDialog;

@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.impl;
+package rocks.inspectit.shared.all.serializer.impl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -9,8 +9,8 @@ import com.esotericsoftware.kryo.util.ObjectMap;
 
 import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.InvocationAwareData.MutableInt;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
-import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.serializer.util.KryoSerializationPreferences;
 
 /**
  * Special serializer that can dismiss writing of the

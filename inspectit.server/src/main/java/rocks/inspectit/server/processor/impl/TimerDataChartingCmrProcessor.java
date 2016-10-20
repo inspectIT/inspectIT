@@ -20,10 +20,10 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.shared.all.spring.logger.Log;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
-import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
-import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 
 /**
  * Processor that saves {@link TimerData} or {@link HttpTimerData} to database correctly if the

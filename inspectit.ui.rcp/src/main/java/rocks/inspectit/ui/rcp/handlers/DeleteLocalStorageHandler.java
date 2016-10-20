@@ -14,7 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.provider.ILocalStorageDataProvider;

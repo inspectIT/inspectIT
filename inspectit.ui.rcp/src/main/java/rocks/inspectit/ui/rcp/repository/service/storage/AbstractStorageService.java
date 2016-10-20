@@ -10,7 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.exception.BusinessException;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;

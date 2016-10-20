@@ -74,7 +74,7 @@ import org.eclipse.ui.progress.UIJob;
 
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.exception.BusinessException;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.storage.IStorageData;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;

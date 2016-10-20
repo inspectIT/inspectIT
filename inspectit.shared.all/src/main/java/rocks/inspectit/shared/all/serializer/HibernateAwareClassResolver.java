@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer;
+package rocks.inspectit.shared.all.serializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.util.DefaultClassResolver;
 
-import rocks.inspectit.shared.all.storage.serializer.impl.HibernateProxySerializer;
+import rocks.inspectit.shared.all.serializer.impl.HibernateProxySerializer;
 import rocks.inspectit.shared.all.util.IHibernateUtil;
 
 /**

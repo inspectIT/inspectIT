@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.schema;
+package rocks.inspectit.shared.all.serializer.schema;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.spring.logger.Log;
-import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 
 /**
  * {@link ClassSchemaManager} holds all schemas that are defined, and provides them to the

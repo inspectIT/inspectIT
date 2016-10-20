@@ -8,7 +8,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.InvocationAwareData.MutableInt;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
-import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.all.serializer.util.KryoSerializationPreferences;
 import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.storage.StorageData;

@@ -4,11 +4,11 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.shared.all.serializer.ISerializerProvider;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
 import rocks.inspectit.shared.all.storage.nio.stream.SocketExtendedByteBufferInputStream;
 import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
-import rocks.inspectit.shared.all.storage.serializer.ISerializerProvider;
-import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
 
 /**
  * Provider for all needed prototypes since we don't have spring config files anymore.

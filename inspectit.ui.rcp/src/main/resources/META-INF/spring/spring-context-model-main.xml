@@ -372,15 +372,15 @@
 
 	<bean id="loggerPostProcessor" class="rocks.inspectit.shared.all.spring.logger.LoggerPostProcessor" />
 
-	<bean id="classSchemaManager" class="rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager">
+	<bean id="classSchemaManager" class="rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager">
 		<property name="schemaListFile" value="classpath:schema/schemaList.txt" />
 	</bean>
 
-	<bean id="serializationManager" class="rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager" scope="prototype" lazy-init="true" />
+	<bean id="serializationManager" class="rocks.inspectit.shared.all.serializer.impl.SerializationManager" scope="prototype" lazy-init="true" />
 
 	<bean id="kryoNetNetwork" class="rocks.inspectit.shared.all.util.KryoNetNetwork" />
 
-	<bean id="serializationManagerProvider" class="rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider">
+	<bean id="serializationManagerProvider" class="rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider">
 		<lookup-method name="createSerializer" bean="serializationManager" />
 	</bean>
 

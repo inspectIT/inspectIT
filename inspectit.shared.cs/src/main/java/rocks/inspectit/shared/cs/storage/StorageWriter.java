@@ -35,12 +35,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.esotericsoftware.kryo.io.Output;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.serializer.ISerializer;
+import rocks.inspectit.shared.all.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
 import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
-import rocks.inspectit.shared.all.storage.serializer.ISerializer;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
-import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;

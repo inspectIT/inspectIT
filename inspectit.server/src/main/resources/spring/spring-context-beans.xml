@@ -21,7 +21,7 @@
 		<lookup-method name="createExtendedByteBufferInputStream" bean="extendedByteBufferInputStream" />
 	</bean>
 
-	<bean id="serializationManagerProvider" class="rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider">
+	<bean id="serializationManagerProvider" class="rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider">
 		<lookup-method name="createSerializer" bean="serializationManager" />
 	</bean>
 

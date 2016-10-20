@@ -39,10 +39,10 @@ import com.esotericsoftware.kryo.io.Output;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.serializer.ISerializer;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.storage.nio.stream.ExtendedByteBufferOutputStream;
 import rocks.inspectit.shared.all.storage.nio.stream.StreamProvider;
-import rocks.inspectit.shared.all.storage.serializer.ISerializer;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.storage.StorageWriter.WriteTask;
 import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;

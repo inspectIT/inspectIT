@@ -25,7 +25,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressConstants;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
 import rocks.inspectit.shared.cs.storage.label.type.impl.ExploredByLabelType;
 import rocks.inspectit.ui.rcp.InspectIT;

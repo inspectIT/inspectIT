@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.util;
+package rocks.inspectit.shared.all.serializer.util;
 
 /**
  * Class where all keys to the serialization preferences are listed.

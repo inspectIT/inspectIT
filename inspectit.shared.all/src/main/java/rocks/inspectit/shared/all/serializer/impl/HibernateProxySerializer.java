@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.impl;
+package rocks.inspectit.shared.all.serializer.impl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
