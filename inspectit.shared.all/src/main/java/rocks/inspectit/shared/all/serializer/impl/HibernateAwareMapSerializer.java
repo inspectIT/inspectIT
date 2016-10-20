@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.impl;
+package rocks.inspectit.shared.all.serializer.impl;
 
 import java.util.Map;
 

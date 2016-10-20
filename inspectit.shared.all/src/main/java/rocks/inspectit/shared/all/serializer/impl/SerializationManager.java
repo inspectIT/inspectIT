@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.impl;
+package rocks.inspectit.shared.all.serializer.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
@@ -126,11 +126,11 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumenta
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
 import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
-import rocks.inspectit.shared.all.storage.serializer.HibernateAwareClassResolver;
-import rocks.inspectit.shared.all.storage.serializer.IKryoProvider;
-import rocks.inspectit.shared.all.storage.serializer.ISerializer;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.serializer.HibernateAwareClassResolver;
+import rocks.inspectit.shared.all.serializer.IKryoProvider;
+import rocks.inspectit.shared.all.serializer.ISerializer;
+import rocks.inspectit.shared.all.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
 import rocks.inspectit.shared.all.util.IHibernateUtil;
 import rocks.inspectit.shared.all.util.KryoNetNetwork;
 import rocks.inspectit.shared.all.util.TimeFrame;

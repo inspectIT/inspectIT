@@ -30,9 +30,9 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.io.FileResolver;
 import rocks.inspectit.agent.java.spring.PrototypesProvider;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.shared.all.spring.logger.Log;
-import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
-import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
 
 /**
  * Implementation of the {@link IClassHashHelper} that holds all data in one concurrent map. Keys in

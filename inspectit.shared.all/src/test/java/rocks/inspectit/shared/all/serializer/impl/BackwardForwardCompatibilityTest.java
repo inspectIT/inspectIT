@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.impl;
+package rocks.inspectit.shared.all.serializer.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -19,8 +19,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchema;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.serializer.impl.CustomCompatibleFieldSerializer;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchema;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
 
 @SuppressWarnings("PMD")
 public class BackwardForwardCompatibilityTest {

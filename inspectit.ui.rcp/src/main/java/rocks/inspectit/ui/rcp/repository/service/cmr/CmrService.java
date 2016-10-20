@@ -2,7 +2,7 @@ package rocks.inspectit.ui.rcp.repository.service.cmr;
 
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
-import rocks.inspectit.shared.all.storage.serializer.provider.SerializationManagerProvider;
+import rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**

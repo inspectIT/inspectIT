@@ -40,7 +40,7 @@ import rocks.inspectit.shared.all.communication.data.AggregatedTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
-import rocks.inspectit.shared.all.storage.serializer.util.KryoSerializationPreferences;
+import rocks.inspectit.shared.all.serializer.util.KryoSerializationPreferences;
 import rocks.inspectit.shared.cs.indexing.aggregation.IAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
 import rocks.inspectit.shared.cs.storage.IWriter;

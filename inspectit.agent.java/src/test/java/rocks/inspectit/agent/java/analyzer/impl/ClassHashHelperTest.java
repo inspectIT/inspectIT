@@ -32,8 +32,8 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.io.FileResolver;
 import rocks.inspectit.agent.java.spring.PrototypesProvider;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
-import rocks.inspectit.shared.all.storage.serializer.SerializationException;
-import rocks.inspectit.shared.all.storage.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings("PMD")

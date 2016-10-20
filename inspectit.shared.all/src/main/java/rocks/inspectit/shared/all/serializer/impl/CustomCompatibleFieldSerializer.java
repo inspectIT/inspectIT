@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.storage.serializer.impl;
+package rocks.inspectit.shared.all.serializer.impl;
 
 import static com.esotericsoftware.minlog.Log.TRACE;
 import static com.esotericsoftware.minlog.Log.trace;
@@ -14,8 +14,8 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryo.util.ObjectMap;
 
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchema;
-import rocks.inspectit.shared.all.storage.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchema;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
 
 /**
  * This is the custom compatible {@link FieldSerializer} that uses our {@link ClassSchemaManager} to
