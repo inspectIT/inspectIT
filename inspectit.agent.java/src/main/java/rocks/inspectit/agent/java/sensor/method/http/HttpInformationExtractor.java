@@ -14,7 +14,8 @@ import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 
 /**
- * Thread-safe realization to extract information from <code>HttpServletRequests</code> and <code>HttpServletResponses</code>.
+ * Thread-safe realization to extract information from <code>HttpServletRequests</code> and
+ * <code>HttpServletResponses</code>.
  *
  * @author Stefan Siegl, Alexander Wert
  */

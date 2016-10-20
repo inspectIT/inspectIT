@@ -65,6 +65,7 @@ public class HttpSensor extends AbstractMethodSensor implements IMethodSensor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return hook;
 	}

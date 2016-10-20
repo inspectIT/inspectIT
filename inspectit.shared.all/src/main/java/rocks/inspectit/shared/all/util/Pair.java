@@ -80,8 +80,8 @@ public class Pair<A, B> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getFirst() == null) ? 0 : getFirst().hashCode());
-		result = prime * result + ((getSecond() == null) ? 0 : getSecond().hashCode());
+		result = (prime * result) + ((getFirst() == null) ? 0 : getFirst().hashCode());
+		result = (prime * result) + ((getSecond() == null) ? 0 : getSecond().hashCode());
 		return result;
 	}
 

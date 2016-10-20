@@ -31,6 +31,7 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	 * Runnable which sends the keep-alive signal.
 	 */
 	private final Runnable keepAliveRunner = new Runnable() {
+		@Override
 		public void run() {
 			try {
 				if (connection.isConnected()) {
@@ -87,6 +88,7 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	 *
 	 * Starts the sending of the keep-alive signals.
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (scheduledTask == null) {
 			scheduledTask = executorService.scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
@@ -98,6 +100,7 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	 *
 	 * Stops the further sending of keep-alive messages.
 	 */
+	@Override
 	public void destroy() throws Exception {
 		scheduledTask.cancel(false);
 	}

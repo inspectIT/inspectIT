@@ -79,6 +79,7 @@ public class InvocationSequenceSensor extends AbstractMethodSensor implements IM
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return invocationSequenceHook;
 	}

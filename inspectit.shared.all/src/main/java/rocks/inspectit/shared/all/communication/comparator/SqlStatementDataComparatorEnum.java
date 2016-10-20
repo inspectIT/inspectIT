@@ -53,6 +53,7 @@ public enum SqlStatementDataComparatorEnum implements IDataComparator<SqlStateme
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(SqlStatementData o1, SqlStatementData o2, ICachedDataService cachedDataService) {
 		return compare(o1, o2);
 	}
@@ -60,6 +61,7 @@ public enum SqlStatementDataComparatorEnum implements IDataComparator<SqlStateme
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(SqlStatementData o1, SqlStatementData o2) {
 		switch (this) {
 		case IS_PREPARED_STATEMENT:

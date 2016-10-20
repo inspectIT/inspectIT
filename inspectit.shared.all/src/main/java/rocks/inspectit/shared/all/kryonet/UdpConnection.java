@@ -15,11 +15,11 @@ import java.nio.channels.Selector;
 import com.esotericsoftware.kryonet.KryoNetException;
 
 /**
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan
+ * Sweet. License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
+ *
  * @author Nathan Sweet <misc@n4te.com>
  */
 @SuppressWarnings("all")
@@ -82,8 +82,9 @@ class UdpConnection {
 
 	public InetSocketAddress readFromAddress() throws IOException {
 		DatagramChannel datagramChannel = this.datagramChannel;
-		if (datagramChannel == null)
+		if (datagramChannel == null) {
 			throw new SocketException("Connection is closed.");
+		}
 		lastCommunicationTime = System.currentTimeMillis();
 		return (InetSocketAddress) datagramChannel.receive(readBuffer);
 	}
@@ -93,8 +94,9 @@ class UdpConnection {
 		try {
 			try {
 				Object object = serialization.read(connection, readBuffer);
-				if (readBuffer.hasRemaining())
+				if (readBuffer.hasRemaining()) {
 					throw new KryoNetException("Incorrect number of bytes (" + readBuffer.remaining() + " remaining) used to deserialize object: " + object);
+				}
 				return object;
 			} catch (Exception ex) {
 				throw new KryoNetException("Error during deserialization.", ex);
@@ -107,8 +109,9 @@ class UdpConnection {
 	/** This method is thread safe. */
 	public int send(Connection connection, Object object, SocketAddress address) throws IOException {
 		DatagramChannel datagramChannel = this.datagramChannel;
-		if (datagramChannel == null)
+		if (datagramChannel == null) {
 			throw new SocketException("Connection is closed.");
+		}
 		synchronized (writeLock) {
 			try {
 				try {
@@ -136,16 +139,18 @@ class UdpConnection {
 			if (datagramChannel != null) {
 				datagramChannel.close();
 				datagramChannel = null;
-				if (selectionKey != null)
+				if (selectionKey != null) {
 					selectionKey.selector().wakeup();
+				}
 			}
 		} catch (IOException ex) {
-			if (DEBUG)
+			if (DEBUG) {
 				debug("kryonet", "Unable to close UDP connection.", ex);
+			}
 		}
 	}
 
 	public boolean needsKeepAlive(long time) {
-		return connectedAddress != null && keepAliveMillis > 0 && time - lastCommunicationTime > keepAliveMillis;
+		return (connectedAddress != null) && (keepAliveMillis > 0) && ((time - lastCommunicationTime) > keepAliveMillis);
 	}
 }

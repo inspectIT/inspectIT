@@ -106,6 +106,7 @@ public abstract class AbstractInterfaceType extends Type implements ImmutableAbs
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableClassType> getImmutableRealizingClasses() {
 		return getRealizingClasses();
 	}

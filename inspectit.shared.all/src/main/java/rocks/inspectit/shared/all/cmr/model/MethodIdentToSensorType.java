@@ -27,8 +27,8 @@ import org.codehaus.jackson.annotate.JsonBackReference;
  */
 @Table(indexes = { @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodIdent"), @Index(name = "method_ident_to_sensor_type_idx", columnList = "methodSensorTypeIdent") })
 @NamedQueries({
-	@NamedQuery(name = MethodIdentToSensorType.FIND_ID_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, query = "SELECT m.id from MethodIdentToSensorType m JOIN m.methodIdent mi JOIN m.methodSensorTypeIdent ms WHERE mi.id=:methodIdentId AND ms.id=:methodSensorTypeIdentId"),
-	@NamedQuery(name = MethodIdentToSensorType.UPDATE_TIMESTAMP, query = "UPDATE MethodIdentToSensorType SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
+		@NamedQuery(name = MethodIdentToSensorType.FIND_ID_FOR_METHOD_ID_AND_METOHD_SENSOR_TYPE_ID, query = "SELECT m.id from MethodIdentToSensorType m JOIN m.methodIdent mi JOIN m.methodSensorTypeIdent ms WHERE mi.id=:methodIdentId AND ms.id=:methodSensorTypeIdentId"),
+		@NamedQuery(name = MethodIdentToSensorType.UPDATE_TIMESTAMP, query = "UPDATE MethodIdentToSensorType SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
 @Entity
 public class MethodIdentToSensorType implements Serializable {
 

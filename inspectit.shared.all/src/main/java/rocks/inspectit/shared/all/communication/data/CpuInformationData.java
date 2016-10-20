@@ -198,6 +198,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(CpuInformationData other) {
 		count += other.count;
 		processCpuTime += other.processCpuTime;
@@ -209,6 +210,7 @@ public class CpuInformationData extends SystemSensorData implements IAggregatedD
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CpuInformationData getData() {
 		return this;
 	}

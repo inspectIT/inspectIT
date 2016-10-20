@@ -138,7 +138,7 @@ public abstract class AbstractMethodInstrumenter extends AdviceAdapter {
 
 	/**
 	 * Gets {@link #methodId}.
-	 * 
+	 *
 	 * @return {@link #methodId}
 	 */
 	public long getMethodId() {
@@ -147,7 +147,7 @@ public abstract class AbstractMethodInstrumenter extends AdviceAdapter {
 
 	/**
 	 * Gets {@link #enhancedExceptionSensor}.
-	 * 
+	 *
 	 * @return {@link #enhancedExceptionSensor}
 	 */
 	public boolean isEnhancedExceptionSensor() {

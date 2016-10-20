@@ -37,6 +37,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return osBean.getName();
 	}
@@ -44,6 +45,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getArch() {
 		return osBean.getArch();
 	}
@@ -51,6 +53,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getVersion() {
 		return osBean.getVersion();
 	}
@@ -58,6 +61,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getAvailableProcessors() {
 		return osBean.getAvailableProcessors();
 	}
@@ -65,6 +69,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getCommittedVirtualMemorySize() {
 		return osBean.getCommittedVirtualMemorySize();
 	}
@@ -72,6 +77,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getFreePhysicalMemorySize() {
 		return osBean.getFreePhysicalMemorySize();
 	}
@@ -79,6 +85,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getFreeSwapSpaceSize() {
 		return osBean.getFreeSwapSpaceSize();
 	}
@@ -86,6 +93,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getProcessCpuTime() {
 		return osBean.getProcessCpuTime();
 	}
@@ -93,6 +101,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getTotalPhysicalMemorySize() {
 		return osBean.getTotalPhysicalMemorySize();
 	}
@@ -100,6 +109,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getTotalSwapSpaceSize() {
 		return osBean.getTotalSwapSpaceSize();
 	}
@@ -107,6 +117,7 @@ public class SunOperatingSystemInfoProvider implements OperatingSystemInfoProvid
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float retrieveCpuUsage() {
 		cpuCalculator.setUptime(runtimeBean.getUptime());
 		cpuCalculator.setProcessCpuTime(this.getProcessCpuTime());

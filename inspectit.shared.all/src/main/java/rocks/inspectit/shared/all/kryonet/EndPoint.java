@@ -8,11 +8,11 @@ import com.esotericsoftware.kryonet.KryoSerialization;
 /**
  * Represents the local end point of a connection.
  * <p>
- * <b>IMPORTANT:</b> The class code is copied/taken/based from <a
- * href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan Sweet.
- * License info can be found <a
- * href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
- * 
+ * <b>IMPORTANT:</b> The class code is copied/taken/based from
+ * <a href="https://github.com/EsotericSoftware/kryonet">kryonet</a>. Original author is Nathan
+ * Sweet. License info can be found
+ * <a href="https://github.com/EsotericSoftware/kryonet/blob/master/license.txt">here</a>.
+ *
  * @author Nathan Sweet <misc@n4te.com>
  */
 @SuppressWarnings("all")
@@ -27,6 +27,7 @@ public interface EndPoint extends Runnable {
 	public void removeListener(Listener listener);
 
 	/** Continually updates this end point until {@link #stop()} is called. */
+	@Override
 	public void run();
 
 	/** Starts a new thread that calls {@link #run()}. */

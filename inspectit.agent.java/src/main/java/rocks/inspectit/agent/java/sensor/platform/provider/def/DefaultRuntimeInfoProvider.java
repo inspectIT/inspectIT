@@ -36,6 +36,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getTotalCompilationTime() {
 		try {
 			return compilationBean.getTotalCompilationTime();
@@ -47,6 +48,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getTotalLoadedClassCount() {
 		return classLoadingBean.getTotalLoadedClassCount();
 	}
@@ -54,6 +56,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getLoadedClassCount() {
 		return classLoadingBean.getLoadedClassCount();
 	}
@@ -61,6 +64,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getUnloadedClassCount() {
 		return classLoadingBean.getUnloadedClassCount();
 	}
@@ -68,6 +72,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getJitCompilerName() {
 		return compilationBean.getName();
 	}
@@ -75,6 +80,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getVmName() {
 		try {
 			return runtimeBean.getVmName();
@@ -86,6 +92,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getVmVendor() {
 		try {
 			return runtimeBean.getVmVendor();
@@ -97,6 +104,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getVmVersion() {
 		try {
 			return runtimeBean.getVmVersion();
@@ -108,6 +116,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getSpecName() {
 		try {
 			return runtimeBean.getSpecName();
@@ -119,6 +128,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getClassPath() {
 		try {
 			return runtimeBean.getClassPath();
@@ -130,6 +140,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getLibraryPath() {
 		try {
 			return runtimeBean.getLibraryPath();
@@ -141,6 +152,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getBootClassPath() {
 		try {
 			return runtimeBean.getBootClassPath();
@@ -154,6 +166,7 @@ public class DefaultRuntimeInfoProvider implements RuntimeInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getUptime() {
 		return runtimeBean.getUptime();
 	}

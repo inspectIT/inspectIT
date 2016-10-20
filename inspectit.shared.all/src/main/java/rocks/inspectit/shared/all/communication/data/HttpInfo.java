@@ -186,6 +186,7 @@ public class HttpInfo implements Sizeable, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes) {
 		return getObjectSize(objectSizes, true);
 	}
@@ -193,6 +194,7 @@ public class HttpInfo implements Sizeable, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(3, 0, 0, 0, 1, 0);

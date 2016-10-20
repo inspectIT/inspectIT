@@ -34,6 +34,7 @@ public class EqualsMatchPattern implements IMatchPattern {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean match(String match) {
 		return Objects.equal(template, match);
 	}
@@ -41,6 +42,7 @@ public class EqualsMatchPattern implements IMatchPattern {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getPattern() {
 		return template;
 	}

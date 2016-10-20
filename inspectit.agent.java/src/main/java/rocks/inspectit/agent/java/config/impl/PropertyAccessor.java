@@ -49,6 +49,7 @@ public class PropertyAccessor implements IPropertyAccessor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getPropertyContent(PropertyPathStart propertyPathStart, Object clazz, Object[] parameters, Object returnValue) throws PropertyAccessException {
 		if (null == propertyPathStart) {
 			throw new PropertyAccessException("Property path start cannot be null!");
@@ -237,6 +238,7 @@ public class PropertyAccessor implements IPropertyAccessor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ParameterContentData> getParameterContentData(List<PropertyPathStart> propertyAccessorList, Object clazz, Object[] parameters, Object returnValue) {
 		List<ParameterContentData> parameterContentData = new ArrayList<ParameterContentData>();
 		for (PropertyPathStart start : propertyAccessorList) {

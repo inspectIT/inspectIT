@@ -68,8 +68,14 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	/**
 	 * Notification filter that listeners only to the MBeanServerNotification events.
 	 */
-	@SuppressWarnings("serial")
 	private static final NotificationFilter NOTIFICATION_FILTER = new NotificationFilter() {
+
+		/**
+		 * Generated UID.
+		 */
+		private static final long serialVersionUID = 3300812282583960575L;
+
+		@Override
 		public boolean isNotificationEnabled(Notification notification) {
 			String type = notification.getType();
 			return MBeanServerNotification.REGISTRATION_NOTIFICATION.equals(type) || MBeanServerNotification.UNREGISTRATION_NOTIFICATION.equals(type);
@@ -163,6 +169,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public JmxSensorTypeConfig getSensorTypeConfig() {
 		return sensorTypeConfig;
 	}
@@ -170,6 +177,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void update(ICoreService coreService) {
 		if (!initialized) {
 			return;
@@ -248,6 +256,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void handleNotification(Notification notification, Object handback) {
 		if (notification instanceof MBeanServerNotification) {
 			MBeanServerNotification serverNotification = (MBeanServerNotification) notification;
@@ -276,7 +285,6 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	 * @param mBeanName
 	 *            Object name to be used in the query. Use <code>null</code> to include all MBeans.
 	 */
-	@SuppressWarnings("unchecked")
 	private void registerMBeans(ObjectName mBeanName) {
 		// do nothing if not intialized or connection is not there
 		if (!initialized || !connection.isConnected()) {
@@ -336,6 +344,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		for (JmxSensorTypeConfig config : configurationStorage.getJmxSensorTypes()) {
 			if (config.getClassName().equals(this.getClass().getName())) {
@@ -348,6 +357,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean, 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroy() throws Exception {
 		// remove listener
 		if (null != mBeanServer) {

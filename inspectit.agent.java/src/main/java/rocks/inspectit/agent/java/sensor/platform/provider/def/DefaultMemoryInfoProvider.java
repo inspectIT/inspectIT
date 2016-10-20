@@ -23,6 +23,7 @@ public class DefaultMemoryInfoProvider implements MemoryInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MemoryUsage getHeapMemoryUsage() {
 		return memoryBean.getHeapMemoryUsage();
 	}
@@ -30,6 +31,7 @@ public class DefaultMemoryInfoProvider implements MemoryInfoProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MemoryUsage getNonHeapMemoryUsage() {
 		return memoryBean.getNonHeapMemoryUsage();
 	}

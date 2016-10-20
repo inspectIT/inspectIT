@@ -71,6 +71,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isPlatformRegistered() {
 		return -1 != platformId;
 	}
@@ -80,6 +81,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	 * <P>
 	 * For now just return the id.
 	 */
+	@Override
 	public long getPlatformId() throws IdNotAvailableException {
 		if (-1 == platformId) {
 			throw new IdNotAvailableException("No ID available in the moment.");
@@ -90,6 +92,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void unregisterPlatform() {
 		if (connection.isConnected() && isPlatformRegistered()) {
 			try {
@@ -181,6 +184,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		doRegistration();
 	}

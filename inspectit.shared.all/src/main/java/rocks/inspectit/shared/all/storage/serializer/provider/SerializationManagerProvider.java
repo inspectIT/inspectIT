@@ -18,5 +18,6 @@ public abstract class SerializationManagerProvider implements ISerializerProvide
 	 *
 	 * @return Returns the new {@link SerializationManager} enhanced by Spring.
 	 */
+	@Override
 	public abstract SerializationManager createSerializer();
 }

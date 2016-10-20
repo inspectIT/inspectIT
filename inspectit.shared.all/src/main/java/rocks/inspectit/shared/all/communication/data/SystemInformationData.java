@@ -26,7 +26,7 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = SystemInformationData.FIND_ALL_FOR_PLATFORM_ID, query = "SELECT s FROM SystemInformationData s WHERE s.platformIdent=:platformIdent"),
-	@NamedQuery(name = SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS, query = "SELECT s FROM SystemInformationData s WHERE s.id IN (SELECT MAX(sd.id) FROM SystemInformationData sd WHERE sd.platformIdent IN (:platformIdents) GROUP BY sd.platformIdent)") })
+		@NamedQuery(name = SystemInformationData.FIND_LATEST_FOR_PLATFORM_IDS, query = "SELECT s FROM SystemInformationData s WHERE s.id IN (SELECT MAX(sd.id) FROM SystemInformationData sd WHERE sd.platformIdent IN (:platformIdents) GROUP BY sd.platformIdent)") })
 public class SystemInformationData extends SystemSensorData {
 
 	/**

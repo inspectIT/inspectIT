@@ -78,7 +78,6 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 	@Mock
 	MethodInstrumentationConfig config2;
 
-
 	ClassInstrumenter classInstrumenter;
 
 	LoaderAwareClassWriter classWriter;
@@ -318,7 +317,6 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, null, new Object[0], methodName);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
-
 
 		// non static
 
@@ -804,7 +802,7 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 		@Test
 		public void intArrayNullParameterResultBefore() throws Exception {
 			String methodName = "intArrayNullParameter";
-			int[] returnValue = new int[] {4, 5, 6, 7, 8, 9};
+			int[] returnValue = new int[] { 4, 5, 6, 7, 8, 9 };
 			long methodId = 9L;
 
 			when(sip.getId()).thenReturn(methodId);

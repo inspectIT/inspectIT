@@ -145,6 +145,7 @@ public final class LogInitializer extends PropertyDefinerBase {
 	 * <P>
 	 * Returns {@link #logDirLocation} if one is set.
 	 */
+	@Override
 	public String getPropertyValue() {
 		return logDirLocation;
 	}

@@ -35,6 +35,7 @@ public class FileBasedVersionReader implements VersionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String readVersion() throws InvalidVersionException {
 		InputStream inputStream = null;
 		BufferedReader reader = null;

@@ -140,6 +140,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableAbstractInterfaceType> getImmutableRealizedInterfaces() {
 		return getRealizedInterfaces();
 	}
@@ -151,6 +152,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	 * @param type
 	 *            the method that is defined in this class.
 	 */
+	@Override
 	public void addMethod(MethodType type) {
 		addMethodNoBidirectionalUpdate(type);
 		type.setClassOrInterfaceTypeNoBidirectionalUpdate(this);
@@ -164,6 +166,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	 * @param type
 	 *            the method that is defined in this class.
 	 */
+	@Override
 	public void addMethodNoBidirectionalUpdate(MethodType type) {
 		if (methods == null) {
 			methods = new MethodTypeSet();
@@ -177,6 +180,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	 *
 	 * @return {@link #methods}
 	 */
+	@Override
 	public Set<MethodType> getMethods() {
 		if (null == methods) {
 			return Collections.emptySet();
@@ -187,6 +191,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableMethodType> getImmutableMethods() {
 		return getMethods();
 	}
@@ -247,6 +252,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableClassType> getImmutableSuperClasses() {
 		return getSuperClasses();
 	}
@@ -306,6 +312,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<? extends ImmutableClassType> getImmutableSubClasses() {
 		return getSubClasses();
 	}
@@ -410,6 +417,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isException() {
 		return isSubClassOf(FQN_THROWABLE);
 	}
@@ -417,6 +425,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isSubClassOf(String superClassFqn) {
 		if (null == superClassFqn) {
 			return false;
@@ -437,6 +446,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean hasInstrumentationPoints() {
 		if (CollectionUtils.isEmpty(methods)) {
 			return false;
@@ -454,6 +464,7 @@ public class ClassType extends Type implements TypeWithMethods, ImmutableClassTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<MethodInstrumentationConfig> getInstrumentationPoints() {
 		if (CollectionUtils.isEmpty(methods)) {
 			return Collections.emptyList();

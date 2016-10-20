@@ -46,6 +46,7 @@ public class ExceptionSensor extends AbstractMethodSensor implements IExceptionS
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IHook getHook() {
 		return exceptionSensorHook;
 	}

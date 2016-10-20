@@ -5,6 +5,8 @@ import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
 import info.novatec.inspectit.org.objectweb.asm.Opcodes;
 import info.novatec.inspectit.org.objectweb.asm.Type;
 
+import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+
 /**
  * Used to instrument methods that are not constructors.
  *

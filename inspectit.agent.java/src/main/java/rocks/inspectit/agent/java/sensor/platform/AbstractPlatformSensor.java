@@ -58,6 +58,7 @@ public abstract class AbstractPlatformSensor implements IPlatformSensor, Initial
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		for (PlatformSensorTypeConfig config : configurationStorage.getPlatformSensorTypes()) {
 			if (config.getClassName().equals(this.getClass().getName())) {
@@ -96,6 +97,7 @@ public abstract class AbstractPlatformSensor implements IPlatformSensor, Initial
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public PlatformSensorTypeConfig getSensorTypeConfig() {
 		return sensorTypeConfig;
 	}

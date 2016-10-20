@@ -120,6 +120,7 @@ public class JavaAgent implements ClassFileTransformer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
 		boolean threadTransformDisabled = Agent.agent.isThreadTransformDisabled();
 		if (threadTransformDisabled) {

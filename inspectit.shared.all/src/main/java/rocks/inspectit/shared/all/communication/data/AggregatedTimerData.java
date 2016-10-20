@@ -31,6 +31,7 @@ public class AggregatedTimerData extends TimerData implements IIdsAwareAggregate
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void aggregate(TimerData data) {
 		this.aggregateTimerData(data);
 		if (data instanceof AggregatedTimerData) {
@@ -49,6 +50,7 @@ public class AggregatedTimerData extends TimerData implements IIdsAwareAggregate
 	 *
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<Long> getAggregatedIds() {
 		return aggregatedIds.keySet();
 	}
@@ -56,6 +58,7 @@ public class AggregatedTimerData extends TimerData implements IIdsAwareAggregate
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clearAggregatedIds() {
 		aggregatedIds.clear();
 
@@ -64,6 +67,7 @@ public class AggregatedTimerData extends TimerData implements IIdsAwareAggregate
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public TimerData getData() {
 		return this;
 	}

@@ -25,7 +25,7 @@ public class InstrumentationAppliedCall extends AbstractRemoteMethodCall<IAgentS
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param remoteObject
 	 *            {@link IAgentService} object
 	 * @param platformIdent

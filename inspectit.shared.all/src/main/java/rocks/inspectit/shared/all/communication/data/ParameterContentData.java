@@ -157,6 +157,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes) {
 		return getObjectSize(objectSizes, true);
 	}
@@ -164,6 +165,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(3, 0, 1, 0, 1, 0);
@@ -181,6 +183,7 @@ public class ParameterContentData implements Serializable, Sizeable, Comparable<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compareTo(ParameterContentData other) {
 		return ObjectUtils.compare(name, other.name);
 	}

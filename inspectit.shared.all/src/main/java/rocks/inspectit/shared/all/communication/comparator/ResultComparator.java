@@ -92,6 +92,7 @@ public class ResultComparator<T extends DefaultData> implements Comparator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(T o1, T o2) {
 		int res = comparator.compare(o1, o2, cachedDataService);
 		if (!ascending && (res != 0)) {

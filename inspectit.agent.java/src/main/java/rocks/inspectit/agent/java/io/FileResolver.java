@@ -43,6 +43,7 @@ public class FileResolver implements InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		agentJar = SpringAgent.getInspectitJarFile();
 	}

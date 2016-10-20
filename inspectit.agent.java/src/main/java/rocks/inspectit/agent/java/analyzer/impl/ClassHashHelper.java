@@ -211,6 +211,7 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 	 * Loads the possible existing class cache from the disk if CMR reports to know classes from
 	 * this agent.
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		serializationManager = prototypesProvider.createSerializer();
 
@@ -235,6 +236,7 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 		}
 
 		Runnable saveCacheToDiskRunnable = new Runnable() {
+			@Override
 			public void run() {
 				saveCacheToDisk();
 			}
@@ -245,6 +247,7 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroy() throws Exception {
 		// save when bean is destroyed, ensure save is always done on finishing
 		saveCacheToDisk();

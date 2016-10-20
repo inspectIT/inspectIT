@@ -63,6 +63,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getComponent() {
 		return COMPONENT_NAME;
 	}
@@ -70,6 +71,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return WordUtils.capitalizeFully(this.toString().toLowerCase());
 	}
@@ -79,6 +81,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #description}
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -88,6 +91,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #possibleCause}
 	 */
+	@Override
 	public String getPossibleCause() {
 		return possibleCause;
 	}
@@ -97,6 +101,7 @@ public enum VersioningErrorCodeEnum implements IErrorCode {
 	 *
 	 * @return {@link #possibleSolution}
 	 */
+	@Override
 	public String getPossibleSolution() {
 		return possibleSolution;
 	}

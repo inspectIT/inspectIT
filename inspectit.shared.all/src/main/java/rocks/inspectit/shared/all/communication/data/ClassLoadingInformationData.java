@@ -328,6 +328,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 	 * @param other
 	 *            Object to aggregate data from.
 	 */
+	@Override
 	public void aggregate(ClassLoadingInformationData other) {
 		count += other.count;
 
@@ -347,6 +348,7 @@ public class ClassLoadingInformationData extends SystemSensorData implements IAg
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ClassLoadingInformationData getData() {
 		return this;
 	}
