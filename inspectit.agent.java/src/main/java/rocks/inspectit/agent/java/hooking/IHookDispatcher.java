@@ -136,7 +136,8 @@ public interface IHookDispatcher {
 	/**
 	 * Dispatches the 'after' on the special method.
 	 * <p>
-	 * Only dispatched if the original method did not throw an exception.
+	 * If the original method did throw an exception, then the returnValue will be the instance of
+	 * thrown exception.
 	 *
 	 * @param id
 	 *            The id of the method.
@@ -145,7 +146,7 @@ public interface IHookDispatcher {
 	 * @param parameters
 	 *            The parameters of the method.
 	 * @param returnValue
-	 *            The return value of the method.
+	 *            The return value of the method or exception being thrown.
 	 * @return Result of the dispatch. Can be <code>null</code>.
 	 */
 	Object dispatchSpecialMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue);

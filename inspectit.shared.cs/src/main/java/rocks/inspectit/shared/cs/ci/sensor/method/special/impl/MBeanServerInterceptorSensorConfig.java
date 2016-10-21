@@ -2,6 +2,7 @@ package rocks.inspectit.shared.cs.ci.sensor.method.special.impl;
 
 import javax.xml.bind.annotation.XmlTransient;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.AbstractSpecialMethodSensorConfig;
 
 /**
@@ -50,6 +51,15 @@ public final class MBeanServerInterceptorSensorConfig extends AbstractSpecialMet
 	@Override
 	public String getClassName() {
 		return CLASS_NAME;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SubstitutionDescriptor getSubstitutionDescriptor() {
+		// we just use for intercepting, no substitutions
+		return new SubstitutionDescriptor(false, false);
 	}
 
 }

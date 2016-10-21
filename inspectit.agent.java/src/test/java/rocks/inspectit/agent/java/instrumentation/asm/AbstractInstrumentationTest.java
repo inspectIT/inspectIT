@@ -46,7 +46,7 @@ public abstract class AbstractInstrumentationTest extends TestBase {
 	 * Calls method on the given object using reflection. Method will be invoked with the given
 	 * parameters.
 	 * <p>
-	 * There is support for String, int and boolean parameter types.
+	 * There is support for String, int, boolean and Object[] array parameter types.
 	 */
 	protected Object callMethod(Object object, String methodName, Object[] parameters) throws Exception {
 		if (null == parameters) {
@@ -63,6 +63,9 @@ public abstract class AbstractInstrumentationTest extends TestBase {
 			} else if ("boolean".equals(parameter)) {
 				parameterClasses[i] = Boolean.TYPE;
 				parameters[i] = false;
+			} else if ("array".equals(parameter)) {
+				parameterClasses[i] = Object[].class;
+				parameters[i] = new Object[] { 1, 2L, true, "test" };
 			} else {
 				parameterClasses[i] = Class.forName(parameter);
 			}
