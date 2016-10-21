@@ -130,4 +130,16 @@ public class InstrumentationTestClass {
 		return new String[] { "test123", "bla" };
 	}
 
+	public String returnStringParameter(String parameterOne) {
+		return parameterOne;
+	}
+
+	public boolean returnBooleanParameter(int one, boolean two) {
+		return two;
+	}
+
+	public Object returnArrayParameter(Object[] array) {
+		return array;
+	}
+
 }

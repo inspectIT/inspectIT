@@ -19,6 +19,10 @@ public interface ISpecialHook extends IHook {
 	 * result will be result of the original method. Otherwise the execution of the original method
 	 * will be normal.
 	 * <p>
+	 * The method can change parameter values in the given parameters array. If special sensor
+	 * configuration denotes parameter substitution, then changed parameters will be passed to the
+	 * original method.
+	 * <p>
 	 * Substitution of the value with <code>null</code> is not support at the moment.
 	 *
 	 * @param methodId
@@ -27,7 +31,8 @@ public interface ISpecialHook extends IHook {
 	 *            The object itself which contains the hook. The object on which the instrumented
 	 *            method was executed. <code>null</code> if method is static.
 	 * @param parameters
-	 *            The parameters of the method call.
+	 *            The parameters of the method call. Can be changed in order to change parameters
+	 *            passed to the instrumented methods.
 	 * @param ssc
 	 *            The {@link SpecialSensorConfig} object which holds all the information of the
 	 *            executed method.
@@ -42,6 +47,9 @@ public interface ISpecialHook extends IHook {
 	 * If this method returns non-null value the returned result will be result of the original
 	 * method.
 	 * <p>
+	 * <p>
+	 * Changing the parameters array has no effect here, as original method is already called.
+	 * <p>
 	 * Only called if the original method is not throwing an exception.
 	 * <p>
 	 * Substitution of the value with <code>null</code> is not support at the moment.
@@ -52,7 +60,10 @@ public interface ISpecialHook extends IHook {
 	 *            The object itself which contains the hook. The object on which the instrumented
 	 *            method was executed. <code>null</code> if method is static.
 	 * @param parameters
-	 *            The parameters of the method call.
+	 *            The parameters of the method call. If
+	 *            {@link #beforeBody(long, Object, Object[], SpecialSensorConfig)} was changing the
+	 *            original parameters, this method will receive changed parameters and not the
+	 *            original ones.
 	 * @param result
 	 *            The return value
 	 * @param ssc

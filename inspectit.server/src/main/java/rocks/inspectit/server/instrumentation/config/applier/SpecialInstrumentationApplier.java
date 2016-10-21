@@ -78,6 +78,7 @@ public class SpecialInstrumentationApplier extends AbstractSensorInstrumentation
 
 		long sensorId = methodSensorTypeConfig.getId();
 		specialInstrumentationPoint.setSensorId(sensorId);
+		specialInstrumentationPoint.setSubstitutionDescriptor(functionalAssignment.getSpecialMethodSensorConfig().getSubstitutionDescriptor());
 	}
 
 	/**

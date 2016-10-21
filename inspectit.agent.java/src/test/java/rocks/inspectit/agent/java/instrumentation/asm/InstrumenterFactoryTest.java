@@ -16,6 +16,7 @@ import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -113,7 +114,9 @@ public class InstrumenterFactoryTest extends TestBase {
 			String name = "method";
 			String desc = "()V";
 			boolean enhancedExceptionSensor = false;
+			SubstitutionDescriptor substitutionDescriptor = mock(SubstitutionDescriptor.class);
 			when(specialInstrumentationPoint.getId()).thenReturn(id);
+			when(specialInstrumentationPoint.getSubstitutionDescriptor()).thenReturn(substitutionDescriptor);
 
 			MethodVisitor methodVisitor = factory.getMethodVisitor(specialInstrumentationPoint, superMethodVisitor, 0, name, desc, enhancedExceptionSensor);
 
