@@ -35,6 +35,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
@@ -113,6 +114,8 @@ public class SpecialInstrumentationApplierTest extends TestBase {
 			AbstractSpecialMethodSensorConfig methodSensorConfig = mock(AbstractSpecialMethodSensorConfig.class);
 			when(methodSensorConfig.getClassName()).thenReturn(sensorClassName);
 			when(assignment.getSpecialMethodSensorConfig()).thenReturn(methodSensorConfig);
+			SubstitutionDescriptor substitutionDescriptor = mock(SubstitutionDescriptor.class);
+			when(methodSensorConfig.getSubstitutionDescriptor()).thenReturn(substitutionDescriptor);
 
 			String packageName = "my.favorite.package";
 			String className = "ClassName";
@@ -150,6 +153,7 @@ public class SpecialInstrumentationApplierTest extends TestBase {
 			SpecialInstrumentationPoint ssc = instrumentationConfig.getSpecialInstrumentationPoint();
 			assertThat(ssc.getId(), is(methodId));
 			assertThat(ssc.getSensorId(), is(sensorId));
+			assertThat(ssc.getSubstitutionDescriptor(), is(substitutionDescriptor));
 			assertThat(instrumentationConfig.getSensorInstrumentationPoint(), is(nullValue()));
 		}
 

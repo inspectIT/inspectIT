@@ -124,6 +124,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.PropertyPathStart;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
 import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
 import rocks.inspectit.shared.all.serializer.HibernateAwareClassResolver;
@@ -391,6 +392,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-1953
 		kryo.register(AlertErrorCodeEnum.class, new EnumSerializer(AlertErrorCodeEnum.class));
+
+		// added with INSPECTIT-2226
+		kryo.register(SubstitutionDescriptor.class, new FieldSerializer<SubstitutionDescriptor>(kryo, SubstitutionDescriptor.class));
 	}
 
 	/**
