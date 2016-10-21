@@ -107,4 +107,9 @@ public interface IInstrumenterConstant {
 	 * Object type cached.
 	 */
 	Type OBJECT_TYPE = Type.getType(Object.class);
+	/**
+	 * Object[] type cached.
+	 */
+	Type OBJECT_ARRAY_TYPE = Type.getType(Object.class);
+
 }

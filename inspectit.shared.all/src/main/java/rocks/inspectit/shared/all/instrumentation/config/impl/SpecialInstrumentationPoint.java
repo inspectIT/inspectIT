@@ -22,6 +22,11 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 	private long sensorId;
 
 	/**
+	 * {@link SubstitutionDescriptor}.
+	 */
+	private SubstitutionDescriptor substitutionDescriptor;
+
+	/**
 	 * Gets {@link #id}.
 	 *
 	 * @return {@link #id}
@@ -50,6 +55,25 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 	}
 
 	/**
+	 * Gets {@link #substitutionDescriptor}.
+	 *
+	 * @return {@link #substitutionDescriptor}
+	 */
+	public SubstitutionDescriptor getSubstitutionDescriptor() {
+		return this.substitutionDescriptor;
+	}
+
+	/**
+	 * Sets {@link #substitutionDescriptor}.
+	 *
+	 * @param substitutionDescriptor
+	 *            New value for {@link #substitutionDescriptor}
+	 */
+	public void setSubstitutionDescriptor(SubstitutionDescriptor substitutionDescriptor) {
+		this.substitutionDescriptor = substitutionDescriptor;
+	}
+
+	/**
 	 * Sets {@link #sensorId}.
 	 *
 	 * @param sensorId
@@ -68,6 +92,7 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 		int result = 1;
 		result = (prime * result) + (int) (this.id ^ (this.id >>> 32));
 		result = (prime * result) + (int) (this.sensorId ^ (this.sensorId >>> 32));
+		result = (prime * result) + ((this.substitutionDescriptor == null) ? 0 : this.substitutionDescriptor.hashCode());
 		return result;
 	}
 
@@ -90,6 +115,13 @@ public class SpecialInstrumentationPoint implements IMethodInstrumentationPoint 
 			return false;
 		}
 		if (this.sensorId != other.sensorId) {
+			return false;
+		}
+		if (this.substitutionDescriptor == null) {
+			if (other.substitutionDescriptor != null) {
+				return false;
+			}
+		} else if (!this.substitutionDescriptor.equals(other.substitutionDescriptor)) {
 			return false;
 		}
 		return true;
