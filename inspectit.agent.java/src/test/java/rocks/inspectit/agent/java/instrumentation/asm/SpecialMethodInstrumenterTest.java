@@ -1,6 +1,7 @@
 package rocks.inspectit.agent.java.instrumentation.asm;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -19,6 +20,7 @@ import info.novatec.inspectit.org.objectweb.asm.Opcodes;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -33,6 +35,7 @@ import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 
 /**
  * @author Ivan Senic
@@ -49,7 +52,7 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 		public MethodVisitor answer(InvocationOnMock invocation) throws Throwable {
 			Object[] arguments = invocation.getArguments();
 			SpecialInstrumentationPoint sip = (SpecialInstrumentationPoint) arguments[0];
-			return getSpecialMethodInstrumenter((MethodVisitor) arguments[1], (Integer) arguments[2], (String) arguments[3], (String) arguments[4], sip.getId());
+			return getSpecialMethodInstrumenter((MethodVisitor) arguments[1], (Integer) arguments[2], (String) arguments[3], (String) arguments[4], sip.getId(), sip.getSubstitutionDescriptor());
 		}
 	};
 
@@ -70,13 +73,7 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 	SpecialInstrumentationPoint sip;
 
 	@Mock
-	SpecialInstrumentationPoint sip2;
-
-	@Mock
 	MethodInstrumentationConfig config;
-
-	@Mock
-	MethodInstrumentationConfig config2;
 
 
 	ClassInstrumenter classInstrumenter;
@@ -89,7 +86,111 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 		a = agent;
 	}
 
-	public class Instrument extends SpecialMethodInstrumenterTest {
+	// inner class naming based on the substitution type, not possible to call by the test method
+
+	public class NoSubstitution extends SpecialMethodInstrumenterTest {
+
+		@BeforeMethod
+		public void setReturnValueDescriptor() {
+			when(sip.getSubstitutionDescriptor()).thenReturn(new SubstitutionDescriptor(false, false));
+		}
+
+		@Test
+		public void noResult() throws Exception {
+			String methodName = "stringNullParameter";
+			long methodId = 3L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			// call this method via reflection as we would get a class cast
+			// exception by casting to the concrete class.
+			Object result = this.callMethod(testClass, methodName, null);
+
+			assertThat(result, is((Object) methodName));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0]);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], methodName);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void resultOnBefore() throws Exception {
+			String methodName = "stringNullParameter";
+			Object returnValue = "returnValue";
+			long methodId = 3L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			when(hookDispatcher.dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0])).thenReturn(returnValue);
+			// call this method via reflection as we would get a class cast
+			// exception by casting to the concrete class.
+			Object result = this.callMethod(testClass, methodName, null);
+
+			assertThat(result, is((Object) methodName));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0]);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], methodName);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void resultOnAfter() throws Exception {
+			String methodName = "stringNullParameter";
+			Object returnValue = "returnValue";
+			long methodId = 3L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			when(hookDispatcher.dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], methodName)).thenReturn(returnValue);
+			// call this method via reflection as we would get a class cast
+			// exception by casting to the concrete class.
+			Object result = this.callMethod(testClass, methodName, null);
+
+			assertThat(result, is((Object) methodName));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0]);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], methodName);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+	}
+
+	public class ReturnValueSubstitution extends SpecialMethodInstrumenterTest {
+
+		@BeforeMethod
+		public void setReturnValueDescriptor() {
+			when(sip.getSubstitutionDescriptor()).thenReturn(new SubstitutionDescriptor(true, false));
+		}
 
 		// static
 
@@ -140,6 +241,33 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 			// now call this method
 			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
 			when(hookDispatcher.dispatchSpecialMethodBeforeBody(methodId, null, new Object[0])).thenReturn(returnValue);
+			// call this method via reflection as we would get a class cast
+			// exception by casting to the concrete class.
+			this.callMethod(testClass, methodName, null);
+
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, null, new Object[0]);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void hookStaticVoidResultOnBeforeNull() throws Exception {
+			String methodName = "voidNullParameterStatic";
+			long methodId = 7L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			when(hookDispatcher.dispatchSpecialMethodBeforeBody(methodId, null, new Object[0])).thenReturn(null);
 			// call this method via reflection as we would get a class cast
 			// exception by casting to the concrete class.
 			this.callMethod(testClass, methodName, null);
@@ -963,13 +1091,530 @@ public class SpecialMethodInstrumenterTest extends AbstractInstrumentationTest {
 			} catch (Throwable t) { // NOPMD
 			}
 
+			ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
 			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0]);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(eq(methodId), eq(testClass), eq(new Object[0]), captor.capture());
+			assertThat(captor.getValue(), is(instanceOf(Exception.class)));
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void unexpectedExceptionNotTrowing() throws Exception {
+			String methodName = "unexpectedExceptionNotThrowing";
+			Object[] parameters = { "java.lang.Object" };
+			long methodId = 9L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, Object.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			try {
+				this.callMethod(testClass, methodName, parameters);
+			} catch (Throwable t) {
+			}
+
+			ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(eq(methodId), eq(testClass), eq(parameters), captor.capture());
+			assertThat(captor.getValue(), is(instanceOf(Exception.class)));
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void exceptionHandledResultReturned() throws Exception {
+			String methodName = "exceptionHandledResultReturned";
+			long methodId = 9L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			Object result = this.callMethod(testClass, methodName, null);
+
+			assertThat(result, is((Object) 3));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0]);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], 3);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void exceptionHandledResultChanged() throws Exception {
+			String methodName = "exceptionHandledResultReturned";
+			long methodId = 9L;
+			int returnValue = 112;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			when(hookDispatcher.dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], 3)).thenReturn(returnValue);
+			Object result = this.callMethod(testClass, methodName, null);
+
+			assertThat(result, is((Object) returnValue));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0]);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], 3);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+	}
+
+	public class ParameterValueSubstitution extends SpecialMethodInstrumenterTest {
+
+		@BeforeMethod
+		public void setReturnValueDescriptor() {
+			when(sip.getSubstitutionDescriptor()).thenReturn(new SubstitutionDescriptor(false, true));
+		}
+
+		// no parameter methods
+
+		@Test
+		public void noParameters() throws Exception {
+			String methodName = "intNullParameter";
+			long methodId = 9L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			when(hookDispatcher.dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0])).thenReturn(9);
+			Object result = this.callMethod(testClass, methodName, null);
+
+			assertThat(result, is((Object) Integer.valueOf(3)));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[0]);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[0], 3);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void noChangeStringParameter() throws Exception {
+			String methodName = "returnStringParameter";
+			Object[] parameters = { "java.lang.String" };
+			long methodId = 9L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is(parameters[0]));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, parameters, parameters[0]);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void changeStringParameterOnBefore() throws Exception {
+			String methodName = "returnStringParameter";
+			Object[] parameters = { "java.lang.String" };
+			long methodId = 9L;
+			final Object parameterValue = "parameterValue";
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = parameterValue;
+					return null;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is(parameterValue));
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[] { parameterValue });
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[] { parameterValue }, parameterValue);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void changeStringParameterOnAfter() throws Exception {
+			String methodName = "returnStringParameter";
+			Object[] parameters = { "java.lang.String" };
+			long methodId = 9L;
+			final Object parameterValue = "parameterValue";
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = parameterValue;
+					return null;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, parameters, parameters[0]);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			// effectively no changes when afterBody returns the result with parameter substitution
+			assertThat(result, is(parameters[0]));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[] { parameterValue }, parameters[0]);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void changeStringParameterOnBeforeWrongClass() throws Exception {
+			String methodName = "returnStringParameter";
+			Object[] parameters = { "java.lang.String" };
+			long methodId = 9L;
+			final Long parameterValue = 10L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = parameterValue;
+					return null;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			// wrong class so no subsititution
+			assertThat(result, is(parameters[0]));
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[] { parameterValue });
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, parameters, parameters[0]);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void noChangeTwoPrimitveParameters() throws Exception {
+			String methodName = "returnBooleanParameter";
+			Object[] parameters = { "int", "boolean" };
+			long methodId = 9L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, int.class, boolean.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is(parameters[1]));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, parameters, parameters[1]);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void changeTwoPrimitiveParametersOnBefore() throws Exception {
+			String methodName = "returnBooleanParameter";
+			Object[] parameters = { "int", "boolean" };
+			long methodId = 9L;
+			final int intSub = 122563;
+			final boolean boolSub = true;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, int.class, boolean.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = intSub;
+					((Object[]) invocation.getArguments()[2])[1] = boolSub;
+					return null;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is((Object) true));
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[] { intSub, boolSub });
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[] { intSub, boolSub }, true);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void noChangeArrayParameter() throws Exception {
+			String methodName = "returnArrayParameter";
+			Object[] parameters = { "array" };
+			long methodId = 9L;
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, Object[].class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is(parameters[0]));
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, parameters, parameters[0]);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void chnageArrayParameterBefore() throws Exception {
+			String methodName = "returnArrayParameter";
+			Object[] parameters = { "array" };
+			long methodId = 9L;
+			final Object[] substitutionParam = new Object[] { "ivan", "tests", "are", "awesome" };
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, Object[].class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = substitutionParam;
+					return null;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is((Object) substitutionParam));
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[] { substitutionParam });
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[] { substitutionParam }, substitutionParam);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void changeArrayParameterBeforeWrongArrayType() throws Exception {
+			String methodName = "returnArrayParameter";
+			Object[] parameters = { "array" };
+			long methodId = 9L;
+			final int[] substitutionParam = new int[] { 1, 2, 3, 4 };
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, Object[].class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = substitutionParam;
+					return null;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is(parameters[0]));
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[] { substitutionParam });
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, parameters, parameters[0]);
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+	}
+
+	public class ReturnValueAndParameterValueSubstitution extends SpecialMethodInstrumenterTest {
+
+		@BeforeMethod
+		public void setReturnValueDescriptor() {
+			when(sip.getSubstitutionDescriptor()).thenReturn(new SubstitutionDescriptor(true, true));
+		}
+
+		// no parameter methods
+
+		@Test
+		public void changeStringParameterAndResultOnBefore() throws Exception {
+			String methodName = "returnStringParameter";
+			Object[] parameters = { "java.lang.String" };
+			long methodId = 9L;
+			final Object parameterValue = "parameterValue";
+			final Object returnValue = "returnValue";
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = parameterValue;
+					return returnValue;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is(returnValue));
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[] { parameterValue });
+			verifyNoMoreInteractions(hookDispatcher);
+		}
+
+		@Test
+		public void changeStringParameterOnBeforeAndResultOnAfter() throws Exception {
+			String methodName = "returnStringParameter";
+			Object[] parameters = { "java.lang.String" };
+			long methodId = 9L;
+			final Object parameterValue = "parameterValue";
+			final Object returnValue = "returnValue";
+
+			when(sip.getId()).thenReturn(methodId);
+			prepareConfigurationMockMethod(config, InstrumentationTestClass.class, methodName, String.class);
+			doAnswer(SPECIAL_INSTRUMENTER_ANSWER).when(instrumenterFactory).getMethodVisitor(eq(sip), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean());
+			when(config.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sip));
+
+			ClassReader cr = new ClassReader(TEST_CLASS_FQN);
+			prepareWriter(cr, null, false, config);
+			cr.accept(classInstrumenter, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+			assertThat(classInstrumenter.isByteCodeAdded(), is(true));
+			byte b[] = classWriter.toByteArray();
+
+			// now call this method
+			Object testClass = this.createInstance(TEST_CLASS_FQN, b);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					((Object[]) invocation.getArguments()[2])[0] = parameterValue;
+					return null;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, parameters);
+			doAnswer(new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					return returnValue;
+				}
+			}).when(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[] { parameterValue }, parameterValue);
+			Object result = this.callMethod(testClass, methodName, parameters);
+
+			assertThat(result, is(returnValue));
+			// possible bug in mockito, remembers the changed parameter in the invocation
+			verify(hookDispatcher).dispatchSpecialMethodBeforeBody(methodId, testClass, new Object[] { parameterValue });
+			verify(hookDispatcher).dispatchSpecialMethodAfterBody(methodId, testClass, new Object[] { parameterValue }, parameterValue);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 	}
 
-	protected static SpecialMethodInstrumenter getSpecialMethodInstrumenter(MethodVisitor superMethodVisitor, int access, String name, String desc, long id) {
-		return new SpecialMethodInstrumenter(superMethodVisitor, access, name, desc, id) {
+	protected static SpecialMethodInstrumenter getSpecialMethodInstrumenter(MethodVisitor superMethodVisitor, int access, String name, String desc, long id, SubstitutionDescriptor descriptor) {
+		return new SpecialMethodInstrumenter(superMethodVisitor, access, name, desc, id, descriptor) {
 			@Override
 			protected void loadHookDispatcher() {
 				mv.visitFieldInsn(Opcodes.GETSTATIC, Type.getInternalName(SpecialMethodInstrumenterTest.class), "dispatcher", Type.getDescriptor(IHookDispatcher.class));

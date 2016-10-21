@@ -5,7 +5,10 @@ import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
 import info.novatec.inspectit.org.objectweb.asm.Opcodes;
 import info.novatec.inspectit.org.objectweb.asm.Type;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 
 /**
  * Instrumenter for our special sensor dispatching. Currently able to replace the return value of
@@ -17,9 +20,25 @@ import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 public class SpecialMethodInstrumenter extends AbstractMethodInstrumenter {
 
 	/**
+	 * {@link SubstitutionDescriptor} that defines what to be substituted after calling the special
+	 * sensor.
+	 */
+	private SubstitutionDescriptor substitutionDescriptor;
+
+	/**
 	 * Return type.
 	 */
 	private Type returnType;
+
+	/**
+	 * Argument types.
+	 */
+	private Type[] argumentTypes;
+
+	/**
+	 * Local of the passed arguments to the beforeBody method.
+	 */
+	private int passedArgumentsLocal;
 
 	/**
 	 * Default constructor. Defines method id that will be used during instrumentation.
@@ -34,10 +53,20 @@ public class SpecialMethodInstrumenter extends AbstractMethodInstrumenter {
 	 *            Method description.
 	 * @param methodId
 	 *            Method id that will be passed to {@link IHookDispatcher}.
+	 * @param substitutionDescriptor
+	 *            {@link SubstitutionDescriptor} that defines what to be substituted after calling
+	 *            the special sensor.
 	 */
-	public SpecialMethodInstrumenter(MethodVisitor mv, int access, String name, String desc, long methodId) {
+	public SpecialMethodInstrumenter(MethodVisitor mv, int access, String name, String desc, long methodId, SubstitutionDescriptor substitutionDescriptor) {
 		super(mv, access, name, desc, methodId, false);
+
+		if (null == substitutionDescriptor) {
+			throw new IllegalArgumentException("SubstitutionDescriptor must not be null when creating the SpecialMethodInstrumenter.");
+		}
+
 		this.returnType = Type.getReturnType(desc);
+		this.argumentTypes = Type.getArgumentTypes(desc);
+		this.substitutionDescriptor = substitutionDescriptor;
 	}
 
 	/**
@@ -57,8 +86,22 @@ public class SpecialMethodInstrumenter extends AbstractMethodInstrumenter {
 	protected void onMethodEnter() {
 		// generate code for calling before body
 		generateBeforeBodyCall();
-		// and code for returning if result is not null
-		generateReturnIfResultNotNull();
+
+		if (substitutionDescriptor.isReturnValueSubstitution()) {
+			// and code for returning if result is not null
+			generateReturnIfResultNotNull();
+		} else {
+			// pop to clear result on stack
+			pop();
+		}
+
+		if (substitutionDescriptor.isParameterValueSubstitution()) {
+			// add code for substituting the parameter
+			generateParameterSubstitutionIfResultNotNull();
+		}
+
+		// start our try block
+		visitLabel(tryBlockStart);
 	}
 
 	/**
@@ -97,8 +140,41 @@ public class SpecialMethodInstrumenter extends AbstractMethodInstrumenter {
 
 		// generate code for calling after body
 		generateAfterBodyCall();
-		// and code for returning if result is not null
-		generateReturnIfResultNotNull();
+
+		if (substitutionDescriptor.isReturnValueSubstitution()) {
+			// and code for returning if result is not null
+			generateReturnIfResultNotNull();
+		} else {
+			// no need to the support parameter substitution when the original method was already
+			// called, pop to clear result on stack
+			pop();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void visitMaxs(int maxStack, int maxLocals) {
+		// the definition of the end of the try block
+		Label tryBlockEnd = new Label();
+		visitLabel(tryBlockEnd);
+
+		// setup for the finally block
+		super.visitTryCatchBlock(tryBlockStart, tryBlockEnd, finallyHandler, null);
+		visitLabel(finallyHandler);
+
+		// generate code for calling after body
+		// push exception on the stack and pass to after body call as the result
+		dup();
+		generateAfterBodyCall();
+		// we can not substitute the result when exception is thrown just pop
+		pop();
+
+		mv.visitInsn(ATHROW);
+
+		// update the max stack stuff
+		super.visitMaxs(maxStack, maxLocals);
 	}
 
 	/**
@@ -120,6 +196,14 @@ public class SpecialMethodInstrumenter extends AbstractMethodInstrumenter {
 
 		// then parameters
 		loadArgArray();
+		if (substitutionDescriptor.isParameterValueSubstitution()) {
+			// note here that we are saving the passed array as local variable
+			// this enables us to substitute the parameters later on if they are changed in the
+			// beforeBody
+			passedArgumentsLocal = newLocal(IInstrumenterConstant.OBJECT_ARRAY_TYPE);
+			storeLocal(passedArgumentsLocal);
+			loadLocal(passedArgumentsLocal);
+		}
 
 		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchSpecialMethodBeforeBody",
 				IInstrumenterConstant.DISPATCH_SPECIAL_METHOD_BEFORE_BODY_DESCRIPTOR, true);
@@ -189,10 +273,54 @@ public class SpecialMethodInstrumenter extends AbstractMethodInstrumenter {
 			loadLocal(local);
 			// we need to unbox here if needed as we are changing the result
 			unbox(returnType);
-			returnValue();
 		}
+		// if method returned something, anyway return (also on void)
+		returnValue();
 
 		visitLabel(continueExecution);
+	}
+
+	/**
+	 * Generates call to substitute the parameters of the method if the result on stack is a not
+	 * null array.
+	 */
+	private void generateParameterSubstitutionIfResultNotNull() {
+		if (ArrayUtils.isEmpty(argumentTypes)) {
+			return;
+		}
+
+		for (int index = 0; index < argumentTypes.length; index++) {
+			// load our parameter array and get the element on the current index
+			loadLocal(passedArgumentsLocal);
+			push(index);
+			arrayLoad(IInstrumenterConstant.OBJECT_TYPE);
+
+			// create new local and store current
+			int local = newLocal(IInstrumenterConstant.OBJECT_TYPE);
+			storeLocal(local);
+
+			// load type that we need to substitute to
+			Type type = argumentTypes[index];
+
+			Label continueExecution = new Label();
+
+			// then load for instance of check if it's an correct object
+			loadLocal(local);
+			instanceOfSafe(type);
+			// if zero compare
+			// we compare the result of the instance of check with the 0
+			// so we will continue execution if the result is false (0)
+			ifZCmp(EQ, continueExecution);
+
+			// load again for setting
+			loadLocal(local);
+			// we need to unbox here if needed as we are changing
+			unbox(type);
+			// the store to the wanted index
+			storeArg(index);
+
+			visitLabel(continueExecution);
+		}
 	}
 
 	/**

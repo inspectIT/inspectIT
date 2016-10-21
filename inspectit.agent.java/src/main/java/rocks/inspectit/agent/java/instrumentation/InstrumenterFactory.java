@@ -58,7 +58,7 @@ public class InstrumenterFactory {
 			}
 		} else if (instrumentationPoint instanceof SpecialInstrumentationPoint) {
 			SpecialInstrumentationPoint specialInstrumentationPoint = (SpecialInstrumentationPoint) instrumentationPoint;
-			return new SpecialMethodInstrumenter(superMethodVisitor, access, name, desc, specialInstrumentationPoint.getId());
+			return new SpecialMethodInstrumenter(superMethodVisitor, access, name, desc, specialInstrumentationPoint.getId(), specialInstrumentationPoint.getSubstitutionDescriptor());
 		}
 		throw new IllegalArgumentException("The instrumentation point " + instrumentationPoint + " is not known to the InstrumenterFactory.");
 	}
