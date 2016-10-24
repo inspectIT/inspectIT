@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -107,10 +106,12 @@ public class JavaAgent implements ClassFileTransformer {
 
 			LOGGER.info("inspectIT Agent: Initialization complete...");
 
-			// now we are analysing the already loaded classes by the jvm to instrument those
+			// register re-transformer
+			inst.addTransformer(new JavaAgent(), true);
+
+			// now we are analyzing the already loaded classes by the jvm to instrument those
 			// classes, too
 			analyzeAlreadyLoadedClasses();
-			inst.addTransformer(new JavaAgent());
 		} catch (Exception e) {
 			LOGGER.severe("Something unexpected happened while trying to initialize the Agent, aborting!");
 			e.printStackTrace(); // NOPMD
@@ -120,6 +121,7 @@ public class JavaAgent implements ClassFileTransformer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
 		boolean threadTransformDisabled = Agent.agent.isThreadTransformDisabled();
 		if (threadTransformDisabled) {
@@ -209,21 +211,19 @@ public class JavaAgent implements ClassFileTransformer {
 	 */
 	private static void analyzeAlreadyLoadedClasses() {
 		try {
-			if (instrumentation.isRedefineClassesSupported()) {
+			if (instrumentation.isRetransformClassesSupported()) {
 				if (instrumentCoreClasses) {
 					for (Class<?> loadedClass : instrumentation.getAllLoadedClasses()) {
+						// check if class is modifiable at all
+						if (!instrumentation.isModifiableClass(loadedClass)) {
+							continue;
+						}
+
 						String clazzName = loadedClass.getCanonicalName();
 						if ((null != clazzName) && !selfFirstClasses.contains(clazzName)) {
 							if ((null == loadedClass.getClassLoader()) || !InspectItClassLoader.class.getCanonicalName().equals(loadedClass.getClassLoader().getClass().getCanonicalName())) {
 								try {
-									clazzName = getClassNameForJavassist(loadedClass);
-									byte[] modified = Agent.agent.inspectByteCode(null, clazzName, loadedClass.getClassLoader());
-									if (null != modified) {
-										ClassDefinition classDefinition = new ClassDefinition(loadedClass, modified);
-										instrumentation.redefineClasses(new ClassDefinition[] { classDefinition });
-									}
-								} catch (ClassNotFoundException e) {
-									LOGGER.severe(e.getMessage());
+									instrumentation.retransformClasses(loadedClass);
 								} catch (UnmodifiableClassException e) {
 									LOGGER.severe(e.getMessage());
 								}
@@ -255,28 +255,6 @@ public class JavaAgent implements ClassFileTransformer {
 		LinkedBlockingQueue.class.getClass();
 
 		LOGGER.info("Preloading classes complete...");
-	}
-
-	/**
-	 * See ClassPool#get(String) why it is needed to replace the '.' with '$' for inner class.
-	 *
-	 * @param clazz
-	 *            The class to get the name from.
-	 * @return the name to be passed to javassist.
-	 */
-	private static String getClassNameForJavassist(Class<?> clazz) {
-		String clazzName = clazz.getCanonicalName();
-		while (null != clazz.getEnclosingClass()) {
-			clazz = clazz.getEnclosingClass();
-		}
-
-		if (!clazzName.equals(clazz.getCanonicalName())) {
-			String enclosingClasses = clazzName.substring(clazz.getCanonicalName().length());
-			enclosingClasses = enclosingClasses.replaceAll("\\.", "\\$");
-			clazzName = clazz.getCanonicalName() + enclosingClasses;
-		}
-
-		return clazzName;
 	}
 
 	/**
