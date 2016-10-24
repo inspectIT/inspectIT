@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -109,10 +108,17 @@ public class JavaAgent implements ClassFileTransformer {
 
 			LOGGER.info("inspectIT Agent: Initialization complete...");
 
-			// now we are analysing the already loaded classes by the jvm to instrument those
-			// classes, too
-			analyzeAlreadyLoadedClasses();
-			inst.addTransformer(new JavaAgent());
+			boolean retransformClassesSupported = inst.isRetransformClassesSupported();
+			inst.addTransformer(new JavaAgent(), retransformClassesSupported);
+
+			if (retransformClassesSupported) {
+				// now we are analyzing the already loaded classes by the jvm to instrument those
+				// classes, too
+				LOGGER.info("inspectIT Agent: Retransform of classes is supported, trying to instrument already loaded classes...");
+				analyzeAlreadyLoadedClasses();
+			} else {
+				LOGGER.info("inspectIT Agent: Retransform of classes is not supported, already loaded classes will not be instrumented...");
+			}
 		} catch (Exception e) {
 			LOGGER.severe("Something unexpected happened while trying to initialize the Agent, aborting!");
 			e.printStackTrace(); // NOPMD
@@ -212,33 +218,32 @@ public class JavaAgent implements ClassFileTransformer {
 	 */
 	private static void analyzeAlreadyLoadedClasses() {
 		try {
-			if (instrumentation.isRedefineClassesSupported()) {
-				if (instrumentCoreClasses) {
-					for (Class<?> loadedClass : instrumentation.getAllLoadedClasses()) {
-						String clazzName = loadedClass.getCanonicalName();
-						if ((null != clazzName) && !selfFirstClasses.contains(clazzName)) {
-							if ((null == loadedClass.getClassLoader()) || !InspectItClassLoader.class.getCanonicalName().equals(loadedClass.getClassLoader().getClass().getCanonicalName())) {
+			if (instrumentCoreClasses) {
+				for (Class<?> loadedClass : instrumentation.getAllLoadedClasses()) {
+					// check if class is modifiable at all
+					if (!instrumentation.isModifiableClass(loadedClass)) {
+						continue;
+					}
+
+					String clazzName = loadedClass.getCanonicalName();
+					// check it's not self first class
+					if ((null != clazzName) && !selfFirstClasses.contains(clazzName)) {
+						// check that we are not loading with our class loader
+						if ((null == loadedClass.getClassLoader()) || !InspectItClassLoader.class.getCanonicalName().equals(loadedClass.getClassLoader().getClass().getCanonicalName())) {
+							// check that class is not ignored by our agent
+							if (!Agent.agent.shouldClassBeIgnored(clazzName)) {
 								try {
-									clazzName = getClassNameForJavassist(loadedClass);
-									byte[] modified = Agent.agent.inspectByteCode(null, clazzName, loadedClass.getClassLoader());
-									if (null != modified) {
-										ClassDefinition classDefinition = new ClassDefinition(loadedClass, modified);
-										instrumentation.redefineClasses(new ClassDefinition[] { classDefinition });
-									}
-								} catch (ClassNotFoundException e) {
-									LOGGER.severe(e.getMessage());
+									instrumentation.retransformClasses(loadedClass);
 								} catch (UnmodifiableClassException e) {
 									LOGGER.severe(e.getMessage());
 								}
 							}
 						}
 					}
-					LOGGER.info("inspectIT Agent: Instrumentation of core classes finished...");
-				} else {
-					LOGGER.info("inspectIT Agent: Core classes cannot be instrumented, please add -Xbootclasspath/a:<path_to_agent.jar> to the JVM parameters!");
 				}
+				LOGGER.info("inspectIT Agent: Instrumentation of already loaded classes finished...");
 			} else {
-				LOGGER.info("Redefinition of Classes is not supported in this JVM!");
+				LOGGER.info("inspectIT Agent: Core classes cannot be instrumented, please add -Xbootclasspath/a:<path_to_agent.jar> to the JVM parameters!");
 			}
 		} catch (Throwable t) { // NOPMD
 			t.printStackTrace(); // NOPMD
@@ -258,28 +263,6 @@ public class JavaAgent implements ClassFileTransformer {
 		LinkedBlockingQueue.class.getClass();
 
 		LOGGER.info("Preloading classes complete...");
-	}
-
-	/**
-	 * See ClassPool#get(String) why it is needed to replace the '.' with '$' for inner class.
-	 *
-	 * @param clazz
-	 *            The class to get the name from.
-	 * @return the name to be passed to javassist.
-	 */
-	private static String getClassNameForJavassist(Class<?> clazz) {
-		String clazzName = clazz.getCanonicalName();
-		while (null != clazz.getEnclosingClass()) {
-			clazz = clazz.getEnclosingClass();
-		}
-
-		if (!clazzName.equals(clazz.getCanonicalName())) {
-			String enclosingClasses = clazzName.substring(clazz.getCanonicalName().length());
-			enclosingClasses = enclosingClasses.replaceAll("\\.", "\\$");
-			clazzName = clazz.getCanonicalName() + enclosingClasses;
-		}
-
-		return clazzName;
 	}
 
 	/**

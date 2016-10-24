@@ -199,12 +199,12 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 				} catch (InterruptedException e) {
 					isInterrupted = true;
 					if (log.isWarnEnabled()) {
-						log.warn("Error occurred instrumenting the byte code of class " + className + ". Thread loading the class was interrupted during communication with the server.");
+						log.warn("Error occurred instrumenting the byte code of class " + className + ". Thread loading the class was interrupted during communication with the server.", e);
 					}
 					return null;
 				} catch (TimeoutException e) {
 					if (log.isWarnEnabled()) {
-						log.warn("Error occurred instrumenting the byte code of class " + className + ". Sending the class structure to the CMR resulted in a time-out.");
+						log.warn("Error occurred instrumenting the byte code of class " + className + ". Sending the class structure to the CMR resulted in a time-out.", e);
 					}
 					return null;
 				}
