@@ -126,6 +126,18 @@
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
+      xsi:type="setup.p2:P2Task"
+      label="Buildship"
+      licenseConfirmationDisabled="true">
+    <requirement
+        name="org.eclipse.buildship.feature.group"
+        versionRange="1.0.21"
+        filter=""/>
+    <repository
+        url="http://download.eclipse.org/buildship/updates/e46/releases/1.0/"/>
+    <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
+  </setupTask>
+  <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone"
       remoteURI="inspectIT/inspectIT">
