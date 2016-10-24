@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<alerting-definition xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" threshold="3000.0" field="duration" threshold-type="UPPER_THRESHOLD" measurement="businessTransactions" timerange="1" id="e7d2d5f0-3b83-4f01-9cfa-7625bc52912b" name="DVDStore Search" created-on="2016-10-20T08:12:39.670+02:00" updated-on="2016-10-20T08:13:25.195+02:00" revision="2" xsi:noNamespaceSchemaLocation="schema\ciSchema.xsd">
+    <tags>
+        <entry>
+            <key>businessTxName</key>
+            <value>Search</value>
+        </entry>
+    </tags>
+    <notification-email-addresses>
+        <notification-email-address>alexander.wert@novatec-gmbh.de</notification-email-address>
+    </notification-email-addresses>
+</alerting-definition>
