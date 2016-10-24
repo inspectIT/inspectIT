@@ -52,4 +52,14 @@ public interface IAgent {
 	 */
 	void setThreadTransformDisabled(boolean disabled);
 
+	/**
+	 * Defines if the agent should ignore the class with the given name.
+	 *
+	 * @param className
+	 *            name of the class
+	 * @return <code>true</code> if class should be ignored (not byte code changes needed, no
+	 *         re-transformation needed, etc), <code>false</code> otherwise
+	 */
+	boolean shouldClassBeIgnored(String className);
+
 }
