@@ -14,16 +14,16 @@ import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 
 /**
- * Thread-safe realization to extract information from <code>HttpServletRequests</code>.
+ * Thread-safe realization to extract information from <code>HttpServletRequests</code> and <code>HttpServletResponses</code>.
  *
- * @author Stefan Siegl
+ * @author Stefan Siegl, Alexander Wert
  */
-class HttpRequestParameterExtractor {
+class HttpInformationExtractor {
 
 	/**
 	 * The logger of this class. Initialized manually.
 	 */
-	private static final Logger LOG = LoggerFactory.getLogger(HttpRequestParameterExtractor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HttpInformationExtractor.class);
 
 	/**
 	 * Constraint for String length.
@@ -69,7 +69,9 @@ class HttpRequestParameterExtractor {
 		/** Gets all attribute names in the session. */
 		SESSION_GET_ATTRIBUTE_NAMES("getAttributeNames", (Class<?>[]) null),
 		/** Gets the value of a session attribute. */
-		SESSION_GET_ATTRIBUTE("getAttribute", new Class[] { String.class });
+		SESSION_GET_ATTRIBUTE("getAttribute", new Class[] { String.class }),
+		/** Gets the response status. */
+		RESPONSE_GET_STATUS("getStatus", (Class<?>[]) null);
 
 		/**
 		 * Constructor.
@@ -96,7 +98,7 @@ class HttpRequestParameterExtractor {
 	 * @param strConstraint
 	 *            the string constraints.
 	 */
-	public HttpRequestParameterExtractor(StringConstraint strConstraint) {
+	public HttpInformationExtractor(StringConstraint strConstraint) {
 		this.strConstraint = strConstraint;
 		try {
 			// setting marker method to point to Object.toString()
@@ -348,6 +350,31 @@ class HttpRequestParameterExtractor {
 			LOG.error("Invocation of to get attributes on given object failed.", e);
 		}
 		return null;
+	}
+
+	/**
+	 * Reads the response status from the HttpServletResponse object.
+	 *
+	 * @param httpServletResponseClass
+	 *            the <code>Class</code> object representing the class of the given
+	 *            <code>HttpServletResponse</code>
+	 * @param httpServletResponse
+	 *            the object realizing the <code> HttpServletResponse </code> interface.
+	 * @return response status code if available. If response status cannot be retrieved, this
+	 *         method returns -1.
+	 */
+	public int getResponseStatus(Class<?> httpServletResponseClass, Object httpServletResponse) {
+		Method getStatusMethod = retrieveMethod(HttpMethods.RESPONSE_GET_STATUS, httpServletResponseClass);
+		if (null == getStatusMethod) {
+			return -1;
+		}
+		try {
+			return (Integer) getStatusMethod.invoke(httpServletResponse);
+		} catch (Exception e) {
+			LOG.error("Invocation of to get response status on given object failed.", e);
+		}
+
+		return -1;
 	}
 
 	/**

@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
+import org.springframework.http.HttpStatus;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
@@ -30,6 +31,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
@@ -428,6 +430,13 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 				if (null != httpInfo.getUri()) {
 					styledString.append("URI: ");
 					styledString.append(httpInfo.getUri());
+					styledString.append(" | ");
+				}
+				if (HttpTimerDataHelper.hasResponseCode(httpTimer)) {
+					styledString.append("Response Status: ");
+					styledString.append(String.valueOf(httpTimer.getHttpResponseStatus()));
+					styledString.append(' ');
+					styledString.append(HttpStatus.valueOf(httpTimer.getHttpResponseStatus()).getReasonPhrase());
 					styledString.append(" | ");
 				}
 			}

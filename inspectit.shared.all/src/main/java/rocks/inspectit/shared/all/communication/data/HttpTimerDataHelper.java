@@ -70,4 +70,15 @@ public final class HttpTimerDataHelper {
 			throw new IllegalArgumentException("Provided Regular expression is not correct.", patternSyntaxException);
 		}
 	}
+
+	/**
+	 * Indicates whether the given {@link HttpTimerData} object has a HTTP response status code.
+	 * 
+	 * @param httpTimerData
+	 *            {@link HttpTimerData}
+	 * @return true, if response code is available.
+	 */
+	public static boolean hasResponseCode(HttpTimerData httpTimerData) {
+		return httpTimerData.getHttpResponseStatus() > 0;
+	}
 }

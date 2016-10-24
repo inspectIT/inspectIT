@@ -74,9 +74,9 @@ public class HttpHook implements IMethodHook {
 	private final ThreadLocalStack<Long> threadCpuTimeStack = new ThreadLocalStack<Long>();
 
 	/**
-	 * Extractor for Http parameters.
+	 * Extractor for Http information.
 	 */
-	private final HttpRequestParameterExtractor extractor;
+	private final HttpInformationExtractor extractor;
 
 	/**
 	 * Configuration setting if session data should be captured.
@@ -89,18 +89,37 @@ public class HttpHook implements IMethodHook {
 	private static final String HTTP_SERVLET_REQUEST_CLASS = "javax.servlet.http.HttpServletRequest";
 
 	/**
+	 * Expected name of the HttpServletResponse interface.
+	 */
+	private static final String HTTP_SERVLET_RESPONSE_CLASS = "javax.servlet.http.HttpServletResponse";
+
+	/**
 	 * Whitelist that contains all classes that we already checked if they provide
 	 * HttpServletMetrics and do. We are talking about the class of the ServletRequest here. This
 	 * list is extended if a new Class that provides this interface is found.
 	 */
-	private static final CopyOnWriteArrayList<Class<?>> WHITE_LIST = new CopyOnWriteArrayList<Class<?>>();
+	private static final CopyOnWriteArrayList<Class<?>> HTTP_REQUEST_WHITE_LIST = new CopyOnWriteArrayList<Class<?>>();
 
 	/**
 	 * Blacklist that contains all classes that we already checked if they provide
 	 * HttpServletMetrics and do not. We are talking about the class of the ServletRequest here.
 	 * This list is extended if a new Class that does not provides this interface is found.
 	 */
-	private static final CopyOnWriteArrayList<Class<?>> BLACK_LIST = new CopyOnWriteArrayList<Class<?>>();
+	private static final CopyOnWriteArrayList<Class<?>> HTTP_REQUEST_BLACK_LIST = new CopyOnWriteArrayList<Class<?>>();
+
+	/**
+	 * Whitelist that contains all classes that we already checked if they provide
+	 * HttpServletMetrics and do. We are talking about the class of the ServletResponse here. This
+	 * list is extended if a new Class that provides this interface is found.
+	 */
+	private static final CopyOnWriteArrayList<Class<?>> HTTP_RESPONSE_WHITE_LIST = new CopyOnWriteArrayList<Class<?>>();
+
+	/**
+	 * Blacklist that contains all classes that we already checked if they provide
+	 * HttpServletMetrics and do not. We are talking about the class of the ServletResponse here.
+	 * This list is extended if a new Class that does not provides this interface is found.
+	 */
+	private static final CopyOnWriteArrayList<Class<?>> HTTP_RESPONSE_BLACK_LIST = new CopyOnWriteArrayList<Class<?>>();
 
 	/**
 	 * Helps us to ensure that we only store on http metric per request.
@@ -123,7 +142,7 @@ public class HttpHook implements IMethodHook {
 		this.timer = timer;
 		this.platformManager = platformManager;
 		this.threadMXBean = threadMXBean;
-		this.extractor = new HttpRequestParameterExtractor(new StringConstraint(parameters));
+		this.extractor = new HttpInformationExtractor(new StringConstraint(parameters));
 
 		if ((null != parameters) && "true".equals(parameters.get("sessioncapture"))) {
 			if (LOG.isDebugEnabled()) {
@@ -157,6 +176,7 @@ public class HttpHook implements IMethodHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void beforeBody(long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 
 		// We mark the invocation of the first servlet and the calls from within it. This way we
@@ -173,7 +193,7 @@ public class HttpHook implements IMethodHook {
 				Class<?> servletRequestClass = httpServletRequest.getClass();
 
 				// Check if metrics interface provided
-				if (providesHttpMetrics(servletRequestClass)) {
+				if (providesHttpRequestMetrics(servletRequestClass)) {
 
 					// We must take the time as soon as we know that we are dealing with an http
 					// timer. We cannot do that after we read the information from the request
@@ -198,6 +218,7 @@ public class HttpHook implements IMethodHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 
 		// no invocation marked -> skip
@@ -220,6 +241,7 @@ public class HttpHook implements IMethodHook {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
 
 		// check if in the right(first) invocation
@@ -228,13 +250,15 @@ public class HttpHook implements IMethodHook {
 			refMarker.remove();
 
 			// double check if nothing changed
-			if (parameters.length != 0) {
+			if (parameters.length >= 2) {
 
 				Object httpServletRequest = parameters[0];
+				Object httpServletResponse = parameters[1];
 				Class<?> servletRequestClass = httpServletRequest.getClass();
+				Class<?> servletResponseClass = httpServletResponse.getClass();
 
 				// double check interface
-				if (providesHttpMetrics(servletRequestClass)) {
+				if (providesHttpRequestMetrics(servletRequestClass) && providesHttpResponseMetrics(servletResponseClass)) {
 
 					try {
 						double endTime = timeStack.pop().doubleValue();
@@ -278,6 +302,9 @@ public class HttpHook implements IMethodHook {
 							data.setSessionAttributes(extractor.getSessionAttributes(servletRequestClass, httpServletRequest));
 						}
 
+						// Include HTTP response information
+						data.setHttpResponseStatus(extractor.getResponseStatus(servletResponseClass, httpServletResponse));
+
 						boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
 						data.setCharting(charting);
 
@@ -301,19 +328,50 @@ public class HttpHook implements IMethodHook {
 	 *            The class to check
 	 * @return whether or not the HttpServletRequest interface is realized.
 	 */
-	private boolean providesHttpMetrics(Class<?> c) {
-		if (WHITE_LIST.contains(c)) {
+	private boolean providesHttpRequestMetrics(Class<?> c) {
+		return implementsInterface(c, HTTP_SERVLET_REQUEST_CLASS, HTTP_REQUEST_WHITE_LIST, HTTP_REQUEST_BLACK_LIST);
+	}
+
+	/**
+	 * Checks if the given Class is realizing the HttpServletResponse interface directly or
+	 * indirectly. Only if this interface is realized, we can get Http metric information.
+	 *
+	 * @param c
+	 *            The class to check
+	 * @return whether or not the HttpServletResponse interface is realized.
+	 */
+	private boolean providesHttpResponseMetrics(Class<?> c) {
+		return implementsInterface(c, HTTP_SERVLET_RESPONSE_CLASS, HTTP_RESPONSE_WHITE_LIST, HTTP_RESPONSE_BLACK_LIST);
+	}
+
+	/**
+	 * Checks if the given class implements the given interface.
+	 *
+	 * @param c
+	 *            The class to check.
+	 * @param interfaceName
+	 *            The name of the target interface.
+	 * @param whiteList
+	 *            A whitelist (cache) of classes from which we know that they implement the
+	 *            interface.
+	 * @param blackList
+	 *            A blacklist (cache) of classes from which we know that they do not implement the
+	 *            interface.
+	 * @return True, if the given class implements the given interface.
+	 */
+	private boolean implementsInterface(Class<?> c, String interfaceName, CopyOnWriteArrayList<Class<?>> whiteList, CopyOnWriteArrayList<Class<?>> blackList) {
+		if (whiteList.contains(c)) {
 			return true;
 		}
-		if (BLACK_LIST.contains(c)) {
+		if (blackList.contains(c)) {
 			return false;
 		}
-		Class<?> intf = ClassUtil.searchInterface(c, HTTP_SERVLET_REQUEST_CLASS);
+		Class<?> intf = ClassUtil.searchInterface(c, interfaceName);
 		if (null != intf) {
-			WHITE_LIST.addIfAbsent(c);
+			whiteList.addIfAbsent(c);
 			return true;
 		} else {
-			BLACK_LIST.addIfAbsent(c);
+			blackList.addIfAbsent(c);
 			return false;
 		}
 	}
