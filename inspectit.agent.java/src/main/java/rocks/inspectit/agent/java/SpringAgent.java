@@ -183,11 +183,9 @@ public class SpringAgent implements IAgent {
 			return byteCode;
 		}
 
-		// ignore all classes which fit to the patterns in the configuration
-		for (IMatchPattern matchPattern : ignoreClassesPatterns) {
-			if (matchPattern.match(className)) {
-				return byteCode;
-			}
+		// check if it should be ignored
+		if (shouldClassBeIgnored(className)) {
+			return byteCode;
 		}
 
 		try {
@@ -235,6 +233,20 @@ public class SpringAgent implements IAgent {
 	@Override
 	public void setThreadTransformDisabled(boolean disabled) {
 		transformDisabledThreadLocal.set(Boolean.valueOf(disabled));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean shouldClassBeIgnored(String className) {
+		// ignore all classes which fit to the patterns in the configuration
+		for (IMatchPattern matchPattern : ignoreClassesPatterns) {
+			if (matchPattern.match(className)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
