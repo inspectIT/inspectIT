@@ -231,7 +231,11 @@ public class PropertyManager {
 			loadConfigurationAndUpdates();
 		} catch (JAXBException | IOException | SAXException e) {
 			LOG.warn("|-Default CMR configuration can not be loaded.", e);
-			return new Properties();
+			throw new BeanInitializationException("Default CMR configuration can not be loaded.", e);
+		}
+
+		if (null == configuration) {
+			throw new BeanInitializationException("Default CMR configuration was not loaded. Aborting..");
 		}
 
 		// check if there is update file
@@ -263,7 +267,7 @@ public class PropertyManager {
 				for (IPropertyUpdate<?> propertyUpdate : notValidList) {
 					configurationUpdate.removePropertyUpdate(propertyUpdate);
 					LOG.info("|-Update of the property " + propertyUpdate.getPropertyLogicalName()
-							+ " can not be performed either because property does not exist in the default configuration or the update value is not valid");
+					+ " can not be performed either because property does not exist in the default configuration or the update value is not valid");
 				}
 				try {
 					transformator.marshall(getConfigurationUpdatePath(), configurationUpdate, getBaseConfigDir().relativize(getConfigurationUpdateSchemaPath()).toString());
@@ -370,8 +374,19 @@ public class PropertyManager {
 	 *             If {@link SAXException} occurs during schema parsing.
 	 */
 	void loadConfigurationAndUpdates() throws JAXBException, IOException, SAXException {
+		// first default configuration
 		LOG.info("|-Loading the default CMR configuration");
-		configuration = transformator.unmarshall(getDefaultConfigurationPath(), getConfigurationSchemaPath(), Configuration.class);
+		Path defaultConfigurationPath = getDefaultConfigurationPath();
+		if (Files.exists(defaultConfigurationPath)) {
+			configuration = transformator.unmarshall(defaultConfigurationPath, getConfigurationSchemaPath(), Configuration.class);
+		} else {
+			String path = defaultConfigurationPath.toAbsolutePath().toString();
+			LOG.warn("||-Default configuration file is not present on the path " + path);
+			throw new IOException("Default configuration file does not exist on the path " + path);
+		}
+
+		// then updates
+		LOG.info("|-Loading the CMR configuration updates");
 		configurationUpdate = transformator.unmarshall(getConfigurationUpdatePath(), getConfigurationUpdateSchemaPath(), ConfigurationUpdate.class);
 	}
 
