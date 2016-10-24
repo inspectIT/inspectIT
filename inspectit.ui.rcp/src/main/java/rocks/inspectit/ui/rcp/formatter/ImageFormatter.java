@@ -616,7 +616,7 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns alert image.
-	 * 
+	 *
 	 * @param alertingDefinition
 	 *            The alerting definition to show the image for.
 	 *
@@ -628,12 +628,38 @@ public final class ImageFormatter {
 
 	/**
 	 * Returns alert image.
-	 * 
+	 *
 	 * @param alert
 	 *            The alert to show the image for.
 	 * @return Returns alert image.
 	 */
 	public static Image getAlertImage(Alert alert) {
 		return InspectIT.getDefault().getImage(InspectITImages.IMG_ALARM);
+	}
+
+	/**
+	 * Returns a corresponding image for a HTTP response code.
+	 *
+	 * @param responseCode
+	 *            The HTTP response code.
+	 * @return Response code image if response code is valid. Returns <code>null</code> if response
+	 *         code is not valid.
+	 */
+	public static Image getResponseStatusImage(int responseCode) {
+		String imageKey;
+		if ((responseCode >= 100) && (responseCode < 200)) {
+			imageKey = InspectITImages.IMG_INFO_CIRCLE_FRAME;
+		} else if ((responseCode >= 200) && (responseCode < 300)) {
+			imageKey = InspectITImages.IMG_OK_CIRCLE_FRAME;
+		} else if ((responseCode >= 300) && (responseCode < 400)) {
+			imageKey = InspectITImages.IMG_NAVIGATION_CIRCLE_FRAME;
+		} else if ((responseCode >= 400) && (responseCode < 500)) {
+			imageKey = InspectITImages.IMG_WARN_CIRCLE_FRAME;
+		} else if ((responseCode >= 500) && (responseCode < 600)) {
+			imageKey = InspectITImages.IMG_ERROR_CIRCLE_FRAME;
+		} else {
+			imageKey = InspectITImages.IMG_QUESTION_CIRCLE_FRAME;
+		}
+		return InspectIT.getDefault().getImage(imageKey);
 	}
 }

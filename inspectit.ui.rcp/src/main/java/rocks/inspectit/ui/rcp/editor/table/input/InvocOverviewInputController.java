@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.springframework.http.HttpStatus;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
@@ -38,6 +39,7 @@ import rocks.inspectit.shared.all.communication.comparator.InvocationSequenceDat
 import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
@@ -87,6 +89,8 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		NESTED_DATA("Nested Data", 40, null, InvocationSequenceDataComparatorEnum.NESTED_DATA),
 		/** The time column. */
 		TIME("Start Time", 150, InspectITImages.IMG_TIMESTAMP, DefaultDataComparatorEnum.TIMESTAMP),
+		/** Response status. */
+		RESPONSE_STATUS("Status", 50, null, InvocationSequenceDataComparatorEnum.RESPONSE_CODE),
 		/** The method column. */
 		METHOD("Method", 550, InspectITImages.IMG_METHOD, MethodSensorDataComparatorEnum.METHOD),
 		/** The duration column. */
@@ -505,10 +509,15 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 				} else {
 					return super.getColumnImage(element, index);
 				}
+			case RESPONSE_STATUS:
+				if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
+					return ImageFormatter.getResponseStatusImage(((HttpTimerData) data.getTimerData()).getHttpResponseStatus());
+				} else {
+					return super.getColumnImage(element, index);
+				}
 			default:
 				return super.getColumnImage(element, index);
 			}
-
 		}
 
 		/**
@@ -531,6 +540,22 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 					return toolTip.toString();
 				} else {
 					return super.getToolTipText(element, index);
+				}
+			case RESPONSE_STATUS:
+				if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
+					if (HttpTimerDataHelper.hasResponseCode((HttpTimerData) data.getTimerData())) {
+						try {
+							HttpStatus httpStatus = HttpStatus.valueOf(((HttpTimerData) data.getTimerData()).getHttpResponseStatus());
+							return httpStatus.getReasonPhrase();
+						} catch (IllegalArgumentException e) {
+							// non standard response code
+							return "Non-standard Response Code";
+						}
+					} else {
+						return "Response Status Unavailable";
+					}
+				} else {
+					return null;
 				}
 			default:
 				return null;
@@ -587,6 +612,17 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		switch (enumId) {
 		case NESTED_DATA:
 			return emptyStyledString;
+		case RESPONSE_STATUS:
+			if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
+				if (HttpTimerDataHelper.hasResponseCode((HttpTimerData) data.getTimerData())) {
+					return new StyledString(String.valueOf(((HttpTimerData) data.getTimerData()).getHttpResponseStatus()));
+				} else {
+					return new StyledString("N/A");
+				}
+
+			} else {
+				return emptyStyledString;
+			}
 		case TIME:
 			return new StyledString(NumberFormatter.formatTimeWithMillis(data.getTimeStamp()));
 		case METHOD:

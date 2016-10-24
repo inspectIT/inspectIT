@@ -30,6 +30,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
@@ -428,6 +429,11 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 				if (null != httpInfo.getUri()) {
 					styledString.append("URI: ");
 					styledString.append(httpInfo.getUri());
+					styledString.append(" | ");
+				}
+				if (HttpTimerDataHelper.hasResponseCode(httpTimer)) {
+					styledString.append("Status: ");
+					styledString.append(String.valueOf(httpTimer.getHttpResponseStatus()));
 					styledString.append(" | ");
 				}
 			}

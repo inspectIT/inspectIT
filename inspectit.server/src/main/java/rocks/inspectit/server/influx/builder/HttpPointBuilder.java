@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.server.influx.constants.Series;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 
 /**
  * Point builder for the {@link HttpTimerData}.
@@ -45,9 +46,11 @@ public class HttpPointBuilder extends DefaultDataPointBuilder<HttpTimerData> {
 		if (null != httpInfo.getUri()) {
 			builder.tag(Series.Http.TAG_URI, httpInfo.getUri());
 		}
+
 		if (httpInfo.hasInspectItTaggingHeader()) {
 			builder.tag(Series.Http.TAG_INSPECTIT_TAGGING_HEADER, httpInfo.getInspectItTaggingHeaderValue());
 		}
+
 	}
 
 	/**
@@ -55,8 +58,10 @@ public class HttpPointBuilder extends DefaultDataPointBuilder<HttpTimerData> {
 	 */
 	@Override
 	protected void addFields(HttpTimerData data, Builder builder) {
-		// fields
 		builder.addField(Series.Http.FIELD_DURATION, data.getDuration());
+		if (HttpTimerDataHelper.hasResponseCode(data)) {
+			builder.addField(Series.Http.FIELD_HTTP_RESPONSE_CODE, data.getHttpResponseStatus());
+		}
 	}
 
 }
