@@ -10,9 +10,11 @@ import java.util.Map;
 import org.apache.commons.collections.MapUtils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.springframework.http.HttpStatus;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.ui.rcp.details.DetailsCellContent;
 import rocks.inspectit.ui.rcp.details.DetailsTable;
@@ -57,6 +59,20 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 
 		table.addContentRow("Method:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getRequestMethod()) });
 		table.addContentRow("URI:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getUri()) });
+
+		if (HttpTimerDataHelper.hasResponseCode(httpTimerData)) {
+			String statusString;
+			try {
+				HttpStatus status = HttpStatus.valueOf(httpTimerData.getHttpResponseStatus());
+				statusString = httpTimerData.getHttpResponseStatus() + " " + status.getReasonPhrase();
+			} catch (IllegalArgumentException e) {
+				// non standard response code
+				statusString = String.valueOf(httpTimerData.getHttpResponseStatus());
+			}
+			table.addContentRow("Response Status:", null, new DetailsCellContent[] { new DetailsCellContent(statusString) });
+		} else {
+			table.addContentRow("Response Status:", null, new DetailsCellContent[] { new DetailsCellContent("Not Available") });
+		}
 
 		if (httpTimerData.getHttpInfo().hasInspectItTaggingHeader()) {
 			table.addContentRow("Tag Value:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getInspectItTaggingHeaderValue()) });

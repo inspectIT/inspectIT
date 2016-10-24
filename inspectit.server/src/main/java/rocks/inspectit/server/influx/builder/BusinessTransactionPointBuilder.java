@@ -4,7 +4,10 @@ import org.influxdb.dto.Point.Builder;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.influx.constants.Series;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
@@ -61,9 +64,11 @@ public class BusinessTransactionPointBuilder extends DefaultDataPointBuilder<Inv
 	 */
 	@Override
 	protected void addFields(InvocationSequenceData data, Builder builder) {
-		// fields
 		builder.addField(Series.BusinessTransaction.FIELD_DURATION, data.getDuration());
 		builder.addField(Series.BusinessTransaction.FIELD_TRACE_ID, data.getId());
+		if (InvocationSequenceDataHelper.hasHttpTimerData(data) && HttpTimerDataHelper.hasResponseCode((HttpTimerData) data.getTimerData())) {
+			builder.addField(Series.BusinessTransaction.FIELD_HTTP_RESPONSE_CODE, ((HttpTimerData) data.getTimerData()).getHttpResponseStatus());
+		}
 	}
 
 }

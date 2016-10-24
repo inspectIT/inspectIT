@@ -63,6 +63,12 @@ public class HttpTimerData extends TimerData {
 	private Map<String, String> sessionAttributes = null;
 
 	/**
+	 * HTTP response status.
+	 */
+	@Transient
+	private int httpResponseStatus;
+
+	/**
 	 * Http info for optimizing saving to the DB.
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
@@ -193,12 +199,31 @@ public class HttpTimerData extends TimerData {
 	}
 
 	/**
+	 * Gets {@link #httpResponseStatus}.
+	 *
+	 * @return {@link #httpResponseStatus}
+	 */
+	public int getHttpResponseStatus() {
+		return httpResponseStatus;
+	}
+
+	/**
+	 * Sets {@link #httpResponseStatus}.
+	 *
+	 * @param httpResponseStatus
+	 *            New value for {@link #httpResponseStatus}
+	 */
+	public void setHttpResponseStatus(int httpResponseStatus) {
+		this.httpResponseStatus = httpResponseStatus;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(5, 0, 0, 0, 0, 0);
+		size += objectSizes.getPrimitiveTypesSize(5, 0, 1, 0, 0, 0);
 
 		if (null != parameters) {
 			size += objectSizes.getSizeOfHashMap(parameters.size());

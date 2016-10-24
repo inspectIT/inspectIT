@@ -15,6 +15,7 @@ import java.util.Vector;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.MapUtils;
@@ -62,7 +63,13 @@ public class HttpHookTest extends AbstractLogSupport {
 	private HttpServletRequest httpServletRequest;
 
 	@Mock
+	private HttpServletResponse httpServletResponse;
+
+	@Mock
 	private ServletRequest servletRequest;
+
+	@Mock
+	private ServletRequest servletResponse;
 
 	@Mock
 	private HttpSession session;
@@ -99,7 +106,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
-		Object[] parameters = new Object[] { httpServletRequest };
+		Object[] parameters = new Object[] { httpServletRequest, httpServletResponse };
 
 		httpHook.beforeBody(methodId, sensorTypeId, servlet, parameters, registeredSensorConfig);
 
@@ -128,7 +135,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 		when(registeredSensorConfig.getSettings()).thenReturn(Collections.<String, Object> singletonMap("charting", Boolean.TRUE));
 
-		Object[] parameters = new Object[] { httpServletRequest };
+		Object[] parameters = new Object[] { httpServletRequest, httpServletResponse };
 
 		httpHook.beforeBody(methodId, sensorTypeId, servlet, parameters, registeredSensorConfig);
 
@@ -203,6 +210,10 @@ public class HttpHookTest extends AbstractLogSupport {
 		Map<String, String> sessionAtrMap = new HashMap<String, String>();
 		MapUtils.putAll(sessionAtrMap, new Object[][] { { sa1, sa1Value }, { sa2, sa2Value } });
 		tmp.setSessionAttributes(sessionAtrMap);
+
+		int responseStatus = 404;
+		tmp.setHttpResponseStatus(responseStatus);
+
 		MethodSensorData data = tmp;
 
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
@@ -219,13 +230,15 @@ public class HttpHookTest extends AbstractLogSupport {
 		Mockito.when(httpServletRequest.getHeader(h1)).thenReturn(h1Value);
 		Mockito.when(httpServletRequest.getHeader(h2)).thenReturn(h2Value);
 
+		when(httpServletResponse.getStatus()).thenReturn(responseStatus);
+
 		when(session.getAttributeNames()).thenReturn(sessionAttributes);
 		when(session.getAttribute(sa1)).thenReturn(sa1Value);
 		when(session.getAttribute(sa2)).thenReturn(sa2Value);
 		Mockito.when(httpServletRequest.getSession(false)).thenReturn(session);
 
 		// Object servlet = (Object) new MyTestServlet();
-		Object[] parameters = new Object[] { httpServletRequest };
+		Object[] parameters = new Object[] { httpServletRequest, httpServletResponse };
 
 		httpHook.beforeBody(methodId, sensorTypeId, servlet, parameters, registeredSensorConfig);
 
@@ -251,7 +264,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(firstCpuTimerValue).thenReturn(secondCpuTimerValue);
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
-		Object[] parameters = new Object[] { servletRequest };
+		Object[] parameters = new Object[] { servletRequest, servletResponse };
 
 		httpHook.beforeBody(methodId, sensorTypeId, servlet, parameters, registeredSensorConfig);
 
@@ -316,8 +329,8 @@ public class HttpHookTest extends AbstractLogSupport {
 		.thenReturn(cpuE21);
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
-		Object[] parametersNoHttp = new Object[] { servletRequest };
-		Object[] parametersHttp = new Object[] { httpServletRequest };
+		Object[] parametersNoHttp = new Object[] { servletRequest, servletResponse };
+		Object[] parametersHttp = new Object[] { httpServletRequest, httpServletResponse };
 
 		httpHook.beforeBody(methodId11, sensorTypeId, servlet, parametersNoHttp, registeredSensorConfig);
 		httpHook.beforeBody(methodId12, sensorTypeId, servlet, parametersHttp, registeredSensorConfig);
@@ -395,10 +408,10 @@ public class HttpHookTest extends AbstractLogSupport {
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(cpuS1).thenReturn(cpuS2).thenReturn(cpuS3).thenReturn(cpuS4).thenReturn(cpuE4).thenReturn(cpuE3).thenReturn(cpuE2).thenReturn(cpuE1);
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
-		Object[] parameters1 = new Object[] { servletRequest };
-		Object[] parameters2 = new Object[] { httpServletRequest };
+		Object[] parameters1 = new Object[] { servletRequest, servletResponse };
+		Object[] parameters2 = new Object[] { httpServletRequest, httpServletResponse };
 		Object[] parameters3 = new Object[] { "Ich bin ein String und keine http information" };
-		Object[] parameters4 = new Object[] { httpServletRequest };
+		Object[] parameters4 = new Object[] { httpServletRequest, httpServletResponse };
 
 		httpHook.beforeBody(methodId1, sensorTypeId, servlet, parameters1, registeredSensorConfig);
 		httpHook.beforeBody(methodId2, sensorTypeId, servlet, parameters2, registeredSensorConfig);
@@ -450,6 +463,7 @@ public class HttpHookTest extends AbstractLogSupport {
 			assertThat(data.getSessionAttributes(), is(equalTo(other.getSessionAttributes())));
 			assertThat(data.getParameters(), is(equalTo(other.getParameters())));
 			assertThat(data.isCharting(), is(equalTo(other.isCharting())));
+			assertThat(data.getHttpResponseStatus(), is(equalTo(other.getHttpResponseStatus())));
 
 			return true;
 		}
