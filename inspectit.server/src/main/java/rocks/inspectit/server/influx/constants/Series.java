@@ -43,6 +43,11 @@ public interface Series {
 		String FIELD_TRACE_ID = "traceId";
 
 		/**
+		 * HTTP response code field.
+		 */
+		String FIELD_HTTP_RESPONSE_CODE = "httpResponseCode";
+
+		/**
 		 * Application name tag.
 		 */
 		String TAG_APPLICATION_NAME = "applicationName";
@@ -138,6 +143,11 @@ public interface Series {
 		 * Duration field.
 		 */
 		String FIELD_DURATION = "duration";
+
+		/**
+		 * HTTP response code field.
+		 */
+		String FIELD_HTTP_RESPONSE_CODE = "httpResponseCode";
 
 		/**
 		 * URI tag.

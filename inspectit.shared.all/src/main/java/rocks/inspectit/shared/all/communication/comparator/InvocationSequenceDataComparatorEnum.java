@@ -39,6 +39,11 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 	URI,
 
 	/**
+	 * Sort by response code.
+	 */
+	RESPONSE_CODE,
+
+	/**
 	 * Sort by applications (if available in invocation root).
 	 */
 	APPLICATION,
@@ -56,6 +61,7 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int compare(InvocationSequenceData o1, InvocationSequenceData o2, ICachedDataService cachedDataService) {
 		switch (this) {
 		case CHILD_COUNT:
@@ -87,6 +93,18 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 				String uri1 = ((HttpTimerData) o1.getTimerData()).getHttpInfo().getUri();
 				String uri2 = ((HttpTimerData) o2.getTimerData()).getHttpInfo().getUri();
 				return ObjectUtils.compare(uri1, uri2);
+			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o1)) {
+				return 1;
+			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
+				return -1;
+			} else {
+				return 0;
+			}
+		case RESPONSE_CODE:
+			if (InvocationSequenceDataHelper.hasHttpTimerData(o1) && InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
+				int status1 = ((HttpTimerData) o1.getTimerData()).getHttpResponseStatus();
+				int status2 = ((HttpTimerData) o2.getTimerData()).getHttpResponseStatus();
+				return ObjectUtils.compare(status1, status2);
 			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o1)) {
 				return 1;
 			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o2)) {

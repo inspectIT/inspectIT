@@ -192,7 +192,11 @@ public interface InspectITImages {
 	String IMG_BROWSER = InspectITConstants.ICON_PATH_FUGUE + "application-browser.png";
 	String IMG_SERVER = InspectITConstants.ICON_PATH_FUGUE + "server.png";
 	String IMG_ALARM = InspectITConstants.ICON_PATH_FUGUE + "flag.png";
-
+	String IMG_WARN_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "exclamation-circle-frame.png";
+	String IMG_ERROR_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "exclamation-red-frame.png";
+	String IMG_OK_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "tick-circle-frame.png";
+	String IMG_INFO_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "information-frame.png";
+	String IMG_NAVIGATION_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "navigation-frame.png";
 
 	// Images originally from Fugue set we modified - license Creative Commons v3.0
 	String IMG_HTTP_PARAMETER = InspectITConstants.ICON_PATH_FUGUE + "http-parameter.png";

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.MapUtils;
@@ -28,16 +29,19 @@ import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 
 @SuppressWarnings("PMD")
-public class HttpRequestParameterExtractorTest extends AbstractLogSupport {
+public class HttpInformationExtractorTest extends AbstractLogSupport {
 
-	private HttpRequestParameterExtractor extractor;
+	private HttpInformationExtractor extractor;
 
 	@Mock
 	private HttpServletRequest httpServletRequest;
 
+	@Mock
+	private HttpServletResponse httpServletResponse;
+
 	@BeforeMethod
 	public void initTestClass() {
-		extractor = new HttpRequestParameterExtractor(new StringConstraint(Collections.<String, Object> singletonMap("stringLength", "20")));
+		extractor = new HttpInformationExtractor(new StringConstraint(Collections.<String, Object> singletonMap("stringLength", "20")));
 	}
 
 	@Test
@@ -301,5 +305,14 @@ public class HttpRequestParameterExtractorTest extends AbstractLogSupport {
 		MapUtils.putAll(expected, new Object[][] { { sa1, extractedSa1Value }, { sa2, extractedSa2Value } });
 
 		assertThat(result, is(equalTo(expected)));
+	}
+
+	@Test
+	public void readHttpResponseStatus() {
+		when(httpServletResponse.getStatus()).thenReturn(200);
+
+		int responseCode = extractor.getResponseStatus(httpServletResponse.getClass(), httpServletResponse);
+
+		assertThat(responseCode, is(200));
 	}
 }

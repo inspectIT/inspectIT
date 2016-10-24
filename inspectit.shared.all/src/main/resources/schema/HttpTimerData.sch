@@ -44,3 +44,6 @@ class: rocks.inspectit.shared.all.communication.data.HttpTimerData
 
 # HttpInfo - INSPECTIT-1849
 29: httpInfo
+
+#Http Timer Data - INSPECTIT-2230
+30: httpResponseStatus
