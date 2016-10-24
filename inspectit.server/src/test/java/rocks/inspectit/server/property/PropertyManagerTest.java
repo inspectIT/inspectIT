@@ -11,11 +11,14 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -33,13 +36,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.testng.annotations.BeforeMethod;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
+import rocks.inspectit.server.util.ShutdownService;
+import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.cmr.property.configuration.AbstractProperty;
 import rocks.inspectit.shared.cs.cmr.property.configuration.Configuration;
 import rocks.inspectit.shared.cs.cmr.property.configuration.PropertySection;
@@ -53,258 +57,401 @@ import rocks.inspectit.shared.cs.cmr.property.update.configuration.Configuration
 import rocks.inspectit.shared.cs.jaxb.JAXBTransformator;
 
 @SuppressWarnings("PMD")
-public class PropertyManagerTest {
+public class PropertyManagerTest extends TestBase {
 
 	@InjectMocks
-	private PropertyManager propertyManager;
+	PropertyManager propertyManager;
 
 	@Mock
-	private ConfigurationUpdate configurationUpdate;
+	ConfigurationUpdate configurationUpdate;
 
 	@Mock
-	private Configuration configuration;
+	Configuration configuration;
 
 	@Mock
-	private PropertyUpdateExecutor propertyUpdateExecutor;
+	PropertyUpdateExecutor propertyUpdateExecutor;
 
 	@Mock
-	private JAXBTransformator transformator;
+	ShutdownService shutdownService;
 
-	@BeforeMethod
-	public void init() {
-		MockitoAnnotations.initMocks(this);
-		propertyManager.init();
+	@Mock
+	JAXBTransformator transformator;
+
+	public class LoadConfigurationAndUpdates extends PropertyManagerTest {
+
+		/**
+		 * Tests that the loading of default configuration and updates can be executed with no
+		 * exceptions.
+		 */
+		@Test
+		public void loadDefaultConfiguration() throws JAXBException, IOException, SAXException {
+			propertyManager.init();
+
+			propertyManager.loadConfigurationAndUpdates();
+		}
+
+		@Test(expectedExceptions = IOException.class)
+		public void nonExistingConfigFile() throws JAXBException, IOException, SAXException {
+			propertyManager.configDirFile = new File("nonexisting");
+
+			propertyManager.loadConfigurationAndUpdates();
+		}
+
 	}
 
-	/**
-	 * Tests that the loading of default configuration and updates can be executed with no
-	 * exceptions.
-	 */
-	@Test
-	public void loadDefaultConfiguration() throws JAXBException, IOException, SAXException {
-		propertyManager.loadConfigurationAndUpdates();
+	public class GetProperties extends PropertyManagerTest {
+
+		/**
+		 * Test that the {@link Properties} returned by the {@link PropertyManager} are correctly
+		 * take from {@link Configuration}.
+		 */
+		@Test
+		public void propertyInDefaultConfiguration() throws JAXBException, IOException, SAXException {
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			when(configuration.validate()).thenReturn(Collections.<AbstractProperty, PropertyValidation> emptyMap());
+
+			SingleProperty<?> property = mock(SingleProperty.class);
+			Answer<Object> answer = new Answer<Object>() {
+				@Override
+				public Object answer(InvocationOnMock invocation) throws Throwable {
+					Properties properties = (Properties) invocation.getArguments()[0];
+					properties.put("property1", "value1");
+					return null;
+				}
+			};
+			doAnswer(answer).when(property).register(Matchers.<Properties> anyObject());
+			when(configuration.getAllProperties()).thenReturn(Collections.<AbstractProperty> singleton(property));
+
+			Properties properties = propertyManager.getProperties();
+
+			assertThat(properties.getProperty("property1"), is(equalTo("value1")));
+			assertThat(properties.size(), is(1));
+		}
+
+		/**
+		 * Test that if validation fails for the property it won't be included in the
+		 * {@link Properties} returned by {@link PropertyManager}.
+		 */
+		@SuppressWarnings("unchecked")
+		@Test
+		public void propertyNotValidInDefaultConfiguration() throws JAXBException, IOException, SAXException {
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+
+			SingleProperty<?> property = mock(SingleProperty.class);
+			PropertyValidation propertyValidation = mock(PropertyValidation.class, Mockito.RETURNS_SMART_NULLS);
+			when(configuration.getAllProperties()).thenReturn(Collections.<AbstractProperty> singleton(property));
+			when(configuration.validate()).thenReturn(MapUtils.putAll(new HashMap<AbstractProperty, PropertyValidation>(), new Object[][] { { property, propertyValidation } }));
+
+			Properties properties = propertyManager.getProperties();
+
+			verify(property, times(0)).register(Matchers.<Properties> anyObject());
+			assertThat(properties.size(), is(0));
+		}
+
+		/**
+		 * Test that {@link Properties} will hold an updated value of the property if it's included
+		 * in the {@link ConfigurationUpdate}.
+		 */
+		@Test
+		@SuppressWarnings("unchecked")
+		public void savedPropertyUpdateFromTheDefaultConfiguration() throws JAXBException, IOException, SAXException {
+			Configuration configuration = new Configuration();
+			PropertySection section = new PropertySection();
+			SingleProperty<String> property = new StringProperty("", "", "property1", "value1", false, false);
+			section.addProperty(property);
+			configuration.addSection(section);
+
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			AbstractPropertyUpdate<String> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdate.getUpdateValue()).thenReturn("updatedValue");
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+
+			Properties properties = propertyManager.getProperties();
+
+			assertThat(properties.getProperty("property1"), is(equalTo("updatedValue")));
+			assertThat(properties.size(), is(1));
+		}
+
+		/**
+		 * Test that {@link Properties} will reseted to default if it's included in the
+		 * {@link ConfigurationUpdate}.
+		 */
+		@Test
+		@SuppressWarnings("unchecked")
+		public void savedPropertyRestoreToDefaultUpdate() throws JAXBException, IOException, SAXException {
+			String defaultValue = "value1";
+			Configuration configuration = new Configuration();
+			PropertySection section = new PropertySection();
+			SingleProperty<String> property = new StringProperty("", "", "property1", defaultValue, false, false);
+			property.setValue("someotherthandefault");
+			section.addProperty(property);
+			configuration.addSection(section);
+
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			AbstractPropertyUpdate<String> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdate.isRestoreDefault()).thenReturn(true);
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+
+			Properties properties = propertyManager.getProperties();
+
+			assertThat(properties.getProperty("property1"), is(equalTo(defaultValue)));
+			assertThat(properties.size(), is(1));
+		}
+
+		/**
+		 * Test that not matching property update will not be taken into account.
+		 */
+		@Test
+		@SuppressWarnings("unchecked")
+		public void savedPropertyUpdateNotValid() throws JAXBException, IOException, SAXException {
+			Configuration configuration = new Configuration();
+			PropertySection section = new PropertySection();
+			SingleProperty<Long> property = new LongProperty("", "", "property1", 10L, false, false);
+			section.addProperty(property);
+			configuration.addSection(section);
+
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			AbstractPropertyUpdate<String> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdate.getUpdateValue()).thenReturn("updatedValue");
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+
+			Properties properties = propertyManager.getProperties();
+
+			assertThat(Long.valueOf(properties.getProperty("property1")), is(10L));
+			assertThat(properties.size(), is(1));
+		}
+
+		@Test(expectedExceptions = BeanInitializationException.class)
+		public void configurationNotLoaded() throws JAXBException, IOException, SAXException {
+			doThrow(new IOException()).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+
+			propertyManager.getProperties();
+		}
+
+		@Test(expectedExceptions = BeanInitializationException.class)
+		public void configurationNull() throws JAXBException, IOException, SAXException {
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+
+			propertyManager.getProperties();
+		}
+
 	}
 
-	/**
-	 * Test that the {@link Properties} returned by the {@link PropertyManager} are correctly take
-	 * from {@link Configuration}.
-	 */
-	@Test
-	public void propertyInDefaultConfiguration() throws JAXBException, IOException, SAXException {
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
-		when(configuration.validate()).thenReturn(Collections.<AbstractProperty, PropertyValidation> emptyMap());
+	public class UpdateConfiguration extends PropertyManagerTest {
 
-		SingleProperty<?> property = mock(SingleProperty.class);
+		/**
+		 * Check that Exception will be thrown if the {@link ConfigurationUpdate} has update that
+		 * can not be applied.
+		 */
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Test(expectedExceptions = { Exception.class })
+		public void noUpdateIfCanNotUpdateProperty() throws Exception {
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
 
-		Answer<Object> answer = new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Properties properties = (Properties) invocation.getArguments()[0];
-				properties.put("property1", "value1");
-				return null;
-			}
-		};
-		doAnswer(answer).when(property).register(Matchers.<Properties> anyObject());
-		when(configuration.getAllProperties()).thenReturn(Collections.<AbstractProperty> singleton(property));
+			ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
+			AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
 
-		Properties properties = propertyManager.getProperties();
-		assertThat(properties.getProperty("property1"), is(equalTo("value1")));
-		assertThat(properties.size(), is(1));
-	}
+			SingleProperty singleProperty = mock(SingleProperty.class);
+			when(singleProperty.canUpdate(propertyUpdate)).thenReturn(false);
+			when(configuration.forLogicalName(Matchers.<String> anyObject())).thenReturn(singleProperty);
 
-	/**
-	 * Test that if validation fails for the property it won't be included in the {@link Properties}
-	 * returned by {@link PropertyManager}.
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void propertyNotValidInDefaultConfiguration() throws JAXBException, IOException, SAXException {
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			propertyManager.init();
+			propertyManager.loadConfigurationAndUpdates();
+			propertyManager.updateConfiguration(configurationUpdate, false);
+		}
 
-		SingleProperty<?> property = mock(SingleProperty.class);
-		PropertyValidation propertyValidation = mock(PropertyValidation.class, Mockito.RETURNS_SMART_NULLS);
-		when(configuration.getAllProperties()).thenReturn(Collections.<AbstractProperty> singleton(property));
-		when(configuration.validate()).thenReturn(MapUtils.putAll(new HashMap<AbstractProperty, PropertyValidation>(), new Object[][] { { property, propertyValidation } }));
+		/**
+		 * Check that Exception will be thrown if the {@link ConfigurationUpdate} has update for non
+		 * existing property.
+		 */
+		@SuppressWarnings("unchecked")
+		@Test(expectedExceptions = { Exception.class })
+		public void noUpdateIfPropertyNotFound() throws Exception {
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			when(configuration.forLogicalName(Matchers.<String> anyObject())).thenReturn(null);
+			ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
+			AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
 
-		Properties properties = propertyManager.getProperties();
-		verify(property, times(0)).register(Matchers.<Properties> anyObject());
-		assertThat(properties.size(), is(0));
-	}
+			propertyManager.init();
+			propertyManager.loadConfigurationAndUpdates();
+			propertyManager.updateConfiguration(configurationUpdate, false);
+		}
 
-	/**
-	 * Test that {@link Properties} will hold an updated value of the property if it's included in
-	 * the {@link ConfigurationUpdate}.
-	 */
-	@Test
-	@SuppressWarnings("unchecked")
-	public void savedPropertyUpdateFromTheDefaultConfiguration() throws JAXBException, IOException, SAXException {
-		Configuration configuration = new Configuration();
-		PropertySection section = new PropertySection();
-		SingleProperty<String> property = new StringProperty("", "", "property1", "value1", false, false);
-		section.addProperty(property);
-		configuration.addSection(section);
+		/**
+		 * Check that property will be correctly updated during runtime.
+		 */
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Test
+		public void runtimePropertyUpdate() throws Exception {
+			Configuration configuration = new Configuration();
+			PropertySection section = new PropertySection();
+			SingleProperty<Long> property = new LongProperty("", "", "property1", 10L, false, false);
+			section.addProperty(property);
+			configuration.addSection(section);
 
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
 
-		AbstractPropertyUpdate<String> propertyUpdate = mock(AbstractPropertyUpdate.class);
-		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
-		when(propertyUpdate.getUpdateValue()).thenReturn("updatedValue");
-		when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+			ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
+			AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdate.getUpdateValue()).thenReturn(20L);
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
 
-		Properties properties = propertyManager.getProperties();
-		assertThat(properties.getProperty("property1"), is(equalTo("updatedValue")));
-		assertThat(properties.size(), is(1));
-	}
+			propertyManager.init();
+			propertyManager.loadConfigurationAndUpdates();
+			propertyManager.updateConfiguration(configurationUpdate, false);
 
-	/**
-	 * Test that not matching property update will not be taken into account.
-	 */
-	@Test
-	@SuppressWarnings("unchecked")
-	public void savedPropertyUpdateNotValid() throws JAXBException, IOException, SAXException {
-		Configuration configuration = new Configuration();
-		PropertySection section = new PropertySection();
-		SingleProperty<Long> property = new LongProperty("", "", "property1", 10L, false, false);
-		section.addProperty(property);
-		configuration.addSection(section);
+			assertThat(property.getValue(), is(20L));
+			ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+			verify(propertyUpdateExecutor, times(1)).executePropertyUpdates(captor.capture());
+			List<SingleProperty<?>> list = captor.getValue();
+			assertThat(list, hasSize(1));
+			assertThat(list, hasItem(property));
 
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			// confirm configuration update write
+			verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
+			verifyZeroInteractions(shutdownService);
+		}
 
-		AbstractPropertyUpdate<String> propertyUpdate = mock(AbstractPropertyUpdate.class);
-		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
-		when(propertyUpdate.getUpdateValue()).thenReturn("updatedValue");
-		when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+		/**
+		 * Check that property will be correctly updated during runtime and server will be
+		 * restarted.
+		 */
+		@SuppressWarnings({ "unchecked" })
+		@Test
+		public void runtimePropertyUpdateServerRestart() throws Exception {
+			Configuration configuration = new Configuration();
+			PropertySection section = new PropertySection();
+			SingleProperty<Long> property = new LongProperty("", "", "property1", 10L, false, true);
+			section.addProperty(property);
+			configuration.addSection(section);
 
-		Properties properties = propertyManager.getProperties();
-		assertThat(Long.valueOf(properties.getProperty("property1")), is(10L));
-		assertThat(properties.size(), is(1));
-	}
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
 
-	/**
-	 * Check that Exception will be thrown if the {@link ConfigurationUpdate} has update that can
-	 * not be applied.
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test(expectedExceptions = { Exception.class })
-	public void noUpdateIfCanNotUpdateProperty() throws Exception {
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
+			AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdate.getUpdateValue()).thenReturn(20L);
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
 
-		ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
-		AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
-		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
-		when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+			propertyManager.init();
+			propertyManager.loadConfigurationAndUpdates();
+			propertyManager.updateConfiguration(configurationUpdate, true);
 
-		SingleProperty singleProperty = mock(SingleProperty.class);
-		when(singleProperty.canUpdate(propertyUpdate)).thenReturn(false);
-		when(configuration.forLogicalName(Matchers.<String> anyObject())).thenReturn(singleProperty);
+			assertThat(property.getValue(), is(20L));
 
-		propertyManager.loadConfigurationAndUpdates();
-		propertyManager.updateConfiguration(configurationUpdate, false);
-	}
+			// confirm configuration update write
+			verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
+			// confirm server service was called
+			verify(shutdownService).restart();
+			verifyZeroInteractions(propertyUpdateExecutor);
+		}
 
-	/**
-	 * Check that Exception will be thrown if the {@link ConfigurationUpdate} has update for non
-	 * existing property.
-	 */
-	@SuppressWarnings("unchecked")
-	@Test(expectedExceptions = { Exception.class })
-	public void noUpdateIfPropertyNotFound() throws Exception {
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
-		when(configuration.forLogicalName(Matchers.<String> anyObject())).thenReturn(null);
-		ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
-		AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
-		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
-		when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+		/**
+		 * Check that property will be correctly reseted to default during runtime.
+		 */
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Test
+		public void runtimePropertyResetToDefault() throws Exception {
+			long defaultValue = 10L;
+			Configuration configuration = new Configuration();
+			PropertySection section = new PropertySection();
+			SingleProperty<Long> property = new LongProperty("", "", "property1", defaultValue, false, false);
+			property.setValue(45523L);
+			section.addProperty(property);
+			configuration.addSection(section);
 
-		propertyManager.loadConfigurationAndUpdates();
-		propertyManager.updateConfiguration(configurationUpdate, false);
-	}
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
 
-	/**
-	 * Check that property will be correctly updated during runtime.
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test
-	public void runtimePropertyUpdate() throws Exception {
-		Configuration configuration = new Configuration();
-		PropertySection section = new PropertySection();
-		SingleProperty<Long> property = new LongProperty("", "", "property1", 10L, false, false);
-		section.addProperty(property);
-		configuration.addSection(section);
+			ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
+			AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdate.isRestoreDefault()).thenReturn(true);
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
 
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(null).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
-		doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
+			propertyManager.init();
+			propertyManager.loadConfigurationAndUpdates();
+			propertyManager.updateConfiguration(configurationUpdate, false);
 
-		ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class);
-		AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
-		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
-		when(propertyUpdate.getUpdateValue()).thenReturn(20L);
-		when(configurationUpdate.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdate));
+			assertThat(property.getValue(), is(defaultValue));
+			ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+			verify(propertyUpdateExecutor, times(1)).executePropertyUpdates(captor.capture());
+			List<SingleProperty<?>> list = captor.getValue();
+			assertThat(list, hasSize(1));
+			assertThat(list, hasItem(property));
 
-		propertyManager.loadConfigurationAndUpdates();
-		propertyManager.updateConfiguration(configurationUpdate, false);
+			// confirm configuration update write
+			verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
+			verifyZeroInteractions(shutdownService);
+		}
 
-		assertThat(property.getValue(), is(20L));
-		ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
-		verify(propertyUpdateExecutor, times(1)).executePropertyUpdates(captor.capture());
-		List<SingleProperty<?>> list = captor.getValue();
-		assertThat(list, hasSize(1));
-		assertThat(list, hasItem(property));
+		/**
+		 * Confirm restore to default of already existing property.
+		 */
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Test
+		public void runtimePropertyUpdateOfAlreadyUpdatedProperty() throws Exception {
+			Configuration configuration = new Configuration();
+			PropertySection section = new PropertySection();
+			SingleProperty<Long> property = new LongProperty("", "", "property1", 10L, false, false);
+			section.addProperty(property);
+			configuration.addSection(section);
 
-		// confirm configuration update write
-		verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
-	}
+			ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class, Mockito.RETURNS_MOCKS);
+			AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdate.getUpdateValue()).thenReturn(20L);
+			Set<IPropertyUpdate<?>> propertyUpdates = Mockito.spy(new HashSet<IPropertyUpdate<?>>());
+			propertyUpdates.add(propertyUpdate);
+			when(configurationUpdate.getPropertyUpdates()).thenReturn(propertyUpdates);
 
-	/**
-	 * Confirm restore to default of already existing property.
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test
-	public void runtimePropertyUpdateOfAlreadyUpdatedProperty() throws Exception {
-		Configuration configuration = new Configuration();
-		PropertySection section = new PropertySection();
-		SingleProperty<Long> property = new LongProperty("", "", "property1", 10L, false, false);
-		section.addProperty(property);
-		configuration.addSection(section);
+			doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
+			doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
+			doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
 
-		ConfigurationUpdate configurationUpdate = mock(ConfigurationUpdate.class, Mockito.RETURNS_MOCKS);
-		AbstractPropertyUpdate<Long> propertyUpdate = mock(AbstractPropertyUpdate.class);
-		when(propertyUpdate.getPropertyLogicalName()).thenReturn("property1");
-		when(propertyUpdate.getUpdateValue()).thenReturn(20L);
-		Set<IPropertyUpdate<?>> propertyUpdates = Mockito.spy(new HashSet<IPropertyUpdate<?>>());
-		propertyUpdates.add(propertyUpdate);
-		when(configurationUpdate.getPropertyUpdates()).thenReturn(propertyUpdates);
+			ConfigurationUpdate configurationUpdateRuntime = mock(ConfigurationUpdate.class);
+			AbstractPropertyUpdate<Long> propertyUpdateRuntime = mock(AbstractPropertyUpdate.class);
+			when(propertyUpdateRuntime.getPropertyLogicalName()).thenReturn("property1");
+			when(propertyUpdateRuntime.getUpdateValue()).thenReturn(10L); // set back to default
+			// value
+			when(configurationUpdateRuntime.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdateRuntime));
 
-		doReturn(configuration).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(Configuration.class));
-		doReturn(configurationUpdate).when(transformator).unmarshall(Matchers.<Path> anyObject(), Matchers.<Path> anyObject(), eq(ConfigurationUpdate.class));
-		doNothing().when(transformator).marshall(Matchers.<Path> anyObject(), any(), anyString());
+			propertyManager.init();
+			propertyManager.getProperties();
+			propertyManager.updateConfiguration(configurationUpdateRuntime, false);
 
-		ConfigurationUpdate configurationUpdateRuntime = mock(ConfigurationUpdate.class);
-		AbstractPropertyUpdate<Long> propertyUpdateRuntime = mock(AbstractPropertyUpdate.class);
-		when(propertyUpdateRuntime.getPropertyLogicalName()).thenReturn("property1");
-		when(propertyUpdateRuntime.getUpdateValue()).thenReturn(10L); // set back to default value
-		when(configurationUpdateRuntime.getPropertyUpdates()).thenReturn(Collections.<IPropertyUpdate<?>> singleton(propertyUpdateRuntime));
+			// confirm property update and value
+			assertThat(property.getValue(), is(10L)); // returned to the default value
+			ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+			verify(propertyUpdateExecutor, times(1)).executePropertyUpdates(captor.capture());
+			List<SingleProperty<?>> list = captor.getValue();
+			assertThat(list, hasSize(1));
+			assertThat(list, hasItem(property));
 
-		propertyManager.getProperties();
-		propertyManager.updateConfiguration(configurationUpdateRuntime, false);
-
-		// confirm property update and value
-		assertThat(property.getValue(), is(10L)); // returned to the default value
-		ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
-		verify(propertyUpdateExecutor, times(1)).executePropertyUpdates(captor.capture());
-		List<SingleProperty<?>> list = captor.getValue();
-		assertThat(list, hasSize(1));
-		assertThat(list, hasItem(property));
-
-		// confirm merging of configurations and write
-		verify(configurationUpdate, times(1)).merge(configurationUpdateRuntime, true);
-		verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
+			// confirm merging of configurations and write
+			verify(configurationUpdate, times(1)).merge(configurationUpdateRuntime, true);
+			verify(transformator, times(1)).marshall(Matchers.<Path> anyObject(), eq(configurationUpdate), anyString());
+			verifyZeroInteractions(shutdownService);
+		}
 	}
 }
