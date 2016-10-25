@@ -18,6 +18,12 @@ public enum AlertClosingReason {
 	private String description;
 
 	/**
+	 * Default constructor.
+	 */
+	AlertClosingReason() {
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @param description
