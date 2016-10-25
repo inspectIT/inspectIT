@@ -387,7 +387,7 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(Alert.class, new FieldSerializer<Alert>(kryo, Alert.class), nextRegistrationId++);
 		kryo.register(EMailValidator.class, new FieldSerializer<EMailValidator>(kryo, EMailValidator.class), nextRegistrationId++);
 		kryo.register(EMailListValidator.class, new FieldSerializer<EMailListValidator>(kryo, EMailListValidator.class), nextRegistrationId++);
-		kryo.register(AlertClosingReason.class, new FieldSerializer<AlertClosingReason>(kryo, AlertClosingReason.class), nextRegistrationId++);
+		kryo.register(AlertClosingReason.class, new EnumSerializer(AlertClosingReason.class), nextRegistrationId++);
 
 	}
 
