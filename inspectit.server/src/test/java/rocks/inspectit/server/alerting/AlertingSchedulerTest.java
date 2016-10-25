@@ -237,7 +237,7 @@ public class AlertingSchedulerTest extends TestBase {
 
 			alertingScheduler.onApplicationEvent(event);
 
-			verify(iteratorMock, times(1)).remove();
+			verify(alertingStates, times(1)).remove(stateMock);
 		}
 
 		@Test
@@ -262,7 +262,7 @@ public class AlertingSchedulerTest extends TestBase {
 
 			alertingScheduler.onApplicationEvent(event);
 
-			verify(iteratorMock, times(1)).remove();
+			verify(alertingStates, times(1)).remove(stateMock);
 			verify(alertMock, times(1)).close(any(Long.class), reasonCapture.capture());
 			assertThat(reasonCapture.getValue(), equalTo(AlertClosingReason.ALERTING_DEFINITION_DELETED));
 		}
