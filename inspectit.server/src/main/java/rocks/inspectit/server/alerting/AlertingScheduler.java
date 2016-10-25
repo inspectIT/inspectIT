@@ -189,16 +189,12 @@ public class AlertingScheduler implements Runnable, ApplicationListener<Abstract
 	 *            the received {@link AbstractAlertingDefinitionEvent}
 	 */
 	private void deletedAlertingDefinition(AbstractAlertingDefinitionEvent event) {
-		Iterator<AlertingState> iterator = alertingStates.iterator();
-
-		while (iterator.hasNext()) {
-			AlertingState state = iterator.next();
-
+		for (AlertingState state : alertingStates) {
 			if (Objects.equals(state.getAlertingDefinition().getId(), event.getFirst().getId())) {
 				if (null != state.getAlert()) {
 					state.getAlert().close(System.currentTimeMillis(), AlertClosingReason.ALERTING_DEFINITION_DELETED);
 				}
-				iterator.remove();
+				alertingStates.remove(state);
 				break;
 			}
 		}
