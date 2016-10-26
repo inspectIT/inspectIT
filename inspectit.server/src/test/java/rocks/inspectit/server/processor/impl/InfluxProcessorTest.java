@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.influx.builder.DefaultDataPointBuilder;
-import rocks.inspectit.server.influx.dao.IInfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
@@ -38,7 +38,7 @@ public class InfluxProcessorTest extends TestBase {
 	InfluxProcessor processor;
 
 	@Mock
-	IInfluxDBDao influxDBDao;
+	InfluxDBDao influxDBDao;
 
 	@Mock
 	EntityManager entityManager;
@@ -53,14 +53,14 @@ public class InfluxProcessorTest extends TestBase {
 		@Test
 		public void processed() {
 			InvocationSequenceData invocationData = new InvocationSequenceData();
-			when(influxDBDao.isOnline()).thenReturn(true);
+			when(influxDBDao.isConnected()).thenReturn(true);
 			doReturn(InvocationSequenceData.class).when(pointBuilder).getDataClass();
 			when(pointBuilder.createBuilder(invocationData)).thenReturn(builder);
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> singletonList(pointBuilder));
 
 			processor.process(invocationData, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			ArgumentCaptor<Point> pointCaptor = ArgumentCaptor.forClass(Point.class);
 			verify(influxDBDao).insert(pointCaptor.capture());
 			assertThat(pointCaptor.getValue().lineProtocol(), is(builder.build().lineProtocol()));
@@ -70,12 +70,12 @@ public class InfluxProcessorTest extends TestBase {
 		@Test
 		public void noBuilders() {
 			InvocationSequenceData invocationData = new InvocationSequenceData();
-			when(influxDBDao.isOnline()).thenReturn(true);
+			when(influxDBDao.isConnected()).thenReturn(true);
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> emptyList());
 
 			processor.process(invocationData, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			verifyNoMoreInteractions(influxDBDao);
 			verifyZeroInteractions(entityManager);
 		}
@@ -83,13 +83,13 @@ public class InfluxProcessorTest extends TestBase {
 		@Test
 		public void influxOffline() {
 			InvocationSequenceData invocationData = new InvocationSequenceData();
-			when(influxDBDao.isOnline()).thenReturn(false);
+			when(influxDBDao.isConnected()).thenReturn(false);
 			doReturn(InvocationSequenceData.class).when(pointBuilder).getDataClass();
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> singletonList(pointBuilder));
 
 			processor.process(invocationData, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			verifyNoMoreInteractions(influxDBDao);
 			verifyZeroInteractions(entityManager);
 		}
@@ -97,13 +97,13 @@ public class InfluxProcessorTest extends TestBase {
 		@Test
 		public void builderForClassDoesNotExist() {
 			InvocationSequenceData invocationData = new InvocationSequenceData();
-			when(influxDBDao.isOnline()).thenReturn(true);
+			when(influxDBDao.isConnected()).thenReturn(true);
 			doReturn(HttpTimerData.class).when(pointBuilder).getDataClass();
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> singletonList(pointBuilder));
 
 			processor.process(invocationData, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			verify(pointBuilder).getDataClass();
 			verifyNoMoreInteractions(influxDBDao, pointBuilder);
 			verifyZeroInteractions(entityManager);
@@ -113,13 +113,13 @@ public class InfluxProcessorTest extends TestBase {
 		public void timerNotCharting() {
 			TimerData data = new TimerData();
 			data.setCharting(false);
-			when(influxDBDao.isOnline()).thenReturn(true);
+			when(influxDBDao.isConnected()).thenReturn(true);
 			doReturn(TimerData.class).when(pointBuilder).getDataClass();
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> singletonList(pointBuilder));
 
 			processor.process(data, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			verify(pointBuilder).getDataClass();
 			verifyNoMoreInteractions(influxDBDao, pointBuilder);
 			verifyZeroInteractions(entityManager);
@@ -129,14 +129,14 @@ public class InfluxProcessorTest extends TestBase {
 		public void timerCharting() {
 			TimerData data = new TimerData();
 			data.setCharting(true);
-			when(influxDBDao.isOnline()).thenReturn(true);
+			when(influxDBDao.isConnected()).thenReturn(true);
 			doReturn(TimerData.class).when(pointBuilder).getDataClass();
 			when(pointBuilder.createBuilder(data)).thenReturn(builder);
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> singletonList(pointBuilder));
 
 			processor.process(data, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			ArgumentCaptor<Point> pointCaptor = ArgumentCaptor.forClass(Point.class);
 			verify(influxDBDao).insert(pointCaptor.capture());
 			assertThat(pointCaptor.getValue().lineProtocol(), is(builder.build().lineProtocol()));
@@ -147,13 +147,13 @@ public class InfluxProcessorTest extends TestBase {
 		public void jmxNotNumeric() {
 			JmxSensorValueData data = new JmxSensorValueData();
 			data.setValue("string value");
-			when(influxDBDao.isOnline()).thenReturn(true);
+			when(influxDBDao.isConnected()).thenReturn(true);
 			doReturn(JmxSensorValueData.class).when(pointBuilder).getDataClass();
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> singletonList(pointBuilder));
 
 			processor.process(data, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			verify(pointBuilder).getDataClass();
 			verifyNoMoreInteractions(influxDBDao, pointBuilder);
 			verifyZeroInteractions(entityManager);
@@ -163,14 +163,14 @@ public class InfluxProcessorTest extends TestBase {
 		public void jmxNumeric() {
 			JmxSensorValueData data = new JmxSensorValueData();
 			data.setValue("1");
-			when(influxDBDao.isOnline()).thenReturn(true);
+			when(influxDBDao.isConnected()).thenReturn(true);
 			doReturn(JmxSensorValueData.class).when(pointBuilder).getDataClass();
 			when(pointBuilder.createBuilder(data)).thenReturn(builder);
 			processor = new InfluxProcessor(influxDBDao, Collections.<DefaultDataPointBuilder<DefaultData>> singletonList(pointBuilder));
 
 			processor.process(data, entityManager);
 
-			verify(influxDBDao).isOnline();
+			verify(influxDBDao).isConnected();
 			ArgumentCaptor<Point> pointCaptor = ArgumentCaptor.forClass(Point.class);
 			verify(influxDBDao).insert(pointCaptor.capture());
 			assertThat(pointCaptor.getValue().lineProtocol(), is(builder.build().lineProtocol()));

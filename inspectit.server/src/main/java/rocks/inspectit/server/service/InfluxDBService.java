@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import rocks.inspectit.server.influx.dao.IInfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.cmr.service.IInfluxDBService;
 
@@ -34,7 +34,7 @@ public class InfluxDBService implements IInfluxDBService {
 	 * {@link IInfluxDBDao} to read from.
 	 */
 	@Autowired
-	IInfluxDBDao influxDbDao;
+	InfluxDBDao influxDbDao;
 
 	/**
 	 * {@inheritDoc}

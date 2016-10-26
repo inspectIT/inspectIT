@@ -104,7 +104,7 @@ public final class CMR {
 		if (LOGGER.isInfoEnabled()) {
 			VersionService versionService = (VersionService) getBeanFactory().getBean("versionService");
 			LOGGER.info("Starting CMR in version " + versionService.getVersionAsString()
-					+ ". Please note that inspectIT does not provide any guarantee on backwards compatibility. Only if the version match exactly we ensure that the components are compatible.");
+			+ ". Please note that inspectIT does not provide any guarantee on backwards compatibility. Only if the version match exactly we ensure that the components are compatible.");
 		}
 	}
 

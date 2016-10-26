@@ -21,7 +21,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.alerting.state.AlertingState;
-import rocks.inspectit.server.influx.dao.IInfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
@@ -42,7 +42,7 @@ public class ThresholdCheckerTest extends TestBase {
 	Logger log;
 
 	@Mock
-	IInfluxDBDao influxDao;
+	InfluxDBDao influxDao;
 
 	@Mock
 	AlertingStateLifecycleManager stateManager;
@@ -78,7 +78,7 @@ public class ThresholdCheckerTest extends TestBase {
 
 		@Test
 		public void noData() throws BusinessException, Exception {
-			when(influxDao.isOnline()).thenReturn(true);
+			when(influxDao.isConnected()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(new QueryResult());
 			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
 
@@ -95,7 +95,7 @@ public class ThresholdCheckerTest extends TestBase {
 		@Test
 		public void noViolationUpperThreshold() throws BusinessException, Exception {
 			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD - 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
+			when(influxDao.isConnected()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
 			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
 			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
@@ -114,7 +114,7 @@ public class ThresholdCheckerTest extends TestBase {
 		@Test
 		public void noViolationLowerThreshold() throws BusinessException, Exception {
 			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
+			when(influxDao.isConnected()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
 			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
 			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
@@ -133,7 +133,7 @@ public class ThresholdCheckerTest extends TestBase {
 		@Test
 		public void violationUpperThreshold() throws BusinessException, Exception {
 			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
+			when(influxDao.isConnected()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
 			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
 			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
@@ -152,7 +152,7 @@ public class ThresholdCheckerTest extends TestBase {
 		@Test
 		public void violationLowerThreshold() throws BusinessException, Exception {
 			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD - 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
+			when(influxDao.isConnected()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
 			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
 			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
@@ -171,7 +171,7 @@ public class ThresholdCheckerTest extends TestBase {
 		@Test
 		public void influxDisconnected() throws BusinessException, Exception {
 			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
-			when(influxDao.isOnline()).thenReturn(false);
+			when(influxDao.isConnected()).thenReturn(false);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
 			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
 

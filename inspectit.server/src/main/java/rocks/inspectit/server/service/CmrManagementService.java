@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rocks.inspectit.server.cache.IBuffer;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.property.PropertyManager;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.ShutdownService;
@@ -77,6 +78,12 @@ public class CmrManagementService implements ICmrManagementService {
 	private ShutdownService shutdownService;
 
 	/**
+	 * An {@link IInfluxDBDao} instance.
+	 */
+	@Autowired
+	private InfluxDBDao influxDbDao;
+
+	/**
 	 * Time in milliseconds when the CMR has started.
 	 */
 	private long timeStarted;
@@ -130,6 +137,7 @@ public class CmrManagementService implements ICmrManagementService {
 		cmrStatusData.setUpTime(System.currentTimeMillis() - timeStarted);
 		cmrStatusData.setDateStarted(dateStarted);
 		cmrStatusData.setDatabaseSize(getDatabaseSize());
+		cmrStatusData.setInfluxConnected(influxDbDao.isConnected());
 		return cmrStatusData;
 	}
 
