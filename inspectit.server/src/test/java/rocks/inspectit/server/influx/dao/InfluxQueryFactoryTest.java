@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.not;
 
 import java.util.concurrent.TimeUnit;
 
+import org.mockito.InjectMocks;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -27,6 +28,9 @@ import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
  */
 public class InfluxQueryFactoryTest extends TestBase {
 
+	@InjectMocks
+	InfluxQueryFactory queryFactory;
+
 	/**
 	 * Tests the {@link InfluxQueryFactory#buildTraceIdForAlertQuery(Alert, long)} method.
 	 *
@@ -34,6 +38,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 	 *
 	 */
 	public static class BuildTraceIdForAlertQuery extends InfluxQueryFactoryTest {
+
 		AlertingDefinition alertingDefinition;
 		private static final long START_TIME = 12345678L;
 		private static final long STOP_TIME = 123456789L;
@@ -51,7 +56,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 
 		@Test
 		public void queryForNotFinalized() {
-			String query = InfluxQueryFactory.buildTraceIdForAlertQuery(new Alert(alertingDefinition, START_TIME));
+			String query = queryFactory.buildTraceIdForAlertQuery(new Alert(alertingDefinition, START_TIME));
 
 			assertThat(query,
 					is("SELECT \"" + Series.BusinessTransaction.FIELD_TRACE_ID + "\" FROM \"" + Series.BusinessTransaction.NAME + "\" WHERE time >= " + START_TIME + "ms AND \"duration\" >= "
@@ -61,7 +66,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 
 		@Test
 		public void queryForFinalized() {
-			String query = InfluxQueryFactory.buildTraceIdForAlertQuery(new Alert(alertingDefinition, START_TIME, STOP_TIME));
+			String query = queryFactory.buildTraceIdForAlertQuery(new Alert(alertingDefinition, START_TIME, STOP_TIME));
 
 			assertThat(query, is("SELECT \"" + Series.BusinessTransaction.FIELD_TRACE_ID + "\" FROM \"" + Series.BusinessTransaction.NAME + "\" WHERE time >= " + START_TIME + "ms AND time < "
 					+ STOP_TIME + "ms AND \"duration\" >= " + THRESHOLD));
@@ -77,7 +82,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 			alertingDefinition.putTag(key1, value1);
 			alertingDefinition.putTag(key2, value2);
 
-			String query = InfluxQueryFactory.buildTraceIdForAlertQuery(new Alert(alertingDefinition, START_TIME));
+			String query = queryFactory.buildTraceIdForAlertQuery(new Alert(alertingDefinition, START_TIME));
 
 			assertThat(query, containsString("SELECT \"" + Series.BusinessTransaction.FIELD_TRACE_ID + "\" FROM \"" + Series.BusinessTransaction.NAME + "\""));
 			assertThat(query, containsString("time >= " + START_TIME));
@@ -89,7 +94,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 
 		@Test(expectedExceptions = { NullPointerException.class })
 		public void queryForInvalidAlertId() {
-			InfluxQueryFactory.buildTraceIdForAlertQuery(null);
+			queryFactory.buildTraceIdForAlertQuery(null);
 		}
 	}
 
@@ -127,7 +132,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 		public void buildQueryStringUpper() throws BusinessException, Exception {
 			alertingDefinition.setThresholdType(ThresholdType.UPPER_THRESHOLD);
 
-			String query = InfluxQueryFactory.buildThresholdCheckForAlertingStateQuery(alertingState, CURRENT_TIME);
+			String query = queryFactory.buildThresholdCheckForAlertingStateQuery(alertingState, CURRENT_TIME);
 
 			assertThat(query, equalTo("SELECT MAX(\"" + FIELD + "\") FROM \"" + MEASUREMENT + "\" WHERE \"" + TAG_KEY + "\" = '" + TAG_VALUE + "' AND time <= " + CURRENT_TIME + "ms" + " AND time > "
 					+ (LAST_CHECK_TIME - alertingDefinition.getTimeRange(TimeUnit.MILLISECONDS)) + "ms"));
@@ -137,7 +142,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 		public void buildQueryStringLower() throws BusinessException, Exception {
 			alertingDefinition.setThresholdType(ThresholdType.LOWER_THRESHOLD);
 
-			String query = InfluxQueryFactory.buildThresholdCheckForAlertingStateQuery(alertingState, CURRENT_TIME);
+			String query = queryFactory.buildThresholdCheckForAlertingStateQuery(alertingState, CURRENT_TIME);
 
 			assertThat(query, is("SELECT MIN(\"" + FIELD + "\") FROM \"" + MEASUREMENT + "\" WHERE \"" + TAG_KEY + "\" = '" + TAG_VALUE + "' AND time <= " + CURRENT_TIME + "ms" + " AND time > "
 					+ (LAST_CHECK_TIME - alertingDefinition.getTimeRange(TimeUnit.MILLISECONDS)) + "ms"));
@@ -150,7 +155,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 			alertingDefinition.setThresholdType(ThresholdType.UPPER_THRESHOLD);
 			alertingDefinition.putTag(tagKey2, tagValue2);
 
-			String query = InfluxQueryFactory.buildThresholdCheckForAlertingStateQuery(alertingState, CURRENT_TIME);
+			String query = queryFactory.buildThresholdCheckForAlertingStateQuery(alertingState, CURRENT_TIME);
 
 			assertThat(query, is("SELECT MAX(\"" + FIELD + "\") FROM \"" + MEASUREMENT + "\" WHERE \"" + TAG_KEY + "\" = '" + TAG_VALUE + "' AND \"" + tagKey2 + "\" = '" + tagValue2 + "' AND time <= "
 					+ CURRENT_TIME + "ms AND time > " + (LAST_CHECK_TIME - alertingDefinition.getTimeRange(TimeUnit.MILLISECONDS)) + "ms"));

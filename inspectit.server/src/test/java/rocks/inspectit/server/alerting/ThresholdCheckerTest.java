@@ -4,18 +4,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.QueryResult.Result;
+import org.influxdb.dto.QueryResult.Series;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -33,6 +32,7 @@ import rocks.inspectit.shared.cs.ci.AlertingDefinition.ThresholdType;
  * @author Marius Oehler
  *
  */
+@SuppressWarnings("PMD")
 public class ThresholdCheckerTest extends TestBase {
 
 	@InjectMocks
@@ -53,8 +53,6 @@ public class ThresholdCheckerTest extends TestBase {
 	 * method.
 	 */
 	public static class CheckThreshold extends ThresholdCheckerTest {
-		private final static double THRESHOLD = 100.1;
-
 		@Mock
 		AlertingDefinition alertingDefinition;
 
@@ -66,118 +64,207 @@ public class ThresholdCheckerTest extends TestBase {
 
 		@BeforeMethod
 		public void buildQueryResult() {
-			queryResult = new QueryResult();
+			Object[] values = { "12:00", 10D };
+			Series series = new Series();
+			series.setValues(Arrays.asList(Arrays.asList(values)));
+			series.setColumns(Arrays.asList(new String[] { "time", "value" }));
 			Result result = new Result();
-			queryResult.setResults(Collections.singletonList(result));
-			org.influxdb.dto.QueryResult.Series series = new org.influxdb.dto.QueryResult.Series();
-			result.setSeries(Collections.singletonList(series));
-			Object[] values = { "ABC", new Double(2.2) };
-			series.setValues(Collections.singletonList(Arrays.asList(values)));
-			series.setColumns(Arrays.asList(new String[] { "col1", "col2" }));
+			result.setSeries(Arrays.asList(series));
+			Mockito.when(queryResult.getResults()).thenReturn(Arrays.asList(result));
 		}
 
 		@Test
 		public void noData() throws BusinessException, Exception {
-			when(influxDao.isOnline()).thenReturn(true);
-			when(influxDao.query(any(String.class))).thenReturn(new QueryResult());
-			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			long time = System.currentTimeMillis();
+			Mockito.when(influxDao.isOnline()).thenReturn(true);
+			Mockito.when(influxDao.query(any(String.class))).thenReturn(new QueryResult());
+			Mockito.when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).noData(alertingState);
-			verifyNoMoreInteractions(stateManager);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			Mockito.verify(alertingState, times(2)).getLastCheckTime();
+			Mockito.verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			Mockito.verify(alertingState).getAlertingDefinition();
+			Mockito.verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			Mockito.verify(influxDao).query(any(String.class));
+			Mockito.verify(influxDao).isOnline();
+			Mockito.verifyNoMoreInteractions(influxDao);
+			Mockito.verify(stateManager).noData(alertingState);
+			Mockito.verifyNoMoreInteractions(stateManager);
+			Mockito.verify(alertingDefinition).getThresholdType();
+			Mockito.verify(alertingDefinition).getField();
+			Mockito.verify(alertingDefinition).getTags();
+			Mockito.verify(alertingDefinition).getMeasurement();
+			Mockito.verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			Mockito.verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void noViolationUpperThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD - 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
-			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
-			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			long time = System.currentTimeMillis();
+			Mockito.when(influxDao.isOnline()).thenReturn(true);
+			Mockito.when(influxDao.query(any(String.class))).thenReturn(queryResult);
+			Mockito.when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			Mockito.when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
+			Mockito.when(alertingDefinition.getThreshold()).thenReturn(15D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).valid(alertingState);
-			verifyNoMoreInteractions(stateManager);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			Mockito.verify(alertingState, times(2)).getLastCheckTime();
+			Mockito.verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			Mockito.verify(alertingState, times(2)).getAlertingDefinition();
+			Mockito.verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			Mockito.verify(influxDao).query(any(String.class));
+			Mockito.verify(influxDao).isOnline();
+			Mockito.verifyNoMoreInteractions(influxDao);
+			Mockito.verify(stateManager).valid(alertingState);
+			Mockito.verifyNoMoreInteractions(stateManager);
+			Mockito.verify(alertingDefinition, times(2)).getThresholdType();
+			Mockito.verify(alertingDefinition).getThreshold();
+			Mockito.verify(alertingDefinition).getField();
+			Mockito.verify(alertingDefinition).getTags();
+			Mockito.verify(alertingDefinition).getMeasurement();
+			Mockito.verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			Mockito.verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void noViolationLowerThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
-			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
-			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			long time = System.currentTimeMillis();
+			Mockito.when(influxDao.isOnline()).thenReturn(true);
+			Mockito.when(influxDao.query(any(String.class))).thenReturn(queryResult);
+			Mockito.when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			Mockito.when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
+			Mockito.when(alertingDefinition.getThreshold()).thenReturn(5D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).valid(alertingState);
-			verifyNoMoreInteractions(stateManager);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			Mockito.verify(alertingState, times(2)).getLastCheckTime();
+			Mockito.verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			Mockito.verify(alertingState, times(2)).getAlertingDefinition();
+			Mockito.verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			Mockito.verify(influxDao).query(any(String.class));
+			Mockito.verify(influxDao).isOnline();
+			Mockito.verifyNoMoreInteractions(influxDao);
+			Mockito.verify(stateManager).valid(alertingState);
+			Mockito.verifyNoMoreInteractions(stateManager);
+			Mockito.verify(alertingDefinition, times(2)).getThresholdType();
+			Mockito.verify(alertingDefinition).getThreshold();
+			Mockito.verify(alertingDefinition).getField();
+			Mockito.verify(alertingDefinition).getTags();
+			Mockito.verify(alertingDefinition).getMeasurement();
+			Mockito.verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			Mockito.verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void violationUpperThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
-			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
-			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			long time = System.currentTimeMillis();
+			Mockito.when(influxDao.isOnline()).thenReturn(true);
+			Mockito.when(influxDao.query(any(String.class))).thenReturn(queryResult);
+			Mockito.when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			Mockito.when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
+			Mockito.when(alertingDefinition.getThreshold()).thenReturn(5D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).violation(alertingState, THRESHOLD + 1.0);
-			verifyNoMoreInteractions(stateManager);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			Mockito.verify(alertingState, times(2)).getLastCheckTime();
+			Mockito.verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			Mockito.verify(alertingState, times(2)).getAlertingDefinition();
+			Mockito.verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			Mockito.verify(influxDao).query(any(String.class));
+			Mockito.verify(influxDao).isOnline();
+			Mockito.verifyNoMoreInteractions(influxDao);
+			Mockito.verify(stateManager).violation(alertingState, 10D);
+			Mockito.verifyNoMoreInteractions(stateManager);
+			Mockito.verify(alertingDefinition, times(2)).getThresholdType();
+			Mockito.verify(alertingDefinition).getThreshold();
+			Mockito.verify(alertingDefinition).getField();
+			Mockito.verify(alertingDefinition).getTags();
+			Mockito.verify(alertingDefinition).getMeasurement();
+			Mockito.verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			Mockito.verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void violationLowerThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD - 1.0 })));
-			when(influxDao.isOnline()).thenReturn(true);
-			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
-			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			long time = System.currentTimeMillis();
+			Mockito.when(influxDao.isOnline()).thenReturn(true);
+			Mockito.when(influxDao.query(any(String.class))).thenReturn(queryResult);
+			Mockito.when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			Mockito.when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
+			Mockito.when(alertingDefinition.getThreshold()).thenReturn(15D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).violation(alertingState, THRESHOLD - 1.0);
-			verifyNoMoreInteractions(stateManager);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			Mockito.verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			Mockito.verify(alertingState, times(2)).getLastCheckTime();
+			Mockito.verify(alertingState, times(2)).getAlertingDefinition();
+			Mockito.verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			Mockito.verify(influxDao).query(any(String.class));
+			Mockito.verify(influxDao).isOnline();
+			Mockito.verifyNoMoreInteractions(influxDao);
+			Mockito.verify(stateManager).violation(alertingState, 10D);
+			Mockito.verifyNoMoreInteractions(stateManager);
+			Mockito.verify(alertingDefinition, times(2)).getThresholdType();
+			Mockito.verify(alertingDefinition).getThreshold();
+			Mockito.verify(alertingDefinition).getField();
+			Mockito.verify(alertingDefinition).getTags();
+			Mockito.verify(alertingDefinition).getMeasurement();
+			Mockito.verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			Mockito.verifyNoMoreInteractions(alertingDefinition);
+		}
+
+		@Test
+		public void neverChecked() throws BusinessException, Exception {
+			long time = System.currentTimeMillis();
+			Mockito.when(influxDao.isOnline()).thenReturn(true);
+			Mockito.when(influxDao.query(any(String.class))).thenReturn(new QueryResult());
+			Mockito.when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			Mockito.when(alertingState.getLastCheckTime()).thenReturn(-1L);
+
+			thresholdChecker.checkThreshold(alertingState);
+
+			ArgumentCaptor<Long> currentTimeCaptor = ArgumentCaptor.forClass(Long.class);
+			Mockito.verify(alertingState, times(2)).getLastCheckTime();
+			Mockito.verify(alertingState, times(2)).setLastCheckTime(currentTimeCaptor.capture());
+			Mockito.verify(alertingState, times(2)).getAlertingDefinition();
+			Mockito.verifyNoMoreInteractions(alertingState);
+			assertThat(currentTimeCaptor.getValue(), greaterThanOrEqualTo(time));
+			Mockito.verify(alertingDefinition, times(2)).getTimeRange(TimeUnit.MILLISECONDS);
+			Mockito.verify(influxDao).query(any(String.class));
+			Mockito.verify(influxDao).isOnline();
+			Mockito.verifyNoMoreInteractions(influxDao);
+			Mockito.verify(stateManager).noData(alertingState);
+			Mockito.verifyNoMoreInteractions(stateManager);
+			Mockito.verify(alertingDefinition).getThresholdType();
+			Mockito.verify(alertingDefinition).getField();
+			Mockito.verify(alertingDefinition).getTags();
+			Mockito.verify(alertingDefinition).getMeasurement();
+			Mockito.verify(alertingDefinition, times(2)).getTimeRange(TimeUnit.MILLISECONDS);
+			Mockito.verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void influxDisconnected() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
-			when(influxDao.isOnline()).thenReturn(false);
-			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			Mockito.when(influxDao.isOnline()).thenReturn(false);
 
 			thresholdChecker.checkThreshold(alertingState);
 
-			verifyNoMoreInteractions(stateManager);
+			Mockito.verify(influxDao).isOnline();
+			Mockito.verifyNoMoreInteractions(influxDao);
+			Mockito.verifyZeroInteractions(stateManager);
+			Mockito.verifyZeroInteractions(alertingState);
 		}
 
 	}

@@ -2,12 +2,16 @@ package rocks.inspectit.server.alerting;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
+import java.util.List;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
@@ -20,8 +24,10 @@ import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
  * Tests the {@link AlertRegistry}.
  *
  * @author Alexander Wert
+ * @author Marius Oehler
  *
  */
+@SuppressWarnings("PMD")
 public class AlertRegistryTest extends TestBase {
 
 	@InjectMocks
@@ -40,51 +46,53 @@ public class AlertRegistryTest extends TestBase {
 	 */
 	public static class RegisterAlert extends AlertRegistryTest {
 
-		@Mock
-		Alert testAlert;
-
-		@Mock
-		AlertingDefinition alertingDefinition;
-
 		@Test
 		public void registerSuccessful() throws Exception {
-			when(alertingDefinition.getMeasurement()).thenReturn(Series.BusinessTransaction.NAME);
-			when(alertingDefinition.getField()).thenReturn(Series.BusinessTransaction.FIELD_DURATION);
-			when(testAlert.getAlertingDefinition()).thenReturn(alertingDefinition);
+			Alert testAlert = Mockito.mock(Alert.class);
+			Mockito.when(testAlert.getAlertingDefinition()).thenReturn(Mockito.mock(AlertingDefinition.class));
+			Mockito.when(testAlert.getId()).thenReturn("id");
 
 			alertRegistry.registerAlert(testAlert);
 
-			assertThat(alertRegistry.getAlerts(), hasItem(testAlert));
-			assertThat(alertRegistry.getBusinessTransactionAlerts(), hasItem(testAlert));
+			assertThat(alertRegistry.getAlert("id"), equalTo(testAlert));
+		}
+
+		@Test(expectedExceptions = { IllegalArgumentException.class })
+		public void alertIdIsNull() throws Exception {
+			Alert testAlert = Mockito.mock(Alert.class);
+			Mockito.when(testAlert.getAlertingDefinition()).thenReturn(Mockito.mock(AlertingDefinition.class));
+
+			alertRegistry.registerAlert(testAlert);
+		}
+
+		@Test(expectedExceptions = { IllegalArgumentException.class })
+		public void alertAlertingDefinitionIsNull() throws Exception {
+			Alert testAlert = Mockito.mock(Alert.class);
+			Mockito.when(testAlert.getId()).thenReturn("id");
+
+			alertRegistry.registerAlert(testAlert);
+		}
+
+		@Test(expectedExceptions = { IllegalArgumentException.class })
+		public void nullAlert() {
+			Alert alert = null;
+
+			alertRegistry.registerAlert(alert);
 		}
 
 		@Test
-		public void registerNonBusinessTransactionAlertWrongField() throws Exception {
-			when(alertingDefinition.getMeasurement()).thenReturn(Series.BusinessTransaction.NAME);
-			when(alertingDefinition.getField()).thenReturn("utilization");
-			when(testAlert.getAlertingDefinition()).thenReturn(alertingDefinition);
+		public void replaceAlert() throws Exception {
+			Alert alertOne = Mockito.mock(Alert.class);
+			Mockito.when(alertOne.getId()).thenReturn("id");
+			Mockito.when(alertOne.getAlertingDefinition()).thenReturn(Mockito.mock(AlertingDefinition.class));
+			Alert alertTwo = Mockito.mock(Alert.class);
+			Mockito.when(alertTwo.getId()).thenReturn("id");
+			Mockito.when(alertTwo.getAlertingDefinition()).thenReturn(Mockito.mock(AlertingDefinition.class));
 
-			alertRegistry.registerAlert(testAlert);
+			alertRegistry.registerAlert(alertOne);
+			alertRegistry.registerAlert(alertTwo);
 
-			assertThat(alertRegistry.getAlerts(), hasItem(testAlert));
-			assertThat(alertRegistry.getBusinessTransactionAlerts(), not(hasItem(testAlert)));
-		}
-
-		@Test
-		public void registerNonBusinessTransactionAlertWrongMeasurement() throws Exception {
-			when(alertingDefinition.getMeasurement()).thenReturn("cpu");
-			when(alertingDefinition.getField()).thenReturn(Series.BusinessTransaction.FIELD_DURATION);
-			when(testAlert.getAlertingDefinition()).thenReturn(alertingDefinition);
-
-			alertRegistry.registerAlert(testAlert);
-
-			assertThat(alertRegistry.getAlerts(), hasItem(testAlert));
-			assertThat(alertRegistry.getBusinessTransactionAlerts(), not(hasItem(testAlert)));
-		}
-
-		@Test(expectedExceptions = { NullPointerException.class })
-		public void registerNull() {
-			alertRegistry.registerAlert(null);
+			assertThat(alertRegistry.getAlert("id"), equalTo(alertTwo));
 		}
 	}
 
@@ -95,27 +103,82 @@ public class AlertRegistryTest extends TestBase {
 	 *
 	 */
 	public static class GetAlert extends AlertRegistryTest {
-		private static final String TEST_ID = "xyz";
-
-		@Mock
-		Alert testAlert;
-
 
 		@Test
-		public void getCorrect() {
-			when(testAlert.getId()).thenReturn(TEST_ID);
+		public void getAlert() {
+			Alert testAlert = Mockito.mock(Alert.class);
+			Mockito.when(testAlert.getId()).thenReturn("id");
+			Mockito.when(testAlert.getAlertingDefinition()).thenReturn(Mockito.mock(AlertingDefinition.class));
 			alertRegistry.registerAlert(testAlert);
 
-			Alert alert = alertRegistry.getAlert(TEST_ID);
+			Alert alert = alertRegistry.getAlert("id");
 
-			assertThat(alert.getId(), equalTo(testAlert.getId()));
+			assertThat(alert, equalTo(testAlert));
 		}
 
 		@Test
-		public void getWrong() {
-			Alert alert = alertRegistry.getAlert("invalid-id");
+		public void getUnknownAlert() {
+			Alert alert = alertRegistry.getAlert("unknown-id");
 
-			assertThat(alert, equalTo(null));
+			assertThat(alert, is(nullValue()));
+		}
+
+		@Test
+		public void getByNull() {
+			Alert alert = alertRegistry.getAlert(null);
+
+			assertThat(alert, is(nullValue()));
+		}
+	}
+
+	/**
+	 * Tests the {@link AlertRegistry#getAlerts()} method.
+	 */
+	public static class GetAlerts extends AlertRegistryTest {
+
+		@Test
+		public void getAlerts() {
+			Alert alertOne = Mockito.mock(Alert.class);
+			Alert alertTwo = Mockito.mock(Alert.class);
+			Mockito.when(alertOne.getId()).thenReturn("id_1");
+			Mockito.when(alertTwo.getId()).thenReturn("id_2");
+			Mockito.when(alertOne.getAlertingDefinition()).thenReturn(Mockito.mock(AlertingDefinition.class));
+			Mockito.when(alertTwo.getAlertingDefinition()).thenReturn(Mockito.mock(AlertingDefinition.class));
+			alertRegistry.registerAlert(alertOne);
+			alertRegistry.registerAlert(alertTwo);
+
+			List<Alert> alerts = alertRegistry.getAlerts();
+
+			assertThat(alerts, hasSize(2));
+			assertThat(alerts, hasItems(alertOne, alertTwo));
+		}
+	}
+
+	/**
+	 * Tests the {@link AlertRegistry#getBusinessTransactionAlerts()} method.
+	 */
+	public static class GetBusinessTransactionAlerts extends AlertRegistryTest {
+
+		@Test
+		public void getOnlyBTAlerts() {
+			AlertingDefinition definitionOne = Mockito.mock(AlertingDefinition.class);
+			AlertingDefinition definitionTwo = Mockito.mock(AlertingDefinition.class);
+			Mockito.when(definitionOne.getMeasurement()).thenReturn(Series.BusinessTransaction.NAME);
+			Mockito.when(definitionOne.getField()).thenReturn(Series.BusinessTransaction.FIELD_DURATION);
+			Alert alertOne = Mockito.mock(Alert.class);
+			Alert alertTwo = Mockito.mock(Alert.class);
+			Mockito.when(alertOne.getId()).thenReturn("id_1");
+			Mockito.when(alertTwo.getId()).thenReturn("id_2");
+			Mockito.when(alertOne.getAlertingDefinition()).thenReturn(definitionOne);
+			Mockito.when(alertTwo.getAlertingDefinition()).thenReturn(definitionTwo);
+
+			alertRegistry.registerAlert(alertOne);
+			alertRegistry.registerAlert(alertTwo);
+
+			List<Alert> alerts = alertRegistry.getBusinessTransactionAlerts();
+
+			assertThat(alerts, hasSize(1));
+			assertThat(alerts, hasItems(alertOne));
 		}
 	}
 }

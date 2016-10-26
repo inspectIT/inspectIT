@@ -1,4 +1,4 @@
-package rocks.inspectit.server.mail.impl;
+package rocks.inspectit.server.mail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -18,7 +20,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import rocks.inspectit.server.mail.IEMailSender;
 import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.util.EMailUtils;
@@ -27,10 +28,11 @@ import rocks.inspectit.shared.all.util.EMailUtils;
  * Central component for sending e-mails.
  *
  * @author Alexander Wert
+ * @author Marius Oehler
  *
  */
 @Component
-public class EMailSender implements IEMailSender {
+public class EMailSender {
 	/**
 	 * Logger for the class.
 	 */
@@ -41,25 +43,25 @@ public class EMailSender implements IEMailSender {
 	 * SMTP Server host.
 	 */
 	@Value("${mail.smpt.host}")
-	String smptHost;
+	String smtpHost;
 
 	/**
 	 * SMTP Server port.
 	 */
 	@Value("${mail.smpt.port}")
-	int smptPort;
+	int smtpPort;
 
 	/**
 	 * SMTP user name.
 	 */
 	@Value("${mail.smtp.user}")
-	String smptUser;
+	String smtpUser;
 
 	/**
 	 * Password for SMTP authentication.
 	 */
 	@Value("${mail.smtp.passwd}")
-	String smptPassword;
+	String smtpPassword;
 
 	/**
 	 * The e-mail address used as sender.
@@ -88,7 +90,7 @@ public class EMailSender implements IEMailSender {
 	/**
 	 * Unwrapped list of default recipients.
 	 */
-	private final List<String> defaultRecipients = new ArrayList<>();
+	private List<String> defaultRecipients = new ArrayList<>();
 
 	/**
 	 * SMTP connection state.
@@ -98,13 +100,29 @@ public class EMailSender implements IEMailSender {
 	/**
 	 * Additional SMTP properties that might be required for certain SMTP servers.
 	 */
-	private final Properties additionalProperties = new Properties();
+	private Properties additionalProperties = new Properties();
+
+	/**
+	 * The {@link ObjectFactory} used to created object instances.
+	 */
+	private ObjectFactory objectFactory = new ObjectFactory();
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean sendEMail(String subject, String htmlMessage, String textMessage, List<String> recipients) {
+		if (StringUtils.isEmpty(subject)) {
+			throw new IllegalArgumentException("The given subject may not be null or empty.");
+		}
+		if (StringUtils.isEmpty(htmlMessage)) {
+			throw new IllegalArgumentException("The given HTML body may not be null or empty.");
+		}
+		if (StringUtils.isEmpty(textMessage)) {
+			throw new IllegalArgumentException("The given text body may not be null or empty.");
+		}
+		if (CollectionUtils.isEmpty(recipients)) {
+			throw new IllegalArgumentException("The given recipients may not be null or empty.");
+		}
 		if (!connected) {
 			log.warn("Failed sending e-mail! E-Mail service cannot connect to the SMTP server. Check the connection settings!");
 			return false;
@@ -125,34 +143,15 @@ public class EMailSender implements IEMailSender {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isConnected() {
 		return connected;
-	}
-
-	/**
-	 * Gets {@link #defaultRecipients}.
-	 *
-	 * @return {@link #defaultRecipients}
-	 */
-	public List<String> getDefaultRecipients() {
-		return this.defaultRecipients;
-	}
-
-	/**
-	 * Gets {@link #additionalProperties}.
-	 *
-	 * @return {@link #additionalProperties}
-	 */
-	public Properties getAdditionalProperties() {
-		return this.additionalProperties;
 	}
 
 	/**
 	 * Unwrap the comma separated list string of default recipients into a real list.
 	 */
 	@PropertyUpdate(properties = { "mail.default.to" })
-	protected void parseRecipientsString() {
+	private void parseRecipientsString() {
 		defaultRecipients.clear();
 		if (null != defaultRecipientString) {
 			String[] strArray = defaultRecipientString.split(",");
@@ -169,7 +168,7 @@ public class EMailSender implements IEMailSender {
 	/**
 	 * Unwrap the comma separated list string of additional properties into real properties object.
 	 */
-	protected void parseAdditionalPropertiesString() {
+	private void parseAdditionalPropertiesString() {
 		additionalProperties.clear();
 		if (null != smtpPropertiesString) {
 			String[] strArray = smtpPropertiesString.split(",");
@@ -186,7 +185,7 @@ public class EMailSender implements IEMailSender {
 	 * Parses the SMTP properties and checks whether a connection can be established.
 	 */
 	@PropertyUpdate(properties = { "mail.smpt.host", "mail.smpt.port", "mail.smpt.user", "mail.smpt.passwd", "mail.smtp.properties" })
-	protected void onSmtpPropertiesChanged() {
+	public void onSmtpPropertiesChanged() {
 		parseAdditionalPropertiesString();
 		checkConnection();
 	}
@@ -195,30 +194,20 @@ public class EMailSender implements IEMailSender {
 	 * Initialize E-Mail service.
 	 */
 	@PostConstruct
-	protected void init() {
+	public void init() {
 		parseRecipientsString();
-		parseAdditionalPropertiesString();
-		checkConnection();
+		onSmtpPropertiesChanged();
 	}
 
-	/**
-	 * Get a {@link Transport} object for a SMTP connection.
-	 *
-	 * @return A new {@link Transport}.
-	 * @throws NoSuchProviderException
-	 *             If provider for SMTP protocol is not found.
-	 */
-	private Transport getTransport() throws NoSuchProviderException {
-		return Session.getInstance(additionalProperties, new DefaultAuthenticator(smptUser, smptPassword)).getTransport("smtp");
-	}
+
 
 	/**
 	 * Checks connection to SMTP server.
 	 */
 	private void checkConnection() {
 		try {
-			Transport transport = getTransport();
-			transport.connect(smptHost, smptPort, smptUser, smptPassword);
+			Transport transport = objectFactory.getSmtpTransport();
+			transport.connect(smtpHost, smtpPort, smtpUser, smtpPassword);
 			transport.close();
 			log.info("|-eMail Service active and connected...");
 			connected = true;
@@ -240,11 +229,11 @@ public class EMailSender implements IEMailSender {
 	 * @throws EmailException
 	 *             is thrown when the from address could not be set
 	 */
-	protected HtmlEmail prepareHtmlEmail(List<String> recipients) throws EmailException {
-		HtmlEmail email = new HtmlEmail();
-		email.setHostName(smptHost);
-		email.setSmtpPort(smptPort);
-		email.setAuthentication(smptUser, smptPassword);
+	private HtmlEmail prepareHtmlEmail(List<String> recipients) throws EmailException {
+		HtmlEmail email = objectFactory.createHtmlEmail();
+		email.setHostName(smtpHost);
+		email.setSmtpPort(smtpPort);
+		email.setAuthentication(smtpUser, smtpPassword);
 		email.setFrom(senderAddress, senderName);
 
 		for (String defaultTo : defaultRecipients) {
@@ -267,5 +256,34 @@ public class EMailSender implements IEMailSender {
 		}
 
 		return email;
+	}
+
+	/**
+	 * Factory class to create objects required by the EMailSender. This class primary exists for
+	 * better testing process.
+	 *
+	 * @author Marius Oehler
+	 *
+	 */
+	class ObjectFactory {
+		/**
+		 * Get a {@link Transport} object for a SMTP connection.
+		 *
+		 * @return A new {@link Transport}.
+		 * @throws NoSuchProviderException
+		 *             If provider for SMTP protocol is not found.
+		 */
+		public Transport getSmtpTransport() throws NoSuchProviderException {
+			return Session.getInstance(additionalProperties, new DefaultAuthenticator(smtpUser, smtpPassword)).getTransport("smtp");
+		}
+
+		/**
+		 * Creates a new instance of {@link HtmlEmail}.
+		 *
+		 * @return the created instance
+		 */
+		public HtmlEmail createHtmlEmail() {
+			return new HtmlEmail();
+		}
 	}
 }
