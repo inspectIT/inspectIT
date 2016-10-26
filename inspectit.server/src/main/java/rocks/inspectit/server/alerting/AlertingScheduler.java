@@ -38,13 +38,13 @@ public class AlertingScheduler implements Runnable, ApplicationListener<Abstract
 	/**
 	 * The execution interval in minutes of this runnable.
 	 */
-	private static final long CHECK_INTERVAL = 1L;
+	static final long CHECK_INTERVAL = 1L;
 
 	/**
 	 * Logger for the class.
 	 */
 	@Log
-	private Logger log;
+	Logger log;
 
 	/**
 	 * Activation state of this service.
@@ -57,49 +57,44 @@ public class AlertingScheduler implements Runnable, ApplicationListener<Abstract
 	 */
 	@Autowired
 	@Resource(name = "scheduledExecutorService")
-	private ScheduledExecutorService executorService;
+	ScheduledExecutorService executorService;
 
 	/**
 	 * {@link ThresholdChecker} instance.
 	 */
 	@Autowired
-	private ThresholdChecker thresholdChecker;
+	ThresholdChecker thresholdChecker;
 
 	/**
 	 * {@link ScheduledFuture} of the currently executed {@link AlertingScheduler}.
 	 */
-	ScheduledFuture<?> scheduledFuture;
+	private ScheduledFuture<?> scheduledFuture;
 
 	/**
 	 * The currently {@link AlertingState}s holding the existing {@link AlertingDefinition}s..
 	 */
-	List<AlertingState> alertingStates = new CopyOnWriteArrayList<>();
-
-	/**
-	 * Triggers the initial update step to activate the scheduler if necessary.
-	 */
-	@PostConstruct
-	public void init() {
-		updateState();
-
-		if (log.isInfoEnabled()) {
-			log.info("|-Alerting scheduler initialized..");
-		}
-	}
+	private List<AlertingState> alertingStates = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Updates the state of this {@link AlertingDefinition} instance. It is getting enabled or
 	 * disabled according to the {@link #active} field.
 	 */
+	@PostConstruct
 	@PropertyUpdate(properties = { "alerting.active" })
 	public void updateState() {
 		if (active) {
 			if ((scheduledFuture == null) || scheduledFuture.isDone()) {
 				scheduledFuture = executorService.scheduleAtFixedRate(this, 0L, CHECK_INTERVAL, TimeUnit.MINUTES);
 			}
+			if (log.isInfoEnabled()) {
+				log.info("|-Alerting scheduler has been started..");
+			}
 		} else {
-			if (scheduledFuture != null) {
+			if ((scheduledFuture != null) && !scheduledFuture.isDone()) {
 				scheduledFuture.cancel(false);
+			}
+			if (log.isInfoEnabled()) {
+				log.info("|-Alerting scheduler has been stopped..");
 			}
 		}
 	}

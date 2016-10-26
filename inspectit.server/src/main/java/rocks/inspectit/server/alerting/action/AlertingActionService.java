@@ -32,13 +32,13 @@ public class AlertingActionService {
 	 * List of {@link IAlertAction} to execute.
 	 */
 	@Autowired
-	private List<IAlertAction> alertActions;
+	List<IAlertAction> alertActions;
 
 	/**
 	 * {@link AlertRegistry} instance.
 	 */
 	@Autowired
-	private AlertRegistry alertRegistry;
+	AlertRegistry alertRegistry;
 
 	/**
 	 * This method is called when a new alert is started.
@@ -49,6 +49,9 @@ public class AlertingActionService {
 	 *            the value has violated the threshold
 	 */
 	public void alertStarting(AlertingState alertingState, double violationValue) {
+		if (alertingState == null) {
+			throw new IllegalArgumentException("The given alerting state may not be null.");
+		}
 		Alert alert = new Alert(alertingState.getAlertingDefinition(), alertingState.getLastCheckTime());
 
 		alertRegistry.registerAlert(alert);
@@ -70,6 +73,9 @@ public class AlertingActionService {
 	 *            the value has violated the threshold
 	 */
 	public void alertOngoing(AlertingState alertingState, double violationValue) {
+		if (alertingState == null) {
+			throw new IllegalArgumentException("The given alerting state may not be null.");
+		}
 		if (log.isDebugEnabled()) {
 			log.debug("Alert definition '{}' is ongoing.", alertingState.getAlertingDefinition().getName());
 		}
@@ -92,6 +98,9 @@ public class AlertingActionService {
 	 *            the ending alert
 	 */
 	public void alertEnding(AlertingState alertingState) {
+		if (alertingState == null) {
+			throw new IllegalArgumentException("The given alerting state may not be null.");
+		}
 		if (log.isDebugEnabled()) {
 			log.debug("Alert definition '{}' is ending.", alertingState.getAlertingDefinition().getName());
 		}
