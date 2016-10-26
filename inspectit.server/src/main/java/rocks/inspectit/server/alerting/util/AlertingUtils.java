@@ -26,6 +26,9 @@ public final class AlertingUtils {
 	 *         business transaction metric, otherwise <code>false</code>
 	 */
 	public static boolean isBusinessTransactionAlert(AlertingDefinition alertingDefinition) {
+		if (alertingDefinition == null) {
+			throw new IllegalArgumentException("The given alerting definition may not be null.");
+		}
 		return Series.BusinessTransaction.NAME.equals(alertingDefinition.getMeasurement()) && Series.BusinessTransaction.FIELD_DURATION.equals(alertingDefinition.getField());
 	}
 
@@ -43,11 +46,7 @@ public final class AlertingUtils {
 			return null;
 		}
 
-		if (alertingDefinition.getTags().containsKey(Series.BusinessTransaction.TAG_BUSINESS_TRANSACTION_NAME)) {
-			return alertingDefinition.getTags().get(Series.BusinessTransaction.TAG_BUSINESS_TRANSACTION_NAME);
-		}
-
-		return null;
+		return alertingDefinition.getTags().get(Series.BusinessTransaction.TAG_BUSINESS_TRANSACTION_NAME);
 	}
 
 	/**
@@ -63,10 +62,6 @@ public final class AlertingUtils {
 			return null;
 		}
 
-		if (alertingDefinition.getTags().containsKey(Series.BusinessTransaction.TAG_APPLICATION_NAME)) {
-			return alertingDefinition.getTags().get(Series.BusinessTransaction.TAG_APPLICATION_NAME);
-		}
-
-		return null;
+		return alertingDefinition.getTags().get(Series.BusinessTransaction.TAG_APPLICATION_NAME);
 	}
 }

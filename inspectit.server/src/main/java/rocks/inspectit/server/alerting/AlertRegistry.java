@@ -56,6 +56,13 @@ public class AlertRegistry {
 	 *            the {@link Alert} to register
 	 */
 	public void registerAlert(Alert alert) {
+		if (alert == null) {
+			throw new IllegalArgumentException("The given alert may not be null.");
+		} else if (alert.getId() == null) {
+			throw new IllegalArgumentException("The alert must have an ID.");
+		} else if (alert.getAlertingDefinition() == null) {
+			throw new IllegalArgumentException("The alert must have an alerting definition.");
+		}
 		registry.put(alert.getId(), alert);
 	}
 

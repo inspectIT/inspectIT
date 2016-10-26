@@ -1,4 +1,4 @@
-package rocks.inspectit.server.alerting;
+package rocks.inspectit.shared.cs.communication.data.cmr;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
