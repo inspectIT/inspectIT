@@ -88,17 +88,22 @@ public class EMailSender implements IEMailSender {
 	/**
 	 * Unwrapped list of default recipients.
 	 */
-	private final List<String> defaultRecipients = new ArrayList<>();
+	List<String> defaultRecipients = new ArrayList<>();
 
 	/**
 	 * SMTP connection state.
 	 */
-	private boolean connected = false;
+	boolean connected = false;
 
 	/**
 	 * Additional SMTP properties that might be required for certain SMTP servers.
 	 */
-	private final Properties additionalProperties = new Properties();
+	Properties additionalProperties = new Properties();
+
+	/**
+	 * The {@link ObjectFactory} used to created object instances.
+	 */
+	private ObjectFactory objectFactory = new ObjectFactory();
 
 	/**
 	 * {@inheritDoc}
@@ -131,28 +136,10 @@ public class EMailSender implements IEMailSender {
 	}
 
 	/**
-	 * Gets {@link #defaultRecipients}.
-	 *
-	 * @return {@link #defaultRecipients}
-	 */
-	public List<String> getDefaultRecipients() {
-		return this.defaultRecipients;
-	}
-
-	/**
-	 * Gets {@link #additionalProperties}.
-	 *
-	 * @return {@link #additionalProperties}
-	 */
-	public Properties getAdditionalProperties() {
-		return this.additionalProperties;
-	}
-
-	/**
 	 * Unwrap the comma separated list string of default recipients into a real list.
 	 */
 	@PropertyUpdate(properties = { "mail.default.to" })
-	protected void parseRecipientsString() {
+	private void parseRecipientsString() {
 		defaultRecipients.clear();
 		if (null != defaultRecipientString) {
 			String[] strArray = defaultRecipientString.split(",");
@@ -169,7 +156,7 @@ public class EMailSender implements IEMailSender {
 	/**
 	 * Unwrap the comma separated list string of additional properties into real properties object.
 	 */
-	protected void parseAdditionalPropertiesString() {
+	private void parseAdditionalPropertiesString() {
 		additionalProperties.clear();
 		if (null != smtpPropertiesString) {
 			String[] strArray = smtpPropertiesString.split(",");
@@ -186,7 +173,7 @@ public class EMailSender implements IEMailSender {
 	 * Parses the SMTP properties and checks whether a connection can be established.
 	 */
 	@PropertyUpdate(properties = { "mail.smpt.host", "mail.smpt.port", "mail.smpt.user", "mail.smpt.passwd", "mail.smtp.properties" })
-	protected void onSmtpPropertiesChanged() {
+	public void onSmtpPropertiesChanged() {
 		parseAdditionalPropertiesString();
 		checkConnection();
 	}
@@ -195,29 +182,20 @@ public class EMailSender implements IEMailSender {
 	 * Initialize E-Mail service.
 	 */
 	@PostConstruct
-	protected void init() {
+	public void init() {
 		parseRecipientsString();
 		parseAdditionalPropertiesString();
 		checkConnection();
 	}
 
-	/**
-	 * Get a {@link Transport} object for a SMTP connection.
-	 *
-	 * @return A new {@link Transport}.
-	 * @throws NoSuchProviderException
-	 *             If provider for SMTP protocol is not found.
-	 */
-	private Transport getTransport() throws NoSuchProviderException {
-		return Session.getInstance(additionalProperties, new DefaultAuthenticator(smptUser, smptPassword)).getTransport("smtp");
-	}
+
 
 	/**
 	 * Checks connection to SMTP server.
 	 */
 	private void checkConnection() {
 		try {
-			Transport transport = getTransport();
+			Transport transport = objectFactory.getSmtpTransport();
 			transport.connect(smptHost, smptPort, smptUser, smptPassword);
 			transport.close();
 			log.info("|-eMail Service active and connected...");
@@ -240,8 +218,8 @@ public class EMailSender implements IEMailSender {
 	 * @throws EmailException
 	 *             is thrown when the from address could not be set
 	 */
-	protected HtmlEmail prepareHtmlEmail(List<String> recipients) throws EmailException {
-		HtmlEmail email = new HtmlEmail();
+	private HtmlEmail prepareHtmlEmail(List<String> recipients) throws EmailException {
+		HtmlEmail email = objectFactory.createHtmlEmail();
 		email.setHostName(smptHost);
 		email.setSmtpPort(smptPort);
 		email.setAuthentication(smptUser, smptPassword);
@@ -267,5 +245,34 @@ public class EMailSender implements IEMailSender {
 		}
 
 		return email;
+	}
+
+	/**
+	 * Factory class to create objects required by the EMailSender. This class primary exists for
+	 * better testing process.
+	 *
+	 * @author Marius Oehler
+	 *
+	 */
+	class ObjectFactory {
+		/**
+		 * Get a {@link Transport} object for a SMTP connection.
+		 *
+		 * @return A new {@link Transport}.
+		 * @throws NoSuchProviderException
+		 *             If provider for SMTP protocol is not found.
+		 */
+		public Transport getSmtpTransport() throws NoSuchProviderException {
+			return Session.getInstance(additionalProperties, new DefaultAuthenticator(smptUser, smptPassword)).getTransport("smtp");
+		}
+
+		/**
+		 * Creates a new instance of {@link HtmlEmail}.
+		 *
+		 * @return the created instance
+		 */
+		public HtmlEmail createHtmlEmail() {
+			return new HtmlEmail();
+		}
 	}
 }

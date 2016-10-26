@@ -1,6 +1,8 @@
 package rocks.inspectit.server.alerting;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -62,6 +64,13 @@ public class AlertingStateLifecycleManagerTest extends TestBase {
 			verify(alertingActionService, times(1)).alertOngoing(alertingState, value);
 			verifyNoMoreInteractions(alertingActionService);
 		}
+
+		@Test
+		public void alertingStateNull() {
+			lifecycleManager.violation(null, 0);
+
+			verifyNoMoreInteractions(alertingActionService);
+		}
 	}
 
 	/**
@@ -114,6 +123,13 @@ public class AlertingStateLifecycleManagerTest extends TestBase {
 			verify(alertingActionService, times(1)).alertEnding(alertingState);
 			verifyNoMoreInteractions(alertingActionService);
 		}
+
+		@Test
+		public void alertingStateNull() {
+			lifecycleManager.valid(null);
+
+			verifyNoMoreInteractions(alertingActionService);
+		}
 	}
 
 	/**
@@ -129,6 +145,7 @@ public class AlertingStateLifecycleManagerTest extends TestBase {
 			AlertingState alertingState = new AlertingState(new AlertingDefinition());
 			alertingState.setAlert(null);
 			lifecycleManager.thresholdResetCount = 0;
+
 			lifecycleManager.noData(alertingState);
 
 			verifyNoMoreInteractions(alertingActionService);
@@ -151,9 +168,32 @@ public class AlertingStateLifecycleManagerTest extends TestBase {
 			AlertingState alertingState = new AlertingState(new AlertingDefinition());
 			alertingState.setAlert(new Alert(null, 0));
 			lifecycleManager.thresholdResetCount = 0;
+
 			lifecycleManager.noData(alertingState);
 
 			verify(alertingActionService, times(1)).alertOngoing(any(AlertingState.class), any(Double.class));
+			verifyNoMoreInteractions(alertingActionService);
+		}
+
+		@Test
+		public void alertActiveValidCountPositive() {
+			AlertingState alertingState = new AlertingState(new AlertingDefinition());
+			alertingState.setAlert(new Alert(null, 0));
+			alertingState.setValidCount(1);
+			lifecycleManager.thresholdResetCount = 0;
+			AlertingStateLifecycleManager lifecycleManagerSpy = spy(lifecycleManager);
+			doNothing().when(lifecycleManagerSpy).valid(alertingState);
+
+			lifecycleManagerSpy.noData(alertingState);
+
+			verify(lifecycleManagerSpy, times(1)).valid(alertingState);
+			verifyNoMoreInteractions(alertingActionService);
+		}
+
+		@Test
+		public void alertingStateNull() {
+			lifecycleManager.noData(null);
+
 			verifyNoMoreInteractions(alertingActionService);
 		}
 	}

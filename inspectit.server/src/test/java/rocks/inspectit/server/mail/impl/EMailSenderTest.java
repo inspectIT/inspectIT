@@ -7,18 +7,18 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Properties;
+
+import javax.mail.AuthenticationFailedException;
+import javax.mail.MessagingException;
+import javax.mail.Transport;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -26,9 +26,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.slf4j.Logger;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.mail.impl.EMailSender.ObjectFactory;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -42,219 +42,304 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 public class EMailSenderTest extends TestBase {
 
 	@InjectMocks
-	EMailSender sender;
+	EMailSender mailSender;
 
 	@Mock
 	Logger log;
 
-	protected String dummySubject = "subject";
-	protected String dummyHtmlBody = "htmlBody";
-	protected String dummyTextBody = "textBody";
-	protected String validEmail1 = "max.mustermann@test.com";
-	protected String validEmail2 = "hans-heinrich@test.com";
-	protected String invalidEmail = "email";
+	@Mock
+	ObjectFactory objectFactoryMock;
+
+	static final String VALID_MAIL_1 = "max.mustermann@test.com";
+	static final String VALID_MAIL_2 = "hans-heinrich@test.com";
+	static final String INVALID_MAIL = "email";
 
 	/**
-	 * Tests the {@link EMailSender#parseRecipientsString()} method.
-	 *
-	 * @author Alexander Wert
+	 * Tests the {@link EMailSender#init()} method.
 	 *
 	 */
-	public static class ParseRecipientsString extends EMailSenderTest {
-		String validEmail1 = "max.mustermann@test.com";
-		String validEmail2 = "hans-heinrich@test.com";
-		String invalidEmail = "email";
+	public static class Init extends EMailSenderTest {
 
+		static final String SMTP_HOST = "smtpHost";
+		static final int SMTP_PORT = 1;
+		static final String SMTP_USER = "smtpUser";
+		static final String SMTP_PASSWD = "smtpPort";
+		static final String PROPERTY_KEY_1 = "key1";
+		static final String PROPERTY_KEY_2 = "key2";
+		static final String PROPERTY_VALUE_1 = "value1";
+		static final String PROPERTY_VALUE_2 = "value2";
+
+		@Mock
+		Transport transportMock;
+
+		// parseRecipientsString
 		@Test
-		public void valid() {
-			sender.defaultRecipientString = validEmail1 + "," + validEmail2;
-			sender.parseRecipientsString();
-			assertThat(sender.getDefaultRecipients(), contains(validEmail1, validEmail2));
+		public void initNullRecipients() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.defaultRecipientString = null;
+
+			mailSender.init();
+
+			assertThat(mailSender.defaultRecipients, hasSize(0));
 		}
 
 		@Test
-		public void oneInvalid() {
-			sender.defaultRecipientString = validEmail1 + "," + invalidEmail + "," + validEmail2;
-			sender.parseRecipientsString();
-			assertThat(sender.getDefaultRecipients(), contains(validEmail1, validEmail2));
-			assertThat(sender.getDefaultRecipients(), hasSize(2));
+		public void initValidRecipients() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.defaultRecipientString = VALID_MAIL_1 + "," + VALID_MAIL_2;
+
+			mailSender.init();
+
+			assertThat(mailSender.defaultRecipients, contains(VALID_MAIL_1, VALID_MAIL_2));
+			assertThat(mailSender.defaultRecipients, hasSize(2));
 		}
 
 		@Test
-		public void empty() {
-			sender.defaultRecipientString = " ";
-			sender.parseRecipientsString();
-			assertThat(sender.getDefaultRecipients(), hasSize(0));
+		public void initInvalidRecipients() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.defaultRecipientString = VALID_MAIL_1 + "," + INVALID_MAIL;
+
+			mailSender.init();
+
+			assertThat(mailSender.defaultRecipients, contains(VALID_MAIL_1));
+			assertThat(mailSender.defaultRecipients, hasSize(1));
+		}
+
+		@Test
+		public void initNoRecipients() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.defaultRecipientString = "";
+
+			mailSender.init();
+
+			assertThat(mailSender.defaultRecipients, hasSize(0));
+		}
+
+		// parseAdditionalPropertiesString
+		@Test
+		public void initNullProperties() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpPropertiesString = null;
+
+			mailSender.init();
+
+			assertThat(mailSender.additionalProperties.entrySet(), hasSize(0));
+		}
+
+		@Test
+		public void initValidProperties() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpPropertiesString = PROPERTY_KEY_1 + "=" + PROPERTY_VALUE_1 + "," + PROPERTY_KEY_2 + "=" + PROPERTY_VALUE_2;
+
+			mailSender.init();
+
+			assertThat(mailSender.additionalProperties.entrySet(), hasSize(2));
+			assertThat(mailSender.additionalProperties.getProperty(PROPERTY_KEY_1), equalTo(PROPERTY_VALUE_1));
+			assertThat(mailSender.additionalProperties.getProperty(PROPERTY_KEY_2), equalTo(PROPERTY_VALUE_2));
+		}
+
+		@Test
+		public void initInvalidProperties() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpPropertiesString = "invalid," + PROPERTY_KEY_1 + "=" + PROPERTY_VALUE_1;
+
+			mailSender.init();
+
+			assertThat(mailSender.additionalProperties.entrySet(), hasSize(1));
+			assertThat(mailSender.additionalProperties.getProperty(PROPERTY_KEY_1), equalTo(PROPERTY_VALUE_1));
+		}
+
+		@Test
+		public void initInvalidPropertyEmptyKey() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpPropertiesString = "=" + PROPERTY_VALUE_1 + "," + PROPERTY_KEY_2 + "=" + PROPERTY_VALUE_2;
+
+			mailSender.init();
+
+			assertThat(mailSender.additionalProperties.entrySet(), hasSize(1));
+			assertThat(mailSender.additionalProperties.getProperty(PROPERTY_KEY_2), equalTo(PROPERTY_VALUE_2));
+		}
+
+		@Test
+		public void initInvalidPropertyEmptyValue() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpPropertiesString = PROPERTY_KEY_1 + "=," + PROPERTY_KEY_2 + "=" + PROPERTY_VALUE_2;
+
+			mailSender.init();
+
+			assertThat(mailSender.additionalProperties.entrySet(), hasSize(1));
+			assertThat(mailSender.additionalProperties.getProperty(PROPERTY_KEY_2), equalTo(PROPERTY_VALUE_2));
+		}
+
+		@Test
+		public void initEmptyProperties() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpPropertiesString = "";
+
+			mailSender.init();
+
+			assertThat(mailSender.additionalProperties.entrySet(), hasSize(0));
+		}
+
+		// checkConnection
+		@Test
+		public void checkConnection() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smptHost = SMTP_HOST;
+			mailSender.smptPort = SMTP_PORT;
+			mailSender.smptUser = SMTP_USER;
+			mailSender.smptPassword = SMTP_PASSWD;
+
+			mailSender.init();
+
+			verify(transportMock, times(1)).connect(SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWD);
+			assertThat(mailSender.connected, is(true));
+		}
+
+		@Test
+		public void checkConnectionAuthenticationFailed() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			doThrow(AuthenticationFailedException.class).when(transportMock).connect(any(String.class), any(Integer.class), any(String.class), any(String.class));
+
+			mailSender.init();
+
+			assertThat(mailSender.connected, is(false));
+		}
+
+		@Test
+		public void checkConnectionFailed() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			doThrow(MessagingException.class).when(transportMock).connect(any(String.class), any(Integer.class), any(String.class), any(String.class));
+
+			mailSender.init();
+
+			assertThat(mailSender.connected, is(false));
 		}
 	}
 
 	/**
-	 * Tests the {@link EMailSender#sendEMail(String, String, String, java.util.List)} and
-	 * {@link EMailSender#sendEMail(String, String, String, String...)} methods.
+	 * Test the {@link EMailSender#onSmtpPropertiesChanged()} method.
+	 *
+	 */
+	public static class OnSmtpPropertiesChanged extends EMailSenderTest {
+
+		@Mock
+		Transport transportMock;
+
+		@Test
+		public void testOnSmtpPropertiesChanged() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.connected = false;
+			mailSender.additionalProperties = mock(Properties.class);
+
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(mailSender.additionalProperties, times(1)).clear();
+			assertThat(mailSender.connected, is(true));
+		}
+	}
+
+	/**
+	 * Tests the {@link EMailSender#sendEMail(String, String, String, java.util.List)} method.
 	 *
 	 * @author Alexander Wert
 	 *
 	 */
 	public static class SendEmail extends EMailSenderTest {
 
-		protected HtmlEmail mockMail;
-		protected EMailSender senderSpy;
+		static final String SMTP_HOST = "smtpHost";
+		static final int SMTP_PORT = 1;
+		static final String SMTP_USER = "smtpUser";
+		static final String SMTP_PASSWD = "smtpPort";
+		static final String SENDER_NAME = "Sender";
+		static final String SENDER_ADDRESS = "sender@example.com";
+		static final String DUMMY_SUBJECT = "subject";
+		static final String DUMMY_HTML_BODY = "htmlBody";
+		static final String DUMMY_TEXT_BODY = "textBody";
 
-		@BeforeMethod
-		@SuppressWarnings("unchecked")
-		public void beforeMethod() throws EmailException {
-			mockMail = mock(HtmlEmail.class);
-			senderSpy = spy(sender);
-
-			doReturn(mockMail).when(senderSpy).prepareHtmlEmail(any(List.class));
-		}
+		@Mock
+		HtmlEmail mockMail;
 
 		@Test
 		public void sendNotConnected() throws Exception {
-			Field fieldConnected = EMailSender.class.getDeclaredField("connected");
-			fieldConnected.setAccessible(true);
-			fieldConnected.set(senderSpy, false);
+			mailSender.connected = false;
 
-			boolean result = senderSpy.sendEMail(dummySubject, dummyHtmlBody, dummyTextBody, Arrays.asList(validEmail1));
+			boolean result = mailSender.sendEMail(DUMMY_SUBJECT, DUMMY_HTML_BODY, DUMMY_TEXT_BODY, Arrays.asList(VALID_MAIL_1));
+
 			assertThat(result, is(false));
 		}
 
 		@Test
 		public void sendIsConnected() throws Exception {
-			Field fieldConnected = EMailSender.class.getDeclaredField("connected");
-			fieldConnected.setAccessible(true);
-			fieldConnected.set(senderSpy, true);
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mockMail);
+			mailSender.connected = true;
 
-			boolean result = senderSpy.sendEMail(dummySubject, dummyHtmlBody, dummyTextBody, Arrays.asList(validEmail1));
+			boolean result = mailSender.sendEMail(DUMMY_SUBJECT, DUMMY_HTML_BODY, DUMMY_TEXT_BODY, Arrays.asList(VALID_MAIL_1));
+
 			assertThat(result, is(true));
 		}
 
 		@Test
-		@SuppressWarnings("unchecked")
 		public void badSmtpPort() throws Exception {
-			doThrow(IllegalArgumentException.class).when(senderSpy).prepareHtmlEmail(any(List.class));
+			doThrow(IllegalArgumentException.class).when(mockMail).setSmtpPort(any(int.class));
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mockMail);
+			mailSender.connected = true;
 
-			Field fieldConnected = EMailSender.class.getDeclaredField("connected");
-			fieldConnected.setAccessible(true);
-			fieldConnected.set(senderSpy, true);
+			boolean result = mailSender.sendEMail(DUMMY_SUBJECT, DUMMY_HTML_BODY, DUMMY_TEXT_BODY, Arrays.asList(VALID_MAIL_1));
 
-			boolean result = senderSpy.sendEMail(dummySubject, dummyHtmlBody, dummyTextBody, Arrays.asList(validEmail1));
 			assertThat(result, is(false));
 		}
 
 		@Test
 		public void sendingFailed() throws Exception {
 			doThrow(EmailException.class).when(mockMail).send();
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mockMail);
+			mailSender.connected = true;
 
-			Field fieldConnected = EMailSender.class.getDeclaredField("connected");
-			fieldConnected.setAccessible(true);
-			fieldConnected.set(senderSpy, true);
+			boolean result = mailSender.sendEMail(DUMMY_SUBJECT, DUMMY_HTML_BODY, DUMMY_TEXT_BODY, Arrays.asList(VALID_MAIL_1));
 
-			boolean result = senderSpy.sendEMail(dummySubject, dummyHtmlBody, dummyTextBody, Arrays.asList(validEmail1));
 			assertThat(result, is(false));
 		}
 
 		@Test
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		public void sendMail() {
-			ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+		public void sendMail() throws Exception {
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mockMail);
+			mailSender.smptHost = SMTP_HOST;
+			mailSender.smptPort = SMTP_PORT;
+			mailSender.smptUser = SMTP_USER;
+			mailSender.smptPassword = SMTP_PASSWD;
+			mailSender.senderName = SENDER_NAME;
+			mailSender.senderAddress = SENDER_ADDRESS;
+			mailSender.defaultRecipients = Arrays.asList(VALID_MAIL_2);
+			ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
+			mailSender.connected = true;
 
-			senderSpy.sendEMail(dummySubject, dummyHtmlBody, dummyTextBody, Arrays.asList(validEmail1, validEmail2));
+			mailSender.sendEMail(DUMMY_SUBJECT, DUMMY_HTML_BODY, DUMMY_TEXT_BODY, Arrays.asList(VALID_MAIL_1));
 
-			verify(senderSpy, times(1)).sendEMail(eq(dummySubject), eq(dummyHtmlBody), eq(dummyTextBody), captor.capture());
-
-			List<String> recipientList = captor.getValue();
-			assertThat(recipientList.size(), is(2));
-			assertThat(recipientList, hasItems(validEmail1, validEmail2));
+			verify(mockMail).setSubject(DUMMY_SUBJECT);
+			verify(mockMail).setHtmlMsg(DUMMY_HTML_BODY);
+			verify(mockMail).setTextMsg(DUMMY_TEXT_BODY);
+			verify(mockMail).setHostName(SMTP_HOST);
+			verify(mockMail).setSmtpPort(SMTP_PORT);
+			verify(mockMail).setAuthentication(SMTP_USER, SMTP_PASSWD);
+			verify(mockMail).setFrom(SENDER_ADDRESS, SENDER_NAME);
+			verify(mockMail).send();
+			verify(mockMail, times(2)).addTo(toCaptor.capture());
+			assertThat(toCaptor.getAllValues(), hasSize(2));
+			assertThat(toCaptor.getAllValues(), hasItems(VALID_MAIL_1, VALID_MAIL_2));
 		}
 
 		@Test
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		public void sendMailNoRecipient() {
-			ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+		public void sendMailWithInvalidEmails() throws Exception {
+			doThrow(EmailException.class).when(mockMail).addTo(INVALID_MAIL);
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mockMail);
+			mailSender.defaultRecipients = Arrays.asList(VALID_MAIL_2, INVALID_MAIL);
+			mailSender.connected = true;
 
-			senderSpy.sendEMail(dummySubject, dummyHtmlBody, dummyTextBody, new ArrayList<String>());
+			mailSender.sendEMail(DUMMY_SUBJECT, DUMMY_HTML_BODY, DUMMY_TEXT_BODY, Arrays.asList(VALID_MAIL_1, INVALID_MAIL));
 
-			verify(senderSpy, times(1)).sendEMail(eq(dummySubject), eq(dummyHtmlBody), eq(dummyTextBody), captor.capture());
-
-			List<String> recipientList = captor.getValue();
-			assertThat(recipientList.size(), is(0));
-		}
-
-		@Test
-		public void testSetMailContent() throws Exception {
-			Field fieldConnected = EMailSender.class.getDeclaredField("connected");
-			fieldConnected.setAccessible(true);
-			fieldConnected.set(senderSpy, true);
-
-			senderSpy.sendEMail(dummySubject, dummyHtmlBody, dummyTextBody, Arrays.asList(validEmail1));
-
-			verify(mockMail).setSubject(dummySubject);
-			verify(mockMail).setHtmlMsg(dummyHtmlBody);
-			verify(mockMail).setTextMsg(dummyTextBody);
 			verify(mockMail).send();
 		}
-	}
 
-	/**
-	 * Test the {@link EMailSender#prepareHtmlEmail(List)} method.
-	 */
-	public static class PrepareHtmlEmail extends EMailSenderTest {
-
-		protected EMailSender senderSpy;
-
-		@BeforeMethod
-		public void beforeMethod() {
-			sender.smptHost = "localhost";
-			sender.smptPort = 1;
-			sender.senderAddress = "test@test.com";
-			sender.senderName = "Tester";
-			sender.smptUser = "";
-			sender.smptPassword = "";
-			sender.defaultRecipientString = "";
-			sender.smtpPropertiesString = "";
-
-			senderSpy = spy(sender);
-		}
-
-		@Test(expectedExceptions = IllegalArgumentException.class)
-		public void wrongSmtpPort() throws EmailException {
-			sender.smptPort = 0;
-			sender.prepareHtmlEmail(new ArrayList<String>());
-		}
-
-		@Test
-		public void testEmptyRecipients() throws EmailException {
-			HtmlEmail htmlMail = sender.prepareHtmlEmail(new ArrayList<String>());
-
-			assertThat(htmlMail.getHostName(), equalTo(sender.smptHost));
-			assertThat(htmlMail.getSmtpPort(), equalTo(String.valueOf(sender.smptPort)));
-			assertThat(htmlMail.getToAddresses().size(), is(0));
-			assertThat(htmlMail.getFromAddress().getAddress(), equalTo(sender.senderAddress));
-		}
-
-		@Test
-		public void testDefaultRecipients() throws EmailException {
-			senderSpy.defaultRecipientString = validEmail1;
-			senderSpy.init();
-
-			HtmlEmail htmlMail = senderSpy.prepareHtmlEmail(new ArrayList<String>());
-
-			assertThat(htmlMail.getToAddresses().size(), is(1));
-			assertThat(htmlMail.getToAddresses().get(0).getAddress(), equalTo(validEmail1));
-		}
-
-		@Test
-		public void testSendWithRecipients() throws EmailException {
-			senderSpy.defaultRecipientString = validEmail1;
-			senderSpy.init();
-
-			HtmlEmail htmlMail = senderSpy.prepareHtmlEmail(Arrays.asList(validEmail1, validEmail2));
-
-			assertThat(htmlMail.getToAddresses().size(), is(3));
-			assertThat(htmlMail.getToAddresses().get(0).getAddress(), equalTo(validEmail1));
-			assertThat(htmlMail.getToAddresses().get(1).getAddress(), equalTo(validEmail1));
-			assertThat(htmlMail.getToAddresses().get(2).getAddress(), equalTo(validEmail2));
-		}
 	}
 }
