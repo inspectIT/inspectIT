@@ -74,6 +74,30 @@ public class CmrStatusData implements Serializable {
 	private Long databaseSize;
 
 	/**
+	 * If the InfluxDB is connected.
+	 */
+	private boolean influxConnected;
+
+	/**
+	 * Gets {@link #influxConnected}.
+	 * 
+	 * @return {@link #influxConnected}
+	 */
+	public boolean isInfluxConnected() {
+		return this.influxConnected;
+	}
+
+	/**
+	 * Sets {@link #influxConnected}.
+	 * 
+	 * @param isInfluxConnected
+	 *            New value for {@link #influxConnected}
+	 */
+	public void setInfluxConnected(boolean isInfluxConnected) {
+		this.influxConnected = isInfluxConnected;
+	}
+
+	/**
 	 * Gets {@link #currentBufferSize}.
 	 *
 	 * @return {@link #currentBufferSize}

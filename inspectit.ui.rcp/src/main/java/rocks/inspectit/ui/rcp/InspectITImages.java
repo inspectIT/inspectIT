@@ -133,6 +133,7 @@ public interface InspectITImages {
 	String IMG_PREFERENCES = InspectITConstants.ICON_PATH_ECLIPSE + "preferences.gif";
 	String IMG_RECORD = InspectITConstants.ICON_PATH_ECLIPSE + "record.gif";
 	String IMG_RECORD_GRAY = InspectITConstants.ICON_PATH_ECLIPSE + "record_gray.gif";
+	String IMG_RECORD_GREEN = InspectITConstants.ICON_PATH_ECLIPSE + "record_green.gif";
 	String IMG_RECORD_SCHEDULED = InspectITConstants.ICON_PATH_ECLIPSE + "record_schedule.gif";
 	String IMG_RECORD_STOP = InspectITConstants.ICON_PATH_ECLIPSE + "record_term.gif";
 	String IMG_OPTIONS = InspectITConstants.ICON_PATH_ECLIPSE + "options.gif";

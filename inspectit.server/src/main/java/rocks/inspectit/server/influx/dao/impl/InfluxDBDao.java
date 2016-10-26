@@ -1,12 +1,15 @@
 package rocks.inspectit.server.influx.dao.impl;
 
 import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -14,7 +17,7 @@ import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +34,7 @@ import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
  *
  */
 @Component
-public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
+public class InfluxDBDao implements IInfluxDBDao {
 
 	/**
 	 * Logger for the class.
@@ -52,7 +55,7 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 	/**
 	 * Indicates whether the service is connected to a influxDB instance.
 	 */
-	private boolean isConnected = false;
+	volatile boolean isConnected = false;
 
 	/**
 	 * Activation state of this service.
@@ -88,35 +91,51 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 	 * Database to use.
 	 */
 	@Value("${influxdb.database}")
-	private String database;
+	String database;
 
 	/**
 	 * The retention policy to use.
 	 */
 	@Value("${influxdb.retentionPolicy}")
-	private String retentionPolicy;
+	String retentionPolicy;
 
 	/**
 	 * Configured {@link InfluxDB} instance.
 	 */
-	private InfluxDB influxDB;
+	InfluxDB influxDB;
 
 	/**
 	 * {@link ScheduledFuture} instance representing the task that checks periodically for
 	 * availability of the influxDB.
 	 */
-	private ScheduledFuture<?> availabilityCheckTask;
+	ScheduledFuture<?> availabilityCheckTask;
 
 	/**
-	 * {@link ScheduledExecutorService} for periodic availability checks.
+	 * {@link ExecutorService} instance.
 	 */
-	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+	@Autowired
+	@Resource(name = "scheduledExecutorService")
+	private ScheduledExecutorService scheduledExecutorService;
+
+	/**
+	 * The task which connects the InfluxDB.
+	 */
+	final ConnectingTask connectingTask = new ConnectingTask();
+
+	/**
+	 * {@link Future} representing the state of {@link #connectingTask}.
+	 */
+	Future<?> connectingFuture;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void insert(Point dataPoint) {
+		if ((dataPoint == null) || (influxDB == null)) {
+			return;
+		}
+
 		if (isConnected) {
 			if (log.isDebugEnabled()) {
 				log.debug("Write data to InfluxDB: {}", dataPoint.toString());
@@ -131,11 +150,11 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 	 */
 	@Override
 	public QueryResult query(String query) {
-		if (isConnected) {
-			return influxDB.query(new Query(query, database));
+		if (!isConnected || (query == null) || (influxDB == null)) {
+			return null;
 		}
 
-		return null;
+		return influxDB.query(new Query(query, database));
 	}
 
 	/**
@@ -147,21 +166,18 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Connects to the InfluxDB if the feature has been enabled.
 	 */
-	@Override
+	@PostConstruct
 	@PropertyUpdate(properties = { "influxdb.host", "influxdb.port", "influxdb.user", "influxdb.passwd", "influxdb.database", "influxdb.active" })
-	public void afterPropertiesSet() {
+	public void propertiesUpdated() {
 		reset();
-		if (active) {
-			isConnected = connect();
-			if (isConnected) {
-				createDatabaseIfNotExistent();
-			}
-			if ((null == availabilityCheckTask) || availabilityCheckTask.isDone()) {
-				startAvailabilityChecks();
-			}
+
+		if ((connectingFuture != null) && !connectingFuture.isDone()) {
+			connectingFuture.cancel(true);
 		}
+
+		connectingFuture = scheduledExecutorService.submit(connectingTask);
 	}
 
 	/**
@@ -265,5 +281,31 @@ public class InfluxDBDao implements InitializingBean, IInfluxDBDao {
 	@PreDestroy
 	protected void shutDownExecutorService() {
 		ExecutorServiceUtils.shutdownExecutor(scheduledExecutorService, 5L, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * Executes the connection process to the InfluxDB.
+	 *
+	 * @author Marius Oehler
+	 *
+	 */
+	private class ConnectingTask implements Runnable {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void run() {
+			if (active) {
+				isConnected = connect();
+				if (isConnected) {
+					createDatabaseIfNotExistent();
+				}
+				if ((null == availabilityCheckTask) || availabilityCheckTask.isDone()) {
+					startAvailabilityChecks();
+				}
+			}
+		}
+
 	}
 }
