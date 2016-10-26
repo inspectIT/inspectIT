@@ -6,13 +6,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.QueryResult.Result;
+import org.influxdb.dto.QueryResult.Series;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,6 +35,7 @@ import rocks.inspectit.shared.cs.ci.AlertingDefinition.ThresholdType;
  * @author Marius Oehler
  *
  */
+@SuppressWarnings("PMD")
 public class ThresholdCheckerTest extends TestBase {
 
 	@InjectMocks
@@ -53,8 +56,6 @@ public class ThresholdCheckerTest extends TestBase {
 	 * method.
 	 */
 	public static class CheckThreshold extends ThresholdCheckerTest {
-		private final static double THRESHOLD = 100.1;
-
 		@Mock
 		AlertingDefinition alertingDefinition;
 
@@ -66,118 +67,207 @@ public class ThresholdCheckerTest extends TestBase {
 
 		@BeforeMethod
 		public void buildQueryResult() {
-			queryResult = new QueryResult();
+			Object[] values = { "12:00", 10D };
+			Series series = new Series();
+			series.setValues(Arrays.asList(Arrays.asList(values)));
+			series.setColumns(Arrays.asList(new String[] { "time", "value" }));
 			Result result = new Result();
-			queryResult.setResults(Collections.singletonList(result));
-			org.influxdb.dto.QueryResult.Series series = new org.influxdb.dto.QueryResult.Series();
-			result.setSeries(Collections.singletonList(series));
-			Object[] values = { "ABC", new Double(2.2) };
-			series.setValues(Collections.singletonList(Arrays.asList(values)));
-			series.setColumns(Arrays.asList(new String[] { "col1", "col2" }));
+			result.setSeries(Arrays.asList(series));
+			when(queryResult.getResults()).thenReturn(Arrays.asList(result));
 		}
 
 		@Test
 		public void noData() throws BusinessException, Exception {
+			long time = System.currentTimeMillis();
 			when(influxDao.isOnline()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(new QueryResult());
 			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).noData(alertingState);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			verify(alertingState, times(2)).getLastCheckTime();
+			verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			verify(alertingState).getAlertingDefinition();
+			verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			verify(influxDao).query(any(String.class));
+			verify(influxDao).isOnline();
+			verifyNoMoreInteractions(influxDao);
+			verify(stateManager).noData(alertingState);
 			verifyNoMoreInteractions(stateManager);
+			verify(alertingDefinition).getThresholdType();
+			verify(alertingDefinition).getField();
+			verify(alertingDefinition).getTags();
+			verify(alertingDefinition).getMeasurement();
+			verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void noViolationUpperThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD - 1.0 })));
+			long time = System.currentTimeMillis();
 			when(influxDao.isOnline()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
 			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
+			when(alertingDefinition.getThreshold()).thenReturn(15D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).valid(alertingState);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			verify(alertingState, times(2)).getLastCheckTime();
+			verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			verify(alertingState, times(2)).getAlertingDefinition();
+			verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			verify(influxDao).query(any(String.class));
+			verify(influxDao).isOnline();
+			verifyNoMoreInteractions(influxDao);
+			verify(stateManager).valid(alertingState);
 			verifyNoMoreInteractions(stateManager);
+			verify(alertingDefinition, times(2)).getThresholdType();
+			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getField();
+			verify(alertingDefinition).getTags();
+			verify(alertingDefinition).getMeasurement();
+			verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void noViolationLowerThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
+			long time = System.currentTimeMillis();
 			when(influxDao.isOnline()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
 			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
+			when(alertingDefinition.getThreshold()).thenReturn(5D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).valid(alertingState);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			verify(alertingState, times(2)).getLastCheckTime();
+			verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			verify(alertingState, times(2)).getAlertingDefinition();
+			verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			verify(influxDao).query(any(String.class));
+			verify(influxDao).isOnline();
+			verifyNoMoreInteractions(influxDao);
+			verify(stateManager).valid(alertingState);
 			verifyNoMoreInteractions(stateManager);
+			verify(alertingDefinition, times(2)).getThresholdType();
+			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getField();
+			verify(alertingDefinition).getTags();
+			verify(alertingDefinition).getMeasurement();
+			verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void violationUpperThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
+			long time = System.currentTimeMillis();
 			when(influxDao.isOnline()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
 			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
+			when(alertingDefinition.getThreshold()).thenReturn(5D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).violation(alertingState, THRESHOLD + 1.0);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			verify(alertingState, times(2)).getLastCheckTime();
+			verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			verify(alertingState, times(2)).getAlertingDefinition();
+			verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			verify(influxDao).query(any(String.class));
+			verify(influxDao).isOnline();
+			verifyNoMoreInteractions(influxDao);
+			verify(stateManager).violation(alertingState, 10D);
 			verifyNoMoreInteractions(stateManager);
+			verify(alertingDefinition, times(2)).getThresholdType();
+			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getField();
+			verify(alertingDefinition).getTags();
+			verify(alertingDefinition).getMeasurement();
+			verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void violationLowerThreshold() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD - 1.0 })));
+			long time = System.currentTimeMillis();
 			when(influxDao.isOnline()).thenReturn(true);
 			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
-			when(alertingDefinition.getThreshold()).thenReturn(THRESHOLD);
 			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.LOWER_THRESHOLD);
+			when(alertingDefinition.getThreshold()).thenReturn(15D);
 
-			long startTime = System.currentTimeMillis();
 			thresholdChecker.checkThreshold(alertingState);
 
-			ArgumentCaptor<Long> lastChecktimeCaptor = ArgumentCaptor.forClass(Long.class);
-			verify(alertingState, times(1)).setLastCheckTime(lastChecktimeCaptor.capture());
-			assertThat(lastChecktimeCaptor.getValue(), greaterThanOrEqualTo(startTime));
-			verify(stateManager, times(1)).violation(alertingState, THRESHOLD - 1.0);
+			ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+			verify(alertingState).setLastCheckTime(timeCaptor.capture());
+			verify(alertingState, times(2)).getLastCheckTime();
+			verify(alertingState, times(2)).getAlertingDefinition();
+			verifyNoMoreInteractions(alertingState);
+			assertThat(timeCaptor.getValue(), greaterThanOrEqualTo(time));
+			verify(influxDao).query(any(String.class));
+			verify(influxDao).isOnline();
+			verifyNoMoreInteractions(influxDao);
+			verify(stateManager).violation(alertingState, 10D);
 			verifyNoMoreInteractions(stateManager);
+			verify(alertingDefinition, times(2)).getThresholdType();
+			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getField();
+			verify(alertingDefinition).getTags();
+			verify(alertingDefinition).getMeasurement();
+			verify(alertingDefinition).getTimeRange(TimeUnit.MILLISECONDS);
+			verifyNoMoreInteractions(alertingDefinition);
+		}
+
+		@Test
+		public void neverChecked() throws BusinessException, Exception {
+			long time = System.currentTimeMillis();
+			when(influxDao.isOnline()).thenReturn(true);
+			when(influxDao.query(any(String.class))).thenReturn(new QueryResult());
+			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
+			when(alertingState.getLastCheckTime()).thenReturn(-1L);
+
+			thresholdChecker.checkThreshold(alertingState);
+
+			ArgumentCaptor<Long> currentTimeCaptor = ArgumentCaptor.forClass(Long.class);
+			verify(alertingState, times(2)).getLastCheckTime();
+			verify(alertingState, times(2)).setLastCheckTime(currentTimeCaptor.capture());
+			verify(alertingState, times(2)).getAlertingDefinition();
+			verifyNoMoreInteractions(alertingState);
+			assertThat(currentTimeCaptor.getValue(), greaterThanOrEqualTo(time));
+			verify(alertingDefinition, times(2)).getTimeRange(TimeUnit.MILLISECONDS);
+			verify(influxDao).query(any(String.class));
+			verify(influxDao).isOnline();
+			verifyNoMoreInteractions(influxDao);
+			verify(stateManager).noData(alertingState);
+			verifyNoMoreInteractions(stateManager);
+			verify(alertingDefinition).getThresholdType();
+			verify(alertingDefinition).getField();
+			verify(alertingDefinition).getTags();
+			verify(alertingDefinition).getMeasurement();
+			verify(alertingDefinition, times(2)).getTimeRange(TimeUnit.MILLISECONDS);
+			verifyNoMoreInteractions(alertingDefinition);
 		}
 
 		@Test
 		public void influxDisconnected() throws BusinessException, Exception {
-			queryResult.getResults().get(0).getSeries().get(0).setValues(Collections.singletonList(Arrays.asList(new Object[] { "a", THRESHOLD + 1.0 })));
 			when(influxDao.isOnline()).thenReturn(false);
-			when(influxDao.query(any(String.class))).thenReturn(queryResult);
-			when(alertingState.getAlertingDefinition()).thenReturn(alertingDefinition);
 
 			thresholdChecker.checkThreshold(alertingState);
 
-			verifyNoMoreInteractions(stateManager);
+			verify(influxDao).isOnline();
+			verifyNoMoreInteractions(influxDao);
+			verifyZeroInteractions(stateManager);
+			verifyZeroInteractions(alertingState);
 		}
 
 	}
