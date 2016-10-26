@@ -49,6 +49,10 @@ public class AlertingStateLifecycleManager {
 	 *            the value which violated the threshold
 	 */
 	public void violation(AlertingState alertingState, double violationValue) {
+		if (alertingState == null) {
+			return;
+		}
+
 		if (alertingState.isAlertActive()) {
 			// alert is ongoing
 			if (log.isDebugEnabled()) {
@@ -75,6 +79,10 @@ public class AlertingStateLifecycleManager {
 	 *            the threshold which has not been violated
 	 */
 	public void valid(AlertingState alertingState) {
+		if (alertingState == null) {
+			return;
+		}
+
 		if (log.isDebugEnabled()) {
 			log.debug("||-Threshold '{}' has not been violated in the last interval.", alertingState.getAlertingDefinition().getName());
 		}
@@ -106,6 +114,10 @@ public class AlertingStateLifecycleManager {
 	 *            the threshold which has been checked
 	 */
 	public void noData(AlertingState alertingState) {
+		if (alertingState == null) {
+			return;
+		}
+
 		if (log.isDebugEnabled()) {
 			log.debug("||-No data available for alerting definition '{}'. Expecting the same behavior as before.", alertingState.getAlertingDefinition().getName());
 		}

@@ -26,6 +26,7 @@ import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
  * @author Alexander Wert
  *
  */
+@SuppressWarnings("PMD")
 public class InfluxQueryFactoryTest extends TestBase {
 
 	/**
@@ -35,6 +36,7 @@ public class InfluxQueryFactoryTest extends TestBase {
 	 *
 	 */
 	public static class BuildTraceIdForAlertQuery extends InfluxQueryFactoryTest {
+
 		AlertingDefinition alertingDefinition;
 		private static final long START_TIME = 12345678L;
 		private static final long STOP_TIME = 123456789L;

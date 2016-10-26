@@ -51,7 +51,7 @@ public final class InfluxQueryFactory {
 			builder.append("\" = '").append(entry.getValue()).append("' AND ");
 		}
 
-		long leftCheckIntervalBorder = alertingState.getLastCheckTime() - alertingState.getAlertingDefinition().getTimeRange(TimeUnit.MILLISECONDS);
+		long leftCheckIntervalBorder = alertingState.getLastCheckTime() - definition.getTimeRange(TimeUnit.MILLISECONDS);
 		builder.append("time <= ").append(currentTime).append("ms AND time > ").append(leftCheckIntervalBorder).append("ms");
 
 		return builder.toString();

@@ -41,21 +41,6 @@ public class AlertingDefinitionTest extends TestBase {
 
 	List<String> emailListBroken = Arrays.asList("test@example.com", null, "test3@example.com", "not_an_email@");
 
-	protected AlertingDefinition createAlertingDefinition() {
-		AlertingDefinition definition = new AlertingDefinition();
-		definition.setField("field");
-		definition.setMeasurement("measurement");
-		definition.setThreshold(1D);
-		definition.setThresholdType(ThresholdType.LOWER_THRESHOLD);
-		definition.setTimeRange(1L, TimeUnit.MINUTES);
-		definition.addNotificationEmailAddress("test@example.com");
-		definition.putTag("tagKey", "tagVal");
-		definition.setThreshold(10);
-		definition.setThresholdType(ThresholdType.UPPER_THRESHOLD);
-		definition.setTimeRange(0L, TimeUnit.MINUTES);
-		return definition;
-	}
-
 	/**
 	 * Test the {@link AlertingDefinition#putTag(String, String)},
 	 * {@link AlertingDefinition#getTags()} and {@link AlertingDefinition#removeTag(String)}
