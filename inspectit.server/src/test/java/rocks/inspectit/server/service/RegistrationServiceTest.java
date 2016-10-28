@@ -660,4 +660,19 @@ public class RegistrationServiceTest extends TestBase {
 		}
 	}
 
+	/**
+	 * Tests the {@link RegistrationService#updateMethodIdentTimestamp(long, String, String)}
+	 * method.
+	 */
+	public static class UpdateMethodIdentTimestamp extends RegistrationServiceTest {
+
+		@Test
+		public void successfully() {
+			registrationService.updateMethodIdentTimestamp(10L, "package", "class");
+
+			verify(methodIdentDao).updateTimestamps(10L, "package", "class");
+			verify(platformIdentCache).markDirty(10L);
+		}
+
+	}
 }

@@ -1,6 +1,7 @@
 package rocks.inspectit.server.instrumentation.config.job;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableClassType;
+import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableType;
 import rocks.inspectit.shared.cs.ci.Environment;
 
 /**
@@ -16,6 +19,7 @@ import rocks.inspectit.shared.cs.ci.Environment;
  * mapping update in the CI.
  *
  * @author Ivan Senic
+ * @author Marius Oehler
  *
  */
 @Component
@@ -33,7 +37,12 @@ public class EnvironmentMappingUpdateJob extends AbstractConfigurationChangeJob 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void run() {
+	protected Collection<ImmutableType> execute() {
+		Collection<ImmutableType> changedClassTypes = new HashSet<>();
+
+		// add current instrumentation
+		changedClassTypes.addAll(getClassCache().getLookupService().findInstrumentedTypes());
+
 		// first remove all existing instrumentation points
 		getClassCache().getInstrumentationService().removeInstrumentationPoints();
 
@@ -45,8 +54,11 @@ public class EnvironmentMappingUpdateJob extends AbstractConfigurationChangeJob 
 		if (configurationHolder.isInitialized()) {
 			// then add instrumentation points
 			Collection<IInstrumentationApplier> instrumentationAppliers = configurationHolder.getInstrumentationAppliers();
-			getClassCache().getInstrumentationService().addInstrumentationPoints(getAgentConfiguration(), instrumentationAppliers);
+			Collection<? extends ImmutableClassType> instrumentedTypes = getClassCache().getInstrumentationService().addInstrumentationPoints(getAgentConfiguration(), instrumentationAppliers);
+			changedClassTypes.addAll(instrumentedTypes);
 		}
+
+		return changedClassTypes;
 	}
 
 	/**

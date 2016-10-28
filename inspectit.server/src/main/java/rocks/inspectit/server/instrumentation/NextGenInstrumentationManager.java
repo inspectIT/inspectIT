@@ -15,17 +15,18 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.event.AgentDeletedEvent;
+import rocks.inspectit.server.event.AgentRegisteredEvent;
 import rocks.inspectit.server.instrumentation.classcache.ClassCache;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheModificationException;
 import rocks.inspectit.server.instrumentation.config.AgentCacheEntry;
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
 import rocks.inspectit.server.instrumentation.config.ConfigurationResolver;
 import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableClassType;
@@ -86,6 +87,12 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	private ExecutorService executor;
 
 	/**
+	 * Event publisher.
+	 */
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+
+	/**
 	 * Cache for the agents and it's used class cache, environments and configurations.
 	 */
 	private final ConcurrentHashMap<Long, AgentCacheEntry> agentCacheMap = new ConcurrentHashMap<>();
@@ -98,7 +105,7 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 		Environment environment = configurationResolver.getEnvironmentForAgent(definedIPs, agentName);
 
 		// if environment load is success register agent
-		long id = registrationService.registerPlatformIdent(definedIPs, agentName, version);
+		final long id = registrationService.registerPlatformIdent(definedIPs, agentName, version);
 
 		// get or create the agent cache entry
 		AgentCacheEntry agentCacheEntry = getAgentCacheEntry(id);
@@ -119,6 +126,15 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 
 		// else kick the configuration creator update
 		configurationHolder.update(environment, id);
+
+		// publish agent registered event
+		executor.submit(new Runnable() {
+			@Override
+			public void run() {
+				AgentRegisteredEvent registeredEvent = new AgentRegisteredEvent(this, id);
+				eventPublisher.publishEvent(registeredEvent);
+			}
+		});
 
 		// return configuration
 		return configurationHolder.getAgentConfiguration();
@@ -253,8 +269,7 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	 */
 	@Override
 	public void onApplicationEvent(AgentDeletedEvent event) {
-		PlatformIdent platformIdent = event.getPlatformIdent();
-		agentCacheMap.remove(platformIdent.getId());
+		agentCacheMap.remove(event.getPlatformId());
 	}
 
 	/**

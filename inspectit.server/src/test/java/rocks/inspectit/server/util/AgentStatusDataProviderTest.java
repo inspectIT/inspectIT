@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.InstrumentationStatus;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -64,6 +65,7 @@ public class AgentStatusDataProviderTest extends TestBase {
 			assertThat(agentStatusData.getConnectionTimestamp(), is(greaterThan(0L)));
 			assertThat(agentStatusData.getLastKeepAliveTimestamp(), is(greaterThan(0L)));
 			assertThat(agentStatusData.getMillisSinceLastData(), is(nullValue()));
+			assertThat(agentStatusData.getInstrumentationStatus(), is(InstrumentationStatus.UP_TO_DATE));
 		}
 
 		@Test
@@ -81,6 +83,7 @@ public class AgentStatusDataProviderTest extends TestBase {
 			assertThat(agentStatusData.getConnectionTimestamp(), is(greaterThanOrEqualTo(currentTimeMillis)));
 			assertThat(agentStatusData.getLastKeepAliveTimestamp(), is(greaterThanOrEqualTo(currentTimeMillis)));
 			assertThat(agentStatusData.getMillisSinceLastData(), is(nullValue()));
+			assertThat(agentStatusData.getInstrumentationStatus(), is(InstrumentationStatus.UP_TO_DATE));
 		}
 
 	}

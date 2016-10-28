@@ -290,4 +290,33 @@ public class ClassCacheLookup {
 		}
 		return exceptionTypes;
 	}
+
+	/**
+	 * Returns all {@link ImmutableType}s which are instrumented.
+	 *
+	 * @return Collection containing {@link ImmutableType}s.
+	 */
+	public Collection<? extends ImmutableType> findInstrumentedTypes() {
+		try {
+			return classcache.executeWithReadLock(new Callable<Collection<ImmutableType>>() {
+				@Override
+				public Collection<ImmutableType> call() throws Exception {
+					Collection<ImmutableType> result = new ArrayList<>();
+
+					for (ImmutableType type : fqnIndexer.findAll()) {
+						if (type.isClass() && type.isInitialized()) {
+							if (type.castToClass().hasInstrumentationPoints()) {
+								result.add(type);
+							}
+						}
+					}
+
+					return result;
+				}
+			});
+		} catch (Exception e) {
+			log.warn("Unexpected exception occurred during read from the FQN indexer", e);
+			return Collections.emptyList();
+		}
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import rocks.inspectit.shared.all.version.VersionService;
+import rocks.inspectit.shared.cs.cmr.service.IAgentInstrumentationService;
 import rocks.inspectit.shared.cs.cmr.service.IAlertService;
 import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
@@ -222,6 +223,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private final IAlertService alertAccessService;
 
 	/**
+	 * The agent instrumentation service.
+	 */
+	private final IAgentInstrumentationService agentInstrumentationService;
+
+	/**
 	 * CMR repository change listeners.
 	 */
 	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<>(1);
@@ -270,6 +276,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		businessContextManagementService = cmrServiceProvider.getBusinessContextManagementService(this);
 		influxDBService = cmrServiceProvider.getInfluxDBService(this);
 		alertAccessService = cmrServiceProvider.getAlertAccessService(this);
+		agentInstrumentationService = cmrServiceProvider.getAgentInstrumentationService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, businessContextManagementService, this);
 	}
@@ -387,6 +394,15 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 */
 	public IAlertService getAlertAccessService() {
 		return alertAccessService;
+	}
+
+	/**
+	 * Gets {@link #agentInstrumentationService}.
+	 *
+	 * @return {@link #agentInstrumentationService}
+	 */
+	public IAgentInstrumentationService getAgentInstrumentationService() {
+		return agentInstrumentationService;
 	}
 
 	/**
