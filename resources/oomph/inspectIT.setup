@@ -29,8 +29,8 @@
   </setupTask>
   <setupTask
       xsi:type="jdt:JRETask"
-      version="J2SE-1.5"
-      location="${jre.location-1.5}">
+      version="JavaSE-1.6"
+      location="${jre.location-1.6}">
     <description>Define the JRE needed to compile and run the inspectIT Agent</description>
   </setupTask>
   <setupTask
