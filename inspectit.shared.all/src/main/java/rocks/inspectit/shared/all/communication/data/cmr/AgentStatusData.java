@@ -46,6 +46,24 @@ public class AgentStatusData implements Serializable {
 	}
 
 	/**
+	 * Enumeration that defines the instrumentation status.
+	 *
+	 * @author Marius Oehler
+	 *
+	 */
+	public enum InstrumentationStatus {
+		/**
+		 * The agent has the latest instrumentation. This is default.
+		 */
+		UP_TO_DATE,
+
+		/**
+		 * The agent has not the latest instrumentation.
+		 */
+		PENDING;
+	}
+
+	/**
 	 * {@link AgentConnection}.
 	 */
 	private AgentConnection agentConnection;
@@ -71,10 +89,21 @@ public class AgentStatusData implements Serializable {
 	private long serverTimestamp;
 
 	/**
-	 * No-arg constructor. Sets {@link #agentConnection} to {@link AgentConnection#NEVER_CONNECTED}.
+	 * The time of the agent's last instrumentation update.
+	 */
+	private long pendingSinceTime;
+
+	/**
+	 * The current {@link InstrumentationStatus}.
+	 */
+	private InstrumentationStatus instrumentationStatus;
+
+	/**
+	 * No-arg constructor. Calling {@link #AgentStatusData(AgentConnection)} using
+	 * {@link AgentConnection#NEVER_CONNECTED}.
 	 */
 	public AgentStatusData() {
-		this.agentConnection = AgentConnection.NEVER_CONNECTED;
+		this(AgentConnection.NEVER_CONNECTED);
 	}
 
 	/**
@@ -85,6 +114,7 @@ public class AgentStatusData implements Serializable {
 	 */
 	public AgentStatusData(AgentConnection agentConnection) {
 		this.agentConnection = agentConnection;
+		this.instrumentationStatus = InstrumentationStatus.UP_TO_DATE;
 	}
 
 	/**
@@ -182,17 +212,57 @@ public class AgentStatusData implements Serializable {
 	}
 
 	/**
+	 * Gets {@link #pendingSinceTime}.
+	 *
+	 * @return {@link #pendingSinceTime}
+	 */
+	public long getLastInstrumentationUpate() {
+		return this.pendingSinceTime;
+	}
+
+	/**
+	 * Sets {@link #pendingSinceTime}.
+	 *
+	 * @param pendingSinceTime
+	 *            New value for {@link #pendingSinceTime}
+	 */
+	public void setPendingSinceTime(long pendingSinceTime) {
+		this.pendingSinceTime = pendingSinceTime;
+	}
+
+	/**
+	 * Gets {@link #instrumentationStatus}.
+	 *
+	 * @return {@link #instrumentationStatus}
+	 */
+	public InstrumentationStatus getInstrumentationStatus() {
+		return this.instrumentationStatus;
+	}
+
+	/**
+	 * Sets {@link #instrumentationStatus}.
+	 *
+	 * @param instrumentationStatus
+	 *            New value for {@link #instrumentationStatus}
+	 */
+	public void setInstrumentationStatus(InstrumentationStatus instrumentationStatus) {
+		this.instrumentationStatus = instrumentationStatus;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((agentConnection == null) ? 0 : agentConnection.hashCode());
-		result = (prime * result) + (int) (lastDataSendTimestamp ^ (lastDataSendTimestamp >>> 32));
-		result = (prime * result) + (int) (serverTimestamp ^ (serverTimestamp >>> 32));
-		result = (prime * result) + (int) (lastKeepAliveTimestamp ^ (lastKeepAliveTimestamp >>> 32));
-		result = (prime * result) + (int) (connectionTimestamp ^ (connectionTimestamp >>> 32));
+		result = (prime * result) + ((this.agentConnection == null) ? 0 : this.agentConnection.hashCode());
+		result = (prime * result) + (int) (this.connectionTimestamp ^ (this.connectionTimestamp >>> 32));
+		result = (prime * result) + ((this.instrumentationStatus == null) ? 0 : this.instrumentationStatus.hashCode());
+		result = (prime * result) + (int) (this.lastDataSendTimestamp ^ (this.lastDataSendTimestamp >>> 32));
+		result = (prime * result) + (int) (this.lastKeepAliveTimestamp ^ (this.lastKeepAliveTimestamp >>> 32));
+		result = (prime * result) + (int) (this.pendingSinceTime ^ (this.pendingSinceTime >>> 32));
+		result = (prime * result) + (int) (this.serverTimestamp ^ (this.serverTimestamp >>> 32));
 		return result;
 	}
 
@@ -211,19 +281,25 @@ public class AgentStatusData implements Serializable {
 			return false;
 		}
 		AgentStatusData other = (AgentStatusData) obj;
-		if (agentConnection != other.agentConnection) {
+		if (this.agentConnection != other.agentConnection) {
 			return false;
 		}
-		if (lastDataSendTimestamp != other.lastDataSendTimestamp) {
+		if (this.connectionTimestamp != other.connectionTimestamp) {
 			return false;
 		}
-		if (serverTimestamp != other.serverTimestamp) {
+		if (this.instrumentationStatus != other.instrumentationStatus) {
 			return false;
 		}
-		if (lastKeepAliveTimestamp != other.lastKeepAliveTimestamp) {
+		if (this.lastDataSendTimestamp != other.lastDataSendTimestamp) {
 			return false;
 		}
-		if (connectionTimestamp != other.connectionTimestamp) {
+		if (this.lastKeepAliveTimestamp != other.lastKeepAliveTimestamp) {
+			return false;
+		}
+		if (this.pendingSinceTime != other.pendingSinceTime) {
+			return false;
+		}
+		if (this.serverTimestamp != other.serverTimestamp) {
 			return false;
 		}
 		return true;

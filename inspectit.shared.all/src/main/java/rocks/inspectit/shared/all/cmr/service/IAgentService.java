@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import rocks.inspectit.shared.all.communication.message.IAgentMessage;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
@@ -88,4 +89,13 @@ public interface IAgentService {
 	 */
 	Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException;
 
+	/**
+	 * Fetches all {@link IAgentMessage} which are available at the CMR. The returned list is
+	 * an ordered list, ordered by time (ascending -> index 0 is the oldest).
+	 *
+	 * @param platformId
+	 *            Id of the agent.
+	 * @return List of {@link IAgentMessage}s.
+	 */
+	List<IAgentMessage<?>> fetchAgentMessages(long platformId);
 }

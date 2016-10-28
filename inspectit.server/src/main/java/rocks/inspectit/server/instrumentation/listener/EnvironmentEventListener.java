@@ -1,19 +1,19 @@
 package rocks.inspectit.server.instrumentation.listener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
-import rocks.inspectit.server.instrumentation.NextGenInstrumentationManager;
 import rocks.inspectit.server.instrumentation.config.AgentCacheEntry;
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
+import rocks.inspectit.server.instrumentation.config.job.AbstractConfigurationChangeJob;
 import rocks.inspectit.server.instrumentation.config.job.EnvironmentUpdateJob;
 import rocks.inspectit.shared.cs.ci.Environment;
 
@@ -21,35 +21,25 @@ import rocks.inspectit.shared.cs.ci.Environment;
  * Listener for the {@link EnvironmentUpdateEvent}s.
  *
  * @author Ivan Senic
+ * @author Marius Oehler
  *
  */
 @Component
-public class EnvironmentEventListener implements ApplicationListener<EnvironmentUpdateEvent> {
+public class EnvironmentEventListener extends AbstractConfigurationChangeListener<EnvironmentUpdateEvent> {
 
 	/**
-	 * NextGenInstrumentationManager need.
+	 * The used {@link ObjectFactory}.
 	 */
 	@Autowired
-	private NextGenInstrumentationManager nextGenInstrumentationManager;
-
-	/**
-	 * Factory for creating new {@link EnvironmentUpdateJob}.
-	 */
-	@Autowired
-	ObjectFactory<EnvironmentUpdateJob> environmentUpdateJobFactory;
-
-	/**
-	 * Executor for dealing with configuration updates.
-	 */
-	@Autowired
-	@Qualifier("agentServiceExecutorService")
-	ExecutorService executor;
+	private ObjectFactory<EnvironmentUpdateJob> objectFactory;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void onApplicationEvent(EnvironmentUpdateEvent event) {
+		List<AbstractConfigurationChangeJob> jobs = new ArrayList<>();
+
 		Map<Long, AgentCacheEntry> agentCacheMap = nextGenInstrumentationManager.getAgentCacheMap();
 		for (AgentCacheEntry agentCacheEntry : agentCacheMap.values()) {
 			ConfigurationHolder configurationHolder = agentCacheEntry.getConfigurationHolder();
@@ -65,11 +55,15 @@ public class EnvironmentEventListener implements ApplicationListener<Environment
 			}
 
 			// create and fire job
-			EnvironmentUpdateJob environmentUpdateJob = environmentUpdateJobFactory.getObject();
+			EnvironmentUpdateJob environmentUpdateJob = objectFactory.getObject();
 			environmentUpdateJob.setEnvironmentUpdateEvent(event);
 			environmentUpdateJob.setAgentCacheEntry(agentCacheEntry);
 
-			executor.execute(environmentUpdateJob);
+			jobs.add(environmentUpdateJob);
+		}
+
+		if (CollectionUtils.isNotEmpty(jobs)) {
+			executeJobs(jobs);
 		}
 	}
 }

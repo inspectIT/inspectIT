@@ -15,10 +15,13 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.event.AgentDeletedEvent;
+import rocks.inspectit.server.event.AgentRegisteredEvent;
 import rocks.inspectit.server.instrumentation.classcache.ClassCache;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheModificationException;
 import rocks.inspectit.server.instrumentation.config.AgentCacheEntry;
@@ -86,6 +89,18 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	private ExecutorService executor;
 
 	/**
+	 * Event publisher.
+	 */
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+
+	/**
+	 * The platform ident DAO.
+	 */
+	@Autowired
+	private PlatformIdentDao platformIdentDao;
+
+	/**
 	 * Cache for the agents and it's used class cache, environments and configurations.
 	 */
 	private final ConcurrentHashMap<Long, AgentCacheEntry> agentCacheMap = new ConcurrentHashMap<>();
@@ -98,7 +113,7 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 		Environment environment = configurationResolver.getEnvironmentForAgent(definedIPs, agentName);
 
 		// if environment load is success register agent
-		long id = registrationService.registerPlatformIdent(definedIPs, agentName, version);
+		final long id = registrationService.registerPlatformIdent(definedIPs, agentName, version);
 
 		// get or create the agent cache entry
 		AgentCacheEntry agentCacheEntry = getAgentCacheEntry(id);
@@ -119,6 +134,16 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 
 		// else kick the configuration creator update
 		configurationHolder.update(environment, id);
+
+		// publish agent registered event
+		executor.submit(new Runnable() {
+			@Override
+			public void run() {
+				PlatformIdent platformIdent = platformIdentDao.load(id);
+				AgentRegisteredEvent registeredEvent = new AgentRegisteredEvent(this, platformIdent);
+				eventPublisher.publishEvent(registeredEvent);
+			}
+		});
 
 		// return configuration
 		return configurationHolder.getAgentConfiguration();

@@ -14,6 +14,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.ui.rcp.ci.dialog.InstrumentationUpdateDialog.OnSaveBehavior;
 import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
@@ -54,6 +55,8 @@ public class InspectITPreferenceInitializer extends AbstractPreferenceInitialize
 
 		// auto check new version
 		PreferencesUtils.saveBooleanValue(PreferencesConstants.AUTO_CHECK_NEW_VERSION, true, true);
+
+		PreferencesUtils.saveObject(PreferencesConstants.INSTRUMENTATION_UPDATED_AUTO_ACTION, OnSaveBehavior.SHOW_DIALOG, true);
 
 		Map<String, PlotDataSolver> dataSolverBeanAssignmentMap = new HashMap<>();
 
