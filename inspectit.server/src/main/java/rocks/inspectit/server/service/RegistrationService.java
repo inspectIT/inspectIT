@@ -183,6 +183,18 @@ public class RegistrationService implements IRegistrationService {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void updateMethodIdentTimestamp(long platformId, String packageName, String className) {
+		try {
+			methodIdentDao.updateTimestamps(platformId, packageName, className);
+		} finally {
+			platformIdentCache.markDirty(platformId);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	@MethodLog
 	public long registerMethodIdent(long platformId, String packageName, String className, String methodName, List<String> parameterTypes, String returnType, int modifiers) {
 		MethodIdent methodIdent = new MethodIdent();

@@ -10,58 +10,54 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.event.AgentDeletedEvent;
-import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.server.messaging.AgentInstrumentationMessageGate;
+import rocks.inspectit.server.messaging.AgentMessageProvider;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings("PMD")
-public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
+public class GlobalDataAccessServiceTest extends TestBase {
 
 	/**
 	 * Class under test.
 	 */
-	private GlobalDataAccessService globalDataAccessService;
+	@InjectMocks
+	GlobalDataAccessService globalDataAccessService;
 
 	@Mock
-	private PlatformIdentDao platformIdentDao;
+	Logger log;
 
 	@Mock
-	private DefaultDataDao defaultDataDao;
+	PlatformIdentDao platformIdentDao;
 
 	@Mock
-	private AgentStatusDataProvider agentStatusProvider;
+	DefaultDataDao defaultDataDao;
 
 	@Mock
-	private ApplicationEventPublisher eventPublisher;
+	AgentStatusDataProvider agentStatusProvider;
 
-	/**
-	 * Initializes mocks. Has to run before each test so that mocks are clear.
-	 */
-	@BeforeMethod
-	public void init() {
-		MockitoAnnotations.initMocks(this);
+	@Mock
+	ApplicationEventPublisher eventPublisher;
 
-		globalDataAccessService = new GlobalDataAccessService();
-		globalDataAccessService.platformIdentDao = platformIdentDao;
-		globalDataAccessService.agentStatusProvider = agentStatusProvider;
-		globalDataAccessService.defaultDataDao = defaultDataDao;
-		globalDataAccessService.eventPublisher = eventPublisher;
-		globalDataAccessService.log = LoggerFactory.getLogger(GlobalDataAccessService.class);
-	}
+	@Mock
+	AgentMessageProvider messageProvider;
+
+	@Mock
+	AgentInstrumentationMessageGate messageGate;
 
 	/**
 	 * No delete enabled when platform ident can not be found.
@@ -113,6 +109,8 @@ public class GlobalDataAccessServiceTest extends AbstractTestNGLogSupport {
 		verify(defaultDataDao, times(1)).deleteAll(platformId);
 		ArgumentCaptor<ApplicationEvent> captor = ArgumentCaptor.forClass(ApplicationEvent.class);
 		verify(eventPublisher, times(1)).publishEvent(captor.capture());
+		verify(messageGate).clear(platformId);
+		verify(messageProvider).clear(platformId);
 
 		AgentDeletedEvent event = (AgentDeletedEvent) captor.getValue();
 		assertThat(event.getPlatformIdent(), is(platformIdent));

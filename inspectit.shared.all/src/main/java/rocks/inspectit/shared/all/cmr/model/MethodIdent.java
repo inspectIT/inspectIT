@@ -37,8 +37,9 @@ import rocks.inspectit.shared.all.jpa.ListStringConverter;
  */
 @Entity
 @NamedQueries({ @NamedQuery(name = MethodIdent.FIND_ALL, query = "SELECT m FROM MethodIdent m"),
-		@NamedQuery(name = MethodIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m.id, m.parameters FROM MethodIdent m WHERE m.platformIdent.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType "),
-		@NamedQuery(name = MethodIdent.UPDATE_TIMESTAMP, query = "UPDATE MethodIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids") })
+	@NamedQuery(name = MethodIdent.FIND_ID_BY_PLATFORM_AND_EXAMPLE, query = "SELECT m.id, m.parameters FROM MethodIdent m WHERE m.platformIdent.id=:platformIdent AND NULLIF(m.packageName,'null')=:packageName AND m.className=:className AND m.methodName=:methodName AND m.returnType=:returnType "),
+	@NamedQuery(name = MethodIdent.UPDATE_TIMESTAMP, query = "UPDATE MethodIdent SET timestamp=CURRENT_TIMESTAMP WHERE id IN :ids"),
+	@NamedQuery(name = MethodIdent.UPDATE_TIMESTAMP_BY_CLASS, query = "UPDATE MethodIdent SET timestamp=CURRENT_TIMESTAMP WHERE platformIdent.id=:platformIdent AND NULLIF(packageName,'null')=:packageName AND className=:className") })
 public class MethodIdent implements Serializable {
 
 	/**
@@ -73,6 +74,18 @@ public class MethodIdent implements Serializable {
 	 * </ul>
 	 */
 	public static final String UPDATE_TIMESTAMP = "MethodIdent.updateTimestamp";
+
+	/**
+	 * Constant for updateTimestamp query.
+	 * <p>
+	 * Parameters in the query:
+	 * <ul>
+	 * <li>platformIdent
+	 * <li>packageName
+	 * <li>className
+	 * </ul>
+	 */
+	public static final String UPDATE_TIMESTAMP_BY_CLASS = "MethodIdent.updateTimestampByClass";
 
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).

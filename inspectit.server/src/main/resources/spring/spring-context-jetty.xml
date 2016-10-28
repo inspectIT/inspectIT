@@ -118,7 +118,7 @@
 		<property name="pathSpec" value="/remoting/ExceptionDataAccessService" />
 	</bean>
 	<!-- END -->
-	
+
 	<!-- Jmx Data Access Service -->
 	<bean name="jmxDataAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
 	</bean>
@@ -194,7 +194,7 @@
 		<property name="pathSpec" value="/remoting/StorageService" />
 	</bean>
 	<!-- END -->
-	
+
 	<!-- ConfigurationInterface Service -->
 	<bean name="configurationInterfaceServiceRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet" />
 
@@ -223,7 +223,7 @@
 		<property name="pathSpec" value="/remoting/BusinessContextManagementService" />
 	</bean>
 	<!-- END -->
-	
+
 	<!-- Influx Database Service -->
 	<bean name="influxDBRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
 	</bean>
@@ -238,7 +238,7 @@
 		<property name="pathSpec" value="/remoting/InfluxDBService" />
 	</bean>
 	<!-- END -->
-	
+
 	<!-- Alert Access Service -->
 	<bean name="alertAccessRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
 	</bean>
@@ -251,6 +251,21 @@
 	<bean id="alertAccessServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
 		<property name="servletName" value="alertAccessServiceExporter" />
 		<property name="pathSpec" value="/remoting/AlertAccessService" />
+	</bean>
+	<!-- END -->
+
+	<!-- Agent Instrumentation Service -->
+	<bean name="agentInstrumentationRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="agentInstrumentationServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="agentInstrumentationServiceExporter" />
+		<property name="servlet" ref="agentInstrumentationRequestHandlerServlet" />
+	</bean>
+
+	<bean id="agentInstrumentationServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="agentInstrumentationServiceExporter" />
+		<property name="pathSpec" value="/remoting/AgentInstrumentationService" />
 	</bean>
 	<!-- END -->
 
@@ -331,10 +346,10 @@
 		<property name="pathSpec" value="*" />
 	</bean>
 	<!-- END -->
-	
+
 	<!-- Dispatcher Servlet -->
 	<bean id="springDispatcherServlet" class="org.springframework.web.servlet.DispatcherServlet" />
-	
+
 	<bean id="springDispatcherServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
 		<property name="name" value="springDispatcherServletExporter" />
 		<property name="servlet" ref="springDispatcherServlet" />
@@ -347,7 +362,7 @@
 
 	<bean id="springDispatcherServletMapping" class="org.mortbay.jetty.servlet.ServletMapping">
 		<property name="servletName" value="springDispatcherServletExporter" />
-		<property name="pathSpec" value="/rest/*"/>
+		<property name="pathSpec" value="/rest/*" />
 	</bean>
 	<!-- END -->
 
@@ -368,6 +383,7 @@
 				<ref bean="businessCtxMngmtServletHolder" />
 				<ref bean="influxDBServletHolder" />
 				<ref bean="alertAccessServletHolder" />
+				<ref bean="agentInstrumentationServletHolder" />
 				<ref bean="defaultServletHolder" />
 				<ref bean="uploadServletHolder" />
 				<ref bean="springDispatcherServletHolder" />
@@ -389,6 +405,7 @@
 				<ref bean="businessCtxMngmtServiceMapping" />
 				<ref bean="influxDBServiceMapping" />
 				<ref bean="alertAccessServiceMapping" />
+				<ref bean="agentInstrumentationServiceMapping" />
 				<ref bean="defaultServletMapping" />
 				<ref bean="uploadServletMapping" />
 				<ref bean="springDispatcherServletMapping" />

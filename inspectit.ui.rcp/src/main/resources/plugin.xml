@@ -585,6 +585,10 @@
             id="rocks.inspectit.ui.rcp.commands.openAlert"
             name="Open Alert">
       </command>
+      <command
+            id="rocks.inspectit.ui.rcp.commands.openInstrumentationUpdateDialog"
+            name="Open Instrumentation Uodate Dialog">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -2133,6 +2137,34 @@
             </test>
          </activeWhen>
       </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.ci.handler.InstrumentationUpdateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.openInstrumentationUpdateDialog">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                     </instanceof>
+                     <instanceof
+                           value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider">
+                     </instanceof>
+                  </or>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -3226,6 +3258,17 @@
                visible="true">
          </separator>
          <command
+               commandId="rocks.inspectit.ui.rcp.commands.openInstrumentationUpdateDialog"
+               icon="icons/fugue/pipette-refresh.png"
+               label="Open Instrumentation Update Dialog"
+               style="push"
+               tooltip="Open a dialog to see which agents have pending instrumentations and trigger the update.">
+         </command>
+         <separator
+               name="rocks.inspectit.ui.rcp.repositoryManagerToolbar.separator4"
+               visible="true">
+         </separator>
+         <command
                commandId="org.eclipse.ui.edit.delete"
                label="Delete Agent"
                style="push">
@@ -3862,5 +3905,4 @@
             productId="rocks.inspectit.ui.rcp.product">
       </statusHandlerProductBinding>
    </extension>
-
 </plugin>

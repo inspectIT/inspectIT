@@ -1,5 +1,6 @@
 package rocks.inspectit.ui.rcp.repository.service.cmr;
 
+import rocks.inspectit.shared.cs.cmr.service.IAgentInstrumentationService;
 import rocks.inspectit.shared.cs.cmr.service.IAlertService;
 import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
@@ -305,4 +306,24 @@ public abstract class CmrServiceProvider {
 	 * @return Returns Spring created {@link IAlertService}.
 	 */
 	protected abstract IAlertService getAlertAccessService();
+
+	/**
+	 * Returns properly initialized {@link IAgentInstrumentationService}.
+	 *
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} to bound service to.
+	 * @return Returns {@link IAgentInstrumentationService}.
+	 */
+	public IAgentInstrumentationService getAgentInstrumentationService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		IAgentInstrumentationService agentInstrumentationService = getAgentInstrumentationService();
+		((ICmrService) agentInstrumentationService).initService(cmrRepositoryDefinition);
+		return agentInstrumentationService;
+	}
+
+	/**
+	 * Returns Spring created {@link IAgentInstrumentationService}.
+	 *
+	 * @return Returns Spring created {@link IAgentInstrumentationService}.
+	 */
+	protected abstract IAgentInstrumentationService getAgentInstrumentationService();
 }

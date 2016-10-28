@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rocks.inspectit.server.instrumentation.NextGenInstrumentationManager;
+import rocks.inspectit.server.messaging.AgentInstrumentationMessageGate;
+import rocks.inspectit.server.messaging.AgentMessageProvider;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.shared.all.cmr.service.IAgentService;
+import rocks.inspectit.shared.all.communication.message.IAgentMessage;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
@@ -42,12 +45,30 @@ public class AgentService implements IAgentService {
 	NextGenInstrumentationManager nextGenInstrumentationManager;
 
 	/**
+	 * The {@link AgentInstrumentationMessageGate}.
+	 */
+	@Autowired
+	AgentInstrumentationMessageGate messageGate;
+
+	/**
+	 * The {@link AgentMessageProvider}.
+	 */
+	@Autowired
+	AgentMessageProvider messageProvider;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	@MethodLog
 	public AgentConfig register(List<String> definedIPs, String agentName, String version) throws BusinessException {
-		return nextGenInstrumentationManager.register(definedIPs, agentName, version);
+		AgentConfig agentConfig = nextGenInstrumentationManager.register(definedIPs, agentName, version);
+
+		// reset instrumentation status
+		messageGate.clear(agentConfig.getPlatformId());
+		messageProvider.clear(agentConfig.getPlatformId());
+
+		return agentConfig;
 	}
 
 	/**
@@ -84,6 +105,15 @@ public class AgentService implements IAgentService {
 	@MethodLog
 	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException {
 		return nextGenInstrumentationManager.analyzeJmxAttributes(platformIdent, attributeDescriptors);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@MethodLog
+	public List<IAgentMessage<?>> fetchAgentMessages(long platformId) {
+		return messageProvider.fetchMessages(platformId);
 	}
 
 	/**

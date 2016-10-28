@@ -3,6 +3,7 @@ package rocks.inspectit.shared.cs.cmr.service;
 import java.util.List;
 import java.util.Map;
 
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.exception.BusinessException;
 
 /**
@@ -51,6 +52,19 @@ public interface IRegistrationService {
 	 *             If the agent defined IPs is not registered.
 	 */
 	void unregisterPlatformIdent(long platformIdent) throws BusinessException;
+
+	/**
+	 * Updates the timestamp of all matching {@link MethodIdent}s to the current time.
+	 *
+	 * @param platformIdent
+	 *            the unique identifier of the platform.
+	 * @param packageName
+	 *            the name of the package
+	 * @param className
+	 *            the name of the class
+	 * @throws BusinessException
+	 */
+	void updateMethodIdentTimestamp(long platformIdent, String packageName, String className);
 
 	/**
 	 * Every instrumented method has to be registered from every Agent. This method returns a unique

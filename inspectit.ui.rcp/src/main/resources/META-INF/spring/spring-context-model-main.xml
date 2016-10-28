@@ -37,6 +37,7 @@
 		<lookup-method name="getBusinessContextManagementService" bean="businessContextManagementService" />
 		<lookup-method name="getInfluxDBService" bean="influxDBService" />
 		<lookup-method name="getAlertAccessService" bean="alertAccessService" />
+		<lookup-method name="getAgentInstrumentationService" bean="agentInstrumentationService" />
 	</bean>
 
 	<!-- CmrManagementService -->
@@ -367,6 +368,29 @@
 	<bean id="alertAccessServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
 		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IAlertService" />
 		<property name="serviceName" value="AlertAccessService" />
+	</bean>
+	<!-- AlertAccessService End -->
+	
+	<!-- AgentInstrumentationService -->
+	<bean id="agentInstrumentationService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
+		<property name="proxyInterfaces">
+			<list>
+				<value>rocks.inspectit.shared.cs.cmr.service.IAgentInstrumentationService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
+			</list>
+		</property>
+		<property name="target" ref="agentInstrumentationServiceTarget" />
+		<property name="interceptorNames">
+			<list>
+				<value>serviceMethodInterceptor</value>
+				<value>interfaceInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="agentInstrumentationServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.IAgentInstrumentationService" />
+		<property name="serviceName" value="AgentInstrumentationService" />
 	</bean>
 	<!-- AlertAccessService End -->
 

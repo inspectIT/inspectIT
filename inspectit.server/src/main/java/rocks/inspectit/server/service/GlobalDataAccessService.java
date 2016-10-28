@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.event.AgentDeletedEvent;
+import rocks.inspectit.server.messaging.AgentInstrumentationMessageGate;
+import rocks.inspectit.server.messaging.AgentMessageProvider;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
@@ -65,6 +67,18 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 	 */
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
+
+	/**
+	 * The {@link AgentMessageProvider}.
+	 */
+	@Autowired
+	AgentMessageProvider agentMessageProvider;
+
+	/**
+	 * The {@link AgentInstrumentationMessageGate}.
+	 */
+	@Autowired
+	AgentInstrumentationMessageGate messageGate;
 
 	/**
 	 * {@inheritDoc}
@@ -118,6 +132,9 @@ public class GlobalDataAccessService implements IGlobalDataAccessService {
 
 			platformIdentDao.delete(platformIdent);
 			defaultDataDao.deleteAll(platformIdent.getId());
+
+			agentMessageProvider.clear(platformId);
+			messageGate.clear(platformId);
 
 			AgentDeletedEvent event = new AgentDeletedEvent(this, platformIdent);
 			eventPublisher.publishEvent(event);
