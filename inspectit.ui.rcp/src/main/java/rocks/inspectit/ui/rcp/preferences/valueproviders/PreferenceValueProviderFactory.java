@@ -3,6 +3,7 @@ package rocks.inspectit.ui.rcp.preferences.valueproviders;
 import java.util.HashMap;
 import java.util.Map;
 
+import rocks.inspectit.ui.rcp.ci.dialog.InstrumentationUpdateDialog;
 import rocks.inspectit.ui.rcp.preferences.PreferenceException;
 import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 
@@ -34,6 +35,8 @@ public final class PreferenceValueProviderFactory {
 		preferenceValueProviders.put(PreferencesConstants.LAST_SELECTED_REPOSITORY, new LastSelectedRepositoryPreferenceValueProvider());
 		preferenceValueProviders.put(PreferencesConstants.INVOCATION_FILTER_DATA_TYPES, new ClassCollectionPreferenceValueProvider());
 		preferenceValueProviders.put(PreferencesConstants.JMX_PLOT_DATA_SOLVER, new MapPreferenceValueProvider());
+		preferenceValueProviders.put(PreferencesConstants.INSTRUMENTATION_UPDATED_AUTO_ACTION,
+				new EnumPreferenceValueProvider<InstrumentationUpdateDialog.OnSaveBehavior>(InstrumentationUpdateDialog.OnSaveBehavior.class));
 	}
 
 	/**

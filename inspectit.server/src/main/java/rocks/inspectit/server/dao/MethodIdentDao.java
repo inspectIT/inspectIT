@@ -71,4 +71,15 @@ public interface MethodIdentDao {
 	 */
 	List<MethodIdent> findAll();
 
+	/**
+	 * Updates the timestamp of all matching {@link MethodIdent}s.
+	 *
+	 * @param platformId
+	 *            the id of the platform
+	 * @param packageName
+	 *            the package name
+	 * @param className
+	 *            the class name
+	 */
+	void updateTimestamps(long platformId, String packageName, String className);
 }

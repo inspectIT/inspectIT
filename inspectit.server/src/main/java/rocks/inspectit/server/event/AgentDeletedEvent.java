@@ -2,8 +2,6 @@ package rocks.inspectit.server.event;
 
 import org.springframework.context.ApplicationEvent;
 
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
-
 /**
  * Event for signaling that agent has been deleted.
  *
@@ -18,35 +16,34 @@ public class AgentDeletedEvent extends ApplicationEvent {
 	private static final long serialVersionUID = 1365478176949875717L;
 
 	/**
-	 * Deleted agent.
+	 * Id of deleted agent.
 	 */
-	private final PlatformIdent platformIdent;
+	private final long platformId;
 
 	/**
 	 * Default constructor for the event.
 	 *
 	 * @param source
 	 *            event source
-	 * @param platformIdent
-	 *            deleted agent, must not be <code>null</code>
+	 * @param platformId
+	 *            id of deleted agent, must be greater than 0
 	 */
-	public AgentDeletedEvent(Object source, PlatformIdent platformIdent) {
+	public AgentDeletedEvent(Object source, long platformId) {
 		super(source);
 
-		if (null == platformIdent) {
-			throw new IllegalArgumentException("Agent can not be null.");
+		if (platformId <= 0) {
+			throw new IllegalArgumentException("Agent ID has to be greater than 0.");
 		}
 
-		this.platformIdent = platformIdent;
+		this.platformId = platformId;
 	}
 
 	/**
-	 * Gets {@link #platformIdent}.
+	 * Gets {@link #platformId}.
 	 *
-	 * @return {@link #platformIdent}
+	 * @return {@link #platformId}
 	 */
-	public PlatformIdent getPlatformIdent() {
-		return platformIdent;
+	public long getPlatformId() {
+		return this.platformId;
 	}
-
 }
