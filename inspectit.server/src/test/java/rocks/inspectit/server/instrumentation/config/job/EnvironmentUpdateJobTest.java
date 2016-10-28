@@ -1,6 +1,8 @@
 package rocks.inspectit.server.instrumentation.config.job;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
@@ -20,9 +22,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationEventPublisher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.ci.event.ClassInstrumentationChangedEvent;
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
 import rocks.inspectit.server.instrumentation.classcache.ClassCache;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheInstrumentation;
@@ -33,7 +37,9 @@ import rocks.inspectit.server.instrumentation.config.ConfigurationResolver;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
+import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableClassType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
@@ -92,10 +98,16 @@ public class EnvironmentUpdateJobTest extends TestBase {
 	protected ClassType classType;
 
 	@Mock
+	protected ImmutableClassType immutableClassType;
+
+	@Mock
 	protected SpecialMethodSensorAssignmentFactory functionalAssignmentFactory;
 
 	@Mock
 	protected EnvironmentUpdateEvent event;
+
+	@Mock
+	protected ApplicationEventPublisher eventPublisher;
 
 	@BeforeMethod
 	public void setup() throws Exception {
@@ -108,6 +120,10 @@ public class EnvironmentUpdateJobTest extends TestBase {
 		when(agentCacheEntry.getId()).thenReturn(PLATFORM_ID);
 
 		when(classCache.getInstrumentationService()).thenReturn(instrumentationService);
+
+		when(classType.isClass()).thenReturn(true);
+		when(classType.castToClass()).thenReturn(immutableClassType);
+		when(classType.getFQN()).thenReturn("fqn");
 
 		when(event.getAfter()).thenReturn(updateEnvironment);
 	}
@@ -125,7 +141,7 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			verify(agentConfiguration, times(0)).setInitialInstrumentationResults(Matchers.anyMap());
 			verify(agentConfiguration, times(0)).setClassCacheExistsOnCmr(Matchers.anyBoolean());
 
-			verifyZeroInteractions(classCache, environment, classCacheSearchNarrower, agentConfiguration, instrumentationService);
+			verifyZeroInteractions(classCache, environment, classCacheSearchNarrower, agentConfiguration, instrumentationService, eventPublisher);
 		}
 
 		@Test
@@ -148,6 +164,12 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			assertThat((Collection<IInstrumentationApplier>) captor.getValue(), hasSize(1));
 			assertThat(((Collection<IInstrumentationApplier>) captor.getValue()).iterator().next(), is(instrumentationApplier));
 
+			ArgumentCaptor<ClassInstrumentationChangedEvent> eventCaptor = ArgumentCaptor.forClass(ClassInstrumentationChangedEvent.class);
+			verify(eventPublisher).publishEvent(eventCaptor.capture());
+			assertThat(eventCaptor.getValue().getAgentId(), is(equalTo(PLATFORM_ID)));
+			assertThat(eventCaptor.getValue().getInstrumentationDefinitions(), contains(org.hamcrest.Matchers.<InstrumentationDefinition> hasProperty("className", equalTo("fqn"))));
+
+			verifyNoMoreInteractions(eventPublisher);
 			verifyZeroInteractions(environment, agentConfiguration);
 		}
 
@@ -173,6 +195,12 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			assertThat((Collection<ClassType>) captor.getValue(), hasSize(1));
 			assertThat(((Collection<ClassType>) captor.getValue()).iterator().next(), is(classType));
 
+			ArgumentCaptor<ClassInstrumentationChangedEvent> eventCaptor = ArgumentCaptor.forClass(ClassInstrumentationChangedEvent.class);
+			verify(eventPublisher).publishEvent(eventCaptor.capture());
+			assertThat(eventCaptor.getValue().getAgentId(), is(equalTo(PLATFORM_ID)));
+			assertThat(eventCaptor.getValue().getInstrumentationDefinitions(), contains(org.hamcrest.Matchers.<InstrumentationDefinition> hasProperty("className", equalTo("fqn"))));
+
+			verifyNoMoreInteractions(eventPublisher);
 			verifyZeroInteractions(environment, agentConfiguration);
 		}
 
@@ -194,7 +222,7 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			verify(instrumentationService, times(1)).removeInstrumentationPoints(types, Collections.singleton(instrumentationApplier));
 
 			verifyNoMoreInteractions(instrumentationService);
-			verifyZeroInteractions(environment, agentConfiguration);
+			verifyZeroInteractions(environment, agentConfiguration, eventPublisher);
 		}
 	}
 }

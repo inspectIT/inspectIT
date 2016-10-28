@@ -28,6 +28,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationEventPublisher;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.dao.JmxDefinitionDataIdentDao;
@@ -41,6 +42,7 @@ import rocks.inspectit.server.dao.impl.MethodIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.MethodSensorTypeIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformSensorTypeIdentDaoImpl;
+import rocks.inspectit.server.event.AgentRegisteredEvent;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
@@ -110,6 +112,9 @@ public class RegistrationServiceTest extends TestBase {
 	@Mock
 	Logger log;
 
+	@Mock
+	ApplicationEventPublisher eventPublisher;
+
 	public class RegisterPlatformIdent extends RegistrationServiceTest {
 		/**
 		 * Tests that an exception will be thrown if the database returns two or more platform
@@ -170,6 +175,10 @@ public class RegistrationServiceTest extends TestBase {
 			assertThat(argument.getValue().getTimeStamp(), is(notNullValue()));
 
 			verify(agentStatusDataProvider, times(1)).registerConnected(platformId);
+
+			ArgumentCaptor<AgentRegisteredEvent> eventCaptor = ArgumentCaptor.forClass(AgentRegisteredEvent.class);
+			verify(eventPublisher).publishEvent(eventCaptor.capture());
+			assertThat(eventCaptor.getValue().getPlatformIdent().getId(), is(equalTo(platformId)));
 		}
 
 		/**
@@ -660,4 +669,19 @@ public class RegistrationServiceTest extends TestBase {
 		}
 	}
 
+	/**
+	 * Tests the {@link RegistrationService#updateMethodIdentTimestamp(long, String, String)}
+	 * method.
+	 */
+	public static class UpdateMethodIdentTimestamp extends RegistrationServiceTest {
+
+		@Test
+		public void successfully() {
+			registrationService.updateMethodIdentTimestamp(10L, "package", "class");
+
+			verify(methodIdentDao).updateTimestamps(10L, "package", "class");
+			verify(platformIdentCache).markDirty(10L);
+		}
+
+	}
 }

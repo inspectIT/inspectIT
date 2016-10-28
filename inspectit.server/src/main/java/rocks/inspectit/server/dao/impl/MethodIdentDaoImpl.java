@@ -89,4 +89,15 @@ public class MethodIdentDaoImpl extends AbstractJpaDao<MethodIdent> implements M
 		return resultList;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateTimestamps(long platformId, String packageName, String className) {
+		Query updateQuery = getEntityManager().createNamedQuery(MethodIdent.UPDATE_TIMESTAMP_BY_CLASS);
+		updateQuery.setParameter("platformIdent", platformId);
+		updateQuery.setParameter("packageName", packageName);
+		updateQuery.setParameter("className", className);
+		updateQuery.executeUpdate();
+	}
 }

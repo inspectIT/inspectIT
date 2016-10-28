@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import rocks.inspectit.server.dao.MethodIdentToSensorTypeDao;
 import rocks.inspectit.server.dao.MethodSensorTypeIdentDao;
 import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.dao.PlatformSensorTypeIdentDao;
+import rocks.inspectit.server.event.AgentRegisteredEvent;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.server.util.PlatformIdentCache;
@@ -114,6 +116,12 @@ public class RegistrationService implements IRegistrationService {
 	PlatformIdentCache platformIdentCache;
 
 	/**
+	 * Event publisher.
+	 */
+	@Autowired
+	ApplicationEventPublisher eventPublisher;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -153,6 +161,10 @@ public class RegistrationService implements IRegistrationService {
 
 		agentStatusDataProvider.registerConnected(platformIdent.getId());
 
+		// publish agent registered event
+		AgentRegisteredEvent registeredEvent = new AgentRegisteredEvent(this, platformIdent);
+		eventPublisher.publishEvent(registeredEvent);
+
 		if (log.isInfoEnabled()) {
 			log.info("Successfully registered the Agent '" + agentName + "' with id " + platformIdent.getId() + ", version " + version + " and following network interfaces:");
 			printOutDefinedIPs(definedIPs);
@@ -176,6 +188,18 @@ public class RegistrationService implements IRegistrationService {
 		} else {
 			log.warn("No registered agent with given ID exists. Unregistration is aborted.");
 			throw new BusinessException("Unregister the agent with ID " + platformId + ".", AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateMethodIdentTimestamp(long platformId, String packageName, String className) {
+		try {
+			methodIdentDao.updateTimestamps(platformId, packageName, className);
+		} finally {
+			platformIdentCache.markDirty(platformId);
 		}
 	}
 

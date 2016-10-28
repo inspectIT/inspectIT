@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rocks.inspectit.server.instrumentation.NextGenInstrumentationManager;
+import rocks.inspectit.server.messaging.AgentMessageProvider;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.shared.all.cmr.service.IAgentService;
+import rocks.inspectit.shared.all.communication.message.IAgentMessage;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
@@ -40,6 +42,12 @@ public class AgentService implements IAgentService {
 	 */
 	@Autowired
 	NextGenInstrumentationManager nextGenInstrumentationManager;
+
+	/**
+	 * The {@link AgentMessageProvider}.
+	 */
+	@Autowired
+	AgentMessageProvider messageProvider;
 
 	/**
 	 * {@inheritDoc}
@@ -84,6 +92,15 @@ public class AgentService implements IAgentService {
 	@MethodLog
 	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException {
 		return nextGenInstrumentationManager.analyzeJmxAttributes(platformIdent, attributeDescriptors);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@MethodLog
+	public List<IAgentMessage<?>> fetchAgentMessages(long platformId) {
+		return messageProvider.fetchMessages(platformId);
 	}
 
 	/**
