@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.message.AbstractAgentMessage;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
@@ -152,4 +153,14 @@ public interface IConnection {
 	 */
 	Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws ServerUnavailableException;
 
+	/**
+	 * Fetches all {@link AbstractAgentMessage} which are available at the CMR.
+	 *
+	 * @param platformIdent
+	 *            Id of the agent.
+	 * @return Collection of {@link AbstractAgentMessage}s.
+	 * @throws ServerUnavailableException
+	 *             If agent with specified id does not exist.
+	 */
+	Collection<AbstractAgentMessage> fetchAgentMessages(long platformIdent) throws ServerUnavailableException;
 }

@@ -49,6 +49,10 @@
 		<Method name="premain" />
 		<Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" />
 	</Match>
+	<Match>
+		<Class name="rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent" />
+		<Bug pattern="SE_BAD_FIELD" />
+	</Match>
 	<!-- Agent ignores END -->
 
 	<!-- CMR ignores START -->
@@ -88,6 +92,10 @@
 		<Class name="rocks.inspectit.shared.cs.jaxb.JAXBTransformator" />
 		<Method name="marshall" />
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+	</Match>
+	<Match>
+		<Class name="rocks.inspectit.server.ci.event.ClassInstrumentationChangedEvent" />
+		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
 	<!-- CMR ignores END -->
 	

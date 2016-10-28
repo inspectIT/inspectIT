@@ -22,6 +22,8 @@ import rocks.inspectit.server.dao.MethodIdentToSensorTypeDao;
 import rocks.inspectit.server.dao.MethodSensorTypeIdentDao;
 import rocks.inspectit.server.dao.PlatformIdentDao;
 import rocks.inspectit.server.dao.PlatformSensorTypeIdentDao;
+import rocks.inspectit.server.messaging.AgentInstrumentationMessageGate;
+import rocks.inspectit.server.messaging.AgentMessageProvider;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.server.util.PlatformIdentCache;
@@ -114,6 +116,18 @@ public class RegistrationService implements IRegistrationService {
 	PlatformIdentCache platformIdentCache;
 
 	/**
+	 * The {@link AgentInstrumentationMessageGate}.
+	 */
+	@Autowired
+	AgentInstrumentationMessageGate messageGate;
+
+	/**
+	 * The {@link AgentMessageProvider}.
+	 */
+	@Autowired
+	AgentMessageProvider messageProvider;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -152,6 +166,10 @@ public class RegistrationService implements IRegistrationService {
 		platformIdentDao.saveOrUpdate(platformIdent);
 
 		agentStatusDataProvider.registerConnected(platformIdent.getId());
+
+		// reset instrumentation status
+		messageGate.clear(platformIdent.getId());
+		messageProvider.clear(platformIdent.getId());
 
 		if (log.isInfoEnabled()) {
 			log.info("Successfully registered the Agent '" + agentName + "' with id " + platformIdent.getId() + ", version " + version + " and following network interfaces:");

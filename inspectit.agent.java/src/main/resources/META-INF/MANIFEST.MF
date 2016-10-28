@@ -1,2 +1,3 @@
 Premain-Class: rocks.inspectit.agent.java.javaagent.JavaAgent
 Can-Redefine-Classes: true
+Can-Retransform-Classes: true

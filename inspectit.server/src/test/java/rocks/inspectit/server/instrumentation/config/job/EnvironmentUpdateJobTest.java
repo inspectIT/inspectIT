@@ -3,6 +3,7 @@ package rocks.inspectit.server.instrumentation.config.job;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
@@ -20,9 +21,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationEventPublisher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.ci.event.ClassInstrumentationChangedEvent;
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
 import rocks.inspectit.server.instrumentation.classcache.ClassCache;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheInstrumentation;
@@ -97,6 +100,9 @@ public class EnvironmentUpdateJobTest extends TestBase {
 	@Mock
 	protected EnvironmentUpdateEvent event;
 
+	@Mock
+	protected ApplicationEventPublisher eventPublisher;
+
 	@BeforeMethod
 	public void setup() throws Exception {
 		when(configurationHolder.getAgentConfiguration()).thenReturn(agentConfiguration);
@@ -125,7 +131,7 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			verify(agentConfiguration, times(0)).setInitialInstrumentationResults(Matchers.anyMap());
 			verify(agentConfiguration, times(0)).setClassCacheExistsOnCmr(Matchers.anyBoolean());
 
-			verifyZeroInteractions(classCache, environment, classCacheSearchNarrower, agentConfiguration, instrumentationService);
+			verifyZeroInteractions(classCache, environment, classCacheSearchNarrower, agentConfiguration, instrumentationService, eventPublisher);
 		}
 
 		@Test
@@ -148,6 +154,9 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			assertThat((Collection<IInstrumentationApplier>) captor.getValue(), hasSize(1));
 			assertThat(((Collection<IInstrumentationApplier>) captor.getValue()).iterator().next(), is(instrumentationApplier));
 
+			verify(eventPublisher).publishEvent(any(ClassInstrumentationChangedEvent.class));
+
+			verifyNoMoreInteractions(eventPublisher);
 			verifyZeroInteractions(environment, agentConfiguration);
 		}
 
@@ -173,6 +182,9 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			assertThat((Collection<ClassType>) captor.getValue(), hasSize(1));
 			assertThat(((Collection<ClassType>) captor.getValue()).iterator().next(), is(classType));
 
+			verify(eventPublisher).publishEvent(any(ClassInstrumentationChangedEvent.class));
+
+			verifyNoMoreInteractions(eventPublisher);
 			verifyZeroInteractions(environment, agentConfiguration);
 		}
 
@@ -194,7 +206,7 @@ public class EnvironmentUpdateJobTest extends TestBase {
 			verify(instrumentationService, times(1)).removeInstrumentationPoints(types, Collections.singleton(instrumentationApplier));
 
 			verifyNoMoreInteractions(instrumentationService);
-			verifyZeroInteractions(environment, agentConfiguration);
+			verifyZeroInteractions(environment, agentConfiguration, eventPublisher);
 		}
 	}
 }

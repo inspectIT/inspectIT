@@ -96,8 +96,8 @@ public class JavaAgent implements ClassFileTransformer {
 			@SuppressWarnings("resource")
 			InspectItClassLoader classLoader = new InspectItClassLoader(new URL[0]);
 			Class<?> agentClazz = classLoader.loadClass(INSPECTIT_AGENT);
-			Constructor<?> constructor = agentClazz.getConstructor(File.class);
-			Object realAgent = constructor.newInstance(getInspectItAgentJarFileLocation());
+			Constructor<?> constructor = agentClazz.getConstructor(File.class, Instrumentation.class);
+			Object realAgent = constructor.newInstance(getInspectItAgentJarFileLocation(), inst);
 
 			// we can reference the Agent now here because it should have been added to the
 			// bootclasspath and thus available from anywhere in the application
@@ -112,7 +112,7 @@ public class JavaAgent implements ClassFileTransformer {
 			// now we are analysing the already loaded classes by the jvm to instrument those
 			// classes, too
 			analyzeAlreadyLoadedClasses();
-			inst.addTransformer(new JavaAgent());
+			inst.addTransformer(new JavaAgent(), true);
 		} catch (Exception e) {
 			LOGGER.severe("Something unexpected happened while trying to initialize the Agent, aborting!");
 			e.printStackTrace(); // NOPMD

@@ -3,6 +3,7 @@ package rocks.inspectit.server.instrumentation.config.job;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
@@ -20,9 +21,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationEventPublisher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.ci.event.ClassInstrumentationChangedEvent;
 import rocks.inspectit.server.ci.event.ProfileUpdateEvent;
 import rocks.inspectit.server.instrumentation.classcache.ClassCache;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheInstrumentation;
@@ -85,6 +88,9 @@ public class ProfileUpdateJobTest extends TestBase {
 	@Mock
 	protected ProfileUpdateEvent event;
 
+	@Mock
+	protected ApplicationEventPublisher eventPublisher;
+
 	@BeforeMethod
 	public void setup() throws Exception {
 		when(configurationHolder.getAgentConfiguration()).thenReturn(agentConfiguration);
@@ -105,7 +111,7 @@ public class ProfileUpdateJobTest extends TestBase {
 
 			job.run();
 
-			verifyZeroInteractions(classCache, environment, classCacheSearchNarrower, agentConfiguration, instrumentationService);
+			verifyZeroInteractions(classCache, environment, classCacheSearchNarrower, agentConfiguration, instrumentationService, eventPublisher);
 		}
 
 		@Test
@@ -122,11 +128,14 @@ public class ProfileUpdateJobTest extends TestBase {
 
 			ArgumentCaptor<Collection> captor = ArgumentCaptor.forClass(Collection.class);
 			verify(instrumentationService, times(1)).addInstrumentationPoints(eq(types), eq(agentConfiguration), captor.capture());
+			verify(instrumentationService).getInstrumentationResults(types);
 
 			assertThat((Collection<IInstrumentationApplier>) captor.getValue(), hasSize(1));
 			assertThat(((Collection<IInstrumentationApplier>) captor.getValue()).iterator().next(), is(instrumentationApplier));
 
-			verifyNoMoreInteractions(instrumentationService);
+			verify(eventPublisher).publishEvent(any(ClassInstrumentationChangedEvent.class));
+
+			verifyNoMoreInteractions(instrumentationService, eventPublisher);
 			verifyZeroInteractions(environment);
 		}
 
@@ -144,6 +153,7 @@ public class ProfileUpdateJobTest extends TestBase {
 
 			ArgumentCaptor<Collection> captor = ArgumentCaptor.forClass(Collection.class);
 			verify(instrumentationService, times(1)).removeInstrumentationPoints(eq(types), captor.capture());
+			verify(instrumentationService).getInstrumentationResults(types);
 
 			assertThat((Collection<IInstrumentationApplier>) captor.getValue(), hasSize(1));
 			assertThat(((Collection<IInstrumentationApplier>) captor.getValue()).iterator().next(), is(instrumentationApplier));
@@ -153,7 +163,9 @@ public class ProfileUpdateJobTest extends TestBase {
 			assertThat((Collection<ClassType>) captor.getValue(), hasSize(1));
 			assertThat(((Collection<ClassType>) captor.getValue()).iterator().next(), is(classType));
 
-			verifyNoMoreInteractions(instrumentationService);
+			verify(eventPublisher).publishEvent(any(ClassInstrumentationChangedEvent.class));
+
+			verifyNoMoreInteractions(instrumentationService, eventPublisher);
 			verifyZeroInteractions(environment);
 		}
 
@@ -176,7 +188,7 @@ public class ProfileUpdateJobTest extends TestBase {
 			assertThat(((Collection<IInstrumentationApplier>) captor.getValue()).iterator().next(), is(instrumentationApplier));
 
 			verifyNoMoreInteractions(instrumentationService);
-			verifyZeroInteractions(environment);
+			verifyZeroInteractions(environment, eventPublisher);
 		}
 	}
 

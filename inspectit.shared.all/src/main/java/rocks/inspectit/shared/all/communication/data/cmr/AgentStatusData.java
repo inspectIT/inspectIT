@@ -46,6 +46,24 @@ public class AgentStatusData implements Serializable {
 	}
 
 	/**
+	 * Enumeration that defines the instrumentation status.
+	 *
+	 * @author Marius Oehler
+	 *
+	 */
+	public enum InstrumentationStatus {
+		/**
+		 * The agent has the latest instrumentation. This is default.
+		 */
+		UP_TO_DATE,
+
+		/**
+		 * The agent has not the latest instrumentation.
+		 */
+		PENDING;
+	}
+
+	/**
 	 * {@link AgentConnection}.
 	 */
 	private AgentConnection agentConnection;
@@ -71,10 +89,21 @@ public class AgentStatusData implements Serializable {
 	private long serverTimestamp;
 
 	/**
-	 * No-arg constructor. Sets {@link #agentConnection} to {@link AgentConnection#NEVER_CONNECTED}.
+	 * The time of the agent's last instrumentation update.
+	 */
+	private long lastInstrumentationUpate;
+
+	/**
+	 * The current {@link InstrumentationStatus}.
+	 */
+	private InstrumentationStatus instrumentationStatus;
+
+	/**
+	 * No-arg constructor. Calling {@link #AgentStatusData(AgentConnection)} using
+	 * {@link AgentConnection#NEVER_CONNECTED}.
 	 */
 	public AgentStatusData() {
-		this.agentConnection = AgentConnection.NEVER_CONNECTED;
+		this(AgentConnection.NEVER_CONNECTED);
 	}
 
 	/**
@@ -85,6 +114,7 @@ public class AgentStatusData implements Serializable {
 	 */
 	public AgentStatusData(AgentConnection agentConnection) {
 		this.agentConnection = agentConnection;
+		this.instrumentationStatus = InstrumentationStatus.UP_TO_DATE;
 	}
 
 	/**
@@ -182,6 +212,44 @@ public class AgentStatusData implements Serializable {
 	}
 
 	/**
+	 * Gets {@link #lastInstrumentationUpate}.
+	 *
+	 * @return {@link #lastInstrumentationUpate}
+	 */
+	public long getLastInstrumentationUpate() {
+		return this.lastInstrumentationUpate;
+	}
+
+	/**
+	 * Sets {@link #lastInstrumentationUpate}.
+	 *
+	 * @param lastInstrumentationUpate
+	 *            New value for {@link #lastInstrumentationUpate}
+	 */
+	public void setLastInstrumentationUpate(long lastInstrumentationUpate) {
+		this.lastInstrumentationUpate = lastInstrumentationUpate;
+	}
+
+	/**
+	 * Gets {@link #instrumentationStatus}.
+	 *
+	 * @return {@link #instrumentationStatus}
+	 */
+	public InstrumentationStatus getInstrumentationStatus() {
+		return this.instrumentationStatus;
+	}
+
+	/**
+	 * Sets {@link #instrumentationStatus}.
+	 *
+	 * @param instrumentationStatus
+	 *            New value for {@link #instrumentationStatus}
+	 */
+	public void setInstrumentationStatus(InstrumentationStatus instrumentationStatus) {
+		this.instrumentationStatus = instrumentationStatus;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -193,6 +261,7 @@ public class AgentStatusData implements Serializable {
 		result = (prime * result) + (int) (serverTimestamp ^ (serverTimestamp >>> 32));
 		result = (prime * result) + (int) (lastKeepAliveTimestamp ^ (lastKeepAliveTimestamp >>> 32));
 		result = (prime * result) + (int) (connectionTimestamp ^ (connectionTimestamp >>> 32));
+		result = (prime * result) + ((this.instrumentationStatus == null) ? 0 : this.instrumentationStatus.hashCode());
 		return result;
 	}
 
@@ -224,6 +293,9 @@ public class AgentStatusData implements Serializable {
 			return false;
 		}
 		if (connectionTimestamp != other.connectionTimestamp) {
+			return false;
+		}
+		if (instrumentationStatus != other.instrumentationStatus) {
 			return false;
 		}
 		return true;

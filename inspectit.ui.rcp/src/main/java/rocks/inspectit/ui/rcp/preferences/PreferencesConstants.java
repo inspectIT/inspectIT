@@ -94,4 +94,9 @@ public interface PreferencesConstants {
 	 * Warning for removing the exclude classes profile.
 	 */
 	String EXCLUDE_CLASSES_PROFILE_WARNING = "EXCLUDE_CLASSES_PROFILE_WARNING";
+
+	/**
+	 * Action when an instrumentation has been updated.
+	 */
+	String INSTRUMENTATION_UPDATED_AUTO_ACTION = "INSTRUMENTATION_UPDATED_AUTO_ACTION";
 }

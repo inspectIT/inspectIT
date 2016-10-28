@@ -29,6 +29,7 @@ import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
 import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.communication.message.AbstractAgentMessage;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
@@ -71,7 +72,7 @@ public class KryoNetConnection implements IConnection {
 	private IAgentService agentService;
 
 	/**
-	 * THe keep-alive service remote object to send keep-alive messages.
+	 * The keep-alive service remote object to send keep-alive messages.
 	 */
 	private IKeepAliveService keepAliveService;
 
@@ -452,7 +453,7 @@ public class KryoNetConnection implements IConnection {
 			return call.makeCall();
 		} catch (ExecutionException executionException) {
 			if (log.isTraceEnabled()) {
-				log.trace("analyze(long,Collection)", executionException);
+				log.trace("analyzeJmxAttributes(long,Collection)", executionException);
 			}
 
 			// otherwise we log and return null as it's unexpected exception for us
@@ -461,6 +462,41 @@ public class KryoNetConnection implements IConnection {
 		} catch (ServerUnavailableException e) {
 			if (!e.isServerTimeout()) {
 				disconnectClient();
+			}
+			throw e;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<AbstractAgentMessage> fetchAgentMessages(final long platformIdent) throws ServerUnavailableException {
+		if (!isConnected()) {
+			throw new ServerUnavailableException();
+		}
+
+		// make call
+		FailFastRemoteMethodCall<IAgentService, Collection<AbstractAgentMessage>> call = new FailFastRemoteMethodCall<IAgentService, Collection<AbstractAgentMessage>>(agentService) {
+			@Override
+			protected Collection<AbstractAgentMessage> performRemoteCall(IAgentService service) throws Exception {
+				return agentService.fetchAgentMessages(platformIdent);
+			}
+		};
+
+		try {
+			return call.makeCall();
+		} catch (ExecutionException executionException) {
+			if (log.isTraceEnabled()) {
+				log.trace("fetchAgentMessages(long,Collection)", executionException);
+			}
+
+			// otherwise we log and return null as it's unexpected exception for us
+			log.error("Could not fetch agent messages.", executionException);
+			return Collections.emptyList();
+		} catch (ServerUnavailableException e) {
+			if (!e.isServerTimeout()) {
+				stopClient();
 			}
 			throw e;
 		}

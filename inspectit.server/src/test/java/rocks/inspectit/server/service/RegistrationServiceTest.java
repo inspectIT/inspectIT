@@ -41,6 +41,8 @@ import rocks.inspectit.server.dao.impl.MethodIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.MethodSensorTypeIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformIdentDaoImpl;
 import rocks.inspectit.server.dao.impl.PlatformSensorTypeIdentDaoImpl;
+import rocks.inspectit.server.messaging.AgentInstrumentationMessageGate;
+import rocks.inspectit.server.messaging.AgentMessageProvider;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.server.util.PlatformIdentCache;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
@@ -108,6 +110,12 @@ public class RegistrationServiceTest extends TestBase {
 	PlatformIdentCache platformIdentCache;
 
 	@Mock
+	AgentInstrumentationMessageGate messageGate;
+
+	@Mock
+	AgentMessageProvider messageProvider;
+
+	@Mock
 	Logger log;
 
 	public class RegisterPlatformIdent extends RegistrationServiceTest {
@@ -170,6 +178,9 @@ public class RegistrationServiceTest extends TestBase {
 			assertThat(argument.getValue().getTimeStamp(), is(notNullValue()));
 
 			verify(agentStatusDataProvider, times(1)).registerConnected(platformId);
+
+			verify(messageGate).clear(platformId);
+			verify(messageProvider).clear(platformId);
 		}
 
 		/**
@@ -211,6 +222,9 @@ public class RegistrationServiceTest extends TestBase {
 			assertThat(argument.getValue().getTimeStamp(), is(not(timestamp)));
 
 			verify(agentStatusDataProvider, times(1)).registerConnected(platformId);
+
+			verify(messageGate).clear(platformId);
+			verify(messageProvider).clear(platformId);
 		}
 
 		/**
@@ -252,6 +266,9 @@ public class RegistrationServiceTest extends TestBase {
 			assertThat(argument.getValue().getTimeStamp(), is(notNullValue()));
 
 			verify(agentStatusDataProvider, times(1)).registerConnected(platformId);
+
+			verify(messageGate).clear(platformId);
+			verify(messageProvider).clear(platformId);
 		}
 
 		/**
@@ -295,6 +312,9 @@ public class RegistrationServiceTest extends TestBase {
 			assertThat(argument.getValue().getTimeStamp(), not(equalTo(timestamp)));
 
 			verify(agentStatusDataProvider, times(1)).registerConnected(platformId);
+
+			verify(messageGate).clear(platformId);
+			verify(messageProvider).clear(platformId);
 		}
 	}
 

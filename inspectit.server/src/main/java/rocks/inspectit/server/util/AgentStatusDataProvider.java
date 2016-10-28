@@ -20,6 +20,7 @@ import rocks.inspectit.server.event.AgentDeletedEvent;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.InstrumentationStatus;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
@@ -101,6 +102,10 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 		agentStatusData.setLastKeepAliveTimestamp(currentTimeMillis);
 		agentStatusData.setConnectionTimestamp(currentTimeMillis);
 		agentStatusData.setAgentConnection(AgentConnection.CONNECTED);
+		agentStatusData.setLastInstrumentationUpate(currentTimeMillis);
+
+		// set instrumentation status up-to-date
+		agentStatusData.setInstrumentationStatus(InstrumentationStatus.UP_TO_DATE);
 	}
 
 	/**

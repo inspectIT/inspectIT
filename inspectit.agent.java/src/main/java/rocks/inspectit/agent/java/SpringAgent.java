@@ -1,6 +1,7 @@
 package rocks.inspectit.agent.java;
 
 import java.io.File;
+import java.lang.instrument.Instrumentation;
 import java.util.Collection;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+import rocks.inspectit.agent.java.instrumentation.RetransformManager;
 import rocks.inspectit.agent.java.logback.LogInitializer;
 import rocks.inspectit.agent.java.spring.SpringConfiguration;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
@@ -75,6 +77,16 @@ public class SpringAgent implements IAgent {
 	private Collection<IMatchPattern> ignoreClassesPatterns;
 
 	/**
+	 * The {@link RetransformManager}.
+	 */
+	private RetransformManager retransformManager;
+
+	/**
+	 * The used {@link Instrumentation}.
+	 */
+	private final Instrumentation instrumentation;
+
+	/**
 	 * Thread local to control the instrumentation transform disabled states for threads.
 	 */
 	private ThreadLocal<Boolean> transformDisabledThreadLocal = new ThreadLocal<Boolean>() {
@@ -89,8 +101,12 @@ public class SpringAgent implements IAgent {
 	 *
 	 * @param inspectitJarFile
 	 *            The inspectIT jar file needed for proper logging
+	 * @param instrumentation
+	 *            The {@link Instrumentation} to use
 	 */
-	public SpringAgent(File inspectitJarFile) {
+	public SpringAgent(File inspectitJarFile, Instrumentation instrumentation) {
+		this.instrumentation = instrumentation;
+
 		setInspectITJarFile(inspectitJarFile);
 
 		// init logging
@@ -159,10 +175,13 @@ public class SpringAgent implements IAgent {
 			hookDispatcher = beanFactory.getBean(IHookDispatcher.class);
 			configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
 			byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
+			retransformManager = beanFactory.getBean(RetransformManager.class);
 
 			// load ignore patterns only once
 			ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
 
+			// inject instrumentation
+			retransformManager.setInstrumentation(instrumentation);
 		} catch (Throwable throwable) { // NOPMD
 			disableInstrumentation = true;
 			LOG.error("inspectIT agent initialization failed. Agent will not be active.", throwable);

@@ -1,6 +1,7 @@
 package rocks.inspectit.agent.java.connection.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +41,7 @@ import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.communication.message.AbstractAgentMessage;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
@@ -673,6 +676,78 @@ public class KryoNetConnectionTest extends TestBase {
 
 			try {
 				connection.instrumentationApplied(id, methodToSensorMap);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(false));
+				throw e;
+			} finally {
+				verifyZeroInteractions(agentService);
+			}
+		}
+	}
+
+	/**
+	 * Tests the {@link KryoNetConnection#fetchAgentMessages(long)} method.
+	 */
+	public static class FetchAgentMessages extends KryoNetConnectionTest {
+
+		@Test
+		public void fetchAgentMessages() throws Exception {
+			AbstractAgentMessage message = mock(AbstractAgentMessage.class);
+			Collection<AbstractAgentMessage> messages = Arrays.asList(message);
+			when(client.isConnected()).thenReturn(true);
+			long id = 7;
+			when(agentService.fetchAgentMessages(id)).thenReturn(messages);
+
+			Collection<AbstractAgentMessage> result = connection.fetchAgentMessages(id);
+
+			assertThat(result, is(equalTo(messages)));
+			verify(agentService).fetchAgentMessages(id);
+			verifyNoMoreInteractions(agentService);
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void timeout() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			long id = 7;
+			when(agentService.fetchAgentMessages(id)).thenThrow(TimeoutException.class);
+
+			try {
+				connection.fetchAgentMessages(id);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(true));
+				throw e;
+			} finally {
+				verify(agentService).fetchAgentMessages(id);
+				verifyNoMoreInteractions(agentService);
+			}
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void remoteException() throws Exception {
+			when(client.isConnected()).thenReturn(true);
+			long id = 7;
+			when(agentService.fetchAgentMessages(id)).thenThrow(RuntimeException.class);
+
+			try {
+				connection.fetchAgentMessages(id);
+			} catch (ServerUnavailableException e) {
+				assertThat(e.isServerTimeout(), is(false));
+				throw e;
+			} finally {
+				// fail fast call, only one attempt
+				verify(agentService).fetchAgentMessages(id);
+				verifyNoMoreInteractions(agentService);
+				verify(client).stop();
+			}
+		}
+
+		@Test(expectedExceptions = { ServerUnavailableException.class })
+		public void notConnected() throws Exception {
+			when(client.isConnected()).thenReturn(false);
+			long id = 7;
+
+			try {
+				connection.fetchAgentMessages(id);
 			} catch (ServerUnavailableException e) {
 				assertThat(e.isServerTimeout(), is(false));
 				throw e;
