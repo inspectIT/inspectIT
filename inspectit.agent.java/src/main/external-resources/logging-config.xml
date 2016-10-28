@@ -70,7 +70,7 @@
 	<!-- sensor logging, set this to 'debug' to get additional information about: - sensors -->
 	<logger name="rocks.inspectit.agent.java.sensor" level="info" />
 
-	<!-- hooking logging, set this to 'debug' to get additional information about: - hooks -->
+	<!-- hooking logging, set this to 'debug' to get additional information about: - hooks dispatching -->
 	<logger name="rocks.inspectit.agent.java.hooking" level="info" />
 
 	<!-- connection logging, set this to 'debug' to get additional information about: - communication -->
@@ -81,6 +81,9 @@
 	
 	<!-- analyzer logging, set this to 'debug' to get additional information about: - analyzers -->
 	<logger name="rocks.inspectit.agent.java.analyzer" level="info" />
+	
+	<!-- tracing logging, set this to 'debug' to get additional information about: - tracing -->
+	<logger name="rocks.inspectit.agent.java.tracing" level="info" />
 	
 	<!-- Needed for bridging minlog to slf4j -->
 	<!-- Set this to debug for more information about libs that use minlog: kryo, kryonet -->

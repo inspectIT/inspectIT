@@ -200,6 +200,7 @@ public interface InspectITImages {
 	String IMG_INFO_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "information-frame.png";
 	String IMG_NAVIGATION_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "navigation-frame.png";
 	String IMG_QUESTION_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "question-frame.png";
+	String IMG_REMOTE = InspectITConstants.ICON_PATH_FUGUE + "servers-network.png";
 
 	// Images originally from Fugue set we modified - license Creative Commons v3.0
 	String IMG_HTTP_PARAMETER = InspectITConstants.ICON_PATH_FUGUE + "http-parameter.png";

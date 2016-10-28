@@ -18,7 +18,7 @@ public class PreparedStatementParameterSensorConfig extends AbstractMethodSensor
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "JDBC Prepared Statement Parameter Sensor";
+	public static final String SENSOR_NAME = "JDBC Prepared Statement Parameter Sensor";
 
 	/**
 	 * Implementing class name.

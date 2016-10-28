@@ -27,6 +27,7 @@ import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor;
 import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingSensor;
+import rocks.inspectit.agent.java.tracing.core.Tracer;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.agent.java.util.ThreadLocalStack;
 import rocks.inspectit.agent.java.util.Timer;
@@ -44,6 +45,8 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 
 /**
  * The invocation sequence hook stores the record of the invocation sequences in a
@@ -68,6 +71,16 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * The Platform manager.
 	 */
 	private final IPlatformManager platformManager;
+
+	/**
+	 * The real core service needed to delegate spans to.
+	 */
+	private final ICoreService realCoreService;
+
+	/**
+	 * Current tracer for the spans.
+	 */
+	private final Tracer tracer;
 
 	/**
 	 * The property accessor.
@@ -125,6 +138,10 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 *            The timer.
 	 * @param platformManager
 	 *            The Platform manager.
+	 * @param coreService
+	 *            The real core service needed to delegate spans to.
+	 * @param tracer
+	 *            Current tracer for the spans.
 	 * @param propertyAccessor
 	 *            The property accessor.
 	 * @param param
@@ -132,9 +149,12 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * @param enhancedExceptionSensor
 	 *            If enhanced exception sensor is ON.
 	 */
-	public InvocationSequenceHook(Timer timer, IPlatformManager platformManager, IPropertyAccessor propertyAccessor, Map<String, Object> param, boolean enhancedExceptionSensor) {
+	public InvocationSequenceHook(Timer timer, IPlatformManager platformManager, ICoreService coreService, Tracer tracer, IPropertyAccessor propertyAccessor, Map<String, Object> param,
+			boolean enhancedExceptionSensor) {
 		this.timer = timer;
 		this.platformManager = platformManager;
+		this.realCoreService = coreService;
+		this.tracer = tracer;
 		this.propertyAccessor = propertyAccessor;
 		this.strConstraint = new StringConstraint(param);
 		this.enhancedExceptionSensor = enhancedExceptionSensor;
@@ -240,6 +260,12 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				double endTime = timeStack.pop().doubleValue();
 				double startTime = timeStack.pop().doubleValue();
 				double duration = endTime - startTime;
+
+				// check if we belong to a span
+				ServerSpan currentSpan = tracer.getCurrentSpan();
+				if (null != currentSpan) {
+					invocationSequenceData.setSpanIdent(currentSpan.getSpanIdent());
+				}
 
 				// complete the sequence and store the data object in the 'true'
 				// core service so that it can be transmitted to the server. we
@@ -501,6 +527,11 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			LoggingData loggingData = (LoggingData) dataObject;
 			invocationSequenceData.setLoggingData(loggingData);
 		}
+
+		if (AbstractSpan.class.isAssignableFrom(dataObject.getClass())) {
+			AbstractSpan span = (AbstractSpan) dataObject;
+			invocationSequenceData.setSpanIdent(span.getSpanIdent());
+		}
 	}
 
 	// //////////////////////////////////////////////
@@ -517,6 +548,11 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			return;
 		}
 		saveDataObject(methodSensorData.finalizeData());
+
+		// delegate to real core service in case of the span
+		if (AbstractSpan.class.isAssignableFrom(methodSensorData.getClass())) {
+			realCoreService.addMethodSensorData(sensorTypeId, methodId, prefix, methodSensorData);
+		}
 	}
 
 	/**

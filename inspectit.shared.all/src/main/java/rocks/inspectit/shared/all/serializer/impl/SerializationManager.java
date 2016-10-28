@@ -132,6 +132,10 @@ import rocks.inspectit.shared.all.serializer.IKryoProvider;
 import rocks.inspectit.shared.all.serializer.ISerializer;
 import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.tracing.constants.Tag;
+import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 import rocks.inspectit.shared.all.util.IHibernateUtil;
 import rocks.inspectit.shared.all.util.KryoNetNetwork;
 import rocks.inspectit.shared.all.util.TimeFrame;
@@ -395,6 +399,13 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-2226
 		kryo.register(SubstitutionDescriptor.class, new FieldSerializer<SubstitutionDescriptor>(kryo, SubstitutionDescriptor.class));
+
+		// added with INSPECTIT-1921
+		kryo.register(SpanIdent.class, new CustomCompatibleFieldSerializer<SpanIdent>(kryo, SpanIdent.class, schemaManager));
+		kryo.register(ClientSpan.class, new CustomCompatibleFieldSerializer<ClientSpan>(kryo, ClientSpan.class, schemaManager));
+		kryo.register(ServerSpan.class, new CustomCompatibleFieldSerializer<ServerSpan>(kryo, ServerSpan.class, schemaManager));
+		kryo.register(Tag.Http.class, new EnumSerializer(Tag.Http.class));
+		kryo.register(Tag.Jms.class, new EnumSerializer(Tag.Jms.class));
 	}
 
 	/**
