@@ -1,5 +1,8 @@
 package rocks.inspectit.server.instrumentation.config.job;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
@@ -7,12 +10,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
+import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableType;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
 
 /**
  * Job for an environment update.
  *
  * @author Ivan Senic
+ * @author Marius Oehler
  *
  */
 @Component
@@ -35,13 +40,17 @@ public class EnvironmentUpdateJob extends AbstractConfigurationChangeJob {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void run() {
+	protected Collection<ImmutableType> execute() {
 		// always update with new Environment
 		getConfigurationHolder().update(environmentUpdateEvent.getAfter(), getAgentId());
 
+		Collection<ImmutableType> changedClassTypes = new HashSet<>();
+
 		// then process removed and added assignments
-		super.processRemovedAssignments(environmentUpdateEvent.getRemovedSensorAssignments(functionalAssignmentFactory));
-		super.processAddedAssignments(environmentUpdateEvent.getAddedSensorAssignments(functionalAssignmentFactory));
+		changedClassTypes.addAll(super.processRemovedAssignments(environmentUpdateEvent.getRemovedSensorAssignments(functionalAssignmentFactory)));
+		changedClassTypes.addAll(super.processAddedAssignments(environmentUpdateEvent.getAddedSensorAssignments(functionalAssignmentFactory)));
+
+		return changedClassTypes;
 	}
 
 	/**

@@ -2,10 +2,12 @@ package rocks.inspectit.server.instrumentation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -19,16 +21,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.server.event.AgentRegisteredEvent;
 import rocks.inspectit.server.instrumentation.classcache.ClassCache;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheInstrumentation;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheLookup;
@@ -92,6 +98,9 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 	@Mock
 	ClassCacheModification modificationService;
 
+	@Mock
+	ApplicationEventPublisher eventPublisher;
+
 	@BeforeMethod
 	public void setup() {
 		when(classCacheFactory.getObject()).thenReturn(classCache);
@@ -99,6 +108,14 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 		when(classCache.getInstrumentationService()).thenReturn(instrumentationService);
 		when(classCache.getLookupService()).thenReturn(lookupService);
 		when(classCache.getModificationService()).thenReturn(modificationService);
+		doAnswer(new Answer<Future<?>>() {
+			@Override
+			public Future<?> answer(InvocationOnMock invocation) throws Throwable {
+				Runnable runnable = (Runnable) invocation.getArguments()[0];
+				runnable.run();
+				return null;
+			}
+		}).when(executor).submit(any(Runnable.class));
 	}
 
 	public class Register extends NextGenInstrumentationManagerTest {
@@ -135,13 +152,17 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 
 			assertThat(result, is(configuration));
 
+			ArgumentCaptor<AgentRegisteredEvent> eventCaptor = ArgumentCaptor.forClass(AgentRegisteredEvent.class);
+			verify(eventPublisher).publishEvent(eventCaptor.capture());
+			assertThat(eventCaptor.getValue().getPlatformId(), is(equalTo(id)));
 			verify(configurationResolver).getEnvironmentForAgent(definedIPs, agentName);
 			verify(registrationService).registerPlatformIdent(definedIPs, agentName, version);
 			verify(configurationHolder).update(environment, id);
 			verify(configurationHolder).getEnvironment();
 			verify(configurationHolder).getAgentConfiguration();
 			verify(configurationHolder).isInitialized();
-			verifyNoMoreInteractions(configurationResolver, registrationService, configurationHolder);
+			verify(executor).submit(any(Runnable.class));
+			verifyNoMoreInteractions(configurationResolver, registrationService, configurationHolder, eventPublisher, executor);
 			verifyZeroInteractions(classCache);
 		}
 

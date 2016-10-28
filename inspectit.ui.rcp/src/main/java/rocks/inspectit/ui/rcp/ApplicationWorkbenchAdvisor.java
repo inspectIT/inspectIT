@@ -6,6 +6,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import rocks.inspectit.ui.rcp.ci.listener.impl.InstrumentationUpdateListener;
 import rocks.inspectit.ui.rcp.job.CheckNewVersionJob;
 import rocks.inspectit.ui.rcp.perspective.AnalyzePerspective;
 
@@ -46,6 +47,12 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		// fire up the auto new version check
 		Job checkNewVersionJob = new CheckNewVersionJob(false);
 		checkNewVersionJob.schedule();
+
+		// register the instr. update listener
+		InstrumentationUpdateListener updateListener = new InstrumentationUpdateListener();
+		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().addAgentMappingsChangeListener(updateListener);
+		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().addEnvironmentChangeListener(updateListener);
+		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().addProfileChangeListener(updateListener);
 	}
 
 	/**

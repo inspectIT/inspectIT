@@ -2,8 +2,10 @@ package rocks.inspectit.server.instrumentation.classcache;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,6 +14,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.Callable;
@@ -683,4 +686,103 @@ public class ClassCacheLookupTest extends TestBase {
 		}
 	}
 
+	/**
+	 * Tests the {@link ClassCacheLookup#findInstrumentedTypes()} method.
+	 */
+	public class FindInstrumentedTypes extends ClassCacheLookupTest {
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void find() throws Exception {
+			when(fqnIndexer.findAll()).thenReturn(Arrays.asList(type));
+			when(type.isClass()).thenReturn(true);
+			when(type.isInitialized()).thenReturn(true);
+			when(type.castToClass()).thenReturn(classType);
+			when(classType.hasInstrumentationPoints()).thenReturn(true);
+
+			Collection<ImmutableType> result = (Collection<ImmutableType>) lookup.findInstrumentedTypes();
+
+			verify(classCache).executeWithReadLock(any(Callable.class));
+			verify(fqnIndexer).findAll();
+			verifyNoMoreInteractions(fqnIndexer, classCache);
+			verifyZeroInteractions(hashIndexer);
+			assertThat(result, hasSize(1));
+			assertThat(result, hasItem(type));
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void noInstrumentedTypes() throws Exception {
+			when(fqnIndexer.findAll()).thenReturn(Arrays.asList(type));
+			when(type.isClass()).thenReturn(true);
+			when(type.isInitialized()).thenReturn(true);
+			when(type.castToClass()).thenReturn(classType);
+			when(classType.hasInstrumentationPoints()).thenReturn(false);
+
+			Collection<? extends ImmutableType> result = lookup.findInstrumentedTypes();
+
+			verify(classCache).executeWithReadLock(any(Callable.class));
+			verify(fqnIndexer).findAll();
+			verifyNoMoreInteractions(fqnIndexer, classCache);
+			verifyZeroInteractions(hashIndexer);
+			assertThat(result, hasSize(0));
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void typeNotAClass() throws Exception {
+			when(fqnIndexer.findAll()).thenReturn(Arrays.asList(type));
+			when(type.isClass()).thenReturn(false);
+
+			Collection<? extends ImmutableType> result = lookup.findInstrumentedTypes();
+
+			verify(classCache).executeWithReadLock(any(Callable.class));
+			verify(fqnIndexer).findAll();
+			verifyNoMoreInteractions(fqnIndexer, classCache);
+			verifyZeroInteractions(hashIndexer);
+			assertThat(result, hasSize(0));
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void typeNotInitialized() throws Exception {
+			when(fqnIndexer.findAll()).thenReturn(Arrays.asList(type));
+			when(type.isClass()).thenReturn(true);
+			when(type.isInitialized()).thenReturn(false);
+
+			Collection<? extends ImmutableType> result = lookup.findInstrumentedTypes();
+
+			verify(classCache).executeWithReadLock(any(Callable.class));
+			verify(fqnIndexer).findAll();
+			verifyNoMoreInteractions(fqnIndexer, classCache);
+			verifyZeroInteractions(hashIndexer);
+			assertThat(result, hasSize(0));
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void noClassesLoaded() throws Exception {
+			Collection<? extends ImmutableType> result = lookup.findInstrumentedTypes();
+
+			verify(classCache).executeWithReadLock(any(Callable.class));
+			verify(fqnIndexer).findAll();
+			verifyNoMoreInteractions(fqnIndexer, classCache);
+			verifyZeroInteractions(hashIndexer);
+			assertThat(result, hasSize(0));
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void exceptionInCallable() throws Exception {
+			when(fqnIndexer.findAll()).thenThrow(RuntimeException.class);
+
+			Collection<? extends ImmutableType> result = lookup.findInstrumentedTypes();
+
+			verify(classCache).executeWithReadLock(any(Callable.class));
+			verify(fqnIndexer).findAll();
+			verifyNoMoreInteractions(fqnIndexer, classCache);
+			verifyZeroInteractions(hashIndexer);
+			assertThat(result, hasSize(0));
+		}
+	}
 }
