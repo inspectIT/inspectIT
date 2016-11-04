@@ -2,6 +2,7 @@ package rocks.inspectit.agent.java.sensor.method.jdbc;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
@@ -25,12 +26,12 @@ public class JDBCUrlExtractorTest {
 	@DataProvider
 	public Object[][] differentVendors() {
 		return new Object[][] { { "jdbc:h2:../../database/database/dvdstore22", "../../database/database/dvdstore22" },
-				{ "jdbc:h2:myh2server.mycompany.de:7000/dvdstore22", "myh2server.mycompany.de:7000/dvdstore22" }, { "jdbc:db2://mydb2instance:8000/mydatabase", "mydb2instance:8000/mydatabase" },
-				{ "jdbc:sqlserver://sqlserver\\myinstance:5000;prop1=1;prop2=2", "sqlserver\\myinstance:5000" }, { "jdbc:oracle:thin:@//myhost:1521/orcl", "myhost:1521/orcl" },
-				{ "jdbc:oracle:thin:@myhost:1521:orcl", "myhost:1521:orcl" }, { "jdbc:oracle:oci:@myhost:1521:orcl", "myhost:1521:orcl" },
-				{ "jdbc:mysql://localhost/test?user=monty&password=greatsqldb", "localhost/test" }, { "jdbc:postgresql:database", "database" },
-				{ "jdbc:postgresql://localhost/test", "localhost/test" }, { "jdbc:postgresql://localhost:5000/test", "localhost:5000/test" }, { "jdbc:odbc:HY_FLAT", "HY_FLAT" },
-				{ "jdbc:odbc:SQL_SERVER;user=sa;password=HerongYang", "SQL_SERVER" } };
+			{ "jdbc:h2:myh2server.mycompany.de:7000/dvdstore22", "myh2server.mycompany.de:7000/dvdstore22" }, { "jdbc:db2://mydb2instance:8000/mydatabase", "mydb2instance:8000/mydatabase" },
+			{ "jdbc:sqlserver://sqlserver\\myinstance:5000;prop1=1;prop2=2", "sqlserver\\myinstance:5000" }, { "jdbc:oracle:thin:@//myhost:1521/orcl", "myhost:1521/orcl" },
+			{ "jdbc:oracle:thin:@myhost:1521:orcl", "myhost:1521:orcl" }, { "jdbc:oracle:oci:@myhost:1521:orcl", "myhost:1521:orcl" },
+			{ "jdbc:mysql://localhost/test?user=monty&password=greatsqldb", "localhost/test" }, { "jdbc:postgresql:database", "database" },
+			{ "jdbc:postgresql://localhost/test", "localhost/test" }, { "jdbc:postgresql://localhost:5000/test", "localhost:5000/test" }, { "jdbc:odbc:HY_FLAT", "HY_FLAT" },
+			{ "jdbc:odbc:SQL_SERVER;user=sa;password=HerongYang", "SQL_SERVER" } };
 	}
 
 	@Test(dataProvider = "differentVendors")
@@ -44,5 +45,11 @@ public class JDBCUrlExtractorTest {
 		String invalid = "this is just an invalid format";
 		String result = extractor.extractURLfromJDBCURL(invalid);
 		assertThat(result, is(invalid));
+	}
+
+	@Test
+	public void urlIsNull() {
+		String result = extractor.extractURLfromJDBCURL(null);
+		assertThat(result, isEmptyString());
 	}
 }

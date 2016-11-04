@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -86,6 +87,7 @@ public class ConnectionMetaDataStorage {
 		}
 		try {
 			return storage.get(connection, new Callable<ConnectionMetaData>() {
+				@Override
 				public ConnectionMetaData call() throws Exception {
 					ConnectionMetaData data = dataExtractor.parse(connection);
 					return data != null ? data : EMPTY;
@@ -283,6 +285,9 @@ public class ConnectionMetaDataStorage {
 		 * @return the url.
 		 */
 		public String extractURLfromJDBCURL(String url) {
+			if (StringUtils.isEmpty(url)) {
+				return "";
+			}
 			try {
 				final Matcher matcher = urlPattern.matcher(url);
 				matcher.find();
