@@ -113,7 +113,7 @@ public class InstrumentationManagerViewPart extends ViewPart implements IRefresh
 		/**
 		 * Menu to be bounded.
 		 */
-		private static final String MENU_ID = "rocks.inspectit.ui.rcp.view.instrumentationManager.table";
+		private static final String MENU_ID = "rocks.inspectit.ui.rcp.ci.view.instrumentationManager.table";
 
 		/**
 		 * Input list of profiles.
