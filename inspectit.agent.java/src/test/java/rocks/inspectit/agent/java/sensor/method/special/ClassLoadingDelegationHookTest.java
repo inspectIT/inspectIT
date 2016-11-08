@@ -111,6 +111,7 @@ public class ClassLoadingDelegationHookTest extends TestBase {
 			assertThat(result, is(nullValue()));
 			verifyZeroInteractions(object, ssc);
 		}
+
 	}
 
 	public static class AfterBody extends ClassLoadingDelegationHookTest {

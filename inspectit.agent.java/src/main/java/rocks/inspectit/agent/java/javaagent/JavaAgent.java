@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import rocks.inspectit.agent.java.Agent;
 import rocks.inspectit.agent.java.IAgent;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
+import rocks.inspectit.agent.java.util.ClassLoadingUtil;
 
 /**
  * The JavaAgent is used since Java 5.0 to instrument classes before they are actually loaded by the
@@ -120,6 +121,7 @@ public class JavaAgent implements ClassFileTransformer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
 		boolean threadTransformDisabled = Agent.agent.isThreadTransformDisabled();
 		if (threadTransformDisabled) {
@@ -513,7 +515,7 @@ public class JavaAgent implements ClassFileTransformer {
 
 			boolean selfFirst = false;
 			if (!ignoreClasses.contains(name)) {
-				if (selfFirstClasses.contains(name)) {
+				if (selfFirstClasses.contains(name) || ClassLoadingUtil.isInspectITClass(name)) {
 					selfFirst = true;
 				}
 			}
