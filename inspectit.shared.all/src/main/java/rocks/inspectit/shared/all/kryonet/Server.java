@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.locks.LockSupport;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.util.IntMap;
@@ -191,12 +192,21 @@ public class Server implements EndPoint {
 									// the server connection.
 		}
 		long startTime = System.currentTimeMillis();
-		int select = 0;
-		if (timeout > 0) {
-			select = selector.select(timeout);
-		} else {
+
+		/* Changed by ISE start */
+		// select without timeout
+		int select = selector.selectNow();
+		while (select == 0) {
+			// if no operation is there sleep in 1ms periods until we reach the timeout
+			long elapsedTime = System.currentTimeMillis() - startTime;
+			if (elapsedTime > timeout) {
+				break;
+			}
+			LockSupport.parkNanos(1000000);
 			select = selector.selectNow();
 		}
+		/* Changed by ISE end */
+
 		if (select == 0) {
 			emptySelects++;
 			if (emptySelects == 100) {
