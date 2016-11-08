@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import java.lang.reflect.Constructor;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
@@ -111,6 +113,21 @@ public class ClassLoadingDelegationHookTest extends TestBase {
 			assertThat(result, is(nullValue()));
 			verifyZeroInteractions(object, ssc);
 		}
+
+		@Test
+		public void reflectAsmClassLoader() throws Exception {
+			Class<?> classLoaderClass = Class.forName("com.esotericsoftware.reflectasm.AccessClassLoader");
+			Constructor<?> constructor = classLoaderClass.getDeclaredConstructor(ClassLoader.class);
+			constructor.setAccessible(true);
+			Object classLoader = constructor.newInstance(this.getClass().getClassLoader());
+			Object[] parameters = new String[] { ClassLoadingDelegationHookTest.class.getName() };
+
+			Object result = hook.beforeBody(METHOD_ID, classLoader, parameters, ssc);
+
+			assertThat(result, is(nullValue()));
+			verifyZeroInteractions(ssc);
+		}
+
 	}
 
 	public static class AfterBody extends ClassLoadingDelegationHookTest {
