@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import rocks.inspectit.agent.java.config.impl.SpecialSensorConfig;
 import rocks.inspectit.agent.java.hooking.ISpecialHook;
+import rocks.inspectit.agent.java.util.ClassLoadingUtil;
 
 /**
  * Hook for the class loading delegation. In the
@@ -17,9 +18,9 @@ import rocks.inspectit.agent.java.hooking.ISpecialHook;
 public class ClassLoadingDelegationHook implements ISpecialHook {
 
 	/**
-	 * Our class start with {@value #CLASS_NAME_PREFIX}.
+	 * Fully qualified name of the reflect ASM Access class loader.
 	 */
-	private static final String CLASS_NAME_PREFIX = "rocks.inspectit";
+	private static final String REFLECTASM_ACCESS_CLASS_LOADER_FQN = "com.esotericsoftware.reflectasm.AccessClassLoader";
 
 	/**
 	 * Logger of the class.
@@ -31,7 +32,7 @@ public class ClassLoadingDelegationHook implements ISpecialHook {
 	 */
 	@Override
 	public Object beforeBody(long methodId, Object object, Object[] parameters, SpecialSensorConfig ssc) {
-		return loadClass(parameters);
+		return loadClass(object, parameters);
 	}
 
 	/**
@@ -49,15 +50,17 @@ public class ClassLoadingDelegationHook implements ISpecialHook {
 	 * String type.
 	 *
 	 * @see #loadClass(String)
+	 * @param classLoader
+	 *            Class loader loading the class (object where the method is executed).
 	 * @param params
 	 *            Original parameters passed to class loader.
 	 * @return Loaded class or <code>null</code>.
 	 */
-	private Class<?> loadClass(Object[] params) {
+	private Class<?> loadClass(Object classLoader, Object[] params) {
 		if ((null != params) && (params.length == 1)) {
 			Object p = params[0];
 			if (p instanceof String) {
-				return loadClass((String) p);
+				return loadClass(classLoader, (String) p);
 			}
 		}
 		return null;
@@ -69,14 +72,16 @@ public class ClassLoadingDelegationHook implements ISpecialHook {
 	 * the inspectIT class loader throws {@link ClassNotFoundException}, the target class loader
 	 * will be used.
 	 *
+	 * @param classLoader
+	 *            Class loader loading the class (object where the method is executed).
 	 * @param className
 	 *            Class name.
 	 * @return Loaded class or <code>null</code> if it can not be found with inspectIT class loader.
 	 */
-	private Class<?> loadClass(String className) {
-		if (loadWithInspectItClassLoader(className)) {
+	private Class<?> loadClass(Object classLoader, String className) {
+		if (loadWithInspectItClassLoader(classLoader, className)) {
 			try {
-				return getClass().getClassLoader().loadClass(className);
+				return getInspectITClassLoader().loadClass(className);
 			} catch (ClassNotFoundException e) {
 				LOG.warn("Class " + className + " could not be loaded with the inspectIT class loader, although it has the correct prefix.", e);
 				return null;
@@ -87,14 +92,27 @@ public class ClassLoadingDelegationHook implements ISpecialHook {
 	}
 
 	/**
-	 * Defines if the class should be loaded with our class loader.
+	 * Defines if the class should be loaded with our class loader. Only if the class starts with
+	 * the inspectIT prefix and the class loader trying to load the class is not the
+	 * {@value #REFLECTASM_ACCESS_CLASS_LOADER_FQN}.
 	 *
+	 * @param classLoader
+	 *            Class loader loading the class (object where the method is executed).
 	 * @param className
 	 *            Name of the class to load.
-	 * @return True if class name starts with {@value #CLASS_NAME_PREFIX}.
+	 * @return True if we should try to load this with the inspectIT class loader.
 	 */
-	private boolean loadWithInspectItClassLoader(String className) {
-		return className.startsWith(CLASS_NAME_PREFIX);
+	private boolean loadWithInspectItClassLoader(Object classLoader, String className) {
+		return ClassLoadingUtil.isInspectITClass(className) && !REFLECTASM_ACCESS_CLASS_LOADER_FQN.equals(classLoader.getClass().getName());
+	}
+
+	/**
+	 * Returns inspectIT class loader.
+	 *
+	 * @return Returns inspectIT class loader.
+	 */
+	private ClassLoader getInspectITClassLoader() {
+		return getClass().getClassLoader();
 	}
 
 }
