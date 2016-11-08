@@ -112,6 +112,9 @@ class TcpConnection {
 			Socket socket = socketChannel.socket();
 			socket.setTcpNoDelay(true);
 
+			// Added by ISE
+			socketInputStream = streamProvider.getSocketExtendedByteBufferInputStream(socketChannel);
+
 			selectionKey = socketChannel.register(selector, SelectionKey.OP_READ);
 
 			if (DEBUG) {
@@ -119,9 +122,6 @@ class TcpConnection {
 			}
 
 			lastReadTime = lastWriteTime = System.currentTimeMillis();
-
-			// Added by ISE
-			socketInputStream = streamProvider.getSocketExtendedByteBufferInputStream(socketChannel);
 
 			return selectionKey;
 		} catch (IOException ex) {
@@ -145,6 +145,9 @@ class TcpConnection {
 			socketChannel.configureBlocking(false);
 			this.socketChannel = socketChannel;
 
+			// Added by ISE
+			socketInputStream = streamProvider.getSocketExtendedByteBufferInputStream(socketChannel);
+
 			selectionKey = socketChannel.register(selector, SelectionKey.OP_READ);
 			selectionKey.attach(this);
 
@@ -153,9 +156,6 @@ class TcpConnection {
 			}
 
 			lastReadTime = lastWriteTime = System.currentTimeMillis();
-
-			// Added by ISE
-			socketInputStream = streamProvider.getSocketExtendedByteBufferInputStream(socketChannel);
 		} catch (IOException ex) {
 			close();
 			IOException ioEx = new IOException("Unable to connect to: " + remoteAddress);
