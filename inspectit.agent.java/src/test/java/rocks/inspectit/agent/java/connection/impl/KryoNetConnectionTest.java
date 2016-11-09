@@ -2,9 +2,11 @@ package rocks.inspectit.agent.java.connection.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -14,6 +16,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,6 +69,85 @@ public class KryoNetConnectionTest extends TestBase {
 	@Mock
 	IKeepAliveService keepAliveService;
 
+	public static class Connect extends KryoNetConnectionTest {
+
+		@Test
+		public void connect() throws IOException {
+			when(client.isConnected()).thenReturn(false);
+			String host = "host";
+			int port = 22;
+
+			connection.connect(host, port);
+
+			verify(client).start();
+			verify(client).connect(anyInt(), eq(host), eq(port));
+			verify(client, atLeast(1)).isConnected();
+			verifyNoMoreInteractions(client);
+		}
+
+		@Test
+		public void alreadyConnected() throws ConnectException {
+			when(client.isConnected()).thenReturn(true);
+
+			connection.connect("host", 22);
+
+			verify(client).isConnected();
+			verifyNoMoreInteractions(client);
+		}
+
+		@Test(expectedExceptions = ConnectException.class)
+		public void ioException() throws IOException {
+			when(client.isConnected()).thenReturn(false);
+			String host = "host";
+			int port = 22;
+			doThrow(IOException.class).when(client).connect(anyInt(), eq(host), eq(port));
+
+			connection.connect(host, port);
+		}
+	}
+
+	public static class Reconnect extends KryoNetConnectionTest {
+
+		@Test
+		public void reconnect() throws IOException {
+			when(client.isConnected()).thenReturn(false);
+
+			connection.reconnect();
+
+			verify(client).reconnect();
+			verify(client, atLeast(1)).isConnected();
+			verifyNoMoreInteractions(client);
+		}
+
+		@Test
+		public void alreadyConnected() throws ConnectException {
+			when(client.isConnected()).thenReturn(true);
+
+			connection.reconnect();
+
+			verify(client).isConnected();
+			verifyNoMoreInteractions(client);
+		}
+
+		@Test(expectedExceptions = ConnectException.class)
+		public void ioException() throws IOException {
+			when(client.isConnected()).thenReturn(false);
+			doThrow(IOException.class).when(client).reconnect();
+
+			connection.reconnect();
+		}
+	}
+
+	public static class Disconnect extends KryoNetConnectionTest {
+
+		@Test
+		public void disconnect() {
+			connection.disconnect();
+
+			verify(client).stop();
+		}
+	}
+
 	public static class KeepAlive extends KryoNetConnectionTest {
 
 		@Test
@@ -110,7 +193,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(keepAliveService, times(1)).sendKeepAlive(id);
 				verifyNoMoreInteractions(keepAliveService);
-				verify(client).stop();
+				verify(client).close();
 			}
 		}
 
@@ -178,7 +261,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// call depends on the retry strategy
 				verify(agentStorageService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).addDataObjects(measurements);
 				verifyNoMoreInteractions(agentStorageService);
-				verify(client).stop();
+				verify(client).close();
 			}
 		}
 
@@ -250,7 +333,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).register(Matchers.<List<String>> any(), eq(agentName), eq(version));
 				verifyNoMoreInteractions(agentService);
-				verify(client).stop();
+				verify(client).close();
 			}
 		}
 
@@ -331,7 +414,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).unregister(platformId);
 				verifyNoMoreInteractions(agentService);
-				verify(client).stop();
+				verify(client).close();
 			}
 		}
 
@@ -419,7 +502,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).analyze(id, hash, type);
 				verifyNoMoreInteractions(agentService);
-				verify(client).stop();
+				verify(client).close();
 			}
 		}
 
@@ -508,7 +591,7 @@ public class KryoNetConnectionTest extends TestBase {
 				// fail fast call, only one attempt
 				verify(agentService, times(1)).analyzeJmxAttributes(id, descriptors);
 				verifyNoMoreInteractions(agentService);
-				verify(client).stop();
+				verify(client).close();
 			}
 		}
 

@@ -99,21 +99,6 @@ public class KryoNetConnection implements IConnection {
 
 				startClient(host, port);
 
-				int agentStorageServiceId = IAgentStorageService.class.getAnnotation(ServiceInterface.class).serviceId();
-				agentStorageService = ObjectSpace.getRemoteObject(client, agentStorageServiceId, IAgentStorageService.class);
-				((RemoteObject) agentStorageService).setNonBlocking(true);
-				((RemoteObject) agentStorageService).setTransmitReturnValue(false);
-
-				int agentServiceServiceId = IAgentService.class.getAnnotation(ServiceInterface.class).serviceId();
-				agentService = ObjectSpace.getRemoteObject(client, agentServiceServiceId, IAgentService.class);
-				((RemoteObject) agentService).setNonBlocking(false);
-				((RemoteObject) agentService).setTransmitReturnValue(true);
-
-				int keepAliveServiceId = IKeepAliveService.class.getAnnotation(ServiceInterface.class).serviceId();
-				keepAliveService = ObjectSpace.getRemoteObject(client, keepAliveServiceId, IKeepAliveService.class);
-				((RemoteObject) keepAliveService).setNonBlocking(true);
-				((RemoteObject) keepAliveService).setTransmitReturnValue(false);
-
 				log.info("KryoNet: Connection established!");
 				connectionException = false;
 			} catch (Exception exception) {
@@ -125,6 +110,27 @@ public class KryoNetConnection implements IConnection {
 				if (log.isTraceEnabled()) {
 					log.trace("connect()", exception);
 				}
+				ConnectException e = new ConnectException(exception.getMessage());
+				e.initCause(exception);
+				throw e; // NOPMD root cause exception is set
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void reconnect() throws ConnectException {
+		if ((null != client) && !isConnected()) {
+			try {
+				reconnectClient();
+
+				log.info("KryoNet: Reconnection successful!");
+				connectionException = false;
+			} catch (Exception exception) {
+				connectionException = true;
+
 				ConnectException e = new ConnectException(exception.getMessage());
 				e.initCause(exception);
 				throw e; // NOPMD root cause exception is set
@@ -159,6 +165,29 @@ public class KryoNetConnection implements IConnection {
 		if (null != client) {
 			client.start();
 			client.connect(5000, host, port);
+			bindServices();
+		}
+	}
+
+	/**
+	 * Reconnects the client if it's not already connected.
+	 *
+	 * @throws IOException
+	 *             If {@link IOException} occurs during the connection.
+	 */
+	private void reconnectClient() throws IOException {
+		if (!isConnected()) {
+			client.reconnect();
+			bindServices();
+		}
+	}
+
+	/**
+	 * Closes the client (disconnects the client) if the client is connected.
+	 */
+	private void disconnectClient() {
+		if (isConnected()) {
+			client.close();
 		}
 	}
 
@@ -168,6 +197,28 @@ public class KryoNetConnection implements IConnection {
 	private void stopClient() {
 		if (null != client) {
 			client.stop();
+		}
+	}
+
+	/**
+	 * Binds services if client is connected.
+	 */
+	private void bindServices() {
+		if (client.isConnected()) {
+			int agentStorageServiceId = IAgentStorageService.class.getAnnotation(ServiceInterface.class).serviceId();
+			agentStorageService = ObjectSpace.getRemoteObject(client, agentStorageServiceId, IAgentStorageService.class);
+			((RemoteObject) agentStorageService).setNonBlocking(true);
+			((RemoteObject) agentStorageService).setTransmitReturnValue(false);
+
+			int agentServiceServiceId = IAgentService.class.getAnnotation(ServiceInterface.class).serviceId();
+			agentService = ObjectSpace.getRemoteObject(client, agentServiceServiceId, IAgentService.class);
+			((RemoteObject) agentService).setNonBlocking(false);
+			((RemoteObject) agentService).setTransmitReturnValue(true);
+
+			int keepAliveServiceId = IKeepAliveService.class.getAnnotation(ServiceInterface.class).serviceId();
+			keepAliveService = ObjectSpace.getRemoteObject(client, keepAliveServiceId, IKeepAliveService.class);
+			((RemoteObject) keepAliveService).setNonBlocking(true);
+			((RemoteObject) keepAliveService).setTransmitReturnValue(false);
 		}
 	}
 
@@ -195,7 +246,7 @@ public class KryoNetConnection implements IConnection {
 			log.error("Exception thrown while trying to send keep-alive signal to the server.", e);
 		} catch (ServerUnavailableException e) {
 			if (!e.isServerTimeout()) {
-				stopClient();
+				disconnectClient();
 			}
 			throw e;
 		}
@@ -245,7 +296,7 @@ public class KryoNetConnection implements IConnection {
 			throw new RegistrationException("Could not register the platform", executionException.getCause()); // NOPMD
 		} catch (ServerUnavailableException e) {
 			if (!e.isServerTimeout()) {
-				stopClient();
+				disconnectClient();
 			}
 			throw e;
 		}
@@ -283,7 +334,7 @@ public class KryoNetConnection implements IConnection {
 			throw new RegistrationException("Could not un-register the platform", executionException.getCause()); // NOPMD
 		} catch (ServerUnavailableException e) {
 			if (!e.isServerTimeout()) {
-				stopClient();
+				disconnectClient();
 			}
 			throw e;
 		}
@@ -307,7 +358,7 @@ public class KryoNetConnection implements IConnection {
 				log.error("Could not send data objects", executionException);
 			} catch (ServerUnavailableException e) {
 				if (!e.isServerTimeout()) {
-					stopClient();
+					disconnectClient();
 				}
 				throw e;
 			}
@@ -348,7 +399,7 @@ public class KryoNetConnection implements IConnection {
 			return null;
 		} catch (ServerUnavailableException e) {
 			if (!e.isServerTimeout()) {
-				stopClient();
+				disconnectClient();
 			}
 			throw e;
 		}
@@ -372,7 +423,7 @@ public class KryoNetConnection implements IConnection {
 				log.error("Could not sent instrumented method ids", executionException);
 			} catch (ServerUnavailableException e) {
 				if (!e.isServerTimeout()) {
-					stopClient();
+					disconnectClient();
 				}
 				throw e;
 			}
@@ -409,7 +460,7 @@ public class KryoNetConnection implements IConnection {
 			return Collections.emptyList();
 		} catch (ServerUnavailableException e) {
 			if (!e.isServerTimeout()) {
-				stopClient();
+				disconnectClient();
 			}
 			throw e;
 		}

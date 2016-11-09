@@ -75,7 +75,7 @@ class TcpConnection {
 	int keepAliveMillis = 8000;
 	final ByteBuffer readBuffer, writeBuffer;
 	boolean bufferPositionFix;
-	int timeoutMillis = 12000;
+	int timeoutMillis = 20000; // ISE: increased to 20s
 	float idleThreshold = 0.1f;
 
 	final IExtendedSerialization serialization; // Changed by ISE
@@ -200,7 +200,6 @@ class TcpConnection {
 		// reset stream
 		socketInputStream.reset(length);
 
-		lastReadTime = System.currentTimeMillis();
 		currentObjectLength = 0;
 
 		// read object
@@ -211,6 +210,7 @@ class TcpConnection {
 			throw new KryoNetException("Error during deserialization.", ex);
 		}
 
+		lastReadTime = System.currentTimeMillis();
 		return object;
 	}
 

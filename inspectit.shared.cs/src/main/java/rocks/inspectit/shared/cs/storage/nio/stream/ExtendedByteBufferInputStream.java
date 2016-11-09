@@ -17,14 +17,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
 import rocks.inspectit.shared.all.storage.nio.stream.AbstractExtendedByteBufferInputStream;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageDescriptor;
@@ -49,12 +47,6 @@ import rocks.inspectit.shared.cs.storage.nio.read.ReadingChannelManager;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInputStream {
-
-	/**
-	 * The log of this class.
-	 */
-	@Log
-	Logger log;
 
 	/**
 	 * {@link ReadingChannelManager}.

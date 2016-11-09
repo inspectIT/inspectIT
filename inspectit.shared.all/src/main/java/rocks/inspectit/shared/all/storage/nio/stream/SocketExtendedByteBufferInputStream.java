@@ -6,15 +6,12 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Input stream that uses {@link SocketChannel} as input and provides bytes via our
@@ -27,12 +24,6 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBufferInputStream {
-
-	/**
-	 * The log of this class.
-	 */
-	@Log
-	Logger log;
 
 	/**
 	 * {@link SocketChannel} to read from.
