@@ -13,148 +13,152 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings("PMD")
-public class SocketExtendedByteBufferInputStreamTest {
+public class SocketExtendedByteBufferInputStreamTest extends TestBase {
 
 	/**
 	 * Class under test.
 	 */
-	private SocketExtendedByteBufferInputStream inputStream;
+	@InjectMocks
+	SocketExtendedByteBufferInputStream inputStream;
 
 	@Mock
-	private ByteBufferProvider byteBufferProvider;
+	ByteBufferProvider byteBufferProvider;
 
 	@Mock
-	private SocketChannel socketChannel;
+	SocketChannel socketChannel;
+
+	@Mock
+	Logger log;
 
 	/**
 	 * Executor service needed for the handler. Can not be mocked.
 	 */
-	private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+	ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
 	/**
 	 * Init.
 	 */
 	@BeforeMethod
 	public void init() {
-		MockitoAnnotations.initMocks(this);
-		inputStream = new SocketExtendedByteBufferInputStream();
-		inputStream.setByteBufferProvider(byteBufferProvider);
 		inputStream.setExecutorService(executorService);
-		inputStream.setSocketChannel(socketChannel);
 	}
 
-	/**
-	 * Tests reading of random size.
-	 *
-	 * @throws IOException
-	 */
-	@Test(invocationCount = 50)
-	public void read() throws IOException {
-		Random random = new Random();
-		final int readSize = random.nextInt(8096);
-		final int bufferSize = 1024;
-		final byte[] array = new byte[readSize];
-		random.nextBytes(array);
+	public static class Read extends SocketExtendedByteBufferInputStreamTest {
+		/**
+		 * Tests reading of random size.
+		 *
+		 * @throws IOException
+		 */
+		@Test(invocationCount = 50)
+		public void read() throws IOException {
+			Random random = new Random();
+			final int readSize = random.nextInt(8096);
+			final int bufferSize = 1024;
+			final byte[] array = new byte[readSize];
+			random.nextBytes(array);
 
-		when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
-			@Override
-			public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
-				return ByteBuffer.allocateDirect(bufferSize);
-			}
-		});
+			when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
+				@Override
+				public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
+					return ByteBuffer.allocateDirect(bufferSize);
+				}
+			});
 
-		when(socketChannel.read(Matchers.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
-			int readPosition = 0;
+			when(socketChannel.read(Matchers.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
+				int readPosition = 0;
 
-			@Override
-			public Integer answer(InvocationOnMock invocation) throws Throwable {
-				Object[] args = invocation.getArguments();
-				ByteBuffer byteBuffer = (ByteBuffer) args[0];
+				@Override
+				public Integer answer(InvocationOnMock invocation) throws Throwable {
+					Object[] args = invocation.getArguments();
+					ByteBuffer byteBuffer = (ByteBuffer) args[0];
 
-				int remaining = byteBuffer.remaining();
+					int remaining = byteBuffer.remaining();
 
-				int toRead = remaining > (array.length - readPosition) ? array.length - readPosition : remaining;
-				byteBuffer.put(array, readPosition, toRead);
-				int newRemaning = byteBuffer.remaining();
+					int toRead = remaining > (array.length - readPosition) ? array.length - readPosition : remaining;
+					byteBuffer.put(array, readPosition, toRead);
+					int newRemaning = byteBuffer.remaining();
 
-				readPosition += remaining - newRemaning;
+					readPosition += remaining - newRemaning;
 
-				return remaining - newRemaning;
-			}
-		});
+					return remaining - newRemaning;
+				}
+			});
 
-		inputStream.prepare();
-		inputStream.reset(readSize);
+			inputStream.prepare();
+			inputStream.reset(readSize);
 
-		byte[] bytes = new byte[readSize];
-		int read = inputStream.read(bytes, 0, readSize);
+			byte[] bytes = new byte[readSize];
+			int read = inputStream.read(bytes, 0, readSize);
 
-		assertThat(read, is(readSize));
-		assertThat(bytes, is(equalTo(array)));
-	}
+			assertThat(read, is(readSize));
+			assertThat(bytes, is(equalTo(array)));
+		}
 
-	@Test(expectedExceptions = IOException.class)
-	public void endOfStream() throws IOException {
-		Random random = new Random();
-		final int readSize = random.nextInt(8096);
-		final int bufferSize = 1024;
-		final byte[] array = new byte[readSize];
-		random.nextBytes(array);
+		@Test(expectedExceptions = IOException.class)
+		public void endOfStream() throws IOException {
+			Random random = new Random();
+			final int readSize = random.nextInt(8096);
+			final int bufferSize = 1024;
+			final byte[] array = new byte[readSize];
+			random.nextBytes(array);
 
-		when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
-			@Override
-			public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
-				return ByteBuffer.allocateDirect(bufferSize);
-			}
-		});
+			when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
+				@Override
+				public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
+					return ByteBuffer.allocateDirect(bufferSize);
+				}
+			});
 
-		when(socketChannel.read(Matchers.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
-			@Override
-			public Integer answer(InvocationOnMock invocation) throws Throwable {
-				return -1;
-			}
-		});
+			when(socketChannel.read(Matchers.<ByteBuffer> any())).thenAnswer(new Answer<Integer>() {
+				@Override
+				public Integer answer(InvocationOnMock invocation) throws Throwable {
+					return -1;
+				}
+			});
 
-		inputStream.prepare();
-		inputStream.reset(readSize);
+			inputStream.prepare();
+			inputStream.reset(readSize);
 
-		byte[] bytes = new byte[readSize];
-		inputStream.read(bytes, 0, readSize);
-	}
+			byte[] bytes = new byte[readSize];
+			inputStream.read(bytes, 0, readSize);
+		}
 
-	@Test(expectedExceptions = IOException.class)
-	public void ioExceptionOnRead() throws IOException {
-		Random random = new Random();
-		final int readSize = random.nextInt(8096);
-		final int bufferSize = 1024;
-		final byte[] array = new byte[readSize];
-		random.nextBytes(array);
+		@Test(expectedExceptions = IOException.class)
+		public void ioExceptionOnRead() throws IOException {
+			Random random = new Random();
+			final int readSize = random.nextInt(8096);
+			final int bufferSize = 1024;
+			final byte[] array = new byte[readSize];
+			random.nextBytes(array);
 
-		when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
-			@Override
-			public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
-				return ByteBuffer.allocateDirect(bufferSize);
-			}
-		});
+			when(byteBufferProvider.acquireByteBuffer()).thenAnswer(new Answer<ByteBuffer>() {
+				@Override
+				public ByteBuffer answer(InvocationOnMock invocation) throws Throwable {
+					return ByteBuffer.allocateDirect(bufferSize);
+				}
+			});
 
-		doThrow(IOException.class).when(socketChannel).read(Matchers.<ByteBuffer> any());
+			doThrow(IOException.class).when(socketChannel).read(Matchers.<ByteBuffer> any());
 
-		inputStream.prepare();
-		inputStream.reset(readSize);
+			inputStream.prepare();
+			inputStream.reset(readSize);
 
-		byte[] bytes = new byte[readSize];
-		inputStream.read(bytes, 0, readSize);
+			byte[] bytes = new byte[readSize];
+			inputStream.read(bytes, 0, readSize);
+		}
 	}
 
 }

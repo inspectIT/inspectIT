@@ -33,6 +33,15 @@ public interface IConnection {
 	void connect(String host, int port) throws ConnectException;
 
 	/**
+	 * Tries to reconnect to the server. Note that this method can be called only if the connection
+	 * has been already connected before and it's currently disconnected. Otherwise has no effect.
+	 *
+	 * @throws ConnectException
+	 *             Throws a ConnectException if there was a problem reconnecting to the repository.
+	 */
+	void reconnect() throws ConnectException;
+
+	/**
 	 * Disconnect from the server if possible.
 	 */
 	void disconnect();

@@ -5,10 +5,12 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.esotericsoftware.kryo.io.ByteBufferInputStream;
 
+import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
 
 /**
@@ -41,7 +43,13 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 	/**
 	 * MAx amount of tries to get the full or empty buffer from the queues.
 	 */
-	protected static final int MAX_BUFFER_POOL_TRIES = 30;
+	protected static final int MAX_BUFFER_POOL_TRIES = 100;
+
+	/**
+	 * Logger of this class.
+	 */
+	@Log
+	protected Logger log;
 
 	/**
 	 * {@link ByteBufferProvider}.
@@ -227,6 +235,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 				}
 			}
 		} catch (ReadFailedException e) {
+			log.warn("Read failed, can not get full byte buffer.", e);
 			throw new IOException("Read from the input stream failed.", e);
 		}
 	}
@@ -255,8 +264,10 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 					break;
 				} else {
 					tries++;
-					if (readFailed || (tries > MAX_BUFFER_POOL_TRIES)) {
-						throw new ReadFailedException("Time-out trying to get the full byte buffer to read from.");
+					if (readFailed) {
+						throw new ReadFailedException("Read failed signal received.");
+					} else if (tries > MAX_BUFFER_POOL_TRIES) {
+						throw new ReadFailedException("Time-out trying to get the full byte buffer to read after " + TimeUnit.MILLISECONDS.toSeconds(100 * MAX_BUFFER_POOL_TRIES) + " sec.");
 					}
 				}
 			} catch (InterruptedException e) {
