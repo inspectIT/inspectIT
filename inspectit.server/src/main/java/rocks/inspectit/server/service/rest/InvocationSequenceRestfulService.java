@@ -77,6 +77,10 @@ public class InvocationSequenceRestfulService {
 	 *            End of time period.
 	 * @param latestReadId
 	 *            Latest read ID of the invocations, only invocations with higher id are submitted.
+	 * @param businessTrxId
+	 *            Business transaction ID.
+	 * @param applicationId
+	 *            Application ID.
 	 * @param limit
 	 *            The limit/size of the results.
 	 * @param minDuration
@@ -85,14 +89,15 @@ public class InvocationSequenceRestfulService {
 	 */
 	@RequestMapping(method = GET, value = "")
 	@ResponseBody
-	public List<InvocationSequenceData> getInvocationSequenceOverview(@RequestParam(value = "agentId", required = false, defaultValue = "0") Long agentId,
+	public List<InvocationSequenceData> getInvocationSequenceOverview(@RequestParam(value = "agentId", required = false, defaultValue = "0") Long agentId, // NOCHK
 			@RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date fromDate,
 			@RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date toDate,
-			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") long latestReadId,
-			@RequestParam(value = "limit", defaultValue = "100") int limit,
-			@RequestParam(value = "minDuration", defaultValue = "0") long minDuration) {
+			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") Long latestReadId,
+			@RequestParam(value = "businessTrxId", required = false, defaultValue = "0") int businessTrxId, @RequestParam(value = "appId", required = false, defaultValue = "0") int applicationId,
+			@RequestParam(value = "limit", defaultValue = "100") int limit, @RequestParam(value = "minDuration", defaultValue = "0") long minDuration) {
 
-		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(agentId, limit, fromDate, toDate, latestReadId + 1, OVERVIEW_COMPARATOR);
+		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(agentId, limit, fromDate, toDate, latestReadId + 1, businessTrxId, applicationId,
+				OVERVIEW_COMPARATOR);
 
 		// manually filter the duration
 		for (Iterator<InvocationSequenceData> it = result.iterator(); it.hasNext();) {

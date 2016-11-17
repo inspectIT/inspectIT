@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
@@ -22,6 +24,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "string-matching")
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class StringMatchingExpression extends AbstractExpression {
 	/**
 	 * Matching type to use for comparing the string value against a snippet.
