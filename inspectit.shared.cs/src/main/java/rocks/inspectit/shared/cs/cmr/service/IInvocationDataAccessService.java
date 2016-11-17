@@ -140,13 +140,24 @@ public interface IInvocationDataAccessService {
 	 *            Date include invocation to.
 	 * @param minId
 	 *            Only invocations with equal or higher id are submitted.
+	 * @param businessTrxId
+	 *            Business transaction ID. If the zero value is passed, looking for the objects will
+	 *            be done on all business transactions.
+	 * @param applicationId
+	 *            Application ID. If the zero value is passed, looking for the objects will be done
+	 *            on all applications.
+	 * @param alertId
+	 *            Alert ID. If the zero value is passed, looking for the objects will be done on all
+	 *            alerts.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
 	 * @return Returns the list of invocation sequences.
+	 * @throws BusinessException
+	 *             If data cannot be retrieved.
 	 */
-	List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
-			ResultComparator<InvocationSequenceData> resultComparator);
+	List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, String alertId, // NOCHK
+			ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException;
 
 	/**
 	 * Returns a list of {@link InvocationSequenceData} objects belonging to an alert defined by the

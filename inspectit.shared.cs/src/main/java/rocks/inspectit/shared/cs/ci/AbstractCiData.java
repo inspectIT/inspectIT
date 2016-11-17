@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.cs.jaxb.AbstractSchemaVersionAware;
 
 /**
@@ -59,6 +61,7 @@ public abstract class AbstractCiData extends AbstractSchemaVersionAware {
 	 * Revision. Server for version control and updating control.
 	 */
 	@XmlAttribute(name = "revision")
+	@JsonIgnore
 	private Integer revision = Integer.valueOf(1);
 
 	/**
