@@ -145,13 +145,15 @@ public interface InvocationDataDao {
 	 * @param applicationId
 	 *            Application ID. If the zero value is passed, looking for the objects will be done
 	 *            on all applications.
+	 * @param invocationIdCollection
+	 *            Collections of invocations IDs to search.
 	 * @param comparator
 	 *            Comparator to compare results with. If <code>null</code> is passed default
 	 *            comparator will be used (in this case Timestamp comparator).
 	 * @return Returns the list of invocation sequences.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, int businessTrxId, int applicationId, // NOCHK
-			Comparator<? super InvocationSequenceData> comparator);
+			Collection<Long> invocationIdCollection, Comparator<? super InvocationSequenceData> comparator);
 
 	/**
 	 * Returns a list of {@link InvocationSequenceData} objects from the buffer. This method returns
