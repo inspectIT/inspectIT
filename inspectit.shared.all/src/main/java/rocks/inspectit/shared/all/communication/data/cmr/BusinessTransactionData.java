@@ -1,5 +1,7 @@
 package rocks.inspectit.shared.all.communication.data.cmr;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * Data object representing a recognized business transaction of an application.
  *
@@ -20,6 +22,7 @@ public class BusinessTransactionData {
 	/**
 	 * {@link ApplicationData} instance this business transaction belongs to.
 	 */
+	@JsonIgnore
 	private ApplicationData application;
 
 	/**

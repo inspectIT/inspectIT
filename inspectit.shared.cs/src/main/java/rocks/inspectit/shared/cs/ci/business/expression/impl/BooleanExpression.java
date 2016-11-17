@@ -5,6 +5,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.ci.business.expression.AbstractExpression;
@@ -17,6 +20,7 @@ import rocks.inspectit.shared.cs.ci.business.expression.AbstractExpression;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "boolean")
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class BooleanExpression extends AbstractExpression {
 	/**
 	 * Boolean value.

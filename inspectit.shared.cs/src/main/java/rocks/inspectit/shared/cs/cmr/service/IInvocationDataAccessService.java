@@ -145,7 +145,8 @@ public interface IInvocationDataAccessService {
 	 *            that case no sorting will be done.
 	 * @return Returns the list of invocation sequences.
 	 */
-	List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, ResultComparator<InvocationSequenceData> resultComparator);
+	List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
+			ResultComparator<InvocationSequenceData> resultComparator);
 
 	/**
 	 * This service method is used to get all the details of a specific invocation sequence.
@@ -174,5 +175,4 @@ public interface IInvocationDataAccessService {
 	 *             If data cannot be retrieved.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException;
-
 }

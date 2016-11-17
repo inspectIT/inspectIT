@@ -139,12 +139,19 @@ public interface InvocationDataDao {
 	 *            Only invocations with equal or higher id are returned.
 	 * @param limit
 	 *            The limit/size of the list.
+	 * @param businessTrxId
+	 *            Business transaction ID. If the zero value is passed, looking for the objects will
+	 *            be done on all business transactions.
+	 * @param applicationId
+	 *            Application ID. If the zero value is passed, looking for the objects will be done
+	 *            on all applications.
 	 * @param comparator
 	 *            Comparator to compare results with. If <code>null</code> is passed default
 	 *            comparator will be used (in this case Timestamp comparator).
 	 * @return Returns the list of invocation sequences.
 	 */
-	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, Comparator<? super InvocationSequenceData> comparator);
+	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, int businessTrxId, int applicationId, // NOCHK
+			Comparator<? super InvocationSequenceData> comparator);
 
 	/**
 	 * Returns a list of {@link InvocationSequenceData} objects from the buffer. This method returns

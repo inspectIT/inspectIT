@@ -4,6 +4,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
@@ -19,6 +22,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureVal
  * @author Alexander Wert
  *
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ HttpUriValueSource.class, HttpParameterValueSource.class, MethodSignatureValueSource.class, MethodParameterValueSource.class, HostValueSource.class, HttpRequestMethodValueSource.class })
 public abstract class StringValueSource {
@@ -49,6 +53,7 @@ public abstract class StringValueSource {
 	 *
 	 * @return Returns an array of options to select from.
 	 */
+	@JsonIgnore
 	public String[] getOptions() {
 		return new String[0];
 	}

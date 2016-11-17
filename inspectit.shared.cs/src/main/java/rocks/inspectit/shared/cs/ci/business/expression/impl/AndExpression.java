@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.ci.business.expression.AbstractExpression;
@@ -22,6 +25,7 @@ import rocks.inspectit.shared.cs.ci.business.expression.IContainerExpression;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "and")
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class AndExpression extends AbstractExpression implements IContainerExpression {
 	/**
 	 * List of expressions constituting the operands of the conjunction expression.

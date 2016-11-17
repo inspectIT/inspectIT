@@ -10,6 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.Sizeable;
 
@@ -21,6 +26,7 @@ import rocks.inspectit.shared.all.communication.Sizeable;
  */
 @Entity
 @Table(indexes = { @Index(name = "uri_idx", columnList = "uri"), @Index(name = "tag_idx", columnList = "inspectItTaggingHeaderValue") })
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class HttpInfo implements Sizeable, Serializable {
 
 	/**
@@ -41,6 +47,7 @@ public class HttpInfo implements Sizeable, Serializable {
 	/**
 	 * The id of this instance (if persisted, otherwise <code>null</code>).
 	 */
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
@@ -59,6 +66,7 @@ public class HttpInfo implements Sizeable, Serializable {
 	/**
 	 * The inspectIT tag.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 	private String inspectItTaggingHeaderValue;
 
 	/**
@@ -107,6 +115,7 @@ public class HttpInfo implements Sizeable, Serializable {
 	 *
 	 * @return True if {@link #uri} is not null and is different from {@value HttpInfo#UNDEFINED}.
 	 */
+	@JsonIgnore
 	public boolean isUriDefined() {
 		return (uri != null) && !HttpInfo.UNDEFINED.equals(uri);
 	}

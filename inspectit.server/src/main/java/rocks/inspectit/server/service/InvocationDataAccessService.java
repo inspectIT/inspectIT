@@ -134,11 +134,12 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 */
 	@Override
 	@MethodLog
-	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, ResultComparator<InvocationSequenceData> resultComparator) {
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
+			ResultComparator<InvocationSequenceData> resultComparator) {
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(cachedDataService);
 		}
-		List<InvocationSequenceData> result = invocationDataDao.getInvocationSequenceOverview(platformId, startDate, endDate, minId, limit, resultComparator);
+		List<InvocationSequenceData> result = invocationDataDao.getInvocationSequenceOverview(platformId, startDate, endDate, minId, limit, businessTrxId, applicationId, resultComparator);
 		return result;
 	}
 

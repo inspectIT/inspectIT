@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.BusinessContextErrorCodeEnum;
 import rocks.inspectit.shared.cs.ci.business.expression.AbstractExpression;
@@ -63,6 +65,7 @@ public class ApplicationDefinition implements IMatchingRuleProvider {
 	/**
 	 * Revision. Server for version control and updating control.
 	 */
+	@JsonIgnore
 	@XmlAttribute(name = "revision")
 	private Integer revision = Integer.valueOf(1);
 
@@ -78,6 +81,7 @@ public class ApplicationDefinition implements IMatchingRuleProvider {
 	/**
 	 * Business transaction definitions.
 	 */
+	@JsonIgnore
 	@XmlElementWrapper(name = "business-transactions")
 	@XmlElementRef(type = BusinessTransactionDefinition.class)
 	private final List<BusinessTransactionDefinition> businessTransactionDefinitions = new ArrayList<BusinessTransactionDefinition>();
@@ -270,6 +274,7 @@ public class ApplicationDefinition implements IMatchingRuleProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@JsonIgnore
 	@Override
 	public boolean isChangeable() {
 		return getId() != DEFAULT_ID;

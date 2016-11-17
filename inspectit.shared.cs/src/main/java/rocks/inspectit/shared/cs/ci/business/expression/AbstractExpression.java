@@ -7,6 +7,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.ci.business.expression.impl.AndExpression;
@@ -23,16 +27,23 @@ import rocks.inspectit.shared.cs.ci.business.expression.impl.StringMatchingExpre
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ AndExpression.class, OrExpression.class, NotExpression.class, StringMatchingExpression.class, BooleanExpression.class })
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({ @JsonSubTypes.Type(value = AndExpression.class, name = "AND"),
+	@JsonSubTypes.Type(value = NotExpression.class, name = "NOT"),
+	@JsonSubTypes.Type(value = OrExpression.class, name = "OR"), @JsonSubTypes.Type(value = BooleanExpression.class, name = "Boolean"),
+	@JsonSubTypes.Type(value = StringMatchingExpression.class, name = "StringMatching") })
 public abstract class AbstractExpression {
 	/**
 	 * Identifier of the expression.
 	 */
+	@JsonIgnore
 	@XmlAttribute(name = "id", required = true)
 	private final long id = UUID.randomUUID().getMostSignificantBits();
 
 	/**
 	 * Indicates whether the expression is modified in advanced mode.
 	 */
+	@JsonIgnore
 	@XmlAttribute(name = "advanced")
 	private Boolean advanced = Boolean.FALSE;
 

@@ -8,6 +8,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+
 import com.google.common.base.Objects;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
@@ -23,6 +26,7 @@ import rocks.inspectit.shared.cs.ci.business.expression.IContainerExpression;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "not")
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class NotExpression extends AbstractExpression implements IContainerExpression {
 	/**
 	 * Operand.
