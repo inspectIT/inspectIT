@@ -134,4 +134,47 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 		}
 		return query;
 	}
+
+	/**
+	 * @param platformId
+	 *            Platform ID where to look for the objects. If the zero value is passed, looking
+	 *            for the object will be done in all platforms.
+	 * @param startDate
+	 *            Date include invocation from.
+	 * @param endDate
+	 *            Date include invocation to.
+	 * @param minId
+	 *            The minimum ID for objects to be returned.
+	 * @param businessTrxId
+	 *            Business transaction ID. If the zero value is passed, looking for the objects will
+	 *            be done on all business transactions.
+	 * @param applicationId
+	 *            Application ID. If the zero value is passed, looking for the objects will be done
+	 *            on all applications.
+	 * @param invocationIdCollection
+	 *            Collections of invocations IDs to search.
+	 * @return Returns the query for invocation sequence overview.
+	 */
+	public E getInvocationSequences(long platformId, Date startDate, Date endDate, long minId, int businessTrxId, int applicationId, Collection<Long> invocationIdCollection) {
+		E query = getIndexQueryProvider().getIndexQuery();
+		query.setPlatformIdent(platformId);
+		query.setMinId(minId);
+		ArrayList<Class<?>> searchedClasses = new ArrayList<Class<?>>();
+		searchedClasses.add(InvocationSequenceData.class);
+		query.setObjectClasses(searchedClasses);
+		if (businessTrxId != 0) {
+			query.addIndexingRestriction(IndexQueryRestrictionFactory.equal("businessTransactionId", businessTrxId));
+		}
+		if (applicationId != 0) {
+			query.addIndexingRestriction(IndexQueryRestrictionFactory.equal("applicationId", applicationId));
+		}
+		if (startDate != null) {
+			query.setFromDate(new Timestamp(startDate.getTime()));
+		}
+		if (endDate != null) {
+			query.setToDate(new Timestamp(endDate.getTime()));
+		}
+		query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("id", invocationIdCollection));
+		return query;
+	}
 }

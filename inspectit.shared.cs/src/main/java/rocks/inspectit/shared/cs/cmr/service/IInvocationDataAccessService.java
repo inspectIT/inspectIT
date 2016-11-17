@@ -140,13 +140,55 @@ public interface IInvocationDataAccessService {
 	 *            Date include invocation to.
 	 * @param minId
 	 *            Only invocations with equal or higher id are submitted.
+	 * @param businessTrxId
+	 *            Business transaction ID. If the zero value is passed, looking for the objects will
+	 *            be done on all business transactions.
+	 * @param applicationId
+	 *            Application ID. If the zero value is passed, looking for the objects will be done
+	 *            on all applications.
 	 * @param resultComparator
 	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
 	 *            that case no sorting will be done.
 	 * @return Returns the list of invocation sequences.
+	 * @throws BusinessException
+	 *             If data cannot be retrieved.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, String alertId, // NOCHK
+			ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException;
+
+	/**
+	 * Returns a list of {@link InvocationSequenceData} objects which contain no associations to
+	 * other objects in given time frame. Thus this list can be used to get an overview of the
+	 * available invocation sequences. The limit defines the size of the list.
+	 *
+	 * @param platformId
+	 *            Platform ID where to look for the objects. If the zero value is passed, looking
+	 *            for the object will be done in all platforms.
+	 * @param limit
+	 *            The limit/size of the list. Value <code>-1</code> means no limit.
+	 * @param startDate
+	 *            Date include invocation from.
+	 * @param endDate
+	 *            Date include invocation to.
+	 * @param minId
+	 *            Only invocations with equal or higher id are submitted.
+	 * @param businessTrxId
+	 *            Business transaction ID. If the zero value is passed, looking for the objects will
+	 *            be done on all business transactions.
+	 * @param applicationId
+	 *            Application ID. If the zero value is passed, looking for the objects will be done
+	 *            on all applications.
+	 * @param invocationIdCollection
+	 *            Collections of invocations IDs to search.
+	 * @param resultComparator
+	 *            Comparator that will be used to sort the results. Can be <code>null</code> and in
+	 *            that case no sorting will be done.
+	 * @return Returns the list of invocation sequences.
+	 * @throws BusinessException
+	 *             If data cannot be retrieved.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
-			ResultComparator<InvocationSequenceData> resultComparator);
+			Collection<Long> invocationIdCollection, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException;
 
 	/**
 	 * This service method is used to get all the details of a specific invocation sequence.

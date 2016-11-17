@@ -154,6 +154,38 @@ public interface InvocationDataDao {
 			Comparator<? super InvocationSequenceData> comparator);
 
 	/**
+	 * Returns a list of {@link InvocationSequenceData} objects which contain no associations to
+	 * other objects. Thus this list can be used to get an overview of the available invocation
+	 * sequences. The limit defines the size of the list.
+	 *
+	 * @param platformId
+	 *            Platform ID where to look for the objects. If the zero value is passed, looking
+	 *            for the object will be done in all platforms.
+	 * @param fromDate
+	 *            Date include invocation from.
+	 * @param toDate
+	 *            Date include invocation to.
+	 * @param minId
+	 *            Only invocations with equal or higher id are returned.
+	 * @param limit
+	 *            The limit/size of the list.
+	 * @param businessTrxId
+	 *            Business transaction ID. If the zero value is passed, looking for the objects will
+	 *            be done on all business transactions.
+	 * @param applicationId
+	 *            Application ID. If the zero value is passed, looking for the objects will be done
+	 *            on all applications.
+	 * @param invocationIdCollection
+	 *            Collections of invocations IDs to search.
+	 * @param comparator
+	 *            Comparator to compare results with. If <code>null</code> is passed default
+	 *            comparator will be used (in this case Timestamp comparator).
+	 * @return Returns the list of invocation sequences.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, int businessTrxId, int applicationId, // NOCHK
+			Collection<Long> invocationIdCollection, Comparator<? super InvocationSequenceData> comparator);
+
+	/**
 	 * Returns a list of {@link InvocationSequenceData} objects from the buffer. This method returns
 	 * the original {@link InvocationSequenceData} instances from the buffer. This method is
 	 * intended to be used only within the CMR for purposes of updating elements in the buffer.

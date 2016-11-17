@@ -8,6 +8,7 @@ import java.util.List;
 import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
@@ -91,7 +92,7 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, String alertId, // NOCHK
 			ResultComparator<InvocationSequenceData> resultComparator) {
 		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, startDate, endDate, minId, businessTrxId, applicationId);
 		query.setOnlyInvocationsWithoutChildren(true);
@@ -157,5 +158,21 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
+			Collection<Long> invocationIdCollection, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException {
+		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, startDate, endDate, minId, businessTrxId, applicationId, invocationIdCollection);
+		query.setOnlyInvocationsWithoutChildren(true);
+		if (null != resultComparator) {
+			resultComparator.setCachedDataService(getStorageRepositoryDefinition().getCachedDataService());
+			return super.executeQuery(query, resultComparator, limit);
+		} else {
+			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit);
+		}
 	}
 }

@@ -134,13 +134,18 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 */
 	@Override
 	@MethodLog
-	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
-			ResultComparator<InvocationSequenceData> resultComparator) {
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, String alertId, // NOCHK
+			ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException {
 		if (null != resultComparator) {
 			resultComparator.setCachedDataService(cachedDataService);
 		}
-		List<InvocationSequenceData> result = invocationDataDao.getInvocationSequenceOverview(platformId, startDate, endDate, minId, limit, businessTrxId, applicationId, resultComparator);
-		return result;
+
+		if (!alertId.isEmpty()) {
+			List<Long> invocationSequenceIds = getInvocationSequenceIds(alertId);
+			return invocationDataDao.getInvocationSequenceOverview(platformId, startDate, endDate, minId, limit, businessTrxId, applicationId, invocationSequenceIds, resultComparator);
+		}
+
+		return invocationDataDao.getInvocationSequenceOverview(platformId, startDate, endDate, minId, limit, businessTrxId, applicationId, resultComparator);
 	}
 
 	/**
@@ -158,6 +163,35 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 */
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException {
+		List<Long> invocationSequenceIds = getInvocationSequenceIds(alertId);
+
+		return getInvocationSequenceOverview(0, invocationSequenceIds, limit, resultComparator);
+	}
+
+	/**
+	 * Is executed after dependency injection is done to perform any initialization.
+	 *
+	 * @throws Exception
+	 *             if an error occurs during {@link PostConstruct}
+	 */
+	@PostConstruct
+	public void postConstruct() throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("|-Invocation Data Access Service active...");
+		}
+	}
+
+	/**
+	 * Returns a list of {@link Long} invocation sequences id's belonging to an alert defined by the
+	 * passed alert id.
+	 *
+	 * @param alertId
+	 *            The ID of the alert the invocation sequences belong to.
+	 * @return Returns the list of IDs of invocation sequences.
+	 * @throws BusinessException
+	 *             If data cannot be retrieved.
+	 */
+	private List<Long> getInvocationSequenceIds(String alertId) throws BusinessException {
 		if (!influxDBDao.isConnected()) {
 			throw new BusinessException("Retrieving invocation sequences for alert with id '" + alertId + "'", AlertErrorCodeEnum.DATABASE_OFFLINE);
 		}
@@ -179,19 +213,16 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 			invocationSequenceIds.add(id);
 		}
 
-		return getInvocationSequenceOverview(0, invocationSequenceIds, limit, resultComparator);
+		return invocationSequenceIds;
 	}
 
 	/**
-	 * Is executed after dependency injection is done to perform any initialization.
-	 *
-	 * @throws Exception
-	 *             if an error occurs during {@link PostConstruct}
+	 * {@inheritDoc}
 	 */
-	@PostConstruct
-	public void postConstruct() throws Exception {
-		if (log.isInfoEnabled()) {
-			log.info("|-Invocation Data Access Service active...");
-		}
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(Long platformId, int limit, Date startDate, Date endDate, Long minId, int businessTrxId, int applicationId, // NOCHK
+			Collection<Long> invocationIdCollection, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

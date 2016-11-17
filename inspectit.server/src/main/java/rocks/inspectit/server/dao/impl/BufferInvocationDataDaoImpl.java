@@ -103,7 +103,7 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, int businessTrxId, int applicationId, // NOCHK
 			Comparator<? super InvocationSequenceData> comparator) {
-		IIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, fromDate, toDate, minId);
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, fromDate, toDate, minId, businessTrxId, applicationId);
 		List<InvocationSequenceData> resultWithChildren;
 		if (null != comparator) {
 			resultWithChildren = super.executeQuery(query, comparator, limit, false);
@@ -136,5 +136,25 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 		} else {
 			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, int businessTrxId, int applicationId, // NOCHK
+			Collection<Long> invocationIdCollection, Comparator<? super InvocationSequenceData> comparator) {
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, fromDate, toDate, minId, businessTrxId, applicationId, invocationIdCollection);
+		List<InvocationSequenceData> resultWithChildren;
+		if (null != comparator) {
+			resultWithChildren = super.executeQuery(query, comparator, limit, false);
+		} else {
+			resultWithChildren = super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
+		}
+		List<InvocationSequenceData> realResults = new ArrayList<InvocationSequenceData>(resultWithChildren.size());
+		for (InvocationSequenceData invocationSequenceData : resultWithChildren) {
+			realResults.add(invocationSequenceData.getClonedInvocationSequence());
+		}
+		return realResults;
 	}
 }
