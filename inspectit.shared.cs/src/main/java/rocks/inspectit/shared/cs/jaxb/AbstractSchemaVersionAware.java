@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * Abstract class that holds the schema version information. Classes should extend this class if
  * they want to pass over the schema version information.
@@ -18,6 +20,7 @@ public abstract class AbstractSchemaVersionAware implements ISchemaVersionAware 
 	 * Schema version.
 	 */
 	@XmlAttribute(name = "schemaVersion", required = true)
+	@JsonIgnore
 	private int schemaVersion;
 
 	/**

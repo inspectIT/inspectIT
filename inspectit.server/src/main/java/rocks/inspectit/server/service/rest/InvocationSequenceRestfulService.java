@@ -24,6 +24,7 @@ import rocks.inspectit.server.service.rest.error.JsonError;
 import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 
 /**
@@ -110,7 +111,7 @@ public class InvocationSequenceRestfulService {
 	}
 
 	/**
-	 * Provides detail informations of an invocation sequence data.
+	 * Provides all informations of an invocation sequence data.
 	 *
 	 * <p>
 	 * <i> Example URL: /data/invocations/{id}</i>
@@ -126,6 +127,30 @@ public class InvocationSequenceRestfulService {
 		InvocationSequenceData template = new InvocationSequenceData();
 		template.setId(id);
 		InvocationSequenceData result = invocationDataAccessService.getInvocationSequenceDetail(template);
+
+		return result;
+	}
+
+	/**
+	 * Provides overview of several invocation data with given alertId.
+	 *
+	 * <p>
+	 * <i> Example URL: /data/invocations/alert</i>
+	 * </p>
+	 *
+	 * @param alertId
+	 *            alert ID.
+	 * @param limit
+	 *            The limit/size of the results.
+	 * @return a list of {@link InvocationSequenceData}.
+	 * @throws BusinessException
+	 *             If data cannot be retrieved.
+	 */
+	@RequestMapping(method = GET, value = "alert")
+	@ResponseBody
+	public List<InvocationSequenceData> getInvocationSequencesByAlertId(@RequestParam(value = "alertId") String alertId, @RequestParam(value = "limit", defaultValue = "100") int limit)
+			throws BusinessException {
+		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(alertId, limit, OVERVIEW_COMPARATOR);
 
 		return result;
 	}
