@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import rocks.inspectit.server.service.rest.error.JsonError;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
@@ -81,11 +82,15 @@ public class InvocationSequenceRestfulService {
 	 *            Business transaction ID.
 	 * @param applicationId
 	 *            Application ID.
+	 * @param alertId
+	 *            alert ID.
 	 * @param limit
 	 *            The limit/size of the results.
 	 * @param minDuration
 	 *            Minimum duration in milliseconds of the invocation to be returned.
 	 * @return a list of {@link InvocationSequenceData}.
+	 * @throws BusinessException
+	 *             If data cannot be retrieved.
 	 */
 	@RequestMapping(method = GET, value = "")
 	@ResponseBody
@@ -94,10 +99,11 @@ public class InvocationSequenceRestfulService {
 			@RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date toDate,
 			@RequestParam(value = "latestReadId", required = false, defaultValue = "0") Long latestReadId,
 			@RequestParam(value = "businessTrxId", required = false, defaultValue = "0") int businessTrxId, @RequestParam(value = "appId", required = false, defaultValue = "0") int applicationId,
-			@RequestParam(value = "limit", defaultValue = "100") int limit, @RequestParam(value = "minDuration", defaultValue = "0") long minDuration) {
+			@RequestParam(value = "alertId", required = false) String alertId, @RequestParam(value = "limit", defaultValue = "100") int limit,
+			@RequestParam(value = "minDuration", defaultValue = "0") long minDuration)
+					throws BusinessException {
 
-		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(agentId, limit, fromDate, toDate, latestReadId + 1, businessTrxId, applicationId,
-				OVERVIEW_COMPARATOR);
+		List<InvocationSequenceData> result = invocationDataAccessService.getInvocationSequenceOverview(agentId, limit, fromDate, toDate, latestReadId + 1, businessTrxId, applicationId, alertId, OVERVIEW_COMPARATOR);
 
 		// manually filter the duration
 		for (Iterator<InvocationSequenceData> it = result.iterator(); it.hasNext();) {
@@ -110,7 +116,7 @@ public class InvocationSequenceRestfulService {
 	}
 
 	/**
-	 * Provides detail informations of an invocation sequence data.
+	 * Provides all informations of an invocation sequence data.
 	 *
 	 * <p>
 	 * <i> Example URL: /data/invocations/{id}</i>
