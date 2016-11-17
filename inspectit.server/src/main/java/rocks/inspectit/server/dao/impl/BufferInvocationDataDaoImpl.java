@@ -101,7 +101,8 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, Comparator<? super InvocationSequenceData> comparator) {
+	public List<InvocationSequenceData> getInvocationSequenceOverview(long platformId, Date fromDate, Date toDate, long minId, int limit, int businessTrxId, int applicationId, // NOCHK
+			Comparator<? super InvocationSequenceData> comparator) {
 		IIndexQuery query = invocationDataQueryFactory.getInvocationSequences(platformId, fromDate, toDate, minId);
 		List<InvocationSequenceData> resultWithChildren;
 		if (null != comparator) {
@@ -136,5 +137,4 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 	}
-
 }

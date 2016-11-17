@@ -2,6 +2,8 @@ package rocks.inspectit.shared.cs.ci.business.expression;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * This interface provides a common access to {@link AbstractExpression} instances that serve as
  * container expression (i.e. expressions that contain other expressions).
@@ -46,5 +48,6 @@ public interface IContainerExpression {
 	 *
 	 * @return The number of child expression currently attached to this expression.
 	 */
+	@JsonIgnore
 	int getNumberOfChildExpressions();
 }
