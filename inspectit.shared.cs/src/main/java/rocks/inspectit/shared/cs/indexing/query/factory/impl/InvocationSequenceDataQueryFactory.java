@@ -71,7 +71,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 	 * @return Returns the query for invocation sequence overview.
 	 */
 	public E getInvocationSequences(long platformId, Date fromDate, Date toDate, long minId) {
-		return this.getInvocationSequences(platformId, fromDate, toDate, minId, 0, 0);
+		return this.getInvocationSequences(platformId, fromDate, toDate, minId, 0, 0, null);
 	}
 
 	/**
@@ -113,9 +113,11 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 	 * @param applicationId
 	 *            Application ID. If the zero value is passed, looking for the objects will be done
 	 *            on all applications.
+	 * @param invocationIdCollection
+	 *            Collections of invocations IDs to search.
 	 * @return Returns the query for invocation sequence overview.
 	 */
-	public E getInvocationSequences(Long platformId, Date startDate, Date endDate, long minId, int businessTrxId, int applicationId) {
+	public E getInvocationSequences(Long platformId, Date startDate, Date endDate, long minId, int businessTrxId, int applicationId, Collection<Long> invocationIdCollection) {
 		E query = getIndexQueryProvider().getIndexQuery();
 		query.setPlatformIdent(platformId);
 		query.setMinId(minId);
@@ -131,6 +133,9 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 		}
 		if (endDate != null) {
 			query.setToDate(new Timestamp(endDate.getTime()));
+		}
+		if (invocationIdCollection != null) {
+			query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("id", invocationIdCollection));
 		}
 		return query;
 	}
