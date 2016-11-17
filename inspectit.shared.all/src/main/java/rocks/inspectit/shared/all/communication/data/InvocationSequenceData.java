@@ -110,11 +110,13 @@ public class InvocationSequenceData extends MethodSensorData {
 	/**
 	 * Identifier of the application this invocation sequence belongs to.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
 	private int applicationId = 0;
 
 	/**
 	 * Identifier of the business transaction this invocation sequence belongs to.
 	 */
+	@JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
 	private int businessTransactionId = 0;
 
 	/**

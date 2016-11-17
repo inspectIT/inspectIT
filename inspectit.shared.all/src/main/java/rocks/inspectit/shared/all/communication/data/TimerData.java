@@ -36,7 +36,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
  */
 @Entity
 @Table(indexes = { @Index(name = "time_stamp_idx", columnList = "timeStamp") })
-@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE)
 public class TimerData extends InvocationAwareData {
 
