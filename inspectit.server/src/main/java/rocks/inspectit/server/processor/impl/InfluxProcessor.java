@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import rocks.inspectit.server.influx.builder.DefaultDataPointBuilder;
-import rocks.inspectit.server.influx.dao.IInfluxDBDao;
+import rocks.inspectit.server.influx.dao.impl.InfluxDBDao;
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
@@ -30,9 +30,9 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
 public class InfluxProcessor extends AbstractCmrDataProcessor {
 
 	/**
-	 * {@link IInfluxDBDao} to write to.
+	 * {@link InfluxDBDao} to write to.
 	 */
-	private IInfluxDBDao influxDbDao;
+	private InfluxDBDao influxDbDao;
 
 	/**
 	 * Map of all builders.
@@ -48,7 +48,7 @@ public class InfluxProcessor extends AbstractCmrDataProcessor {
 	 *            All available influx point builders.
 	 */
 	@Autowired
-	public InfluxProcessor(IInfluxDBDao influxDbDao, List<DefaultDataPointBuilder<DefaultData>> builders) {
+	public InfluxProcessor(InfluxDBDao influxDbDao, List<DefaultDataPointBuilder<DefaultData>> builders) {
 		this.influxDbDao = influxDbDao;
 		if (CollectionUtils.isEmpty(builders)) {
 			builderMap = Collections.emptyMap();
@@ -75,7 +75,7 @@ public class InfluxProcessor extends AbstractCmrDataProcessor {
 	 */
 	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
-		return influxDbDao.isOnline() && builderMap.containsKey(defaultData.getClass()) && isValidData(defaultData);
+		return influxDbDao.isConnected() && builderMap.containsKey(defaultData.getClass()) && isValidData(defaultData);
 	}
 
 	/**

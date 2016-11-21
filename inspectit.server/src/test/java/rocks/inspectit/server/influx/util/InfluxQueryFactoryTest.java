@@ -1,4 +1,4 @@
-package rocks.inspectit.server.influx.dao;
+package rocks.inspectit.server.influx.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.server.alerting.state.AlertingState;
 import rocks.inspectit.server.influx.constants.Series;
+import rocks.inspectit.server.influx.util.InfluxQueryFactory;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;

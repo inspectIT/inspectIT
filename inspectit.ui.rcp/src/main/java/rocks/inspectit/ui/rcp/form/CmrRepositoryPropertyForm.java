@@ -106,6 +106,8 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 	private ProgressBar spaceLeftBar; // NOCHK
 	private Label uptimeLabel; // NOCHK
 	private Label databaseSizeLabel; // NOCHK
+	private Label influxStatusIcon; // NOCHK
+	private Label influxStatusLabel; // NOCHK
 
 	/**
 	 * Default constructor.
@@ -180,6 +182,15 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 		toolkit.createLabel(generalComposite, "Database size:");
 		databaseSizeLabel = toolkit.createLabel(generalComposite, null, SWT.WRAP);
 		databaseSizeLabel.setToolTipText("Current size of the database on the CMR");
+
+		toolkit.createLabel(generalComposite, "InfluxDB:");
+		Composite influxStatusComposite = toolkit.createComposite(generalComposite);
+		GridLayout influxLayout = new GridLayout(2, false);
+		influxLayout.marginHeight = 0;
+		influxLayout.marginWidth = 0;
+		influxStatusComposite.setLayout(influxLayout);
+		influxStatusIcon = toolkit.createLabel(influxStatusComposite, null, SWT.WRAP);
+		influxStatusLabel = toolkit.createLabel(influxStatusComposite, null, SWT.WRAP);
 
 		generalSection.setClient(generalComposite);
 		generalSection.setLayout(new TableWrapLayout());
@@ -441,6 +452,15 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 			} else {
 				databaseSizeLabel.setText("n/a");
 			}
+
+			// influxDB info
+			if (cmrStatusData.isInfluxConnected()) {
+				influxStatusLabel.setText("Connected");
+				influxStatusIcon.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GREEN));
+			} else {
+				influxStatusLabel.setText("Disconnected");
+				influxStatusIcon.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GRAY));
+			}
 		}
 
 		if (!dataLoaded) {
@@ -454,6 +474,7 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 			spaceLeftLabel.setText("");
 			uptimeLabel.setText("");
 			databaseSizeLabel.setText("");
+			influxStatusLabel.setText("");
 		}
 	}
 
@@ -546,7 +567,7 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 		/**
 		 * Default constructor.
 		 */
-		public UpdateCmrPropertiesJob() {
+		UpdateCmrPropertiesJob() {
 			super("Updating CMR Properties..");
 		}
 
@@ -632,7 +653,7 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 		/**
 		 * Default constructor.
 		 */
-		public RecordCountdownJob() {
+		RecordCountdownJob() {
 			super("Update Recording Countdown");
 			setUser(false);
 		}
