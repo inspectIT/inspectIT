@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import rocks.inspectit.server.alerting.AlertRegistry;
 import rocks.inspectit.server.alerting.util.AlertingUtils;
 import rocks.inspectit.server.dao.InvocationDataDao;
-import rocks.inspectit.server.influx.dao.IInfluxDBDao;
-import rocks.inspectit.server.influx.dao.InfluxQueryFactory;
+import rocks.inspectit.server.influx.dao.impl.InfluxDBDao;
+import rocks.inspectit.server.influx.util.InfluxQueryFactory;
 import rocks.inspectit.server.influx.util.QueryResultWrapper;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
@@ -61,7 +61,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 * DAO for the influxDB data.
 	 */
 	@Autowired
-	private IInfluxDBDao influxDBDao;
+	private InfluxDBDao influxDBDao;
 
 	/**
 	 * {@inheritDoc}
@@ -157,7 +157,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 */
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException {
-		if (!influxDBDao.isOnline()) {
+		if (!influxDBDao.isConnected()) {
 			throw new BusinessException("Retrieving invocation sequences for alert with id '" + alertId + "'", AlertErrorCodeEnum.DATABASE_OFFLINE);
 		}
 		Alert alert = alertRegistry.getAlert(alertId);
