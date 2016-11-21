@@ -1,4 +1,4 @@
-package rocks.inspectit.server.influx.dao.impl;
+package rocks.inspectit.server.influx.dao;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
