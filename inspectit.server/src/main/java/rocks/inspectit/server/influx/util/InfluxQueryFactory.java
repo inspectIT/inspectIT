@@ -1,4 +1,4 @@
-package rocks.inspectit.server.influx.dao;
+package rocks.inspectit.server.influx.util;
 
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
