@@ -279,12 +279,24 @@ public class ConfigurationResolver {
 		stringBuilder.append("|-enhanced exception sensor: " + environment.getExceptionSensorConfig().isEnhanced() + "\n"); // NOPMD
 		stringBuilder.append("|-retransformation strategy: " + environment.getRetransformationStrategy().toString() + "\n"); // NOPMD
 
+
 		EndUserMonitoringConfig eumConfig = environment.getEumConfig();
 		stringBuilder.append("|-end user monitoring: " + eumConfig.isEumEnabled()); // NOPMD
 		if (eumConfig.isEumEnabled()) {
 			stringBuilder.append("\n||-EUM beacon URL: " + eumConfig.getScriptBaseUrl() + JSAgentModule.BEACON_SUB_PATH); // NOPMD
-			stringBuilder.append(
-					"\n||-EUM JS agent URL: " + eumConfig.getScriptBaseUrl() + JSAgentModule.JAVASCRIPT_URL_PREFIX + JSAgentModule.JS_AGENT_REVISION + "_" + eumConfig.getActiveModules() + ".js"); // NOPMD
+			stringBuilder.append("\n||-EUM JS agent URL: " + eumConfig.getScriptBaseUrl() + JSAgentModule.JAVASCRIPT_URL_PREFIX + JSAgentModule.JS_AGENT_REVISION + "_" + eumConfig.getActiveModules() + ".js"); // NOPMD
+
+			stringBuilder.append("\n||-Relevancy Threshold: " + eumConfig.getRelevancyThreshold() + " milliseconds"); // NOPMD
+			if (eumConfig.isListenerInstrumentationAllowed()) {
+				stringBuilder.append("\n||-Listener Instrumentation: enabled");
+			} else {
+				stringBuilder.append("\n||-Listener Instrumentation: disabled");
+			}
+			if (eumConfig.isAgentMinificationEnabled()) {
+				stringBuilder.append("\n||-Agent minification: enabled");
+			} else {
+				stringBuilder.append("\n||-Agent minification: disabled");
+			}
 		}
 
 		return stringBuilder.toString();

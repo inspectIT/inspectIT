@@ -105,6 +105,9 @@ END OF TERMS AND CONDITIONS
       <plugin id="com.esotericsoftware.kryonet"/>
       <plugin id="com.esotericsoftware.minlog"/>
       <plugin id="com.esotericsoftware.reflectasm"/>
+      <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
+      <plugin id="com.fasterxml.jackson.core.jackson-core"/>
+      <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
       <plugin id="com.github.stephenc.high-scale-lib"/>
       <plugin id="com.google.gson"/>
       <plugin id="com.google.guava"/>

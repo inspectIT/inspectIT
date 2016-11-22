@@ -85,11 +85,13 @@ import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
 import rocks.inspectit.shared.all.communication.data.eum.AjaxRequest;
-import rocks.inspectit.shared.all.communication.data.eum.ClickAction;
-import rocks.inspectit.shared.all.communication.data.eum.PageLoadAction;
+import rocks.inspectit.shared.all.communication.data.eum.Beacon;
+import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
+import rocks.inspectit.shared.all.communication.data.eum.JSDomEventListenerExecution;
+import rocks.inspectit.shared.all.communication.data.eum.JSEventListenerExecution;
+import rocks.inspectit.shared.all.communication.data.eum.JSTimerExecution;
 import rocks.inspectit.shared.all.communication.data.eum.PageLoadRequest;
 import rocks.inspectit.shared.all.communication.data.eum.ResourceLoadRequest;
-import rocks.inspectit.shared.all.communication.data.eum.UserAction;
 import rocks.inspectit.shared.all.communication.data.eum.UserSessionInfo;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.RemoteException;
@@ -408,11 +410,24 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		// TODO: Use the CustomCompatibleFieldSerializer as soon as the data is stable
 		kryo.register(AgentEndUserMonitoringConfig.class, new FieldSerializer<AgentEndUserMonitoringConfig>(kryo, AgentEndUserMonitoringConfig.class), nextRegistrationId++);
 		kryo.register(AjaxRequest.class, new FieldSerializer<AjaxRequest>(kryo, AjaxRequest.class), nextRegistrationId++);
-		kryo.register(ClickAction.class, new FieldSerializer<ClickAction>(kryo, ClickAction.class), nextRegistrationId++);
-		kryo.register(PageLoadAction.class, new FieldSerializer<PageLoadAction>(kryo, PageLoadAction.class), nextRegistrationId++);
+		kryo.register(Beacon.class, new FieldSerializer<Beacon>(kryo, Beacon.class), nextRegistrationId++);
+		kryo.register(EUMSpan.class, new FieldSerializer<EUMSpan>(kryo, EUMSpan.class) {
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public EUMSpan read(Kryo kryo, Input input, Class<EUMSpan> type) {
+				EUMSpan read = super.read(kryo, input, type);
+				read.getDetails().setOwningSpan(read);
+				return read;
+			}
+		}, nextRegistrationId++);
 		kryo.register(PageLoadRequest.class, new FieldSerializer<PageLoadRequest>(kryo, PageLoadRequest.class), nextRegistrationId++);
+		kryo.register(PageLoadRequest.NavigationTimings.class, new FieldSerializer<UserSessionInfo>(kryo, PageLoadRequest.NavigationTimings.class), nextRegistrationId++);
 		kryo.register(ResourceLoadRequest.class, new FieldSerializer<ResourceLoadRequest>(kryo, ResourceLoadRequest.class), nextRegistrationId++);
-		kryo.register(UserAction.class, new FieldSerializer<UserAction>(kryo, UserAction.class), nextRegistrationId++);
+		kryo.register(JSTimerExecution.class, new FieldSerializer<JSTimerExecution>(kryo, JSTimerExecution.class), nextRegistrationId++);
+		kryo.register(JSEventListenerExecution.class, new FieldSerializer<JSEventListenerExecution>(kryo, JSEventListenerExecution.class), nextRegistrationId++);
+		kryo.register(JSDomEventListenerExecution.class, new FieldSerializer<JSDomEventListenerExecution>(kryo, JSDomEventListenerExecution.class), nextRegistrationId++);
 		kryo.register(UserSessionInfo.class, new FieldSerializer<UserSessionInfo>(kryo, UserSessionInfo.class), nextRegistrationId++);
 	}
 

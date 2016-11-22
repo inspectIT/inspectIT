@@ -16,7 +16,9 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
 
 import io.opentracing.References;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
@@ -688,6 +690,8 @@ public final class ImageFormatter {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_JMS);
 		case PROCESS:
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_ACTIVITY);
+		case JAVASCRIPT:
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_JAVASCRIPT);
 		default:
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_REMOTE);
 		}
@@ -724,6 +728,24 @@ public final class ImageFormatter {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_REFERENCE_CHILDOF);
 		} else if (References.FOLLOWS_FROM.equals(reference)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_REFERENCE_FOLLOWSFROM);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns an icon for the span origin.
+	 *
+	 * @param span
+	 *            the span to return the icon for
+	 * @param spanPlatform
+	 *            the paltformIdent of the span, if available.
+	 * @return the image for teh span origin.
+	 */
+	public static Image getSpanOriginImage(Span span, PlatformIdent spanPlatform) {
+		if (span instanceof EUMSpan) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_BROWSER);
+		} else if (spanPlatform != null) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_AGENT);
 		}
 		return null;
 	}
