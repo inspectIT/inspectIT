@@ -824,7 +824,9 @@ public final class TextFormatter {
 	 */
 	public static StyledString getPropagationStyled(PropagationType propagationType) {
 		StyledString styledString = new StyledString();
-		if (null != propagationType) {
+		if (propagationType == PropagationType.JAVASCRIPT) {
+			styledString.append("JavaScript");
+		} else if (null != propagationType) {
 			styledString.append(propagationType.toString());
 		} else {
 			// if it's null we assume it's our SDK as we always set the propagation

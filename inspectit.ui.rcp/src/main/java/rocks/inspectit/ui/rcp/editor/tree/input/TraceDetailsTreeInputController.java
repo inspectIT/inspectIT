@@ -41,6 +41,7 @@ import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
+import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
 import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ISpanService;
@@ -402,6 +403,9 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 		case PROPAGATION:
 			return TextFormatter.getPropagationStyled(span.getPropagationType());
 		case AGENT:
+			if (span instanceof EUMSpan) {
+				return new StyledString("Browser");
+			}
 			PlatformIdent platformIdent = cachedDataService.getPlatformIdentForId(span.getPlatformIdent());
 			if (null != platformIdent) {
 				return new StyledString(platformIdent.getAgentName());

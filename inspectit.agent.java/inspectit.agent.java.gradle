@@ -84,6 +84,44 @@ jar {
 	}
 }
 
+task minifyJS {
+	description = 'Minify JS Agent sources'
+	
+	def inputDir = file("${mainResources}/js")
+	def outputDir = file("${buildRoot}/resources/main/js/min")
+	
+	inputs.dir inputDir
+	outputs.dir outputDir
+	
+	def inputDirPath = java.nio.file.Paths.get(inputDir.path);
+	def outputDirPath = java.nio.file.Paths.get(outputDir.path)
+			
+	fileTree(dir: inputDirPath.toString(), include:"**/*.js").each {File file ->
+		doLast {
+			def relativeInputFilePath = inputDirPath.relativize(file.toPath());
+			def outputFilePath = outputDirPath.resolve(relativeInputFilePath);
+			
+			//create the directory if required			
+			outputFilePath.getParent().toFile().mkdirs()
+			
+			javaexec {
+			
+				workingDir = inputDirPath.toString()
+			
+				classpath configurations.closureCompiler
+				main = 'com.google.javascript.jscomp.CommandLineRunner'
+				
+				def closureArgs = []
+				closureArgs << "--compilation_level=SIMPLE_OPTIMIZATIONS"
+				closureArgs << "--js_output_file=" +  outputFilePath.toString()
+				closureArgs << relativeInputFilePath.toString()
+				args closureArgs
+			}
+		}
+	}
+}
+jar.dependsOn(minifyJS)
+
 /**
  * Creates the release package.
  */

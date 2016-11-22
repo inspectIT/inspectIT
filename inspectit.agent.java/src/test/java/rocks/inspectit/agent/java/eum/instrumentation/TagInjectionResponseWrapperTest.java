@@ -3,6 +3,9 @@ package rocks.inspectit.agent.java.eum.instrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -21,9 +25,10 @@ import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.eum.instrumentation.TagInjectionOutputStream;
-import rocks.inspectit.agent.java.eum.instrumentation.TagInjectionResponseWrapper;
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanContextImpl;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.util.ConversionUtils;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -102,9 +107,18 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 	@Mock
 	javax.servlet.http.HttpServletResponse dummyResponse;
 
+	@Mock
+	javax.servlet.http.HttpServletRequest dummyRequest;
+
 	ByteArrayOutputStream streamResult;
 
 	StringWriter printerResult;
+
+	@Mock
+	EumScriptTagPrinter tagPrinter;
+
+	@Mock
+	TracerImpl tracer;
 
 	@Mock
 	IRuntimeLinker linker;
@@ -124,6 +138,9 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 		printerResult = new StringWriter();
 		PrintWriter pw = new PrintWriter(printerResult);
 
+		when(tagPrinter.printTags()).thenReturn(TEST_TAG);
+		when(tagPrinter.clone()).thenReturn(tagPrinter);
+
 		when(dummyResponse.getCharacterEncoding()).thenReturn(CHARACTER_ENCODING);
 		when(dummyResponse.getWriter()).thenReturn(pw);
 		when(dummyResponse.getOutputStream()).thenReturn(stream);
@@ -135,7 +152,7 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 		@BeforeMethod
 		public void init() {
 			printerResult.getBuffer().setLength(0);
-			respWrapper = new TagInjectionResponseWrapper(dummyResponse, null, TEST_TAG);
+			respWrapper = new TagInjectionResponseWrapper(dummyRequest, dummyResponse, tracer, tagPrinter);
 			respWrapper.proxyLinked(dummyProxy, linker);
 		}
 
@@ -163,6 +180,32 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 			assertThat(printerResult.toString(), equalTo(NON_HTML_TEST_CASE_B));
 		}
 
+		@Test
+		public void testTraceCorrelationInfoSet() throws IOException {
+			when(tagPrinter.clone()).thenReturn(tagPrinter);
+			SpanContextImpl context = mock(SpanContextImpl.class);
+			when(context.getTraceId()).thenReturn(1234L);
+			String traceID = ConversionUtils.toHexString(1234L);
+			when(tracer.getCurrentContext()).thenReturn(context);
+			ArgumentCaptor<String> traceIdJSSetting = ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<Cookie> cookieCapture = ArgumentCaptor.forClass(Cookie.class);
+
+			respWrapper.getWriter();
+
+
+			verify(tagPrinter).setSetting(eq(JSAgentBuilder.TRACEID_CORRELATION_SETTING), traceIdJSSetting.capture());
+			verify(dummyResponse, atLeast(1)).addCookie(cookieCapture.capture());
+			boolean cookieFound = false;
+			for (Cookie cookie : cookieCapture.getAllValues()) {
+				if (cookie.getName().equals(JSAgentBuilder.TRACEID_CORRELATION_COOKIE_PREFIX + traceID)) {
+					cookieFound = true;
+				}
+			}
+			assertThat("Trace Correlation cookie not set", cookieFound);
+			assertThat(traceIdJSSetting.getValue(), equalTo("\"" + traceID + "\""));
+
+		}
+
 	}
 
 	public static class GetOutputStream extends TagInjectionResponseWrapperTest {
@@ -183,7 +226,7 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 				}
 			});
 			streamResult.reset();
-			respWrapper = new TagInjectionResponseWrapper(dummyResponse, null, TEST_TAG);
+			respWrapper = new TagInjectionResponseWrapper(dummyRequest, dummyResponse, tracer, tagPrinter);
 			respWrapper.proxyLinked(dummyProxy, linker);
 		}
 
@@ -264,5 +307,6 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 		}
 
 	}
+
 
 }

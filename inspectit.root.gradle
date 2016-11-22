@@ -332,7 +332,7 @@ subprojects {
 		sourceSets = [sourceSets.main]
 		configFile = file(checkstyleConfigFile)
 		reportsDir = file(buildQAAnalysisCheckstyle)
-		toolVersion = '5.6'
+		toolVersion = '5.9'
 	}
 
 	task checkstyleHtmlReport {

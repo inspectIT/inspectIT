@@ -6,11 +6,17 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import rocks.inspectit.agent.java.eum.reflection.WCookie;
+import rocks.inspectit.agent.java.eum.reflection.WHttpServletRequest;
 import rocks.inspectit.agent.java.eum.reflection.WHttpServletResponse;
 import rocks.inspectit.agent.java.proxy.IProxySubject;
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
 import rocks.inspectit.agent.java.proxy.ProxyFor;
 import rocks.inspectit.agent.java.proxy.ProxyMethod;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanContextImpl;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.util.ConversionUtils;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.util.RandomUtils;
 
 /**
  *
@@ -43,6 +49,16 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 	private WHttpServletResponse wrappedResponse;
 
 	/**
+	 * The original, uninstrumented request for this response.
+	 */
+	private WHttpServletRequest wrappedRequest;
+
+	/**
+	 * The tracer for performing the trace corelation.
+	 */
+	private TracerImpl tracer;
+
+	/**
 	 * The linker used for building this proxy instance.
 	 */
 	private IRuntimeLinker linker;
@@ -50,12 +66,7 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 	/**
 	 * The tag which will be injected into the HTML code.
 	 */
-	private String tagToInject;
-
-	/**
-	 * If non-null, a set-cookie header will be added with this cookie.
-	 */
-	private Object cookieToSet;
+	private EumScriptTagPrinter tagToInject;
 
 	/**
 	 * Buffer all Calls issued which modify the content-length header. We omit these calls if we
@@ -72,19 +83,23 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 	 * Constructor. After the Construction, a proxy has to be generated using a
 	 * {@link IRuntimeLinker}.
 	 *
+	 * @param requestObject
+	 *            the javax.servlet.http.HTTPServletResponse which triggered this response.
 	 * @param responseObject
 	 *            the javax.servlet.http.HTTPServletResponse to wrap.
-	 * @param cookieToSet
-	 *            the javax.servlet.http.Cookie which shall be set. Null, if no cookie should be
-	 *            set.
+	 * @param tracer
+	 *            the tracer used for request correlation
 	 * @param tagToInject
 	 *            the tag to inject
 	 */
-	public TagInjectionResponseWrapper(Object responseObject, Object cookieToSet, String tagToInject) {
-		this.tagToInject = tagToInject;
-		this.cookieToSet = cookieToSet;
-		contentLengthHeaderModifications = new ArrayList<Runnable>();
+	public TagInjectionResponseWrapper(Object requestObject, Object responseObject, TracerImpl tracer, EumScriptTagPrinter tagToInject) {
+		// copy the tag printer we further modify it, for example with request correlation
+		// information
+		this.tagToInject = tagToInject.clone();
+		this.tracer = tracer;
 		wrappedResponse = WHttpServletResponse.wrap(responseObject);
+		wrappedRequest = WHttpServletRequest.wrap(requestObject);
+		contentLengthHeaderModifications = new ArrayList<Runnable>();
 	}
 
 	@Override
@@ -116,7 +131,7 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 			if (isNonHtmlContentTypeSet() || (originalWriter instanceof TagInjectionPrintWriter)) {
 				wrappedWriter = originalWriter;
 			} else {
-				wrappedWriter = new TagInjectionPrintWriter(originalWriter, tagToInject);
+				wrappedWriter = new TagInjectionPrintWriter(originalWriter, tagToInject.printTags());
 			}
 		}
 		return wrappedWriter;
@@ -139,7 +154,7 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 			if (isNonHtmlContentTypeSet() || linker.isProxyInstance(originalStream, TagInjectionOutputStream.class)) {
 				wrappedStream = originalStream;
 			} else {
-				TagInjectionOutputStream resultStr = new TagInjectionOutputStream(originalStream, tagToInject);
+				TagInjectionOutputStream resultStr = new TagInjectionOutputStream(originalStream, tagToInject.printTags());
 				resultStr.setEncoding(wrappedResponse.getCharacterEncoding());
 
 				ClassLoader cl = wrappedResponse.getWrappedElement().getClass().getClassLoader();
@@ -290,9 +305,62 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 				cmd.run();
 			}
 		} else {
-			if (cookieToSet != null) {
-				wrappedResponse.addCookie(cookieToSet);
+			setSessionIDCookie();
+			setTraceCorrelationInformation();
+		}
+	}
+
+	/**
+	 *
+	 * Generates and sets the cookie for tracking the user session.
+	 *
+	 */
+	private void setSessionIDCookie() {
+		// check if it already has an id set, if yes don't do anything
+		Object[] cookies = wrappedRequest.getCookies();
+		if (cookies != null) {
+			for (Object cookieObj : cookies) {
+				WCookie cookie = WCookie.wrap(cookieObj);
+				if (JSAgentBuilder.SESSION_ID_COOKIE_NAME.equals(cookie.getName())) {
+					return; // cookie already present, nothing todo
+				}
 			}
+		}
+
+		String sessionID = ConversionUtils.toHexString(RandomUtils.randomLong());
+
+		// otherwise generate the cookie
+		ClassLoader cl = wrappedResponse.getWrappedElement().getClass().getClassLoader();
+		Object cookie = WCookie.newInstance(cl, JSAgentBuilder.SESSION_ID_COOKIE_NAME, sessionID);
+		WCookie wrappedCookie = WCookie.wrap(cookie);
+		wrappedCookie.setPath("/");
+		// We do not set any expiration age - the default age "-1" represents a session cookie which
+		// is deleted when the browser is closed
+		wrappedResponse.addCookie(cookie);
+	}
+
+	/**
+	 * Sets the information for correlating the initial request.
+	 *
+	 */
+	private void setTraceCorrelationInformation() {
+
+		SpanContextImpl context = tracer.getCurrentContext();
+		if (context != null) {
+			String traceID = ConversionUtils.toHexString(context.getTraceId());
+			// add it to the JS settings
+			tagToInject.setSetting(JSAgentBuilder.TRACEID_CORRELATION_SETTING, "\"" + traceID + "\"");
+
+			// add a cookie with short time-to-live to detect caching at the client side
+			ClassLoader cl = wrappedResponse.getWrappedElement().getClass().getClassLoader();
+			Object cookie = WCookie.newInstance(cl, JSAgentBuilder.TRACEID_CORRELATION_COOKIE_PREFIX + traceID, "1");
+			WCookie wrappedCookie = WCookie.wrap(cookie);
+			wrappedCookie.setPath("/");
+			// short time to live just in case our script is not running
+			wrappedCookie.setMaxAge(2 * 60);
+
+			wrappedResponse.addCookie(cookie);
+
 		}
 	}
 

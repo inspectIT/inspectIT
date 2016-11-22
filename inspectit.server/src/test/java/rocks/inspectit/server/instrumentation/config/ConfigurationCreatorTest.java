@@ -319,7 +319,7 @@ public class ConfigurationCreatorTest extends TestBase {
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters());
 			verifyNoMoreInteractions(registrationService);
 		}
-		
+
 		@Test
 		public void eumConfig() throws Exception {
 
@@ -329,6 +329,9 @@ public class ConfigurationCreatorTest extends TestBase {
 			when(config.getScriptBaseUrl()).thenReturn(url);
 			String modules = "12a";
 			when(config.getActiveModules()).thenReturn(modules);
+			when(config.isListenerInstrumentationAllowed()).thenReturn(false);
+			when(config.isAgentMinificationEnabled()).thenReturn(false);
+
 			when(environment.getEumConfig()).thenReturn(config);
 
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
@@ -337,6 +340,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(eumConfig.isEnabled(), is(true));
 			assertThat(eumConfig.getActiveModules(), is(modules));
 			assertThat(eumConfig.getScriptBaseUrl(), is(url));
+			assertThat(eumConfig.isListenerInstrumentationAllowed(), is(false));
+			assertThat(eumConfig.isAgentMinificationEnabled(), is(false));
 		}
 
 		@Test
