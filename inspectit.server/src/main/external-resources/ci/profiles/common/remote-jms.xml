@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<profile schemaVersion="4"  id="remote-jms" name="Remote-JMS" common="true" default="true" created-on="2016-11-24T12:00:00" description="Profile for the Remote JMS Calls."
+<profile schemaVersion="5"  id="remote-jms" name="Remote-JMS" common="true" default="true" created-on="2016-11-24T12:00:00" description="Profile for the Remote JMS Calls."
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<sensor-assignment-profile-data>

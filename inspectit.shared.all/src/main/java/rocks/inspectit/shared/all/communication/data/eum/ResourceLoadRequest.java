@@ -1,26 +1,18 @@
 package rocks.inspectit.shared.all.communication.data.eum;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Request which contains informations about a single resource load. (e.g. CSS file)
  *
- * @author David Monschein
+ * @author David Monschein, Jonas Kunz
  */
-public class ResourceLoadRequest extends Request {
+public class ResourceLoadRequest extends AbstractRequest {
 
 	/**
 	 * serial Version UID.
 	 */
 	private static final long serialVersionUID = 583794863578163599L;
-
-	/**
-	 * Start time of the resource load request.
-	 */
-	private double startTime;
-
-	/**
-	 * End time of the resource load request.
-	 */
-	private double endTime;
 
 	/**
 	 * Determines from what the resource loading got triggered.
@@ -33,47 +25,10 @@ public class ResourceLoadRequest extends Request {
 	private long transferSize;
 
 	/**
-	 * The URL which triggered the resource load.
+	 * Stores the current URL of the main page when the request was recorded.
 	 */
-	private String initiatorUrl;
-
-	/**
-	 * Gets {@link #startTime}.
-	 *
-	 * @return {@link #startTime}
-	 */
-	public double getStartTime() {
-		return this.startTime;
-	}
-
-	/**
-	 * Sets {@link #startTime}.
-	 *
-	 * @param startTime
-	 *            New value for {@link #startTime}
-	 */
-	public void setStartTime(double startTime) {
-		this.startTime = startTime;
-	}
-
-	/**
-	 * Gets {@link #endTime}.
-	 *
-	 * @return {@link #endTime}
-	 */
-	public double getEndTime() {
-		return this.endTime;
-	}
-
-	/**
-	 * Sets {@link #endTime}.
-	 *
-	 * @param endTime
-	 *            New value for {@link #endTime}
-	 */
-	public void setEndTime(double endTime) {
-		this.endTime = endTime;
-	}
+	@JsonProperty
+	private String baseUrl;
 
 	/**
 	 * Gets {@link #initiatorType}.
@@ -85,59 +40,37 @@ public class ResourceLoadRequest extends Request {
 	}
 
 	/**
-	 * Sets {@link #initiatorType}.
+	 * Gets {@link #transferSize}.
 	 *
-	 * @param initiatorType
-	 *            New value for {@link #initiatorType}
+	 * @return {@link #transferSize}
 	 */
-	public void setInitiatorType(String initiatorType) {
-		this.initiatorType = initiatorType;
+	public long getTransferSize() {
+		return this.transferSize;
+	}
+
+	/**
+	 * Gets {@link #baseUrl}.
+	 *
+	 * @return {@link #baseUrl}
+	 */
+	public String getBaseUrl() {
+		return this.baseUrl;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RequestType getRequestType() {
-		return RequestType.RESOURCELOAD;
+	public boolean isAsyncCall() {
+		return true;
 	}
 
 	/**
-	 * Gets {@link #transferSize}.
-	 *
-	 * @return {@link #transferSize}
+	 * {@inheritDoc}
 	 */
-	public long getTransferSize() {
-		return transferSize;
-	}
-
-	/**
-	 * Sets {@link #transferSize}.
-	 *
-	 * @param transferSize
-	 *            New value for {@link #transferSize}
-	 */
-	public void setTransferSize(long transferSize) {
-		this.transferSize = transferSize;
-	}
-
-	/**
-	 * Gets {@link #initiatorUrl}.
-	 *
-	 * @return {@link #initiatorUrl}
-	 */
-	public String getInitiatorUrl() {
-		return initiatorUrl;
-	}
-
-	/**
-	 * Sets {@link #initiatorUrl}.
-	 *
-	 * @param initiatorUrl
-	 *            New value for {@link #initiatorUrl}
-	 */
-	public void setInitiatorUrl(String initiatorUrl) {
-		this.initiatorUrl = initiatorUrl;
+	@Override
+	public void deserializationComplete(Beacon beacon) {
+		super.resolveRelativeUrl(baseUrl);
 	}
 
 	/**
@@ -147,13 +80,8 @@ public class ResourceLoadRequest extends Request {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		long temp;
-		temp = Double.doubleToLongBits(this.endTime);
-		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		result = (prime * result) + ((this.baseUrl == null) ? 0 : this.baseUrl.hashCode());
 		result = (prime * result) + ((this.initiatorType == null) ? 0 : this.initiatorType.hashCode());
-		result = (prime * result) + ((this.initiatorUrl == null) ? 0 : this.initiatorUrl.hashCode());
-		temp = Double.doubleToLongBits(this.startTime);
-		result = (prime * result) + (int) (temp ^ (temp >>> 32));
 		result = (prime * result) + (int) (this.transferSize ^ (this.transferSize >>> 32));
 		return result;
 	}
@@ -173,7 +101,11 @@ public class ResourceLoadRequest extends Request {
 			return false;
 		}
 		ResourceLoadRequest other = (ResourceLoadRequest) obj;
-		if (Double.doubleToLongBits(this.endTime) != Double.doubleToLongBits(other.endTime)) {
+		if (this.baseUrl == null) {
+			if (other.baseUrl != null) {
+				return false;
+			}
+		} else if (!this.baseUrl.equals(other.baseUrl)) {
 			return false;
 		}
 		if (this.initiatorType == null) {
@@ -181,16 +113,6 @@ public class ResourceLoadRequest extends Request {
 				return false;
 			}
 		} else if (!this.initiatorType.equals(other.initiatorType)) {
-			return false;
-		}
-		if (this.initiatorUrl == null) {
-			if (other.initiatorUrl != null) {
-				return false;
-			}
-		} else if (!this.initiatorUrl.equals(other.initiatorUrl)) {
-			return false;
-		}
-		if (Double.doubleToLongBits(this.startTime) != Double.doubleToLongBits(other.startTime)) {
 			return false;
 		}
 		if (this.transferSize != other.transferSize) {

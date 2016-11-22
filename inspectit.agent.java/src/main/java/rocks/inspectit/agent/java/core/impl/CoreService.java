@@ -36,7 +36,7 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
-import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
+import rocks.inspectit.shared.all.communication.data.eum.EUMBeaconElement;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 
@@ -297,9 +297,17 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addEUMData(AbstractEUMData eumData) {
-		sensorDataObjects.put(String.valueOf(counter.incrementAndGet()), eumData);
-		notifyListListeners();
+	public void addEUMData(EUMBeaconElement data) {
+		if (data instanceof DefaultData) {
+			DefaultData ddata = (DefaultData) data;
+			//TODO: Allow null platform IDs by the buffer as there actually is no platform for EUM spans
+			ddata.setPlatformIdent(platformManager.getPlatformId());
+			sensorDataObjects.put(String.valueOf(counter.incrementAndGet()), ddata);
+			notifyListListeners();
+		} else {
+			throw new RuntimeException(data.getClass().getName() + " does not inherit from DefaultData!");
+		}
+
 	}
 
 	/**

@@ -68,7 +68,7 @@ public class SpanIdent implements Sizeable, Serializable {
 	 * @return If this is span identification for a root span.
 	 */
 	public boolean isRoot() {
-		return (this.parentId == this.id) && (this.traceId == this.id);
+		return (this.parentId == this.id);
 	}
 
 	/**

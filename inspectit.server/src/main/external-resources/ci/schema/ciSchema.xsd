@@ -555,6 +555,9 @@
     <xs:attribute name="eum-enabled" type="xs:boolean" use="required"/>
     <xs:attribute name="eum-script-base-url" type="xs:string" use="required"/>
     <xs:attribute name="active-modules" type="xs:string" use="required"/>
+    <xs:attribute name="relevancyThreshold" type="xs:int" use="required"/>
+    <xs:attribute name="listenerInstrumentationAllowed" type="xs:boolean" use="required"/>
+    <xs:attribute name="agentMinificationEnabled" type="xs:boolean" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="timeSendingStrategyConfig">

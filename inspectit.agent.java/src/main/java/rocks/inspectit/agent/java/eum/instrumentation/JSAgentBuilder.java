@@ -8,9 +8,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.stereotype.Component;
 
 import com.google.common.io.ByteStreams;
 
+import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
 
 /**
@@ -19,7 +24,8 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
  * @author David Monschein
  *
  */
-public final class JSAgentBuilder {
+@Component
+public class JSAgentBuilder {
 
 	/**
 	 * The logger.
@@ -29,7 +35,17 @@ public final class JSAgentBuilder {
 	/**
 	 * The name of the cookie to use for storing the UEM session ID.
 	 */
-	public static final String SESSION_ID_COOKIE_NAME = "inspectIT_cookieId";
+	public static final String SESSION_ID_COOKIE_NAME = "inspectIT_session";
+
+	/**
+	 * The name of the cookie to use for storing the UEM session ID.
+	 */
+	public static final String TRACEID_CORRELATION_COOKIE_PREFIX = "inspectIT_traceid_";
+
+	/**
+	 * The name of the cookie to use for storing the UEM session ID.
+	 */
+	public static final String TRACEID_CORRELATION_SETTING = "traceid";
 
 	/**
 	 * Defines how long the JS Agent of the current revision shall stay in the browsers cache.
@@ -39,27 +55,58 @@ public final class JSAgentBuilder {
 	/**
 	 * Javascript code which starts the execution at the end when all plugins are loaded.
 	 */
-	private static final String EXECUTE_START_JAVASCRIPT = "inspectIT.start();";
+	private static final String EXECUTE_START_JAVASCRIPT = "inspectIT.init();";
 
 	/**
-	 * the path to the javascript in the resources.
+	 * The path to the not minified javascript in the resources.
 	 */
-	private static final String SCRIPT_RESOURCE_PATH = "/js/";
+	private static final String NORMAL_SCRIPT_RESOURCE_PATH = "/js/";
+
+	/**
+	 * The path to the minified javascript in the resources.
+	 */
+	private static final String MINIFIED_SCRIPT_RESOURCE_PATH = "/js/min/";
 
 	/**
 	 * the path to the js agent without any plugins.
 	 */
-	private static final String JSBASE_RESOURCE = SCRIPT_RESOURCE_PATH + "inspectit_jsagent_base.js";
+	private static final String JSBASE_RESOURCE = "inspectit_jsagent_base.js";
 
 	/**
 	 * Cache for the source of the individual JS Agent modules.
 	 */
-	private static ConcurrentHashMap<JSAgentModule, String> moduleSourceCache = new ConcurrentHashMap<JSAgentModule, String>();
+	private ConcurrentHashMap<JSAgentModule, String> moduleSourceCache = new ConcurrentHashMap<JSAgentModule, String>();
 
 	/**
 	 * Cache variable for the JS agent core source code.
 	 */
-	private static String agentCoreSource = null;
+	private String agentCoreSource = null;
+
+	/**
+	 * Flag whether to use the minified agent.
+	 */
+	private boolean useMinifedAgent;
+
+	/**
+	 * Configuration initialization. Automatically called by spring.
+	 *
+	 * @param config
+	 *            the configuration
+	 */
+	@Required
+	@Autowired
+	public void setConfiguration(IConfigurationStorage config) {
+		if (config != null) {
+			try {
+				useMinifedAgent = config.getEndUserMonitoringConfig().isAgentMinificationEnabled();
+			} catch (StorageException e) { // NOPMD
+				// fallback to normal agent
+				useMinifedAgent = false;
+			}
+		} else {
+			useMinifedAgent = false;
+		}
+	}
 
 	/**
 	 * Builds the JS agent from single char arguments.
@@ -68,9 +115,11 @@ public final class JSAgentBuilder {
 	 *            all arguments together as a string.
 	 * @return the generated stream which builds the agent.
 	 */
-	public static String buildJsFile(String arguments) {
+	public String buildJsFile(String arguments) {
 
 		StringBuilder script = new StringBuilder();
+		script.append("window.inspectIT_settings.activeAgentModules = \"").append(arguments).append("\";");
+
 		script.append(getAgentCoreSource());
 
 		// prevent duplicates of the modules added
@@ -86,8 +135,7 @@ public final class JSAgentBuilder {
 				}
 			}
 		}
-
-		script.append("\r\n").append(EXECUTE_START_JAVASCRIPT);
+		script.append(EXECUTE_START_JAVASCRIPT);
 
 		return script.toString();
 	}
@@ -97,7 +145,7 @@ public final class JSAgentBuilder {
 	 *         the cache.
 	 */
 	@SuppressWarnings({ "PMD" })
-	private static String getAgentCoreSource() {
+	private String getAgentCoreSource() {
 		if (agentCoreSource == null) {
 			synchronized (JSAgentBuilder.class) {
 				if (agentCoreSource == null) {
@@ -119,10 +167,10 @@ public final class JSAgentBuilder {
 	 * @return @return the modules source code, either loaded from the resources or directly fetched
 	 *         form the cache.
 	 */
-	private static String getAgentModuleSource(JSAgentModule module) {
+	private String getAgentModuleSource(JSAgentModule module) {
 		if (!moduleSourceCache.containsKey(module)) {
 			try {
-				String src = readResourceFile(SCRIPT_RESOURCE_PATH + module.getModuleSourceFile());
+				String src = readResourceFile(module.getModuleSourceFile());
 				moduleSourceCache.putIfAbsent(module, src);
 				return src;
 			} catch (Exception e) {
@@ -143,17 +191,18 @@ public final class JSAgentBuilder {
 	 * @throws IOException
 	 *             if the reading of the resource fails
 	 */
-	private static String readResourceFile(String path) throws IOException {
-		InputStream is = JSAgentBuilder.class.getResourceAsStream(path);
-		String source = new String(ByteStreams.toByteArray(is));
+	private String readResourceFile(String path) throws IOException {
+		StringBuilder fullpath = new StringBuilder();
+		if (useMinifedAgent) {
+			fullpath.append(MINIFIED_SCRIPT_RESOURCE_PATH);
+		} else {
+			fullpath.append(NORMAL_SCRIPT_RESOURCE_PATH);
+		}
+		fullpath.append(path);
+		InputStream is = JSAgentBuilder.class.getResourceAsStream(fullpath.toString());
+		String result = new String(ByteStreams.toByteArray(is));
 		is.close();
-		return source;
-	}
-
-	/**
-	 * No instance creation allowed.
-	 */
-	private JSAgentBuilder() {
+		return result;
 	}
 
 }

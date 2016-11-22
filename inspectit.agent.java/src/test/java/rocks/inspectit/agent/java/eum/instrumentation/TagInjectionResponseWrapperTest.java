@@ -21,9 +21,8 @@ import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.eum.instrumentation.TagInjectionOutputStream;
-import rocks.inspectit.agent.java.eum.instrumentation.TagInjectionResponseWrapper;
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -102,9 +101,18 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 	@Mock
 	javax.servlet.http.HttpServletResponse dummyResponse;
 
+	@Mock
+	javax.servlet.http.HttpServletRequest dummyRequest;
+
 	ByteArrayOutputStream streamResult;
 
 	StringWriter printerResult;
+
+	@Mock
+	EumScriptTagPrinter tagPrinter;
+
+	@Mock
+	TracerImpl tracer;
 
 	@Mock
 	IRuntimeLinker linker;
@@ -124,6 +132,9 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 		printerResult = new StringWriter();
 		PrintWriter pw = new PrintWriter(printerResult);
 
+		when(tagPrinter.printTags()).thenReturn(TEST_TAG);
+		when(tagPrinter.clone()).thenReturn(tagPrinter);
+
 		when(dummyResponse.getCharacterEncoding()).thenReturn(CHARACTER_ENCODING);
 		when(dummyResponse.getWriter()).thenReturn(pw);
 		when(dummyResponse.getOutputStream()).thenReturn(stream);
@@ -135,7 +146,7 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 		@BeforeMethod
 		public void init() {
 			printerResult.getBuffer().setLength(0);
-			respWrapper = new TagInjectionResponseWrapper(dummyResponse, null, TEST_TAG);
+			respWrapper = new TagInjectionResponseWrapper(dummyRequest, dummyResponse, tracer, tagPrinter);
 			respWrapper.proxyLinked(dummyProxy, linker);
 		}
 
@@ -183,7 +194,7 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 				}
 			});
 			streamResult.reset();
-			respWrapper = new TagInjectionResponseWrapper(dummyResponse, null, TEST_TAG);
+			respWrapper = new TagInjectionResponseWrapper(dummyRequest, dummyResponse, tracer, tagPrinter);
 			respWrapper.proxyLinked(dummyProxy, linker);
 		}
 
