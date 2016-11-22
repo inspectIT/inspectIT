@@ -1,4 +1,4 @@
-package rocks.inspectit.server.influx.dao.impl;
+package rocks.inspectit.server.influx.dao;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -29,6 +29,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.influx.InfluxAvailabilityChecker;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.influx.util.InfluxClientFactory;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
