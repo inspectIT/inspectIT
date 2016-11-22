@@ -11,6 +11,10 @@ defaultTasks 'releaseAndAnalyze'
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
+repositories {
+  mavenCentral() //or jcenter()
+}
+
 /** defined to have it included in Eclipse as source */
 sourceSets {
 	externalResources {
@@ -28,6 +32,7 @@ ext {
 
 /** Setting compile configuration as plugin in Eclipse needs it */
 configurations {
+  	closureCompiler
 	compile {
 		extendsFrom configurations.agentJavaProd
 	}
@@ -39,6 +44,7 @@ configurations {
 
 /** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
 dependencies {
+	closureCompiler 'com.google.javascript:closure-compiler:v20150609'
 	compile project(':inspectit.shared.all')
 	compile project(':inspectit.agent.java.sdk')
 	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
@@ -83,6 +89,47 @@ jar {
 		from file("${mainResources}/META-INF/MANIFEST.MF")
 	}
 }
+
+
+task minifyJS {
+	description = 'Minify JS Agent sources'
+	
+	def inputDir = file("${mainResources}/js")
+	def outputDir = file("$buildRoot/resources/main/js/min")
+	
+	inputs.dir inputDir
+	outputs.dir outputDir
+	
+	def inputDirPath = inputDir.path;
+	def outputDirPath = outputDir.path
+			
+	fileTree(dir: inputDirPath, include:"**/*.js").each {File file ->
+		doLast {
+		
+			def relativeInputFilePath = file.path.substring(inputDirPath.length() + 1)
+			def outputFilePath = outputDirPath+ file.path.substring(inputDirPath.length())
+			
+			//create the directory if required			
+			new File("$outputFilePath").getParentFile().mkdirs()
+			
+			javaexec {
+			
+				workingDir = inputDirPath
+			
+				classpath configurations.closureCompiler
+				main = 'com.google.javascript.jscomp.CommandLineRunner'
+				
+				def closureArgs = []
+				closureArgs << "--compilation_level=SIMPLE_OPTIMIZATIONS"
+				closureArgs << "--js_output_file=\"$outputFilePath\""  
+				closureArgs << "$relativeInputFilePath"
+				args closureArgs
+			}
+			
+		}
+	}
+}
+jar.dependsOn(minifyJS)
 
 /**
  * Creates the release package.

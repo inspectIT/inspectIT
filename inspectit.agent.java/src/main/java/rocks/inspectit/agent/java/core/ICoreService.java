@@ -4,7 +4,7 @@ import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
-import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
+import rocks.inspectit.shared.all.communication.data.eum.Beacon;
 
 /**
  * Interface definition for the core service. The core service is the central point of the Agent
@@ -95,10 +95,10 @@ public interface ICoreService {
 	/**
 	 * Adds a new EUm Record to the value storage to be sent.
 	 *
-	 * @param eumData
+	 * @param beacon
 	 *            the data t osend, must have a valid session id and element ID!
 	 */
-	void addEUMData(AbstractEUMData eumData);
+	void addEUMData(Beacon beacon);
 
 	/**
 	 * Triggers sending the buffered data.

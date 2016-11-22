@@ -1,11 +1,13 @@
 package rocks.inspectit.shared.all.communication.data.eum;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
- * Representing an AJAX request.
+ * EUM element representing an AJAX request.
  *
- * @author David Monschein
+ * @author David Monschein, Jonas Kunz
  */
-public class AjaxRequest extends Request {
+public class AjaxRequest extends AbstractRequest {
 
 	/**
 	 * serial Version UID.
@@ -13,66 +15,37 @@ public class AjaxRequest extends Request {
 	private static final long serialVersionUID = -2318566427302336923L;
 
 	/**
-	 * Start time of the Ajax request.
-	 */
-	private double startTime;
-
-	/**
-	 * End time of the Ajax request.
-	 */
-	private double endTime;
-
-	/**
 	 * Status with which the Ajax request was completed. (e.g. 200 for successful)
 	 */
+	@JsonProperty
 	private int status;
 
 	/**
 	 * Method which was used to send the Ajax request (e.g. GET or POST).
 	 */
+	@JsonProperty
 	private String method;
 
 	/**
-	 * The base URL of the ajax request.
+	 * A flag indicating whether this request was a non-blocking one, meaning that it was issued
+	 * asynchronously.
 	 */
+	@JsonProperty
+	private boolean isAsync; // NOPMD
+
+	/**
+	 * Stores the current URL of the main page when the request was recorded.
+	 */
+	@JsonProperty
 	private String baseUrl;
 
 	/**
-	 * Gets {@link #startTime}.
+	 * Gets {@link #status}.
 	 *
-	 * @return {@link #startTime}
+	 * @return {@link #status}
 	 */
-	public double getStartTime() {
-		return startTime;
-	}
-
-	/**
-	 * Sets {@link #startTime}.
-	 *
-	 * @param startTime
-	 *            New value for {@link #startTime}
-	 */
-	public void setStartTime(double startTime) {
-		this.startTime = startTime;
-	}
-
-	/**
-	 * Gets {@link #endTime}.
-	 *
-	 * @return {@link #endTime}
-	 */
-	public double getEndTime() {
-		return endTime;
-	}
-
-	/**
-	 * Sets {@link #endTime}.
-	 *
-	 * @param endTime
-	 *            New value for {@link #endTime}
-	 */
-	public void setEndTime(double endTime) {
-		this.endTime = endTime;
+	public int getStatus() {
+		return this.status;
 	}
 
 	/**
@@ -81,44 +54,15 @@ public class AjaxRequest extends Request {
 	 * @return {@link #method}
 	 */
 	public String getMethod() {
-		return method;
-	}
-
-	/**
-	 * Sets {@link #method}.
-	 *
-	 * @param method
-	 *            New value for {@link #method}
-	 */
-	public void setMethod(String method) {
-		this.method = method;
+		return this.method;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RequestType getRequestType() {
-		return RequestType.AJAX;
-	}
-
-	/**
-	 * Gets {@link #status}.
-	 *
-	 * @return {@link #status}
-	 */
-	public int getStatus() {
-		return status;
-	}
-
-	/**
-	 * Sets {@link #status}.
-	 *
-	 * @param status
-	 *            New value for {@link #status}
-	 */
-	public void setStatus(int status) {
-		this.status = status;
+	public boolean isAsyncCall() {
+		return isAsync;
 	}
 
 	/**
@@ -127,17 +71,7 @@ public class AjaxRequest extends Request {
 	 * @return {@link #baseUrl}
 	 */
 	public String getBaseUrl() {
-		return baseUrl;
-	}
-
-	/**
-	 * Sets {@link #baseUrl}.
-	 *
-	 * @param baseUrl
-	 *            New value for {@link #baseUrl}
-	 */
-	public void setBaseUrl(String baseUrl) {
-		this.baseUrl = baseUrl;
+		return this.baseUrl;
 	}
 
 	/**
@@ -148,12 +82,8 @@ public class AjaxRequest extends Request {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = (prime * result) + ((this.baseUrl == null) ? 0 : this.baseUrl.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(this.endTime);
-		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		result = (prime * result) + (this.isAsync ? 1231 : 1237);
 		result = (prime * result) + ((this.method == null) ? 0 : this.method.hashCode());
-		temp = Double.doubleToLongBits(this.startTime);
-		result = (prime * result) + (int) (temp ^ (temp >>> 32));
 		result = (prime * result) + this.status;
 		return result;
 	}
@@ -180,7 +110,7 @@ public class AjaxRequest extends Request {
 		} else if (!this.baseUrl.equals(other.baseUrl)) {
 			return false;
 		}
-		if (Double.doubleToLongBits(this.endTime) != Double.doubleToLongBits(other.endTime)) {
+		if (this.isAsync != other.isAsync) {
 			return false;
 		}
 		if (this.method == null) {
@@ -190,14 +120,10 @@ public class AjaxRequest extends Request {
 		} else if (!this.method.equals(other.method)) {
 			return false;
 		}
-		if (Double.doubleToLongBits(this.startTime) != Double.doubleToLongBits(other.startTime)) {
-			return false;
-		}
 		if (this.status != other.status) {
 			return false;
 		}
 		return true;
 	}
-
 
 }

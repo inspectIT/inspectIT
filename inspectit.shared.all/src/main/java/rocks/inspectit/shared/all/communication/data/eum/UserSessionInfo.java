@@ -1,14 +1,17 @@
 package rocks.inspectit.shared.all.communication.data.eum;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
- * Containing informations about an user session. A session should be unique for every user.
+ * Stores information about an user session. This element will be sent for every new tab openend,
+ * however as the ifnormation is consistent across tabs duplciate userSessionInfos received can be
+ * safely ignored.
  *
- * @author David Monschein
+ * @author David Monschein, Jonas Kunz
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserSessionInfo extends AbstractEUMData {
+public class UserSessionInfo extends AbstractEUMElement {
 
 	/**
 	 * serial Version UID.
@@ -31,47 +34,12 @@ public class UserSessionInfo extends AbstractEUMData {
 	private String language;
 
 	/**
-	 * Creates a new user session containing no information about the user.
-	 */
-	public UserSessionInfo() {
-	}
-
-	/**
-	 * Creates a new user session with all information about the user initialized.
-	 *
-	 * @param browser
-	 *            the browser which is used
-	 * @param device
-	 *            the device of the user
-	 * @param lang
-	 *            the language of he users browser
-	 * @param id
-	 *            an unique id representing this user
-	 */
-	public UserSessionInfo(String browser, String device, String lang, String id) {
-		super(id);
-		this.browser = browser;
-		this.device = device;
-		this.language = lang;
-	}
-
-	/**
 	 * Gets {@link #browser}.
 	 *
 	 * @return {@link #browser}
 	 */
 	public String getBrowser() {
-		return browser;
-	}
-
-	/**
-	 * Sets {@link #browser}.
-	 *
-	 * @param browser
-	 *            New value for {@link #browser}
-	 */
-	public void setBrowser(String browser) {
-		this.browser = browser;
+		return this.browser;
 	}
 
 	/**
@@ -80,17 +48,7 @@ public class UserSessionInfo extends AbstractEUMData {
 	 * @return {@link #device}
 	 */
 	public String getDevice() {
-		return device;
-	}
-
-	/**
-	 * Sets {@link #device}.
-	 *
-	 * @param device
-	 *            New value for {@link #device}
-	 */
-	public void setDevice(String device) {
-		this.device = device;
+		return this.device;
 	}
 
 	/**
@@ -99,17 +57,19 @@ public class UserSessionInfo extends AbstractEUMData {
 	 * @return {@link #language}
 	 */
 	public String getLanguage() {
-		return language;
+		return this.language;
 	}
 
-	/**
-	 * Sets {@link #language}.
-	 *
-	 * @param language
-	 *            New value for {@link #language}
-	 */
-	public void setLanguage(String language) {
-		this.language = language;
+	@Override
+	@JsonIgnore
+	public void setLocalID(long localId) {
+		// ignores calls as a UserSessionInfo does not really have a local id.
+	}
+
+	@Override
+	@JsonIgnore
+	public void setTabID(long sessionId) {
+		// ignores calls as a UserSessionInfo does not really have a tab id.
 	}
 
 	/**

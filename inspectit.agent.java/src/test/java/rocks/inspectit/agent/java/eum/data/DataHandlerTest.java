@@ -2,11 +2,18 @@ package rocks.inspectit.agent.java.eum.data;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -18,21 +25,25 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
+import rocks.inspectit.shared.all.communication.data.eum.Beacon;
 import rocks.inspectit.shared.all.communication.data.eum.UserSessionInfo;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 @SuppressWarnings({ "PMD" })
 public class DataHandlerTest extends TestBase {
 
-	private static final String SESSID_DEMOVALUE = "12345";
+	private static final String MODULES_DEMOVALUE = "m12";
+	private static final long TABID_DEMOVALUE = 12345;
+	private static final long SESSID_DEMOVALUE = 6789;
 
 	private static final long PLATFORM_ID = 17L;
 
-	private ObjectMapper mapper = new ObjectMapper();
 
 	@Mock
 	Logger inejctedLog;
+
+	@Mock
+	IdGenerator idGenerator;
 
 	@Mock
 	IPlatformManager platformManager;
@@ -40,7 +51,7 @@ public class DataHandlerTest extends TestBase {
 	@Mock
 	ICoreService coreService;
 
-	ArgumentCaptor<AbstractEUMData> sentElements;
+	ArgumentCaptor<Beacon> sentElements;
 
 	@InjectMocks
 	DataHandler dataHandler;
@@ -49,54 +60,92 @@ public class DataHandlerTest extends TestBase {
 	@BeforeMethod
 	public void initMocks() {
 		when(platformManager.getPlatformId()).thenReturn(PLATFORM_ID);
-		sentElements = ArgumentCaptor.forClass(AbstractEUMData.class);
+		sentElements = ArgumentCaptor.forClass(Beacon.class);
 		doNothing().when(coreService).addEUMData(sentElements.capture());
+		when(idGenerator.generateSessionID()).thenReturn(SESSID_DEMOVALUE);
+		when(idGenerator.generateTabID()).thenReturn(TABID_DEMOVALUE);
 	}
 
-	public String buildBeaconJson(String typeName, AbstractEUMData data) {
-		ObjectNode tree = mapper.valueToTree(data);
-		tree.put("type", typeName);
-		tree.remove("id");
-		tree.remove("platformIdent");
-		tree.remove("sensorTypeIdent");
-		tree.remove("timeStamp");
-		return tree.toString();
-
-	}
 
 	public static class InsertBeacon extends DataHandlerTest {
 
 		@Test
 		public void testSessionInfoSending() {
-			UserSessionInfo r = new UserSessionInfo();
-			r.setSessionId(SESSID_DEMOVALUE);
-			r.setBrowser("Firefox");
-			r.setDevice("iOS");
-			r.setLanguage("de");
+			ObjectNode beacon = new ObjectNode(JsonNodeFactory.instance);
+			ObjectNode sessInfo = new ObjectNode(JsonNodeFactory.instance);
+			sessInfo.put("type", "metaInfo");
+			sessInfo.put("browser", "Firefox");
+			sessInfo.put("device", "iOS");
+			sessInfo.put("language", "de");
 
-			String beacon = buildBeaconJson("userSession", r);
-			dataHandler.insertBeacon(beacon);
-			Mockito.verify(coreService, Mockito.times(1)).addEUMData(any(UserSessionInfo.class));
-			UserSessionInfo sent = (UserSessionInfo) sentElements.getValue();
+			beacon.put("sessionID", "" + SESSID_DEMOVALUE);
+			beacon.put("tabID", "" + TABID_DEMOVALUE);
+			beacon.put("activeAgentModules", MODULES_DEMOVALUE);
+			ArrayNode data = beacon.arrayNode();
+			beacon.put("data", data);
+			data.add(sessInfo);
 
-			assertThat(sent.getBrowser(), equalTo(r.getBrowser()));
-			assertThat(sent.getSessionId(), equalTo(r.getSessionId()));
-			assertThat(sent.getDevice(), equalTo(r.getDevice()));
-			assertThat(sent.getLanguage(), equalTo(r.getLanguage()));
-			assertThat(sent.getPlatformIdent(), equalTo(PLATFORM_ID));
+			String beaconJson = beacon.toString();
+			dataHandler.insertBeacon(beaconJson);
+			Mockito.verify(coreService, Mockito.times(1)).addEUMData(any(Beacon.class));
+			Beacon sent = sentElements.getValue();
+
+			assertThat(sent.getData().size(), equalTo(1));
+			assertThat(sent.getData().get(0), instanceOf(UserSessionInfo.class));
+			UserSessionInfo sentInfo = (UserSessionInfo) sent.getData().get(0);
+			assertThat(sentInfo.getBrowser(), equalTo("Firefox"));
+			assertThat(sentInfo.getDevice(), equalTo("iOS"));
+			assertThat(sentInfo.getLanguage(), equalTo("de"));
+			assertThat(sentInfo.getID().getSessionID(), equalTo(SESSID_DEMOVALUE));
+		}
+
+		@Test
+		public void testIDAssignment() throws JsonProcessingException, IOException {
+			ObjectNode beacon = new ObjectNode(JsonNodeFactory.instance);
+
+			beacon.put("sessionID", "" + Beacon.REQUEST_NEW_SESSION_ID_MARKER);
+			beacon.put("tabID", "" + Beacon.REQUEST_NEW_TAB_ID_MARKER);
+			beacon.put("activeAgentModules", MODULES_DEMOVALUE);
+			ArrayNode data = beacon.arrayNode();
+			beacon.put("data", data);
+
+			String beaconJson = beacon.toString();
+			String responseJson = dataHandler.insertBeacon(beaconJson);
+			Mockito.verify(coreService, Mockito.times(0)).addEUMData(any(Beacon.class));
+
+			JsonNode response = (new ObjectMapper()).readTree(responseJson);
+			assertThat(response, instanceOf(ObjectNode.class));
+			assertThat(response.get("sessionID").asLong(), equalTo(SESSID_DEMOVALUE));
+			assertThat(response.get("tabID").asLong(), equalTo(TABID_DEMOVALUE));
 		}
 
 		@Test
 		public void testInvalidBeaconSyntax() {
-			dataHandler.insertBeacon("a{\"type\":\"userSession\",\"device\":\"Windows\",\"browser\":\"Firefox\",\"language\":\"en-US\",\"sessionId\":\"eum_agent2_1476445972407_2\"}");
-			Mockito.verify(coreService, Mockito.times(0)).addEUMData(any(AbstractEUMData.class));
+			dataHandler.insertBeacon("nope { }");
+			Mockito.verify(coreService, Mockito.times(0)).addEUMData(any(Beacon.class));
 
 		}
 
 		@Test
 		public void testInvalidBeaconContent() {
-			dataHandler.insertBeacon("{\"type\":\"nothing\",\"desdfdsfice\":\"sdfsdf\"}");
-			Mockito.verify(coreService, Mockito.times(0)).addEUMData(any(AbstractEUMData.class));
+			ObjectNode beacon = new ObjectNode(JsonNodeFactory.instance);
+			ObjectNode sessInfo = new ObjectNode(JsonNodeFactory.instance);
+			sessInfo.put("type", "unkownType");
+			sessInfo.put("browser", "Firefox");
+			sessInfo.put("device", "iOS");
+			sessInfo.put("language", "de");
+
+			beacon.put("sessionID", "" + SESSID_DEMOVALUE);
+			beacon.put("tabID", "" + TABID_DEMOVALUE);
+			beacon.put("activeAgentModules", MODULES_DEMOVALUE);
+			ArrayNode data = beacon.arrayNode();
+			beacon.put("data", data);
+			data.add(sessInfo);
+
+			String beaconJson = beacon.toString();
+
+			dataHandler.insertBeacon(beaconJson);
+			Mockito.verify(coreService, Mockito.times(0)).addEUMData(any(Beacon.class));
 
 		}
 	}

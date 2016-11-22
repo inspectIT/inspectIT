@@ -6,6 +6,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import rocks.inspectit.agent.java.eum.data.IdGenerator;
+import rocks.inspectit.agent.java.eum.reflection.WCookie;
+import rocks.inspectit.agent.java.eum.reflection.WHttpServletRequest;
 import rocks.inspectit.agent.java.eum.reflection.WHttpServletResponse;
 import rocks.inspectit.agent.java.proxy.IProxySubject;
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
@@ -43,6 +46,16 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 	private WHttpServletResponse wrappedResponse;
 
 	/**
+	 * The original, uninstrumented request for this response.
+	 */
+	private WHttpServletRequest wrappedRequest;
+
+	/**
+	 * Generator for generating session IDs.
+	 */
+	private IdGenerator idGenerator;
+
+	/**
 	 * The linker used for building this proxy instance.
 	 */
 	private IRuntimeLinker linker;
@@ -51,11 +64,6 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 	 * The tag which will be injected into the HTML code.
 	 */
 	private String tagToInject;
-
-	/**
-	 * If non-null, a set-cookie header will be added with this cookie.
-	 */
-	private Object cookieToSet;
 
 	/**
 	 * Buffer all Calls issued which modify the content-length header. We omit these calls if we
@@ -72,19 +80,21 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 	 * Constructor. After the Construction, a proxy has to be generated using a
 	 * {@link IRuntimeLinker}.
 	 *
+	 * @param requestObject
+	 *            the javax.servlet.http.HTTPServletResponse which triggered this response.
 	 * @param responseObject
 	 *            the javax.servlet.http.HTTPServletResponse to wrap.
-	 * @param cookieToSet
-	 *            the javax.servlet.http.Cookie which shall be set. Null, if no cookie should be
-	 *            set.
+	 * @param idGenerator
+	 *            the isGenerator used for generating session cookies
 	 * @param tagToInject
 	 *            the tag to inject
 	 */
-	public TagInjectionResponseWrapper(Object responseObject, Object cookieToSet, String tagToInject) {
+	public TagInjectionResponseWrapper(Object requestObject, Object responseObject, IdGenerator idGenerator, String tagToInject) {
 		this.tagToInject = tagToInject;
-		this.cookieToSet = cookieToSet;
-		contentLengthHeaderModifications = new ArrayList<Runnable>();
+		this.idGenerator = idGenerator;
 		wrappedResponse = WHttpServletResponse.wrap(responseObject);
+		wrappedRequest = WHttpServletRequest.wrap(requestObject);
+		contentLengthHeaderModifications = new ArrayList<Runnable>();
 	}
 
 	@Override
@@ -290,10 +300,42 @@ public class TagInjectionResponseWrapper implements IProxySubject {
 				cmd.run();
 			}
 		} else {
-			if (cookieToSet != null) {
-				wrappedResponse.addCookie(cookieToSet);
+			Object sessionCookie = generateSessionIDCookie();
+			if (sessionCookie != null) {
+				wrappedResponse.addCookie(sessionCookie);
 			}
 		}
+	}
+
+	/**
+	 *
+	 * Generates the cookie for tracking the user session. The returned Cookie is of type
+	 * javax.servlet.http.Cookie.
+	 *
+	 * @return the new session ID cookie, or null if it is already set.
+	 */
+	private Object generateSessionIDCookie() {
+		// check if it already has an id set, if yes don't do anything
+		Object[] cookies = wrappedRequest.getCookies();
+		if (cookies != null) {
+			for (Object cookieObj : cookies) {
+				WCookie cookie = WCookie.wrap(cookieObj);
+				if (cookie.getName().equals(JSAgentBuilder.SESSION_ID_COOKIE_NAME)) {
+					return null; // cookie already present, nothing todo
+				}
+			}
+		}
+
+		String sessionID = String.valueOf(idGenerator.generateSessionID());
+
+		// otherwise generate the cookie
+		ClassLoader cl = wrappedResponse.getWrappedElement().getClass().getClassLoader();
+		Object cookie = WCookie.newInstance(cl, JSAgentBuilder.SESSION_ID_COOKIE_NAME, sessionID);
+		WCookie wrappedCookie = WCookie.wrap(cookie);
+		wrappedCookie.setPath("/");
+		// We do not set any expiration age - the default age "-1" represents a session cookie which
+		// is deleted when the browser is closed
+		return cookie;
 	}
 
 	/**

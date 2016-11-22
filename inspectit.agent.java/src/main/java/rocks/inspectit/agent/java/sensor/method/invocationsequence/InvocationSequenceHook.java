@@ -53,7 +53,7 @@ import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
-import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
+import rocks.inspectit.shared.all.communication.data.eum.Beacon;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
@@ -710,7 +710,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addEUMData(AbstractEUMData eumData) {
+	public void addEUMData(Beacon eumData) {
 		throw new UnsupportedMethodException();
 	}
 

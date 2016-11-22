@@ -21,8 +21,7 @@ import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.eum.instrumentation.TagInjectionOutputStream;
-import rocks.inspectit.agent.java.eum.instrumentation.TagInjectionResponseWrapper;
+import rocks.inspectit.agent.java.eum.data.IdGenerator;
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
@@ -102,6 +101,12 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 	@Mock
 	javax.servlet.http.HttpServletResponse dummyResponse;
 
+	@Mock
+	javax.servlet.http.HttpServletRequest dummyRequest;
+
+	@Mock
+	IdGenerator idGenerator;
+
 	ByteArrayOutputStream streamResult;
 
 	StringWriter printerResult;
@@ -135,7 +140,7 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 		@BeforeMethod
 		public void init() {
 			printerResult.getBuffer().setLength(0);
-			respWrapper = new TagInjectionResponseWrapper(dummyResponse, null, TEST_TAG);
+			respWrapper = new TagInjectionResponseWrapper(dummyRequest, dummyResponse, idGenerator, TEST_TAG);
 			respWrapper.proxyLinked(dummyProxy, linker);
 		}
 
@@ -183,7 +188,7 @@ public class TagInjectionResponseWrapperTest extends TestBase {
 				}
 			});
 			streamResult.reset();
-			respWrapper = new TagInjectionResponseWrapper(dummyResponse, null, TEST_TAG);
+			respWrapper = new TagInjectionResponseWrapper(dummyRequest, dummyResponse, idGenerator, TEST_TAG);
 			respWrapper.proxyLinked(dummyProxy, linker);
 		}
 
