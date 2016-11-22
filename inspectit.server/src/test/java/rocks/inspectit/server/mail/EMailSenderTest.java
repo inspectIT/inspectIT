@@ -20,6 +20,7 @@ import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.Transport;
 
 import org.apache.commons.mail.EmailException;
@@ -212,6 +213,8 @@ public class EMailSenderTest extends TestBase {
 
 		@Test
 		public void succesfully() throws Exception {
+			Session session = Session.getInstance(new Properties());
+			when(mailMock.getMailSession()).thenReturn(session);
 			when(objectFactoryMock.createHtmlEmail()).thenReturn(mailMock);
 			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
 			mailSender.defaultRecipientString = "one@example.com,two@example.com,invalid";
@@ -235,6 +238,7 @@ public class EMailSenderTest extends TestBase {
 			verify(mailMock).setSmtpPort(25);
 			verify(mailMock).setAuthentication("user", "passwd");
 			verify(mailMock).setFrom("sender@example.com", "Sender Name");
+			verify(mailMock).getMailSession();
 			verify(mailMock).addTo("one@example.com");
 			verify(mailMock).addTo("two@example.com");
 			verify(mailMock).addTo("three@example.com");
@@ -243,6 +247,9 @@ public class EMailSenderTest extends TestBase {
 			verify(mailMock).setTextMsg("textBody");
 			verify(mailMock).send();
 			verifyNoMoreInteractions(objectFactoryMock, transportMock, mailMock);
+			assertThat(session.getProperties().entrySet(), hasSize(2));
+			assertThat(session.getProperties(), hasEntry((Object) "key1", (Object) "val1"));
+			assertThat(session.getProperties(), hasEntry((Object) "key2", (Object) "val2"));
 		}
 
 		@Test

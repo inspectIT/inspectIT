@@ -230,6 +230,10 @@ public class EMailSender {
 		email.setAuthentication(smtpUser, smtpPassword);
 		email.setFrom(senderAddress, senderName);
 
+		if ((additionalProperties != null) && !additionalProperties.isEmpty()) {
+			email.getMailSession().getProperties().putAll(additionalProperties);
+		}
+
 		for (String defaultTo : defaultRecipients) {
 			try {
 				email.addTo(defaultTo);
