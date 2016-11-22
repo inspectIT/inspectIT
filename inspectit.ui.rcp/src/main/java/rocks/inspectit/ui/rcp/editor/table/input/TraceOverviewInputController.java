@@ -77,11 +77,13 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 		TIME("Start Time", 200, InspectITImages.IMG_TIMESTAMP, DefaultDataComparatorEnum.TIMESTAMP),
 		/** The duration column. */
 		DURATION("Duration (ms)", 100, InspectITImages.IMG_TIME, SpanComparator.DURATION),
+		/** Origin. */
+		ORIGIN("Origin", 120, null, null),
 		/** Propagation type. */
 		PROPAGATION("Propagation", 120, null, SpanComparator.PROPAGATION_TYPE),
 		/** Details. */
 		DETAILS("Details", 300, null, null),
-		/** Details. */
+		/** Trace Id. */
 		TRACE_ID("Trace ID", 120, null, null);
 
 		/** The name. */
@@ -437,6 +439,8 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 			switch (enumId) {
 			case PROPAGATION:
 				return ImageFormatter.getPropagationImage(data.getPropagationType());
+			case ORIGIN:
+				return ImageFormatter.getSpanOriginImage(data, cachedDataService.getPlatformIdentForId(data.getPlatformIdent()));
 			default:
 				return null;
 			}
@@ -472,6 +476,8 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 			return TextFormatter.getPropagationStyled(data.getPropagationType());
 		case DETAILS:
 			return TextFormatter.getSpanDetailsFull(data, cachedDataService);
+		case ORIGIN:
+			return TextFormatter.getSpanOriginStyled(data, cachedDataService.getPlatformIdentForId(data.getPlatformIdent()));
 		case TRACE_ID:
 			return new StyledString(Long.toHexString(data.getSpanIdent().getTraceId()));
 		default:

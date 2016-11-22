@@ -123,5 +123,13 @@
 		<Bug pattern="ES_COMPARING_STRINGS_WITH_EQ" />
 	</Match>
 	<!-- RCP ignores END -->
+	
+	<!-- EUM ignores START -->	
+	<Match>
+		<Class name="rocks.inspectit.shared.all.communication.data.eum.EumSpanDeserializer" />
+		<Field name="om" />
+		<Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+	</Match>
+	<!-- EUM ignores END -->	
 
 </FindBugsFilter>

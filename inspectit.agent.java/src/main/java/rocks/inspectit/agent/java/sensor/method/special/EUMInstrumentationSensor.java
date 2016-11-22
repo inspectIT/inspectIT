@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.eum.data.IDataHandler;
+import rocks.inspectit.agent.java.eum.instrumentation.JSAgentBuilder;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
 
@@ -27,6 +29,12 @@ public class EUMInstrumentationSensor extends AbstractMethodSensor implements IM
 	private IRuntimeLinker linker;
 
 	/**
+	 * The tracer for correlating front and back end traces.
+	 */
+	@Autowired
+	private TracerImpl tracer;
+
+	/**
 	 * Handles the data which we get from the JS agent.
 	 */
 	@Autowired
@@ -37,6 +45,12 @@ public class EUMInstrumentationSensor extends AbstractMethodSensor implements IM
 	 */
 	@Autowired
 	private IConfigurationStorage config;
+
+	/**
+	 * Java Script Agent builder.
+	 */
+	@Autowired
+	private JSAgentBuilder agentBuilder;
 
 	/**
 	 * The EUM instrumentation hook initialised by this sensor.
@@ -56,7 +70,7 @@ public class EUMInstrumentationSensor extends AbstractMethodSensor implements IM
 	 */
 	@Override
 	protected void initHook(Map<String, Object> parameters) {
-		hook = new EUMInstrumentationHook(linker, dataHandler, config);
+		hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 	}
 
 }

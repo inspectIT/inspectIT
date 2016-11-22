@@ -14,6 +14,11 @@ public enum JSAgentModule {
 	/**
 	 * Enum values for all existing JS modules.
 	 */
+	BROWSERINFO_MODULE('m', "plugins/browsermetainfo.js", "Browser Meta-Info Capturing", "When enabled, the browser alongside with additional meta information of users is captured."),
+
+	/**
+	 * Module for tracking AJAX requests.
+	 */
 	AJAX_MODULE('a', "plugins/ajax.js", "AJAX Capturing Module", "This module is responsible for capturing AJAX requests."),
 	/**
 	 * Module for instrumenting asynchronous JS functions.
