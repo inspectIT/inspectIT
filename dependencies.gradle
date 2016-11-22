@@ -87,6 +87,7 @@ configurations {
 	eclipseBase
 	antContrib
 	jarCheck
+	closureCompiler
 }
 // all our configurations to transitive=false
 configurations.sharedAllProd.transitive = false
@@ -139,8 +140,16 @@ dependencies {
 
 		'com.google.guava:guava:18.0',
 		'com.github.stephenc.high-scale-lib:high-scale-lib:1.1.2',
+		//needed for spring 3.1
 		'org.codehaus.jackson:jackson-core-asl:1.9.13',
-		'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+		'org.codehaus.jackson:jackson-mapper-asl:1.9.13',
+		
+		//needed for EUM (de)serialization
+		'com.fasterxml.jackson.core:jackson-annotations:2.7.0',
+		'com.fasterxml.jackson.core:jackson-core:2.7.2',
+		'com.fasterxml.jackson.core:jackson-databind:2.7.2',
+		
+		'io.opentracing:opentracing-api:0.20.9',
 	) 
 	sharedAllTest (
 		'nl.jqno.equalsverifier:equalsverifier:1.0.2',
@@ -261,10 +270,7 @@ dependencies {
 
 		'org.apache.httpcomponents:httpclient:4.1.1',
 		'org.apache.httpcomponents:httpcore:4.1.1',
-		'org.apache.httpcomponents:httpmime:4.1.1',
-
-		// opentracing api needed for tags
-		'io.opentracing:opentracing-api:0.20.9'
+		'org.apache.httpcomponents:httpmime:4.1.1'
 	)
 
 	/** other */
@@ -313,5 +319,8 @@ dependencies {
 	)
 	jarCheck (
 		'jarcheck:jarcheck:1.5'
+	)
+	closureCompiler (
+		'com.google.javascript:closure-compiler:v20150609'
 	)
 }

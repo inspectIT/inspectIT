@@ -36,6 +36,7 @@ import rocks.inspectit.agent.java.eum.instrumentation.JSAgentBuilder;
 import rocks.inspectit.agent.java.eum.instrumentation.TagInjectionResponseWrapper;
 import rocks.inspectit.agent.java.proxy.IProxySubject;
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
 import rocks.inspectit.shared.all.testbase.TestBase;
@@ -50,11 +51,10 @@ public class EUMInstrumentationHookTest extends TestBase {
 
 	static final long METHOD_ID = 11L;
 
-	@Mock
-	SpecialSensorConfig ssc;
+	static final String AGENT_CODE = "doSomething();";
 
 	@Mock
-	javax.servlet.Filter dummyFilter;
+	SpecialSensorConfig ssc;
 
 	@Mock
 	javax.servlet.Servlet dummyServlet;
@@ -75,7 +75,13 @@ public class EUMInstrumentationHookTest extends TestBase {
 	IDataHandler dataHandler;
 
 	@Mock
+	JSAgentBuilder agentBuilder;
+
+	@Mock
 	Logger log;
+
+	@Mock
+	TracerImpl tracer;
 
 	EUMInstrumentationHook hook;
 
@@ -88,10 +94,18 @@ public class EUMInstrumentationHookTest extends TestBase {
 		when(config.getEndUserMonitoringConfig()).thenReturn(eumConfig);
 		when(dummyResponse.getWriter()).thenReturn(Mockito.mock(PrintWriter.class));
 		when(dummyResponse.getOutputStream()).thenReturn(Mockito.mock(ServletOutputStream.class));
+		when(agentBuilder.buildJsFile(any(String.class))).thenReturn(AGENT_CODE);
 
 	}
 
 	TagInjectionResponseWrapper respWrapper;
+
+	private class FakeWrapper extends HttpServletResponseWrapper {
+
+		public FakeWrapper(HttpServletResponse response) {
+			super(response);
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	@BeforeMethod
@@ -115,10 +129,11 @@ public class EUMInstrumentationHookTest extends TestBase {
 
 		private static final String FAKE_BEACON = "Json beacon usually goes here..";
 
+
+
 		@Test
 		public void testBeaconInterception() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			String beaconUrl = eumConfig.getScriptBaseUrl() + JSAgentModule.BEACON_SUB_PATH;
 			when(dummyRequest.getRequestURI()).thenReturn(beaconUrl);
 			when(dummyRequest.getReader()).thenReturn(new BufferedReader(new StringReader(FAKE_BEACON)));
@@ -131,50 +146,29 @@ public class EUMInstrumentationHookTest extends TestBase {
 
 		@Test
 		public void testScriptInterception() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			String scriptUrl = eumConfig.getScriptBaseUrl() + JSAgentModule.JAVASCRIPT_URL_PREFIX + "32488_" + eumConfig.getActiveModules() + ".JS";
 			when(dummyRequest.getRequestURI()).thenReturn(scriptUrl);
-
 			StringWriter response = new StringWriter();
 			PrintWriter pw = new PrintWriter(response);
-
 			when(dummyResponse.getWriter()).thenReturn(pw);
 
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, new Object[] { dummyRequest, dummyResponse }, ssc);
+
 			assertThat(intercepted, equalTo(true));
-			assertThat(response.toString(), equalTo(JSAgentBuilder.buildJsFile(eumConfig.getActiveModules())));
+			assertThat(response.toString(), equalTo(AGENT_CODE));
 
 		}
 
 		@Test
 		public void testOtherRequestsInterception() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			String requestUrl = eumConfig.getScriptBaseUrl() + "dontinterceptme";
 			when(dummyRequest.getRequestURI()).thenReturn(requestUrl);
 
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, new Object[] { dummyRequest, dummyResponse }, ssc);
 
 			assertThat(intercepted, equalTo(false));
-			verify(dummyResponse, never()).getWriter();
-			verify(dummyResponse, never()).getOutputStream();
-
-		}
-
-		@Test
-		public void testFilterChainHandling() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
-			String requestUrl = eumConfig.getScriptBaseUrl() + "dontinterceptme";
-			when(dummyRequest.getRequestURI()).thenReturn(requestUrl);
-
-			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyFilter, new Object[] { dummyRequest, dummyResponse }, ssc);
-			assertThat(intercepted, equalTo(false));
-
-			intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, new Object[] { dummyRequest, dummyResponse }, ssc);
-			assertThat(intercepted, equalTo(false));
-
 			verify(dummyResponse, never()).getWriter();
 			verify(dummyResponse, never()).getOutputStream();
 
@@ -184,11 +178,12 @@ public class EUMInstrumentationHookTest extends TestBase {
 		@Test
 		public void testInvalidConfigInterception() throws IOException, StorageException {
 			when(config.getEndUserMonitoringConfig()).thenThrow(StorageException.class);
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			Object[] params = new Object[] { dummyRequest, dummyResponse };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
 			Object response = params[1];
+
 			assertThat(intercepted, equalTo(false));
 			assertThat(response, equalTo((Object) dummyResponse));
 
@@ -198,11 +193,12 @@ public class EUMInstrumentationHookTest extends TestBase {
 		@Test
 		public void testInvalidConfigHandling() throws IOException, StorageException {
 			when(config.getEndUserMonitoringConfig()).thenThrow(StorageException.class);
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			Object[] params = new Object[] { dummyRequest, dummyResponse };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
 			Object response = params[1];
+
 			assertThat(intercepted, equalTo(false));
 			assertThat(response, equalTo((Object) dummyResponse));
 
@@ -210,12 +206,13 @@ public class EUMInstrumentationHookTest extends TestBase {
 
 		@Test
 		public void testInvalidParamTypesHandling() throws IOException, StorageException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			Object invalidResponseObject = new Object();
 			Object[] params = new Object[] { invalidResponseObject, invalidResponseObject };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
 			Object response = params[1];
+
 			assertThat(intercepted, equalTo(false));
 			assertThat(response, equalTo(invalidResponseObject));
 
@@ -223,49 +220,50 @@ public class EUMInstrumentationHookTest extends TestBase {
 
 		@Test
 		public void testInstrumentation() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			Object[] params = new Object[] { dummyRequest, dummyResponse };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
 			Object response = params[1];
+
 			assertThat(intercepted, equalTo(false));
 			assertThat(response, instanceOf(FakeWrapper.class));
 		}
-
 		@SuppressWarnings("unchecked")
 		@Test
 		public void testPreventDoubleInstrumentation() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			Object[] params = new Object[] { dummyRequest, new FakeWrapper(dummyResponse) };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
+
 			assertThat(intercepted, equalTo(false));
 			verify(linker, never()).createProxy(any(Class.class), any(IProxySubject.class), any(ClassLoader.class));
 		}
 
 		@Test
 		public void testCookieGeneration() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			Object[] params = new Object[] { dummyRequest, dummyResponse };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
-			assertThat(intercepted, equalTo(false));
 			respWrapper.getWriter();
+
+			assertThat(intercepted, equalTo(false));
 			verify(dummyResponse, times(1)).addCookie(any(Cookie.class));
 		}
 
 		@Test
 		public void testPreventCookieOverwriting() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			String sessionId = "234587";
 			when(dummyRequest.getCookies()).thenReturn(new Cookie[] { new Cookie(JSAgentBuilder.SESSION_ID_COOKIE_NAME, sessionId) });
-
 			Object[] params = new Object[] { dummyRequest, dummyResponse };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
-			assertThat(intercepted, equalTo(false));
 			respWrapper.getWriter();
 
+			assertThat(intercepted, equalTo(false));
 			verify(dummyResponse, never()).addCookie(any(Cookie.class));
 		}
 
@@ -278,9 +276,9 @@ public class EUMInstrumentationHookTest extends TestBase {
 					return null;
 				}
 			});
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
+			hook = new EUMInstrumentationHook(linker, tracer, dataHandler, config, agentBuilder);
 			Object[] params = new Object[] { dummyRequest, dummyResponse };
+
 			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, params, ssc);
 			Object response = params[1];
 
@@ -291,35 +289,5 @@ public class EUMInstrumentationHookTest extends TestBase {
 
 		}
 
-	}
-
-	public static class AfterBody extends EUMInstrumentationHookTest {
-
-		@Test
-		public void testNoOperationInAfterBody() throws IOException {
-			hook = new EUMInstrumentationHook(linker, dataHandler, config);
-
-			String requestUrl = eumConfig.getScriptBaseUrl() + "dontinterceptme";
-			when(dummyRequest.getRequestURI()).thenReturn(requestUrl);
-
-			boolean intercepted = null != hook.beforeBody(METHOD_ID, dummyFilter, new Object[] { dummyRequest, dummyResponse }, ssc);
-			assertThat(intercepted, equalTo(false));
-			intercepted = null != hook.beforeBody(METHOD_ID, dummyServlet, new Object[] { dummyRequest, dummyResponse }, ssc);
-			assertThat(intercepted, equalTo(false));
-
-			hook.afterBody(METHOD_ID, dummyServlet, new Object[] { dummyRequest, dummyResponse }, null, ssc);
-			hook.afterBody(METHOD_ID, dummyFilter, new Object[] { dummyRequest, dummyResponse }, null, ssc);
-
-			verify(dummyResponse, never()).getWriter();
-			verify(dummyResponse, never()).getOutputStream();
-
-		}
-	}
-
-	private static class FakeWrapper extends HttpServletResponseWrapper {
-
-		public FakeWrapper(HttpServletResponse response) {
-			super(response);
-		}
 	}
 }

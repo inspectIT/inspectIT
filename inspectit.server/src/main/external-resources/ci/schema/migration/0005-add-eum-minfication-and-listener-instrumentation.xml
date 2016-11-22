@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<!-- In this update we'll add two flags to enable or disable minification and the permission of instrumenting listeners  -->
+
+	<!--Copy all -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+
+	<!--Add eum config attributes -->
+	<xsl:template match="environment/end-user-monitoring-config">
+		<xsl:copy>
+			<xsl:attribute name="listenerInstrumentationAllowed">true</xsl:attribute>
+			<xsl:attribute name="agentMinificationEnabled">true</xsl:attribute>
+			<xsl:apply-templates select="@* | node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>

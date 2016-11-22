@@ -6,11 +6,13 @@ package rocks.inspectit.agent.java.eum.data;
  */
 public interface IDataHandler {
 	/**
-	 * Parses the incoming beacon and decides whether it is a session creation or a user action and
-	 * then adds it to the session map or to the user action list.
+	 * Parses the incoming beacon. If the beacon requests for a new session and or tab ID, these IDs
+	 * are assigned and packed into the response.
 	 *
 	 * @param data
 	 *            the beacon which should get parsed and processed
+	 * @return the response string to send back to the client.
+	 *
 	 */
-	void insertBeacon(String data);
+	String insertBeacon(String data);
 }
