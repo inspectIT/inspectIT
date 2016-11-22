@@ -1,47 +1,100 @@
 
 /**
- * Async module for instrumenting asynchronous Javascript functions like setTimeout.
- * That allows us to be more precise with assigning requests to an user action.
+ * Async module for instrumenting asynchronous Javascript functions setTimeout and setInterval.
+ * 
  */
-(function () {
-
-	if(typeof window.inspectIT.plugins.async === "undefined") {
-		var originalSetTimeout = window.setTimeout;
-		var originalClearTimeout = window.clearTimeout;
+window.inspectIT.registerPlugin("asyncInstrumentation", (function() {
+	
+	var inspectIT = window.inspectIT;
+	
+	
+	/**
+	 * Instruments the setTimeout and clearTimeout function to be supported by the Action Bundling.
+	 */
+	function instrumentTimers() {
 		
-		/**
-		 * Instruments the setTimeout and clearTimeout function to be supported by the Action Bundling.
-		 */
-		function instrumentTimers() {
-			var timerChildMap = {};
-			
-			window.setTimeout = function(f) {
-				var enterAsync = inspectIT.action.enterChild();
+		var originalSetTimeout = window.setTimeout;
+		window.setTimeout = function(callback, duration) {
+			if(inspectIT.instrumentation.isEnabled()) {
 				
-				newFunction = function() {
-					var innerEnter = inspectIT.action.enterChild(enterAsync);
-					f.apply(this, arguments);
-					inspectIT.action.leaveChild(innerEnter);
-					inspectIT.action.leaveChild(enterAsync);
+				var setTimeoutTimestamp = inspectIT.util.timestampMS();
+				var parentElement = inspectIT.traceBuilder.getCurrentParent();
+				var funcName = inspectIT.util.getFunctionName(callback);
+				
+				var instrumentedCallback = function() {
+					var timerLog = inspectIT.createEUMElement("timerExecution");
+					timerLog.require("timerData");
+					timerLog.setParent(parentElement);
+					
+					timerLog.initiatorCallTimestamp = setTimeoutTimestamp;
+					timerLog.iterationNumber = 0;
+					timerLog.functionName = funcName;
+					timerLog.configuredTimeout = duration || 0;
+					
+					var originalThis = this;
+					var originalArgs = arguments;
+					
+					timerLog.buildTrace(true, function() {
+						callback.apply(originalThis,originalArgs);
+					})
+					
+					timerLog.markComplete("timerData");
 				}
+
+				var modifiedArgs = Array.prototype.slice.call(arguments);
+				modifiedArgs[0] = instrumentedCallback;
 				
-				var args = Array.prototype.slice.call(arguments);
-				args[0] = newFunction;
-				
-				var retVal = originalSetTimeout.apply(this, args);
-				timerChildMap[retVal] = enterAsync;
-				return retVal;
-			}
+				return originalSetTimeout.apply(this,modifiedArgs);
+			} else {
+				return originalSetTimeout.apply(this,arguments);
+			}		
 			
-			window.clearTimeout = function(id) {
-				inspectIT.action.leaveChild(timerChildMap[id]);
-				originalClearTimeout.apply(this, arguments);
-			}
 		}
 		
-		// adds the plugin
-		window.inspectIT.plugins.asnyc = {
-			init : instrumentTimers
-		};
+		var originalSetInterval = window.setInterval;
+		window.setInterval = function(callback, duration) {
+			if(inspectIT.instrumentation.isEnabled()) {
+				
+				var setIntervalTimestamp = inspectIT.util.timestampMS();
+				var parentElement = inspectIT.traceBuilder.getCurrentParent();
+				var funcName = inspectIT.util.getFunctionName(callback);
+				
+				var iterationCounter = 0;
+
+				var instrumentedCallback = function() {
+					var timerLog = inspectIT.createEUMElement("timerExecution");
+					timerLog.require("timerData");
+					timerLog.setParent(parentElement);
+					
+					timerLog.initiatorCallTimestamp = setIntervalTimestamp;
+					timerLog.functionName = funcName;
+					timerLog.configuredTimeout = duration || 0;
+					iterationCounter++;
+					timerLog.iterationNumber = iterationCounter;
+					
+					var originalThis = this;
+					var originalArgs = arguments;
+					
+					timerLog.buildTrace(true, function() {
+						callback.apply(originalThis,originalArgs);
+					})
+					
+					timerLog.markComplete("timerData");
+				}
+
+				var modifiedArgs = Array.prototype.slice.call(arguments);
+				modifiedArgs[0] = instrumentedCallback;
+				
+				return originalSetInterval.apply(this,modifiedArgs);
+			} else {
+				return originalSetInterval.apply(this,arguments);
+			}		
+			
+		}
+		
 	}
-})();
+		
+	return {
+		init: instrumentTimers
+	}
+})());

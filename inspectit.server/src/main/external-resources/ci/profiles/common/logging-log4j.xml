@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<profile schemaVersion="4" id="logging-log4j" name="Logging for log4j" common="true" created-on="2016-01-29T12:00:00" description="Profile for the log4j logging capturing."
+<profile schemaVersion="5" id="logging-log4j" name="Logging for log4j" common="true" created-on="2016-01-29T12:00:00" description="Profile for the log4j logging capturing."
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<!-- Configuration for Log4j -->

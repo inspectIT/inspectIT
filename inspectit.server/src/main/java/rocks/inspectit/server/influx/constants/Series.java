@@ -466,7 +466,7 @@ public interface Series {
 	 * @author Jonas Kunz
 	 *
 	 */
-	interface EUMBasicRequestSeries extends Series {
+	interface EUMBasicRequestSeries {
 		/**
 		 * See the corresponding field in {@link PageLoadRequest}.
 		 */
@@ -513,6 +513,11 @@ public interface Series {
 		/**
 		 * See the corresponding field in {@link PageLoadRequest}.
 		 */
+		String FIELD_SECURE_CONNECT_START = "secureConnectStart";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
 		String FIELD_CONNECT_START = "connectStart";
 
 		/**
@@ -530,6 +535,11 @@ public interface Series {
 		 * See the corresponding field in {@link PageLoadRequest}.
 		 */
 		String FIELD_DOM_INTERACTIVE = "domInteractive";
+
+		/**
+		 * See the corresponding field in {@link PageLoadRequest}.
+		 */
+		String FIELD_DOM_COMPLETE = "domComplete";
 
 		/**
 		 * See the corresponding field in {@link PageLoadRequest}.

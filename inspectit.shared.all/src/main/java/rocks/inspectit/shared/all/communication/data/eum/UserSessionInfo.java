@@ -1,14 +1,20 @@
 package rocks.inspectit.shared.all.communication.data.eum;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
- * Containing informations about an user session. A session should be unique for every user.
+ * Stores information about an user session. This element will be sent for every new tab openend,
+ * however as the information is consistent across tabs duplciate userSessionInfos received can be
+ * safely ignored.
  *
- * @author David Monschein
+ * @author David Monschein, Jonas Kunz
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class UserSessionInfo extends AbstractEUMData {
+@JsonIgnoreProperties({ "type", "id" })
+public class UserSessionInfo extends DefaultData implements EUMBeaconElement {
 
 	/**
 	 * serial Version UID.
@@ -16,43 +22,44 @@ public class UserSessionInfo extends AbstractEUMData {
 	private static final long serialVersionUID = 2607499843063635013L;
 
 	/**
+	 * The session ID.
+	 */
+	@JsonIgnore
+	private long sessionId;
+
+	/**
 	 * The browser name.
 	 */
+	@JsonProperty
 	private String browser;
 
 	/**
 	 * The device name.
 	 */
+	@JsonProperty
 	private String device;
 
 	/**
 	 * The browser language.
 	 */
+	@JsonProperty
 	private String language;
 
 	/**
-	 * Creates a new user session containing no information about the user.
+	 * {@inheritDoc}
 	 */
-	public UserSessionInfo() {
+	@Override
+	public DefaultData asDefaultData() {
+		return this;
 	}
 
 	/**
-	 * Creates a new user session with all information about the user initialized.
+	 * Gets {@link #sessionId}.
 	 *
-	 * @param browser
-	 *            the browser which is used
-	 * @param device
-	 *            the device of the user
-	 * @param lang
-	 *            the language of he users browser
-	 * @param id
-	 *            an unique id representing this user
+	 * @return {@link #sessionId}
 	 */
-	public UserSessionInfo(String browser, String device, String lang, String id) {
-		super(id);
-		this.browser = browser;
-		this.device = device;
-		this.language = lang;
+	public long getSessionId() {
+		return this.sessionId;
 	}
 
 	/**
@@ -61,17 +68,7 @@ public class UserSessionInfo extends AbstractEUMData {
 	 * @return {@link #browser}
 	 */
 	public String getBrowser() {
-		return browser;
-	}
-
-	/**
-	 * Sets {@link #browser}.
-	 *
-	 * @param browser
-	 *            New value for {@link #browser}
-	 */
-	public void setBrowser(String browser) {
-		this.browser = browser;
+		return this.browser;
 	}
 
 	/**
@@ -80,17 +77,7 @@ public class UserSessionInfo extends AbstractEUMData {
 	 * @return {@link #device}
 	 */
 	public String getDevice() {
-		return device;
-	}
-
-	/**
-	 * Sets {@link #device}.
-	 *
-	 * @param device
-	 *            New value for {@link #device}
-	 */
-	public void setDevice(String device) {
-		this.device = device;
+		return this.device;
 	}
 
 	/**
@@ -99,17 +86,15 @@ public class UserSessionInfo extends AbstractEUMData {
 	 * @return {@link #language}
 	 */
 	public String getLanguage() {
-		return language;
+		return this.language;
 	}
 
 	/**
-	 * Sets {@link #language}.
-	 *
-	 * @param language
-	 *            New value for {@link #language}
+	 * {@inheritDoc}
 	 */
-	public void setLanguage(String language) {
-		this.language = language;
+	@Override
+	public void deserializationComplete(Beacon beacon) {
+		this.sessionId = beacon.getSessionID();
 	}
 
 	/**
@@ -122,6 +107,7 @@ public class UserSessionInfo extends AbstractEUMData {
 		result = (prime * result) + ((this.browser == null) ? 0 : this.browser.hashCode());
 		result = (prime * result) + ((this.device == null) ? 0 : this.device.hashCode());
 		result = (prime * result) + ((this.language == null) ? 0 : this.language.hashCode());
+		result = (prime * result) + (int) (this.sessionId ^ (this.sessionId >>> 32));
 		return result;
 	}
 
@@ -159,6 +145,9 @@ public class UserSessionInfo extends AbstractEUMData {
 				return false;
 			}
 		} else if (!this.language.equals(other.language)) {
+			return false;
+		}
+		if (this.sessionId != other.sessionId) {
 			return false;
 		}
 		return true;

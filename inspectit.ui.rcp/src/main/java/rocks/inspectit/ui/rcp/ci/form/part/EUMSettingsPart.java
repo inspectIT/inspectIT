@@ -74,6 +74,22 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 	private TableViewer modulesTableViewer;
 
 	/**
+	 * The base URL under which the EUM will operate (e.g. place the script).
+	 */
+	private Text relevancyThresholdMS;
+
+	/**
+	 * Switch to disable or enable minification.
+	 */
+	private Button minificationEnabledButton;
+
+	/**
+	 * Switch to allow or prevent JS event listeners instrumentation.
+	 */
+	private Button listenerInstrumentationAllowedButton;
+
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param formPage
@@ -128,7 +144,31 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		scriptBaseUrl = toolkit.createText(mainComposite, environment.getEumConfig().getScriptBaseUrl(), SWT.BORDER | SWT.LEFT);
 		scriptBaseUrl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		createInfoLabel(mainComposite, toolkit,
-				"The url-prefix under which the agents monitoring scripts will be made accessible to the client.\nThis Url must be mapped by at least one servlet or filter, usually the base-url of other static content like scripts or images is a good choice here.\nAlso, the entered path must begin and end with a slash.");
+				"The url-prefix under which the agents monitoring scripts will be made accessible to the client.\n"
+						+ "This Url must be mapped by at least one servlet or filter, usually the base-url of other static content like scripts or images is a good choice here.\n"
+						+ "Also, the entered path must begin and end with a slash.");
+
+
+		toolkit.createLabel(mainComposite, "Relevancy Threshold (ms):").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		relevancyThresholdMS = toolkit.createText(mainComposite, String.valueOf(environment.getEumConfig().getRelevancyThreshold()), SWT.BORDER | SWT.LEFT);
+		relevancyThresholdMS.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		createInfoLabel(mainComposite, toolkit,
+				"This Threshold given in milliseconds prevents fast-running JS functions to be sent to the CMR, as this improves the performance and the clarity of traces.\n"
+						+ "A function execution will only be captured if its executation took at least as long as configured by this threshold.\n"
+						+ "Setting the threshold to zero will cause everything to be sent to the CMR.");
+
+		toolkit.createLabel(mainComposite, "Allow JS Listener Instrumentation:").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		listenerInstrumentationAllowedButton = toolkit.createButton(mainComposite, "", SWT.CHECK);
+		listenerInstrumentationAllowedButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		listenerInstrumentationAllowedButton.setSelection(environment.getEumConfig().isListenerInstrumentationAllowed());
+		createInfoLabel(mainComposite, toolkit, "If deactivated, the JS agent will not instrument any JS event listeners to prevent performance issues.");
+
+		toolkit.createLabel(mainComposite, "Deliver Minified JS Agent:").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		minificationEnabledButton = toolkit.createButton(mainComposite, "", SWT.CHECK);
+		minificationEnabledButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		minificationEnabledButton.setSelection(environment.getEumConfig().isAgentMinificationEnabled());
+		createInfoLabel(mainComposite, toolkit,
+				"If enabled, the clients will receive a minified version of the JS Agent which reduces the size and improves the performance. Should only be disabled for debugging.");
 
 		ValidationControlDecoration<Text> scriptBaseUrlValidation = new ValidationControlDecoration<Text>(scriptBaseUrl, formPage.getManagedForm().getMessageManager()) {
 			@Override
@@ -139,6 +179,21 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		};
 		scriptBaseUrlValidation.setDescriptionText("The URL must begin and end with a slash");
 		scriptBaseUrlValidation.registerListener(SWT.Modify);
+
+		ValidationControlDecoration<Text> relevancyThresholdValidation = new ValidationControlDecoration<Text>(relevancyThresholdMS, formPage.getManagedForm().getMessageManager()) {
+			@Override
+			protected boolean validate(Text control) {
+				try {
+					int value = Integer.parseInt(control.getText());
+					return value >= 0;
+				} catch (NumberFormatException e) {
+					return false;
+				}
+			}
+
+		};
+		relevancyThresholdValidation.setDescriptionText("The relevancy threshold must be a duration in milliseconds.");
+		relevancyThresholdValidation.registerListener(SWT.Modify);
 
 		modulesTable = toolkit.createTable(mainComposite, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.CHECK);
 		GridData tableLayout = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -177,6 +232,9 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		};
 		eumEnabledButton.addListener(SWT.Selection, dirtyListener);
 		scriptBaseUrl.addListener(SWT.Modify, dirtyListener);
+		listenerInstrumentationAllowedButton.addListener(SWT.Selection, dirtyListener);
+		minificationEnabledButton.addListener(SWT.Selection, dirtyListener);
+		relevancyThresholdMS.addListener(SWT.Modify, dirtyListener);
 
 		updateEnabledState();
 	}
@@ -185,8 +243,12 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 	 * Disables or enabled the controls depending on wheterh EUM is enalbed or not.
 	 */
 	private void updateEnabledState() {
-		modulesTable.setEnabled(eumEnabledButton.getSelection());
-		scriptBaseUrl.setEnabled(eumEnabledButton.getSelection());
+		boolean en = eumEnabledButton.getSelection();
+		modulesTable.setEnabled(en);
+		scriptBaseUrl.setEnabled(en);
+		listenerInstrumentationAllowedButton.setEnabled(en);
+		minificationEnabledButton.setEnabled(en);
+		relevancyThresholdMS.setEnabled(en);
 	}
 
 	/**
@@ -252,7 +314,10 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		if (onSave) {
 			super.commit(onSave);
 			environment.getEumConfig().setEumEnabled(eumEnabledButton.getSelection());
+			environment.getEumConfig().setListenerInstrumentationAllowed(listenerInstrumentationAllowedButton.getSelection());
+			environment.getEumConfig().setAgentMinificationEnabled(minificationEnabledButton.getSelection());
 			environment.getEumConfig().setScriptBaseUrl(scriptBaseUrl.getText());
+			environment.getEumConfig().setRelevancyThreshold(Integer.parseInt(relevancyThresholdMS.getText()));
 			StringBuilder moduleString = new StringBuilder();
 			for (TableItem item : modulesTableViewer.getTable().getItems()) {
 				JSAgentModule moduleInfo = (JSAgentModule) item.getData();
