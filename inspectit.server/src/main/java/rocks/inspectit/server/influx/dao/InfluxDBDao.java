@@ -1,4 +1,4 @@
-package rocks.inspectit.server.influx.dao.impl;
+package rocks.inspectit.server.influx.dao;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

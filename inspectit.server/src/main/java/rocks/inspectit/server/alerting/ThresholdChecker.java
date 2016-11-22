@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.alerting.state.AlertingState;
-import rocks.inspectit.server.influx.dao.impl.InfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.influx.util.InfluxQueryFactory;
 import rocks.inspectit.server.influx.util.QueryResultWrapper;
 import rocks.inspectit.shared.all.spring.logger.Log;

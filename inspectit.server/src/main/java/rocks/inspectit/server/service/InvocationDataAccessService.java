@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import rocks.inspectit.server.alerting.AlertRegistry;
 import rocks.inspectit.server.alerting.util.AlertingUtils;
 import rocks.inspectit.server.dao.InvocationDataDao;
-import rocks.inspectit.server.influx.dao.impl.InfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.influx.util.InfluxQueryFactory;
 import rocks.inspectit.server.influx.util.QueryResultWrapper;
 import rocks.inspectit.server.spring.aop.MethodLog;

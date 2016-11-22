@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import rocks.inspectit.server.influx.dao.impl.InfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.cmr.service.IInfluxDBService;
 

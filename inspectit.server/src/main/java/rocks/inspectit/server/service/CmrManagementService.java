@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rocks.inspectit.server.cache.IBuffer;
-import rocks.inspectit.server.influx.dao.impl.InfluxDBDao;
+import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.property.PropertyManager;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.ShutdownService;
