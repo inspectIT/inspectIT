@@ -36,7 +36,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import io.opentracing.tag.Tags;
-import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
@@ -98,7 +97,7 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 		/** The business transaction column. */
 		BUSINESS_TRANSACTION("Business Transaction", 150, null),
 		/** Propagation. */
-		AGENT("Agent", 120, InspectITImages.IMG_AGENT);
+		ORIGIN("Origin", 120, null);
 
 		/** The name. */
 		private String name;
@@ -401,13 +400,8 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 			return TextFormatter.getSpanDetailsShort(span, cachedDataService);
 		case PROPAGATION:
 			return TextFormatter.getPropagationStyled(span.getPropagationType());
-		case AGENT:
-			PlatformIdent platformIdent = cachedDataService.getPlatformIdentForId(span.getPlatformIdent());
-			if (null != platformIdent) {
-				return new StyledString(platformIdent.getAgentName());
-			} else {
-				return EMPTY_STYLED_STRING;
-			}
+		case ORIGIN:
+			return TextFormatter.getSpanOriginStyled(span, cachedDataService.getPlatformIdentForId(span.getPlatformIdent()));
 		case TIME:
 			return new StyledString(NumberFormatter.formatTimeWithMillis(span.getTimeStamp()));
 		case DURATION:
@@ -617,6 +611,8 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 				break;
 			case PROPAGATION:
 				return ImageFormatter.getPropagationImage(span.getPropagationType());
+			case ORIGIN:
+				return ImageFormatter.getSpanOriginImage(span, cachedDataService.getPlatformIdentForId(span.getPlatformIdent()));
 			default:
 				return super.getColumnImage(element, index);
 			}

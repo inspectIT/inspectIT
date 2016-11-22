@@ -35,6 +35,7 @@ import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
 import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 import rocks.inspectit.shared.all.tracing.data.Span;
@@ -75,12 +76,18 @@ import rocks.inspectit.ui.rcp.validation.ValidationState;
  * @author Ivan Senic
  * @author Marius Oehler
  */
+@SuppressWarnings("PMD.ExcessiveClassLength")
 public final class TextFormatter {
 
 	/**
 	 * Error {@link Styler}.
 	 */
 	private static final Styler ERROR_STYLED = StyledString.createColorRegistryStyler(JFacePreferences.ERROR_COLOR, null);
+
+	/**
+	 * Empty styled string.
+	 */
+	private static final StyledString EMPTY_STYLED_STRING = new StyledString();
 
 	/**
 	 * Hyperlink color {@link Styler}.
@@ -824,7 +831,9 @@ public final class TextFormatter {
 	 */
 	public static StyledString getPropagationStyled(PropagationType propagationType) {
 		StyledString styledString = new StyledString();
-		if (null != propagationType) {
+		if (propagationType == PropagationType.JAVASCRIPT) {
+			styledString.append("JavaScript");
+		} else if (null != propagationType) {
 			styledString.append(propagationType.toString());
 		} else {
 			// if it's null we assume it's our SDK as we always set the propagation
@@ -1047,6 +1056,25 @@ public final class TextFormatter {
 			return "Non-Synchronous";
 		}
 		return "N/A";
+	}
+
+	/**
+	 * Returns an description label for the span origin.
+	 *
+	 * @param span
+	 *            the span to return the label for
+	 * @param platformIdent
+	 *            the paltformIdent of the span, if available.
+	 * @return the label for the span origin.
+	 */
+	public static StyledString getSpanOriginStyled(Span span, PlatformIdent platformIdent) {
+		if (span instanceof EUMSpan) {
+			return new StyledString("Browser");
+		} else if (null != platformIdent) {
+			return new StyledString(platformIdent.getAgentName());
+		} else {
+			return EMPTY_STYLED_STRING;
+		}
 	}
 
 }
