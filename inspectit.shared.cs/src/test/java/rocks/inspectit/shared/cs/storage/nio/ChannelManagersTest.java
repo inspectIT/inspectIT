@@ -82,7 +82,7 @@ public class ChannelManagersTest {
 		byteBuffer.flip();
 		long position = writingChannelManager.write(byteBuffer, file, new WriteReadCompletionRunnable() {
 			@Override
-			public void run() {
+			public void runOnFinish() {
 				byteBuffer.clear();
 				bufferQueue.add(byteBuffer);
 			}
@@ -92,7 +92,7 @@ public class ChannelManagersTest {
 		readingChannelManager.read(readBuffer, position, bytes.length, file, new WriteReadCompletionRunnable() {
 
 			@Override
-			public void run() {
+			public void runOnFinish() {
 				bufferQueue.add(readBuffer);
 			}
 		});
@@ -124,7 +124,7 @@ public class ChannelManagersTest {
 		byteBuffer.flip();
 		long position = writingChannelManager.write(byteBuffer, file, new WriteReadCompletionRunnable() {
 			@Override
-			public void run() {
+			public void runOnFinish() {
 				byteBuffer.clear();
 				bufferQueue.add(byteBuffer);
 			}
@@ -134,7 +134,7 @@ public class ChannelManagersTest {
 		readingChannelManager.read(readBuffer, position, 0, file, new WriteReadCompletionRunnable() {
 
 			@Override
-			public void run() {
+			public void runOnFinish() {
 				bufferQueue.add(readBuffer);
 			}
 		});
@@ -179,7 +179,7 @@ public class ChannelManagersTest {
 		Mockito.when(outputStream.getTotalWriteSize()).thenReturn((long) bytes.length);
 		long position = writingChannelManager.write(outputStream, file, new WriteReadCompletionRunnable(buffers.size()) {
 			@Override
-			public void run() {
+			public void runOnFinish() {
 				assertThat(isCompleted(), is(true));
 				assertThat(getAttemptedWriteReadSize(), is(equalTo((long) bytes.length)));
 				lock.lock();

@@ -77,6 +77,8 @@ public class ReadingChannelManager extends AbstractChannelManager {
 		attachment.setSize(readSize);
 		attachment.setFileChannel(channel.getFileChannel());
 		attachment.setCompletionRunnable(completionRunnable);
+		completionRunnable.setAttemptedWriteReadSize(readSize);
+		completionRunnable.setAttemptedWriteReadPosition(position);
 
 		boolean read = false;
 		while (!read) {

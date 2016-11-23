@@ -115,10 +115,15 @@
 		<Filed name="hardDriveSize" />
 		<Bug pattern="URF_UNREAD_FIELD" />
 	</Match>
-		<Match> <!-- Meant to be so -->	
+	<Match> <!-- Meant to be so -->	
 		<Class name="rocks.inspectit.shared.cs.storage.StorageWriter" />
 		<Filed name="waitForPendingWritingTasks" />
 		<Bug pattern="SWL_SLEEP_WITH_LOCK_HELD" />
+	</Match>
+	<Match>
+		<Class name="rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable" />
+		<Method name="run" />
+		<Bug pattern="NN_NAKED_NOTIFY" />
 	</Match>
 	<!-- CommonsCS ignores END -->
 

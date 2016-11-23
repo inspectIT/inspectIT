@@ -1,5 +1,6 @@
 package rocks.inspectit.shared.cs.storage.nio;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import rocks.inspectit.shared.cs.storage.nio.read.ReadingCompletionHandler;
@@ -40,10 +41,52 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	private AtomicInteger failedMarks = new AtomicInteger(0);
 
 	/**
+	 * If {@link #runOnFinish()} is done.
+	 */
+	private AtomicBoolean runOnFinishDone = new AtomicBoolean(false);
+
+	/**
 	 * Default constructor. Sets {@link #completeMarks} to 1.
 	 */
 	public WriteReadCompletionRunnable() {
 		this(1);
+	}
+
+	/**
+	 * Called when write/read is done and completion runnable is able to perform any task.
+	 */
+	protected abstract void runOnFinish();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void run() {
+		this.runOnFinish();
+
+		runOnFinishDone.lazySet(true);
+
+		synchronized (this) {
+			this.notifyAll();
+		}
+	}
+
+	/**
+	 * Waits until this completion runnable is finished.
+	 *
+	 * @throws InterruptedException
+	 *             If {@link InterruptedException} occurs during awaiting on the condition.
+	 */
+	public final void waitUntilDone() throws InterruptedException {
+		if (isFinished() && runOnFinishDone.get()) {
+			return;
+		}
+
+		synchronized (this) {
+			while (!isFinished() || !runOnFinishDone.get()) {
+				this.wait();
+			}
+		}
 	}
 
 	/**

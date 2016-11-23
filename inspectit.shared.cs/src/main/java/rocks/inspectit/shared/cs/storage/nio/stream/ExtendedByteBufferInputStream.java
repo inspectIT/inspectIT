@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Resource;
 
@@ -72,7 +67,7 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 	 * {@link ExecutorService} for reading tasks executions.
 	 */
 	@Autowired
-	@Resource(name = "storageExecutorService")
+	@Resource(name = "IOExecutorService")
 	private ExecutorService executorService;
 
 	/**
@@ -84,11 +79,6 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 	 * List of descriptors that point to the data.
 	 */
 	private List<IStorageDescriptor> descriptors;
-
-	/**
-	 * Next index of the descriptor to be read.
-	 */
-	private AtomicInteger nextDescriptorIndex = new AtomicInteger(0);
 
 	/**
 	 * Set of opened paths.
@@ -237,35 +227,24 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 	private class ReadTask implements Runnable {
 
 		/**
-		 * Lock for stop reading.
-		 */
-		private Lock continueReadLock = new ReentrantLock();
-
-		/**
-		 * Condition for signaling continue reading can occur.
-		 */
-		private Condition canContinueRead = continueReadLock.newCondition();
-
-		/**
-		 * Flag for waiting, since signal/await is problematic due it's unknown if the waiting
-		 * thread will go into the await state before the signal comes.
-		 */
-		private AtomicBoolean wait = new AtomicBoolean();
-
-		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public void run() {
 			// we run the task until all descriptors are processed
-			while (nextDescriptorIndex.get() < descriptors.size()) {
-				IStorageDescriptor storageDescriptor = descriptors.get(nextDescriptorIndex.get());
+			for (IStorageDescriptor storageDescriptor : descriptors) {
+				// get correct channel
 				Path channelPath = storageManager.getChannelPath(storageData, storageDescriptor);
 				openedChannelPaths.add(channelPath);
+
+				// Initial values
 				long readPosition = storageDescriptor.getPosition();
-				long readSize = 0;
-				while (readSize < storageDescriptor.getSize()) {
-					// we read until whole descriptor size has been read
+				long descriptorTotalSize = storageDescriptor.getSize();
+				long descriptorReadSize = 0;
+
+				// we read until whole descriptor size has been read
+				while (descriptorReadSize < descriptorTotalSize) {
+					// get the empty buffer
 					ByteBuffer buffer = null;
 					try {
 						buffer = getEmptyBuffers().take();
@@ -273,12 +252,16 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 						Thread.interrupted();
 					}
 					buffer.clear();
+
+					// we need final as well
 					final ByteBuffer finalByteBuffer = buffer;
-					// in single shot we can read only till the buffer's capacity
-					long singleReadSize = Math.min(storageDescriptor.getSize() - readSize, buffer.capacity());
+
+					// in single shot we can read max till the buffer's capacity
+					final long singleReadSize = Math.min(descriptorTotalSize - descriptorReadSize, buffer.capacity());
+
 					WriteReadCompletionRunnable completionRunnable = new WriteReadCompletionRunnable() {
 						@Override
-						public void run() {
+						public void runOnFinish() {
 							if (isCompleted()) {
 								// add buffer to the queue
 								getFullBuffers().add(finalByteBuffer);
@@ -289,38 +272,26 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 								getEmptyBuffers().add(finalByteBuffer);
 								setTotalSize(getTotalSize() - getAttemptedWriteReadSize());
 							}
-							// signal continue reading if await is active
-							continueReadLock.lock();
-							try {
-								wait.set(false);
-								canContinueRead.signal();
-							} finally {
-								continueReadLock.unlock();
-							}
 						}
 					};
 
 					try {
 						// execute read
-						wait.set(true);
 						readingChannelManager.read(finalByteBuffer, readPosition, singleReadSize, channelPath, completionRunnable);
+
+						// get actual size we tried to read
+						long actualReadSize = completionRunnable.getAttemptedWriteReadSize();
+
 						// update the position and size for this descriptor
-						readSize += singleReadSize;
-						readPosition += singleReadSize;
-						if (readSize < storageDescriptor.getSize()) {
-							// if the descriptor has not been read completely we have to block until
-							// the read is finished
-							// this ensures that the data for one descriptor will be read in order
-							while (wait.get()) {
-								continueReadLock.lock();
-								try {
-									canContinueRead.awaitNanos(5000);
-								} catch (InterruptedException e) {
-									Thread.interrupted();
-								} finally {
-									continueReadLock.unlock();
-								}
-							}
+						descriptorReadSize += actualReadSize;
+						readPosition += actualReadSize;
+
+						// block until the read is finished, because starting another async read
+						// could screw up order of byte buffers and thus screw up the serialization
+						try {
+							completionRunnable.waitUntilDone();
+						} catch (InterruptedException e) {
+							Thread.interrupted();
 						}
 					} catch (IOException e) {
 						// log error not to lose it
@@ -332,8 +303,8 @@ public class ExtendedByteBufferInputStream extends AbstractExtendedByteBufferInp
 						setReadFailed(true);
 						break;
 					}
+
 				}
-				nextDescriptorIndex.incrementAndGet();
 			}
 		}
 	}

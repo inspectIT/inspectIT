@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -25,6 +27,8 @@ import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
 
 @SuppressWarnings("PMD")
 public class SocketExtendedByteBufferInputStreamTest {
+
+	private static final int NUMBER_OF_BUFFERS = 2;
 
 	/**
 	 * Class under test.
@@ -48,7 +52,7 @@ public class SocketExtendedByteBufferInputStreamTest {
 	@BeforeMethod
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		inputStream = new SocketExtendedByteBufferInputStream();
+		inputStream = new SocketExtendedByteBufferInputStream(NUMBER_OF_BUFFERS);
 		inputStream.setByteBufferProvider(byteBufferProvider);
 		inputStream.setExecutorService(executorService);
 		inputStream.setSocketChannel(socketChannel);
@@ -102,6 +106,9 @@ public class SocketExtendedByteBufferInputStreamTest {
 
 		assertThat(read, is(readSize));
 		assertThat(bytes, is(equalTo(array)));
+
+		inputStream.close();
+		verify(byteBufferProvider, times(NUMBER_OF_BUFFERS)).releaseByteBuffer(Matchers.<ByteBuffer> anyObject());
 	}
 
 	@Test(expectedExceptions = IOException.class)

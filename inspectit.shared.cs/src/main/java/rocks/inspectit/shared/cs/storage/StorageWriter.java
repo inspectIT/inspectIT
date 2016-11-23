@@ -663,7 +663,7 @@ public class StorageWriter implements IWriter {
 				final ExtendedByteBufferOutputStream finalOutputStream = extendedByteBufferOutputStream;
 				WriteReadCompletionRunnable completionRunnable = new WriteReadCompletionRunnable(buffersToWrite) {
 					@Override
-					public void run() {
+					public void runOnFinish() {
 						finalOutputStream.close();
 						if (isCompleted()) {
 							indexingTreeHandler.writeSuccessful(WriteTask.this, getAttemptedWriteReadPosition(), getAttemptedWriteReadSize());

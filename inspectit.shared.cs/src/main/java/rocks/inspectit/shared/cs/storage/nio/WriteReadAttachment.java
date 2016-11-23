@@ -50,19 +50,19 @@ public class WriteReadAttachment {
 	 *
 	 * @param byteBuffer
 	 *            {@link ByteBuffer} where writing is taking bytes from.
-	 * @param writingPosition
-	 *            Writing position.
-	 * @param writingSize
-	 *            Writing size.
+	 * @param position
+	 *            Writing/Reading position.
+	 * @param size
+	 *            Writing/Reading size.
 	 * @param completionRunnable
 	 *            Completion {@link Runnable}.
 	 * @param fileChannel
 	 *            Channel where write is performed.
 	 */
-	public WriteReadAttachment(ByteBuffer byteBuffer, long writingPosition, long writingSize, WriteReadCompletionRunnable completionRunnable, AsynchronousFileChannel fileChannel) {
+	public WriteReadAttachment(ByteBuffer byteBuffer, long position, long size, WriteReadCompletionRunnable completionRunnable, AsynchronousFileChannel fileChannel) {
 		this.byteBuffer = byteBuffer;
-		this.position = writingPosition;
-		this.size = writingSize;
+		this.position = position;
+		this.size = size;
 		this.completionRunnable = completionRunnable;
 		this.fileChannel = fileChannel;
 	}
