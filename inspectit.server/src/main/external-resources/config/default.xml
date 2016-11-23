@@ -358,12 +358,12 @@
 	</section>
 	<section name="Mail" >
 		<properties>
-			<string-property name="SMTP Server Host" default-value="smtp-server" server-restart-required="false" logical-name="mail.smpt.host" advanced="false" description="The hostname/IP of the SMPT server to be used to send e-mails.">
+			<string-property name="SMTP Server Host" default-value="smtp-server" server-restart-required="false" logical-name="mail.smtp.host" advanced="false" description="The hostname/IP of the SMTP server to be used to send e-mails.">
 				<validators>
 					<isNotEmpty />
 				</validators>
 			</string-property>
-			<long-property name="SMTP Server Port" default-value="25" server-restart-required="false" logical-name="mail.smpt.port" advanced="false" description="The port of the SMPT server to be used to send e-mails.">
+			<long-property name="SMTP Server Port" default-value="25" server-restart-required="false" logical-name="mail.smtp.port" advanced="false" description="The port of the SMTP server to be used to send e-mails.">
 				<validators>
 					<isPositive />
 				</validators>
