@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -209,13 +210,11 @@ public class Server implements EndPoint {
 		/* Changed by ISE start */
 		// select without timeout
 		int select = selector.selectNow();
-		while (select == 0) {
-			// if no operation is there sleep in 1ms periods until we reach the timeout
-			long elapsedTime = System.currentTimeMillis() - startTime;
-			if (elapsedTime > timeout) {
-				break;
-			}
-			LockSupport.parkNanos(1000000);
+		long waitUntil = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeout);
+		while ((select == 0) && (System.nanoTime() < waitUntil)) {
+			// if no operation is there sleep 1/10 of a millisecond
+			// until we reach the timeout
+			LockSupport.parkNanos(100000);
 			select = selector.selectNow();
 		}
 		/* Changed by ISE end */
