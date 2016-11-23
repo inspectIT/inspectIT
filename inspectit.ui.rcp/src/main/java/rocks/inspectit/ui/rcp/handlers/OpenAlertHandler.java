@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
@@ -73,7 +74,7 @@ public class OpenAlertHandler extends AbstractHandler {
 			InputDefinition inputDefinition = createInputDefinition(dialog.getCmrRepositoryDefinition(), dialog.getAlert());
 
 			// Get the view
-			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			IWorkbenchPage page = window.getActivePage();
 
 			// open the view if the input definition is set
