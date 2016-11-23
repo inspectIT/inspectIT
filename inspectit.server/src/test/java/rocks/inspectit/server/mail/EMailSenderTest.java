@@ -78,28 +78,27 @@ public class EMailSenderTest extends TestBase {
 		});
 	}
 
+	protected Properties getAdditionalProperties() throws Exception {
+		Field field = EMailSender.class.getDeclaredField("additionalProperties");
+		field.setAccessible(true);
+		return (Properties) field.get(mailSender);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<String> getDefaultRecipients() throws Exception {
+		Field field = EMailSender.class.getDeclaredField("defaultRecipients");
+		field.setAccessible(true);
+		return (List<String>) field.get(mailSender);
+	}
+
 	/**
-	 * Tests the {@link EMailSender#init()} and {@link EMailSender#onSmtpPropertiesChanged()}
-	 * methods.
+	 * Tests the {@link EMailSender#init()} method.
 	 *
 	 */
-	public static class InitAndOnSmtpPropertiesChanged extends EMailSenderTest {
+	public static class Init extends EMailSenderTest {
 
 		@Mock
 		Transport transportMock;
-
-		private Properties getAdditionalProperties() throws Exception {
-			Field field = EMailSender.class.getDeclaredField("additionalProperties");
-			field.setAccessible(true);
-			return (Properties) field.get(mailSender);
-		}
-
-		@SuppressWarnings("unchecked")
-		private List<String> getDefaultRecipients() throws Exception {
-			Field field = EMailSender.class.getDeclaredField("defaultRecipients");
-			field.setAccessible(true);
-			return (List<String>) field.get(mailSender);
-		}
 
 		@Test
 		public void successfully() throws Exception {
@@ -294,7 +293,42 @@ public class EMailSenderTest extends TestBase {
 		Transport transportMock;
 
 		@Test
-		public void succesfully() throws Exception {
+		public void sendWithoutDefaultRecipientsAndProperties() throws Exception {
+			Session session = Session.getInstance(new Properties());
+			when(mailMock.getMailSession()).thenReturn(session);
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mailMock);
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.senderAddress = "sender@example.com";
+			mailSender.senderName = "Sender Name";
+			mailSender.smtpEnabled = true;
+			mailSender.init();
+
+			boolean result = mailSender.sendEMail("subject", "htmlBody", "textBody", Arrays.asList("three@example.com"));
+
+			assertThat(result, is(true));
+			verify(objectFactoryMock).getSmtpTransport();
+			verify(objectFactoryMock).createHtmlEmail();
+			verify(transportMock).connect(any(String.class), any(Integer.class), any(String.class), any(String.class));
+			verify(transportMock).close();
+			verify(mailMock).setHostName("host");
+			verify(mailMock).setSmtpPort(25);
+			verify(mailMock).setAuthentication("user", "passwd");
+			verify(mailMock).setFrom("sender@example.com", "Sender Name");
+			verify(mailMock).addTo("three@example.com");
+			verify(mailMock).setSubject("subject");
+			verify(mailMock).setHtmlMsg("htmlBody");
+			verify(mailMock).setTextMsg("textBody");
+			verify(mailMock).send();
+			verifyNoMoreInteractions(objectFactoryMock, transportMock, mailMock);
+			assertThat(session.getProperties().entrySet(), hasSize(0));
+		}
+
+		@Test
+		public void sendUsingDefaultRecipientsAndProperties() throws Exception {
 			Session session = Session.getInstance(new Properties());
 			when(mailMock.getMailSession()).thenReturn(session);
 			when(objectFactoryMock.createHtmlEmail()).thenReturn(mailMock);
@@ -465,6 +499,181 @@ public class EMailSenderTest extends TestBase {
 			} finally {
 				verifyZeroInteractions(mailMock, transportMock, objectFactoryMock);
 			}
+		}
+	}
+
+	/**
+	 * Tests the {@link EMailSender#onSmtpPropertiesChanged()} method.
+	 *
+	 */
+	public class OnSmtpPropertiesChanged extends EMailSenderTest {
+
+		@Mock
+		HtmlEmail mailMock;
+
+		@Mock
+		Transport transportMock;
+
+		@Test
+		public void propertiesChanged() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.defaultRecipientString = "one@example.com,two@example.com,invalid";
+			mailSender.smtpPropertiesString = "key1=val1,key2=val2,=noKey,noVal=,=,invalid";
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.smtpEnabled = true;
+
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(objectFactoryMock).getSmtpTransport();
+			verify(transportMock).connect("host", 25, "user", "passwd");
+			verify(transportMock).close();
+			verifyNoMoreInteractions(mailMock, objectFactoryMock, transportMock);
+			assertThat(mailSender.isConnected(), is(true));
+			assertThat(getAdditionalProperties().entrySet(), hasSize(2));
+			assertThat(getAdditionalProperties(), hasEntry((Object) "key1", (Object) "val1"));
+			assertThat(getAdditionalProperties(), hasEntry((Object) "key2", (Object) "val2"));
+			assertThat(getDefaultRecipients(), hasSize(0));
+		}
+
+		@Test
+		public void testMailFailedNoRecipient() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.testMailEnabled = true;
+			mailSender.smtpEnabled = true;
+
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(objectFactoryMock).getSmtpTransport();
+			verify(transportMock).connect("host", 25, "user", "passwd");
+			verify(transportMock).close();
+			verifyNoMoreInteractions(mailMock, objectFactoryMock, transportMock);
+			assertThat(mailSender.isConnected(), is(true));
+			assertThat(getAdditionalProperties().entrySet(), hasSize(0));
+			assertThat(getDefaultRecipients(), hasSize(0));
+		}
+
+		@Test
+		public void testMailFailedNoConnection() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			doThrow(MessagingException.class).when(transportMock).connect("host", 25, "user", "passwd");
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.testMailEnabled = true;
+			mailSender.testMailRecipient = "@test@example.com";
+			mailSender.smtpEnabled = true;
+
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(objectFactoryMock).getSmtpTransport();
+			verify(transportMock).connect("host", 25, "user", "passwd");
+			verifyNoMoreInteractions(mailMock, objectFactoryMock, transportMock);
+			assertThat(mailSender.isConnected(), is(false));
+			assertThat(getAdditionalProperties().entrySet(), hasSize(0));
+			assertThat(getDefaultRecipients(), hasSize(0));
+		}
+
+		@Test
+		public void testMailFailedInvalidRecipient() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.defaultRecipientString = "one@example.com,two@example.com,invalid";
+			mailSender.smtpPropertiesString = "key1=val1,key2=val2,=noKey,noVal=,=,invalid";
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.testMailEnabled = true;
+			mailSender.testMailRecipient = "@test@example.com";
+			mailSender.smtpEnabled = true;
+
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(objectFactoryMock).getSmtpTransport();
+			verify(transportMock).connect("host", 25, "user", "passwd");
+			verify(transportMock).close();
+			verifyNoMoreInteractions(mailMock, objectFactoryMock, transportMock);
+			assertThat(mailSender.isConnected(), is(true));
+			assertThat(getAdditionalProperties().entrySet(), hasSize(2));
+			assertThat(getAdditionalProperties(), hasEntry((Object) "key1", (Object) "val1"));
+			assertThat(getAdditionalProperties(), hasEntry((Object) "key2", (Object) "val2"));
+			assertThat(getDefaultRecipients(), hasSize(0));
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void testMailThrowsException() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mailMock);
+			when(mailMock.setTextMsg(any(String.class))).thenThrow(EmailException.class);
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.senderAddress = "sender@example.com";
+			mailSender.senderName = "Sender Name";
+			mailSender.testMailEnabled = true;
+			mailSender.testMailRecipient = "test@example.com";
+			mailSender.smtpEnabled = true;
+
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(objectFactoryMock).getSmtpTransport();
+			verify(objectFactoryMock).createHtmlEmail();
+			verify(transportMock).connect("host", 25, "user", "passwd");
+			verify(transportMock).close();
+			verify(mailMock).setHostName("host");
+			verify(mailMock).setSmtpPort(25);
+			verify(mailMock).setAuthentication("user", "passwd");
+			verify(mailMock).setFrom("sender@example.com", "Sender Name");
+			verify(mailMock).addTo("test@example.com");
+			verify(mailMock).setSubject(any(String.class));
+			verify(mailMock).setTextMsg(any(String.class));
+			verifyNoMoreInteractions(mailMock, objectFactoryMock, transportMock);
+			assertThat(mailSender.isConnected(), is(true));
+			assertThat(getAdditionalProperties().entrySet(), hasSize(0));
+			assertThat(getDefaultRecipients(), hasSize(0));
+		}
+
+		@Test
+		public void sendTestMail() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mailMock);
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.senderAddress = "sender@example.com";
+			mailSender.senderName = "Sender Name";
+			mailSender.testMailEnabled = true;
+			mailSender.testMailRecipient = "test@example.com";
+			mailSender.smtpEnabled = true;
+
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(objectFactoryMock).getSmtpTransport();
+			verify(objectFactoryMock).createHtmlEmail();
+			verify(transportMock).connect("host", 25, "user", "passwd");
+			verify(transportMock).close();
+			verify(mailMock).setHostName("host");
+			verify(mailMock).setSmtpPort(25);
+			verify(mailMock).setAuthentication("user", "passwd");
+			verify(mailMock).setFrom("sender@example.com", "Sender Name");
+			verify(mailMock).addTo("test@example.com");
+			verify(mailMock).setSubject(any(String.class));
+			verify(mailMock).setTextMsg(any(String.class));
+			verify(mailMock).send();
+			verifyNoMoreInteractions(mailMock, objectFactoryMock, transportMock);
+			assertThat(mailSender.isConnected(), is(true));
+			assertThat(getAdditionalProperties().entrySet(), hasSize(0));
+			assertThat(getDefaultRecipients(), hasSize(0));
 		}
 	}
 }
