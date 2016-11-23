@@ -41,13 +41,13 @@ public class EMailSender {
 	/**
 	 * SMTP Server host.
 	 */
-	@Value("${mail.smpt.host}")
+	@Value("${mail.smtp.host}")
 	String smtpHost;
 
 	/**
 	 * SMTP Server port.
 	 */
-	@Value("${mail.smpt.port}")
+	@Value("${mail.smtp.port}")
 	int smtpPort;
 
 	/**
@@ -180,7 +180,7 @@ public class EMailSender {
 	/**
 	 * Parses the SMTP properties and checks whether a connection can be established.
 	 */
-	@PropertyUpdate(properties = { "mail.smpt.host", "mail.smpt.port", "mail.smpt.user", "mail.smpt.passwd", "mail.smtp.properties" })
+	@PropertyUpdate(properties = { "mail.smtp.host", "mail.smtp.port", "mail.smtp.user", "mail.smtp.passwd", "mail.smtp.properties" })
 	public void onSmtpPropertiesChanged() {
 		parseAdditionalPropertiesString();
 		checkConnection();
