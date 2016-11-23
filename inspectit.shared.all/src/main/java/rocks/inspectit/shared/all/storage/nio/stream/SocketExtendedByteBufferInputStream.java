@@ -47,6 +47,22 @@ public class SocketExtendedByteBufferInputStream extends AbstractExtendedByteBuf
 	private ExecutorService executorService;
 
 	/**
+	 * No-arg constructor.
+	 */
+	public SocketExtendedByteBufferInputStream() {
+	}
+
+	/**
+	 * Constructor that defines number of bytes to use.
+	 *
+	 * @param numberOfBuffers
+	 *            Number of buffers.
+	 */
+	public SocketExtendedByteBufferInputStream(int numberOfBuffers) {
+		super(numberOfBuffers);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

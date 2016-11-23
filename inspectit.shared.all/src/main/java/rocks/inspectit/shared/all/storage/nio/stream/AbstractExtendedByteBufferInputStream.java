@@ -126,6 +126,7 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 			ByteBuffer byteBuffer = byteBufferProvider.acquireByteBuffer();
 			emptyBuffers.add(byteBuffer);
 		}
+		numberOfBuffers = buffers;
 	}
 
 	/**
@@ -284,25 +285,32 @@ public abstract class AbstractExtendedByteBufferInputStream extends ByteBufferIn
 		if (closed) {
 			return;
 		}
-		// release buffers from both queues
-		while (!fullBuffers.isEmpty()) {
-			ByteBuffer byteBuffer = fullBuffers.poll();
-			if (null != byteBuffer) {
-				byteBufferProvider.releaseByteBuffer(byteBuffer);
-			}
-		}
-		while (!emptyBuffers.isEmpty()) {
-			ByteBuffer byteBuffer = emptyBuffers.poll();
-			if (null != byteBuffer) {
-				byteBufferProvider.releaseByteBuffer(byteBuffer);
-			}
-		}
 
-		// also release the one we could have set for current reading
-		ByteBuffer currentBuffer = super.getByteBuffer();
-		if (null != currentBuffer) {
-			byteBufferProvider.releaseByteBuffer(currentBuffer);
-			super.setByteBuffer(null);
+		int releasedBuffers = 0;
+		while (releasedBuffers < numberOfBuffers) {
+			// release buffers from both queues
+			while (!fullBuffers.isEmpty()) {
+				ByteBuffer byteBuffer = fullBuffers.poll();
+				if (null != byteBuffer) {
+					byteBufferProvider.releaseByteBuffer(byteBuffer);
+					releasedBuffers++;
+				}
+			}
+			while (!emptyBuffers.isEmpty()) {
+				ByteBuffer byteBuffer = emptyBuffers.poll();
+				if (null != byteBuffer) {
+					byteBufferProvider.releaseByteBuffer(byteBuffer);
+					releasedBuffers++;
+				}
+			}
+
+			// also release the one we could have set for current reading
+			ByteBuffer currentBuffer = super.getByteBuffer();
+			if (null != currentBuffer) {
+				byteBufferProvider.releaseByteBuffer(currentBuffer);
+				releasedBuffers++;
+				super.setByteBuffer(null);
+			}
 		}
 
 		closed = true;

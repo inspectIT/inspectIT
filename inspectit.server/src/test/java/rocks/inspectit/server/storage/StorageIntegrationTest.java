@@ -23,8 +23,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -284,15 +286,15 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 	}
 
 	/**
-	 * Tests reading of data from created storage.
+	 * Tests reading of data from created storage using our ExtendedByteBufferInputStream.
 	 *
 	 * @throws SerializationException
 	 *             If serialization fails.
 	 * @throws IOException
 	 *             If {@link IOException} occurs.
 	 */
-	@Test(dependsOnMethods = { "finalizeWriteTest" })
-	public void readTest() throws SerializationException, IOException {
+	@Test(dependsOnMethods = { "finalizeWriteTest" }, invocationCount = 5)
+	public void readUsingExtendedByteBufferInputStream() throws SerializationException, IOException {
 		if (storageIndexingTree == null) {
 			return;
 		}
@@ -309,10 +311,9 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 			assertThat("Size of the descriptor is wrong.", descriptor.getSize(), is(greaterThan(0L)));
 		}
 
-		InputStream result = inputStreamProvider.getExtendedByteBufferInputStream(storageData, descriptors);
-		Input input = new Input(result);
 		int count = 0;
-		try {
+		try (InputStream result = inputStreamProvider.getExtendedByteBufferInputStream(storageData, descriptors);) {
+			Input input = new Input(result);
 			while (KryoUtil.hasMoreBytes(input)) {
 				try {
 					Object invocation = serializer.deserialize(input);
@@ -323,8 +324,57 @@ public class StorageIntegrationTest extends AbstractTransactionalTestNGLogSuppor
 					e.printStackTrace();
 				}
 			}
-		} finally {
-			result.close();
+		}
+		assertThat("Amount of de-serialize objects is less than the amount of invocations saved.", count, is(equalTo(createdInvocations.size())));
+	}
+
+	/**
+	 * Tests reading of data from created storage using the NIO streams.
+	 *
+	 * @throws SerializationException
+	 *             If serialization fails.
+	 * @throws IOException
+	 *             If {@link IOException} occurs.
+	 * @see Files#newInputStream(Path, java.nio.file.OpenOption...)
+	 */
+	@Test(dependsOnMethods = { "finalizeWriteTest" })
+	public void readUsingNioStream() throws SerializationException, IOException {
+		if (storageIndexingTree == null) {
+			return;
+		}
+
+		StorageIndexQuery query = new StorageIndexQuery();
+		List<Class<?>> searchedClasses = new ArrayList<>();
+		searchedClasses.add(InvocationSequenceData.class);
+		query.setObjectClasses(searchedClasses);
+
+		List<IStorageDescriptor> descriptors = storageIndexingTree.query(query);
+		assertThat("Amount of descriptors is less than the amount of invocations saved.", descriptors.size(), is(equalTo(createdInvocations.size())));
+		for (IStorageDescriptor descriptor : descriptors) {
+			assertThat("position of descriptor is negative.", descriptor.getPosition(), is(greaterThanOrEqualTo(0L)));
+			assertThat("Size of the descriptor is wrong.", descriptor.getSize(), is(greaterThan(0L)));
+		}
+		Set<Path> allPaths = new HashSet<>();
+		for (IStorageDescriptor desc : descriptors) {
+			Path absolutePath = storageManager.getChannelPath(storageData, desc.getChannelId()).toAbsolutePath();
+			allPaths.add(absolutePath);
+		}
+
+		int count = 0;
+		for (Path path : allPaths) {
+			try (InputStream result = Files.newInputStream(path, StandardOpenOption.READ)) {
+				Input input = new Input(result);
+				while (KryoUtil.hasMoreBytes(input)) {
+					try {
+						Object invocation = serializer.deserialize(input);
+						assertThat(invocation, is(instanceOf(InvocationSequenceData.class)));
+						assertThat(createdInvocations, hasItem((InvocationSequenceData) invocation));
+						count++;
+					} catch (SerializationException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 		assertThat("Amount of de-serialize objects is less than the amount of invocations saved.", count, is(equalTo(createdInvocations.size())));
 	}
