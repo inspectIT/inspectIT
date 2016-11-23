@@ -382,6 +382,8 @@
 					<isNotEmpty />
 				</validators>
 			</string-property>
+			<boolean-property name="Send Test E-Mail" default-value="false" server-restart-required="false" logical-name="mail.test.enabled" advanced="false" description="If activated, a test e-mail is send to the specified test recipient after changing any value of: SMTP-Host, SMTP-Port, SMTP-User, SMTP-Password, Additional SMTP Properties, Recipient Test-E-Mail Address." />
+			<string-property name="Test E-Mail Recipient" default-value="" server-restart-required="false" logical-name="mail.test.recipient" advanced="false" description="The e-mail address which represents the recipient of the test e-mail." />
 			<string-property name="Default Recipients" default-value="" server-restart-required="false" logical-name="mail.default.to" advanced="true" description="A comma separated list of default recipient e-mail addresses. These recipients will receive every e-mail that is sent by inspectIT.">
 				<validators>
 					<isValidEMailList />

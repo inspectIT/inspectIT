@@ -1,6 +1,7 @@
 package rocks.inspectit.server.mail;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -108,6 +109,18 @@ public class EMailSender implements IExternalService {
 	String smtpPropertiesString;
 
 	/**
+	 * Whether a test mail should be send after SMTP property update.
+	 */
+	@Value("${mail.test.enabled}")
+	boolean testMailEnabled;
+
+	/**
+	 * The recipient address for the test e-mail.
+	 */
+	@Value("${mail.test.recipient}")
+	String testMailRecipient;
+
+	/**
 	 * Unwrapped list of default recipients.
 	 */
 	private List<String> defaultRecipients = new ArrayList<>();
@@ -174,7 +187,9 @@ public class EMailSender implements IExternalService {
 			email.send();
 			return true;
 		} catch (EmailException | IllegalArgumentException e) {
-			log.warn("Failed sending e-mail!", e);
+			if (log.isWarnEnabled()) {
+				log.warn("Failed sending e-mail!", e);
+			}
 			return false;
 		}
 	}
@@ -223,21 +238,48 @@ public class EMailSender implements IExternalService {
 	/**
 	 * Parses the SMTP properties and checks whether a connection can be established.
 	 */
-	@PropertyUpdate(properties = { "mail.smtp.host", "mail.smtp.port", "mail.smtp.user", "mail.smtp.passwd", "mail.smtp.properties" })
+	@PropertyUpdate(properties = { "mail.smtp.host", "mail.smtp.port", "mail.smtp.user", "mail.smtp.passwd", "mail.smtp.properties", "mail.test.enabled" })
 	public void onSmtpPropertiesChanged() {
 		if (!smtpEnabled) {
 			return;
 		}
+		onSmtpPropertiesChanged(true);
+	}
+
+	/**
+	 * Parses the SMTP properties and checks whether a connection can be established.
+	 *
+	 * @param sendTestMailIfEnabled
+	 *            send a test email if this feature is enabled
+	 */
+	private void onSmtpPropertiesChanged(boolean sendTestMailIfEnabled) {
 		parseAdditionalPropertiesString();
-		checkConnection();
+		checkConnection(sendTestMailIfEnabled && testMailEnabled);
 	}
 
 	/**
 	 * Initialize E-Mail service.
 	 */
-	@PostConstruct
 	@PropertyUpdate(properties = { "mail.enable" })
 	public void init() {
+		init(true);
+	}
+
+	/**
+	 * Method which is executed after bean is created.
+	 */
+	@PostConstruct
+	public void postConstruct() {
+		init(false);
+	}
+
+	/**
+	 * Initialize E-Mail service.
+	 *
+	 * @param sendTestMailIfEnabled
+	 *            send a test email if this feature is enabled
+	 */
+	private void init(boolean sendTestMailIfEnabled) {
 		if (!smtpEnabled) {
 			return;
 		} else if (log.isInfoEnabled()) {
@@ -245,21 +287,25 @@ public class EMailSender implements IExternalService {
 		}
 
 		parseRecipientsString();
-		onSmtpPropertiesChanged();
+		onSmtpPropertiesChanged(sendTestMailIfEnabled);
 	}
 
 	/**
 	 * Checks connection to SMTP server.
+	 *
+	 * @param sendTestMail
+	 *            specifies whether a test email should be send after the connection is established
 	 */
-	private void checkConnection() {
+	private void checkConnection(boolean sendTestMail) {
 		if ((connectionCheckFuture != null) && !connectionCheckFuture.isDone()) {
 			connectionCheckFuture.cancel(true);
 		}
+		connectionCheck.sendTestEmail = sendTestMail;
 		connectionCheckFuture = scheduledExecutorService.submit(connectionCheck);
 	}
 
 	/**
-	 * Prepares an email object.
+	 * Prepares an email object including the default recipients.
 	 *
 	 * @param recipients
 	 *            recipient to send to.
@@ -268,6 +314,21 @@ public class EMailSender implements IExternalService {
 	 *             is thrown when the from address could not be set
 	 */
 	private HtmlEmail prepareHtmlEmail(List<String> recipients) throws EmailException {
+		return prepareHtmlEmail(recipients, true);
+	}
+
+	/**
+	 * Prepares an email object.
+	 *
+	 * @param recipients
+	 *            recipient to send to.
+	 * @param includeDefaultRecipients
+	 *            whether the default recipients should be added to the mail
+	 * @return Returns a prepared {@link HtmlEmail} object.
+	 * @throws EmailException
+	 *             is thrown when the from address could not be set
+	 */
+	private HtmlEmail prepareHtmlEmail(List<String> recipients, boolean includeDefaultRecipients) throws EmailException {
 		HtmlEmail email = objectFactory.createHtmlEmail();
 		email.setHostName(smtpHost);
 		email.setSmtpPort(smtpPort);
@@ -278,12 +339,14 @@ public class EMailSender implements IExternalService {
 			email.getMailSession().getProperties().putAll(additionalProperties);
 		}
 
-		for (String defaultTo : defaultRecipients) {
-			try {
-				email.addTo(defaultTo);
-			} catch (EmailException e) {
-				if (log.isWarnEnabled()) {
-					log.warn("Invalid recipient e-mail address!", e);
+		if (includeDefaultRecipients) {
+			for (String defaultTo : defaultRecipients) {
+				try {
+					email.addTo(defaultTo);
+				} catch (EmailException e) {
+					if (log.isWarnEnabled()) {
+						log.warn("Invalid recipient e-mail address!", e);
+					}
 				}
 			}
 		}
@@ -300,6 +363,47 @@ public class EMailSender implements IExternalService {
 		}
 
 		return email;
+	}
+
+	/**
+	 * * Sending a test e-mail to the configured recipient if a valid SMTP server has been
+	 * configured and connected.
+	 */
+	@PropertyUpdate(properties = { "mail.test.recipient" })
+	private void sendTestMail() {
+		if (getServiceStatus() == ExternalServiceStatus.DISABLED) {
+			return;
+		} else if (!isConnected()) {
+			if (log.isDebugEnabled()) {
+				log.debug("Cannot send a test e-mail because the SMTP connection is not established.");
+			}
+			return;
+		} else if (StringUtils.isEmpty(testMailRecipient)) {
+			if (log.isDebugEnabled()) {
+				log.debug("A recipient address has been specified in order to send a test e-mail.");
+			}
+			return;
+		} else if (!EMailUtils.isValidEmailAddress(testMailRecipient)) {
+			if (log.isWarnEnabled()) {
+				log.warn("The specified recipient address for the test e-mail is not valid.");
+			}
+			return;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Sending test e-mail to '{}'.", testMailRecipient);
+		}
+
+		try {
+			HtmlEmail htmlEmail = prepareHtmlEmail(Collections.singletonList(testMailRecipient), false);
+			htmlEmail.setSubject("inspectIT Test E-Mail");
+			htmlEmail.setTextMsg("Hello, this is a test e-mail. You have successfully configured the SMTP server used by inspectIT!");
+			htmlEmail.send();
+		} catch (EmailException | IllegalArgumentException e) {
+			if (log.isWarnEnabled()) {
+				log.warn("Failed sending e-mail!", e);
+			}
+		}
 	}
 
 	/**
@@ -364,6 +468,11 @@ public class EMailSender implements IExternalService {
 	private class ConnectionCheck implements Runnable {
 
 		/**
+		 * Specifies whether a test email should be send if the connection check was successful.
+		 */
+		private boolean sendTestEmail = false;
+
+		/**
 		 * {@inheritDoc}
 		 */
 		@Override
@@ -414,6 +523,9 @@ public class EMailSender implements IExternalService {
 					if (executionDelayIndex < (EXECUTION_DELAYS.length - 1)) {
 						executionDelayIndex++;
 					}
+				} else if (sendTestEmail) {
+					sendTestEmail = false;
+					sendTestMail();
 				}
 			}
 		}
