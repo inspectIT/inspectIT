@@ -39,6 +39,7 @@ import rocks.inspectit.server.util.CollectionSubtractUtils;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.AlertErrorCodeEnum;
 import rocks.inspectit.shared.all.exception.enumeration.ConfigurationInterfaceErrorCodeEnum;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
@@ -78,6 +79,12 @@ public class ConfigurationInterfaceManager {
 	 */
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
+
+	/**
+	 * The used {@link SerializationManager}.
+	 */
+	@Autowired
+	SerializationManager serializationManager;
 
 	/**
 	 * {@link JAXBTransformator}.
@@ -233,12 +240,18 @@ public class ConfigurationInterfaceManager {
 		}
 
 		String id = profile.getId();
-		Profile local = existingProfiles.remove(id);
+		Profile local = existingProfiles.get(id);
 		if (null != local) {
 			Files.deleteIfExists(pathResolver.getProfileFilePath(local));
 
 			for (Environment environment : existingEnvironments.values()) {
-				if (checkProfiles(environment)) {
+				if (CollectionUtils.isEmpty(environment.getProfileIds())) {
+					continue;
+				}
+
+				if (environment.getProfileIds().contains(id)) {
+					environment = copy(environment);
+					environment.getProfileIds().remove(id);
 					try {
 						updateEnvironment(environment, false);
 					} catch (Exception e) {
@@ -246,6 +259,7 @@ public class ConfigurationInterfaceManager {
 					}
 				}
 			}
+			existingProfiles.remove(id);
 		}
 	}
 
@@ -907,6 +921,19 @@ public class ConfigurationInterfaceManager {
 	 */
 	private Path getRelativeToSchemaPath(Path path) {
 		return path.relativize(pathResolver.getSchemaPath());
+	}
+
+	/**
+	 * Creates a deep copy of the given object.
+	 *
+	 * @param object
+	 *            object to clone
+	 * @param <T>
+	 *            the class of the given object
+	 * @return the new object
+	 */
+	private synchronized <T> T copy(T object) {
+		return serializationManager.copy(object);
 	}
 
 	/**
