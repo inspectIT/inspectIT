@@ -50,6 +50,7 @@ import rocks.inspectit.server.ci.event.BusinessContextDefinitionUpdateEvent;
 import rocks.inspectit.server.ci.event.EnvironmentUpdateEvent;
 import rocks.inspectit.server.ci.event.ProfileUpdateEvent;
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.AgentMapping;
 import rocks.inspectit.shared.cs.ci.AgentMappings;
@@ -232,6 +233,9 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 
 	public class DeleteProfile extends ConfigurationInterfaceManagerTest {
 
+		@Mock
+		SerializationManager serializationManager;
+
 		@Test
 		public void deleteProfile() throws Exception {
 			Profile profile = new Profile();
@@ -255,9 +259,22 @@ public class ConfigurationInterfaceManagerTest extends TestBase {
 			environment = manager.createEnvironment(environment);
 			environment.setProfileIds(new HashSet<>(Collections.singleton(profile.getId())));
 			environment = manager.updateEnvironment(environment, true);
+			when(serializationManager.copy(any(Environment.class))).thenAnswer(new Answer<Environment>() {
+				@Override
+				public Environment answer(InvocationOnMock invocation) throws Throwable {
+					Environment env = (Environment) invocation.getArguments()[0];
+					Environment copy = new Environment();
+					copy.setId(env.getId());
+					copy.setName(env.getName());
+					copy.setRevision(env.getRevision());
+					copy.setProfileIds(new HashSet<>(env.getProfileIds()));
+					return copy;
+				}
+			});
 
 			manager.deleteProfile(profile);
 
+			assertThat(manager.getEnvironment(environment.getId()).getProfileIds(), is(not(equalTo(environment.getProfileIds()))));
 			assertThat(manager.getEnvironment(environment.getId()).getProfileIds(), is(empty()));
 		}
 
