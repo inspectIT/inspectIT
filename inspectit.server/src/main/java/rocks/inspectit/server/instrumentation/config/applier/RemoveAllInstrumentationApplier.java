@@ -49,7 +49,7 @@ public class RemoveAllInstrumentationApplier implements IInstrumentationApplier 
 	 */
 	@Override
 	public boolean removeInstrumentationPoints(ClassType classType) {
-		if (classType.hasInstrumentationPoints()) {
+		if (!classType.hasInstrumentationPoints()) {
 			return false;
 		}
 
