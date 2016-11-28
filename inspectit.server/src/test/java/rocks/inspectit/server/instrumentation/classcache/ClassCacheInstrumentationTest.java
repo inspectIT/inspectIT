@@ -144,6 +144,7 @@ public class ClassCacheInstrumentationTest extends TestBase {
 			when(classType.isClass()).thenReturn(true);
 			when(classType.castToClass()).thenReturn(classType);
 			when(classType.isInitialized()).thenReturn(true);
+			when(classType.hasInstrumentationPoints()).thenReturn(true);
 			when(classType.getMethods()).thenReturn(Collections.singleton(methodType));
 			doReturn(Collections.singleton(classType)).when(lookup).findAll();
 

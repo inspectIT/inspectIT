@@ -49,7 +49,10 @@ public class RemoveAllInstrumentationApplier implements IInstrumentationApplier 
 	 */
 	@Override
 	public boolean removeInstrumentationPoints(ClassType classType) {
-		if (classType.hasInstrumentationPoints()) {
+		if (classType == null) {
+			throw new IllegalArgumentException("ClassType may not be null.");
+		}
+		if (!classType.hasInstrumentationPoints()) {
 			return false;
 		}
 
