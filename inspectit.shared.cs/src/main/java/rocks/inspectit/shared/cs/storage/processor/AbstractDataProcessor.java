@@ -35,7 +35,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	 *
 	 * @param defaultData
 	 *            Default data object.
-	 * @return Returns list of {@link Future}s if the data processing submitted one or more writing
+	 * @return Returns list of {@link RunnableFuture}s if the data processing submitted one or more writing
 	 *         tasks. Empty collection means no writing tasks were submitted.
 	 */
 	public Collection<Future<Void>> process(DefaultData defaultData) {
@@ -50,7 +50,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	 *
 	 * @param defaultData
 	 *            Default data object.
-	 * @return Returns list of {@link Future}s if the data processing submitted one or more writing
+	 * @return Returns list of {@link RunnableFuture}s if the data processing submitted one or more writing
 	 *         tasks. Empty collection means no writing tasks were submitted.
 	 */
 	protected abstract Collection<Future<Void>> processData(DefaultData defaultData);
@@ -73,7 +73,7 @@ public abstract class AbstractDataProcessor implements Serializable {
 	 * Default implementation of this method does not do anything, subclasses should override it if
 	 * any specific action is needed.
 	 *
-	 * @return Returns list of {@link Future}s if the data flushing submitted one or more writing
+	 * @return Returns list of {@link RunnableFuture}s if the data flushing submitted one or more writing
 	 *         tasks. Empty collection means no writing tasks were submitted.
 	 */
 	public Collection<Future<Void>> flush() {

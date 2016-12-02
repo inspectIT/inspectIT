@@ -218,7 +218,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 	 *
 	 * @param data
 	 *            Data to be written.
-	 * @return {@link Future} received from Storage writer.
+	 * @return {@link RunnableFuture} received from Storage writer.
 	 */
 	private Future<Void> passToStorageWriter(E data) {
 		// clear aggregated ids when saving to storage

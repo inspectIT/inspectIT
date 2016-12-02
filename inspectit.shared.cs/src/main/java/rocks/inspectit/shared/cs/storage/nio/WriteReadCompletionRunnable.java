@@ -1,5 +1,6 @@
 package rocks.inspectit.shared.cs.storage.nio;
 
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import rocks.inspectit.shared.cs.storage.nio.read.ReadingCompletionHandler;
@@ -143,6 +144,32 @@ public abstract class WriteReadCompletionRunnable implements Runnable {
 	 */
 	public void setAttemptedWriteReadPosition(long attemptedWriteReadPosition) {
 		this.attemptedWriteReadPosition = attemptedWriteReadPosition;
+	}
+
+	/**
+	 * RunnableFuture for the {@link WriteReadCompletionRunnable}.
+	 *
+	 * @author Ivan Senic
+	 *
+	 */
+	public class RunnableFuture extends FutureTask<Void> {
+
+		/**
+		 * Default constructor.
+		 */
+		public RunnableFuture() {
+			super(WriteReadCompletionRunnable.this, null);
+		}
+
+		/**
+		 * Returns {@link WriteReadCompletionRunnable} future is associeated with.
+		 *
+		 * @return Returns {@link WriteReadCompletionRunnable}.
+		 */
+		public WriteReadCompletionRunnable getWriteReadCompletionRunnable() {
+			return WriteReadCompletionRunnable.this;
+		}
+
 	}
 
 }

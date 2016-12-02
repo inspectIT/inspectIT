@@ -64,7 +64,7 @@ public abstract class AbstractChainedDataProcessor extends AbstractDataProcessor
 	 *
 	 * @param defaultData
 	 *            Data to pass.
-	 * @return Returns list of {@link Future}s if the data processed by chained processors submitted
+	 * @return Returns list of {@link RunnableFuture}s if the data processed by chained processors submitted
 	 *         one or more writing tasks. Empty collection means no writing tasks were submitted.
 	 */
 	protected Collection<Future<Void>> passToChainedProcessors(DefaultData defaultData) {

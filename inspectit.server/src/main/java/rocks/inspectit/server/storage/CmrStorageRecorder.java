@@ -63,12 +63,12 @@ public class CmrStorageRecorder {
 	ScheduledExecutorService executorService;
 
 	/**
-	 * Future for the task of recording stop.
+	 * RunnableFuture for the task of recording stop.
 	 */
 	private ScheduledFuture<?> stopRecordingFuture;
 
 	/**
-	 * Future for the task of recording start.
+	 * RunnableFuture for the task of recording start.
 	 */
 	private ScheduledFuture<?> startRecordingFuture;
 

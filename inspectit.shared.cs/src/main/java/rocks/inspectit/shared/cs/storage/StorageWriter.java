@@ -165,7 +165,7 @@ public class StorageWriter implements IWriter {
 	private boolean finalized = false;
 
 	/**
-	 * Future for the task of checking the writing status.
+	 * RunnableFuture for the task of checking the writing status.
 	 */
 	private ScheduledFuture<?> checkWritingStatusFuture;
 
@@ -188,7 +188,7 @@ public class StorageWriter implements IWriter {
 	 *            List of objects to process.
 	 * @param processors
 	 *            List of processors. Can be null, and in this case direct write will be executed.
-	 * @return Returns collection of void {@link Future}s, one for each writing task that has been
+	 * @return Returns collection of void {@link RunnableFuture}s, one for each writing task that has been
 	 *         creating while data has been processed. These futures provide only the information
 	 *         when the single writing task is executed, but not when the serialized bytes are
 	 *         actually written on disk.

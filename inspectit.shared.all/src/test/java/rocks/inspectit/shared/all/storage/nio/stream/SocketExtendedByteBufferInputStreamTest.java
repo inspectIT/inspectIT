@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -13,7 +15,6 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -28,10 +29,11 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 @SuppressWarnings("PMD")
 public class SocketExtendedByteBufferInputStreamTest extends TestBase {
 
+	private static final int NUMBER_OF_BUFFERS = 2;
+
 	/**
 	 * Class under test.
 	 */
-	@InjectMocks
 	SocketExtendedByteBufferInputStream inputStream;
 
 	@Mock
@@ -53,7 +55,11 @@ public class SocketExtendedByteBufferInputStreamTest extends TestBase {
 	 */
 	@BeforeMethod
 	public void init() {
+		inputStream = new SocketExtendedByteBufferInputStream(NUMBER_OF_BUFFERS);
+		inputStream.setByteBufferProvider(byteBufferProvider);
 		inputStream.setExecutorService(executorService);
+		inputStream.setSocketChannel(socketChannel);
+		inputStream.setLog(log);
 	}
 
 	public static class Read extends SocketExtendedByteBufferInputStreamTest {
@@ -105,6 +111,9 @@ public class SocketExtendedByteBufferInputStreamTest extends TestBase {
 
 			assertThat(read, is(readSize));
 			assertThat(bytes, is(equalTo(array)));
+
+			inputStream.close();
+			verify(byteBufferProvider, times(NUMBER_OF_BUFFERS)).releaseByteBuffer(Matchers.<ByteBuffer> anyObject());
 		}
 
 		@Test(expectedExceptions = IOException.class)

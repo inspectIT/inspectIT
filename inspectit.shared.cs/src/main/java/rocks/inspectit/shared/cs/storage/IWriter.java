@@ -18,7 +18,7 @@ public interface IWriter {
 	 *
 	 * @param defaultData
 	 *            Object to be written.
-	 * @return Returns the {@link Future} for the writing task of the given data or
+	 * @return Returns the {@link RunnableFuture} for the writing task of the given data or
 	 *         <code>null</code> if writing is currently suspended by the writer. This future
 	 *         provides only the information when the writing task is executed, but not when the
 	 *         serialized bytes are actually written on disk.
@@ -32,7 +32,7 @@ public interface IWriter {
 	 *            Object to be written.
 	 * @param kryoPreferences
 	 *            Map of preferences to be passed to the Kryo serializer.
-	 * @return Returns the {@link Future} for the writing task of the given data or
+	 * @return Returns the {@link RunnableFuture} for the writing task of the given data or
 	 *         <code>null</code> if writing is currently suspended by the writer. This future
 	 *         provides only the information when the writing task is executed, but not when the
 	 *         serialized bytes are actually written on disk.

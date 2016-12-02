@@ -125,7 +125,7 @@ public class StorageIndexingTreeHandler {
 	long maximumIndexingTreeSize;
 
 	/**
-	 * Future for the task of saving the indexing tree.
+	 * RunnableFuture for the task of saving the indexing tree.
 	 */
 	private volatile ScheduledFuture<?> indexingTreeSavingFuture;
 

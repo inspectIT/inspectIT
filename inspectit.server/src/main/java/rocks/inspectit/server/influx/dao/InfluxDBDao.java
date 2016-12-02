@@ -99,7 +99,7 @@ public class InfluxDBDao implements InfluxAvailabilityListener {
 	private final ConnectingTask connectingTask = new ConnectingTask();
 
 	/**
-	 * {@link Future} representing the state of {@link #connectingTask}.
+	 * {@link RunnableFuture} representing the state of {@link #connectingTask}.
 	 */
 	private Future<?> connectingFuture;
 

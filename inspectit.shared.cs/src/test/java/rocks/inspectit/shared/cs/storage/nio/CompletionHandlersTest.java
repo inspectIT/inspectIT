@@ -34,7 +34,10 @@ public class CompletionHandlersTest {
 	private ByteBuffer byteBuffer;
 
 	@Mock
-	private WriteReadCompletionRunnable writeReadCompletionRunnable;
+	private WriteReadCompletionRunnable.RunnableFuture writeReadRunnableFuture;
+
+	@Mock
+	private WriteReadCompletionRunnable writeReadRunnable;
 
 	@Mock
 	private AsynchronousFileChannel channel;
@@ -42,7 +45,8 @@ public class CompletionHandlersTest {
 	@BeforeMethod
 	public void initMock() {
 		MockitoAnnotations.initMocks(this);
-		when(attachment.getCompletionRunnable()).thenReturn(writeReadCompletionRunnable);
+		when(writeReadRunnableFuture.getWriteReadCompletionRunnable()).thenReturn(writeReadRunnable);
+		when(attachment.getCompletionRunnableFuture()).thenReturn(writeReadRunnableFuture);
 		when(attachment.getFileChannel()).thenReturn(channel);
 		when(attachment.getByteBuffer()).thenReturn(byteBuffer);
 	}
@@ -50,29 +54,31 @@ public class CompletionHandlersTest {
 	@Test(dataProvider = "Handlers")
 	public void writeReadFailedNotCompleted(CompletionHandler<Integer, WriteReadAttachment> handler) {
 		Exception exception = new Exception();
-		when(writeReadCompletionRunnable.isFinished()).thenReturn(false);
+		when(writeReadRunnable.isFinished()).thenReturn(false);
 		handler.failed(exception, attachment);
 
-		verify(attachment).getCompletionRunnable();
-		verify(writeReadCompletionRunnable).isFinished();
-		verify(writeReadCompletionRunnable).markFailed();
+		verify(attachment).getCompletionRunnableFuture();
+		verify(writeReadRunnable).isFinished();
+		verify(writeReadRunnable).markFailed();
+		verify(writeReadRunnableFuture, times(2)).getWriteReadCompletionRunnable();
 
-		verifyNoMoreInteractions(writeReadCompletionRunnable);
+		verifyNoMoreInteractions(writeReadRunnable, writeReadRunnableFuture);
 		verifyZeroInteractions(channel, byteBuffer);
 	}
 
 	@Test(dataProvider = "Handlers")
 	public void writeReadFailedCompleted(CompletionHandler<Integer, WriteReadAttachment> handler) {
 		Exception exception = new Exception();
-		when(writeReadCompletionRunnable.isFinished()).thenReturn(true);
+		when(writeReadRunnable.isFinished()).thenReturn(true);
 		handler.failed(exception, attachment);
 
-		verify(attachment).getCompletionRunnable();
-		verify(writeReadCompletionRunnable).isFinished();
-		verify(writeReadCompletionRunnable).markFailed();
-		verify(writeReadCompletionRunnable).run();
+		verify(attachment).getCompletionRunnableFuture();
+		verify(writeReadRunnable).isFinished();
+		verify(writeReadRunnable).markFailed();
+		verify(writeReadRunnableFuture).run();
+		verify(writeReadRunnableFuture, times(2)).getWriteReadCompletionRunnable();
 
-		verifyNoMoreInteractions(writeReadCompletionRunnable);
+		verifyNoMoreInteractions(writeReadRunnable, writeReadRunnableFuture);
 		verifyZeroInteractions(channel, byteBuffer);
 	}
 
@@ -83,14 +89,15 @@ public class CompletionHandlersTest {
 		when(attachment.getPosition()).thenReturn(0L);
 		when(attachment.getSize()).thenReturn((long) size);
 
-		when(writeReadCompletionRunnable.isFinished()).thenReturn(false);
+		when(writeReadRunnable.isFinished()).thenReturn(false);
 		handler.completed(bytesRead, attachment);
 
-		verify(attachment).getCompletionRunnable();
-		verify(writeReadCompletionRunnable).isFinished();
-		verify(writeReadCompletionRunnable).markSuccess();
+		verify(attachment).getCompletionRunnableFuture();
+		verify(writeReadRunnable).isFinished();
+		verify(writeReadRunnable).markSuccess();
+		verify(writeReadRunnableFuture, times(2)).getWriteReadCompletionRunnable();
 
-		verifyNoMoreInteractions(writeReadCompletionRunnable);
+		verifyNoMoreInteractions(writeReadRunnable, writeReadRunnableFuture);
 		verifyZeroInteractions(channel, byteBuffer);
 	}
 
@@ -101,15 +108,16 @@ public class CompletionHandlersTest {
 		when(attachment.getPosition()).thenReturn(0L);
 		when(attachment.getSize()).thenReturn((long) size);
 
-		when(writeReadCompletionRunnable.isFinished()).thenReturn(true);
+		when(writeReadRunnable.isFinished()).thenReturn(true);
 		handler.completed(bytesRead, attachment);
 
-		verify(attachment).getCompletionRunnable();
-		verify(writeReadCompletionRunnable).isFinished();
-		verify(writeReadCompletionRunnable).markSuccess();
-		verify(writeReadCompletionRunnable).run();
+		verify(attachment).getCompletionRunnableFuture();
+		verify(writeReadRunnable).isFinished();
+		verify(writeReadRunnable).markSuccess();
+		verify(writeReadRunnableFuture).run();
+		verify(writeReadRunnableFuture, times(2)).getWriteReadCompletionRunnable();
 
-		verifyNoMoreInteractions(writeReadCompletionRunnable);
+		verifyNoMoreInteractions(writeReadRunnable, writeReadRunnableFuture);
 		verifyZeroInteractions(channel, byteBuffer);
 	}
 
@@ -124,14 +132,14 @@ public class CompletionHandlersTest {
 		when(attachment.getPosition()).thenReturn(wantedPosition);
 		when(attachment.getSize()).thenReturn(wantedSize);
 
-		when(writeReadCompletionRunnable.isFinished()).thenReturn(false);
+		when(writeReadRunnable.isFinished()).thenReturn(false);
 		writingCompletionHandler.completed(bytesRead, attachment);
 
 		verify(attachment).setPosition(wantedPosition + written);
 		verify(attachment).setSize(wantedSize - written);
 		verify(channel, times(1)).write(byteBuffer, wantedPosition + written, attachment, writingCompletionHandler);
 
-		verifyZeroInteractions(writeReadCompletionRunnable, byteBuffer);
+		verifyZeroInteractions(writeReadRunnableFuture, byteBuffer);
 	}
 
 	@Test(dataProvider = "Write-Read-Data-Provider")
@@ -140,14 +148,14 @@ public class CompletionHandlersTest {
 		when(attachment.getPosition()).thenReturn(wantedPosition);
 		when(attachment.getSize()).thenReturn(wantedSize);
 
-		when(writeReadCompletionRunnable.isFinished()).thenReturn(false);
+		when(writeReadRunnable.isFinished()).thenReturn(false);
 		readingCompletionHandler.completed(bytesRead, attachment);
 
 		verify(attachment).setPosition(wantedPosition + read);
 		verify(attachment).setSize(wantedSize - read);
 		verify(channel, times(1)).read(byteBuffer, wantedPosition + read, attachment, readingCompletionHandler);
 
-		verifyZeroInteractions(writeReadCompletionRunnable, byteBuffer);
+		verifyZeroInteractions(writeReadRunnableFuture, byteBuffer);
 	}
 
 	@DataProvider(name = "Write-Read-Data-Provider")

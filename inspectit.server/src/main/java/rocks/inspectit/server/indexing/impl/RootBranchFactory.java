@@ -75,7 +75,7 @@ public class RootBranchFactory implements FactoryBean<RootBranch<DefaultData>> {
 		};
 
 		/**
-		 * Future that holds state of clear empty components runnable.
+		 * RunnableFuture that holds state of clear empty components runnable.
 		 */
 		private Future<?> clearEmptyComponentsFuture;
 

@@ -50,7 +50,7 @@ public class Leaf<E extends DefaultData> implements IBufferTreeComponent<E> {
 	};
 
 	/**
-	 * Future that holds state of clear runnable.
+	 * RunnableFuture that holds state of clear runnable.
 	 */
 	private Future<?> clearFuture;
 
