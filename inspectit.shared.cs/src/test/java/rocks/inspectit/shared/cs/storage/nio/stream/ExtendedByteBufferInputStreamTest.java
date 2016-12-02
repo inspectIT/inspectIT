@@ -15,9 +15,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
 import org.mockito.Matchers;
@@ -102,13 +104,21 @@ public class ExtendedByteBufferInputStreamTest {
 				return ByteBuffer.allocateDirect(bufferSize);
 			}
 		});
-		IStorageDescriptor storageDescriptor = mock(StorageDescriptor.class);
-		when(storageDescriptor.getPosition()).thenReturn(0L);
-		when(storageDescriptor.getSize()).thenReturn((long) readSize);
 
-		doAnswer(new Answer<Void>() {
+		List<IStorageDescriptor> descriptors = new ArrayList<>();
+		long totalInDescriptors = 0;
+		while (totalInDescriptors < readSize) {
+			long descriptorSize = Math.min(random.nextInt(2048), readSize - totalInDescriptors);
+			IStorageDescriptor storageDescriptor = mock(StorageDescriptor.class);
+			when(storageDescriptor.getPosition()).thenReturn(totalInDescriptors);
+			when(storageDescriptor.getSize()).thenReturn(descriptorSize);
+			totalInDescriptors += descriptorSize;
+			descriptors.add(storageDescriptor);
+		}
+
+		doAnswer(new Answer<Future<?>>() {
 			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
+			public Future<?> answer(InvocationOnMock invocation) throws Throwable {
 				Object[] args = invocation.getArguments();
 				ByteBuffer byteBuffer = (ByteBuffer) args[0];
 				long position = (long) args[1];
@@ -118,18 +128,26 @@ public class ExtendedByteBufferInputStreamTest {
 				byteBuffer.put(array, (int) position, (int) size);
 				byteBuffer.flip();
 
+				writeReadCompletionRunnable.setAttemptedWriteReadSize(size);
+				writeReadCompletionRunnable.setAttemptedWriteReadPosition(position);
 				writeReadCompletionRunnable.markSuccess();
 				writeReadCompletionRunnable.run();
 
-				return null;
+				return mock(Future.class);
 			}
 		}).when(readingChannelManager).read(Matchers.<ByteBuffer> anyObject(), anyLong(), anyLong(), Matchers.<Path> anyObject(), Matchers.<WriteReadCompletionRunnable> anyObject());
 
-		inputStream.setDescriptors(Collections.singletonList(storageDescriptor));
+		inputStream.setDescriptors(descriptors);
 		inputStream.prepare();
 
 		byte[] bytes = new byte[readSize];
-		inputStream.read(bytes, 0, readSize);
+		// do read in series
+		int alreadyRead = 0;
+		while (alreadyRead < readSize) {
+			int actuallyRead = inputStream.read(bytes, alreadyRead, Math.min(random.nextInt(512), readSize - alreadyRead));
+			alreadyRead += actuallyRead;
+		}
+		assertThat(inputStream.hasRemaining(), is(false));
 		inputStream.close();
 
 		try {

@@ -65,7 +65,7 @@ public class WritingChannelManager extends AbstractChannelManager {
 		attachment.setPosition(writingPosition);
 		completionRunnable.setAttemptedWriteReadSize(writingSize);
 		completionRunnable.setAttemptedWriteReadPosition(writingPosition);
-		attachment.setCompletionRunnable(completionRunnable);
+		attachment.setCompletionRunnableFuture(completionRunnable.new RunnableFuture());
 		attachment.setFileChannel(channel.getFileChannel());
 
 		boolean wrote = false;
@@ -114,7 +114,7 @@ public class WritingChannelManager extends AbstractChannelManager {
 			attachment.setByteBuffer(byteBuffer);
 			attachment.setSize(writingSize);
 			attachment.setPosition(writingPosition);
-			attachment.setCompletionRunnable(completionRunnable);
+			attachment.setCompletionRunnableFuture(completionRunnable.new RunnableFuture());
 			attachment.setFileChannel(channel.getFileChannel());
 
 			boolean wrote = false;
