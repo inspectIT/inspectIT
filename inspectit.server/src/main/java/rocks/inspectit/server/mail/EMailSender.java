@@ -3,8 +3,13 @@ package rocks.inspectit.server.mail;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -16,10 +21,14 @@ import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.server.externalservice.IExternalService;
 import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.util.EMailUtils;
 
@@ -31,12 +40,24 @@ import rocks.inspectit.shared.all.util.EMailUtils;
  *
  */
 @Component
-public class EMailSender {
+public class EMailSender implements IExternalService {
+
+	/**
+	 * The delay in seconds between consecutive automatic connection checks.
+	 */
+	private static final Long[] EXECUTION_DELAYS = { 15L, 30L, 60L, 600L };
+
 	/**
 	 * Logger for the class.
 	 */
 	@Log
 	Logger log;
+
+	/**
+	 * SMTP Server enabled.
+	 */
+	@Value("${mail.enable}")
+	boolean smtpEnabled;
 
 	/**
 	 * SMTP Server host.
@@ -107,6 +128,28 @@ public class EMailSender {
 	private ObjectFactory objectFactory = new ObjectFactory();
 
 	/**
+	 * {@link ExecutorService} instance.
+	 */
+	@Autowired
+	@Resource(name = "scheduledExecutorService")
+	private ScheduledExecutorService scheduledExecutorService;
+
+	/**
+	 * Instance of {@link ConnectionCheck}.
+	 */
+	private final ConnectionCheck connectionCheck = new ConnectionCheck();
+
+	/**
+	 * The future of the executed {@link ConnectionCheck}.
+	 */
+	private Future<?> connectionCheckFuture;
+
+	/**
+	 * The index of the next used execution delay.
+	 */
+	private int executionDelayIndex = 0;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public boolean sendEMail(String subject, String htmlMessage, String textMessage, List<String> recipients) {
@@ -140,7 +183,7 @@ public class EMailSender {
 	 * {@inheritDoc}
 	 */
 	public boolean isConnected() {
-		return connected;
+		return getServiceStatus() == ExternalServiceStatus.CONNECTED;
 	}
 
 	/**
@@ -182,6 +225,9 @@ public class EMailSender {
 	 */
 	@PropertyUpdate(properties = { "mail.smtp.host", "mail.smtp.port", "mail.smtp.user", "mail.smtp.passwd", "mail.smtp.properties" })
 	public void onSmtpPropertiesChanged() {
+		if (!smtpEnabled) {
+			return;
+		}
 		parseAdditionalPropertiesString();
 		checkConnection();
 	}
@@ -190,7 +236,14 @@ public class EMailSender {
 	 * Initialize E-Mail service.
 	 */
 	@PostConstruct
+	@PropertyUpdate(properties = { "mail.enable" })
 	public void init() {
+		if (!smtpEnabled) {
+			return;
+		} else if (log.isInfoEnabled()) {
+			log.info("||-eMail Service initialized");
+		}
+
 		parseRecipientsString();
 		onSmtpPropertiesChanged();
 	}
@@ -199,19 +252,10 @@ public class EMailSender {
 	 * Checks connection to SMTP server.
 	 */
 	private void checkConnection() {
-		try {
-			Transport transport = objectFactory.getSmtpTransport();
-			transport.connect(smtpHost, smtpPort, smtpUser, smtpPassword);
-			transport.close();
-			log.info("|-eMail Service active and connected...");
-			connected = true;
-		} catch (AuthenticationFailedException e) {
-			log.warn("|-eMail Service was not able to connect! Authentication failed!");
-			connected = false;
-		} catch (MessagingException e) {
-			log.warn("|-eMail Service was not able to connect! Check connection settings!");
-			connected = false;
+		if ((connectionCheckFuture != null) && !connectionCheckFuture.isDone()) {
+			connectionCheckFuture.cancel(true);
 		}
+		connectionCheckFuture = scheduledExecutorService.submit(connectionCheck);
 	}
 
 	/**
@@ -259,6 +303,30 @@ public class EMailSender {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ExternalServiceType getServiceType() {
+		return ExternalServiceType.MAIL_SENDER;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ExternalServiceStatus getServiceStatus() {
+		if (!smtpEnabled) {
+			return ExternalServiceStatus.DISABLED;
+		}
+
+		if (connected) {
+			return ExternalServiceStatus.CONNECTED;
+		} else {
+			return ExternalServiceStatus.DISCONNECTED;
+		}
+	}
+
+	/**
 	 * Factory class to create objects required by the EMailSender. This class primary exists for
 	 * better testing process.
 	 *
@@ -285,5 +353,59 @@ public class EMailSender {
 		public HtmlEmail createHtmlEmail() {
 			return new HtmlEmail();
 		}
+	}
+
+	/**
+	 * Runnable to execute the connection check.
+	 *
+	 * @author Marius Oehler
+	 *
+	 */
+	private class ConnectionCheck implements Runnable {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void run() {
+			if (log.isDebugEnabled()) {
+				log.debug("Check connection to SMTP server..");
+			}
+
+			try {
+				Transport transport = objectFactory.getSmtpTransport();
+				transport.connect(smtpHost, smtpPort, smtpUser, smtpPassword);
+				transport.close();
+				if (log.isDebugEnabled()) {
+					log.debug("|-eMail Service connected.");
+				}
+				connected = true;
+			} catch (AuthenticationFailedException e) {
+				if (log.isDebugEnabled()) {
+					log.debug("|-eMail Service was not able to connect! Authentication failed!");
+				}
+				connected = false;
+			} catch (MessagingException e) {
+				if (log.isDebugEnabled()) {
+					log.debug("|-eMail Service was not able to connect!");
+				}
+				connected = false;
+			}
+
+			if (smtpEnabled) {
+				if (connected) {
+					executionDelayIndex = 0;
+				}
+
+				scheduledExecutorService.schedule(this, EXECUTION_DELAYS[executionDelayIndex], TimeUnit.SECONDS);
+
+				if (!connected) {
+					if (executionDelayIndex < (EXECUTION_DELAYS.length - 1)) {
+						executionDelayIndex++;
+					}
+				}
+			}
+		}
+
 	}
 }

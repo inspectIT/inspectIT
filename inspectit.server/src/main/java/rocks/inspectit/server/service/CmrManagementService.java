@@ -9,6 +9,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rocks.inspectit.server.cache.IBuffer;
-import rocks.inspectit.server.influx.dao.InfluxDBDao;
+import rocks.inspectit.server.externalservice.IExternalService;
 import rocks.inspectit.server.property.PropertyManager;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.ShutdownService;
@@ -78,10 +79,10 @@ public class CmrManagementService implements ICmrManagementService {
 	private ShutdownService shutdownService;
 
 	/**
-	 * An {@link IInfluxDBDao} instance.
+	 * List of {@link IExternalService}s.
 	 */
 	@Autowired
-	private InfluxDBDao influxDbDao;
+	private List<IExternalService> services;
 
 	/**
 	 * Time in milliseconds when the CMR has started.
@@ -137,7 +138,11 @@ public class CmrManagementService implements ICmrManagementService {
 		cmrStatusData.setUpTime(System.currentTimeMillis() - timeStarted);
 		cmrStatusData.setDateStarted(dateStarted);
 		cmrStatusData.setDatabaseSize(getDatabaseSize());
-		cmrStatusData.setInfluxConnected(influxDbDao.isConnected());
+
+		for (IExternalService service : services) {
+			cmrStatusData.getExternalServiceStatusMap().put(service.getServiceType(), service.getServiceStatus());
+		}
+
 		return cmrStatusData;
 	}
 

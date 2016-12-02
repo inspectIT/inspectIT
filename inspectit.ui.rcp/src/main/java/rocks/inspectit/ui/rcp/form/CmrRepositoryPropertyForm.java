@@ -2,6 +2,9 @@ package rocks.inspectit.ui.rcp.form;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,7 +40,10 @@ import org.eclipse.ui.progress.UIJob;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
 import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.all.util.Pair;
 import rocks.inspectit.shared.cs.communication.data.cmr.RecordingData;
 import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.shared.cs.storage.recording.RecordingState;
@@ -106,8 +112,11 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 	private ProgressBar spaceLeftBar; // NOCHK
 	private Label uptimeLabel; // NOCHK
 	private Label databaseSizeLabel; // NOCHK
-	private Label influxStatusIcon; // NOCHK
-	private Label influxStatusLabel; // NOCHK
+
+	/**
+	 * Map containing the labels of the external services.
+	 */
+	private Map<ExternalServiceType, Pair<Label, Label>> externalServiceLabelMap = new HashMap<>();
 
 	/**
 	 * Default constructor.
@@ -183,19 +192,41 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 		databaseSizeLabel = toolkit.createLabel(generalComposite, null, SWT.WRAP);
 		databaseSizeLabel.setToolTipText("Current size of the database on the CMR");
 
-		toolkit.createLabel(generalComposite, "InfluxDB:");
-		Composite influxStatusComposite = toolkit.createComposite(generalComposite);
-		GridLayout influxLayout = new GridLayout(2, false);
-		influxLayout.marginHeight = 0;
-		influxLayout.marginWidth = 0;
-		influxStatusComposite.setLayout(influxLayout);
-		influxStatusIcon = toolkit.createLabel(influxStatusComposite, null, SWT.WRAP);
-		influxStatusLabel = toolkit.createLabel(influxStatusComposite, null, SWT.WRAP);
-
 		generalSection.setClient(generalComposite);
 		generalSection.setLayout(new TableWrapLayout());
 		generalSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		// END - General section
+
+		// START - External Service section
+		Section externalServicesSection = toolkit.createSection(mainComposite, ExpandableComposite.TITLE_BAR);
+		externalServicesSection.setText("External services");
+
+		Composite externalServicesSectionComposite = toolkit.createComposite(externalServicesSection, SWT.NONE);
+		tableWrapLayout = new TableWrapLayout();
+		tableWrapLayout.numColumns = 2;
+		externalServicesSectionComposite.setLayout(tableWrapLayout);
+		externalServicesSectionComposite.setLayoutData(new TableWrapData(TableWrapData.FILL));
+
+		for (ExternalServiceType service : ExternalServiceType.values()) {
+			toolkit.createLabel(externalServicesSectionComposite, service.getName() + ":");
+			Composite statusComposite = toolkit.createComposite(externalServicesSectionComposite);
+			GridLayout statusLayout = new GridLayout(2, false);
+			statusLayout.marginHeight = 0;
+			statusLayout.marginWidth = 0;
+			statusComposite.setLayout(statusLayout);
+
+			Label iconLabel = toolkit.createLabel(statusComposite, null, SWT.WRAP);
+			Label textLabel = toolkit.createLabel(statusComposite, null, SWT.WRAP);
+			iconLabel.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GRAY));
+			textLabel.setText("-");
+
+			externalServiceLabelMap.put(service, new Pair<>(iconLabel, textLabel));
+		}
+
+		externalServicesSection.setClient(externalServicesSectionComposite);
+		externalServicesSection.setLayout(new TableWrapLayout());
+		externalServicesSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		// END - External Service section
 
 		// START - Buffer section
 		Section bufferSection = toolkit.createSection(mainComposite, ExpandableComposite.TITLE_BAR);
@@ -453,13 +484,22 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 				databaseSizeLabel.setText("n/a");
 			}
 
-			// influxDB info
-			if (cmrStatusData.isInfluxConnected()) {
-				influxStatusLabel.setText("Connected");
-				influxStatusIcon.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GREEN));
-			} else {
-				influxStatusLabel.setText("Disconnected");
-				influxStatusIcon.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GRAY));
+			// external services
+			for (Entry<ExternalServiceType, Pair<Label, Label>> serviceEntry : externalServiceLabelMap.entrySet()) {
+				ExternalServiceStatus serviceStatus = cmrStatusData.getExternalServiceStatusMap().get(serviceEntry.getKey());
+				if (serviceStatus == ExternalServiceStatus.CONNECTED) {
+					serviceEntry.getValue().getFirst().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GREEN));
+					serviceEntry.getValue().getSecond().setText("Connected");
+				} else if (serviceStatus == ExternalServiceStatus.DISCONNECTED) {
+					serviceEntry.getValue().getFirst().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD));
+					serviceEntry.getValue().getSecond().setText("Disconnected");
+				} else if (serviceStatus == ExternalServiceStatus.DISABLED) {
+					serviceEntry.getValue().getFirst().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GRAY));
+					serviceEntry.getValue().getSecond().setText("Disabled");
+				} else if (serviceStatus == ExternalServiceStatus.UNKNOWN) {
+					serviceEntry.getValue().getFirst().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_YELLOW));
+					serviceEntry.getValue().getSecond().setText("Unknown status");
+				}
 			}
 		}
 
@@ -474,7 +514,11 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 			spaceLeftLabel.setText("");
 			uptimeLabel.setText("");
 			databaseSizeLabel.setText("");
-			influxStatusLabel.setText("");
+
+			for (Entry<ExternalServiceType, Pair<Label, Label>> serviceEntry : externalServiceLabelMap.entrySet()) {
+				serviceEntry.getValue().getFirst().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GRAY));
+				serviceEntry.getValue().getSecond().setText("-");
+			}
 		}
 	}
 
