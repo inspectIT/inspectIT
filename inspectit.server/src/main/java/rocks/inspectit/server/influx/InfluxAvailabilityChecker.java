@@ -62,7 +62,7 @@ public class InfluxAvailabilityChecker implements Runnable {
 	/**
 	 * The delay in seconds between consecutive checks.
 	 */
-	private static final Long[] EXECUTION_DELAYS = { 5L, 15L, 30L, 60L, 600L };
+	private static final Long[] EXECUTION_DELAYS = { 5L, 15L, 30L, 60L, 120L };
 
 	/**
 	 * Logger for the class.

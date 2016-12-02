@@ -272,7 +272,7 @@ public class InfluxAvailabilityCheckerTest extends TestBase {
 			verify(executorService).schedule(eq(availabilityChecker), eq(15L), any(TimeUnit.class));
 			verify(executorService).schedule(eq(availabilityChecker), eq(30L), any(TimeUnit.class));
 			verify(executorService).schedule(eq(availabilityChecker), eq(60L), any(TimeUnit.class));
-			verify(executorService, times(2)).schedule(eq(availabilityChecker), eq(600L), any(TimeUnit.class));
+			verify(executorService, times(2)).schedule(eq(availabilityChecker), eq(120L), any(TimeUnit.class));
 			verify(executorService).schedule(eq(availabilityChecker), eq(5L), any(TimeUnit.class));
 			verifyNoMoreInteractions(executorService);
 			verify(influxDb, times(6)).ping();
