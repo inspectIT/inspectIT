@@ -52,11 +52,11 @@ public class ReadingCompletionHandler implements CompletionHandler<Integer, Writ
 				byteBuffer.position(byteBuffer.position() + (int) bytesToReadMore);
 			}
 			byteBuffer.flip();
-			WriteReadCompletionRunnable completionRunnable = attachment.getCompletionRunnable();
-			if (null != completionRunnable) {
-				completionRunnable.markSuccess();
-				if (completionRunnable.isFinished()) {
-					completionRunnable.run();
+			WriteReadCompletionRunnable.RunnableFuture completionRunnableFuture = attachment.getCompletionRunnableFuture();
+			if (null != completionRunnableFuture) {
+				completionRunnableFuture.getWriteReadCompletionRunnable().markSuccess();
+				if (completionRunnableFuture.getWriteReadCompletionRunnable().isFinished()) {
+					completionRunnableFuture.run();
 				}
 			}
 		}
@@ -68,11 +68,11 @@ public class ReadingCompletionHandler implements CompletionHandler<Integer, Writ
 	@Override
 	public void failed(Throwable exc, WriteReadAttachment attachment) {
 		LOG.error("Write to the disk failed.", exc);
-		WriteReadCompletionRunnable completionRunnable = attachment.getCompletionRunnable();
-		if (null != completionRunnable) {
-			completionRunnable.markFailed();
-			if (completionRunnable.isFinished()) {
-				completionRunnable.run();
+		WriteReadCompletionRunnable.RunnableFuture completionRunnableFuture = attachment.getCompletionRunnableFuture();
+		if (null != completionRunnableFuture) {
+			completionRunnableFuture.getWriteReadCompletionRunnable().markFailed();
+			if (completionRunnableFuture.getWriteReadCompletionRunnable().isFinished()) {
+				completionRunnableFuture.run();
 			}
 		}
 	}

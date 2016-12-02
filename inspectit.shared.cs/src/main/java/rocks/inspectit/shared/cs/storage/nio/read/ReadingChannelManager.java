@@ -3,6 +3,7 @@ package rocks.inspectit.shared.cs.storage.nio.read;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 
@@ -11,6 +12,7 @@ import rocks.inspectit.shared.cs.storage.nio.AbstractChannelManager;
 import rocks.inspectit.shared.cs.storage.nio.CustomAsyncChannel;
 import rocks.inspectit.shared.cs.storage.nio.WriteReadAttachment;
 import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable;
+import rocks.inspectit.shared.cs.storage.nio.WriteReadCompletionRunnable.RunnableFuture;
 
 /**
  * Channel manager that performs reading.
@@ -55,10 +57,11 @@ public class ReadingChannelManager extends AbstractChannelManager {
 	 *            first.
 	 * @param completionRunnable
 	 *            Runnable that will be executed at the end of the read.
+	 * @return Future for the write completion runnable.
 	 * @throws IOException
 	 *             Delegates {@link IOException} from IO operations.
 	 */
-	public void read(ByteBuffer byteBuffer, long position, long size, Path channelPath, WriteReadCompletionRunnable completionRunnable) throws IOException {
+	public Future<Void> read(ByteBuffer byteBuffer, long position, long size, Path channelPath, WriteReadCompletionRunnable completionRunnable) throws IOException {
 		long readSize;
 		if (size <= 0) {
 			readSize = byteBuffer.capacity() - byteBuffer.position();
@@ -76,7 +79,10 @@ public class ReadingChannelManager extends AbstractChannelManager {
 		attachment.setByteBuffer(byteBuffer);
 		attachment.setSize(readSize);
 		attachment.setFileChannel(channel.getFileChannel());
-		attachment.setCompletionRunnable(completionRunnable);
+		RunnableFuture runnableFuture = completionRunnable.new RunnableFuture();
+		attachment.setCompletionRunnableFuture(runnableFuture);
+		completionRunnable.setAttemptedWriteReadSize(readSize);
+		completionRunnable.setAttemptedWriteReadPosition(position);
 
 		boolean read = false;
 		while (!read) {
@@ -88,6 +94,8 @@ public class ReadingChannelManager extends AbstractChannelManager {
 				this.openAsyncChannel(channel);
 			}
 		}
+
+		return runnableFuture;
 	}
 
 	/**
