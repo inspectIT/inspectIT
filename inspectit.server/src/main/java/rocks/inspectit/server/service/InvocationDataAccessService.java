@@ -24,6 +24,7 @@ import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.AlertErrorCodeEnum;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
@@ -158,7 +159,7 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 	 */
 	@Override
 	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException {
-		if (!influxDBDao.isConnected()) {
+		if (influxDBDao.getServiceStatus() != ExternalServiceStatus.CONNECTED) {
 			throw new BusinessException("Retrieving invocation sequences for alert with id '" + alertId + "'", AlertErrorCodeEnum.DATABASE_OFFLINE);
 		}
 		Alert alert = alertRegistry.getAlert(alertId);

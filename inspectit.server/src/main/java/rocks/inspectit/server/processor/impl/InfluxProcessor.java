@@ -18,6 +18,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
 
 /**
  * The simple influx processor. Processor knows all available influx point builders. When the
@@ -75,7 +76,7 @@ public class InfluxProcessor extends AbstractCmrDataProcessor {
 	 */
 	@Override
 	public boolean canBeProcessed(DefaultData defaultData) {
-		return influxDbDao.isConnected() && builderMap.containsKey(defaultData.getClass()) && isValidData(defaultData);
+		return (influxDbDao.getServiceStatus() == ExternalServiceStatus.CONNECTED) && builderMap.containsKey(defaultData.getClass()) && isValidData(defaultData);
 	}
 
 	/**

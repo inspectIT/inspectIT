@@ -19,10 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.server.externalservice.IExternalService;
 import rocks.inspectit.server.influx.InfluxAvailabilityChecker;
 import rocks.inspectit.server.influx.InfluxAvailabilityChecker.InfluxAvailabilityListener;
 import rocks.inspectit.server.influx.util.InfluxClientFactory;
 import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 
@@ -34,7 +37,7 @@ import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
  *
  */
 @Component
-public class InfluxDBDao implements InfluxAvailabilityListener {
+public class InfluxDBDao implements InfluxAvailabilityListener, IExternalService {
 
 	/**
 	 * After this duration, the batch have to be flushed.
@@ -116,7 +119,7 @@ public class InfluxDBDao implements InfluxAvailabilityListener {
 	 *            {@link Point} to insert
 	 */
 	public void insert(Point dataPoint) {
-		if ((dataPoint == null) || !isConnected()) {
+		if ((dataPoint == null) || !connected) {
 			return;
 		}
 
@@ -135,7 +138,7 @@ public class InfluxDBDao implements InfluxAvailabilityListener {
 	 * @return the result of this query
 	 */
 	public QueryResult query(String query) {
-		if ((query == null) || !isConnected()) {
+		if ((query == null) || !connected) {
 			return null;
 		}
 
@@ -144,15 +147,6 @@ public class InfluxDBDao implements InfluxAvailabilityListener {
 		}
 
 		return influxDB.query(new Query(query, database));
-	}
-
-	/**
-	 * Indicates whether the influxDB service is connected to a running influxDB instance.
-	 *
-	 * @return true, if connected, otherwise false
-	 */
-	public boolean isConnected() {
-		return connected;
 	}
 
 	/**
@@ -302,6 +296,30 @@ public class InfluxDBDao implements InfluxAvailabilityListener {
 		createDatabaseIfNotExistent();
 
 		connected = true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ExternalServiceStatus getServiceStatus() {
+		if (!active) {
+			return ExternalServiceStatus.DISABLED;
+		}
+
+		if (connected) {
+			return ExternalServiceStatus.CONNECTED;
+		} else {
+			return ExternalServiceStatus.DISCONNECTED;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ExternalServiceType getServiceType() {
+		return ExternalServiceType.INFLUXDB;
 	}
 
 	/**

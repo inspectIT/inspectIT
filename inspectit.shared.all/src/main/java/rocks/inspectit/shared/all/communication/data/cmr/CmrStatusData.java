@@ -2,8 +2,12 @@ package rocks.inspectit.shared.all.communication.data.cmr;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
 
 /**
  * Class that hold all information about a CMR status.
@@ -74,27 +78,17 @@ public class CmrStatusData implements Serializable {
 	private Long databaseSize;
 
 	/**
-	 * If the InfluxDB is connected.
+	 * The connection status of external services.
 	 */
-	private boolean influxConnected;
+	private Map<ExternalServiceType, ExternalServiceStatus> externalServiceStatusMap = new HashMap<ExternalServiceType, ExternalServiceStatus>(0);
 
 	/**
-	 * Gets {@link #influxConnected}.
-	 * 
-	 * @return {@link #influxConnected}
+	 * Gets {@link #externalServiceStatusMap}.
+	 *
+	 * @return {@link #externalServiceStatusMap}
 	 */
-	public boolean isInfluxConnected() {
-		return this.influxConnected;
-	}
-
-	/**
-	 * Sets {@link #influxConnected}.
-	 * 
-	 * @param isInfluxConnected
-	 *            New value for {@link #influxConnected}
-	 */
-	public void setInfluxConnected(boolean isInfluxConnected) {
-		this.influxConnected = isInfluxConnected;
+	public Map<ExternalServiceType, ExternalServiceStatus> getExternalServiceStatusMap() {
+		return this.externalServiceStatusMap;
 	}
 
 	/**

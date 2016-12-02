@@ -8,6 +8,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -17,6 +19,9 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
@@ -27,10 +32,15 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.mail.EMailSender.ObjectFactory;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -51,6 +61,24 @@ public class EMailSenderTest extends TestBase {
 
 	@Mock
 	ObjectFactory objectFactoryMock;
+
+	@Mock
+	ScheduledExecutorService scheduledExecutorService;
+
+	Future<?> future;
+
+	@BeforeMethod
+	public void init() {
+		future = mock(Future.class);
+		when(scheduledExecutorService.submit(any(Runnable.class))).thenAnswer(new Answer<Future<?>>() {
+			@Override
+			public Future<?> answer(InvocationOnMock invocation) throws Throwable {
+				Runnable runnabel = (Runnable) invocation.getArguments()[0];
+				runnabel.run();
+				return future;
+			}
+		});
+	}
 
 	/**
 	 * Tests the {@link EMailSender#init()} and {@link EMailSender#onSmtpPropertiesChanged()}
@@ -84,20 +112,31 @@ public class EMailSenderTest extends TestBase {
 			mailSender.smtpPort = 25;
 			mailSender.smtpUser = "user";
 			mailSender.smtpPassword = "passwd";
+			mailSender.smtpEnabled = true;
 
 			mailSender.init();
 
 			verify(objectFactoryMock).getSmtpTransport();
-			verifyNoMoreInteractions(objectFactoryMock);
 			verify(transportMock).connect("host", 25, "user", "passwd");
 			verify(transportMock).close();
-			verifyNoMoreInteractions(transportMock);
-			assertThat(mailSender.isConnected(), is(true));
+			verify(scheduledExecutorService).submit(any(Runnable.class));
+			verify(scheduledExecutorService).schedule(any(Runnable.class), eq(15L), eq(TimeUnit.SECONDS));
+			verifyNoMoreInteractions(objectFactoryMock, transportMock, scheduledExecutorService);
+			assertThat(mailSender.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
+			assertThat(mailSender.getServiceType(), is(ExternalServiceType.MAIL_SENDER));
 			assertThat(getAdditionalProperties().entrySet(), hasSize(2));
 			assertThat(getAdditionalProperties(), hasEntry((Object) "key1", (Object) "val1"));
 			assertThat(getAdditionalProperties(), hasEntry((Object) "key2", (Object) "val2"));
 			assertThat(getDefaultRecipients(), hasSize(2));
 			assertThat(getDefaultRecipients(), hasItems("one@example.com", "two@example.com"));
+		}
+
+		@Test
+		public void disabled() {
+			mailSender.init();
+
+			assertThat(mailSender.getServiceStatus(), is(ExternalServiceStatus.DISABLED));
+			verifyZeroInteractions(objectFactoryMock, scheduledExecutorService, transportMock);
 		}
 
 		@Test
@@ -109,6 +148,7 @@ public class EMailSenderTest extends TestBase {
 			mailSender.smtpPort = 25;
 			mailSender.smtpUser = "user";
 			mailSender.smtpPassword = "passwd";
+			mailSender.smtpEnabled = true;
 
 			mailSender.init();
 
@@ -116,7 +156,7 @@ public class EMailSenderTest extends TestBase {
 			verify(transportMock).connect("host", 25, "user", "passwd");
 			verify(transportMock).close();
 			verifyNoMoreInteractions(objectFactoryMock, transportMock);
-			assertThat(mailSender.isConnected(), is(true));
+			assertThat(mailSender.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			assertThat(getAdditionalProperties().entrySet(), hasSize(0));
 			assertThat(getDefaultRecipients(), hasSize(0));
 		}
@@ -131,13 +171,14 @@ public class EMailSenderTest extends TestBase {
 			mailSender.smtpPort = 25;
 			mailSender.smtpUser = "user";
 			mailSender.smtpPassword = "passwd";
+			mailSender.smtpEnabled = true;
 
 			mailSender.init();
 
 			verify(objectFactoryMock).getSmtpTransport();
 			verify(transportMock).connect("host", 25, "user", "passwd");
 			verifyNoMoreInteractions(objectFactoryMock, transportMock);
-			assertThat(mailSender.isConnected(), is(false));
+			assertThat(mailSender.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
 		}
 
 		@Test
@@ -150,32 +191,55 @@ public class EMailSenderTest extends TestBase {
 			mailSender.smtpPort = 25;
 			mailSender.smtpUser = "user";
 			mailSender.smtpPassword = "passwd";
+			mailSender.smtpEnabled = true;
 
 			mailSender.init();
 
 			verify(objectFactoryMock).getSmtpTransport();
 			verify(transportMock).connect("host", 25, "user", "passwd");
 			verifyNoMoreInteractions(objectFactoryMock, transportMock);
-			assertThat(mailSender.isConnected(), is(false));
+			assertThat(mailSender.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
+		}
+
+		@Test
+		public void onSmtpPropertiesChanged() throws Exception {
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			when(future.isDone()).thenReturn(false, true);
+			mailSender.defaultRecipientString = "one@example.com,two@example.com,invalid";
+			mailSender.smtpPropertiesString = "key1=val1,key2=val2,=noKey,noVal=,=,invalid";
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.smtpEnabled = true;
+
+			mailSender.init();
+			mailSender.onSmtpPropertiesChanged();
+			mailSender.onSmtpPropertiesChanged();
+
+			verify(future, times(2)).isDone();
+			verify(future).cancel(true);
+			verifyNoMoreInteractions(future);
 		}
 	}
 
 	/**
-	 * Tests the {@link EMailSender#isConnected()} method.
+	 * Tests the {@link EMailSender#getServiceStatus()} method.
 	 */
-	public static class IsConnected extends EMailSenderTest {
+	public static class GetServiceStatus extends EMailSenderTest {
 
 		@Mock
 		Transport transportMock;
 
 		@Test
 		public void connected() throws MessagingException {
+			mailSender.smtpEnabled = true;
 			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
 			mailSender.init();
 
-			boolean result = mailSender.isConnected();
+			ExternalServiceStatus result = mailSender.getServiceStatus();
 
-			assertThat(result, is(true));
+			assertThat(result, is(ExternalServiceStatus.CONNECTED));
 			verify(objectFactoryMock).getSmtpTransport();
 			verify(transportMock).connect(any(String.class), any(Integer.class), any(String.class), any(String.class));
 			verify(transportMock).close();
@@ -184,16 +248,28 @@ public class EMailSenderTest extends TestBase {
 
 		@Test
 		public void notConnected() throws MessagingException {
+			mailSender.smtpEnabled = true;
 			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
 			doThrow(MessagingException.class).when(transportMock).connect(any(String.class), any(Integer.class), any(String.class), any(String.class));
 			mailSender.init();
 
-			boolean result = mailSender.isConnected();
+			ExternalServiceStatus result = mailSender.getServiceStatus();
 
-			assertThat(result, is(false));
+			assertThat(result, is(ExternalServiceStatus.DISCONNECTED));
 			verify(objectFactoryMock).getSmtpTransport();
 			verify(transportMock).connect(any(String.class), any(Integer.class), any(String.class), any(String.class));
 			verifyNoMoreInteractions(objectFactoryMock, transportMock);
+		}
+
+		@Test
+		public void disabled() throws MessagingException {
+			mailSender.smtpEnabled = false;
+			mailSender.init();
+
+			ExternalServiceStatus result = mailSender.getServiceStatus();
+
+			assertThat(result, is(ExternalServiceStatus.DISABLED));
+			verifyZeroInteractions(objectFactoryMock, transportMock);
 		}
 	}
 
@@ -225,6 +301,7 @@ public class EMailSenderTest extends TestBase {
 			mailSender.smtpPassword = "passwd";
 			mailSender.senderAddress = "sender@example.com";
 			mailSender.senderName = "Sender Name";
+			mailSender.smtpEnabled = true;
 			mailSender.init();
 
 			boolean result = mailSender.sendEMail("subject", "htmlBody", "textBody", Arrays.asList("three@example.com"));
@@ -270,6 +347,7 @@ public class EMailSenderTest extends TestBase {
 			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
 			mailSender.smtpHost = "host";
 			mailSender.smtpPort = -1;
+			mailSender.smtpEnabled = true;
 			mailSender.init();
 
 			boolean result = mailSender.sendEMail("subject", "htmlBody", "textBody", Arrays.asList("one@example.com"));
@@ -297,6 +375,7 @@ public class EMailSenderTest extends TestBase {
 			mailSender.smtpPassword = "passwd";
 			mailSender.senderAddress = "invalid";
 			mailSender.senderName = "Sender Name";
+			mailSender.smtpEnabled = true;
 			mailSender.init();
 
 			boolean result = mailSender.sendEMail("subject", "htmlBody", "textBody", Arrays.asList("three@example.com"));

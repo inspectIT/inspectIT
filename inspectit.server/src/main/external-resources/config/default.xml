@@ -358,6 +358,7 @@
 	</section>
 	<section name="Mail" >
 		<properties>
+			<boolean-property name="Use SMTP server" default-value="false" server-restart-required="false" logical-name="mail.enable" advanced="false" description="If activated, a configured SMTP server can be used to send e-mails (e.g. for alerting messages)." />
 			<string-property name="SMTP Server Host" default-value="smtp-server" server-restart-required="false" logical-name="mail.smtp.host" advanced="false" description="The hostname/IP of the SMTP server to be used to send e-mails.">
 				<validators>
 					<isNotEmpty />

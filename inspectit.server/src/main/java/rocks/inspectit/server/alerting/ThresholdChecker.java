@@ -11,6 +11,7 @@ import rocks.inspectit.server.alerting.state.AlertingState;
 import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.influx.util.InfluxQueryFactory;
 import rocks.inspectit.server.influx.util.QueryResultWrapper;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 
@@ -55,7 +56,7 @@ public class ThresholdChecker {
 			log.debug("||-Check threshold defined by alerting definition '{}'.", alertingState.getAlertingDefinition().toString());
 		}
 
-		if (!influxDao.isConnected()) {
+		if (influxDao.getServiceStatus() != ExternalServiceStatus.CONNECTED) {
 			if (log.isDebugEnabled()) {
 				log.debug("||-Cannot check threshold without connected influxDB.");
 			}

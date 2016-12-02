@@ -29,8 +29,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.influx.InfluxAvailabilityChecker;
-import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.influx.util.InfluxClientFactory;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
+import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -93,7 +94,7 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.insert(dataPoint);
 
-			assertThat(influxDao.isConnected(), is(true));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(executor).submit(any(Runnable.class));
 			verify(influxDb).write(influxDao.database, influxDao.retentionPolicy, dataPoint);
 			verify(influxDb).ping();
@@ -116,7 +117,7 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.insert(null);
 
-			assertThat(influxDao.isConnected(), is(true));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(executor).submit(any(Runnable.class));
 			verify(influxDb).ping();
 			verify(influxDb).isBatchEnabled();
@@ -133,9 +134,11 @@ public class InfluxDBDaoTest extends TestBase {
 
 		@Test
 		public void notConnected() {
+			influxDao.active = true;
+
 			influxDao.insert(dataPoint);
 
-			assertThat(influxDao.isConnected(), is(false));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
 			verifyZeroInteractions(future, dataPoint, executor, availabilityChecker, clientFactory);
 		}
 	}
@@ -152,7 +155,7 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.query("myQuery");
 
-			assertThat(influxDao.isConnected(), is(true));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			ArgumentCaptor<Query> queryCaptor = ArgumentCaptor.forClass(Query.class);
 			verify(influxDb).query(queryCaptor.capture());
 			assertThat(queryCaptor.getValue().getCommand(), equalTo("myQuery"));
@@ -177,7 +180,7 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.query(null);
 
-			assertThat(influxDao.isConnected(), is(true));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(influxDb).ping();
 			verify(influxDb).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
@@ -194,9 +197,11 @@ public class InfluxDBDaoTest extends TestBase {
 
 		@Test
 		public void notConnected() {
+			influxDao.active = true;
+
 			influxDao.query("myQuery");
 
-			assertThat(influxDao.isConnected(), is(false));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
 			verifyZeroInteractions(future, executor, availabilityChecker, clientFactory);
 		}
 	}
@@ -237,7 +242,9 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.propertiesUpdated();
 
-			assertThat(influxDao.isConnected(), is(true));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
+			assertThat(influxDao.getServiceType(), is(ExternalServiceType.INFLUXDB));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
 			verify(influxDb).isBatchEnabled();
@@ -260,7 +267,8 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.propertiesUpdated();
 
-			assertThat(influxDao.isConnected(), is(false));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
 			verify(influxDb).isBatchEnabled();
@@ -280,7 +288,7 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.propertiesUpdated();
 
-			assertThat(influxDao.isConnected(), is(true));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
 			verify(influxDb).isBatchEnabled();
@@ -304,7 +312,7 @@ public class InfluxDBDaoTest extends TestBase {
 			influxDao.active = false;
 			influxDao.propertiesUpdated();
 
-			assertThat(influxDao.isConnected(), is(false));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISABLED));
 			verify(future).cancel(true);
 			verify(future).isDone();
 			verify(executor, times(1)).submit(any(Runnable.class));
@@ -331,7 +339,7 @@ public class InfluxDBDaoTest extends TestBase {
 			influxDao.active = false;
 			influxDao.propertiesUpdated();
 
-			assertThat(influxDao.isConnected(), is(false));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISABLED));
 			verify(future).isDone();
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
@@ -354,7 +362,7 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.propertiesUpdated();
 
-			assertThat(influxDao.isConnected(), is(false));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(availabilityChecker).deactivate();
 			verify(clientFactory).createClient();
@@ -370,7 +378,7 @@ public class InfluxDBDaoTest extends TestBase {
 
 			influxDao.propertiesUpdated();
 
-			assertThat(influxDao.isConnected(), is(false));
+			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(availabilityChecker).deactivate();
 			verify(clientFactory).createClient();
