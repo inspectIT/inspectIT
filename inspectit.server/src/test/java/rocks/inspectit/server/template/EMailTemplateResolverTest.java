@@ -33,6 +33,7 @@ import rocks.inspectit.server.influx.constants.Series;
 import rocks.inspectit.server.template.AlertEMailTemplateType.Placeholders;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
+import rocks.inspectit.shared.cs.ci.AlertingDefinition.ThresholdType;
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.shared.cs.communication.data.cmr.AlertClosingReason;
 
@@ -72,6 +73,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			when(alertingDefinition.getMeasurement()).thenReturn(Series.BusinessTransaction.NAME);
 			when(alertingDefinition.getField()).thenReturn(Series.BusinessTransaction.FIELD_DURATION);
 			when(alertingDefinition.getThreshold()).thenReturn(200D);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
 			when(alertingDefinition.getTags()).thenReturn(tags);
 			when(alertingDefinition.getNotificationEmailAddresses()).thenReturn(Arrays.asList("test@example.com"));
 			when(alert.getId()).thenReturn("id");
@@ -92,6 +94,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			verify(alertingDefinition, times(4)).getMeasurement();
 			verify(alertingDefinition, times(4)).getField();
 			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getThresholdType();
 			verify(alertingDefinition, times(3)).getTags();
 			verifyNoMoreInteractions(alertingDefinition);
 			verify(alert).getStartTimestamp();
@@ -113,7 +116,8 @@ public class EMailTemplateResolverTest extends TestBase {
 			assertThat(map.get(Placeholders.BUSINESS_TX_NAME), is("btName"));
 			assertThat(map.get(Placeholders.TAGS), containsString(Series.BusinessTransaction.TAG_APPLICATION_NAME + "=appName"));
 			assertThat(map.get(Placeholders.TAGS), containsString(Series.BusinessTransaction.TAG_BUSINESS_TRANSACTION_NAME + "=btName"));
-			assertThat(map.entrySet(), hasSize(12));
+			assertThat(map.get(Placeholders.THRESHOLD_TYPE), is(ThresholdType.UPPER_THRESHOLD.getName()));
+			assertThat(map.entrySet(), hasSize(13));
 		}
 
 		@Test
@@ -128,6 +132,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			when(alertingDefinition.getMeasurement()).thenReturn(Series.BusinessTransaction.NAME);
 			when(alertingDefinition.getField()).thenReturn(Series.BusinessTransaction.FIELD_DURATION);
 			when(alertingDefinition.getThreshold()).thenReturn(200D);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
 			when(alertingDefinition.getTags()).thenReturn(tags);
 			when(alertingDefinition.getNotificationEmailAddresses()).thenReturn(Arrays.asList("test@example.com"));
 			when(alert.getId()).thenReturn("id");
@@ -148,6 +153,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			verify(alertingDefinition, times(4)).getMeasurement();
 			verify(alertingDefinition, times(4)).getField();
 			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getThresholdType();
 			verify(alertingDefinition, times(3)).getTags();
 			verifyNoMoreInteractions(alertingDefinition);
 			verify(alert).getStartTimestamp();
@@ -169,7 +175,8 @@ public class EMailTemplateResolverTest extends TestBase {
 			assertThat(map.get(Placeholders.BUSINESS_TX_NAME), is("All"));
 			assertThat(map.get(Placeholders.TAGS), containsString("k1=appName"));
 			assertThat(map.get(Placeholders.TAGS), containsString("k2=btName"));
-			assertThat(map.entrySet(), hasSize(12));
+			assertThat(map.get(Placeholders.THRESHOLD_TYPE), is(ThresholdType.UPPER_THRESHOLD.getName()));
+			assertThat(map.entrySet(), hasSize(13));
 		}
 
 		@Test
@@ -184,6 +191,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			when(alertingDefinition.getMeasurement()).thenReturn("measurement");
 			when(alertingDefinition.getField()).thenReturn("field");
 			when(alertingDefinition.getThreshold()).thenReturn(200D);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
 			when(alertingDefinition.getTags()).thenReturn(tags);
 			when(alertingDefinition.getNotificationEmailAddresses()).thenReturn(Arrays.asList("test@example.com"));
 			when(alert.getId()).thenReturn("id");
@@ -204,6 +212,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			verify(alertingDefinition, times(2)).getMeasurement();
 			verify(alertingDefinition).getField();
 			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getThresholdType();
 			verify(alertingDefinition).getTags();
 			verifyNoMoreInteractions(alertingDefinition);
 			verify(alert).getStartTimestamp();
@@ -223,7 +232,8 @@ public class EMailTemplateResolverTest extends TestBase {
 			assertThat(numberFormat.parse(map.get(Placeholders.EXTREME_VALUE)).doubleValue(), is(100D));
 			assertThat(map.get(Placeholders.TAGS), containsString("k1=appName"));
 			assertThat(map.get(Placeholders.TAGS), containsString("k2=btName"));
-			assertThat(map.entrySet(), hasSize(10));
+			assertThat(map.get(Placeholders.THRESHOLD_TYPE), is(ThresholdType.UPPER_THRESHOLD.getName()));
+			assertThat(map.entrySet(), hasSize(11));
 		}
 
 		@Test
@@ -238,6 +248,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			when(alertingDefinition.getMeasurement()).thenReturn("measurement");
 			when(alertingDefinition.getField()).thenReturn("field");
 			when(alertingDefinition.getThreshold()).thenReturn(200D);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
 			when(alertingDefinition.getTags()).thenReturn(tags);
 			when(alertingDefinition.getNotificationEmailAddresses()).thenReturn(Arrays.asList("test@example.com"));
 			when(alert.getId()).thenReturn("id");
@@ -258,6 +269,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			verify(alertingDefinition, times(2)).getMeasurement();
 			verify(alertingDefinition).getField();
 			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getThresholdType();
 			verify(alertingDefinition).getTags();
 			verifyNoMoreInteractions(alertingDefinition);
 			verify(alert).getStartTimestamp();
@@ -277,7 +289,8 @@ public class EMailTemplateResolverTest extends TestBase {
 			assertThat(numberFormat.parse(map.get(Placeholders.EXTREME_VALUE)).doubleValue(), is(100D));
 			assertThat(map.get(Placeholders.TAGS), containsString("k1: appName"));
 			assertThat(map.get(Placeholders.TAGS), containsString("k2: btName"));
-			assertThat(map.entrySet(), hasSize(10));
+			assertThat(map.get(Placeholders.THRESHOLD_TYPE), is(ThresholdType.UPPER_THRESHOLD.getName()));
+			assertThat(map.entrySet(), hasSize(11));
 		}
 
 		@Test
@@ -292,6 +305,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			when(alertingDefinition.getMeasurement()).thenReturn("measurement");
 			when(alertingDefinition.getField()).thenReturn("field");
 			when(alertingDefinition.getThreshold()).thenReturn(200D);
+			when(alertingDefinition.getThresholdType()).thenReturn(ThresholdType.UPPER_THRESHOLD);
 			when(alertingDefinition.getTags()).thenReturn(tags);
 			when(alertingDefinition.getNotificationEmailAddresses()).thenReturn(Arrays.asList("test@example.com"));
 			when(alert.getId()).thenReturn("id");
@@ -314,6 +328,7 @@ public class EMailTemplateResolverTest extends TestBase {
 			verify(alertingDefinition, times(2)).getMeasurement();
 			verify(alertingDefinition).getField();
 			verify(alertingDefinition).getThreshold();
+			verify(alertingDefinition).getThresholdType();
 			verify(alertingDefinition).getTags();
 			verifyNoMoreInteractions(alertingDefinition);
 			verify(alert).getStartTimestamp();
@@ -336,7 +351,8 @@ public class EMailTemplateResolverTest extends TestBase {
 			assertThat(map.get(Placeholders.CLOSING_REASON), is(AlertClosingReason.ALERT_RESOLVED.toString()));
 			assertThat(map.get(Placeholders.TAGS), containsString("k1: appName"));
 			assertThat(map.get(Placeholders.TAGS), containsString("k2: btName"));
-			assertThat(map.entrySet(), hasSize(12));
+			assertThat(map.get(Placeholders.THRESHOLD_TYPE), is(ThresholdType.UPPER_THRESHOLD.getName()));
+			assertThat(map.entrySet(), hasSize(13));
 		}
 
 		@Test(expectedExceptions = IllegalArgumentException.class)

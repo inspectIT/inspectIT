@@ -39,13 +39,37 @@ public class AlertingDefinition extends AbstractCiData {
 		 * The specified threshold is an upper threshold. Alert is issued if the threshold is
 		 * exceeded.
 		 */
-		UPPER_THRESHOLD,
+		UPPER_THRESHOLD("Upper Threshold"),
 
 		/**
 		 * The specified threshold is an lower threshold. Alert is issued if the threshold is
 		 * undercut.
 		 */
-		LOWER_THRESHOLD
+		LOWER_THRESHOLD("Lower Threshold");
+
+		/**
+		 * The name of the threshold type.
+		 */
+		private String name;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param name
+		 *            the name of the threshold type
+		 */
+		ThresholdType(String name) {
+			this.name = name;
+		}
+
+		/**
+		 * Gets {@link #name}.
+		 *
+		 * @return {@link #name}
+		 */
+		public String getName() {
+			return this.name;
+		}
 	}
 
 	/**

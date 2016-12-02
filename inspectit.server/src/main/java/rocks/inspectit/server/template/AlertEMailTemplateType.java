@@ -160,6 +160,11 @@ public enum AlertEMailTemplateType implements ITemplateType {
 		 * Placeholder for the closing reason.
 		 */
 		String CLOSING_REASON = "{closingReason}";
+
+		/**
+		 * Placeholder for the threshold type.
+		 */
+		String THRESHOLD_TYPE = "{thresholdType}";
 	}
 
 }
