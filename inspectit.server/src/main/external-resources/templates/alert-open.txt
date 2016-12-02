@@ -9,6 +9,7 @@ Start Time: {startTime}
 Measurement: {measurement}
 Field: {field}
 Threshold: {threshold}
+Threshold Type: {thresholdType}
 Used Tags:
 {tags}
 

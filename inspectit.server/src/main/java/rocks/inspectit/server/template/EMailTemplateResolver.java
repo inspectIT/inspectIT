@@ -88,6 +88,7 @@ public class EMailTemplateResolver {
 		properties.put(Placeholders.MEASUREMENT, definition.getMeasurement());
 		properties.put(Placeholders.FIELD, definition.getField());
 		properties.put(Placeholders.THRESHOLD, numberFormat.format(definition.getThreshold()));
+		properties.put(Placeholders.THRESHOLD_TYPE, definition.getThresholdType().getName());
 		properties.put(Placeholders.START_TIME, String.valueOf(dateFormat.format(new Date(alert.getStartTimestamp()))));
 		properties.put(Placeholders.VIOLATION_VALUE, numberFormat.format(alertingState.getExtremeValue()));
 		properties.put(Placeholders.CURRENT_TIME, String.valueOf(new Date(System.currentTimeMillis())));

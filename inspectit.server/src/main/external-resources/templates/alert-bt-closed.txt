@@ -17,6 +17,7 @@ End Time: {endTime}
 Measurement: {measurement}
 Field: {field}
 Threshold: {threshold}
+Threshold Type: {thresholdType}
 Extreme Value: {extremeValue}
 Used Tags:
 {tags}
