@@ -3,7 +3,7 @@ package rocks.inspectit.ui.rcp.tester;
 import org.eclipse.core.expressions.PropertyTester;
 
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 
 /**
  * Property Tester to check for specific criteria within an invocation sequence element.

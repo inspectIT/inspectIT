@@ -68,6 +68,15 @@ public class SpanIdent implements Sizeable, Serializable {
 	}
 
 	/**
+	 * Same as {@link #isRoot()}. Needed for querying.
+	 *
+	 * @return {@link #isRoot()}
+	 */
+	public boolean getRoot() { // NOPMD
+		return isRoot();
+	}
+
+	/**
 	 * Gets {@link #id}.
 	 *
 	 * @return {@link #id}

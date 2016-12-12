@@ -268,6 +268,21 @@
 		<property name="pathSpec" value="/remoting/AgentInstrumentationService" />
 	</bean>
 	<!-- END -->
+	
+	<!-- Span Access Service -->
+	<bean name="spanRequestHandlerServlet" class="org.springframework.web.context.support.HttpRequestHandlerServlet">
+	</bean>
+
+	<bean id="spanServletHolder" class="org.mortbay.jetty.servlet.ServletHolder">
+		<property name="name" value="spanServiceExporter" />
+		<property name="servlet" ref="spanRequestHandlerServlet" />
+	</bean>
+
+	<bean id="spanServiceMapping" class="org.mortbay.jetty.servlet.ServletMapping">
+		<property name="servletName" value="spanServiceExporter" />
+		<property name="pathSpec" value="/remoting/SpanService" />
+	</bean>
+	<!-- END -->
 
 	<!-- DEFAULT SERVER FOR STATIC CONTENT -->
 	<bean id="defaultServlet" class="org.mortbay.jetty.servlet.DefaultServlet" />
@@ -384,6 +399,7 @@
 				<ref bean="influxDBServletHolder" />
 				<ref bean="alertAccessServletHolder" />
 				<ref bean="agentInstrumentationServletHolder" />
+				<ref bean="spanServletHolder" />
 				<ref bean="defaultServletHolder" />
 				<ref bean="uploadServletHolder" />
 				<ref bean="springDispatcherServletHolder" />
@@ -406,6 +422,7 @@
 				<ref bean="influxDBServiceMapping" />
 				<ref bean="alertAccessServiceMapping" />
 				<ref bean="agentInstrumentationServiceMapping" />
+				<ref bean="spanServiceMapping" />
 				<ref bean="defaultServletMapping" />
 				<ref bean="uploadServletMapping" />
 				<ref bean="springDispatcherServletMapping" />

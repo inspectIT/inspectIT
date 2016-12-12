@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -111,13 +112,13 @@ public interface TreeInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns <code>true</code> if the controller can open the input which consists of one or
-	 * several {@link DefaultData} objects.
+	 * several objects.
 	 *
 	 * @param data
 	 *            The data which is checked if the controller can open it.
 	 * @return Returns <code>true</code> if the controller can open the input.
 	 */
-	boolean canOpenInput(List<? extends DefaultData> data);
+	boolean canOpenInput(List<? extends Object> data);
 
 	/**
 	 * Returns all needed preference IDs.
@@ -170,6 +171,17 @@ public interface TreeInputController extends SubViewClassificationController {
 	 * @return The level to which the viewer's tree should be expanded.
 	 */
 	int getExpandLevel();
+
+	/**
+	 * Should the expanded state of the given tree path be changed on the double click event.
+	 *
+	 * @param expandedState
+	 *            Current expanded state.
+	 * @param treePath
+	 *            Tree path element.
+	 * @return <code>true</code> to change the expanded state, false otherwise
+	 */
+	boolean changeExpandedState(boolean expandedState, TreePath treePath);
 
 	/**
 	 * Returns the list of the objects that should be searched.

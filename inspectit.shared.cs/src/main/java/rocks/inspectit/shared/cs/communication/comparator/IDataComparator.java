@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.communication.comparator;
+package rocks.inspectit.shared.cs.communication.comparator;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.DefaultData;

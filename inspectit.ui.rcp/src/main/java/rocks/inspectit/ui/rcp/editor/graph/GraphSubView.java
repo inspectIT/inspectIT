@@ -32,7 +32,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.Range;
 import org.jfree.experimental.chart.swt.ChartComposite;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.util.TimeFrame;
 import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
 import rocks.inspectit.shared.cs.storage.label.type.impl.DataTimeFrameLabelType;
@@ -281,7 +280,7 @@ public class GraphSubView extends AbstractSubView {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 		// nothing to do here
 	}
 

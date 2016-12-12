@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
+import rocks.inspectit.shared.all.tracing.data.ISpanIdentAware;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
 /**
@@ -22,10 +23,10 @@ import rocks.inspectit.shared.all.tracing.data.SpanIdent;
  * <code>InvocationSequenceData</code> instances.
  *
  * @author Patrice Bouillet
- * @see InvocationSequenceDataHelper
+ * @see rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper
  */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
-public class InvocationSequenceData extends MethodSensorData {
+public class InvocationSequenceData extends MethodSensorData implements ISpanIdentAware {
 
 	/**
 	 * The serial version UID.
@@ -249,6 +250,7 @@ public class InvocationSequenceData extends MethodSensorData {
 	 *
 	 * @return {@link #spanIdent}
 	 */
+	@Override
 	public SpanIdent getSpanIdent() {
 		return this.spanIdent;
 	}

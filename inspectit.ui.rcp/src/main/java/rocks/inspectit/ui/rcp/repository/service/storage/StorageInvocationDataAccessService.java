@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 import rocks.inspectit.shared.cs.indexing.storage.impl.StorageIndexQuery;
@@ -107,6 +107,14 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	 * {@inheritDoc}
 	 */
 	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
 		// here we need to create new query since this one does not exist in factory
 		StorageIndexQuery query = invocationDataQueryFactory.getIndexQueryProvider().getIndexQuery();
@@ -125,6 +133,16 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 			return results.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<InvocationSequenceData> getInvocationSequenceDetail(long traceId) {
+		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(traceId);
+		query.setOnlyInvocationsWithoutChildren(false);
+		return super.executeQuery(query);
 	}
 
 	/**
@@ -151,11 +169,4 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 		this.invocationDataQueryFactory = invocationDataQueryFactory;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
-		throw new UnsupportedOperationException();
-	}
 }

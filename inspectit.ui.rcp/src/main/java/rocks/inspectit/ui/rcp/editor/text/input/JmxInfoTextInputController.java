@@ -12,7 +12,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
@@ -300,9 +299,9 @@ public class JmxInfoTextInputController extends AbstractTextInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> dataInput) {
+	public void setDataInput(List<? extends Object> dataInput) {
 		currentData = new ArrayList<>();
-		for (DefaultData data : dataInput) {
+		for (Object data : dataInput) {
 			if (data instanceof JmxSensorValueData) {
 				currentData.add((JmxSensorValueData) data);
 			}

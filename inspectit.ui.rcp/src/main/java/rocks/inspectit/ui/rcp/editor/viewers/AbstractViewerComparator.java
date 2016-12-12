@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 
 /**
  * Viewer comparator uses provided comparators to sort specific columns.

@@ -21,14 +21,13 @@ import org.eclipse.swt.graphics.Image;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
-import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
-import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
+import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.cs.communication.comparator.InvocationAwareDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
@@ -284,7 +283,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (null == data) {
 			return false;
 		}

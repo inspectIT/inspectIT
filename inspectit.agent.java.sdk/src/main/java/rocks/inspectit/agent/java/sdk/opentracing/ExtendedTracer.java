@@ -1,5 +1,6 @@
 package rocks.inspectit.agent.java.sdk.opentracing;
 
+import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import rocks.inspectit.agent.java.sdk.opentracing.propagation.Propagator;
@@ -77,5 +78,18 @@ public interface ExtendedTracer extends Tracer {
 	 * @return {@link SpanBuilder}.
 	 */
 	SpanBuilder buildSpan(String operationName, String referenceType, boolean useThreadContext);
+
+	/**
+	 * Returns the current thread span context if one exists. If the current thread has already
+	 * started spans, this will return context of the last started span that is not finished yet.
+	 * Otherwise this method returns <code>null</code>.
+	 * <p>
+	 * The noop tracer implementation should always return the
+	 * {@link io.opentracing.NoopSpanContext} instance here.
+	 *
+	 * @return Context of the last started (non-finished) span by current thread or
+	 *         <code>null</code> if thread has no such spans.
+	 */
+	SpanContext getCurrentContext();
 
 }

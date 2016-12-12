@@ -240,10 +240,9 @@ public class TracerImpl implements ExtendedTracer {
 	}
 
 	/**
-	 * Returns current context.
-	 *
-	 * @return Returns current context.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public SpanContextImpl getCurrentContext() {
 		Stack<SpanImpl> stack = spanStack.get();
 		if (!stack.isEmpty()) {
