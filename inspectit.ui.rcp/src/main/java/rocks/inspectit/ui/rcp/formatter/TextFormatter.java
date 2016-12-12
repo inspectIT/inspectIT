@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -20,9 +21,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.TextStyle;
 
+import io.opentracing.tag.Tags;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
@@ -30,6 +33,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
+import rocks.inspectit.shared.all.tracing.data.PropagationType;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
@@ -68,6 +74,21 @@ import rocks.inspectit.ui.rcp.validation.ValidationState;
  * @author Marius Oehler
  */
 public final class TextFormatter {
+
+	/**
+	 * Error {@link Styler}.
+	 */
+	private static final Styler ERROR_STYLED = StyledString.createColorRegistryStyler(JFacePreferences.ERROR_COLOR, null);
+
+	/**
+	 * Hyperlink color {@link Styler}.
+	 */
+	private static final Styler HYPERLINK_STYLED = StyledString.createColorRegistryStyler(JFacePreferences.HYPERLINK_COLOR, null);
+
+	/**
+	 * Styled string for client span.
+	 */
+	private static final StyledString CLIENT_SPAN = new StyledString("Client :: ", StyledString.DECORATIONS_STYLER);
 
 	/** Logical Name for the font used for the error marker. */
 	public static final String FONT_ERROR_MARKER = "de.inspectit.font.errormarker";
@@ -790,5 +811,143 @@ public final class TextFormatter {
 	public static String getAlertDescription(Alert alert) {
 		String closing = alert.isOpen() ? "Open" : DateFormat.getDateTimeInstance().format(new Date(alert.getStopTimestamp()));
 		return alert.getAlertingDefinition().getName() + " (" + DateFormat.getDateTimeInstance().format(new Date(alert.getStartTimestamp())) + " - " + closing + ")";
+	}
+
+	/**
+	 * Returns styled string including the span propagation.
+	 *
+	 * @param propagationType
+	 *            Propagation type. Can be <code>null</code>. Returns "Unknown" as the result.
+	 * @return Styled string.
+	 */
+	public static StyledString getPropagationStyled(PropagationType propagationType) {
+		StyledString styledString = new StyledString();
+		if (null != propagationType) {
+			styledString.append(propagationType.toString());
+		} else {
+			// if it's null we assume it's our SDK as we always set the propagation
+			styledString.append("SDK");
+		}
+		return styledString;
+	}
+
+	/**
+	 * Returns the span details in form of StyledString. This method returns details if on of these
+	 * situations is matched:
+	 *
+	 * <ul>
+	 * <li>Propagation type is known for a span.
+	 * <li>Operation name exists as a tag.
+	 * <li>Method ident exists in the span.
+	 * </ul>
+	 *
+	 * @param span
+	 *            {@link Span}
+	 * @param cachedDataService
+	 *            Cached data service to load the method ident information from.
+	 * @return Returns {@link StyledString} if information in the span is enough or
+	 *         <code>null</code> if details can not be constructed.
+	 */
+	public static StyledString getSpanDetails(Span span, ICachedDataService cachedDataService) {
+		return getSpanDetails(span.isCaller(), span.getPropagationType(), span.getMethodIdent(), span.getTags(), cachedDataService);
+	}
+
+	/**
+	 * Helper method to generate span details out of available information.
+	 *
+	 * @param isCaller
+	 *            if it's client span
+	 * @param propagationType
+	 *            Propagation type. Can be <code>null</code>.
+	 * @param methodId
+	 *            method ident id if available.
+	 * @param tags
+	 *            Tags
+	 * @param cachedDataService
+	 *            Cached data service to load the method ident information from.
+	 * @return Returns {@link StyledString} if information given is enough or <code>null</code> if
+	 *         details can not be constructed.
+	 */
+	private static StyledString getSpanDetails(boolean isCaller, PropagationType propagationType, long methodId, Map<String, String> tags, ICachedDataService cachedDataService) {
+		// first by propagation
+		if (null != propagationType) {
+			switch (propagationType) {
+			case HTTP:
+				StyledString styledString = new StyledString();
+				if (isCaller) {
+					styledString.append(CLIENT_SPAN);
+				}
+				styledString.append('[', StyledString.DECORATIONS_STYLER);
+				String status = tags.get(Tags.HTTP_STATUS.getKey());
+				styledString.append(getHttpStatusStyledString(status));
+				styledString.append(" | ", StyledString.DECORATIONS_STYLER);
+				styledString.append(StringUtils.defaultString(tags.get(Tags.HTTP_METHOD.getKey()), "?"), StyledString.DECORATIONS_STYLER);
+				styledString.append("] ", StyledString.DECORATIONS_STYLER);
+				styledString.append(StringUtils.defaultString(tags.get(Tags.HTTP_URL.getKey())));
+				return styledString;
+			case JMS:
+				styledString = new StyledString();
+				if (isCaller) {
+					styledString.append(CLIENT_SPAN);
+				}
+				styledString.append('[', StyledString.DECORATIONS_STYLER);
+				styledString.append(StringUtils.defaultString(tags.get(ExtraTags.JMS_MESSAGE_DESTINATION), "?"), StyledString.DECORATIONS_STYLER);
+				styledString.append("] ", StyledString.DECORATIONS_STYLER);
+				styledString.append(StringUtils.defaultString(tags.get(ExtraTags.JMS_MESSAGE_ID)));
+				return styledString;
+			default:
+			}
+		}
+
+		// then by operation name
+		String op = tags.get(ExtraTags.OPERATION_NAME);
+		if (null != op) {
+			StyledString styledString = new StyledString();
+			if (isCaller) {
+				styledString.append(CLIENT_SPAN);
+			}
+			styledString.append("[Operation] ", StyledString.DECORATIONS_STYLER);
+			styledString.append(op);
+			return styledString;
+		}
+
+		// then by method id
+		MethodIdent methodIdent = cachedDataService.getMethodIdentForId(methodId);
+		if (null != methodIdent) {
+			StyledString styledString = new StyledString();
+			if (isCaller) {
+				styledString.append(CLIENT_SPAN);
+			}
+			styledString.append("[Method] ", StyledString.DECORATIONS_STYLER);
+			styledString.append(getMethodWithParameters(methodIdent));
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns styled string for status tag.
+	 *
+	 * @param status
+	 *            http status as string
+	 * @return StyledString
+	 */
+	private static StyledString getHttpStatusStyledString(String status) {
+		if (null == status) {
+			return new StyledString("?", StyledString.DECORATIONS_STYLER);
+		}
+
+		try {
+			int statusInt = Integer.parseInt(status);
+			if ((statusInt >= 400) && (statusInt < 500)) {
+				return new StyledString(status, HYPERLINK_STYLED);
+			} else if ((statusInt >= 500) & (statusInt < 600)) {
+				return new StyledString(status, ERROR_STYLED);
+			} else {
+				return new StyledString(status, StyledString.COUNTER_STYLER);
+			}
+		} catch (NumberFormatException e) {
+			return new StyledString(status, StyledString.DECORATIONS_STYLER);
+		}
 	}
 }

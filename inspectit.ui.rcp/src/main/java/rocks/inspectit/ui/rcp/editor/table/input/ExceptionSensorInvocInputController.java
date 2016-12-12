@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -24,7 +25,6 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
@@ -45,6 +45,7 @@ import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
+import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -309,7 +310,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (null == data) {
 			return false;
 		}
@@ -318,11 +319,17 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 			return true;
 		}
 
-		if (!(data.get(0) instanceof InvocationSequenceData)) {
-			return false;
+		// we accept invocation sequences
+		if (data.get(0) instanceof InvocationSequenceData) {
+			return true;
 		}
 
-		return true;
+		// or one trace data
+		if (data.get(0) instanceof TraceTreeData) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -352,7 +359,18 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
-			List<InvocationSequenceData> invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
+			List<? extends Object> input = (List<? extends Object>) inputElement;
+
+			if (CollectionUtils.isEmpty(input)) {
+				return new Object[0];
+			}
+
+			List<InvocationSequenceData> invocationSequenceDataList;
+			if (input.get(0) instanceof TraceTreeData) {
+				invocationSequenceDataList = TraceTreeData.collectInvocations((TraceTreeData) input.get(0), new ArrayList<InvocationSequenceData>());
+			} else {
+				invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
+			}
 			exceptionSensorDataList = getRawExceptionSensorDataList(invocationSequenceDataList, new ArrayList<ExceptionSensorData>());
 			if (!rawMode) {
 				AggregationPerformer<ExceptionSensorData> aggregationPerformer = new AggregationPerformer<>(new ExceptionDataAggregator(ExceptionAggregationType.THROWABLE_TYPE));

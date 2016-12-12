@@ -16,7 +16,6 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
@@ -171,7 +170,7 @@ public abstract class AbstractTextInputController implements TextInputController
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 	}
 
 }

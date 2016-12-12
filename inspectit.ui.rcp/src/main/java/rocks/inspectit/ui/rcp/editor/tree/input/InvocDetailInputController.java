@@ -2,11 +2,15 @@ package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
@@ -24,9 +28,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpInfo;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
@@ -35,12 +42,16 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.tracing.data.Span;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
+import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.model.ExceptionImageFactory;
@@ -54,17 +65,12 @@ import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
  * @author Patrice Bouillet
  *
  */
-public class InvocDetailInputController extends AbstractTreeInputController {
+public class InvocDetailInputController extends AbstractTreeInputController { // NOPMD
 
 	/**
 	 * The ID of this subview / controller.
 	 */
 	public static final String ID = "inspectit.subview.tree.invocdetail";
-
-	/**
-	 * The total duration of the displayed invocation.
-	 */
-	private double invocationDuration = 0.0d;
 
 	/**
 	 * The resource manager is used for the images etc.
@@ -95,8 +101,8 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	 *
 	 */
 	private static enum Column {
-		/** The method column. */
-		METHOD("Method", 700, InspectITImages.IMG_CALL_HIERARCHY),
+		/** The element column. */
+		ELEMENT("Element", 700, InspectITImages.IMG_CALL_HIERARCHY),
 		/** The duration column. */
 		DURATION("Duration (ms)", 100, InspectITImages.IMG_TIME),
 		/** The exclusive duration column. */
@@ -154,9 +160,41 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	private ICachedDataService cachedDataService;
 
 	/**
+	 * Span service for loading span information.
+	 */
+	private ISpanService spanService;
+
+	/**
 	 * Current input of the tree.
 	 */
-	private Object input;
+	private List<InvocationSequenceData> input;
+
+	/**
+	 * Span cache for avoiding reloading.
+	 */
+	protected LoadingCache<SpanIdent, Span> spanCache = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader<SpanIdent, Span>() {
+		@Override
+		public Span load(SpanIdent ident) throws Exception {
+			// collect all from same trace
+			Collection<? extends Span> spans = spanService.getSpans(ident.getTraceId());
+			if (CollectionUtils.isNotEmpty(spans)) {
+				Span value = null;
+				for (Span span : spans) {
+					if (Objects.equals(ident, span.getSpanIdent())) {
+						value = span;
+					} else {
+						spanCache.put(span.getSpanIdent(), span);
+					}
+				}
+
+				// return asked one
+				if (null != value) {
+					return value;
+				}
+			}
+			throw new Exception("Span with ident " + ident + " can not be found.");
+		}
+	});
 
 	/**
 	 * {@inheritDoc}
@@ -165,6 +203,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	public void setInputDefinition(InputDefinition inputDefinition) {
 		super.setInputDefinition(inputDefinition);
 		cachedDataService = inputDefinition.getRepositoryDefinition().getCachedDataService();
+		spanService = inputDefinition.getRepositoryDefinition().getSpanService();
 	}
 
 	/**
@@ -250,7 +289,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (null == data) {
 			return false;
 		}
@@ -259,16 +298,11 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 			return true;
 		}
 
-		if (data.size() != 1) {
-			return false;
+		for (Object d : data) {
+			if (!(d instanceof InvocationSequenceData)) {
+				return false;
+			}
 		}
-
-		if (!(data.get(0) instanceof InvocationSequenceData)) {
-			return false;
-		}
-
-		// we are saving the complete duration of this invocation sequence
-		invocationDuration = ((InvocationSequenceData) data.get(0)).getDuration();
 
 		return true;
 	}
@@ -292,11 +326,18 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		 */
 		@Override
 		public StyledString getStyledText(Object element, int index) {
-			InvocationSequenceData data = (InvocationSequenceData) element;
-			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
 			Column enumId = Column.fromOrd(index);
 
-			return getStyledTextForColumn(data, methodIdent, enumId);
+			if (element instanceof InvocationSequenceData) {
+				InvocationSequenceData data = (InvocationSequenceData) element;
+				MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
+
+				return getStyledTextForColumn(data, methodIdent, enumId);
+			} else if (element instanceof Span) {
+				return getStyledTextForColumn((Span) element, enumId);
+			}
+
+			return super.getStyledText(element, index);
 		}
 
 		/**
@@ -310,34 +351,38 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		 */
 		@Override
 		public Image getColumnImage(Object element, int index) {
-			InvocationSequenceData data = (InvocationSequenceData) element;
-			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
 			Column enumId = Column.fromOrd(index);
 
-			switch (enumId) {
-			case METHOD:
-				ExceptionSensorData exceptionSensorData = null;
-				Image image = ModifiersImageFactory.getImage(methodIdent.getModifiers());
+			if (element instanceof InvocationSequenceData) {
+				InvocationSequenceData data = (InvocationSequenceData) element;
+				MethodIdent methodIdent = cachedDataService.getMethodIdentForId(data.getMethodIdent());
 
-				if (InvocationSequenceDataHelper.hasExceptionData(data)) {
-					exceptionSensorData = data.getExceptionSensorDataObjects().get(data.getExceptionSensorDataObjects().size() - 1);
-					image = ExceptionImageFactory.decorateImageWithException(image, exceptionSensorData, resourceManager);
+				switch (enumId) {
+				case ELEMENT:
+					ExceptionSensorData exceptionSensorData = null;
+					Image image = ModifiersImageFactory.getImage(methodIdent.getModifiers());
+
+					if (InvocationSequenceDataHelper.hasExceptionData(data)) {
+						exceptionSensorData = data.getExceptionSensorDataObjects().get(data.getExceptionSensorDataObjects().size() - 1);
+						image = ExceptionImageFactory.decorateImageWithException(image, exceptionSensorData, resourceManager);
+					}
+
+					return image;
+				default:
+					return null;
 				}
+			} else if (element instanceof Span) {
+				Span span = (Span) element;
 
-				return image;
-			case DURATION:
-				return null;
-			case CPUDURATION:
-				return null;
-			case EXCLUSIVE:
-				return null;
-			case SQL:
-				return null;
-			case PARAMETER:
-				return null;
-			default:
-				return null;
+				switch (enumId) {
+				case ELEMENT:
+					return ImageFormatter.getSpanImage(span, resourceManager);
+				default:
+					return null;
+				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -345,12 +390,16 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		 */
 		@Override
 		protected Color getBackground(Object element, int index) {
+			if (!(element instanceof InvocationSequenceData)) {
+				return null;
+			}
 			InvocationSequenceData data = (InvocationSequenceData) element;
-			double duration = InvocationSequenceDataHelper.calculateDuration(data);
+			double duration = InvocationSequenceDataHelper.calculateDuration(data, spanCache);
 
 			if (-1.0d != duration) { // no duration?
-				double exclusiveTime = duration - InvocationSequenceDataHelper.computeNestedDuration(data);
+				double exclusiveTime = duration - InvocationSequenceDataHelper.computeNestedDuration(data, spanCache);
 
+				double invocationDuration = InvocationSequenceDataHelper.getRootElementInSequence(data).getDuration();
 				// compute the correct color
 				int colorValue = 255 - (int) ((exclusiveTime / invocationDuration) * 100);
 
@@ -379,10 +428,10 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	 *            The enumeration ID.
 	 * @return The styled string containing the information from the data object.
 	 */
-	private static StyledString getStyledTextForColumn(InvocationSequenceData data, MethodIdent methodIdent, Column enumId) {
+	private StyledString getStyledTextForColumn(InvocationSequenceData data, MethodIdent methodIdent, Column enumId) {
 		StyledString styledString = null;
 		switch (enumId) {
-		case METHOD:
+		case ELEMENT:
 			return TextFormatter.getStyledMethodString(methodIdent);
 		case START_DELTA:
 			InvocationSequenceData root = data;
@@ -393,7 +442,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 			return new StyledString(NumberFormatter.formatLong(delta));
 		case DURATION:
 			styledString = new StyledString();
-			double duration = InvocationSequenceDataHelper.calculateDuration(data);
+			double duration = InvocationSequenceDataHelper.calculateDuration(data, spanCache);
 			if (-1.0d != duration) {
 				styledString.append(NumberFormatter.formatDouble(duration));
 			}
@@ -406,10 +455,10 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 			return styledString;
 		case EXCLUSIVE:
 			styledString = new StyledString();
-			double dur = InvocationSequenceDataHelper.calculateDuration(data);
+			double dur = InvocationSequenceDataHelper.calculateDuration(data, spanCache);
 
 			if (-1.0d != dur) {
-				double exclusiveTime = dur - InvocationSequenceDataHelper.computeNestedDuration(data);
+				double exclusiveTime = dur - InvocationSequenceDataHelper.computeNestedDuration(data, spanCache);
 				styledString.append(NumberFormatter.formatDouble(exclusiveTime));
 			}
 
@@ -468,12 +517,57 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	}
 
 	/**
+	 * Returns styled text for {@link Span} based on the column.
+	 *
+	 * @param span
+	 *            span
+	 * @param enumId
+	 *            column
+	 * @return string
+	 */
+	public StyledString getStyledTextForColumn(Span span, Column enumId) {
+		switch (enumId) {
+		case ELEMENT:
+			return TextFormatter.getSpanDetails(span, cachedDataService);
+		case DURATION:
+			return new StyledString(NumberFormatter.formatDouble(span.getDuration()));
+		default:
+			return new StyledString();
+		}
+	}
+
+	/**
+	 * Searches the {@link InvocationSequenceData} list for the given span ident based on current
+	 * input.
+	 *
+	 * @param input
+	 *            Root invocations.
+	 * @param spanIdent
+	 *            ident
+	 * @return Found data or <code>null</code>
+	 */
+	protected InvocationSequenceData getForSpanIdent(List<InvocationSequenceData> input, SpanIdent spanIdent) {
+		for (InvocationSequenceData invoc : input) {
+			if (Objects.equals(spanIdent, invoc.getSpanIdent())) {
+				return invoc;
+			}
+
+			InvocationSequenceData containing = getForSpanIdent(invoc.getNestedSequences(), spanIdent);
+			if (null != containing) {
+				return containing;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * The invoc detail content provider for this view.
 	 *
 	 * @author Patrice Bouillet
 	 *
 	 */
-	private final class InvocDetailContentProvider implements ITreeContentProvider {
+	protected class InvocDetailContentProvider implements ITreeContentProvider {
 
 		/**
 		 * The deferred manager is used here to update the tree in a concurrent thread so the UI
@@ -486,13 +580,120 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		 */
 		@Override
 		public Object[] getChildren(Object parent) {
-			if (manager.isDeferredAdapter(parent)) {
-				Object[] children = manager.getChildren(parent);
+			if (parent instanceof InvocationSequenceData) {
+				InvocationSequenceData invocationSequenceData = (InvocationSequenceData) parent;
+				// we will use the deferred manager when we know there are only invocations as
+				// children, otherwise go for direct load
+				// this should work good as invocations usually don't have any span attached
+				if (!InvocationSequenceDataHelper.hasSpanIdent(invocationSequenceData)) {
+					return manager.getChildren(invocationSequenceData);
+				} else {
+					return getChildren(invocationSequenceData);
+				}
+			} else if (parent instanceof Span) {
+				return getChildren((Span) parent);
+			}
+			return new Object[0];
+		}
 
-				return children;
+		/**
+		 * Returns children of the invocation sequence. It's all nested sequences or it's spans,
+		 * plus any client span connected to invocation.
+		 *
+		 * @param invoc
+		 *            invocation data
+		 * @return children
+		 */
+		protected Object[] getChildren(InvocationSequenceData invoc) {
+			List<Object> objects = new ArrayList<>();
+
+			// children are all invocations or it's server spans
+			for (InvocationSequenceData child : invoc.getNestedSequences()) {
+				addSpanOrInvoc(objects, child);
 			}
 
+			// plus any client span
+			if (null != invoc.getSpanIdent()) {
+				try {
+					Span span = spanCache.get(invoc.getSpanIdent());
+					if (span.isCaller()) {
+						objects.add(span);
+					}
+				} catch (Exception e) {
+					InspectIT.getDefault().log(IStatus.INFO, e.getMessage());
+				}
+			}
+
+			return objects.toArray();
+		}
+
+		/**
+		 * Returns children of the span.only server spans have children, and it's the invocation
+		 * bounded to.
+		 *
+		 * @param span
+		 *            span
+		 * @return children
+		 */
+		protected Object[] getChildren(Span span) {
+			if (!span.isCaller()) {
+				InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
+				return new Object[] { invoc };
+			}
 			return new Object[0];
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean hasChildren(Object parent) {
+			if (parent instanceof InvocationSequenceData) {
+				return hasChildren((InvocationSequenceData) parent);
+
+			} else if (parent instanceof Span) {
+				return hasChildren((Span) parent);
+			}
+
+			return false;
+		}
+
+		/**
+		 * If invocation has children. First checks for nested sequences. Otherwise checks if the
+		 * invocation has client span connected.
+		 *
+		 * @param invoc
+		 *            invocation data
+		 * @return if invocation has children
+		 */
+		protected boolean hasChildren(InvocationSequenceData invoc) {
+			if (!invoc.getNestedSequences().isEmpty()) {
+				return true;
+			}
+
+			if (InvocationSequenceDataHelper.hasSpanIdent(invoc)) {
+				try {
+					Span span = spanCache.get(invoc.getSpanIdent());
+					return span.isCaller();
+				} catch (Exception e) {
+					InspectIT.getDefault().log(IStatus.INFO, e.getMessage());
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		 * If span has children. Only child of the span can be invocation if the span is server
+		 * kind.
+		 *
+		 * @param span
+		 *            span
+		 * @return if span has children in the tree
+		 */
+		protected boolean hasChildren(Span span) {
+			InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
+			return (null != invoc) && !span.isCaller();
 		}
 
 		/**
@@ -501,30 +702,56 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		@Override
 		public Object getParent(Object child) {
 			if (child instanceof InvocationSequenceData) {
-				InvocationSequenceData invocationSequenceData = (InvocationSequenceData) child;
-				return invocationSequenceData.getParentSequence();
+				return getParent((InvocationSequenceData) child);
+			} else if (child instanceof Span) {
+				return getParent((Span) child);
 			}
 
 			return null;
 		}
 
 		/**
-		 * {@inheritDoc}
+		 * Returns parent of the invocation. First checks for the connected server span, then goes
+		 * for normal sequence parent.
+		 *
+		 * @param invoc
+		 *            invocation
+		 * @return parent
 		 */
-		@Override
-		public boolean hasChildren(Object parent) {
-			if (parent == null) {
-				return false;
-			}
-
-			if (parent instanceof InvocationSequenceData) {
-				InvocationSequenceData invocationSequenceData = (InvocationSequenceData) parent;
-				if (!invocationSequenceData.getNestedSequences().isEmpty()) {
-					return true;
+		protected Object getParent(InvocationSequenceData invoc) {
+			// invocation parent can be called span or the normal invocation parent
+			// try span first
+			if (InvocationSequenceDataHelper.hasSpanIdent(invoc)) {
+				try {
+					Span span = spanCache.get(invoc.getSpanIdent());
+					if (!span.isCaller()) {
+						return span;
+					}
+				} catch (ExecutionException e) {
+					InspectIT.getDefault().log(IStatus.INFO, e.getMessage());
 				}
 			}
 
-			return false;
+			// if does not work, then invocation parent
+			return invoc.getParentSequence();
+		}
+
+		/**
+		 * Returns parent of the span.
+		 *
+		 * @param span
+		 *            span
+		 * @return parent
+		 */
+		protected Object getParent(Span span) {
+			// for span, if it's client on then parent is invocation is bounded on, otherwise
+			// the parent of the invocation it belongs to
+			InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
+			if (!span.isCaller()) {
+				return null;
+			} else {
+				return invoc.getParentSequence();
+			}
 		}
 
 		/**
@@ -534,16 +761,21 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			List<InvocationSequenceData> invocationSequenceData = (List<InvocationSequenceData>) inputElement;
-			return invocationSequenceData.toArray();
+			List<Object> objects = new ArrayList<>();
+			for (InvocationSequenceData data : invocationSequenceData) {
+				addSpanOrInvoc(objects, data);
+			}
+			return objects.toArray();
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			manager = new DeferredTreeContentManager((AbstractTreeViewer) viewer);
-			input = newInput;
+			input = (List<InvocationSequenceData>) newInput;
 		}
 
 		/**
@@ -606,9 +838,9 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 						duration = invocationSequenceData.getSqlStatementData().getDuration();
 					} else if (InvocationSequenceDataHelper.hasTimerData(invocationSequenceData)) {
 						double totalDuration = invocationSequenceData.getTimerData().getDuration();
-						duration = totalDuration - InvocationSequenceDataHelper.computeNestedDuration(invocationSequenceData);
+						duration = totalDuration - InvocationSequenceDataHelper.computeNestedDuration(invocationSequenceData, spanCache);
 					} else if (InvocationSequenceDataHelper.isRootElementInSequence(invocationSequenceData)) {
-						duration = invocationSequenceData.getDuration() - InvocationSequenceDataHelper.computeNestedDuration(invocationSequenceData);
+						duration = invocationSequenceData.getDuration() - InvocationSequenceDataHelper.computeNestedDuration(invocationSequenceData, spanCache);
 					}
 
 					if (!Double.isNaN(duration) && (duration <= defaultExclusiveFilterTime)) {
@@ -629,7 +861,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 					InvocationSequenceData invocationSequenceData = (InvocationSequenceData) element;
 
 					// filter by the exclusive duration
-					double duration = InvocationSequenceDataHelper.calculateDuration(invocationSequenceData);
+					double duration = InvocationSequenceDataHelper.calculateDuration(invocationSequenceData, spanCache);
 					if ((duration != -1.0d) && (duration <= defaultTotalFilterTime)) {
 						return false;
 					}
@@ -699,6 +931,13 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 				sb.append('\t');
 			}
 			return sb.toString();
+		} else if (object instanceof Span) {
+			Span span = (Span) object;
+			StringBuilder sb = new StringBuilder();
+			for (Column column : Column.values()) {
+				sb.append(getStyledTextForColumn(span, column).toString());
+				sb.append('\t');
+			}
 		}
 		throw new RuntimeException("Could not create the human readable string!");
 	}
@@ -716,6 +955,13 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 				values.add(getStyledTextForColumn(data, methodIdent, column).toString());
 			}
 			return values;
+		} else if (object instanceof Span) {
+			Span span = (Span) object;
+			List<String> values = new ArrayList<>();
+			for (Column column : Column.values()) {
+				values.add(getStyledTextForColumn(span, column).toString());
+			}
+			return values;
 		}
 		throw new RuntimeException("Could not create the column values!");
 	}
@@ -729,7 +975,7 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 		List<InvocationSequenceData> invocationSequenceDataList = (List<InvocationSequenceData>) treeInput;
 		if (!invocationSequenceDataList.isEmpty()) {
 			InvocationSequenceData invocation = invocationSequenceDataList.get(0);
-			List<InvocationSequenceData> allObjects = new ArrayList<>((int) invocation.getChildCount());
+			List<Object> allObjects = new ArrayList<>((int) invocation.getChildCount());
 			extractAllChildren(allObjects, invocation);
 			return allObjects.toArray();
 		}
@@ -745,10 +991,43 @@ public class InvocDetailInputController extends AbstractTreeInputController {
 	 * @param invocation
 	 *            Invocation to extract.
 	 */
-	private void extractAllChildren(List<InvocationSequenceData> resultList, InvocationSequenceData invocation) {
+	private void extractAllChildren(List<Object> resultList, InvocationSequenceData invocation) {
 		resultList.add(invocation);
+		if (InvocationSequenceDataHelper.hasSpanIdent(invocation)) {
+			try {
+				resultList.add(spanCache.get(invocation.getSpanIdent()));
+			} catch (Exception e) {
+				InspectIT.getDefault().log(IStatus.INFO, e.getMessage());
+			}
+		}
 		for (InvocationSequenceData child : invocation.getNestedSequences()) {
 			extractAllChildren(resultList, child);
+		}
+	}
+
+	/**
+	 * Adds invoc and possibly span to the list of objects. Order depends on span calling
+	 * properties.
+	 *
+	 * @param objects
+	 *            Object to add data to.
+	 * @param data
+	 *            Invocation
+	 */
+	private void addSpanOrInvoc(List<Object> objects, InvocationSequenceData data) {
+		if (InvocationSequenceDataHelper.hasSpanIdent(data)) {
+			try {
+				Span span = spanCache.get(data.getSpanIdent());
+				if (span.isCaller()) {
+					objects.add(data);
+				} else {
+					objects.add(span);
+				}
+			} catch (Exception e) {
+				InspectIT.getDefault().log(IStatus.INFO, e.getMessage());
+			}
+		} else {
+			objects.add(data);
 		}
 	}
 

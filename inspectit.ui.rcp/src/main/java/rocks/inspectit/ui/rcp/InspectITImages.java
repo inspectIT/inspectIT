@@ -17,6 +17,7 @@ public interface InspectITImages {
 	// NOCHKALL: We will not javadoc comment each image.
 
 	// images created by us
+	String IMG_LOGO = InspectITConstants.ICON_PATH_SELFMADE + "16x16.png";
 	String IMG_SERVER_ONLINE = InspectITConstants.ICON_PATH_SELFMADE + "server_online.png";
 	String IMG_SERVER_OFFLINE = InspectITConstants.ICON_PATH_SELFMADE + "server_offline.png";
 	String IMG_SERVER_ONLINE_SMALL = InspectITConstants.ICON_PATH_SELFMADE + "server_online_16x16.png";
@@ -202,6 +203,9 @@ public interface InspectITImages {
 	String IMG_NAVIGATION_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "navigation-frame.png";
 	String IMG_QUESTION_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "question-frame.png";
 	String IMG_REMOTE = InspectITConstants.ICON_PATH_FUGUE + "servers-network.png";
+	String IMG_JMS = InspectITConstants.ICON_PATH_FUGUE + "envelope.png";
+	String IMG_REFERENCE_CHILDOF = InspectITConstants.ICON_PATH_FUGUE + "arrow-return-180.png";
+	String IMG_REFERENCE_FOLLOWSFROM = InspectITConstants.ICON_PATH_FUGUE + "arrow-curve-000-left.png";
 
 	// Images originally from Fugue set we modified - license Creative Commons v3.0
 	String IMG_HTTP_PARAMETER = InspectITConstants.ICON_PATH_FUGUE + "http-parameter.png";

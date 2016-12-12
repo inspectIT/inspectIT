@@ -589,6 +589,14 @@
             id="rocks.inspectit.ui.rcp.commands.openInstrumentationUpdateDialog"
             name="Open Instrumentation Uodate Dialog">
       </command>
+      <command
+            id="rocks.inspectit.ui.rcp.commands.openTraceOverview"
+            name="Open Trace Overview">
+      </command>
+      <command
+            id="rocks.inspectit.ui.rcp.commands.traceDetails"
+            name="Open Trace Details">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -1125,82 +1133,6 @@
          </activeWhen>
       </handler>
       <handler
-            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$SqlLocateHandler"
-            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
-         <activeWhen>
-            <and>
-               <count
-                     value="+">
-               </count>
-               <iterate
-                     ifEmpty="false">
-                  <instanceof
-                        value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
-                  </instanceof>
-               </iterate>
-               <with
-                     variable="activeEditor">
-                  <test
-                        property="rocks.inspectit.ui.rcp.hasSubView"
-                        value="steppingTreeSubView">
-                  </test>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$ExceptionLocateHandler"
-            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
-         <activeWhen>
-            <and>
-               <count
-                     value="+">
-               </count>
-               <iterate
-                     ifEmpty="false">
-                  <instanceof
-                        value="rocks.inspectit.shared.all.communication.data.ExceptionSensorData">
-                  </instanceof>
-               </iterate>
-               <with
-                     variable="activeEditor">
-                  <test
-                        property="rocks.inspectit.ui.rcp.hasSubView"
-                        value="steppingTreeSubView">
-                  </test>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$InvocationLocateHandler"
-            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
-         <activeWhen>
-            <and>
-               <count
-                     value="+">
-               </count>
-               <iterate
-                     ifEmpty="false">
-                  <instanceof
-                        value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
-                  </instanceof>
-               </iterate>
-               <with
-                     variable="activeEditor">
-                  <test
-                        property="rocks.inspectit.ui.rcp.hasSubView"
-                        value="steppingTreeSubView">
-                  </test>
-                  <test
-                        property="rocks.inspectit.ui.rcp.activeSubView"
-                        value="treeSubView">
-                  </test>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
             class="rocks.inspectit.ui.rcp.handlers.DownloadStorageHandler"
             commandId="rocks.inspectit.ui.rcp.commands.downloadStorage">
          <activeWhen>
@@ -1244,40 +1176,6 @@
                      variable="selection">
                   <test
                         property="rocks.inspectit.ui.rcp.canNavigateToAggregatedSqlData">
-                  </test>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$TimerLocateHandler"
-            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
-         <activeWhen>
-            <and>
-               <count
-                     value="+">
-               </count>
-               <iterate
-                     ifEmpty="false">
-                  <not>
-                     <instanceof
-                           value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
-                     </instanceof>
-                  </not>
-                  <not>
-                     <instanceof
-                           value="rocks.inspectit.shared.all.communication.data.HttpTimerData">
-                     </instanceof>
-                  </not>
-                  <instanceof
-                        value="rocks.inspectit.shared.all.communication.data.TimerData">
-                  </instanceof>
-               </iterate>
-               <with
-                     variable="activeEditor">
-                  <test
-                        property="rocks.inspectit.ui.rcp.hasSubView"
-                        value="steppingTreeSubView">
                   </test>
                </with>
             </and>
@@ -1627,10 +1525,16 @@
                <count
                      value="1">
                </count>
-               <iterate>
-                  <instanceof
-                        value="rocks.inspectit.shared.all.communication.DefaultData">
-                  </instanceof>
+               <iterate
+                     ifEmpty="false">
+                  <or>
+                     <instanceof
+                           value="rocks.inspectit.shared.all.communication.DefaultData">
+                     </instanceof>
+                     <instanceof
+                           value="rocks.inspectit.shared.all.tracing.data.Span">
+                     </instanceof>
+                  </or>
                </iterate>
             </and>
          </activeWhen>
@@ -2162,6 +2066,192 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.OpenTraceOverviewHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.openTraceOverview">
+         <activeWhen>
+            <or>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
+                  </instanceof>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </iterate>
+               <with
+                     variable="activePart">
+                  <test
+                        property="rocks.inspectit.ui.rcp.repositoryType"
+                        value="cmrRepositoryDefinition">
+                  </test>
+                  <test
+                        property="rocks.inspectit.ui.rcp.onlineStatus"
+                        value="ONLINE">
+                  </test>
+               </with>
+            </or>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.OpenTraceDetailsHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.traceDetails">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <instanceof
+                        value="rocks.inspectit.shared.all.tracing.data.ISpanIdentAware">
+                  </instanceof>
+                  <test
+                        property="rocks.inspectit.ui.rcp.spanIdentNotNull">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$SqlLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
+                  </instanceof>
+               </iterate>
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="rocks.inspectit.ui.rcp.hasSubView"
+                        value="steppingTreeSubView">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$ExceptionLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.shared.all.communication.data.ExceptionSensorData">
+                  </instanceof>
+               </iterate>
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="rocks.inspectit.ui.rcp.hasSubView"
+                        value="steppingTreeSubView">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$InvocationLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.shared.all.communication.data.InvocationSequenceData">
+                  </instanceof>
+               </iterate>
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="rocks.inspectit.ui.rcp.hasSubView"
+                        value="steppingTreeSubView">
+                  </test>
+                  <test
+                        property="rocks.inspectit.ui.rcp.activeSubView"
+                        value="treeSubView">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$TimerLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <not>
+                     <instanceof
+                           value="rocks.inspectit.shared.all.communication.data.SqlStatementData">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="rocks.inspectit.shared.all.communication.data.HttpTimerData">
+                     </instanceof>
+                  </not>
+                  <instanceof
+                        value="rocks.inspectit.shared.all.communication.data.TimerData">
+                  </instanceof>
+               </iterate>
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="rocks.inspectit.ui.rcp.hasSubView"
+                        value="steppingTreeSubView">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="rocks.inspectit.ui.rcp.handlers.LocateHandler$SpanLocateHandler"
+            commandId="rocks.inspectit.ui.rcp.commands.addToSteppingObjects">
+         <activeWhen>
+            <and>
+               <count
+                     value="+">
+               </count>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.shared.all.tracing.data.Span">
+                  </instanceof>
+               </iterate>
+               <with
+                     variable="activeEditor">
+                  <test
+                        property="rocks.inspectit.ui.rcp.hasSubView"
+                        value="steppingTreeSubView">
+                  </test>
+                  <test
+                        property="rocks.inspectit.ui.rcp.activeSubView"
+                        value="treeSubView">
+                  </test>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
@@ -2298,6 +2388,13 @@
             properties="isDefaultApplication, canMoveUp, canMoveDown"
             type="rocks.inspectit.ui.rcp.model.ci.ApplicationLeaf">
       </propertyTester>
+      <propertyTester
+            class="rocks.inspectit.ui.rcp.tester.SpanIdentTester"
+            id="rocks.inspectit.ui.rcp.SpanIdentTester"
+            namespace="rocks.inspectit.ui.rcp"
+            properties="spanIdentNotNull"
+            type="rocks.inspectit.shared.all.tracing.data.ISpanIdentAware">
+      </propertyTester>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -2310,6 +2407,15 @@
          <menu
                icon="icons/eclipse/next_nav.gif"
                label="Navigate To">
+            <command
+                  commandId="rocks.inspectit.ui.rcp.commands.traceDetails"
+                  icon="icons/fugue/servers-network.png"
+                  label="Trace Details"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
             <command
                   commandId="rocks.inspectit.ui.rcp.commands.navigateToInvocations"
                   icon="icons/fugue/arrow-switch.png"
@@ -2463,6 +2569,15 @@
          <menu
                icon="icons/eclipse/next_nav.gif"
                label="Navigate To">
+            <command
+                  commandId="rocks.inspectit.ui.rcp.commands.traceDetails"
+                  icon="icons/fugue/servers-network.png"
+                  label="Trace Details"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
             <command
                   commandId="rocks.inspectit.ui.rcp.commands.navigateToInvocations"
                   icon="icons/fugue/arrow-switch.png"
@@ -2806,6 +2921,15 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:rocks.inspectit.ui.rcp.view.dataExplorer">
+         <command
+               commandId="rocks.inspectit.ui.rcp.commands.openTraceOverview"
+               icon="icons/fugue/servers-network.png"
+               label="Tracing"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
          <command
                commandId="rocks.inspectit.ui.rcp.commands.clearRepositoryBuffer"
                icon="icons/eclipse/buffer_clear.gif"

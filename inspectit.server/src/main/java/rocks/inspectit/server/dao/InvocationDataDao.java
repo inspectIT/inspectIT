@@ -177,12 +177,22 @@ public interface InvocationDataDao {
 	List<InvocationSequenceData> getInvocationSequenceDetail(long platformId, long methodId, int limit, Date fromDate, Date toDate, Comparator<? super InvocationSequenceData> comparator);
 
 	/**
-	 * This service method is used to get all the details of a specific invocation sequence.
+	 * This method is used to get all the details of a specific invocation sequence.
 	 *
 	 * @param template
 	 *            The template data object.
 	 * @return The detailed invocation sequence object.
 	 */
 	InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template);
+
+	/**
+	 * This method is used to get all the details of all invocation sequences that belongs to the
+	 * given span trace id.
+	 *
+	 * @param traceId
+	 *            trace id
+	 * @return The detailed invocation sequence objects.
+	 */
+	List<InvocationSequenceData> getInvocationSequenceDetail(long traceId);
 
 }

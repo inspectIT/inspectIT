@@ -18,6 +18,7 @@ import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
+import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IStorageService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
@@ -228,6 +229,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private final IAgentInstrumentationService agentInstrumentationService;
 
 	/**
+	 * Span service.
+	 */
+	private ISpanService spanService;
+
+	/**
 	 * CMR repository change listeners.
 	 */
 	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<>(1);
@@ -277,6 +283,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		influxDBService = cmrServiceProvider.getInfluxDBService(this);
 		alertAccessService = cmrServiceProvider.getAlertAccessService(this);
 		agentInstrumentationService = cmrServiceProvider.getAgentInstrumentationService(this);
+		spanService = cmrServiceProvider.getSpanService(this);
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, businessContextManagementService, this);
 	}
@@ -376,6 +383,14 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public IJmxDataAccessService getJmxDataAccessService() {
 		return jmxDataAccessService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ISpanService getSpanService() {
+		return spanService;
 	}
 
 	/**

@@ -31,7 +31,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.ExceptionSensorDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
@@ -258,7 +257,7 @@ public class GroupedExceptionOverviewInputController extends AbstractTableInputC
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (data.isEmpty()) {
 			return true;
 		}

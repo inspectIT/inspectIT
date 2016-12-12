@@ -94,6 +94,17 @@ public final class InputDefinitionExtrasMarkerFactory {
 	};
 
 	/**
+	 * Marker for {@link TraceInputDefinitionExtra}.
+	 */
+	public static final InputDefinitionExtraMarker<TraceInputDefinitionExtra> TRACE_EXTRAS_MARKER = new InputDefinitionExtraMarker<TraceInputDefinitionExtra>() {
+		@Override
+		public Class<TraceInputDefinitionExtra> getInputDefinitionExtraClass() {
+			return TraceInputDefinitionExtra.class;
+		}
+
+	};
+
+	/**
 	 * Abstract class for input definition extras marker.
 	 *
 	 * @author Ivan Senic

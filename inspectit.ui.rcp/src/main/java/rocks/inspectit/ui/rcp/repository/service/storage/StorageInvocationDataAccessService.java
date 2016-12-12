@@ -107,6 +107,14 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 	 * {@inheritDoc}
 	 */
 	@Override
+	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
 		// here we need to create new query since this one does not exist in factory
 		StorageIndexQuery query = invocationDataQueryFactory.getIndexQueryProvider().getIndexQuery();
@@ -125,6 +133,16 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 			return results.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<InvocationSequenceData> getInvocationSequenceDetail(long traceId) {
+		StorageIndexQuery query = invocationDataQueryFactory.getInvocationSequences(traceId);
+		query.setOnlyInvocationsWithoutChildren(false);
+		return super.executeQuery(query);
 	}
 
 	/**
@@ -151,11 +169,4 @@ public class StorageInvocationDataAccessService extends AbstractStorageService<I
 		this.invocationDataQueryFactory = invocationDataQueryFactory;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) {
-		throw new UnsupportedOperationException();
-	}
 }

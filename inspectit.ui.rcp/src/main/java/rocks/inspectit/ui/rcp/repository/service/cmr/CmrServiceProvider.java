@@ -12,6 +12,7 @@ import rocks.inspectit.shared.cs.cmr.service.IInfluxDBService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService;
+import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IStorageService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
@@ -326,4 +327,25 @@ public abstract class CmrServiceProvider {
 	 * @return Returns Spring created {@link IAgentInstrumentationService}.
 	 */
 	protected abstract IAgentInstrumentationService getAgentInstrumentationService();
+
+	/**
+	 * Returns properly initialized {@link ISpanService}.
+	 *
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} to bound service to.
+	 * @return Returns {@link ISpanService}.
+	 */
+	public ISpanService getSpanService(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		ISpanService spanService = getSpanService();
+		((ICmrService) spanService).initService(cmrRepositoryDefinition);
+		return spanService;
+	}
+
+	/**
+	 * Returns Spring created {@link ISpanService}.
+	 *
+	 * @return Returns Spring created {@link ISpanService}.
+	 */
+	protected abstract ISpanService getSpanService();
+
 }

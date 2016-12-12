@@ -32,6 +32,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.all.communication.DefaultData;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.composite.BreadcrumbTitleComposite;
@@ -68,6 +69,7 @@ public class DetailsDialog extends Dialog {
 		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToStartMethodInvocations", "Only This Method Invocation(s)");
 		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToSingleExceptionType", "Exception Type");
 		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.navigateToGroupedExceptionType", "Grouped Exception View");
+		NAVIGATE_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.traceDetails", "Trace Details");
 
 		ACTION_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.copySqlQuery", "Copy SQL Query");
 		ACTION_COMMANDS_IDS.put("rocks.inspectit.ui.rcp.commands.copyLogMessage", "Copy Log Message");
@@ -274,6 +276,9 @@ public class DetailsDialog extends Dialog {
 			if (null != sensorTypeEnum) {
 				breadcrumbTitleComposite.setGroup(sensorTypeEnum.getDisplayName(), sensorTypeEnum.getImage());
 			}
+		} else if (defaultData instanceof Span) {
+			// must be set explicitly as no sensor id is set with user spans
+			breadcrumbTitleComposite.setGroup("Tracing SDK", null);
 		}
 
 		breadcrumbTitleComposite.setView("Details", null);

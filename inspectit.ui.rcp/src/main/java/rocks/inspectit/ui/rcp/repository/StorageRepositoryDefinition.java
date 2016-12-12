@@ -20,12 +20,14 @@ import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
 import rocks.inspectit.ui.rcp.repository.service.storage.StorageServiceProvider;
+import rocks.inspectit.ui.rcp.repository.service.storage.StorageSpanService;
 
 /**
  * Storage repository definition. This {@link RepositoryDefinition} has a direct usage of a
@@ -90,6 +92,11 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	 * {@link IBusinessContextDefinition}.
 	 */
 	private IBusinessContextManagementService businessContextService;
+
+	/**
+	 * {@link ISpanService}.
+	 */
+	private ISpanService spanService;
 
 	/**
 	 * {@link StorageServiceProvider} for instantiating storage services.
@@ -210,6 +217,14 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public ISpanService getSpanService() {
+		return spanService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressWarnings("unchecked")
 	public void initServices() {
 		// init services
@@ -221,6 +236,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
 		jmxDataAccessService = storageServiceProvider.createStorageJmxDataAccessService(this, localStorageData, (IStorageTreeComponent<JmxSensorValueData>) indexingTree);
 		businessContextService = storageServiceProvider.createStorageBusinessContextService(this, localStorageData, (IStorageTreeComponent<DefaultData>) indexingTree, businessTransactions);
+		spanService = new StorageSpanService();
 		// for storage we use the regular cached data service because ids can never change
 		cachedDataService = new CachedDataService(globalDataAccessService, businessContextService);
 	}

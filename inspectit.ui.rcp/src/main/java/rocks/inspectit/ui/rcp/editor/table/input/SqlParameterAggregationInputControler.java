@@ -25,7 +25,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
@@ -189,9 +188,9 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (data != null) {
-			for (DefaultData defaultData : data) {
+			for (Object defaultData : data) {
 				if (!(defaultData instanceof SqlHolderHelper)) {
 					return false;
 				} else if (!((SqlHolderHelper) defaultData).isMaster()) {

@@ -21,7 +21,6 @@ import org.eclipse.swt.graphics.Image;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
@@ -284,7 +283,7 @@ public class TimerDataInputController extends AbstractTableInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (null == data) {
 			return false;
 		}
