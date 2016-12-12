@@ -27,7 +27,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TreeColumn;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.all.communication.comparator.SqlStatementDataComparatorEnum;
@@ -44,6 +43,7 @@ import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.Prefere
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.tree.TreeViewerComparator;
 import rocks.inspectit.ui.rcp.editor.tree.util.DatabaseSqlTreeComparator;
+import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -310,7 +310,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (null == data) {
 			return false;
 		}
@@ -321,6 +321,11 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 		// we accept one invocation sequence
 		if (data.get(0) instanceof InvocationSequenceData) {
+			return true;
+		}
+
+		// or one trace data
+		if (data.get(0) instanceof TraceTreeData) {
 			return true;
 		}
 
@@ -352,7 +357,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
-			List<? extends DefaultData> input = (List<? extends DefaultData>) inputElement;
+			List<? extends Object> input = (List<? extends Object>) inputElement;
 
 			if (CollectionUtils.isEmpty(input)) {
 				return new Object[0];
@@ -360,6 +365,9 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 			if (input.get(0) instanceof InvocationSequenceData) {
 				sqlStatementDataList = getRawInputList((List<InvocationSequenceData>) input, new ArrayList<SqlStatementData>());
+			} else if (input.get(0) instanceof TraceTreeData) {
+				TraceTreeData traceTreeData = (TraceTreeData) input.get(0);
+				sqlStatementDataList = getRawInputList(TraceTreeData.collectInvocations(traceTreeData, new ArrayList<InvocationSequenceData>()), new ArrayList<SqlStatementData>());
 			} else {
 				sqlStatementDataList = (List<SqlStatementData>) input;
 			}

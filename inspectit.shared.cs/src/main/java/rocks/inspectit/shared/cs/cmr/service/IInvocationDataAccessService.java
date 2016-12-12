@@ -149,15 +149,6 @@ public interface IInvocationDataAccessService {
 			ResultComparator<InvocationSequenceData> resultComparator);
 
 	/**
-	 * This service method is used to get all the details of a specific invocation sequence.
-	 *
-	 * @param template
-	 *            The template data object.
-	 * @return The detailed invocation sequence object.
-	 */
-	InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template);
-
-	/**
 	 * Returns a list of {@link InvocationSequenceData} objects belonging to an alert defined by the
 	 * passed alert id. The {@link InvocationSequenceData} objects in this list contain no
 	 * associations to other objects. Thus this list can be used to get an overview of the available
@@ -175,4 +166,23 @@ public interface IInvocationDataAccessService {
 	 *             If data cannot be retrieved.
 	 */
 	List<InvocationSequenceData> getInvocationSequenceOverview(String alertId, int limit, ResultComparator<InvocationSequenceData> resultComparator) throws BusinessException;
+
+	/**
+	 * This service method is used to get all the details of a specific invocation sequence.
+	 *
+	 * @param template
+	 *            The template data object.
+	 * @return The detailed invocation sequence object.
+	 */
+	InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template);
+
+	/**
+	 * This service method is used to get all the details of all invocation sequences that belongs
+	 * to the given span trace id.
+	 *
+	 * @param traceId
+	 *            trace id
+	 * @return The detailed invocation sequence objects.
+	 */
+	Collection<InvocationSequenceData> getInvocationSequenceDetail(long traceId);
 }

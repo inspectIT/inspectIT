@@ -319,10 +319,10 @@ public class SqlInputController extends AbstractTreeInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (data != null) {
-			for (DefaultData defaultData : data) {
-				if (!(defaultData instanceof SqlStatementData)) {
+			for (Object object : data) {
+				if (!(object instanceof SqlStatementData)) {
 					return false;
 				}
 			}

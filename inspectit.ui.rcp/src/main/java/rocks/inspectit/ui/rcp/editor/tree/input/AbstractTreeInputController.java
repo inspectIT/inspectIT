@@ -12,13 +12,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.TreeColumn;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
@@ -70,7 +70,7 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	 * Return <code>null</code> by default, sub-classes may override.
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		return false;
 	}
 
@@ -188,6 +188,16 @@ public abstract class AbstractTreeInputController implements TreeInputController
 	@Override
 	public int getExpandLevel() {
 		return 2;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Return <b>true</b> by default, sub-classes may override.
+	 */
+	@Override
+	public boolean changeExpandedState(boolean expandedState, TreePath treePath) {
+		return true;
 	}
 
 	/**

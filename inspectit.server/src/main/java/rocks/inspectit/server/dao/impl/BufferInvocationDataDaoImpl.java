@@ -137,4 +137,14 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<InvocationSequenceData> getInvocationSequenceDetail(long traceId) {
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequences(traceId);
+		return super.executeQuery(query, true);
+	}
+
 }

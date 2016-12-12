@@ -30,7 +30,6 @@ import org.eclipse.ui.PlatformUI;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
@@ -282,7 +281,7 @@ public class UngroupedExceptionOverviewInputController extends AbstractTableInpu
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (data.isEmpty()) {
 			return true;
 		}

@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.AbstractSubView;
 import rocks.inspectit.ui.rcp.editor.ISubView;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
@@ -322,7 +321,7 @@ public class TableSubView extends AbstractSubView implements ISearchExecutor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 		if (checkDisposed()) {
 			return;
 		}

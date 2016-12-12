@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.AbstractSubView;
 import rocks.inspectit.ui.rcp.editor.ISubView;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
@@ -151,7 +150,7 @@ public abstract class AbstractCompositeSubView extends AbstractSubView {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 		// just delegate to all sub-views.
 		for (ISubView subView : subViews) {
 			subView.setDataInput(data);

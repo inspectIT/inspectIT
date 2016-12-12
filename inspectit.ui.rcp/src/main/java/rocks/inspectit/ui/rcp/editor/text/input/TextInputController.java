@@ -5,7 +5,6 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 
 /**
@@ -56,6 +55,6 @@ public interface TextInputController {
 	 * @param data
 	 *            New input.
 	 */
-	void setDataInput(List<? extends DefaultData> data);
+	void setDataInput(List<? extends Object> data);
 
 }

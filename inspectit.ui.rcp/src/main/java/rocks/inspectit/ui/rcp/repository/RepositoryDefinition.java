@@ -9,6 +9,7 @@ import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IJmxDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ISqlDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
+import rocks.inspectit.ui.rcp.repository.service.CachedSpanService;
 
 /**
  * The interface to the repository definition. A repository can be anywhere and anything, the
@@ -94,11 +95,18 @@ public interface RepositoryDefinition {
 	 * @return Returns the {@link IJmxDataAccessService}.
 	 */
 	IJmxDataAccessService getJmxDataAccessService();
-	
+
 	/**
 	 * Returns the {@link IBusinessContextManagementService}.
-	 * 
+	 *
 	 * @return Returns the {@link IBusinessContextManagementService}.
 	 */
 	IBusinessContextManagementService getBusinessContextMangementService();
+
+	/**
+	 * Returns the {@link CachedSpanService}.
+	 *
+	 * @return Returns the {@link CachedSpanService}.
+	 */
+	CachedSpanService getSpanService();
 }

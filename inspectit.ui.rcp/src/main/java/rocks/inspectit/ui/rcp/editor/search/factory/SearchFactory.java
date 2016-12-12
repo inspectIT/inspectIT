@@ -19,6 +19,7 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.ui.rcp.editor.search.criteria.SearchCriteria;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
@@ -62,6 +63,11 @@ public final class SearchFactory {
 	private static JmxSearchFinder jmxSearchFinder = new JmxSearchFinder();
 
 	/**
+	 * Search finder for {@link SpanSearchFinder}.
+	 */
+	private static SpanSearchFinder spanSearchFinder = new SpanSearchFinder();
+
+	/**
 	 * Private constructor.
 	 */
 	private SearchFactory() {
@@ -97,6 +103,8 @@ public final class SearchFactory {
 			return invocationSearchFinder.isSearchCompatible((InvocationSequenceData) element, searchCriteria, repositoryDefinition);
 		} else if (JmxSensorValueData.class.equals(element.getClass())) {
 			return jmxSearchFinder.isSearchCompatible((JmxSensorValueData) element, searchCriteria, repositoryDefinition);
+		} else if (Span.class.isAssignableFrom(element.getClass())) {
+			return spanSearchFinder.isSearchCompatible((Span) element, searchCriteria, repositoryDefinition);
 		}
 		return false;
 	}
@@ -382,6 +390,31 @@ public final class SearchFactory {
 			BusinessTransactionData businessTxData = repositoryDefinition.getCachedDataService().getBusinessTransactionForId(element.getApplicationId(), element.getBusinessTransactionId());
 			if ((null != businessTxData) && stringMatches(businessTxData.getName(), searchCriteria)) {
 				return true;
+			}
+
+			MethodIdent methodIdent = repositoryDefinition.getCachedDataService().getMethodIdentForId(element.getMethodIdent());
+			return super.isSearchCompatible(methodIdent, searchCriteria);
+		}
+
+	}
+
+	/**
+	 * Search finder for {@link Span}s.
+	 *
+	 * @author Ivan Senic
+	 *
+	 */
+	private static class SpanSearchFinder extends AbstractSearchFinder<Span> {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean isSearchCompatible(Span element, SearchCriteria searchCriteria, RepositoryDefinition repositoryDefinition) {
+			for (String tagValue : element.getTags().values()) {
+				if (stringMatches(tagValue, searchCriteria)) {
+					return true;
+				}
 			}
 
 			MethodIdent methodIdent = repositoryDefinition.getCachedDataService().getMethodIdentForId(element.getMethodIdent());

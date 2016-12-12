@@ -143,15 +143,6 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@MethodLog
-	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
-		InvocationSequenceData result = invocationDataDao.getInvocationSequenceDetail(template);
-		return result;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -180,6 +171,24 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 		}
 
 		return getInvocationSequenceOverview(0, invocationSequenceIds, limit, resultComparator);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@MethodLog
+	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
+		InvocationSequenceData result = invocationDataDao.getInvocationSequenceDetail(template);
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<InvocationSequenceData> getInvocationSequenceDetail(long traceId) {
+		return invocationDataDao.getInvocationSequenceDetail(traceId);
 	}
 
 	/**

@@ -138,7 +138,10 @@ dependencies {
 		'com.google.guava:guava:18.0',
 		'com.github.stephenc.high-scale-lib:high-scale-lib:1.1.2',
 		'org.codehaus.jackson:jackson-core-asl:1.9.13',
-		'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+		'org.codehaus.jackson:jackson-mapper-asl:1.9.13',
+		
+		// opentracing api needed for tags
+		'io.opentracing:opentracing-api:0.20.9',
 	) 
 	sharedAllTest (
 		'nl.jqno.equalsverifier:equalsverifier:1.0.2',

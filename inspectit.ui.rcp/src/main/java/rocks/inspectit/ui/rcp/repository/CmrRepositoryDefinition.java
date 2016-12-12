@@ -24,6 +24,7 @@ import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
+import rocks.inspectit.ui.rcp.repository.service.CachedSpanService;
 import rocks.inspectit.ui.rcp.repository.service.RefreshEditorsCachedDataService;
 import rocks.inspectit.ui.rcp.repository.service.cmr.CmrServiceProvider;
 
@@ -228,6 +229,11 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	private final IAgentInstrumentationService agentInstrumentationService;
 
 	/**
+	 * Span service.
+	 */
+	private CachedSpanService spanService;
+
+	/**
 	 * CMR repository change listeners.
 	 */
 	private List<CmrRepositoryChangeListener> cmrRepositoryChangeListeners = new ArrayList<>(1);
@@ -277,6 +283,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		influxDBService = cmrServiceProvider.getInfluxDBService(this);
 		alertAccessService = cmrServiceProvider.getAlertAccessService(this);
 		agentInstrumentationService = cmrServiceProvider.getAgentInstrumentationService(this);
+		spanService = new CachedSpanService(cmrServiceProvider.getSpanService(this));
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, businessContextManagementService, this);
 	}
@@ -376,6 +383,14 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	@Override
 	public IJmxDataAccessService getJmxDataAccessService() {
 		return jmxDataAccessService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public CachedSpanService getSpanService() {
+		return spanService;
 	}
 
 	/**

@@ -132,6 +132,7 @@ import rocks.inspectit.shared.all.serializer.IKryoProvider;
 import rocks.inspectit.shared.all.serializer.ISerializer;
 import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.tracing.comparator.SpanComparator;
 import rocks.inspectit.shared.all.tracing.data.ClientSpan;
 import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
@@ -403,6 +404,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(SpanIdent.class, new CustomCompatibleFieldSerializer<SpanIdent>(kryo, SpanIdent.class, schemaManager));
 		kryo.register(ClientSpan.class, new CustomCompatibleFieldSerializer<ClientSpan>(kryo, ClientSpan.class, schemaManager, true));
 		kryo.register(ServerSpan.class, new CustomCompatibleFieldSerializer<ServerSpan>(kryo, ServerSpan.class, schemaManager, true));
+		kryo.register(SpanComparator.class, new EnumSerializer(SpanComparator.class));
 	}
 
 	/**

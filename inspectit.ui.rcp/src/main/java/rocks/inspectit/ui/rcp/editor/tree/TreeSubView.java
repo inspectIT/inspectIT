@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.AbstractSubView;
 import rocks.inspectit.ui.rcp.editor.ISubView;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
@@ -127,10 +126,12 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 				TreePath path = selection.getPaths()[0];
 				if (null != path) {
 					boolean expanded = treeViewer.getExpandedState(path);
-					if (expanded) {
-						treeViewer.collapseToLevel(path, 1);
-					} else {
-						treeViewer.expandToLevel(path, 1);
+					if (treeInputController.changeExpandedState(expanded, path)) {
+						if (expanded) {
+							treeViewer.collapseToLevel(path, 1);
+						} else {
+							treeViewer.expandToLevel(path, 1);
+						}
 					}
 				}
 			}
@@ -290,7 +291,7 @@ public class TreeSubView extends AbstractSubView implements ISearchExecutor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 		if (checkDisposed()) {
 			return;
 		}

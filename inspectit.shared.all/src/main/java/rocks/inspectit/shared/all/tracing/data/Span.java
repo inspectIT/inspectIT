@@ -9,13 +9,28 @@ import java.util.Map;
  * @author Ivan Senic
  *
  */
-public interface Span {
+public interface Span extends ISpanIdentAware {
+
+	/**
+	 * Returns platform ident.
+	 *
+	 * @return Returns platform ident.
+	 */
+	long getPlatformIdent();
+
+	/**
+	 * Returns method ident.
+	 *
+	 * @return Returns method ident.
+	 */
+	long getMethodIdent();
 
 	/**
 	 * Returns the span identification. Must not be <code>null</code>.
 	 *
 	 * @return Returns the span identification. Must not be <code>null</code>.
 	 */
+	@Override
 	SpanIdent getSpanIdent();
 
 	/**
