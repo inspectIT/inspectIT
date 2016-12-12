@@ -5,9 +5,9 @@ import java.util.List;
 
 import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
 import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 
 /**
  * Service interface which defines the methods to retrieve data objects based on the exception

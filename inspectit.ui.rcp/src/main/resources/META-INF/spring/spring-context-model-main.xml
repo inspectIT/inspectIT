@@ -38,6 +38,7 @@
 		<lookup-method name="getInfluxDBService" bean="influxDBService" />
 		<lookup-method name="getAlertAccessService" bean="alertAccessService" />
 		<lookup-method name="getAgentInstrumentationService" bean="agentInstrumentationService" />
+		<lookup-method name="getSpanService" bean="spanService" />
 	</bean>
 
 	<!-- CmrManagementService -->
@@ -393,7 +394,30 @@
 		<property name="serviceName" value="AgentInstrumentationService" />
 	</bean>
 	<!-- AlertAccessService End -->
-
+	
+	<!-- SpanService -->
+	<bean id="spanService" class="org.springframework.aop.framework.ProxyFactoryBean" scope="prototype" lazy-init="true">
+		<property name="proxyInterfaces">
+			<list>
+				<value>rocks.inspectit.shared.cs.cmr.service.ISpanService</value>
+				<value>rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService</value>
+			</list>
+		</property>
+		<property name="target" ref="spanServiceTarget" />
+		<property name="interceptorNames">
+			<list>
+				<value>serviceMethodInterceptor</value>
+				<value>interfaceInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="spanServiceTarget" class="rocks.inspectit.ui.rcp.repository.service.cmr.CmrService" scope="prototype" lazy-init="true">
+		<property name="serviceInterface" value="rocks.inspectit.shared.cs.cmr.service.ISpanService" />
+		<property name="serviceName" value="SpanService" />
+	</bean>
+	<!-- SpanService End -->
+	
 	<bean id="loggerPostProcessor" class="rocks.inspectit.shared.all.spring.logger.LoggerPostProcessor" />
 
 	<bean id="classSchemaManager" class="rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager">

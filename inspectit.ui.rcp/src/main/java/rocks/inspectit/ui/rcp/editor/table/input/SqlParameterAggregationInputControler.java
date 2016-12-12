@@ -25,13 +25,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
-import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
-import rocks.inspectit.shared.all.communication.comparator.SqlStatementDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.cs.communication.comparator.InvocationAwareDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.comparator.SqlStatementDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
@@ -189,12 +188,12 @@ public class SqlParameterAggregationInputControler extends AbstractTableInputCon
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (data != null) {
-			for (DefaultData defaultData : data) {
-				if (!(defaultData instanceof SqlHolderHelper)) {
+			for (Object object : data) {
+				if (!(object instanceof SqlHolderHelper)) {
 					return false;
-				} else if (!((SqlHolderHelper) defaultData).isMaster()) {
+				} else if (!((SqlHolderHelper) object).isMaster()) {
 					return false;
 				}
 			}

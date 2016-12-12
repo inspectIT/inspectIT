@@ -28,11 +28,10 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
@@ -223,10 +222,10 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 		if (CollectionUtils.isNotEmpty(data)) {
-			DefaultData defaultData = data.get(0);
-			if (defaultData instanceof InvocationSequenceData) {
+			Object object = data.get(0);
+			if (object instanceof InvocationSequenceData) {
 				updateRepresentation((List<InvocationSequenceData>) data);
 			}
 		} else {

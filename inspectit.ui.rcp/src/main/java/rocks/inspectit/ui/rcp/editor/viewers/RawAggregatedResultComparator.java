@@ -2,9 +2,9 @@ package rocks.inspectit.ui.rcp.editor.viewers;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
+import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 
 /**
  * Extension of {@link ResultComparator} to solve problems with raw/aggregated comparison on the UI.

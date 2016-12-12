@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
@@ -209,7 +208,7 @@ public class AggregatedTimerSummaryInputController extends AbstractTableInputCon
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if ((null == data) || data.isEmpty()) {
 			return true;
 		}

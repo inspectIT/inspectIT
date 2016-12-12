@@ -23,6 +23,7 @@ import rocks.inspectit.ui.rcp.editor.table.input.NavigationInvocOverviewInputCon
 import rocks.inspectit.ui.rcp.editor.table.input.SqlParameterAggregationInputControler;
 import rocks.inspectit.ui.rcp.editor.table.input.TaggedHttpTimerDataInputController;
 import rocks.inspectit.ui.rcp.editor.table.input.TimerDataInputController;
+import rocks.inspectit.ui.rcp.editor.table.input.TraceOverviewInputController;
 import rocks.inspectit.ui.rcp.editor.table.input.UngroupedExceptionOverviewInputController;
 import rocks.inspectit.ui.rcp.editor.text.TextSubView;
 import rocks.inspectit.ui.rcp.editor.text.input.ClassesInputController;
@@ -41,6 +42,8 @@ import rocks.inspectit.ui.rcp.editor.tree.input.ExceptionTreeInputController;
 import rocks.inspectit.ui.rcp.editor.tree.input.SqlInputController;
 import rocks.inspectit.ui.rcp.editor.tree.input.SqlInvocInputController;
 import rocks.inspectit.ui.rcp.editor.tree.input.SteppingInvocDetailInputController;
+import rocks.inspectit.ui.rcp.editor.tree.input.TraceDetailsTreeInputController;
+import rocks.inspectit.ui.rcp.editor.tree.input.TraceInvocDetailsInputController;
 import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 
 /**
@@ -123,7 +126,6 @@ public final class SubViewFactory {
 			ISubView invocOverview = new TableSubView(new InvocOverviewInputController());
 			invocSubView.addSubView(invocOverview, 1);
 			invocSubView.addSubView(invocTabbedSubView, 2);
-
 			return invocSubView;
 		case SQL:
 			SashCompositeSubView sqlSashSubView = new SashCompositeSubView();
@@ -237,6 +239,25 @@ public final class SubViewFactory {
 			alertInvocSubView.addSubView(alertInvocTabbedSubView, 2);
 
 			return alertInvocSubView;
+		case TRACING:
+			SashCompositeSubView tracingSashSubView = new SashCompositeSubView();
+			tracingSashSubView.addSubView(new TableSubView(new TraceOverviewInputController()));
+			return tracingSashSubView;
+		case TRACING_DETAILS:
+			TabbedCompositeSubView invocTabbedSubView2 = new TabbedCompositeSubView();
+			ISubView invocDetails2 = new SteppingTreeSubView(new TraceInvocDetailsInputController());
+			ISubView invocSql2 = new TreeSubView(new SqlInvocInputController());
+			ISubView invocMethods2 = new TableSubView(new MethodInvocInputController());
+			ISubView invocExceptions2 = new TableSubView(new ExceptionSensorInvocInputController());
+			invocTabbedSubView2.addSubView(invocDetails2, "Call Hierarchy", InspectIT.getDefault().getImage(InspectITImages.IMG_CALL_HIERARCHY));
+			invocTabbedSubView2.addSubView(invocSql2, "SQL", InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE));
+			invocTabbedSubView2.addSubView(invocMethods2, "Methods", InspectIT.getDefault().getImage(InspectITImages.IMG_METHOD_PUBLIC));
+			invocTabbedSubView2.addSubView(invocExceptions2, "Exceptions", InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR));
+
+			SashCompositeSubView traceDetailsView = new SashCompositeSubView();
+			traceDetailsView.addSubView(new TreeSubView(new TraceDetailsTreeInputController()), 1);
+			traceDetailsView.addSubView(invocTabbedSubView2, 2);
+			return traceDetailsView;
 		default:
 			throw new IllegalArgumentException("Could not create sub-view. Not supported: " + sensorTypeEnum.toString());
 		}

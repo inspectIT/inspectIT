@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import rocks.inspectit.server.dao.ExceptionSensorDataDao;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 
 /**
  * Service class for retrieving {@link ExceptionSensorData} objects from the CMR.

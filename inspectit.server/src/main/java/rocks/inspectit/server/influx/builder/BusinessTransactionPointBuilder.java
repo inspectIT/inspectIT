@@ -7,10 +7,10 @@ import rocks.inspectit.server.influx.constants.Series;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 
 /**
  * Point builder for the business transactions. Information is derived from the

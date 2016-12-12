@@ -13,9 +13,9 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 
 /**
  * Processor performing necessary calculation and fixes. This is special type of chained processor

@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.AbstractViewerComparator;
 
 /**

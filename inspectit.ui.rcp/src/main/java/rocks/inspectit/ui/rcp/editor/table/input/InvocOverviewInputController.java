@@ -32,19 +32,18 @@ import org.springframework.http.HttpStatus;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
-import rocks.inspectit.shared.all.communication.comparator.InvocationSequenceDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.cs.communication.comparator.InvocationSequenceDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
@@ -373,7 +372,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (data.isEmpty()) {
 			return true;
 		}

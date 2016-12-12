@@ -1,5 +1,6 @@
 package rocks.inspectit.shared.all.serializer.impl;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -54,15 +56,6 @@ import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
-import rocks.inspectit.shared.all.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ExceptionSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.HttpTimerDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
-import rocks.inspectit.shared.all.communication.comparator.SqlStatementDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
 import rocks.inspectit.shared.all.communication.data.AggregatedSqlStatementData;
@@ -132,6 +125,7 @@ import rocks.inspectit.shared.all.serializer.IKryoProvider;
 import rocks.inspectit.shared.all.serializer.ISerializer;
 import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.tracing.data.ClientSpan;
 import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
@@ -155,6 +149,17 @@ import rocks.inspectit.shared.all.util.TimeFrame;
 public class SerializationManager implements ISerializer, IKryoProvider, InitializingBean {
 
 	/**
+	 * Kryo's nextRegisterID field.
+	 */
+	private static Field kryoNextRegisterIDField;
+
+	/**
+	 * Logger of this class.
+	 */
+	@Log
+	Logger logger;
+
+	/**
 	 * Main {@link Kryo} instance.
 	 */
 	private Kryo kryo;
@@ -176,6 +181,16 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 	 */
 	@Autowired(required = false)
 	IHibernateUtil hibernateUtil;
+
+	static {
+		// we need the nextRegisterID field from kryo
+		try {
+			kryoNextRegisterIDField = Kryo.class.getDeclaredField("nextRegisterID");
+			kryoNextRegisterIDField.setAccessible(true);
+		} catch (Exception e) { // NOPMD //NOCHK
+			// ignore / should never happen
+		}
+	}
 
 	/**
 	 * Initialize {@link Kryo} properties.
@@ -253,7 +268,6 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		/** Common data classes */
 		kryo.register(MutableInt.class, new FieldSerializer<MutableInt>(kryo, MutableInt.class));
 		kryo.register(InvocationSequenceData.class, new InvocationSequenceCustomCompatibleFieldSerializer(kryo, InvocationSequenceData.class, schemaManager));
-		// TODO Check if we want for these
 		kryo.register(TimerData.class, new InvocationAwareDataSerializer<TimerData>(kryo, TimerData.class, schemaManager));
 		kryo.register(HttpTimerData.class, new InvocationAwareDataSerializer<HttpTimerData>(kryo, HttpTimerData.class, schemaManager));
 		kryo.register(SqlStatementData.class, new InvocationAwareDataSerializer<SqlStatementData>(kryo, SqlStatementData.class, schemaManager));
@@ -311,17 +325,16 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		SynchronizedCollectionsSerializer.registerSerializers(kryo);
 		kryo.register(StackTraceElement.class, new StackTraceElementSerializer());
 
-		// added with INSPECTIT-887
-		kryo.register(DefaultDataComparatorEnum.class, new EnumSerializer(DefaultDataComparatorEnum.class));
-		kryo.register(MethodSensorDataComparatorEnum.class, new EnumSerializer(MethodSensorDataComparatorEnum.class));
-		kryo.register(InvocationAwareDataComparatorEnum.class, new EnumSerializer(InvocationAwareDataComparatorEnum.class));
-		kryo.register(TimerDataComparatorEnum.class, new EnumSerializer(TimerDataComparatorEnum.class));
-		kryo.register(HttpTimerDataComparatorEnum.class, new EnumSerializer(HttpTimerDataComparatorEnum.class));
-		kryo.register(SqlStatementDataComparatorEnum.class, new EnumSerializer(SqlStatementDataComparatorEnum.class));
-		kryo.register(ExceptionSensorDataComparatorEnum.class, new EnumSerializer(ExceptionSensorDataComparatorEnum.class));
-		kryo.register(AggregatedExceptionSensorDataComparatorEnum.class, new EnumSerializer(AggregatedExceptionSensorDataComparatorEnum.class));
-		kryo.register(InvocationAwareDataComparatorEnum.class, new EnumSerializer(InvocationAwareDataComparatorEnum.class));
-		kryo.register(ResultComparator.class, new FieldSerializer<ResultComparator<?>>(kryo, ResultComparator.class));
+		// ATTENTION: registration ID has been increased by 9 as there were 9 classes removed from
+		// registration at this point with ticket INSPECTIT-2276
+		// there is no other way then using reflection here
+		int nextRegistrationId = kryo.getNextRegistrationId();
+		nextRegistrationId += 9;
+		try {
+			kryoNextRegisterIDField.set(kryo, nextRegistrationId);
+		} catch (Exception e) {
+			logger.error("Kryo serialization was not intialized correctly.", e);
+		}
 
 		// added with INSPECTIT-950
 		kryo.register(TimeFrame.class, new CustomCompatibleFieldSerializer<TimeFrame>(kryo, TimeFrame.class, schemaManager));

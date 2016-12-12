@@ -12,8 +12,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.util.ClipboardUtil;

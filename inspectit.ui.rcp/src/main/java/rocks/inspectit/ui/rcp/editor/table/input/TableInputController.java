@@ -118,13 +118,13 @@ public interface TableInputController extends SubViewClassificationController {
 
 	/**
 	 * Returns <code>true</code> if the controller can open the input which consists of one or
-	 * several {@link DefaultData} objects.
+	 * several objects.
 	 *
 	 * @param data
 	 *            The data which is checked if the controller can open it.
 	 * @return Returns <code>true</code> if the controller can open the input.
 	 */
-	boolean canOpenInput(List<? extends DefaultData> data);
+	boolean canOpenInput(List<? extends Object> data);
 
 	/**
 	 * Returns all needed preference IDs.

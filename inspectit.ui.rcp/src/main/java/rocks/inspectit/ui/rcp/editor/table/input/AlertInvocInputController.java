@@ -7,9 +7,9 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ViewerComparator;
 
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;

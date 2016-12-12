@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import rocks.inspectit.server.service.rest.error.JsonError;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 
 /**
  * Restful service provider for detail {@link InvocationSequenceData} information.

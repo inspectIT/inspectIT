@@ -23,7 +23,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.storage.IStorageData;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
@@ -382,7 +381,7 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 		subView.setDataInput(data);
 	}
 
