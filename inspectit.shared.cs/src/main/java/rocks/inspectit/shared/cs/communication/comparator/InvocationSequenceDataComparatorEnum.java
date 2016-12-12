@@ -1,14 +1,14 @@
-package rocks.inspectit.shared.all.communication.comparator;
+package rocks.inspectit.shared.cs.communication.comparator;
 
 import org.apache.commons.lang.StringUtils;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 
 /**
  * Comparators for {@link InvocationSequenceData}.

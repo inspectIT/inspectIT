@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.editor.viewers.AbstractViewerComparator;
 

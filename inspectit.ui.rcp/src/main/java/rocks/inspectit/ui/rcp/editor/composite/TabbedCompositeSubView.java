@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.ISubView;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 
@@ -140,7 +139,7 @@ public class TabbedCompositeSubView extends AbstractCompositeSubView {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
+	public void setDataInput(List<? extends Object> data) {
 		super.setDataInput(data);
 		fixTabControlsVisibility();
 	}

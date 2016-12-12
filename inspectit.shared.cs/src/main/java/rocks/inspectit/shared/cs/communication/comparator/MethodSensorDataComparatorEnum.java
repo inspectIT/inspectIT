@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.communication.comparator;
+package rocks.inspectit.shared.cs.communication.comparator;
 
 import java.util.Comparator;
 import java.util.List;

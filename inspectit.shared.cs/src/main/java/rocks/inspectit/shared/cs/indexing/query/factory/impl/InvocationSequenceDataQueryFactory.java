@@ -1,9 +1,10 @@
 package rocks.inspectit.shared.cs.indexing.query.factory.impl;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,11 @@ import rocks.inspectit.shared.cs.indexing.restriction.impl.IndexQueryRestriction
 public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends AbstractQueryFactory<E> {
 
 	/**
+	 * Classes searched by the query factory.
+	 */
+	private static final List<Class<?>> SEARCHED_CLASSES = Collections.unmodifiableList(Collections.<Class<?>> singletonList(InvocationSequenceData.class));
+
+	/**
 	 * Returns query for invocation overview.
 	 *
 	 * @param platformId
@@ -40,9 +46,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 		E query = getIndexQueryProvider().getIndexQuery();
 		query.setPlatformIdent(platformId);
 		query.setMethodIdent(methodId);
-		ArrayList<Class<?>> searchedClasses = new ArrayList<>();
-		searchedClasses.add(InvocationSequenceData.class);
-		query.setObjectClasses(searchedClasses);
+		query.setObjectClasses(SEARCHED_CLASSES);
 		if (fromDate != null) {
 			query.setFromDate(new Timestamp(fromDate.getTime()));
 		}
@@ -86,9 +90,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 	public E getInvocationSequences(long platformId, Collection<Long> invocationIdCollection, int limit) {
 		E query = getIndexQueryProvider().getIndexQuery();
 		query.setPlatformIdent(platformId);
-		ArrayList<Class<?>> searchedClasses = new ArrayList<>();
-		searchedClasses.add(InvocationSequenceData.class);
-		query.setObjectClasses(searchedClasses);
+		query.setObjectClasses(SEARCHED_CLASSES);
 		query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("id", invocationIdCollection));
 		return query;
 	}
@@ -117,9 +119,7 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 		E query = getIndexQueryProvider().getIndexQuery();
 		query.setPlatformIdent(platformId);
 		query.setMinId(minId);
-		ArrayList<Class<?>> searchedClasses = new ArrayList<Class<?>>();
-		searchedClasses.add(InvocationSequenceData.class);
-		query.setObjectClasses(searchedClasses);
+		query.setObjectClasses(SEARCHED_CLASSES);
 		if (businessTrxId != 0) {
 			query.addIndexingRestriction(IndexQueryRestrictionFactory.equal("businessTransactionId", businessTrxId));
 		}
@@ -132,6 +132,21 @@ public class InvocationSequenceDataQueryFactory<E extends IIndexQuery> extends A
 		if (endDate != null) {
 			query.setToDate(new Timestamp(endDate.getTime()));
 		}
+		return query;
+	}
+
+	/**
+	 * Returns query for searching invocations by trace id.
+	 *
+	 * @param traceId
+	 *            traceId in the span ident
+	 * @return Returns query for searching invocations by trace id.
+	 */
+	public E getInvocationSequences(long traceId) {
+		E query = getIndexQueryProvider().getIndexQuery();
+		query.setObjectClasses(SEARCHED_CLASSES);
+		query.addIndexingRestriction(IndexQueryRestrictionFactory.isNotNull("spanIdent"));
+		query.addIndexingRestriction(IndexQueryRestrictionFactory.equal("spanIdent.traceId", traceId));
 		return query;
 	}
 }

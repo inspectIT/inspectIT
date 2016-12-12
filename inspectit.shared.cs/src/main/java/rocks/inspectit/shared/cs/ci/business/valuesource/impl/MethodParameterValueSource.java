@@ -8,10 +8,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.cs.ci.business.expression.impl.StringMatchingExpression;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 
 /**
  * This configuration element indicates that the method parameter value is to be used as the string

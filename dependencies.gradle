@@ -276,7 +276,10 @@ dependencies {
 
 		'org.apache.httpcomponents:httpclient:4.1.1',
 		'org.apache.httpcomponents:httpcore:4.1.1',
-		'org.apache.httpcomponents:httpmime:4.1.1'
+		'org.apache.httpcomponents:httpmime:4.1.1',
+
+		// opentracing api needed for tags
+		'io.opentracing:opentracing-api:0.20.9'
 	)
 
 	/** other */

@@ -9,11 +9,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.ui.rcp.editor.ISubView;
 import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
 import rocks.inspectit.ui.rcp.editor.tree.SteppingTreeSubView;
@@ -27,6 +27,11 @@ import rocks.inspectit.ui.rcp.editor.tree.SteppingTreeSubView;
 public abstract class LocateHandler extends AbstractTemplateHandler {
 
 	/**
+	 * Command executed by this handler.
+	 */
+	public static final String COMMAND = "rocks.inspectit.ui.rcp.commands.addToSteppingObjects";
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -38,8 +43,8 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 			SteppingTreeSubView steppingTreeSubView = mainView.getSubView(SteppingTreeSubView.class);
 			if (steppingTreeSubView != null) {
 				StructuredSelection structuredSelection = (StructuredSelection) HandlerUtil.getCurrentSelection(event);
-				List<DefaultData> templates = this.getTemplates(structuredSelection);
-				for (DefaultData objectToLocate : templates) {
+				List<Object> templates = this.getTemplates(structuredSelection);
+				for (Object objectToLocate : templates) {
 					steppingTreeSubView.addObjectToSteppingControl(objectToLocate);
 				}
 
@@ -58,7 +63,7 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 	 *
 	 * @return {@link AbstractTemplateDefinitionDialog}.
 	 */
-	public abstract List<DefaultData> getTemplates(StructuredSelection structuredSelection);
+	public abstract List<Object> getTemplates(StructuredSelection structuredSelection);
 
 	/**
 	 * {@link LocateHandler} for
@@ -73,8 +78,8 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<>();
+		public List<Object> getTemplates(StructuredSelection structuredSelection) {
+			List<Object> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof SqlStatementData) {
 					results.add(super.getTemplate((SqlStatementData) selected, true, true, true));
@@ -98,8 +103,8 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<>();
+		public List<Object> getTemplates(StructuredSelection structuredSelection) {
+			List<Object> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof ExceptionSensorData) {
 					results.add(super.getTemplate((ExceptionSensorData) selected, true, true, true, true, true));
@@ -123,8 +128,8 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<>();
+		public List<Object> getTemplates(StructuredSelection structuredSelection) {
+			List<Object> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof InvocationSequenceData) {
 					InvocationSequenceData invocationSequenceData = (InvocationSequenceData) selected;
@@ -186,8 +191,8 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public List<DefaultData> getTemplates(StructuredSelection structuredSelection) {
-			List<DefaultData> results = new ArrayList<>();
+		public List<Object> getTemplates(StructuredSelection structuredSelection) {
+			List<Object> results = new ArrayList<>();
 			for (Object selected : structuredSelection.toList()) {
 				if (selected instanceof TimerData) {
 					results.add(super.getTemplate((TimerData) selected, true, true));
@@ -197,4 +202,29 @@ public abstract class LocateHandler extends AbstractTemplateHandler {
 		}
 
 	}
+
+	/**
+	 * {@link LocateHandler} for {@link rocks.inspectit.shared.all.tracing.data.Span}.
+	 *
+	 * @author Ivan Senic
+	 *
+	 */
+	public static final class SpanLocateHandler extends LocateHandler {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public List<Object> getTemplates(StructuredSelection structuredSelection) {
+			List<Object> results = new ArrayList<>();
+			for (Object selected : structuredSelection.toList()) {
+				if (selected instanceof Span) {
+					results.add(selected);
+				}
+			}
+			return results;
+		}
+
+	}
+
 }

@@ -14,13 +14,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.comparator.HttpTimerDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
-import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
-import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.communication.comparator.HttpTimerDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.cs.communication.comparator.InvocationAwareDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;

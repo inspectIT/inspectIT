@@ -10,7 +10,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.StyledString;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.cs.cmr.service.IHttpTimerDataAccessService;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
@@ -92,7 +91,7 @@ public abstract class AbstractHttpInputController extends AbstractTableInputCont
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (null == data) {
 			return false;
 		}

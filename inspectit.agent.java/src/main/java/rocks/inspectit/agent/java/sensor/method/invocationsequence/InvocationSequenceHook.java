@@ -48,7 +48,6 @@ import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
@@ -387,7 +386,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 						return true;
 					}
 				} else if (Log4JLoggingSensor.class.getName().equals(className)) {
-					return !InvocationSequenceDataHelper.hasLoggingData(invocationSequenceData);
+					return null == invocationSequenceData.getLoggingData();
 				} else if (REMOVE_SENSOR_CLASS_NAMES.contains(className)) {
 					return null == invocationSequenceData.getSpanIdent();
 				}

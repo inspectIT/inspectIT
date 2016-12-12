@@ -87,11 +87,11 @@ public class SqlStatementTextInputController extends AbstractTextInputController
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setDataInput(List<? extends DefaultData> data) {
-		if ((null != data) && !data.isEmpty()) {
-			DefaultData defaultData = data.get(0);
-			if (defaultData instanceof SqlHolderHelper) {
-				SqlHolderHelper sqlHolderHelper = (SqlHolderHelper) defaultData;
+	public void setDataInput(List<? extends Object> data) {
+		if (CollectionUtils.isNotEmpty(data)) {
+			Object object = data.get(0);
+			if (object instanceof SqlHolderHelper) {
+				SqlHolderHelper sqlHolderHelper = (SqlHolderHelper) object;
 				if (!sqlHolderHelper.isMaster() && !sqlHolderHelper.getSqlStatementDataList().isEmpty()) {
 					updateRepresentation(sqlHolderHelper.getSqlStatementDataList().get(0));
 					return;

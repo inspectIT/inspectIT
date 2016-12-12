@@ -36,11 +36,11 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.PatternMatchingType;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
-import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerPortValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpSchemeValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerNameValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerPortValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
@@ -112,6 +112,16 @@ import rocks.inspectit.shared.cs.cmr.property.update.impl.PercentagePropertyUpda
 import rocks.inspectit.shared.cs.cmr.property.update.impl.RestoreDefaultPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.property.update.impl.StringPropertyUpdate;
 import rocks.inspectit.shared.cs.cmr.service.IServerStatusService.ServerStatus;
+import rocks.inspectit.shared.cs.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ExceptionSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.HttpTimerDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.InvocationAwareDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.InvocationSequenceDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
+import rocks.inspectit.shared.cs.communication.comparator.SqlStatementDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.shared.cs.communication.data.cmr.AlertClosingReason;
 import rocks.inspectit.shared.cs.communication.data.cmr.RecordingData;
@@ -162,6 +172,7 @@ import rocks.inspectit.shared.cs.storage.processor.impl.TimeFrameDataProcessor;
 import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
 import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 import rocks.inspectit.shared.cs.storage.serializer.impl.ServerStatusSerializer;
+import rocks.inspectit.shared.cs.tracing.comparator.SpanComparator;
 
 /**
  * Registers all classes from the CommonsCS project after {@link SerializationManager} has been
@@ -417,6 +428,19 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(RemoteJmsClientSensorConfig.class, new FieldSerializer<>(kryo, RemoteJmsClientSensorConfig.class), nextRegistrationId++);
 		kryo.register(RemoteJmsListenerServerSensorConfig.class, new FieldSerializer<>(kryo, RemoteJmsListenerServerSensorConfig.class), nextRegistrationId++);
 		kryo.register(RemoteManualServerSensorConfig.class, new FieldSerializer<>(kryo, RemoteManualServerSensorConfig.class), nextRegistrationId++);
+
+		// moved from Serialization manager with INSPECTIT-2276
+		kryo.register(DefaultDataComparatorEnum.class, new EnumSerializer(DefaultDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(MethodSensorDataComparatorEnum.class, new EnumSerializer(MethodSensorDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(InvocationAwareDataComparatorEnum.class, new EnumSerializer(InvocationAwareDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(TimerDataComparatorEnum.class, new EnumSerializer(TimerDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(HttpTimerDataComparatorEnum.class, new EnumSerializer(HttpTimerDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(SqlStatementDataComparatorEnum.class, new EnumSerializer(SqlStatementDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(ExceptionSensorDataComparatorEnum.class, new EnumSerializer(ExceptionSensorDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(AggregatedExceptionSensorDataComparatorEnum.class, new EnumSerializer(AggregatedExceptionSensorDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(InvocationSequenceDataComparatorEnum.class, new EnumSerializer(InvocationSequenceDataComparatorEnum.class), nextRegistrationId++);
+		kryo.register(ResultComparator.class, new FieldSerializer<ResultComparator<?>>(kryo, ResultComparator.class), nextRegistrationId++);
+		kryo.register(SpanComparator.class, new EnumSerializer(SpanComparator.class), nextRegistrationId++);
 	}
 
 }

@@ -13,6 +13,8 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.tracing.data.Span;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
@@ -150,7 +152,12 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 		List<Object> input = (List<Object>) getTreeInput();
 		if ((input != null) && !input.isEmpty()) {
 			InvocationSequenceData invocation = (InvocationSequenceData) input.get(0);
-			return OccurrenceFinderFactory.getOccurrence(invocation, template, occurance, filters);
+			InvocationSequenceData found = OccurrenceFinderFactory.getOccurrence(invocation, template, occurance, filters);
+			if (InvocationSequenceDataHelper.hasSpanIdent(found) && (template instanceof Span)) {
+				return spanService.get(found.getSpanIdent());
+			} else {
+				return found;
+			}
 		}
 		return null;
 	}
@@ -159,37 +166,39 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getElementTextualRepresentation(Object invAwareData) {
-		if (invAwareData instanceof SqlStatementData) {
-			SqlStatementData sqlData = (SqlStatementData) invAwareData;
+	public String getElementTextualRepresentation(Object object) {
+		if (object instanceof SqlStatementData) {
+			SqlStatementData sqlData = (SqlStatementData) object;
 			if (0 == sqlData.getId()) {
 				return "SQL: " + sqlData.getSql() + " [All]";
 			} else {
 				return "SQL: " + sqlData.getSql() + " [Single]";
 			}
-		} else if (invAwareData instanceof TimerData) {
-			TimerData timerData = (TimerData) invAwareData;
+		} else if (object instanceof TimerData) {
+			TimerData timerData = (TimerData) object;
 			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(timerData.getMethodIdent());
 			if (0 == timerData.getId()) {
 				return TextFormatter.getMethodString(methodIdent) + " [All]";
 			} else {
 				return TextFormatter.getMethodString(methodIdent) + " [Single]";
 			}
-		} else if (invAwareData instanceof ExceptionSensorData) {
-			ExceptionSensorData exData = (ExceptionSensorData) invAwareData;
+		} else if (object instanceof ExceptionSensorData) {
+			ExceptionSensorData exData = (ExceptionSensorData) object;
 			if (0 == exData.getId()) {
 				return "Exception: " + exData.getThrowableType() + " [All]";
 			} else {
 				return "Exception: " + exData.getThrowableType() + " [Single]";
 			}
-		} else if (invAwareData instanceof InvocationSequenceData) {
-			InvocationSequenceData invocationSequenceData = (InvocationSequenceData) invAwareData;
+		} else if (object instanceof InvocationSequenceData) {
+			InvocationSequenceData invocationSequenceData = (InvocationSequenceData) object;
 			MethodIdent methodIdent = cachedDataService.getMethodIdentForId(invocationSequenceData.getMethodIdent());
 			if (0 == invocationSequenceData.getId()) {
 				return TextFormatter.getMethodString(methodIdent) + " [All]";
 			} else {
 				return TextFormatter.getMethodString(methodIdent) + " [Single]";
 			}
+		} else if (object instanceof Span) {
+			return TextFormatter.getSpanDetailsFull((Span) object, cachedDataService).toString();
 		}
 		return "";
 	}

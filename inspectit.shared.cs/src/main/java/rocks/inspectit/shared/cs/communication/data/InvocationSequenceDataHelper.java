@@ -1,4 +1,4 @@
-package rocks.inspectit.shared.all.communication.data;
+package rocks.inspectit.shared.cs.communication.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,13 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.mutable.MutableDouble;
+
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.tracing.data.Span;
+import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 
 /**
  * Helper class to easier query {@link InvocationSequenceData} objects.
@@ -144,6 +151,17 @@ public final class InvocationSequenceDataHelper {
 	}
 
 	/**
+	 * If invocation has span ident connected.
+	 *
+	 * @param data
+	 *            InvocationSequenceData
+	 * @return <code>true</code> if span ident exists in this invocation.
+	 */
+	public static boolean hasSpanIdent(InvocationSequenceData data) {
+		return null != data.getSpanIdent();
+	}
+
+	/**
 	 * Checks whether this data object has a parent element.
 	 *
 	 * @param data
@@ -163,6 +181,22 @@ public final class InvocationSequenceDataHelper {
 	 */
 	public static boolean isRootElementInSequence(InvocationSequenceData data) {
 		return !hasParentElementInSequence(data);
+	}
+
+	/**
+	 * Returns root object of the sequence the given data belongs to by iterating till the tree
+	 * root.
+	 *
+	 * @param data
+	 *            Invocation
+	 * @return Root invocation of the sequence given invocation belongs to.
+	 */
+	public static InvocationSequenceData getRootElementInSequence(InvocationSequenceData data) {
+		InvocationSequenceData invoc = data;
+		while (null != invoc.getParentSequence()) {
+			invoc = invoc.getParentSequence();
+		}
+		return invoc;
 	}
 
 	/**
@@ -191,10 +225,24 @@ public final class InvocationSequenceDataHelper {
 	 * Calculates the duration starting from this invocation sequence data element.
 	 *
 	 * @param data
-	 *            the <code>InvocationSequenceData</code> object.
+	 *            the {@link InvocationSequenceData}s object.
 	 * @return the duration starting from this invocation sequence data element.
 	 */
 	public static double calculateDuration(InvocationSequenceData data) {
+		return calculateDuration(data, null);
+	}
+
+	/**
+	 * Calculates the duration starting from this invocation sequence data element. Includes span
+	 * duration as last resource if the span ident exists on the data.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @param spanService
+	 *            Span service providing the additional span information if needed.
+	 * @return the duration starting from this invocation sequence data element.
+	 */
+	public static double calculateDuration(InvocationSequenceData data, ISpanService spanService) {
 		double duration = -1.0d;
 		if (InvocationSequenceDataHelper.hasTimerData(data)) {
 			duration = data.getTimerData().getDuration();
@@ -202,6 +250,9 @@ public final class InvocationSequenceDataHelper {
 			duration = data.getSqlStatementData().getDuration();
 		} else if (InvocationSequenceDataHelper.isRootElementInSequence(data)) {
 			duration = data.getDuration();
+		} else if ((null != spanService) && hasSpanIdent(data)) {
+			Span span = spanService.get(data.getSpanIdent());
+			return span.getDuration();
 		}
 		return duration;
 	}
@@ -214,27 +265,34 @@ public final class InvocationSequenceDataHelper {
 	 * @return The duration of all nested sequences (with their nested sequences as well).
 	 */
 	public static double computeNestedDuration(InvocationSequenceData data) {
+		return computeNestedDuration(data, null);
+	}
+
+	/**
+	 * Computes the duration of the nested invocation elements. Includes span duration as last
+	 * resource if the span ident exists on the data.
+	 *
+	 * @param data
+	 *            The data objects which is inspected for its nested elements.
+	 * @param spanService
+	 *            Span service providing the additional span information if needed.
+	 * @return The duration of all nested sequences (with their nested sequences as well).
+	 */
+	public static double computeNestedDuration(InvocationSequenceData data, ISpanService spanService) {
 		if (data.getNestedSequences().isEmpty()) {
 			return 0;
 		}
 
 		double nestedDuration = 0d;
-		boolean added = false;
 		for (InvocationSequenceData nestedData : data.getNestedSequences()) {
-			if (hasTimerData(nestedData)) {
-				nestedDuration = nestedDuration + nestedData.getTimerData().getDuration();
-				added = true;
-			} else if (hasSQLData(nestedData)) {
-				nestedDuration = nestedDuration + nestedData.getSqlStatementData().getDuration();
-				added = true;
-			}
-
-			if (!added && !nestedData.getNestedSequences().isEmpty()) {
+			double duration = calculateDuration(nestedData, spanService);
+			if (duration != -1.0d) {
+				nestedDuration += duration;
+			} else if (!nestedData.getNestedSequences().isEmpty()) {
 				// nothing was added, but there could be child elements with
 				// time measurements
-				nestedDuration = nestedDuration + computeNestedDuration(nestedData);
+				nestedDuration += computeNestedDuration(nestedData, spanService);
 			}
-			added = false;
 		}
 
 		return nestedDuration;

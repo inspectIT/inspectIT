@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.AbstractRootEditor;
@@ -86,9 +85,9 @@ public interface ISubView {
 	 * (like live data from the server). This is only needed if some specific needs to be displayed.
 	 *
 	 * @param data
-	 *            The list of {@link DefaultData} objects.
+	 *            The list of objects.
 	 */
-	void setDataInput(List<? extends DefaultData> data);
+	void setDataInput(List<? extends Object> data);
 
 	/**
 	 * Returns the control class of this view controller.
