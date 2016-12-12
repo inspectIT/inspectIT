@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Image;
 import rocks.inspectit.shared.all.cmr.model.MethodIdentToSensorType;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.AbstractRemoteSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
@@ -120,7 +121,11 @@ public enum SensorTypeEnum {
 	/** The Remote jms listener sensor. */
 	REMOTE_JMS_LISTENER(RemoteJmsListenerServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
 	/** The manual Remote server sensor. */
-	REMOTE_MANUAL_SERVER(RemoteManualServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false);
+	REMOTE_MANUAL_SERVER(RemoteManualServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** Tracing view. */
+	TRACING(AbstractRemoteSensorConfig.class.getName(), InspectITImages.IMG_REMOTE, false),
+	/** Tracing details view. */
+	TRACING_DETAILS(AbstractRemoteSensorConfig.class.getName() + "#deatils", InspectITImages.IMG_REMOTE, false);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full

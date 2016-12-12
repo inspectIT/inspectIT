@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.ExceptionSensorDataQueryFactory;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;

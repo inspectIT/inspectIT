@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -23,13 +24,12 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.IDataComparator;
-import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
+import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
 import rocks.inspectit.ui.rcp.InspectIT;
@@ -39,6 +39,7 @@ import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
+import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -309,7 +310,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean canOpenInput(List<? extends DefaultData> data) {
+	public boolean canOpenInput(List<? extends Object> data) {
 		if (null == data) {
 			return false;
 		}
@@ -318,11 +319,17 @@ public class MethodInvocInputController extends AbstractTableInputController {
 			return true;
 		}
 
-		if (!(data.get(0) instanceof InvocationSequenceData)) {
-			return false;
+		// we accept invocation sequences
+		if (data.get(0) instanceof InvocationSequenceData) {
+			return true;
 		}
 
-		return true;
+		// or one trace data
+		if (data.get(0) instanceof TraceTreeData) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -339,7 +346,19 @@ public class MethodInvocInputController extends AbstractTableInputController {
 		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
-			List<InvocationSequenceData> invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
+			List<? extends Object> input = (List<? extends Object>) inputElement;
+
+			if (CollectionUtils.isEmpty(input)) {
+				return new Object[0];
+			}
+
+			List<InvocationSequenceData> invocationSequenceDataList;
+			if (input.get(0) instanceof TraceTreeData) {
+				invocationSequenceDataList = TraceTreeData.collectInvocations((TraceTreeData) input.get(0), new ArrayList<InvocationSequenceData>());
+			} else {
+				invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
+			}
+
 			timerDataList = getRawInputList(invocationSequenceDataList, new ArrayList<TimerData>());
 			if (!rawMode) {
 				AggregationPerformer<TimerData> aggregationPerformer = new AggregationPerformer<>(new TimerDataAggregator());

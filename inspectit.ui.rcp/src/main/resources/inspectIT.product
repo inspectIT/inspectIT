@@ -116,6 +116,7 @@ END OF TERMS AND CONDITIONS
       <plugin id="com.springsource.javax.inject"/>
       <plugin id="com.springsource.org.aopalliance"/>
       <plugin id="de.javakaffee.kryo-serializers"/>
+      <plugin id="io.opentracing.api"/>
       <plugin id="jackson-core-asl"/>
       <plugin id="jackson-mapper-asl"/>
       <plugin id="javax.servlet"/>

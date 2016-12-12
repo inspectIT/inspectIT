@@ -59,7 +59,7 @@ public interface IRootEditor {
 	 * @param data
 	 *            The list of {@link DefaultData} objects.
 	 */
-	void setDataInput(List<? extends DefaultData> data);
+	void setDataInput(List<? extends Object> data);
 
 	/**
 	 * Returns the preference panel.

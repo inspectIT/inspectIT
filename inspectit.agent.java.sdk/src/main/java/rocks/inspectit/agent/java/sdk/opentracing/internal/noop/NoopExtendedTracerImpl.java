@@ -1,5 +1,9 @@
 package rocks.inspectit.agent.java.sdk.opentracing.internal.noop;
 
+import java.util.Collections;
+import java.util.Map.Entry;
+
+import io.opentracing.NoopSpanContext;
 import io.opentracing.NoopTracer;
 import io.opentracing.NoopTracerFactory;
 import io.opentracing.SpanContext;
@@ -26,6 +30,17 @@ public final class NoopExtendedTracerImpl implements ExtendedTracer, NoopTracer 
 	 * The noop tracer from the opentracing.io.
 	 */
 	private static final NoopTracer DEFAULT_NOOP_TRACER = NoopTracerFactory.create();
+
+	/**
+	 * The noop context instance to return when calling {@link #getCurrentContext()}.
+	 */
+	private static final NoopSpanContext NOOP_SPAN_CONTEXT_INSTANCE = new NoopSpanContext() {
+
+		@Override
+		public Iterable<Entry<String, String>> baggageItems() {
+			return Collections.emptyList();
+		}
+	};
 
 	/**
 	 * Private constructor, use {@link #INSTANCE}.
@@ -85,6 +100,14 @@ public final class NoopExtendedTracerImpl implements ExtendedTracer, NoopTracer 
 	@Override
 	public SpanBuilder buildSpan(String operationName, String referenceType, boolean useThreadContext) {
 		return DEFAULT_NOOP_TRACER.buildSpan(operationName);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SpanContext getCurrentContext() {
+		return NOOP_SPAN_CONTEXT_INSTANCE;
 	}
 
 }

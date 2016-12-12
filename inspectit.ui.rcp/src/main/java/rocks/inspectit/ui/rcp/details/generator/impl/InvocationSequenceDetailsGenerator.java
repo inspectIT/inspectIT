@@ -5,9 +5,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.ui.rcp.details.DetailsCellContent;
 import rocks.inspectit.ui.rcp.details.DetailsTable;
 import rocks.inspectit.ui.rcp.details.YesNoDetailsCellContent;

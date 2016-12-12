@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,7 +18,11 @@ import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
+import rocks.inspectit.shared.all.tracing.data.Span;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 import rocks.inspectit.shared.all.util.ObjectUtils;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 import rocks.inspectit.ui.rcp.InspectIT;
 
 /**
@@ -80,6 +85,34 @@ public final class OccurrenceFinderFactory {
 	private static InvocationOccurenceFinder invocationOccurenceFinder = new InvocationOccurenceFinder();
 
 	/**
+	 * Occurrence finder for {@link SpanIdent}.
+	 */
+	private static SpanOccurenceFinder spanOccurenceFinder = new SpanOccurenceFinder();
+
+	/**
+	 * Counts number of occurrences of the element in the given invocations.
+	 *
+	 * @param invocations
+	 *            Invocations to search in.
+	 * @param element
+	 *            Wanted element.
+	 * @param filters
+	 *            Array of filters that each found occurrence has to pass.
+	 * @return Number of occurrences found and filtered.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static ElementOccurrenceCount getOccurrenceCount(List<InvocationSequenceData> invocations, Object element, ViewerFilter[] filters) {
+		OccurrenceFinder finder = getOccurrenceFinder(element);
+		ElementOccurrenceCount total = new ElementOccurrenceCount();
+		for (InvocationSequenceData invocation : invocations) {
+			ElementOccurrenceCount occurrenceCount = finder.getOccurrenceCount(invocation, element, filters, null);
+			total.setFilteredOccurrences(total.getFilteredOccurrences() + occurrenceCount.getFilteredOccurrences());
+			total.setVisibleOccurrences(total.getVisibleOccurrences() + occurrenceCount.getTotalOccurrences());
+		}
+		return total;
+	}
+
+	/**
 	 * Counts number of occurrences of the element in the given invocation.
 	 *
 	 * @param invocation
@@ -94,6 +127,34 @@ public final class OccurrenceFinderFactory {
 	public static ElementOccurrenceCount getOccurrenceCount(InvocationSequenceData invocation, Object element, ViewerFilter[] filters) {
 		OccurrenceFinder finder = getOccurrenceFinder(element);
 		return finder.getOccurrenceCount(invocation, element, filters, null);
+	}
+
+	/**
+	 * Returns the {@link InvocationSequenceData} that holds the proper occurrence of the wanted
+	 * element if it exists.
+	 *
+	 * @param invocations
+	 *            Invocations to search in.
+	 * @param element
+	 *            Wanted element.
+	 * @param occurrence
+	 *            Wanted occurrence.
+	 * @param filters
+	 *            Array of filters that each found occurrence has to pass.
+	 * @return Returns the {@link InvocationSequenceData} that holds the proper occurrence of the
+	 *         wanted element if it exists.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static InvocationSequenceData getOccurrence(List<InvocationSequenceData> invocations, Object element, int occurrence, ViewerFilter[] filters) {
+		OccurrenceFinder finder = getOccurrenceFinder(element);
+		MutableInt occurrencesLeft = new MutableInt(occurrence);
+		for (InvocationSequenceData invocation : invocations) {
+			InvocationSequenceData found = finder.getOccurrence(invocation, element, occurrencesLeft, filters);
+			if (found != null) {
+				return found;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -150,6 +211,8 @@ public final class OccurrenceFinderFactory {
 			return exceptionOccurrenceFinder;
 		} else if (InvocationSequenceData.class.isAssignableFrom(element.getClass())) {
 			return invocationOccurenceFinder;
+		} else if (Span.class.isAssignableFrom(element.getClass())) {
+			return spanOccurenceFinder;
 		}
 		RuntimeException exception = new RuntimeException(
 				"Occurrence finder factory was not able to supply the correct occurrence finder for the object of class " + element.getClass().getName() + ".");
@@ -574,6 +637,49 @@ public final class OccurrenceFinderFactory {
 		public Class<? extends InvocationSequenceData> getConcreteClass() {
 			return InvocationSequenceData.class;
 		}
+
+	}
+
+	/**
+	 * Occurrence finder for {@link SpanIdent} in the invocation.
+	 *
+	 * @author Ivan Senic
+	 *
+	 */
+	private static class SpanOccurenceFinder extends OccurrenceFinder<Span> {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Span getEmptyTemplate() {
+			return new ServerSpan();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean occurrenceFound(InvocationSequenceData invocationData, Span template) {
+			return InvocationSequenceDataHelper.hasSpanIdent(invocationData) && Objects.equals(invocationData.getSpanIdent(), template.getSpanIdent());
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean doesTemplateEqualsElement(Span template, Span element) {
+			return Objects.equals(template.getSpanIdent(), element.getSpanIdent());
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Class<? extends Span> getConcreteClass() {
+			return Span.class;
+		}
+
 
 	}
 }

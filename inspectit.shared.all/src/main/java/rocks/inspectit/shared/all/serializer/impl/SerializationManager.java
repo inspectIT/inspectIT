@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -54,15 +55,6 @@ import rocks.inspectit.shared.all.cmr.model.PlatformSensorTypeIdent;
 import rocks.inspectit.shared.all.cmr.model.SensorTypeIdent;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
-import rocks.inspectit.shared.all.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ExceptionSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.HttpTimerDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.InvocationAwareDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.MethodSensorDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
-import rocks.inspectit.shared.all.communication.comparator.SqlStatementDataComparatorEnum;
-import rocks.inspectit.shared.all.communication.comparator.TimerDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.AggregatedHttpTimerData;
 import rocks.inspectit.shared.all.communication.data.AggregatedSqlStatementData;
@@ -132,6 +124,7 @@ import rocks.inspectit.shared.all.serializer.IKryoProvider;
 import rocks.inspectit.shared.all.serializer.ISerializer;
 import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.tracing.data.ClientSpan;
 import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
@@ -153,6 +146,12 @@ import rocks.inspectit.shared.all.util.TimeFrame;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Lazy
 public class SerializationManager implements ISerializer, IKryoProvider, InitializingBean {
+
+	/**
+	 * Logger of this class.
+	 */
+	@Log
+	Logger logger;
 
 	/**
 	 * Main {@link Kryo} instance.
@@ -253,7 +252,6 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		/** Common data classes */
 		kryo.register(MutableInt.class, new FieldSerializer<MutableInt>(kryo, MutableInt.class));
 		kryo.register(InvocationSequenceData.class, new InvocationSequenceCustomCompatibleFieldSerializer(kryo, InvocationSequenceData.class, schemaManager));
-		// TODO Check if we want for these
 		kryo.register(TimerData.class, new InvocationAwareDataSerializer<TimerData>(kryo, TimerData.class, schemaManager));
 		kryo.register(HttpTimerData.class, new InvocationAwareDataSerializer<HttpTimerData>(kryo, HttpTimerData.class, schemaManager));
 		kryo.register(SqlStatementData.class, new InvocationAwareDataSerializer<SqlStatementData>(kryo, SqlStatementData.class, schemaManager));
@@ -311,98 +309,92 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		SynchronizedCollectionsSerializer.registerSerializers(kryo);
 		kryo.register(StackTraceElement.class, new StackTraceElementSerializer());
 
-		// added with INSPECTIT-887
-		kryo.register(DefaultDataComparatorEnum.class, new EnumSerializer(DefaultDataComparatorEnum.class));
-		kryo.register(MethodSensorDataComparatorEnum.class, new EnumSerializer(MethodSensorDataComparatorEnum.class));
-		kryo.register(InvocationAwareDataComparatorEnum.class, new EnumSerializer(InvocationAwareDataComparatorEnum.class));
-		kryo.register(TimerDataComparatorEnum.class, new EnumSerializer(TimerDataComparatorEnum.class));
-		kryo.register(HttpTimerDataComparatorEnum.class, new EnumSerializer(HttpTimerDataComparatorEnum.class));
-		kryo.register(SqlStatementDataComparatorEnum.class, new EnumSerializer(SqlStatementDataComparatorEnum.class));
-		kryo.register(ExceptionSensorDataComparatorEnum.class, new EnumSerializer(ExceptionSensorDataComparatorEnum.class));
-		kryo.register(AggregatedExceptionSensorDataComparatorEnum.class, new EnumSerializer(AggregatedExceptionSensorDataComparatorEnum.class));
-		kryo.register(InvocationAwareDataComparatorEnum.class, new EnumSerializer(InvocationAwareDataComparatorEnum.class));
-		kryo.register(ResultComparator.class, new FieldSerializer<ResultComparator<?>>(kryo, ResultComparator.class));
+		// ATTENTION: registration ID has been increased by 9 as there were 9 classes removed from
+		// registration at this point with ticket INSPECTIT-2276
+		// there is no other way then using reflection here
+		int nextRegistrationId = kryo.getNextRegistrationId();
+		nextRegistrationId += 9;
 
 		// added with INSPECTIT-950
-		kryo.register(TimeFrame.class, new CustomCompatibleFieldSerializer<TimeFrame>(kryo, TimeFrame.class, schemaManager));
+		kryo.register(TimeFrame.class, new CustomCompatibleFieldSerializer<TimeFrame>(kryo, TimeFrame.class, schemaManager), nextRegistrationId++);
 
 		// added with INSPECTIT-480
 		// needed for KryoNet
-		kryoNetNetwork.register(kryo);
+		nextRegistrationId = kryoNetNetwork.register(kryo, nextRegistrationId);
 
 		// added with INSPECTIT-632
-		kryo.register(BusinessException.class, new FieldSerializer<BusinessException>(kryo, BusinessException.class));
-		kryo.register(TechnicalException.class, new FieldSerializer<TechnicalException>(kryo, TechnicalException.class));
-		kryo.register(RemoteException.class, new FieldSerializer<RemoteException>(kryo, RemoteException.class));
-		kryo.register(StorageErrorCodeEnum.class, new EnumSerializer(StorageErrorCodeEnum.class));
-		kryo.register(AgentManagementErrorCodeEnum.class, new EnumSerializer(AgentManagementErrorCodeEnum.class));
+		kryo.register(BusinessException.class, new FieldSerializer<BusinessException>(kryo, BusinessException.class), nextRegistrationId++);
+		kryo.register(TechnicalException.class, new FieldSerializer<TechnicalException>(kryo, TechnicalException.class), nextRegistrationId++);
+		kryo.register(RemoteException.class, new FieldSerializer<RemoteException>(kryo, RemoteException.class), nextRegistrationId++);
+		kryo.register(StorageErrorCodeEnum.class, new EnumSerializer(StorageErrorCodeEnum.class), nextRegistrationId++);
+		kryo.register(AgentManagementErrorCodeEnum.class, new EnumSerializer(AgentManagementErrorCodeEnum.class), nextRegistrationId++);
 		kryo.register(InvocationTargetException.class, new FieldSerializer<InvocationTargetException>(kryo, InvocationTargetException.class) {
 			@Override
 			protected InvocationTargetException create(Kryo kryo, Input input, Class<InvocationTargetException> type) {
 				return new InvocationTargetException(null);
 			}
-		});
+		}, nextRegistrationId++);
 
 		// added with INSPECTIT-1924
-		kryo.register(ConfigurationInterfaceErrorCodeEnum.class, new EnumSerializer(ConfigurationInterfaceErrorCodeEnum.class));
+		kryo.register(ConfigurationInterfaceErrorCodeEnum.class, new EnumSerializer(ConfigurationInterfaceErrorCodeEnum.class), nextRegistrationId++);
 
 		// added with INSPECTIT-1971
-		kryo.register(LoggingData.class, new InvocationAwareDataSerializer<LoggingData>(kryo, LoggingData.class, schemaManager));
+		kryo.register(LoggingData.class, new InvocationAwareDataSerializer<LoggingData>(kryo, LoggingData.class, schemaManager), nextRegistrationId++);
 
 		// added with INSPECTIT-1915
-		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true));
-		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager));
-		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager));
+		kryo.register(JmxSensorTypeIdent.class, new CustomCompatibleFieldSerializer<JmxSensorTypeIdent>(kryo, JmxSensorTypeIdent.class, schemaManager, true), nextRegistrationId++);
+		kryo.register(JmxDefinitionDataIdent.class, new CustomCompatibleFieldSerializer<JmxDefinitionDataIdent>(kryo, JmxDefinitionDataIdent.class, schemaManager), nextRegistrationId++);
+		kryo.register(JmxSensorValueData.class, new CustomCompatibleFieldSerializer<JmxSensorValueData>(kryo, JmxSensorValueData.class, schemaManager), nextRegistrationId++);
 
 		// added with INSPECTIT-1849
-		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager));
+		kryo.register(HttpInfo.class, new CustomCompatibleFieldSerializer<HttpInfo>(kryo, HttpInfo.class, schemaManager), nextRegistrationId++);
 
 		// added with INSPECTIT-1919
-		kryo.register(AgentConfig.class, new FieldSerializer<AgentConfig>(kryo, AgentConfig.class));
-		kryo.register(StrategyConfig.class, new FieldSerializer<StrategyConfig>(kryo, StrategyConfig.class));
-		kryo.register(PlatformSensorTypeConfig.class, new FieldSerializer<PlatformSensorTypeConfig>(kryo, PlatformSensorTypeConfig.class));
-		kryo.register(MethodSensorTypeConfig.class, new FieldSerializer<MethodSensorTypeConfig>(kryo, MethodSensorTypeConfig.class));
-		kryo.register(ExceptionSensorTypeConfig.class, new FieldSerializer<ExceptionSensorTypeConfig>(kryo, ExceptionSensorTypeConfig.class));
-		kryo.register(PropertyPath.class, new FieldSerializer<PropertyPath>(kryo, PropertyPath.class));
-		kryo.register(PropertyPathStart.class, new FieldSerializer<PropertyPathStart>(kryo, PropertyPathStart.class));
-		kryo.register(InstrumentationDefinition.class, new FieldSerializer<InstrumentationDefinition>(kryo, InstrumentationDefinition.class));
-		kryo.register(MethodInstrumentationConfig.class, new FieldSerializer<MethodInstrumentationConfig>(kryo, MethodInstrumentationConfig.class));
-		kryo.register(SensorInstrumentationPoint.class, new FieldSerializer<SensorInstrumentationPoint>(kryo, SensorInstrumentationPoint.class));
-		kryo.register(SpecialInstrumentationPoint.class, new FieldSerializer<SpecialInstrumentationPoint>(kryo, SpecialInstrumentationPoint.class));
-		kryo.register(SpecialInstrumentationType.class, new EnumSerializer(SpecialInstrumentationType.class));
-		kryo.register(PriorityEnum.class, new EnumSerializer(PriorityEnum.class));
-		kryo.register(EqualsMatchPattern.class, new FieldSerializer<EqualsMatchPattern>(kryo, EqualsMatchPattern.class));
-		kryo.register(WildcardMatchPattern.class, new FieldSerializer<WildcardMatchPattern>(kryo, WildcardMatchPattern.class));
+		kryo.register(AgentConfig.class, new FieldSerializer<AgentConfig>(kryo, AgentConfig.class), nextRegistrationId++);
+		kryo.register(StrategyConfig.class, new FieldSerializer<StrategyConfig>(kryo, StrategyConfig.class), nextRegistrationId++);
+		kryo.register(PlatformSensorTypeConfig.class, new FieldSerializer<PlatformSensorTypeConfig>(kryo, PlatformSensorTypeConfig.class), nextRegistrationId++);
+		kryo.register(MethodSensorTypeConfig.class, new FieldSerializer<MethodSensorTypeConfig>(kryo, MethodSensorTypeConfig.class), nextRegistrationId++);
+		kryo.register(ExceptionSensorTypeConfig.class, new FieldSerializer<ExceptionSensorTypeConfig>(kryo, ExceptionSensorTypeConfig.class), nextRegistrationId++);
+		kryo.register(PropertyPath.class, new FieldSerializer<PropertyPath>(kryo, PropertyPath.class), nextRegistrationId++);
+		kryo.register(PropertyPathStart.class, new FieldSerializer<PropertyPathStart>(kryo, PropertyPathStart.class), nextRegistrationId++);
+		kryo.register(InstrumentationDefinition.class, new FieldSerializer<InstrumentationDefinition>(kryo, InstrumentationDefinition.class), nextRegistrationId++);
+		kryo.register(MethodInstrumentationConfig.class, new FieldSerializer<MethodInstrumentationConfig>(kryo, MethodInstrumentationConfig.class), nextRegistrationId++);
+		kryo.register(SensorInstrumentationPoint.class, new FieldSerializer<SensorInstrumentationPoint>(kryo, SensorInstrumentationPoint.class), nextRegistrationId++);
+		kryo.register(SpecialInstrumentationPoint.class, new FieldSerializer<SpecialInstrumentationPoint>(kryo, SpecialInstrumentationPoint.class), nextRegistrationId++);
+		kryo.register(SpecialInstrumentationType.class, new EnumSerializer(SpecialInstrumentationType.class), nextRegistrationId++);
+		kryo.register(PriorityEnum.class, new EnumSerializer(PriorityEnum.class), nextRegistrationId++);
+		kryo.register(EqualsMatchPattern.class, new FieldSerializer<EqualsMatchPattern>(kryo, EqualsMatchPattern.class), nextRegistrationId++);
+		kryo.register(WildcardMatchPattern.class, new FieldSerializer<WildcardMatchPattern>(kryo, WildcardMatchPattern.class), nextRegistrationId++);
 		// class cache structures
-		kryo.register(ClassType.class, new FieldSerializer<ClassType>(kryo, ClassType.class));
-		kryo.register(InterfaceType.class, new FieldSerializer<InterfaceType>(kryo, InterfaceType.class));
-		kryo.register(AnnotationType.class, new FieldSerializer<AnnotationType>(kryo, AnnotationType.class));
-		kryo.register(MethodType.class, new FieldSerializer<MethodType>(kryo, MethodType.class));
-		kryo.register(ArraySet.class, new CollectionSerializer());
-		kryo.register(SortedArraySet.class, new CollectionSerializer());
-		kryo.register(MethodTypeSet.class, new CollectionSerializer());
-		kryo.register(TypeSet.class, new CollectionSerializer());
-		kryo.register(TypeWithAnnotationsSet.class, new CollectionSerializer());
+		kryo.register(ClassType.class, new FieldSerializer<ClassType>(kryo, ClassType.class), nextRegistrationId++);
+		kryo.register(InterfaceType.class, new FieldSerializer<InterfaceType>(kryo, InterfaceType.class), nextRegistrationId++);
+		kryo.register(AnnotationType.class, new FieldSerializer<AnnotationType>(kryo, AnnotationType.class), nextRegistrationId++);
+		kryo.register(MethodType.class, new FieldSerializer<MethodType>(kryo, MethodType.class), nextRegistrationId++);
+		kryo.register(ArraySet.class, new CollectionSerializer(), nextRegistrationId++);
+		kryo.register(SortedArraySet.class, new CollectionSerializer(), nextRegistrationId++);
+		kryo.register(MethodTypeSet.class, new CollectionSerializer(), nextRegistrationId++);
+		kryo.register(TypeSet.class, new CollectionSerializer(), nextRegistrationId++);
+		kryo.register(TypeWithAnnotationsSet.class, new CollectionSerializer(), nextRegistrationId++);
 
 		// added with INSPECTIT-2071
-		kryo.register(JmxAttributeDescriptor.class, new FieldSerializer<JmxAttributeDescriptor>(kryo, JmxAttributeDescriptor.class));
-		kryo.register(JmxSensorTypeConfig.class, new FieldSerializer<JmxSensorTypeConfig>(kryo, JmxSensorTypeConfig.class));
+		kryo.register(JmxAttributeDescriptor.class, new FieldSerializer<JmxAttributeDescriptor>(kryo, JmxAttributeDescriptor.class), nextRegistrationId++);
+		kryo.register(JmxSensorTypeConfig.class, new FieldSerializer<JmxSensorTypeConfig>(kryo, JmxSensorTypeConfig.class), nextRegistrationId++);
 
 		// added with INSPECTIT-1804, INSPECTIT-1807
-		kryo.register(BusinessContextErrorCodeEnum.class, new EnumSerializer(BusinessContextErrorCodeEnum.class));
-		kryo.register(ApplicationData.class, new CustomCompatibleFieldSerializer<ApplicationData>(kryo, ApplicationData.class, schemaManager));
-		kryo.register(BusinessTransactionData.class, new CustomCompatibleFieldSerializer<BusinessTransactionData>(kryo, BusinessTransactionData.class, schemaManager));
+		kryo.register(BusinessContextErrorCodeEnum.class, new EnumSerializer(BusinessContextErrorCodeEnum.class), nextRegistrationId++);
+		kryo.register(ApplicationData.class, new CustomCompatibleFieldSerializer<ApplicationData>(kryo, ApplicationData.class, schemaManager), nextRegistrationId++);
+		kryo.register(BusinessTransactionData.class, new CustomCompatibleFieldSerializer<BusinessTransactionData>(kryo, BusinessTransactionData.class, schemaManager), nextRegistrationId++);
 
 		// added with INSPECTIT-1953
-		kryo.register(AlertErrorCodeEnum.class, new EnumSerializer(AlertErrorCodeEnum.class));
+		kryo.register(AlertErrorCodeEnum.class, new EnumSerializer(AlertErrorCodeEnum.class), nextRegistrationId++);
 
 		// added with INSPECTIT-2226
-		kryo.register(SubstitutionDescriptor.class, new FieldSerializer<SubstitutionDescriptor>(kryo, SubstitutionDescriptor.class));
+		kryo.register(SubstitutionDescriptor.class, new FieldSerializer<SubstitutionDescriptor>(kryo, SubstitutionDescriptor.class), nextRegistrationId++);
 
 		// added with INSPECTIT-1921
-		kryo.register(SpanIdent.class, new CustomCompatibleFieldSerializer<SpanIdent>(kryo, SpanIdent.class, schemaManager));
-		kryo.register(ClientSpan.class, new CustomCompatibleFieldSerializer<ClientSpan>(kryo, ClientSpan.class, schemaManager, true));
-		kryo.register(ServerSpan.class, new CustomCompatibleFieldSerializer<ServerSpan>(kryo, ServerSpan.class, schemaManager, true));
+		kryo.register(SpanIdent.class, new CustomCompatibleFieldSerializer<SpanIdent>(kryo, SpanIdent.class, schemaManager), nextRegistrationId++);
+		kryo.register(ClientSpan.class, new CustomCompatibleFieldSerializer<ClientSpan>(kryo, ClientSpan.class, schemaManager, true), nextRegistrationId++);
+		kryo.register(ServerSpan.class, new CustomCompatibleFieldSerializer<ServerSpan>(kryo, ServerSpan.class, schemaManager, true), nextRegistrationId++);
 	}
 
 	/**

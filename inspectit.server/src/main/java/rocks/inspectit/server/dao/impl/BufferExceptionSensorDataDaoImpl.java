@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import rocks.inspectit.server.dao.ExceptionSensorDataDao;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.cs.indexing.AbstractBranch;
 import rocks.inspectit.shared.cs.indexing.aggregation.Aggregators;
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.ExceptionSensorDataQueryFactory;

@@ -20,12 +20,12 @@ import rocks.inspectit.server.influx.util.InfluxQueryFactory;
 import rocks.inspectit.server.influx.util.QueryResultWrapper;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
-import rocks.inspectit.shared.all.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.AlertErrorCodeEnum;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 
 /**
@@ -143,15 +143,6 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@MethodLog
-	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
-		InvocationSequenceData result = invocationDataDao.getInvocationSequenceDetail(template);
-		return result;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -180,6 +171,24 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 		}
 
 		return getInvocationSequenceOverview(0, invocationSequenceIds, limit, resultComparator);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@MethodLog
+	public InvocationSequenceData getInvocationSequenceDetail(InvocationSequenceData template) {
+		InvocationSequenceData result = invocationDataDao.getInvocationSequenceDetail(template);
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<InvocationSequenceData> getInvocationSequenceDetail(long traceId) {
+		return invocationDataDao.getInvocationSequenceDetail(traceId);
 	}
 
 	/**

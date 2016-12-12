@@ -32,6 +32,7 @@
  # objensis
  # okhttp
  # okio
+ # opentracing-api
  # retrofit
  # spring-aop
  # spring-asm
@@ -69,7 +70,7 @@ Copyright (c) 2003-2013, Objenesis Team and all contributors. (objensis)
 
 Copyright (c) 2008 Google Inc. (gson) 
 
-Coptright (c) (converter-jackson, gson, jackson-core, logging-interceptor, okhttp, okio, retrofit, converter-moshi, moshi)
+Coptright (c) (converter-jackson, gson, jackson-core, logging-interceptor, okhttp, okio, opentracing-api, retrofit, converter-moshi, moshi)
 
 Note that copyright holder of a work retains his full rights without any 
 explicit notice.

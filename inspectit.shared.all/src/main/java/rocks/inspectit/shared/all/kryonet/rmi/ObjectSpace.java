@@ -481,7 +481,7 @@ public class ObjectSpace {
 					responseID = nextResponseNum++;
 					if (nextResponseNum == 64) {
 						nextResponseNum = 1; // Keep number under 2^6, avoid 0 (see else statement
-												// below)
+						// below)
 					}
 				}
 				// Pack return value and exception info into the top two bits
@@ -764,11 +764,16 @@ public class ObjectSpace {
 	 * Registers the classes needed to use ObjectSpaces. This should be called before any
 	 * connections are opened.
 	 *
+	 * @param nextRegistrationId
+	 *            Registration id to start registering at.
+	 *
+	 * @return updated value of the next registration id
+	 *
 	 * @see Kryo#register(Class, Serializer)
 	 */
-	static public void registerClasses(final Kryo kryo) {
-		kryo.register(Object[].class);
-		kryo.register(InvokeMethod.class);
+	static public int registerClasses(final Kryo kryo, int nextRegistrationId) {
+		kryo.register(Object[].class, nextRegistrationId++);
+		kryo.register(InvokeMethod.class, nextRegistrationId++);
 
 		FieldSerializer serializer = (FieldSerializer) kryo.register(InvokeMethodResult.class).getSerializer();
 		serializer.getField("objectID").setClass(int.class, new Serializer<Integer>() {
@@ -800,7 +805,8 @@ public class ObjectSpace {
 				}
 				return object;
 			}
-		});
+		}, nextRegistrationId++);
+		return nextRegistrationId;
 	}
 
 	static class CachedMethod {

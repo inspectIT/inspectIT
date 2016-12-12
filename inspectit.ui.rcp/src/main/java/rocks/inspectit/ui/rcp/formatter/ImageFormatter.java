@@ -15,7 +15,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
 
+import io.opentracing.References;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
+import rocks.inspectit.shared.all.tracing.data.PropagationType;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
@@ -664,5 +667,64 @@ public final class ImageFormatter {
 			imageKey = InspectITImages.IMG_QUESTION_CIRCLE_FRAME;
 		}
 		return InspectIT.getDefault().getImage(imageKey);
+	}
+
+	/**
+	 * Returns icon for the {@link PropagationType}.
+	 *
+	 * @param propagationType
+	 *            {@link PropagationType}.
+	 * @return Image
+	 */
+	public static Image getPropagationImage(PropagationType propagationType) {
+		if (null == propagationType) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_LOGO);
+		}
+
+		switch (propagationType) {
+		case HTTP:
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_HTTP);
+		case JMS:
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_JMS);
+		case PROCESS:
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_ACTIVITY);
+		default:
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_REMOTE);
+		}
+	}
+
+	/**
+	 * Returns span image based on propagation and reference type.
+	 *
+	 * @param span
+	 *            Span
+	 * @param resourceManager
+	 *            resource manager
+	 * @return image
+	 */
+	public static Image getSpanImage(Span span, ResourceManager resourceManager) {
+		Image propagationImage = getPropagationImage(span.getPropagationType());
+		if (!span.isCaller() && !References.FOLLOWS_FROM.equals(span.getReferenceType())) {
+			return propagationImage;
+		} else {
+			return getOverlayedImage(propagationImage, resourceManager, 1, getReferenceImage(span.getReferenceType()));
+		}
+	}
+
+	/**
+	 * Returns icon for the span reference.
+	 *
+	 * @param reference
+	 *            span reference
+	 * @return Image
+	 * @see References
+	 */
+	public static Image getReferenceImage(String reference) {
+		if (References.CHILD_OF.equals(reference)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_REFERENCE_CHILDOF);
+		} else if (References.FOLLOWS_FROM.equals(reference)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_REFERENCE_FOLLOWSFROM);
+		}
+		return null;
 	}
 }

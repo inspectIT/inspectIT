@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import rocks.inspectit.server.dao.InvocationDataDao;
-import rocks.inspectit.shared.all.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.cs.indexing.AbstractBranch;
 import rocks.inspectit.shared.cs.indexing.query.factory.impl.InvocationSequenceDataQueryFactory;
 
@@ -137,4 +137,14 @@ public class BufferInvocationDataDaoImpl extends AbstractBufferDataDao<Invocatio
 			return super.executeQuery(query, DefaultDataComparatorEnum.TIMESTAMP, limit, false);
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<InvocationSequenceData> getInvocationSequenceDetail(long traceId) {
+		IIndexQuery query = invocationDataQueryFactory.getInvocationSequences(traceId);
+		return super.executeQuery(query, true);
+	}
+
 }
