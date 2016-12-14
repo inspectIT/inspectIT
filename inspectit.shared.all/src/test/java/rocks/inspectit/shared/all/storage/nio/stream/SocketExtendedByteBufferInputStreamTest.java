@@ -110,7 +110,7 @@ public class SocketExtendedByteBufferInputStreamTest extends TestBase {
 		@Test(expectedExceptions = IOException.class)
 		public void endOfStream() throws IOException {
 			Random random = new Random();
-			final int readSize = random.nextInt(8096);
+			final int readSize = 1 + random.nextInt(8096);
 			final int bufferSize = 1024;
 			final byte[] array = new byte[readSize];
 			random.nextBytes(array);
@@ -139,7 +139,7 @@ public class SocketExtendedByteBufferInputStreamTest extends TestBase {
 		@Test(expectedExceptions = IOException.class)
 		public void ioExceptionOnRead() throws IOException {
 			Random random = new Random();
-			final int readSize = random.nextInt(8096);
+			final int readSize = 1 + random.nextInt(8096);
 			final int bufferSize = 1024;
 			final byte[] array = new byte[readSize];
 			random.nextBytes(array);
