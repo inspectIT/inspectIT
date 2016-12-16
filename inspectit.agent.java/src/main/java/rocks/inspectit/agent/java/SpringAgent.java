@@ -31,7 +31,7 @@ import rocks.inspectit.shared.all.version.VersionService;
  * @author Patrice Bouillet
  *
  */
-public class SpringAgent implements IAgent {
+public class SpringAgent implements IAgent, IThreadTransformHelper {
 
 	/**
 	 * The logger of this class. Initialized manually.
@@ -59,6 +59,11 @@ public class SpringAgent implements IAgent {
 	private IByteCodeAnalyzer byteCodeAnalyzer;
 
 	/**
+	 * The thread transform helper.
+	 */
+	private IThreadTransformHelper threadTransformHelper;
+
+	/**
 	 * Set to <code>true</code> if something happened and we need to disable further
 	 * instrumentation.
 	 */
@@ -73,16 +78,6 @@ public class SpringAgent implements IAgent {
 	 * Ignore classes patterns.
 	 */
 	private Collection<IMatchPattern> ignoreClassesPatterns;
-
-	/**
-	 * Thread local to control the instrumentation transform disabled states for threads.
-	 */
-	private ThreadLocal<Boolean> transformDisabledThreadLocal = new ThreadLocal<Boolean>() {
-		@Override
-		protected Boolean initialValue() {
-			return Boolean.FALSE;
-		};
-	};
 
 	/**
 	 * Constructor initializing this agent.
@@ -159,6 +154,7 @@ public class SpringAgent implements IAgent {
 			hookDispatcher = beanFactory.getBean(IHookDispatcher.class);
 			configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
 			byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
+			threadTransformHelper = beanFactory.getBean(IThreadTransformHelper.class);
 
 			// load ignore patterns only once
 			ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
@@ -224,7 +220,7 @@ public class SpringAgent implements IAgent {
 	 */
 	@Override
 	public boolean isThreadTransformDisabled() {
-		return transformDisabledThreadLocal.get();
+		return threadTransformHelper.isThreadTransformDisabled();
 	}
 
 	/**
@@ -232,7 +228,7 @@ public class SpringAgent implements IAgent {
 	 */
 	@Override
 	public void setThreadTransformDisabled(boolean disabled) {
-		transformDisabledThreadLocal.set(Boolean.valueOf(disabled));
+		threadTransformHelper.setThreadTransformDisabled(disabled);
 	}
 
 	/**

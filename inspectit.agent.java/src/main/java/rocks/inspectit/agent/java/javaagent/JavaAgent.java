@@ -24,7 +24,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
@@ -260,7 +259,6 @@ public class JavaAgent implements ClassFileTransformer {
 		LOGGER.info("Preloading classes ...");
 
 		StringIndexOutOfBoundsException.class.getClass();
-		LinkedBlockingQueue.class.getClass();
 
 		LOGGER.info("Preloading classes complete...");
 	}

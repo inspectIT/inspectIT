@@ -8,7 +8,7 @@ import rocks.inspectit.agent.java.hooking.IHookDispatcher;
  * @author Patrice Bouillet
  *
  */
-public interface IAgent {
+public interface IAgent extends IThreadTransformHelper {
 
 	/**
 	 * This method will inspect the given byte code and class name to check if it needs to be
@@ -33,24 +33,6 @@ public interface IAgent {
 	 * @return The hook dispatcher
 	 */
 	IHookDispatcher getHookDispatcher();
-
-	/**
-	 * Returns if the instrumentation transform method for the thread calling this method is
-	 * currently disabled.
-	 *
-	 * @return Returns true if the transform is disabled for current thread, otherwise
-	 *         <code>false</code>.
-	 */
-	boolean isThreadTransformDisabled();
-
-	/**
-	 * Sets if the instrumentation transform method for the thread calling this method is currently
-	 * disabled.
-	 *
-	 * @param disabled
-	 *            <code>true</code> to disable, <code>false</code> otherwise
-	 */
-	void setThreadTransformDisabled(boolean disabled);
 
 	/**
 	 * Defines if the agent should ignore the class with the given name.

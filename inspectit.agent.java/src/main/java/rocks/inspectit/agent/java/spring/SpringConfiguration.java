@@ -22,7 +22,9 @@ import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.connection.impl.AgentAwareClient;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AbstractSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
@@ -105,14 +107,16 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 *
 	 * @param prototypesProvider
 	 *            {@link PrototypesProvider} (autowired)
+	 * @param threadTransformHelper
+	 *            {@link IThreadTransformHelper} (autowired)
 	 * @return Created bean
 	 */
 	@Bean(name = "kryonet-client")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
 	@Autowired
-	public Client getClient(PrototypesProvider prototypesProvider) {
+	public Client getClient(PrototypesProvider prototypesProvider, IThreadTransformHelper threadTransformHelper) {
 		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
-		return new Client(serialization, prototypesProvider);
+		return new AgentAwareClient(serialization, prototypesProvider, threadTransformHelper);
 	}
 
 	/**
