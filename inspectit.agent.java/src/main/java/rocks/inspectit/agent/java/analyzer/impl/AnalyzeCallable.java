@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rocks.inspectit.agent.java.Agent;
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
@@ -32,6 +32,11 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 	private final IConnection connection;
 
 	/**
+	 * {@link IThreadTransformHelper} to block any transformation while doing the remote call.
+	 */
+	private final IThreadTransformHelper threadTransformHelper;
+
+	/**
 	 * Platform ID to pass.
 	 */
 	private final long platformId;
@@ -51,6 +56,9 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 	 *
 	 * @param connection
 	 *            Connection to use.
+	 * @param threadTransformHelper
+	 *            {@link IThreadTransformHelper} to block any transformation while doing the remote
+	 *            call.
 	 * @param platformId
 	 *            Platform ID to pass.
 	 * @param hash
@@ -60,8 +68,9 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 	 * @see IConnection#analyze(long, String,
 	 *      rocks.inspectit.shared.all.instrumentation.classcache.Type)
 	 */
-	public AnalyzeCallable(IConnection connection, long platformId, String hash, Type type) {
+	public AnalyzeCallable(IConnection connection, IThreadTransformHelper threadTransformHelper, long platformId, String hash, Type type) {
 		this.connection = connection;
+		this.threadTransformHelper = threadTransformHelper;
 		this.platformId = platformId;
 		this.hash = hash;
 		this.type = type;
@@ -73,7 +82,7 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 	@Override
 	public InstrumentationDefinition call() throws Exception {
 		// set that transform is disabled from this thread that is doing the call
-		Agent.agent.setThreadTransformDisabled(true);
+		threadTransformHelper.setThreadTransformDisabled(true);
 		try {
 			if (connection.isConnected()) {
 				return connection.analyze(platformId, hash, type);
@@ -93,7 +102,7 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 			throw e;
 		} finally {
 			// finally remove the transform flag
-			Agent.agent.setThreadTransformDisabled(false);
+			threadTransformHelper.setThreadTransformDisabled(false);
 		}
 	}
 

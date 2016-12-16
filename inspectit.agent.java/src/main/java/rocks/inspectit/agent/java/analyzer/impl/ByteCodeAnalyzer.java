@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.io.ByteStreams;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.StorageException;
@@ -89,6 +90,12 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 	 */
 	@Autowired
 	private IConnection connection;
+
+	/**
+	 * {@link IThreadTransformHelper} to block any transformation while doing the remote call.
+	 */
+	@Autowired
+	private IThreadTransformHelper threadTransformHelper;
 
 	/**
 	 * {@link IHookDispatcherMapper}.
@@ -193,7 +200,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 				analyzeDependingTypes(type, classLoader);
 
 				// try connecting to server
-				Callable<InstrumentationDefinition> analyzeCallable = new AnalyzeCallable(connection, platformManager.getPlatformId(), hash, type);
+				Callable<InstrumentationDefinition> analyzeCallable = new AnalyzeCallable(connection, threadTransformHelper, platformManager.getPlatformId(), hash, type);
 				try {
 					instrumentationResult = executorService.submit(analyzeCallable).get(ANALYZE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
 				} catch (InterruptedException e) {
