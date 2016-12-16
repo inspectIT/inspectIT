@@ -461,7 +461,7 @@ public class Client extends Connection implements EndPoint {
 			} catch (InterruptedException ignored) {
 			}
 		}
-		updateThread = new Thread(this, "Client");
+		updateThread = new Thread(this, "inspectit-Client");
 		updateThread.setDaemon(true);
 		updateThread.start();
 	}

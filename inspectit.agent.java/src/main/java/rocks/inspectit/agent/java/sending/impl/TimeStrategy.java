@@ -2,6 +2,9 @@ package rocks.inspectit.agent.java.sending.impl;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.sending.AbstractSendingStrategy;
 
 /**
@@ -32,6 +35,13 @@ public class TimeStrategy extends AbstractSendingStrategy {
 	 * If we are allowed to send something right now.
 	 */
 	private boolean allowSending = true;
+
+	/**
+	 * {@link IThreadTransformHelper} to use to disable transformations done in the threads started
+	 * by core service.
+	 */
+	@Autowired
+	IThreadTransformHelper threadTransformHelper;
 
 	/**
 	 * {@inheritDoc}
@@ -77,6 +87,9 @@ public class TimeStrategy extends AbstractSendingStrategy {
 		 */
 		@Override
 		public void run() {
+			// never do any transformation with this thread
+			threadTransformHelper.setThreadTransformDisabled(true);
+
 			Thread thisThread = Thread.currentThread();
 			while (trigger == thisThread) { // NOPMD
 				try {

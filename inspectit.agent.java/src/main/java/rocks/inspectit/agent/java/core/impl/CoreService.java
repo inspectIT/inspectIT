@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.buffer.IBufferStrategy;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
@@ -97,6 +98,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	@Autowired
 	@Qualifier("coreServiceExecutorService")
 	private ScheduledExecutorService executorService;
+
+	/**
+	 * {@link IThreadTransformHelper} to use to disable transformations done in the threads started
+	 * by core service.
+	 */
+	@Autowired
+	IThreadTransformHelper threadTransformHelper;
 
 	/**
 	 * Already used data objects which can be used directly on the CMR to persist.
@@ -414,6 +422,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		 */
 		@Override
 		public void run() {
+			// never do any transformation with this thread
+			threadTransformHelper.setThreadTransformDisabled(true);
+
 			Thread thisThread = Thread.currentThread();
 
 			while (sensorRefresher == thisThread) { // NOPMD
@@ -601,6 +612,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		 */
 		@Override
 		public void run() {
+			// never do any transformation with this thread
+			threadTransformHelper.setThreadTransformDisabled(true);
+
 			while (!isInterrupted()) {
 				// wait for activation
 				synchronized (this) {
@@ -652,6 +666,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		 */
 		@Override
 		public void run() {
+			// never do any transformation with this thread
+			threadTransformHelper.setThreadTransformDisabled(true);
+
 			while (!isInterrupted()) {
 				// wait for activation if there is nothing to send
 				if (!bufferStrategy.hasNext()) {
@@ -682,6 +699,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	private class ShutdownHookSender extends Thread {
 		@Override
 		public void run() {
+			// never do any transformation with this thread
+			threadTransformHelper.setThreadTransformDisabled(true);
+
 			log.info("Shutdown initialized, sending remaining data");
 			// Stop the CoreService services
 			CoreService.this.stop();

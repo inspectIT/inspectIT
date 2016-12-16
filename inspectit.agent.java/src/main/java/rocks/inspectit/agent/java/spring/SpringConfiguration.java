@@ -22,7 +22,10 @@ import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.connection.impl.AgentAwareClient;
+import rocks.inspectit.agent.java.util.AgentAwareThread;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AbstractSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
@@ -85,8 +88,16 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 */
 	@Bean(name = "socketReadExecutorService")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
-	public ExecutorService getSocketReadExecutorService() {
-		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
+	@Autowired
+	public ExecutorService getSocketReadExecutorService(final IThreadTransformHelper threadTransformHelper) {
+		ThreadFactory inspectitThreadFactory = new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				return new AgentAwareThread(r, threadTransformHelper);
+			}
+		};
+
+		ThreadFactory threadFactory = new ThreadFactoryBuilder().setThreadFactory(inspectitThreadFactory).setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newFixedThreadPool(1, threadFactory);
 	}
 
@@ -95,8 +106,16 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 */
 	@Bean(name = "coreServiceExecutorService")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
-	public ScheduledExecutorService getCoreServiceExecutorService() {
-		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
+	@Autowired
+	public ScheduledExecutorService getCoreServiceExecutorService(final IThreadTransformHelper threadTransformHelper) {
+		ThreadFactory inspectitThreadFactory = new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				return new AgentAwareThread(r, threadTransformHelper);
+			}
+		};
+
+		ThreadFactory threadFactory = new ThreadFactoryBuilder().setThreadFactory(inspectitThreadFactory).setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
 		return Executors.newScheduledThreadPool(3, threadFactory);
 	}
 
@@ -105,14 +124,16 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 *
 	 * @param prototypesProvider
 	 *            {@link PrototypesProvider} (autowired)
+	 * @param threadTransformHelper
+	 *            {@link IThreadTransformHelper} (autowired)
 	 * @return Created bean
 	 */
 	@Bean(name = "kryonet-client")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
 	@Autowired
-	public Client getClient(PrototypesProvider prototypesProvider) {
+	public Client getClient(PrototypesProvider prototypesProvider, IThreadTransformHelper threadTransformHelper) {
 		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
-		return new Client(serialization, prototypesProvider);
+		return new AgentAwareClient(serialization, prototypesProvider, threadTransformHelper);
 	}
 
 	/**
