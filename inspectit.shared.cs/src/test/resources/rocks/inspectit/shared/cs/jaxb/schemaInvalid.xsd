@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <xs:element name="test-data" type="testData"/>
+
+  <xs:complexType name="abstractSchemaVersionAware" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="schemaVersion" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="testData">
+    <xs:complexContent>
+      <xs:extension base="abstractSchemaVersionAware">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+</xs:schema>
