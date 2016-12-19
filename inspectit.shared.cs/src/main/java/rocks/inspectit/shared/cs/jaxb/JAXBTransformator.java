@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -247,6 +246,7 @@ public class JAXBTransformator {
 
 		// check if we need to migrate
 		InputStream inputStream = null;
+		boolean migrated = false;
 		if (null != migrationPath) {
 			try (InputStream schemaCheckStream = Files.newInputStream(path, StandardOpenOption.READ)) {
 				int schemaVersion = getSchemaVersion(schemaCheckStream, 0);
@@ -257,12 +257,7 @@ public class JAXBTransformator {
 						LOG.info("|- Migrating file " + path.toAbsolutePath().toString() + " from schema version " + schemaVersion + " to " + targetSchemaVersion);
 						// enter migration, we expect result of migration as the result
 						inputStream = migrate(Files.newInputStream(path, StandardOpenOption.READ), migrationPath, schemaVersion, targetSchemaVersion);
-						if (rewrite) {
-							// if rewrite write to disk and set input stream to null so it will be
-							// loaded again
-							Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
-							inputStream = null; // NOPMD
-						}
+						migrated = (null != inputStream);
 					} catch (TransformerException e) {
 						String pathString = path.toAbsolutePath().toString();
 						throw new JAXBException("Failed to migrate data in file " + pathString, e);
@@ -279,7 +274,18 @@ public class JAXBTransformator {
 		Unmarshaller unmarshaller = getUnmarshaller(schemaPath, rootClass);
 
 		try {
-			return (T) unmarshaller.unmarshal(inputStream);
+			T object = (T) unmarshaller.unmarshal(inputStream);
+			if (migrated) {
+				if (object instanceof ISchemaVersionAware) {
+					((ISchemaVersionAware) object).setSchemaVersion(targetSchemaVersion);
+				}
+				if (rewrite) {
+					// if need to rewrite just pass the object to the marshall
+					String noNamespaceSchemaLocation = path.relativize(schemaPath).toString();
+					this.marshall(path, object, noNamespaceSchemaLocation);
+				}
+			}
+			return object;
 		} finally {
 			inputStream.close();
 		}
@@ -342,6 +348,7 @@ public class JAXBTransformator {
 	public <T> T unmarshall(byte[] data, Path schemaPath, int targetSchemaVersion, Path migrationPath, Class<T> rootClass) throws JAXBException, IOException, SAXException {
 		// check if we need to migrate
 		InputStream inputStream = null;
+		boolean migrated = false;
 		if (null != migrationPath) {
 			try (InputStream xmlInputStream = new ByteArrayInputStream(data)) {
 				int schemaVersion = getSchemaVersion(xmlInputStream, 0);
@@ -352,6 +359,7 @@ public class JAXBTransformator {
 						LOG.info("|- Migrating data bytes from schema version " + schemaVersion + " to " + targetSchemaVersion);
 						// enter migration, we expect result of migration as the result
 						inputStream = migrate(new ByteArrayInputStream(data), migrationPath, schemaVersion, targetSchemaVersion);
+						migrated = (null != inputStream);
 					} catch (TransformerException e) {
 						throw new JAXBException("Failed to migrate data bytes", e);
 					}
@@ -367,7 +375,11 @@ public class JAXBTransformator {
 		Unmarshaller unmarshaller = getUnmarshaller(schemaPath, rootClass);
 
 		try {
-			return (T) unmarshaller.unmarshal(inputStream);
+			T object = (T) unmarshaller.unmarshal(inputStream);
+			if (migrated && (object instanceof ISchemaVersionAware)) {
+				((ISchemaVersionAware) object).setSchemaVersion(targetSchemaVersion);
+			}
+			return object;
 		} finally {
 			inputStream.close();
 		}

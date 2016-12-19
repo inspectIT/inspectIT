@@ -24,7 +24,7 @@ public interface ISchemaVersionAware {
 	 */
 	interface ConfigurationInterface {
 
-		/** Current versio. */
+		/** Current version. */
 		int SCHEMA_VERSION = 2;
 	}
 }
