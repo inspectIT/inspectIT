@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +49,7 @@ import com.esotericsoftware.minlog.Log;
  * output.
  * <p>
  * Unmarshalling supports migration to the updated schema version if needed (see
- * {@link #unmarshall(Path, Path, int, Path, boolean, Class)} and
+ * {@link #unmarshall(Path, Path, int, Path, Class)} and
  * {@link #unmarshall(byte[], Path, int, Path, Class)}). Unmarshalling can also be done with out any
  * migration.
  *
@@ -206,14 +205,15 @@ public class JAXBTransformator {
 	 *             If {@link SAXException} occurs during schema parsing.
 	 */
 	public <T> T unmarshall(Path path, Path schemaPath, Class<T> rootClass) throws JAXBException, IOException, SAXException {
-		return this.unmarshall(path, schemaPath, 0, null, false, rootClass);
+		return this.unmarshall(path, schemaPath, 0, null, rootClass);
 	}
 
 	/**
 	 * Unmarshalls the given file. The root class of the XML must be given.
 	 * <p>
 	 * This method allows migration of the specified XML file to the wanted target schema version
-	 * using the files in the migration path (if possible).
+	 * using the files in the migration path (if possible). If the migration is successful the
+	 * original file be replaced with the migrated content.
 	 *
 	 * @param <T>
 	 *            Type of root object.
@@ -226,9 +226,6 @@ public class JAXBTransformator {
 	 *            The current schema version that is used as target.
 	 * @param migrationPath
 	 *            Path that contains the XSLT migration files to use if schema validation fails.
-	 * @param rewrite
-	 *            If the migration is successful should the original file be replaced with the
-	 *            migrated content.
 	 * @param rootClass
 	 *            Root class of the XML document.
 	 * @return Unmarshalled object.
@@ -240,33 +237,32 @@ public class JAXBTransformator {
 	 *             If {@link SAXException} occurs during schema parsing.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T unmarshall(Path path, Path schemaPath, int targetSchemaVersion, Path migrationPath, boolean rewrite, Class<T> rootClass) throws JAXBException, IOException, SAXException {
+	public <T> T unmarshall(Path path, Path schemaPath, int targetSchemaVersion, Path migrationPath, Class<T> rootClass) throws JAXBException, IOException, SAXException {
 		if (Files.notExists(path) || Files.isDirectory(path)) {
 			return null;
 		}
 
 		// check if we need to migrate
 		InputStream inputStream = null;
+		boolean migrated = false;
 		if (null != migrationPath) {
 			try (InputStream schemaCheckStream = Files.newInputStream(path, StandardOpenOption.READ)) {
 				int schemaVersion = getSchemaVersion(schemaCheckStream, 0);
 
 				// migrate if versions differ
-				if (schemaVersion != targetSchemaVersion) {
+				if (schemaVersion < targetSchemaVersion) {
 					try {
 						LOG.info("|- Migrating file " + path.toAbsolutePath().toString() + " from schema version " + schemaVersion + " to " + targetSchemaVersion);
 						// enter migration, we expect result of migration as the result
 						inputStream = migrate(Files.newInputStream(path, StandardOpenOption.READ), migrationPath, schemaVersion, targetSchemaVersion);
-						if (rewrite) {
-							// if rewrite write to disk and set input stream to null so it will be
-							// loaded again
-							Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
-							inputStream = null; // NOPMD
-						}
+						migrated = (null != inputStream);
 					} catch (TransformerException e) {
 						String pathString = path.toAbsolutePath().toString();
 						throw new JAXBException("Failed to migrate data in file " + pathString, e);
 					}
+				} else if (schemaVersion > targetSchemaVersion) {
+					LOG.warn("|- Migrattion of file " + path.toAbsolutePath().toString() + " is not possible. Current schema version " + schemaVersion + " is higher than migration target version "
+							+ targetSchemaVersion);
 				}
 			}
 		}
@@ -279,7 +275,16 @@ public class JAXBTransformator {
 		Unmarshaller unmarshaller = getUnmarshaller(schemaPath, rootClass);
 
 		try {
-			return (T) unmarshaller.unmarshal(inputStream);
+			T object = (T) unmarshaller.unmarshal(inputStream);
+			if (migrated) {
+				if (object instanceof ISchemaVersionAware) {
+					((ISchemaVersionAware) object).setSchemaVersion(targetSchemaVersion);
+				}
+				// if need to rewrite just pass the object to the marshall
+				String noNamespaceSchemaLocation = path.relativize(schemaPath).toString();
+				this.marshall(path, object, noNamespaceSchemaLocation);
+			}
+			return object;
 		} finally {
 			inputStream.close();
 		}
@@ -342,19 +347,24 @@ public class JAXBTransformator {
 	public <T> T unmarshall(byte[] data, Path schemaPath, int targetSchemaVersion, Path migrationPath, Class<T> rootClass) throws JAXBException, IOException, SAXException {
 		// check if we need to migrate
 		InputStream inputStream = null;
+		boolean migrated = false;
 		if (null != migrationPath) {
 			try (InputStream xmlInputStream = new ByteArrayInputStream(data)) {
 				int schemaVersion = getSchemaVersion(xmlInputStream, 0);
 
 				// migrate if versions differ
-				if (schemaVersion != targetSchemaVersion) {
+				if (schemaVersion < targetSchemaVersion) {
 					try {
 						LOG.info("|- Migrating data bytes from schema version " + schemaVersion + " to " + targetSchemaVersion);
 						// enter migration, we expect result of migration as the result
 						inputStream = migrate(new ByteArrayInputStream(data), migrationPath, schemaVersion, targetSchemaVersion);
+						migrated = (null != inputStream);
 					} catch (TransformerException e) {
 						throw new JAXBException("Failed to migrate data bytes", e);
 					}
+				} else if (schemaVersion > targetSchemaVersion) {
+					LOG.warn("|- Migrattion of data bytes is not possible. Current schema version " + schemaVersion + " is higher than migration target version "
+							+ targetSchemaVersion);
 				}
 			}
 		}
@@ -367,7 +377,11 @@ public class JAXBTransformator {
 		Unmarshaller unmarshaller = getUnmarshaller(schemaPath, rootClass);
 
 		try {
-			return (T) unmarshaller.unmarshal(inputStream);
+			T object = (T) unmarshaller.unmarshal(inputStream);
+			if (migrated && (object instanceof ISchemaVersionAware)) {
+				((ISchemaVersionAware) object).setSchemaVersion(targetSchemaVersion);
+			}
+			return object;
 		} finally {
 			inputStream.close();
 		}
