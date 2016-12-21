@@ -3,6 +3,7 @@ package rocks.inspectit.agent.java.instrumentation;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -13,12 +14,14 @@ import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.util.Arrays;
 
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.analyzer.impl.ClassHashHelper;
 import rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent;
 import rocks.inspectit.shared.all.communication.message.IAgentMessage;
@@ -47,6 +50,9 @@ public class RetransformManagerTest extends TestBase {
 	@Mock
 	ClassHashHelper classHashHelper;
 
+	@Mock
+	IThreadTransformHelper threadTransformHelper;
+
 	/**
 	 * Tests the {@link RetransformManager#onApplicationEvent(AgentMessagesReceivedEvent)} method.
 	 *
@@ -72,7 +78,10 @@ public class RetransformManagerTest extends TestBase {
 			verify(instrumentation).getAllLoadedClasses();
 			verify(instrumentation).retransformClasses(eq(Object.class));
 			verify(instrumentation).isModifiableClass(eq(Object.class));
-			verifyNoMoreInteractions(instrumentation, classHashHelper);
+			InOrder inOrder = inOrder(threadTransformHelper);
+			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(false);
+			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(true);
+			verifyNoMoreInteractions(instrumentation, classHashHelper, threadTransformHelper);
 		}
 
 		@Test
@@ -91,6 +100,7 @@ public class RetransformManagerTest extends TestBase {
 			verify(instrumentation).getAllLoadedClasses();
 			verify(instrumentation).isModifiableClass(eq(Object.class));
 			verifyNoMoreInteractions(instrumentation, classHashHelper);
+			verifyZeroInteractions(threadTransformHelper);
 		}
 
 		@Test
@@ -107,6 +117,7 @@ public class RetransformManagerTest extends TestBase {
 			verify(classHashHelper).registerInstrumentationDefinition(eq("unknown.Class"), eq(iDefinition));
 			verify(instrumentation).getAllLoadedClasses();
 			verifyNoMoreInteractions(instrumentation, classHashHelper);
+			verifyZeroInteractions(threadTransformHelper);
 		}
 
 		@Test
@@ -117,7 +128,7 @@ public class RetransformManagerTest extends TestBase {
 
 			retransformManager.onApplicationEvent(event);
 
-			verifyZeroInteractions(instrumentation, classHashHelper);
+			verifyZeroInteractions(instrumentation, classHashHelper, threadTransformHelper);
 		}
 
 		@Test
@@ -137,7 +148,11 @@ public class RetransformManagerTest extends TestBase {
 			verify(instrumentation).getAllLoadedClasses();
 			verify(instrumentation).retransformClasses(any(Class.class));
 			verify(instrumentation).isModifiableClass(eq(Object.class));
+			InOrder inOrder = inOrder(threadTransformHelper);
+			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(false);
+			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(true);
 			verifyNoMoreInteractions(instrumentation, classHashHelper);
+			verifyZeroInteractions(threadTransformHelper);
 		}
 
 		@Test
@@ -146,7 +161,7 @@ public class RetransformManagerTest extends TestBase {
 
 			retransformManager.onApplicationEvent(null);
 
-			verifyZeroInteractions(instrumentation, classHashHelper);
+			verifyZeroInteractions(instrumentation, classHashHelper, threadTransformHelper);
 		}
 
 		@Test
@@ -157,7 +172,7 @@ public class RetransformManagerTest extends TestBase {
 
 			retransformManager.onApplicationEvent(event);
 
-			verifyZeroInteractions(instrumentation, classHashHelper);
+			verifyZeroInteractions(instrumentation, classHashHelper, threadTransformHelper);
 		}
 	}
 

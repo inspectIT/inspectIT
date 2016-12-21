@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.analyzer.impl.ClassHashHelper;
 import rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent;
 import rocks.inspectit.shared.all.communication.message.IAgentMessage;
@@ -46,6 +47,12 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 	 */
 	@Autowired
 	private ClassHashHelper classHashHelper;
+
+	/**
+	 * The {@link IThreadTransformHelper}.
+	 */
+	@Autowired
+	private IThreadTransformHelper threadTransformHelper;
 
 	/**
 	 * {@inheritDoc}
@@ -153,13 +160,16 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 			}
 		}
 
-		try {
-			if (CollectionUtils.isNotEmpty(classesToRetransform)) {
+		if (CollectionUtils.isNotEmpty(classesToRetransform)) {
+			try {
+				threadTransformHelper.setThreadTransformDisabled(false);
 				instrumentation.retransformClasses(classesToRetransform.toArray(new Class[classesToRetransform.size()]));
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled()) {
-				log.error("Failed to triggering retransformation of loaded classes.", e);
+			} catch (Exception e) {
+				if (log.isErrorEnabled()) {
+					log.error("Failed to triggering retransformation of loaded classes.", e);
+				}
+			} finally {
+				threadTransformHelper.setThreadTransformDisabled(true);
 			}
 		}
 	}
