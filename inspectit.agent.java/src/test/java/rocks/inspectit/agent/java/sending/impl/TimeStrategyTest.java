@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
@@ -19,6 +20,9 @@ public class TimeStrategyTest extends TestBase {
 
 	@Mock
 	private ICoreService coreService;
+
+	@Mock
+	private IThreadTransformHelper threadTransformHelper;
 
 	@InjectMocks
 	private TimeStrategy sendingStrategy;
@@ -49,6 +53,7 @@ public class TimeStrategyTest extends TestBase {
 
 		// should be called at least once, but sometimes it could be even two
 		// times.
+		verify(threadTransformHelper).setThreadTransformDisabled(true);
 		verify(coreService, atLeastOnce()).sendData();
 	}
 

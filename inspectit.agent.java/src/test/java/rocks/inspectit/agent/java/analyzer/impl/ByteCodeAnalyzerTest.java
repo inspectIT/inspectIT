@@ -14,7 +14,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -37,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -49,8 +47,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.agent.java.Agent;
-import rocks.inspectit.agent.java.IAgent;
 import rocks.inspectit.agent.java.analyzer.classes.AbstractSubTest;
 import rocks.inspectit.agent.java.analyzer.classes.TestClass;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
@@ -130,15 +126,10 @@ public class ByteCodeAnalyzerTest extends TestBase {
 	@Mock
 	Future<Object> future;
 
-	@Mock
-	IAgent agent;
-
 	final Long platformId = 10L;
 
 	@BeforeMethod
 	public void setup() throws IdNotAvailableException, ServerUnavailableException {
-		Agent.agent = agent;
-
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 		doAnswer(new Answer<Void>() {
 			@Override
@@ -235,9 +226,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
-			InOrder inOrder = inOrder(agent);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 
@@ -299,9 +287,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
-			InOrder inOrder = inOrder(agent);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 
@@ -348,9 +333,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
 			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
-			InOrder inOrder = inOrder(agent);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			ArgumentCaptor<SpecialSensorConfig> sscCaptor = ArgumentCaptor.forClass(SpecialSensorConfig.class);
 			verify(hookDispatcherMapper, times(1)).addMapping(eq(sscId), sscCaptor.capture());
 			assertThat(sscCaptor.getValue().getId(), is(sscId));
@@ -381,7 +363,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			// but we asked for the instrumentation result
 			verify(classHashHelper, times(1)).getInstrumentationDefinition(fqnCaptor.getValue());
 			verifyNoMoreInteractions(classHashHelper);
-			verifyZeroInteractions(platformManager, connection, hookDispatcherMapper, agent);
+			verifyZeroInteractions(platformManager, connection, hookDispatcherMapper);
 		}
 
 		@Test
@@ -441,7 +423,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(captor.getValue().size(), is(1));
 			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
 			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
-			verifyZeroInteractions(agent);
 		}
 
 		@Test
@@ -470,9 +451,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
 			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), null);
-			InOrder inOrder = inOrder(agent);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			verifyZeroInteractions(hookDispatcherMapper);
 			verifyNoMoreInteractions(connection, classHashHelper);
 		}
@@ -496,7 +474,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(connection, times(1)).isConnected();
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
-			verifyZeroInteractions(hookDispatcherMapper, agent);
+			verifyZeroInteractions(hookDispatcherMapper);
 			verifyNoMoreInteractions(connection, classHashHelper);
 		}
 
@@ -536,9 +514,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
 			verify(classHashHelper, times(1)).registerSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerInstrumentationDefinition(fqnCaptor.getValue(), instrumentationResult);
-			InOrder inOrder = inOrder(agent);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			verifyNoMoreInteractions(connection, classHashHelper);
 			verifyZeroInteractions(hookDispatcherMapper);
 		}
@@ -551,7 +526,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 
 			assertThat(instrumentedByteCode, is(nullValue()));
 
-			verifyZeroInteractions(hookDispatcherMapper, connection, classHashHelper, configurationStorage, platformManager, agent);
+			verifyZeroInteractions(hookDispatcherMapper, connection, classHashHelper, configurationStorage, platformManager);
 		}
 
 		@Test
@@ -596,11 +571,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(connection, times(1)).analyze(eq(platformId.longValue()), anyString(), eq(classCaptor.getAllValues().get(1)));
 			ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
 			verify(connection, times(1)).instrumentationApplied(eq(platformId), captor.capture());
-			InOrder inOrder = inOrder(agent);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			assertThat(captor.getValue().size(), is(1));
 			assertThat((Map<Long, long[]>) captor.getValue(), hasEntry(rscId, sensorIds));
 
@@ -661,7 +631,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
-			verifyZeroInteractions(hookDispatcherMapper, agent);
+			verifyZeroInteractions(hookDispatcherMapper);
 			verifyNoMoreInteractions(connection, classHashHelper);
 		}
 
@@ -695,7 +665,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			verify(classHashHelper, atLeastOnce()).isAnalyzed(anyString());
 			verify(classHashHelper, times(1)).isSent(fqnCaptor.getValue(), hashCaptor.getValue());
 			verify(classHashHelper, times(1)).registerAnalyzed(fqnCaptor.getValue());
-			verifyZeroInteractions(hookDispatcherMapper, agent);
+			verifyZeroInteractions(hookDispatcherMapper);
 			verifyNoMoreInteractions(connection, classHashHelper);
 		}
 
@@ -764,9 +734,6 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().isStartsInvocation(), is(sensorInstrumentationPoint.isStartsInvocation()));
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
-			InOrder inOrder = inOrder(agent);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(true);
-			inOrder.verify(agent, times(1)).setThreadTransformDisabled(false);
 			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
 		}
 

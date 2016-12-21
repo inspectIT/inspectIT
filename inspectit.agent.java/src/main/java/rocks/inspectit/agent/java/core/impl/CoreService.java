@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.buffer.IBufferStrategy;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
@@ -27,6 +28,7 @@ import rocks.inspectit.agent.java.core.ListListener;
 import rocks.inspectit.agent.java.sending.ISendingStrategy;
 import rocks.inspectit.agent.java.sensor.jmx.IJmxSensor;
 import rocks.inspectit.agent.java.sensor.platform.IPlatformSensor;
+import rocks.inspectit.agent.java.util.AgentAwareThread;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
@@ -97,6 +99,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	@Autowired
 	@Qualifier("coreServiceExecutorService")
 	private ScheduledExecutorService executorService;
+
+	/**
+	 * {@link IThreadTransformHelper} to use to disable transformations done in the threads started
+	 * by core service.
+	 */
+	@Autowired
+	IThreadTransformHelper threadTransformHelper;
 
 	/**
 	 * Already used data objects which can be used directly on the CMR to persist.
@@ -387,7 +396,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * @author Alfred Krauss
 	 *
 	 */
-	private class SensorRefresher extends Thread {
+	private class SensorRefresher extends AgentAwareThread {
 
 		/**
 		 * Counts the number of iterations from the start. Used to distinguish between reset, gather
@@ -405,6 +414,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		 * Creates a new instance of the <code>PlatformSensorRefresher</code> as a daemon thread.
 		 */
 		public SensorRefresher() {
+			super(threadTransformHelper);
 			setName("inspectit-platform-sensor-refresher-thread");
 			setDaemon(true);
 		}
@@ -414,6 +424,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		 */
 		@Override
 		public void run() {
+			// call super to perform needed pre-run operations
+			super.run();
+
 			Thread thisThread = Thread.currentThread();
 
 			while (sensorRefresher == thisThread) { // NOPMD
@@ -586,12 +599,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * @author Ivan Senic
 	 * @author Stefan Siegl
 	 */
-	private class PreparingThread extends Thread {
+	private class PreparingThread extends AgentAwareThread {
 
 		/**
 		 * Creates a new <code>PreparingThread</code> as daemon.
 		 */
 		public PreparingThread() {
+			super(threadTransformHelper);
 			setName("inspectit-preparing-thread");
 			setDaemon(true);
 		}
@@ -601,6 +615,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		 */
 		@Override
 		public void run() {
+			// call super to perform needed pre-run operations
+			super.run();
+
 			while (!isInterrupted()) {
 				// wait for activation
 				synchronized (this) {
@@ -637,12 +654,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 * @author Ivan Senic
 	 * @author Stefan Siegl
 	 */
-	private class SendingThread extends Thread {
+	private class SendingThread extends AgentAwareThread {
 
 		/**
 		 * Creates a new <code>SendingThread</code> as daemon.
 		 */
 		public SendingThread() {
+			super(threadTransformHelper);
 			setName("inspectit-sending-thread");
 			setDaemon(true);
 		}
@@ -652,6 +670,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		 */
 		@Override
 		public void run() {
+			// call super to perform needed pre-run operations
+			super.run();
+
 			while (!isInterrupted()) {
 				// wait for activation if there is nothing to send
 				if (!bufferStrategy.hasNext()) {
@@ -679,9 +700,20 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	 *
 	 * @author Stefan Siegl
 	 */
-	private class ShutdownHookSender extends Thread {
+	private class ShutdownHookSender extends AgentAwareThread {
+
+		/**
+		 * Default constructor.
+		 */
+		public ShutdownHookSender() {
+			super(threadTransformHelper);
+		}
+
 		@Override
 		public void run() {
+			// call super to perform needed pre-run operations
+			super.run();
+
 			log.info("Shutdown initialized, sending remaining data");
 			// Stop the CoreService services
 			CoreService.this.stop();
