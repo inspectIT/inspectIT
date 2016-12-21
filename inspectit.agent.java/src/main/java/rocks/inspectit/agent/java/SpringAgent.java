@@ -49,23 +49,28 @@ public class SpringAgent implements IAgent {
 	/**
 	 * The hook dispatcher used by the instrumented methods.
 	 */
-	private IHookDispatcher hookDispatcher;
+	IHookDispatcher hookDispatcher;
 
 	/**
 	 * The configuration storage.
 	 */
-	private IConfigurationStorage configurationStorage;
+	IConfigurationStorage configurationStorage;
 
 	/**
 	 * The byte code analyzer.
 	 */
-	private IByteCodeAnalyzer byteCodeAnalyzer;
+	IByteCodeAnalyzer byteCodeAnalyzer;
+
+	/**
+	 * The thread transform helper.
+	 */
+	IThreadTransformHelper threadTransformHelper;
 
 	/**
 	 * Set to <code>true</code> if something happened and we need to disable further
 	 * instrumentation.
 	 */
-	private volatile boolean disableInstrumentation = false;
+	volatile boolean disableInstrumentation = false;
 
 	/**
 	 * Created bean factory.
@@ -75,22 +80,12 @@ public class SpringAgent implements IAgent {
 	/**
 	 * Ignore classes patterns.
 	 */
-	private Collection<IMatchPattern> ignoreClassesPatterns;
+	Collection<IMatchPattern> ignoreClassesPatterns;
 
 	/**
 	 * The used {@link Instrumentation}.
 	 */
 	private final Instrumentation instrumentation;
-
-	/**
-	 * Thread local to control the instrumentation transform disabled states for threads.
-	 */
-	private ThreadLocal<Boolean> transformDisabledThreadLocal = new ThreadLocal<Boolean>() {
-		@Override
-		protected Boolean initialValue() {
-			return Boolean.FALSE;
-		};
-	};
 
 	/**
 	 * Constructor initializing this agent.
@@ -171,6 +166,7 @@ public class SpringAgent implements IAgent {
 			hookDispatcher = beanFactory.getBean(IHookDispatcher.class);
 			configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
 			byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
+			threadTransformHelper = beanFactory.getBean(IThreadTransformHelper.class);
 
 			// load ignore patterns only once
 			ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
@@ -200,17 +196,30 @@ public class SpringAgent implements IAgent {
 			return byteCode;
 		}
 
+		boolean threadTransformDisabled = threadTransformHelper.isThreadTransformDisabled();
+		if (threadTransformDisabled) {
+			// if transform is currently disabled for thread trying to transform the class do
+			// nothing
+			return byteCode;
+		}
+
 		// check if it should be ignored
 		if (shouldClassBeIgnored(className)) {
 			return byteCode;
 		}
 
 		try {
+			// set transform disabled from this point for this thread
+			threadTransformHelper.setThreadTransformDisabled(true);
+
 			byte[] instrumentedByteCode = byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
 			return instrumentedByteCode;
 		} catch (Throwable throwable) { // NOPMD
 			LOG.error("Something unexpected happened while trying to analyze or instrument the bytecode with the class name: " + className, throwable);
 			return byteCode;
+		} finally {
+			// reset the state of transform disabled if we set it originally
+			threadTransformHelper.setThreadTransformDisabled(false);
 		}
 	}
 
@@ -234,22 +243,6 @@ public class SpringAgent implements IAgent {
 			return inspectitJarFile.getAbsoluteFile();
 		}
 		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isThreadTransformDisabled() {
-		return transformDisabledThreadLocal.get();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setThreadTransformDisabled(boolean disabled) {
-		transformDisabledThreadLocal.set(Boolean.valueOf(disabled));
 	}
 
 	/**

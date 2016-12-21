@@ -2,7 +2,11 @@ package rocks.inspectit.agent.java.sending.impl;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.sending.AbstractSendingStrategy;
+import rocks.inspectit.agent.java.util.AgentAwareThread;
 
 /**
  * Implements a strategy to wait a specific (user-defined) time and then executes the sending of the
@@ -34,6 +38,13 @@ public class TimeStrategy extends AbstractSendingStrategy {
 	private boolean allowSending = true;
 
 	/**
+	 * {@link IThreadTransformHelper} to use to disable transformations done in the threads started
+	 * by core service.
+	 */
+	@Autowired
+	IThreadTransformHelper threadTransformHelper;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -62,12 +73,13 @@ public class TimeStrategy extends AbstractSendingStrategy {
 	 * @author Patrice Bouillet
 	 *
 	 */
-	private class Trigger extends Thread {
+	private class Trigger extends AgentAwareThread {
 
 		/**
 		 * Creates a new <code>Trigger</code> as daemon thread.
 		 */
 		public Trigger() {
+			super(threadTransformHelper);
 			setName("inspectit-timer-strategy-trigger-thread");
 			setDaemon(true);
 		}
@@ -77,6 +89,9 @@ public class TimeStrategy extends AbstractSendingStrategy {
 		 */
 		@Override
 		public void run() {
+			// call super to perform needed pre-run operations
+			super.run();
+
 			Thread thisThread = Thread.currentThread();
 			while (trigger == thisThread) { // NOPMD
 				try {
