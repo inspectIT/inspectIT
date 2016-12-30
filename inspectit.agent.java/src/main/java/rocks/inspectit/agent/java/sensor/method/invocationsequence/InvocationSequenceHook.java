@@ -16,7 +16,6 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IObjectStorage;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.core.ListListener;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
@@ -149,45 +148,39 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			return;
 		}
 
-		try {
-			long platformId = platformManager.getPlatformId();
-			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		long platformId = platformManager.getPlatformId();
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-			if (null == threadLocalInvocationData.get()) {
-				// the sensor type is only available in the beginning of the
-				// sequence trace
+		if (null == threadLocalInvocationData.get()) {
+			// the sensor type is only available in the beginning of the
+			// sequence trace
 
-				// save the start time
-				timeStack.push(new Double(timer.getCurrentTime()));
+			// save the start time
+			timeStack.push(new Double(timer.getCurrentTime()));
 
-				// no invocation tracer is currently started, so we do that now.
-				InvocationSequenceData invocationSequenceData = new InvocationSequenceData(timestamp, platformId, sensorTypeId, methodId);
-				threadLocalInvocationData.set(invocationSequenceData);
+			// no invocation tracer is currently started, so we do that now.
+			InvocationSequenceData invocationSequenceData = new InvocationSequenceData(timestamp, platformId, sensorTypeId, methodId);
+			threadLocalInvocationData.set(invocationSequenceData);
 
-				invocationStartId.set(Long.valueOf(methodId));
-				invocationStartIdCount.set(Long.valueOf(1));
-			} else {
-				if (methodId == invocationStartId.get().longValue()) {
-					long count = invocationStartIdCount.get().longValue();
-					invocationStartIdCount.set(Long.valueOf(count + 1));
-				}
-				// A subsequent call to the before body method where an
-				// invocation tracer is already started.
-				InvocationSequenceData invocationSequenceData = threadLocalInvocationData.get();
-				invocationSequenceData.setChildCount(invocationSequenceData.getChildCount() + 1L);
-
-				InvocationSequenceData nestedInvocationSequenceData = new InvocationSequenceData(timestamp, platformId, invocationSequenceData.getSensorTypeIdent(), methodId);
-				nestedInvocationSequenceData.setStart(timer.getCurrentTime());
-				nestedInvocationSequenceData.setParentSequence(invocationSequenceData);
-
-				invocationSequenceData.getNestedSequences().add(nestedInvocationSequenceData);
-
-				threadLocalInvocationData.set(nestedInvocationSequenceData);
+			invocationStartId.set(Long.valueOf(methodId));
+			invocationStartIdCount.set(Long.valueOf(1));
+		} else {
+			if (methodId == invocationStartId.get().longValue()) {
+				long count = invocationStartIdCount.get().longValue();
+				invocationStartIdCount.set(Long.valueOf(count + 1));
 			}
-		} catch (IdNotAvailableException idNotAvailableException) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Could not start invocation sequence because of a (currently) not mapped ID");
-			}
+			// A subsequent call to the before body method where an
+			// invocation tracer is already started.
+			InvocationSequenceData invocationSequenceData = threadLocalInvocationData.get();
+			invocationSequenceData.setChildCount(invocationSequenceData.getChildCount() + 1L);
+
+			InvocationSequenceData nestedInvocationSequenceData = new InvocationSequenceData(timestamp, platformId, invocationSequenceData.getSensorTypeIdent(), methodId);
+			nestedInvocationSequenceData.setStart(timer.getCurrentTime());
+			nestedInvocationSequenceData.setParentSequence(invocationSequenceData);
+
+			invocationSequenceData.getNestedSequences().add(nestedInvocationSequenceData);
+
+			threadLocalInvocationData.set(nestedInvocationSequenceData);
 		}
 	}
 

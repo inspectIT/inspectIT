@@ -36,7 +36,6 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.config.impl.SpecialSensorConfig;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
 import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.agent.java.instrumentation.asm.ClassAnalyzer;
@@ -220,9 +219,6 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 			} else {
 				return null;
 			}
-		} catch (IdNotAvailableException idNotAvailableException) {
-			log.error("Error occurred instrumenting the byte code of class " + className, idNotAvailableException);
-			return null;
 		} catch (StorageException storageException) {
 			log.error("Error occurred instrumenting the byte code of class " + className, storageException);
 			return null;
@@ -308,11 +304,7 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 
 			// inform CMR of the applied instrumentation ids
 			if (MapUtils.isNotEmpty(methodToSensorMap)) {
-				try {
-					executorService.submit(new InstrumentationAppliedRunnable(connection, platformManager.getPlatformId(), methodToSensorMap));
-				} catch (IdNotAvailableException idNotAvailableException) {
-					log.warn("Error trying to send applied instrumentations to the server.", idNotAvailableException);
-				}
+				executorService.submit(new InstrumentationAppliedRunnable(connection, platformManager.getPlatformId(), methodToSensorMap));
 			}
 
 			return classWriter.toByteArray();

@@ -4,14 +4,10 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.core.impl.CoreService;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
@@ -31,11 +27,6 @@ import rocks.inspectit.shared.all.communication.data.TimerData;
  *
  */
 public class AverageTimerHook implements IMethodHook, IConstructorHook {
-
-	/**
-	 * The logger of this class. Initialized manually.
-	 */
-	private static final Logger LOG = LoggerFactory.getLogger(AverageTimerHook.class);
 
 	/**
 	 * The stack containing the start time values.
@@ -122,23 +113,17 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 		TimerData timerData = (TimerData) coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
 
 		if (null == timerData) {
-			try {
-				long platformId = platformManager.getPlatformId();
+			long platformId = platformManager.getPlatformId();
 
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
-				timerData = new TimerData(timestamp, platformId, sensorTypeId, methodId, parameterContentData);
-				timerData.increaseCount();
-				timerData.addDuration(duration);
-				timerData.calculateMin(duration);
-				timerData.calculateMax(duration);
+			timerData = new TimerData(timestamp, platformId, sensorTypeId, methodId, parameterContentData);
+			timerData.increaseCount();
+			timerData.addDuration(duration);
+			timerData.calculateMin(duration);
+			timerData.calculateMax(duration);
 
-				coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerData);
-			} catch (IdNotAvailableException e) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Could not save the average timer data because of an unavailable id. " + e.getMessage());
-				}
-			}
+			coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerData);
 		} else {
 			timerData.increaseCount();
 			timerData.addDuration(duration);

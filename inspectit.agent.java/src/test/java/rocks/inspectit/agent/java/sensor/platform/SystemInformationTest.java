@@ -25,6 +25,7 @@ import rocks.inspectit.shared.all.testbase.TestBase;
  *
  * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
+@SuppressWarnings("PMD")
 public class SystemInformationTest extends TestBase {
 
 	/** Class under test. */

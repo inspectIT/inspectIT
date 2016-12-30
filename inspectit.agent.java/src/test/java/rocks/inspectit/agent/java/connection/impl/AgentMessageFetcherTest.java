@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent;
 import rocks.inspectit.shared.all.communication.message.IAgentMessage;
 import rocks.inspectit.shared.all.testbase.TestBase;
@@ -78,7 +77,7 @@ public class AgentMessageFetcherTest extends TestBase {
 		IConnection connection;
 
 		@Test
-		public void successful() throws IdNotAvailableException, ServerUnavailableException {
+		public void successful() throws Exception {
 			when(connection.isConnected()).thenReturn(true);
 			when(platformManager.getPlatformId()).thenReturn(10L);
 			List<IAgentMessage<?>> messages = Arrays.<IAgentMessage<?>> asList(mock(IAgentMessage.class));
@@ -97,7 +96,7 @@ public class AgentMessageFetcherTest extends TestBase {
 
 		@Test
 		@SuppressWarnings("unchecked")
-		public void successfulNoMessages() throws IdNotAvailableException, ServerUnavailableException {
+		public void successfulNoMessages() throws Exception {
 			when(connection.isConnected()).thenReturn(true);
 			when(platformManager.getPlatformId()).thenReturn(10L);
 			when(connection.fetchAgentMessages(10L)).thenReturn(Collections.EMPTY_LIST);
@@ -113,7 +112,7 @@ public class AgentMessageFetcherTest extends TestBase {
 
 		@Test
 		@SuppressWarnings("unchecked")
-		public void serverUnavailable() throws IdNotAvailableException, ServerUnavailableException {
+		public void serverUnavailable() throws Exception {
 			when(connection.isConnected()).thenReturn(true);
 			when(platformManager.getPlatformId()).thenReturn(10L);
 			when(connection.fetchAgentMessages(any(Long.class))).thenThrow(ServerUnavailableException.class);
@@ -129,7 +128,7 @@ public class AgentMessageFetcherTest extends TestBase {
 
 		@Test
 		@SuppressWarnings("unchecked")
-		public void unexpectedException() throws IdNotAvailableException, ServerUnavailableException {
+		public void unexpectedException() throws Exception {
 			when(connection.isConnected()).thenReturn(true);
 			when(platformManager.getPlatformId()).thenReturn(10L);
 			when(connection.fetchAgentMessages(any(Long.class))).thenThrow(RuntimeException.class);
@@ -138,20 +137,6 @@ public class AgentMessageFetcherTest extends TestBase {
 
 			verify(connection).isConnected();
 			verify(connection).fetchAgentMessages(any(Long.class));
-			verify(platformManager).getPlatformId();
-			verifyNoMoreInteractions(connection, platformManager);
-			verifyZeroInteractions(eventPublisher);
-		}
-
-		@Test
-		@SuppressWarnings("unchecked")
-		public void noIdAvailable() throws IdNotAvailableException {
-			when(connection.isConnected()).thenReturn(true);
-			when(platformManager.getPlatformId()).thenThrow(IdNotAvailableException.class);
-
-			messageFetcher.run();
-
-			verify(connection).isConnected();
 			verify(platformManager).getPlatformId();
 			verifyNoMoreInteractions(connection, platformManager);
 			verifyZeroInteractions(eventPublisher);

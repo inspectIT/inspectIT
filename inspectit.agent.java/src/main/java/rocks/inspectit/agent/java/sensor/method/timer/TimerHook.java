@@ -12,7 +12,6 @@ import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
 import rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerHook;
@@ -190,22 +189,16 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 		ITimerStorage storage = (ITimerStorage) coreService.getObjectStorage(sensorTypeId, methodId, prefix);
 
 		if (null == storage) {
-			try {
-				long platformId = platformManager.getPlatformId();
+			long platformId = platformManager.getPlatformId();
 
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
-				boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
+			boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
 
-				storage = timerStorageFactory.newStorage(timestamp, platformId, sensorTypeId, methodId, parameterContentData, charting);
-				storage.addData(duration, cpuDuration);
+			storage = timerStorageFactory.newStorage(timestamp, platformId, sensorTypeId, methodId, parameterContentData, charting);
+			storage.addData(duration, cpuDuration);
 
-				coreService.addObjectStorage(sensorTypeId, methodId, prefix, storage);
-			} catch (IdNotAvailableException e) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Could not save the timer data because of an unavailable id. " + e.getMessage());
-				}
-			}
+			coreService.addObjectStorage(sensorTypeId, methodId, prefix, storage);
 		} else {
 			storage.addData(duration, cpuDuration);
 		}
