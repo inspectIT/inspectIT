@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
 import rocks.inspectit.agent.java.sensor.method.timer.TimerHook;
 import rocks.inspectit.agent.java.util.ClassUtil;
@@ -262,65 +261,59 @@ public class HttpHook implements IMethodHook {
 				// double check interface
 				if (providesHttpRequestMetrics(servletRequestClass) && providesHttpResponseMetrics(servletResponseClass)) {
 
-					try {
-						double endTime = timeStack.pop().doubleValue();
-						double startTime = timeStack.pop().doubleValue();
-						double duration = endTime - startTime;
+					double endTime = timeStack.pop().doubleValue();
+					double startTime = timeStack.pop().doubleValue();
+					double duration = endTime - startTime;
 
-						// default setting to a negative number
-						double cpuDuration = -1.0d;
-						if (threadCPUTimeEnabled) {
-							long cpuEndTime = threadCpuTimeStack.pop().longValue();
-							long cpuStartTime = threadCpuTimeStack.pop().longValue();
-							cpuDuration = (cpuEndTime - cpuStartTime) / 1000000.0d;
-						}
+					// default setting to a negative number
+					double cpuDuration = -1.0d;
+					if (threadCPUTimeEnabled) {
+						long cpuEndTime = threadCpuTimeStack.pop().longValue();
+						long cpuStartTime = threadCpuTimeStack.pop().longValue();
+						cpuDuration = (cpuEndTime - cpuStartTime) / 1000000.0d;
+					}
 
-						long platformId = platformManager.getPlatformId();
-						Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
+					long platformId = platformManager.getPlatformId();
+					Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
-						// Creating return data object
-						HttpTimerData data = new HttpTimerData();
+					// Creating return data object
+					HttpTimerData data = new HttpTimerData();
 
-						data.setPlatformIdent(platformId);
-						data.setMethodIdent(methodId);
-						data.setSensorTypeIdent(sensorTypeId);
-						data.setTimeStamp(timestamp);
+					data.setPlatformIdent(platformId);
+					data.setMethodIdent(methodId);
+					data.setSensorTypeIdent(sensorTypeId);
+					data.setTimeStamp(timestamp);
 
-						data.setDuration(duration);
-						data.calculateMin(duration);
-						data.calculateMax(duration);
-						data.setCpuDuration(cpuDuration);
-						data.calculateCpuMax(cpuDuration);
-						data.calculateCpuMin(cpuDuration);
-						data.setCount(1L);
+					data.setDuration(duration);
+					data.calculateMin(duration);
+					data.calculateMax(duration);
+					data.setCpuDuration(cpuDuration);
+					data.calculateCpuMax(cpuDuration);
+					data.calculateCpuMin(cpuDuration);
+					data.setCount(1L);
 
-						// Include additional http information
-						data.getHttpInfo().setUri(extractor.getRequestUri(servletRequestClass, httpServletRequest));
-						data.getHttpInfo().setRequestMethod(extractor.getRequestMethod(servletRequestClass, httpServletRequest));
+					// Include additional http information
+					data.getHttpInfo().setUri(extractor.getRequestUri(servletRequestClass, httpServletRequest));
+					data.getHttpInfo().setRequestMethod(extractor.getRequestMethod(servletRequestClass, httpServletRequest));
 						data.getHttpInfo().setScheme(extractor.getScheme(servletRequestClass, httpServletRequest));
 						data.getHttpInfo().setServerName(extractor.getServerName(servletRequestClass, httpServletRequest));
 						data.getHttpInfo().setServerPort(extractor.getServerPort(servletRequestClass, httpServletRequest));
 						data.getHttpInfo().setQueryString(extractor.getQueryString(servletRequestClass, httpServletRequest));
-						data.setParameters(extractor.getParameterMap(servletRequestClass, httpServletRequest));
-						data.setAttributes(extractor.getAttributes(servletRequestClass, httpServletRequest));
-						data.setHeaders(extractor.getHeaders(servletRequestClass, httpServletRequest));
-						if (captureSessionData) {
-							data.setSessionAttributes(extractor.getSessionAttributes(servletRequestClass, httpServletRequest));
-						}
-
-						// Include HTTP response information
-						data.setHttpResponseStatus(extractor.getResponseStatus(servletResponseClass, httpServletResponse));
-
-						boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
-						data.setCharting(charting);
-
-						// returning gathered information
-						coreService.addMethodSensorData(sensorTypeId, methodId, null, data);
-					} catch (IdNotAvailableException e) {
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Could not save the timer data because of an unavailable id. " + e.getMessage());
-						}
+					data.setParameters(extractor.getParameterMap(servletRequestClass, httpServletRequest));
+					data.setAttributes(extractor.getAttributes(servletRequestClass, httpServletRequest));
+					data.setHeaders(extractor.getHeaders(servletRequestClass, httpServletRequest));
+					if (captureSessionData) {
+						data.setSessionAttributes(extractor.getSessionAttributes(servletRequestClass, httpServletRequest));
 					}
+
+					// Include HTTP response information
+					data.setHttpResponseStatus(extractor.getResponseStatus(servletResponseClass, httpServletResponse));
+
+					boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
+					data.setCharting(charting);
+
+					// returning gathered information
+					coreService.addMethodSensorData(sensorTypeId, methodId, null, data);
 				}
 			}
 		}

@@ -3,14 +3,9 @@ package rocks.inspectit.agent.java.sensor.exception;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -31,7 +26,6 @@ import rocks.inspectit.agent.java.analyzer.classes.MyTestException;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
@@ -62,7 +56,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void throwableObjectWasCreated() throws InstantiationException, IllegalAccessException, IdNotAvailableException {
+	public void throwableObjectWasCreated() throws Exception {
 		long constructorId = 5L;
 		long sensorTypeId = 3L;
 		long platformId = 1L;
@@ -81,7 +75,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void throwableObjectDifferentThenRSCTargetClass() throws InstantiationException, IllegalAccessException, IdNotAvailableException {
+	public void throwableObjectDifferentThenRSCTargetClass() throws Exception {
 		long constructorId = 5L;
 		long sensorTypeId = 3L;
 		long platformId = 1L;
@@ -98,7 +92,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void throwableObjectCreatedThrownAndHandled() throws InstantiationException, IllegalAccessException, IdNotAvailableException {
+	public void throwableObjectCreatedThrownAndHandled() throws Exception {
 		long methodId = 5L;
 		long constructorId = 4L;
 		long sensorTypeId = 3L;
@@ -136,7 +130,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void differentThrowableObjectsCreatedAndThrown() throws InstantiationException, IllegalAccessException, IdNotAvailableException {
+	public void differentThrowableObjectsCreatedAndThrown() throws Exception {
 		long methodId = 5L;
 		long constructorId = 4L;
 		long sensorTypeId = 3L;
@@ -164,7 +158,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void throwableHasCause() throws InstantiationException, IllegalAccessException, IdNotAvailableException, SecurityException, NoSuchFieldException {
+	public void throwableHasCause() throws Exception, SecurityException, NoSuchFieldException {
 		long methodId = 5L;
 		long constructorId = 4L;
 		long sensorTypeId = 3L;
@@ -216,7 +210,7 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void valueTooLong() throws InstantiationException, IllegalAccessException, IdNotAvailableException {
+	public void valueTooLong() throws Exception {
 		long constructorId = 5L;
 		long sensorTypeId = 3L;
 		long platformId = 1L;
@@ -244,25 +238,6 @@ public class ExceptionSensorHookTest extends AbstractLogSupport {
 		verify(coreService, times(1)).addExceptionSensorData(eq(sensorTypeId), eq(exceptionSensorData.getThrowableIdentityHashCode()), argThat(new ExceptionSensorDataVerifier(exceptionSensorData)));
 
 		verifyNoMoreInteractions(platformManager);
-	}
-
-	@Test
-	public void platformIdNotAvailable() throws IdNotAvailableException {
-		// set up data
-		long methodId = 3L;
-		long constructorId = 7L;
-		long exceptionSensorTypeId = 11L;
-		Object object = mock(Object.class);
-		MyTestException exceptionObject = mock(MyTestException.class);
-		Object[] parameters = new Object[0];
-
-		doThrow(new IdNotAvailableException("")).when(platformManager).getPlatformId();
-
-		exceptionHook.afterConstructor(coreService, constructorId, exceptionSensorTypeId, exceptionObject, parameters, registeredSensorConfig);
-		exceptionHook.dispatchOnThrowInBody(coreService, methodId, exceptionSensorTypeId, object, exceptionObject, parameters, registeredSensorConfig);
-		exceptionHook.dispatchBeforeCatchBody(coreService, methodId, exceptionSensorTypeId, exceptionObject, registeredSensorConfig);
-
-		verify(coreService, never()).addExceptionSensorData(anyLong(), anyInt(), (ExceptionSensorData) isNull());
 	}
 
 	private static class ExceptionSensorDataVerifier extends ArgumentMatcher<ExceptionSensorData> {

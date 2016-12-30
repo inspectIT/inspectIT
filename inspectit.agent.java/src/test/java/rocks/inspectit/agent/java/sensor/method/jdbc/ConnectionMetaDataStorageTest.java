@@ -17,6 +17,7 @@ import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.C
 import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionMetaDataStorage.ConnectionMetaDataExtractor;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
+@SuppressWarnings("PMD")
 public class ConnectionMetaDataStorageTest {
 
 	private ConnectionMetaDataStorage storage;

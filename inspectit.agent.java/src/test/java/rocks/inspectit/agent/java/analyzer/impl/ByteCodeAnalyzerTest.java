@@ -53,9 +53,7 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.config.impl.SpecialSensorConfig;
 import rocks.inspectit.agent.java.connection.IConnection;
-import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
 import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -129,7 +127,7 @@ public class ByteCodeAnalyzerTest extends TestBase {
 	final Long platformId = 10L;
 
 	@BeforeMethod
-	public void setup() throws IdNotAvailableException, ServerUnavailableException {
+	public void setup() throws Exception {
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 		doAnswer(new Answer<Void>() {
 			@Override

@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
 import rocks.inspectit.agent.java.util.StringConstraint;
@@ -145,29 +144,23 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 				double duration = endTime - startTime;
 				SqlStatementData sqlData = (SqlStatementData) coreService.getMethodSensorData(sensorTypeId, methodId, sql);
 				if (null == sqlData) {
-					try {
-						Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
-						List<String> params = statementStorage.getParameters(object);
-						long platformId = platformManager.getPlatformId();
+					Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
+					List<String> params = statementStorage.getParameters(object);
+					long platformId = platformManager.getPlatformId();
 
-						sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
-						sqlData.setPreparedStatement(true);
-						sqlData.setSql(strConstraint.crop(sql));
-						sqlData.setDuration(duration);
-						sqlData.calculateMin(duration);
-						sqlData.calculateMax(duration);
-						sqlData.setCount(1L);
-						sqlData.setParameterValues(params);
+					sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
+					sqlData.setPreparedStatement(true);
+					sqlData.setSql(strConstraint.crop(sql));
+					sqlData.setDuration(duration);
+					sqlData.calculateMin(duration);
+					sqlData.calculateMax(duration);
+					sqlData.setCount(1L);
+					sqlData.setParameterValues(params);
 
-						// populate the connection meta data.
-						connectionMetaDataStorage.populate(sqlData, statementReflectionCache.getConnection(object.getClass(), object));
+					// populate the connection meta data.
+					connectionMetaDataStorage.populate(sqlData, statementReflectionCache.getConnection(object.getClass(), object));
 
-						coreService.addMethodSensorData(sensorTypeId, methodId, sql, sqlData);
-					} catch (IdNotAvailableException e) {
-						if (log.isDebugEnabled()) {
-							log.debug("Could not save the sql data because of an unavailable id. " + e.getMessage());
-						}
-					}
+					coreService.addMethodSensorData(sensorTypeId, methodId, sql, sqlData);
 				} else {
 					sqlData.increaseCount();
 					sqlData.addDuration(duration);

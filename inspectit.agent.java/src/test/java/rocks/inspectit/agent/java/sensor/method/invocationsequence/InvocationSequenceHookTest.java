@@ -29,7 +29,6 @@ import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.sensor.ISensor;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -95,7 +94,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * @throws IdNotAvailableException
 	 */
 	@Test
-	public void startEndInvocationWithDataSaving() throws IdNotAvailableException {
+	public void startEndInvocationWithDataSaving() {
 		long platformId = 1L;
 		long methodId = 3L;
 		long sensorTypeId = 11L;
@@ -142,7 +141,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * @throws IdNotAvailableException
 	 */
 	@Test
-	public void twoInvocationsParentChild() throws IdNotAvailableException {
+	public void twoInvocationsParentChild() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -196,7 +195,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * @throws IdNotAvailableException
 	 */
 	@Test
-	public void twoRecursiveInvocations() throws IdNotAvailableException {
+	public void twoRecursiveInvocations() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -250,7 +249,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * @throws IdNotAvailableException
 	 */
 	@Test
-	public void minDuration() throws IdNotAvailableException {
+	public void minDuration() {
 		long platformId = 1L;
 		long methodId = 3L;
 		long sensorTypeId = 11L;
@@ -289,34 +288,10 @@ public class InvocationSequenceHookTest extends TestBase {
 	}
 
 	/**
-	 * Tests that when Id is not available (platform) on start of invocation no data will be
-	 * captured.
-	 */
-	@Test
-	public void idNotAvailablePlatform() throws IdNotAvailableException {
-		long methodId = 3L;
-		long sensorTypeId = 11L;
-		Object object = mock(Object.class);
-		Object[] parameters = new Object[0];
-		Object result = mock(Object.class);
-
-		// no test of skipping/removal
-		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
-
-		when(platformManager.getPlatformId()).thenThrow(new IdNotAvailableException("test"));
-
-		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
-
-		verifyZeroInteractions(timer, coreService);
-	}
-
-	/**
 	 * Checks if there is a correct order of children when one in the middle is removed.
 	 */
 	@Test
-	public void fixChildrenOnRemoval() throws IdNotAvailableException {
+	public void fixChildrenOnRemoval() {
 		long platformId = 1L;
 		long sensorTypeId = 11L;
 		long methodId1 = 3L;
@@ -378,7 +353,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * Removing done due to the exception delegation.
 	 */
 	@Test
-	public void removeExceptionDelegation() throws IdNotAvailableException {
+	public void removeExceptionDelegation() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -426,7 +401,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * No removing exception delegation done cause there is exception object.
 	 */
 	@Test
-	public void noRemoveExceptionDelegation() throws IdNotAvailableException {
+	public void noRemoveExceptionDelegation() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -488,7 +463,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * Removing done due to the wrapped SQLs.
 	 */
 	@Test
-	public void removeWrappedSql() throws IdNotAvailableException {
+	public void removeWrappedSql() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -536,7 +511,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * No removing done due to the wrapped SQLs, because there is SQL object.
 	 */
 	@Test
-	public void noRemoveWrappedSql() throws IdNotAvailableException {
+	public void noRemoveWrappedSql() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -599,7 +574,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * Removing done due to the not captured loggings.
 	 */
 	@Test
-	public void removeNotCapturedLogging() throws IdNotAvailableException {
+	public void removeNotCapturedLogging() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -647,7 +622,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * No removing done due to the captured logging, because there is log object.
 	 */
 	@Test
-	public void noRemoveCapturedLogging() throws IdNotAvailableException {
+	public void noRemoveCapturedLogging() {
 		long platformId = 1L;
 		long methodId1 = 3L;
 		long sensorTypeId = 11L;
@@ -712,7 +687,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * @see #skippingSensors()
 	 */
 	@Test(dataProvider = "skippingSensors")
-	public void skipSingleSensor(Class<? extends ISensor> sensorClass) throws IdNotAvailableException {
+	public void skipSingleSensor(Class<? extends ISensor> sensorClass) {
 		long methodId = 3L;
 		long sensorTypeId = 11L;
 		Object object = mock(Object.class);
@@ -738,7 +713,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 * @see #skippingSensors()
 	 */
 	@Test(dataProvider = "skippingSensors")
-	public void skipSensorWithEnchancedExceptionSensor(Class<? extends ISensor> sensorClass) throws IdNotAvailableException {
+	public void skipSensorWithEnchancedExceptionSensor(Class<? extends ISensor> sensorClass) {
 		invocationSequenceHook = new InvocationSequenceHook(timer, platformManager, propertyAccessor, Collections.<String, Object> emptyMap(), true);
 
 		long methodId = 3L;

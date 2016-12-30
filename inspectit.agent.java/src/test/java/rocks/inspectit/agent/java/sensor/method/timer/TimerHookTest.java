@@ -4,14 +4,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -37,7 +33,6 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IObjectStorage;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
@@ -77,7 +72,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void sameMethodTwice() throws IdNotAvailableException {
+	public void sameMethodTwice() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
@@ -170,29 +165,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void platformIdNotAvailable() throws IdNotAvailableException {
-		// set up data
-		long methodId = 3L;
-		long sensorTypeId = 11L;
-		Object object = mock(Object.class);
-		Object[] parameters = new Object[0];
-		Object result = mock(Object.class);
-
-		Double firstTimerValue = 1000.453d;
-		Double secondTimerValue = 1323.675d;
-
-		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		doThrow(new IdNotAvailableException("")).when(platformManager).getPlatformId();
-
-		timerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
-		timerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		timerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-
-		verify(coreService, never()).addObjectStorage(anyLong(), anyLong(), anyString(), (IObjectStorage) isNull());
-	}
-
-	@Test
-	public void propertyAccess() throws IdNotAvailableException {
+	public void propertyAccess() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
@@ -217,7 +190,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void charting() throws IdNotAvailableException {
+	public void charting() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
@@ -246,7 +219,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void aggregateStorage() throws IdNotAvailableException {
+	public void aggregateStorage() {
 		Map<String, Object> settings = new HashMap<String, Object>();
 		settings.put("mode", "aggregate");
 		timerHook = new TimerHook(timer, platformManager, propertyAccessor, settings, ManagementFactory.getThreadMXBean());
@@ -328,7 +301,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void optimizedStorage() throws IdNotAvailableException {
+	public void optimizedStorage() {
 		Map<String, Object> settings = new HashMap<String, Object>();
 		settings.put("mode", "optimized");
 		timerHook = new TimerHook(timer, platformManager, propertyAccessor, settings, ManagementFactory.getThreadMXBean());
@@ -412,7 +385,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void oneRecordWithCpuTime() throws IdNotAvailableException {
+	public void oneRecordWithCpuTime() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
@@ -454,7 +427,7 @@ public class TimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void twoRecordsWithCpuTime() throws IdNotAvailableException {
+	public void twoRecordsWithCpuTime() {
 		long platformId = 1L;
 		long methodIdOne = 3L;
 		long methodIdTwo = 9L;

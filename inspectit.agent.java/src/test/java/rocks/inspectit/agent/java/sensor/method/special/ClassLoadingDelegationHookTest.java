@@ -19,6 +19,8 @@ import rocks.inspectit.shared.all.testbase.TestBase;
  * @author Ivan Senic
  *
  */
+@SuppressWarnings("PMD")
+
 public class ClassLoadingDelegationHookTest extends TestBase {
 
 	@InjectMocks

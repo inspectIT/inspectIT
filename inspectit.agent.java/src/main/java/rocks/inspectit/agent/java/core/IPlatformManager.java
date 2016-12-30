@@ -22,10 +22,8 @@ public interface IPlatformManager {
 	 * as a different agent name is set on the same machine.
 	 *
 	 * @return The unique platform id.
-	 * @throws IdNotAvailableException
-	 *             This exception is thrown if no ID can be retrieved from this manager.
 	 */
-	long getPlatformId() throws IdNotAvailableException;
+	long getPlatformId();
 
 	/**
 	 * Un-registers the platform if the agent is currently connected and registered.After calling
