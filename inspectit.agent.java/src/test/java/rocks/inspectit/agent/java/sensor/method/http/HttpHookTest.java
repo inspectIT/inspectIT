@@ -30,7 +30,6 @@ import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
@@ -93,7 +92,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void oneRecordThatIsHttpWithoutReadingData() throws IdNotAvailableException {
+	public void oneRecordThatIsHttpWithoutReadingData() {
 		Double firstTimerValue = 1000.453d;
 		Double secondTimerValue = 1323.675d;
 
@@ -120,7 +119,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void oneRecordThatIsHttpCharting() throws IdNotAvailableException {
+	public void oneRecordThatIsHttpCharting() {
 		Double firstTimerValue = 1000.453d;
 		Double secondTimerValue = 1323.675d;
 
@@ -149,7 +148,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void oneRecordThatIsHttpReadingDataNoCropping() throws IdNotAvailableException {
+	public void oneRecordThatIsHttpReadingDataNoCropping() {
 		final String uri = "URI";
 		final String method = "GET";
 
@@ -251,7 +250,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void oneRecordThatIsNotHttp() throws IdNotAvailableException {
+	public void oneRecordThatIsNotHttp() {
 		Double firstTimerValue = 1000.453d;
 		Double secondTimerValue = 1323.675d;
 
@@ -277,7 +276,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void twoInvocationsAfterEachOther() throws IdNotAvailableException {
+	public void twoInvocationsAfterEachOther() {
 		// Idea: Is it also working for two invocations after each other. Is the marker reset
 		// correctly?
 
@@ -323,9 +322,9 @@ public class HttpHookTest extends AbstractLogSupport {
 		MethodSensorData data2 = new HttpTimerData(null, platformId, sensorTypeId, methodId21);
 
 		when(timer.getCurrentTime()).thenReturn(timerS11).thenReturn(timerS12).thenReturn(timerE12).thenReturn(timerE11).thenReturn(timerS21).thenReturn(timerS22).thenReturn(timerE22)
-				.thenReturn(timerE21);
+		.thenReturn(timerE21);
 		when(threadMXBean.getCurrentThreadCpuTime()).thenReturn(cpuS11).thenReturn(cpuS12).thenReturn(cpuE12).thenReturn(cpuE11).thenReturn(cpuS21).thenReturn(cpuS22).thenReturn(cpuE22)
-				.thenReturn(cpuE21);
+		.thenReturn(cpuE21);
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		Object[] parametersNoHttp = new Object[] { servletRequest, servletResponse };
@@ -366,7 +365,7 @@ public class HttpHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void multipleRecordsWithHttp() throws IdNotAvailableException {
+	public void multipleRecordsWithHttp() {
 		// Idea:
 		// 1.element -> not http -> no data
 		// 2.element -> http -> measurement

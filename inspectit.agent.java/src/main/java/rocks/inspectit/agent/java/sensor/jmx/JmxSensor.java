@@ -39,7 +39,6 @@ import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -284,10 +283,6 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 				iterator.remove();
 				log.warn("JMX::Runtime error reading the attribute " + descriptor.getAttributeName() + " from the MBean " + descriptor.getmBeanObjectName()
 				+ ". Attribute removed from the actively read list.", e);
-			} catch (IdNotAvailableException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("JMX::IdNotAvailable. MBean may not be registered on the Server.", e);
-				}
 			}
 		}
 	}
@@ -354,10 +349,6 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 		} catch (ServerUnavailableException e) {
 			if (log.isWarnEnabled()) {
 				log.warn("Error registering JMX attributes on the server.", e);
-			}
-		} catch (IdNotAvailableException e) {
-			if (log.isDebugEnabled()) {
-				log.debug("Error registering JMX attributes on the server.", e);
 			}
 		}
 	}

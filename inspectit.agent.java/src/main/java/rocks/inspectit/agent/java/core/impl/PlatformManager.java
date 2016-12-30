@@ -15,7 +15,6 @@ import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.RegistrationException;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -82,10 +81,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	 * For now just return the id.
 	 */
 	@Override
-	public long getPlatformId() throws IdNotAvailableException {
-		if (-1 == platformId) {
-			throw new IdNotAvailableException("No ID available in the moment.");
-		}
+	public long getPlatformId() {
 		return platformId;
 	}
 

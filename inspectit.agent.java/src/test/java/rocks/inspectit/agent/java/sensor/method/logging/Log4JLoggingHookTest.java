@@ -16,7 +16,6 @@ import rocks.inspectit.agent.java.AbstractLogSupport;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 
@@ -54,7 +53,7 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 	}
 
 	@Test(dataProvider = "allCombinationShouldWeCapture")
-	public void checkForCorrectLogging(Level givenMinimumLevel, Level logThisLevel, Boolean shouldCapture) throws IdNotAvailableException {
+	public void checkForCorrectLogging(Level givenMinimumLevel, Level logThisLevel, Boolean shouldCapture) {
 		Log4JLoggingHook hook = new Log4JLoggingHook(platformManager, givenMinimumLevel.toString());
 
 		long methodId = 1l;

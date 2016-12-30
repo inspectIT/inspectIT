@@ -2,8 +2,6 @@ package rocks.inspectit.agent.java.sensor.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -18,7 +16,6 @@ import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
@@ -28,6 +25,7 @@ import rocks.inspectit.shared.all.testbase.TestBase;
  *
  * @author Max Wassiljew (NovaTec Consulting GmbH)
  */
+@SuppressWarnings("PMD")
 public class AbstractPlatformSensorTest extends TestBase {
 
 	/** Class under test. */
@@ -102,23 +100,6 @@ public class AbstractPlatformSensorTest extends TestBase {
 
 			verify(systemSensorData).setPlatformIdent(1337L);
 			verify(systemSensorData).setSensorTypeIdent(73L);
-		}
-
-		@Test
-		void sensorTypeConfigIdNotAvailable() throws Exception {
-			PlatformSensorTypeConfig platformSensorTypeConfigA = Mockito.mock(PlatformSensorTypeConfig.class);
-
-			when(platformSensorTypeConfigA.getClassName()).thenReturn("rocks.inspectit.agent.java.sensor.platform.AbstractPlatformSensorFakeImpl");
-			when(this.configurationStorage.getPlatformSensorTypes()).thenReturn(Arrays.asList(platformSensorTypeConfigA));
-			when(this.log.isDebugEnabled()).thenReturn(Boolean.TRUE);
-
-			IdNotAvailableException exception = mock(IdNotAvailableException.class);
-
-			doThrow(exception).when(platformManager).getPlatformId();
-
-			this.cut.afterPropertiesSet();
-
-			verify(exception).getMessage();
 		}
 
 	}

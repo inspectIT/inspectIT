@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
@@ -83,36 +82,30 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 		String throwableClass = object.getClass().getName();
 		String rscTragetClassname = rsc.getTargetClassFqn();
 		if (throwableClass.equals(rscTragetClassname)) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				Long identityHash = Long.valueOf(System.identityHashCode(object));
+			long platformId = platformManager.getPlatformId();
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			Long identityHash = Long.valueOf(System.identityHashCode(object));
 
-				// need to reset the exception handler id
-				exceptionHandlerId.set(null);
+			// need to reset the exception handler id
+			exceptionHandlerId.set(null);
 
-				// getting the actual object with information
-				Throwable throwable = (Throwable) object;
+			// getting the actual object with information
+			Throwable throwable = (Throwable) object;
 
-				// creating the data object
-				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, methodId);
-				data.setThrowableIdentityHashCode(identityHash.longValue());
-				data.setExceptionEvent(ExceptionEvent.CREATED);
-				data.setThrowableType(throwable.getClass().getName());
+			// creating the data object
+			ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, methodId);
+			data.setThrowableIdentityHashCode(identityHash.longValue());
+			data.setExceptionEvent(ExceptionEvent.CREATED);
+			data.setThrowableType(throwable.getClass().getName());
 
-				// set the static information of the current object
-				setStaticInformation(data, throwable);
+			// set the static information of the current object
+			setStaticInformation(data, throwable);
 
-				// creating the mapping object and setting it on the thread local
-				exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
+			// creating the mapping object and setting it on the thread local
+			exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
 
-				// adding the data object to the core service
-				coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
-			} catch (IdNotAvailableException e) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Could not start exception sequence because of a (currently) not mapped ID");
-				}
-			}
+			// adding the data object to the core service
+			coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
 		}
 	}
 
@@ -125,55 +118,49 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 		IdentityHashToDataObject mappingObject = exceptionDataHolder.get();
 
 		if (null != mappingObject) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				Long identityHash = Long.valueOf(System.identityHashCode(exceptionObject));
+			long platformId = platformManager.getPlatformId();
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			Long identityHash = Long.valueOf(System.identityHashCode(exceptionObject));
 
-				// getting the actual object with information
-				Throwable throwable = (Throwable) exceptionObject;
+			// getting the actual object with information
+			Throwable throwable = (Throwable) exceptionObject;
 
-				// creating the data object
-				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, id);
-				data.setThrowableIdentityHashCode(identityHash.longValue());
-				data.setThrowableType(throwable.getClass().getName());
+			// creating the data object
+			ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, id);
+			data.setThrowableIdentityHashCode(identityHash.longValue());
+			data.setThrowableType(throwable.getClass().getName());
 
-				// check whether it's the same Throwable object as before
-				if (mappingObject.getIdentityHash().equals(identityHash)) {
-					// we have to check whether the Throwable object is just passed or explicitly
-					// rethrown
-					if ((null != exceptionHandlerId.get()) && (id == exceptionHandlerId.get().longValue())) {
-						// the Throwable object is explicitly rethrown
-						data.setExceptionEvent(ExceptionEvent.RETHROWN);
-					} else {
-						// the Throwable object is thrown the first time or just passed by the JVM,
-						// so it's a PASSED event
-						data.setExceptionEvent(ExceptionEvent.PASSED);
-					}
-
-					// current object is the child of the previous object
-					ExceptionSensorData parent = mappingObject.getExceptionSensorData();
-					parent.setChild(data);
-
-					// we are just exchanging the data object and setting it on the mapping object
-					mappingObject.setExceptionSensorData(data);
-					exceptionDataHolder.set(mappingObject);
+			// check whether it's the same Throwable object as before
+			if (mappingObject.getIdentityHash().equals(identityHash)) {
+				// we have to check whether the Throwable object is just passed or explicitly
+				// rethrown
+				if ((null != exceptionHandlerId.get()) && (id == exceptionHandlerId.get().longValue())) {
+					// the Throwable object is explicitly rethrown
+					data.setExceptionEvent(ExceptionEvent.RETHROWN);
 				} else {
-					// it's a new Throwable object, that we didn't recognize earlier
-					data.setExceptionEvent(ExceptionEvent.UNREGISTERED_PASSED);
-					setStaticInformation(data, throwable);
-
-					// we are creating a new mapping object and setting it on the thread local
-					exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
+					// the Throwable object is thrown the first time or just passed by the JVM,
+					// so it's a PASSED event
+					data.setExceptionEvent(ExceptionEvent.PASSED);
 				}
 
-				// adding the data object to the core service
-				coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
-			} catch (IdNotAvailableException e) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Could not start exception sequence because of a (currently) not mapped ID");
-				}
+				// current object is the child of the previous object
+				ExceptionSensorData parent = mappingObject.getExceptionSensorData();
+				parent.setChild(data);
+
+				// we are just exchanging the data object and setting it on the mapping object
+				mappingObject.setExceptionSensorData(data);
+				exceptionDataHolder.set(mappingObject);
+			} else {
+				// it's a new Throwable object, that we didn't recognize earlier
+				data.setExceptionEvent(ExceptionEvent.UNREGISTERED_PASSED);
+				setStaticInformation(data, throwable);
+
+				// we are creating a new mapping object and setting it on the thread local
+				exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
 			}
+
+			// adding the data object to the core service
+			coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
 		}
 	}
 
@@ -186,48 +173,42 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 		IdentityHashToDataObject mappingObject = exceptionDataHolder.get();
 
 		if (null != mappingObject) {
-			try {
-				long platformId = platformManager.getPlatformId();
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				Long identityHash = Long.valueOf(System.identityHashCode(exceptionObject));
+			long platformId = platformManager.getPlatformId();
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			Long identityHash = Long.valueOf(System.identityHashCode(exceptionObject));
 
-				// save id of the method where the exception is catched
-				exceptionHandlerId.set(Long.valueOf(id));
+			// save id of the method where the exception is catched
+			exceptionHandlerId.set(Long.valueOf(id));
 
-				// getting the actual object with information
-				Throwable throwable = (Throwable) exceptionObject;
+			// getting the actual object with information
+			Throwable throwable = (Throwable) exceptionObject;
 
-				// creating the data object
-				ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, id);
-				data.setThrowableIdentityHashCode(identityHash.longValue());
-				data.setThrowableType(throwable.getClass().getName());
-				data.setExceptionEvent(ExceptionEvent.HANDLED);
+			// creating the data object
+			ExceptionSensorData data = new ExceptionSensorData(timestamp, platformId, sensorTypeId, id);
+			data.setThrowableIdentityHashCode(identityHash.longValue());
+			data.setThrowableType(throwable.getClass().getName());
+			data.setExceptionEvent(ExceptionEvent.HANDLED);
 
-				// check whether it's the same Throwable object as before
-				if (mappingObject.getIdentityHash().equals(identityHash)) {
-					// current object is the child of the previous object
-					ExceptionSensorData parent = mappingObject.getExceptionSensorData();
-					parent.setChild(data);
+			// check whether it's the same Throwable object as before
+			if (mappingObject.getIdentityHash().equals(identityHash)) {
+				// current object is the child of the previous object
+				ExceptionSensorData parent = mappingObject.getExceptionSensorData();
+				parent.setChild(data);
 
-					// we are just exchanging the data object and setting it on the mapping object
-					mappingObject.setExceptionSensorData(data);
-					exceptionDataHolder.set(mappingObject);
-				} else {
-					// it's a Throwable object, that we didn't recognize earlier
-					data.setExceptionEvent(ExceptionEvent.UNREGISTERED_PASSED);
-					setStaticInformation(data, throwable);
+				// we are just exchanging the data object and setting it on the mapping object
+				mappingObject.setExceptionSensorData(data);
+				exceptionDataHolder.set(mappingObject);
+			} else {
+				// it's a Throwable object, that we didn't recognize earlier
+				data.setExceptionEvent(ExceptionEvent.UNREGISTERED_PASSED);
+				setStaticInformation(data, throwable);
 
-					// we are creating a new mapping object and setting it on the thread local
-					exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
-				}
-
-				// adding the data object to the core service
-				coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
-			} catch (IdNotAvailableException e) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Could not start exception sequence because of a (currently) not mapped ID");
-				}
+				// we are creating a new mapping object and setting it on the thread local
+				exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
 			}
+
+			// adding the data object to the core service
+			coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
 		}
 	}
 

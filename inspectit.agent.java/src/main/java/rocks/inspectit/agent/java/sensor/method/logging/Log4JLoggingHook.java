@@ -2,13 +2,9 @@ package rocks.inspectit.agent.java.sensor.method.logging;
 
 import java.sql.Timestamp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
 import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelper;
 import rocks.inspectit.agent.java.sensor.method.logging.severity.SeverityHelperFactory;
@@ -31,9 +27,6 @@ import rocks.inspectit.shared.all.communication.data.LoggingData;
  * @author Stefan Siegl
  */
 public class Log4JLoggingHook implements IMethodHook {
-
-	/** The logger of this class. Initialized manually. */
-	private static final Logger LOG = LoggerFactory.getLogger(Log4JLoggingHook.class);
 
 	/** the platform manager. */
 	private final IPlatformManager platformManager;
@@ -88,28 +81,22 @@ public class Log4JLoggingHook implements IMethodHook {
 				return;
 			}
 
-			try {
-				long platformId = platformManager.getPlatformId();
+			long platformId = platformManager.getPlatformId();
 
-				LoggingData data = new LoggingData();
-				data.setLevel(level);
-				data.setMessage(String.valueOf(parameters[2]));
-				data.setPlatformIdent(platformId);
-				data.setSensorTypeIdent(sensorTypeId);
-				data.setMethodIdent(methodId);
-				data.setTimeStamp(new Timestamp(System.currentTimeMillis()));
+			LoggingData data = new LoggingData();
+			data.setLevel(level);
+			data.setMessage(String.valueOf(parameters[2]));
+			data.setPlatformIdent(platformId);
+			data.setSensorTypeIdent(sensorTypeId);
+			data.setMethodIdent(methodId);
+			data.setTimeStamp(new Timestamp(System.currentTimeMillis()));
 
-				// TODO: Note that setting the prefix to null here is only
-				// meaningful for the
-				// current integration version of the logging sensor where
-				// loggings outside of
-				// invocation sequences is not yet supported!
-				coreService.addMethodSensorData(sensorTypeId, methodId, null, data);
-			} catch (IdNotAvailableException e) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Could not save the timer data because of an unavailable id. " + e.getMessage());
-				}
-			}
+			// TODO: Note that setting the prefix to null here is only
+			// meaningful for the
+			// current integration version of the logging sensor where
+			// loggings outside of
+			// invocation sequences is not yet supported!
+			coreService.addMethodSensorData(sensorTypeId, methodId, null, data);
 		}
 	}
 }

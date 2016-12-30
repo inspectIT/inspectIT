@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.cmr.service.IKeepAliveService;
 import rocks.inspectit.shared.all.spring.logger.Log;
 
@@ -108,10 +107,6 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 						}
 					}
 				}
-			}
-		} catch (IdNotAvailableException e) {
-			if (log.isDebugEnabled()) {
-				log.debug("Keep-alive signal could not be sent. No platform id available.", e);
 			}
 		} catch (ServerUnavailableException e) {
 			if (log.isDebugEnabled()) {

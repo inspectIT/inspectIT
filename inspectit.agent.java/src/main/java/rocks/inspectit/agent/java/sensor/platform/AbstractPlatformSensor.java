@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -83,15 +82,9 @@ public abstract class AbstractPlatformSensor implements IPlatformSensor, Initial
 	 * Initializes the {@link SystemSensorData}.
 	 */
 	private void initSensorData() {
-		try {
-			SystemSensorData systemSensorData = this.getSystemSensorData();
-			systemSensorData.setPlatformIdent(this.platformManager.getPlatformId());
-			systemSensorData.setSensorTypeIdent(sensorTypeConfig.getId());
-		} catch (IdNotAvailableException e) {
-			if (log.isDebugEnabled()) {
-				log.debug("Could not save the " + this.getClass().getName() + " because of an unavailable id. " + e.getMessage());
-			}
-		}
+		SystemSensorData systemSensorData = this.getSystemSensorData();
+		systemSensorData.setPlatformIdent(this.platformManager.getPlatformId());
+		systemSensorData.setSensorTypeIdent(sensorTypeConfig.getId());
 	}
 
 	/**

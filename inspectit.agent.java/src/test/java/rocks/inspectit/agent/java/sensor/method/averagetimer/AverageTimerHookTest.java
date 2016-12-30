@@ -3,14 +3,9 @@ package rocks.inspectit.agent.java.sensor.method.averagetimer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -29,9 +24,7 @@ import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.util.Timer;
-import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 
@@ -64,7 +57,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void oneRecord() throws IdNotAvailableException {
+	public void oneRecord() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
@@ -105,7 +98,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void twoRecords() throws IdNotAvailableException {
+	public void twoRecords() {
 		long platformId = 1L;
 		long methodIdOne = 3L;
 		long methodIdTwo = 9L;
@@ -151,7 +144,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void sameMethodTwice() throws IdNotAvailableException {
+	public void sameMethodTwice() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
@@ -215,7 +208,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void newMinValue() throws IdNotAvailableException {
+	public void newMinValue() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;
@@ -320,29 +313,7 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 	}
 
 	@Test
-	public void platformIdNotAvailable() throws IdNotAvailableException {
-		// set up data
-		long methodId = 3L;
-		long sensorTypeId = 11L;
-		Object object = mock(Object.class);
-		Object[] parameters = new Object[0];
-		Object result = mock(Object.class);
-
-		Double firstTimerValue = 1000.453d;
-		Double secondTimerValue = 1323.675d;
-
-		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
-		doThrow(new IdNotAvailableException("")).when(platformManager).getPlatformId();
-
-		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-
-		verify(coreService, never()).addMethodSensorData(anyLong(), anyLong(), anyString(), (MethodSensorData) isNull());
-	}
-
-	@Test
-	public void propertyAccess() throws IdNotAvailableException {
+	public void propertyAccess() {
 		// set up data
 		long platformId = 1L;
 		long methodId = 3L;

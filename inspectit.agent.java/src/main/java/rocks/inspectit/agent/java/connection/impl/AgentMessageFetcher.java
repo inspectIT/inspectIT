@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.IdNotAvailableException;
 import rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent;
 import rocks.inspectit.shared.all.communication.message.IAgentMessage;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -111,10 +110,6 @@ public class AgentMessageFetcher implements Runnable {
 			} catch (ServerUnavailableException e) {
 				if (log.isDebugEnabled()) {
 					log.debug("CMR is not available. Agent messages could not been fetched.", e);
-				}
-			} catch (IdNotAvailableException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Platform ID is not available. Agent messages could not been fetched.", e);
 				}
 			}
 		}
