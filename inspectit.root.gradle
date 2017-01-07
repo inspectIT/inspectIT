@@ -29,6 +29,9 @@ File platformFile = file("platform.gradle")
 /** Apply base plug-in to the root project so that we enable tasks like clean */
 apply plugin: 'base'
 
+/** Apply base plug-in to the root project so that we enable tasks like clean */
+apply plugin: 'base'
+
 allprojects {
 	apply from: file(propertiesFile.absolutePath)
 	apply from: file(dependenciesFile.absolutePath)
