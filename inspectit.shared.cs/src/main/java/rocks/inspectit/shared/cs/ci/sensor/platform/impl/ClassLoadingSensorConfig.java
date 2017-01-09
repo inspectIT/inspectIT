@@ -15,6 +15,11 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 public class ClassLoadingSensorConfig extends AbstractPlatformSensorConfig implements IPlatformSensorConfig {
 
 	/**
+	 * Sensor name.
+	 */
+	public static final String SENSOR_NAME = "Class Loading Information";
+
+	/**
 	 * Implementing class name.
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.ClassLoadingInformation";

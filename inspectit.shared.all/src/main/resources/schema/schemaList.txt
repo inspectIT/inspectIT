@@ -43,3 +43,5 @@ schema/JmxSensorValueData.sch
 schema/HttpInfo.sch
 schema/ApplicationData.sch
 schema/BusinessTransactionData.sch
+schema/SpanIdent.sch
+schema/AbstractSpan.sch

@@ -56,6 +56,14 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsListenerServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteManualServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteSpringRestTemplateClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
@@ -389,6 +397,15 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(EMailListValidator.class, new FieldSerializer<EMailListValidator>(kryo, EMailListValidator.class), nextRegistrationId++);
 		kryo.register(AlertClosingReason.class, new EnumSerializer(AlertClosingReason.class), nextRegistrationId++);
 
+		// INSPECTIT-1921
+		kryo.register(RemoteApacheHttpClientV40SensorConfig.class, new FieldSerializer<>(kryo, RemoteApacheHttpClientV40SensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteJettyHttpClientV61ClientSensorConfig.class, new FieldSerializer<>(kryo, RemoteJettyHttpClientV61ClientSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteUrlConnectionClientSensorConfig.class, new FieldSerializer<>(kryo, RemoteUrlConnectionClientSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteSpringRestTemplateClientSensorConfig.class, new FieldSerializer<>(kryo, RemoteSpringRestTemplateClientSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteJavaHttpServerSensorConfig.class, new FieldSerializer<>(kryo, RemoteJavaHttpServerSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteJmsClientSensorConfig.class, new FieldSerializer<>(kryo, RemoteJmsClientSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteJmsListenerServerSensorConfig.class, new FieldSerializer<>(kryo, RemoteJmsListenerServerSensorConfig.class), nextRegistrationId++);
+		kryo.register(RemoteManualServerSensorConfig.class, new FieldSerializer<>(kryo, RemoteManualServerSensorConfig.class), nextRegistrationId++);
 	}
 
 }
