@@ -18,7 +18,7 @@ public class InvocationSequenceSensorConfig extends StringConstraintSensorConfig
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "Invocation Sequence Sensor";
+	public static final String SENSOR_NAME = "Invocation Sequence Sensor";
 
 	/**
 	 * Implementing class name.

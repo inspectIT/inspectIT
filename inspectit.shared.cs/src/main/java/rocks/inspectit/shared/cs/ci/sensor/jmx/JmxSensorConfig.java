@@ -21,6 +21,11 @@ import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
 public class JmxSensorConfig implements ISensorConfig {
 
 	/**
+	 * Sensor name.
+	 */
+	public static final String SENSOR_NAME = "JMX Sensor";
+
+	/**
 	 * Implementing class name.
 	 */
 	private static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.jmx.JmxSensor";
@@ -40,6 +45,14 @@ public class JmxSensorConfig implements ISensorConfig {
 	 */
 	@XmlAttribute(name = "forceMBeanServerCreation")
 	private boolean forceMBeanServer = false;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getName() {
+		return SENSOR_NAME;
+	}
 
 	/**
 	 * {@inheritDoc}
