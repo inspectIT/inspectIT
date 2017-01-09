@@ -17,6 +17,7 @@ import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.AbstractRemoteSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
@@ -26,14 +27,8 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParamete
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.platform.AbstractPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CpuSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.ci.strategy.impl.ListSendingStrategyConfig;
 import rocks.inspectit.shared.cs.ci.strategy.impl.SimpleBufferStrategyConfig;
@@ -72,9 +67,7 @@ public class Environment extends AbstractCiData {
 	 * List of the platform sensors configurations.
 	 */
 	@XmlElementWrapper(name = "platform-sensor-configs")
-	@XmlElementRefs({ @XmlElementRef(type = ClassLoadingSensorConfig.class), @XmlElementRef(type = CompilationSensorConfig.class), @XmlElementRef(type = CpuSensorConfig.class),
-		@XmlElementRef(type = MemorySensorConfig.class), @XmlElementRef(type = RuntimeSensorConfig.class), @XmlElementRef(type = SystemSensorConfig.class),
-		@XmlElementRef(type = ThreadSensorConfig.class) })
+	@XmlElementRefs({ @XmlElementRef(type = AbstractPlatformSensorConfig.class) })
 	private final List<IPlatformSensorConfig> platformSensorConfigs = ConfigurationDefaultsFactory.getAvailablePlatformSensorConfigs();
 
 	/**
@@ -83,7 +76,7 @@ public class Environment extends AbstractCiData {
 	@XmlElementWrapper(name = "method-sensor-configs")
 	@XmlElementRefs({ @XmlElementRef(type = ConnectionSensorConfig.class), @XmlElementRef(type = HttpSensorConfig.class), @XmlElementRef(type = InvocationSequenceSensorConfig.class),
 		@XmlElementRef(type = PreparedStatementParameterSensorConfig.class), @XmlElementRef(type = PreparedStatementSensorConfig.class), @XmlElementRef(type = StatementSensorConfig.class),
-		@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class) })
+			@XmlElementRef(type = TimerSensorConfig.class), @XmlElementRef(type = Log4jLoggingSensorConfig.class), @XmlElementRef(type = AbstractRemoteSensorConfig.class) })
 	private final List<IMethodSensorConfig> methodSensorConfigs = ConfigurationDefaultsFactory.getAvailableMethodSensorConfigs();
 
 	/**
