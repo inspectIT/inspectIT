@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StyledString;
@@ -33,23 +33,6 @@ import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.ISensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CpuSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.MemorySensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.shared.cs.communication.data.cmr.WritingStatus;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
@@ -694,42 +677,14 @@ public final class TextFormatter {
 	 * @return Name or empty string if sensor name can be resolved.
 	 */
 	public static String getSensorConfigName(Class<? extends ISensorConfig> sensorClass) {
-		if (ObjectUtils.equals(sensorClass, ExceptionSensorConfig.class)) {
-			return "Exception Sensor";
-		} else if (ObjectUtils.equals(sensorClass, ConnectionSensorConfig.class)) {
-			return "JDBC Connection Sensor";
-		} else if (ObjectUtils.equals(sensorClass, HttpSensorConfig.class)) {
-			return "HTTP Sensor";
-		} else if (ObjectUtils.equals(sensorClass, InvocationSequenceSensorConfig.class)) {
-			return "Invocation Sequence Sensor";
-		} else if (ObjectUtils.equals(sensorClass, PreparedStatementParameterSensorConfig.class)) {
-			return "JDBC Prepared Statement Parameter Sensor";
-		} else if (ObjectUtils.equals(sensorClass, PreparedStatementSensorConfig.class)) {
-			return "JDBC Prepared Statement Sensor";
-		} else if (ObjectUtils.equals(sensorClass, StatementSensorConfig.class)) {
-			return "JDBC Statement Sensor";
-		} else if (ObjectUtils.equals(sensorClass, TimerSensorConfig.class)) {
-			return "Timer Sensor";
-		} else if (ObjectUtils.equals(sensorClass, Log4jLoggingSensorConfig.class)) {
-			return "Logging Sensor for log4j ";
-		} else if (ObjectUtils.equals(sensorClass, ClassLoadingSensorConfig.class)) {
-			return "Class Loading Information";
-		} else if (ObjectUtils.equals(sensorClass, CompilationSensorConfig.class)) {
-			return "Compilation Information";
-		} else if (ObjectUtils.equals(sensorClass, CpuSensorConfig.class)) {
-			return "CPU Information";
-		} else if (ObjectUtils.equals(sensorClass, MemorySensorConfig.class)) {
-			return "Memory Information";
-		} else if (ObjectUtils.equals(sensorClass, RuntimeSensorConfig.class)) {
-			return "Runtime Information";
-		} else if (ObjectUtils.equals(sensorClass, SystemSensorConfig.class)) {
-			return "System Information";
-		} else if (ObjectUtils.equals(sensorClass, ThreadSensorConfig.class)) {
-			return "Thread Information";
-		} else if (ObjectUtils.equals(sensorClass, JmxSensorConfig.class)) {
-			return "JMX Sensor";
+		// we expect that all configurations have SENSOR_NAME field
+		try {
+			ISensorConfig sensorInstance = sensorClass.newInstance();
+			return sensorInstance.getName();
+		} catch (Exception e) {
+			InspectIT.getDefault().log(IStatus.WARNING, "Can not load sensor name for class " + sensorClass.getSimpleName());
+			return null;
 		}
-		return null;
 	}
 
 	/**

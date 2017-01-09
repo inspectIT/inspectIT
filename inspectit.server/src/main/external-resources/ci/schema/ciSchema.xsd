@@ -95,6 +95,22 @@
 
   <xs:element name="profile" type="profile"/>
 
+  <xs:element name="remote-apache-httpclientV40-client-sensor-config" type="remoteApacheHttpClientV40SensorConfig"/>
+
+  <xs:element name="remote-http-server-sensor-config" type="remoteJavaHttpServerSensorConfig"/>
+
+  <xs:element name="remote-jetty-httpclientV61-client-sensor-config" type="remoteJettyHttpClientV61ClientSensorConfig"/>
+
+  <xs:element name="remote-jms-client-sensor-config" type="remoteJmsClientSensorConfig"/>
+
+  <xs:element name="remote-jms-listener-server-sensor-config" type="remoteJmsListenerServerSensorConfig"/>
+
+  <xs:element name="remote-manual-server-sensor-config" type="remoteManualServerSensorConfig"/>
+
+  <xs:element name="remote-spring-resttemplate-client-sensor-config" type="remoteSpringRestTemplateClientSensorConfig"/>
+
+  <xs:element name="remote-urlconnection-client-sensor-config" type="remoteUrlConnectionClientSensorConfig"/>
+
   <xs:element name="return-capture" type="returnContextCapture"/>
 
   <xs:element name="runtime-sensor-config" type="runtimeSensorConfig"/>
@@ -503,6 +519,14 @@
                   <xs:element ref="statement-sensor-config"/>
                   <xs:element ref="timer-sensor-config"/>
                   <xs:element ref="log4j-logging-sensor-config"/>
+                  <xs:element ref="remote-http-server-sensor-config"/>
+                  <xs:element ref="remote-jms-listener-server-sensor-config"/>
+                  <xs:element ref="remote-apache-httpclientV40-client-sensor-config"/>
+                  <xs:element ref="remote-urlconnection-client-sensor-config"/>
+                  <xs:element ref="remote-jetty-httpclientV61-client-sensor-config"/>
+                  <xs:element ref="remote-spring-resttemplate-client-sensor-config"/>
+                  <xs:element ref="remote-jms-client-sensor-config"/>
+                  <xs:element ref="remote-manual-server-sensor-config"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -541,17 +565,17 @@
     <xs:attribute name="size" type="xs:int" use="required"/>
   </xs:complexType>
 
+  <xs:complexType name="abstractPlatformSensorConfig" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="active" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
   <xs:complexType name="classLoadingSensorConfig">
     <xs:complexContent>
       <xs:extension base="abstractPlatformSensorConfig">
         <xs:sequence/>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="abstractPlatformSensorConfig" abstract="true">
-    <xs:sequence/>
-    <xs:attribute name="active" type="xs:boolean" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="compilationSensorConfig">
@@ -682,6 +706,74 @@
       <xs:extension base="abstractMethodSensorConfig">
         <xs:sequence/>
         <xs:attribute name="minLevel" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractRemoteSensorConfig" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="remoteJavaHttpServerSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteJmsListenerServerSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteApacheHttpClientV40SensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteUrlConnectionClientSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteJettyHttpClientV61ClientSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteSpringRestTemplateClientSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteJmsClientSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteManualServerSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

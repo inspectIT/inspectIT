@@ -16,7 +16,10 @@ import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 import rocks.inspectit.agent.java.instrumentation.IInstrumentationAware;
 import rocks.inspectit.agent.java.logback.LogInitializer;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.TracerLoggerProvider;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerLoggerWrapper;
 import rocks.inspectit.agent.java.spring.SpringConfiguration;
+import rocks.inspectit.agent.java.tracing.core.Slf4jTracerLoggerProvider;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.version.VersionService;
 
@@ -134,6 +137,11 @@ public class SpringAgent implements IAgent {
 				disableInstrumentation = true;
 			};
 		});
+
+		// IMPORTANT: set the logger provider before starting the spring
+		// this was we ensure we use correct provider before any SDK classes are loaded
+		TracerLoggerProvider provider = new Slf4jTracerLoggerProvider();
+		TracerLoggerWrapper.setProvider(provider);
 
 		// set inspectIT class loader to be the context class loader
 		// so that bean factory can use correct class loader for finding the classes
