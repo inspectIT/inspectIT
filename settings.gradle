@@ -5,7 +5,7 @@
  * @author Ivan Senic
  */
 rootProject.name = "inspectit.root" 
-include 'inspectit.agent.java', 'inspectit.server', 'inspectit.shared.all', 'inspectit.shared.cs', 'inspectit.ui.rcp'
+include 'inspectit.agent.java', 'inspectit.agent.java.sdk', 'inspectit.server', 'inspectit.shared.all', 'inspectit.shared.cs', 'inspectit.ui.rcp'
 
 /**
  * Sets the name of the project build file (and all of its sub-projects) to be "${project.name}.gradle" pattern.

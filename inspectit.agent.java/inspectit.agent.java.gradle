@@ -40,6 +40,7 @@ configurations {
 /** Depend on inspectit.shared.all, testCompile must depend on shared all test sources because of TestBase class */
 dependencies {
 	compile project(':inspectit.shared.all')
+	compile project(':inspectit.agent.java.sdk')
 	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
@@ -74,6 +75,7 @@ jar {
 
 	into('libs') {
 		from project(':inspectit.shared.all').jar.outputs
+		from project(':inspectit.agent.java.sdk').jar.outputs
 		from configurations.agentJavaProd
 	}
 

@@ -15,6 +15,11 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 public class SystemSensorConfig extends AbstractPlatformSensorConfig implements IPlatformSensorConfig {
 
 	/**
+	 * Sensor name.
+	 */
+	public static final String SENSOR_NAME = "System Information";
+
+	/**
 	 * Implementing class name.
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.SystemInformation";

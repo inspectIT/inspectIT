@@ -1,0 +1,59 @@
+/**
+ * Gradle build file for the inspectit.agent.java.sdk project.
+ * 
+ * @author Ivan Senic
+ */
+defaultTasks 'releaseAndAnalyze'
+
+/** used by the eclipse buildship plugin */
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+/** defined to have it included in Eclipse as source */
+sourceSets {
+	externalResources {
+		resources {
+			srcDir mainExtResources
+		}
+	}
+}
+
+/** Some agent specific properties */
+ext {
+	distJarName = 'inspectit-agent-java-sdk'
+}
+
+/** Setting compile configuration as plugin in Eclipse needs it */
+configurations {
+	compile {
+		extendsFrom configurations.agentJavaSdkProd
+	}
+	testCompile {
+		extendsFrom configurations.agentJavaSdkTest
+		extendsFrom configurations.jmhbase
+	}
+}
+
+
+/** Compile compatibility to 1.6 for all compile tasks */
+tasks.withType(JavaCompile) { t ->
+	sourceCompatibility = '1.6'
+	targetCompatibility = '1.6'
+
+	options.bootClasspath = configurations.java16rt.asPath
+}
+
+/**
+ * Creates the jar.
+ */
+jar {
+	archivesBaseName = distJarName
+
+	manifest {}
+}
+
+task releaseAndAnalyze {
+	description = "Runs all unit tests, all checks and releases the jar."
+	group = 'Release'
+	dependsOn(analyze, jar)
+}
