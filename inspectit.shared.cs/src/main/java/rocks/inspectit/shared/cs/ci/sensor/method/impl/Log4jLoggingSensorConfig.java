@@ -27,7 +27,7 @@ public class Log4jLoggingSensorConfig extends AbstractMethodSensorConfig impleme
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "Logging Sensor for log4j";
+	public static final String SENSOR_NAME = "Logging Sensor for log4j";
 
 	/**
 	 * Implementing class name.

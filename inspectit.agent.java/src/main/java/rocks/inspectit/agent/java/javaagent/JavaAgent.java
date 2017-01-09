@@ -91,9 +91,14 @@ public class JavaAgent implements ClassFileTransformer {
 
 		// Starting up the real agent
 		try {
-			// initialize the SpringAgent
+			// append all needed jars to the boot class loader
 			@SuppressWarnings("resource")
 			InspectItClassLoader classLoader = new InspectItClassLoader(new URL[0]);
+			for (String jarPath : classLoader.getBootClassLoaderJarFiles()) {
+				inst.appendToBootstrapClassLoaderSearch(new JarFile(jarPath));
+			}
+
+			// initialize the SpringAgent
 			Class<?> agentClazz = classLoader.loadClass(INSPECTIT_AGENT);
 			Constructor<?> constructor = agentClazz.getConstructor(File.class, Instrumentation.class);
 			Object realAgent = constructor.newInstance(getInspectItAgentJarFileLocation(), inst);
@@ -320,6 +325,11 @@ public class JavaAgent implements ClassFileTransformer {
 		private final Set<String> ignoreClasses = new HashSet<String>();
 
 		/**
+		 * Set of jar files that need to be appended to the boot class loader.
+		 */
+		private Set<String> bootClassLoaderJarFiles = new HashSet<String>();
+
+		/**
 		 * Default constructor initialized with the urls of the dependency jars etc.
 		 *
 		 * @param urls
@@ -356,6 +366,15 @@ public class JavaAgent implements ClassFileTransformer {
 		}
 
 		/**
+		 * Gets {@link #bootClassLoaderJarFiles}.
+		 *
+		 * @return {@link #bootClassLoaderJarFiles}
+		 */
+		public Set<String> getBootClassLoaderJarFiles() {
+			return this.bootClassLoaderJarFiles;
+		}
+
+		/**
 		 * Analyze this jar file for containing jar files and classes to be used in our own
 		 * classloader.
 		 *
@@ -373,7 +392,11 @@ public class JavaAgent implements ClassFileTransformer {
 				JarEntry jarEntry = jarEntries.nextElement();
 				if (!jarEntry.isDirectory() && isJar(jarEntry.getName())) {
 					File jar = jarEntryAsFile(jarFile, jarEntry);
-					addJarResource(jar);
+					if (jar.getName().contains("io.opentracing")) {
+						bootClassLoaderJarFiles.add(jar.getAbsolutePath());
+					} else {
+						addJarResource(jar);
+					}
 				}
 			}
 		}

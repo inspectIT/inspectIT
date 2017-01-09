@@ -11,6 +11,13 @@ import java.util.Map;
 public interface ISensorConfig {
 
 	/**
+	 * Returns sensor name.
+	 *
+	 * @return Returns sensor name.
+	 */
+	String getName();
+
+	/**
 	 * Returns the class name of the sensor type as fully qualified.
 	 *
 	 * @return Returns the class name of the sensor type as fully qualified.

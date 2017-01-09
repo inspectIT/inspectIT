@@ -103,7 +103,7 @@ public class ClassLoadingDelegationHook implements ISpecialHook {
 	 * @return True if we should try to load this with the inspectIT class loader.
 	 */
 	private boolean loadWithInspectItClassLoader(Object classLoader, String className) {
-		return ClassLoadingUtil.isInspectITClass(className) && !REFLECTASM_ACCESS_CLASS_LOADER_FQN.equals(classLoader.getClass().getName());
+		return (ClassLoadingUtil.isInspectITClass(className) || ClassLoadingUtil.isOpenTracingClass(className)) && !REFLECTASM_ACCESS_CLASS_LOADER_FQN.equals(classLoader.getClass().getName());
 	}
 
 	/**

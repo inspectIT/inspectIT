@@ -4,10 +4,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -29,6 +31,8 @@ import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanContextImpl;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.agent.java.sensor.ISensor;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
@@ -36,6 +40,7 @@ import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor;
 import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingSensor;
+import rocks.inspectit.agent.java.tracing.core.transformer.SpanContextTransformer;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
@@ -44,6 +49,8 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
 /**
  * Testing the {@link InvocationSequenceHook}.
@@ -66,6 +73,12 @@ public class InvocationSequenceHookTest extends TestBase {
 	private IPlatformManager platformManager;
 
 	@Mock
+	private ICoreService realCoreService;
+
+	@Mock
+	private TracerImpl tracer;
+
+	@Mock
 	private IPropertyAccessor propertyAccessor;
 
 	@Mock
@@ -85,7 +98,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 	@BeforeMethod
 	public void init() {
-		invocationSequenceHook = new InvocationSequenceHook(timer, platformManager, propertyAccessor, Collections.<String, Object> emptyMap(), false);
+		invocationSequenceHook = new InvocationSequenceHook(timer, platformManager, realCoreService, tracer, propertyAccessor, Collections.<String, Object> emptyMap(), false);
 	}
 
 	/**
@@ -133,6 +146,103 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(invocation.getChildCount(), is(0L));
 		assertThat(invocation.getTimerData(), is(timerData));
 		assertThat(invocation.getSqlStatementData(), is(sqlStatementData));
+		assertThat(invocation.getSpanIdent(), is(nullValue()));
+
+		verifyZeroInteractions(realCoreService);
+	}
+
+	/**
+	 * Tests that the correct time and ids will be set on the invocation.
+	 *
+	 * @throws IdNotAvailableException
+	 */
+	@Test
+	public void startEndInvocationWithSpanSaving() {
+		long platformId = 1L;
+		long methodId = 3L;
+		long sensorTypeId = 11L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[0];
+		Object result = mock(Object.class);
+
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+
+		double firstTimerValue = 1000.0d;
+		double secondTimerValue = 1323.0d;
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue, secondTimerValue);
+		when(rsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
+		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
+
+		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
+		// save span
+		SpanIdent spanIdent = new SpanIdent(0, 0, 0);
+		ClientSpan clientSpan = new ClientSpan();
+		clientSpan.setSpanIdent(spanIdent);
+		invocationSequenceHook.addMethodSensorData(0, 0, "", clientSpan);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+
+		verify(timer, times(2)).getCurrentTime();
+		verify(realCoreService, times(1)).addMethodSensorData(0, 0, "", clientSpan);
+		verifyNoMoreInteractions(realCoreService);
+
+		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
+
+		InvocationSequenceData invocation = captor.getValue();
+		assertThat(invocation.getPlatformIdent(), is(platformId));
+		assertThat(invocation.getMethodIdent(), is(methodId));
+		assertThat(invocation.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(invocation.getDuration(), is(secondTimerValue - firstTimerValue));
+		assertThat(invocation.getNestedSequences(), is(empty()));
+		assertThat(invocation.getChildCount(), is(0L));
+		assertThat(invocation.getSpanIdent(), is(spanIdent));
+
+	}
+
+	/**
+	 * Tests that the correct time and ids will be set on the invocation.
+	 *
+	 * @throws IdNotAvailableException
+	 */
+	@Test
+	public void startEndInvocationWithActiveServerSpan() {
+		long platformId = 1L;
+		long methodId = 3L;
+		long sensorTypeId = 11L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[0];
+		Object result = mock(Object.class);
+
+		SpanContextImpl context = SpanContextImpl.build();
+		when(tracer.getCurrentContext()).thenReturn(context);
+		when(tracer.isCurrentContextExisting()).thenReturn(true);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+
+		double firstTimerValue = 1000.0d;
+		double secondTimerValue = 1323.0d;
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue, secondTimerValue);
+		when(rsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
+		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
+
+		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+
+		verify(timer, times(2)).getCurrentTime();
+		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
+
+		InvocationSequenceData invocation = captor.getValue();
+		assertThat(invocation.getPlatformIdent(), is(platformId));
+		assertThat(invocation.getMethodIdent(), is(methodId));
+		assertThat(invocation.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(invocation.getDuration(), is(secondTimerValue - firstTimerValue));
+		assertThat(invocation.getNestedSequences(), is(empty()));
+		assertThat(invocation.getChildCount(), is(0L));
+		assertThat(invocation.getSpanIdent(), is(SpanContextTransformer.transformSpanContext(context)));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -186,6 +296,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getNestedSequences(), is(empty()));
 		assertThat(child.getParentSequence(), is(invocation));
 		assertThat(child.getChildCount(), is(0L));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -240,6 +352,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getNestedSequences(), is(empty()));
 		assertThat(child.getParentSequence(), is(invocation));
 		assertThat(child.getChildCount(), is(0L));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -285,6 +399,8 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), Matchers.<InvocationSequenceData> anyObject());
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -347,6 +463,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getNestedSequences(), is(empty()));
 		assertThat(child.getParentSequence(), is(invocation));
 		assertThat(child.getChildCount(), is(0L));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -395,6 +513,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(invocation.getDuration(), is(thirdTimerValue - firstTimerValue));
 		assertThat(invocation.getNestedSequences(), hasSize(0));
 		assertThat(invocation.getChildCount(), is(0L));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -457,6 +577,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getParentSequence(), is(invocation));
 		assertThat(child.getChildCount(), is(0L));
 		assertThat(child.getExceptionSensorDataObjects(), is(Collections.singletonList(exceptionData)));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -505,6 +627,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(invocation.getDuration(), is(thirdTimerValue - firstTimerValue));
 		assertThat(invocation.getNestedSequences(), hasSize(0));
 		assertThat(invocation.getChildCount(), is(0L));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -568,6 +692,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getParentSequence(), is(invocation));
 		assertThat(child.getChildCount(), is(0L));
 		assertThat(child.getSqlStatementData(), is(sqlStatementData));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -616,6 +742,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(invocation.getDuration(), is(thirdTimerValue - firstTimerValue));
 		assertThat(invocation.getNestedSequences(), hasSize(0));
 		assertThat(invocation.getChildCount(), is(0L));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -678,6 +806,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getParentSequence(), is(invocation));
 		assertThat(child.getChildCount(), is(0L));
 		assertThat(child.getLoggingData(), is(loggingData));
+
+		verifyZeroInteractions(realCoreService);
 	}
 
 	/**
@@ -703,7 +833,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
 
-		verifyZeroInteractions(timer, coreService);
+		verifyZeroInteractions(timer, coreService, realCoreService);
 	}
 
 	/**
@@ -714,7 +844,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	 */
 	@Test(dataProvider = "skippingSensors")
 	public void skipSensorWithEnchancedExceptionSensor(Class<? extends ISensor> sensorClass) {
-		invocationSequenceHook = new InvocationSequenceHook(timer, platformManager, propertyAccessor, Collections.<String, Object> emptyMap(), true);
+		invocationSequenceHook = new InvocationSequenceHook(timer, platformManager, realCoreService, tracer, propertyAccessor, Collections.<String, Object> emptyMap(), true);
 
 		long methodId = 3L;
 		long sensorTypeId = 11L;
@@ -742,7 +872,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
 
-		verifyZeroInteractions(timer, coreService);
+		verifyZeroInteractions(timer, coreService, realCoreService);
 	}
 
 	@DataProvider(name = "skippingSensors")

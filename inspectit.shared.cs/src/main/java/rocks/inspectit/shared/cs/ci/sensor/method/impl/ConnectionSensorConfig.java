@@ -18,7 +18,7 @@ public class ConnectionSensorConfig extends AbstractMethodSensorConfig implement
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "JDBC Connection Sensor";
+	public static final String SENSOR_NAME = "JDBC Connection Sensor";
 
 	/**
 	 * Implementing class name.

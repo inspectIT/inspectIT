@@ -18,7 +18,7 @@ public class TimerSensorConfig extends StringConstraintSensorConfig implements I
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "Timer Sensor";
+	public static final String SENSOR_NAME = "Timer Sensor";
 
 	/**
 	 * Implementing class name.
