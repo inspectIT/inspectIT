@@ -16,6 +16,14 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsListenerServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteManualServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteSpringRestTemplateClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
@@ -96,7 +104,23 @@ public enum SensorTypeEnum {
 	/** MBean server interceptor. */
 	MBEAN_SERVER_INTERCEPTOR(MBeanServerInterceptorSensorConfig.CLASS_NAME, InspectITImages.IMG_BEAN, false),
 	/** The alert invocation sequence sensor type. */
-	ALERT_INVOCATION(InvocationSequenceSensorConfig.CLASS_NAME + "#alert", InspectITImages.IMG_ALARM_INVOCATION);
+	ALERT_INVOCATION(InvocationSequenceSensorConfig.CLASS_NAME + "#alert", InspectITImages.IMG_ALARM_INVOCATION),
+	/** The Remote Apache sensor. */
+	REMOTE_APACHE_HTTP_CLIENT_V40(RemoteApacheHttpClientV40SensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote UrlConnection sensor. */
+	REMOTE_HTTP_URL_CONNECTION(RemoteUrlConnectionClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote UrlConnection sensor. */
+	REMOTE_SPRING_REST_TEMPLATE_CLIENT(RemoteSpringRestTemplateClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote Jetty sensor. */
+	REMOTE_JETTY_HTTP_CLIENT_V61(RemoteJettyHttpClientV61ClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote http client sensor. */
+	REMOTE_JAVA_HTTP_SERVER(RemoteJavaHttpServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote jms client sensor. */
+	REMOTE_JMS_CLIENT(RemoteJmsClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote jms listener sensor. */
+	REMOTE_JMS_LISTENER(RemoteJmsListenerServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The manual Remote server sensor. */
+	REMOTE_MANUAL_SERVER(RemoteManualServerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full

@@ -21,7 +21,7 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "HTTP Sensor";
+	public static final String SENSOR_NAME = "HTTP Sensor";
 
 	/**
 	 * Implementing class name.

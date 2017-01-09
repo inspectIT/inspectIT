@@ -31,7 +31,7 @@ public class HttpTimerData extends TimerData {
 	/**
 	 * The default header for tagged requests.
 	 */
-	public static final String INSPECTIT_TAGGING_HEADER = "inspectit";
+	public static final String INSPECTIT_TAGGING_HEADER = "x-insp-use_case";
 
 	/**
 	 * String used to represent multiple request methods in an aggregation.

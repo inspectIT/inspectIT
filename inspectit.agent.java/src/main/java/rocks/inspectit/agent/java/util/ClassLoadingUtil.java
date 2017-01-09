@@ -14,6 +14,11 @@ public final class ClassLoadingUtil {
 	private static final String CLASS_NAME_PREFIX = "rocks.inspectit";
 
 	/**
+	 * Open tracing package prefix.
+	 */
+	private static final String IO_OPENTRACING_PREFIX = "io.opentracing";
+
+	/**
 	 * Private constructor.
 	 */
 	private ClassLoadingUtil() {
@@ -29,4 +34,16 @@ public final class ClassLoadingUtil {
 	public static boolean isInspectITClass(String className) {
 		return className.startsWith(CLASS_NAME_PREFIX);
 	}
+
+	/**
+	 * Returns if the class name starts with {@value #IO_OPENTRACING_PREFIX}.
+	 *
+	 * @param className
+	 *            Class name
+	 * @return Returns if the class name starts with {@value #IO_OPENTRACING_PREFIX}.
+	 */
+	public static boolean isOpenTracingClass(String className) {
+		return className.startsWith(IO_OPENTRACING_PREFIX);
+	}
+
 }
