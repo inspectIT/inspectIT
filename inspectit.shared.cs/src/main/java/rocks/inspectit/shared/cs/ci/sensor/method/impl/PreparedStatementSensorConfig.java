@@ -18,7 +18,7 @@ public class PreparedStatementSensorConfig extends StringConstraintSensorConfig 
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "JDBC Prepared Statement Sensor";
+	public static final String SENSOR_NAME = "JDBC Prepared Statement Sensor";
 
 	/**
 	 * Implementing class name.

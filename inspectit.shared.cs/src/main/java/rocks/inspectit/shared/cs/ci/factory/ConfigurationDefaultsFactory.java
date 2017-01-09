@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlTransient;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
@@ -15,6 +16,14 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsListenerServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteManualServerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteSpringRestTemplateClientSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
@@ -94,6 +103,14 @@ public final class ConfigurationDefaultsFactory {
 		methodSensorConfigs.add(new StatementSensorConfig());
 		methodSensorConfigs.add(new TimerSensorConfig());
 		methodSensorConfigs.add(new Log4jLoggingSensorConfig());
+		methodSensorConfigs.add(new RemoteApacheHttpClientV40SensorConfig());
+		methodSensorConfigs.add(new RemoteJettyHttpClientV61ClientSensorConfig());
+		methodSensorConfigs.add(new RemoteUrlConnectionClientSensorConfig());
+		methodSensorConfigs.add(new RemoteSpringRestTemplateClientSensorConfig());
+		methodSensorConfigs.add(new RemoteJavaHttpServerSensorConfig());
+		methodSensorConfigs.add(new RemoteJmsClientSensorConfig());
+		methodSensorConfigs.add(new RemoteJmsListenerServerSensorConfig());
+		methodSensorConfigs.add(new RemoteManualServerSensorConfig());
 		return methodSensorConfigs;
 	}
 

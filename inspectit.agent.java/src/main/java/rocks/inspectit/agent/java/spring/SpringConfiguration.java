@@ -25,6 +25,9 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.connection.impl.AgentAwareClient;
+import rocks.inspectit.agent.java.sdk.opentracing.Reporter;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
+import rocks.inspectit.agent.java.sdk.opentracing.util.SystemTimer;
 import rocks.inspectit.agent.java.util.AgentAwareThread;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AbstractSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -138,6 +141,23 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	public Client getClient(PrototypesProvider prototypesProvider, IThreadTransformHelper threadTransformHelper) {
 		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
 		return new AgentAwareClient(serialization, prototypesProvider, threadTransformHelper);
+	}
+
+	/**
+	 * Creates the {@link TracerImpl}.
+	 *
+	 * @param reporter
+	 *            Reporter to use. Autowired.
+	 * @param logger
+	 *            Logger to use. Autowired.
+	 * @return Created bean
+	 */
+	@Bean
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	@Autowired
+	public TracerImpl getTracer(Reporter reporter) {
+		TracerImpl tracer = new TracerImpl(new SystemTimer(), reporter, true);
+		return tracer;
 	}
 
 	/**
