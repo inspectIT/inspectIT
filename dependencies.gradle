@@ -31,8 +31,10 @@ configurations {
 	sharedCsProd {
 		extendsFrom configurations.sharedAllProd
 	}
+	agentJavaSdkProd
 	agentJavaProd {
 		extendsFrom configurations.sharedAllProd
+		extendsFrom configurations.agentJavaSdkProd
 	}
 	serverProd {
 		extendsFrom configurations.sharedAllProd
@@ -53,6 +55,9 @@ configurations {
 		extendsFrom configurations.testbase
 	}
 	agentJavaTest {
+		extendsFrom configurations.testbase
+	}
+	agentJavaSdkTest {
 		extendsFrom configurations.testbase
 	}
 	serverTest {
@@ -79,6 +84,7 @@ configurations {
 configurations.sharedAllProd.transitive = false
 configurations.sharedCsProd.transitive = false
 configurations.agentJavaProd.transitive = false
+configurations.agentJavaSdkProd.transitive = false
 configurations.serverProd.transitive = false
 configurations.uiRcpProd.transitive = false
 configurations.testbase.transitive = false
@@ -86,6 +92,7 @@ configurations.classmexer.transitive = false
 configurations.sharedAllTest.transitive = false
 configurations.sharedCsTest.transitive = false
 configurations.agentJavaTest.transitive = false
+configurations.agentJavaSdkTest.transitive = false
 configurations.serverTest.transitive = false
 configurations.uiRcpTest.transitive = false
 configurations.jmhbase.transitive = false
@@ -138,6 +145,12 @@ dependencies {
 	)
 	sharedCsTest (
 		'nl.jqno.equalsverifier:equalsverifier:1.0.2'
+	)
+	
+	/** inspectit.agent.java.sdk */
+	agentJavaSdkProd (
+		'io.opentracing:opentracing-api:0.20.9',
+		'io.opentracing:opentracing-noop:0.20.9',
 	)
 
 	/** inspectit.agent.java */

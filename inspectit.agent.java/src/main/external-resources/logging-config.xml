@@ -82,6 +82,9 @@
 	<!-- analyzer logging, set this to 'debug' to get additional information about: - analyzers -->
 	<logger name="rocks.inspectit.agent.java.analyzer" level="info" />
 	
+	<!-- tracing logging, set this to 'debug' to get additional information about: - tracing -->
+	<logger name="rocks.inspectit.agent.java.tracing" level="info" />
+	
 	<!-- Needed for bridging minlog to slf4j -->
 	<!-- Set this to debug for more information about libs that use minlog: kryo, kryonet -->
 	<logger name="rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger" level="warn" />

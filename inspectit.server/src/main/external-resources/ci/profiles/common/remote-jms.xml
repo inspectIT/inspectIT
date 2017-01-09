@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile schemaVersion="2"  id="remote-jms" name="Remote-JMS" common="true" created-on="2016-11-24T12:00:00" description="Profile for the Remote JMS Calls."
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+
+	<sensor-assignment-profile-data>
+		<!-- Client sensor for JMS sender -->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig" class-name="javax.jms.MessageProducer" method-name="send" parameters="javax.jms.Message" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig" class-name="javax.jms.MessageProducer" method-name="send" parameters="javax.jms.Message int int long" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig" class-name="javax.jms.MessageProducer" method-name="send" parameters="javax.jms.Queue javax.jms.Message" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig" class-name="javax.jms.MessageProducer" method-name="send" parameters="javax.jms.Queue javax.jms.Message int int long" interface="true"/>
+
+		<!-- Server sensor for JMS listener -->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsListenerServerSensorConfig" class-name="javax.jms.MessageListener" method-name="onMessage" parameters="javax.jms.Message" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsListenerServerSensorConfig" class-name="javax.jms.MessageListener" method-name="onMessage" parameters="javax.jms.Message javax.jms.Session" interface="true"/>
+	</sensor-assignment-profile-data>
+
+</profile>
