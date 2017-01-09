@@ -18,7 +18,7 @@ public class StatementSensorConfig extends StringConstraintSensorConfig implemen
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "JDBC Statement Sensor";
+	public static final String SENSOR_NAME = "JDBC Statement Sensor";
 
 	/**
 	 * Implementing class name.

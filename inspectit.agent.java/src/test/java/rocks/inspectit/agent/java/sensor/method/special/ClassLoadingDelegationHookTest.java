@@ -115,6 +115,16 @@ public class ClassLoadingDelegationHookTest extends TestBase {
 		}
 
 		@Test
+		public void opentracingClass() throws Exception {
+			Object[] parameters = new String[] { io.opentracing.Tracer.class.getName() };
+
+			Object result = hook.beforeBody(METHOD_ID, object, parameters, ssc);
+
+			assertThat(result, is((Object) io.opentracing.Tracer.class));
+			verifyZeroInteractions(object, ssc);
+		}
+
+		@Test
 		public void reflectAsmClassLoader() throws Exception {
 			Class<?> classLoaderClass = Class.forName("com.esotericsoftware.reflectasm.AccessClassLoader");
 			Constructor<?> constructor = classLoaderClass.getDeclaredConstructor(ClassLoader.class);

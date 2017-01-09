@@ -39,6 +39,8 @@ import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.VmArgumentData;
+import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 
 /**
  * This tests checks all the {@link DefaultData} classes for the proper use of the
@@ -57,7 +59,7 @@ public class ObjectSizesPrimitiveTypesSizeTest {
 			{ SqlStatementData.class }, { ExceptionSensorData.class }, { InvocationSequenceData.class }, { ClassLoadingInformationData.class }, { CompilationInformationData.class },
 			{ MemoryInformationData.class }, { RuntimeInformationData.class }, { SystemInformationData.class }, { ThreadInformationData.class }, { HttpTimerData.class },
 			{ AggregatedExceptionSensorData.class }, { AggregatedHttpTimerData.class }, { AggregatedSqlStatementData.class }, { AggregatedTimerData.class }, { ParameterContentData.class },
-			{ HttpInfo.class }, { VmArgumentData.class } };
+			{ HttpInfo.class }, { VmArgumentData.class }, { ServerSpan.class }, { ClientSpan.class } };
 
 	/**
 	 * Enums that implement sizable.

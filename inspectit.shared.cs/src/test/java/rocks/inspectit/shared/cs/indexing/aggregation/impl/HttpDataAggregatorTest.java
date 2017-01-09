@@ -30,14 +30,14 @@ public class HttpDataAggregatorTest {
 	public void aggregationWithInspectITHeaderTwoDifferent() {
 		final HttpTimerData data = new HttpTimerData();
 		Map<String, String> map1 = new HashMap<>();
-		MapUtils.putAll(map1, new String[][] { { "inspectit", "tag1" } });
+		MapUtils.putAll(map1, new String[][] { { HttpTimerData.INSPECTIT_TAGGING_HEADER, "tag1" } });
 		data.setHeaders(map1);
 		data.getHttpInfo().setUri("URI");
 		data.getHttpInfo().setRequestMethod("GET");
 
 		final HttpTimerData data2 = new HttpTimerData();
 		Map<String, String> map2 = new HashMap<>();
-		MapUtils.putAll(map2, new String[][] { { "inspectit", "tag2" } });
+		MapUtils.putAll(map2, new String[][] { { HttpTimerData.INSPECTIT_TAGGING_HEADER, "tag2" } });
 		data2.setHeaders(map2);
 		data2.getHttpInfo().setUri("URI");
 		data2.getHttpInfo().setRequestMethod("GET");
@@ -56,7 +56,7 @@ public class HttpDataAggregatorTest {
 	public void aggregationWithInspectITHeader() {
 		final HttpTimerData data = new HttpTimerData();
 		Map<String, String> map = new HashMap<>();
-		MapUtils.putAll(map, new String[][] { { "inspectit", "tag1" } });
+		MapUtils.putAll(map, new String[][] { { HttpTimerData.INSPECTIT_TAGGING_HEADER, "tag1" } });
 		data.setHeaders(map);
 
 		data.getHttpInfo().setUri("URI");
@@ -72,7 +72,7 @@ public class HttpDataAggregatorTest {
 			private static final long serialVersionUID = 6328525502662081826L;
 
 			{
-				put("inspectit", "tag1");
+				put(HttpTimerData.INSPECTIT_TAGGING_HEADER, "tag1");
 			}
 		});
 		data2.getHttpInfo().setUri("URI");

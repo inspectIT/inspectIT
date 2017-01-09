@@ -22,7 +22,7 @@ public class ExceptionSensorConfig extends StringConstraintSensorConfig implemen
 	/**
 	 * Sensor name.
 	 */
-	private static final String SENSOR_NAME = "Exception Sensor";
+	public static final String SENSOR_NAME = "Exception Sensor";
 
 	/**
 	 * Implementing class name.
