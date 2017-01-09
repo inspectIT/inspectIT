@@ -15,9 +15,22 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 public class CpuSensorConfig extends AbstractPlatformSensorConfig implements IPlatformSensorConfig {
 
 	/**
+	 * Sensor name.
+	 */
+	public static final String SENSOR_NAME = "CPU Information";
+
+	/**
 	 * Implementing class name.
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.platform.CpuInformation";
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getName() {
+		return SENSOR_NAME;
+	}
 
 	/**
 	 * {@inheritDoc}
