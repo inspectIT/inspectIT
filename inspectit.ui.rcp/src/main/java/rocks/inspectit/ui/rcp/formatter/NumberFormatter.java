@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,6 +14,11 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public final class NumberFormatter {
+
+	/**
+	 * Abbreviation character for the decimal metric unit.
+	 */
+	private static final String[] BINARY_METRIC_UNITS = { "", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei" };
 
 	/**
 	 * Formats a decimal number with the specific pattern.
@@ -249,26 +255,39 @@ public final class NumberFormatter {
 	}
 
 	/**
-	 * Returns the human readable bytes number.
-	 * <p>
-	 * <b>IMPORTANT:</b> The method code is copied/taken/based from <a href=
-	 * "http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java"
-	 * >stackoverflow</a>. Original author is aioobe. License info can be found
-	 * <a href="http://creativecommons.org/licenses/by-sa/3.0/">here</a>.
+	 * Returns the human readable bytes number with one decimal place.
 	 *
 	 * @param bytes
 	 *            Bytes to transform.
 	 * @return Human readable string.
 	 */
 	public static String humanReadableByteCount(long bytes) {
-		int unit = 1024;
-		if (bytes < unit) {
+		return humanReadableByteCount(bytes, 1);
+	}
+
+	/**
+	 * Returns the human readable bytes number with the specified amount of decimal places.
+	 * <p>
+	 * <b>IMPORTANT:</b> The method code is based on <a href=
+	 * "http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java"
+	 * >stackoverflow</a>. Original author is aioobe. License info can be found
+	 * <a href="http://creativecommons.org/licenses/by-sa/3.0/">here</a>.
+	 *
+	 * @param bytes
+	 *            Bytes to transform.
+	 * @param decimalPlaces
+	 *            Amount of decimal places.
+	 * @return Human readable string.
+	 */
+	public static String humanReadableByteCount(long bytes, int decimalPlaces) {
+		if (bytes < 1024L) {
 			return bytes + " B";
-		} else {
-			int exp = (int) (Math.log(bytes) / Math.log(unit));
-			String pre = ("KMGTPE").charAt(exp - 1) + "i";
-			return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 		}
+
+		int sizeIndex = (int) (Math.log(bytes) / Math.log(1024D));
+		double value = bytes / Math.pow(1024D, sizeIndex);
+
+		return String.format(Locale.US, "%." + decimalPlaces + "f %sB", value, BINARY_METRIC_UNITS[sizeIndex]);
 	}
 
 	/**
