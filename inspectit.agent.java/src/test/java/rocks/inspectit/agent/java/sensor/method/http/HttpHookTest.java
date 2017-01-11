@@ -220,7 +220,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		when(platformManager.getPlatformId()).thenReturn(platformId);
 
 		when(httpServletRequest.getMethod()).thenReturn(method);
-		when(httpServletRequest.getRequestURI()).thenReturn(uri);
+		when(httpServletRequest.getRequestURL()).thenReturn(new StringBuffer(uri));
 		when(httpServletRequest.getParameterMap()).thenReturn(parameterMap);
 		when(httpServletRequest.getAttributeNames()).thenReturn(attributes);
 		Mockito.when(httpServletRequest.getAttribute(att1)).thenReturn(att1Value);

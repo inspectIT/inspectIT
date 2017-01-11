@@ -295,7 +295,7 @@ public class HttpHook implements IMethodHook {
 						data.setCount(1L);
 
 						// Include additional http information
-						data.getHttpInfo().setUri(extractor.getRequestUri(servletRequestClass, httpServletRequest));
+						data.getHttpInfo().setUri(extractor.getRequestUrl(servletRequestClass, httpServletRequest));
 						data.getHttpInfo().setRequestMethod(extractor.getRequestMethod(servletRequestClass, httpServletRequest));
 						data.setParameters(extractor.getParameterMap(servletRequestClass, httpServletRequest));
 						data.setAttributes(extractor.getAttributes(servletRequestClass, httpServletRequest));

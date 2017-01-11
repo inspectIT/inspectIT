@@ -217,17 +217,16 @@ public class HttpInformationExtractorTest extends AbstractLogSupport {
 
 	@Test
 	public void readRequestUri() {
-		final String uri = "URI";
-		when(httpServletRequest.getRequestURI()).thenReturn(uri);
+		final StringBuffer uriBuffer = new StringBuffer("URI");
+		when(httpServletRequest.getRequestURL()).thenReturn(uriBuffer);
 
-		String result = extractor.getRequestUri(httpServletRequest.getClass(), httpServletRequest);
-		assertThat(result, is(equalTo(uri)));
-		assertThat("Same instances", uri == result);
+		String result = extractor.getRequestUrl(httpServletRequest.getClass(), httpServletRequest);
+		assertThat(result, is(equalTo(uriBuffer.toString())));
 	}
 
 	@Test
 	public void readRequestUriNull() {
-		String result = extractor.getRequestUri(httpServletRequest.getClass(), httpServletRequest);
+		String result = extractor.getRequestUrl(httpServletRequest.getClass(), httpServletRequest);
 
 		assertThat(result, is(HttpInfo.UNDEFINED));
 	}

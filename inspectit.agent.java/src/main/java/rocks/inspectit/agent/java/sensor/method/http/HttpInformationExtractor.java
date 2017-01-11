@@ -51,8 +51,8 @@ class HttpInformationExtractor {
 	 * @author Stefan Siegl
 	 */
 	private enum HttpMethods {
-		/** Request URI in Servlet. */
-		SERVLET_REQUEST_URI("getRequestURI", (Class<?>[]) null),
+		/** Request URL in Servlet. */
+		SERVLET_REQUEST_URL("getRequestURL", (Class<?>[]) null),
 		/** Parameter map. */
 		SERVLET_GET_PARAMETER_MAP("getParameterMap", (Class<?>[]) null),
 		/** Gets all attributes names. */
@@ -111,7 +111,7 @@ class HttpInformationExtractor {
 	}
 
 	/**
-	 * Reads the request URI from the given <code>HttpServletRequest</code> object and stores it
+	 * Reads the request URL from the given <code>HttpServletRequest</code> object and stores it
 	 * with the given <code>HttpTimerData</code> object.
 	 *
 	 * @param httpServletRequestClass
@@ -119,18 +119,18 @@ class HttpInformationExtractor {
 	 *            <code>HttpServletRequest</code>
 	 * @param httpServletRequest
 	 *            the object realizing the <code> HttpServletRequest </code> interface.
-	 * @return the request uri
+	 * @return the request url
 	 */
-	public String getRequestUri(Class<?> httpServletRequestClass, Object httpServletRequest) {
-		Method m = retrieveMethod(HttpMethods.SERVLET_REQUEST_URI, httpServletRequestClass);
+	public String getRequestUrl(Class<?> httpServletRequestClass, Object httpServletRequest) {
+		Method m = retrieveMethod(HttpMethods.SERVLET_REQUEST_URL, httpServletRequestClass);
 		if (null == m) {
 			return HttpInfo.UNDEFINED;
 		}
 
 		try {
-			String uri = (String) m.invoke(httpServletRequest, (Object[]) null);
-			if (null != uri) {
-				return uri;
+			Object result = m.invoke(httpServletRequest, (Object[]) null);
+			if (null != result) {
+				return result.toString();
 			} else {
 				return HttpInfo.UNDEFINED;
 			}
