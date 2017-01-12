@@ -130,7 +130,7 @@ public class JavaAgent implements ClassFileTransformer {
 	@Override
 	public byte[] transform(ClassLoader classLoader, String className, Class<?> clazz, ProtectionDomain pd, byte[] data) throws IllegalClassFormatException {
 		try {
-			if ((null != classLoader) && InspectItClassLoader.class.getCanonicalName().equals(classLoader.getClass().getCanonicalName())) {
+			if ((null != classLoader) && InspectItClassLoader.class.getName().equals(classLoader.getClass().getName())) {
 				// return if the classloader to load the class is our own, we don't want to
 				// instrument these classes.
 				return data;
@@ -209,11 +209,11 @@ public class JavaAgent implements ClassFileTransformer {
 						continue;
 					}
 
-					String clazzName = loadedClass.getCanonicalName();
+					String clazzName = loadedClass.getName();
 					// check it's not self first class
 					if ((null != clazzName) && !selfFirstClasses.contains(clazzName)) {
 						// check that we are not loading with our class loader
-						if ((null == loadedClass.getClassLoader()) || !InspectItClassLoader.class.getCanonicalName().equals(loadedClass.getClassLoader().getClass().getCanonicalName())) {
+						if ((null == loadedClass.getClassLoader()) || !InspectItClassLoader.class.getName().equals(loadedClass.getClassLoader().getClass().getName())) {
 							// check that class is not ignored by our agent
 							if (!Agent.agent.shouldClassBeIgnored(clazzName)) {
 								try {
@@ -233,7 +233,7 @@ public class JavaAgent implements ClassFileTransformer {
 			t.printStackTrace(); // NOPMD
 			LOGGER.severe("The process of class redefinitions produced an error: " + t.getMessage());
 			LOGGER.severe("If you are running on an IBM JVM, please ignore this error as the JVM does not support this feature!");
-			LOGGER.throwing(JavaAgent.class.getCanonicalName(), "analyzeAlreadyLoadedClasses", t);
+			LOGGER.throwing(JavaAgent.class.getName(), "analyzeAlreadyLoadedClasses", t);
 		}
 	}
 
@@ -328,21 +328,21 @@ public class JavaAgent implements ClassFileTransformer {
 				}
 			} catch (IOException e) {
 				LOGGER.severe("There was a problem in extracting needed libs for the inspectIT agent: " + e.getMessage());
-				LOGGER.throwing(InspectItClassLoader.class.getCanonicalName(), "InspectItClassLoader", e);
+				LOGGER.throwing(InspectItClassLoader.class.getName(), "InspectItClassLoader", e);
 			}
 
 			// ignore IAgent because this is the interface for the SUD to access the real agent
-			ignoreClasses.add(IAgent.class.getCanonicalName());
-			ignoreClasses.add(IMBeanServerListener.class.getCanonicalName());
-			ignoreClasses.add(Agent.class.getCanonicalName());
+			ignoreClasses.add(IAgent.class.getName());
+			ignoreClasses.add(IMBeanServerListener.class.getName());
+			ignoreClasses.add(Agent.class.getName());
 
 			// ignore hook dispatcher because it is defined in the IAgent interface and thus must be
 			// available in the standard classloader.
-			ignoreClasses.add(IHookDispatcher.class.getCanonicalName());
+			ignoreClasses.add(IHookDispatcher.class.getName());
 
 			// ignore the following classes because they are used in the JavaAgent class
-			ignoreClasses.add(JavaAgent.class.getCanonicalName());
-			ignoreClasses.add(InspectItClassLoader.class.getCanonicalName());
+			ignoreClasses.add(JavaAgent.class.getName());
+			ignoreClasses.add(InspectItClassLoader.class.getName());
 		}
 
 		/**

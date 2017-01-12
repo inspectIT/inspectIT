@@ -116,7 +116,7 @@ public class RemotingExporter implements BeanFactoryPostProcessor {
 
 				MutablePropertyValues values = new MutablePropertyValues();
 				values.add("service", new RuntimeBeanReference(beanName));
-				values.add("serviceInterface", new TypedStringValue(serviceInterface.getCanonicalName()));
+				values.add("serviceInterface", new TypedStringValue(serviceInterface.getName()));
 
 				ServiceExporterType type = (ServiceExporterType) AnnotationUtils.getValue(annotation, "exporter");
 				switch (type) {

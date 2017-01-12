@@ -133,7 +133,7 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 	 */
 	private void processInstrumentationDefinitions(Collection<InstrumentationDefinition> instrumentationDefinitions) {
 		if (log.isInfoEnabled()) {
-			log.info("Retransform {} class(es)", instrumentationDefinitions.size());
+			log.info("Trying to retransform {} class(es)", instrumentationDefinitions.size());
 		}
 
 		Collection<Class<?>> classesToRetransform = new ArrayList<Class<?>>();
@@ -147,17 +147,59 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 			classHashHelper.registerInstrumentationDefinition(definition.getClassName(), definition);
 		}
 
+		Map<String, Integer> classLoaderCounterMap = new HashMap<String, Integer>();
+
 		Class<?>[] loadedClasses = instrumentation.getAllLoadedClasses();
 		for (Class<?> clazz : loadedClasses) {
-			if (instrumentationDefinitionMap.containsKey(clazz.getCanonicalName())) {
-				if (instrumentation.isModifiableClass(clazz)) {
-					classesToRetransform.add(clazz);
+			try {
+				if (!instrumentation.isModifiableClass(clazz)) {
+					continue;
 				}
 
+				String className = clazz.getName();
+
+				if (instrumentationDefinitionMap.containsKey(className)) {
+					classesToRetransform.add(clazz);
+
+					int incrementedCounter;
+					if (classLoaderCounterMap.containsKey(className)) {
+						incrementedCounter = classLoaderCounterMap.get(className) + 1;
+					} else {
+						incrementedCounter = 1;
+					}
+					classLoaderCounterMap.put(className, incrementedCounter);
+
+					if (log.isDebugEnabled()) {
+						String classLoaderName;
+						try {
+							ClassLoader classLoader = clazz.getClassLoader();
+							if (classLoader == null) {
+								classLoaderName = "bootstrap classloader";
+							} else {
+								classLoaderName = clazz.getClassLoader().getClass().getName();
+							}
+						} catch (SecurityException e) {
+							classLoaderName = "unknown classloader";
+						}
+						log.debug("|-{} : {} (is instrumented: {})", className, classLoaderName, !instrumentationDefinitionMap.get(className).getMethodInstrumentationConfigs().isEmpty());
+					}
+				}
+			} catch (Exception e) {
+				// This catch prevents the thread/loop from crashing.
 				if (log.isDebugEnabled()) {
-					log.debug("|-{} (is instrumented: {})", clazz.getCanonicalName(), !instrumentationDefinitionMap.get(clazz.getCanonicalName()).getMethodInstrumentationConfigs().isEmpty());
+					log.debug("Failed to add class to the list of classes to retransform.", e);
 				}
 			}
+		}
+
+		if (log.isInfoEnabled()) {
+			int classCount = 0;
+			for (int count : classLoaderCounterMap.values()) {
+				classCount += count;
+			}
+			int classLoaderCount = classLoaderCounterMap.size();
+
+			log.info("|-Going to retransform {} loaded class(es) of {} class loader(s).", classCount, classLoaderCount);
 		}
 
 		if (CollectionUtils.isNotEmpty(classesToRetransform)) {
@@ -171,6 +213,10 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 			} finally {
 				threadTransformHelper.setThreadTransformDisabled(true);
 			}
+		}
+
+		if (log.isInfoEnabled()) {
+			log.info("|-Retransformation finished.");
 		}
 	}
 }
