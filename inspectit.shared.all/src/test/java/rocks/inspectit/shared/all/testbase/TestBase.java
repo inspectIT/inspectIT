@@ -112,10 +112,10 @@ public abstract class TestBase {
 			// Get the private field
 			Field field;
 			if (objectToChange instanceof Class<?>) {
-				targetClass = ((Class<?>) objectToChange).getCanonicalName();
+				targetClass = ((Class<?>) objectToChange).getName();
 				field = findField((Class<?>) objectToChange, fieldName);
 			} else {
-				targetClass = objectToChange.getClass().getCanonicalName();
+				targetClass = objectToChange.getClass().getName();
 				field = findField(objectToChange.getClass(), fieldName);
 			}
 			// Allow modification on the field

@@ -5,6 +5,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -64,20 +65,24 @@ public class RetransformManagerTest extends TestBase {
 
 		@Test
 		public void successful() throws UnmodifiableClassException {
-			InstrumentationDefinition iDefinition = mock(InstrumentationDefinition.class);
-			when(iDefinition.getClassName()).thenReturn("java.lang.Object");
+			InstrumentationDefinition objectDefinition = mock(InstrumentationDefinition.class);
+			when(objectDefinition.getClassName()).thenReturn("java.lang.Object");
+			InstrumentationDefinition stringDefinition = mock(InstrumentationDefinition.class);
+			when(stringDefinition.getClassName()).thenReturn("java.lang.String");
 			IAgentMessage<?> message = new UpdatedInstrumentationMessage();
-			((UpdatedInstrumentationMessage) message).getMessageContent().add(iDefinition);
+			((UpdatedInstrumentationMessage) message).getMessageContent().add(objectDefinition);
+			((UpdatedInstrumentationMessage) message).getMessageContent().add(stringDefinition);
 			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
-			when(instrumentation.isModifiableClass(eq(Object.class))).thenReturn(true);
+			when(instrumentation.isModifiableClass(any(Class.class))).thenReturn(true);
 
 			retransformManager.onApplicationEvent(event);
 
-			verify(classHashHelper).registerInstrumentationDefinition(eq("java.lang.Object"), eq(iDefinition));
+			verify(classHashHelper).registerInstrumentationDefinition(eq("java.lang.Object"), eq(objectDefinition));
+			verify(classHashHelper).registerInstrumentationDefinition(eq("java.lang.String"), eq(stringDefinition));
 			verify(instrumentation).getAllLoadedClasses();
-			verify(instrumentation).retransformClasses(eq(Object.class));
-			verify(instrumentation).isModifiableClass(eq(Object.class));
+			verify(instrumentation).retransformClasses(eq(Object.class), eq(String.class));
+			verify(instrumentation, times(2)).isModifiableClass(any(Class.class));
 			InOrder inOrder = inOrder(threadTransformHelper);
 			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(false);
 			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(true);
@@ -98,9 +103,32 @@ public class RetransformManagerTest extends TestBase {
 
 			verify(classHashHelper).registerInstrumentationDefinition(eq("java.lang.Object"), eq(iDefinition));
 			verify(instrumentation).getAllLoadedClasses();
-			verify(instrumentation).isModifiableClass(eq(Object.class));
+			verify(instrumentation, times(2)).isModifiableClass(any(Class.class));
 			verifyNoMoreInteractions(instrumentation, classHashHelper);
 			verifyZeroInteractions(threadTransformHelper);
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		public void instrumentationThrowsOneException() throws UnmodifiableClassException {
+			InstrumentationDefinition iDefinition = mock(InstrumentationDefinition.class);
+			when(iDefinition.getClassName()).thenReturn("java.lang.Object");
+			IAgentMessage<?> message = new UpdatedInstrumentationMessage();
+			((UpdatedInstrumentationMessage) message).getMessageContent().add(iDefinition);
+			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
+			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
+			when(instrumentation.isModifiableClass(any(Class.class))).thenReturn(true).thenThrow(RuntimeException.class);
+
+			retransformManager.onApplicationEvent(event);
+
+			verify(classHashHelper).registerInstrumentationDefinition(eq("java.lang.Object"), eq(iDefinition));
+			verify(instrumentation).getAllLoadedClasses();
+			verify(instrumentation).retransformClasses(eq(Object.class));
+			verify(instrumentation, times(2)).isModifiableClass(any(Class.class));
+			InOrder inOrder = inOrder(threadTransformHelper);
+			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(false);
+			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(true);
+			verifyNoMoreInteractions(instrumentation, classHashHelper, threadTransformHelper);
 		}
 
 		@Test
@@ -116,6 +144,7 @@ public class RetransformManagerTest extends TestBase {
 
 			verify(classHashHelper).registerInstrumentationDefinition(eq("unknown.Class"), eq(iDefinition));
 			verify(instrumentation).getAllLoadedClasses();
+			verify(instrumentation, times(2)).isModifiableClass(any(Class.class));
 			verifyNoMoreInteractions(instrumentation, classHashHelper);
 			verifyZeroInteractions(threadTransformHelper);
 		}
@@ -147,7 +176,7 @@ public class RetransformManagerTest extends TestBase {
 			verify(classHashHelper).registerInstrumentationDefinition(eq("java.lang.Object"), eq(iDefinition));
 			verify(instrumentation).getAllLoadedClasses();
 			verify(instrumentation).retransformClasses(any(Class.class));
-			verify(instrumentation).isModifiableClass(eq(Object.class));
+			verify(instrumentation, times(2)).isModifiableClass(any(Class.class));
 			InOrder inOrder = inOrder(threadTransformHelper);
 			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(false);
 			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(true);

@@ -403,7 +403,7 @@ class HttpInformationExtractor {
 					m = existing;
 				}
 			} catch (Exception e) {
-				LOG.error("The provided class " + clazzUsedToLookup.getCanonicalName() + " did not provide the desired method.", e);
+				LOG.error("The provided class " + clazzUsedToLookup.getName() + " did not provide the desired method.", e);
 
 				// Do not try to look up every time.
 				// Can not place null as value anyway
@@ -426,7 +426,7 @@ class HttpInformationExtractor {
 	 * @return the generated lookup name.
 	 */
 	private String getCacheLookupName(HttpMethods httpMethod, Class<?> clazz) {
-		return clazz.getCanonicalName() + '#' + httpMethod.methodName;
+		return clazz.getName() + '#' + httpMethod.methodName;
 	}
 
 	/**
