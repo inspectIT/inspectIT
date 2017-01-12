@@ -20,7 +20,7 @@ public class ClassUtilTest extends TestBase {
 
 		@Test
 		public void classNull() {
-			String interfaceName = SearchedInterface.class.getCanonicalName();
+			String interfaceName = SearchedInterface.class.getName();
 
 			Class<?> found = ClassUtil.searchInterface(null, interfaceName);
 
@@ -29,7 +29,7 @@ public class ClassUtilTest extends TestBase {
 
 		@Test
 		public void classWithoutInterface() {
-			String interfaceName = SearchedInterface.class.getCanonicalName();
+			String interfaceName = SearchedInterface.class.getName();
 
 			Class<?> found = ClassUtil.searchInterface(ClassWithoutInterface.class, interfaceName);
 
@@ -38,7 +38,7 @@ public class ClassUtilTest extends TestBase {
 
 		@Test
 		public void classWithoutSomeInterface() {
-			String interfaceName = SearchedInterface.class.getCanonicalName();
+			String interfaceName = SearchedInterface.class.getName();
 
 			Class<?> found = ClassUtil.searchInterface(ClassWithSomeInterface.class, interfaceName);
 
@@ -47,7 +47,7 @@ public class ClassUtilTest extends TestBase {
 
 		@Test
 		public void classWithInterface() {
-			String interfaceName = SearchedInterface.class.getCanonicalName();
+			String interfaceName = SearchedInterface.class.getName();
 
 			Class<?> found = ClassUtil.searchInterface(ClassWithSearchedInterface.class, interfaceName);
 
@@ -65,7 +65,7 @@ public class ClassUtilTest extends TestBase {
 
 		@Test
 		public void classWithSubInterface() {
-			String interfaceName = SearchedInterface.class.getCanonicalName();
+			String interfaceName = SearchedInterface.class.getName();
 
 			Class<?> found = ClassUtil.searchInterface(ClassWithSubInterface.class, interfaceName);
 
@@ -83,7 +83,7 @@ public class ClassUtilTest extends TestBase {
 
 		@Test
 		public void superclassExtendsClassWithSearchedInterface() {
-			String interfaceName = SearchedInterface.class.getCanonicalName();
+			String interfaceName = SearchedInterface.class.getName();
 
 			Class<?> found = ClassUtil.searchInterface(SuperclassExtendsClassWithSearchedInterface.class, interfaceName);
 
@@ -101,7 +101,7 @@ public class ClassUtilTest extends TestBase {
 
 		@Test
 		public void superclassExtendsClassClassWithSubInterface() {
-			String interfaceName = SearchedInterface.class.getCanonicalName();
+			String interfaceName = SearchedInterface.class.getName();
 
 			Class<?> found = ClassUtil.searchInterface(SuperclassExtendsClassClassWithSubInterface.class, interfaceName);
 

@@ -38,4 +38,10 @@ final public class TestClass extends AbstractTestClass implements TestInterface,
 	public String value() {
 		return "";
 	}
+
+	public static class NestedClass {
+	}
+
+	public class InnerClass {
+	}
 }

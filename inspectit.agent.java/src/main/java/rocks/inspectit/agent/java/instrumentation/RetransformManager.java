@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.HashMultiset;
+
 import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.analyzer.impl.ClassHashHelper;
 import rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent;
+import rocks.inspectit.agent.java.util.ClassUtil;
 import rocks.inspectit.shared.all.communication.message.IAgentMessage;
 import rocks.inspectit.shared.all.communication.message.UpdatedInstrumentationMessage;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
@@ -133,7 +136,7 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 	 */
 	private void processInstrumentationDefinitions(Collection<InstrumentationDefinition> instrumentationDefinitions) {
 		if (log.isInfoEnabled()) {
-			log.info("Retransform {} class(es)", instrumentationDefinitions.size());
+			log.info("Trying to retransform {} class(es)", instrumentationDefinitions.size());
 		}
 
 		Collection<Class<?>> classesToRetransform = new ArrayList<Class<?>>();
@@ -147,17 +150,37 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 			classHashHelper.registerInstrumentationDefinition(definition.getClassName(), definition);
 		}
 
+		HashMultiset<String> classLoaderMultiset = HashMultiset.<String> create();
+
 		Class<?>[] loadedClasses = instrumentation.getAllLoadedClasses();
 		for (Class<?> clazz : loadedClasses) {
-			if (instrumentationDefinitionMap.containsKey(clazz.getCanonicalName())) {
-				if (instrumentation.isModifiableClass(clazz)) {
-					classesToRetransform.add(clazz);
+			try {
+				if (!instrumentation.isModifiableClass(clazz)) {
+					continue;
 				}
 
+				String className = clazz.getName();
+
+				if (instrumentationDefinitionMap.containsKey(className)) {
+					classesToRetransform.add(clazz);
+
+					String classLoaderName = ClassUtil.getClassLoaderName(clazz, "unknown classloader");
+					classLoaderMultiset.add(classLoaderName);
+
+					if (log.isDebugEnabled()) {
+						log.debug("|-{} : {} (is instrumented: {})", className, classLoaderName, !instrumentationDefinitionMap.get(className).getMethodInstrumentationConfigs().isEmpty());
+					}
+				}
+			} catch (Exception e) {
+				// This catch prevents the thread/loop from crashing.
 				if (log.isDebugEnabled()) {
-					log.debug("|-{} (is instrumented: {})", clazz.getCanonicalName(), !instrumentationDefinitionMap.get(clazz.getCanonicalName()).getMethodInstrumentationConfigs().isEmpty());
+					log.debug("Failed to add class to the list of classes to retransform.", e);
 				}
 			}
+		}
+
+		if (log.isInfoEnabled()) {
+			log.info("|-Going to retransform {} loaded class(es) of {} class loader(s).", classLoaderMultiset.size(), classLoaderMultiset.elementSet().size());
 		}
 
 		if (CollectionUtils.isNotEmpty(classesToRetransform)) {
@@ -171,6 +194,10 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 			} finally {
 				threadTransformHelper.setThreadTransformDisabled(true);
 			}
+		}
+
+		if (log.isInfoEnabled()) {
+			log.info("|-Retransformation finished.");
 		}
 	}
 }

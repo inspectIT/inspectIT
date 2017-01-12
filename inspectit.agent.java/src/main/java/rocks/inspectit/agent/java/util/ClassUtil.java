@@ -26,6 +26,28 @@ public final class ClassUtil {
 	}
 
 	/**
+	 * Returns the name of the class loader of the given class.
+	 *
+	 * @param clazz
+	 *            the class
+	 * @param defaultValue
+	 *            the string which is returned if an exception occurred
+	 * @return the name of the class loader
+	 */
+	public static String getClassLoaderName(Class<?> clazz, String defaultValue) {
+		try {
+			ClassLoader classLoader = clazz.getClassLoader();
+			if (classLoader == null) {
+				return "bootstrap classloader";
+			} else {
+				return clazz.getClassLoader().getClass().getName();
+			}
+		} catch (SecurityException e) {
+			return defaultValue;
+		}
+	}
+
+	/**
 	 * Search if class implements the specified interface. If so it returns the class representing
 	 * the interface. This is recursive method, so it searches also all the superclasses of the
 	 * given class and all the superinterfaces of directly implemented interfaces.
@@ -67,7 +89,7 @@ public final class ClassUtil {
 					// only if we did not checked this before check it
 					if (!searched.contains(interf)) {
 						// if we have the one return it
-						if (interf.getCanonicalName().equals(interfaceName)) {
+						if (interf.getName().equals(interfaceName)) {
 							return interf;
 						}
 						// otherwise mark as searched

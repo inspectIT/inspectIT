@@ -310,7 +310,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		if (1 == sensors.size()) {
 			MethodSensorTypeConfig methodSensorTypeConfig = sensors.get(0).getSensorTypeConfig();
 
-			if (ExceptionSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
+			if (ExceptionSensor.class.getName().equals(methodSensorTypeConfig.getClassName())) {
 				return CollectionUtils.isEmpty(invocationSequenceData.getExceptionSensorDataObjects());
 			}
 		}
@@ -333,7 +333,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
 			for (IMethodSensor methodSensor : sensors) {
 				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
-				if (PreparedStatementSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
+				if (PreparedStatementSensor.class.getName().equals(methodSensorTypeConfig.getClassName())) {
 					if ((null == invocationSequenceData.getSqlStatementData()) || (0 == invocationSequenceData.getSqlStatementData().getCount())) {
 						return true;
 					}
@@ -360,7 +360,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
 			for (IMethodSensor methodSensor : sensors) {
 				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
-				if (Log4JLoggingSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
+				if (Log4JLoggingSensor.class.getName().equals(methodSensorTypeConfig.getClassName())) {
 					return !InvocationSequenceDataHelper.hasLoggingData(invocationSequenceData);
 				}
 			}
@@ -391,11 +391,11 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
 			for (IMethodSensor methodSensor : sensors) {
 				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
-				if (PreparedStatementParameterSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
+				if (PreparedStatementParameterSensor.class.getName().equals(methodSensorTypeConfig.getClassName())) {
 					return true;
 				}
 
-				if (ConnectionSensor.class.getCanonicalName().equals(methodSensorTypeConfig.getClassName())) {
+				if (ConnectionSensor.class.getName().equals(methodSensorTypeConfig.getClassName())) {
 					return true;
 				}
 			}
