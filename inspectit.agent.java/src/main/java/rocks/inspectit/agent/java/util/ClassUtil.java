@@ -67,7 +67,7 @@ public final class ClassUtil {
 					// only if we did not checked this before check it
 					if (!searched.contains(interf)) {
 						// if we have the one return it
-						if (interf.getCanonicalName().equals(interfaceName)) {
+						if (interf.getName().equals(interfaceName)) {
 							return interf;
 						}
 						// otherwise mark as searched

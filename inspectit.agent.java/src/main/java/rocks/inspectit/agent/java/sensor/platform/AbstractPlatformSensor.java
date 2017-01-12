@@ -89,7 +89,7 @@ public abstract class AbstractPlatformSensor implements IPlatformSensor, Initial
 			systemSensorData.setSensorTypeIdent(sensorTypeConfig.getId());
 		} catch (IdNotAvailableException e) {
 			if (log.isDebugEnabled()) {
-				log.debug("Could not save the " + this.getClass().getCanonicalName() + " because of an unavailable id. " + e.getMessage());
+				log.debug("Could not save the " + this.getClass().getName() + " because of an unavailable id. " + e.getMessage());
 			}
 		}
 	}

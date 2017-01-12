@@ -133,7 +133,7 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 	 */
 	private void processInstrumentationDefinitions(Collection<InstrumentationDefinition> instrumentationDefinitions) {
 		if (log.isInfoEnabled()) {
-			log.info("Retransform {} class(es)", instrumentationDefinitions.size());
+			log.info("Trying to retransform {} class(es)", instrumentationDefinitions.size());
 		}
 
 		Collection<Class<?>> classesToRetransform = new ArrayList<Class<?>>();
@@ -147,17 +147,37 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 			classHashHelper.registerInstrumentationDefinition(definition.getClassName(), definition);
 		}
 
+		int countRetransformSuccessful = 0;
+		int countTransformationFailed = 0;
+
 		Class<?>[] loadedClasses = instrumentation.getAllLoadedClasses();
 		for (Class<?> clazz : loadedClasses) {
-			if (instrumentationDefinitionMap.containsKey(clazz.getCanonicalName())) {
-				if (instrumentation.isModifiableClass(clazz)) {
-					classesToRetransform.add(clazz);
+			try {
+				if (!instrumentation.isModifiableClass(clazz)) {
+					continue;
 				}
 
-				if (log.isDebugEnabled()) {
-					log.debug("|-{} (is instrumented: {})", clazz.getCanonicalName(), !instrumentationDefinitionMap.get(clazz.getCanonicalName()).getMethodInstrumentationConfigs().isEmpty());
+				String className = clazz.getName();
+
+				if (instrumentationDefinitionMap.containsKey(className)) {
+					classesToRetransform.add(clazz);
+
+					countRetransformSuccessful++;
+
+					if (log.isDebugEnabled()) {
+						log.debug("|-{} (is instrumented: {})", className, !instrumentationDefinitionMap.get(className).getMethodInstrumentationConfigs().isEmpty());
+					}
 				}
+			} catch (Exception e) {
+				// No log output. This catch prevents the thread/loop from crashing.
+
+				countTransformationFailed++;
 			}
+		}
+
+		if (log.isInfoEnabled()) {
+			log.info("|-Result of retransformation: {} class(es) retransformed; {} class(es) are unmodifiable; {} class(es) failed to retransform", countRetransformSuccessful,
+					(instrumentationDefinitions.size() - countRetransformSuccessful - countTransformationFailed), countTransformationFailed);
 		}
 
 		if (CollectionUtils.isNotEmpty(classesToRetransform)) {

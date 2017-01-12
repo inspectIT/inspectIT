@@ -39,7 +39,7 @@ public class RemoteException extends RuntimeException {
 	 */
 	public RemoteException(Throwable originalException) {
 		super(assertNotNull(originalException).getMessage());
-		this.originalExceptionClass = originalException.getClass().getCanonicalName();
+		this.originalExceptionClass = originalException.getClass().getName();
 		super.setStackTrace(originalException.getStackTrace());
 	}
 

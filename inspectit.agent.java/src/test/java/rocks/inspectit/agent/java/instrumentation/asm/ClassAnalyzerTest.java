@@ -318,6 +318,26 @@ public class ClassAnalyzerTest {
 			assertThat(exception.getFQN(), is(equalTo(Exception.class.getName())));
 			assertThat(exception.isInitialized(), is(false));
 		}
+
+		@Test
+		public void innerClass() throws Exception {
+			ClassReader classReader = new ClassReader(TestClass.InnerClass.class.getName());
+			classReader.accept(classAnalyzer, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+
+			ImmutableType immutableType = classAnalyzer.getType();
+
+			assertThat(immutableType.getFQN(), is(TestClass.class.getName() + "$" + TestClass.InnerClass.class.getSimpleName()));
+		}
+
+		@Test
+		public void nestedClass() throws Exception {
+			ClassReader classReader = new ClassReader(TestClass.NestedClass.class.getName());
+			classReader.accept(classAnalyzer, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+
+			ImmutableType immutableType = classAnalyzer.getType();
+
+			assertThat(immutableType.getFQN(), is(TestClass.class.getName() + "$" + TestClass.NestedClass.class.getSimpleName()));
+		}
 	}
 
 }

@@ -374,7 +374,7 @@ public class HttpTimerDataInputController extends AbstractHttpInputController {
 			}
 			return sb.toString();
 		} else {
-			throw new RuntimeException("Could not create the human readable string! Class is: " + object.getClass().getCanonicalName());
+			throw new RuntimeException("Could not create the human readable string! Class is: " + object.getClass().getName());
 		}
 	}
 

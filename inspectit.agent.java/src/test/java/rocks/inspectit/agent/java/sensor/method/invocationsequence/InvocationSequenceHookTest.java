@@ -337,7 +337,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
 		MethodSensorTypeConfig exceptionSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getCanonicalName());
+		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getName());
 
 		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
 		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
@@ -396,7 +396,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
 		MethodSensorTypeConfig exceptionSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getCanonicalName());
+		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getName());
 
 		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
 		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
@@ -445,7 +445,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
 		MethodSensorTypeConfig exceptionSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getCanonicalName());
+		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getName());
 
 		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
 		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
@@ -506,7 +506,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
 		MethodSensorTypeConfig sqlSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(sqlSensorConfig.getClassName()).thenReturn(PreparedStatementSensor.class.getCanonicalName());
+		when(sqlSensorConfig.getClassName()).thenReturn(PreparedStatementSensor.class.getName());
 
 		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
 		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
@@ -555,7 +555,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
 		MethodSensorTypeConfig sqlSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(sqlSensorConfig.getClassName()).thenReturn(PreparedStatementSensor.class.getCanonicalName());
+		when(sqlSensorConfig.getClassName()).thenReturn(PreparedStatementSensor.class.getName());
 
 		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
 		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
@@ -617,7 +617,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
 		MethodSensorTypeConfig logSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(logSensorConfig.getClassName()).thenReturn(Log4JLoggingSensor.class.getCanonicalName());
+		when(logSensorConfig.getClassName()).thenReturn(Log4JLoggingSensor.class.getName());
 
 		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
 		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
@@ -666,7 +666,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
 		MethodSensorTypeConfig logSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(logSensorConfig.getClassName()).thenReturn(Log4JLoggingSensor.class.getCanonicalName());
+		when(logSensorConfig.getClassName()).thenReturn(Log4JLoggingSensor.class.getName());
 
 		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
 		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
@@ -720,7 +720,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		Object result = mock(Object.class);
 
 		MethodSensorTypeConfig sensorConfig = mock(MethodSensorTypeConfig.class);
-		when(sensorConfig.getClassName()).thenReturn(sensorClass.getCanonicalName());
+		when(sensorConfig.getClassName()).thenReturn(sensorClass.getName());
 		when(rsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
 		when(methodSensor.getSensorTypeConfig()).thenReturn(sensorConfig);
 
@@ -749,8 +749,8 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		MethodSensorTypeConfig sensorConfig = mock(MethodSensorTypeConfig.class);
 		MethodSensorTypeConfig exceptionSensorConfig = mock(MethodSensorTypeConfig.class);
-		when(sensorConfig.getClassName()).thenReturn(sensorClass.getCanonicalName());
-		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getCanonicalName());
+		when(sensorConfig.getClassName()).thenReturn(sensorClass.getName());
+		when(exceptionSensorConfig.getClassName()).thenReturn(ExceptionSensor.class.getName());
 
 		List<MethodSensorTypeConfig> configs = new ArrayList<MethodSensorTypeConfig>();
 		configs.add(exceptionSensorConfig);

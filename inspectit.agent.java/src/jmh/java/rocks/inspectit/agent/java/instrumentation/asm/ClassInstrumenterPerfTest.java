@@ -73,7 +73,7 @@ public class ClassInstrumenterPerfTest {
 			MethodInstrumentationConfig instrumentationConfig = new MethodInstrumentationConfig();
 			instrumentationConfig.setTargetClassFqn(clazz);
 			instrumentationConfig.setTargetMethodName(method.getName());
-			instrumentationConfig.setReturnType(method.getReturnType().getCanonicalName());
+			instrumentationConfig.setReturnType(method.getReturnType().getName());
 			if (!specialMethodInstrumentation) {
 				SensorInstrumentationPoint registeredSensorConfig = new SensorInstrumentationPoint();
 				instrumentationConfig.setSensorInstrumentationPoint(registeredSensorConfig);
