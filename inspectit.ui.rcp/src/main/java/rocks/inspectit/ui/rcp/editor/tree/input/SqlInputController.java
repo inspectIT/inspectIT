@@ -104,7 +104,7 @@ public class SqlInputController extends AbstractTreeInputController {
 		/** The max column. */
 		MAX("Max (ms)", 80, null, TimerDataComparatorEnum.MAX),
 		/** The duration column. */
-		DURATION("Duration (ms)", 80, null, TimerDataComparatorEnum.MAX),
+		DURATION("Duration (ms)", 80, null, TimerDataComparatorEnum.DURATION),
 		/** The prepared column. */
 		PREPARED("Prepared?", 80, null, SqlStatementDataComparatorEnum.IS_PREPARED_STATEMENT);
 
