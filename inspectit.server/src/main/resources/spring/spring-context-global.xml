@@ -13,7 +13,7 @@
 	<!-- activates annotation scanning -->
 	<context:annotation-config />
 	<context:component-scan base-package="rocks.inspectit"  >
-		 <context:exclude-filter type="regex" expression="info\.novatec\.inspectit\.agent\..*"/>
+		 <context:exclude-filter type="regex" expression="rocks\.inspectit\.agent\..*"/>
 	</context:component-scan>
 
 	<!-- puts all the properties into the container -->

@@ -62,6 +62,7 @@
                 <log4j-logging-sensor-config minLevel="WARN"/>
             </method-sensor-configs>
             <exception-sensor-config enhanced="false" string-length="500"/>
+            <jmx-loading-sensor-config active="true" forceMBeanServerCreation="false"/>
             <profile-ids>
                 <profile-id>sql</profile-id>
                 <profile-id>sql-parameters</profile-id>
