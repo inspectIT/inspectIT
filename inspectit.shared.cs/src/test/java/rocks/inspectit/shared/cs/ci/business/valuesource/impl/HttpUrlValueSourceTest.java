@@ -23,9 +23,9 @@ import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
  *
  */
 @SuppressWarnings("PMD")
-public class HttpUriValueSourceTest extends TestBase {
+public class HttpUrlValueSourceTest extends TestBase {
 	@InjectMocks
-	HttpUriValueSource valueSource;
+	HttpUrlValueSource valueSource;
 
 	@Mock
 	CachedDataService cachedDataService;
@@ -38,15 +38,20 @@ public class HttpUriValueSourceTest extends TestBase {
 
 	/**
 	 * Test
-	 * {@link HttpUriValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
+	 * {@link HttpUrlValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
 	 * .
 	 */
-	public static class GetStringVlaues extends HttpUriValueSourceTest {
-		private static final String TEST_URI = "/my/test/uri";
+	public static class GetStringVlaues extends HttpUrlValueSourceTest {
+		private static final String TEST_URI = "http://localhost:8080/test/uri?test=true";
 
 		@Test
 		public void retrieveURI() {
 			HttpInfo httpInfo = new HttpInfo(TEST_URI, "POST", null);
+			httpInfo.setScheme("http");
+			httpInfo.setServerName("localhost");
+			httpInfo.setServerPort(8080);
+			httpInfo.setUri("/test/uri");
+			httpInfo.setQueryString("test=true");
 
 			Mockito.doReturn(httpTimerData).when(invocationSeuence).getTimerData();
 			Mockito.doReturn(httpInfo).when(httpTimerData).getHttpInfo();

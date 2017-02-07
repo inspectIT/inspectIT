@@ -37,7 +37,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
-import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureValueSource;
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
@@ -314,7 +314,7 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(StringMatchingExpression.class, new FieldSerializer<StringMatchingExpression>(kryo, StringMatchingExpression.class), nextRegistrationId++);
 		kryo.register(PatternMatchingType.class, new EnumSerializer(PatternMatchingType.class));
 		kryo.register(StringValueSource.class, new FieldSerializer<StringValueSource>(kryo, StringValueSource.class), nextRegistrationId++);
-		kryo.register(HttpUriValueSource.class, new FieldSerializer<HttpUriValueSource>(kryo, HttpUriValueSource.class), nextRegistrationId++);
+		kryo.register(HttpUrlValueSource.class, new FieldSerializer<HttpUrlValueSource>(kryo, HttpUrlValueSource.class), nextRegistrationId++);
 		kryo.register(HostValueSource.class, new FieldSerializer<HostValueSource>(kryo, HostValueSource.class), nextRegistrationId++);
 		kryo.register(HttpParameterValueSource.class, new FieldSerializer<HttpParameterValueSource>(kryo, HttpParameterValueSource.class), nextRegistrationId++);
 		kryo.register(MethodSignatureValueSource.class, new FieldSerializer<MethodSignatureValueSource>(kryo, MethodSignatureValueSource.class), nextRegistrationId++);

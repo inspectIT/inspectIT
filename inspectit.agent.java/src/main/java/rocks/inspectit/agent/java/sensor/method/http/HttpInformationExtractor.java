@@ -72,7 +72,15 @@ class HttpInformationExtractor {
 		/** Gets the value of a session attribute. */
 		SESSION_GET_ATTRIBUTE("getAttribute", new Class[] { String.class }),
 		/** Gets the response status. */
-		RESPONSE_GET_STATUS("getStatus", (Class<?>[]) null);
+		RESPONSE_GET_STATUS("getStatus", (Class<?>[]) null),
+		/** Gets the scheme. */
+		RESPONSE_GET_SCHEME("getScheme", (Class<?>[]) null),
+		/** Gets the server name. */
+		RESPONSE_GET_SERVER_NAME("getServerName", (Class<?>[]) null),
+		/** Gets the server port. */
+		RESPONSE_GET_SERVER_PORT("getServerPort", (Class<?>[]) null),
+		/** Gets the query string. */
+		RESPONSE_GET_QUERY_STRING("getQueryString", (Class<?>[]) null);
 
 		/**
 		 * Constructor.
@@ -376,6 +384,124 @@ class HttpInformationExtractor {
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Reads the request scheme from the HttpServletRequest object.
+	 *
+	 * @param httpServletRequestClass
+	 *            the <code>Class</code> object representing the class of the given
+	 *            <code>HttpServletRequest</code>
+	 * @param httpServletRequest
+	 *            the object realizing the <code> HttpServletResponse </code> interface.
+	 * @return scheme if available. If scheme cannot be retrieved, this method returns null.
+	 */
+	public String getScheme(Class<?> httpServletRequestClass, Object httpServletRequest) {
+		Method m = retrieveMethod(HttpMethods.RESPONSE_GET_SCHEME, httpServletRequestClass);
+		if (null == m) {
+			return null;
+		}
+
+		try {
+			String scheme = (String) m.invoke(httpServletRequest, (Object[]) null);
+			if (null != scheme) {
+				return scheme;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			LOG.error("Invocation on given object failed.", e);
+			return null;
+		}
+	}
+
+	/**
+	 * Reads the request server name from the HttpServletRequest object.
+	 *
+	 * @param httpServletRequestClass
+	 *            the <code>Class</code> object representing the class of the given
+	 *            <code>HttpServletRequest</code>
+	 * @param httpServletRequest
+	 *            the object realizing the <code> HttpServletResponse </code> interface.
+	 * @return request server name if available. If it cannot be retrieved, this method returns
+	 *         null.
+	 */
+	public String getServerName(Class<?> httpServletRequestClass, Object httpServletRequest) {
+		Method m = retrieveMethod(HttpMethods.RESPONSE_GET_SERVER_NAME, httpServletRequestClass);
+		if (null == m) {
+			return null;
+		}
+
+		try {
+			String serverName = (String) m.invoke(httpServletRequest, (Object[]) null);
+			if (null != serverName) {
+				return serverName;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			LOG.error("Invocation on given object failed.", e);
+			return null;
+		}
+	}
+
+	/**
+	 * Reads the server port from the HttpServletRequest object.
+	 *
+	 * @param httpServletRequestClass
+	 *            the <code>Class</code> object representing the class of the given
+	 *            <code>HttpServletRequest</code>
+	 * @param httpServletRequest
+	 *            the object realizing the <code> HttpServletResponse </code> interface.
+	 * @return server port if available. If the port cannot be retrieved, this method returns 0.
+	 */
+	public int getServerPort(Class<?> httpServletRequestClass, Object httpServletRequest) {
+		Method m = retrieveMethod(HttpMethods.RESPONSE_GET_SERVER_PORT, httpServletRequestClass);
+		if (null == m) {
+			return 0;
+		}
+
+		try {
+			Integer port = (Integer) m.invoke(httpServletRequest, (Object[]) null);
+			if (port > 0) {
+				return port;
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			LOG.error("Invocation on given object failed.", e);
+			return 0;
+		}
+	}
+
+	/**
+	 * Reads the request query string name from the HttpServletRequest object.
+	 *
+	 * @param httpServletRequestClass
+	 *            the <code>Class</code> object representing the class of the given
+	 *            <code>HttpServletRequest</code>
+	 * @param httpServletRequest
+	 *            the object realizing the <code> HttpServletResponse </code> interface.
+	 * @return request query string if available. If it cannot be retrieved, this method returns
+	 *         null.
+	 */
+	public String getQueryString(Class<?> httpServletRequestClass, Object httpServletRequest) {
+		Method m = retrieveMethod(HttpMethods.RESPONSE_GET_QUERY_STRING, httpServletRequestClass);
+		if (null == m) {
+			return null;
+		}
+
+		try {
+			String queryString = (String) m.invoke(httpServletRequest, (Object[]) null);
+			if (null != queryString) {
+				return queryString;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			LOG.error("Invocation on given object failed.", e);
+			return null;
+		}
 	}
 
 	/**

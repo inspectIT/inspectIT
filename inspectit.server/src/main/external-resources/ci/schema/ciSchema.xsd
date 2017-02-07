@@ -49,7 +49,7 @@
 
   <xs:element name="http-sensor-config" type="httpSensorConfig"/>
 
-  <xs:element name="http-uri" type="httpUriValueSource"/>
+  <xs:element name="http-url" type="httpUrlValueSource"/>
 
   <xs:element name="invocation-sequence-sensor-config" type="invocationSequenceSensorConfig"/>
 
@@ -294,7 +294,7 @@
     <xs:complexContent>
       <xs:extension base="abstractExpression">
         <xs:choice>
-          <xs:element ref="http-uri"/>
+          <xs:element ref="http-url"/>
           <xs:element ref="http-parameter-value"/>
           <xs:element ref="method-signature"/>
           <xs:element ref="method-parameter"/>
@@ -313,7 +313,7 @@
     <xs:sequence/>
   </xs:complexType>
 
-  <xs:complexType name="httpUriValueSource">
+  <xs:complexType name="httpUrlValueSource">
     <xs:complexContent>
       <xs:extension base="stringValueSource">
         <xs:sequence/>
@@ -391,7 +391,7 @@
 
   <xs:complexType name="nameExtractionExpression">
     <xs:choice>
-      <xs:element ref="http-uri"/>
+      <xs:element ref="http-url"/>
       <xs:element ref="http-parameter-value"/>
       <xs:element ref="method-signature"/>
       <xs:element ref="method-parameter"/>

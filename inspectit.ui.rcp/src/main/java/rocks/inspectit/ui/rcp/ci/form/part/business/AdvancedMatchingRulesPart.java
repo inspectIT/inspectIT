@@ -673,7 +673,7 @@ public class AdvancedMatchingRulesPart extends MasterDetailsBlock implements IMa
 					styledString.append(" (Parameter \"" + ((HttpParameterValueSource) stringMatchingExpression.getStringValueSource()).getParameterName() + "\" "
 							+ stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")", StyledString.QUALIFIER_STYLER);
 					break;
-				case HTTP_URI:
+				case HTTP_URL:
 					styledString.append(" (URI " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")", StyledString.QUALIFIER_STYLER);
 					break;
 				case IP:

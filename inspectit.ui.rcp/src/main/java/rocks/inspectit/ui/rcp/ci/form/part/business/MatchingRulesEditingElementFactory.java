@@ -15,7 +15,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
-import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureValueSource;
 import rocks.inspectit.ui.rcp.InspectITImages;
@@ -23,7 +23,7 @@ import rocks.inspectit.ui.rcp.ci.form.part.business.rules.AbstractRuleEditingEle
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.BooleanRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpParameterRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpRequestMethodRuleEditingElement;
-import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpUriRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpUrlRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.IpRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.MethodParameterRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.MethodSignatureRuleEditingElement;
@@ -91,8 +91,8 @@ public final class MatchingRulesEditingElementFactory {
 		case HTTP_PARAMETER:
 			ruleComposite = new HttpParameterRuleEditingElement(expression, editable, upstreamValidationManager);
 			break;
-		case HTTP_URI:
-			ruleComposite = new HttpUriRuleEditingElement(expression, editable, upstreamValidationManager);
+		case HTTP_URL:
+			ruleComposite = new HttpUrlRuleEditingElement(expression, editable, upstreamValidationManager);
 			break;
 		case IP:
 			ruleComposite = new IpRuleEditingElement(expression, editable, upstreamValidationManager);
@@ -163,8 +163,8 @@ public final class MatchingRulesEditingElementFactory {
 		case HTTP_PARAMETER:
 			expression.setStringValueSource(new HttpParameterValueSource(""));
 			break;
-		case HTTP_URI:
-			expression.setStringValueSource(new HttpUriValueSource());
+		case HTTP_URL:
+			expression.setStringValueSource(new HttpUrlValueSource());
 			break;
 		case IP:
 			expression.setStringValueSource(new HostValueSource());
@@ -246,8 +246,8 @@ public final class MatchingRulesEditingElementFactory {
 	 * @return the {@link MatchingRuleType} of the passed {@link StringValueSource}.
 	 */
 	public static MatchingRuleType getMatchingRuleType(StringValueSource source) {
-		if (source instanceof HttpUriValueSource) {
-			return MatchingRuleType.HTTP_URI;
+		if (source instanceof HttpUrlValueSource) {
+			return MatchingRuleType.HTTP_URL;
 		} else if (source instanceof HttpParameterValueSource) {
 			return MatchingRuleType.HTTP_PARAMETER;
 		} else if (source instanceof MethodSignatureValueSource) {
@@ -308,7 +308,7 @@ public final class MatchingRulesEditingElementFactory {
 		/**
 		 * Matching of the HTTP URI.
 		 */
-		HTTP_URI,
+		HTTP_URL,
 
 		/**
 		 * Matching of an HTTP parameter value.
@@ -340,8 +340,8 @@ public final class MatchingRulesEditingElementFactory {
 			switch (this) {
 			case HTTP_PARAMETER:
 				return "HTTP Parameter Matching";
-			case HTTP_URI:
-				return "HTTP URI Matching";
+			case HTTP_URL:
+				return "HTTP URL Matching";
 			case HTTP_REQUEST_METHOD:
 				return "HTTP Request Method Matching";
 			case IP:
@@ -363,7 +363,7 @@ public final class MatchingRulesEditingElementFactory {
 			switch (this) {
 			case HTTP_PARAMETER:
 				return InspectITImages.IMG_HTTP_PARAMETER;
-			case HTTP_URI:
+			case HTTP_URL:
 				return InspectITImages.IMG_BROWSER;
 			case HTTP_REQUEST_METHOD:
 				return InspectITImages.IMG_HTTP_METHOD;
