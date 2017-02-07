@@ -97,8 +97,8 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		DURATION("Duration (ms)", 100, InspectITImages.IMG_TIME, InvocationSequenceDataComparatorEnum.DURATION),
 		/** The count column. */
 		COUNT("Child Count", 100, null, InvocationSequenceDataComparatorEnum.CHILD_COUNT),
-		/** The URI column. */
-		URI("URI", 150, null, InvocationSequenceDataComparatorEnum.URI),
+		/** The URL column. */
+		URL("URL", 150, null, InvocationSequenceDataComparatorEnum.URL),
 		/** The application column. */
 		APPLICATION("Application", 150, null, InvocationSequenceDataComparatorEnum.APPLICATION),
 		/** The business transaction column. */
@@ -638,11 +638,11 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 			}
 		case COUNT:
 			return new StyledString(NumberFormatter.formatLong(data.getChildCount()));
-		case URI:
+		case URL:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(data)) {
-				String uri = ((HttpTimerData) data.getTimerData()).getHttpInfo().getUri();
-				if (null != uri) {
-					return new StyledString(uri);
+				String url = ((HttpTimerData) data.getTimerData()).getHttpInfo().getUrl();
+				if (null != url) {
+					return new StyledString(url);
 				} else {
 					return emptyStyledString;
 				}

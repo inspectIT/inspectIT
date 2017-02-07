@@ -19,13 +19,13 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 
 /**
- * @author Alexander Wert
+ * @author Marius Oehler
  *
  */
 @SuppressWarnings("PMD")
-public class HttpUriValueSourceTest extends TestBase {
+public class HttpUrlValueSourceTest extends TestBase {
 	@InjectMocks
-	HttpUriValueSource valueSource;
+	HttpUrlValueSource valueSource;
 
 	@Mock
 	CachedDataService cachedDataService;
@@ -38,21 +38,26 @@ public class HttpUriValueSourceTest extends TestBase {
 
 	/**
 	 * Test
-	 * {@link HttpUriValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
+	 * {@link HttpUrlValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
 	 * .
 	 */
-	public static class GetStringValues extends HttpUriValueSourceTest {
-		private static final String TEST_URI = "/test/uri";
+	public static class GetStringValues extends HttpUrlValueSourceTest {
+		private static final String TEST_URL = "http://localhost:8080/test/uri?test=true";
 
 		@Test
-		public void retrieveURI() {
-			HttpInfo httpInfo = new HttpInfo(TEST_URI, "POST", null);
+		public void retrieveURL() {
+			HttpInfo httpInfo = new HttpInfo();
+			httpInfo.setScheme("http");
+			httpInfo.setServerName("localhost");
+			httpInfo.setServerPort(8080);
+			httpInfo.setUri("/test/uri");
+			httpInfo.setQueryString("test=true");
 
 			Mockito.doReturn(httpTimerData).when(invocationSeuence).getTimerData();
 			Mockito.doReturn(httpInfo).when(httpTimerData).getHttpInfo();
 
 			String[] values = valueSource.getStringValues(invocationSeuence, cachedDataService);
-			assertThat(values, hasItemInArray(TEST_URI));
+			assertThat(values, hasItemInArray(TEST_URL));
 		}
 
 		@Test

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerDataHelper;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.ui.rcp.details.DetailsCellContent;
 import rocks.inspectit.ui.rcp.details.DetailsTable;
+import rocks.inspectit.ui.rcp.details.YesNoDetailsCellContent;
 import rocks.inspectit.ui.rcp.details.generator.IDetailsGenerator;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
@@ -29,6 +31,11 @@ import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
  *
  */
 public class HttpDetailsGenerator implements IDetailsGenerator {
+
+	/**
+	 * Default string for not available values.
+	 */
+	private static final String NOT_AVAILABLE = "N/A";
 
 	/**
 	 * Comparator for the rows displaying the HTTP parameters, attributes, etc.
@@ -57,9 +64,6 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 
 		DetailsTable table = new DetailsTable(parent, toolkit, "HTTP Info", 1);
 
-		table.addContentRow("Method:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getRequestMethod()) });
-		table.addContentRow("URI:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getUri()) });
-
 		if (HttpTimerDataHelper.hasResponseCode(httpTimerData)) {
 			String statusString;
 			try {
@@ -71,8 +75,25 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 			}
 			table.addContentRow("Response Status:", null, new DetailsCellContent[] { new DetailsCellContent(statusString) });
 		} else {
-			table.addContentRow("Response Status:", null, new DetailsCellContent[] { new DetailsCellContent("Not Available") });
+			table.addContentRow("Response Status:", null, new DetailsCellContent[] { new DetailsCellContent(NOT_AVAILABLE) });
 		}
+
+		String scheme = httpTimerData.getHttpInfo().getScheme();
+		boolean usedHTTPS = StringUtils.isNotEmpty(scheme) && "https".equalsIgnoreCase(scheme);
+
+		String portDescription;
+		if (httpTimerData.getHttpInfo().getServerPort() > 0) {
+			portDescription = String.valueOf(httpTimerData.getHttpInfo().getServerPort());
+		} else {
+			portDescription = NOT_AVAILABLE;
+		}
+
+		table.addContentRow("Used HTTPS:", null, new DetailsCellContent[] { new YesNoDetailsCellContent(usedHTTPS) });
+		table.addContentRow("Method:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getRequestMethod()) });
+		table.addContentRow("Server Name:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getServerName()) });
+		table.addContentRow("Port:", null, new DetailsCellContent[] { new DetailsCellContent(portDescription) });
+		table.addContentRow("URI:", null, new DetailsCellContent[] { new DetailsCellContent(StringUtils.defaultString(httpTimerData.getHttpInfo().getUri())) });
+		table.addContentRow("Query String:", null, new DetailsCellContent[] { new DetailsCellContent(StringUtils.defaultString(httpTimerData.getHttpInfo().getQueryString(), NOT_AVAILABLE)) });
 
 		if (httpTimerData.getHttpInfo().hasInspectItTaggingHeader()) {
 			table.addContentRow("Tag Value:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getInspectItTaggingHeaderValue()) });

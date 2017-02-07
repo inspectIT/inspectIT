@@ -30,7 +30,12 @@ import rocks.inspectit.ui.rcp.ci.form.part.business.MatchingRulesEditingElementF
 import rocks.inspectit.ui.rcp.ci.form.part.business.MatchingRulesEditingElementFactory.IRulesExpressionType;
 import rocks.inspectit.ui.rcp.ci.form.part.business.MatchingRulesEditingElementFactory.MatchingRuleType;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpParameterRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpQueryStringRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpSchemeRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpServerNameRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpServerPortRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpUriRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpUrlRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.IpRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.MethodParameterRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.MethodSignatureRuleEditingElement;
@@ -156,8 +161,18 @@ public abstract class AbstractRuleEditingElement<T extends AbstractExpression> {
 		switch (ruleType) {
 		case HTTP_PARAMETER:
 			return HttpParameterRuleEditingElement.validate(stringMatchingExpression);
+		case HTTP_URL:
+			return HttpUrlRuleEditingElement.validate(stringMatchingExpression);
+		case HTTP_SCHEME:
+			return HttpSchemeRuleEditingElement.validate(stringMatchingExpression);
+		case HTTP_SERVER_NAME:
+			return HttpServerNameRuleEditingElement.validate(stringMatchingExpression);
+		case HTTP_SERVER_PORT:
+			return HttpServerPortRuleEditingElement.validate(stringMatchingExpression);
 		case HTTP_URI:
 			return HttpUriRuleEditingElement.validate(stringMatchingExpression);
+		case HTTP_QUERY_STRING:
+			return HttpQueryStringRuleEditingElement.validate(stringMatchingExpression);
 		case IP:
 			return IpRuleEditingElement.validate(stringMatchingExpression);
 		case METHOD_PARAMETER:
@@ -305,7 +320,7 @@ public abstract class AbstractRuleEditingElement<T extends AbstractExpression> {
 	 */
 	protected void updateEnabledState() {
 		for (Control control : childControls) {
-			if (null != control && !(control instanceof Label)) {
+			if ((null != control) && !(control instanceof Label)) {
 				control.setEnabled(isEditable());
 			}
 		}

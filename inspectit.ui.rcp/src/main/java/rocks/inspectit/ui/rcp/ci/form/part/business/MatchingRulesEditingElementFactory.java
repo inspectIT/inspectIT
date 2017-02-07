@@ -14,16 +14,26 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.PatternMatchingType;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpSchemeValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerNameValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerPortValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureValueSource;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.AbstractRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.BooleanRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpParameterRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpQueryStringRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpRequestMethodRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpSchemeRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpServerNameRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpServerPortRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpUriRuleEditingElement;
+import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.HttpUrlRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.IpRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.MethodParameterRuleEditingElement;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.impl.MethodSignatureRuleEditingElement;
@@ -91,8 +101,23 @@ public final class MatchingRulesEditingElementFactory {
 		case HTTP_PARAMETER:
 			ruleComposite = new HttpParameterRuleEditingElement(expression, editable, upstreamValidationManager);
 			break;
+		case HTTP_URL:
+			ruleComposite = new HttpUrlRuleEditingElement(expression, editable, upstreamValidationManager);
+			break;
+		case HTTP_SCHEME:
+			ruleComposite = new HttpSchemeRuleEditingElement(expression, editable, upstreamValidationManager);
+			break;
+		case HTTP_SERVER_NAME:
+			ruleComposite = new HttpServerNameRuleEditingElement(expression, editable, upstreamValidationManager);
+			break;
+		case HTTP_SERVER_PORT:
+			ruleComposite = new HttpServerPortRuleEditingElement(expression, editable, upstreamValidationManager);
+			break;
 		case HTTP_URI:
 			ruleComposite = new HttpUriRuleEditingElement(expression, editable, upstreamValidationManager);
+			break;
+		case HTTP_QUERY_STRING:
+			ruleComposite = new HttpQueryStringRuleEditingElement(expression, editable, upstreamValidationManager);
 			break;
 		case IP:
 			ruleComposite = new IpRuleEditingElement(expression, editable, upstreamValidationManager);
@@ -163,8 +188,23 @@ public final class MatchingRulesEditingElementFactory {
 		case HTTP_PARAMETER:
 			expression.setStringValueSource(new HttpParameterValueSource(""));
 			break;
+		case HTTP_URL:
+			expression.setStringValueSource(new HttpUrlValueSource());
+			break;
+		case HTTP_SCHEME:
+			expression.setStringValueSource(new HttpSchemeValueSource());
+			break;
+		case HTTP_SERVER_NAME:
+			expression.setStringValueSource(new HttpServerNameValueSource());
+			break;
+		case HTTP_SERVER_PORT:
+			expression.setStringValueSource(new HttpServerPortValueSource());
+			break;
 		case HTTP_URI:
 			expression.setStringValueSource(new HttpUriValueSource());
+			break;
+		case HTTP_QUERY_STRING:
+			expression.setStringValueSource(new HttpQueryStringValueSource());
 			break;
 		case IP:
 			expression.setStringValueSource(new HostValueSource());
@@ -246,8 +286,18 @@ public final class MatchingRulesEditingElementFactory {
 	 * @return the {@link MatchingRuleType} of the passed {@link StringValueSource}.
 	 */
 	public static MatchingRuleType getMatchingRuleType(StringValueSource source) {
-		if (source instanceof HttpUriValueSource) {
+		if (source instanceof HttpUrlValueSource) {
+			return MatchingRuleType.HTTP_URL;
+		} else if (source instanceof HttpSchemeValueSource) {
+			return MatchingRuleType.HTTP_SCHEME;
+		} else if (source instanceof HttpServerNameValueSource) {
+			return MatchingRuleType.HTTP_SERVER_NAME;
+		} else if (source instanceof HttpServerPortValueSource) {
+			return MatchingRuleType.HTTP_SERVER_PORT;
+		} else if (source instanceof HttpUriValueSource) {
 			return MatchingRuleType.HTTP_URI;
+		} else if (source instanceof HttpQueryStringValueSource) {
+			return MatchingRuleType.HTTP_QUERY_STRING;
 		} else if (source instanceof HttpParameterValueSource) {
 			return MatchingRuleType.HTTP_PARAMETER;
 		} else if (source instanceof MethodSignatureValueSource) {
@@ -306,9 +356,34 @@ public final class MatchingRulesEditingElementFactory {
 	 */
 	public enum MatchingRuleType implements IRulesExpressionType {
 		/**
+		 * Matching of the HTTP URL.
+		 */
+		HTTP_URL,
+
+		/**
+		 * Matching of the HTTP scheme.
+		 */
+		HTTP_SCHEME,
+
+		/**
+		 * Matching of the HTTP server name.
+		 */
+		HTTP_SERVER_NAME,
+
+		/**
+		 * Matching of the HTTP serve port.
+		 */
+		HTTP_SERVER_PORT,
+
+		/**
 		 * Matching of the HTTP URI.
 		 */
 		HTTP_URI,
+
+		/**
+		 * Matching of the HTTP query string.
+		 */
+		HTTP_QUERY_STRING,
 
 		/**
 		 * Matching of an HTTP parameter value.
@@ -340,8 +415,18 @@ public final class MatchingRulesEditingElementFactory {
 			switch (this) {
 			case HTTP_PARAMETER:
 				return "HTTP Parameter Matching";
+			case HTTP_URL:
+				return "HTTP URL Matching";
+			case HTTP_SCHEME:
+				return "HTTP Scheme Matching";
+			case HTTP_SERVER_NAME:
+				return "HTTP Server Name Matching";
+			case HTTP_SERVER_PORT:
+				return "HTTP Server Port Matching";
 			case HTTP_URI:
 				return "HTTP URI Matching";
+			case HTTP_QUERY_STRING:
+				return "HTTP Query String Matching";
 			case HTTP_REQUEST_METHOD:
 				return "HTTP Request Method Matching";
 			case IP:
@@ -363,8 +448,18 @@ public final class MatchingRulesEditingElementFactory {
 			switch (this) {
 			case HTTP_PARAMETER:
 				return InspectITImages.IMG_HTTP_PARAMETER;
-			case HTTP_URI:
+			case HTTP_URL:
 				return InspectITImages.IMG_BROWSER;
+			case HTTP_SCHEME:
+				return InspectITImages.IMG_HTTP_SCHEME;
+			case HTTP_SERVER_NAME:
+				return InspectITImages.IMG_HTTP_SERVER;
+			case HTTP_SERVER_PORT:
+				return InspectITImages.IMG_HTTP_PORT;
+			case HTTP_URI:
+				return InspectITImages.IMG_HTTP_URI;
+			case HTTP_QUERY_STRING:
+				return InspectITImages.IMG_HTTP_QUERY;
 			case HTTP_REQUEST_METHOD:
 				return InspectITImages.IMG_HTTP_METHOD;
 			case IP:
