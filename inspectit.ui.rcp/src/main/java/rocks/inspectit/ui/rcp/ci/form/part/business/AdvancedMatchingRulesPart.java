@@ -673,8 +673,26 @@ public class AdvancedMatchingRulesPart extends MasterDetailsBlock implements IMa
 					styledString.append(" (Parameter \"" + ((HttpParameterValueSource) stringMatchingExpression.getStringValueSource()).getParameterName() + "\" "
 							+ stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")", StyledString.QUALIFIER_STYLER);
 					break;
+				case HTTP_URL:
+					styledString.append(" (URL " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")", StyledString.QUALIFIER_STYLER);
+					break;
+				case HTTP_SCHEME:
+					styledString.append(" (Scheme " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")", StyledString.QUALIFIER_STYLER);
+					break;
+				case HTTP_SERVER_NAME:
+					styledString.append(" (Server name " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")",
+							StyledString.QUALIFIER_STYLER);
+					break;
+				case HTTP_SERVER_PORT:
+					styledString.append(" (Server port " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")",
+							StyledString.QUALIFIER_STYLER);
+					break;
 				case HTTP_URI:
 					styledString.append(" (URI " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")", StyledString.QUALIFIER_STYLER);
+					break;
+				case HTTP_QUERY_STRING:
+					styledString.append(" (Query string " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")",
+							StyledString.QUALIFIER_STYLER);
 					break;
 				case IP:
 					styledString.append(" (IP " + stringMatchingExpression.getMatchingType().toString() + " \"" + stringMatchingExpression.getSnippet() + "\")", StyledString.QUALIFIER_STYLER);

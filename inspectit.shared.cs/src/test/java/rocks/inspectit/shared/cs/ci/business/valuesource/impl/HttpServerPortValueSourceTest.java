@@ -17,17 +17,15 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
-
 /**
- * @author Alexander Wert
  * @author Marius Oehler
  *
  */
 @SuppressWarnings("PMD")
-public class HttpUriValueSourceTest extends TestBase {
+public class HttpServerPortValueSourceTest extends TestBase {
 
 	@InjectMocks
-	HttpUriValueSource valueSource;
+	HttpServerPortValueSource valueSource;
 
 	@Mock
 	CachedDataService cachedDataService;
@@ -40,20 +38,21 @@ public class HttpUriValueSourceTest extends TestBase {
 
 	/**
 	 * Test
-	 * {@link HttpUriValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
+	 * {@link HttpServerPortValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
 	 * .
 	 */
-	public static class GetStringValues extends HttpUriValueSourceTest {
+	public static class GetStringValues extends HttpServerPortValueSourceTest {
 
 		@Test
-		public void retrieveURI() {
-			HttpInfo httpInfo = new HttpInfo("/test/uri", "POST", null);
+		public void retrieveServerPort() {
+			HttpInfo httpInfo = new HttpInfo();
+			httpInfo.setServerPort(8080);
 			doReturn(httpTimerData).when(invocationSequenceData).getTimerData();
 			doReturn(httpInfo).when(httpTimerData).getHttpInfo();
 
 			String[] values = valueSource.getStringValues(invocationSequenceData, cachedDataService);
 
-			assertThat(values, hasItemInArray("/test/uri"));
+			assertThat(values, hasItemInArray("8080"));
 		}
 
 		@Test

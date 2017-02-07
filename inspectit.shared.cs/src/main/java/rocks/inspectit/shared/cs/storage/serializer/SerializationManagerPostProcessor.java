@@ -36,8 +36,13 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.PatternMatchingType;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerPortValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpSchemeValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerNameValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureValueSource;
 import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
@@ -321,6 +326,12 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(MethodParameterValueSource.class, new FieldSerializer<MethodParameterValueSource>(kryo, MethodParameterValueSource.class), nextRegistrationId++);
 		kryo.register(NameExtractionExpression.class, new FieldSerializer<NameExtractionExpression>(kryo, NameExtractionExpression.class), nextRegistrationId++);
 		kryo.register(HttpRequestMethodValueSource.class, new FieldSerializer<HttpRequestMethodValueSource>(kryo, HttpRequestMethodValueSource.class), nextRegistrationId++);
+		// INSPECTIT-2302
+		kryo.register(HttpUrlValueSource.class, new FieldSerializer<HttpUrlValueSource>(kryo, HttpUrlValueSource.class), nextRegistrationId++);
+		kryo.register(HttpSchemeValueSource.class, new FieldSerializer<HttpSchemeValueSource>(kryo, HttpSchemeValueSource.class), nextRegistrationId++);
+		kryo.register(HttpServerNameValueSource.class, new FieldSerializer<HttpServerNameValueSource>(kryo, HttpServerNameValueSource.class), nextRegistrationId++);
+		kryo.register(HttpServerPortValueSource.class, new FieldSerializer<HttpServerPortValueSource>(kryo, HttpServerPortValueSource.class), nextRegistrationId++);
+		kryo.register(HttpQueryStringValueSource.class, new FieldSerializer<HttpQueryStringValueSource>(kryo, HttpQueryStringValueSource.class), nextRegistrationId++);
 
 		// INSPECTIT-658
 		// this classes are registered with CompatibleFieldSerializer since they can be

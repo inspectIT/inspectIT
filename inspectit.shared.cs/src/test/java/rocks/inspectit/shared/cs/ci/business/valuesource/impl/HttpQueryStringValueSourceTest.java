@@ -19,15 +19,14 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 
 /**
- * @author Alexander Wert
  * @author Marius Oehler
  *
  */
 @SuppressWarnings("PMD")
-public class HttpUriValueSourceTest extends TestBase {
+public class HttpQueryStringValueSourceTest extends TestBase {
 
 	@InjectMocks
-	HttpUriValueSource valueSource;
+	HttpQueryStringValueSource valueSource;
 
 	@Mock
 	CachedDataService cachedDataService;
@@ -40,20 +39,21 @@ public class HttpUriValueSourceTest extends TestBase {
 
 	/**
 	 * Test
-	 * {@link HttpUriValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
+	 * {@link HttpQueryStringValueSource#getStringValues(InvocationSequenceData, rocks.inspectit.shared.all.cmr.service.ICachedDataService)}
 	 * .
 	 */
-	public static class GetStringValues extends HttpUriValueSourceTest {
+	public static class GetStringValues extends HttpQueryStringValueSourceTest {
 
 		@Test
-		public void retrieveURI() {
-			HttpInfo httpInfo = new HttpInfo("/test/uri", "POST", null);
+		public void retrieveQueryString() {
+			HttpInfo httpInfo = new HttpInfo();
+			httpInfo.setQueryString("test=true");
 			doReturn(httpTimerData).when(invocationSequenceData).getTimerData();
 			doReturn(httpInfo).when(httpTimerData).getHttpInfo();
 
 			String[] values = valueSource.getStringValues(invocationSequenceData, cachedDataService);
 
-			assertThat(values, hasItemInArray("/test/uri"));
+			assertThat(values, hasItemInArray("test=true"));
 		}
 
 		@Test

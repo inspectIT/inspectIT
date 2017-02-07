@@ -4,28 +4,28 @@ import java.util.Set;
 
 import rocks.inspectit.shared.cs.ci.business.expression.AbstractExpression;
 import rocks.inspectit.shared.cs.ci.business.expression.impl.StringMatchingExpression;
-import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpSchemeValueSource;
 import rocks.inspectit.ui.rcp.ci.form.part.business.MatchingRulesEditingElementFactory.MatchingRuleType;
 import rocks.inspectit.ui.rcp.ci.form.part.business.rules.AbstractStringMatchingRuleEditingElement;
 import rocks.inspectit.ui.rcp.validation.AbstractValidationManager;
 import rocks.inspectit.ui.rcp.validation.ValidationState;
 
 /**
- * Editing element for a HTTP URI matching expression.
- *
+ * Editing element for a HTTP scheme matching expression.
+ * 
  * @author Marius Oehler
  *
  */
-public class HttpUriRuleEditingElement extends AbstractStringMatchingRuleEditingElement<HttpUriValueSource> {
+public class HttpSchemeRuleEditingElement extends AbstractStringMatchingRuleEditingElement<HttpSchemeValueSource> {
 	/**
 	 * The name of the string source.
 	 */
-	private static final String SOURCE_NAME = "URI";
+	private static final String SOURCE_NAME = "Scheme";
 
 	/**
-	 * Description text for the HTTP URI matching rule.
+	 * Description text for the HTTP scheme matching rule.
 	 */
-	private static final String DESCRIPTION = "This rule applies if the URI of the corresponding request\n" + "matches (equals, starts with, etc.) the specified String value.";
+	private static final String DESCRIPTION = "This rule applies if the scheme of the corresponding request\n" + "matches (equals, starts with, etc.) the specified String value.";
 
 	/**
 	 * Constructor.
@@ -39,8 +39,8 @@ public class HttpUriRuleEditingElement extends AbstractStringMatchingRuleEditing
 	 *            {@link AbstractValidationManager} instance to be notified on validation state
 	 *            changes.
 	 */
-	public HttpUriRuleEditingElement(StringMatchingExpression expression, boolean editable, AbstractValidationManager<AbstractExpression> upstreamValidationManager) {
-		super(expression, MatchingRuleType.HTTP_URI, DESCRIPTION, SOURCE_NAME, false, editable, upstreamValidationManager);
+	public HttpSchemeRuleEditingElement(StringMatchingExpression expression, boolean editable, AbstractValidationManager<AbstractExpression> upstreamValidationManager) {
+		super(expression, MatchingRuleType.HTTP_SCHEME, DESCRIPTION, SOURCE_NAME, false, editable, upstreamValidationManager);
 	}
 
 	/**
@@ -61,6 +61,6 @@ public class HttpUriRuleEditingElement extends AbstractStringMatchingRuleEditing
 	 */
 	@Override
 	protected boolean isValidExpression(StringMatchingExpression expression) {
-		return expression.getStringValueSource() instanceof HttpUriValueSource;
+		return expression.getStringValueSource() instanceof HttpSchemeValueSource;
 	}
 }

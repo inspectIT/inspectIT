@@ -45,11 +45,21 @@
 
   <xs:element name="http-parameter-value" type="httpParameterValueSource"/>
 
+  <xs:element name="http-query-string" type="httpQueryStringValueSource"/>
+
   <xs:element name="http-request-method" type="httpRequestMethodValueSource"/>
+
+  <xs:element name="http-scheme" type="httpSchemeValueSource"/>
 
   <xs:element name="http-sensor-config" type="httpSensorConfig"/>
 
+  <xs:element name="http-server-name" type="httpServerNameValueSource"/>
+
+  <xs:element name="http-server-port" type="httpServerPortValueSource"/>
+
   <xs:element name="http-uri" type="httpUriValueSource"/>
+
+  <xs:element name="http-url" type="httpUrlValueSource"/>
 
   <xs:element name="invocation-sequence-sensor-config" type="invocationSequenceSensorConfig"/>
 
@@ -294,12 +304,17 @@
     <xs:complexContent>
       <xs:extension base="abstractExpression">
         <xs:choice>
-          <xs:element ref="http-uri"/>
+          <xs:element ref="http-url"/>
           <xs:element ref="http-parameter-value"/>
           <xs:element ref="method-signature"/>
           <xs:element ref="method-parameter"/>
           <xs:element ref="host"/>
           <xs:element ref="http-request-method"/>
+          <xs:element ref="http-server-port"/>
+          <xs:element ref="http-query-string"/>
+          <xs:element ref="http-scheme"/>
+          <xs:element ref="http-server-name"/>
+          <xs:element ref="http-uri"/>
         </xs:choice>
         <xs:attribute name="matching-type" type="patternMatchingType" use="required"/>
         <xs:attribute name="snippet" type="xs:string" use="required"/>
@@ -313,7 +328,7 @@
     <xs:sequence/>
   </xs:complexType>
 
-  <xs:complexType name="httpUriValueSource">
+  <xs:complexType name="httpUrlValueSource">
     <xs:complexContent>
       <xs:extension base="stringValueSource">
         <xs:sequence/>
@@ -364,6 +379,46 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="httpServerPortValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="httpQueryStringValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="httpSchemeValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="httpServerNameValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="httpUriValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="booleanExpression">
     <xs:complexContent>
       <xs:extension base="abstractExpression">
@@ -391,12 +446,17 @@
 
   <xs:complexType name="nameExtractionExpression">
     <xs:choice>
-      <xs:element ref="http-uri"/>
+      <xs:element ref="http-url"/>
       <xs:element ref="http-parameter-value"/>
       <xs:element ref="method-signature"/>
       <xs:element ref="method-parameter"/>
       <xs:element ref="host"/>
       <xs:element ref="http-request-method"/>
+      <xs:element ref="http-server-port"/>
+      <xs:element ref="http-query-string"/>
+      <xs:element ref="http-scheme"/>
+      <xs:element ref="http-server-name"/>
+      <xs:element ref="http-uri"/>
     </xs:choice>
     <xs:attribute name="regularExpression" type="xs:string" use="required"/>
     <xs:attribute name="targetNamePattern" type="xs:string" use="required"/>

@@ -37,7 +37,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
-import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureValueSource;
 import rocks.inspectit.ui.rcp.InspectIT;
@@ -166,7 +166,7 @@ public class DynamicNameExtractionPart extends SectionPart { // NOPMD
 	/**
 	 * The default value for the {@link MatchingRuleType}.
 	 */
-	private static final MatchingRuleType DEFAULT_MATCHING_RULE_TYPE = MatchingRuleType.HTTP_URI;
+	private static final MatchingRuleType DEFAULT_MATCHING_RULE_TYPE = MatchingRuleType.HTTP_URL;
 
 	/**
 	 * Check box for enabling/disabling dynamic name extraction.
@@ -342,7 +342,8 @@ public class DynamicNameExtractionPart extends SectionPart { // NOPMD
 				methodSignatureText.setText(methodSignature);
 				parameterIndexSpinner.setSelection(((MethodParameterValueSource) nameExtractionExpression.getStringValueSource()).getParameterIndex());
 				break;
-			case HTTP_URI:
+			case HTTP_URL:
+			case HTTP_SCHEME:
 			case IP:
 			case METHOD_SIGNATURE:
 			default:
@@ -814,7 +815,12 @@ public class DynamicNameExtractionPart extends SectionPart { // NOPMD
 		case METHOD_PARAMETER:
 			createMethodParameterControls();
 			break;
+		case HTTP_URL:
+		case HTTP_SCHEME:
+		case HTTP_SERVER_NAME:
+		case HTTP_SERVER_PORT:
 		case HTTP_URI:
+		case HTTP_QUERY_STRING:
 		case IP:
 			searchDepthSpinner.setEnabled(false);
 			searchInTraceCheckBox.setEnabled(false);
@@ -957,8 +963,8 @@ public class DynamicNameExtractionPart extends SectionPart { // NOPMD
 		switch (sourceType) {
 		case HTTP_PARAMETER:
 			return new HttpParameterValueSource(parameterNameText.getText());
-		case HTTP_URI:
-			return new HttpUriValueSource();
+		case HTTP_URL:
+			return new HttpUrlValueSource();
 		case IP:
 			return new HostValueSource();
 		case METHOD_PARAMETER:

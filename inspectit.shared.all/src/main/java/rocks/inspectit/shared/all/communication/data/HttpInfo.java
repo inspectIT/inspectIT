@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -57,6 +58,30 @@ public class HttpInfo implements Sizeable, Serializable {
 	 */
 	@Column(length = 1000)
 	private String uri = UNDEFINED;
+
+	/**
+	 * The request scheme.
+	 */
+	@Column
+	private String scheme;
+
+	/**
+	 * The request server name.
+	 */
+	@Column
+	private String serverName;
+
+	/**
+	 * The request server port.
+	 */
+	@Column
+	private Integer serverPort;
+
+	/**
+	 * The request query string.
+	 */
+	@Column
+	private String queryString;
 
 	/**
 	 * The request method.
@@ -165,6 +190,82 @@ public class HttpInfo implements Sizeable, Serializable {
 	}
 
 	/**
+	 * Gets {@link #scheme}.
+	 *
+	 * @return {@link #scheme}
+	 */
+	public String getScheme() {
+		return this.scheme;
+	}
+
+	/**
+	 * Sets {@link #scheme}.
+	 *
+	 * @param scheme
+	 *            New value for {@link #scheme}
+	 */
+	public void setScheme(String scheme) {
+		this.scheme = scheme;
+	}
+
+	/**
+	 * Gets {@link #serverName}.
+	 *
+	 * @return {@link #serverName}
+	 */
+	public String getServerName() {
+		return this.serverName;
+	}
+
+	/**
+	 * Sets {@link #serverName}.
+	 *
+	 * @param serverName
+	 *            New value for {@link #serverName}
+	 */
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+
+	/**
+	 * Gets {@link #serverPort}.
+	 *
+	 * @return {@link #serverPort}
+	 */
+	public Integer getServerPort() {
+		return this.serverPort;
+	}
+
+	/**
+	 * Sets {@link #serverPort}.
+	 *
+	 * @param serverPort
+	 *            New value for {@link #serverPort}
+	 */
+	public void setServerPort(Integer serverPort) {
+		this.serverPort = serverPort;
+	}
+
+	/**
+	 * Gets {@link #queryString}.
+	 *
+	 * @return {@link #queryString}
+	 */
+	public String getQueryString() {
+		return this.queryString;
+	}
+
+	/**
+	 * Sets {@link #queryString}.
+	 *
+	 * @param queryString
+	 *            New value for {@link #queryString}
+	 */
+	public void setQueryString(String queryString) {
+		this.queryString = queryString;
+	}
+
+	/**
 	 * Checks if this data has the inspectIT tagging header set.
 	 *
 	 * @return if this data has the inspectIT tagging header set.
@@ -193,6 +294,24 @@ public class HttpInfo implements Sizeable, Serializable {
 	}
 
 	/**
+	 * Returns the URL.
+	 *
+	 * @return the URL
+	 */
+	public String getUrl() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(scheme).append("://").append(serverName);
+		if (serverPort > 0) {
+			builder.append(':').append(serverPort);
+		}
+		builder.append(uri);
+		if (StringUtils.isNotEmpty(queryString)) {
+			builder.append('?').append(queryString);
+		}
+		return builder.toString();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -206,8 +325,8 @@ public class HttpInfo implements Sizeable, Serializable {
 	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = objectSizes.getSizeOfObjectHeader();
-		size += objectSizes.getPrimitiveTypesSize(3, 0, 0, 0, 1, 0);
-		size += objectSizes.getSizeOf(uri, requestMethod, inspectItTaggingHeaderValue);
+		size += objectSizes.getPrimitiveTypesSize(7, 0, 0, 0, 1, 0);
+		size += objectSizes.getSizeOf(uri, requestMethod, inspectItTaggingHeaderValue, scheme, serverName, queryString);
 
 		if (doAlign) {
 			return objectSizes.alignTo8Bytes(size);

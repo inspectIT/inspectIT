@@ -10,14 +10,14 @@ import rocks.inspectit.shared.cs.ci.business.expression.impl.StringMatchingExpre
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 
 /**
- * This configuration element indicates that the URI of the HTTP request is to be used as the string
+ * This configuration element indicates that the URL of the HTTP request is to be used as the string
  * value for the {@link StringMatchingExpression}.
  *
- * @author Marius Oehler
+ * @author Alexander Wert
  *
  */
-@XmlRootElement(name = "http-uri")
-public class HttpUriValueSource extends StringValueSource {
+@XmlRootElement(name = "http-url")
+public class HttpUrlValueSource extends StringValueSource {
 
 	/**
 	 * {@inheritDoc}
@@ -28,6 +28,6 @@ public class HttpUriValueSource extends StringValueSource {
 			return new String[0];
 		}
 		HttpTimerData httpData = (HttpTimerData) invocSequence.getTimerData();
-		return new String[] { httpData.getHttpInfo().getUri() };
+		return new String[] { httpData.getHttpInfo().getUrl() };
 	}
 }
