@@ -27,6 +27,7 @@
  # jcl-over-slf4j
  # kryo-serializers
  # logging-interceptor
+ # moshi
  # objensis
  # okhttp
  # okio
