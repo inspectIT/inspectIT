@@ -206,6 +206,11 @@ public interface InspectITImages {
 	String IMG_HTTP_PARAMETER = InspectITConstants.ICON_PATH_FUGUE + "http-parameter.png";
 	String IMG_HTTP_METHOD = InspectITConstants.ICON_PATH_FUGUE + "http-method.png";
 	String IMG_ALARM_INVOCATION = InspectITConstants.ICON_PATH_FUGUE + "invocFlag.png";
+	String IMG_HTTP_SCHEME = InspectITConstants.ICON_PATH_FUGUE + "http-scheme.png";
+	String IMG_HTTP_SERVER = InspectITConstants.ICON_PATH_FUGUE + "http-server.png";
+	String IMG_HTTP_PORT = InspectITConstants.ICON_PATH_FUGUE + "http-port.png";
+	String IMG_HTTP_URI = InspectITConstants.ICON_PATH_FUGUE + "http-uri.png";
+	String IMG_HTTP_QUERY = InspectITConstants.ICON_PATH_FUGUE + "http-query.png";
 
 	// labels just pointing to existing ones
 	String IMG_ASSIGNEE_LABEL_ICON = IMG_USER;
@@ -215,5 +220,4 @@ public interface InspectITImages {
 	String IMG_STATUS_LABEL_ICON = IMG_ALERT;
 	String IMG_USECASE_LABEL_ICON = IMG_BUSINESS;
 	String IMG_USER_LABEL_ICON = IMG_DISABLED;
-
 }

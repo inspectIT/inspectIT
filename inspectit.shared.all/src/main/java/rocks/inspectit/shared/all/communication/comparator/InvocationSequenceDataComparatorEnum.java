@@ -34,9 +34,9 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 	NESTED_DATA,
 
 	/**
-	 * Sort by URIs (if available in invocation root).
+	 * Sort by URLs (if available in invocation root).
 	 */
-	URI,
+	URL,
 
 	/**
 	 * Sort by response code.
@@ -88,10 +88,10 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 				invNested2++;
 			}
 			return invNested1 - invNested2;
-		case URI:
+		case URL:
 			if (InvocationSequenceDataHelper.hasHttpTimerData(o1) && InvocationSequenceDataHelper.hasHttpTimerData(o2)) {
-				String uri1 = ((HttpTimerData) o1.getTimerData()).getHttpInfo().getUri();
-				String uri2 = ((HttpTimerData) o2.getTimerData()).getHttpInfo().getUri();
+				String uri1 = ((HttpTimerData) o1.getTimerData()).getHttpInfo().getUrl();
+				String uri2 = ((HttpTimerData) o2.getTimerData()).getHttpInfo().getUrl();
 				return ObjectUtils.compare(uri1, uri2);
 			} else if (InvocationSequenceDataHelper.hasHttpTimerData(o1)) {
 				return 1;
