@@ -162,6 +162,33 @@ public class JAXBTransformatorTest extends TestBase {
 
 		}
 
+		@Test
+		public void overwriteExistingFile() throws Exception {
+			String initialValue = "initialValue";
+			TestData testData1 = new TestData();
+			testData1.setValue(initialValue);
+
+			transformator.marshall(path, testData1, null);
+
+			JAXBContext context = JAXBContext.newInstance(TestData.class);
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
+				Object unmarshaled = unmarshaller.unmarshal(is);
+				assertThat(unmarshaled, is((Object) testData1));
+			}
+
+			String overwrittenValue = "overwrittenValue";
+			TestData testData2 = new TestData();
+			testData2.setValue(overwrittenValue);
+
+			transformator.marshall(path, testData2, null);
+
+			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
+				Object unmarshaled = unmarshaller.unmarshal(is);
+				assertThat(unmarshaled, is((Object) testData2));
+			}
+		}
+
 	}
 
 	public static class Unmarshal extends JAXBTransformatorTest {
