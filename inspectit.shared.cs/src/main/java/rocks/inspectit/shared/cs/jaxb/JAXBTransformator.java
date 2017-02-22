@@ -107,7 +107,6 @@ public class JAXBTransformator {
 		if (Files.isDirectory(path)) {
 			throw new IOException("Can not marshal object to the path that represents the directory");
 		}
-		Files.deleteIfExists(path);
 		Files.createDirectories(path.getParent());
 
 		JAXBContext context = JAXBContext.newInstance(object.getClass());
@@ -122,7 +121,7 @@ public class JAXBTransformator {
 			((ISchemaVersionAware) object).setSchemaVersion(schemaVersion);
 		}
 
-		try (OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE_NEW)) {
+		try (OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 			marshaller.marshal(object, outputStream);
 		}
 	}
