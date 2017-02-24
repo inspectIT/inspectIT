@@ -33,7 +33,6 @@ configurations {
 	}
 	testCompile {
 		extendsFrom configurations.agentJavaTest
-		extendsFrom configurations.jmhbase
 	}
 }
 

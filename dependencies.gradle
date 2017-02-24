@@ -63,9 +63,6 @@ configurations {
 		extendsFrom configurations.testbase
 	}
 
-	/** JMH test configurations */
-	jmhbase
-
 	/** Build */
 	xjc
 	izpack
@@ -88,7 +85,6 @@ configurations.sharedCsTest.transitive = false
 configurations.agentJavaTest.transitive = false
 configurations.serverTest.transitive = false
 configurations.uiRcpTest.transitive = false
-configurations.jmhbase.transitive = false
 
 dependencies {
 
@@ -248,10 +244,6 @@ dependencies {
 	)
 	classmexer (
 		'classmexer:classmexer:0.0.3'
-	)
-	jmhbase (
-		'org.openjdk.jmh:jmh-core:1.11.3',
-		'org.openjdk.jmh:jmh-generator-annprocess:1.11.3'
 	)
 	xjc (
 		'com.sun.xml.bind:jaxb-jxc:2.2.11',

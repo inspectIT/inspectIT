@@ -35,7 +35,6 @@ configurations {
 	}
 	testCompile {
 		extendsFrom configurations.serverTest
-		extendsFrom configurations.jmhbase
 	}
 }
 
