@@ -77,7 +77,7 @@ public class MinlogToSLF4JLogger extends Logger {
 	 * @return combinedMessage
 	 */
 	private String getMessage(String category, String message) {
-		int size = (category != null) ? category.length() + 2 : (0 + message) != null ? message.length() : 0;
+		int size = (category != null) ? category.length() + 2 : (message != null) ? message.length() : 0;
 		StringBuilder stringBuilder = new StringBuilder(size);
 		if (null != category) {
 			stringBuilder.append(category);

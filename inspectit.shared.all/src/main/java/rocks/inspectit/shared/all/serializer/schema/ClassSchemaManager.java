@@ -124,15 +124,9 @@ public class ClassSchemaManager implements InitializingBean {
 			}
 		}
 
-		if (null != br) {
-			br.close();
-		}
-		if (null != isr) {
-			isr.close();
-		}
-		if (null != is) {
-			is.close();
-		}
+		br.close();
+		isr.close();
+		is.close();
 	}
 
 	/**
@@ -153,7 +147,9 @@ public class ClassSchemaManager implements InitializingBean {
 			}
 		});
 
-		loadSchemas(files);
+		if (files != null) {
+			loadSchemas(files);
+		}
 	}
 
 	/**

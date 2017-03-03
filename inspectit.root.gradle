@@ -230,8 +230,10 @@ cpdCheck {
 	}
 }
 
-task cpdHtmlReport << {
-	ant.xslt(in: "${buildQAAnalysisCPD}/main.xml", style: cpdReportFile, out: "${buildQAAnalysisCPD}/../cpd.html")
+task cpdHtmlReport {
+	doLast {
+		ant.xslt(in: "${buildQAAnalysisCPD}/main.xml", style: cpdReportFile, out: "${buildQAAnalysisCPD}/../cpd.html")
+	}
 }
 cpdCheck.finalizedBy cpdHtmlReport
 
@@ -327,13 +329,15 @@ subprojects {
 		ruleSetFiles = files(pmdRulesFile)
 		ruleSets = []
 		reportsDir = file(buildQAAnalysisPMD)
-		toolVersion = '5.1.0'
+		toolVersion = '5.4.1'
 	}
 
-	task pmdHtmlReport << {
-		ant.xslt(in: "${buildQAAnalysisPMD}/main.xml", style: pmdReportFile, out: "${buildQAAnalysisPMD}/sortable_report.html")
-		ant.copy(todir: buildQAAnalysisPMD, file: pmdSortableFile)      
-		new File(buildQAAnalysis, "pmd.html").text = "<meta http-equiv=\"refresh\" content=\"0; url=pmd/sortable_report.html\" >"
+	task pmdHtmlReport {
+		doLast {
+			ant.xslt(in: "${buildQAAnalysisPMD}/main.xml", style: pmdReportFile, out: "${buildQAAnalysisPMD}/sortable_report.html")
+			ant.copy(todir: buildQAAnalysisPMD, file: pmdSortableFile)      
+			new File(buildQAAnalysis, "pmd.html").text = "<meta http-equiv=\"refresh\" content=\"0; url=pmd/sortable_report.html\" >"
+		}
 	}
 	pmdMain.finalizedBy pmdHtmlReport
 
@@ -347,8 +351,10 @@ subprojects {
 		toolVersion = '5.6'
 	}
 
-	task checkstyleHtmlReport << {
-		ant.xslt(in: "${buildQAAnalysisCheckstyle}/main.xml", style: "${checkstyleReportFile}", out: "${buildQAAnalysisCheckstyle}/../checkstyle.html")
+	task checkstyleHtmlReport {
+		doLast {
+			ant.xslt(in: "${buildQAAnalysisCheckstyle}/main.xml", style: "${checkstyleReportFile}", out: "${buildQAAnalysisCheckstyle}/../checkstyle.html")
+		}
 	}
 	checkstyleMain.finalizedBy checkstyleHtmlReport
 
@@ -363,8 +369,10 @@ subprojects {
 		toolVersion = '2.0.0'
 	}
 
-	task findbugsHtmlReport << {
-		ant.xslt(in: "${buildQAAnalysisFindbugs}/main.xml", style: findbugsConfigFancyHist, out: "${buildQAAnalysisFindbugs}/../findbugs.html")
+	task findbugsHtmlReport {
+		doLast {
+			ant.xslt(in: "${buildQAAnalysisFindbugs}/main.xml", style: findbugsConfigFancyHist, out: "${buildQAAnalysisFindbugs}/../findbugs.html")
+		}
 	} 
 	findbugsMain.finalizedBy findbugsHtmlReport
 

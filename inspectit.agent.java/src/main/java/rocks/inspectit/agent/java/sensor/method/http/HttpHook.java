@@ -144,7 +144,7 @@ public class HttpHook implements IMethodHook {
 		this.threadMXBean = threadMXBean;
 		this.extractor = new HttpInformationExtractor(new StringConstraint(parameters));
 
-		if ((null != parameters) && "true".equals(parameters.get("sessioncapture"))) {
+		if ("true".equals(parameters.get("sessioncapture"))) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Enabling session capturing for the http sensor");
 			}

@@ -212,10 +212,6 @@ public class AgentStorageService implements IAgentStorageService {
 
 				List<? extends DefaultData> defaultDataList = softReference.get();
 				if (defaultDataList != null) {
-					for (DefaultData data : defaultDataList) {
-						data.finalizeData();
-					}
-
 					long time = 0;
 					if (log.isDebugEnabled()) {
 						time = System.nanoTime();

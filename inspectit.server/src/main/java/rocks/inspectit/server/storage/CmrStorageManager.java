@@ -763,12 +763,9 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 */
 	public boolean removeLabelFromStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel) throws IOException, SerializationException, BusinessException {
 		StorageData local = getLocalStorageDataObject(storageData);
-		if (null != local) {
-			boolean removed = local.removeLabel(storageLabel);
-			writeStorageDataToDisk(local);
-			return removed;
-		}
-		return false;
+		boolean removed = local.removeLabel(storageLabel);
+		writeStorageDataToDisk(local);
+		return removed;
 	}
 
 	/**
@@ -785,14 +782,10 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 */
 	public void updateStorageData(StorageData storageData) throws BusinessException, IOException, SerializationException {
 		StorageData local = getLocalStorageDataObject(storageData);
-		if (null == local) {
-			throw new BusinessException("Update of the storage data" + storageData + ".", StorageErrorCodeEnum.STORAGE_DOES_NOT_EXIST);
-		} else {
-			synchronized (local) {
-				local.setName(storageData.getName());
-				local.setDescription(storageData.getDescription());
-				writeStorageDataToDisk(local);
-			}
+		synchronized (local) {
+			local.setName(storageData.getName());
+			local.setDescription(storageData.getDescription());
+			writeStorageDataToDisk(local);
 		}
 	}
 
