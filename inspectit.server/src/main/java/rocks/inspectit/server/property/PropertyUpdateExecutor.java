@@ -250,7 +250,7 @@ public class PropertyUpdateExecutor implements BeanPostProcessor, BeanFactoryAwa
 		 * @param property
 		 *            Property name.
 		 */
-		public PropertyUpdateFieldInfo(Object target, Field field, String property) {
+		PropertyUpdateFieldInfo(Object target, Field field, String property) {
 			if (null == target) {
 				throw new IllegalArgumentException("Target object can not be null.");
 			}

@@ -136,6 +136,7 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 		 * {@inheritDoc}
 		 */
 		@Override
+		@SuppressWarnings("PMD.ConsecutiveLiteralAppends")
 		protected String getUrlString(ExecutionEvent event) {
 			// Get the exception out of the context
 			IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

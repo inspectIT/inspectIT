@@ -78,7 +78,7 @@ public final class LogInitializer extends PropertyDefinerBase {
 				}
 
 				// then fail to default if none is specified
-				if ((null == is) && (null != agentJar)) {
+				if (null == is) {
 					String logPath = agentJar.getParent() + File.separator + File.separator + DEFAULT_LOG_FILE_NAME;
 					File logFile = new File(logPath);
 					if (logFile.exists()) {

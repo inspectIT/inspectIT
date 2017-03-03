@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="inspectit-ruleset"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
-	xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<?xml version="1.0"?>
+<ruleset name="inspectIT ruleset"
+    xmlns="http://pmd.sf.net/ruleset/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+    xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
 	<description>inspectit - PMD Plugin preferences rule set</description>
 	<rule ref="rulesets/java/basic.xml/AvoidDecimalLiteralsInBigDecimalConstructor" />
 	<rule ref="rulesets/java/basic.xml/AvoidMultipleUnaryOperators" />
@@ -39,7 +40,6 @@
 	<rule ref="rulesets/java/controversial.xml/AvoidPrefixingMethodParameters" />
 	<rule ref="rulesets/java/controversial.xml/AvoidUsingNativeCode" />
 	<rule ref="rulesets/java/controversial.xml/AvoidUsingShortType" />
-	<rule ref="rulesets/java/controversial.xml/BooleanInversion" />
 	<rule ref="rulesets/java/controversial.xml/DoNotCallGarbageCollectionExplicitly" />
 	<rule ref="rulesets/java/controversial.xml/DontImportSun" />
 	<rule ref="rulesets/java/controversial.xml/NullAssignment" />
@@ -57,7 +57,6 @@
 	<rule ref="rulesets/java/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal" />
 	<rule ref="rulesets/java/design.xml/CloseResource" />
 	<rule ref="rulesets/java/design.xml/CompareObjectsWithEquals" />
-	<rule ref="rulesets/java/design.xml/ConstructorCallsOverridableMethod" />
 	<rule ref="rulesets/java/design.xml/DefaultLabelNotLastInSwitchStmt" />
 	<rule ref="rulesets/java/design.xml/EqualsNull" />
 	<rule ref="rulesets/java/design.xml/FinalFieldCouldBeStatic" />
@@ -74,7 +73,6 @@
 	<rule ref="rulesets/java/design.xml/PreserveStackTrace" />
 	<rule ref="rulesets/java/design.xml/ReturnEmptyArrayRatherThanNull" />
 	<rule ref="rulesets/java/design.xml/SimplifyBooleanExpressions" />
-	<rule ref="rulesets/java/design.xml/SimplifyBooleanReturns" />
 	<rule ref="rulesets/java/design.xml/SimplifyConditional" />
 	<rule ref="rulesets/java/design.xml/SwitchDensity" />
 	<rule ref="rulesets/java/design.xml/SwitchStmtsShouldHaveDefault" />
@@ -82,7 +80,6 @@
 	<rule ref="rulesets/java/design.xml/UseCollectionIsEmpty" />
 	<rule ref="rulesets/java/design.xml/UseNotifyAllInsteadOfNotify" />
 	<rule ref="rulesets/java/design.xml/UseUtilityClass" />
-	<rule ref="rulesets/java/design.xml/UseVarargs" />
 	<rule ref="rulesets/java/empty.xml/EmptyCatchBlock" />
 	<rule ref="rulesets/java/empty.xml/EmptyFinallyBlock" />
 	<rule ref="rulesets/java/empty.xml/EmptyIfStmt" />
@@ -179,5 +176,4 @@
 	<rule ref="rulesets/java/unusedcode.xml/UnusedLocalVariable" />
 	<rule ref="rulesets/java/unusedcode.xml/UnusedModifier" />
 	<rule ref="rulesets/java/unusedcode.xml/UnusedPrivateField" />
-	<rule ref="rulesets/java/unusedcode.xml/UnusedPrivateMethod" />
 </ruleset>

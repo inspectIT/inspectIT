@@ -90,7 +90,7 @@ public enum AlertEMailTemplateType implements ITemplateType {
 	 * @author Alexander Wert
 	 *
 	 */
-	public interface Placeholders {
+	interface Placeholders {
 		/**
 		 * Placeholder for alert definition name.
 		 */

@@ -68,9 +68,9 @@
       label="PMD"
       licenseConfirmationDisabled="true">
     <requirement
-        name="net.sourceforge.pmd.eclipse.feature.group"/>
+        name="ch.acanda.eclipse.pmd.feature.feature.group"/>
     <repository
-        url="http://sourceforge.net/projects/pmd/files/pmd-eclipse/update-site/"/>
+        url="http://www.acanda.ch/eclipse-pmd/release/latest"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
