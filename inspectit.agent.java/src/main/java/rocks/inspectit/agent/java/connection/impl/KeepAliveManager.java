@@ -28,9 +28,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 public class KeepAliveManager implements InitializingBean, DisposableBean {
 
 	/**
-	 * We will always try to reconnect at least in 5 min periods.
+	 * We will always try to reconnect at least in this period.
 	 */
-	private static final int MAX_NEXT_RECONNECT = (int) (TimeUnit.MINUTES.toMillis(5) / IKeepAliveService.KA_PERIOD);
+	private static final int MAX_NEXT_RECONNECT = IKeepAliveService.KA_MAX_RECONNECT_DELAY / IKeepAliveService.KA_PERIOD;
 
 	/**
 	 * Runnable which sends the keep-alive signal.
@@ -94,14 +94,12 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 			if (connection.isConnected()) {
 				connection.sendKeepAlive(platformManager.getPlatformId());
 			} else {
-				noConnectionCount++;
 				if (shouldReconnect()) {
 					log.info("Trying to reconnect to the server.");
 					try {
 						connection.reconnect();
-						resetReconnectCount();
+						nextReconnectAt = 2;
 					} catch (ConnectException e) {
-						increaseNextReconnectAt();
 						if (log.isDebugEnabled()) {
 							log.debug("Reconnection failed, next attempt in " + TimeUnit.MILLISECONDS.toSeconds(IKeepAliveService.KA_PERIOD * (nextReconnectAt - noConnectionCount)) + " seconds.");
 						}
@@ -120,20 +118,21 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	}
 
 	/**
-	 * If we should execute reconnect.
+	 * Checks whether an attempt to reconnect should be executed. This method also handles the
+	 * counter variables to keep track of the state.
 	 *
 	 * @return If we should execute reconnect.
 	 */
 	private boolean shouldReconnect() {
-		return noConnectionCount >= nextReconnectAt;
-	}
+		noConnectionCount++;
+		boolean shouldReconnect = noConnectionCount >= nextReconnectAt;
 
-	/**
-	 * Resets the {@link #noConnectionCount} and {@link #nextReconnectAt}.
-	 */
-	private void resetReconnectCount() {
-		noConnectionCount = 0;
-		nextReconnectAt = 2;
+		if (shouldReconnect) {
+			noConnectionCount = 0;
+			increaseNextReconnectAt();
+		}
+
+		return shouldReconnect;
 	}
 
 	/**
@@ -151,7 +150,7 @@ public class KeepAliveManager implements InitializingBean, DisposableBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (scheduledTask == null) {
-			scheduledTask = executorService.scheduleAtFixedRate(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
+			scheduledTask = executorService.scheduleWithFixedDelay(keepAliveRunner, IKeepAliveService.KA_INITIAL_DELAY, IKeepAliveService.KA_PERIOD, TimeUnit.MILLISECONDS);
 		}
 	}
 

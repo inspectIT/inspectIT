@@ -12,7 +12,7 @@ import java.rmi.Remote;
 public interface IKeepAliveService extends Remote {
 
 	/**
-	 * The period in miliseconds of the keep-alive signals.
+	 * The period in milliseconds of the keep-alive signals.
 	 */
 	int KA_PERIOD = 2500;
 
@@ -25,6 +25,11 @@ public interface IKeepAliveService extends Remote {
 	 * The duration of a timeout after no keep-alive messages are received.
 	 */
 	int KA_TIMEOUT = 5000;
+
+	/**
+	 * The maximum duration waiting before a new attempt to reconnect is done.
+	 */
+	int KA_MAX_RECONNECT_DELAY = 300000;
 
 	/**
 	 * Sends a keep-alive message of the platform with the given id.
