@@ -90,14 +90,14 @@ public class KeepAliveManagerTest extends TestBase {
 
 			manager.sendKeepAlive();
 			manager.sendKeepAlive();
+			manager.sendKeepAlive();
+			manager.sendKeepAlive();
 			verify(connection, times(2)).reconnect();
 
 			manager.sendKeepAlive();
 			manager.sendKeepAlive();
 			manager.sendKeepAlive();
 			manager.sendKeepAlive();
-			verify(connection, times(3)).reconnect();
-
 			manager.sendKeepAlive();
 			manager.sendKeepAlive();
 			manager.sendKeepAlive();
