@@ -299,9 +299,12 @@ public class HttpInfo implements Sizeable, Serializable {
 	 * @return the URL
 	 */
 	public String getUrl() {
+		// for backward compatibility with storage data always check if data is available
 		StringBuilder builder = new StringBuilder();
-		builder.append(scheme).append("://").append(serverName);
-		if (serverPort > 0) {
+		if ((null != scheme) && (null != serverName)) {
+			builder.append(scheme).append("://").append(serverName);
+		}
+		if ((null != serverPort) && (serverPort.intValue() > 0)) {
 			builder.append(':').append(serverPort);
 		}
 		builder.append(uri);
