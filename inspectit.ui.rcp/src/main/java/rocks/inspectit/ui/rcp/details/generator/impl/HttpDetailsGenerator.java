@@ -82,15 +82,15 @@ public class HttpDetailsGenerator implements IDetailsGenerator {
 		boolean usedHTTPS = StringUtils.isNotEmpty(scheme) && "https".equalsIgnoreCase(scheme);
 
 		String portDescription;
-		if (httpTimerData.getHttpInfo().getServerPort() > 0) {
+		if ((null != httpTimerData.getHttpInfo().getServerPort()) && (httpTimerData.getHttpInfo().getServerPort() > 0)) {
 			portDescription = String.valueOf(httpTimerData.getHttpInfo().getServerPort());
 		} else {
 			portDescription = NOT_AVAILABLE;
 		}
 
 		table.addContentRow("Used HTTPS:", null, new DetailsCellContent[] { new YesNoDetailsCellContent(usedHTTPS) });
-		table.addContentRow("Method:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getRequestMethod()) });
-		table.addContentRow("Server Name:", null, new DetailsCellContent[] { new DetailsCellContent(httpTimerData.getHttpInfo().getServerName()) });
+		table.addContentRow("Method:", null, new DetailsCellContent[] { new DetailsCellContent(StringUtils.defaultString(httpTimerData.getHttpInfo().getRequestMethod(), NOT_AVAILABLE)) });
+		table.addContentRow("Server Name:", null, new DetailsCellContent[] { new DetailsCellContent(StringUtils.defaultString(httpTimerData.getHttpInfo().getServerName(), NOT_AVAILABLE)) });
 		table.addContentRow("Port:", null, new DetailsCellContent[] { new DetailsCellContent(portDescription) });
 		table.addContentRow("URI:", null, new DetailsCellContent[] { new DetailsCellContent(StringUtils.defaultString(httpTimerData.getHttpInfo().getUri())) });
 		table.addContentRow("Query String:", null, new DetailsCellContent[] { new DetailsCellContent(StringUtils.defaultString(httpTimerData.getHttpInfo().getQueryString(), NOT_AVAILABLE)) });
