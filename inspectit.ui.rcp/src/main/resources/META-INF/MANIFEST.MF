@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: inspectIT RCP
 Bundle-SymbolicName: rocks.inspectit.ui.rcp;singleton:=true
-Bundle-Version: 1.6.0
+Bundle-Version: 1.7.0
 Bundle-Activator: rocks.inspectit.ui.rcp.InspectIT
 Bundle-Vendor: NovaTec GmbH
 Bundle-Localization: plugin
