@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: inspectIT Shared Client-Server
 Bundle-SymbolicName: rocks.inspectit.shared.cs
-Bundle-Version: 1.6.0
+Bundle-Version: 1.7.0
 Bundle-ClassPath: .
-Bundle-Vendor: NovaTec GmbH
+Bundle-Vendor: NovaTec Consulting GmbH
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: rocks.inspectit.shared.all,
  org.apache.commons.collections;bundle-version="3.2.1",
