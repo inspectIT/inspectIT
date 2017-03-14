@@ -124,6 +124,11 @@ public final class UnderlyingSystemInfo {
 	public static final String JAVA_VERSION_FULL = getSystemProperty("java.version");
 
 	/**
+	 * Runtime version of the Java.
+	 */
+	public static final String JAVA_RUNTIME_VERSION = getSystemProperty("java.runtime.version");
+
+	/**
 	 * Java version trimmed.
 	 */
 	public static final String JAVA_VERSION_TRIMMED = getJavaVersionTrimmed();

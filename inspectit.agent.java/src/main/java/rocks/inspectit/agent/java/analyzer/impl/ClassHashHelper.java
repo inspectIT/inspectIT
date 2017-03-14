@@ -33,6 +33,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.serializer.provider.SerializationManagerProvider;
 import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
 
 /**
  * Implementation of the {@link IClassHashHelper} that holds all data in one concurrent map. Keys in
@@ -268,9 +269,20 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 				fileInputStream = new FileInputStream(file);
 				Input input = new Input(fileInputStream);
 
+				// ignore java classes if the version of the java changed
+				String javaRuntimeVersion = (String) serializationManager.deserialize(input);
+				boolean cacheJavaClasses = UnderlyingSystemInfo.JAVA_RUNTIME_VERSION.equals(javaRuntimeVersion);
+
 				Map<String, Collection<String>> fqnWithHashes = (Map<String, Collection<String>>) serializationManager.deserialize(input);
 				for (Entry<String, Collection<String>> entry : fqnWithHashes.entrySet()) {
-					ClassEntry classEntry = getOrCreateEntry(entry.getKey());
+					String fqn = entry.getKey();
+
+					// don't add java classes if we should ignore them
+					if (!cacheJavaClasses && fqn.startsWith("java")) {
+						continue;
+					}
+
+					ClassEntry classEntry = getOrCreateEntry(fqn);
 					for (String hash : entry.getValue()) {
 						classEntry.addHash(hash);
 					}
@@ -333,6 +345,7 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 				fqnWithHashes.put(entry.getKey(), entry.getValue().getHashes());
 			}
 
+			serializationManager.serialize(UnderlyingSystemInfo.JAVA_RUNTIME_VERSION, output);
 			serializationManager.serialize(fqnWithHashes, output);
 		} catch (Throwable t) { // NOPMD
 			log.warn("Unable to save sending classes cache to disk.", t);

@@ -45,9 +45,21 @@ public interface IAgent {
 	boolean shouldClassBeIgnored(String className);
 
 	/**
+	 * Defines if the class with the given name should be re-transformed / re-defined on the agent
+	 * startup. This condition is <code>false</code> when the class with the given FQN is already
+	 * analyzed by us and there is no instrumentation definition for the class.
+	 *
+	 * @param className
+	 *            Fully qualified name of the class.
+	 * @return <code>false</code> if this class can be skipped during analyzing already loaded
+	 *         classes on the agent startup
+	 */
+	boolean shouldAnalyzeOnStartup(String className);
+
+	/**
 	 * Returns whether retransformation is specified by the current environment.
 	 *
-	 * @return <code>true</code> if retransformation should be used
+	 * @return <code>true</code> if retransformation should be used.
 	 */
 	boolean isUsingRetransformation();
 
