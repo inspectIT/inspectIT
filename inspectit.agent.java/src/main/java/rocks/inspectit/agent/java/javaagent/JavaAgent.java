@@ -222,7 +222,7 @@ public class JavaAgent implements ClassFileTransformer {
 						// check that we are not loading with our class loader
 						if ((null == loadedClass.getClassLoader()) || !InspectItClassLoader.class.getName().equals(loadedClass.getClassLoader().getClass().getName())) {
 							// check that class is not ignored by our agent
-							if (!Agent.agent.shouldClassBeIgnored(clazzName)) {
+							if (!Agent.agent.shouldClassBeIgnored(clazzName) && !Agent.agent.shouldNotInstrumentOnStartup(clazzName)) {
 								try {
 									if (useRetransformation) {
 										instrumentation.retransformClasses(loadedClass);

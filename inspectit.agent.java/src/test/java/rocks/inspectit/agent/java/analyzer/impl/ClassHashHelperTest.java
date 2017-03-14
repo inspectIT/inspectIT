@@ -35,6 +35,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
 
 @SuppressWarnings("PMD")
 public class ClassHashHelperTest extends TestBase {
@@ -95,13 +96,46 @@ public class ClassHashHelperTest extends TestBase {
 		public void cacheFileExists() throws Exception {
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
 			new File(TEST_CACHE_FILE).createNewFile();
+			Object javaRuntimeVersion = UnderlyingSystemInfo.JAVA_RUNTIME_VERSION;
 			Object hashes = Collections.singletonMap("fqn", Collections.singleton("hash"));
-			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(hashes);
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(javaRuntimeVersion).thenReturn(hashes);
 
 			helper.afterPropertiesSet();
 
 			verify(prototypesProvider, times(1)).createSerializer();
-			verify(serializationManager, times(1)).deserialize(Matchers.<Input> any());
+			verify(serializationManager, times(2)).deserialize(Matchers.<Input> any());
+			verify(executorService, times(1)).scheduleAtFixedRate(Matchers.<Runnable> any(), anyLong(), anyLong(), Matchers.<TimeUnit> any());
+			assertThat(helper.isEmpty(), is(false));
+		}
+
+		@Test
+		public void cacheFileExistsJavaIgnored() throws Exception {
+			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
+			new File(TEST_CACHE_FILE).createNewFile();
+			Object javaRuntimeVersion = "some_other_version";
+			Object hashes = Collections.singletonMap("java.lang.String", Collections.singleton("hash"));
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(javaRuntimeVersion).thenReturn(hashes);
+
+			helper.afterPropertiesSet();
+
+			verify(prototypesProvider, times(1)).createSerializer();
+			verify(serializationManager, times(2)).deserialize(Matchers.<Input> any());
+			verify(executorService, times(1)).scheduleAtFixedRate(Matchers.<Runnable> any(), anyLong(), anyLong(), Matchers.<TimeUnit> any());
+			assertThat(helper.isEmpty(), is(true));
+		}
+
+		@Test
+		public void cacheFileExistsJavaNotIgnored() throws Exception {
+			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
+			new File(TEST_CACHE_FILE).createNewFile();
+			Object javaRuntimeVersion = UnderlyingSystemInfo.JAVA_RUNTIME_VERSION;
+			Object hashes = Collections.singletonMap("java.lang.String", Collections.singleton("hash"));
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(javaRuntimeVersion).thenReturn(hashes);
+
+			helper.afterPropertiesSet();
+
+			verify(prototypesProvider, times(1)).createSerializer();
+			verify(serializationManager, times(2)).deserialize(Matchers.<Input> any());
 			verify(executorService, times(1)).scheduleAtFixedRate(Matchers.<Runnable> any(), anyLong(), anyLong(), Matchers.<TimeUnit> any());
 			assertThat(helper.isEmpty(), is(false));
 		}
@@ -193,8 +227,9 @@ public class ClassHashHelperTest extends TestBase {
 			String fqn = "fqn";
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
 			new File(TEST_CACHE_FILE).createNewFile();
+			Object javaRuntimeVersion = UnderlyingSystemInfo.JAVA_RUNTIME_VERSION;
 			Object hashes = Collections.singletonMap(fqn, Collections.emptyList());
-			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(hashes);
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(javaRuntimeVersion).thenReturn(hashes);
 			helper.afterPropertiesSet();
 
 			boolean analyzed = helper.isAnalyzed(fqn);
@@ -280,8 +315,9 @@ public class ClassHashHelperTest extends TestBase {
 			String hash = "hash";
 			when(configurationStorage.isClassCacheExistsOnCmr()).thenReturn(true);
 			new File(TEST_CACHE_FILE).createNewFile();
+			Object javaRuntimeVersion = UnderlyingSystemInfo.JAVA_RUNTIME_VERSION;
 			Object hashes = Collections.singletonMap(fqn, Collections.singleton(hash));
-			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(hashes);
+			when(serializationManager.deserialize(Matchers.<Input> any())).thenReturn(javaRuntimeVersion).thenReturn(hashes);
 			helper.afterPropertiesSet();
 
 			boolean sent = helper.isSent(fqn, hash);
