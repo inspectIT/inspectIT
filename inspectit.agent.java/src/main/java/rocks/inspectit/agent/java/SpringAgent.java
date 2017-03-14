@@ -12,6 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
+import rocks.inspectit.agent.java.analyzer.impl.ClassHashHelper;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
@@ -21,6 +22,7 @@ import rocks.inspectit.agent.java.sdk.opentracing.internal.TracerLoggerProvider;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerLoggerWrapper;
 import rocks.inspectit.agent.java.spring.SpringConfiguration;
 import rocks.inspectit.agent.java.tracing.core.Slf4jTracerLoggerProvider;
+import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
@@ -55,22 +57,27 @@ public class SpringAgent implements IAgent {
 	/**
 	 * The hook dispatcher used by the instrumented methods.
 	 */
-	IHookDispatcher hookDispatcher;
+	private IHookDispatcher hookDispatcher;
 
 	/**
 	 * The configuration storage.
 	 */
-	IConfigurationStorage configurationStorage;
+	private IConfigurationStorage configurationStorage;
 
 	/**
 	 * The byte code analyzer.
 	 */
-	IByteCodeAnalyzer byteCodeAnalyzer;
+	private IByteCodeAnalyzer byteCodeAnalyzer;
 
 	/**
 	 * The thread transform helper.
 	 */
-	IThreadTransformHelper threadTransformHelper;
+	private IThreadTransformHelper threadTransformHelper;
+
+	/**
+	 * Class hash helper in the Spring.
+	 */
+	private ClassHashHelper classHashHelper;
 
 	/**
 	 * Set to <code>true</code> if something happened and we need to disable further
@@ -86,7 +93,7 @@ public class SpringAgent implements IAgent {
 	/**
 	 * Ignore classes patterns.
 	 */
-	Collection<IMatchPattern> ignoreClassesPatterns;
+	private Collection<IMatchPattern> ignoreClassesPatterns;
 
 	/**
 	 * The used {@link Instrumentation}.
@@ -177,6 +184,7 @@ public class SpringAgent implements IAgent {
 			configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
 			byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
 			threadTransformHelper = beanFactory.getBean(IThreadTransformHelper.class);
+			classHashHelper = beanFactory.getBean(ClassHashHelper.class);
 
 			// load ignore patterns only once
 			ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
@@ -272,6 +280,18 @@ public class SpringAgent implements IAgent {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean shouldAnalyzeOnStartup(String className) {
+		if ((null != classHashHelper) && classHashHelper.isAnalyzed(className)) {
+			InstrumentationDefinition instrumentationDefinition = classHashHelper.getInstrumentationDefinition(className);
+			return (null != instrumentationDefinition) && !instrumentationDefinition.isEmpty();
+		}
+		return true;
 	}
 
 	/**
