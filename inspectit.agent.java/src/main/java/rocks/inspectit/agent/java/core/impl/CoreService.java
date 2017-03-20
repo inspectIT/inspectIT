@@ -688,6 +688,19 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 					}
 				}
 
+				if (!connection.isConnected()) {
+					synchronized (connection.getReconnectionMonitor()) {
+						try {
+							if (!connection.isConnected()) {
+								connection.getReconnectionMonitor().wait();
+							}
+						} catch (InterruptedException e) {
+							log.error("Sending thread interrupted and shuting down!");
+							break; // we were interrupted during waiting and close ourself down.
+						}
+					}
+				}
+
 				// send the data
 				send();
 			}

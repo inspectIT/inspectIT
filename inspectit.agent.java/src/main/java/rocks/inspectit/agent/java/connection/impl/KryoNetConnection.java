@@ -88,6 +88,11 @@ public class KryoNetConnection implements IConnection {
 	private List<String> networkInterfaces;
 
 	/**
+	 * Monitor for signaling reconnection of the connection.
+	 */
+	private final Object reconnectionMonitor = new Object();
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -129,6 +134,10 @@ public class KryoNetConnection implements IConnection {
 
 				log.info("KryoNet: Reconnection successful!");
 				connectionException = false;
+
+				synchronized (reconnectionMonitor) {
+					reconnectionMonitor.notifyAll();
+				}
 			} catch (Exception exception) {
 				connectionException = true;
 
@@ -534,4 +543,11 @@ public class KryoNetConnection implements IConnection {
 		return (null != client) && client.isConnected();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object getReconnectionMonitor() {
+		return reconnectionMonitor;
+	}
 }
