@@ -164,4 +164,11 @@ public interface IConnection {
 	 *             If agent with specified id does not exist.
 	 */
 	List<IAgentMessage<?>> fetchAgentMessages(long platformIdent) throws ServerUnavailableException;
+
+	/**
+	 * Returns the monitor which is used to wait and notify for reconnects of the connection.
+	 *
+	 * @return {@link Object} which acts as monitor
+	 */
+	Object getReconnectionMonitor();
 }
