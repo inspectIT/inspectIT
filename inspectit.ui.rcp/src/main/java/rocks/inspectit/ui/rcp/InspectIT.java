@@ -1,6 +1,5 @@
 package rocks.inspectit.ui.rcp;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -12,7 +11,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -98,11 +96,6 @@ public class InspectIT extends AbstractUIPlugin {
 	private List<IPropertyChangeListener> propertyChangeListeners = new ArrayList<>();
 
 	/**
-	 * Runtime directory of plug-in depending if we are in development or not.
-	 */
-	private Path runtimeDir;
-
-	/**
 	 * {@link ILogListener} used for logging.
 	 */
 	private ILogListener logListener;
@@ -120,7 +113,6 @@ public class InspectIT extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		plugin = this;
 
-		locateRuntimeDir();
 		initLogger();
 
 		// add log listener once logger is initialized
@@ -128,27 +120,6 @@ public class InspectIT extends AbstractUIPlugin {
 		Platform.addLogListener(logListener);
 
 		super.start(context);
-	}
-
-	/**
-	 * Locates the runtime directory. It's needed for distinguish between development and runtime.
-	 */
-	private void locateRuntimeDir() {
-		File bundleFile = null;
-		try {
-			bundleFile = FileLocator.getBundleFile(getBundle());
-		} catch (IOException e) { // NOPMD //NOCHK
-		}
-
-		if ((null != bundleFile) && bundleFile.isDirectory()) {
-			runtimeDir = Paths.get(bundleFile.getAbsolutePath());
-			// in development bundle file is in src/main/resources
-			if (runtimeDir.toString().endsWith(ResourcesPathResolver.RESOURCES)) {
-				runtimeDir = runtimeDir.getParent().getParent().getParent().toAbsolutePath();
-			}
-		} else {
-			runtimeDir = Paths.get("");
-		}
 	}
 
 	/**
@@ -175,7 +146,7 @@ public class InspectIT extends AbstractUIPlugin {
 
 			// then fail to default if none is specified
 			if (null == is) {
-				Path logPath = ResourcesPathResolver.getResourceFile(DEFAULT_LOG_FILE_NAME, runtimeDir.toFile()).toPath().toAbsolutePath();
+				Path logPath = ResourcesPathResolver.getResourceFile(DEFAULT_LOG_FILE_NAME, Platform.getLocation().toFile()).toPath().toAbsolutePath();
 				if (Files.exists(logPath)) {
 					is = Files.newInputStream(logPath, StandardOpenOption.READ);
 				}
@@ -413,25 +384,6 @@ public class InspectIT extends AbstractUIPlugin {
 			}
 		}
 		return configurationInterfaceManager;
-	}
-
-	/**
-	 * Gets {@link #runtimeDir}.
-	 *
-	 * @return {@link #runtimeDir}
-	 */
-	public Path getRuntimeDir() {
-		return runtimeDir;
-	}
-
-	/**
-	 * Sets {@link #runtimeDir}.
-	 *
-	 * @param runtimeDir
-	 *            New value for {@link #runtimeDir}
-	 */
-	public void setRuntimeDir(Path runtimeDir) {
-		this.runtimeDir = runtimeDir;
 	}
 
 	/**

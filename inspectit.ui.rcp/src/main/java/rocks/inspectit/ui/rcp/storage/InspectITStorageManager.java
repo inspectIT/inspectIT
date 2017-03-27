@@ -23,6 +23,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.mutable.MutableObject;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.swt.widgets.Display;
 
@@ -1057,7 +1058,7 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 */
 	@Override
 	protected Path getDefaultStorageDirPath() {
-		return InspectIT.getDefault().getRuntimeDir().resolve(getStorageDefaultFolder()).toAbsolutePath();
+		return Paths.get(Platform.getLocation().toString(), getStorageDefaultFolder()).toAbsolutePath();
 	}
 
 	/**
