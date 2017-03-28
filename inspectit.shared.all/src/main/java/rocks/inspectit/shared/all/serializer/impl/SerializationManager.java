@@ -126,6 +126,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumenta
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
+import rocks.inspectit.shared.all.pattern.ExceptionalMatchPattern;
 import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
 import rocks.inspectit.shared.all.serializer.HibernateAwareClassResolver;
 import rocks.inspectit.shared.all.serializer.IKryoProvider;
@@ -395,6 +396,9 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 
 		// added with INSPECTIT-2226
 		kryo.register(SubstitutionDescriptor.class, new FieldSerializer<SubstitutionDescriptor>(kryo, SubstitutionDescriptor.class));
+
+		// added with INSPECTIT-2270
+		kryo.register(ExceptionalMatchPattern.class, new FieldSerializer<ExceptionalMatchPattern>(kryo, ExceptionalMatchPattern.class));
 	}
 
 	/**

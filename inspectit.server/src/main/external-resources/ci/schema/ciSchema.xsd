@@ -845,6 +845,11 @@
   <xs:complexType name="excludeRule">
     <xs:sequence/>
     <xs:attribute name="class-name" type="xs:string" use="required"/>
+    <xs:attribute name="exceptions">
+      <xs:simpleType>
+        <xs:list itemType="xs:string"/>
+      </xs:simpleType>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="jmxDefinitionProfileData">

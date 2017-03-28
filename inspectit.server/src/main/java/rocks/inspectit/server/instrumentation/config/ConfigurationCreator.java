@@ -120,7 +120,7 @@ public class ConfigurationCreator {
 		if (CollectionUtils.isNotEmpty(excludeRules)) {
 			Collection<IMatchPattern> excludeClassesPatterns = new ArrayList<>();
 			for (ExcludeRule excludeRule : excludeRules) {
-				excludeClassesPatterns.add(PatternFactory.getPattern(excludeRule.getClassName()));
+				excludeClassesPatterns.add(PatternFactory.getPattern(excludeRule.getClassName(), excludeRule.getExceptions()));
 			}
 			agentConfiguration.setExcludeClassesPatterns(excludeClassesPatterns);
 		} else {

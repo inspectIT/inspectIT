@@ -16,6 +16,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeCo
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
+import rocks.inspectit.shared.all.pattern.ExceptionalMatchPattern;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
 import rocks.inspectit.shared.all.testbase.TestBase;
@@ -227,14 +229,18 @@ public class ConfigurationCreatorTest extends TestBase {
 		public void excludeRules() throws Exception {
 			ExcludeRule er1 = new ExcludeRule("excludeRule1");
 			ExcludeRule er2 = new ExcludeRule("wildCard*");
-			when(configurationResolver.getAllExcludeRules(environment)).thenReturn(Arrays.asList(new ExcludeRule[] { er1, er2 }));
+			ExcludeRule er3 = new ExcludeRule("excludeRule3");
+			er3.setExceptions(Collections.singletonList("exceptionWildCard*"));
+			when(configurationResolver.getAllExcludeRules(environment)).thenReturn(Arrays.asList(new ExcludeRule[] { er1, er2, er3 }));
 
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
 
 			Collection<IMatchPattern> excludeClassesPatterns = agentConfiguration.getExcludeClassesPatterns();
-			assertThat(excludeClassesPatterns, hasSize(2));
+			assertThat(excludeClassesPatterns, hasSize(3));
 			assertThat(excludeClassesPatterns, hasItem(new EqualsMatchPattern(er1.getClassName())));
 			assertThat(excludeClassesPatterns, hasItem(new WildcardMatchPattern(er2.getClassName())));
+			assertThat(excludeClassesPatterns, hasItem(
+					new ExceptionalMatchPattern(new EqualsMatchPattern(er3.getClassName()), new ArrayList<>(Collections.<IMatchPattern> singleton(new WildcardMatchPattern("exceptionWildCard*"))))));
 		}
 
 		@Test
