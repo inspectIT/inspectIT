@@ -12,7 +12,6 @@ import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -93,6 +92,12 @@ public class JavaAgent implements ClassFileTransformer {
 			// now we load the PicoAgent via our own classloader
 			@SuppressWarnings("resource")
 			InspectItClassLoader classLoader = new InspectItClassLoader(new URL[0]);
+
+			// append piccolo to the boot class path loader
+			String path = classLoader.getPiccoloJarFile();
+			instrumentation.appendToBootstrapClassLoaderSearch(new JarFile(path));
+
+			// then initialize the SpringAgent
 			Class<?> agentClazz = classLoader.loadClass(INSPECTIT_AGENT);
 			Constructor<?> constructor = agentClazz.getConstructor(File.class, Instrumentation.class);
 			Object realAgent = constructor.newInstance(getInspectItAgentJarFileLocation(), inst);
@@ -167,13 +172,9 @@ public class JavaAgent implements ClassFileTransformer {
 		try {
 			// we can utilize the mechanism to add the inspectit-agent to the bootstrap classloader
 			// through the instrumentation api.
-			Method append = instrumentation.getClass().getDeclaredMethod("appendToBootstrapClassLoaderSearch", JarFile.class);
-			append.setAccessible(true);
-			append.invoke(instrumentation, new JarFile(getInspectItAgentJarFileLocation()));
+			instrumentation.appendToBootstrapClassLoaderSearch(new JarFile(getInspectItAgentJarFileLocation()));
 
 			instrumentCoreClasses = true;
-		} catch (NoSuchMethodException e) {
-			LOGGER.info("inspectIT Agent: Advanced instrumentation capabilities not detected...");
 		} catch (SecurityException e) {
 			LOGGER.info("inspectIT Agent: Advanced instrumentation capabilities not detected due to security constraints...");
 		} catch (Exception e) {
@@ -310,6 +311,12 @@ public class JavaAgent implements ClassFileTransformer {
 		private final Set<String> ignoreClasses = new HashSet<String>();
 
 		/**
+		 * Piccolo jar file that we need to append to the boot class path to have it accessible when
+		 * initializing the logging.
+		 */
+		private String piccoloJarFile;
+
+		/**
 		 * Default constructor initialized with the urls of the dependency jars etc.
 		 *
 		 * @param urls
@@ -346,6 +353,15 @@ public class JavaAgent implements ClassFileTransformer {
 		}
 
 		/**
+		 * Gets {@link #piccoloJarFile}.
+		 *
+		 * @return {@link #piccoloJarFile}
+		 */
+		public String getPiccoloJarFile() {
+			return this.piccoloJarFile;
+		}
+
+		/**
 		 * Analyze this jar file for containing jar files and classes to be used in our own
 		 * classloader.
 		 *
@@ -362,7 +378,12 @@ public class JavaAgent implements ClassFileTransformer {
 			while (jarEntries.hasMoreElements()) {
 				JarEntry jarEntry = jarEntries.nextElement();
 				if (!jarEntry.isDirectory() && isJar(jarEntry.getName())) {
-					addJarResource(jarEntryAsFile(jarFile, jarEntry));
+					File jar = jarEntryAsFile(jarFile, jarEntry);
+					if (jarEntry.getName().contains("piccolo")) {
+						piccoloJarFile = jar.getAbsolutePath();
+					} else {
+						addJarResource(jar);
+					}
 				}
 			}
 		}
