@@ -29,6 +29,11 @@ public final class LogInitializer extends PropertyDefinerBase {
 	private static final String SAX_PARSER_FACTORY_PROPERTY = "javax.xml.parsers.SAXParserFactory";
 
 	/**
+	 * Sax parser factory we will use to initialize the logging.
+	 */
+	private static final String DEFAULT_SAX_PARSER_FACTORY = "com.bluecast.xml.JAXPSAXParserFactory";
+
+	/**
 	 * Default name of the log file.
 	 */
 	public static final String DEFAULT_LOG_FILE_NAME = "logging-config.xml";
@@ -56,7 +61,7 @@ public final class LogInitializer extends PropertyDefinerBase {
 		initLogDirLocation();
 
 		// remove parser factory property so that we use default
-		String parserFactoryProperty = System.clearProperty(SAX_PARSER_FACTORY_PROPERTY);
+		String parserFactoryProperty = System.setProperty(SAX_PARSER_FACTORY_PROPERTY, DEFAULT_SAX_PARSER_FACTORY);
 
 		try {
 			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -104,8 +109,12 @@ public final class LogInitializer extends PropertyDefinerBase {
 			// minlong
 			MinlogToSLF4JLogger.init();
 		} finally {
+			// if we overwrote the factory setting put it back again, otherwise clear our entry in
+			// the system properties
 			if (null != parserFactoryProperty) {
 				System.setProperty(SAX_PARSER_FACTORY_PROPERTY, parserFactoryProperty);
+			} else {
+				System.clearProperty(SAX_PARSER_FACTORY_PROPERTY);
 			}
 		}
 
