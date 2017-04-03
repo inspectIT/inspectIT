@@ -20,8 +20,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.Logger;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import rocks.inspectit.agent.java.Agent;
+import rocks.inspectit.agent.java.IAgent;
 import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.analyzer.impl.ClassHashHelper;
 import rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent;
@@ -54,6 +57,14 @@ public class RetransformManagerTest extends TestBase {
 	@Mock
 	IThreadTransformHelper threadTransformHelper;
 
+	@Mock
+	IAgent agent;
+
+	@BeforeMethod
+	public void setup() {
+		Agent.agent = agent;
+	}
+
 	/**
 	 * Tests the {@link RetransformManager#onApplicationEvent(AgentMessagesReceivedEvent)} method.
 	 *
@@ -75,6 +86,7 @@ public class RetransformManagerTest extends TestBase {
 			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
 			when(instrumentation.isModifiableClass(any(Class.class))).thenReturn(true);
+			when(agent.isUsingRetransformation()).thenReturn(true);
 
 			retransformManager.onApplicationEvent(event);
 
@@ -83,10 +95,11 @@ public class RetransformManagerTest extends TestBase {
 			verify(instrumentation).getAllLoadedClasses();
 			verify(instrumentation).retransformClasses(eq(Object.class), eq(String.class));
 			verify(instrumentation, times(2)).isModifiableClass(any(Class.class));
+			verify(agent).isUsingRetransformation();
 			InOrder inOrder = inOrder(threadTransformHelper);
 			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(false);
 			inOrder.verify(threadTransformHelper).setThreadTransformDisabled(true);
-			verifyNoMoreInteractions(instrumentation, classHashHelper, threadTransformHelper);
+			verifyNoMoreInteractions(instrumentation, classHashHelper, threadTransformHelper, agent);
 		}
 
 		@Test
@@ -98,6 +111,7 @@ public class RetransformManagerTest extends TestBase {
 			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
 			when(instrumentation.isModifiableClass(eq(Object.class))).thenReturn(false);
+			when(agent.isUsingRetransformation()).thenReturn(true);
 
 			retransformManager.onApplicationEvent(event);
 
@@ -118,6 +132,7 @@ public class RetransformManagerTest extends TestBase {
 			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
 			when(instrumentation.isModifiableClass(any(Class.class))).thenReturn(true).thenThrow(RuntimeException.class);
+			when(agent.isUsingRetransformation()).thenReturn(true);
 
 			retransformManager.onApplicationEvent(event);
 
@@ -139,6 +154,7 @@ public class RetransformManagerTest extends TestBase {
 			((UpdatedInstrumentationMessage) message).getMessageContent().add(iDefinition);
 			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
+			when(agent.isUsingRetransformation()).thenReturn(true);
 
 			retransformManager.onApplicationEvent(event);
 
@@ -154,6 +170,7 @@ public class RetransformManagerTest extends TestBase {
 			IAgentMessage<?> message = new UpdatedInstrumentationMessage();
 			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
+			when(agent.isUsingRetransformation()).thenReturn(true);
 
 			retransformManager.onApplicationEvent(event);
 
@@ -170,6 +187,7 @@ public class RetransformManagerTest extends TestBase {
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
 			doThrow(Exception.class).when(instrumentation).retransformClasses(any(Class.class));
 			when(instrumentation.isModifiableClass(Matchers.<Class<?>> any())).thenReturn(true);
+			when(agent.isUsingRetransformation()).thenReturn(true);
 
 			retransformManager.onApplicationEvent(event);
 
@@ -190,7 +208,7 @@ public class RetransformManagerTest extends TestBase {
 
 			retransformManager.onApplicationEvent(null);
 
-			verifyZeroInteractions(instrumentation, classHashHelper, threadTransformHelper);
+			verifyZeroInteractions(instrumentation, classHashHelper, threadTransformHelper, agent);
 		}
 
 		@Test
@@ -198,6 +216,21 @@ public class RetransformManagerTest extends TestBase {
 			IAgentMessage<?> message = mock(IAgentMessage.class);
 			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
 			when(instrumentation.getAllLoadedClasses()).thenReturn(new Class[] { Object.class, String.class });
+			when(agent.isUsingRetransformation()).thenReturn(true);
+
+			retransformManager.onApplicationEvent(event);
+
+			verifyZeroInteractions(instrumentation, classHashHelper, threadTransformHelper);
+		}
+
+		@Test
+		public void retransformationDisabled() throws UnmodifiableClassException {
+			InstrumentationDefinition objectDefinition = mock(InstrumentationDefinition.class);
+			when(objectDefinition.getClassName()).thenReturn("java.lang.Object");
+			IAgentMessage<?> message = new UpdatedInstrumentationMessage();
+			((UpdatedInstrumentationMessage) message).getMessageContent().add(objectDefinition);
+			AgentMessagesReceivedEvent event = new AgentMessagesReceivedEvent(eventSource, Arrays.<IAgentMessage<?>> asList(message));
+			when(agent.isUsingRetransformation()).thenReturn(false);
 
 			retransformManager.onApplicationEvent(event);
 

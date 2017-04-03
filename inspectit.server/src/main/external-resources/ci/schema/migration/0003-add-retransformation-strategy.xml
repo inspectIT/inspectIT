@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<!-- In this update we'll add the retransformation strategy to the environment -->
+
+	<!--Copy all -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+
+	<!--Add retransformation strategy element -->
+	<xsl:template match="environment">
+		<xsl:copy>
+			<xsl:copy-of select="@*|node()" />
+			<xsl:element name="retransformation-strategy">DISABLE_RETRANSFORMATION_ON_IBM_JVM</xsl:element>
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>

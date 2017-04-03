@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.cs.ci.factory.ConfigurationDefaultsFactory;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
@@ -44,6 +45,7 @@ import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
  * a list of profiles to include.
  *
  * @author Ivan Senic
+ * @author Marius Oehler
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -108,6 +110,12 @@ public class Environment extends AbstractCiData {
 	 */
 	@XmlElement(name = "classLoadingDelegation")
 	private boolean classLoadingDelegation = true;
+
+	/**
+	 * The retransformation strategy.
+	 */
+	@XmlElement(name = "retransformation-strategy")
+	private RetransformationStrategy retransformationStrategy = ConfigurationDefaultsFactory.getDefaultRetransformationStrategy();
 
 	/**
 	 * Returns the {@link IMethodSensorConfig} for the given {@link IMethodSensorConfig} class.
@@ -201,6 +209,25 @@ public class Environment extends AbstractCiData {
 	}
 
 	/**
+	 * Gets {@link #retransformationStrategy}.
+	 *
+	 * @return {@link #retransformationStrategy}
+	 */
+	public RetransformationStrategy getRetransformationStrategy() {
+		return this.retransformationStrategy;
+	}
+
+	/**
+	 * Sets {@link #retransformationStrategy}.
+	 *
+	 * @param retransformationStrategy
+	 *            New value for {@link #retransformationStrategy}
+	 */
+	public void setRetransformationStrategy(RetransformationStrategy retransformationStrategy) {
+		this.retransformationStrategy = retransformationStrategy;
+	}
+
+	/**
 	 * Gets {@link #profileIds}.
 	 *
 	 * @return {@link #profileIds}
@@ -252,6 +279,7 @@ public class Environment extends AbstractCiData {
 		result = (prime * result) + ((this.methodSensorConfigs == null) ? 0 : this.methodSensorConfigs.hashCode());
 		result = (prime * result) + ((this.platformSensorConfigs == null) ? 0 : this.platformSensorConfigs.hashCode());
 		result = (prime * result) + ((this.profileIds == null) ? 0 : this.profileIds.hashCode());
+		result = (prime * result) + ((this.retransformationStrategy == null) ? 0 : this.retransformationStrategy.hashCode());
 		result = (prime * result) + ((this.sendingStrategyConfig == null) ? 0 : this.sendingStrategyConfig.hashCode());
 		return result;
 	}
@@ -314,6 +342,9 @@ public class Environment extends AbstractCiData {
 				return false;
 			}
 		} else if (!this.profileIds.equals(other.profileIds)) {
+			return false;
+		}
+		if (this.retransformationStrategy != other.retransformationStrategy) {
 			return false;
 		}
 		if (this.sendingStrategyConfig == null) {
