@@ -44,4 +44,10 @@ public interface IAgent {
 	 */
 	boolean shouldClassBeIgnored(String className);
 
+	/**
+	 * Returns whether retransformation is specified by the current environment.
+	 *
+	 * @return <code>true</code> if retransformation should be used
+	 */
+	boolean isUsingRetransformation();
 }
