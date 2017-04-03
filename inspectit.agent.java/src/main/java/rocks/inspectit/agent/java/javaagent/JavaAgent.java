@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -43,6 +44,7 @@ import rocks.inspectit.agent.java.util.ClassLoadingUtil;
  * <code>-javaagent:inspectit-agent.jar</code>
  *
  * @author Patrice Bouillet
+ * @author Marius Oehler
  */
 public class JavaAgent implements ClassFileTransformer {
 
@@ -112,16 +114,31 @@ public class JavaAgent implements ClassFileTransformer {
 
 			LOGGER.info("inspectIT Agent: Initialization complete...");
 
-			boolean retransformClassesSupported = inst.isRetransformClassesSupported();
-			inst.addTransformer(new JavaAgent(), retransformClassesSupported);
+			boolean useRetransformation = Agent.agent.isUsingRetransformation();
 
-			if (retransformClassesSupported) {
-				// now we are analyzing the already loaded classes by the jvm to instrument those
-				// classes, too
-				LOGGER.info("inspectIT Agent: Retransform of classes is supported, trying to instrument already loaded classes...");
-				analyzeAlreadyLoadedClasses();
+			if (useRetransformation) {
+				boolean retransformClassesSupported = inst.isRetransformClassesSupported();
+				inst.addTransformer(new JavaAgent(), retransformClassesSupported);
+
+				if (retransformClassesSupported) {
+					// now we are analyzing the already loaded classes by the jvm to instrument
+					// those classes, too
+					LOGGER.info("inspectIT Agent: Retransform of classes is supported, trying to instrument already loaded classes...");
+					analyzeAlreadyLoadedClasses(useRetransformation);
+				} else {
+					LOGGER.info("inspectIT Agent: Retransform of classes is not supported, already loaded classes will not be instrumented...");
+				}
 			} else {
-				LOGGER.info("inspectIT Agent: Retransform of classes is not supported, already loaded classes will not be instrumented...");
+				boolean redefineClassesSupported = inst.isRedefineClassesSupported();
+				inst.addTransformer(new JavaAgent());
+
+				if (redefineClassesSupported) {
+					// analyze the already loaded classes by the jvm to instrument those classes
+					LOGGER.info("inspectIT Agent: Redefine of classes is supported, trying to instrument already loaded classes...");
+					analyzeAlreadyLoadedClasses(useRetransformation);
+				} else {
+					LOGGER.info("inspectIT Agent: Redefine of classes is not supported, already loaded classes will not be instrumented...");
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Something unexpected happened while trying to initialize the Agent, aborting!");
@@ -200,8 +217,11 @@ public class JavaAgent implements ClassFileTransformer {
 	 * Analyzes all the classes which are already loaded by the jvm. This only works if the
 	 * -Xbootclasspath option is being set in addition as we are instrumenting core classes which
 	 * are directly connected to the bootstrap classloader.
+	 *
+	 * @param useRetransformation
+	 *            Whether retransformation or redefinition should be used to modify loaded classes
 	 */
-	private static void analyzeAlreadyLoadedClasses() {
+	private static void analyzeAlreadyLoadedClasses(boolean useRetransformation) {
 		try {
 			if (instrumentCoreClasses) {
 				for (Class<?> loadedClass : instrumentation.getAllLoadedClasses()) {
@@ -218,7 +238,15 @@ public class JavaAgent implements ClassFileTransformer {
 							// check that class is not ignored by our agent
 							if (!Agent.agent.shouldClassBeIgnored(clazzName)) {
 								try {
-									instrumentation.retransformClasses(loadedClass);
+									if (useRetransformation) {
+										instrumentation.retransformClasses(loadedClass);
+									} else {
+										byte[] modified = Agent.agent.inspectByteCode(null, clazzName, loadedClass.getClassLoader());
+										if (null != modified) {
+											ClassDefinition classDefinition = new ClassDefinition(loadedClass, modified);
+											instrumentation.redefineClasses(new ClassDefinition[] { classDefinition });
+										}
+									}
 								} catch (UnmodifiableClassException e) {
 									LOGGER.severe(e.getMessage());
 								}
@@ -232,7 +260,7 @@ public class JavaAgent implements ClassFileTransformer {
 			}
 		} catch (Throwable t) { // NOPMD
 			t.printStackTrace(); // NOPMD
-			LOGGER.severe("The process of class redefinitions produced an error: " + t.getMessage());
+			LOGGER.severe("The process of class retransformation/redefinition produced an error: " + t.getMessage());
 			LOGGER.severe("If you are running on an IBM JVM, please ignore this error as the JVM does not support this feature!");
 			LOGGER.throwing(JavaAgent.class.getName(), "analyzeAlreadyLoadedClasses", t);
 		}

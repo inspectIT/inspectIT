@@ -13,11 +13,15 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
+import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.hooking.IHookDispatcher;
 import rocks.inspectit.agent.java.instrumentation.IInstrumentationAware;
 import rocks.inspectit.agent.java.logback.LogInitializer;
 import rocks.inspectit.agent.java.spring.SpringConfiguration;
+import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
+import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
 import rocks.inspectit.shared.all.version.VersionService;
 
 /**
@@ -262,6 +266,25 @@ public class SpringAgent implements IAgent {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isUsingRetransformation() {
+		RetransformationStrategy retransformationStrategy;
+		try {
+			retransformationStrategy = configurationStorage.getRetransformStrategy();
+		} catch (StorageException e) {
+			if (LOG.isWarnEnabled()) {
+				LOG.warn("Class retransformation strategy could be set. Using the default retransformation stretegy: " + RetransformationStrategy.DISABLE_RETRANSFORMATION_ON_IBM_JVM);
+			}
+			retransformationStrategy = RetransformationStrategy.DISABLE_RETRANSFORMATION_ON_IBM_JVM;
+		}
+
+		return (retransformationStrategy == RetransformationStrategy.ALWAYS_USE_RETRANSFORMATION)
+				|| ((retransformationStrategy == RetransformationStrategy.DISABLE_RETRANSFORMATION_ON_IBM_JVM) && (UnderlyingSystemInfo.JVM_PROVIDER != JvmProvider.IBM));
 	}
 
 }

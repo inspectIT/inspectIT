@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlTransient;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
+import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
@@ -115,4 +117,12 @@ public final class ConfigurationDefaultsFactory {
 		return new JmxSensorConfig();
 	}
 
+	/**
+	 * Returns default {@link RetransformationStrategy}.
+	 *
+	 * @return The default {@link RetransformationStrategy}
+	 */
+	public static RetransformationStrategy getDefaultRetransformationStrategy() {
+		return RetransformationStrategy.DISABLE_RETRANSFORMATION_ON_IBM_JVM;
+	}
 }

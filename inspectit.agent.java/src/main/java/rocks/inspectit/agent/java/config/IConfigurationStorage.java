@@ -12,6 +12,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 
@@ -22,6 +23,7 @@ import rocks.inspectit.shared.all.pattern.IMatchPattern;
  * @author Eduard Tudenhoefner
  * @author Alfred Krauss
  * @author Ivan Senic
+ * @author Marius Oehler
  */
 public interface IConfigurationStorage {
 
@@ -179,4 +181,12 @@ public interface IConfigurationStorage {
 	 */
 	Map<Collection<String>, InstrumentationDefinition> getInitialInstrumentationResults() throws StorageException;
 
+	/**
+	 * Returns the {@link RetransformationStrategy} specified by the current environment.
+	 * 
+	 * @return The {@link RetransformationStrategy}
+	 * @throws StorageException
+	 *             If agent configuration is not set.
+	 */
+	RetransformationStrategy getRetransformStrategy() throws StorageException;
 }

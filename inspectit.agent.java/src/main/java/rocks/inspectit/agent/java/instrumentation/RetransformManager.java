@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.HashMultiset;
 
+import rocks.inspectit.agent.java.Agent;
 import rocks.inspectit.agent.java.IThreadTransformHelper;
 import rocks.inspectit.agent.java.analyzer.impl.ClassHashHelper;
 import rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent;
@@ -77,6 +78,13 @@ public class RetransformManager implements ApplicationListener<AgentMessagesRece
 		if (event == null) {
 			if (log.isDebugEnabled()) {
 				log.debug("A 'null' event will not be processed.");
+			}
+			return;
+		}
+
+		if (!Agent.agent.isUsingRetransformation()) {
+			if (log.isDebugEnabled()) {
+				log.debug("Retransformation is disabled by the used retransformation strategy.");
 			}
 			return;
 		}

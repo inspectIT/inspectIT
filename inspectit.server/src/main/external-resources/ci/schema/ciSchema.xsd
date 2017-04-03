@@ -517,6 +517,7 @@
             </xs:complexType>
           </xs:element>
           <xs:element name="classLoadingDelegation" type="xs:boolean"/>
+          <xs:element name="retransformation-strategy" type="retransformationStrategy" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -917,6 +918,14 @@
       <xs:enumeration value="equals"/>
       <xs:enumeration value="regex"/>
       <xs:enumeration value="starts-with"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="retransformationStrategy">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ALWAYS_USE_RETRANSFORMATION"/>
+      <xs:enumeration value="DISABLE_RETRANSFORMATION_ON_IBM_JVM"/>
+      <xs:enumeration value="NEVER_USER_RETRANSFORMATION"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>

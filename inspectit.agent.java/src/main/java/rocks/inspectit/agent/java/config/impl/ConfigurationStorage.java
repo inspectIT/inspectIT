@@ -24,6 +24,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -272,6 +273,16 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		}
 
 		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RetransformationStrategy getRetransformStrategy() throws StorageException {
+		ensureConfigurationExists();
+
+		return agentConfiguration.getRetransformationStrategy();
 	}
 
 	/**
