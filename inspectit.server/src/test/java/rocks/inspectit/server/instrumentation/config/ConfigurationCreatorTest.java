@@ -32,6 +32,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTyp
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.EqualsMatchPattern;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
@@ -267,6 +268,16 @@ public class ConfigurationCreatorTest extends TestBase {
 			StrategyConfig strategyConfig = agentConfiguration.getBufferStrategyConfig();
 			assertThat(strategyConfig.getClazzName(), is(className));
 			assertThat(strategyConfig.getSettings(), is(settings));
+		}
+
+		@Test
+		public void retransformationStrategy() throws Exception {
+			RetransformationStrategy retransformationStrategy = RetransformationStrategy.ALWAYS;
+			when(environment.getRetransformationStrategy()).thenReturn(retransformationStrategy);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
+
+			assertThat(agentConfiguration.getRetransformationStrategy(), is(retransformationStrategy));
 		}
 
 		// special method sensor

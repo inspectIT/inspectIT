@@ -21,6 +21,7 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
 import rocks.inspectit.shared.cs.ci.strategy.impl.ListSendingStrategyConfig;
@@ -101,6 +102,11 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 	private Combo bufferCombo;
 
 	/**
+	 * Combo for choosing reransformation strategy.
+	 */
+	private Combo retransformationCombo;
+
+	/**
 	 * Button for class loading delegation.
 	 */
 	private Button classDelegationButton;
@@ -128,8 +134,8 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 		createPart(getSection(), toolkit);
 
 		// text and description on our own
-		getSection().setText("Strategies");
-		Label label = toolkit.createLabel(getSection(), "Define sending and buffer strategies");
+		getSection().setText("Strategies and Options");
+		Label label = toolkit.createLabel(getSection(), "Define different options and strategies of the environment.");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		getSection().setDescriptionControl(label);
 	}
@@ -173,6 +179,13 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 		createInfoLabel(mainComposite, toolkit,
 				"The simple version of a buffer is apparently no buffer at all. It contains exactly one element. This is useful if old data isn't necessary or maybe the memory of the application is very limited.\nThe Size buffer strategy needs specification of the size of this buffer. This buffer works as a FILO stack, so last added elements will be sent first (as they are more important), and old ones are thrown away if this buffer is full");
 
+		toolkit.createLabel(mainComposite, "Retransformation strategy:").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		retransformationCombo = new Combo(mainComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		retransformationCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		toolkit.adapt(retransformationCombo, false, false);
+		createInfoLabel(mainComposite, toolkit,
+				"The retransformation strategy states whether agents should use class retransformation to instrument already loaded classes during startup phase.\nIf retransformation is disabled, class redefinition is used and classes cannot be dynamically reinstrumented without application restart.");
+
 		// fill the boxes and values
 		sendingCombo.add(TIME_SENDING_STRATEGY);
 		sendingCombo.add(LIST_SENDING_STRATEGY);
@@ -203,6 +216,12 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 			bufferCombo.select(1);
 			bufferValue.setText(String.valueOf(((SizeBufferStrategyConfig) bufferStrategyConfig).getSize()));
 		}
+
+		for (RetransformationStrategy strategy : RetransformationStrategy.values()) {
+			retransformationCombo.add(strategy.toString());
+			retransformationCombo.setData(strategy.toString(), strategy);
+		}
+		retransformationCombo.select(environment.getRetransformationStrategy().ordinal());
 
 		// listeners
 		sendingCombo.addSelectionListener(new SelectionAdapter() {
@@ -266,6 +285,7 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 		};
 		sendingCombo.addListener(SWT.Selection, dirtyListener);
 		bufferCombo.addListener(SWT.Selection, dirtyListener);
+		retransformationCombo.addListener(SWT.Selection, dirtyListener);
 		sendingValue.addListener(SWT.Modify, dirtyListener);
 		bufferValue.addListener(SWT.Modify, dirtyListener);
 		classDelegationButton.addListener(SWT.Selection, dirtyListener);
@@ -281,6 +301,7 @@ public class EnvironmentSettingsPart extends SectionPart implements IPropertyLis
 
 			validateUpdateSendingStrategy(true);
 			validateUpdateBufferStrategy(true);
+			environment.setRetransformationStrategy((RetransformationStrategy) retransformationCombo.getData(retransformationCombo.getItem(retransformationCombo.getSelectionIndex())));
 			environment.setClassLoadingDelegation(classDelegationButton.getSelection());
 			getManagedForm().dirtyStateChanged();
 		}
