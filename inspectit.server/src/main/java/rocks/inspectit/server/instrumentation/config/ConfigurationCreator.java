@@ -115,6 +115,9 @@ public class ConfigurationCreator {
 		IStrategyConfig sendingStrategyConfig = environment.getSendingStrategyConfig();
 		agentConfiguration.setSendingStrategyConfig(new StrategyConfig(sendingStrategyConfig.getClassName(), sendingStrategyConfig.getSettings()));
 
+		// retransformation strategy
+		agentConfiguration.setRetransformationStrategy(environment.getRetransformationStrategy());
+
 		// exclude classes
 		Collection<ExcludeRule> excludeRules = configurationResolver.getAllExcludeRules(environment);
 		if (CollectionUtils.isNotEmpty(excludeRules)) {

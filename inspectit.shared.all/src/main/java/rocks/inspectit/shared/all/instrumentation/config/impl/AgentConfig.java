@@ -11,6 +11,7 @@ import rocks.inspectit.shared.all.pattern.IMatchPattern;
  * Configuration that will be sent to the Agent when he initially connects to the CMR.
  *
  * @author Ivan Senic
+ * @author Marius Oehler
  *
  */
 public class AgentConfig {
@@ -66,6 +67,11 @@ public class AgentConfig {
 	 * Collection of the exclude classes patterns.
 	 */
 	private Collection<IMatchPattern> excludeClassesPatterns;
+
+	/**
+	 * Retransformation strategy.
+	 */
+	private RetransformationStrategy retransformationStrategy;
 
 	/**
 	 * Set of known {@link InstrumentationDefinition} for the agent that can be used by the Agent
@@ -349,6 +355,25 @@ public class AgentConfig {
 	}
 
 	/**
+	 * Gets {@link #retransformationStrategy}.
+	 *
+	 * @return {@link #retransformationStrategy}
+	 */
+	public RetransformationStrategy getRetransformationStrategy() {
+		return this.retransformationStrategy;
+	}
+
+	/**
+	 * Sets {@link #retransformationStrategy}.
+	 *
+	 * @param retransformationStrategy
+	 *            New value for {@link #retransformationStrategy}
+	 */
+	public void setRetransformationStrategy(RetransformationStrategy retransformationStrategy) {
+		this.retransformationStrategy = retransformationStrategy;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -365,6 +390,7 @@ public class AgentConfig {
 		result = (prime * result) + ((this.methodSensorTypeConfigs == null) ? 0 : this.methodSensorTypeConfigs.hashCode());
 		result = (prime * result) + (int) (this.platformId ^ (this.platformId >>> 32));
 		result = (prime * result) + ((this.platformSensorTypeConfigs == null) ? 0 : this.platformSensorTypeConfigs.hashCode());
+		result = (prime * result) + ((this.retransformationStrategy == null) ? 0 : this.retransformationStrategy.hashCode());
 		result = (prime * result) + ((this.sendingStrategyConfig == null) ? 0 : this.sendingStrategyConfig.hashCode());
 		result = (prime * result) + ((this.specialMethodSensorTypeConfigs == null) ? 0 : this.specialMethodSensorTypeConfigs.hashCode());
 		return result;
@@ -447,6 +473,9 @@ public class AgentConfig {
 		} else if (!this.platformSensorTypeConfigs.equals(other.platformSensorTypeConfigs)) {
 			return false;
 		}
+		if (this.retransformationStrategy != other.retransformationStrategy) {
+			return false;
+		}
 		if (this.sendingStrategyConfig == null) {
 			if (other.sendingStrategyConfig != null) {
 				return false;
@@ -463,5 +492,4 @@ public class AgentConfig {
 		}
 		return true;
 	}
-
 }
