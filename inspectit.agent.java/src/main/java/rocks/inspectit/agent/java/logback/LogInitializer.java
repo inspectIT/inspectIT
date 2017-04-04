@@ -24,16 +24,6 @@ import rocks.inspectit.shared.all.minlog.MinlogToSLF4JLogger;
 public final class LogInitializer extends PropertyDefinerBase {
 
 	/**
-	 * Name of the property for the SAX parser factory.
-	 */
-	private static final String SAX_PARSER_FACTORY_PROPERTY = "javax.xml.parsers.SAXParserFactory";
-
-	/**
-	 * Sax parser factory we will use to initialize the logging.
-	 */
-	private static final String DEFAULT_SAX_PARSER_FACTORY = "com.bluecast.xml.JAXPSAXParserFactory";
-
-	/**
 	 * Default name of the log file.
 	 */
 	public static final String DEFAULT_LOG_FILE_NAME = "logging-config.xml";
@@ -60,63 +50,52 @@ public final class LogInitializer extends PropertyDefinerBase {
 
 		initLogDirLocation();
 
-		// remove parser factory property so that we use default
-		String parserFactoryProperty = System.setProperty(SAX_PARSER_FACTORY_PROPERTY, DEFAULT_SAX_PARSER_FACTORY);
+		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+		PiccoloSaxEventRecorder recorder = new PiccoloSaxEventRecorder(context);
+		JoranConfigurator configurator = new JoranConfigurator();
+		configurator.setContext(context);
+		context.reset();
+
+		InputStream is = null;
 
 		try {
-			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-			JoranConfigurator configurator = new JoranConfigurator();
-			configurator.setContext(context);
-			context.reset();
-
-			InputStream is = null;
-
-			try {
-				// first check if it's supplied as parameter
-				String logFileLocation = System.getProperty(LOG_FILE_PROPERTY);
-				if (null != logFileLocation) {
-					File logFile = new File(logFileLocation).getAbsoluteFile();
-					if (logFile.exists()) {
-						is = new FileInputStream(logFile);
-					}
+			// first check if it's supplied as parameter
+			String logFileLocation = System.getProperty(LOG_FILE_PROPERTY);
+			if (null != logFileLocation) {
+				File logFile = new File(logFileLocation).getAbsoluteFile();
+				if (logFile.exists()) {
+					is = new FileInputStream(logFile);
 				}
-
-				// then fail to default if none is specified
-				if (null == is) {
-					String logPath = agentJar.getParent() + File.separator + File.separator + DEFAULT_LOG_FILE_NAME;
-					File logFile = new File(logPath);
-					if (logFile.exists()) {
-						is = new FileInputStream(logFile);
-					}
-				}
-
-				if (null != is) {
-					try {
-						configurator.doConfigure(is);
-					} catch (JoranException e) { // NOPMD NOCHK StatusPrinter will handle this
-					} finally {
-						is.close();
-					}
-				}
-			} catch (IOException e) { // NOPMD NOCHK StatusPrinter will handle this
 			}
 
-			StatusPrinter.printInCaseOfErrorsOrWarnings(context);
-
-			// initialize out minlog bridge to the slf4j
-			// not sure if we can do this, this would also bridge application logging if they use
-			// minlong
-			MinlogToSLF4JLogger.init();
-		} finally {
-			// if we overwrote the factory setting put it back again, otherwise clear our entry in
-			// the system properties
-			if (null != parserFactoryProperty) {
-				System.setProperty(SAX_PARSER_FACTORY_PROPERTY, parserFactoryProperty);
-			} else {
-				System.clearProperty(SAX_PARSER_FACTORY_PROPERTY);
+			// then fail to default if none is specified
+			if (null == is) {
+				String logPath = agentJar.getParent() + File.separator + File.separator + DEFAULT_LOG_FILE_NAME;
+				File logFile = new File(logPath);
+				if (logFile.exists()) {
+					is = new FileInputStream(logFile);
+				}
 			}
+
+			if (null != is) {
+				try {
+					recorder.recordEvents(is);
+					configurator.doConfigure(recorder.getSaxEventList());
+				} catch (JoranException e) { // NOPMD NOCHK StatusPrinter will handle this
+				} finally {
+					is.close();
+				}
+			}
+		} catch (IOException e) { // NOPMD NOCHK StatusPrinter will handle this
 		}
+
+		StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+
+		// initialize out minlog bridge to the slf4j
+		// not sure if we can do this, this would also bridge application logging if they use
+		// minlong
+		MinlogToSLF4JLogger.init();
 
 	}
 

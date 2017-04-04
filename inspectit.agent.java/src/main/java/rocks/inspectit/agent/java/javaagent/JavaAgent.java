@@ -91,15 +91,9 @@ public class JavaAgent implements ClassFileTransformer {
 
 		// Starting up the real agent
 		try {
-			// now we load the PicoAgent via our own classloader
+			// initialize the SpringAgent
 			@SuppressWarnings("resource")
 			InspectItClassLoader classLoader = new InspectItClassLoader(new URL[0]);
-
-			// append piccolo to the boot class path loader
-			String path = classLoader.getPiccoloJarFile();
-			instrumentation.appendToBootstrapClassLoaderSearch(new JarFile(path));
-
-			// then initialize the SpringAgent
 			Class<?> agentClazz = classLoader.loadClass(INSPECTIT_AGENT);
 			Constructor<?> constructor = agentClazz.getConstructor(File.class, Instrumentation.class);
 			Object realAgent = constructor.newInstance(getInspectItAgentJarFileLocation(), inst);
@@ -324,12 +318,6 @@ public class JavaAgent implements ClassFileTransformer {
 		private final Set<String> ignoreClasses = new HashSet<String>();
 
 		/**
-		 * Piccolo jar file that we need to append to the boot class path to have it accessible when
-		 * initializing the logging.
-		 */
-		private String piccoloJarFile;
-
-		/**
 		 * Default constructor initialized with the urls of the dependency jars etc.
 		 *
 		 * @param urls
@@ -366,15 +354,6 @@ public class JavaAgent implements ClassFileTransformer {
 		}
 
 		/**
-		 * Gets {@link #piccoloJarFile}.
-		 *
-		 * @return {@link #piccoloJarFile}
-		 */
-		public String getPiccoloJarFile() {
-			return this.piccoloJarFile;
-		}
-
-		/**
 		 * Analyze this jar file for containing jar files and classes to be used in our own
 		 * classloader.
 		 *
@@ -392,11 +371,7 @@ public class JavaAgent implements ClassFileTransformer {
 				JarEntry jarEntry = jarEntries.nextElement();
 				if (!jarEntry.isDirectory() && isJar(jarEntry.getName())) {
 					File jar = jarEntryAsFile(jarFile, jarEntry);
-					if (jarEntry.getName().contains("piccolo")) {
-						piccoloJarFile = jar.getAbsolutePath();
-					} else {
-						addJarResource(jar);
-					}
+					addJarResource(jar);
 				}
 			}
 		}
