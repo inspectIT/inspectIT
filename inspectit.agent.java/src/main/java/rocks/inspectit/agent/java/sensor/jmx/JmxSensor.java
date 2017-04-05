@@ -156,7 +156,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 			try {
 				server.addNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), holder, NOTIFICATION_FILTER, null);
 			} catch (Exception e) {
-				log.warn("Failed to add notification listener to the MBean server with the default domain " + server.getDefaultDomain() + ". New added beans/attributes will not be monitored.", e);
+				log.warn("Failed to add notification listener to the MBean server " + server.toString() + ". New added beans/attributes will not be monitored.", e);
 			}
 
 			// register already existing beans
@@ -166,7 +166,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 			activeServerMap.put(server, holder);
 		} catch (Throwable t) { // NOPMD
 			// catching throwable if anything goes wrong
-			log.warn("Unable to add the MBean server with the default domain " + server.getDefaultDomain() + ".", t);
+			log.warn("Unable to add the MBean server " + server.toString() + ".", t);
 		}
 
 	}
@@ -192,11 +192,11 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 			try {
 				server.removeNotificationListener(new ObjectName(MBEAN_SERVER_DELEGATE_NAME), holder, NOTIFICATION_FILTER, null);
 			} catch (Exception e) {
-				log.warn("Failed to remove notification listener to the MBean server with the default domain " + server.getDefaultDomain() + ".", e);
+				log.warn("Failed to remove notification listener to the MBean server " + server.toString() + ".", e);
 			}
 		} catch (Throwable t) { // NOPMD
 			// catching throwable if anything goes wrong
-			log.warn("Unable to remove the MBean server with the default domain " + server.getDefaultDomain() + ".", t);
+			log.warn("Unable to remove the MBean server " + server.toString() + ".", t);
 		}
 
 	}
@@ -288,7 +288,6 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 	}
 
 	/**
-	@Override
 	 * Registers all attributes of all object names that are returned as the result of querying with
 	 * the given mBeanName on the server in the given holder.
 	 *
