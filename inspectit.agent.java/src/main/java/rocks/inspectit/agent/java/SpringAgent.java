@@ -279,6 +279,11 @@ public class SpringAgent implements IAgent {
 	@Override
 	public boolean isUsingRetransformation() {
 		if (usingRetransformation == null) {
+			// use retransformation as long as the configuration storage is not available
+			if (configurationStorage == null) {
+				return true;
+			}
+
 			RetransformationStrategy retransformationStrategy;
 			try {
 				retransformationStrategy = configurationStorage.getRetransformStrategy();
