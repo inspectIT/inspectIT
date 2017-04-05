@@ -50,4 +50,11 @@ public interface IAgent {
 	 * @return <code>true</code> if retransformation should be used
 	 */
 	boolean isUsingRetransformation();
+
+	/**
+	 * Returns whether the instrumentation has been disabled or not.
+	 *
+	 * @return <code>true</code> if the instrumentation is disabled
+	 */
+	boolean isInstrumentationDisabled();
 }

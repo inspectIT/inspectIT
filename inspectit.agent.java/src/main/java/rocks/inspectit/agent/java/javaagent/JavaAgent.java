@@ -108,16 +108,18 @@ public class JavaAgent implements ClassFileTransformer {
 
 			LOGGER.info("inspectIT Agent: Initialization complete...");
 
-			boolean redefineClassesSupported = inst.isRedefineClassesSupported();
-			boolean useRetransformation = inst.isRetransformClassesSupported() && Agent.agent.isUsingRetransformation();
+			if (!Agent.agent.isInstrumentationDisabled()) {
+				boolean redefineClassesSupported = inst.isRedefineClassesSupported();
+				boolean useRetransformation = inst.isRetransformClassesSupported() && Agent.agent.isUsingRetransformation();
 
-			inst.addTransformer(new JavaAgent(), useRetransformation);
+				inst.addTransformer(new JavaAgent(), useRetransformation);
 
-			if (useRetransformation || redefineClassesSupported) {
-				LOGGER.info("inspectIT Agent: " + (useRetransformation ? "Retransform" : "Redefine") + " of classes is supported, trying to instrument already loaded classes...");
-				analyzeAlreadyLoadedClasses(useRetransformation);
-			} else {
-				LOGGER.info("inspectIT Agent: Already loaded classes will not be instrumented because redefinition/retransformation is not supported or turned off...");
+				if (useRetransformation || redefineClassesSupported) {
+					LOGGER.info("inspectIT Agent: " + (useRetransformation ? "Retransform" : "Redefine") + " of classes is supported, trying to instrument already loaded classes...");
+					analyzeAlreadyLoadedClasses(useRetransformation);
+				} else {
+					LOGGER.info("inspectIT Agent: Already loaded classes will not be instrumented because redefinition/retransformation is not supported or turned off...");
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Something unexpected happened while trying to initialize the Agent, aborting!");

@@ -278,6 +278,10 @@ public class SpringAgent implements IAgent {
 	 */
 	@Override
 	public boolean isUsingRetransformation() {
+		if (disableInstrumentation) {
+			return false;
+		}
+
 		if (usingRetransformation == null) {
 			RetransformationStrategy retransformationStrategy;
 			try {
@@ -296,4 +300,11 @@ public class SpringAgent implements IAgent {
 		return usingRetransformation.booleanValue();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isInstrumentationDisabled() {
+		return disableInstrumentation;
+	}
 }
