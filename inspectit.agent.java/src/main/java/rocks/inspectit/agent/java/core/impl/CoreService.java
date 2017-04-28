@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -171,6 +172,11 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	private boolean sendingExceptionNotice = false;
 
 	/**
+	 * Counter which is used by collision of data adding.
+	 */
+	private AtomicLong counter = new AtomicLong(0);
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -260,7 +266,13 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		builder.append(methodIdent);
 		builder.append('.');
 		builder.append(sensorTypeIdent);
-		sensorDataObjects.put(builder.toString(), methodSensorData);
+		DefaultData existingData = sensorDataObjects.put(builder.toString(), methodSensorData);
+
+		// put existing data back into the map
+		if (existingData != null) {
+			sensorDataObjects.put(String.valueOf(counter.incrementAndGet()), existingData);
+		}
+
 		notifyListListeners();
 	}
 
@@ -377,13 +389,11 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	/**
 	 * Notify all registered listeners that a change occurred in the lists.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void notifyListListeners() {
 		if (!listListeners.isEmpty()) {
-			List temp = new ArrayList(sensorDataObjects.values());
-			temp.addAll(objectStorages.values());
+			int elementCount = sensorDataObjects.size() + objectStorages.size();
 			for (ListListener<?> listListener : listListeners) {
-				listListener.contentChanged(temp);
+				listListener.contentChanged(elementCount);
 			}
 		}
 	}
@@ -413,7 +423,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		/**
 		 * Creates a new instance of the <code>PlatformSensorRefresher</code> as a daemon thread.
 		 */
-		public SensorRefresher() {
+		SensorRefresher() {
 			super(threadTransformHelper);
 			setName("inspectit-platform-sensor-refresher-thread");
 			setDaemon(true);
@@ -604,7 +614,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		/**
 		 * Creates a new <code>PreparingThread</code> as daemon.
 		 */
-		public PreparingThread() {
+		PreparingThread() {
 			super(threadTransformHelper);
 			setName("inspectit-preparing-thread");
 			setDaemon(true);
@@ -659,7 +669,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		/**
 		 * Creates a new <code>SendingThread</code> as daemon.
 		 */
-		public SendingThread() {
+		SendingThread() {
 			super(threadTransformHelper);
 			setName("inspectit-sending-thread");
 			setDaemon(true);
@@ -718,7 +728,7 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 		/**
 		 * Default constructor.
 		 */
-		public ShutdownHookSender() {
+		ShutdownHookSender() {
 			super(threadTransformHelper);
 		}
 

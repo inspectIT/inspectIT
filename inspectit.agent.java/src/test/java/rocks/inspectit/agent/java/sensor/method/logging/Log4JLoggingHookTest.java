@@ -1,14 +1,15 @@
 package rocks.inspectit.agent.java.sensor.method.logging;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.apache.log4j.Level;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -19,6 +20,10 @@ import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 
+/**
+ * Test the {@link Log4JLoggingHook} class.
+ *
+ */
 @SuppressWarnings("PMD")
 public class Log4JLoggingHookTest extends AbstractLogSupport {
 
@@ -80,9 +85,9 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 		loggingData.setPlatformIdent(platformId);
 
 		if (shouldCapture) {
-			Mockito.verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq((String) null), argThat(new LoggingDataVerifier(loggingData)));
+			verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), any(String.class), argThat(new LoggingDataVerifier(loggingData)));
 		} else {
-			Mockito.verify(coreService, never()).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq((String) null), argThat(new LoggingDataVerifier(loggingData)));
+			verify(coreService, never()).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq((String) null), argThat(new LoggingDataVerifier(loggingData)));
 		}
 	}
 

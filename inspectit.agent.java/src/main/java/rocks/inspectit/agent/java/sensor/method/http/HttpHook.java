@@ -295,10 +295,10 @@ public class HttpHook implements IMethodHook {
 					// Include additional http information
 					data.getHttpInfo().setUri(extractor.getRequestUri(servletRequestClass, httpServletRequest));
 					data.getHttpInfo().setRequestMethod(extractor.getRequestMethod(servletRequestClass, httpServletRequest));
-						data.getHttpInfo().setScheme(extractor.getScheme(servletRequestClass, httpServletRequest));
-						data.getHttpInfo().setServerName(extractor.getServerName(servletRequestClass, httpServletRequest));
-						data.getHttpInfo().setServerPort(extractor.getServerPort(servletRequestClass, httpServletRequest));
-						data.getHttpInfo().setQueryString(extractor.getQueryString(servletRequestClass, httpServletRequest));
+					data.getHttpInfo().setScheme(extractor.getScheme(servletRequestClass, httpServletRequest));
+					data.getHttpInfo().setServerName(extractor.getServerName(servletRequestClass, httpServletRequest));
+					data.getHttpInfo().setServerPort(extractor.getServerPort(servletRequestClass, httpServletRequest));
+					data.getHttpInfo().setQueryString(extractor.getQueryString(servletRequestClass, httpServletRequest));
 					data.setParameters(extractor.getParameterMap(servletRequestClass, httpServletRequest));
 					data.setAttributes(extractor.getAttributes(servletRequestClass, httpServletRequest));
 					data.setHeaders(extractor.getHeaders(servletRequestClass, httpServletRequest));
@@ -313,7 +313,7 @@ public class HttpHook implements IMethodHook {
 					data.setCharting(charting);
 
 					// returning gathered information
-					coreService.addMethodSensorData(sensorTypeId, methodId, null, data);
+					coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(startTime), data);
 				}
 			}
 		}
