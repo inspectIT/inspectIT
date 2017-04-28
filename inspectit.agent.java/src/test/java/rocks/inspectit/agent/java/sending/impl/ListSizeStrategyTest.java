@@ -43,7 +43,7 @@ public class ListSizeStrategyTest extends TestBase {
 		sendingStrategy.start(coreService);
 		List<List<DefaultData>> list = mock(List.class);
 
-		sendingStrategy.contentChanged(list);
+		sendingStrategy.contentChanged(list.size());
 
 		verify(list).size();
 
@@ -57,7 +57,7 @@ public class ListSizeStrategyTest extends TestBase {
 		List<List<DefaultData>> list = mock(List.class);
 		when(list.size()).thenReturn(11);
 
-		sendingStrategy.contentChanged(list);
+		sendingStrategy.contentChanged(list.size());
 
 		verify(coreService).sendData();
 	}
@@ -72,7 +72,7 @@ public class ListSizeStrategyTest extends TestBase {
 		List<List<DefaultData>> list = mock(List.class);
 		when(list.size()).thenReturn(5);
 
-		sendingStrategy.contentChanged(list);
+		sendingStrategy.contentChanged(list.size());
 
 		verify(coreService).sendData();
 	}

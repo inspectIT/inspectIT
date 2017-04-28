@@ -1,14 +1,17 @@
 package rocks.inspectit.agent.java.sensor.method.logging;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.apache.log4j.Level;
+import org.hamcrest.Matchers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -19,6 +22,10 @@ import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 
+/**
+ * Test the {@link Log4JLoggingHook} class.
+ *
+ */
 @SuppressWarnings("PMD")
 public class Log4JLoggingHookTest extends AbstractLogSupport {
 
@@ -79,10 +86,14 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 		loggingData.setSensorTypeIdent(sensorTypeId);
 		loggingData.setPlatformIdent(platformId);
 
+		long currentTime = System.currentTimeMillis();
+
 		if (shouldCapture) {
-			Mockito.verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq((String) null), argThat(new LoggingDataVerifier(loggingData)));
+			ArgumentCaptor<String> timeCaptor = ArgumentCaptor.forClass(String.class);
+			verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), timeCaptor.capture(), argThat(new LoggingDataVerifier(loggingData)));
+			assertThat(currentTime, Matchers.greaterThanOrEqualTo(currentTime));
 		} else {
-			Mockito.verify(coreService, never()).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq((String) null), argThat(new LoggingDataVerifier(loggingData)));
+			verify(coreService, never()).addMethodSensorData(eq(sensorTypeId), eq(methodId), eq((String) null), argThat(new LoggingDataVerifier(loggingData)));
 		}
 	}
 

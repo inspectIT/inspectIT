@@ -1,7 +1,6 @@
 package rocks.inspectit.agent.java.core;
 
 import java.util.EventListener;
-import java.util.List;
 
 /**
  * The {@link ListListener} interface allows a class to react on events that change a list.
@@ -16,9 +15,9 @@ public interface ListListener<E> extends EventListener {
 	/**
 	 * The content of a list has changed.
 	 *
-	 * @param list
-	 *            The list which was changed.
+	 * @param elementCount
+	 *            The amount of elements in the list.
 	 */
-	void contentChanged(List<E> list);
+	void contentChanged(int elementCount);
 
 }
