@@ -46,8 +46,8 @@ public class ListSizeStrategy extends AbstractSendingStrategy implements ListLis
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void contentChanged(List<List<DefaultData>> list) {
-		if (list.size() > size) {
+	public void contentChanged(int elementCount) {
+		if (elementCount > size) {
 			sendNow();
 		}
 	}
