@@ -236,7 +236,7 @@ public class CoreServiceTest extends TestBase {
 		coreService.addListListener(listener);
 		coreService.addMethodSensorData(0, 0, null, timerData);
 
-		verify(listener, times(1)).contentChanged(dataList);
+		verify(listener, times(1)).contentChanged(dataList.size());
 
 		coreService.removeListListener(listener);
 
@@ -254,7 +254,7 @@ public class CoreServiceTest extends TestBase {
 		coreService.addListListener(listener);
 		coreService.addPlatformSensorData(0, cpuInformationData);
 
-		verify(listener, times(1)).contentChanged(dataList);
+		verify(listener, times(1)).contentChanged(dataList.size());
 
 		coreService.removeListListener(listener);
 
@@ -275,7 +275,7 @@ public class CoreServiceTest extends TestBase {
 		coreService.addListListener(listener);
 		coreService.addExceptionSensorData(0, exceptionSensorData.getThrowableIdentityHashCode(), exceptionSensorData);
 
-		verify(listener, times(1)).contentChanged(dataList);
+		verify(listener, times(1)).contentChanged(dataList.size());
 
 		coreService.removeListListener(listener);
 
@@ -293,7 +293,7 @@ public class CoreServiceTest extends TestBase {
 		coreService.addListListener(listener);
 		coreService.addObjectStorage(0, 0, null, timerStorage);
 
-		verify(listener, times(1)).contentChanged(storageList);
+		verify(listener, times(1)).contentChanged(storageList.size());
 
 		coreService.removeListListener(listener);
 
@@ -325,6 +325,52 @@ public class CoreServiceTest extends TestBase {
 
 		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
 		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerData))));
+	}
+
+	@Test
+	public void addDuplicateMethodSensorDataNoPrefix() {
+		ListListener<TimerData> listener = mock(ListListener.class);
+
+		long sensorTypeId = 2;
+		long methodId = 5;
+		String prefix = null;
+		TimerData timerDataOne = new TimerData();
+		TimerData timerDataTwo = new TimerData();
+
+		coreService.addListListener(listener);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataOne);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataTwo);
+		coreService.removeListListener(listener);
+
+		verify(listener).contentChanged(1);
+		verify(listener).contentChanged(2);
+		verifyNoMoreInteractions(listener);
+
+		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
+		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerDataOne))));
+	}
+
+	@Test
+	public void addDuplicateMethodSensorDataWithPrefix() {
+		ListListener<TimerData> listener = mock(ListListener.class);
+
+		long sensorTypeId = 2;
+		long methodId = 5;
+		String prefix = "prefix";
+		TimerData timerDataOne = new TimerData();
+		TimerData timerDataTwo = new TimerData();
+
+		coreService.addListListener(listener);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataOne);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataTwo);
+		coreService.removeListListener(listener);
+
+		verify(listener).contentChanged(1);
+		verify(listener).contentChanged(2);
+		verifyNoMoreInteractions(listener);
+
+		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
+		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerDataOne))));
 	}
 
 	@Test
