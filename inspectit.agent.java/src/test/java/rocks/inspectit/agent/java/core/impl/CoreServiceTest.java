@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -325,6 +326,52 @@ public class CoreServiceTest extends TestBase {
 
 		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
 		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerData))));
+	}
+
+	@Test
+	public void addDuplicateMethodSensorDataNoPrefix() {
+		ListListener<TimerData> listener = mock(ListListener.class);
+
+		long sensorTypeId = 2;
+		long methodId = 5;
+		String prefix = null;
+		TimerData timerDataOne = new TimerData();
+		TimerData timerDataTwo = new TimerData();
+
+		coreService.addListListener(listener);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataOne);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataTwo);
+		coreService.removeListListener(listener);
+
+		verify(listener).contentChanged(Arrays.asList(timerDataOne));
+		verify(listener).contentChanged(Arrays.asList(timerDataOne, timerDataTwo));
+		verifyNoMoreInteractions(listener);
+
+		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
+		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerDataOne))));
+	}
+
+	@Test
+	public void addDuplicateMethodSensorDataWithPrefix() {
+		ListListener<TimerData> listener = mock(ListListener.class);
+
+		long sensorTypeId = 2;
+		long methodId = 5;
+		String prefix = "prefix";
+		TimerData timerDataOne = new TimerData();
+		TimerData timerDataTwo = new TimerData();
+
+		coreService.addListListener(listener);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataOne);
+		coreService.addMethodSensorData(sensorTypeId, methodId, prefix, timerDataTwo);
+		coreService.removeListListener(listener);
+
+		verify(listener).contentChanged(Arrays.asList(timerDataOne));
+		verify(listener).contentChanged(Arrays.asList(timerDataOne, timerDataTwo));
+		verifyNoMoreInteractions(listener);
+
+		MethodSensorData methodSensorData = coreService.getMethodSensorData(sensorTypeId, methodId, prefix);
+		assertThat(methodSensorData, is(equalTo(((MethodSensorData) timerDataOne))));
 	}
 
 	@Test
