@@ -18,7 +18,7 @@ sourceSets {
 	}
 }
 
-/** Some agent specific properties */
+/** Some agent SDK specific properties */
 ext {
 	distJarName = 'inspectit-agent-java-sdk'
 }
@@ -59,4 +59,116 @@ task releaseAndAnalyze {
 	description = "Runs all unit tests, all checks and releases the jar."
 	group = 'Release'
 	dependsOn(analyze, jar)
+}
+
+/**
+ * Creates jar with sources.
+ */
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+/**
+ * Creates jar with javadocs.
+ */
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+/**
+ * Pushing to maven centeral.
+ */
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'io.codearte.nexus-staging'
+
+// Infos which are used in the POM file
+group = "rocks.inspectit"
+archivesBaseName = "agent-java-sdk"
+version = project.property('sdk.version')
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+			// check if necessary parameter exists
+			if (!project.hasProperty('sonatype.username') || !project.hasProperty('sonatype.password')) {
+				throw new GradleException('Credentials for Sonytype are missing.')
+			}
+			if (!project.hasProperty('sdk.version')) {
+				throw new GradleException('The version of the SDK has to be specified.')
+			}
+			
+			// required to map correct configuration (including dependencies)
+			pom.scopeMappings.with {
+                mappings.clear()
+                addMapping(300, configurations.agentJavaSdkProd, 'compile')
+            }
+
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            	authentication(userName: project.property('sonatype.username'), password: project.property('sonatype.password'))
+            }
+
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+            	authentication(userName: project.property('sonatype.username'), password: project.property('sonatype.password'))
+            }
+
+			pom.project {
+				name 'inspectIT Java SDK'
+				packaging 'jar'
+				description 'This library provides an implementation of the open-tracing API for inspectIT.'
+				url 'https://github.com/inspectIT/inspectIT'
+
+				scm {
+					url "https://github.com/inspectIT/inspectIT"
+					connection "scm:git:https://github.com/inspectIT/inspectIT.git"
+					developerConnection "scm:git:git@github.com:inspectIT/inspectIT.git"
+				}
+
+				issueManagement {
+					system 'jira'
+					url 'https://inspectit-performance.atlassian.net'
+				}
+
+				licenses {
+					license {
+						name 'The Apache Software License, Version 2.0'
+						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+						distribution 'repo'
+					}
+				}
+
+				developers {
+					developer {
+						id 'inspectit-team'
+						name 'The inspectIT Development Team'
+						organizationUrl 'http://www.inspectit.rocks'
+					}
+				}
+			}
+        }
+    }
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+nexusStaging {
+	// check if necessary parameter exists
+	if (!project.hasProperty('sonatype.username') || !project.hasProperty('sonatype.password')) {
+		throw new GradleException('Credentials for Sonytype are missing.')
+	}
+
+	username = project.property('sonatype.username')
+	password = project.property('sonatype.password')
+
+    packageGroup = "rocks.inspectit" //optional if packageGroup == project.getGroup()
 }
