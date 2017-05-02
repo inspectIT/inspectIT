@@ -20,6 +20,7 @@ buildscript {
 /** apply cpd to the root project, as this was how the plugin is intended to be used **/
 plugins {
 	id "de.aaschmid.cpd" version "1.0"
+	id "io.codearte.nexus-staging" version "0.8.0"
 }
 
 File propertiesFile = file("properties.gradle")
