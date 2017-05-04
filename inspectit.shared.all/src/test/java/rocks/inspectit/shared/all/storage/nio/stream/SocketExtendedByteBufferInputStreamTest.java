@@ -109,7 +109,11 @@ public class SocketExtendedByteBufferInputStreamTest extends TestBase {
 			byte[] bytes = new byte[readSize];
 			int read = inputStream.read(bytes, 0, readSize);
 
-			assertThat(read, is(readSize));
+			if (readSize > 0) {
+				assertThat(read, is(readSize));
+			} else {
+				assertThat(read, is(-1));
+			}
 			assertThat(bytes, is(equalTo(array)));
 
 			inputStream.close();
