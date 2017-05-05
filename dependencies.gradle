@@ -291,8 +291,8 @@ dependencies {
 		'classmexer:classmexer:0.0.3'
 	)
 	jmhbase (
-		'org.openjdk.jmh:jmh-core:1.11.3',
-		'org.openjdk.jmh:jmh-generator-annprocess:1.11.3'
+		"org.openjdk.jmh:jmh-core:$jmhversion",
+		"org.openjdk.jmh:jmh-generator-annprocess:$jmhversion"
 	)
 	xjc (
 		'com.sun.xml.bind:jaxb-jxc:2.2.11',
