@@ -12,7 +12,7 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath "gradle.plugin.me.champeau.gradle:jmh-gradle-plugin:0.3.0"
+		classpath "me.champeau.gradle:jmh-gradle-plugin:0.3.1"
 		classpath "org.standardout:bnd-platform:1.4.0"
 	}
 }
@@ -396,6 +396,9 @@ subprojects {
 		}
 		humanOutputFile = file("${buildQAPerfTest}/jmh/human.txt") 
 		resultsFile = file("${buildQAPerfTest}/jmh/results.txt")
+		duplicateClassesStrategy = 'exclude'
+		
+		jmhVersion = jmhversion
 	}
 	
 	/** 

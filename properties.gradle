@@ -121,5 +121,8 @@ ext {
 	procrunStopClass = 'rocks.inspectit.server.CMR'
 	procrunStopMethod = 'stop'
 	procrunStopParams = 'stop'
+	
+	/** JMH */
+	jmhversion = '1.19'
 }
 	
