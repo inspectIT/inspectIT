@@ -28,6 +28,7 @@ import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SpecialInstrumentationPoint;
+import rocks.inspectit.shared.all.instrumentation.config.impl.SubstitutionDescriptor;
 
 /**
  * Performance test for the {@link ClassInstrumenter} class using JMH framework.
@@ -79,6 +80,7 @@ public class ClassInstrumenterPerfTest {
 				instrumentationConfig.setSensorInstrumentationPoint(registeredSensorConfig);
 			} else {
 				SpecialInstrumentationPoint specialInstrumentationPoint = new SpecialInstrumentationPoint();
+				specialInstrumentationPoint.setSubstitutionDescriptor(new SubstitutionDescriptor());
 				instrumentationConfig.setSpecialInstrumentationPoint(specialInstrumentationPoint);
 			}
 			configs.add(instrumentationConfig);

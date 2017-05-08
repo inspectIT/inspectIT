@@ -251,7 +251,6 @@ subprojects {
 	apply plugin: 'pmd'
 	apply plugin: 'checkstyle'
 	apply plugin: 'findbugs'
-	apply plugin: 'me.champeau.gradle.jmh'
 	apply plugin: 'jacoco'
 	
 	/** all compile, test and runtime configurations to transitive = false */
@@ -379,27 +378,6 @@ subprojects {
 	/** Ensure that check task depends on the */ 
 	check.dependsOn(':cpdCheck')
 
-	/** 
-	 * JMH-Perf tests.
-	 */
-	jmhJar {
-		doFirst {
-			duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-		}
-	}
-	jmh {
-		/**
-		 * Use -PjmhInclude='regular expression' to specify what tests to run with JMH.
-		 */
-		if (project.hasProperty('jmhInclude')) {
-			include = project.getProperty('jmhInclude')
-		}
-		humanOutputFile = file("${buildQAPerfTest}/jmh/human.txt") 
-		resultsFile = file("${buildQAPerfTest}/jmh/results.txt")
-		duplicateClassesStrategy = 'exclude'
-		
-		jmhVersion = jmhversion
-	}
 	
 	/** 
 	 * Configures the jacoco plugin.
@@ -408,4 +386,33 @@ subprojects {
 		reportsDir = file(buildQATestCoveragedata)
 	}
 	
+}
+
+// JMH tests only to projects that do have them
+["inspectit.agent.java","inspectit.server"].each { n ->
+	project(":$n") {
+		apply plugin: 'me.champeau.gradle.jmh'
+
+		/** 
+		 * JMH-Perf tests.
+		 */
+		jmhJar {
+			doFirst {
+				duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+			}
+		}
+		jmh {
+			/**
+			 * Use -PjmhInclude='regular expression' to specify what tests to run with JMH.
+			 */
+			if (project.hasProperty('jmhInclude')) {
+				include = project.getProperty('jmhInclude')
+			}
+			humanOutputFile = file("${buildQAPerfTest}/jmh/human.txt") 
+			resultsFile = file("${buildQAPerfTest}/jmh/results.txt")
+			duplicateClassesStrategy = 'exclude'
+
+			jmhVersion = jmhversion
+		}
+	}
 }
