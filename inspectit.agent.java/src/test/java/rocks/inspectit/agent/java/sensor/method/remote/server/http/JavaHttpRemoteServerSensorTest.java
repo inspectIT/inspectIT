@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -18,11 +20,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
 
+import io.opentracing.SpanContext;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.tag.Tags;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
@@ -139,6 +143,21 @@ public class JavaHttpRemoteServerSensorTest extends TestBase {
 			ServerRequestAdapter<TextMap> adapter = sensor.getServerRequestAdapter(object, new Object[] { httpRequest, httpResponse }, rsc);
 
 			assertThat(adapter.getCarrier().iterator().hasNext(), is(false));
+			verifyZeroInteractions(object, httpResponse, rsc);
+		}
+
+		@Test
+		public void contextStore() {
+			SpanContext spanContext = mock(SpanContext.class);
+			when(httpRequest.getAttribute(SpanContextStore.Constants.ID)).thenReturn(spanContext);
+
+			ServerRequestAdapter<TextMap> adapter = sensor.getServerRequestAdapter(object, new Object[] { httpRequest, httpResponse }, rsc);
+
+			SpanContextStore spanContextStore = adapter.getSpanContextStore();
+			SpanContext result = spanContextStore.getSpanContext();
+			assertThat(result, is(spanContext));
+			spanContextStore.setSpanContext(spanContext);
+			verify(httpRequest).setAttribute(SpanContextStore.Constants.ID, spanContext);
 			verifyZeroInteractions(object, httpResponse, rsc);
 		}
 	}

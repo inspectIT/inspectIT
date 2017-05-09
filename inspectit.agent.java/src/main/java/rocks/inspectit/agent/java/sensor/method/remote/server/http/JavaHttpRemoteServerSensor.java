@@ -41,7 +41,7 @@ public class JavaHttpRemoteServerSensor extends RemoteServerSensor implements Se
 		// request is first parameter
 		Object httpServletRequest = parameters[0];
 		JavaHttpServerRequest serverRequest = new JavaHttpServerRequest(httpServletRequest, CACHE);
-		return new HttpServerRequestAdapter(serverRequest);
+		return new HttpServerRequestAdapter(serverRequest, serverRequest);
 	}
 
 	/**

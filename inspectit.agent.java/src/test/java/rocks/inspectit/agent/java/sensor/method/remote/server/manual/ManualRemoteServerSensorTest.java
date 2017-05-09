@@ -1,7 +1,9 @@
 package rocks.inspectit.agent.java.sensor.method.remote.server.manual;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -12,12 +14,15 @@ import org.testng.annotations.Test;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
+import rocks.inspectit.agent.java.tracing.core.adapter.store.NoopSpanContextStore;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
  * @author Ivan Senic
  *
  */
+@SuppressWarnings("PMD")
 public class ManualRemoteServerSensorTest extends TestBase {
 
 	@InjectMocks
@@ -46,6 +51,16 @@ public class ManualRemoteServerSensorTest extends TestBase {
 
 			assertThat(adapter.getCarrier(), is(nullValue()));
 			assertThat(adapter.getFormat(), is(nullValue()));
+			verifyZeroInteractions(object, rsc);
+		}
+
+		@Test
+		public void contextStore() {
+			ServerRequestAdapter<?> adapter = sensor.getServerRequestAdapter(object, null, rsc);
+
+			SpanContextStore spanContextStore = adapter.getSpanContextStore();
+			assertThat(spanContextStore, is(not(nullValue())));
+			assertThat(spanContextStore, is(instanceOf(NoopSpanContextStore.class)));
 			verifyZeroInteractions(object, rsc);
 		}
 

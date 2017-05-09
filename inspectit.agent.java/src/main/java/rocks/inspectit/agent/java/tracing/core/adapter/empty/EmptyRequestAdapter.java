@@ -7,6 +7,8 @@ import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
+import rocks.inspectit.agent.java.tracing.core.adapter.store.NoopSpanContextStore;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
 /**
@@ -80,6 +82,14 @@ public final class EmptyRequestAdapter implements ServerRequestAdapter<TextMap>,
 	@Override
 	public TextMap getCarrier() {
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SpanContextStore getSpanContextStore() {
+		return NoopSpanContextStore.INSTANCE;
 	}
 
 }

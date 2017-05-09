@@ -2,7 +2,10 @@ package rocks.inspectit.agent.java.sensor.method.remote.server.mq;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -21,6 +24,8 @@ import io.opentracing.propagation.TextMap;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
+import rocks.inspectit.agent.java.tracing.core.adapter.store.NoopSpanContextStore;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
@@ -151,6 +156,16 @@ public class JmsListenerRemoteServerSensorTest extends TestBase {
 			ServerRequestAdapter<TextMap> adapter = sensor.getServerRequestAdapter(object, new Object[] { message }, rsc);
 
 			assertThat(adapter.getCarrier().iterator().hasNext(), is(false));
+			verifyZeroInteractions(object, rsc);
+		}
+
+		@Test
+		public void contextStore() {
+			ServerRequestAdapter<TextMap> adapter = sensor.getServerRequestAdapter(object, new Object[] { message }, rsc);
+
+			SpanContextStore spanContextStore = adapter.getSpanContextStore();
+			assertThat(spanContextStore, is(not(nullValue())));
+			assertThat(spanContextStore, is(instanceOf(NoopSpanContextStore.class)));
 			verifyZeroInteractions(object, rsc);
 		}
 	}
