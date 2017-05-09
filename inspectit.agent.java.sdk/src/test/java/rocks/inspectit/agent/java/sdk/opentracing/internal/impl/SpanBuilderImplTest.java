@@ -195,6 +195,18 @@ public class SpanBuilderImplTest extends TestBase {
 		}
 
 		@Test
+		public void referenceNull() {
+			when(timer.getCurrentTimeMicroseconds()).thenReturn(System.currentTimeMillis());
+			SpanContextImpl parent = null;
+			SpanBuilderImpl builder = new SpanBuilderImpl(tracer, null).addReference(References.CHILD_OF, parent);
+
+			SpanImpl span = builder.start();
+
+			assertThat(span.context().getId(), is(span.context().getParentId()));
+			assertThat(span.context().getReferenceType(), is(nullValue()));
+		}
+
+		@Test
 		public void noReport() {
 			when(timer.getCurrentTimeMicroseconds()).thenReturn(System.currentTimeMillis());
 			SpanBuilderImpl builder = new SpanBuilderImpl(tracer, null).doNotReport();

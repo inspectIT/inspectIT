@@ -6,6 +6,7 @@ import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.opentracing.References;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
@@ -14,6 +15,7 @@ import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanImpl;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
 import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 
 /**
@@ -56,13 +58,17 @@ public class ServerInterceptor {
 	 * @return Current span that was created.
 	 */
 	public <C> SpanImpl handleRequest(ServerRequestAdapter<C> requestAdapter) {
-		// eject data from request
-		SpanContext context = tracer.extract(requestAdapter.getFormat(), requestAdapter.getCarrier());
-
-		// add reference to the passed context
 		// not specifying operation name as we can distinguish spans without it
 		SpanBuilderImpl builder = tracer.buildSpan();
+
+		// eject data from request and add as reference
+		SpanContext context = tracer.extract(requestAdapter.getFormat(), requestAdapter.getCarrier());
 		builder.asChildOf(context);
+
+		// check span context store, add reference as well
+		SpanContextStore store = requestAdapter.getSpanContextStore();
+		context = store.getSpanContext();
+		builder.addReference(References.FOLLOWS_FROM, context);
 
 		// set as server
 		builder.withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_SERVER);
@@ -83,7 +89,13 @@ public class ServerInterceptor {
 			}
 		}
 
-		return builder.start();
+		// start
+		SpanImpl span = builder.start();
+
+		// store to span context store
+		store.setSpanContext(span.context());
+
+		return span;
 	}
 
 	/**

@@ -9,7 +9,9 @@ import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
 import rocks.inspectit.agent.java.tracing.core.adapter.mq.data.MQMessage;
+import rocks.inspectit.agent.java.tracing.core.adapter.store.NoopSpanContextStore;
 import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
@@ -98,4 +100,11 @@ public class MQRequestAdapter implements ServerRequestAdapter<TextMap>, ClientRe
 		return message;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SpanContextStore getSpanContextStore() {
+		return NoopSpanContextStore.INSTANCE;
+	}
 }

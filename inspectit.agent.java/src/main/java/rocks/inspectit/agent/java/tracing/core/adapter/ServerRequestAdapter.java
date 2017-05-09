@@ -32,4 +32,13 @@ public interface ServerRequestAdapter<C> extends RequestAdapter {
 	 */
 	C getCarrier();
 
+	/**
+	 * Optionally provides store adapter for storing and querying span contexts. Implementations
+	 * that do not provide context store must return
+	 * {@link rocks.inspectit.agent.java.tracing.core.adapter.store.NoopSpanContextStore}.
+	 *
+	 * @return {@link SpanContextStore}
+	 */
+	SpanContextStore getSpanContextStore();
+
 }
