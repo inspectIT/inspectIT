@@ -75,10 +75,10 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(1)).getCurrentTime();
 
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(2)).getCurrentTime();
 
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(platformManager).getPlatformId();
 		verify(coreService).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
@@ -118,8 +118,8 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.beforeBody(methodIdOne, sensorTypeId, object, parameters, registeredSensorConfig);
 		averageTimerHook.beforeBody(methodIdTwo, sensorTypeId, object, parameters, registeredSensorConfig);
 
-		averageTimerHook.firstAfterBody(methodIdTwo, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		averageTimerHook.secondAfterBody(coreService, methodIdTwo, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodIdTwo, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodIdTwo, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		TimerData timerDataTwo = new TimerData();
 		timerDataTwo.setPlatformIdent(platformId);
 		timerDataTwo.setMethodIdent(methodIdTwo);
@@ -130,8 +130,8 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		timerDataTwo.calculateMin(thirdTimerValue - secondTimerValue);
 		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodIdTwo), (String) eq(null), argThat(new TimerDataVerifier(timerDataTwo)));
 
-		averageTimerHook.firstAfterBody(methodIdOne, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		averageTimerHook.secondAfterBody(coreService, methodIdOne, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodIdOne, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodIdOne, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		TimerData timerDataOne = new TimerData();
 		timerDataOne.setPlatformIdent(platformId);
 		timerDataOne.setMethodIdent(methodIdOne);
@@ -165,10 +165,10 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(1)).getCurrentTime();
 
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(2)).getCurrentTime();
 
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(platformManager).getPlatformId();
 		verify(coreService).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
@@ -187,11 +187,11 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(3)).getCurrentTime();
 
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(4)).getCurrentTime();
 
 		when(coreService.getMethodSensorData(sensorTypeId, methodId, null)).thenReturn(timerData);
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(coreService, times(2)).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig, times(2)).isPropertyAccess();
 
@@ -229,10 +229,10 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(1)).getCurrentTime();
 
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(2)).getCurrentTime();
 
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(platformManager).getPlatformId();
 		verify(coreService).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig).isPropertyAccess();
@@ -251,11 +251,11 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(3)).getCurrentTime();
 
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(4)).getCurrentTime();
 
 		when(coreService.getMethodSensorData(sensorTypeId, methodId, null)).thenReturn(timerData);
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(coreService, times(2)).getMethodSensorData(sensorTypeId, methodId, null);
 		verify(registeredSensorConfig, times(2)).isPropertyAccess();
 
@@ -330,11 +330,35 @@ public class AverageTimerHookTest extends AbstractLogSupport {
 		when(registeredSensorConfig.isPropertyAccess()).thenReturn(true);
 
 		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
-		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
-		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 
 		verify(registeredSensorConfig, times(1)).isPropertyAccess();
 		verify(propertyAccessor, times(1)).getParameterContentData(registeredSensorConfig.getPropertyAccessorList(), object, parameters, result);
+	}
+
+	@Test
+	public void propertyAccessException() {
+		// set up data
+		long platformId = 1L;
+		long methodId = 3L;
+		long sensorTypeId = 11L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[2];
+		Object result = mock(Object.class);
+
+		Double firstTimerValue = 1000.453d;
+		Double secondTimerValue = 1323.675d;
+
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+		when(registeredSensorConfig.isPropertyAccess()).thenReturn(true);
+
+		averageTimerHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
+		averageTimerHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, true, registeredSensorConfig);
+		averageTimerHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, true, registeredSensorConfig);
+
+		verifyZeroInteractions(propertyAccessor);
 	}
 
 }

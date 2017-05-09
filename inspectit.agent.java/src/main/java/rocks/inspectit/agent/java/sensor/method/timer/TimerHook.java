@@ -149,7 +149,7 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		timeStack.push(new Double(timer.getCurrentTime()));
 		if (enabled) {
 			threadCpuTimeStack.push(Long.valueOf(threadMXBean.getCurrentThreadCpuTime()));
@@ -160,7 +160,7 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) { // NOCHK:8-params
 		double endTime = timeStack.pop().doubleValue();
 		double startTime = timeStack.pop().doubleValue();
 		double duration = endTime - startTime;
@@ -176,7 +176,7 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 		List<ParameterContentData> parameterContentData = null;
 		String prefix = null;
 		// check if some properties need to be accessed and saved
-		if (rsc.isPropertyAccess()) {
+		if (!exception && rsc.isPropertyAccess()) {
 			parameterContentData = propertyAccessor.getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result);
 			prefix = parameterContentData.toString();
 
@@ -225,7 +225,7 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 			threadCpuTimeStack.push(Long.valueOf(threadMXBean.getCurrentThreadCpuTime()));
 		}
 		// just call the second after body method directly
-		secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, null, rsc);
+		secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, null, false, rsc);
 	}
 
 }

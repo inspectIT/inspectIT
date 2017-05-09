@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -67,6 +68,7 @@ public class RemoteServerHookTest extends TestBase {
 	@Test
 	public void happyPath() throws Exception {
 		// ids
+		boolean exception = RandomUtils.nextBoolean();
 		long platformId = 1l;
 		long methodId = 7l;
 		long sensorId = 13l;
@@ -76,7 +78,7 @@ public class RemoteServerHookTest extends TestBase {
 		// interceptor
 		Object[] parameters = new String[] { "blah", "bla" };
 		doReturn(requestAdapter).when(adapterProvider).getServerRequestAdapter(object, parameters, rsc);
-		doReturn(responseAdapter).when(adapterProvider).getServerResponseAdapter(object, parameters, result, rsc);
+		doReturn(responseAdapter).when(adapterProvider).getServerResponseAdapter(object, parameters, result, exception, rsc);
 
 		SpanContextImpl context = mock(SpanContextImpl.class);
 		when(context.getId()).thenReturn(spanId);
@@ -88,8 +90,8 @@ public class RemoteServerHookTest extends TestBase {
 
 		// execute calls
 		hook.beforeBody(methodId, sensorId, object, parameters, rsc);
-		hook.firstAfterBody(methodId, sensorId, object, parameters, result, rsc);
-		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, rsc);
+		hook.firstAfterBody(methodId, sensorId, object, parameters, result, exception, rsc);
+		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, exception, rsc);
 
 		ArgumentCaptor<ServerSpan> captor = ArgumentCaptor.forClass(ServerSpan.class);
 		verify(coreService).addMethodSensorData(eq(sensorId), eq(methodId), eq(String.valueOf(spanId)), captor.capture());
@@ -101,7 +103,7 @@ public class RemoteServerHookTest extends TestBase {
 		verify(serverInterceptor).handleRequest(requestAdapter);
 		verify(serverInterceptor).handleResponse(spanImpl, responseAdapter);
 		verify(adapterProvider).getServerRequestAdapter(object, parameters, rsc);
-		verify(adapterProvider).getServerResponseAdapter(object, parameters, result, rsc);
+		verify(adapterProvider).getServerResponseAdapter(object, parameters, result, exception, rsc);
 		verifyNoMoreInteractions(adapterProvider, serverInterceptor, coreService);
 	}
 
@@ -116,13 +118,13 @@ public class RemoteServerHookTest extends TestBase {
 		// interceptor
 		Object[] parameters = new String[] { "blah", "bla" };
 		doReturn(requestAdapter).when(adapterProvider).getServerRequestAdapter(object, parameters, rsc);
-		doReturn(responseAdapter).when(adapterProvider).getServerResponseAdapter(object, parameters, result, rsc);
+		doReturn(responseAdapter).when(adapterProvider).getServerResponseAdapter(object, parameters, result, false, rsc);
 		when(serverInterceptor.handleRequest(requestAdapter)).thenReturn(null);
 
 		// execute calls
 		hook.beforeBody(methodId, sensorId, object, parameters, rsc);
-		hook.firstAfterBody(methodId, sensorId, object, parameters, result, rsc);
-		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, rsc);
+		hook.firstAfterBody(methodId, sensorId, object, parameters, result, false, rsc);
+		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, false, rsc);
 
 		// verify timer, interceptor and adapters
 		verify(serverInterceptor).handleRequest(requestAdapter);
@@ -143,7 +145,7 @@ public class RemoteServerHookTest extends TestBase {
 		// interceptor
 		Object[] parameters = new String[] { "blah", "bla" };
 		doReturn(requestAdapter).when(adapterProvider).getServerRequestAdapter(object, parameters, rsc);
-		doReturn(responseAdapter).when(adapterProvider).getServerResponseAdapter(object, parameters, result, rsc);
+		doReturn(responseAdapter).when(adapterProvider).getServerResponseAdapter(object, parameters, result, false, rsc);
 
 		SpanContextImpl context = mock(SpanContextImpl.class);
 		when(context.getId()).thenReturn(spanId);
@@ -157,11 +159,11 @@ public class RemoteServerHookTest extends TestBase {
 		hook.beforeBody(methodId, sensorId, object, parameters, rsc);
 		// new call
 		hook.beforeBody(methodId, sensorId, object, parameters, rsc);
-		hook.firstAfterBody(methodId, sensorId, object, parameters, result, rsc);
-		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, rsc);
+		hook.firstAfterBody(methodId, sensorId, object, parameters, result, false, rsc);
+		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, false, rsc);
 		// end new call
-		hook.firstAfterBody(methodId, sensorId, object, parameters, result, rsc);
-		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, rsc);
+		hook.firstAfterBody(methodId, sensorId, object, parameters, result, false, rsc);
+		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, false, rsc);
 
 		ArgumentCaptor<ServerSpan> captor = ArgumentCaptor.forClass(ServerSpan.class);
 		verify(coreService).addMethodSensorData(eq(sensorId), eq(methodId), eq(String.valueOf(spanId)), captor.capture());
@@ -173,7 +175,7 @@ public class RemoteServerHookTest extends TestBase {
 		verify(serverInterceptor).handleRequest(requestAdapter);
 		verify(serverInterceptor).handleResponse(spanImpl, responseAdapter);
 		verify(adapterProvider).getServerRequestAdapter(object, parameters, rsc);
-		verify(adapterProvider).getServerResponseAdapter(object, parameters, result, rsc);
+		verify(adapterProvider).getServerResponseAdapter(object, parameters, result, false, rsc);
 		verifyNoMoreInteractions(adapterProvider, serverInterceptor, coreService);
 	}
 

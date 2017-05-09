@@ -84,6 +84,11 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 			dup();
 		}
 
+		// push two false booleans to denote no exception in the call
+		// swap in the middle so we have result - false - result - false on stack
+		push(false);
+		swap();
+		push(false);
 		// generate code for calling first and second
 		generateAfterBodyCall("dispatchFirstMethodAfterBody");
 		generateAfterBodyCall("dispatchSecondMethodAfterBody");
@@ -113,9 +118,14 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 		visitLabel(finallyHandler);
 
 		// generate code for calling first and second
-		// push nulls as we don't have a result
-		pushNull();
-		pushNull();
+		// push exception as we don't have a result
+		dup();
+		dup();
+		// push two true booleans to denote exception in the call
+		// swap in the middle so we have result - true - result - true on stack
+		push(true);
+		swap();
+		push(true);
 		generateAfterBodyCall("dispatchFirstMethodAfterBody");
 		generateAfterBodyCall("dispatchSecondMethodAfterBody");
 
@@ -155,17 +165,61 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 	 *
 	 * @param method
 	 *            method to be called can be only
-	 *            {@link IHookDispatcher#dispatchFirstMethodAfterBody(long, Object, Object[], Object)}
+	 *            {@link IHookDispatcher#dispatchFirstMethodAfterBody(long, Object, Object[], Object, boolean)}
 	 *            or
-	 *            {@link IHookDispatcher#dispatchSecondMethodAfterBody(long, Object, Object[], Object)}
+	 *            {@link IHookDispatcher#dispatchSecondMethodAfterBody(long, Object, Object[], Object, boolean)}
 	 */
 	private void generateAfterBodyCall(String method) {
 		// prepare for calls
-		// we expect result on stack so we must swap as result is last argument in the call
+		// we expect following stack: result - boolean (short r-b)
+		loadHookDispatcher();
+		// r-b-d
+		dupX2();
+		// d-r-b-d
+		pop();
+		// d-r-b
+
+		// push method id
+		push(methodId);
+		// method id is long, thus a bit of gymnastic
+		// d-r--b-l-l2
+		dup2X2();
+		// d-l-l2-r-b-l-l2
+		pop2();
+		// d-l-l2-r-b :)
+
+		// then this object or null if's static
+		if (isStatic) {
+			pushNull();
+		} else {
+			loadThis();
+		}
+		// same as for dispatcher
+		dupX2();
+		pop();
+
+		// then parameters
+		loadArgArray();
+		// same as for dispatcher
+		dupX2();
+		pop();
+
+		// execute after body
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, method, IInstrumenterConstant.DISPATCH_METHOD_AFTER_BODY_DESCRIPTOR, true);
+	}
+
+	/**
+	 * Generates call for
+	 * {@link IHookDispatcher#dispatchOnThrowInBody(long, Object, Object[], Object)}. This method
+	 * expects exception object on stack that can be consumed.
+	 */
+	private void generateThrowInBodyCall() {
+		// prepare for calls
+		// we expect result on stack only so we must swap as result is last argument in the call
 		loadHookDispatcher();
 		swap();
 
-		// first push method id
+		// push method id
 		push(methodId);
 		// can not just swap because method id is long, thus a bit of gymnastic
 		// r-l-l2
@@ -186,18 +240,8 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 		loadArgArray();
 		swap();
 
-		// execute after body
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, method, IInstrumenterConstant.DISPATCH_METHOD_AFTER_BODY_DESCRIPTOR, true);
-	}
-
-	/**
-	 * Generates call for
-	 * {@link IHookDispatcher#dispatchOnThrowInBody(long, Object, Object[], Object)}. This method
-	 * expects exception object on stack that can be consumed.
-	 */
-	private void generateThrowInBodyCall() {
-		// we can use same code for the after body call since method signature is same
-		generateAfterBodyCall("dispatchOnThrowInBody");
+		// execute dispatchOnThrowInBody
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchOnThrowInBody", IInstrumenterConstant.DISPATCH_ON_THROW_BODY_DESCRIPTOR, true);
 	}
 
 	/**

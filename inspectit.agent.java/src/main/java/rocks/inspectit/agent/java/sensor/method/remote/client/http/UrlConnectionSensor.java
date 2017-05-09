@@ -8,6 +8,7 @@ import rocks.inspectit.agent.java.sensor.method.remote.client.RemoteClientSensor
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
@@ -56,11 +57,17 @@ public class UrlConnectionSensor extends RemoteClientSensor implements ClientAda
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		Object urlConnection = object;
 		if ((urlConnection instanceof HttpURLConnection) && GET_INPUT_STREAM_METHOD.equals(rsc.getTargetMethodName())) {
 			HttpResponse response = new UrlConnectionHttpClientRequestResponse((HttpURLConnection) urlConnection);
-			return new HttpResponseAdapter(response);
+			HttpResponseAdapter adapter = new HttpResponseAdapter(response);
+			if (exception) {
+				// we can delegate as we don't depend on result
+				return new ThrowableAwareResponseAdapter(adapter, result.getClass().getSimpleName());
+			} else {
+				return adapter;
+			}
 		} else {
 			return null;
 		}

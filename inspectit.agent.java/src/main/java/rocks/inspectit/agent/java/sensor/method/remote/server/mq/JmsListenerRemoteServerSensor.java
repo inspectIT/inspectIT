@@ -7,6 +7,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.mq.MQRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.mq.data.impl.JmsMessage;
 
@@ -47,8 +48,12 @@ public class JmsListenerRemoteServerSensor extends RemoteServerSensor implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
-		return EmptyResponseAdapter.INSTANCE;
+	public ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
+		if (exception) {
+			return new ThrowableAwareResponseAdapter(result.getClass().getSimpleName());
+		} else {
+			return EmptyResponseAdapter.INSTANCE;
+		}
 	}
 
 }

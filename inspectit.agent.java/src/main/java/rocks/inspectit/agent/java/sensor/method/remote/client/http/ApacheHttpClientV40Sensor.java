@@ -6,7 +6,7 @@ import rocks.inspectit.agent.java.sensor.method.remote.client.RemoteClientSensor
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
@@ -44,15 +44,15 @@ public class ApacheHttpClientV40Sensor extends RemoteClientSensor implements Cli
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		// Apache HTTP response is result of method invocation
-		// in case of exceptions, result will be null, thus we can only use empty adapter
-		if (null != result) {
+		if (exception) {
+			// no delegation as we depend on result
+			return new ThrowableAwareResponseAdapter(result.getClass().getSimpleName());
+		} else {
 			Object httpResponse = result;
 			HttpResponse response = new ApacheHttpClientV40HttpResponse(httpResponse, CACHE);
 			return new HttpResponseAdapter(response);
-		} else {
-			return EmptyResponseAdapter.INSTANCE;
 		}
 	}
 

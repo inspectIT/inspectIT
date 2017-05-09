@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 import io.opentracing.References;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
+import io.opentracing.tag.Tags;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
@@ -158,11 +159,22 @@ public class JmsRemoteClientSensorTest extends TestBase {
 
 		@Test
 		public void empty() {
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, result, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, result, false, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(0));
 			verifyZeroInteractions(object, result, rsc);
+		}
+
+		@Test
+		public void exception() {
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, new NullPointerException(), true, rsc);
+
+			Map<String, String> tags = adapter.getTags();
+			assertThat(tags.size(), is(2));
+			assertThat(tags, hasEntry(Tags.ERROR.getKey(), String.valueOf(true)));
+			assertThat(tags, hasEntry(ExtraTags.THROWABLE_TYPE, NullPointerException.class.getSimpleName()));
+			verifyZeroInteractions(object, rsc);
 		}
 
 	}

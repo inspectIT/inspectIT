@@ -6,11 +6,10 @@ import rocks.inspectit.agent.java.sensor.method.remote.client.RemoteClientSensor
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.AsyncHttpClientRequestAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.AsyncHttpResponse;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.JettyHttpClientV61HttpClientRequest;
 
 /**
@@ -42,10 +41,14 @@ public class JettyHttpClientV61Sensor extends RemoteClientSensor implements Clie
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
-		// async client, empty response adapter
-		HttpResponse response = AsyncHttpResponse.INSTANCE;
-		return new HttpResponseAdapter(response);
+	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
+		// async client, empty response adapter with throwable check
+		if (exception) {
+			return new ThrowableAwareResponseAdapter(result.getClass().getSimpleName());
+		} else {
+			return EmptyResponseAdapter.INSTANCE;
+		}
+
 	}
 
 	/**
