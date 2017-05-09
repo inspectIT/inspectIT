@@ -28,6 +28,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
 /**
@@ -172,10 +173,25 @@ public class JavaHttpRemoteServerSensorTest extends TestBase {
 			int status = 200;
 			when(httpResponse.getStatus()).thenReturn(status);
 
-			ResponseAdapter adapter = sensor.getServerResponseAdapter(object, new Object[] { httpRequest, httpResponse }, null, rsc);
+			ResponseAdapter adapter = sensor.getServerResponseAdapter(object, new Object[] { httpRequest, httpResponse }, null, false, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
+			assertThat(tags, hasEntry(Tags.HTTP_STATUS.getKey(), String.valueOf(status)));
+			verifyZeroInteractions(object, rsc);
+		}
+
+		@Test
+		public void exception() {
+			int status = 200;
+			when(httpResponse.getStatus()).thenReturn(status);
+
+			ResponseAdapter adapter = sensor.getServerResponseAdapter(object, new Object[] { httpRequest, httpResponse }, new NullPointerException(), true, rsc);
+
+			Map<String, String> tags = adapter.getTags();
+			assertThat(tags.size(), is(3));
+			assertThat(tags, hasEntry(Tags.ERROR.getKey(), String.valueOf(true)));
+			assertThat(tags, hasEntry(ExtraTags.THROWABLE_TYPE, NullPointerException.class.getSimpleName()));
 			assertThat(tags, hasEntry(Tags.HTTP_STATUS.getKey(), String.valueOf(status)));
 			verifyZeroInteractions(object, rsc);
 		}

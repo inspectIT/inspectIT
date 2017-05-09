@@ -23,6 +23,7 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
 /**
@@ -144,11 +145,13 @@ public class ApacheHttpClientV40SensorTest extends TestBase {
 		StatusLine statusLine;
 
 		@Test
-		public void responseNull() {
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, null, rsc);
+		public void exception() {
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, new NullPointerException(), true, rsc);
 
 			Map<String, String> tags = adapter.getTags();
-			assertThat(tags.size(), is(0));
+			assertThat(tags.size(), is(2));
+			assertThat(tags, hasEntry(Tags.ERROR.getKey(), String.valueOf(true)));
+			assertThat(tags, hasEntry(ExtraTags.THROWABLE_TYPE, NullPointerException.class.getSimpleName()));
 			verifyZeroInteractions(object, rsc);
 		}
 
@@ -158,7 +161,7 @@ public class ApacheHttpClientV40SensorTest extends TestBase {
 			when(statusLine.getStatusCode()).thenReturn(status);
 			when(httpResponse.getStatusLine()).thenReturn(statusLine);
 
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, httpResponse, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, httpResponse, false, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
@@ -170,7 +173,7 @@ public class ApacheHttpClientV40SensorTest extends TestBase {
 		public void statusNullStatusLine() {
 			when(httpResponse.getStatusLine()).thenReturn(null);
 
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, httpResponse, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, httpResponse, false, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(0));

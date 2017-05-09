@@ -30,12 +30,16 @@ public interface IPropertyAccessor {
 	 *            The method parameters (can be <code>null</code>).
 	 * @param returnValue
 	 *            The return value of the method.
+	 * @param exception
+	 *            If method exited as result of exception. If <code>true</code> then the returnValue
+	 *            parameter will be the exception and not the return value of the method execution
+	 *            as such does not exist.
 	 * @return The {@link String} representation of the field or parameter followed by the path.
 	 * @throws PropertyAccessException
 	 *             This exception is thrown whenever something unexpectedly happens while accessing
 	 *             a property.
 	 */
-	String getPropertyContent(PropertyPathStart propertyPathStart, Object clazz, Object[] parameters, Object returnValue) throws PropertyAccessException;
+	String getPropertyContent(PropertyPathStart propertyPathStart, Object clazz, Object[] parameters, Object returnValue, boolean exception) throws PropertyAccessException;
 
 	/**
 	 * Converts the list of property accessors {@link PropertyPathStart} into a list of
@@ -49,8 +53,12 @@ public interface IPropertyAccessor {
 	 *            The parameters.
 	 * @param returnValue
 	 *            The return value of the method.
+	 * @param exception
+	 *            If method exited as result of exception. If <code>true</code> then the returnValue
+	 *            parameter will be the exception and not the return value of the method execution
+	 *            as such does not exist.
 	 * @return The list of {@link ParameterContentData}.
 	 */
-	List<ParameterContentData> getParameterContentData(List<PropertyPathStart> propertyAccessorList, Object clazz, Object[] parameters, Object returnValue);
+	List<ParameterContentData> getParameterContentData(List<PropertyPathStart> propertyAccessorList, Object clazz, Object[] parameters, Object returnValue, boolean exception);
 
 }

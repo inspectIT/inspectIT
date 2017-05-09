@@ -21,7 +21,7 @@ import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
  * The hook is the default implementation of remote server. The hook works with the
  * {@link ServerInterceptor} in order to correctly handle server request start in the
  * {@link #beforeBody(long, long, Object, Object[], RegisteredSensorConfig)} and request end in the
- * {@link #secondAfterBody(ICoreService, long, long, Object, Object[], Object, RegisteredSensorConfig)}.
+ * {@link #secondAfterBody(ICoreService, long, long, Object, Object[], Object, boolean, RegisteredSensorConfig)}.
  * <p>
  * This hook measures also measures execution time.
  * <p>
@@ -109,7 +109,7 @@ public class RemoteServerHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		REF_MARKER.markEndCall();
 	}
 
@@ -117,7 +117,7 @@ public class RemoteServerHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {// NOCHK:8-params
 		// check if in the right(first) invocation
 		if (REF_MARKER.isMarkerSet() && REF_MARKER.matchesFirst()) {
 			// call ended, remove the marker.
@@ -129,7 +129,7 @@ public class RemoteServerHook implements IMethodHook {
 
 			if (null != span) {
 				// get requestAdapter and handle
-				ResponseAdapter responseAdapter = serverAdapterProvider.getServerResponseAdapter(object, parameters, result, rsc);
+				ResponseAdapter responseAdapter = serverAdapterProvider.getServerResponseAdapter(object, parameters, result, exception, rsc);
 				serverInterceptor.handleResponse(span, responseAdapter);
 
 				if (LOG.isDebugEnabled()) {

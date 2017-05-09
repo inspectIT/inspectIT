@@ -32,7 +32,7 @@ public interface IMethodHook extends IHook {
 	 * after body calls. It is important that a hook, implementing this method, just adds time or
 	 * memory critical settings. Everything else, including computing or adding values to the value
 	 * storage has to be added to the
-	 * {@link #secondAfterBody(ICoreService, int, String, Object, Object[], Object, RegisteredSensorConfig)}
+	 * {@link #secondAfterBody(ICoreService, int, String, Object, Object[], Object, boolean, RegisteredSensorConfig)}
 	 * implementation.
 	 *
 	 * @param methodId
@@ -44,12 +44,16 @@ public interface IMethodHook extends IHook {
 	 * @param parameters
 	 *            The parameters of the method call.
 	 * @param result
-	 *            The return value
+	 *            The return value of the method or exception thrown by method.
+	 * @param exception
+	 *            If method exited as result of exception. If <code>true</code> then the returnValue
+	 *            parameter will be the exception and not the return value of the method execution
+	 *            as such does not exist.
 	 * @param rsc
 	 *            The {@link RegisteredSensorConfig} object which holds all the information of the
 	 *            executed method.
 	 */
-	void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc);
+	void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc);
 
 	/**
 	 * This method will be called before the original method will return. It is the second of two
@@ -66,10 +70,14 @@ public interface IMethodHook extends IHook {
 	 * @param parameters
 	 *            The parameters of the method call.
 	 * @param result
-	 *            The return value
+	 *            The return value of the method or exception thrown by method.
+	 * @param exception
+	 *            If method exited as result of exception. If <code>true</code> then the returnValue
+	 *            parameter will be the exception and not the return value of the method execution
+	 *            as such does not exist.
 	 * @param rsc
 	 *            The {@link RegisteredSensorConfig} object which holds all the information of the
 	 *            executed method.
 	 */
-	void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc);
+	void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc); // NOCHK:8-params
 }

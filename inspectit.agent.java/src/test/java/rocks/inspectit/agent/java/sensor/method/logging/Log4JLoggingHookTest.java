@@ -77,7 +77,7 @@ public class Log4JLoggingHookTest extends AbstractLogSupport {
 		params[2] = loggingMessage;
 		params[3] = null;
 
-		hook.secondAfterBody(coreService, methodId, sensorTypeId, null, params, null, rsc);
+		hook.secondAfterBody(coreService, methodId, sensorTypeId, null, params, null, false, rsc);
 
 		LoggingData loggingData = new LoggingData(logThisLevel.toString(), loggingMessage);
 		loggingData.setMethodIdent(methodId);

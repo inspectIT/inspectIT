@@ -35,11 +35,15 @@ public interface ServerAdapterProvider {
 	 * @param parameters
 	 *            Method invocation parameters.
 	 * @param result
-	 *            Result of the method invocation.
+	 *            The result of method invocation or exception thrown by method.
+	 * @param exception
+	 *            If method exited as result of exception. If <code>true</code> then the returnValue
+	 *            parameter will be the exception and not the return value of the method execution
+	 *            as such does not exist.
 	 * @param rsc
 	 *            {@link RegisteredSensorConfig}.
 	 * @return {@link ClientRequestAdapter}.
 	 */
-	ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc);
+	ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc);
 
 }

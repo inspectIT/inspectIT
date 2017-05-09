@@ -140,8 +140,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		SqlStatementData sqlStatementData = new SqlStatementData();
 		invocationSequenceHook.addMethodSensorData(0, 0, "", timerData);
 		invocationSequenceHook.addMethodSensorData(0, 0, "", sqlStatementData);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(2)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -189,8 +189,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		ClientSpan clientSpan = new ClientSpan();
 		clientSpan.setSpanIdent(spanIdent);
 		invocationSequenceHook.addMethodSensorData(0, 0, "", clientSpan);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(2)).getCurrentTime();
 		verify(realCoreService, times(1)).addMethodSensorData(0, 0, "", clientSpan);
@@ -236,8 +236,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
 
 		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(2)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -282,10 +282,10 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -338,10 +338,10 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -394,8 +394,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
 
 		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(2)).getCurrentTime();
 		verifyZeroInteractions(coreService);
@@ -404,8 +404,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		when(timer.getCurrentTime()).thenReturn(firstTimerValue, secondTimerValue);
 
 		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
 		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), Matchers.<InvocationSequenceData> anyObject());
@@ -447,12 +447,12 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
 		invocationSequenceHook.beforeBody(methodId3, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId3, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId3, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId3, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId3, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(5)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -507,10 +507,10 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -562,10 +562,10 @@ public class InvocationSequenceHookTest extends TestBase {
 		ExceptionSensorData exceptionData = new ExceptionSensorData();
 		invocationSequenceHook.addExceptionSensorData(0, 0, exceptionData);
 
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -621,10 +621,10 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -677,10 +677,10 @@ public class InvocationSequenceHookTest extends TestBase {
 		sqlStatementData.setCount(1L);
 		invocationSequenceHook.addMethodSensorData(0, 0, "", sqlStatementData);
 
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -736,10 +736,10 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -791,10 +791,10 @@ public class InvocationSequenceHookTest extends TestBase {
 		LoggingData loggingData = new LoggingData();
 		invocationSequenceHook.addMethodSensorData(0, 0, "", loggingData);
 
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -818,6 +818,56 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getLoggingData(), is(loggingData));
 
 		verifyZeroInteractions(realCoreService);
+	}
+
+	@Test
+	public void propertyAccess() {
+		// set up data
+		long platformId = 1L;
+		long methodId = 3L;
+		long sensorTypeId = 11L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[2];
+		Object result = mock(Object.class);
+
+		Double firstTimerValue = 1000.453d;
+		Double secondTimerValue = 1323.675d;
+
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+		when(rsc.isPropertyAccess()).thenReturn(true);
+
+		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
+
+		verify(rsc, times(1)).isPropertyAccess();
+		verify(propertyAccessor, times(1)).getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result, false);
+	}
+
+	@Test
+	public void propertyAccessException() {
+		// set up data
+		long platformId = 1L;
+		long methodId = 3L;
+		long sensorTypeId = 11L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[2];
+		Object result = mock(Object.class);
+
+		Double firstTimerValue = 1000.453d;
+		Double secondTimerValue = 1323.675d;
+
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue).thenReturn(secondTimerValue);
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+		when(rsc.isPropertyAccess()).thenReturn(true);
+
+		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, true, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, true, rsc);
+
+		verify(rsc, times(1)).isPropertyAccess();
+		verify(propertyAccessor, times(1)).getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result, true);
 	}
 
 	/**
@@ -850,10 +900,10 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -907,10 +957,10 @@ public class InvocationSequenceHookTest extends TestBase {
 		span.setSpanIdent(new SpanIdent(1, 2, 3));
 		invocationSequenceHook.addMethodSensorData(0, 0, null, span);
 
-		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
-		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
@@ -958,8 +1008,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		when(methodSensor.getSensorTypeConfig()).thenReturn(sensorConfig);
 
 		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verifyZeroInteractions(timer, coreService, realCoreService);
 	}
@@ -997,8 +1047,8 @@ public class InvocationSequenceHookTest extends TestBase {
 		when(methodSensor.getSensorTypeConfig()).thenReturn(sensorConfig);
 
 		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
-		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, rsc);
-		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verifyZeroInteractions(timer, coreService, realCoreService);
 	}

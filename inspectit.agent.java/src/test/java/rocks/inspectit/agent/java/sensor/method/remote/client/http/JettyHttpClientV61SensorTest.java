@@ -23,6 +23,7 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
 /**
@@ -211,10 +212,21 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 
 		@Test
 		public void empty() {
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, result, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, result, false, rsc);
 
 			assertThat(adapter, is(not(nullValue())));
 			assertThat(adapter.getTags().size(), is(0));
+			verifyZeroInteractions(object, rsc);
+		}
+
+		@Test
+		public void exception() {
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, new NullPointerException(), true, rsc);
+
+			Map<String, String> tags = adapter.getTags();
+			assertThat(tags.size(), is(2));
+			assertThat(tags, hasEntry(Tags.ERROR.getKey(), String.valueOf(true)));
+			assertThat(tags, hasEntry(ExtraTags.THROWABLE_TYPE, NullPointerException.class.getSimpleName()));
 			verifyZeroInteractions(object, rsc);
 		}
 
