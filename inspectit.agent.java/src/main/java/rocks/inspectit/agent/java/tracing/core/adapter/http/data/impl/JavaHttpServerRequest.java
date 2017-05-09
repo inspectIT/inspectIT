@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import io.opentracing.SpanContext;
+import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
 import rocks.inspectit.agent.java.util.ReflectionCache;
 
@@ -18,7 +20,7 @@ import rocks.inspectit.agent.java.util.ReflectionCache;
  * @author Ivan Senic
  *
  */
-public class JavaHttpServerRequest implements HttpRequest {
+public class JavaHttpServerRequest implements HttpRequest, SpanContextStore {
 
 	/**
 	 * FQN constant of the javax.servlet.HttpServletRequest.
@@ -106,6 +108,24 @@ public class JavaHttpServerRequest implements HttpRequest {
 	@Override
 	public void put(String key, String value) {
 		throw new UnsupportedOperationException("Server request does not provide option to put baggage.");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setSpanContext(SpanContext spanContext) {
+		cache.invokeMethod(httpServletRequest.getClass(), "setAttribute", new Class<?>[] { String.class, Object.class }, httpServletRequest,
+				new Object[] { SpanContextStore.Constants.ID, spanContext }, null, JAVAX_SERVLET_HTTP_SERVLET_REQUEST_CLASS);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SpanContext getSpanContext() {
+		return (SpanContext) cache.invokeMethod(httpServletRequest.getClass(), "getAttribute", new Class<?>[] { String.class }, httpServletRequest, new Object[] { SpanContextStore.Constants.ID },
+				null, JAVAX_SERVLET_HTTP_SERVLET_REQUEST_CLASS);
 	}
 
 }

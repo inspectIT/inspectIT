@@ -106,17 +106,19 @@ public class SpanBuilderImpl implements SpanBuilder {
 	 */
 	@Override
 	public SpanBuilderImpl addReference(String referenceType, SpanContext referencedContext) {
-		if (References.CHILD_OF.equals(referenceType) || References.FOLLOWS_FROM.equals(referenceType)) {
-			// we will set the main parent only if it's not set already
-			if ((null == parent) && (referencedContext instanceof SpanContextImpl)) {
-				this.parent = (SpanContextImpl) referencedContext;
-				this.referenceType = referenceType;
-			}
+		if (null != referencedContext) {
+			if (References.CHILD_OF.equals(referenceType) || References.FOLLOWS_FROM.equals(referenceType)) {
+				// we will set the main parent only if it's not set already
+				if ((null == parent) && (referencedContext instanceof SpanContextImpl)) {
+					this.parent = (SpanContextImpl) referencedContext;
+					this.referenceType = referenceType;
+				}
 
+			}
+			// for now we only directly reference one parent, but collect baggage from all
+			// reference contexts
+			withBaggageFrom(referencedContext);
 		}
-		// for now we only directly reference one parent, but collect baggage from all
-		// reference contexts
-		withBaggageFrom(referencedContext);
 
 		return this;
 	}
