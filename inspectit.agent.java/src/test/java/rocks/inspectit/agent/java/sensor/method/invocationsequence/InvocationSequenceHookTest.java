@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -40,6 +41,14 @@ import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor;
 import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.ApacheHttpClientV40Sensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.JettyHttpClientV61Sensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.SpringRestTemplateClientSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.UrlConnectionSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.mq.JmsRemoteClientSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.server.http.JavaHttpRemoteServerSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.server.manual.ManualRemoteServerSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.server.mq.JmsListenerRemoteServerSensor;
 import rocks.inspectit.agent.java.tracing.core.transformer.SpanContextTransformer;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
@@ -49,6 +58,7 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
 import rocks.inspectit.shared.all.tracing.data.ClientSpan;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
@@ -811,6 +821,124 @@ public class InvocationSequenceHookTest extends TestBase {
 	}
 
 	/**
+	 * Removing done due to the not captured span ident.
+	 */
+	@Test(dataProvider = "remoteSensors")
+	public void removeRemoteIgnored(Class<? extends ISensor> sensorClass) {
+		long platformId = 1L;
+		long methodId1 = 3L;
+		long sensorTypeId = 11L;
+		long methodId2 = 23L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[0];
+		Object result = mock(Object.class);
+
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+
+		double firstTimerValue = 1000.0d;
+		double secondTimerValue = 1323.0d;
+		double thirdTimerValue = 1881.0d;
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue, secondTimerValue, thirdTimerValue);
+
+		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
+		MethodSensorTypeConfig remoteSensorConfig = mock(MethodSensorTypeConfig.class);
+		when(remoteSensorConfig.getClassName()).thenReturn(sensorClass.getName());
+
+		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
+		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
+		when(methodSensor.getSensorTypeConfig()).thenReturn(remoteSensorConfig);
+
+		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
+		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+
+		verify(timer, times(3)).getCurrentTime();
+		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+
+		InvocationSequenceData invocation = captor.getValue();
+		assertThat(invocation.getPlatformIdent(), is(platformId));
+		assertThat(invocation.getMethodIdent(), is(methodId1));
+		assertThat(invocation.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(invocation.getDuration(), is(thirdTimerValue - firstTimerValue));
+		assertThat(invocation.getNestedSequences(), hasSize(0));
+		assertThat(invocation.getChildCount(), is(0L));
+		assertThat(invocation.getSpanIdent(), is(nullValue()));
+
+
+		verifyZeroInteractions(realCoreService);
+	}
+
+	/**
+	 * No removing done due to the captured span ident.
+	 */
+	@Test(dataProvider = "remoteSensors")
+	public void noRemoveRemoteSpan(Class<? extends ISensor> sensorClass) {
+		long platformId = 1L;
+		long methodId1 = 3L;
+		long sensorTypeId = 11L;
+		long methodId2 = 23L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[0];
+		Object result = mock(Object.class);
+
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+
+		double firstTimerValue = 1000.0d;
+		double secondTimerValue = 1323.0d;
+		double thirdTimerValue = 1881.0d;
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue, secondTimerValue, thirdTimerValue);
+
+		RegisteredSensorConfig removingRsc = mock(RegisteredSensorConfig.class);
+		MethodSensorTypeConfig remoteSensorConfig = mock(MethodSensorTypeConfig.class);
+		when(remoteSensorConfig.getClassName()).thenReturn(sensorClass.getName());
+
+		when(rsc.getMethodSensors()).thenReturn(Collections.<IMethodSensor> emptyList());
+		when(removingRsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
+		when(methodSensor.getSensorTypeConfig()).thenReturn(remoteSensorConfig);
+
+		invocationSequenceHook.beforeBody(methodId1, sensorTypeId, object, parameters, rsc);
+		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
+
+		AbstractSpan span = new ClientSpan();
+		span.setSpanIdent(new SpanIdent(1, 2, 3));
+		invocationSequenceHook.addMethodSensorData(0, 0, null, span);
+
+		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, removingRsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, removingRsc);
+		invocationSequenceHook.firstAfterBody(methodId1, sensorTypeId, object, parameters, result, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId1, sensorTypeId, object, parameters, result, rsc);
+
+		verify(timer, times(4)).getCurrentTime();
+		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+
+		InvocationSequenceData invocation = captor.getValue();
+		assertThat(invocation.getPlatformIdent(), is(platformId));
+		assertThat(invocation.getMethodIdent(), is(methodId1));
+		assertThat(invocation.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(invocation.getDuration(), is(thirdTimerValue - firstTimerValue));
+		assertThat(invocation.getNestedSequences(), hasSize(1));
+		assertThat(invocation.getChildCount(), is(1L));
+		assertThat(invocation.getSpanIdent(), is(nullValue()));
+		InvocationSequenceData child = invocation.getNestedSequences().iterator().next();
+		assertThat(child.getPlatformIdent(), is(platformId));
+		assertThat(child.getMethodIdent(), is(methodId2));
+		assertThat(child.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(child.getDuration(), is(thirdTimerValue - secondTimerValue));
+		assertThat(child.getNestedSequences(), is(empty()));
+		assertThat(child.getParentSequence(), is(invocation));
+		assertThat(child.getChildCount(), is(0L));
+		assertThat(child.getSpanIdent(), is(not(nullValue())));
+
+		verify(realCoreService).addMethodSensorData(0, 0, null, span);
+		verifyNoMoreInteractions(realCoreService);
+	}
+
+	/**
 	 * Tests that skip is activated when certain sensor is only defined in the
 	 * {@link RegisteredSensorConfig}.
 	 *
@@ -878,5 +1006,11 @@ public class InvocationSequenceHookTest extends TestBase {
 	@DataProvider(name = "skippingSensors")
 	public Object[][] skippingSensors() {
 		return new Object[][] { { ConnectionSensor.class }, { PreparedStatementParameterSensor.class } };
+	}
+
+	@DataProvider(name = "remoteSensors")
+	public Object[][] remoteSensors() {
+		return new Object[][] { { ApacheHttpClientV40Sensor.class }, { JettyHttpClientV61Sensor.class }, { UrlConnectionSensor.class }, { SpringRestTemplateClientSensor.class },
+			{ JmsRemoteClientSensor.class }, { JavaHttpRemoteServerSensor.class }, { JmsListenerRemoteServerSensor.class }, { ManualRemoteServerSensor.class } };
 	}
 }
