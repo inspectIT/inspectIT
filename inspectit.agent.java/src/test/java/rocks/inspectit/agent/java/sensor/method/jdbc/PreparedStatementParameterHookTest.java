@@ -59,8 +59,8 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 		Object object = new Object();
 
 		preparedStatementParameterHook.beforeBody(0, 0, object, parameters, rsc);
-		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, rsc);
-		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, rsc);
+		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, false, rsc);
+		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, false, rsc);
 
 		Mockito.verify(statementStorage, Mockito.times(1)).addParameter(object, 0, "Value");
 		Mockito.verifyNoMoreInteractions(statementStorage);
@@ -83,8 +83,8 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 		Object object = new Object();
 
 		preparedStatementParameterHook.beforeBody(0, 0, object, parameters, rsc);
-		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, rsc);
-		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, rsc);
+		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, false, rsc);
+		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, false, rsc);
 
 		Mockito.verifyZeroInteractions(statementStorage);
 		Mockito.verifyZeroInteractions(coreService);
@@ -107,8 +107,8 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 		Object object = new Object();
 
 		preparedStatementParameterHook.beforeBody(0, 0, object, parameters, rsc);
-		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, rsc);
-		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, rsc);
+		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, false, rsc);
+		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, false, rsc);
 
 		Mockito.verifyZeroInteractions(statementStorage);
 		Mockito.verifyZeroInteractions(coreService);
@@ -132,8 +132,8 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 		Object object = new Object();
 
 		preparedStatementParameterHook.beforeBody(0, 0, object, parameters, rsc);
-		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, rsc);
-		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, rsc);
+		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, false, rsc);
+		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, false, rsc);
 
 		Mockito.verify(statementStorage, Mockito.times(1)).addParameter(object, 0, null);
 		Mockito.verifyNoMoreInteractions(statementStorage);
@@ -156,8 +156,8 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 		Object object = new Object();
 
 		preparedStatementParameterHook.beforeBody(0, 0, object, parameters, rsc);
-		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, rsc);
-		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, rsc);
+		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, false, rsc);
+		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, false, rsc);
 
 		Mockito.verify(statementStorage, Mockito.times(1)).clearParameters(object);
 		Mockito.verifyNoMoreInteractions(statementStorage);
@@ -185,8 +185,8 @@ public class PreparedStatementParameterHookTest extends AbstractLogSupport {
 		Object object = new Object();
 
 		preparedStatementParameterHook.beforeBody(0, 0, object, parameters, rsc);
-		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, rsc);
-		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, rsc);
+		preparedStatementParameterHook.firstAfterBody(0, 0, object, parameters, null, false, rsc);
+		preparedStatementParameterHook.secondAfterBody(coreService, 0, 0, object, parameters, null, false, rsc);
 
 		String expected = "[" + methodName.substring("set".length()) + "]";
 		Mockito.verify(statementStorage, Mockito.times(1)).addParameter(object, 0, expected);

@@ -220,7 +220,7 @@ public class HttpHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 
 		// no invocation marked -> skip
 		if (!refMarker.isMarkerSet()) {
@@ -243,7 +243,7 @@ public class HttpHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) { // NOCHK:8-params
 
 		// check if in the right(first) invocation
 		if (refMarker.isMarkerSet() && refMarker.matchesFirst()) {

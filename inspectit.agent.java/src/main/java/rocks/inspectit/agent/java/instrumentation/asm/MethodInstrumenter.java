@@ -84,9 +84,10 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 			dup();
 		}
 
+		// add two false booleans to denote no exception in the call
 		// generate code for calling first and second
-		generateAfterBodyCall("dispatchFirstMethodAfterBody");
-		generateAfterBodyCall("dispatchSecondMethodAfterBody");
+		generateAfterBodyCall("dispatchFirstMethodAfterBody", false);
+		generateAfterBodyCall("dispatchSecondMethodAfterBody", false);
 	}
 
 	/**
@@ -113,11 +114,12 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 		visitLabel(finallyHandler);
 
 		// generate code for calling first and second
-		// push nulls as we don't have a result
-		pushNull();
-		pushNull();
-		generateAfterBodyCall("dispatchFirstMethodAfterBody");
-		generateAfterBodyCall("dispatchSecondMethodAfterBody");
+		// push exception as we don't have a result
+		dup();
+		dup();
+		// add true booleans to denote exception in the call
+		generateAfterBodyCall("dispatchFirstMethodAfterBody", true);
+		generateAfterBodyCall("dispatchSecondMethodAfterBody", true);
 
 		mv.visitInsn(ATHROW);
 
@@ -155,24 +157,58 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 	 *
 	 * @param method
 	 *            method to be called can be only
-	 *            {@link IHookDispatcher#dispatchFirstMethodAfterBody(long, Object, Object[], Object)}
+	 *            {@link IHookDispatcher#dispatchFirstMethodAfterBody(long, Object, Object[], Object, boolean)}
 	 *            or
-	 *            {@link IHookDispatcher#dispatchSecondMethodAfterBody(long, Object, Object[], Object)}
+	 *            {@link IHookDispatcher#dispatchSecondMethodAfterBody(long, Object, Object[], Object, boolean)}
+	 * @param exception
+	 *            Value of the exception argument pass to the dispatcher.
 	 */
-	private void generateAfterBodyCall(String method) {
-		// prepare for calls
-		// we expect result on stack so we must swap as result is last argument in the call
-		loadHookDispatcher();
-		swap();
+	private void generateAfterBodyCall(String method, boolean exception) {
+		// prepare first everything up to exception boolean
+		prepareAfterBodyCall();
 
-		// first push method id
+		// then push on stack info about exception
+		push(exception);
+
+		// execute after body
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, method, IInstrumenterConstant.DISPATCH_METHOD_AFTER_BODY_DESCRIPTOR, true);
+	}
+
+	/**
+	 * Generates call for
+	 * {@link IHookDispatcher#dispatchOnThrowInBody(long, Object, Object[], Object)}. This method
+	 * expects exception object on stack that can be consumed.
+	 */
+	private void generateThrowInBodyCall() {
+		// we can use same code for the after body call since method signature is same (without
+		// exception)
+		prepareAfterBodyCall();
+
+		// execute dispatchOnThrowInBody
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, "dispatchOnThrowInBody", IInstrumenterConstant.DISPATCH_ON_THROW_BODY_DESCRIPTOR, true);
+	}
+
+	/**
+	 * Prepares the afterBody or throwInBody calls by loading dispatcher, methodId, object and
+	 * parameters to the stack. This method excepts result on stack (result will remain first on
+	 * stack).
+	 */
+	private void prepareAfterBodyCall() {
+		// prepare for calls
+		// we expect following stack: result (short r)
+		loadHookDispatcher();
+		// r-d
+		swap();
+		// d-r
+
+		// push method id
 		push(methodId);
 		// can not just swap because method id is long, thus a bit of gymnastic
-		// r-l-l2
+		// d-r-l-l
 		dup2X1();
-		// l-l2-r-l-l2
+		// d-l-l-r-l-l2
 		pop2();
-		// l-l2-r :)
+		// d-l-l-r :)
 
 		// then this object or null if's static
 		if (isStatic) {
@@ -185,19 +221,6 @@ public class MethodInstrumenter extends AbstractMethodInstrumenter {
 		// then parameters
 		loadArgArray();
 		swap();
-
-		// execute after body
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, IInstrumenterConstant.IHOOK_DISPATCHER_INTERNAL_NAME, method, IInstrumenterConstant.DISPATCH_METHOD_AFTER_BODY_DESCRIPTOR, true);
-	}
-
-	/**
-	 * Generates call for
-	 * {@link IHookDispatcher#dispatchOnThrowInBody(long, Object, Object[], Object)}. This method
-	 * expects exception object on stack that can be consumed.
-	 */
-	private void generateThrowInBodyCall() {
-		// we can use same code for the after body call since method signature is same
-		generateAfterBodyCall("dispatchOnThrowInBody");
 	}
 
 	/**

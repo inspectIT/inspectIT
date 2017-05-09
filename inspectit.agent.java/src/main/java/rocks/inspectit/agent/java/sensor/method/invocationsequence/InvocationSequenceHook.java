@@ -226,7 +226,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		if (skip(rsc)) {
 			return;
 		}
@@ -249,7 +249,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) { // NOCHK:8-params
 		if (skip(rsc)) {
 			return;
 		}
@@ -259,7 +259,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 		if (null != invocationSequenceData) {
 			// check if some properties need to be accessed and saved
 			if (rsc.isPropertyAccess()) {
-				List<ParameterContentData> parameterContentData = propertyAccessor.getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result);
+				List<ParameterContentData> parameterContentData = propertyAccessor.getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result, exception);
 
 				// crop the content strings of all ParameterContentData
 				for (ParameterContentData contentData : parameterContentData) {
@@ -484,8 +484,8 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 */
 	@Override
 	public void afterConstructor(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
-		firstAfterBody(methodId, sensorTypeId, object, parameters, null, rsc);
-		secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, null, rsc);
+		firstAfterBody(methodId, sensorTypeId, object, parameters, null, false, rsc);
+		secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, null, false, rsc);
 	}
 
 	/**

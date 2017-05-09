@@ -84,7 +84,7 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		timeStack.push(new Double(timer.getCurrentTime()));
 	}
 
@@ -92,7 +92,7 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) { // NOCHK:8-params
 		double endTime = timeStack.pop().doubleValue();
 		double startTime = timeStack.pop().doubleValue();
 		double duration = endTime - startTime;
@@ -100,8 +100,9 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 		List<ParameterContentData> parameterContentData = null;
 		String prefix = null;
 		// check if some properties need to be accessed and saved
+		// not in case of exception thrown
 		if (rsc.isPropertyAccess()) {
-			parameterContentData = propertyAccessor.getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result);
+			parameterContentData = propertyAccessor.getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result, exception);
 			prefix = parameterContentData.toString();
 
 			// crop the content strings of all ParameterContentData but leave the prefix as it is
@@ -148,7 +149,7 @@ public class AverageTimerHook implements IMethodHook, IConstructorHook {
 	@Override
 	public void afterConstructor(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		timeStack.push(new Double(timer.getCurrentTime()));
-		secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, null, rsc);
+		secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, null, false, rsc);
 	}
 
 }

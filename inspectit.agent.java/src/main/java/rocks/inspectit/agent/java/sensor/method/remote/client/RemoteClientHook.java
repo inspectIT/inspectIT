@@ -20,7 +20,7 @@ import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
  * The hook is the default implementation of remote client. The hook works with the
  * {@link ClientInterceptor} in order to correctly handle client request start in the
  * {@link #beforeBody(long, long, Object, Object[], RegisteredSensorConfig)} and request end in the
- * {@link #secondAfterBody(ICoreService, long, long, Object, Object[], Object, RegisteredSensorConfig)}.
+ * {@link #secondAfterBody(ICoreService, long, long, Object, Object[], Object, boolean, RegisteredSensorConfig)}.
  * <p>
  * This hook measures also measures execution time.
  * <p>
@@ -110,7 +110,7 @@ public class RemoteClientHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		REF_MARKER.markEndCall();
 	}
 
@@ -118,7 +118,7 @@ public class RemoteClientHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) { // NOCHK:8-params
 		// check if in the right(first) invocation
 		if (REF_MARKER.isMarkerSet() && REF_MARKER.matchesFirst()) {
 			// call ended, remove the marker.
@@ -129,7 +129,7 @@ public class RemoteClientHook implements IMethodHook {
 
 			if (null != span) {
 				// get requestAdapter
-				ResponseAdapter adapter = clientAdapterProvider.getClientResponseAdapter(object, parameters, result, rsc);
+				ResponseAdapter adapter = clientAdapterProvider.getClientResponseAdapter(object, parameters, result, exception, rsc);
 				// only handle if request adapter is provided
 				if (null != adapter) {
 					clientInterceptor.handleResponse(span, adapter);

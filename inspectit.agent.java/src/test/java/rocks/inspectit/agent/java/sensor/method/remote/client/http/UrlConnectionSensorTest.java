@@ -29,6 +29,7 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
 /**
@@ -153,7 +154,7 @@ public class UrlConnectionSensorTest extends TestBase {
 			when(urlConnection.getResponseCode()).thenReturn(status);
 			when(rsc.getTargetMethodName()).thenReturn("getInputStream");
 
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(urlConnection, null, result, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(urlConnection, null, result, false, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
@@ -168,7 +169,7 @@ public class UrlConnectionSensorTest extends TestBase {
 			when(urlConnection.getResponseCode()).thenThrow(new IOException());
 			when(rsc.getTargetMethodName()).thenReturn("getInputStream");
 
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(urlConnection, null, result, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(urlConnection, null, result, false, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(0));
@@ -181,7 +182,7 @@ public class UrlConnectionSensorTest extends TestBase {
 		public void notUrlConnection() throws IOException {
 			when(rsc.getTargetMethodName()).thenReturn("getInputStream");
 
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(new Object(), null, result, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(new Object(), null, result, false, rsc);
 
 			assertThat(adapter, is(nullValue()));
 			verifyZeroInteractions(result, rsc);
@@ -191,12 +192,29 @@ public class UrlConnectionSensorTest extends TestBase {
 		public void notInputStreamMethod() throws IOException {
 			when(rsc.getTargetMethodName()).thenReturn("connect");
 
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(urlConnection, null, result, rsc);
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(urlConnection, null, result, false, rsc);
 
 			assertThat(adapter, is(nullValue()));
 			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 			verifyZeroInteractions(result);
+		}
+
+		@Test
+		public void exception() throws IOException {
+			int status = 200;
+			when(urlConnection.getResponseCode()).thenReturn(status);
+			when(rsc.getTargetMethodName()).thenReturn("getInputStream");
+
+			ResponseAdapter adapter = sensor.getClientResponseAdapter(urlConnection, null, new NullPointerException(), true, rsc);
+
+			Map<String, String> tags = adapter.getTags();
+			assertThat(tags.size(), is(3));
+			assertThat(tags, hasEntry(Tags.HTTP_STATUS.getKey(), String.valueOf(status)));
+			assertThat(tags, hasEntry(Tags.ERROR.getKey(), String.valueOf(true)));
+			assertThat(tags, hasEntry(ExtraTags.THROWABLE_TYPE, NullPointerException.class.getSimpleName()));
+			verify(rsc).getTargetMethodName();
+			verifyNoMoreInteractions(rsc);
 		}
 
 	}

@@ -51,7 +51,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setName("this");
 		start.setContentType(ParameterContentType.FIELD);
 
-		String result = propertyAccessor.getPropertyContent(start, person, null, resultValueMock);
+		String result = propertyAccessor.getPropertyContent(start, person, null, resultValueMock, false);
 		assertThat(result, is("Dirk"));
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
@@ -69,14 +69,14 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		path.setName("name");
 		start.setPathToContinue(path);
 
-		String result = propertyAccessor.getPropertyContent(start, person, null, resultValueMock);
+		String result = propertyAccessor.getPropertyContent(start, person, null, resultValueMock, false);
 		assertThat(result, is("Dirk"));
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
 
 	@Test(expectedExceptions = { PropertyAccessException.class })
 	public void nullStartPath() throws PropertyAccessException {
-		propertyAccessor.getPropertyContent(null, null, null, null);
+		propertyAccessor.getPropertyContent(null, null, null, null, false);
 	}
 
 	@Test(expectedExceptions = { PropertyAccessException.class })
@@ -85,7 +85,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setName("this");
 		start.setContentType(ParameterContentType.FIELD);
 
-		propertyAccessor.getPropertyContent(start, null, null, resultValueMock);
+		propertyAccessor.getPropertyContent(start, null, null, resultValueMock, false);
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
 
@@ -99,7 +99,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setName("this");
 		start.setContentType(ParameterContentType.RETURN);
 
-		String result = propertyAccessor.getPropertyContent(start, null, null, null);
+		String result = propertyAccessor.getPropertyContent(start, null, null, null, false);
 		assertThat(result, is(equalTo("null")));
 	}
 
@@ -110,7 +110,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setSignaturePosition(0);
 		start.setContentType(ParameterContentType.PARAM);
 
-		propertyAccessor.getPropertyContent(start, null, null, resultValueMock);
+		propertyAccessor.getPropertyContent(start, null, null, resultValueMock, false);
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
 
@@ -121,7 +121,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setSignaturePosition(0);
 		start.setContentType(ParameterContentType.PARAM);
 
-		propertyAccessor.getPropertyContent(start, null, new Object[0], resultValueMock);
+		propertyAccessor.getPropertyContent(start, null, new Object[0], resultValueMock, false);
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
 
@@ -131,7 +131,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setName("name");
 		start.setSignaturePosition(0);
 
-		propertyAccessor.getPropertyContent(start, null, null, null);
+		propertyAccessor.getPropertyContent(start, null, null, null, false);
 	}
 
 	@Test(expectedExceptions = { PropertyAccessException.class })
@@ -148,7 +148,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setPathToContinue(path);
 
 		// name != surname -> exception
-		propertyAccessor.getPropertyContent(start, person, null, resultValueMock);
+		propertyAccessor.getPropertyContent(start, person, null, resultValueMock, false);
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
 
@@ -186,7 +186,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		// set the parameter array
 		Object[] parameters = { null, peter };
 
-		String result = propertyAccessor.getPropertyContent(start, new Object(), parameters, resultValueMock);
+		String result = propertyAccessor.getPropertyContent(start, new Object(), parameters, resultValueMock, false);
 		assertThat(result, is("Michael"));
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
@@ -229,7 +229,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 
 		assertThat(propertyAccessorList, hasSize(3));
 
-		List<ParameterContentData> parameterContentList = propertyAccessor.getParameterContentData(propertyAccessorList, peter, new Object[] { peter }, resultValueMock);
+		List<ParameterContentData> parameterContentList = propertyAccessor.getParameterContentData(propertyAccessorList, peter, new Object[] { peter }, resultValueMock, false);
 
 		// size should be reduced to one
 		assertThat(propertyAccessorList, hasSize(1));
@@ -262,7 +262,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		path2.setName("length()");
 		path.setPathToContinue(path2);
 
-		String result = propertyAccessor.getPropertyContent(start, peter, null, resultValueMock);
+		String result = propertyAccessor.getPropertyContent(start, peter, null, resultValueMock, false);
 		assertThat(Integer.parseInt(result), is(2));
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
@@ -287,7 +287,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		path.setPathToContinue(path2);
 
 		// must result in an Exception as name is not an array
-		propertyAccessor.getPropertyContent(start, peter, null, resultValueMock);
+		propertyAccessor.getPropertyContent(start, peter, null, resultValueMock, false);
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
 
@@ -313,7 +313,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		path2.setName("size()");
 		path.setPathToContinue(path2);
 
-		String result = propertyAccessor.getPropertyContent(start, peter, null, resultValueMock);
+		String result = propertyAccessor.getPropertyContent(start, peter, null, resultValueMock, false);
 		assertThat(Integer.parseInt(result), is(3));
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
@@ -325,7 +325,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setName("returnName");
 		start.setContentType(ParameterContentType.RETURN);
 
-		String result = propertyAccessor.getPropertyContent(start, null, null, "Peter");
+		String result = propertyAccessor.getPropertyContent(start, null, null, "Peter", false);
 		assertThat(result, is("Peter"));
 	}
 
@@ -339,7 +339,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setName("setName");
 		start.setContentType(ParameterContentType.RETURN);
 
-		String result = propertyAccessor.getPropertyContent(start, null, null, peter);
+		String result = propertyAccessor.getPropertyContent(start, null, null, peter, false);
 		assertThat(result, is("Peter"));
 	}
 
@@ -360,8 +360,29 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		start.setPathToContinue(pathOne);
 		propertyAccessorList.add(start);
 
-		String result = propertyAccessor.getPropertyContent(start, null, null, peter);
+		String result = propertyAccessor.getPropertyContent(start, null, null, peter, false);
 		assertThat(result, is("Hans"));
+	}
+
+	@Test
+	public void analyzeReturnValueObjectException() throws PropertyAccessException {
+		// create initial object relation
+		Person peter = new Person("Peter");
+		Person juergen = new Person("Hans");
+		peter.setChild(juergen);
+
+		List<PropertyPathStart> propertyAccessorList = new ArrayList<PropertyPathStart>();
+
+		// valid
+		PropertyPathStart start = new PropertyPathStart();
+		start.setName("return");
+		start.setContentType(ParameterContentType.RETURN);
+		PropertyPath pathOne = new PropertyPath("child");
+		start.setPathToContinue(pathOne);
+		propertyAccessorList.add(start);
+
+		String result = propertyAccessor.getPropertyContent(start, null, null, peter, true);
+		assertThat(result, is("n/a"));
 	}
 
 	@Test(expectedExceptions = { PropertyAccessException.class })
@@ -377,7 +398,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		path.setName("getName()");
 		start.setPathToContinue(path);
 
-		propertyAccessor.getPropertyContent(start, peter, null, resultValueMock);
+		propertyAccessor.getPropertyContent(start, peter, null, resultValueMock, false);
 		Mockito.verifyZeroInteractions(resultValueMock);
 	}
 
@@ -429,7 +450,7 @@ public class PropertyAccessorTest extends AbstractLogSupport {
 		// Access via iterator
 		i.next();
 		// Direct access
-		List<ParameterContentData> parameterContentList = propertyAccessor.getParameterContentData(propertyAccessorList, peter, new Object[] { peter }, null);
+		List<ParameterContentData> parameterContentList = propertyAccessor.getParameterContentData(propertyAccessorList, peter, new Object[] { peter }, null, false);
 
 		// Double check results, in case of missing exception
 		// size should be reduced to one

@@ -48,16 +48,22 @@ public interface IInstrumenterConstant {
 	String DISPATCH_METHOD_BEFORE_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class));
 
 	/**
-	 * {@link IHookDispatcher#dispatchFirstMethodAfterBody(long, Object, Object[], Object)} and
-	 * {@link IHookDispatcher#dispatchSecondMethodAfterBody(long, Object, Object[], Object)}
+	 * {@link IHookDispatcher#dispatchFirstMethodAfterBody(long, Object, Object[], Object, boolean)} and
+	 * {@link IHookDispatcher#dispatchSecondMethodAfterBody(long, Object, Object[], Object, boolean)}
 	 * descriptor.
 	 */
-	String DISPATCH_METHOD_AFTER_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class), Type.getType(Object.class));
+	String DISPATCH_METHOD_AFTER_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class), Type.getType(Object.class),
+			Type.BOOLEAN_TYPE);
 
 	/**
 	 * {@link IHookDispatcher#dispatchBeforeCatch(long, Object)} descriptor.
 	 */
 	String DISPATCH_BEFORE_CATCH_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class));;
+
+	/**
+	 * {@link IHookDispatcher#dispatchOnThrowInBody(long, Object, Object[], Object) descriptor.
+	 */
+	String DISPATCH_ON_THROW_BODY_DESCRIPTOR = Type.getMethodDescriptor(Type.VOID_TYPE, Type.LONG_TYPE, Type.getType(Object.class), Type.getType(Object[].class), Type.getType(Object.class));
 
 	/**
 	 * {@link IHookDispatcher#dispatchConstructorBeforeBody(long, Object[])} descriptor.

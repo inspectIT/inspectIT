@@ -32,9 +32,13 @@ public interface IHookDispatcher {
 	 * @param parameters
 	 *            The parameters of the method.
 	 * @param returnValue
-	 *            The return value of the method.
+	 *            The return value of the method or exception thrown by method.
+	 * @param exception
+	 *            If method exited as result of exception. If <code>true</code> then the returnValue
+	 *            parameter will be the exception and not the return value of the method execution
+	 *            as such does not exist.
 	 */
-	void dispatchFirstMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue);
+	void dispatchFirstMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue, boolean exception);
 
 	/**
 	 * Dispatches the second 'after' method statement.
@@ -46,9 +50,13 @@ public interface IHookDispatcher {
 	 * @param parameters
 	 *            The parameters of the method.
 	 * @param returnValue
-	 *            The return value of the method.
+	 *            The return value of the method or exception thrown by method.
+	 * @param exception
+	 *            If method exited as result of exception. If <code>true</code> then the returnValue
+	 *            parameter will be the exception and not the return value of the method execution
+	 *            as such does not exist.
 	 */
-	void dispatchSecondMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue);
+	void dispatchSecondMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue, boolean exception);
 
 	/**
 	 * Dispatches the 'addCatch' statement of a method.

@@ -7,6 +7,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ServerAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 
 /**
  * Remote server sensor that users can manually place on any method. Not depending on any technology
@@ -37,8 +38,12 @@ public class ManualRemoteServerSensor extends RemoteServerSensor implements Serv
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
-		return EmptyResponseAdapter.INSTANCE;
+	public ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
+		if (exception) {
+			return new ThrowableAwareResponseAdapter(result.getClass().getSimpleName());
+		} else {
+			return EmptyResponseAdapter.INSTANCE;
+		}
 	}
 
 }

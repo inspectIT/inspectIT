@@ -84,10 +84,10 @@ public class StatementHookTest extends AbstractLogSupport {
 		statementHook.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(1)).getCurrentTime();
 
-		statementHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		statementHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(2)).getCurrentTime();
 
-		statementHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		statementHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(platformManager).getPlatformId();
 
 		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
@@ -121,14 +121,14 @@ public class StatementHookTest extends AbstractLogSupport {
 
 		statementHook2.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(2)).getCurrentTime();
-		statementHook2.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		statementHook2.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(3)).getCurrentTime();
-		statementHook2.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		statementHook2.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 
-		statementHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		statementHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(4)).getCurrentTime();
 
-		statementHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, registeredSensorConfig);
+		statementHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 
 		verify(platformManager, times(2)).getPlatformId();
 

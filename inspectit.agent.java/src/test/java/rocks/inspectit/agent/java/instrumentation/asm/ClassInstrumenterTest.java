@@ -8,6 +8,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -166,8 +167,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter");
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter");
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter", false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter", false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -194,8 +195,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, null, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], null, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -220,8 +221,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter");
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter");
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter", false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], "stringNullParameter", false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -246,8 +247,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], 3);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], 3);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], 3, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], 3, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -272,8 +273,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], 5.3D);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], 5.3D);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], 5.3D, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], 5.3D, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -298,8 +299,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], Float.MAX_VALUE);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], Float.MAX_VALUE);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], Float.MAX_VALUE, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], Float.MAX_VALUE, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -324,8 +325,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], (byte) 127);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], (byte) 127);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], (byte) 127, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], (byte) 127, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -350,8 +351,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], (short) 16345);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], (short) 16345);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], (short) 16345, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], (short) 16345, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -376,8 +377,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], false);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], false);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], false, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], false, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -402,8 +403,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], '\u1234');
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], '\u1234');
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], '\u1234', false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], '\u1234', false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -428,8 +429,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, null, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], null, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -454,8 +455,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, null, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], "stringNullParameterStatic");
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], "stringNullParameterStatic");
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], "stringNullParameterStatic", false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], "stringNullParameterStatic", false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -481,8 +482,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, parameters);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, parameters);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, null, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -508,8 +509,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, parameters);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, parameters);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, "stringOneParameter");
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, "stringOneParameter");
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, "stringOneParameter", false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, "stringOneParameter", false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -535,8 +536,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, parameters);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, parameters);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, null, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -562,8 +563,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, parameters);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, parameters);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, null, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -588,8 +589,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], new int[] { 1, 2, 3 });
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], new int[] { 1, 2, 3 });
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], new int[] { 1, 2, 3 }, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], new int[] { 1, 2, 3 }, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -614,8 +615,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], new String[] { "test123", "bla" });
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], new String[] { "test123", "bla" });
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], new String[] { "test123", "bla" }, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], new String[] { "test123", "bla" }, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -645,8 +646,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			}
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(eq(methodId), eq(testClass), eq(new Object[0]), isA(Throwable.class), eq(true));
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(eq(methodId), eq(testClass), eq(new Object[0]), isA(Throwable.class), eq(true));
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -675,8 +676,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			}
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, parameters);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, parameters, null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, parameters, null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(eq(methodId), eq(testClass), eq(parameters), isA(Throwable.class), eq(true));
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(eq(methodId), eq(testClass), eq(parameters), isA(Throwable.class), eq(true));
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -701,8 +702,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], 3);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], 3);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], 3, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], 3, false);
 			verifyNoMoreInteractions(hookDispatcher);
 		}
 
@@ -929,8 +930,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], null, false);
 
 			ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
 			verify(hookDispatcher).dispatchBeforeCatch(eq(methodId), captor.capture());
@@ -996,13 +997,13 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			// first method
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], null, false);
 
 			// inner method
 			verify(hookDispatcher).dispatchMethodBeforeBody(innerMethodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(innerMethodId, testClass, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(innerMethodId, testClass, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(eq(innerMethodId), eq(testClass), eq(new Object[0]), isA(MyTestException.class), eq(true));
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(eq(innerMethodId), eq(testClass), eq(new Object[0]), isA(MyTestException.class), eq(true));
 
 			ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
 			verify(hookDispatcher).dispatchOnThrowInBody(eq(innerMethodId), eq(testClass), (Object[]) anyObject(), captor.capture());
@@ -1042,13 +1043,13 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			// first method
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, null, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, null, new Object[0], null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, null, new Object[0], null, false);
 
 			// inner method
 			verify(hookDispatcher).dispatchMethodBeforeBody(innerMethodId, null, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(innerMethodId, null, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(innerMethodId, null, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(eq(innerMethodId), eq(null), eq(new Object[0]), isA(MyTestException.class), eq(true));
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(eq(innerMethodId), eq(null), eq(new Object[0]), isA(MyTestException.class), eq(true));
 
 			ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
 			verify(hookDispatcher).dispatchOnThrowInBody(eq(innerMethodId), eq(null), (Object[]) anyObject(), captor.capture());
@@ -1099,8 +1100,8 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 
 			// inner method
 			verify(hookDispatcher).dispatchMethodBeforeBody(eq(innerMethodId), anyObject(), eq(new Object[0]));
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(eq(innerMethodId), anyObject(), eq(new Object[0]), eq(null));
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(eq(innerMethodId), anyObject(), eq(new Object[0]), eq(null));
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(eq(innerMethodId), anyObject(), eq(new Object[0]), isA(MyTestException.class), eq(true));
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(eq(innerMethodId), anyObject(), eq(new Object[0]), isA(MyTestException.class), eq(true));
 
 			verify(hookDispatcher).dispatchOnThrowInBody(eq(innerMethodId), anyObject(), eq(new Object[0]), captor.capture());
 			assertThat(captor.getValue().getClass().getName(), is(equalTo(MyTestException.class.getName())));
@@ -1138,16 +1139,16 @@ public class ClassInstrumenterTest extends AbstractInstrumentationTest {
 			this.callMethod(testClass, methodName, null);
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(methodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(methodId, testClass, new Object[0], null, false);
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(methodId, testClass, new Object[0], null, false);
 
 			ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
 			verify(hookDispatcher).dispatchBeforeCatch(eq(methodId), captor.capture());
 			assertThat(captor.getValue().getClass().getName(), is(equalTo(MyTestException.class.getName())));
 
 			verify(hookDispatcher).dispatchMethodBeforeBody(innerMethodId, testClass, new Object[0]);
-			verify(hookDispatcher).dispatchFirstMethodAfterBody(innerMethodId, testClass, new Object[0], null);
-			verify(hookDispatcher).dispatchSecondMethodAfterBody(innerMethodId, testClass, new Object[0], null);
+			verify(hookDispatcher).dispatchFirstMethodAfterBody(eq(innerMethodId), eq(testClass), eq(new Object[0]), isA(MyTestException.class), eq(true));
+			verify(hookDispatcher).dispatchSecondMethodAfterBody(eq(innerMethodId), eq(testClass), eq(new Object[0]), isA(MyTestException.class), eq(true));
 
 			captor = ArgumentCaptor.forClass(Object.class);
 			verify(hookDispatcher).dispatchOnThrowInBody(eq(innerMethodId), eq(testClass), (Object[]) anyObject(), captor.capture());
