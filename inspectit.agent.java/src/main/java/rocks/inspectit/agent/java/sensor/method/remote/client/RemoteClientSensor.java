@@ -15,6 +15,11 @@ import rocks.inspectit.agent.java.util.ReflectionCache;
  * Abstract class for all remote client sensors. Subclasses must implement
  * {@link #getClientAdapterProvider()} that is passed to the {@link RemoteClientHook} during
  * initialization.
+ * <p>
+ * Note that all remote client sensors class names should be added to the
+ * {@link rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceHook}, as we
+ * don't want additional invocation children to be created if remote sensor did not create any
+ * tracing data.
  *
  * @author Ivan Senic
  *

@@ -2,9 +2,12 @@ package rocks.inspectit.agent.java.sensor.method.invocationsequence;
 
 import java.net.ConnectException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -27,6 +30,14 @@ import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor;
 import rocks.inspectit.agent.java.sensor.method.logging.Log4JLoggingSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.ApacheHttpClientV40Sensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.JettyHttpClientV61Sensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.SpringRestTemplateClientSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.http.UrlConnectionSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.client.mq.JmsRemoteClientSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.server.http.JavaHttpRemoteServerSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.server.manual.ManualRemoteServerSensor;
+import rocks.inspectit.agent.java.sensor.method.remote.server.mq.JmsListenerRemoteServerSensor;
 import rocks.inspectit.agent.java.tracing.core.transformer.SpanContextTransformer;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.agent.java.util.ThreadLocalStack;
@@ -65,6 +76,14 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * The logger of this class. Initialized manually.
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(InvocationSequenceHook.class);
+
+	/**
+	 * List of remote sensor names needed for
+	 * {@link #removeDueToNoData(RegisteredSensorConfig, InvocationSequenceData)}.
+	 */
+	private static final Set<String> REMOVE_SENSOR_CLASS_NAMES = new HashSet<String>(
+			Arrays.asList(ApacheHttpClientV40Sensor.class.getName(), JettyHttpClientV61Sensor.class.getName(), SpringRestTemplateClientSensor.class.getName(), UrlConnectionSensor.class.getName(),
+					JavaHttpRemoteServerSensor.class.getName(), JmsRemoteClientSensor.class.getName(), JmsListenerRemoteServerSensor.class.getName(), ManualRemoteServerSensor.class.getName()));
 
 	/**
 	 * The Platform manager.
@@ -291,7 +310,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				InvocationSequenceData parentSequence = invocationSequenceData.getParentSequence();
 				// check if we should not include this invocation because of exception delegation,
 				// SQL wrapping or empty logging
-				if (removeDueToExceptionDelegation(rsc, invocationSequenceData) || removeDueToWrappedSqls(rsc, invocationSequenceData) || removeDueToNotCapturedLogging(rsc, invocationSequenceData)) {
+				if (removeDueToExceptionDelegation(rsc, invocationSequenceData) || removeDueToNoData(rsc, invocationSequenceData)) {
 					parentSequence.getNestedSequences().remove(invocationSequenceData);
 					parentSequence.setChildCount(parentSequence.getChildCount() - 1);
 					// but connect all possible children to the parent then we are eliminating one
@@ -337,8 +356,14 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	}
 
 	/**
-	 * Returns if the given {@link InvocationSequenceData} should be removed due to the wrapping of
-	 * the prepared SQL statements.
+	 * Returns if the given {@link InvocationSequenceData} should be removed due to no data. Can be
+	 * in case of
+	 * <ul>
+	 * <li>the wrapping of the prepared SQL statements.
+	 * <li>having an empty logging element (if the logging occurred with a lower logging level than
+	 * the configuration)
+	 * <li>running remote sensor that provided no span
+	 * </ul>
 	 *
 	 * @param rsc
 	 *            {@link RegisteredSensorConfig}
@@ -346,43 +371,29 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 *            {@link InvocationSequenceData} to check.
 	 * @return True if the invocation should be removed.
 	 */
-	private boolean removeDueToWrappedSqls(RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData) {
+	private boolean removeDueToNoData(RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData) {
 		List<IMethodSensor> sensors = rsc.getMethodSensors();
-		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
+		int sensorsSize = sensors.size();
+		if ((1 == sensorsSize) || ((2 == sensorsSize) && enhancedExceptionSensor)) {
 			for (IMethodSensor methodSensor : sensors) {
-				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
-				if (PreparedStatementSensor.class.getName().equals(methodSensorTypeConfig.getClassName())) {
+				String className = methodSensor.getSensorTypeConfig().getClassName();
+				// check if class name is null, return then nothing to check
+				if (null == className) {
+					return false;
+				}
+
+				if (PreparedStatementSensor.class.getName().equals(className)) {
 					if ((null == invocationSequenceData.getSqlStatementData()) || (0 == invocationSequenceData.getSqlStatementData().getCount())) {
 						return true;
 					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Returns if a given {@link InvocationSequenceData} element should be removed due to having an
-	 * empty logging element. This can happen if the logging occurred with a lower logging level
-	 * than the configuration.
-	 *
-	 * @param rsc
-	 *            {@link RegisteredSensorConfig}
-	 * @param invocationSequenceData
-	 *            {@link InvocationSequenceData} to check.
-	 * @return True if the invocation should be removed.
-	 */
-	private boolean removeDueToNotCapturedLogging(RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData) {
-		List<IMethodSensor> sensors = rsc.getMethodSensors();
-		if ((1 == sensors.size()) || ((2 == sensors.size()) && enhancedExceptionSensor)) {
-			for (IMethodSensor methodSensor : sensors) {
-				MethodSensorTypeConfig methodSensorTypeConfig = methodSensor.getSensorTypeConfig();
-				if (Log4JLoggingSensor.class.getName().equals(methodSensorTypeConfig.getClassName())) {
+				} else if (Log4JLoggingSensor.class.getName().equals(className)) {
 					return !InvocationSequenceDataHelper.hasLoggingData(invocationSequenceData);
+				} else if (REMOVE_SENSOR_CLASS_NAMES.contains(className)) {
+					return null == invocationSequenceData.getSpanIdent();
 				}
 			}
 		}
+
 		return false;
 	}
 
