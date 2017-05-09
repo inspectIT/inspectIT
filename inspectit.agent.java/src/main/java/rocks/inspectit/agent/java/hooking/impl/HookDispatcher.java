@@ -159,7 +159,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void dispatchFirstMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue) {
+	public void dispatchFirstMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue, boolean exception) {
 		if (!executionMarker.isActive()) {
 			try {
 				executionMarker.active();
@@ -171,7 +171,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 					// normal execution (sensor with highest priority first)
 					for (IMethodSensor methodSensor : rsc.getMethodSensors()) {
 						IMethodHook methodHook = (IMethodHook) methodSensor.getHook();
-						methodHook.firstAfterBody(id, methodSensor.getSensorTypeConfig().getId(), object, parameters, returnValue, rsc);
+						methodHook.firstAfterBody(id, methodSensor.getSensorTypeConfig().getId(), object, parameters, returnValue, exception, rsc);
 					}
 				} catch (Throwable throwable) { // NOPMD
 					log.error("An error happened in the Hook Dispatcher! (after body)", throwable);
@@ -186,7 +186,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void dispatchSecondMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue) {
+	public void dispatchSecondMethodAfterBody(long id, Object object, Object[] parameters, Object returnValue, boolean exception) {
 		if (!executionMarker.isActive()) {
 			try {
 				executionMarker.active();
@@ -207,15 +207,15 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 							// the invocation sequence sensor needs the original core service!
 							long sensorId = methodSensor.getSensorTypeConfig().getId();
 							if (invocCoreService == methodHook) { // NOPMD
-								methodHook.secondAfterBody(coreService, id, sensorId, object, parameters, returnValue, rsc);
+								methodHook.secondAfterBody(coreService, id, sensorId, object, parameters, returnValue, exception, rsc);
 							} else {
-								methodHook.secondAfterBody(invocCoreService, id, sensorId, object, parameters, returnValue, rsc);
+								methodHook.secondAfterBody(invocCoreService, id, sensorId, object, parameters, returnValue, exception, rsc);
 							}
 						}
 					} else {
 						for (IMethodSensor methodSensor : rsc.getMethodSensors()) {
 							IMethodHook methodHook = (IMethodHook) methodSensor.getHook();
-							methodHook.secondAfterBody(coreService, id, methodSensor.getSensorTypeConfig().getId(), object, parameters, returnValue, rsc);
+							methodHook.secondAfterBody(coreService, id, methodSensor.getSensorTypeConfig().getId(), object, parameters, returnValue, exception, rsc);
 						}
 					}
 
@@ -232,7 +232,7 @@ public class HookDispatcher implements IHookDispatcherMapper, IHookDispatcher {
 
 						// The sensor type ID is not important here, thus we are passing a -1. It is
 						// already stored in the data object
-						invocationHook.secondAfterBody(coreService, id, -1, object, parameters, returnValue, rsc);
+						invocationHook.secondAfterBody(coreService, id, -1, object, parameters, returnValue, exception, rsc);
 					}
 				} catch (Throwable throwable) { // NOPMD
 					log.error("An error happened in the Hook Dispatcher! (second after body)", throwable);

@@ -41,6 +41,11 @@ public class PropertyAccessor implements IPropertyAccessor {
 	private static final String NULL_VALUE = "null";
 
 	/**
+	 * Static null value for return value capturing in case of method exited with exception.
+	 */
+	private static final String NA = "n/a";
+
+	/**
 	 * An array containing the names of all methods that might be called by the PropertyAccessor.
 	 * Names should not include the brackets.
 	 */
@@ -50,7 +55,7 @@ public class PropertyAccessor implements IPropertyAccessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getPropertyContent(PropertyPathStart propertyPathStart, Object clazz, Object[] parameters, Object returnValue) throws PropertyAccessException {
+	public String getPropertyContent(PropertyPathStart propertyPathStart, Object clazz, Object[] parameters, Object returnValue, boolean exception) throws PropertyAccessException {
 		if (null == propertyPathStart) {
 			throw new PropertyAccessException("Property path start cannot be null!");
 		}
@@ -77,9 +82,12 @@ public class PropertyAccessor implements IPropertyAccessor {
 			return getPropertyContent(propertyPathStart.getPathToContinue(), parameters[propertyPathStart.getSignaturePosition()]);
 		case RETURN:
 			// we will not throw an exception here as the return value of a method can sometimes be
-			// null. If we throw an exception, this will lead to the removal of the path and thus no
+			// null or we had exceptional method exit.
+			// If we throw an exception, this will lead to the removal of the path and thus no
 			// return value of this property accessor will be captured afterwards.
-			if (null == returnValue) {
+			if (exception) {
+				return NA;
+			} else if (null == returnValue) {
 				return NULL_VALUE;
 			} else {
 				return getPropertyContent(propertyPathStart.getPathToContinue(), returnValue);
@@ -239,11 +247,11 @@ public class PropertyAccessor implements IPropertyAccessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ParameterContentData> getParameterContentData(List<PropertyPathStart> propertyAccessorList, Object clazz, Object[] parameters, Object returnValue) {
+	public List<ParameterContentData> getParameterContentData(List<PropertyPathStart> propertyAccessorList, Object clazz, Object[] parameters, Object returnValue, boolean exception) {
 		List<ParameterContentData> parameterContentData = new ArrayList<ParameterContentData>();
 		for (PropertyPathStart start : propertyAccessorList) {
 			try {
-				String content = this.getPropertyContent(start, clazz, parameters, returnValue);
+				String content = this.getPropertyContent(start, clazz, parameters, returnValue, exception);
 				ParameterContentData paramContentData = new ParameterContentData();
 				paramContentData.setContent(content);
 				paramContentData.setContentType(start.getContentType());

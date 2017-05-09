@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -79,10 +80,10 @@ public class HookDispatcherTest extends TestBase {
 			verify(registeredSensorConfig, times(1)).isStartsInvocation();
 			verify(registeredSensorConfig, times(1)).getMethodSensorsReverse();
 
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
 
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
 
@@ -92,6 +93,7 @@ public class HookDispatcherTest extends TestBase {
 
 		@Test
 		public void dispatchOneMethodHookWithoutInvocationTrace() {
+			boolean exception = RandomUtils.nextBoolean();
 			long sensorTypeId = 7L;
 			IMethodSensor methodSensor = mock(IMethodSensor.class);
 			IMethodHook methodHook = mock(IMethodHook.class);
@@ -116,14 +118,14 @@ public class HookDispatcherTest extends TestBase {
 			verify(registeredSensorConfig, times(1)).getMethodSensorsReverse();
 			verify(methodHook, times(1)).beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, exception);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
-			verify(methodHook, times(1)).firstAfterBody(methodId, sensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).firstAfterBody(methodId, sensorTypeId, object, parameters, returnValue, exception, registeredSensorConfig);
 
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, exception);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
-			verify(methodHook, times(1)).secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, returnValue, exception, registeredSensorConfig);
 
 			verifyZeroInteractions(object, coreService, returnValue);
 			verifyNoMoreInteractions(registeredSensorConfig, methodHook);
@@ -174,20 +176,20 @@ public class HookDispatcherTest extends TestBase {
 			inOrder.verify(methodHookTwo, times(1)).beforeBody(methodId, sensorTypeIdTwo, object, parameters, registeredSensorConfig);
 			inOrder.verify(methodHookOne, times(1)).beforeBody(methodId, sensorTypeIdOne, object, parameters, registeredSensorConfig);
 
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
 			inOrder = inOrder(methodHookOne, methodHookTwo, methodHookThree);
-			inOrder.verify(methodHookOne, times(1)).firstAfterBody(methodId, sensorTypeIdOne, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookTwo, times(1)).firstAfterBody(methodId, sensorTypeIdTwo, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookThree, times(1)).firstAfterBody(methodId, sensorTypeIdThree, object, parameters, returnValue, registeredSensorConfig);
+			inOrder.verify(methodHookOne, times(1)).firstAfterBody(methodId, sensorTypeIdOne, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookTwo, times(1)).firstAfterBody(methodId, sensorTypeIdTwo, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookThree, times(1)).firstAfterBody(methodId, sensorTypeIdThree, object, parameters, returnValue, false, registeredSensorConfig);
 
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
 			inOrder = inOrder(methodHookOne, methodHookTwo, methodHookThree);
-			inOrder.verify(methodHookOne, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdOne, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookTwo, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdTwo, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookThree, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdThree, object, parameters, returnValue, registeredSensorConfig);
+			inOrder.verify(methodHookOne, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdOne, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookTwo, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdTwo, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookThree, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdThree, object, parameters, returnValue, false, registeredSensorConfig);
 
 			verifyZeroInteractions(object, coreService, returnValue);
 			verifyNoMoreInteractions(methodHookOne, methodHookTwo, methodHookThree);
@@ -196,6 +198,7 @@ public class HookDispatcherTest extends TestBase {
 
 		@Test
 		public void dispatchOneMethodHookWithInvocationTrace() {
+			boolean exception = RandomUtils.nextBoolean();
 			long methodSensorTypeId = 7L;
 			IMethodSensor methodSensor = mock(IMethodSensor.class);
 			IMethodHook methodHook = mock(IMethodHook.class);
@@ -260,36 +263,36 @@ public class HookDispatcherTest extends TestBase {
 			verify(invocHook, times(1)).beforeBody(eq(methodIdTwo), anyLong(), eq(object), eq(parameters), eq(registeredSensorConfigTwo));
 
 			// dispatch the second method - first after body
-			hookDispatcher.dispatchFirstMethodAfterBody(methodIdTwo, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodIdTwo, object, parameters, returnValue, exception);
 			verify(registeredSensorConfigTwo, times(1)).getMethodSensors();
 			verify(methodSensor, times(3)).getHook();
-			verify(methodHook, times(1)).firstAfterBody(methodIdTwo, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfigTwo);
+			verify(methodHook, times(1)).firstAfterBody(methodIdTwo, methodSensorTypeId, object, parameters, returnValue, exception, registeredSensorConfigTwo);
 
 			// dispatch the second method - second after body
-			hookDispatcher.dispatchSecondMethodAfterBody(methodIdTwo, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodIdTwo, object, parameters, returnValue, exception);
 			verify(registeredSensorConfigTwo, times(2)).isStartsInvocation();
 			verify(registeredSensorConfigTwo, times(2)).getMethodSensors();
 			verify(methodSensor, times(4)).getHook();
-			verify(methodHook, times(1)).secondAfterBody(invocHook, methodIdTwo, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfigTwo);
-			verify(invocHook, times(1)).secondAfterBody(eq(coreService), eq(methodIdTwo), anyLong(), eq(object), eq(parameters), eq(returnValue), eq(registeredSensorConfigTwo));
+			verify(methodHook, times(1)).secondAfterBody(invocHook, methodIdTwo, methodSensorTypeId, object, parameters, returnValue, exception, registeredSensorConfigTwo);
+			verify(invocHook, times(1)).secondAfterBody(eq(coreService), eq(methodIdTwo), anyLong(), eq(object), eq(parameters), eq(returnValue), eq(exception), eq(registeredSensorConfigTwo));
 
 			// END SECOND METHOD DISPATCHER
 			// ////////////////////////////////////////////////////////
 
 			// dispatch the first method - first after body
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
 			verify(methodSensor, times(5)).getHook();
-			verify(methodHook, times(1)).firstAfterBody(methodId, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
-			verify(invocHook, times(1)).firstAfterBody(methodId, invocSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).firstAfterBody(methodId, methodSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
+			verify(invocHook, times(1)).firstAfterBody(methodId, invocSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// dispatch the first method - second after body
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
 			verify(methodSensor, times(6)).getHook();
-			verify(methodHook, times(1)).secondAfterBody(invocHook, methodId, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
-			verify(invocHook, times(1)).secondAfterBody(coreService, methodId, invocSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).secondAfterBody(invocHook, methodId, methodSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
+			verify(invocHook, times(1)).secondAfterBody(coreService, methodId, invocSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// END FIRST METHOD DISPATCHER
 			// ////////////////////////////////////////////////////////
@@ -487,15 +490,15 @@ public class HookDispatcherTest extends TestBase {
 			// ////////////////////////////////////////////////////////
 
 			// dispatch the method - first after body
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
-			verify(invocHook, times(1)).firstAfterBody(methodId, invocSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(invocHook, times(1)).firstAfterBody(methodId, invocSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// dispatch the method - second after body
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
-			verify(invocHook, times(1)).secondAfterBody(coreService, methodId, invocSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(invocHook, times(1)).secondAfterBody(coreService, methodId, invocSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// END METHOD DISPATCHER
 			// ////////////////////////////////////////////////////////
@@ -569,14 +572,14 @@ public class HookDispatcherTest extends TestBase {
 			hookDispatcher.dispatchOnThrowInBody(methodId, object, parameters, exceptionObject);
 			verify(exceptionHook, times(1)).dispatchOnThrowInBody(coreService, methodId, exceptionSensorTypeId, object, exceptionObject, parameters, registeredSensorConfig);
 
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
-			verify(methodHook, times(1)).firstAfterBody(methodId, sensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).firstAfterBody(methodId, sensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
-			verify(methodHook, times(1)).secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// third method of exception sensor
 			hookDispatcher.dispatchBeforeCatch(methodId, exceptionObject);
@@ -664,20 +667,20 @@ public class HookDispatcherTest extends TestBase {
 			hookDispatcher.dispatchOnThrowInBody(methodId, object, parameters, exceptionObject);
 			verify(exceptionHook, times(1)).dispatchOnThrowInBody(coreService, methodId, exceptionSensorTypeId, object, exceptionObject, parameters, registeredSensorConfig);
 
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
 			inOrder = inOrder(methodHookOne, methodHookTwo, methodHookThree);
-			inOrder.verify(methodHookOne, times(1)).firstAfterBody(methodId, sensorTypeIdOne, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookTwo, times(1)).firstAfterBody(methodId, sensorTypeIdTwo, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookThree, times(1)).firstAfterBody(methodId, sensorTypeIdThree, object, parameters, returnValue, registeredSensorConfig);
+			inOrder.verify(methodHookOne, times(1)).firstAfterBody(methodId, sensorTypeIdOne, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookTwo, times(1)).firstAfterBody(methodId, sensorTypeIdTwo, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookThree, times(1)).firstAfterBody(methodId, sensorTypeIdThree, object, parameters, returnValue, false, registeredSensorConfig);
 
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
 			inOrder = inOrder(methodHookOne, methodHookTwo, methodHookThree);
-			inOrder.verify(methodHookOne, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdOne, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookTwo, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdTwo, object, parameters, returnValue, registeredSensorConfig);
-			inOrder.verify(methodHookThree, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdThree, object, parameters, returnValue, registeredSensorConfig);
+			inOrder.verify(methodHookOne, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdOne, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookTwo, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdTwo, object, parameters, returnValue, false, registeredSensorConfig);
+			inOrder.verify(methodHookThree, times(1)).secondAfterBody(coreService, methodId, sensorTypeIdThree, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// third method of exception sensor
 			hookDispatcher.dispatchBeforeCatch(methodId, exceptionObject);
@@ -690,7 +693,7 @@ public class HookDispatcherTest extends TestBase {
 
 		@Test
 		public void dispatchExceptionSensorWithOneMethodHookWithInvocationTrace() throws Exception {
-
+			boolean exception = RandomUtils.nextBoolean();
 			long methodSensorTypeId = 23L;
 			long exceptionSensorTypeId = 10L;
 			long invocSensorTypeId = 13L;
@@ -790,16 +793,16 @@ public class HookDispatcherTest extends TestBase {
 			// /////////////////////////////////////////////////////////
 
 			// dispatch the second method - first after body
-			hookDispatcher.dispatchFirstMethodAfterBody(methodIdTwo, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodIdTwo, object, parameters, returnValue, exception);
 			verify(registeredSensorConfigTwo, times(1)).getMethodSensors();
-			verify(methodHook, times(1)).firstAfterBody(methodIdTwo, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfigTwo);
+			verify(methodHook, times(1)).firstAfterBody(methodIdTwo, methodSensorTypeId, object, parameters, returnValue, exception, registeredSensorConfigTwo);
 
 			// dispatch the second method - second after body
-			hookDispatcher.dispatchSecondMethodAfterBody(methodIdTwo, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodIdTwo, object, parameters, returnValue, exception);
 			verify(registeredSensorConfigTwo, times(2)).isStartsInvocation();
 			verify(registeredSensorConfigTwo, times(2)).getMethodSensors();
-			verify(methodHook, times(1)).secondAfterBody(invocHook, methodIdTwo, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfigTwo);
-			verify(invocHook, times(1)).secondAfterBody(eq(coreService), eq(methodIdTwo), anyLong(), eq(object), eq(parameters), eq(returnValue), eq(registeredSensorConfigTwo));
+			verify(methodHook, times(1)).secondAfterBody(invocHook, methodIdTwo, methodSensorTypeId, object, parameters, returnValue, exception, registeredSensorConfigTwo);
+			verify(invocHook, times(1)).secondAfterBody(eq(coreService), eq(methodIdTwo), anyLong(), eq(object), eq(parameters), eq(returnValue), eq(exception), eq(registeredSensorConfigTwo));
 			// END SECOND METHOD DISPATCHER
 			// ////////////////////////////////////////////////////////
 
@@ -808,17 +811,17 @@ public class HookDispatcherTest extends TestBase {
 			verify(exceptionHook, times(1)).dispatchBeforeCatchBody(invocHook, methodId, exceptionSensorTypeId, exceptionObject, registeredSensorConfig);
 
 			// dispatch the first method - first after body
-			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchFirstMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(1)).getMethodSensors();
-			verify(methodHook, times(1)).firstAfterBody(methodId, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
-			verify(invocHook, times(1)).firstAfterBody(methodId, invocSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).firstAfterBody(methodId, methodSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
+			verify(invocHook, times(1)).firstAfterBody(methodId, invocSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// dispatch the first method - second after body
-			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue);
+			hookDispatcher.dispatchSecondMethodAfterBody(methodId, object, parameters, returnValue, false);
 			verify(registeredSensorConfig, times(2)).isStartsInvocation();
 			verify(registeredSensorConfig, times(2)).getMethodSensors();
-			verify(methodHook, times(1)).secondAfterBody(invocHook, methodId, methodSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
-			verify(invocHook, times(1)).secondAfterBody(coreService, methodId, invocSensorTypeId, object, parameters, returnValue, registeredSensorConfig);
+			verify(methodHook, times(1)).secondAfterBody(invocHook, methodId, methodSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
+			verify(invocHook, times(1)).secondAfterBody(coreService, methodId, invocSensorTypeId, object, parameters, returnValue, false, registeredSensorConfig);
 
 			// END FIRST METHOD DISPATCHER
 			// ////////////////////////////////////////////////////////

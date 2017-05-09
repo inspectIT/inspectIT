@@ -7,6 +7,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ClientAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.mq.MQRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.mq.data.impl.JmsMessage;
 
@@ -51,8 +52,12 @@ public class JmsRemoteClientSensor extends RemoteClientSensor implements ClientA
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
-		return EmptyResponseAdapter.INSTANCE;
+	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
+		if (exception) {
+			return new ThrowableAwareResponseAdapter(result.getClass().getSimpleName());
+		} else {
+			return EmptyResponseAdapter.INSTANCE;
+		}
 	}
 
 	/**

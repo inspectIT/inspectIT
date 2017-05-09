@@ -7,11 +7,11 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ClientAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.AsyncHttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.AsyncHttpResponse;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.SpringRestTemplateHttpClientRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.SpringRestTemplateHttpResponse;
 
@@ -60,15 +60,16 @@ public class SpringRestTemplateClientSensor extends RemoteClientSensor implement
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
-		if (ASYNC_METHOD_NAME.equals(rsc.getTargetMethodName())) {
-			return new HttpResponseAdapter(AsyncHttpResponse.INSTANCE);
-		} else if (null != result) {
+	public ResponseAdapter getClientResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
+		if (exception) {
+			// we can not delegate here as result is used
+			return new ThrowableAwareResponseAdapter(result.getClass().getSimpleName());
+		} else if (ASYNC_METHOD_NAME.equals(rsc.getTargetMethodName())) {
+			return EmptyResponseAdapter.INSTANCE;
+		} else {
 			Object response = result;
 			HttpResponse httpResponse = new SpringRestTemplateHttpResponse(response, CACHE);
 			return new HttpResponseAdapter(httpResponse);
-		} else {
-			return EmptyResponseAdapter.INSTANCE;
 		}
 	}
 

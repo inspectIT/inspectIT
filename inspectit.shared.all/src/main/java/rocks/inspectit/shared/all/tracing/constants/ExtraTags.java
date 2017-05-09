@@ -32,4 +32,9 @@ public interface ExtraTags {
 	 */
 	String JMS_MESSAGE_DESTINATION = "ext.jms.destination";
 
+	/**
+	 * Exception type tag.
+	 */
+	String THROWABLE_TYPE = "ext.throw.type";
+
 }

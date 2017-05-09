@@ -63,7 +63,7 @@ public class Log4JLoggingHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void firstAfterBody(long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		// not needed for this hook
 	}
 
@@ -71,7 +71,7 @@ public class Log4JLoggingHook implements IMethodHook {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public void secondAfterBody(ICoreService coreService, long methodId, long sensorTypeId, Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) { // NOCHK:8-params
 		if (checker.isValid()) {
 			// get the information from the parameters. We are expecting the
 			// method: Priority.forcedLog (String, Priority, Object, Throwable)

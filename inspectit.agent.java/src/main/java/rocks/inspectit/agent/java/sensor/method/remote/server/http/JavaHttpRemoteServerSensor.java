@@ -6,6 +6,7 @@ import rocks.inspectit.agent.java.sensor.method.remote.server.RemoteServerSensor
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpServerRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.JavaHttpResponse;
@@ -48,11 +49,17 @@ public class JavaHttpRemoteServerSensor extends RemoteServerSensor implements Se
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, RegisteredSensorConfig rsc) {
+	public ResponseAdapter getServerResponseAdapter(Object object, Object[] parameters, Object result, boolean exception, RegisteredSensorConfig rsc) {
 		// response is second parameter
 		Object httpServletResponse = parameters[1];
 		JavaHttpResponse httpResponse = new JavaHttpResponse(httpServletResponse, CACHE);
-		return new HttpResponseAdapter(httpResponse);
+		HttpResponseAdapter adapter = new HttpResponseAdapter(httpResponse);
+		if (exception) {
+			// we can delegate here as we are not working on result
+			return new ThrowableAwareResponseAdapter(adapter, result.getClass().getSimpleName());
+		} else {
+			return adapter;
+		}
 	}
 
 }
