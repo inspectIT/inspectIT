@@ -983,16 +983,9 @@
                </count>
                <iterate
                      ifEmpty="false">
-                  <and>
-                     <instanceof
-                           value="rocks.inspectit.shared.all.communication.MethodSensorData">
-                     </instanceof>
-                     <not>
-                        <instanceof
-                              value="rocks.inspectit.shared.all.tracing.data.Span">
-                        </instanceof>
-                     </not>
-                  </and>
+                  <instanceof
+                        value="rocks.inspectit.shared.all.communication.MethodSensorData">
+                  </instanceof>
                </iterate>
                <with
                      variable="activeEditor">
@@ -2087,6 +2080,12 @@
                         property="rocks.inspectit.ui.rcp.onlineStatus"
                         value="ONLINE">
                   </test>
+               </iterate>
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition">
+                  </instanceof>
                </iterate>
                <with
                      variable="activePart">

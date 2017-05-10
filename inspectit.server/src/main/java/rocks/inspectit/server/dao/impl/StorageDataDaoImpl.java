@@ -2,6 +2,7 @@ package rocks.inspectit.server.dao.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -28,10 +29,13 @@ import rocks.inspectit.server.dao.StorageDataDao;
 import rocks.inspectit.server.util.JpaUtil;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.SystemSensorData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
 import rocks.inspectit.shared.all.indexing.IIndexQuery;
+import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 import rocks.inspectit.shared.cs.indexing.buffer.IBufferTreeComponent;
 import rocks.inspectit.shared.cs.indexing.impl.IndexingException;
 import rocks.inspectit.shared.cs.indexing.query.provider.impl.IndexQueryProvider;
@@ -262,6 +266,18 @@ public class StorageDataDaoImpl implements StorageDataDao {
 		IIndexQuery query = indexQueryProvider.createNewIndexQuery();
 		query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("id", elementIds));
 		query.setPlatformIdent(platformIdent);
+		return indexingTree.query(query);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<DefaultData> getDataForTraceIdList(Collection<Long> traceIds) {
+		IIndexQuery query = indexQueryProvider.createNewIndexQuery();
+		List<Class<?>> objectClasses = Arrays.asList(new Class<?>[] { InvocationSequenceData.class, ClientSpan.class, ServerSpan.class });
+		query.setObjectClasses(objectClasses);
+		query.addIndexingRestriction(IndexQueryRestrictionFactory.isInCollection("spanIdent.traceId", traceIds));
 		return indexingTree.query(query);
 	}
 
