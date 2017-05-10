@@ -40,6 +40,9 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
+import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.SqlStatementDataAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
@@ -100,6 +103,11 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 	public static final int ONLY_EXCEPTIONS = 128;
 
 	/**
+	 * Marker that marks that only spans are saved.
+	 */
+	public static final int ONLY_SPANS = 256;
+
+	/**
 	 * Default message.
 	 */
 	private static final String DEFAULT_MESSAGE = "Define the data that should be stored in the storage and additional options";
@@ -154,6 +162,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 			inputList.add(SqlStatementData.class);
 			inputList.add(InvocationSequenceData.class);
 			inputList.add(ExceptionSensorData.class);
+			inputList.add(AbstractSpan.class);
 		}
 		if (isStyleApplied(ONLY_TIMERS)) {
 			inputList.add(TimerData.class);
@@ -169,6 +178,10 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		}
 		if (isStyleApplied(ONLY_EXCEPTIONS)) {
 			inputList.add(ExceptionSensorData.class);
+			inputList.add(InvocationSequenceData.class);
+		}
+		if (isStyleApplied(ONLY_SPANS)) {
+			inputList.add(AbstractSpan.class);
 			inputList.add(InvocationSequenceData.class);
 		}
 		if (isStyleApplied(SYSTEM_DATA)) {
@@ -220,6 +233,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 				} else if (ObjectUtils.equals(tableItem.getData(), ExceptionSensorData.class) && isStyleApplied(ONLY_EXCEPTIONS)) {
 					tableItem.setChecked(true);
 				} else if (ObjectUtils.equals(tableItem.getData(), HttpTimerData.class) && isStyleApplied(ONLY_HTTP_TIMERS)) {
+					tableItem.setChecked(true);
+				} else if (isStyleApplied(ONLY_SPANS)) {
 					tableItem.setChecked(true);
 				} else {
 					tableItem.setChecked(false);
@@ -324,6 +339,11 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		 * Normal saving processor.
 		 */
 		List<Class<? extends DefaultData>> saveClassesList = getSelectedClassesFromTable();
+		// include both span types
+		if (saveClassesList.contains(AbstractSpan.class)) {
+			saveClassesList.add(ClientSpan.class);
+			saveClassesList.add(ServerSpan.class);
+		}
 		boolean writeInvocationAffiliation = saveClassesList.contains(InvocationSequenceData.class);
 
 		if (!saveClassesList.isEmpty()) {
@@ -460,6 +480,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 				return "Compilation Information Data";
 			} else if (ObjectUtils.equals(element, JmxSensorValueData.class)) {
 				return "JMX Data";
+			} else if (AbstractSpan.class.isAssignableFrom((Class<?>) element)) {
+				return "Tracing Data";
 			}
 			return super.getText(element);
 		}
@@ -493,6 +515,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 				return InspectIT.getDefault().getImage(InspectITImages.IMG_COMPILATION_OVERVIEW);
 			} else if (ObjectUtils.equals(element, JmxSensorValueData.class)) {
 				return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
+			} else if (AbstractSpan.class.isAssignableFrom((Class<?>) element)) {
+				return InspectIT.getDefault().getImage(InspectITImages.IMG_REMOTE);
 			}
 			return super.getImage(element);
 		}

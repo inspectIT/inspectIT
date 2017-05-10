@@ -14,6 +14,7 @@ import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
+import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
 import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
 import rocks.inspectit.shared.cs.cmr.service.IExceptionDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.IGlobalDataAccessService;
@@ -27,7 +28,6 @@ import rocks.inspectit.shared.cs.cmr.service.cache.CachedSpanService;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
 import rocks.inspectit.ui.rcp.repository.service.storage.StorageServiceProvider;
-import rocks.inspectit.ui.rcp.repository.service.storage.StorageSpanService;
 
 /**
  * Storage repository definition. This {@link RepositoryDefinition} has a direct usage of a
@@ -236,7 +236,7 @@ public class StorageRepositoryDefinition implements RepositoryDefinition {
 		httpTimerDataAccessService = storageServiceProvider.createStorageHttpTimerDataAccessService(this, localStorageData, (IStorageTreeComponent<HttpTimerData>) indexingTree);
 		jmxDataAccessService = storageServiceProvider.createStorageJmxDataAccessService(this, localStorageData, (IStorageTreeComponent<JmxSensorValueData>) indexingTree);
 		businessContextService = storageServiceProvider.createStorageBusinessContextService(this, localStorageData, (IStorageTreeComponent<DefaultData>) indexingTree, businessTransactions);
-		spanService = new CachedSpanService(new StorageSpanService());
+		spanService = new CachedSpanService(storageServiceProvider.createStorageSpanService(this, localStorageData, (IStorageTreeComponent<AbstractSpan>) indexingTree));
 		// for storage we use the regular cached data service because ids can never change
 		cachedDataService = new CachedDataService(globalDataAccessService, businessContextService);
 	}

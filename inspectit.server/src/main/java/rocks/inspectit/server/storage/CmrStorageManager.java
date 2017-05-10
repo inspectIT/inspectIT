@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.mutable.MutableLong;
 import org.apache.commons.lang.mutable.MutableObject;
@@ -485,6 +486,9 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 *            IDs of the elements to be saved.
 	 * @param platformIdent
 	 *            Platform ident elements belong to.
+	 * @param traceIds
+	 *            Set of trace ids to include when saving. This includes all spans and invocations
+	 *            related to traceId.
 	 * @param dataProcessors
 	 *            Processors to process the data. Can be null, then the data is only copied with no
 	 *            processing.
@@ -497,7 +501,7 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 	 * @throws BusinessException
 	 *             If {@link BusinessException} occurs.
 	 */
-	public void copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
+	public void copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Set<Long> traceIds, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
 			throws IOException, SerializationException, BusinessException {
 		if (!isStorageExisting(storageData)) {
 			this.createStorage(storageData);
@@ -507,8 +511,16 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 			this.openStorage(local);
 		}
 
-		List<DefaultData> toWriteList = storageDataDao.getDataFromIdList(elementIds, platformIdent);
-		this.writeToStorage(local, toWriteList, dataProcessors, true);
+		if (CollectionUtils.isNotEmpty(elementIds)) {
+			List<DefaultData> toWriteList = storageDataDao.getDataFromIdList(elementIds, platformIdent);
+			this.writeToStorage(local, toWriteList, dataProcessors, true);
+		}
+
+		if (CollectionUtils.isNotEmpty(traceIds)) {
+			List<DefaultData> toWriteList = storageDataDao.getDataForTraceIdList(traceIds);
+			this.writeToStorage(local, toWriteList, dataProcessors, true);
+		}
+
 		if (autoFinalize) {
 			this.closeStorage(local);
 		}

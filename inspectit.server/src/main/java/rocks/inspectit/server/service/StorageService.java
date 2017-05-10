@@ -285,10 +285,10 @@ public class StorageService implements IStorageService {
 	}
 
 	@Override
-	public StorageData copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
-			throws BusinessException {
+	public StorageData copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Set<Long> traceIds, Collection<AbstractDataProcessor> dataProcessors,
+			boolean autoFinalize) throws BusinessException {
 		try {
-			storageManager.copyDataToStorage(storageData, elementIds, platformIdent, dataProcessors, autoFinalize);
+			storageManager.copyDataToStorage(storageData, elementIds, platformIdent, traceIds, dataProcessors, autoFinalize);
 			return storageData;
 		} catch (SerializationException e) {
 			throw new TechnicalException("Write to the storage " + storageData + ".", StorageErrorCodeEnum.SERIALIZATION_FAILED, e);
@@ -381,6 +381,7 @@ public class StorageService implements IStorageService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@MethodLog
 	public StorageData addLabelToStorage(StorageData storageData, AbstractStorageLabel<?> storageLabel, boolean doOverwrite) throws BusinessException {
 		try {

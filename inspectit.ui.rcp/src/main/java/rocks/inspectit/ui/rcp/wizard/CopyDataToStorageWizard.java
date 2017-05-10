@@ -32,6 +32,9 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
@@ -130,6 +133,8 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 				style |= DefineDataProcessorsWizardPage.ONLY_TIMERS;
 			} else if (InvocationSequenceData.class.equals(clazz)) {
 				style |= DefineDataProcessorsWizardPage.ONLY_INVOCATIONS | DefineDataProcessorsWizardPage.EXTRACT_INVOCATIONS;
+			} else if (ClientSpan.class.equals(clazz) || ServerSpan.class.equals(clazz)) {
+				style |= DefineDataProcessorsWizardPage.ONLY_SPANS;
 			}
 		}
 		newOrExistsingStorageWizardPage = new NewOrExistsingStorageWizardPage();
@@ -163,12 +168,16 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 			// prepare for save
 			final Collection<AbstractDataProcessor> processors = defineDataProcessorsWizardPage.getProcessorList();
 			final Set<Long> idSet = new HashSet<>();
+			final Set<Long> traceIdSet = new HashSet<>();
 			Set<Long> platformIdents = new HashSet<>();
 			for (DefaultData template : copyDataList) {
 				if (template instanceof IIdsAwareAggregatedData<?>) {
 					// if we have aggregated data add all objects that were included in the
 					// aggregation
 					idSet.addAll(((IIdsAwareAggregatedData<?>) template).getAggregatedIds());
+				} else if (template instanceof Span) {
+					Span span = (Span) template;
+					traceIdSet.add(span.getSpanIdent().getTraceId());
 				} else if (0 != template.getId()) {
 					idSet.add(template.getId());
 				}
@@ -186,7 +195,7 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
-						StorageData updatedStorageData = cmrRepositoryDefinition.getStorageService().copyDataToStorage(storageData, idSet, platformIdent, processors, autoFinalize);
+						StorageData updatedStorageData = cmrRepositoryDefinition.getStorageService().copyDataToStorage(storageData, idSet, platformIdent, traceIdSet, processors, autoFinalize);
 						List<AbstractStorageLabel<?>> labels = addLabelWizardPage.getLabelsToAdd();
 						if (!labels.isEmpty()) {
 							cmrRepositoryDefinition.getStorageService().addLabelsToStorage(updatedStorageData, labels, true);

@@ -127,6 +127,15 @@ public interface StorageDataDao {
 	List<DefaultData> getDataFromIdList(Collection<Long> elementIds, long platformIdent);
 
 	/**
+	 * Returns the fresh data from the buffer which is involved with the given trace id.
+	 *
+	 * @param traceIds
+	 *            Trace id to search for.
+	 * @return Data to be store in storage.
+	 */
+	List<DefaultData> getDataForTraceIdList(Collection<Long> traceIds);
+
+	/**
 	 * Returns the last {@link SystemInformationData} for every agent provided in the list.
 	 *
 	 * @param agentIds

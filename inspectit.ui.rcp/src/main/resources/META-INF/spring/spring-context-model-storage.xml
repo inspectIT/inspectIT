@@ -30,6 +30,7 @@
 	<bean id="httpTimerDataQueryFactory" class="rocks.inspectit.shared.cs.indexing.query.factory.impl.HttpTimerDataQueryFactory" />
 	<bean id="invocationSequenceDataQueryFactory" class="rocks.inspectit.shared.cs.indexing.query.factory.impl.InvocationSequenceDataQueryFactory" />
 	<bean id="exceptionSensorDataQueryFactory" class="rocks.inspectit.shared.cs.indexing.query.factory.impl.ExceptionSensorDataQueryFactory" />
+	<bean id="spanQueryFactory" class="rocks.inspectit.shared.cs.indexing.query.factory.impl.SpanQueryFactory" />
 
 	<bean id="dataRetriever" class="rocks.inspectit.ui.rcp.storage.util.DataRetriever" init-method="init" />
 
@@ -66,6 +67,10 @@
 	<bean id="storageJmxDataAccessService" class="rocks.inspectit.ui.rcp.repository.service.storage.StorageJmxDataAccessService" scope="prototype" lazy-init="true" />
 
 	<bean id="storageBusinessContextService" class="rocks.inspectit.ui.rcp.repository.service.storage.StorageBusinessContextService" scope="prototype" lazy-init="true" />
+	
+	<bean id="storageSpanService" class="rocks.inspectit.ui.rcp.repository.service.storage.StorageSpanService" scope="prototype" lazy-init="true">
+		<property name="spanQueryFactory" ref="spanQueryFactory" />
+	</bean>
 
 	<!-- add the provider here directly -->
 
@@ -78,6 +83,7 @@
 		<lookup-method name="createStorageGlobalDataAccessService" bean="storageGlobalDataAccessService" />
 		<lookup-method name="createStorageJmxDataAccessService" bean="storageJmxDataAccessService" />
 		<lookup-method name="createStorageBusinessContextService" bean="storageBusinessContextService" />
+		<lookup-method name="createStorageSpanService" bean="storageSpanService" />
 	</bean>
 
 	<bean id="IOExecutorService" class="rocks.inspectit.shared.cs.storage.util.ExecutorServiceFactory">

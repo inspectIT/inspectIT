@@ -12,7 +12,9 @@ import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
+import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
 import rocks.inspectit.shared.cs.cmr.service.IBusinessContextManagementService;
+import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 import rocks.inspectit.shared.cs.storage.LocalStorageData;
 import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
@@ -231,5 +233,29 @@ public abstract class StorageServiceProvider {
 		storageBusinessContextService.setIndexingTree(indexingTree);
 		storageBusinessContextService.setBusinessTransactions(businessTransactions);
 		return storageBusinessContextService;
+	}
+
+	/**
+	 * @return Spring created {@link StorageSpanService}.
+	 */
+	protected abstract StorageSpanService createStorageSpanService();
+
+	/**
+	 * Properly initialized {@link ISpanService}.
+	 *
+	 * @param storageRepositoryDefinition
+	 *            {@link StorageRepositoryDefinition}.
+	 * @param localStorageData
+	 *            {@link LocalStorageData}.
+	 * @param indexingTree
+	 *            Indexing tree.
+	 * @return The storage implementation of the {@link IBusinessContextManagementService}
+	 */
+	public ISpanService createStorageSpanService(StorageRepositoryDefinition storageRepositoryDefinition, LocalStorageData localStorageData, IStorageTreeComponent<AbstractSpan> indexingTree) {
+		StorageSpanService storageSpanService = createStorageSpanService();
+		storageSpanService.setStorageRepositoryDefinition(storageRepositoryDefinition);
+		storageSpanService.setLocalStorageData(localStorageData);
+		storageSpanService.setIndexingTree(indexingTree);
+		return storageSpanService;
 	}
 }
