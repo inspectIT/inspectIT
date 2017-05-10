@@ -40,6 +40,9 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.SystemInformationData;
 import rocks.inspectit.shared.all.communication.data.ThreadInformationData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
+import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
+import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.ServerSpan;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.SqlStatementDataAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
@@ -75,29 +78,34 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 	public static final int EXTRACT_INVOCATIONS = 4;
 
 	/**
-	 * Marker that marks that only invocations are saved.
+	 * Marker that marks that invocations are saved.
 	 */
-	public static final int ONLY_INVOCATIONS = 8;
+	public static final int INVOCATIONS = 8;
 
 	/**
-	 * Marker that marks that only timer are saved.
+	 * Marker that marks that timer are saved.
 	 */
-	public static final int ONLY_TIMERS = 16;
+	public static final int TIMERS = 16;
 
 	/**
-	 * Marker that marks that only invocations are saved.
+	 * Marker that marks that SQLs are saved.
 	 */
-	public static final int ONLY_SQL_STATEMENTS = 32;
+	public static final int SQL_STATEMENTS = 32;
 
 	/**
-	 * Marker that marks that only HTTP timers are saved.
+	 * Marker that marks that HTTP timers are saved.
 	 */
-	public static final int ONLY_HTTP_TIMERS = 64;
+	public static final int HTTP_TIMERS = 64;
 
 	/**
-	 * Marker that marks that only exceptions are saved.
+	 * Marker that marks that exceptions are saved.
 	 */
-	public static final int ONLY_EXCEPTIONS = 128;
+	public static final int EXCEPTIONS = 128;
+
+	/**
+	 * Marker that marks that spans are saved.
+	 */
+	public static final int SPANS = 256;
 
 	/**
 	 * Default message.
@@ -148,27 +156,32 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		setTitle("Define Data");
 		setDescription(DEFAULT_MESSAGE);
 		this.selectionStyle = selectionStyle;
-		if (isStyleApplied(BUFFER_DATA) || isStyleApplied(ONLY_INVOCATIONS)) {
+		if (isStyleApplied(BUFFER_DATA) || isStyleApplied(INVOCATIONS)) {
 			inputList.add(TimerData.class);
 			inputList.add(HttpTimerData.class);
 			inputList.add(SqlStatementData.class);
 			inputList.add(InvocationSequenceData.class);
 			inputList.add(ExceptionSensorData.class);
+			inputList.add(AbstractSpan.class);
 		}
-		if (isStyleApplied(ONLY_TIMERS)) {
+		if (isStyleApplied(TIMERS)) {
 			inputList.add(TimerData.class);
 			inputList.add(InvocationSequenceData.class);
 		}
-		if (isStyleApplied(ONLY_SQL_STATEMENTS)) {
+		if (isStyleApplied(SQL_STATEMENTS)) {
 			inputList.add(SqlStatementData.class);
 			inputList.add(InvocationSequenceData.class);
 		}
-		if (isStyleApplied(ONLY_HTTP_TIMERS)) {
+		if (isStyleApplied(HTTP_TIMERS)) {
 			inputList.add(HttpTimerData.class);
 			inputList.add(InvocationSequenceData.class);
 		}
-		if (isStyleApplied(ONLY_EXCEPTIONS)) {
+		if (isStyleApplied(EXCEPTIONS)) {
 			inputList.add(ExceptionSensorData.class);
+			inputList.add(InvocationSequenceData.class);
+		}
+		if (isStyleApplied(SPANS)) {
+			inputList.add(AbstractSpan.class);
 			inputList.add(InvocationSequenceData.class);
 		}
 		if (isStyleApplied(SYSTEM_DATA)) {
@@ -211,15 +224,17 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 			}
 		} else {
 			for (TableItem tableItem : table.getItems()) {
-				if (ObjectUtils.equals(tableItem.getData(), InvocationSequenceData.class) && isStyleApplied(ONLY_INVOCATIONS)) {
+				if (ObjectUtils.equals(tableItem.getData(), InvocationSequenceData.class) && isStyleApplied(INVOCATIONS)) {
 					tableItem.setChecked(true);
-				} else if (ObjectUtils.equals(tableItem.getData(), TimerData.class) && isStyleApplied(ONLY_TIMERS)) {
+				} else if (ObjectUtils.equals(tableItem.getData(), TimerData.class) && isStyleApplied(TIMERS)) {
 					tableItem.setChecked(true);
-				} else if (ObjectUtils.equals(tableItem.getData(), SqlStatementData.class) && isStyleApplied(ONLY_SQL_STATEMENTS)) {
+				} else if (ObjectUtils.equals(tableItem.getData(), SqlStatementData.class) && isStyleApplied(SQL_STATEMENTS)) {
 					tableItem.setChecked(true);
-				} else if (ObjectUtils.equals(tableItem.getData(), ExceptionSensorData.class) && isStyleApplied(ONLY_EXCEPTIONS)) {
+				} else if (ObjectUtils.equals(tableItem.getData(), ExceptionSensorData.class) && isStyleApplied(EXCEPTIONS)) {
 					tableItem.setChecked(true);
-				} else if (ObjectUtils.equals(tableItem.getData(), HttpTimerData.class) && isStyleApplied(ONLY_HTTP_TIMERS)) {
+				} else if (ObjectUtils.equals(tableItem.getData(), HttpTimerData.class) && isStyleApplied(HTTP_TIMERS)) {
+					tableItem.setChecked(true);
+				} else if (isStyleApplied(SPANS)) {
 					tableItem.setChecked(true);
 				} else {
 					tableItem.setChecked(false);
@@ -290,23 +305,23 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 			setMessage("At least one data type has to be selected", ERROR);
 			return false;
 		}
-		if (isStyleApplied(ONLY_INVOCATIONS) && !getSelectedClassesFromTable().contains(InvocationSequenceData.class)) {
+		if (isStyleApplied(INVOCATIONS) && !getSelectedClassesFromTable().contains(InvocationSequenceData.class)) {
 			setMessage("Invocation Sequence Data type has to be selected because it is source of data", ERROR);
 			return false;
 		}
-		if (isStyleApplied(ONLY_TIMERS) && !getSelectedClassesFromTable().contains(TimerData.class)) {
+		if (isStyleApplied(TIMERS) && !getSelectedClassesFromTable().contains(TimerData.class)) {
 			setMessage("Timer Data type has to be selected because it is source of data", ERROR);
 			return false;
 		}
-		if (isStyleApplied(ONLY_SQL_STATEMENTS) && !getSelectedClassesFromTable().contains(SqlStatementData.class)) {
+		if (isStyleApplied(SQL_STATEMENTS) && !getSelectedClassesFromTable().contains(SqlStatementData.class)) {
 			setMessage("SQL Statement Data type has to be selected because it is source of data", ERROR);
 			return false;
 		}
-		if (isStyleApplied(ONLY_EXCEPTIONS) && !getSelectedClassesFromTable().contains(ExceptionSensorData.class)) {
+		if (isStyleApplied(EXCEPTIONS) && !getSelectedClassesFromTable().contains(ExceptionSensorData.class)) {
 			setMessage("Exception Sensor Data type has to be selected because it is source of data", ERROR);
 			return false;
 		}
-		if (isStyleApplied(ONLY_HTTP_TIMERS) && !getSelectedClassesFromTable().contains(HttpTimerData.class)) {
+		if (isStyleApplied(HTTP_TIMERS) && !getSelectedClassesFromTable().contains(HttpTimerData.class)) {
 			setMessage("HTTP Timer Data type has to be selected because it is source of data", ERROR);
 			return false;
 		}
@@ -324,6 +339,11 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		 * Normal saving processor.
 		 */
 		List<Class<? extends DefaultData>> saveClassesList = getSelectedClassesFromTable();
+		// include both span types
+		if (saveClassesList.contains(AbstractSpan.class)) {
+			saveClassesList.add(ClientSpan.class);
+			saveClassesList.add(ServerSpan.class);
+		}
 		boolean writeInvocationAffiliation = saveClassesList.contains(InvocationSequenceData.class);
 
 		if (!saveClassesList.isEmpty()) {
@@ -460,6 +480,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 				return "Compilation Information Data";
 			} else if (ObjectUtils.equals(element, JmxSensorValueData.class)) {
 				return "JMX Data";
+			} else if (AbstractSpan.class.isAssignableFrom((Class<?>) element)) {
+				return "Tracing Data";
 			}
 			return super.getText(element);
 		}
@@ -493,6 +515,8 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 				return InspectIT.getDefault().getImage(InspectITImages.IMG_COMPILATION_OVERVIEW);
 			} else if (ObjectUtils.equals(element, JmxSensorValueData.class)) {
 				return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
+			} else if (AbstractSpan.class.isAssignableFrom((Class<?>) element)) {
+				return InspectIT.getDefault().getImage(InspectITImages.IMG_REMOTE);
 			}
 			return super.getImage(element);
 		}

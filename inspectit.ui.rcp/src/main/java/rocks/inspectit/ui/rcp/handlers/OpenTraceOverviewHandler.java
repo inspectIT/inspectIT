@@ -23,8 +23,8 @@ import rocks.inspectit.ui.rcp.editor.root.RootEditorInput;
 import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
-import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
+import rocks.inspectit.ui.rcp.repository.StorageRepositoryDefinition;
 
 /**
  * Handler for opening the trace overview view.
@@ -38,30 +38,28 @@ public class OpenTraceOverviewHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		// TODO when tracing data is available for the storage also enable storage repository
-		// definition
-		CmrRepositoryDefinition availableCmr = null;
+		RepositoryDefinition availableRepository = null;
 
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof StructuredSelection) {
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof ICmrRepositoryProvider) {
 				ICmrRepositoryProvider cmrRepositoryProvider = (ICmrRepositoryProvider) selectedObject;
-				availableCmr = cmrRepositoryProvider.getCmrRepositoryDefinition();
+				availableRepository = cmrRepositoryProvider.getCmrRepositoryDefinition();
+			} else if (selectedObject instanceof StorageRepositoryDefinition) {
+				availableRepository = (RepositoryDefinition) selectedObject;
 			}
 		}
-		if (null == availableCmr) {
+		if (null == availableRepository) {
 			IWorkbenchPart editor = HandlerUtil.getActivePart(event);
 			if (editor instanceof IInputDefinitionProvider) {
 				IInputDefinitionProvider inputDefinitionProvider = (IInputDefinitionProvider) editor;
-				if (inputDefinitionProvider.getInputDefinition().getRepositoryDefinition() instanceof CmrRepositoryDefinition) {
-					availableCmr = (CmrRepositoryDefinition) inputDefinitionProvider.getInputDefinition().getRepositoryDefinition();
-				}
+				availableRepository = inputDefinitionProvider.getInputDefinition().getRepositoryDefinition();
 			}
 		}
 
-		if (null != availableCmr) {
-			InputDefinition inputDefinition = createInputDefinition(availableCmr);
+		if (null != availableRepository) {
+			InputDefinition inputDefinition = createInputDefinition(availableRepository);
 
 			// Get the view
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();

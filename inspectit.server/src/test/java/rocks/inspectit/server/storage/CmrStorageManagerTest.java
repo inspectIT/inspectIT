@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -416,21 +417,28 @@ public class CmrStorageManagerTest extends AbstractTestNGLogSupport {
 		storageData.setName("Test");
 
 		List<DefaultData> data = Collections.singletonList(mock(DefaultData.class));
+		List<DefaultData> traceData = Collections.singletonList(mock(DefaultData.class));
 		Collection<AbstractDataProcessor> processors = Collections.singleton(mock(AbstractDataProcessor.class));
 		storageManager = spy(storageManager);
 		long platformIdent = 10L;
 		Collection<Long> elementIds = mock(Collection.class);
+		Set<Long> traceIds = mock(Set.class);
 		when(storageDataDao.getDataFromIdList(elementIds, platformIdent)).thenReturn(data);
+		when(storageDataDao.getDataForTraceIdList(traceIds)).thenReturn(traceData);
 
 		// first with no auto-finalize
-		storageManager.copyDataToStorage(storageData, elementIds, platformIdent, processors, false);
+		storageManager.copyDataToStorage(storageData, elementIds, platformIdent, traceIds, processors, false);
 		verify(storageDataDao, times(1)).getDataFromIdList(elementIds, platformIdent);
 		verify(storageManager, times(1)).writeToStorage(storageData, data, processors, true);
+		verify(storageDataDao, times(1)).getDataForTraceIdList(traceIds);
+		verify(storageManager, times(1)).writeToStorage(storageData, traceData, processors, true);
 
 		// first with auto-finalize
-		storageManager.copyDataToStorage(storageData, elementIds, platformIdent, processors, false);
+		storageManager.copyDataToStorage(storageData, elementIds, platformIdent, traceIds, processors, false);
 		verify(storageDataDao, times(2)).getDataFromIdList(elementIds, platformIdent);
 		verify(storageManager, times(2)).writeToStorage(storageData, data, processors, true);
+		verify(storageDataDao, times(2)).getDataForTraceIdList(traceIds);
+		verify(storageManager, times(2)).writeToStorage(storageData, traceData, processors, true);
 		assertThat(storageManager.isStorageClosed(storageData), is(true));
 	}
 

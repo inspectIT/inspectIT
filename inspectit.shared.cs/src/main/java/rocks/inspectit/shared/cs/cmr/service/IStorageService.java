@@ -3,6 +3,7 @@ package rocks.inspectit.shared.cs.cmr.service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import rocks.inspectit.shared.all.cmr.service.ServiceExporterType;
 import rocks.inspectit.shared.all.cmr.service.ServiceInterface;
@@ -197,6 +198,9 @@ public interface IStorageService {
 	 *            PLatform ident that element belong to. If zero is passed it will be ignored and
 	 *            complete buffer will be searched for the IDs. Providing the platform ident will
 	 *            considerably speed-up the query that needs to be performed.
+	 * @param traceIds
+	 *            Set of trace ids to include when saving. This includes all spans and invocations
+	 *            related to traceId.
 	 * @param dataProcessors
 	 *            Processors to process the data. Can be null, then the data is only copied with no
 	 *            processing.
@@ -206,8 +210,8 @@ public interface IStorageService {
 	 * @throws BusinessException
 	 *             If the storage is currently used for recording. If write fails.
 	 */
-	StorageData copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Collection<AbstractDataProcessor> dataProcessors, boolean autoFinalize)
-			throws BusinessException;
+	StorageData copyDataToStorage(StorageData storageData, Collection<Long> elementIds, long platformIdent, Set<Long> traceIds, Collection<AbstractDataProcessor> dataProcessors,
+			boolean autoFinalize) throws BusinessException;
 
 	/**
 	 * Returns the map of the string/long pairs that represent the path to the index files for one
@@ -285,7 +289,7 @@ public interface IStorageService {
 	 * <p>
 	 * For example, if the CMR has the ip localhost and port 8080, the address for the file would
 	 * be: http://localhost:8080/directory/file.extension
-	 * 
+	 *
 	 * @param storageData
 	 *            Storage to get business context files for.
 	 * @return Returns the map of the string/long pairs that represent the path to the business
@@ -520,7 +524,7 @@ public interface IStorageService {
 	 *             If exception occurs during the check.
 	 *
 	 */
-	void createStorageFromUploadedDir(final IStorageData localStorageData) throws BusinessException;
+	void createStorageFromUploadedDir(IStorageData localStorageData) throws BusinessException;
 
 	/**
 	 * Caches the given collection of {@link DefaultData} for the storage. Data will be cached under
