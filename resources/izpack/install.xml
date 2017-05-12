@@ -119,6 +119,9 @@
 			<description>@{installerUiDescriptionLong}</description>
 			<file override="update" src="@{installerUiPointer}" unpack="true" targetdir="$INSTALL_PATH" />
 
+			<!-- Overriding the default Info.plist to avoid Java SE 6 dialog -->
+			<singlefile override="true" src="@{Info.plist}" target="$INSTALL_PATH/inspectit/inspectIT.app/Contents/Info.plist" condition="izpack.macinstall" />
+
 			<!-- Set executable flag to inspectIT files after installation (important for GNU/Linux OS or OSX) -->
 			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT.app/Contents/MacOS/inspectIT" condition="izpack.macinstall" />
 			<executable targetfile="$INSTALL_PATH/inspectit/inspectIT" condition="izpack.linuxinstall" />

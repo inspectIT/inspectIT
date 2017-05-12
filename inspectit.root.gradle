@@ -185,6 +185,7 @@ def izpack(installerName, os, arch, cmrReleaseTask, uiReleaseTask) {
 			ant.var(name: 'installerCmrPointer', value: cmrPointer.absolutePath)
 			ant.var(name: 'installerUiPointer', value: uiPointer.absolutePath)
 			ant.var(name: 'installerApplicationVersion', value: versionInfo)
+			ant.var(name: 'Info.plist', value: file("${installerResources}/Info.plist").absolutePath)
 			if (os == 'Windows') {
 				ant.var(name: 'installerInstallServiceBat', value: file("${buildInstallerRoot}/installService.bat").absolutePath)
 				ant.var(name: 'installerUninstallServiceBat', value: file("${buildInstallerRoot}/uninstallService.bat").absolutePath)
