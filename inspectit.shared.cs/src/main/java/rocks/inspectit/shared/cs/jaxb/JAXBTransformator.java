@@ -76,9 +76,13 @@ public class JAXBTransformator {
 	 * @throws JAXBException
 	 *             If {@link JAXBException} occurs.
 	 * @throws IOException
-	 *             If {@link IOException} occurs.
+	 *             If {@link IOException} occurs or if passed object is instance of
+	 *             {@link ISchemaVersionAware}..
 	 */
 	public void marshall(Path path, Object object, String noNamespaceSchemaLocation) throws JAXBException, IOException {
+		if (object instanceof ISchemaVersionAware) {
+			throw new IOException("Can not marshal instance of ISchemaVersionAware without the schema version.");
+		}
 		marshall(path, object, noNamespaceSchemaLocation, 0);
 	}
 
@@ -117,7 +121,7 @@ public class JAXBTransformator {
 		}
 
 		// set schema version if needed
-		if ((object instanceof ISchemaVersionAware) && (0 != schemaVersion)) {
+		if (object instanceof ISchemaVersionAware) {
 			((ISchemaVersionAware) object).setSchemaVersion(schemaVersion);
 		}
 
@@ -138,9 +142,13 @@ public class JAXBTransformator {
 	 * @throws JAXBException
 	 *             If {@link JAXBException} occurs.
 	 * @throws IOException
-	 *             If {@link IOException} occurs.
+	 *             If {@link IOException} occurs or if passed object is instance of
+	 *             {@link ISchemaVersionAware}.
 	 */
 	public byte[] marshall(Object object, String noNamespaceSchemaLocation) throws JAXBException, IOException {
+		if (object instanceof ISchemaVersionAware) {
+			throw new IOException("Can not marshal instance of ISchemaVersionAware without the schema version.");
+		}
 		return marshall(object, noNamespaceSchemaLocation, 0);
 	}
 
@@ -171,7 +179,7 @@ public class JAXBTransformator {
 		}
 
 		// set schema version if needed
-		if ((object instanceof ISchemaVersionAware) && (0 != schemaVersion)) {
+		if (object instanceof ISchemaVersionAware) {
 			((ISchemaVersionAware) object).setSchemaVersion(schemaVersion);
 		}
 
@@ -276,12 +284,9 @@ public class JAXBTransformator {
 		try {
 			T object = (T) unmarshaller.unmarshal(inputStream);
 			if (migrated) {
-				if (object instanceof ISchemaVersionAware) {
-					((ISchemaVersionAware) object).setSchemaVersion(targetSchemaVersion);
-				}
 				// if need to rewrite just pass the object to the marshall
 				String noNamespaceSchemaLocation = path.relativize(schemaPath).toString();
-				this.marshall(path, object, noNamespaceSchemaLocation);
+				this.marshall(path, object, noNamespaceSchemaLocation, targetSchemaVersion);
 			}
 			return object;
 		} finally {

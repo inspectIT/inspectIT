@@ -664,7 +664,7 @@ public class ConfigurationInterfaceManager {
 			importData.setProfiles(exportedProfiles);
 		}
 
-		return transformator.marshall(importData, null);
+		return transformator.marshall(importData, null, ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION);
 	}
 
 	/**
@@ -908,7 +908,8 @@ public class ConfigurationInterfaceManager {
 	 *             if {@link JAXBException} occurs. If saving fails
 	 */
 	private void saveAlertingDefinition(AlertingDefinition alertingDefinition) throws JAXBException, IOException {
-		transformator.marshall(pathResolver.getAlertingDefinitionFilePath(alertingDefinition), alertingDefinition, getRelativeToSchemaPath(pathResolver.getDefaultCiPath()).toString());
+		transformator.marshall(pathResolver.getAlertingDefinitionFilePath(alertingDefinition), alertingDefinition, getRelativeToSchemaPath(pathResolver.getDefaultCiPath()).toString(),
+				ISchemaVersionAware.ConfigurationInterface.SCHEMA_VERSION);
 	}
 
 	/**

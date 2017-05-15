@@ -12,6 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.jaxb.AbstractSchemaVersionAware;
 
 /**
  * Simple POJO to represent configuration interface data to be imported.
@@ -21,7 +22,7 @@ import rocks.inspectit.shared.cs.ci.Profile;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "configuration-interface-import-data")
-public class ConfigurationInterfaceImportData {
+public class ConfigurationInterfaceImportData extends AbstractSchemaVersionAware {
 
 	/**
 	 * File extension constant.
