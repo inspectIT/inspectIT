@@ -2,6 +2,7 @@
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <xs:element name="test-data" type="testData"/>
+  <xs:element name="non-schema-aware-test-data" type="nonSchemaAwareTestData"/>
 
   <xs:complexType name="abstractSchemaVersionAware" abstract="true">
     <xs:sequence/>
@@ -15,6 +16,11 @@
         <xs:attribute name="value" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="nonSchemaAwareTestData">
+    <xs:sequence/>
+    <xs:attribute name="value" type="xs:string" use="required"/>
   </xs:complexType>
 
 </xs:schema>

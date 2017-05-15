@@ -50,13 +50,13 @@ public class JAXBTransformatorTest extends TestBase {
 		@Test
 		public void basic() throws Exception {
 			String value = "value";
-			TestData testData = new TestData();
+			NonSchemaAwareTestData testData = new NonSchemaAwareTestData();
 			testData.setValue(value);
 
 			transformator.marshall(path, testData, null);
 
 			assertThat(Files.exists(path), is(true));
-			JAXBContext context = JAXBContext.newInstance(TestData.class);
+			JAXBContext context = JAXBContext.newInstance(NonSchemaAwareTestData.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
 				Object unmarshaled = unmarshaller.unmarshal(is);
@@ -86,7 +86,7 @@ public class JAXBTransformatorTest extends TestBase {
 		public void schemaLocation() throws Exception {
 			String schemaLocation = "something.xsd";
 
-			transformator.marshall(path, new TestData(), schemaLocation);
+			transformator.marshall(path, new NonSchemaAwareTestData(), schemaLocation);
 
 			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -104,19 +104,24 @@ public class JAXBTransformatorTest extends TestBase {
 
 		@Test(expectedExceptions = IOException.class)
 		public void directoryAsPath() throws Exception {
-			transformator.marshall(path.getParent(), new TestData(), null);
+			transformator.marshall(path.getParent(), new NonSchemaAwareTestData(), null);
+		}
+
+		@Test(expectedExceptions = IOException.class)
+		public void schemaAwareUsingWrongMethod() throws Exception {
+			transformator.marshall(path, new TestData(), null);
 		}
 
 		@Test
 		public void bytesBasic() throws Exception {
 			String value = "value";
-			TestData testData = new TestData();
+			NonSchemaAwareTestData testData = new NonSchemaAwareTestData();
 			testData.setValue(value);
 
 			byte[] data = transformator.marshall(testData, null);
 
 			assertThat(Files.exists(path), is(true));
-			JAXBContext context = JAXBContext.newInstance(TestData.class);
+			JAXBContext context = JAXBContext.newInstance(NonSchemaAwareTestData.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			try (InputStream is = new ByteArrayInputStream(data)) {
 				Object unmarshaled = unmarshaller.unmarshal(is);
@@ -146,7 +151,7 @@ public class JAXBTransformatorTest extends TestBase {
 		public void bytesSchemaLocation() throws Exception {
 			String schemaLocation = "something.xsd";
 
-			byte[] data = transformator.marshall(new TestData(), schemaLocation);
+			byte[] data = transformator.marshall(new NonSchemaAwareTestData(), schemaLocation);
 
 			try (InputStream is = new ByteArrayInputStream(data)) {
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -162,15 +167,20 @@ public class JAXBTransformatorTest extends TestBase {
 
 		}
 
+		@Test(expectedExceptions = IOException.class)
+		public void bytesSchemaAwareUsingWrongMethod() throws Exception {
+			transformator.marshall(new TestData(), null);
+		}
+
 		@Test
 		public void overwriteExistingFile() throws Exception {
 			String initialValue = "initialValue";
-			TestData testData1 = new TestData();
+			NonSchemaAwareTestData testData1 = new NonSchemaAwareTestData();
 			testData1.setValue(initialValue);
 
 			transformator.marshall(path, testData1, null);
 
-			JAXBContext context = JAXBContext.newInstance(TestData.class);
+			JAXBContext context = JAXBContext.newInstance(NonSchemaAwareTestData.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
 				Object unmarshaled = unmarshaller.unmarshal(is);
@@ -178,7 +188,7 @@ public class JAXBTransformatorTest extends TestBase {
 			}
 
 			String overwrittenValue = "overwrittenValue";
-			TestData testData2 = new TestData();
+			NonSchemaAwareTestData testData2 = new NonSchemaAwareTestData();
 			testData2.setValue(overwrittenValue);
 
 			transformator.marshall(path, testData2, null);
@@ -203,11 +213,11 @@ public class JAXBTransformatorTest extends TestBase {
 		@Test
 		public void basic() throws Exception {
 			String value = "value";
-			TestData testData = new TestData();
+			NonSchemaAwareTestData testData = new NonSchemaAwareTestData();
 			testData.setValue(value);
 			transformator.marshall(path, testData, null);
 
-			TestData unmarshalled = transformator.unmarshall(path, schemaPath, TestData.class);
+			NonSchemaAwareTestData unmarshalled = transformator.unmarshall(path, schemaPath, NonSchemaAwareTestData.class);
 
 			assertThat(unmarshalled, is(testData));
 		}
@@ -215,11 +225,11 @@ public class JAXBTransformatorTest extends TestBase {
 		@Test(expectedExceptions = UnmarshalException.class)
 		public void schemaNotValid() throws Exception {
 			String value = "value";
-			TestData testData = new TestData();
+			NonSchemaAwareTestData testData = new NonSchemaAwareTestData();
 			testData.setValue(value);
 			transformator.marshall(path, testData, null);
 
-			transformator.unmarshall(path, invalidSchemaPath, TestData.class);
+			transformator.unmarshall(path, invalidSchemaPath, NonSchemaAwareTestData.class);
 		}
 
 		@Test
@@ -276,11 +286,11 @@ public class JAXBTransformatorTest extends TestBase {
 		@Test
 		public void bytesBasic() throws Exception {
 			String value = "value";
-			TestData testData = new TestData();
+			NonSchemaAwareTestData testData = new NonSchemaAwareTestData();
 			testData.setValue(value);
 			byte[] data = transformator.marshall(testData, null);
 
-			TestData unmarshalled = transformator.unmarshall(data, schemaPath, TestData.class);
+			NonSchemaAwareTestData unmarshalled = transformator.unmarshall(data, schemaPath, NonSchemaAwareTestData.class);
 
 			assertThat(unmarshalled, is(testData));
 		}
@@ -288,7 +298,7 @@ public class JAXBTransformatorTest extends TestBase {
 		@Test(expectedExceptions = UnmarshalException.class)
 		public void bytesSchemaNotValid() throws Exception {
 			String value = "value";
-			TestData testData = new TestData();
+			NonSchemaAwareTestData testData = new NonSchemaAwareTestData();
 			testData.setValue(value);
 			byte[] data = transformator.marshall(testData, null);
 
