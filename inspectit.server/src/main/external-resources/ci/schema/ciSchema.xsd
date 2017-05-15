@@ -978,22 +978,26 @@
   </xs:complexType>
 
   <xs:complexType name="configurationInterfaceImportData">
-    <xs:sequence>
-      <xs:element name="profiles" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element ref="profile" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="environments" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element ref="environment" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="abstractSchemaVersionAware">
+        <xs:sequence>
+          <xs:element name="profiles" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="profile" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="environments" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="environment" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:simpleType name="thresholdType">
