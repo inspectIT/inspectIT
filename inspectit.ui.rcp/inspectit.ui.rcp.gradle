@@ -227,6 +227,11 @@ def releaseSingle(os, arch, distName) {
 		into('inspectit/jre'){
 			from zipTree(jreFile)
 		}
+		if ('macosx'.equals(os)) {
+			filesMatching('**/*Info.plist') {
+				filter { line -> line.replaceAll('org.eclipse.eclipse', 'rocks.inspectit.ui.rcp') }
+			}
+		}
 	}
 }
 
