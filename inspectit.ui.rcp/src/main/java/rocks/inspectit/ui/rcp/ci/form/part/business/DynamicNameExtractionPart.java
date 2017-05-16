@@ -36,7 +36,12 @@ import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpSchemeValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerNameValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerPortValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureValueSource;
@@ -973,6 +978,16 @@ public class DynamicNameExtractionPart extends SectionPart { // NOPMD
 			return new MethodSignatureValueSource();
 		case HTTP_REQUEST_METHOD:
 			return new HttpRequestMethodValueSource();
+		case HTTP_QUERY_STRING:
+			return new HttpQueryStringValueSource();
+		case HTTP_SCHEME:
+			return new HttpSchemeValueSource();
+		case HTTP_SERVER_NAME:
+			return new HttpServerNameValueSource();
+		case HTTP_SERVER_PORT:
+			return new HttpServerPortValueSource();
+		case HTTP_URI:
+			return new HttpUriValueSource();
 		default:
 			throw new RuntimeException("Unsupported value source type!");
 		}
