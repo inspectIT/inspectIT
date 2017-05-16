@@ -120,7 +120,7 @@ public class MethodIdentToSensorType implements Serializable {
 	 *         instrumentation on {@link MethodIdent}.
 	 */
 	public boolean isActive() {
-		return timestamp.after(methodIdent.getTimeStamp());
+		return timestamp.after(methodIdent.getTimeStamp()) && timestamp.after(methodIdent.getPlatformIdent().getTimeStamp());
 	}
 
 	/**
