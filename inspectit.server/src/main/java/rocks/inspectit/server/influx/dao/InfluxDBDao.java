@@ -162,7 +162,7 @@ public class InfluxDBDao implements InfluxAvailabilityListener, IExternalService
 	 * Connects to the InfluxDB if the feature has been enabled.
 	 */
 	@PostConstruct
-	@PropertyUpdate(properties = { "influxdb.host", "influxdb.port", "influxdb.user", "influxdb.passwd", "influxdb.database", "influxdb.active" })
+	@PropertyUpdate(properties = { "influxdb.host", "influxdb.port", "influxdb.user", "influxdb.passwd", "influxdb.database", "influxdb.active", "influxdb.ssl" })
 	public void propertiesUpdated() {
 		reset();
 

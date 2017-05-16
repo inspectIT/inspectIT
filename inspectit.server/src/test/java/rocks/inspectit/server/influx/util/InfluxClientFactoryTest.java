@@ -8,7 +8,6 @@ import org.influxdb.InfluxDB;
 import org.mockito.InjectMocks;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.influx.util.InfluxClientFactory;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -32,6 +31,18 @@ public class InfluxClientFactoryTest extends TestBase {
 			clientFactory.host = "localhost";
 			clientFactory.port = 1;
 			clientFactory.user = "user";
+
+			InfluxDB client = clientFactory.createClient();
+
+			assertThat(client, not(nullValue()));
+		}
+
+		@Test
+		public void usingSSL() {
+			clientFactory.host = "localhost";
+			clientFactory.port = 1;
+			clientFactory.user = "user";
+			clientFactory.sslEnabled = true;
 
 			InfluxDB client = clientFactory.createClient();
 

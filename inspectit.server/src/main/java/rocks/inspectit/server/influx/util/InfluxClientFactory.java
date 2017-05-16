@@ -14,6 +14,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class InfluxClientFactory {
+	/**
+	 * HTTP scheme.
+	 */
+	private static final String HTTP = "http://";
+
+	/**
+	 * HTTPS scheme.
+	 */
+	private static final String HTTPS = "https://";
 
 	/**
 	 * Host where InfluxDB is running.
@@ -40,6 +49,12 @@ public class InfluxClientFactory {
 	String password;
 
 	/**
+	 * Indicates whether SSL connection shall be used.
+	 */
+	@Value("${influxdb.ssl}")
+	boolean sslEnabled;
+
+	/**
 	 * Creates a new {@link InfluxDB} client based on the configured host, port, user and password.
 	 *
 	 * @return An {@link InfluxDB} client.
@@ -53,7 +68,8 @@ public class InfluxClientFactory {
 		if (port <= 0) {
 			throw new IllegalArgumentException("Specify a valid port in the range between 1 and 65535.");
 		}
-		String influxUrl = "http://" + host + ":" + port;
+		String protocol = sslEnabled ? HTTPS : HTTP;
+		String influxUrl = protocol + host + ":" + port;
 		return InfluxDBFactory.connect(influxUrl, user, password);
 	}
 
