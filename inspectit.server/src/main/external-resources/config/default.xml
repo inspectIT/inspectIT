@@ -66,6 +66,7 @@
 			</group-property>
 			<group-property name="influxDB" description="Defines properties to be used if influxDB is used for storing long term data.">
 				<properties>
+					<boolean-property name="Enable SSL" default-value="false" server-restart-required="false" logical-name="influxdb.ssl" advanced="false" description="If enabled the inspectIT server uses an SSL/HTTPS connection to influxDB."></boolean-property>
 					<string-property name="Host" default-value="localhost" server-restart-required="false" logical-name="influxdb.host" advanced="false" description="The hostname/IP of the influxDB instance.">
 						<validators>
 							<isNotEmpty />
