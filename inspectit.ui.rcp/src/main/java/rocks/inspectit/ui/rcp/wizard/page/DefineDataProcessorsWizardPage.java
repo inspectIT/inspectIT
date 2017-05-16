@@ -1,7 +1,7 @@
 package rocks.inspectit.ui.rcp.wizard.page;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -115,7 +115,7 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 	/**
 	 * Input list for table containing all the classes.
 	 */
-	private Set<Class<?>> inputList = new HashSet<>();
+	private Set<Class<?>> inputList = new LinkedHashSet<>();
 
 	/**
 	 * Style for providing different selection possibilities.
@@ -156,11 +156,12 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		setTitle("Define Data");
 		setDescription(DEFAULT_MESSAGE);
 		this.selectionStyle = selectionStyle;
+		// use add if not contained to have always same order of elements in the page
 		if (isStyleApplied(BUFFER_DATA) || isStyleApplied(INVOCATIONS)) {
+			inputList.add(InvocationSequenceData.class);
 			inputList.add(TimerData.class);
 			inputList.add(HttpTimerData.class);
 			inputList.add(SqlStatementData.class);
-			inputList.add(InvocationSequenceData.class);
 			inputList.add(ExceptionSensorData.class);
 			inputList.add(AbstractSpan.class);
 		}
@@ -370,16 +371,20 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 		}
 
 		/**
-		 * Invocation extractor & cloner.
+		 * Invocation extractor.
+		 */
+		// we only include the extractor of invocations if the style is specified
+		if (isStyleApplied(EXTRACT_INVOCATIONS)) {
+			List<AbstractDataProcessor> chainedProcessorsForExtractor = new ArrayList<>();
+			chainedProcessorsForExtractor.addAll(normalProcessors);
+			InvocationExtractorDataProcessor invocationExtractorDataProcessor = new InvocationExtractorDataProcessor(chainedProcessorsForExtractor);
+			normalProcessors.add(invocationExtractorDataProcessor);
+		}
+
+		/**
+		 * Invocation cloner.
 		 */
 		if (saveClassesList.contains(InvocationSequenceData.class)) {
-			// we only include the extractor of invocations if the style is specified
-			if (isStyleApplied(EXTRACT_INVOCATIONS)) {
-				List<AbstractDataProcessor> chainedProcessorsForExtractor = new ArrayList<>();
-				chainedProcessorsForExtractor.addAll(normalProcessors);
-				InvocationExtractorDataProcessor invocationExtractorDataProcessor = new InvocationExtractorDataProcessor(chainedProcessorsForExtractor);
-				normalProcessors.add(invocationExtractorDataProcessor);
-			}
 			normalProcessors.add(new InvocationClonerDataProcessor());
 		}
 
