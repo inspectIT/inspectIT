@@ -77,7 +77,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 		/** The timestamp column. */
 		TIMESTAMP("Timestamp", 130, InspectITImages.IMG_TIMESTAMP, false, true, DefaultDataComparatorEnum.TIMESTAMP),
 		/** The column containing the name of the database. */
-		DATABASE_URL("Database URL", 120, null, true, true, null),
+		DATABASE_URL("Database URL", 120, null, true, true, SqlStatementDataComparatorEnum.DATABASE_URL),
 		/** The statement column. */
 		STATEMENT("Statement", 600, InspectITImages.IMG_DATABASE, true, true, SqlStatementDataComparatorEnum.SQL_AND_PARAMETERS),
 		/** The count column. */
