@@ -1062,7 +1062,7 @@
                </count>
                <iterate>
                   <instanceof
-                        value="rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition">
+                        value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
                </iterate>
             </and>
