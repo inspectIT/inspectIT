@@ -56,7 +56,7 @@
 							<isNotEmpty />
 						</validators>
 					</string-property>
-					<string-property name="Password" default-value="inspectit" server-restart-required="true" logical-name="database.password" advanced="true" description="The password used to connect to the database.">
+					<string-property name="Password" default-value="inspectit" password="true" server-restart-required="true" logical-name="database.password" advanced="true" description="The password used to connect to the database.">
 						<validators>
 							<isNotEmpty />
 						</validators>
@@ -82,7 +82,7 @@
 							<isNotEmpty />
 						</validators>
 					</string-property>
-					<string-property name="Password" default-value="password" server-restart-required="false" logical-name="influxdb.passwd" advanced="false" description="The password to be used to connect to the influxDB instance.">
+					<string-property name="Password" default-value="password" password="true" server-restart-required="false" logical-name="influxdb.passwd" advanced="false" description="The password to be used to connect to the influxDB instance.">
 						<validators>
 							<isNotEmpty />
 						</validators>
@@ -371,7 +371,7 @@
 				</validators>
 			</long-property>
 			<string-property name="Username" default-value="" server-restart-required="false" logical-name="mail.smtp.user" advanced="false" description="The username to be used to connect to the SMTP server." />
-			<string-property name="Password" default-value="" server-restart-required="false" logical-name="mail.smtp.passwd" advanced="false" description="The password to be used to connect to the SMTP server." />
+			<string-property name="Password" default-value="" password="true" server-restart-required="false" logical-name="mail.smtp.passwd" advanced="false" description="The password to be used to connect to the SMTP server." />
 			<string-property name="From E-Mail Address" default-value="sender@inspectit.rocks" server-restart-required="false" logical-name="mail.from" advanced="false" description="The e-mail address to be used as sender when e-mails are sent by inspectIT.">
 				<validators>
 					<isNotEmpty />

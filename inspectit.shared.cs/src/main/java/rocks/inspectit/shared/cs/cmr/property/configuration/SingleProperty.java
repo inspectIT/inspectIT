@@ -173,6 +173,15 @@ public abstract class SingleProperty<T> extends AbstractProperty {
 	}
 
 	/**
+	 * If property contains password.
+	 *
+	 * @return If property contains password.
+	 */
+	public boolean isPassword() {
+		return false;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

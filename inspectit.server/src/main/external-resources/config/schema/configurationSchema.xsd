@@ -180,6 +180,7 @@
         <xs:sequence/>
         <xs:attribute name="used-value" type="xs:string"/>
         <xs:attribute name="default-value" type="xs:string" use="required"/>
+        <xs:attribute name="password" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

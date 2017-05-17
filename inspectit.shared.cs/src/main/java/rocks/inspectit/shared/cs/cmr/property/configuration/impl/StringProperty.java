@@ -32,6 +32,12 @@ public class StringProperty extends SingleProperty<String> {
 	private String defaultValue;
 
 	/**
+	 * If property is a password.
+	 */
+	@XmlAttribute(name = "password")
+	private Boolean password = Boolean.FALSE;
+
+	/**
 	 * No-arg constructor.
 	 */
 	public StringProperty() {
@@ -115,6 +121,15 @@ public class StringProperty extends SingleProperty<String> {
 	@Override
 	public String parseLiteral(String literal) {
 		return literal;
+	}
+
+	/**
+	 * Gets {@link #password}.
+	 *
+	 * @return {@link #password}
+	 */
+	public boolean isPassword() {
+		return this.password;
 	}
 
 }
