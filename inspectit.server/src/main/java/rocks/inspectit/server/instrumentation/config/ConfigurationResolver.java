@@ -270,7 +270,8 @@ public class ConfigurationResolver {
 		// some options
 		stringBuilder.append("Options:\n"); // NOPMD
 		stringBuilder.append("|-class loading delegation: " + environment.isClassLoadingDelegation() + "\n"); // NOPMD
-		stringBuilder.append("|-enhanced exception sensor: " + environment.getExceptionSensorConfig().isEnhanced()); // NOPMD
+		stringBuilder.append("|-enhanced exception sensor: " + environment.getExceptionSensorConfig().isEnhanced() + "\n"); // NOPMD
+		stringBuilder.append("|-retransformation strategy: " + environment.getRetransformationStrategy().toString()); // NOPMD
 
 		return stringBuilder.toString();
 	}
