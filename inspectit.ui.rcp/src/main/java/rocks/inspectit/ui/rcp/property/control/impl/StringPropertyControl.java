@@ -43,7 +43,12 @@ public class StringPropertyControl extends AbstractPropertyControl<StringPropert
 	 */
 	@Override
 	public Control createControl(Composite parent) {
-		text = new Text(parent, SWT.BORDER);
+		int style = SWT.BORDER;
+		if (property.isPassword()) {
+			style |= SWT.PASSWORD;
+		}
+
+		text = new Text(parent, style);
 		text.setText(property.getValue());
 		text.addModifyListener(new ModifyListener() {
 			@Override

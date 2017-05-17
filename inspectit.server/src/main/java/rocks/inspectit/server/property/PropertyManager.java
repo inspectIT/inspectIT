@@ -178,7 +178,8 @@ public class PropertyManager {
 			updatedProperties.add(property);
 
 			if (LOG.isInfoEnabled()) {
-				LOG.info("Property '" + property.getName() + "' successfully updated, new value is " + property.getFormattedValue());
+				String value = property.isPassword() ? property.getFormattedValue().replaceAll(".", "*") : property.getFormattedValue();
+				LOG.info("Property '" + property.getName() + "' successfully updated, new value is " + value);
 			}
 		}
 
