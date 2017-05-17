@@ -1064,6 +1064,22 @@
                   <instanceof
                         value="rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider">
                   </instanceof>
+                  <not>
+                     <or>
+                        <instanceof
+                              value="rocks.inspectit.ui.rcp.provider.IProfileProvider">
+                        </instanceof>
+                        <instanceof
+                              value="rocks.inspectit.ui.rcp.provider.IEnvironmentProvider">
+                        </instanceof>
+                        <instanceof
+                              value="rocks.inspectit.ui.rcp.provider.IApplicationProvider">
+                        </instanceof>
+                        <instanceof
+                              value="rocks.inspectit.ui.rcp.provider.IAlertDefinitionProvider">
+                        </instanceof>
+                     </or>
+                  </not>
                </iterate>
             </and>
          </activeWhen>
