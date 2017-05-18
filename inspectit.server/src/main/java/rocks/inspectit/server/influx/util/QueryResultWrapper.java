@@ -144,10 +144,21 @@ public class QueryResultWrapper {
 	 *            the row index
 	 * @param columnIndex
 	 *            the column index
-	 * @return the object of at the specified location as a {@link Double}.
+	 * @return the object of at the specified location as a {@link Double}. If the object in
+	 *         specified row and column is already a Double, returns that object. Otherwise tries to
+	 *         transform the object to double if it's a number. Finally returns Double.NaN if the
+	 *         object in specified row and column is not a number.
 	 */
 	public Double getDouble(int rowIndex, int columnIndex) {
-		String value = get(rowIndex, columnIndex).toString();
+		Object object = get(rowIndex, columnIndex);
+
+		// if it's double already avoid any transformation
+		if (object instanceof Double) {
+			return (Double) object;
+		}
+
+		// otherwise use NumberUtils
+		String value = object.toString();
 		if (NumberUtils.isNumber(value)) {
 			return NumberUtils.toDouble(value);
 		} else {
