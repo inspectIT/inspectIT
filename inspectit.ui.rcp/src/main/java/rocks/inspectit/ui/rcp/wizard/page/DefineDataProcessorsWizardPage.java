@@ -326,8 +326,21 @@ public class DefineDataProcessorsWizardPage extends WizardPage {
 			setMessage("HTTP Timer Data type has to be selected because it is source of data", ERROR);
 			return false;
 		}
+		if (isStyleApplied(SPANS) && !getSelectedClassesFromTable().contains(AbstractSpan.class)) {
+			setMessage("Tracing Data type has to be selected because it is source of data", ERROR);
+			return false;
+		}
 		setMessage(DEFAULT_MESSAGE);
 		return true;
+	}
+
+	/**
+	 * Reports if the tracing data was selected for saving.
+	 *
+	 * @return Reports if the tracing data was selected for saving.
+	 */
+	public boolean isTraceDataSelected() {
+		return getSelectedClassesFromTable().contains(AbstractSpan.class);
 	}
 
 	/**
