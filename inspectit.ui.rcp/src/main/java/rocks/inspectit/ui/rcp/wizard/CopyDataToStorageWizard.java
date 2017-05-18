@@ -33,8 +33,9 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.tracing.data.ClientSpan;
+import rocks.inspectit.shared.all.tracing.data.ISpanIdentAware;
 import rocks.inspectit.shared.all.tracing.data.ServerSpan;
-import rocks.inspectit.shared.all.tracing.data.Span;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.shared.cs.storage.label.AbstractStorageLabel;
@@ -167,19 +168,25 @@ public class CopyDataToStorageWizard extends Wizard implements INewWizard {
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			// prepare for save
 			final Collection<AbstractDataProcessor> processors = defineDataProcessorsWizardPage.getProcessorList();
+			final boolean includeTraces = defineDataProcessorsWizardPage.isTraceDataSelected();
 			final Set<Long> idSet = new HashSet<>();
 			final Set<Long> traceIdSet = new HashSet<>();
 			Set<Long> platformIdents = new HashSet<>();
+
 			for (DefaultData template : copyDataList) {
 				if (template instanceof IIdsAwareAggregatedData<?>) {
 					// if we have aggregated data add all objects that were included in the
 					// aggregation
 					idSet.addAll(((IIdsAwareAggregatedData<?>) template).getAggregatedIds());
-				} else if (template instanceof Span) {
-					Span span = (Span) template;
-					traceIdSet.add(span.getSpanIdent().getTraceId());
 				} else if (0 != template.getId()) {
 					idSet.add(template.getId());
+				}
+				if (includeTraces && (template instanceof ISpanIdentAware)) {
+					ISpanIdentAware spanIdentaware = (ISpanIdentAware) template;
+					SpanIdent spanIdent = spanIdentaware.getSpanIdent();
+					if (null != spanIdent) {
+						traceIdSet.add(spanIdent.getTraceId());
+					}
 				}
 				if (template instanceof InvocationAwareData) {
 					// if we have invocation aware object, add also all invocations
