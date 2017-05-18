@@ -166,8 +166,8 @@ public class InvocationDataAccessService implements IInvocationDataAccessService
 
 		List<Long> invocationSequenceIds = new ArrayList<>();
 		for (int i = 0; i < resultWrapper.getRowCount(); i++) {
-			long id = (long) resultWrapper.get(i, 1);
-			invocationSequenceIds.add(id);
+			Double id = (Double) resultWrapper.get(i, 1);
+			invocationSequenceIds.add(id.longValue());
 		}
 
 		return getInvocationSequenceOverview(0, invocationSequenceIds, limit, resultComparator);

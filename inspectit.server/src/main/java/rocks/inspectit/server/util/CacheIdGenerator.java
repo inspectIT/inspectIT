@@ -20,7 +20,7 @@ public class CacheIdGenerator {
 	/**
 	 * Atomic long to keep next available id.
 	 */
-	private AtomicLong nextId = new AtomicLong(Long.MAX_VALUE / 2);
+	private AtomicLong nextId = new AtomicLong(Long.MAX_VALUE / (long) Math.pow(2, 32));
 
 	/**
 	 * Assigns the {@link DefaultData} object a unique ID.
