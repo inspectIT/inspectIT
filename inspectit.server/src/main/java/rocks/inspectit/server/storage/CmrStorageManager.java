@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -511,15 +512,21 @@ public class CmrStorageManager extends StorageManager implements ApplicationList
 			this.openStorage(local);
 		}
 
+		// use set to avoid duplicated data
+		Set<DefaultData> toWriteList = new HashSet<>();
+
 		if (CollectionUtils.isNotEmpty(elementIds)) {
-			List<DefaultData> toWriteList = storageDataDao.getDataFromIdList(elementIds, platformIdent);
-			this.writeToStorage(local, toWriteList, dataProcessors, true);
+			List<DefaultData> data = storageDataDao.getDataFromIdList(elementIds, platformIdent);
+			toWriteList.addAll(data);
 		}
 
 		if (CollectionUtils.isNotEmpty(traceIds)) {
-			List<DefaultData> toWriteList = storageDataDao.getDataForTraceIdList(traceIds);
-			this.writeToStorage(local, toWriteList, dataProcessors, true);
+			List<DefaultData> data = storageDataDao.getDataForTraceIdList(traceIds);
+			toWriteList.addAll(data);
 		}
+
+		// write only one time
+		this.writeToStorage(local, toWriteList, dataProcessors, true);
 
 		if (autoFinalize) {
 			this.closeStorage(local);
