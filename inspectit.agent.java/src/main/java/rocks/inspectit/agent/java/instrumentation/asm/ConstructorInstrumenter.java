@@ -82,19 +82,16 @@ public class ConstructorInstrumenter extends AbstractMethodInstrumenter {
 		Label tryBlockEnd = new Label();
 		visitLabel(tryBlockEnd);
 
-		// only add catch block if exception sensor is active
-		if (enhancedExceptionSensor) {
-			super.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchHandler, IInstrumenterConstant.THROWABLE_INTERNAL_NAME);
-			visitLabel(catchHandler);
+		// setup for the finally block
+		super.visitTryCatchBlock(tryBlockStart, tryBlockEnd, finallyHandler, null);
+		visitLabel(finallyHandler);
 
+		// only generate the throw in body if exception sensor is active
+		if (enhancedExceptionSensor) {
 			// duplicate exception and call
 			dup();
 			generateThrowInBodyCall();
 		}
-
-		// setup for the finally block
-		super.visitTryCatchBlock(tryBlockStart, tryBlockEnd, finallyHandler, null);
-		visitLabel(finallyHandler);
 
 		// generate code for calling after
 		// push created object and call
