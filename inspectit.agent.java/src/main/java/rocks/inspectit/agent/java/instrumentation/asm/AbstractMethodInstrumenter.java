@@ -39,11 +39,6 @@ public abstract class AbstractMethodInstrumenter extends AdviceAdapter {
 	protected Label tryBlockStart = new Label();
 
 	/**
-	 * The label for the start of the catch block in try/catch/finally.
-	 */
-	protected Label catchHandler = new Label();
-
-	/**
 	 * The label for the start of the finally block in try/finally or try/catch/finally.
 	 */
 	protected Label finallyHandler = new Label();
@@ -93,9 +88,7 @@ public abstract class AbstractMethodInstrumenter extends AdviceAdapter {
 		// if enhanced sensor is on we must add beforeCatch call to start of each catch block
 		// thus we are saving labels that denote start of handler blocks
 		// note we are skipping the finally blocks
-		// and skipping one handler that denotes our catch block
-		// comparing references is fine here
-		if (enhancedExceptionSensor && (handler != catchHandler) && (null != type)) { // NOPMD
+		if (enhancedExceptionSensor && (null != type)) {
 			handlers.add(handler);
 		}
 	}
