@@ -1,6 +1,6 @@
 package rocks.inspectit.agent.java.sdk.opentracing.internal.util;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Random;
 
 import rocks.inspectit.agent.java.sdk.opentracing.internal.TracerLogger;
@@ -15,7 +15,6 @@ import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerLoggerWrap
  * @author Ivan Senic
  *
  */
-@SuppressWarnings("unchecked")
 public final class RandomUtils {
 
 	/**
@@ -29,17 +28,16 @@ public final class RandomUtils {
 	private static final Random RANDOM = new Random();
 
 	/**
-	 * LocalRandom field in the java.util.concurrent.ThreadLocalRandom class.
+	 * current() method in the java.util.concurrent.ThreadLocalRandom class.
 	 */
-	private static ThreadLocal<Random> threadLocalRandomLocal;
+	private static Method threadLocalRandomCurrentMethod;
 
 	static {
 		// try to load thread local random
 		try {
 			Class<?> clazz = Class.forName("java.util.concurrent.ThreadLocalRandom");
-			Field field = clazz.getDeclaredField("localRandom");
-			field.setAccessible(true);
-			threadLocalRandomLocal = (ThreadLocal<Random>) field.get(null);
+			threadLocalRandomCurrentMethod = clazz.getDeclaredMethod("current", new Class<?>[] {});
+			threadLocalRandomCurrentMethod.setAccessible(true);
 		} catch (Exception e) {
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("ThreadLocalRandom is not available. Using " + RANDOM.getClass().getSimpleName() + " for generating random numbers.");
@@ -81,8 +79,15 @@ public final class RandomUtils {
 	 * @return Returns random to use when generating random ids.
 	 */
 	private static Random getRandom() {
-		if (null != threadLocalRandomLocal) {
-			return threadLocalRandomLocal.get();
+		if (null != threadLocalRandomCurrentMethod) {
+			try {
+				return (Random) threadLocalRandomCurrentMethod.invoke(null);
+			} catch (Exception e) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Error invoking the current() method on the ThreadLocalRandom");
+				}
+				return RANDOM;
+			}
 		}
 		return RANDOM;
 	}
