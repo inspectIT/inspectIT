@@ -22,6 +22,7 @@ import org.influxdb.dto.Query;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
@@ -107,7 +108,7 @@ public class InfluxDBDaoTest extends TestBase {
 			verify(availabilityChecker).setInflux(influxDb);
 			verify(availabilityChecker).activate();
 			verify(clientFactory).createClient();
-			verifyNoMoreInteractions(executor, influxDb, availabilityChecker, clientFactory);
+			verifyNoMoreInteractions(executor, availabilityChecker, clientFactory);
 			verifyZeroInteractions(future, dataPoint);
 		}
 
@@ -130,7 +131,7 @@ public class InfluxDBDaoTest extends TestBase {
 			verify(availabilityChecker).setInflux(influxDb);
 			verify(availabilityChecker).activate();
 			verify(clientFactory).createClient();
-			verifyNoMoreInteractions(executor, influxDb, availabilityChecker, clientFactory);
+			verifyNoMoreInteractions(executor, availabilityChecker, clientFactory);
 			verifyZeroInteractions(future, dataPoint);
 		}
 
@@ -164,6 +165,7 @@ public class InfluxDBDaoTest extends TestBase {
 			verify(influxDb).query(queryCaptor.capture());
 			assertThat(queryCaptor.getValue().getCommand(), equalTo("myQuery"));
 			verify(influxDb).ping();
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
 			verify(influxDb).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
 			verify(influxDb).describeDatabases();
@@ -187,6 +189,7 @@ public class InfluxDBDaoTest extends TestBase {
 			assertThat(influxDao.isConnected(), is(true));
 			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(influxDb).ping();
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
 			verify(influxDb).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
 			verify(influxDb).describeDatabases();
@@ -253,6 +256,7 @@ public class InfluxDBDaoTest extends TestBase {
 			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
 			verify(influxDb).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
 			verify(influxDb).describeDatabases();
@@ -277,6 +281,7 @@ public class InfluxDBDaoTest extends TestBase {
 			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.DISCONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
 			verify(influxDb).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
 			verify(availabilityChecker).deactivate();
@@ -298,6 +303,7 @@ public class InfluxDBDaoTest extends TestBase {
 			assertThat(influxDao.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
 			verify(influxDb).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
 			verify(influxDb).describeDatabases();
@@ -325,6 +331,7 @@ public class InfluxDBDaoTest extends TestBase {
 			verify(future).isDone();
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
 			verify(influxDb, times(2)).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
 			verify(influxDb).disableBatch();
@@ -352,6 +359,7 @@ public class InfluxDBDaoTest extends TestBase {
 			verify(future).isDone();
 			verify(executor, times(1)).submit(any(Runnable.class));
 			verify(influxDb).ping();
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
 			verify(influxDb, times(2)).isBatchEnabled();
 			verify(influxDb).enableBatch(InfluxDBDao.BATCH_BUFFER_SIZE, InfluxDBDao.BATCH_FLUSH_TIMER, TimeUnit.SECONDS);
 			verify(influxDb).disableBatch();
@@ -362,6 +370,20 @@ public class InfluxDBDaoTest extends TestBase {
 			verify(availabilityChecker).activate();
 			verify(clientFactory).createClient();
 			verifyNoMoreInteractions(future, influxDb, availabilityChecker, executor, clientFactory);
+		}
+
+		@Test
+		public void writeTestFails() {
+			influxDao.active = true;
+			Mockito.doThrow(new RuntimeException()).when(influxDb).write(any(String.class), any(String.class), any(Point.class));
+
+			influxDao.propertiesUpdated();
+
+			assertThat(influxDao.isConnected(), is(false));
+			verify(executor, times(1)).submit(any(Runnable.class));
+			verify(influxDb).write(any(String.class), any(String.class), any(Point.class));
+			verify(clientFactory).createClient();
+			verifyNoMoreInteractions(future, influxDb, executor, clientFactory);
 		}
 
 		@Test

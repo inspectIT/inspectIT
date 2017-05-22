@@ -50,6 +50,11 @@ public class InfluxDBDao implements InfluxAvailabilityListener, IExternalService
 	static final int BATCH_BUFFER_SIZE = 2000;
 
 	/**
+	 * Dummy measurement. It is used e.g. for write testing.
+	 */
+	static final String DUMMY_MEASUREMENT = "_inspectit_dummy";
+
+	/**
 	 * Logger for the class.
 	 */
 	@Log
@@ -203,6 +208,10 @@ public class InfluxDBDao implements InfluxAvailabilityListener, IExternalService
 			if (log.isErrorEnabled()) {
 				log.error("InfluxDB client is null. Please check your configuration settings and try again.");
 			}
+		} else if (!executeWriteTest()) {
+			if (log.isWarnEnabled()) {
+				log.warn("The InfluxDB test-write failed. Please check the provided credentials and user permissions.");
+			}
 		} else {
 			enableBatching();
 
@@ -222,6 +231,27 @@ public class InfluxDBDao implements InfluxAvailabilityListener, IExternalService
 
 			activateAvailabilityChecker();
 		}
+	}
+
+	/**
+	 * Executes a write operation to test the connection.
+	 *
+	 * @return <code>true</code> if the write operation was successful.
+	 */
+	private boolean executeWriteTest() {
+		Point point = Point.measurement(DUMMY_MEASUREMENT).addField("write_check", true).build();
+
+		try {
+			influxDB.write(database, retentionPolicy, point);
+			influxDB.query(new Query("DROP MEASUREMENT " + DUMMY_MEASUREMENT, database));
+		} catch (Exception ex) {
+			if (log.isDebugEnabled()) {
+				log.debug("Test-write failed with the following message: " + ex.getMessage());
+			}
+
+			return false;
+		}
+		return true;
 	}
 
 	/**

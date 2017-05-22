@@ -219,7 +219,7 @@ dependencies {
 		'com.squareup.okhttp3:logging-interceptor:3.5.0',
 		'com.squareup.retrofit2:converter-moshi:2.1.0',
 		'com.squareup.moshi:moshi:1.2.0',
-		'com.squareup.okio:okio:1.8.0',
+		'com.squareup.okio:okio:1.11.0',
 		
 		'org.apache.commons:commons-email:1.4',
 		'javax.activation:activation:1.1.1',
