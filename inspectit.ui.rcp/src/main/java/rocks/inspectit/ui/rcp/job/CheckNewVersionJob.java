@@ -50,6 +50,7 @@ import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
  * Job for checking if a new version of inspectIT exists on the GitHub.
  *
  * @author Ivan Senic
+ * @author Marius Oehler
  *
  */
 public class CheckNewVersionJob extends Job {
@@ -104,7 +105,15 @@ public class CheckNewVersionJob extends Job {
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(GITHUB_RELEASES_API);
-			HttpResponse response = httpClient.execute(httpGet);
+
+			HttpResponse response = null;
+			try {
+				response = httpClient.execute(httpGet);
+			} catch (Exception ex) {
+				InspectIT.getDefault().log(IStatus.INFO, "Check for new version could not be executed. You may be missing an established internet connection.");
+				return Status.CANCEL_STATUS;
+			}
+
 			HttpEntity entity = response.getEntity();
 
 			try (InputStream inputStream = entity.getContent()) {
@@ -210,7 +219,7 @@ public class CheckNewVersionJob extends Job {
 		 *            the initial state for the toggle
 		 *
 		 */
-		public NewVersionDialog(VersionRelease versionRelease, Shell parentShell, boolean toggleState) {
+		NewVersionDialog(VersionRelease versionRelease, Shell parentShell, boolean toggleState) {
 			super(parentShell, "Check for New Version", null, "", MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0, "Enable auto check for the new version on startup",
 					toggleState);
 			this.setShellStyle(this.getShellStyle() | SWT.SHEET);
@@ -253,7 +262,7 @@ public class CheckNewVersionJob extends Job {
 					}
 				});
 				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false).hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT)
-						.applyTo(messageFormText);
+				.applyTo(messageFormText);
 			}
 
 			return composite;
