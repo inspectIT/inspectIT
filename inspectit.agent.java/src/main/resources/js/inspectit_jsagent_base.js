@@ -78,7 +78,7 @@
 			function getOS() { // gets the operation system, null if we can't recognize it
 				var userAgent = navigator.userAgent;
 				// mobile detection
-				if(userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
+				if (isIOS()) {
 					return "iOS";
 				} else if(userAgent.match(/Android/i)) {
 					return "Android";
@@ -100,14 +100,19 @@
 			 * @return The information about the user listed above.
 			 */
 			function getBrowserInformation() {
+				// some pre-matching
+				var is_iOS = isIOS();
+				var iOSSafari = is_iOS && !/(CriOS|OPiOS)/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent);
+				var iOSChrome = is_iOS && /CriOS/.test(navigator.userAgent);
+				
 				// gets information about the browser of the user
 				// feature detection
-				var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+				var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0 || navigator.userAgent.indexOf('OPiOS') >= 0;
 				var isFirefox = typeof InstallTrigger !== 'undefined';
-				var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+				var isSafari = iOSSafari || Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
 				var isIE = /*@cc_on!@*/false || !!document.documentMode;
 				var isEdge = !isIE && !!window.StyleMedia;
-				var isChrome = Boolean(window.chrome);
+				var isChrome = iOSChrome || Boolean(window.chrome);
 				
 				// get language
 				var userLanguage = navigator.language || navigator.userLanguage;
@@ -132,6 +137,13 @@
 					retObj.name = "Unknown";
 				}
 				return retObj;
+			}
+			
+			/**
+			 * Checks if iOS is underlying OS.
+			 */
+			function isIOS() {
+				return /(iPad|iPhone|iPod).*WebKit/.test(navigator.userAgent) && !window.MSStream;
 			}
 			
 			/**
