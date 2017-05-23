@@ -359,12 +359,10 @@ public class SelectiveRulesPart implements IMatchingRulesPart {
 					validationManager.allValidationStatesRemoved();
 					markDirty();
 				}
-			} else {
-				validationManager.allValidationStatesRemoved();
-				markDirty();
 			}
 
 			initContent(ruleProvider);
+			setFocus();
 		}
 	}
 
