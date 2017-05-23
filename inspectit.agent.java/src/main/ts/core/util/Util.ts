@@ -61,4 +61,23 @@ namespace Util {
         }
         return undefined;
     }
+
+    const matchesFunc = Element.prototype.matches || Element.prototype.msMatchesSelector ||
+        Element.prototype.webkitMatchesSelector || function () { return false; };
+
+    export function elementMatchesSelector(element: Element, selector: string): boolean {
+        try {
+            return matchesFunc.call(element, selector);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Taken from http://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object.
+     */
+    export function isDomElement(o: any) {
+        return (typeof HTMLElement === "object" ? o instanceof HTMLElement : // DOM2
+            o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string");
+    }
 }

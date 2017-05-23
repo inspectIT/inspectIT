@@ -38,6 +38,7 @@ import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
+import rocks.inspectit.shared.cs.ci.eum.EumDomEventSelector;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
 import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
@@ -299,6 +300,23 @@ public class ConfigurationResolver {
 				stringBuilder.append("\n||-Agent minification: enabled");
 			} else {
 				stringBuilder.append("\n||-Agent minification: disabled");
+			}
+			if (eumConfig.isRespectDNTHeader()) {
+				stringBuilder.append("\n||-DNT header respect: enabled");
+			} else {
+				stringBuilder.append("\n||-DNT header respect: disabled");
+			}
+			Collection<EumDomEventSelector> selectors = eumConfig.getEventSelectors();
+			if (selectors.isEmpty()) {
+				stringBuilder.append("\n||-Dom Event Selectors: none");
+			} else {
+				stringBuilder.append("\n||-Dom Event Selectors:");
+				for (EumDomEventSelector sel : selectors) {
+					stringBuilder.append("\n|||-(").append(sel.getEventsList()).append(';')
+					.append(sel.getSelector()).append(';').append(sel.getAttributesToExtractList())
+					.append(";alwaysRelevant:").append(sel.isAlwaysRelevant())
+					.append(";ancestorLevelsToCheck:").append(sel.getAncestorLevelsToCheck()).append(')');
+				}
 			}
 		}
 

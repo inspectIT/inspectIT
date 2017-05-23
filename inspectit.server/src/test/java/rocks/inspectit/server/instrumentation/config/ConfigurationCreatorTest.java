@@ -1,6 +1,7 @@
 package rocks.inspectit.server.instrumentation.config;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
@@ -32,6 +33,7 @@ import com.google.common.collect.Iterators;
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEumDomEventSelector;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
@@ -44,6 +46,7 @@ import rocks.inspectit.shared.all.pattern.WildcardMatchPattern;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
+import rocks.inspectit.shared.cs.ci.eum.EumDomEventSelector;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
@@ -348,7 +351,38 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(eumConfig.getActiveModules(), is(modules));
 			assertThat(eumConfig.getScriptBaseUrl(), is(url));
 			assertThat(eumConfig.isListenerInstrumentationAllowed(), is(false));
+			assertThat(eumConfig.isRespectDNTHeader(), is(false));
 			assertThat(eumConfig.isAgentMinificationEnabled(), is(false));
+		}
+
+		@Test
+		public void eumEventSelectorsConfig() throws Exception {
+			EndUserMonitoringConfig config = mock(EndUserMonitoringConfig.class);
+			EumDomEventSelector selA = new EumDomEventSelector();
+			selA.setEventsList("eventA");
+			selA.setSelector("selectorA");
+			selA.setAttributesToExtractList("attributeA");
+			selA.setAncestorLevelsToCheck(0);
+			selA.setAlwaysRelevant(false);
+			EumDomEventSelector selB = new EumDomEventSelector();
+			selB.setEventsList("eventB");
+			selB.setSelector("selectorB");
+			selB.setAttributesToExtractList("attributeB");
+			selB.setAlwaysRelevant(true);
+			selB.setAncestorLevelsToCheck(-1);
+
+			AgentEumDomEventSelector refA = new AgentEumDomEventSelector("eventA", "selectorA", "attributeA", false, 0);
+			AgentEumDomEventSelector refB = new AgentEumDomEventSelector("eventB", "selectorB", "attributeB", true, -1);
+
+			when(config.getEventSelectors()).thenReturn(Arrays.asList(selA, selB));
+			when(environment.getEumConfig()).thenReturn(config);
+
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
+
+
+			AgentEndUserMonitoringConfig eumConfig = agentConfiguration.getEumConfig();
+			assertThat(eumConfig.getEventSelectors(), containsInAnyOrder(refA, refB));
 		}
 
 		@Test

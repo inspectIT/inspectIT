@@ -20,7 +20,7 @@ import rocks.inspectit.shared.all.tracing.data.PropagationType;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = false)
 @JsonSubTypes({ @Type(name = "pageLoadRequest", value = PageLoadRequest.class), @Type(name = "resourceLoadRequest", value = ResourceLoadRequest.class),
 	@Type(name = "ajaxRequest", value = AjaxRequest.class), @Type(name = "timerExecution", value = JSTimerExecution.class),
-	@Type(name = "listenerExecution", value = JSEventListenerExecution.class), @Type(name = "domListenerExecution", value = JSDomEventListenerExecution.class) })
+	@Type(name = "listenerExecution", value = JSEventListenerExecution.class), @Type(name = "domEvent", value = JSDomEvent.class) })
 // ignore properties which are handled by EumSpan already
 @JsonIgnoreProperties({ "id", "parentId", "traceId", "enterTimestamp", "duration", "executionOrderIndex" })
 public abstract class AbstractEUMSpanDetails extends DefaultData {

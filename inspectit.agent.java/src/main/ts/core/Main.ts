@@ -25,11 +25,14 @@ const ASYNC_INIT_TIMEOUT = 50;
 let pageLoadRequest: PageLoadRequestRecord;
 
 /**
- * Checks whether the browser supports this JS Agent.
+ * Checks whether the browser supports this JS Agent and whether the JS agent should be active.
  * @internal
  */
-function checkBrowserRequirements(): boolean {
-    return typeof XMLHttpRequest !== "undefined" && ("addEventListener" in window);
+function checkAgentRequirements(): boolean {
+    const browserSupported =  typeof XMLHttpRequest !== "undefined" && ("addEventListener" in window);
+    const dntValue = (navigator as any).doNotTrack || (window as any).doNotTrack || (navigator as any).msDoNotTrack;
+    const doNotTrack = SETTINGS.respectDNT && (dntValue === 1 || dntValue === "1" || dntValue === "yes");
+    return browserSupported && ! doNotTrack;
 }
 
 /**
@@ -50,7 +53,7 @@ window.inspectIT.init = function () {
         initCalled = true;
     }
 
-    if (!checkBrowserRequirements()) {
+    if (!checkAgentRequirements()) {
         return;
     }
 

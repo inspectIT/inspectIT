@@ -1,6 +1,7 @@
 package rocks.inspectit.shared.cs.ci.factory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlTransient;
@@ -8,16 +9,17 @@ import javax.xml.bind.annotation.XmlTransient;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationStrategy;
 import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
+import rocks.inspectit.shared.cs.ci.eum.EumDomEventSelector;
 import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ApacheClientExchangeHandlerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.ApacheClientExchangeHandlerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
@@ -118,7 +120,15 @@ public final class ConfigurationDefaultsFactory {
 	 * @return Returns default End User Monitoring configuration.
 	 */
 	public static EndUserMonitoringConfig getDefaultEndUserMonitoringConfig() {
-		return new EndUserMonitoringConfig();
+		EndUserMonitoringConfig defaultConf = new EndUserMonitoringConfig();
+		EumDomEventSelector sel = new EumDomEventSelector();
+		sel.setEventsList("*");
+		sel.setSelector("*");
+		sel.setAttributesToExtractList("tagName,id");
+		sel.setAlwaysRelevant(false);
+		sel.setAncestorLevelsToCheck(0);
+		defaultConf.setEventSelectors(Arrays.asList(sel));
+		return defaultConf;
 	}
 
 	/**

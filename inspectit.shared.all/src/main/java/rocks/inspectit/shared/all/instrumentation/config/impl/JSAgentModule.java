@@ -71,7 +71,7 @@ public enum JSAgentModule {
 	 * URL for fetching the agent, therefore incrementing the revision ensures that the newest
 	 * version is fetched instead of using an old one from the HTTP cache.
 	 */
-	public static final int JS_AGENT_REVISION = 2;
+	public static final int JS_AGENT_REVISION = 3;
 
 	static {
 		HashMap<Character, JSAgentModule> temp = new HashMap<Character, JSAgentModule>();

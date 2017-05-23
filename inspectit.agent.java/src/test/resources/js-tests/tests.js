@@ -288,10 +288,8 @@ QUnit.test( "Speedindex & Firstpaint test", function( assert ) {
 
 QUnit.module("Resource Timings API module.", {
     beforeEach : function() {
-        capturedActions = [];
     },
     afterEach : function() {
-        capturedActions = [];
     }
 });
 
@@ -449,17 +447,33 @@ QUnit.module("Listener instrumentation module.", {
         // create an element and add a listener
         var btn = document.createElement("button");
         btn.setAttribute("style", "visibility:hidden;");
-        btn.setAttribute("id", "test_button");
+		btn.setAttribute("id", "test_button");
+		
+        var outerDiv = document.createElement("div");
+        outerDiv.setAttribute("style", "visibility:hidden;");
+		outerDiv.setAttribute("id", "outer");
+
+		var innerDivLabel = document.createElement("label");
+        innerDivLabel.setAttribute("style", "visibility:hidden;");
+        innerDivLabel.setAttribute("for", "inner");
+		innerDivLabel.textContent = "MyLabelText";
+		outerDiv.appendChild(innerDivLabel);
+		
+        var innerDiv = document.createElement("div");
+        innerDiv.setAttribute("style", "visibility:hidden;");
+		innerDiv.setAttribute("id", "inner");
+		innerDiv.setAttribute("data-customAttrib", "HelloHTML");
+		innerDiv.myJsAttrib = "HelloJS";
+		outerDiv.appendChild(innerDiv);
         
         document.body.appendChild(btn);
+        document.body.appendChild(outerDiv);
         btn.addEventListener("click",myClickListener);
         
     },
     beforeEach : function() {
-        capturedActions = [];
     },
     afterEach : function() {
-        capturedActions = [];
     }
 });
 
@@ -467,30 +481,73 @@ QUnit.module("Listener instrumentation module.", {
 QUnit.test("Click capture test" , function( assert ) {
     var done = assert.async();
     
-    var el = document.getElementById("test_button");
+	var el = document.getElementById("test_button");
+	
     el.click();
     
     setTimeout(function() {
-    	var record = null;
+		var clickListenerRecord;
+		var clickEventRecord;
     	for(var i=0; i<mocking.sentElements.length; i++) {
     		var elem = mocking.sentElements[i];
-    		if(elem.type == "domListenerExecution") {
-				 if (elem.elementID == "test_button") {
-					 record = elem;
+    		if(elem.type == "domEvent") {
+				 if (elem.elementInfo["id"] == "test_button") {
+					clickEventRecord = elem;
 	             }
     		}
     	}
-    	assert.ok(record != null, "Click Listener execution captured.");
-    	if(record) {
-    		if(supportMap["functionNames"]) {
-    	    	assert.ok(record.functionName == "myClickListener", "Listener function name captured.");    			
-    		}
+    	assert.ok(clickEventRecord != null, "Click Event captured.");
+    	if(clickEventRecord) {
+			var traceId = clickEventRecord.traceId;
+			var eventId = clickEventRecord.id;
+			for(var i=0; i<mocking.sentElements.length; i++) {
+				var elem = mocking.sentElements[i];
+				if(elem.type == "listenerExecution") {
+					 if (elem.traceId == traceId && elem.parentId == eventId) {
+						clickListenerRecord = elem;
+					 }
+				}
+			}
+			assert.ok(clickListenerRecord != null, "Click Listener Execution captured.");
+    		if(clickListenerRecord) {
+				if(supportMap["functionNames"]) {
+					assert.ok(clickListenerRecord.functionName == "myClickListener", "Listener function name captured.");    			
+				}
+			}
     	}
     	done();
     	
     }, 1000);
 });
 
+QUnit.test("CSS Event Selectors test" , function( assert ) {
+    var done = assert.async();
+    
+    var el = document.getElementById("inner");
+    el.click();
+    
+    setTimeout(function() {
+    	var clickEventRecord;
+    	for(var i=0; i<mocking.sentElements.length; i++) {
+    		var elem = mocking.sentElements[i];
+    		if(elem.type == "domEvent") {
+				 if (elem.elementInfo["id"] == "inner") {
+					clickEventRecord = elem;
+	             }
+    		}
+    	}
+    	assert.ok(clickEventRecord != null, "Click Event captured.");
+    	if(clickEventRecord) {
+			assert.ok(clickEventRecord.elementInfo["tagName"] == "DIV", "Tag captured.");
+			assert.ok(clickEventRecord.elementInfo["myJsAttrib"] == "HelloJS", "JS Attribute captured.");
+			assert.ok(clickEventRecord.elementInfo["data-customAttrib"] == "HelloHTML", "HTML Attribute captured.");
+			assert.ok(clickEventRecord.elementInfo["$label"] == "MyLabelText", "Label captured.");
+			assert.ok(clickEventRecord.elementInfo["parent.id"] == "outer", "Ancestor selection working.");
+		}
+    	done();
+    	
+    }, 1000);
+});
 
 //START TESTS
 window.addEventListener("load", function() {

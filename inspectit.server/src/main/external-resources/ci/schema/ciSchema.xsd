@@ -39,6 +39,8 @@
 
   <xs:element name="environment" type="environment"/>
 
+  <xs:element name="eum-dom-event-selector" type="eumDomEventSelector"/>
+
   <xs:element name="exception-sensor-assignment" type="exceptionSensorAssignment"/>
 
   <xs:element name="exception-sensor-config" type="exceptionSensorConfig"/>
@@ -561,13 +563,25 @@
   </xs:complexType>
 
   <xs:complexType name="endUserMonitoringConfig">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element ref="eum-dom-event-selector" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
     <xs:attribute name="eum-enabled" type="xs:boolean" use="required"/>
     <xs:attribute name="eum-script-base-url" type="xs:string" use="required"/>
     <xs:attribute name="active-modules" type="xs:string" use="required"/>
     <xs:attribute name="relevancyThreshold" type="xs:int" use="required"/>
     <xs:attribute name="listenerInstrumentationAllowed" type="xs:boolean" use="required"/>
     <xs:attribute name="agentMinificationEnabled" type="xs:boolean" use="required"/>
+    <xs:attribute name="respectDNTHeader" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="eumDomEventSelector">
+    <xs:sequence/>
+    <xs:attribute name="eventsList" type="xs:string" use="required"/>
+    <xs:attribute name="selector" type="xs:string" use="required"/>
+    <xs:attribute name="attributesToExtractList" type="xs:string" use="required"/>
+    <xs:attribute name="alwaysRelevant" type="xs:boolean" use="required"/>
+    <xs:attribute name="ancestorLevelsToCheck" type="xs:int" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="abstractPlatformSensorConfig" abstract="true">

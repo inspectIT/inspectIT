@@ -5,7 +5,6 @@
 
 window.mocking = (function() {
 
-	var sentElements = [];
 	function preAgentCore() {
 
 	}
@@ -15,7 +14,7 @@ window.mocking = (function() {
 		BeaconService.init = function() {
 		};
 		BeaconService.send = function(data) {
-			sentElements.push(data);
+			window.mocking.sentElements.push(data);
 		};
 	}
 
@@ -32,7 +31,7 @@ window.mocking = (function() {
 		preAgentModules : preAgentModules,
 		preAgentInit : preAgentInit,
 		postAgentInit : postAgentInit,
-		sentElements : sentElements,
+		sentElements : [],
 	};
 
 })();

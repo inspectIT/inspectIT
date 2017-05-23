@@ -3,6 +3,7 @@ package rocks.inspectit.server.instrumentation.config;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEumDomEventSelector;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
@@ -102,9 +104,23 @@ public class ConfigurationCreator {
 			agentConfiguration.setJmxSensorTypeConfig(getJmxSensorTypeConfig(platformId, jmxSensorConfig));
 		}
 
+		// End-User-Monitoring configuration
 		EndUserMonitoringConfig eumConf = environment.getEumConfig();
-		agentConfiguration.setEumConfig(new AgentEndUserMonitoringConfig(eumConf.isEumEnabled(), eumConf.getScriptBaseUrl(), eumConf.getActiveModules(), eumConf.getRelevancyThreshold(),
-				eumConf.isListenerInstrumentationAllowed(), eumConf.isAgentMinificationEnabled()));
+
+		AgentEndUserMonitoringConfig agentEumConf = new AgentEndUserMonitoringConfig();
+		agentEumConf.setEnabled(eumConf.isEumEnabled());
+		agentEumConf.setScriptBaseUrl(eumConf.getScriptBaseUrl());
+		agentEumConf.setActiveModules(eumConf.getActiveModules());
+		agentEumConf.setRelevancyThreshold(eumConf.getRelevancyThreshold());
+		agentEumConf.setListenerInstrumentationAllowed(eumConf.isListenerInstrumentationAllowed());
+		agentEumConf.setAgentMinificationEnabled(eumConf.isAgentMinificationEnabled());
+		agentEumConf.setRespectDNTHeader(eumConf.isRespectDNTHeader());
+		List<AgentEumDomEventSelector> selectors = new ArrayList<>();
+		eumConf.getEventSelectors().forEach((s) -> selectors.add(
+				new AgentEumDomEventSelector(s.getEventsList(), s.getSelector(), s.getAttributesToExtractList(), s.isAlwaysRelevant(), s.getAncestorLevelsToCheck())));
+		agentEumConf.setEventSelectors(selectors);
+
+		agentConfiguration.setEumConfig(agentEumConf);
 
 		// then all special sensors
 		Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs = new ArrayList<>(0);
