@@ -87,7 +87,7 @@ import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
 import rocks.inspectit.shared.all.communication.data.eum.AjaxRequest;
 import rocks.inspectit.shared.all.communication.data.eum.Beacon;
 import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
-import rocks.inspectit.shared.all.communication.data.eum.JSDomEventListenerExecution;
+import rocks.inspectit.shared.all.communication.data.eum.JSDomEvent;
 import rocks.inspectit.shared.all.communication.data.eum.JSEventListenerExecution;
 import rocks.inspectit.shared.all.communication.data.eum.JSTimerExecution;
 import rocks.inspectit.shared.all.communication.data.eum.PageLoadRequest;
@@ -114,6 +114,7 @@ import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.SpecialInstrumentationType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEumDomEventSelector;
 import rocks.inspectit.shared.all.instrumentation.config.impl.ExceptionSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
@@ -427,8 +428,12 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(ResourceLoadRequest.class, new FieldSerializer<ResourceLoadRequest>(kryo, ResourceLoadRequest.class), nextRegistrationId++);
 		kryo.register(JSTimerExecution.class, new FieldSerializer<JSTimerExecution>(kryo, JSTimerExecution.class), nextRegistrationId++);
 		kryo.register(JSEventListenerExecution.class, new FieldSerializer<JSEventListenerExecution>(kryo, JSEventListenerExecution.class), nextRegistrationId++);
-		kryo.register(JSDomEventListenerExecution.class, new FieldSerializer<JSDomEventListenerExecution>(kryo, JSDomEventListenerExecution.class), nextRegistrationId++);
+		nextRegistrationId++; // JSDomEventListenerExecution removed in 2528
 		kryo.register(UserSessionInfo.class, new FieldSerializer<UserSessionInfo>(kryo, UserSessionInfo.class), nextRegistrationId++);
+
+		// ADDED with INSPECT-2528
+		kryo.register(JSDomEvent.class, new FieldSerializer<JSDomEvent>(kryo, JSDomEvent.class), nextRegistrationId++);
+		kryo.register(AgentEumDomEventSelector.class, new FieldSerializer<AgentEumDomEventSelector>(kryo, AgentEumDomEventSelector.class), nextRegistrationId++);
 	}
 
 	/**

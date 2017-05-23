@@ -51,4 +51,9 @@ public interface ExtraTags {
 	 * The class name of the traced runnable.
 	 */
 	String RUNNABLE_TYPE = "ext.runnable.type";
+	
+	/**
+	 * Prefix for storing EUM information captured on dom elements.
+	 */
+	String INSPECTT_DOM_ELEMENT_PREFIX = "ext.inspectit.domelement.";
 }

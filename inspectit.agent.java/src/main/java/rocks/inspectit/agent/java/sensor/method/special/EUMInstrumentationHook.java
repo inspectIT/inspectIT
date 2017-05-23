@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ import rocks.inspectit.agent.java.proxy.impl.RuntimeLinker;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.agent.java.sensor.method.http.StartEndMarker;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
+import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEumDomEventSelector;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
 
 /**
@@ -43,7 +45,7 @@ public class EUMInstrumentationHook implements ISpecialHook {
 	/**
 	 * The logger.
 	 */
-	private static final Logger LOG = LoggerFactory.getLogger(EUMInstrumentationHook.class);;
+	private static final Logger LOG = LoggerFactory.getLogger(EUMInstrumentationHook.class);
 
 	/**
 	 * The runtime linker for creating proxies.
@@ -90,6 +92,11 @@ public class EUMInstrumentationHook implements ISpecialHook {
 	 * configuration has been specified, the instrumenter performs NOOP.
 	 */
 	private boolean configurationValid = false;
+
+	/**
+	 * If true, incoming requests with a do-not-track header set will not be instrumented.
+	 **/
+	private boolean respectDNTHeader;
 
 	/**
 	 * Initialises this hook.
@@ -250,18 +257,17 @@ public class EUMInstrumentationHook implements ISpecialHook {
 	 */
 	public Object instrumentResponse(Object httpRequestObj, Object httpResponseObj) {
 		try {
-			if (configurationValid && WHttpServletResponse.isInstance(httpResponseObj)) {
-				if (!linker.isProxyInstance(httpResponseObj, TagInjectionResponseWrapper.class)) {
-
-					ClassLoader cl = httpResponseObj.getClass().getClassLoader();
-					TagInjectionResponseWrapper wrap = new TagInjectionResponseWrapper(httpRequestObj, httpResponseObj, tracer, scriptTags);
-					Object proxy = linker.createProxy(TagInjectionResponseWrapper.class, wrap, cl);
-					if (proxy == null) {
-						return httpResponseObj;
-					} else {
-						return proxy;
-					}
-
+			boolean preconditionFulfilled = configurationValid && WHttpServletResponse.isInstance(httpResponseObj);
+			preconditionFulfilled = preconditionFulfilled && !linker.isProxyInstance(httpResponseObj, TagInjectionResponseWrapper.class);
+			preconditionFulfilled = preconditionFulfilled && !isDoNotTrackHeaderSetAndNotIgnored(httpRequestObj);
+			if (preconditionFulfilled) {
+				ClassLoader cl = httpResponseObj.getClass().getClassLoader();
+				TagInjectionResponseWrapper wrap = new TagInjectionResponseWrapper(httpRequestObj, httpResponseObj, tracer, scriptTags);
+				Object proxy = linker.createProxy(TagInjectionResponseWrapper.class, wrap, cl);
+				if (proxy == null) {
+					return httpResponseObj;
+				} else {
+					return proxy;
 				}
 			}
 		} catch (Throwable e) { // NOPMD
@@ -279,6 +285,9 @@ public class EUMInstrumentationHook implements ISpecialHook {
 	public final void initConfig(IConfigurationStorage configurationStorage) {
 		try {
 			AgentEndUserMonitoringConfig endUserMonitoringConfig = configurationStorage.getEndUserMonitoringConfig();
+			String activeModules = configurationStorage.getEndUserMonitoringConfig().getActiveModules();
+
+			this.respectDNTHeader = endUserMonitoringConfig.isRespectDNTHeader();
 
 			String base = endUserMonitoringConfig.getScriptBaseUrl();
 			beaconURLRegEx = Pattern.compile(Pattern.quote(base + JSAgentModule.BEACON_SUB_PATH), Pattern.CASE_INSENSITIVE);
@@ -305,17 +314,52 @@ public class EUMInstrumentationHook implements ISpecialHook {
 			StringBuilder scriptSrcURL = new StringBuilder();
 			scriptSrcURL.append(base).append(JSAgentModule.JAVASCRIPT_URL_PREFIX);
 			scriptSrcURL.append(JSAgentModule.JS_AGENT_REVISION).append('_');
-			scriptSrcURL.append(configurationStorage.getEndUserMonitoringConfig().getActiveModules());
+			scriptSrcURL.append(activeModules);
 			scriptSrcURL.append(".js");
 
 			scriptTags.setScriptSourceURL(scriptSrcURL.toString());
 			scriptTags.setSetting("eumManagementServer", beaconPath.toString());
 			scriptTags.setSetting("relevancyThreshold", String.valueOf(endUserMonitoringConfig.getRelevancyThreshold()));
 			scriptTags.setSetting("allowListenerInstrumentation", String.valueOf(endUserMonitoringConfig.isListenerInstrumentationAllowed()));
-
+			scriptTags.setSetting("respectDNT", Boolean.toString(respectDNTHeader));
+			if (activeModules.contains(String.valueOf(JSAgentModule.LISTENER_MODULE.getIdentifier()))) {
+				StringBuilder selectorsArray = new StringBuilder("[");
+				boolean isFirst = true;
+				for (AgentEumDomEventSelector sel : endUserMonitoringConfig.getEventSelectors()) {
+					if (!isFirst) {
+						selectorsArray.append(',');
+					} else {
+						isFirst = false;
+					}
+					selectorsArray.append("[\"").append(StringEscapeUtils.escapeJavaScript(sel.getEventsList()));
+					selectorsArray.append("\",\"").append(StringEscapeUtils.escapeJavaScript(sel.getSelector()));
+					selectorsArray.append("\",\"").append(StringEscapeUtils.escapeJavaScript(sel.getAttributesToExtractList()));
+					selectorsArray.append("\",").append(sel.isAlwaysRelevant());
+					selectorsArray.append(',').append(sel.getAncestorLevelsToCheck()).append(']');
+				}
+				selectorsArray.append(']');
+				scriptTags.setSetting("domEventSelectors", selectorsArray.toString());
+			}
 			configurationValid = true;
 		} catch (StorageException e) {
 			configurationValid = false;
 		}
+	}
+
+	/**
+	 * Checks for the do not track header settings.
+	 *
+	 * @param httpRequestObj
+	 *            the incoming request on which teh check will be performed
+	 * @return true, if the DNT is set and inspectIT is configured to respect it
+	 */
+	private boolean isDoNotTrackHeaderSetAndNotIgnored(Object httpRequestObj) {
+		if (!respectDNTHeader) {
+			return false;
+		}
+		WHttpServletRequest req = WHttpServletRequest.wrap(httpRequestObj);
+		String header = req.getHeader("DNT");
+		return "1".equals(header);
+
 	}
 }

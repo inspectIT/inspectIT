@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<!--Copy all -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+	<!--Add default event selector -->
+	<xsl:template match="environment/end-user-monitoring-config" priority="1">
+		<xsl:copy>
+			<xsl:next-match/>
+			<eum-dom-event-selector eventsList="*" selector="*" attributesToExtractList="tagName,id" alwaysRelevant="false" ancestorLevelsToCheck="0"/>
+			<xsl:apply-templates select="@* | node()" />
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>

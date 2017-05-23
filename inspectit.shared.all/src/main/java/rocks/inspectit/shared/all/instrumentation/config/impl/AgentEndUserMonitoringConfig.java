@@ -1,5 +1,7 @@
 package rocks.inspectit.shared.all.instrumentation.config.impl;
 
+import java.util.List;
+
 /**
  * @author Jonas Kunz
  *
@@ -45,36 +47,14 @@ public class AgentEndUserMonitoringConfig {
 	private boolean agentMinificationEnabled;
 
 	/**
-	 * Default constructor.
+	 * If enabled, users sending a Do-Not-Track Header will not be monitored.
 	 */
-	public AgentEndUserMonitoringConfig() {
-	}
+	private boolean respectDNTHeader;
 
 	/**
-	 * @param isEnabled
-	 *            true, if end user monitoring is enabled
-	 * @param scriptBaseUrl
-	 *            the base url to place the script under and to sent the beacons to
-	 * @param activeModules
-	 *            the active modules, see {@link JSAgentModule}.
-	 * @param relevancyThresholdMS
-	 *            the relevancy threshold, see {@link #relevancyThreshold}
-	 * @param listenerInstrumentationAllowed
-	 *            the listener isntrumentation allowance flag, see
-	 *            {@link #listenerInstrumentationAllowed}
-	 * @param agentMinificationEnabled
-	 *            the agent minification flag, see {@link #agentMinificationEnabled}
+	 * Holds all active {@link AgentEumDomEventSelector}s.
 	 */
-	public AgentEndUserMonitoringConfig(boolean isEnabled, String scriptBaseUrl, String activeModules, int relevancyThresholdMS, boolean listenerInstrumentationAllowed,
-			boolean agentMinificationEnabled) {
-		this.enabled = isEnabled;
-		this.scriptBaseUrl = scriptBaseUrl;
-		this.activeModules = activeModules;
-		this.relevancyThreshold = relevancyThresholdMS;
-		this.listenerInstrumentationAllowed = listenerInstrumentationAllowed;
-		this.agentMinificationEnabled = agentMinificationEnabled;
-
-	}
+	private List<AgentEumDomEventSelector> eventSelectors;
 
 	/**
 	 * Gets {@link #isEnabled}.
@@ -191,6 +171,44 @@ public class AgentEndUserMonitoringConfig {
 	}
 
 	/**
+	 * Gets {@link #respectDNTHeader}.
+	 *
+	 * @return {@link #respectDNTHeader}
+	 */
+	public boolean isRespectDNTHeader() {
+		return this.respectDNTHeader;
+	}
+
+	/**
+	 * Sets {@link #respectDNTHeader}.
+	 *
+	 * @param respectDNTHeader
+	 *            New value for {@link #respectDNTHeader}
+	 */
+	public void setRespectDNTHeader(boolean respectDNTHeader) {
+		this.respectDNTHeader = respectDNTHeader;
+	}
+
+	/**
+	 * Gets {@link #eventSelectors}.
+	 *
+	 * @return {@link #eventSelectors}
+	 */
+	public List<AgentEumDomEventSelector> getEventSelectors() {
+		return this.eventSelectors;
+	}
+
+	/**
+	 * Sets {@link #eventSelectors}.
+	 *
+	 * @param eventSelectors
+	 *            New value for {@link #eventSelectors}
+	 */
+	public void setEventSelectors(List<AgentEumDomEventSelector> eventSelectors) {
+		this.eventSelectors = eventSelectors;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -200,8 +218,10 @@ public class AgentEndUserMonitoringConfig {
 		result = (prime * result) + ((this.activeModules == null) ? 0 : this.activeModules.hashCode());
 		result = (prime * result) + (this.agentMinificationEnabled ? 1231 : 1237);
 		result = (prime * result) + (this.enabled ? 1231 : 1237);
+		result = (prime * result) + ((this.eventSelectors == null) ? 0 : this.eventSelectors.hashCode());
 		result = (prime * result) + (this.listenerInstrumentationAllowed ? 1231 : 1237);
 		result = (prime * result) + this.relevancyThreshold;
+		result = (prime * result) + (this.respectDNTHeader ? 1231 : 1237);
 		result = (prime * result) + ((this.scriptBaseUrl == null) ? 0 : this.scriptBaseUrl.hashCode());
 		return result;
 	}
@@ -234,10 +254,20 @@ public class AgentEndUserMonitoringConfig {
 		if (this.enabled != other.enabled) {
 			return false;
 		}
+		if (this.eventSelectors == null) {
+			if (other.eventSelectors != null) {
+				return false;
+			}
+		} else if (!this.eventSelectors.equals(other.eventSelectors)) {
+			return false;
+		}
 		if (this.listenerInstrumentationAllowed != other.listenerInstrumentationAllowed) {
 			return false;
 		}
 		if (this.relevancyThreshold != other.relevancyThreshold) {
+			return false;
+		}
+		if (this.respectDNTHeader != other.respectDNTHeader) {
 			return false;
 		}
 		if (this.scriptBaseUrl == null) {

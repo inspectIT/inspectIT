@@ -1,8 +1,13 @@
 package rocks.inspectit.shared.cs.ci.eum;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
@@ -60,6 +65,17 @@ public class EndUserMonitoringConfig {
 	@XmlAttribute(name = "agentMinificationEnabled", required = true)
 	private boolean agentMinificationEnabled = true;
 
+	/**
+	 * When enabled, users sending a Do-Not-Track Header will not receive teh JS Agent.
+	 */
+	@XmlAttribute(name = "respectDNTHeader", required = true)
+	private boolean respectDNTHeader = false;
+
+	/**
+	 * Contains a list of all {@link EumDomEventSelector} to use.
+	 */
+	@XmlElementRefs({ @XmlElementRef(type = EumDomEventSelector.class) })
+	private Collection<EumDomEventSelector> eventSelectors = new ArrayList<>();
 	/**
 	 * Gets {@link #eumEnabled}.
 	 *
@@ -174,6 +190,45 @@ public class EndUserMonitoringConfig {
 		this.agentMinificationEnabled = agentMinificationEnabled;
 	}
 
+
+	/**
+	 * Gets {@link #respectDNTHeader}.
+	 *
+	 * @return {@link #respectDNTHeader}
+	 */
+	public boolean isRespectDNTHeader() {
+		return this.respectDNTHeader;
+	}
+
+	/**
+	 * Sets {@link #respectDNTHeader}.
+	 *
+	 * @param respectDNTHeader
+	 *            New value for {@link #respectDNTHeader}
+	 */
+	public void setRespectDNTHeader(boolean respectDNTHeader) {
+		this.respectDNTHeader = respectDNTHeader;
+	}
+
+	/**
+	 * Gets {@link #eventSelectors}.
+	 *
+	 * @return {@link #eventSelectors}
+	 */
+	public Collection<EumDomEventSelector> getEventSelectors() {
+		return this.eventSelectors;
+	}
+
+	/**
+	 * Sets {@link #eventSelectors}.
+	 *
+	 * @param eventSelectors
+	 *            New value for {@link #eventSelectors}
+	 */
+	public void setEventSelectors(Collection<EumDomEventSelector> eventSelectors) {
+		this.eventSelectors = eventSelectors;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -184,8 +239,10 @@ public class EndUserMonitoringConfig {
 		result = (prime * result) + ((this.activeModules == null) ? 0 : this.activeModules.hashCode());
 		result = (prime * result) + (this.agentMinificationEnabled ? 1231 : 1237);
 		result = (prime * result) + (this.eumEnabled ? 1231 : 1237);
+		result = (prime * result) + ((this.eventSelectors == null) ? 0 : this.eventSelectors.hashCode());
 		result = (prime * result) + (this.listenerInstrumentationAllowed ? 1231 : 1237);
 		result = (prime * result) + this.relevancyThreshold;
+		result = (prime * result) + (this.respectDNTHeader ? 1231 : 1237);
 		result = (prime * result) + ((this.scriptBaseUrl == null) ? 0 : this.scriptBaseUrl.hashCode());
 		return result;
 	}
@@ -218,10 +275,20 @@ public class EndUserMonitoringConfig {
 		if (this.eumEnabled != other.eumEnabled) {
 			return false;
 		}
+		if (this.eventSelectors == null) {
+			if (other.eventSelectors != null) {
+				return false;
+			}
+		} else if (!this.eventSelectors.equals(other.eventSelectors)) {
+			return false;
+		}
 		if (this.listenerInstrumentationAllowed != other.listenerInstrumentationAllowed) {
 			return false;
 		}
 		if (this.relevancyThreshold != other.relevancyThreshold) {
+			return false;
+		}
+		if (this.respectDNTHeader != other.respectDNTHeader) {
 			return false;
 		}
 		if (this.scriptBaseUrl == null) {
@@ -233,5 +300,6 @@ public class EndUserMonitoringConfig {
 		}
 		return true;
 	}
+
 
 }

@@ -1,10 +1,21 @@
 package rocks.inspectit.ui.rcp.ci.form.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -29,8 +40,10 @@ import org.eclipse.ui.forms.widgets.Section;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JSAgentModule;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
+import rocks.inspectit.shared.cs.ci.eum.EumDomEventSelector;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.ci.dialog.EumDomEventSelectorDialog;
 import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
 import rocks.inspectit.ui.rcp.editor.tooltip.ColumnAwareToolTipSupport;
 import rocks.inspectit.ui.rcp.validation.ValidationControlDecoration;
@@ -88,6 +101,40 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 	 */
 	private Button listenerInstrumentationAllowedButton;
 
+	/**
+	 * Allows to configure the Agent to either respect or to ignore Do-Not-Track headers.
+	 */
+	private Button respectDNTButton;
+
+	/**
+	 * Table for modifying the Event selectors.
+	 */
+	private Table selectorsTable;
+
+	/**
+	 * Table viewer for {@link selectorsTable}.
+	 */
+	private TableViewer selectorsTableViewer;
+
+	/**
+	 * Table viewer for {@link selectorsTable}.
+	 */
+	private List<EumDomEventSelector> selectorsList;
+
+	/**
+	 * Button for adding a new DOM Event selector.
+	 */
+	private Button addSelectorBtn;
+
+	/**
+	 * Button for editing the selected DOM Event selector.
+	 */
+	private Button editSelectorBtn;
+
+	/**
+	 * Button for removing the selected DOM Event selector.
+	 */
+	private Button removeSelectorBtn;
 
 	/**
 	 * Default constructor.
@@ -148,7 +195,6 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 						+ "This Url must be mapped by at least one servlet or filter, usually the base-url of other static content like scripts or images is a good choice here.\n"
 						+ "Also, the entered path must begin and end with a slash.");
 
-
 		toolkit.createLabel(mainComposite, "Relevancy Threshold (ms):").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		relevancyThresholdMS = toolkit.createText(mainComposite, String.valueOf(environment.getEumConfig().getRelevancyThreshold()), SWT.BORDER | SWT.LEFT);
 		relevancyThresholdMS.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -162,6 +208,12 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		listenerInstrumentationAllowedButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		listenerInstrumentationAllowedButton.setSelection(environment.getEumConfig().isListenerInstrumentationAllowed());
 		createInfoLabel(mainComposite, toolkit, "If deactivated, the JS agent will not instrument any JS event listeners to prevent performance issues.");
+
+		toolkit.createLabel(mainComposite, "Respect Do-Not-Track Header:").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		respectDNTButton = toolkit.createButton(mainComposite, "", SWT.CHECK);
+		respectDNTButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		respectDNTButton.setSelection(environment.getEumConfig().isRespectDNTHeader());
+		createInfoLabel(mainComposite, toolkit, "If enabled, users which send a Do-Not-Track header will not be monitored.");
 
 		toolkit.createLabel(mainComposite, "Deliver Minified JS Agent:").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		minificationEnabledButton = toolkit.createButton(mainComposite, "", SWT.CHECK);
@@ -195,30 +247,10 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		relevancyThresholdValidation.setDescriptionText("The relevancy threshold must be a duration in milliseconds.");
 		relevancyThresholdValidation.registerListener(SWT.Modify);
 
-		modulesTable = toolkit.createTable(mainComposite, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.CHECK);
-		GridData tableLayout = new GridData(SWT.FILL, SWT.FILL, true, false);
-		tableLayout.horizontalSpan = 2;
-		modulesTable.setLayoutData(tableLayout);
-		modulesTable.setHeaderVisible(true);
-		modulesTable.setLinesVisible(true);
+		createModulesTable(toolkit, mainComposite);
+		createSelectorsTable(toolkit, mainComposite, environment.getEumConfig());
 
-		modulesTableViewer = new TableViewer(modulesTable);
-		createColumns();
-		ColumnAwareToolTipSupport.enableFor(modulesTableViewer);
-		modulesTableViewer.setContentProvider(new ArrayContentProvider());
-		modulesTableViewer.setInput(JSAgentModule.values());
-		modulesTableViewer.refresh();
 		updateCheckedItems();
-		modulesTable.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (e.detail == SWT.CHECK) {
-					if (!isDirty()) {
-						markDirty();
-					}
-				}
-			}
-		});
 
 		// dirty listener
 		Listener dirtyListener = new Listener() {
@@ -233,6 +265,7 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		eumEnabledButton.addListener(SWT.Selection, dirtyListener);
 		scriptBaseUrl.addListener(SWT.Modify, dirtyListener);
 		listenerInstrumentationAllowedButton.addListener(SWT.Selection, dirtyListener);
+		respectDNTButton.addListener(SWT.Selection, dirtyListener);
 		minificationEnabledButton.addListener(SWT.Selection, dirtyListener);
 		relevancyThresholdMS.addListener(SWT.Modify, dirtyListener);
 
@@ -247,14 +280,59 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 		modulesTable.setEnabled(en);
 		scriptBaseUrl.setEnabled(en);
 		listenerInstrumentationAllowedButton.setEnabled(en);
+		respectDNTButton.setEnabled(en);
 		minificationEnabledButton.setEnabled(en);
 		relevancyThresholdMS.setEnabled(en);
+
+		boolean listenerModuleActive = false;
+		for (TableItem item : modulesTableViewer.getTable().getItems()) {
+			JSAgentModule moduleInfo = (JSAgentModule) item.getData();
+			if (moduleInfo == JSAgentModule.LISTENER_MODULE) {
+				listenerModuleActive = item.getChecked();
+				break;
+			}
+		}
+		if (listenerModuleActive && en) {
+			addSelectorBtn.setEnabled(true);
+			selectorsTable.setEnabled(true);
+			StructuredSelection structuredSelection = (StructuredSelection) selectorsTableViewer.getSelection();
+			if (structuredSelection.isEmpty()) {
+				removeSelectorBtn.setEnabled(false);
+				editSelectorBtn.setEnabled(false);
+			} else {
+				removeSelectorBtn.setEnabled(true);
+				editSelectorBtn.setEnabled(true);
+			}
+		} else {
+			addSelectorBtn.setEnabled(false);
+			selectorsTable.setEnabled(false);
+			removeSelectorBtn.setEnabled(false);
+			editSelectorBtn.setEnabled(false);
+		}
 	}
 
 	/**
 	 * Builds the JSAgent module table.
+	 *
+	 * @param toolkit
+	 *            the toolkit to use
+	 * @param mainComposite
+	 *            the main composite contiant all elements of this part
 	 */
-	private void createColumns() {
+	private void createModulesTable(FormToolkit toolkit, Composite mainComposite) {
+
+		modulesTable = toolkit.createTable(mainComposite, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.CHECK);
+		GridData tableLayout = new GridData(SWT.FILL, SWT.FILL, true, false);
+		tableLayout.horizontalSpan = 2;
+		modulesTable.setLayoutData(tableLayout);
+		modulesTable.setHeaderVisible(true);
+		modulesTable.setLinesVisible(true);
+
+		modulesTableViewer = new TableViewer(modulesTable);
+		ColumnAwareToolTipSupport.enableFor(modulesTableViewer);
+		modulesTableViewer.setContentProvider(new ArrayContentProvider());
+		modulesTableViewer.setInput(JSAgentModule.values());
+
 		TableViewerColumn activeColumn = new TableViewerColumn(modulesTableViewer, SWT.NONE);
 		activeColumn.getColumn().setResizable(false);
 		activeColumn.getColumn().setWidth(60);
@@ -293,6 +371,254 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 
 		});
 		moduleNameColumn.getColumn().setToolTipText("Module type.");
+
+		modulesTableViewer.refresh();
+		createInfoLabel(mainComposite, toolkit, "Select the modules to activate in this environment.");
+
+		modulesTable.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (e.detail == SWT.CHECK) {
+					if (!isDirty()) {
+						markDirty();
+					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * Builds the table for modifying the DOM event selectors.
+	 *
+	 * @param toolkit
+	 *            the toolkit to use
+	 * @param mainComposite
+	 *            the main composite contiant all elements of this part
+	 * @param eumConf
+	 *            the current end user monitoring configuration
+	 */
+	private void createSelectorsTable(FormToolkit toolkit, Composite mainComposite, EndUserMonitoringConfig eumConf) {
+
+		GridData selectorsLabelGridData = new GridData(SWT.FILL, SWT.CENTER, false, false);
+		selectorsLabelGridData.horizontalSpan = 3;
+		toolkit.createLabel(mainComposite, "Dom Event Selectors:").setLayoutData(selectorsLabelGridData);
+
+		selectorsTable = toolkit.createTable(mainComposite, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		GridData tableLayout = new GridData(SWT.FILL, SWT.FILL, true, false);
+		tableLayout.heightHint = 100;
+		tableLayout.horizontalSpan = 2;
+		selectorsTable.setLayoutData(tableLayout);
+		selectorsTable.setHeaderVisible(true);
+		selectorsTable.setLinesVisible(true);
+
+		selectorsTableViewer = new TableViewer(selectorsTable);
+		selectorsTableViewer.setContentProvider(new ArrayContentProvider());
+
+		TableViewerColumn eventsColumn = new TableViewerColumn(selectorsTableViewer, SWT.NONE);
+		eventsColumn.getColumn().setResizable(true);
+		eventsColumn.getColumn().setWidth(100);
+		eventsColumn.getColumn().setText("Events");
+		eventsColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return ((EumDomEventSelector) element).getEventsList();
+			}
+		});
+
+		TableViewerColumn selectorColumn = new TableViewerColumn(selectorsTableViewer, SWT.NONE);
+		selectorColumn.getColumn().setResizable(true);
+		selectorColumn.getColumn().setWidth(150);
+		selectorColumn.getColumn().setText("CSS-Selector");
+		selectorColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return ((EumDomEventSelector) element).getSelector();
+			}
+		});
+
+		TableViewerColumn attributesColumn = new TableViewerColumn(selectorsTableViewer, SWT.NONE);
+		attributesColumn.getColumn().setResizable(true);
+		attributesColumn.getColumn().setWidth(150);
+		attributesColumn.getColumn().setText("Attributes to extract");
+		attributesColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return ((EumDomEventSelector) element).getAttributesToExtractList();
+			}
+		});
+
+		TableViewerColumn ancestorLevelsColumn = new TableViewerColumn(selectorsTableViewer, SWT.NONE);
+		ancestorLevelsColumn.getColumn().setResizable(true);
+		ancestorLevelsColumn.getColumn().setWidth(100);
+		ancestorLevelsColumn.getColumn().setText("Ancestor Levels");
+		ancestorLevelsColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return String.valueOf(((EumDomEventSelector) element).getAncestorLevelsToCheck());
+			}
+		});
+
+		TableViewerColumn relevancyColumn = new TableViewerColumn(selectorsTableViewer, SWT.NONE);
+		relevancyColumn.getColumn().setResizable(false);
+		relevancyColumn.getColumn().setWidth(100);
+		relevancyColumn.getColumn().setText("Always Relevant");
+		relevancyColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return "";
+			}
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public Image getImage(Object element) {
+				if (((EumDomEventSelector) element).isAlwaysRelevant()) {
+					return InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK);
+				} else {
+					return null;
+				}
+			}
+
+		});
+
+		selectorsTableViewer.getTable().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.F2) {
+					editSelectedSelector();
+				} else if (e.keyCode == SWT.DEL) {
+					removeSelectedSelector();
+				}
+			}
+		});
+		selectorsTableViewer.getTable().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				editSelectedSelector();
+			}
+		});
+
+		// create the buttons
+
+		Composite buttonComposite = toolkit.createComposite(mainComposite, SWT.INHERIT_DEFAULT);
+		GridLayout buttonLayout = new GridLayout(1, true);
+		buttonLayout.marginHeight = 0;
+		buttonLayout.marginWidth = 0;
+		buttonComposite.setLayout(buttonLayout);
+		GridData gd = new GridData(SWT.RIGHT, SWT.TOP, false, false);
+		gd.widthHint = 30;
+		buttonComposite.setLayoutData(gd);
+
+		addSelectorBtn = toolkit.createButton(buttonComposite, "", SWT.PUSH);
+		addSelectorBtn.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_ADD));
+		addSelectorBtn.setToolTipText("Add");
+		addSelectorBtn.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		addSelectorBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addSelector();
+			}
+		});
+
+		editSelectorBtn = toolkit.createButton(buttonComposite, "", SWT.PUSH);
+		editSelectorBtn.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_EDIT));
+		editSelectorBtn.setToolTipText("Edit");
+		editSelectorBtn.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		editSelectorBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				editSelectedSelector();
+			}
+		});
+
+		removeSelectorBtn = toolkit.createButton(buttonComposite, "", SWT.PUSH);
+		removeSelectorBtn.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_REMOVE));
+		removeSelectorBtn.setToolTipText("Remove");
+		removeSelectorBtn.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		removeSelectorBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				removeSelectedSelector();
+			}
+		});
+		selectorsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateEnabledState();
+			}
+		});
+		selectorsList = new ArrayList<>(eumConf.getEventSelectors());
+		selectorsTableViewer.setInput(selectorsList);
+
+		modulesTableViewer.getTable().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (e.detail == SWT.CHECK) {
+					if (e.item instanceof TableItem) {
+						TableItem item = (TableItem) e.item;
+						Object data = item.getData();
+						if (data == JSAgentModule.LISTENER_MODULE) {
+							updateEnabledState();
+						}
+					}
+				}
+			}
+		});
+
+		selectorsTableViewer.refresh();
+	}
+
+	/**
+	 * Updates the selectors table due to a change.
+	 *
+	 * @param markDirty
+	 *            if true, the for mwil lbe marked as dirty, asking for a save.
+	 */
+	private void updateSelectorsTableInternal(boolean markDirty) {
+		selectorsTableViewer.refresh();
+		updateEnabledState();
+		if (markDirty) {
+			markDirty();
+		}
+	}
+
+	/**
+	 * Removes the currently selected dom event selector.
+	 */
+	private void removeSelectedSelector() {
+		StructuredSelection selection = (StructuredSelection) selectorsTableViewer.getSelection();
+		for (Object sel : selection.toArray()) {
+			selectorsList.remove(sel);
+		}
+		updateSelectorsTableInternal(true);
+	}
+
+	/**
+	 * Starts the edit dialog for the currently selected dom event selector.
+	 */
+	private void editSelectedSelector() {
+		StructuredSelection selection = (StructuredSelection) selectorsTableViewer.getSelection();
+		Object selected = selection.getFirstElement();
+		if (selected instanceof EumDomEventSelector) {
+			EumDomEventSelectorDialog dialog = new EumDomEventSelectorDialog(getManagedForm().getForm().getShell(), (EumDomEventSelector) selected);
+			if (Window.OK == dialog.open()) {
+				updateSelectorsTableInternal(true);
+			}
+		}
+	}
+
+	/**
+	 * Starts the dialog for adding a new dom event selector.
+	 */
+	private void addSelector() {
+		EumDomEventSelectorDialog dialog = new EumDomEventSelectorDialog(getManagedForm().getForm().getShell());
+		if (Window.OK == dialog.open()) {
+			EumDomEventSelector newSelector = dialog.getSelector();
+			selectorsList.add(newSelector);
+			updateSelectorsTableInternal(true);
+			selectorsTableViewer.setSelection(new StructuredSelection(newSelector));
+		}
 	}
 
 	/**
@@ -315,9 +641,11 @@ public class EUMSettingsPart extends SectionPart implements IPropertyListener {
 			super.commit(onSave);
 			environment.getEumConfig().setEumEnabled(eumEnabledButton.getSelection());
 			environment.getEumConfig().setListenerInstrumentationAllowed(listenerInstrumentationAllowedButton.getSelection());
+			environment.getEumConfig().setRespectDNTHeader(respectDNTButton.getSelection());
 			environment.getEumConfig().setAgentMinificationEnabled(minificationEnabledButton.getSelection());
 			environment.getEumConfig().setScriptBaseUrl(scriptBaseUrl.getText());
 			environment.getEumConfig().setRelevancyThreshold(Integer.parseInt(relevancyThresholdMS.getText()));
+			environment.getEumConfig().setEventSelectors(selectorsList);
 			StringBuilder moduleString = new StringBuilder();
 			for (TableItem item : modulesTableViewer.getTable().getItems()) {
 				JSAgentModule moduleInfo = (JSAgentModule) item.getData();

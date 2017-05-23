@@ -7,10 +7,17 @@
 		<!-- include the agent with all modules -->
 		<script>
 			window.inspectIT_settings = {
-					eumManagementServer : "/mockedUrl/",
-					relevancyThreshold : 50,
-					allowListenerInstrumentation : true,
-			}
+				domEventSelectors:[
+				//[eventList,cssSelector,attributesToExtractList,alwaysRelevantFlag,parentLevelsToCheck]
+				["*","*","tagName,id",false,0],
+				["click","#inner","data-customAttrib,myJsAttrib,$label",true,0],
+				["click","#outer","parent.id",true,-1]
+				],
+				allowListenerInstrumentation:true,
+				respectDNT:false,
+				relevancyThreshold:50,
+				eumManagementServer:"http://localhost:8180/browser"
+			};
 		</script>
 		<script>
 			mocking.preAgentCore();
@@ -43,6 +50,9 @@
 	</head>
 
 	<body>
+		<div id="qunit"></div>
+		
+		
 		<div id="qunit"></div>
   		<div id="qunit-fixture"></div>
 		<A HREF="http://www.inspectit.rocks" style="visibility: hidden;"><IMG SRC="http://www.inspectit.rocks/wp-content/themes/inspectit/assets/images/logo.png" alt="Logo"></A>

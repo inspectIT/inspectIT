@@ -51,6 +51,7 @@ import rocks.inspectit.shared.cs.ci.context.impl.FieldContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ParameterContextCapture;
 import rocks.inspectit.shared.cs.ci.context.impl.ReturnContextCapture;
 import rocks.inspectit.shared.cs.ci.eum.EndUserMonitoringConfig;
+import rocks.inspectit.shared.cs.ci.eum.EumDomEventSelector;
 import rocks.inspectit.shared.cs.ci.exclude.ExcludeRule;
 import rocks.inspectit.shared.cs.ci.export.ConfigurationInterfaceImportData;
 import rocks.inspectit.shared.cs.ci.profile.data.ExcludeRulesProfileData;
@@ -460,6 +461,9 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		// INSPECTIT-2458
 		kryo.register(RemoteAsyncApacheHttpClientSensorConfig.class, new FieldSerializer<>(kryo, RemoteAsyncApacheHttpClientSensorConfig.class), nextRegistrationId++);
 		kryo.register(ApacheClientExchangeHandlerSensorConfig.class, new FieldSerializer<>(kryo, ApacheClientExchangeHandlerSensorConfig.class), nextRegistrationId++);
+		
+		// INSPECTIT-2528
+		kryo.register(EumDomEventSelector.class, new FieldSerializer<EumDomEventSelector>(kryo, EumDomEventSelector.class), nextRegistrationId++);
 	}
 
 }

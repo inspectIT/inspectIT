@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<profile schemaVersion="9" id="executor-correlation" name="Executor Correlation" common="true" default="true" created-on="2017-08-11T12:00:00" description="Profile for the correlation of Executors"
+<profile schemaVersion="11" id="executor-correlation" name="Executor Correlation" common="true" default="true" created-on="2017-08-11T12:00:00" description="Profile for the correlation of Executors"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 	
     <!-- executor correlation -->
