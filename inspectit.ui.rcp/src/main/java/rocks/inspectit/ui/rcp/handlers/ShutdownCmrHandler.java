@@ -17,10 +17,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 
 import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.job.UpdateRepositoryJob;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
-import rocks.inspectit.ui.rcp.repository.CmrRepositoryManager.UpdateRepositoryJob;
 
 /**
  * Handler that performs shutdown and restart of the CMR.

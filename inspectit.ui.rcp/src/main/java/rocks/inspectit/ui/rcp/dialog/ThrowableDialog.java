@@ -168,9 +168,9 @@ public class ThrowableDialog extends TitleAreaDialog {
 		StringBuilder sb = new StringBuilder("<form><p>");
 		if (throwable instanceof RemoteException) {
 			String serviceMethod = ((RemoteException) throwable).getServiceMethodSignature();
-			sb.append("The error occurred while invoking the service method <span color=\"info\">" + serviceMethod + "</span>.");
+			sb.append("An error occurred while invoking the service method <span color=\"info\">" + serviceMethod + "</span>.");
 		} else {
-			sb.append("The unexpected error occurred in the <span color=\"info\">inspectIT User interface</span>.");
+			sb.append("An unexpected error occurred in the <span color=\"info\">inspectIT User interface</span>.");
 		}
 
 		// message
