@@ -104,7 +104,7 @@ public final class CMR {
 		if (LOGGER.isInfoEnabled()) {
 			VersionService versionService = (VersionService) getBeanFactory().getBean("versionService");
 			LOGGER.info("Starting CMR in version " + versionService.getVersionAsString()
-					+ ". Please note that inspectIT does not provide any guarantee on backwards compatibility. Only if the version match exactly we ensure that the components are compatible.");
+			+ ". Please note that inspectIT does not provide any guarantee on backwards compatibility. Only if the version match exactly we ensure that the components are compatible.");
 		}
 	}
 
@@ -113,8 +113,7 @@ public final class CMR {
 	 */
 	private static void checkForCorrectJvmVersion() {
 		String version = System.getProperty("java.version");
-		// searching for Oracle version pattern: 1.7.0_80 or unofficial builds from OpenJDK:
-		// 1.7.0-u80-unofficial
+		// searching for Zulu version pattern: 1.8.0_131
 		Matcher matcher = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)[_-]u?(\\d+)").matcher(version);
 		boolean correctVersion = true;
 
@@ -125,11 +124,11 @@ public final class CMR {
 				int minor = Integer.parseInt(matcher.group(3));
 				int update = Integer.parseInt(matcher.group(4));
 
-				if ((majorFirst != 1) || (majorSecond != 7) || (minor != 0)) {
+				if ((majorFirst != 1) || (majorSecond != 8) || (minor != 0)) {
 					correctVersion = false;
 				}
 
-				if ((update < 51) || (update > 80)) {
+				if (update < 131) {
 					correctVersion = false;
 				}
 			} catch (NumberFormatException e) {

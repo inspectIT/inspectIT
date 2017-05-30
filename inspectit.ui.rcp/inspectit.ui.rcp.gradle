@@ -10,8 +10,8 @@ evaluationDependsOn(':inspectit.shared.cs')
 defaultTasks 'releaseAndAnalyze'
 
 /** used by the eclipse buildship plugin */
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 /** defined to have it included in Eclipse as source */
 sourceSets {
@@ -40,9 +40,9 @@ dependencies {
 }
 
 /** Compile compatibility to 1.7 for all compile tasks */
-tasks.withType(JavaCompile) { 
-	sourceCompatibility = '1.7'
-	targetCompatibility = '1.7'
+tasks.withType(JavaCompile) {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
 }
 
 /**
@@ -181,23 +181,21 @@ task release {
 	description = 'Releases RCP packages for the windows, linux and macosx.'
 	group = 'Release'
 
-	dependsOn(releaseSingle('windows', 'x86', 'inspectit-win32.win32.x86'))
-	dependsOn(releaseSingle('windows', 'x64', 'inspectit-win32.win32.x86_64'))
-	dependsOn(releaseSingle('linux', 'x86', 'inspectit-linux.gtk.x86'))
-	dependsOn(releaseSingle('linux', 'x64', 'inspectit-linux.gtk.x86_64'))
-	dependsOn(releaseSingle('macosx', 'x64', 'inspectit-macosx.cocoa.x86_64'))
+	dependsOn(releaseSingle('windows', 'inspectit-win32.win32.x86_64'))
+	dependsOn(releaseSingle('linux', 'inspectit-linux.gtk.x86_64'))
+	dependsOn(releaseSingle('macosx', 'inspectit-macosx.cocoa.x86_64'))
 }
 
 /**
  * Creates the task that adds jre, license and log configuration to the already existing package produced in the pdeBuild task.
  *
  * @param os Operating system ('windows', 'linux' or 'macosx')
- * @param arch Architecture ('x86' or 'x64')
  * @param distName Name of the release file that the pdeBuild produced (without extension).
  */
-def releaseSingle(os, arch, distName) {
+def releaseSingle(os, distName) {
 	return tasks.create(name: "release-${distName}", type: Zip, dependsOn: pdeBuild) {
 		// definition of all files
+		def arch = 'x64'
 		def distNameWithExtension = "${distName}.zip"
 		def archiveFile  = file("${pdeBuildDir}/I.inspectit/${distNameWithExtension}")
 		def distDir = file(buildReleasePackages)
@@ -224,7 +222,7 @@ def releaseSingle(os, arch, distName) {
 			include('logging-config.xml')
 			includeEmptyDirs = false
 		}
-		into('inspectit/jre'){
+		into('inspectit'){
 			from zipTree(jreFile)
 		}
 		if ('macosx'.equals(os)) {

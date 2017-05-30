@@ -105,10 +105,6 @@
 			<name>ARCH_VER</name>
 			<value>64</value>
 		</condition>
-		<condition type="variable" id="is32">
-			<name>ARCH_VER</name>
-			<value>32</value>
-		</condition>
 	</conditions>
 
 	<!-- Installer content -->
@@ -160,7 +156,6 @@
 			<executable targetfile="$INSTALL_PATH/CMR/jre/bin/unpack200" condition="izpack.linuxinstall|izpack.macinstall" />
 
 			<file override="update" src="@{installerResources}/procrun/win64/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is64" />
-			<file override="update" src="@{installerResources}/procrun/win32/prunsrv.exe" targetdir="$INSTALL_PATH/CMR/" condition="isWindows+is32" />
 			<file override="update" src="@{installerResources}/procrun/inspectITCMRw.exe" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
 			<file override="update" src="@{installerInstallServiceBat}" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />
 			<file override="update" src="@{installerUninstallServiceBat}" targetdir="$INSTALL_PATH/CMR/" condition="izpack.windowsinstall" />

@@ -8,8 +8,8 @@ evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
 /** used by the eclipse buildship plugin */
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 /** Artifact names */
 ext {
@@ -33,10 +33,10 @@ dependencies {
 	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
-/** Compile compatibility to 1.7 for all compile tasks */
-tasks.withType(JavaCompile) { 
-	sourceCompatibility = '1.7'
-	targetCompatibility = '1.7'
+/** Compile compatibility to 1.8 for all compile tasks */
+tasks.withType(JavaCompile) {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
 }
 
 /**
