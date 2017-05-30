@@ -73,9 +73,7 @@ gradle.projectsEvaluated {
 		description = 'Releases inspectIT installers.'
 		group = 'Release'
 
-		dependsOn(izpack('inspectit.installer-all.windows.x86', 'Windows', '32', 'release-windows-x86', 'release-inspectit-win32.win32.x86'))
 		dependsOn(izpack('inspectit.installer-all.windows.x64', 'Windows', '64', 'release-windows-x64', 'release-inspectit-win32.win32.x86_64'))
-		dependsOn(izpack('inspectit.installer-all.linux.x86', 'Linux', '32', 'release-linux-x86', 'release-inspectit-linux.gtk.x86'))
 		dependsOn(izpack('inspectit.installer-all.linux.x64', 'Linux', '64', 'release-linux-x64', 'release-inspectit-linux.gtk.x86_64'))
 		dependsOn(izpack('inspectit.installer-all.macosx.x64', 'MacOSX', '64', 'release-macosx-x64', 'release-inspectit-macosx.cocoa.x86_64'))
 	}
@@ -131,12 +129,7 @@ def izpack(installerName, os, arch, cmrReleaseTask, uiReleaseTask) {
 			// copy service bat files if it's windows
 			if (os == 'Windows') {
 				// create command for the install service template
-				def commandOpts
-				if (arch == '32') {
-					commandOpts =  project(':inspectit.server').serverJavaMemory32bit + ' '  + project(':inspectit.server').serverJavaOpts32bit
-				} else if (arch == '64') {
-					commandOpts =  project(':inspectit.server').serverJavaMemory64bit + ' '  + project(':inspectit.server').serverJavaOpts64bit
-				}
+				def commandOpts = project(':inspectit.server').serverJavaMemory64bit + ' '  + project(':inspectit.server').serverJavaOpts64bit
 				commandOpts += ' ' + project(':inspectit.server').serverJavaOptsWin + ' ' + project(':inspectit.server').serverJavaLocgcWin
 				// adapt for the procrun
 				def procrunCommandOpts = ''
@@ -188,12 +181,7 @@ def izpack(installerName, os, arch, cmrReleaseTask, uiReleaseTask) {
 			if (os == 'Windows') {
 				ant.var(name: 'installerInstallServiceBat', value: file("${buildInstallerRoot}/installService.bat").absolutePath)
 				ant.var(name: 'installerUninstallServiceBat', value: file("${buildInstallerRoot}/uninstallService.bat").absolutePath)
-			
-				if (arch == '64') {
-					ant.var(name: 'installerWindowsServiceDisplayNamePointer', value: installerWindowsService64DisplayName)
-				} else if (arch == '32') {
-					ant.var(name: 'installerWindowsServiceDisplayNamePointer', value: installerWindowsService32DisplayName)
-				}
+				ant.var(name: 'installerWindowsServiceDisplayNamePointer', value: installerWindowsService64DisplayName)
 			} else {
 				// reset in case of other OS types
 				ant.var(name: 'installerInstallServiceBat', value: "")
@@ -309,9 +297,6 @@ subprojects {
 		}
 		reports.html.destination = file(buildQATestTestdata)
 
-		ext.customJvmArgs = '-XX:-UseSplitVerifier'
-		jvmArgs = [customJvmArgs]
-		
 		//create html pages that link to the interesting parts
 		doLast {
 			new File(buildQATest, "coverage.html").text = "<meta http-equiv=\"refresh\" content=\"0; url=coveragedata/index.html\" >"

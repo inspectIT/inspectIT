@@ -49,5 +49,5 @@ Require-Bundle: org.eclipse.ui,
  io.opentracing.api;bundle-version="0.20.9"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Spring-Context: *;create-asynchronously:=false

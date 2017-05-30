@@ -10,8 +10,8 @@ evaluationDependsOn(':inspectit.shared.cs')
 defaultTasks 'releaseAndAnalyze'
 
 /** used by the eclipse buildship plugin */
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 /** defined to have it included in Eclipse as source */
 sourceSets {
@@ -46,10 +46,10 @@ dependencies {
 	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
-/** Compile compatibility to 1.7 for all compile tasks */
-tasks.withType(JavaCompile) { 
-	sourceCompatibility = '1.7'
-	targetCompatibility = '1.7'
+/** Compile compatibility to 1.8 for all compile tasks */
+tasks.withType(JavaCompile) {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
 }
 
 /** 
@@ -192,12 +192,10 @@ jar {
 task release {
 	description = 'Releases the server packages for the windows, linux and macosx.'
 	group = 'Release'
-	
-	dependsOn(releaseSingle('windows', 'x86'))
-	dependsOn(releaseSingle('windows', 'x64'))
-	dependsOn(releaseSingle('linux', 'x86'))
-	dependsOn(releaseSingle('linux', 'x64'))
-	dependsOn(releaseSingle('macosx', 'x64'))
+
+	dependsOn(releaseSingle('windows'))
+	dependsOn(releaseSingle('linux'))
+	dependsOn(releaseSingle('macosx'))
 }
 
 /**
@@ -205,10 +203,10 @@ task release {
  * Note that the JVM must exists for the given combination (f.e. jre7-linux-x64.zip).
  * 
  * @param os Operating system ('windows', 'linux' or 'macosx')
- * @param arch Architecture ('x86' or 'x64')
  */
-def releaseSingle(os, arch) {	
-	return tasks.create(name: "release-${os}-${arch}", type: Zip, dependsOn: jar) {
+def releaseSingle(os) {	
+	return tasks.create(name: "release-${os}-x64", type: Zip, dependsOn: jar) {
+		def arch = 'x64' 
 		archiveName = "inspectit-cmr.${os}.${arch}-${versionInfo}.zip"
 		destinationDir = file(buildReleasePackages)
 	
@@ -231,9 +229,10 @@ def releaseSingle(os, arch) {
 			from file(mainExtResources)
 			// exclude ignored resources so local builds also work
 			exclude('config/updates/*')
-			exclude('ci/agent-mappings.xml')
+			exclude('ci/*.xml')
 			exclude('ci/environments/*xml')
 			exclude('ci/profiles/*.xml')
+			exclude('ci/alerting/*.xml')
 			// startups separatelly
 			exclude('startup.*')
 			includeEmptyDirs = false
@@ -255,12 +254,8 @@ def releaseSingle(os, arch) {
 
 			// change the #COMMAND# on the fly
 			def command
-			if (os.equals('windows') && arch.equals('x86')) {
-				command = "${serverJavaCommandWin} ${serverJavaMemory32bit} ${serverJavaOpts32bit} ${serverJavaOptsWin} ${serverJavaLocgcWin} -jar ${distJarName}.jar"
-			} else if (os.equals('windows') && arch.equals('x64')) {
+			if (os.equals('windows')) {
 				command = "${serverJavaCommandWin} ${serverJavaMemory64bit} ${serverJavaOpts64bit} ${serverJavaOptsWin} ${serverJavaLocgcWin} -jar ${distJarName}.jar"
-			} else if (arch.equals('x86')) {
-				command = "${serverJavaCommandLinux} ${serverJavaMemory32bit} ${serverJavaOpts32bit} ${serverJavaOptsLinux} ${serverJavaLocgcLinux} -jar ${distJarName}.jar"
 			} else {
 				// macosx and linux x64 have same command
 				command = "${serverJavaCommandLinux} ${serverJavaMemory64bit} ${serverJavaOpts64bit} ${serverJavaOptsLinux} ${serverJavaLocgcLinux} -jar ${distJarName}.jar"
@@ -270,7 +265,7 @@ def releaseSingle(os, arch) {
 			}
 		}
 		// also jre
-		into('CMR/jre') {
+		into('CMR') {
 			from zipTree(jreFile)
 		}
 	}

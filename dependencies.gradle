@@ -313,17 +313,15 @@ dependencies {
 		'org.icepdf.os:icepdf-viewer:6.1.2'
 	)
 	jvms (
-		'org.openjdk:openjdk-7-jre-windows-x86:1.7.0-u80-unofficial',
-		'org.openjdk:openjdk-7-jre-windows-x64:1.7.0-u80-unofficial',
-		'org.openjdk:openjdk-7-jre-linux-x86:1.7.0-u80-unofficial',
-		'org.openjdk:openjdk-7-jre-linux-x64:1.7.0-u80-unofficial',
-		'org.openjdk:openjdk-7-jre-macosx-x64:1.7.0-u80-unofficial'
+		'com.azul:zulu-8-jre-windows-x64:1.8.0-u131@zip',
+		'com.azul:zulu-8-jre-linux-x64:1.8.0-u131@zip',
+		'com.azul:zulu-8-jre-macosx-x64:1.8.0-u131@zip'
 	)
 	java16rt (
 		'com.sun:rt:1.6.0_45'
 	)
 	eclipseBase (
-		'org.eclipse:eclipse-base:3.8.2'
+		'org.eclipse:eclipse-base:3.8.2_20170531@zip'
 	)
 	antContrib (
 		'ant-contrib:ant-contrib:1.0b3'
