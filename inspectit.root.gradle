@@ -365,20 +365,19 @@ subprojects {
 		includeFilter = file(findbugsConfigInclude)
 		excludeFilter = file(findbugsConfigExclude)
 		reportsDir = file(buildQAAnalysisFindbugs)
-		toolVersion = '2.0.0'
+		toolVersion = '3.0.1'
 	}
 
 	task findbugsHtmlReport {
 		doLast {
 			ant.xslt(in: "${buildQAAnalysisFindbugs}/main.xml", style: findbugsConfigFancyHist, out: "${buildQAAnalysisFindbugs}/../findbugs.html")
 		}
-	} 
+	}
 	findbugsMain.finalizedBy findbugsHtmlReport
 
 	/** Ensure that check task depends on the */ 
 	check.dependsOn(':cpdCheck')
 
-	
 	/** 
 	 * Configures the jacoco plugin.
 	 */

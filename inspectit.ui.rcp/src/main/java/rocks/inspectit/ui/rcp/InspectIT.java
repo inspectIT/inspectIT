@@ -363,8 +363,11 @@ public class InspectIT extends AbstractUIPlugin {
 		if (null == storageManager) {
 			synchronized (this) {
 				if (null == storageManager) { // NOCHK: DCL works with volatile.
-					storageManager = getService(InspectITStorageManager.class);
-					storageManager.startUp();
+					InspectITStorageManager service = getService(InspectITStorageManager.class);
+					service.startUp();
+
+					// store to volatile after init
+					storageManager = service;
 				}
 			}
 		}

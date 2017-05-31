@@ -892,6 +892,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 				sb.append(getStyledTextForColumn(span, column).toString());
 				sb.append('\t');
 			}
+			return sb.toString();
 		}
 		throw new RuntimeException("Could not create the human readable string!");
 	}

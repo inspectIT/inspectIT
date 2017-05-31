@@ -65,7 +65,7 @@ public enum InvocationSequenceDataComparatorEnum implements IDataComparator<Invo
 	public int compare(InvocationSequenceData o1, InvocationSequenceData o2, ICachedDataService cachedDataService) {
 		switch (this) {
 		case CHILD_COUNT:
-			return Long.valueOf(o1.getChildCount()).compareTo(Long.valueOf(o2.getChildCount()));
+			return Long.compare(o1.getChildCount(), o2.getChildCount());
 		case DURATION:
 			if (InvocationSequenceDataHelper.hasTimerData(o1) && InvocationSequenceDataHelper.hasTimerData(o2)) {
 				return Double.compare(o1.getTimerData().getDuration(), o2.getTimerData().getDuration());

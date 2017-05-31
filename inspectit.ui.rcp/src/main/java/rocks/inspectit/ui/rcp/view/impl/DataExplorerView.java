@@ -507,21 +507,18 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	private void updateFormBody() {
 		clearFormBody();
 		if ((null != displayedRepositoryDefinition) && (null != displayedAgent)) {
-			TreeModelManager treeModelManager = null;
-			treeModelManager = new TreeModelManager(displayedRepositoryDefinition, displayedAgent, hideInactiveInstrumentations);
-			if ((null != treeModelManager) && (null != displayedAgent)) {
-				treeViewer.setInput(treeModelManager);
-				treeViewer.getTree().setVisible(true);
-				treeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			} else {
-				displayMessage("Repository is currently unavailable.", Display.getDefault().getSystemImage(SWT.ICON_ERROR));
-			}
+			TreeModelManager treeModelManager = new TreeModelManager(displayedRepositoryDefinition, displayedAgent, hideInactiveInstrumentations);
+			treeViewer.setInput(treeModelManager);
+			treeViewer.getTree().setVisible(true);
+			treeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		} else if ((null != displayedRepositoryDefinition) && (null == displayedAgent)) {
 			if (null == availableAgents) {
 				displayMessage("No agent could be loaded on selected repository.", Display.getDefault().getSystemImage(SWT.ICON_WARNING));
 			} else {
 				displayMessage("This repository is empty.", Display.getDefault().getSystemImage(SWT.ICON_INFORMATION));
 			}
+		} else {
+			displayMessage("Repository is currently unavailable.", Display.getDefault().getSystemImage(SWT.ICON_ERROR));
 		}
 
 		mainForm.getBody().layout();
