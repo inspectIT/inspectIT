@@ -161,11 +161,9 @@ public interface IObjectSizes {
 	 *
 	 * @param mapSize
 	 *            Map size.
-	 * @param concurrencyLevel
-	 *            Concurrency level in the map.
 	 * @return Size of ConcurrentHashMap object in bytes.
 	 */
-	long getSizeOfConcurrentHashMap(int mapSize, int concurrencyLevel);
+	long getSizeOfConcurrentHashMap(int mapSize);
 
 	/**
 	 * Calculates the approximate size of the

@@ -78,8 +78,8 @@ public abstract class AbstractObjectSizesIbm extends AbstractObjectSizes {
 	 * HashMap from IBM JVM handles in different way the map capacity calculations.
 	 */
 	@Override
-	public int getHashMapCapacityFromSize(int hashMapSize, int initialCapacity) {
-		return super.getHashMapCapacityFromSize(hashMapSize, calculateHashMapCapacity(initialCapacity));
+	public int getMapCapacityFromSize(int hashMapSize, int initialCapacity) {
+		return super.getMapCapacityFromSize(hashMapSize, calculateHashMapCapacity(initialCapacity));
 	}
 
 	/**
@@ -98,52 +98,5 @@ public abstract class AbstractObjectSizesIbm extends AbstractObjectSizes {
 		return capacity;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected int getNumberOfConcurrentSegments(int mapSize, int concurrencyLevel) {
-		int segments = 1;
-		while (segments < concurrencyLevel) {
-			segments <<= 1;
-		}
-		return segments;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * I can not figure out what I am missing, but seams that I am missing one reference size here.
-	 */
-	@Override
-	protected long getSizeOfConcurrentSeqment(int seqmentCapacity) {
-		long size = super.getSizeOfConcurrentSeqment(seqmentCapacity);
-
-		// for unknown reasons i miss one reference
-		size += this.getPrimitiveTypesSize(1, 0, 0, 0, 0, 0);
-
-		return alignTo8Bytes(size);
-	}
-
-	/**
-	 * Returns the concurrent hash map segment capacity from its size and initial capacity.
-	 *
-	 * @param seqmentSize
-	 *            Number of elements in the segment.
-	 * @param initialCapacity
-	 *            Initial capacity.
-	 * @return Size in bytes.
-	 */
-	@Override
-	protected int getSegmentCapacityFromSize(int seqmentSize, int initialCapacity) {
-		int capacity = initialCapacity;
-		float loadFactor = 0.75f;
-		int threshold = (int) (capacity * loadFactor);
-		while ((threshold + 1) < seqmentSize) {
-			capacity <<= 1;
-			threshold = (int) (capacity * loadFactor);
-		}
-		return capacity;
-	}
 
 }

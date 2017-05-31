@@ -26,25 +26,18 @@ public class ObjectSizesFactory implements FactoryBean<IObjectSizes> {
 	@Override
 	public IObjectSizes getObject() throws Exception {
 		boolean isIbm = UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.IBM;
-		boolean is64Bit = UnderlyingSystemInfo.IS_64BIT;
 		boolean compresedOops = UnderlyingSystemInfo.IS_COMPRESSED_OOPS;
-		if (is64Bit && !compresedOops) {
+		if (!compresedOops) {
 			if (isIbm) {
 				return new ObjectSizes64BitsIbm();
 			} else {
 				return new ObjectSizes64Bits();
 			}
-		} else if (is64Bit && compresedOops) {
+		} else {
 			if (isIbm) {
 				return new ObjectSizes64BitsCompressedOopsIbm();
 			} else {
 				return new ObjectSizes64BitsCompressedOops();
-			}
-		} else {
-			if (isIbm) {
-				return new ObjectSizes32BitsIbm();
-			} else {
-				return new ObjectSizes32Bits();
 			}
 		}
 	}

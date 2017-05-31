@@ -224,10 +224,13 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	public long getSizeOfHashMap(int hashMapSize, int initialCapacity) {
 		long size = this.getSizeOfObjectHeader();
 		size += this.getPrimitiveTypesSize(4, 0, 4, 1, 0, 0);
-		int mapCapacity = this.getHashMapCapacityFromSize(hashMapSize, initialCapacity);
+		int mapCapacity = this.getMapCapacityFromSize(hashMapSize, initialCapacity);
 
 		// size of the map array for the entries
-		size += this.getSizeOfArray(mapCapacity);
+		// in java 8 hash map table is not initialized until first element is added
+		if (mapCapacity > 0) {
+			size += this.getSizeOfArray(mapCapacity);
+		}
 
 		// size of the entries
 		size += hashMapSize * this.getSizeOfHashMapEntry();
@@ -257,27 +260,34 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long getSizeOfConcurrentHashMap(int mapSize, int concurrencyLevel) {
+	public long getSizeOfConcurrentHashMap(int mapSize) {
 		long size = this.getSizeOfObjectHeader();
-		size += this.getPrimitiveTypesSize(6, 0, 3, 0, 0, 0);
+		size += this.getPrimitiveTypesSize(8, 0, 3, 0, 1, 0);
 
-		// array of segments based on capacity
-		size += this.getSizeOfArray(concurrencyLevel);
+		// in Java 8 map table is not initialized when empty
+		if (mapSize > 0) {
+			int initialCapacity = MAP_INITIAL_CAPACITY;
+			initialCapacity = tableSizeFor(initialCapacity + (initialCapacity >>> 1) + 1);
+			int tableSize = getMapCapacityFromSize(mapSize, initialCapacity);
 
-		// approximate capacity of each segment
-		int segmentCapacity = getSegmentCapacityFromSize(mapSize / concurrencyLevel, MAP_INITIAL_CAPACITY / concurrencyLevel);
+			// array of nodes based on tableSize
+			size += this.getSizeOfArray(tableSize);
 
-		// get number of segments
-		int segments = getNumberOfConcurrentSegments(mapSize, concurrencyLevel);
+			// and for each object in the map there is the reference to the HashEntry in Segment
+			// that we
+			// need to add
+			// size += mapSize * alignTo8Bytes(this.getReferenceSize());
+			size += mapSize * this.getSizeOfConcurrentHashMapNode();
+		}
 
-		// size of each segment based on the capacity, times number of segments
-		size += segments * this.getSizeOfConcurrentSeqment(segmentCapacity);
+		return alignTo8Bytes(size);
+	}
 
-		// and for each object in the map there is the reference to the HashEntry in Segment that we
-		// need to add
-		// size += mapSize * alignTo8Bytes(this.getReferenceSize());
-		size += mapSize * this.getSizeOfHashMapEntry();
-
+	/**
+	 * @return Size of concurrent hash map node in java 8.
+	 */
+	private long getSizeOfConcurrentHashMapNode() {
+		long size = this.getSizeOfObjectHeader() + this.getPrimitiveTypesSize(3, 0, 1, 0, 0, 0);
 		return alignTo8Bytes(size);
 	}
 
@@ -352,20 +362,6 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 		// always has an array of 4 longs attached
 		size += this.getSizeOfPrimitiveArray(4, LONG_SIZE);
 		return size;
-	}
-
-	/**
-	 * Returns number of segments in the concurrent hash map.
-	 *
-	 * @param mapSize
-	 *            Size of map
-	 * @param concurrencyLevel
-	 *            Initial concurrency level.
-	 * @return Number of segments.
-	 */
-	protected int getNumberOfConcurrentSegments(int mapSize, int concurrencyLevel) {
-		// if map is empty there is only one segment created no matter what
-		return mapSize == 0 ? 1 : concurrencyLevel;
 	}
 
 	/**
@@ -500,27 +496,6 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	}
 
 	/**
-	 * Calculates the size of the {@link ConcurrentHashMap} segment.
-	 *
-	 * @param seqmentCapacity
-	 *            Capacity that segment has.
-	 *
-	 * @return Size in bytes.
-	 */
-	protected long getSizeOfConcurrentSeqment(int seqmentCapacity) {
-		long size = this.getSizeOfObjectHeader();
-		size += this.getPrimitiveTypesSize(2, 0, 3, 1, 0, 0);
-
-		// plus the sync in the reentrant lock
-		size += alignTo8Bytes(this.getSizeOfObjectHeader() + this.getPrimitiveTypesSize(3, 0, 1, 0, 0, 0));
-
-		// plus just the empty array because we don't know how many objects segment has, this is
-		// calculated additionally in concurrent map
-		size += this.getSizeOfArray(seqmentCapacity);
-		return alignTo8Bytes(size);
-	}
-
-	/**
 	 * Returns the size of a HashMap entry. Not that the key and value objects are not in this size.
 	 * If HashSet is used the HashMapEntry value object will be a simple Object, thus this size has
 	 * to be added to the HashSet.
@@ -546,7 +521,7 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	 * @return Returns the capacity of the HashMap from it size. The calculations take the default
 	 *         capacity of 16 and default load factor of 0.75.
 	 */
-	public int getHashMapCapacityFromSize(int hashMapSize, int initialCapacity) {
+	public int getMapCapacityFromSize(int hashMapSize, int initialCapacity) {
 		// from JDK1.7.0_40 the map has 0 initial capacity
 		// capacity goes to initial when first entry is added
 		if (hashMapSize == 0) {
@@ -567,23 +542,23 @@ public abstract class AbstractObjectSizes implements IObjectSizes {
 	}
 
 	/**
-	 * Returns the concurrent hash map segment capacity from its size and initial capacity.
+	 * Returns a power of two table size for the given desired capacity. See Hackers Delight, sec
+	 * 3.2
+	 * <p>
+	 * <b>IMPORTANT:</b> This code peace has been copied from ConcurrentHashMap class.
 	 *
-	 * @param seqmentSize
-	 *            Number of elements in the segment.
-	 * @param initialCapacity
-	 *            Initial capacity.
-	 * @return Size in bytes.
+	 * @param c
+	 *            cap
+	 * @return size
 	 */
-	protected int getSegmentCapacityFromSize(int seqmentSize, int initialCapacity) {
-		int capacity = initialCapacity;
-		float loadFactor = 0.75f;
-		int threshold = (int) (capacity * loadFactor);
-		while ((threshold + 1) <= seqmentSize) {
-			capacity *= 2;
-			threshold = (int) (capacity * loadFactor);
-		}
-		return capacity;
+	private int tableSizeFor(int c) {
+		int n = c - 1;
+		n |= n >>> 1;
+		n |= n >>> 2;
+		n |= n >>> 4;
+		n |= n >>> 8;
+		n |= n >>> 16;
+		return (n < 0) ? 1 : n + 1;
 	}
 
 }
