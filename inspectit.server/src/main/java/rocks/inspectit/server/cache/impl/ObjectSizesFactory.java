@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
-import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
 
 /**
  * Factory for returning the correct instance of {@link IObjectSizes} for Spring initialization. The
@@ -25,27 +24,11 @@ public class ObjectSizesFactory implements FactoryBean<IObjectSizes> {
 	 */
 	@Override
 	public IObjectSizes getObject() throws Exception {
-		boolean isIbm = UnderlyingSystemInfo.JVM_PROVIDER == JvmProvider.IBM;
-		boolean is64Bit = UnderlyingSystemInfo.IS_64BIT;
-		boolean compresedOops = UnderlyingSystemInfo.IS_COMPRESSED_OOPS;
-		if (is64Bit && !compresedOops) {
-			if (isIbm) {
-				return new ObjectSizes64BitsIbm();
-			} else {
-				return new ObjectSizes64Bits();
-			}
-		} else if (is64Bit && compresedOops) {
-			if (isIbm) {
-				return new ObjectSizes64BitsCompressedOopsIbm();
-			} else {
-				return new ObjectSizes64BitsCompressedOops();
-			}
+		boolean compressedOops = UnderlyingSystemInfo.IS_COMPRESSED_OOPS;
+		if (!compressedOops) {
+			return new ObjectSizes64Bits();
 		} else {
-			if (isIbm) {
-				return new ObjectSizes32BitsIbm();
-			} else {
-				return new ObjectSizes32Bits();
-			}
+			return new ObjectSizes64BitsCompressedOops();
 		}
 	}
 
