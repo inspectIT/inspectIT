@@ -723,14 +723,7 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 						if (!recTime.isVisible()) {
 							recTime.setVisible(true);
 						}
-						String string;
-						if (millisMore > 0) {
-							string = NumberFormatter.humanReadableMillisCount(millisMore, false);
-						} else {
-							string = "";
-						}
-						recTime.setText(string);
-
+						recTime.setText(NumberFormatter.humanReadableMillisCount(millisMore, false));
 					} else {
 						if (recTimeBar.isVisible()) {
 							recTimeBar.setVisible(false);

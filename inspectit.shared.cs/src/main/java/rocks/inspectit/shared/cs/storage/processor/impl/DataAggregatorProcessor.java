@@ -188,9 +188,8 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 		IAggregatedData<E> oldest = queue.poll();
 		E data = oldest.getData();
 		map.remove(getCacheHash(data, data.getTimeStamp().getTime()));
-		data.finalizeData();
 		elementCount.decrementAndGet();
-		passToStorageWriter(data);
+		passToStorageWriter(data.finalizeData());
 	}
 
 	/**
@@ -203,9 +202,8 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 		while (null != oldest) {
 			E data = oldest.getData();
 			map.remove(getCacheHash(data, data.getTimeStamp().getTime()));
-			data.finalizeData();
 			elementCount.decrementAndGet();
-			Future<Void> future = passToStorageWriter(data);
+			Future<Void> future = passToStorageWriter(data.finalizeData());
 			CollectionUtils.addIgnoreNull(futures, future);
 
 			oldest = queue.poll();
@@ -220,7 +218,7 @@ public class DataAggregatorProcessor<E extends TimerData> extends AbstractDataPr
 	 *            Data to be written.
 	 * @return {@link Future} received from Storage writer.
 	 */
-	private Future<Void> passToStorageWriter(E data) {
+	private Future<Void> passToStorageWriter(DefaultData data) {
 		// clear aggregated ids when saving to storage
 		if (data instanceof IIdsAwareAggregatedData) {
 			((IIdsAwareAggregatedData<?>) data).clearAggregatedIds();

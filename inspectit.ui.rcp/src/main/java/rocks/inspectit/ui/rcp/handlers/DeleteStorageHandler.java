@@ -31,7 +31,6 @@ import rocks.inspectit.shared.cs.storage.label.type.impl.ExploredByLabelType;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
-import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
 /**
@@ -95,10 +94,8 @@ public class DeleteStorageHandler extends AbstractHandler implements IHandler {
 						protected IStatus run(IProgressMonitor monitor) {
 							List<Status> statuses = new ArrayList<>();
 
-							final Set<CmrRepositoryDefinition> involvedCmrSet = new HashSet<>();
 							for (final IStorageDataProvider storageDataProvider : storagesToDelete) {
 								if (storageDataProvider.getCmrRepositoryDefinition().getOnlineStatus() != OnlineStatus.OFFLINE) {
-									involvedCmrSet.add(storageDataProvider.getCmrRepositoryDefinition());
 									try {
 										storageDataProvider.getCmrRepositoryDefinition().getStorageService().deleteStorage(storageDataProvider.getStorageData());
 										InspectIT.getDefault().getInspectITStorageManager().storageRemotelyDeleted(storageDataProvider.getStorageData());

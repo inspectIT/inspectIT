@@ -119,9 +119,7 @@ public class ClassSchemaManager implements InitializingBean {
 			if (null != inputStreamReader) {
 				inputStreamReader.close();
 			}
-			if (null != inputStream) {
-				inputStream.close();
-			}
+			inputStream.close();
 		}
 
 		br.close();

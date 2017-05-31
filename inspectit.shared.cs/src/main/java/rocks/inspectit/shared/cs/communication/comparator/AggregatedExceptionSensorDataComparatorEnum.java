@@ -43,11 +43,11 @@ public enum AggregatedExceptionSensorDataComparatorEnum implements IDataComparat
 	public int compare(AggregatedExceptionSensorData o1, AggregatedExceptionSensorData o2) {
 		switch (this) {
 		case CREATED:
-			return Long.valueOf(o1.getCreated()).compareTo(Long.valueOf(o2.getCreated()));
+			return Long.compare(o1.getCreated(), o2.getCreated());
 		case RETHROWN:
-			return Long.valueOf(o1.getPassed()).compareTo(Long.valueOf(o2.getPassed()));
+			return Long.compare(o1.getPassed(), o2.getPassed());
 		case HANDLED:
-			return Long.valueOf(o1.getHandled()).compareTo(Long.valueOf(o2.getHandled()));
+			return Long.compare(o1.getHandled(), o2.getHandled());
 		default:
 			return 0;
 		}

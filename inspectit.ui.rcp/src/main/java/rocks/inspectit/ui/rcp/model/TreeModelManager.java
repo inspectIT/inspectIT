@@ -443,14 +443,6 @@ public class TreeModelManager {
 		for (PlatformSensorTypeIdent platformSensorTypeIdent : platformSensorTypeIdents) {
 			if (platformSensorTypeIdent.getFullyQualifiedClassName().equalsIgnoreCase(SensorTypeEnum.MEMORY_INFORMATION.getFqn())) {
 				sensorTypeAvailable = true;
-				List<PlatformSensorTypeIdent> platformSensorTypeIdentList = new ArrayList<>();
-				// add sensor types to local list
-				platformSensorTypeIdentList.add(platformSensorTypeIdent);
-				for (PlatformSensorTypeIdent platformSensorTypeIdent2 : platformSensorTypeIdents) {
-					if (platformSensorTypeIdent2.getFullyQualifiedClassName().equalsIgnoreCase(SensorTypeEnum.SYSTEM_INFORMATION.getFqn())) {
-						platformSensorTypeIdentList.add(platformSensorTypeIdent2);
-					}
-				}
 
 				InputDefinition inputDefinition = new InputDefinition();
 				inputDefinition.setRepositoryDefinition(definition);

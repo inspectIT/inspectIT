@@ -1,6 +1,6 @@
 <FindBugsFilter>
 	<Match>
-		<Class name="~.*\.*Test" />
+		<Class name="~.*\.*Test.*" />
 	</Match>
 	<Match>
 		<Package name="~.*\.test\..*" />
@@ -8,17 +8,12 @@
 
 	<!-- Globally ignored rules -->
 	<Match>
-		<Bug pattern="EI_EXPOSE_REP2,EI_EXPOSE_REP,DM_DEFAULT_ENCODING,SBSC_USE_STRINGBUFFER_CONCATENATION,MS_MUTABLE_ARRAY,SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
+		<Bug pattern="EI_EXPOSE_REP2,EI_EXPOSE_REP,DM_DEFAULT_ENCODING,SBSC_USE_STRINGBUFFER_CONCATENATION,MS_MUTABLE_ARRAY,SE_COMPARATOR_SHOULD_BE_SERIALIZABLE,NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
 	</Match>
 
 	<!-- Direct ignores -->
 
 	<!-- Agent ignores START -->
-	<Match>
-		<Class name="rocks.inspectit.agent.java.javaagent.JavaAgent" />
-		<Field name="operationInProgress" />
-		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
-	</Match>
 	<Match>
 		<Class name="rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementHook" />
 		<Field name="preparedStatementsWithExceptions" />
@@ -35,16 +30,6 @@
 		<Bug pattern="MS_CANNOT_BE_FINAL" />
 	</Match>
 	<Match> <!-- This ignore should be removed after Agent sending/buffering restructuring -->
-		<Class name="rocks.inspectit.agent.java.core.impl.CoreService$PreparingThread" />
-		<Method name="run" />
-		<Bug pattern="UW_UNCOND_WAIT" />
-	</Match>
-	<Match> <!-- This ignore should be removed after Agent sending/buffering restructuring -->
-		<Class name="rocks.inspectit.agent.java.core.impl.CoreService$SendingThread" />
-		<Method name="run" />
-		<Bug pattern="UW_UNCOND_WAIT" />
-	</Match>
-	<Match> <!-- This ignore should be removed after Agent sending/buffering restructuring -->
 		<Class name="rocks.inspectit.agent.java.javaagent.JavaAgent" />
 		<Method name="premain" />
 		<Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" />
@@ -57,28 +42,13 @@
 
 	<!-- CMR ignores START -->
 	<Match>
-		<Class name="rocks.inspectit.server.cache.impl.AtomicBuffer" />
-		<Method name="~(analyze|index)Next" />
-		<Bug pattern="UL_UNRELEASED_LOCK_EXCEPTION_PATH" />
-	</Match>
-	<Match>
 		<Class name="rocks.inspectit.server.storage.CmrStorageRecorder" />
 		<Field name="~(storageWriter|recordingProperties)" />
 		<Bug pattern="IS2_INCONSISTENT_SYNC" />
 	</Match>
 	<Match>
-		<Class name="rocks.inspectit.server.dao.impl.TimerDataAggregator" />
-		<Method name="processTimerData" />
-		<Bug pattern="AT_OPERATION_SEQUENCE_ON_CONCURRENT_ABSTRACTION" />
-	</Match>
-	<Match>
 		<Class name="~rocks.inspectit.server.util.ShutdownService.*" />
 		<Bug pattern="DM_EXIT" />
-	</Match>
-	<Match>
-		<Class name="rocks.inspectit.server.jaxb.JAXBTransformator" />
-		<Method name="unmarshall" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
 	</Match>
 	<Match>
 		<Class name="rocks.inspectit.server.ci.event.EnvironmentUpdateEvent" />
@@ -89,46 +59,45 @@
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
 	<Match>
-		<Class name="rocks.inspectit.shared.cs.jaxb.JAXBTransformator" />
-		<Method name="marshall" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
-	</Match>
-	<Match>
 		<Class name="rocks.inspectit.server.ci.event.ClassInstrumentationChangedEvent" />
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
 	<!-- CMR ignores END -->
 	
-	<!-- Commons ignores START -->
+	<!-- shared.all ignores START -->
 	<!-- KryoNet complete -->
 	<Match>
 		<Package name="~rocks\.inspectit\.shared\.all\.kryonet.*"/>
 	</Match>
-	
-	<Match><!-- There is default case, but FindBugs is still complaining -->
-		<Class name="rocks.inspectit.shared.cs.cmr.property.configuration.impl.ByteProperty" />
-		<Method name="fromString" />
-		<Bug pattern="SF_SWITCH_NO_DEFAULT" />
-	</Match>
-	<!-- Commons ignores END -->
+	<!-- shared.all ignores END -->
 
-	<!-- CommonsCS ignores START -->
+	<!-- shared.cs ignores START -->
 	<Match>
 		<Class name="rocks.inspectit.shared.cs.storage.StorageWriter" />
 		<Field name="~(storageData|writingFolderPath)" />
 		<Bug pattern="IS2_INCONSISTENT_SYNC" />
 	</Match>
-	<Match> <!-- This is a strange FindBugs behavior, since the field is read in one public method. -->
-		<Class name="rocks.inspectit.shared.cs.storage.StorageManager" />
-		<Filed name="hardDriveSize" />
-		<Bug pattern="URF_UNREAD_FIELD" />
-	</Match>
-		<Match> <!-- Meant to be so -->	
+	<Match> <!-- Meant to be so -->	
 		<Class name="rocks.inspectit.shared.cs.storage.StorageWriter" />
 		<Filed name="waitForPendingWritingTasks" />
 		<Bug pattern="SWL_SLEEP_WITH_LOCK_HELD" />
 	</Match>
-	<!-- CommonsCS ignores END -->
+	<Match><!-- There is default case, but FindBugs is still complaining -->
+		<Class name="rocks.inspectit.shared.cs.cmr.property.configuration.impl.ByteProperty" />
+		<Method name="fromString" />
+		<Bug pattern="SF_SWITCH_NO_DEFAULT" />
+	</Match>
+	<Match>
+		<Class name="rocks.inspectit.shared.cs.cmr.service.IServerStatusService$ServerStatus" />
+		<Method name="setRegistrationIdsValidationKey" />
+		<Bug pattern="ME_ENUM_FIELD_SETTER" />
+	</Match>
+	<Match><!-- There is default case, but FindBugs is still complaining -->
+		<Class name="rocks.inspectit.shared.cs.ci.context.AbstractContextCapture" />
+		<Method name="addPaths" />
+		<Bug pattern="UC_USELESS_OBJECT" />
+	</Match>
+	<!-- shared.cs ignores END -->
 
 	<!-- RCP ignores START -->
 	<Match>
@@ -143,6 +112,10 @@
 	<Match>
 		<Class name="rocks.inspectit.ui.rcp.editor.table.input.HttpTimerDataInputController$RegExHttpAggregator" />
 		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
+	</Match>
+	<Match>
+		<Class name="rocks.inspectit.ui.rcp.editor.table.input.MethodInvocInputController$MethodInvocContentProvider" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT" />
 	</Match>
 	<Match>
 		<Class name="~rocks\.inspectit\.ui\.rcp\.ci\.form\.part\.MethodSensorAssignmentDetailsPage.*" />

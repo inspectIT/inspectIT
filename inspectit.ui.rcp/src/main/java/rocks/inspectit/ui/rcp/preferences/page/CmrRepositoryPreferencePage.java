@@ -3,9 +3,9 @@ package rocks.inspectit.ui.rcp.preferences.page;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -369,7 +369,7 @@ public class CmrRepositoryPreferencePage extends PreferencePage implements IWork
 	 * @return Where there changes performed by user.
 	 */
 	private boolean isDirty() {
-		return !Objects.equals(inputList.keySet(), cmrRepositoryManager.getCmrRepositoryDefinitions());
+		return !CollectionUtils.isEqualCollection(inputList.keySet(), cmrRepositoryManager.getCmrRepositoryDefinitions());
 	}
 
 	/**
