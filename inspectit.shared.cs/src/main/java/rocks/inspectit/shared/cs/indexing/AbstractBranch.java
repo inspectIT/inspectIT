@@ -261,7 +261,7 @@ public abstract class AbstractBranch<R, E> implements ITreeComponent<R, E> {
 		int mapSize = map.size();
 		long size = objectSizes.getSizeOfObjectHeader();
 		size += objectSizes.getPrimitiveTypesSize(2, 0, 0, 0, 0, 0);
-		size += objectSizes.getSizeOfConcurrentHashMap(mapSize, CONCURRENCY_LEVEL);
+		size += objectSizes.getSizeOfConcurrentHashMap(mapSize);
 		size += mapSize * objectSizes.getSizeOfLongObject(); // for a Long key in a Map.entry
 		for (ITreeComponent<R, E> treeComponent : map.values()) {
 			size += treeComponent.getComponentSize(objectSizes);

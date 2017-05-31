@@ -197,7 +197,7 @@ public class AggregatedExceptionSensorData extends ExceptionSensorData implement
 		long size = super.getObjectSize(objectSizes, false);
 		size += objectSizes.getPrimitiveTypesSize(1, 0, 0, 0, 3, 0);
 		if (null != aggregatedIds) {
-			size += objectSizes.getSizeOfConcurrentHashMap(aggregatedIds.size(), 4);
+			size += objectSizes.getSizeOfConcurrentHashMap(aggregatedIds.size());
 			size += aggregatedIds.size() * objectSizes.getSizeOfLongObject();
 		}
 		if (doAlign) {
