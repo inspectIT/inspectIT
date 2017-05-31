@@ -64,6 +64,11 @@ public final class UnderlyingSystemInfo {
 		JAVA_1_7,
 
 		/**
+		 * Denotes Java version 1.8.
+		 */
+		JAVA_1_8,
+
+		/**
 		 * Denotes unknown java version.
 		 */
 		OTHER;
@@ -91,6 +96,11 @@ public final class UnderlyingSystemInfo {
 		 * Denotes JVM from IBM.
 		 */
 		IBM,
+
+		/**
+		 * Denotes JVM from Azul.
+		 */
+		AZUL,
 
 		/**
 		 * Denotes JVM from other provider.
@@ -158,6 +168,8 @@ public final class UnderlyingSystemInfo {
 			return JvmProvider.ORACLE;
 		} else if (getJavaVendorMatches("IBM")) {
 			return JvmProvider.IBM;
+		} else if (getJavaVendorMatches("Azul")) {
+			return JvmProvider.AZUL;
 		} else {
 			return JvmProvider.OTHER;
 		}
@@ -183,6 +195,8 @@ public final class UnderlyingSystemInfo {
 			return JavaVersion.JAVA_1_6;
 		} else if (getJavaVersionMatches("1.7")) {
 			return JavaVersion.JAVA_1_7;
+		} else if (getJavaVersionMatches("1.8")) {
+			return JavaVersion.JAVA_1_8;
 		} else {
 			return JavaVersion.OTHER;
 		}
@@ -217,6 +231,8 @@ public final class UnderlyingSystemInfo {
 			return System.getProperty("sun.arch.data.model").indexOf("64") != -1;
 		case IBM:
 			return System.getProperty("com.ibm.vm.bitmode").indexOf("64") != -1;
+		case AZUL:
+			return System.getProperty("java.vm.name").indexOf("64") != -1;
 		default:
 			return false;
 		}
@@ -257,7 +273,8 @@ public final class UnderlyingSystemInfo {
 			switch (getJvmProvider()) {
 			case SUN:
 			case ORACLE:
-				if (getJavaVersion() == JavaVersion.JAVA_1_7) {
+			case AZUL:
+				if ((getJavaVersion() == JavaVersion.JAVA_1_7) || (getJavaVersion() == JavaVersion.JAVA_1_8)) {
 					long max = Runtime.getRuntime().maxMemory();
 					return (max == Long.MAX_VALUE) || (max < MAX_COMPRESSED_OOPS_JAVA7_MEMORY);
 				} else if (getJavaVersion() == JavaVersion.JAVA_1_6) {
