@@ -108,8 +108,9 @@ public class DecodingHtmlScriptInjectorTest extends TestBase {
 		public void testLeftOverRemaining() throws UnsupportedEncodingException {
 			String encoding = "UTF-8";
 			injector.setCharacterEncoding(encoding);
+			byte[] testdata = new byte[] { "ü".getBytes(encoding)[0] }; // "ü" is a two-byte char
 
-			assertThat(injector.performInjection(new byte[] {-64}), equalTo(null)); // "11......" is the start of two-byte chars
+			assertThat(injector.performInjection(testdata), equalTo(null));
 			assertThat(injector.hasTerminated(), equalTo(false));
 
 			assertThat(injector.performInjection("This string is ignored as the previous character was not finished"), equalTo(null));
